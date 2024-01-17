@@ -1,11 +1,12 @@
 package com.pubnub.internal.subscribe.eventengine.effect
 
 import com.pubnub.api.PubNubException
+import com.pubnub.api.callbacks.PNCallback
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
-import com.pubnub.internal.eventengine.Sink
 import com.pubnub.api.models.consumer.PNStatus
+import com.pubnub.internal.eventengine.Sink
 import com.pubnub.internal.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.internal.subscribe.eventengine.event.SubscriptionCursor
 import io.mockk.spyk
@@ -94,9 +95,9 @@ fun <T> successfulRemoteAction(result: T): RemoteAction<T> = object : RemoteActi
     override fun silentCancel() {
     }
 
-    override fun async(callback: (result: T?, status: PNStatus) -> Unit) {
+    override fun async(callback: PNCallback<T>) {
         executors.submit {
-            callback(
+            callback.onResponse(
                 result,
                 PNStatus(
                     PNStatusCategory.PNAcknowledgmentCategory,
@@ -123,9 +124,9 @@ fun <T> failingRemoteAction(exception: PubNubException = PubNubException("Except
         override fun silentCancel() {
         }
 
-        override fun async(callback: (result: T?, status: PNStatus) -> Unit) {
+        override fun async(callback: PNCallback<T>) {
             executors.submit {
-                callback(
+                callback.onResponse(
                     null,
                     PNStatus(
                         PNStatusCategory.PNUnknownCategory,

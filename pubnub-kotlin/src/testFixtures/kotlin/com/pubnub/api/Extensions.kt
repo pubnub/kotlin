@@ -6,6 +6,7 @@ import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.awaitility.pollinterval.FibonacciPollInterval
 import org.hamcrest.core.IsEqual
+import java.util.UUID
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
@@ -41,7 +42,7 @@ fun AtomicBoolean.listen(function: () -> Boolean): AtomicBoolean {
     return this
 }
 
-fun <Output> RemoteAction<Output>.asyncRetry(
+fun <Output> Endpoint<Output>.asyncRetry(
     function: (result: Output?, status: PNStatus) -> Unit
 ) {
     val hits = AtomicInteger(0)
@@ -50,7 +51,7 @@ fun <Output> RemoteAction<Output>.asyncRetry(
         hits.incrementAndGet()
         val latch = CountDownLatch(1)
         val success = AtomicBoolean()
-// TODO FIX        queryParam += mapOf("key" to UUID.randomUUID().toString())
+        queryParam += mapOf("key" to UUID.randomUUID().toString())
         async { result, status ->
             try {
                 function.invoke(result, status)
@@ -72,7 +73,7 @@ fun <Output> RemoteAction<Output>.asyncRetry(
         }
 }
 
-fun <Output> RemoteAction<Output>.retryForbidden(
+fun <Output> Endpoint<Output>.retryForbidden(
     onFail: (status: PNStatus) -> Unit,
     function: (result: Output?, status: PNStatus) -> Unit
 ) {
@@ -93,7 +94,7 @@ fun <Output> RemoteAction<Output>.retryForbidden(
     Thread.sleep(2_000L)
 
     // retry and invoke callback
-    // TODO fix queryParam += mapOf("key" to UUID.randomUUID().toString())
+    queryParam += mapOf("key" to UUID.randomUUID().toString())
     async { result, status ->
         try {
             function.invoke(result, status)

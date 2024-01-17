@@ -1,9 +1,6 @@
 package com.pubnub.internal.endpoints
 
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
-import com.pubnub.api.models.consumer.history.PNHistoryResult
-
-interface IHistory : ExtendedRemoteAction<PNHistoryResult> {
+interface IHistory {
     val channel: String
     val start: Long?
     val end: Long?

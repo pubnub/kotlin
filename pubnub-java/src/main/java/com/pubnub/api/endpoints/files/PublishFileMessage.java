@@ -1,17 +1,18 @@
 package com.pubnub.api.endpoints.files;
 
+import com.pubnub.api.Endpoint;
 import com.pubnub.api.endpoints.BuilderSteps;
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.endpoints.ValidatingEndpoint;
 import com.pubnub.api.endpoints.files.requiredparambuilder.ChannelFileNameFileIdBuilder;
 import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps;
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
+import com.pubnub.api.endpoints.remoteaction.IdentityMappingEndpoint;
 import com.pubnub.api.models.consumer.files.PNPublishFileMessageResult;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class PublishFileMessage extends Endpoint<PNPublishFileMessageResult> {
+public class PublishFileMessage extends ValidatingEndpoint<PNPublishFileMessageResult> {
 
     @Setter
     private Object message;
@@ -34,8 +35,8 @@ public class PublishFileMessage extends Endpoint<PNPublishFileMessageResult> {
     }
 
     @Override
-    protected ExtendedRemoteAction<PNPublishFileMessageResult> createAction() {
-        return pubnub.publishFileMessage(
+    protected Endpoint<PNPublishFileMessageResult> createAction() {
+        return new IdentityMappingEndpoint<>(pubnub.publishFileMessage(
                 channel,
                 fileName,
                 fileId,
@@ -43,7 +44,7 @@ public class PublishFileMessage extends Endpoint<PNPublishFileMessageResult> {
                 meta,
                 ttl,
                 shouldStore
-        );
+        ));
     }
 
     public static class Builder

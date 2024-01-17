@@ -14,7 +14,7 @@ import java.util.UUID
 /**
  * Example of how we could test that parameters from builders are passed to the right calls.
  */
-class HistoryBatchEndpointTest {
+class HistoryBatchValidatingEndpointTest {
     private val config = config()
     private val pubnubMock = pubNubImplMock(PubNubTestUtils.getInternalConfigOf(config))
     private val pubNubApi: PubNub = PubNubTestUtils.getApiPubNubOf(config, pubnubMock)

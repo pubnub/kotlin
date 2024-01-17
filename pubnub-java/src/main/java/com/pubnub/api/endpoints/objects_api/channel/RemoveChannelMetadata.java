@@ -1,13 +1,14 @@
 package com.pubnub.api.endpoints.objects_api.channel;
 
+import com.pubnub.api.Endpoint;
 import com.pubnub.api.endpoints.BuilderSteps;
-import com.pubnub.api.endpoints.Endpoint;
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
+import com.pubnub.api.endpoints.ValidatingEndpoint;
+import com.pubnub.api.endpoints.remoteaction.MappingEndpoint;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects_api.channel.PNRemoveChannelMetadataResult;
 import lombok.AllArgsConstructor;
 
-public class RemoveChannelMetadata extends Endpoint<PNRemoveChannelMetadataResult> {
+public class RemoveChannelMetadata extends ValidatingEndpoint<PNRemoveChannelMetadataResult> {
     public RemoveChannelMetadata(String channel, final com.pubnub.internal.PubNub pubnubInstance) {
         super(pubnubInstance);
         this.channel = channel;
@@ -16,8 +17,8 @@ public class RemoveChannelMetadata extends Endpoint<PNRemoveChannelMetadataResul
     private final String channel;
 
     @Override
-    protected ExtendedRemoteAction<PNRemoveChannelMetadataResult> createAction() {
-        return new MappingRemoteAction<>(
+    protected Endpoint<PNRemoveChannelMetadataResult> createAction() {
+        return new MappingEndpoint<>(
                 pubnub.removeChannelMetadata(channel),
                 result -> new PNRemoveChannelMetadataResult(
                         result.getStatus(),

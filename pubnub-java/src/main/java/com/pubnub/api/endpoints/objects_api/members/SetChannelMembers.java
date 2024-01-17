@@ -1,11 +1,12 @@
 package com.pubnub.api.endpoints.objects_api.members;
 
+import com.pubnub.api.Endpoint;
 import com.pubnub.api.endpoints.BuilderSteps;
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.endpoints.ValidatingEndpoint;
 import com.pubnub.api.endpoints.objects_api.utils.Include;
 import com.pubnub.api.endpoints.objects_api.utils.ObjectsBuilderSteps;
 import com.pubnub.api.endpoints.objects_api.utils.PNSortKey;
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
+import com.pubnub.api.endpoints.remoteaction.MappingEndpoint;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects_api.member.PNSetChannelMembersResult;
@@ -27,7 +28,7 @@ import java.util.List;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class SetChannelMembers extends Endpoint<PNSetChannelMembersResult> {
+public class SetChannelMembers extends ValidatingEndpoint<PNSetChannelMembersResult> {
 
     private Integer limit = null;
     private PNPage page;
@@ -46,7 +47,7 @@ public class SetChannelMembers extends Endpoint<PNSetChannelMembersResult> {
     }
 
     @Override
-    protected ExtendedRemoteAction<PNSetChannelMembersResult> createAction() {
+    protected Endpoint<PNSetChannelMembersResult> createAction() {
         List<MemberInput> memberInputs = new ArrayList<>(uuids.size());
         for (PNUUID uuid : uuids) {
             memberInputs.add(new PNMember.Partial(
@@ -56,7 +57,7 @@ public class SetChannelMembers extends Endpoint<PNSetChannelMembersResult> {
                             : null,
                     uuid.getStatus()));
         }
-        return new MappingRemoteAction<>(
+        return new MappingEndpoint<>(
                 pubnub.setChannelMembers(
                         channel,
                         memberInputs,

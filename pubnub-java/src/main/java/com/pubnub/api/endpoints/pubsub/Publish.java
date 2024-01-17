@@ -1,26 +1,22 @@
 package com.pubnub.api.endpoints.pubsub;
 
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.Endpoint;
+import com.pubnub.api.endpoints.ValidatingEndpoint;
+import com.pubnub.api.endpoints.remoteaction.IdentityMappingEndpoint;
 import com.pubnub.api.models.consumer.PNPublishResult;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+@Setter
 @Accessors(chain = true, fluent = true)
-public class Publish extends Endpoint<PNPublishResult> {
+public class Publish extends ValidatingEndpoint<PNPublishResult> {
 
-    @Setter
     private Object message;
-    @Setter
     private String channel;
-    @Setter
     private Boolean shouldStore;
-    @Setter
     private boolean usePOST;
-    @Setter
     private Object meta;
-    @Setter
     private boolean replicate;
-    @Setter
     private Integer ttl;
 
     public Publish(com.pubnub.internal.PubNub pubnub) {
@@ -29,8 +25,8 @@ public class Publish extends Endpoint<PNPublishResult> {
     }
 
     @Override
-    protected com.pubnub.internal.Endpoint<?, PNPublishResult> createAction() {
-        return pubnub.publish(
+    protected Endpoint<PNPublishResult> createAction() {
+        return new IdentityMappingEndpoint<>(pubnub.publish(
                 channel,
                 message,
                 meta,
@@ -38,6 +34,6 @@ public class Publish extends Endpoint<PNPublishResult> {
                 usePOST,
                 replicate,
                 ttl
-        );
+        ));
     }
 }

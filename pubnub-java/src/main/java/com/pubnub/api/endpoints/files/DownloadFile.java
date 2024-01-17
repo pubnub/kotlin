@@ -1,16 +1,17 @@
 package com.pubnub.api.endpoints.files;
 
+import com.pubnub.api.Endpoint;
 import com.pubnub.api.endpoints.BuilderSteps;
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.endpoints.ValidatingEndpoint;
 import com.pubnub.api.endpoints.files.requiredparambuilder.ChannelFileNameFileIdBuilder;
 import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps;
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
+import com.pubnub.api.endpoints.remoteaction.IdentityMappingEndpoint;
 import com.pubnub.api.models.consumer.files.PNDownloadFileResult;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Accessors(chain = true, fluent = true)
-public class DownloadFile extends Endpoint<PNDownloadFileResult> {
+public class DownloadFile extends ValidatingEndpoint<PNDownloadFileResult> {
 
     private final String channel;
     private final String fileId;
@@ -27,13 +28,13 @@ public class DownloadFile extends Endpoint<PNDownloadFileResult> {
     }
 
     @Override
-    protected ExtendedRemoteAction<PNDownloadFileResult> createAction() {
-        return pubnub.downloadFile(
+    protected Endpoint<PNDownloadFileResult> createAction() {
+        return new IdentityMappingEndpoint<>(pubnub.downloadFile(
                 channel,
                 fileName,
                 fileId,
                 cipherKey
-        );
+        ));
     }
 
     public static class Builder extends ChannelFileNameFileIdBuilder<DownloadFile> {

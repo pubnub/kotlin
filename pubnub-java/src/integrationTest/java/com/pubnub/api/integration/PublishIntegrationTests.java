@@ -163,7 +163,7 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
                         observer.publish()
                                 .message(messagePayload)
                                 .channel(expectedChannel)
-                                .async((PNCallback<PNPublishResult>) (result, status1) -> assertFalse(status1.isError()));
+                                .async((result, status1) -> assertFalse(status1.isError()));
                     }
                 }
             }
@@ -245,7 +245,7 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
                                     observer.publish()
                                             .message(messagePayload)
                                             .channel(expectedChannel)
-                                            .async((PNCallback<PNPublishResult>) (result2, status2) -> assertFalse(status2.isError()));
+                                            .async((result2, status2) -> assertFalse(status2.isError()));
                                 });
                     }
                 }

@@ -79,154 +79,155 @@ sealed class PNOperationType(open val queryParam: String? = null) {
         return this.javaClass.simpleName
     }
 
+    // What follows is a terrible hack to support the legacy Java SDK field access on the PNOperationType class
+    // Otherwise customers would have to do .INSTANCE every time, but with this we are source-compatible!
     companion object {
-
-        @kotlin.jvm.JvmField
+        @JvmField
         val FileOperation: FileOperation = Class.forName("com.pubnub.api.enums.PNOperationType\$FileOperation").getField("INSTANCE").get(null) as FileOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val SpaceOperation: SpaceOperation = Class.forName("com.pubnub.api.enums.PNOperationType\$SpaceOperation").getField("INSTANCE").get(null) as SpaceOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val UserOperation: UserOperation = Class.forName("com.pubnub.api.enums.PNOperationType\$UserOperation").getField("INSTANCE").get(null) as UserOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val MembershipOperation: MembershipOperation = Class.forName("com.pubnub.api.enums.PNOperationType\$MembershipOperation").getField("INSTANCE").get(null) as MembershipOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNSubscribeOperation: PNSubscribeOperation = Class.forName("com.pubnub.api.enums.PNOperationType\$PNSubscribeOperation").getField("INSTANCE").get(null) as PNSubscribeOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNDisconnectOperation: PNDisconnectOperation = Class.forName("com.pubnub.api.enums.PNOperationType\$PNDisconnectOperation").getField("INSTANCE").get(null) as PNDisconnectOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNPublishOperation: PNPublishOperation = Class.forName("com.pubnub.api.enums.PNOperationType\$PNPublishOperation").getField("INSTANCE").get(null) as PNPublishOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNHistoryOperation: PNHistoryOperation = Class.forName("com.pubnub.api.enums.PNOperationType\$PNHistoryOperation").getField("INSTANCE").get(null) as PNHistoryOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNFetchMessagesOperation: PNFetchMessagesOperation = Class.forName("com.pubnub.api.enums.PNOperationType\$PNFetchMessagesOperation").getField("INSTANCE").get(null) as PNFetchMessagesOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNDeleteMessagesOperation: PNDeleteMessagesOperation = Class.forName("com.pubnub.api.enums.PNOperationType\$PNDeleteMessagesOperation").getField("INSTANCE").get(null) as PNDeleteMessagesOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNUnsubscribeOperation: PNUnsubscribeOperation = Class.forName("com.pubnub.api.enums.PNOperationType\$PNUnsubscribeOperation").getField("INSTANCE").get(null) as PNUnsubscribeOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNWhereNowOperation: PNWhereNowOperation = Class.forName("com.pubnub.api.enums.PNOperationType\$PNWhereNowOperation").getField("INSTANCE").get(null) as PNWhereNowOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNHereNowOperation: PNHereNowOperation = Class.forName("com.pubnub.api.enums.PNOperationType\$PNHereNowOperation").getField("INSTANCE").get(null) as PNHereNowOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNHeartbeatOperation: PNHeartbeatOperation = Class.forName("com.pubnub.api.enums.PNOperationType\$PNHeartbeatOperation").getField("INSTANCE").get(null) as PNHeartbeatOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNSetStateOperation: PNSetStateOperation = Class.forName("com.pubnub.api.enums.PNOperationType\$PNSetStateOperation").getField("INSTANCE").get(null) as PNSetStateOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNGetState: PNGetState = Class.forName("com.pubnub.api.enums.PNOperationType\$PNGetState").getField("INSTANCE").get(null) as PNGetState
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNAddChannelsToGroupOperation: PNAddChannelsToGroupOperation = Class.forName("com.pubnub.api.enums.PNOperationType\$PNAddChannelsToGroupOperation").getField("INSTANCE").get(null) as PNAddChannelsToGroupOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNRemoveChannelsFromGroupOperation: PNRemoveChannelsFromGroupOperation =
             Class.forName("com.pubnub.api.enums.PNOperationType\$PNRemoveChannelsFromGroupOperation").getField("INSTANCE").get(null) as PNRemoveChannelsFromGroupOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNChannelGroupsOperation: PNChannelGroupsOperation = Class.forName("com.pubnub.api.enums.PNOperationType\$PNChannelGroupsOperation").getField("INSTANCE").get(null) as PNChannelGroupsOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNRemoveGroupOperation: PNRemoveGroupOperation = Class.forName("com.pubnub.api.enums.PNOperationType\$PNRemoveGroupOperation").getField("INSTANCE").get(null) as PNRemoveGroupOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNChannelsForGroupOperation: PNChannelsForGroupOperation = Class.forName("com.pubnub.api.enums.PNOperationType\$PNChannelsForGroupOperation").getField("INSTANCE").get(null) as PNChannelsForGroupOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNPushNotificationEnabledChannelsOperation: PNPushNotificationEnabledChannelsOperation =
             Class.forName("com.pubnub.api.enums.PNOperationType\$PNPushNotificationEnabledChannelsOperation").getField("INSTANCE").get(null) as PNPushNotificationEnabledChannelsOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNAddPushNotificationsOnChannelsOperation: PNAddPushNotificationsOnChannelsOperation =
             Class.forName("com.pubnub.api.enums.PNOperationType\$PNAddPushNotificationsOnChannelsOperation").getField("INSTANCE").get(null) as PNAddPushNotificationsOnChannelsOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNRemovePushNotificationsFromChannelsOperation: PNRemovePushNotificationsFromChannelsOperation =
             Class.forName("com.pubnub.api.enums.PNOperationType\$PNRemovePushNotificationsFromChannelsOperation").getField("INSTANCE").get(null) as PNRemovePushNotificationsFromChannelsOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNRemoveAllPushNotificationsOperation: PNRemoveAllPushNotificationsOperation =
             Class.forName("com.pubnub.api.enums.PNOperationType\$PNRemoveAllPushNotificationsOperation").getField("INSTANCE").get(null) as PNRemoveAllPushNotificationsOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNAccessManagerAudit: PNAccessManagerAudit = Class.forName("com.pubnub.api.enums.PNOperationType\$PNAccessManagerAudit").getField("INSTANCE").get(null) as PNAccessManagerAudit
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNAccessManagerGrant: PNAccessManagerGrant = Class.forName("com.pubnub.api.enums.PNOperationType\$PNAccessManagerGrant").getField("INSTANCE").get(null) as PNAccessManagerGrant
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNMessageCountOperation: PNMessageCountOperation = Class.forName("com.pubnub.api.enums.PNOperationType\$PNMessageCountOperation").getField("INSTANCE").get(null) as PNMessageCountOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNSignalOperation: PNSignalOperation = Class.forName("com.pubnub.api.enums.PNOperationType\$PNSignalOperation").getField("INSTANCE").get(null) as PNSignalOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNSetUUIDMetadataOperation: PNSetUUIDMetadataOperation = Class.forName("com.pubnub.api.enums.PNOperationType\$PNSetUUIDMetadataOperation").getField("INSTANCE").get(null) as PNSetUUIDMetadataOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNGetUUIDMetadataOperation: PNGetUUIDMetadataOperation = Class.forName("com.pubnub.api.enums.PNOperationType\$PNGetUUIDMetadataOperation").getField("INSTANCE").get(null) as PNGetUUIDMetadataOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNGetAllUUIDMetadataOperation: PNGetAllUUIDMetadataOperation = Class.forName("com.pubnub.api.enums.PNOperationType\$PNGetAllUUIDMetadataOperation").getField("INSTANCE").get(null) as PNGetAllUUIDMetadataOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNRemoveUUIDMetadataOperation: PNRemoveUUIDMetadataOperation = Class.forName("com.pubnub.api.enums.PNOperationType\$PNRemoveUUIDMetadataOperation").getField("INSTANCE").get(null) as PNRemoveUUIDMetadataOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNSetChannelMetadataOperation: PNSetChannelMetadataOperation = Class.forName("com.pubnub.api.enums.PNOperationType\$PNSetChannelMetadataOperation").getField("INSTANCE").get(null) as PNSetChannelMetadataOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNGetChannelMetadataOperation: PNGetChannelMetadataOperation = Class.forName("com.pubnub.api.enums.PNOperationType\$PNGetChannelMetadataOperation").getField("INSTANCE").get(null) as PNGetChannelMetadataOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNGetAllChannelsMetadataOperation: PNGetAllChannelsMetadataOperation =
             Class.forName("com.pubnub.api.enums.PNOperationType\$PNGetAllChannelsMetadataOperation").getField("INSTANCE").get(null) as PNGetAllChannelsMetadataOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNRemoveChannelMetadataOperation: PNRemoveChannelMetadataOperation =
             Class.forName("com.pubnub.api.enums.PNOperationType\$PNRemoveChannelMetadataOperation").getField("INSTANCE").get(null) as PNRemoveChannelMetadataOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNGetMembershipsOperation: PNGetMembershipsOperation = Class.forName("com.pubnub.api.enums.PNOperationType\$PNGetMembershipsOperation").getField("INSTANCE").get(null) as PNGetMembershipsOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNSetMembershipsOperation: PNSetMembershipsOperation = Class.forName("com.pubnub.api.enums.PNOperationType\$PNSetMembershipsOperation").getField("INSTANCE").get(null) as PNSetMembershipsOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNUpdateMembershipsOperation: PNUpdateMembershipsOperation = Class.forName("com.pubnub.api.enums.PNOperationType\$PNUpdateMembershipsOperation").getField("INSTANCE").get(null) as PNUpdateMembershipsOperation
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNManageMemberships: PNManageMemberships = Class.forName("com.pubnub.api.enums.PNOperationType\$PNManageMemberships").getField("INSTANCE").get(null) as PNManageMemberships
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNAccessManagerGrantToken: PNAccessManagerGrantToken = Class.forName("com.pubnub.api.enums.PNOperationType\$PNAccessManagerGrantToken").getField("INSTANCE").get(null) as PNAccessManagerGrantToken
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNAccessManagerRevokeToken: PNAccessManagerRevokeToken = Class.forName("com.pubnub.api.enums.PNOperationType\$PNAccessManagerRevokeToken").getField("INSTANCE").get(null) as PNAccessManagerRevokeToken
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNAddMessageAction: PNAddMessageAction = Class.forName("com.pubnub.api.enums.PNOperationType\$PNAddMessageAction").getField("INSTANCE").get(null) as PNAddMessageAction
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNGetMessageActions: PNGetMessageActions = Class.forName("com.pubnub.api.enums.PNOperationType\$PNGetMessageActions").getField("INSTANCE").get(null) as PNGetMessageActions
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNDeleteMessageAction: PNDeleteMessageAction = Class.forName("com.pubnub.api.enums.PNOperationType\$PNDeleteMessageAction").getField("INSTANCE").get(null) as PNDeleteMessageAction
 
-        @kotlin.jvm.JvmField
+        @JvmField
         val PNTimeOperation: PNTimeOperation = Class.forName("com.pubnub.api.enums.PNOperationType\$PNTimeOperation").getField("INSTANCE").get(null) as PNTimeOperation
     }
 }

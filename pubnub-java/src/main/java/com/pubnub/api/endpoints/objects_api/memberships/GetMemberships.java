@@ -1,9 +1,10 @@
 package com.pubnub.api.endpoints.objects_api.memberships;
 
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.Endpoint;
+import com.pubnub.api.endpoints.ValidatingEndpoint;
 import com.pubnub.api.endpoints.objects_api.utils.Include;
 import com.pubnub.api.endpoints.objects_api.utils.PNSortKey;
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
+import com.pubnub.api.endpoints.remoteaction.MappingEndpoint;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects_api.membership.PNGetMembershipsResult;
@@ -15,7 +16,7 @@ import java.util.Collections;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class GetMemberships extends Endpoint<PNGetMembershipsResult> {
+public class GetMemberships extends ValidatingEndpoint<PNGetMembershipsResult> {
 
     private String uuid;
     private Integer limit;
@@ -31,8 +32,8 @@ public class GetMemberships extends Endpoint<PNGetMembershipsResult> {
     }
 
     @Override
-    protected ExtendedRemoteAction<PNGetMembershipsResult> createAction() {
-        return new MappingRemoteAction<>(
+    protected Endpoint<PNGetMembershipsResult> createAction() {
+        return new MappingEndpoint<>(
                 pubnub.getMemberships(
                         uuid,
                         limit,

@@ -2,6 +2,7 @@ package com.pubnub.internal.endpoints.files
 
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.callbacks.PNCallback
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.endpoints.remoteaction.ComposableRemoteAction
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
@@ -38,7 +39,7 @@ class SendFile internal constructor(
     publishFileMessageFactory: PublishFileMessage.Factory,
     sendFileToS3Factory: UploadFile.Factory,
     cryptoModule: CryptoModule? = null
-) : ISendFile {
+) : ExtendedRemoteAction<PNFileUploadResult> {
 
     private val sendFileMultistepAction: ExtendedRemoteAction<PNFileUploadResult> = sendFileComposedActions(
         generateUploadUrlFactory, publishFileMessageFactory, sendFileToS3Factory, inputStream, cryptoModule
@@ -50,13 +51,13 @@ class SendFile internal constructor(
         return sendFileMultistepAction.sync()
     }
 
-    override fun async(callback: (result: PNFileUploadResult?, status: PNStatus) -> Unit) {
+    override fun async(callback: PNCallback<PNFileUploadResult>) {
         executorService.execute {
             try {
                 validate()
                 sendFileMultistepAction.async(callback)
             } catch (ex: PubNubException) {
-                callback(
+                callback.onResponse(
                     null,
                     PNStatus(
                         category = PNStatusCategory.PNBadRequestCategory,

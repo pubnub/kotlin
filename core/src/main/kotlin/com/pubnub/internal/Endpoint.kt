@@ -3,6 +3,7 @@ package com.pubnub.internal
 import com.google.gson.JsonElement
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.callbacks.PNCallback
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.enums.PNStatusCategory.PNAccessDeniedCategory
@@ -45,7 +46,7 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
         private const val SERVER_RESPONSE_NOT_FOUND = 404
     }
 
-    private lateinit var cachedCallback: (result: Output?, status: PNStatus) -> Unit
+    private lateinit var cachedCallback:PNCallback<Output>
     private lateinit var call: Call<Input>
     private var silenceFailures = false
     private val retryableRestCaller =
@@ -53,7 +54,6 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
 
     /**
      * Key-value object to pass with every PubNub API operation. Used for debugging purposes.
-     * todo: it should be removed!
      */
     val queryParam: MutableMap<String, String> = mutableMapOf()
 
@@ -95,14 +95,14 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
      *
      * @param callback The callback to receive the response in.
      */
-    override fun async(callback: (result: Output?, status: PNStatus) -> Unit) {
+    override fun async(callback: PNCallback<Output>) {
         cachedCallback = callback
 
         try {
             validateParams()
             call = doWork(createBaseParams())
         } catch (pubnubException: PubNubException) {
-            callback.invoke(
+            callback.onResponse(
                 null,
                 createStatusResponse(
                     category = PNBadRequestCategory,
@@ -128,7 +128,7 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
                             } catch (e: PubNubException) {
                                 Triple(PNMalformedResponseCategory, null, e)
                             }.let {
-                                callback.invoke(
+                                callback.onResponse(
                                     it.second,
                                     createStatusResponse(
                                         category = it.first,
@@ -156,7 +156,7 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
                                 else -> PNUnknownCategory
                             }
 
-                            callback.invoke(
+                            callback.onResponse(
                                 null,
                                 createStatusResponse(
                                     category = pnStatusCategory,
@@ -197,7 +197,7 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
                         }
 
                     val pubnubException = PubNubException(errorMessage = t.toString(), pubnubError = error)
-                    callback.invoke(
+                    callback.onResponse(
                         null,
                         createStatusResponse(
                             category = category,

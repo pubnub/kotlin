@@ -1,10 +1,11 @@
 package com.pubnub.api.endpoints.objects_api.memberships;
 
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.Endpoint;
+import com.pubnub.api.endpoints.ValidatingEndpoint;
 import com.pubnub.api.endpoints.objects_api.utils.Include;
 import com.pubnub.api.endpoints.objects_api.utils.ObjectsBuilderSteps;
 import com.pubnub.api.endpoints.objects_api.utils.PNSortKey;
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
+import com.pubnub.api.endpoints.remoteaction.MappingEndpoint;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects_api.membership.PNChannelMembership;
@@ -20,7 +21,7 @@ import java.util.Collections;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class ManageMemberships extends Endpoint<PNManageMembershipResult> {
+public class ManageMemberships extends ValidatingEndpoint<PNManageMembershipResult> {
     private Collection<PNChannelMembership> set = Collections.emptySet();
     private Collection<PNChannelMembership> remove = Collections.emptySet();;
     private String uuid;
@@ -37,7 +38,7 @@ public class ManageMemberships extends Endpoint<PNManageMembershipResult> {
     }
 
     @Override
-    protected ExtendedRemoteAction<PNManageMembershipResult> createAction() {
+    protected Endpoint<PNManageMembershipResult> createAction() {
         ArrayList<ChannelMembershipInput> toSet = new ArrayList<>(set.size());
         for (PNChannelMembership channel : set) {
             toSet.add(new com.pubnub.internal.models.consumer.objects.membership.PNChannelMembership.Partial(
@@ -53,7 +54,7 @@ public class ManageMemberships extends Endpoint<PNManageMembershipResult> {
             toRemove.add(channel.getChannel().getId());
         }
 
-        return new MappingRemoteAction<>(
+        return new MappingEndpoint<>(
                 pubnub.manageMemberships(
                         toSet,
                         toRemove,

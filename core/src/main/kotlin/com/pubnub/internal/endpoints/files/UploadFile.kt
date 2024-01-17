@@ -2,6 +2,7 @@ package com.pubnub.internal.endpoints.files
 
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.callbacks.PNCallback
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
@@ -80,7 +81,7 @@ internal class UploadFile(
         }
     }
 
-    override fun async(callback: (result: Unit?, status: PNStatus) -> Unit) {
+    override fun async(callback: PNCallback<Unit>) {
         try {
             call = prepareCall()
             call!!.enqueue(object : Callback<Unit> {
@@ -88,13 +89,13 @@ internal class UploadFile(
                     if (!response.isSuccessful) {
                         val ex = createException(response)
                         val pnStatusCategory = response.getCategory()
-                        callback(
+                        callback.onResponse(
                             null,
                             createStatusResponse(pnStatusCategory, response, ex)
                         )
                         return
                     }
-                    callback(
+                    callback.onResponse(
                         Unit,
                         createStatusResponse(
                             PNStatusCategory.PNAcknowledgmentCategory, response,
@@ -117,7 +118,7 @@ internal class UploadFile(
                             PNStatusCategory.PNBadRequestCategory to PubNubError.HTTP_ERROR
                         }
                     }
-                    callback(
+                    callback.onResponse(
                         null,
                         createStatusResponse(
                             statusCategory,
@@ -130,12 +131,12 @@ internal class UploadFile(
                 }
             })
         } catch (e: IOException) {
-            callback(
+            callback.onResponse(
                 null,
                 createStatusResponse(PNStatusCategory.PNUnknownCategory, null, e)
             )
         } catch (e: PubNubException) {
-            callback(
+            callback.onResponse(
                 null,
                 createStatusResponse(PNStatusCategory.PNUnknownCategory, null, e)
             )

@@ -1,8 +1,9 @@
 package com.pubnub.api.endpoints.objects_api.uuid;
 
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.Endpoint;
+import com.pubnub.api.endpoints.ValidatingEndpoint;
 import com.pubnub.api.endpoints.objects_api.utils.PNSortKey;
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
+import com.pubnub.api.endpoints.remoteaction.MappingEndpoint;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects_api.uuid.PNGetAllUUIDMetadataResult;
@@ -14,21 +15,16 @@ import java.util.Collections;
 
 import static com.pubnub.api.endpoints.objects_api.channel.GetAllChannelsMetadata.toInternal;
 
+@Setter
 @Accessors(chain = true, fluent = true)
 public class GetAllUUIDMetadata
-        extends Endpoint<PNGetAllUUIDMetadataResult> {
+        extends ValidatingEndpoint<PNGetAllUUIDMetadataResult> {
 
-    @Setter
     private boolean includeCustom;
-    @Setter
     private boolean includeTotalCount;
-    @Setter
     private Integer limit;
-    @Setter
     private PNPage page;
-    @Setter
     private String filter;
-    @Setter
     private Collection<PNSortKey> sort = Collections.emptyList();
 
     public GetAllUUIDMetadata(final com.pubnub.internal.PubNub pubnub) {
@@ -36,8 +32,8 @@ public class GetAllUUIDMetadata
     }
 
     @Override
-    protected ExtendedRemoteAction<PNGetAllUUIDMetadataResult> createAction() {
-        return new MappingRemoteAction<>(
+    protected Endpoint<PNGetAllUUIDMetadataResult> createAction() {
+        return new MappingEndpoint<>(
                 pubnub.getAllUUIDMetadata(
                         limit,
                         page,

@@ -1,10 +1,14 @@
 package com.pubnub.api.endpoints.files;
 
+import com.pubnub.api.Endpoint;
 import com.pubnub.api.endpoints.BuilderSteps;
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.endpoints.ValidatingEndpoint;
 import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
+import com.pubnub.api.endpoints.remoteaction.IdentityMappingEndpoint;
 import com.pubnub.api.models.consumer.files.PNFileUploadResult;
+import com.pubnub.internal.DelegatingRemoteAction;
+import com.pubnub.internal.PubNub;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -12,11 +16,12 @@ import java.io.InputStream;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class SendFile extends Endpoint<PNFileUploadResult> {
+public class SendFile extends DelegatingRemoteAction<PNFileUploadResult> {
 
     private final String channel;
     private final String fileName;
     private final InputStream inputStream;
+    private final PubNub pubnub;
 
     @Setter
     private Object message;
@@ -30,7 +35,7 @@ public class SendFile extends Endpoint<PNFileUploadResult> {
     private String cipherKey;
 
     public SendFile(com.pubnub.internal.PubNub pubnub, String channel, String fileName, InputStream inputStream) {
-        super(pubnub);
+        this.pubnub = pubnub;
         this.channel = channel;
         this.fileName = fileName;
         this.inputStream = inputStream;

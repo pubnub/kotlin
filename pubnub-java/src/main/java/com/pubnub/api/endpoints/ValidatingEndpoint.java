@@ -2,25 +2,19 @@ package com.pubnub.api.endpoints;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.callbacks.PNCallback;
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.models.consumer.PNStatus;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function2;
+import com.pubnub.internal.DelegatingEndpoint;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 
-public abstract class Endpoint<T> implements ExtendedRemoteAction<T> {
+public abstract class ValidatingEndpoint<T> extends DelegatingEndpoint<T> {
     protected final com.pubnub.internal.PubNub pubnub;
-    private volatile ExtendedRemoteAction<T> remoteAction = null;
-
-    public Endpoint(com.pubnub.internal.PubNub pubnub) {
+    public ValidatingEndpoint(com.pubnub.internal.PubNub pubnub) {
         this.pubnub = pubnub;
     }
-
-    protected abstract ExtendedRemoteAction<T> createAction();
 
     public T sync() throws PubNubException {
         validateParams();
@@ -35,10 +29,7 @@ public abstract class Endpoint<T> implements ExtendedRemoteAction<T> {
                     createStatusResponse(PNStatusCategory.PNBadRequestCategory, pubnubException));
             return;
         }
-        getRemoteAction().async((result, pnStatus) -> {
-            callback.onResponse(result, pnStatus);
-            return Unit.INSTANCE;
-        });
+        getRemoteAction().async(callback);
     }
 
     private PNStatus createStatusResponse(PNStatusCategory category, PubNubException throwable) {
@@ -60,26 +51,6 @@ public abstract class Endpoint<T> implements ExtendedRemoteAction<T> {
 
     protected void validateParams() throws PubNubException { }
 
-    protected ExtendedRemoteAction<T> getRemoteAction() {
-        ExtendedRemoteAction<T> localRef = remoteAction;
-        if (localRef == null) {
-            synchronized (this) {
-                localRef = remoteAction;
-                if (localRef == null) {
-                    remoteAction = localRef = createAction();
-                }
-            }
-        }
-        return localRef;
-    }
-
-    @Override
-    public void async(@NotNull Function2<? super T, ? super PNStatus, Unit> callback) {
-        async((result, status) -> {
-            callback.invoke(result, status);
-        });
-    }
-
     @Override
     public void retry() {
         getRemoteAction().retry();
@@ -99,4 +70,5 @@ public abstract class Endpoint<T> implements ExtendedRemoteAction<T> {
     public PNOperationType getOperationType() {
         return operationType();
     }
+
 }

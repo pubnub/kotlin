@@ -1,7 +1,9 @@
 package com.pubnub.api.endpoints.message_actions;
 
+import com.pubnub.api.Endpoint;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.endpoints.ValidatingEndpoint;
+import com.pubnub.api.endpoints.remoteaction.IdentityMappingEndpoint;
 import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult;
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction;
 import lombok.Setter;
@@ -15,7 +17,7 @@ import static com.pubnub.api.builder.PubNubErrorBuilder.PNERROBJ_MESSAGE_TIMETOK
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class AddMessageAction extends Endpoint<PNAddMessageActionResult> {
+public class AddMessageAction extends ValidatingEndpoint<PNAddMessageActionResult> {
 
     private String channel;
     private PNMessageAction messageAction;
@@ -25,8 +27,8 @@ public class AddMessageAction extends Endpoint<PNAddMessageActionResult> {
     }
 
     @Override
-    protected com.pubnub.internal.Endpoint<?, PNAddMessageActionResult> createAction() {
-        return pubnub.addMessageAction(channel, messageAction);
+    protected Endpoint<PNAddMessageActionResult> createAction() {
+        return new IdentityMappingEndpoint<>(pubnub.addMessageAction(channel, messageAction));
     }
 
     @Override

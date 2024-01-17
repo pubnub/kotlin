@@ -1,9 +1,10 @@
 package com.pubnub.api.endpoints.objects_api.memberships;
 
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.Endpoint;
+import com.pubnub.api.endpoints.ValidatingEndpoint;
 import com.pubnub.api.endpoints.objects_api.utils.Include;
 import com.pubnub.api.endpoints.objects_api.utils.PNSortKey;
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
+import com.pubnub.api.endpoints.remoteaction.MappingEndpoint;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects_api.membership.PNChannelMembership;
@@ -24,7 +25,7 @@ import java.util.List;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class SetMemberships extends Endpoint<PNSetMembershipResult> {
+public class SetMemberships extends ValidatingEndpoint<PNSetMembershipResult> {
     private final Collection<PNChannelMembership> channels;
     private String uuid;
     private Integer limit;
@@ -41,7 +42,7 @@ public class SetMemberships extends Endpoint<PNSetMembershipResult> {
     }
 
     @Override
-    protected ExtendedRemoteAction<PNSetMembershipResult> createAction() {
+    protected Endpoint<PNSetMembershipResult> createAction() {
         ArrayList<ChannelMembershipInput> channelList = new ArrayList<>(channels.size());
         for (PNChannelMembership channel : channels) {
             channelList.add(new Partial(
@@ -52,7 +53,7 @@ public class SetMemberships extends Endpoint<PNSetMembershipResult> {
                     null
             ));
         }
-        return new MappingRemoteAction<>(
+        return new MappingEndpoint<>(
                 pubnub.setMemberships(
                         channelList,
                         uuid,

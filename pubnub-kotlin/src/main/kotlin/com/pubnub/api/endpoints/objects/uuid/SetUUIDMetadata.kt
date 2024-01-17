@@ -1,21 +1,18 @@
 package com.pubnub.api.endpoints.objects.uuid
 
-import com.pubnub.internal.DelegatingEndpoint
+import com.pubnub.api.Endpoint
 import com.pubnub.api.PubNub
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
-import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction
+import com.pubnub.api.endpoints.remoteaction.map
+import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult
+import com.pubnub.internal.DelegatingEndpoint
 import com.pubnub.internal.endpoints.objects.uuid.ISetUUIDMetadata
 import com.pubnub.internal.endpoints.objects.uuid.SetUUIDMetadata
-import com.pubnub.internal.models.consumer.objects.uuid.PNUUIDMetadataResult
 
 /**
  * @see [PubNub.setUUIDMetadata]
  */
-class SetUUIDMetadata internal constructor(setUUIDMetadata: SetUUIDMetadata) :
-    DelegatingEndpoint<com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult, PNUUIDMetadataResult>(
-        setUUIDMetadata
-    ), ISetUUIDMetadata by setUUIDMetadata {
-    override fun convertAction(remoteAction: ExtendedRemoteAction<PNUUIDMetadataResult>): ExtendedRemoteAction<com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult> {
-        return MappingRemoteAction(remoteAction, com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult::from)
-    }
+class SetUUIDMetadata internal constructor(private val setUUIDMetadata: SetUUIDMetadata) :
+    DelegatingEndpoint<PNUUIDMetadataResult>(), ISetUUIDMetadata by setUUIDMetadata {
+
+    override fun createAction(): Endpoint<PNUUIDMetadataResult> = setUUIDMetadata.map(PNUUIDMetadataResult::from)
 }

@@ -1,43 +1,36 @@
 package com.pubnub.api.endpoints;
 
+import com.pubnub.api.Endpoint;
+import com.pubnub.api.endpoints.remoteaction.IdentityMappingEndpoint;
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Setter
 @Slf4j
 @Accessors(chain = true, fluent = true)
-public class FetchMessages extends Endpoint<PNFetchMessagesResult> {
-    @Setter
+public class FetchMessages extends ValidatingEndpoint<PNFetchMessagesResult> {
     private List<String> channels = new ArrayList<>();
-    @Setter
     private int maximumPerChannel = 0;
-    @Setter
     private Long start;
-    @Setter
     private Long end;
 
-    @Setter
     private boolean includeMeta;
-    @Setter
     private boolean includeMessageActions;
-    @Setter
     private boolean includeMessageType = true;
-    @Setter
     private boolean includeUUID = true;
 
     public FetchMessages(com.pubnub.internal.PubNub pubnub) {
         super(pubnub);
     }
 
-    @NotNull
     @Override
-    protected com.pubnub.internal.endpoints.FetchMessages createAction() {
-        return pubnub.fetchMessages(
+    protected Endpoint<PNFetchMessagesResult> createAction() {
+        return new IdentityMappingEndpoint<>(pubnub.fetchMessages(
                 channels,
                 maximumPerChannel,
                 start,
@@ -45,7 +38,7 @@ public class FetchMessages extends Endpoint<PNFetchMessagesResult> {
                 includeMeta,
                 includeMessageActions,
                 includeMessageType
-        );
+        ));
     }
 
 }

@@ -1,9 +1,6 @@
 package com.pubnub.internal.endpoints.pubsub
 
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
-import com.pubnub.api.models.consumer.PNPublishResult
-
-interface IPublish : ExtendedRemoteAction<PNPublishResult> {
+interface IPublish {
     val message: Any
     val channel: String
     val meta: Any?

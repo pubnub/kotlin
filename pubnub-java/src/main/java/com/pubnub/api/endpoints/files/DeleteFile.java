@@ -1,16 +1,17 @@
 package com.pubnub.api.endpoints.files;
 
+import com.pubnub.api.Endpoint;
 import com.pubnub.api.endpoints.BuilderSteps.ChannelStep;
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.endpoints.ValidatingEndpoint;
 import com.pubnub.api.endpoints.files.requiredparambuilder.ChannelFileNameFileIdBuilder;
 import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps.FileIdStep;
 import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps.FileNameStep;
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
+import com.pubnub.api.endpoints.remoteaction.IdentityMappingEndpoint;
 import com.pubnub.api.models.consumer.files.PNDeleteFileResult;
 import lombok.experimental.Accessors;
 
 @Accessors(chain = true, fluent = true)
-public class DeleteFile extends Endpoint<PNDeleteFileResult> {
+public class DeleteFile extends ValidatingEndpoint<PNDeleteFileResult> {
 
     private final String channel;
     private final String fileId;
@@ -24,12 +25,12 @@ public class DeleteFile extends Endpoint<PNDeleteFileResult> {
     }
 
     @Override
-    protected ExtendedRemoteAction<PNDeleteFileResult> createAction() {
-        return pubnub.deleteFile(
+    protected Endpoint<PNDeleteFileResult> createAction() {
+        return new IdentityMappingEndpoint<>(pubnub.deleteFile(
                 channel,
                 fileName,
                 fileId
-        );
+        ));
     }
 
     public static class Builder extends ChannelFileNameFileIdBuilder<DeleteFile> {

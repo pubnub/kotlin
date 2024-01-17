@@ -1,42 +1,38 @@
 package com.pubnub.api.endpoints.push;
 
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.Endpoint;
+import com.pubnub.api.endpoints.ValidatingEndpoint;
+import com.pubnub.api.endpoints.remoteaction.IdentityMappingEndpoint;
 import com.pubnub.api.enums.PNPushEnvironment;
 import com.pubnub.api.enums.PNPushType;
 import com.pubnub.api.models.consumer.push.PNPushAddChannelResult;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+@Setter
 @Accessors(chain = true, fluent = true)
-public class AddChannelsToPush extends Endpoint<PNPushAddChannelResult> {
+public class AddChannelsToPush extends ValidatingEndpoint<PNPushAddChannelResult> {
 
-    @Setter
     private PNPushType pushType;
-    @Setter
     private List<String> channels;
-    @Setter
     private String deviceId;
-    @Setter
     private PNPushEnvironment environment = PNPushEnvironment.DEVELOPMENT;
-    @Setter
     private String topic;
 
     public AddChannelsToPush(com.pubnub.internal.PubNub pubnub) {
         super(pubnub);
     }
 
-    @NotNull
     @Override
-    protected com.pubnub.internal.endpoints.push.AddChannelsToPush createAction() {
-        return pubnub.addPushNotificationsOnChannels(
+    protected Endpoint<PNPushAddChannelResult> createAction() {
+        return new IdentityMappingEndpoint<>(pubnub.addPushNotificationsOnChannels(
                 pushType,
                 channels,
                 deviceId,
                 topic,
                 environment
-        );
+        ));
     }
 }

@@ -1,8 +1,9 @@
 package com.pubnub.api.endpoints.objects_api.channel;
 
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.Endpoint;
+import com.pubnub.api.endpoints.ValidatingEndpoint;
 import com.pubnub.api.endpoints.objects_api.utils.PNSortKey;
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
+import com.pubnub.api.endpoints.remoteaction.MappingEndpoint;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects_api.channel.PNGetAllChannelsMetadataResult;
@@ -15,21 +16,16 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+@Setter
 @Accessors(chain = true, fluent = true)
 public class GetAllChannelsMetadata
-        extends Endpoint<PNGetAllChannelsMetadataResult> {
+        extends ValidatingEndpoint<PNGetAllChannelsMetadataResult> {
 
-    @Setter
     private Integer limit = null;
-    @Setter
     private PNPage page;
-    @Setter
     private String filter;
-    @Setter
     private Collection<PNSortKey> sort = Collections.emptyList();
-    @Setter
     private boolean includeTotalCount;
-    @Setter
     private boolean includeCustom;
 
     public GetAllChannelsMetadata(final com.pubnub.internal.PubNub pubnubInstance) {
@@ -37,8 +33,8 @@ public class GetAllChannelsMetadata
     }
 
     @Override
-    protected ExtendedRemoteAction<PNGetAllChannelsMetadataResult> createAction() {
-        return new MappingRemoteAction<>(pubnub.getAllChannelMetadata(
+    protected Endpoint<PNGetAllChannelsMetadataResult> createAction() {
+        return new MappingEndpoint<>(pubnub.getAllChannelMetadata(
                 limit,
                 page,
                 filter,

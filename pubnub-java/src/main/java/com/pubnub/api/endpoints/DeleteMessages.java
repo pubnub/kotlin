@@ -1,6 +1,7 @@
 package com.pubnub.api.endpoints;
 
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
+import com.pubnub.api.Endpoint;
+import com.pubnub.api.endpoints.remoteaction.IdentityMappingEndpoint;
 import com.pubnub.api.models.consumer.history.PNDeleteMessagesResult;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class DeleteMessages extends Endpoint<PNDeleteMessagesResult> {
+public class DeleteMessages extends ValidatingEndpoint<PNDeleteMessagesResult> {
     private List<String> channels;
     private Long start;
     private Long end;
@@ -21,11 +22,11 @@ public class DeleteMessages extends Endpoint<PNDeleteMessagesResult> {
     }
 
     @Override
-    protected ExtendedRemoteAction<PNDeleteMessagesResult> createAction() {
-        return pubnub.deleteMessages(
+    protected Endpoint<PNDeleteMessagesResult> createAction() {
+        return new IdentityMappingEndpoint<>(pubnub.deleteMessages(
                 channels,
                 start,
                 end
-        );
+        ));
     }
 }

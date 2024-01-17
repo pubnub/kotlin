@@ -1,13 +1,14 @@
 package com.pubnub.api.endpoints.files;
 
+import com.pubnub.api.Endpoint;
 import com.pubnub.api.endpoints.BuilderSteps;
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.endpoints.ValidatingEndpoint;
 import com.pubnub.api.endpoints.files.requiredparambuilder.ChannelFileNameFileIdBuilder;
 import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps;
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
+import com.pubnub.api.endpoints.remoteaction.IdentityMappingEndpoint;
 import com.pubnub.api.models.consumer.files.PNFileUrlResult;
 
-public class GetFileUrl extends Endpoint<PNFileUrlResult> {
+public class GetFileUrl extends ValidatingEndpoint<PNFileUrlResult> {
 
     private final String channel;
     private final  String fileId;
@@ -21,12 +22,12 @@ public class GetFileUrl extends Endpoint<PNFileUrlResult> {
     }
 
     @Override
-    protected ExtendedRemoteAction<PNFileUrlResult> createAction() {
-        return pubnub.getFileUrl(
+    protected Endpoint<PNFileUrlResult> createAction() {
+        return new IdentityMappingEndpoint<>(pubnub.getFileUrl(
                 channel,
                 fileName,
                 fileId
-        );
+        ));
     }
 
     public static class Builder extends ChannelFileNameFileIdBuilder<GetFileUrl> {

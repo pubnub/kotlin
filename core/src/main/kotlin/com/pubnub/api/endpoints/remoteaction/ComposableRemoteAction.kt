@@ -1,6 +1,7 @@
 package com.pubnub.api.endpoints.remoteaction
 
 import com.pubnub.api.PubNubException
+import com.pubnub.api.callbacks.PNCallback
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
@@ -29,10 +30,10 @@ class ComposableRemoteAction<T, U>(
         }
     }
 
-    override fun async(callback: (result: U?, status: PNStatus) -> Unit) {
+    override fun async(callback: PNCallback<U>) {
         remoteAction.async { r: T?, s: PNStatus ->
             if (s.error) {
-                callback(null, switchRetryReceiver(s))
+                callback.onResponse(null, switchRetryReceiver(s))
             } else {
                 try {
                     synchronized(this) {
@@ -42,15 +43,15 @@ class ComposableRemoteAction<T, U>(
                             nextRemoteAction = newNextRemoteAction
                             newNextRemoteAction.async { r2: U?, s2: PNStatus ->
                                 if (s2.error) {
-                                    callback(null, switchRetryReceiver(s2))
+                                    callback.onResponse(null, switchRetryReceiver(s2))
                                 } else {
-                                    callback(r2, switchRetryReceiver(s2))
+                                    callback.onResponse(r2, switchRetryReceiver(s2))
                                 }
                             }
                         }
                     }
                 } catch (ex: PubNubException) {
-                    callback(
+                    callback.onResponse(
                         null,
                         PNStatus(
                             category = PNStatusCategory.PNBadRequestCategory,

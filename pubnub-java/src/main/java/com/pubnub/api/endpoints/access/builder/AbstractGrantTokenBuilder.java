@@ -1,11 +1,11 @@
 package com.pubnub.api.endpoints.access.builder;
 
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.Endpoint;
+import com.pubnub.api.endpoints.ValidatingEndpoint;
 import com.pubnub.api.endpoints.access.GrantToken;
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult;
 
-public abstract class AbstractGrantTokenBuilder<T> extends Endpoint<PNGrantTokenResult> {
+public abstract class AbstractGrantTokenBuilder<T> extends ValidatingEndpoint<PNGrantTokenResult> {
     protected final GrantToken grantToken;
 
     public AbstractGrantTokenBuilder(com.pubnub.internal.PubNub pubnub, GrantToken grantToken) {
@@ -14,7 +14,7 @@ public abstract class AbstractGrantTokenBuilder<T> extends Endpoint<PNGrantToken
     }
 
     @Override
-    protected ExtendedRemoteAction<PNGrantTokenResult> createAction() {
+    protected Endpoint<PNGrantTokenResult> createAction() {
         return grantToken;
     }
 }

@@ -1,12 +1,7 @@
 package com.pubnub.api.legacy.endpoints.files
 
-import com.pubnub.internal.PNConfiguration
-import com.pubnub.internal.PubNub
 import com.pubnub.api.PubNubException
-import com.pubnub.internal.endpoints.files.GenerateUploadUrl
-import com.pubnub.internal.endpoints.files.PublishFileMessage
-import com.pubnub.internal.endpoints.files.SendFile
-import com.pubnub.internal.endpoints.files.UploadFile
+import com.pubnub.api.callbacks.PNCallback
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.legacy.endpoints.remoteaction.TestRemoteAction
@@ -14,9 +9,15 @@ import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.files.PNBaseFile
 import com.pubnub.api.models.consumer.files.PNFileUploadResult
 import com.pubnub.api.models.consumer.files.PNPublishFileMessageResult
+import com.pubnub.api.retry.RequestRetryPolicy
+import com.pubnub.internal.PNConfiguration
+import com.pubnub.internal.PubNub
+import com.pubnub.internal.endpoints.files.GenerateUploadUrl
+import com.pubnub.internal.endpoints.files.PublishFileMessage
+import com.pubnub.internal.endpoints.files.SendFile
+import com.pubnub.internal.endpoints.files.UploadFile
 import com.pubnub.internal.models.server.files.FileUploadRequestDetails
 import com.pubnub.internal.models.server.files.FormField
-import com.pubnub.api.retry.RequestRetryPolicy
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.spyk
@@ -212,9 +213,9 @@ class SendFileTest : TestsWithFiles {
             pubNub = pubNub
         ) {
         private val numberOfFails = AtomicInteger(0)
-        override fun async(callback: (result: PNPublishFileMessageResult?, status: PNStatus) -> Unit) {
+        override fun async(callback: PNCallback<PNPublishFileMessageResult>) {
             if (numberOfFails.getAndAdd(1) < numberOfFailsBeforeSuccess) {
-                callback(
+                callback.onResponse(
                     null,
                     PNStatus(
                         category = PNStatusCategory.PNBadRequestCategory,
@@ -223,7 +224,7 @@ class SendFileTest : TestsWithFiles {
                     )
                 )
             } else {
-                callback(
+                callback.onResponse(
                     result,
                     PNStatus(
                         category = PNStatusCategory.PNAcknowledgmentCategory,
@@ -269,8 +270,8 @@ class SendFileTest : TestsWithFiles {
             return result
         }
 
-        override fun async(callback: (result: PNPublishFileMessageResult?, status: PNStatus) -> Unit) {
-            callback(
+        override fun async(callback: PNCallback<PNPublishFileMessageResult>) {
+            callback.onResponse(
                 result,
                 PNStatus(
                     category = PNStatusCategory.PNAcknowledgmentCategory,

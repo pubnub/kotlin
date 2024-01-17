@@ -1,14 +1,16 @@
 package com.pubnub.api.endpoints.pubsub;
 
+import com.pubnub.api.Endpoint;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.endpoints.ValidatingEndpoint;
+import com.pubnub.api.endpoints.remoteaction.IdentityMappingEndpoint;
 import com.pubnub.api.models.consumer.PNPublishResult;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Accessors(chain = true, fluent = true)
-public class Signal extends Endpoint<PNPublishResult> {
+public class Signal extends ValidatingEndpoint<PNPublishResult> {
 
     @Setter
     private Object message;
@@ -21,8 +23,8 @@ public class Signal extends Endpoint<PNPublishResult> {
     }
 
     @Override
-    protected com.pubnub.internal.Endpoint<?, PNPublishResult> createAction() {
-        return pubnub.signal(channel, message);
+    protected Endpoint<PNPublishResult> createAction() {
+        return new IdentityMappingEndpoint<>(pubnub.signal(channel, message));
     }
 
     @Override

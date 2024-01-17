@@ -1,8 +1,9 @@
 package com.pubnub.api.endpoints.files;
 
+import com.pubnub.api.Endpoint;
 import com.pubnub.api.endpoints.BuilderSteps;
-import com.pubnub.api.endpoints.Endpoint;
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
+import com.pubnub.api.endpoints.ValidatingEndpoint;
+import com.pubnub.api.endpoints.remoteaction.IdentityMappingEndpoint;
 import com.pubnub.api.models.consumer.files.PNListFilesResult;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import lombok.Setter;
@@ -10,7 +11,7 @@ import lombok.experimental.Accessors;
 
 
 @Accessors(chain = true, fluent = true)
-public class ListFiles extends Endpoint<PNListFilesResult> {
+public class ListFiles extends ValidatingEndpoint<PNListFilesResult> {
 
     private final String channel;
 
@@ -25,12 +26,12 @@ public class ListFiles extends Endpoint<PNListFilesResult> {
     }
 
     @Override
-    protected ExtendedRemoteAction<PNListFilesResult> createAction() {
-        return pubnub.listFiles(
+    protected Endpoint<PNListFilesResult> createAction() {
+        return new IdentityMappingEndpoint<>(pubnub.listFiles(
                 channel,
                 limit,
                 next
-        );
+        ));
     }
 
     public static class Builder implements BuilderSteps.ChannelStep<ListFiles> {

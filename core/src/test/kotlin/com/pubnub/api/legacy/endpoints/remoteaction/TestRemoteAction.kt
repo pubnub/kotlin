@@ -2,6 +2,7 @@ package com.pubnub.api.legacy.endpoints.remoteaction
 
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.callbacks.PNCallback
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
@@ -17,7 +18,7 @@ class TestRemoteAction<Output> internal constructor(
     private val executor: Executor = Executors.newSingleThreadExecutor()
     private val asyncCallmeter = AtomicInteger(0)
     private val callsToFail: AtomicInteger
-    private lateinit var callback: (result: Output?, status: PNStatus) -> Unit
+    private lateinit var callback: PNCallback<Output>
 
     @Throws(PubNubException::class)
     override fun sync(): Output {
@@ -30,12 +31,12 @@ class TestRemoteAction<Output> internal constructor(
         }
     }
 
-    override fun async(callback: (result: Output?, status: PNStatus) -> Unit) {
+    override fun async(callback: PNCallback<Output>) {
         this.callback = callback
         asyncCallmeter.incrementAndGet()
         executor.execute {
             if (failingStrategy == FailingStrategy.ALWAYS_FAIL) {
-                callback(
+                callback.onResponse(
                     null,
                     PNStatus(
                         error = true,
@@ -44,7 +45,7 @@ class TestRemoteAction<Output> internal constructor(
                     )
                 )
             } else if (failingStrategy == FailingStrategy.FAIL_FIRST_CALLS && callsToFail.getAndDecrement() > 0) {
-                callback(
+                callback.onResponse(
                     null,
                     PNStatus(
                         error = true,
@@ -53,7 +54,7 @@ class TestRemoteAction<Output> internal constructor(
                     )
                 )
             } else {
-                callback(
+                callback.onResponse(
                     output,
                     PNStatus(
                         error = false,
@@ -70,6 +71,7 @@ class TestRemoteAction<Output> internal constructor(
     }
 
     override fun silentCancel() {}
+
     fun howManyTimesAsyncCalled(): Int {
         return asyncCallmeter.get()
     }

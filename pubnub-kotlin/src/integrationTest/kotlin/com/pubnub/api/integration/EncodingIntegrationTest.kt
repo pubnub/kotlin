@@ -42,7 +42,7 @@ class EncodingIntegrationTest(
             meta = expectedMetadata,
             usePost = false
         ).apply {
-// TODO fix            queryParam += mapOf(propertyName to regular)
+            queryParam += mapOf(propertyName to regular)
         }.async { _, status ->
             assertFalse(status.error)
             val encodedParam = status.encodedParam(propertyName)

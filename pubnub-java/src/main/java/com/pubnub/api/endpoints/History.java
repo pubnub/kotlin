@@ -1,26 +1,22 @@
 package com.pubnub.api.endpoints;
 
+import com.pubnub.api.Endpoint;
+import com.pubnub.api.endpoints.remoteaction.IdentityMappingEndpoint;
 import com.pubnub.api.models.consumer.history.PNHistoryResult;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
+@Setter
 @Slf4j
 @Accessors(chain = true, fluent = true)
-public class History extends Endpoint<PNHistoryResult> {
-    @Setter
+public class History extends ValidatingEndpoint<PNHistoryResult> {
     private String channel;
-    @Setter
     private Long start;
-    @Setter
     private Long end;
-    @Setter
     private boolean reverse;
-    @Setter
     private int count = com.pubnub.internal.endpoints.History.MAX_COUNT;
-    @Setter
     private boolean includeTimetoken;
-    @Setter
     private boolean includeMeta;
 
     public History(com.pubnub.internal.PubNub pubnub) {
@@ -28,8 +24,8 @@ public class History extends Endpoint<PNHistoryResult> {
     }
 
     @Override
-    protected com.pubnub.internal.Endpoint<?, PNHistoryResult> createAction() {
-        return pubnub.history(
+    protected Endpoint<PNHistoryResult> createAction() {
+        return new IdentityMappingEndpoint<>(pubnub.history(
                 channel,
                 start,
                 end,
@@ -37,6 +33,6 @@ public class History extends Endpoint<PNHistoryResult> {
                 reverse,
                 includeTimetoken,
                 includeMeta
-        );
+        ));
     }
 }

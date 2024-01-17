@@ -1,15 +1,17 @@
 package com.pubnub.api.endpoints.message_actions;
 
+import com.pubnub.api.Endpoint;
 import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.endpoints.ValidatingEndpoint;
+import com.pubnub.api.endpoints.remoteaction.IdentityMappingEndpoint;
 import com.pubnub.api.models.consumer.message_actions.PNGetMessageActionsResult;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class GetMessageActions extends Endpoint<PNGetMessageActionsResult> {
+public class GetMessageActions extends ValidatingEndpoint<PNGetMessageActionsResult> {
 
     private String channel;
     private Long start;
@@ -28,7 +30,7 @@ public class GetMessageActions extends Endpoint<PNGetMessageActionsResult> {
     }
 
     @Override
-    protected com.pubnub.internal.Endpoint<?, PNGetMessageActionsResult> createAction() {
-        return pubnub.getMessageActions(channel, start, end, limit);
+    protected Endpoint<PNGetMessageActionsResult> createAction() {
+        return new IdentityMappingEndpoint<>(pubnub.getMessageActions(channel, start, end, limit));
     }
 }

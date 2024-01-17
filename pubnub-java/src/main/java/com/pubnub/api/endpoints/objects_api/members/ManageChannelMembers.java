@@ -1,10 +1,11 @@
 package com.pubnub.api.endpoints.objects_api.members;
 
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.Endpoint;
+import com.pubnub.api.endpoints.ValidatingEndpoint;
 import com.pubnub.api.endpoints.objects_api.utils.Include;
 import com.pubnub.api.endpoints.objects_api.utils.ObjectsBuilderSteps;
 import com.pubnub.api.endpoints.objects_api.utils.PNSortKey;
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
+import com.pubnub.api.endpoints.remoteaction.MappingEndpoint;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects_api.member.PNManageChannelMembersResult;
@@ -22,7 +23,7 @@ import java.util.List;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class ManageChannelMembers extends Endpoint<PNManageChannelMembersResult> {
+public class ManageChannelMembers extends ValidatingEndpoint<PNManageChannelMembersResult> {
 
     private Integer limit = null;
     private PNPage page;
@@ -43,7 +44,7 @@ public class ManageChannelMembers extends Endpoint<PNManageChannelMembersResult>
     }
 
     @Override
-    protected ExtendedRemoteAction<PNManageChannelMembersResult> createAction() {
+    protected Endpoint<PNManageChannelMembersResult> createAction() {
         List<String> toRemove = new ArrayList<String>(uuidsToRemove.size());
         for (PNUUID pnuuid : uuidsToRemove) {
             toRemove.add(pnuuid.getUuid().getId());
@@ -57,7 +58,7 @@ public class ManageChannelMembers extends Endpoint<PNManageChannelMembersResult>
             ));
         }
 
-        return new MappingRemoteAction<>(pubnub.manageChannelMembers(
+        return new MappingEndpoint<>(pubnub.manageChannelMembers(
                 channel,
                 toSet,
                 toRemove,

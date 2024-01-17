@@ -1,6 +1,7 @@
 package com.pubnub.api.legacy.endpoints.remoteaction
 
 import com.pubnub.api.PubNubException
+import com.pubnub.api.callbacks.PNCallback
 import com.pubnub.api.endpoints.remoteaction.ComposableRemoteAction.Companion.firstDo
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.enums.PNOperationType
@@ -88,10 +89,10 @@ class ComposableRemoteActionTest {
         val firstAsyncFinished = AtomicBoolean(false)
         val longRunningTask: CancellableRemoteAction<Any?> = object : CancellableRemoteAction<Any?> {
             @Throws(InterruptedException::class)
-            override fun doAsync(callback: (result: Any?, status: PNStatus) -> Unit) {
+            override fun doAsync(callback: PNCallback<Any?>) {
                 cancelSynchronisingLatch.await()
                 println("async")
-                callback(null, PNStatus(category = PNStatusCategory.PNAcknowledgmentCategory, error = false, operation = operationType()))
+                callback.onResponse(null, PNStatus(category = PNStatusCategory.PNAcknowledgmentCategory, error = false, operation = operationType()))
                 firstAsyncFinished.set(true)
                 resultSynchronisingLatch.countDown()
             }

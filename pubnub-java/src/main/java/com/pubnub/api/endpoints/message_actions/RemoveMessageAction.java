@@ -1,15 +1,17 @@
 package com.pubnub.api.endpoints.message_actions;
 
+import com.pubnub.api.Endpoint;
 import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.endpoints.ValidatingEndpoint;
+import com.pubnub.api.endpoints.remoteaction.IdentityMappingEndpoint;
 import com.pubnub.api.models.consumer.message_actions.PNRemoveMessageActionResult;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class RemoveMessageAction extends Endpoint<PNRemoveMessageActionResult> {
+public class RemoveMessageAction extends ValidatingEndpoint<PNRemoveMessageActionResult> {
 
     private String channel;
     private Long messageTimetoken;
@@ -20,8 +22,8 @@ public class RemoveMessageAction extends Endpoint<PNRemoveMessageActionResult> {
     }
 
     @Override
-    protected com.pubnub.internal.Endpoint<?, PNRemoveMessageActionResult> createAction() {
-        return pubnub.removeMessageAction(channel, messageTimetoken, actionTimetoken);
+    protected Endpoint<PNRemoveMessageActionResult> createAction() {
+        return new IdentityMappingEndpoint<>(pubnub.removeMessageAction(channel, messageTimetoken, actionTimetoken));
     }
 
     @Override

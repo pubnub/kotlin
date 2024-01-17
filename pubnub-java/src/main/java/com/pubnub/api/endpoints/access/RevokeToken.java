@@ -1,14 +1,16 @@
 package com.pubnub.api.endpoints.access;
 
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.Endpoint;
+import com.pubnub.api.endpoints.ValidatingEndpoint;
+import com.pubnub.api.endpoints.remoteaction.IdentityMappingEndpoint;
 import kotlin.Unit;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+@Setter
 @Accessors(chain = true, fluent = true)
-public class RevokeToken extends Endpoint<Unit> {
+public class RevokeToken extends ValidatingEndpoint<Unit> {
 
-    @Setter
     private String token;
 
     public RevokeToken(com.pubnub.internal.PubNub pubnub) {
@@ -16,7 +18,7 @@ public class RevokeToken extends Endpoint<Unit> {
     }
 
     @Override
-    protected com.pubnub.internal.Endpoint<?, Unit> createAction() {
-        return pubnub.revokeToken(token);
+    protected Endpoint<Unit> createAction() {
+        return new IdentityMappingEndpoint<>(pubnub.revokeToken(token));
     }
 }

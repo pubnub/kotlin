@@ -1,8 +1,9 @@
 package com.pubnub.api.endpoints.objects_api.channel;
 
+import com.pubnub.api.Endpoint;
 import com.pubnub.api.endpoints.BuilderSteps;
-import com.pubnub.api.endpoints.Endpoint;
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
+import com.pubnub.api.endpoints.ValidatingEndpoint;
+import com.pubnub.api.endpoints.remoteaction.MappingEndpoint;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadata;
 import com.pubnub.api.models.consumer.objects_api.channel.PNSetChannelMetadataResult;
@@ -15,7 +16,7 @@ import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
 public class SetChannelMetadata
-        extends Endpoint<PNSetChannelMetadataResult> {
+        extends ValidatingEndpoint<PNSetChannelMetadataResult> {
 
     public SetChannelMetadata(final String channel, final com.pubnub.internal.PubNub pubnubInstance) {
         super(pubnubInstance);
@@ -23,8 +24,8 @@ public class SetChannelMetadata
     }
 
     @Override
-    protected ExtendedRemoteAction<PNSetChannelMetadataResult> createAction() {
-        return new MappingRemoteAction<>(
+    protected Endpoint<PNSetChannelMetadataResult> createAction() {
+        return new MappingEndpoint<>(
                 pubnub.setChannelMetadata(
                         channel,
                         name,

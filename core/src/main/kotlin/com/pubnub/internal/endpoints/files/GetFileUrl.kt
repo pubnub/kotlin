@@ -2,6 +2,7 @@ package com.pubnub.internal.endpoints.files
 
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.callbacks.PNCallback
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
@@ -24,7 +25,7 @@ class GetFileUrl(
     pubNub: PubNub
 ) : com.pubnub.internal.Endpoint<ResponseBody, PNFileUrlResult>(pubNub), IGetFileUrl {
 
-    private lateinit var cachedCallback: (result: PNFileUrlResult?, status: PNStatus) -> Unit
+    private lateinit var cachedCallback: PNCallback<PNFileUrlResult>
     private val executorService: ExecutorService = pubNub.retrofitManager.getTransactionClientExecutorService()
 
     @Throws(PubNubException::class)
@@ -65,12 +66,12 @@ class GetFileUrl(
     // the code shouldn't call any outside endpoints it's necessary to achieve asynchronous
     // behavior using other means than OkHttp. That's why the code is using executorService
     // to asynchronously call sync()
-    override fun async(callback: (result: PNFileUrlResult?, status: PNStatus) -> Unit) {
+    override fun async(callback: PNCallback<PNFileUrlResult>) {
         cachedCallback = callback
         executorService.execute {
             try {
                 val res: PNFileUrlResult? = sync()
-                callback(
+                callback.onResponse(
                     res,
                     PNStatus(
                         category = PNStatusCategory.PNAcknowledgmentCategory,
@@ -79,7 +80,7 @@ class GetFileUrl(
                     )
                 )
             } catch (ex: PubNubException) {
-                callback(
+                callback.onResponse(
                     null,
                     PNStatus(
                         category = PNStatusCategory.PNUnknownCategory,

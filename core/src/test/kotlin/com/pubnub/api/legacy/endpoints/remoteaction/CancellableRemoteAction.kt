@@ -1,7 +1,7 @@
 package com.pubnub.api.legacy.endpoints.remoteaction
 
+import com.pubnub.api.callbacks.PNCallback
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
-import com.pubnub.api.models.consumer.PNStatus
 import java.util.concurrent.Executors
 
 internal interface CancellableRemoteAction<T> : ExtendedRemoteAction<T> {
@@ -11,8 +11,8 @@ internal interface CancellableRemoteAction<T> : ExtendedRemoteAction<T> {
 
     override fun retry() {}
 
-    fun doAsync(callback: (result: T?, status: PNStatus) -> Unit)
-    override fun async(callback: (result: T?, status: PNStatus) -> Unit) {
+    fun doAsync(callback: PNCallback<T>)
+    override fun async(callback: PNCallback<T>) {
         Executors.newSingleThreadExecutor()
             .execute { doAsync(callback) }
     }

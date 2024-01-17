@@ -1,7 +1,9 @@
 package com.pubnub.api.endpoints.presence;
 
 
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.Endpoint;
+import com.pubnub.api.endpoints.ValidatingEndpoint;
+import com.pubnub.api.endpoints.remoteaction.IdentityMappingEndpoint;
 import com.pubnub.api.models.consumer.presence.PNHereNowResult;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -10,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Accessors(chain = true, fluent = true)
-public class HereNow extends Endpoint<PNHereNowResult> {
+public class HereNow extends ValidatingEndpoint<PNHereNowResult> {
     @Setter
     private List<String> channels;
     @Setter
@@ -27,12 +29,12 @@ public class HereNow extends Endpoint<PNHereNowResult> {
     }
 
     @Override
-    protected com.pubnub.internal.Endpoint<?, PNHereNowResult> createAction() {
-        return pubnub.hereNow(
+    protected Endpoint<PNHereNowResult> createAction() {
+        return new IdentityMappingEndpoint<>(pubnub.hereNow(
                 channels,
                 channelGroups,
                 includeState,
                 includeUUIDs
-        );
+        ));
     }
 }

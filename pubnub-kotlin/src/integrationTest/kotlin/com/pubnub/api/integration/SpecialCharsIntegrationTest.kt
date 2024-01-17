@@ -27,14 +27,14 @@ class SpecialCharsIntegrationTest : BaseIntegrationTest() {
                 keyName to value
             )
         ).apply {
-//            TODO FIX queryParam += mapOf(
-//                "za" to value,
-//                "aa" to value,
-//                "s" to value,
-//                "Zz" to value,
-//                "ZZZ" to value,
-//                "123" to value
-//            )
+            queryParam += mapOf(
+                "za" to value,
+                "aa" to value,
+                "s" to value,
+                "Zz" to value,
+                "ZZZ" to value,
+                "123" to value
+            )
         }.async { _, status ->
             assertFalse(status.error)
             SignatureUtils.decomposeAndVerifySignature(server.configuration, status.clientRequest!!)

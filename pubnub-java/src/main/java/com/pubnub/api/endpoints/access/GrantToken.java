@@ -1,6 +1,9 @@
 package com.pubnub.api.endpoints.access;
 
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.Endpoint;
+import com.pubnub.api.endpoints.ValidatingEndpoint;
+import com.pubnub.api.endpoints.remoteaction.IdentityMappingEndpoint;
+import com.pubnub.api.endpoints.remoteaction.MappingRemoteActionKt;
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult;
@@ -12,20 +15,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Setter
 @Accessors(chain = true, fluent = true)
-public class GrantToken extends Endpoint<PNGrantTokenResult> {
+public class GrantToken extends ValidatingEndpoint<PNGrantTokenResult> {
 
-    @Setter
     private Integer ttl;
-    @Setter
     private Object meta;
-    @Setter
     private String authorizedUUID;
-    @Setter
     private List<ChannelGrant> channels = Collections.emptyList();
-    @Setter
     private List<ChannelGroupGrant> channelGroups = Collections.emptyList();
-    @Setter
     private List<UUIDGrant> uuids = Collections.emptyList();
 
     public GrantToken(com.pubnub.internal.PubNub pubnub) {
@@ -33,14 +31,16 @@ public class GrantToken extends Endpoint<PNGrantTokenResult> {
     }
 
     @Override
-    protected com.pubnub.internal.Endpoint<?, PNGrantTokenResult> createAction() {
-        return pubnub.grantToken(
-                ttl,
-                meta,
-                authorizedUUID,
-                toInternalChannels(channels),
-                toInternalChannelGroups(channelGroups),
-                toInternalUuids(uuids)
+    protected Endpoint<PNGrantTokenResult> createAction() {
+        return new IdentityMappingEndpoint<>(
+                pubnub.grantToken(
+                        ttl,
+                        meta,
+                        authorizedUUID,
+                        toInternalChannels(channels),
+                        toInternalChannelGroups(channelGroups),
+                        toInternalUuids(uuids)
+                )
         );
     }
 

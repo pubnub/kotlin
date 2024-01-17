@@ -2,6 +2,7 @@ package com.pubnub.api.endpoints.remoteaction
 
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.callbacks.PNCallback
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
@@ -15,7 +16,7 @@ internal class RetryingRemoteAction<T>(
     private val operationType: PNOperationType,
     private val executorService: ExecutorService
 ) : ExtendedRemoteAction<T> {
-    private lateinit var cachedCallback: (result: T?, status: PNStatus) -> Unit
+    private lateinit var cachedCallback: PNCallback<T>
 
     @Throws(PubNubException::class)
     override fun sync(): T? {
@@ -31,14 +32,14 @@ internal class RetryingRemoteAction<T>(
         throw thrownException!!
     }
 
-    override fun async(callback: (result: T?, status: PNStatus) -> Unit) {
+    override fun async(callback: PNCallback<T>) {
         cachedCallback = callback
         executorService.execute(
             Runnable {
                 try {
                     validate()
                 } catch (ex: PubNubException) {
-                    callback(
+                    callback.onResponse(
                         null,
                         PNStatus(
                             operation = operationType,
@@ -55,11 +56,11 @@ internal class RetryingRemoteAction<T>(
                 for (i in 0 until maxNumberOfAutomaticRetries) {
                     lastResultAndStatus = syncAsync()
                     if (!lastResultAndStatus.status.error) {
-                        callback(lastResultAndStatus.result, lastResultAndStatus.status)
+                        callback.onResponse(lastResultAndStatus.result, lastResultAndStatus.status)
                         return@Runnable
                     }
                 }
-                callback(lastResultAndStatus!!.result, lastResultAndStatus.status)
+                callback.onResponse(lastResultAndStatus!!.result, lastResultAndStatus.status)
             }
         )
     }
