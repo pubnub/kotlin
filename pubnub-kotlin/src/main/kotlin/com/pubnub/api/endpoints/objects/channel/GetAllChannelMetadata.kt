@@ -16,5 +16,4 @@ class GetAllChannelMetadata internal constructor(private val getAllChannelMetada
 
     override fun createAction(): Endpoint<PNChannelMetadataArrayResult> =
         getAllChannelMetadata.map(PNChannelMetadataArrayResult::from)
-
 }

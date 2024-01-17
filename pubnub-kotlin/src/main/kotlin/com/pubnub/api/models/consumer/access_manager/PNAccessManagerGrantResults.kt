@@ -34,7 +34,6 @@ private fun Map<String, Map<String, com.pubnub.internal.models.consumer.access_m
     }
 }
 
-
 open class PNAccessManagerKeyData {
 
     /**

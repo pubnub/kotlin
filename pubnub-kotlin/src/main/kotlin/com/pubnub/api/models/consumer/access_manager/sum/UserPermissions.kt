@@ -45,4 +45,3 @@ fun UserPermissions.toUuidGrant(): UUIDGrant {
         else -> throw PubNubException(pubnubError = PubNubError.INVALID_ARGUMENTS)
     }
 }
-

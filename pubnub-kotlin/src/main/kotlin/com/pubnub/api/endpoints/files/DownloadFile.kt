@@ -11,7 +11,8 @@ import com.pubnub.internal.endpoints.files.IDownloadFile
 /**
  * @see [PubNub.downloadFile]
  */
-class DownloadFile internal constructor(private val downloadFile: DownloadFile) : DelegatingEndpoint<PNDownloadFileResult>(),
+class DownloadFile internal constructor(private val downloadFile: DownloadFile) :
+    DelegatingEndpoint<PNDownloadFileResult>(),
     IDownloadFile by downloadFile {
     override fun createAction(): Endpoint<PNDownloadFileResult> = downloadFile.mapIdentity()
 }

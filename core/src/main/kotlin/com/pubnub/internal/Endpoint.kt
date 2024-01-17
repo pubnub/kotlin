@@ -46,7 +46,7 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
         private const val SERVER_RESPONSE_NOT_FOUND = 404
     }
 
-    private lateinit var cachedCallback:PNCallback<Output>
+    private lateinit var cachedCallback: PNCallback<Output>
     private lateinit var call: Call<Input>
     private var silenceFailures = false
     private val retryableRestCaller =

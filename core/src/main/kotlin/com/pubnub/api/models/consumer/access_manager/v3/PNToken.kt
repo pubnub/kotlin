@@ -35,7 +35,6 @@ data class PNToken(
         val isUpdate: Boolean get() = update
         val isJoin: Boolean get() = join
 
-
         constructor(grant: Int) : this(
             grant and TokenBitmask.READ != 0,
             grant and TokenBitmask.WRITE != 0,

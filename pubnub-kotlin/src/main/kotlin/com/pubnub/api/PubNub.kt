@@ -685,8 +685,8 @@ class PubNub(
     @Deprecated(
         replaceWith = ReplaceWith(
             "setMemberships(channels = channels, uuid = uuid, limit = limit, " +
-                    "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
-                    "includeChannelDetails = includeChannelDetails)"
+                "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
+                "includeChannelDetails = includeChannelDetails)"
         ),
         level = DeprecationLevel.ERROR,
         message = "Use setMemberships instead"
@@ -1031,7 +1031,6 @@ class PubNub(
         connected: Boolean = false
     ) = pubnubImpl.presence(channels, channelGroups, connected)
 
-
     /**
      * Perform Cryptographic decryption of an input string using cipher key provided by [PNConfiguration.cipherKey].
      *
@@ -1118,4 +1117,3 @@ class PubNub(
         return pubnubImpl.setToken(token)
     }
 }
-

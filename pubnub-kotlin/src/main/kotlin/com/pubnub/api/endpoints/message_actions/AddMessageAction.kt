@@ -11,7 +11,8 @@ import com.pubnub.internal.endpoints.message_actions.IAddMessageAction
 /**
  * @see [PubNub.addMessageAction]
  */
-class AddMessageAction internal constructor(private val addMessageAction: AddMessageAction) : DelegatingEndpoint<PNAddMessageActionResult>(),
+class AddMessageAction internal constructor(private val addMessageAction: AddMessageAction) :
+    DelegatingEndpoint<PNAddMessageActionResult>(),
     IAddMessageAction by addMessageAction {
     override fun createAction(): Endpoint<PNAddMessageActionResult> = addMessageAction.mapIdentity()
 }

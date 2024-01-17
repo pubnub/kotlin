@@ -121,7 +121,6 @@ open class PubNub internal constructor(
     internal val cryptoModule: CryptoModule?
         get() = configuration.cryptoModule
 
-
     //region Managers
 
     /**

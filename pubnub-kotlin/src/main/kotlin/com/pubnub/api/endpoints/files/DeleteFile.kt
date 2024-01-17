@@ -11,7 +11,8 @@ import com.pubnub.internal.endpoints.files.IDeleteFile
 /**
  * @see [PubNub.deleteFile]
  */
-class DeleteFile internal constructor(private val deleteFile: DeleteFile) : DelegatingEndpoint<PNDeleteFileResult?>(),
+class DeleteFile internal constructor(private val deleteFile: DeleteFile) :
+    DelegatingEndpoint<PNDeleteFileResult?>(),
     IDeleteFile by deleteFile {
     override fun createAction(): Endpoint<PNDeleteFileResult?> = deleteFile.mapIdentity()
 }

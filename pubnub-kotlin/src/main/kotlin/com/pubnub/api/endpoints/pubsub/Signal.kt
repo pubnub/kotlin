@@ -11,7 +11,6 @@ import com.pubnub.internal.endpoints.pubsub.Signal
 /**
  * @see [PubNub.signal]
  */
-class Signal internal constructor(private val signal: Signal) :DelegatingEndpoint<PNPublishResult>(), ISignal by signal {
+class Signal internal constructor(private val signal: Signal) : DelegatingEndpoint<PNPublishResult>(), ISignal by signal {
     override fun createAction(): Endpoint<PNPublishResult> = signal.mapIdentity()
 }
-

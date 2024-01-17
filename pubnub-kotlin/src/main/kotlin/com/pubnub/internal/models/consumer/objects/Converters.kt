@@ -320,14 +320,14 @@ private fun <T : SortField, T2 : com.pubnub.internal.models.consumer.objects.Sor
 
 internal fun PNChannelDetailsLevel?.toInternal(): com.pubnub.internal.models.consumer.objects.membership.PNChannelDetailsLevel? {
     if (this == null) {
-        return null;
+        return null
     }
     return com.pubnub.internal.models.consumer.objects.membership.PNChannelDetailsLevel.valueOf(this.name)
 }
 
 internal fun PNUUIDDetailsLevel?.toInternal(): com.pubnub.internal.models.consumer.objects.member.PNUUIDDetailsLevel? {
     if (this == null) {
-        return null;
+        return null
     }
     return com.pubnub.internal.models.consumer.objects.member.PNUUIDDetailsLevel.valueOf(this.name)
 }

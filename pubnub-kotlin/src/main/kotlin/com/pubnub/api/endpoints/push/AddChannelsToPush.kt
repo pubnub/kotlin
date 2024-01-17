@@ -11,7 +11,8 @@ import com.pubnub.internal.endpoints.push.IAddChannelsToPush
 /**
  * @see [PubNub.addPushNotificationsOnChannels]
  */
-class AddChannelsToPush internal constructor(private val addChannelsToPush: AddChannelsToPush) : DelegatingEndpoint<PNPushAddChannelResult>(),
+class AddChannelsToPush internal constructor(private val addChannelsToPush: AddChannelsToPush) :
+    DelegatingEndpoint<PNPushAddChannelResult>(),
     IAddChannelsToPush by addChannelsToPush {
     override fun createAction(): Endpoint<PNPushAddChannelResult> = addChannelsToPush.mapIdentity()
 }
