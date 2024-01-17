@@ -399,7 +399,6 @@ open class PNConfiguration(
      *  Use [RetryConfiguration.Linear] to set retry with linear delay interval
      *  Use [RetryConfiguration.Exponential] to set retry with exponential delay interval
      *  Delay will vary from provided value by random value.
-     *
      */
     var retryConfiguration: RetryConfiguration = RetryConfiguration.None
 
