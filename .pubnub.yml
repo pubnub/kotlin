@@ -1,9 +1,9 @@
 name: kotlin
-version: 7.7.4
+version: 7.8.0
 schema: 1
 scm: github.com/pubnub/kotlin
 files:
-  - build/libs/pubnub-kotlin-7.7.4-all.jar
+  - build/libs/pubnub-kotlin-7.8.0-all.jar
 sdks:
   - 
       type: library
@@ -23,8 +23,8 @@ sdks:
             -
               distribution-type: library
               distribution-repository: maven
-              package-name: pubnub-kotlin-7.7.4
-              location: https://repo.maven.apache.org/maven2/com/pubnub/pubnub-kotlin/7.7.4/pubnub-kotlin-7.7.4.jar
+              package-name: pubnub-kotlin-7.8.0
+              location: https://repo.maven.apache.org/maven2/com/pubnub/pubnub-kotlin/7.8.0/pubnub-kotlin-7.8.0.jar
               supported-platforms:
                 supported-operating-systems:
                   Android:
@@ -114,6 +114,11 @@ sdks:
                   license-url: https://www.apache.org/licenses/LICENSE-2.0.txt
                   is-required: Required
 changelog:
+  - date: 2024-01-17
+    version: v7.8.0
+    changes:
+      - type: feature
+        text: "Added `enableEventEngine`, `retryConfiguration` and `maintainPresenceState` configuration flags."
   - date: 2023-11-28
     version: v7.7.4
     changes:

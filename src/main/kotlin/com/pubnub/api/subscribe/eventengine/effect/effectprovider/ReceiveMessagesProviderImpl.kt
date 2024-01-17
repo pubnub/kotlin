@@ -21,6 +21,7 @@ internal class ReceiveMessagesProviderImpl(val pubNub: PubNub, val messageProces
         subscribe.channelGroups = channelGroups.toList()
         subscribe.timetoken = subscriptionCursor.timetoken
         subscribe.region = subscriptionCursor.region
+        subscribe.filterExpression = pubNub.configuration.filterExpression.ifBlank { null }
         return subscribe.map {
             val sdkMessages: List<PNEvent> = it.messages.mapNotNull {
                 messageProcessor.processIncomingPayload(it)
