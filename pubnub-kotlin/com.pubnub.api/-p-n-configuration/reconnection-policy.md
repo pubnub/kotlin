@@ -3,7 +3,7 @@
 # reconnectionPolicy
 
 [jvm]\
-var [reconnectionPolicy](reconnection-policy.md): [PNReconnectionPolicy](../../com.pubnub.api.enums/-p-n-reconnection-policy/index.md)
+~~var~~ [~~reconnectionPolicy~~](reconnection-policy.md)~~:~~ [PNReconnectionPolicy](../../com.pubnub.api.enums/-p-n-reconnection-policy/index.md)
 
 Set to [PNReconnectionPolicy.LINEAR](../../com.pubnub.api.enums/-p-n-reconnection-policy/-l-i-n-e-a-r/index.md) for automatic reconnects.
 

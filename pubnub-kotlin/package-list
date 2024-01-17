@@ -1219,6 +1219,31 @@ $dokka.location:com.pubnub.api.models/TokenBitmask/MANAGE/#/PointingToDeclaratio
 $dokka.location:com.pubnub.api.models/TokenBitmask/READ/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models/-token-bitmask/-r-e-a-d.md
 $dokka.location:com.pubnub.api.models/TokenBitmask/UPDATE/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models/-token-bitmask/-u-p-d-a-t-e.md
 $dokka.location:com.pubnub.api.models/TokenBitmask/WRITE/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models/-token-bitmask/-w-r-i-t-e.md
+$dokka.location:com.pubnub.api.retry////PointingToDeclaration/pubnub-kotlin/com.pubnub.api.retry/index.md
+$dokka.location:com.pubnub.api.retry/RetryConfiguration.Exponential///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.retry/-retry-configuration/-exponential/index.md
+$dokka.location:com.pubnub.api.retry/RetryConfiguration.Exponential/Exponential/#kotlin.Int#kotlin.Int#kotlin.Int#kotlin.collections.List[com.pubnub.api.retry.RetryableEndpointGroup]/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.retry/-retry-configuration/-exponential/-exponential.md
+$dokka.location:com.pubnub.api.retry/RetryConfiguration.Exponential/excludedOperations/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.retry/-retry-configuration/-exponential/excluded-operations.md
+$dokka.location:com.pubnub.api.retry/RetryConfiguration.Exponential/maxDelayInSec/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.retry/-retry-configuration/-exponential/max-delay-in-sec.md
+$dokka.location:com.pubnub.api.retry/RetryConfiguration.Exponential/maxRetryNumber/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.retry/-retry-configuration/-exponential/max-retry-number.md
+$dokka.location:com.pubnub.api.retry/RetryConfiguration.Exponential/minDelayInSec/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.retry/-retry-configuration/-exponential/min-delay-in-sec.md
+$dokka.location:com.pubnub.api.retry/RetryConfiguration.Linear///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.retry/-retry-configuration/-linear/index.md
+$dokka.location:com.pubnub.api.retry/RetryConfiguration.Linear/Linear/#kotlin.Int#kotlin.Int#kotlin.collections.List[com.pubnub.api.retry.RetryableEndpointGroup]/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.retry/-retry-configuration/-linear/-linear.md
+$dokka.location:com.pubnub.api.retry/RetryConfiguration.Linear/delayInSec/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.retry/-retry-configuration/-linear/delay-in-sec.md
+$dokka.location:com.pubnub.api.retry/RetryConfiguration.Linear/excludedOperations/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.retry/-retry-configuration/-linear/excluded-operations.md
+$dokka.location:com.pubnub.api.retry/RetryConfiguration.Linear/maxRetryNumber/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.retry/-retry-configuration/-linear/max-retry-number.md
+$dokka.location:com.pubnub.api.retry/RetryConfiguration.None///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.retry/-retry-configuration/-none/index.md
+$dokka.location:com.pubnub.api.retry/RetryConfiguration///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.retry/-retry-configuration/index.md
+$dokka.location:com.pubnub.api.retry/RetryableEndpointGroup.ACCESS_MANAGER///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api.retry/-retryable-endpoint-group/-a-c-c-e-s-s_-m-a-n-a-g-e-r/index.md
+$dokka.location:com.pubnub.api.retry/RetryableEndpointGroup.APP_CONTEXT///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api.retry/-retryable-endpoint-group/-a-p-p_-c-o-n-t-e-x-t/index.md
+$dokka.location:com.pubnub.api.retry/RetryableEndpointGroup.CHANNEL_GROUP///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api.retry/-retryable-endpoint-group/-c-h-a-n-n-e-l_-g-r-o-u-p/index.md
+$dokka.location:com.pubnub.api.retry/RetryableEndpointGroup.FILE_PERSISTENCE///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api.retry/-retryable-endpoint-group/-f-i-l-e_-p-e-r-s-i-s-t-e-n-c-e/index.md
+$dokka.location:com.pubnub.api.retry/RetryableEndpointGroup.MESSAGE_PERSISTENCE///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api.retry/-retryable-endpoint-group/-m-e-s-s-a-g-e_-p-e-r-s-i-s-t-e-n-c-e/index.md
+$dokka.location:com.pubnub.api.retry/RetryableEndpointGroup.MESSAGE_REACTION///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api.retry/-retryable-endpoint-group/-m-e-s-s-a-g-e_-r-e-a-c-t-i-o-n/index.md
+$dokka.location:com.pubnub.api.retry/RetryableEndpointGroup.PRESENCE///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api.retry/-retryable-endpoint-group/-p-r-e-s-e-n-c-e/index.md
+$dokka.location:com.pubnub.api.retry/RetryableEndpointGroup.PUBLISH///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api.retry/-retryable-endpoint-group/-p-u-b-l-i-s-h/index.md
+$dokka.location:com.pubnub.api.retry/RetryableEndpointGroup.PUSH_NOTIFICATION///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api.retry/-retryable-endpoint-group/-p-u-s-h_-n-o-t-i-f-i-c-a-t-i-o-n/index.md
+$dokka.location:com.pubnub.api.retry/RetryableEndpointGroup.SUBSCRIBE///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api.retry/-retryable-endpoint-group/-s-u-b-s-c-r-i-b-e/index.md
+$dokka.location:com.pubnub.api.retry/RetryableEndpointGroup///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.retry/-retryable-endpoint-group/index.md
 $dokka.location:com.pubnub.api.services////PointingToDeclaration/pubnub-kotlin/com.pubnub.api.services/index.md
 $dokka.location:com.pubnub.api.services/FilesService.Companion///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.services/-files-service/-companion/index.md
 $dokka.location:com.pubnub.api.services/FilesService.Companion/GET_FILE_URL/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.services/-files-service/-companion/-g-e-t_-f-i-l-e_-u-r-l.md
@@ -1294,6 +1319,7 @@ $dokka.location:com.pubnub.api/PNConfiguration/httpLoggingInterceptor/#/Pointing
 $dokka.location:com.pubnub.api/PNConfiguration/includeInstanceIdentifier/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/include-instance-identifier.md
 $dokka.location:com.pubnub.api/PNConfiguration/includeRequestIdentifier/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/include-request-identifier.md
 $dokka.location:com.pubnub.api/PNConfiguration/logVerbosity/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/log-verbosity.md
+$dokka.location:com.pubnub.api/PNConfiguration/maintainPresenceState/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/maintain-presence-state.md
 $dokka.location:com.pubnub.api/PNConfiguration/maximumConnections/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/maximum-connections.md
 $dokka.location:com.pubnub.api/PNConfiguration/maximumMessagesCacheSize/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/maximum-messages-cache-size.md
 $dokka.location:com.pubnub.api/PNConfiguration/maximumReconnectionRetries/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/maximum-reconnection-retries.md
@@ -1306,6 +1332,7 @@ $dokka.location:com.pubnub.api/PNConfiguration/proxySelector/#/PointingToDeclara
 $dokka.location:com.pubnub.api/PNConfiguration/publishKey/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/publish-key.md
 $dokka.location:com.pubnub.api/PNConfiguration/reconnectionPolicy/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/reconnection-policy.md
 $dokka.location:com.pubnub.api/PNConfiguration/requestMessageCountThreshold/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/request-message-count-threshold.md
+$dokka.location:com.pubnub.api/PNConfiguration/retryConfiguration/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/retry-configuration.md
 $dokka.location:com.pubnub.api/PNConfiguration/secretKey/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/secret-key.md
 $dokka.location:com.pubnub.api/PNConfiguration/secure/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/secure.md
 $dokka.location:com.pubnub.api/PNConfiguration/sslSocketFactory/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/ssl-socket-factory.md
@@ -1449,11 +1476,12 @@ $dokka.location:com.pubnub.api/PubNubError///PointingToDeclaration/pubnub-kotli
 $dokka.location:com.pubnub.api/PubNubError/message/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub-error/message.md
 $dokka.location:com.pubnub.api/PubNubError/toString/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub-error/to-string.md
 $dokka.location:com.pubnub.api/PubNubException///PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub-exception/index.md
-$dokka.location:com.pubnub.api/PubNubException/PubNubException/#kotlin.String?#com.pubnub.api.PubNubError?#kotlin.String?#kotlin.Int#retrofit2.Call[*]?/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub-exception/-pub-nub-exception.md
+$dokka.location:com.pubnub.api/PubNubException/PubNubException/#kotlin.String?#com.pubnub.api.PubNubError?#kotlin.String?#kotlin.Int#retrofit2.Call[*]?#kotlin.Int?/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub-exception/-pub-nub-exception.md
 $dokka.location:com.pubnub.api/PubNubException/affectedCall/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub-exception/affected-call.md
 $dokka.location:com.pubnub.api/PubNubException/errorMessage/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub-exception/error-message.md
 $dokka.location:com.pubnub.api/PubNubException/jso/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub-exception/jso.md
 $dokka.location:com.pubnub.api/PubNubException/pubnubError/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub-exception/pubnub-error.md
+$dokka.location:com.pubnub.api/PubNubException/retryAfterHeaderValue/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub-exception/retry-after-header-value.md
 $dokka.location:com.pubnub.api/PubNubException/statusCode/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub-exception/status-code.md
 $dokka.location:com.pubnub.api/SpaceId///PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-space-id/index.md
 $dokka.location:com.pubnub.api/SpaceId/SpaceId/#kotlin.String/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-space-id/-space-id.md
@@ -1464,7 +1492,7 @@ $dokka.location:com.pubnub.api/UserId/value/#/PointingToDeclaration/pubnub-kotl
 $dokka.location:com.pubnub.extension////PointingToDeclaration/pubnub-kotlin/com.pubnub.extension/index.md
 $dokka.location:com.pubnub.extension//limit/kotlin.Int#kotlin.Int/PointingToDeclaration/pubnub-kotlin/com.pubnub.extension/limit.md
 $dokka.location:com.pubnub.extension//nonPositiveToNull/kotlin.Int#/PointingToDeclaration/pubnub-kotlin/com.pubnub.extension/non-positive-to-null.md
-$dokka.location:com.pubnub.extension//scheduleWithDelay/java.util.concurrent.ScheduledExecutorService#java.time.Duration#kotlin.Function0[kotlin.Unit]/PointingToDeclaration/pubnub-kotlin/com.pubnub.extension/schedule-with-delay.md
+$dokka.location:com.pubnub.extension//scheduleWithDelay/java.util.concurrent.ScheduledExecutorService#kotlin.time.Duration#kotlin.Function0[kotlin.Unit]/PointingToDeclaration/pubnub-kotlin/com.pubnub.extension/schedule-with-delay.md
 com.pubnub.api
 com.pubnub.api.builder
 com.pubnub.api.callbacks
@@ -1517,6 +1545,7 @@ com.pubnub.api.models.server.history
 com.pubnub.api.models.server.message_actions
 com.pubnub.api.models.server.objects_api
 com.pubnub.api.models.server.presence
+com.pubnub.api.retry
 com.pubnub.api.services
 com.pubnub.api.vendor
 com.pubnub.extension

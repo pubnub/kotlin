@@ -58,6 +58,7 @@
 | [com.pubnub.api.models.server.message_actions](pubnub-kotlin/com.pubnub.api.models.server.message_actions/index.md) |
 | [com.pubnub.api.models.server.objects_api](pubnub-kotlin/com.pubnub.api.models.server.objects_api/index.md) |
 | [com.pubnub.api.models.server.presence](pubnub-kotlin/com.pubnub.api.models.server.presence/index.md) |
+| [com.pubnub.api.retry](pubnub-kotlin/com.pubnub.api.retry/index.md) |
 | [com.pubnub.api.services](pubnub-kotlin/com.pubnub.api.services/index.md) |
 | [com.pubnub.api.vendor](pubnub-kotlin/com.pubnub.api.vendor/index.md) |
 | [com.pubnub.extension](pubnub-kotlin/com.pubnub.extension/index.md) |

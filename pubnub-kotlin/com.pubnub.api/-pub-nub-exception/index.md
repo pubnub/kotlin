@@ -3,7 +3,7 @@
 # PubNubException
 
 [jvm]\
-data class [PubNubException](index.md)(val errorMessage: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null, val pubnubError: [PubNubError](../-pub-nub-error/index.md)? = null, val jso: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null, val statusCode: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) = 0, val affectedCall: Call&lt;*&gt;? = null) : [Exception](https://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html)
+data class [PubNubException](index.md)(val errorMessage: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null, val pubnubError: [PubNubError](../-pub-nub-error/index.md)? = null, val jso: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null, val statusCode: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) = 0, val affectedCall: Call&lt;*&gt;? = null, val retryAfterHeaderValue: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)? = null) : [Exception](https://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html)
 
 Custom exception wrapper for errors occurred during execution or processing of a PubNub API operation.
 
@@ -11,7 +11,7 @@ Custom exception wrapper for errors occurred during execution or processing of a
 
 | | |
 |---|---|
-| [PubNubException](-pub-nub-exception.md) | [jvm]<br>fun [PubNubException](-pub-nub-exception.md)(errorMessage: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null, pubnubError: [PubNubError](../-pub-nub-error/index.md)? = null, jso: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null, statusCode: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) = 0, affectedCall: Call&lt;*&gt;? = null) |
+| [PubNubException](-pub-nub-exception.md) | [jvm]<br>fun [PubNubException](-pub-nub-exception.md)(errorMessage: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null, pubnubError: [PubNubError](../-pub-nub-error/index.md)? = null, jso: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null, statusCode: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) = 0, affectedCall: Call&lt;*&gt;? = null, retryAfterHeaderValue: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)? = null) |
 
 ## Functions
 
@@ -36,4 +36,5 @@ Custom exception wrapper for errors occurred during execution or processing of a
 | [jso](jso.md) | [jvm]<br>val [jso](jso.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null<br>The error json received from the server, if any. |
 | [message](index.md#1824300659%2FProperties%2F-1216412040) | [jvm]<br>open val [message](index.md#1824300659%2FProperties%2F-1216412040): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? |
 | [pubnubError](pubnub-error.md) | [jvm]<br>val [pubnubError](pubnub-error.md): [PubNubError](../-pub-nub-error/index.md)? = null<br>The appropriate matching PubNub error. |
+| [retryAfterHeaderValue](retry-after-header-value.md) | [jvm]<br>val [retryAfterHeaderValue](retry-after-header-value.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)? = null |
 | [statusCode](status-code.md) | [jvm]<br>val [statusCode](status-code.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) = 0<br>HTTP status code. |
