@@ -32,18 +32,22 @@ public class PNAccessManagerGrantResult {
                 .subscribeKey(data.getSubscribeKey())
                 .channels(from(data.getChannels()))
                 .channelGroups(from(data.getChannelGroups()))
-                // TODO why no uuids in Kotlin? where do we get them from?
+                .uuids(from(data.getUuids()))
                 .build();
     }
 
     private static Map<String, Map<String, PNAccessManagerKeyData>> from(Map<String, Map<String, com.pubnub.internal.models.consumer.access_manager.PNAccessManagerKeyData>> data) {
         Map<String, Map<String, PNAccessManagerKeyData>> newMap = new HashMap<>(data.size());
         for (Map.Entry<String, Map<String, com.pubnub.internal.models.consumer.access_manager.PNAccessManagerKeyData>> stringMapEntry : data.entrySet()) {
-            Map<String, PNAccessManagerKeyData> innerMap = new HashMap<>(stringMapEntry.getValue().size());
-            for (Map.Entry<String, com.pubnub.internal.models.consumer.access_manager.PNAccessManagerKeyData> innerEntry : stringMapEntry.getValue().entrySet()) {
-                innerMap.put(innerEntry.getKey(), PNAccessManagerKeyData.from(innerEntry.getValue()));
+            if (stringMapEntry.getValue() == null) {
+                newMap.put(stringMapEntry.getKey(), null);
+            } else {
+                Map<String, PNAccessManagerKeyData> innerMap = new HashMap<>(stringMapEntry.getValue().size());
+                for (Map.Entry<String, com.pubnub.internal.models.consumer.access_manager.PNAccessManagerKeyData> innerEntry : stringMapEntry.getValue().entrySet()) {
+                    innerMap.put(innerEntry.getKey(), PNAccessManagerKeyData.from(innerEntry.getValue()));
+                }
+                newMap.put(stringMapEntry.getKey(), innerMap);
             }
-            newMap.put(stringMapEntry.getKey(), innerMap);
         }
         return newMap;
     }

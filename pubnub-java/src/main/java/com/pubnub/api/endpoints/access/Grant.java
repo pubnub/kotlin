@@ -46,7 +46,8 @@ public class Grant extends ValidatingEndpoint<PNAccessManagerGrantResult> {
                         ttl,
                         authKeys,
                         channels,
-                        channelGroups
+                        channelGroups,
+                        uuids
                 ), PNAccessManagerGrantResult::from
         );
     }

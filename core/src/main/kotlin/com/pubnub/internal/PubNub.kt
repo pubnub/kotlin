@@ -964,7 +964,8 @@ open class PubNub internal constructor(
         ttl: Int = -1,
         authKeys: List<String> = emptyList(),
         channels: List<String> = emptyList(),
-        channelGroups: List<String> = emptyList()
+        channelGroups: List<String> = emptyList(),
+        uuids: List<String> = emptyList()
     ) = Grant(
         pubnub = this,
         read = read,
@@ -974,7 +975,8 @@ open class PubNub internal constructor(
         ttl = ttl,
         authKeys = authKeys,
         channels = channels,
-        channelGroups = channelGroups
+        channelGroups = channelGroups,
+        uuids = uuids,
     )
 
     /**

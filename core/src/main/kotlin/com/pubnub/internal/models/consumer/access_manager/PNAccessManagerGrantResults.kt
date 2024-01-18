@@ -18,7 +18,8 @@ class PNAccessManagerGrantResult(
     val ttl: Int,
     val subscribeKey: String,
     val channels: Map<String, Map<String, PNAccessManagerKeyData>?>,
-    val channelGroups: Map<String, Map<String, PNAccessManagerKeyData>?>
+    val channelGroups: Map<String, Map<String, PNAccessManagerKeyData>?>,
+    val uuids: Map<String, Map<String, PNAccessManagerKeyData>?>,
 )
 
 open class PNAccessManagerKeyData {

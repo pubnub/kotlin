@@ -9,4 +9,5 @@ interface IGrant {
     val authKeys: List<String>
     val channels: List<String>
     val channelGroups: List<String>
+    val uuids: List<String>
 }

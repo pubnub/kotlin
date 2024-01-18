@@ -370,8 +370,9 @@ class PubNub(
         ttl: Int = -1,
         authKeys: List<String> = emptyList(),
         channels: List<String> = emptyList(),
-        channelGroups: List<String> = emptyList()
-    ): Grant = Grant(pubnubImpl.grant(read, write, manage, delete, ttl, authKeys, channels, channelGroups))
+        channelGroups: List<String> = emptyList(),
+        uuids: List<String> = emptyList(),
+    ): Grant = Grant(pubnubImpl.grant(read, write, manage, delete, ttl, authKeys, channels, channelGroups, uuids))
 
     fun grantToken(
         ttl: Int,

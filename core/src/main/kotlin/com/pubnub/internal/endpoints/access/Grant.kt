@@ -28,7 +28,8 @@ open class Grant(
 
     override val authKeys: List<String> = emptyList(),
     override val channels: List<String> = emptyList(),
-    override val channelGroups: List<String> = emptyList()
+    override val channelGroups: List<String> = emptyList(),
+    override val uuids: List<String> = emptyList(),
 ) : com.pubnub.internal.Endpoint<Envelope<AccessManagerGrantPayload>, PNAccessManagerGrantResult>(pubnub), IGrant {
 
     override fun validateParams() {
@@ -55,6 +56,7 @@ open class Grant(
 
         val constructedChannels = mutableMapOf<String, Map<String, PNAccessManagerKeyData>?>()
         val constructedGroups = mutableMapOf<String, Map<String, PNAccessManagerKeyData>?>()
+        val constructedUuids = mutableMapOf<String, Map<String, PNAccessManagerKeyData>?>()
 
         // we have a case of a singular channel.
         data.channel?.let {
@@ -75,12 +77,21 @@ open class Grant(
             constructedChannels[it.key] = data.channels[it.key]!!.authKeys
         }
 
+        if (data.uuids != null) {
+            for (fetchedUuid in data.uuids.keys) {
+                data.uuids[fetchedUuid]?.authKeys?.let {
+                    constructedUuids[fetchedUuid] = it
+                }
+            }
+        }
+
         return PNAccessManagerGrantResult(
             level = data.level!!,
             ttl = data.ttl,
             subscribeKey = data.subscribeKey!!,
             channels = constructedChannels,
-            channelGroups = constructedGroups
+            channelGroups = constructedGroups,
+            uuids = constructedUuids
         )
     }
 

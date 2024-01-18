@@ -15,13 +15,14 @@ class PNAccessManagerGrantResult(
     val ttl: Int,
     val subscribeKey: String,
     val channels: Map<String, Map<String, PNAccessManagerKeyData>?>,
-    val channelGroups: Map<String, Map<String, PNAccessManagerKeyData>?>
+    val channelGroups: Map<String, Map<String, PNAccessManagerKeyData>?>,
+    val uuids: Map<String, Map<String, PNAccessManagerKeyData>?>,
 ) {
     companion object {
         fun from(result: com.pubnub.internal.models.consumer.access_manager.PNAccessManagerGrantResult): PNAccessManagerGrantResult {
             with(result) {
                 return PNAccessManagerGrantResult(
-                    level, ttl, subscribeKey, channels.toApi(), channelGroups.toApi()
+                    level, ttl, subscribeKey, channels.toApi(), channelGroups.toApi(), uuids.toApi()
                 )
             }
         }

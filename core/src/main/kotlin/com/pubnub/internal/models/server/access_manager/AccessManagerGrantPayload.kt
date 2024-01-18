@@ -19,6 +19,9 @@ class AccessManagerGrantPayload {
     @SerializedName("channel-groups")
     internal val channelGroups: JsonElement? = null
 
+    @SerializedName("uuids")
+    internal val uuids: Map<String, PNAccessManagerKeysData>? = null
+
     @SerializedName("auths")
     internal val authKeys: Map<String, PNAccessManagerKeyData>? = null
 
