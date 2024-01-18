@@ -96,6 +96,8 @@ import com.pubnub.api.workers.SubscribeMessageProcessor
 import java.io.InputStream
 import java.util.Date
 import java.util.UUID
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
 import kotlin.time.Duration.Companion.seconds
 
 class PubNub internal constructor(
@@ -126,6 +128,8 @@ class PubNub internal constructor(
      */
     val mapper = MapperManager()
 
+    internal val executorService: ScheduledExecutorService = Executors.newScheduledThreadPool(15)
+
     private val basePathManager = BasePathManager(configuration)
     internal val retrofitManager = RetrofitManager(this)
     internal val publishSequenceManager = PublishSequenceManager(MAX_SEQUENCE)
@@ -142,7 +146,8 @@ class PubNub internal constructor(
         eventEnginesConf,
         SubscribeMessageProcessor(this, DuplicationManager(configuration)),
         presenceData,
-        configuration.maintainPresenceState
+        configuration.maintainPresenceState,
+        executorService
     )
 
     private val presence = Presence.create(
@@ -156,7 +161,8 @@ class PubNub internal constructor(
         listenerManager = listenerManager,
         eventEngineConf = eventEnginesConf.presence,
         presenceData = presenceData,
-        sendStateWithHeartbeat = configuration.maintainPresenceState
+        sendStateWithHeartbeat = configuration.maintainPresenceState,
+        executorService = executorService
     )
 
     //endregion
@@ -2078,11 +2084,11 @@ class PubNub internal constructor(
         if (configuration.enableEventEngine) {
             subscribe.destroy()
             presence.destroy()
-            retrofitManager.destroy()
         } else {
             subscriptionManager.destroy()
-            retrofitManager.destroy()
         }
+        retrofitManager.destroy()
+        executorService.shutdown()
     }
 
     /**
@@ -2092,11 +2098,11 @@ class PubNub internal constructor(
         if (configuration.enableEventEngine) {
             subscribe.destroy()
             presence.destroy()
-            retrofitManager.destroy(true)
         } else {
             subscriptionManager.destroy(true)
-            retrofitManager.destroy(true)
         }
+        retrofitManager.destroy(true)
+        executorService.shutdownNow()
     }
 
     fun parseToken(token: String): PNToken {

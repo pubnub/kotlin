@@ -5,25 +5,23 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 import kotlin.time.Duration
 
 internal abstract class RetryableCallback<T>(
     retryConfiguration: RetryConfiguration,
     endpointGroupName: RetryableEndpointGroup,
     private val call: Call<T>,
-    private val isEndpointRetryable: Boolean
+    private val isEndpointRetryable: Boolean,
+    private val executorService: ExecutorService
 ) : Callback<T>, RetryableBase<T>(retryConfiguration, endpointGroupName) {
     private val log = LoggerFactory.getLogger(this.javaClass.simpleName)
     private var retryCount = 0
     private var exponentialMultiplier = 0.0
-    private val executorService: ExecutorService = Executors.newSingleThreadExecutor()
 
     override fun onResponse(call: Call<T>, response: Response<T>) {
         if (shouldRetryOnResponse(response)) {
             retryOnResponseWithError(response)
         } else {
-            executorService.shutdown()
             onFinalResponse(call, response)
         }
     }
@@ -32,7 +30,6 @@ internal abstract class RetryableCallback<T>(
         if (shouldRetryOnFailure(t)) {
             retryOnFailure()
         } else {
-            executorService.shutdown()
             onFinalFailure(call, t)
         }
     }

@@ -10,8 +10,10 @@ import org.hamcrest.Matchers.hasKey
 import org.hamcrest.Matchers.not
 import org.junit.jupiter.api.Test
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ScheduledExecutorService
 
 class EffectDispatcherTest {
+    private val executorService: ScheduledExecutorService = mockk()
 
     internal sealed class TestEffectInvocation(override val type: EffectInvocationType) : EffectInvocation {
         override val id: String = this::class.java.simpleName
@@ -52,7 +54,8 @@ class EffectDispatcherTest {
         val effectDispatcher = EffectDispatcher(
             effectFactory = EffectHandlerFactoryImpl(),
             managedEffects = managedEffects,
-            effectSource = QueueSinkSource()
+            effectSource = QueueSinkSource(),
+            executorService = executorService
         )
 
         // when
@@ -69,7 +72,8 @@ class EffectDispatcherTest {
         val effectDispatcher = EffectDispatcher(
             effectFactory = EffectHandlerFactoryImpl(),
             managedEffects = managedEffects,
-            effectSource = QueueSinkSource()
+            effectSource = QueueSinkSource(),
+            executorService = executorService
         )
 
         // when
@@ -87,7 +91,8 @@ class EffectDispatcherTest {
         val effectDispatcher = EffectDispatcher(
             effectFactory = EffectHandlerFactoryImpl(),
             managedEffects = managedEffects,
-            effectSource = QueueSinkSource()
+            effectSource = QueueSinkSource(),
+            executorService = executorService
         )
 
         // when
@@ -109,7 +114,8 @@ class EffectDispatcherTest {
         val effectDispatcher = EffectDispatcher(
             effectFactory = effectHandlerFactory,
             managedEffects = managedEffects,
-            effectSource = QueueSinkSource()
+            effectSource = QueueSinkSource(),
+            executorService = executorService
         )
 
         // when
@@ -130,7 +136,8 @@ class EffectDispatcherTest {
         val effectDispatcher = EffectDispatcher(
             effectFactory = effectFactory,
             managedEffects = managedEffects,
-            effectSource = QueueSinkSource()
+            effectSource = QueueSinkSource(),
+            executorService = executorService
         )
         val effect: Effect = mockk()
         every { effect.runEffect() } returns Unit

@@ -1,8 +1,10 @@
 package com.pubnub.api.eventengine
 
 import com.pubnub.contract.subscribe.eventEngine.state.TestSinkSource
+import io.mockk.mockk
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import java.util.concurrent.ScheduledExecutorService
 
 class EventEngineTest {
 
@@ -16,6 +18,7 @@ class EventEngineTest {
             return transitionTo(TestState, TestEffectInvocation)
         }
     }
+    private val executorService: ScheduledExecutorService = mockk()
 
     @Test
     internal fun `should pass invocations for handling when event provided`() {
@@ -26,7 +29,8 @@ class EventEngineTest {
         val eventEngine = EventEngine(
             effectSink = eventEngineConf.effectSink,
             eventSource = eventEngineConf.eventSource,
-            currentState = TestState
+            currentState = TestState,
+            executorService = executorService
         )
 
         // when

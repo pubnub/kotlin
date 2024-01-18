@@ -72,7 +72,7 @@ internal class PresenceEffectFactory(
                 }
             }
             is PresenceEffectInvocation.Wait -> {
-                WaitEffect(heartbeatInterval, presenceEventSink)
+                WaitEffect(heartbeatInterval, presenceEventSink, executorService)
             }
 
             PresenceEffectInvocation.CancelDelayedHeartbeat,
