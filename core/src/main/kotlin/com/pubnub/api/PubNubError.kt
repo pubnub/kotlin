@@ -231,6 +231,10 @@ enum class PubNubError(private val code: Int, val message: String) {
         "Message decryption failed using the current crypto configuration."
     ),
 
+    SPACEID_NULL_OR_EMPTY(
+        178,
+        "SpaceId can't be null nor empty"
+    ),
     ;
 
     override fun toString(): String {

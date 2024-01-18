@@ -460,11 +460,6 @@ public class PubNub {
         return pubnubImpl.encryptInputStream(inputStream, cipherKey);
     }
 
-//    TODO bring back?
-//    public int getTimestamp() {
-//        return (int) ((new Date().getTime()) / TIMESTAMP_DIVIDER);
-//    }
-
     /**
      * @return instance uuid.
      */
