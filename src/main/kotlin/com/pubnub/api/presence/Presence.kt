@@ -60,7 +60,7 @@ internal interface Presence {
                 )
             ).also { it.start() }
 
-            return EnabledPresence(eventEngineManager, presenceData)
+            return EnabledPresence(eventEngineManager)
         }
     }
 
@@ -110,8 +110,7 @@ internal class PresenceNoOp : Presence {
 }
 
 internal class EnabledPresence(
-    private val presenceEventEngineManager: PresenceEventEngineManager,
-    private val presenceData: PresenceData = PresenceData()
+    private val presenceEventEngineManager: PresenceEventEngineManager
 ) : Presence {
 
     override fun joined(
@@ -125,12 +124,10 @@ internal class EnabledPresence(
         channels: Set<String>,
         channelGroups: Set<String>
     ) {
-        presenceData.channelStates.keys.removeAll(channels)
         presenceEventEngineManager.addEventToQueue(PresenceEvent.Left(channels, channelGroups))
     }
 
     override fun leftAll() {
-        presenceData.channelStates.clear()
         presenceEventEngineManager.addEventToQueue(PresenceEvent.LeftAll)
     }
 
