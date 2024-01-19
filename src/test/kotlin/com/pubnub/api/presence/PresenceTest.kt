@@ -19,6 +19,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
+import java.util.concurrent.ScheduledExecutorService
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
@@ -29,6 +30,7 @@ private const val CHANNEL_GROUPS_01 = "channelGroups01"
 
 internal class PresenceTest {
     private val listenerManager: ListenerManager = mockk()
+    private val executorService: ScheduledExecutorService = mockk()
 
     companion object {
         @JvmStatic
@@ -110,6 +112,7 @@ internal class PresenceTest {
         listenerManager = listenerManager,
         eventEngineConf = eventEngineConf,
         presenceData = presenceData,
-        sendStateWithHeartbeat = true
+        sendStateWithHeartbeat = true,
+        executorService = executorService
     )
 }

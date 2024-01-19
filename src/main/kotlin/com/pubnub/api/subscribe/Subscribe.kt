@@ -19,7 +19,7 @@ import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent.SubscriptionCha
 import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent.SubscriptionRestored
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import com.pubnub.api.workers.SubscribeMessageProcessor
-import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
 
 private const val PRESENCE_CHANNEL_SUFFIX = "-pnpres"
 
@@ -37,6 +37,7 @@ internal class Subscribe(
             messageProcessor: SubscribeMessageProcessor,
             presenceData: PresenceData,
             sendStateWithSubscribe: Boolean,
+            executorService: ScheduledExecutorService
         ): Subscribe {
             val subscribeEventEngineManager = createAndStartSubscribeEventEngineManager(
                 pubNub,
@@ -45,7 +46,8 @@ internal class Subscribe(
                 retryConfiguration,
                 listenerManager,
                 presenceData,
-                sendStateWithSubscribe = sendStateWithSubscribe,
+                sendStateWithSubscribe,
+                executorService
             )
 
             return Subscribe(subscribeEventEngineManager, presenceData)
@@ -59,13 +61,14 @@ internal class Subscribe(
             listenerManager: ListenerManager,
             presenceData: PresenceData,
             sendStateWithSubscribe: Boolean,
+            executorService: ScheduledExecutorService
         ): SubscribeEventEngineManager {
             val subscribeEffectFactory = SubscribeEffectFactory(
                 handshakeProvider = HandshakeProviderImpl(pubNub),
                 receiveMessagesProvider = ReceiveMessagesProviderImpl(pubNub, messageProcessor),
                 subscribeEventSink = eventEnginesConf.subscribe.eventSink,
                 retryConfiguration = retryConfiguration,
-                executorService = Executors.newSingleThreadScheduledExecutor(),
+                executorService = executorService,
                 messagesConsumer = listenerManager,
                 statusConsumer = listenerManager,
                 presenceData = presenceData,

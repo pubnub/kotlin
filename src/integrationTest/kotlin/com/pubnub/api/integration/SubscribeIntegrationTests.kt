@@ -234,6 +234,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
                 origin = notExistingUri
                 retryConfiguration = RetryConfiguration.Linear(delayInSec = 1, maxRetryNumber = 2)
                 enableEventEngine = true
+                heartbeatInterval = 1
             }
         )
 

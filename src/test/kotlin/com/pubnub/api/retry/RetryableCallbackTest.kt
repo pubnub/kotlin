@@ -5,6 +5,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import okhttp3.ResponseBody
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -13,6 +14,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -28,6 +31,16 @@ class RetryableCallbackTest {
         mockResponse = mockk(relaxed = true)
     }
 
+    companion object {
+        private val executorService: ScheduledExecutorService = Executors.newScheduledThreadPool(10)
+
+        @JvmStatic
+        @AfterAll
+        fun tearDown() {
+            executorService.shutdownNow()
+        }
+    }
+
     private fun getRetryableCallback(
         retryConfiguration: RetryConfiguration = RetryConfiguration.None,
         onFinalFailureFinished: AtomicBoolean = AtomicBoolean(false),
@@ -35,7 +48,11 @@ class RetryableCallbackTest {
         endpointGroupName: RetryableEndpointGroup = RetryableEndpointGroup.MESSAGE_PERSISTENCE
     ): RetryableCallback<Any> {
         return object : RetryableCallback<Any>(
-            retryConfiguration, endpointGroupName, mockCall, isEndpointRetryable = true
+            retryConfiguration = retryConfiguration,
+            endpointGroupName = endpointGroupName,
+            call = mockCall,
+            isEndpointRetryable = true,
+            executorService = executorService
         ) {
             override fun onFinalResponse(call: Call<Any>, response: Response<Any>) {
                 onFinalResponseCalled = true
@@ -82,7 +99,14 @@ class RetryableCallbackTest {
         // given
         val success = AtomicBoolean()
         val retryableCallback =
-            getRetryableCallback(retryConfiguration = RetryConfiguration.Linear(delayInSec = 10.milliseconds, maxRetryNumber = 3, isInternal = true), onFinalResponseFinished = success)
+            getRetryableCallback(
+                retryConfiguration = RetryConfiguration.Linear(
+                    delayInSec = 10.milliseconds,
+                    maxRetryNumber = 3,
+                    isInternal = true
+                ),
+                onFinalResponseFinished = success
+            )
         val errorResponse: Response<Any> = Response.error<Any>(500, ResponseBody.create(null, ""))
         every { mockResponse.isSuccessful } returns false
         every { mockResponse.code() } returns 500 // Assuming 500 is a retryable error
@@ -118,7 +142,8 @@ class RetryableCallbackTest {
             isInternal = true
         )
         val success = AtomicBoolean()
-        val retryableCallback = getRetryableCallback(retryConfiguration = retryConfiguration, onFinalResponseFinished = success)
+        val retryableCallback =
+            getRetryableCallback(retryConfiguration = retryConfiguration, onFinalResponseFinished = success)
         val errorResponse: Response<Any> = Response.error<Any>(500, ResponseBody.create(null, ""))
         every { mockResponse.isSuccessful } returns false
         every { mockResponse.code() } returns 500 // Assuming 500 is a retryable error
@@ -152,7 +177,8 @@ class RetryableCallbackTest {
             isInternal = true
         )
         val success = AtomicBoolean()
-        val retryableCallback = getRetryableCallback(retryConfiguration = retryConfiguration, onFinalResponseFinished = success)
+        val retryableCallback =
+            getRetryableCallback(retryConfiguration = retryConfiguration, onFinalResponseFinished = success)
         every { mockResponse.isSuccessful } returns false
         every { mockResponse.code() } returns 500 // Assuming 500 is a retryable error
         val successfulResponse: Response<Any> = Response.success(null)
@@ -185,7 +211,8 @@ class RetryableCallbackTest {
             isInternal = true
         )
         val success = AtomicBoolean()
-        val retryableCallback = getRetryableCallback(retryConfiguration = retryConfiguration, onFinalFailureFinished = success)
+        val retryableCallback =
+            getRetryableCallback(retryConfiguration = retryConfiguration, onFinalFailureFinished = success)
         every { mockResponse.isSuccessful } returns false
         every { mockResponse.code() } returns 500 // Assuming 500 is a retryable error
         every { mockCall.enqueue(any()) } answers {
