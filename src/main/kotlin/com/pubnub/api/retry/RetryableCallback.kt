@@ -1,29 +1,29 @@
 package com.pubnub.api.retry
 
+import com.pubnub.extension.scheduleWithDelay
 import org.slf4j.LoggerFactory
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 
 internal abstract class RetryableCallback<T>(
     retryConfiguration: RetryConfiguration,
     endpointGroupName: RetryableEndpointGroup,
     private val call: Call<T>,
-    private val isEndpointRetryable: Boolean
+    private val isEndpointRetryable: Boolean,
+    private val executorService: ScheduledExecutorService
 ) : Callback<T>, RetryableBase<T>(retryConfiguration, endpointGroupName) {
     private val log = LoggerFactory.getLogger(this.javaClass.simpleName)
     private var retryCount = 0
     private var exponentialMultiplier = 0.0
-    private val executorService: ExecutorService = Executors.newSingleThreadExecutor()
 
     override fun onResponse(call: Call<T>, response: Response<T>) {
         if (shouldRetryOnResponse(response)) {
             retryOnResponseWithError(response)
         } else {
-            executorService.shutdown()
             onFinalResponse(call, response)
         }
     }
@@ -32,7 +32,6 @@ internal abstract class RetryableCallback<T>(
         if (shouldRetryOnFailure(t)) {
             retryOnFailure()
         } else {
-            executorService.shutdown()
             onFinalFailure(call, t)
         }
     }
@@ -71,17 +70,12 @@ internal abstract class RetryableCallback<T>(
 
     private fun retry(delay: Duration) {
         retryCount++
-        val randomDelayInMillis = random.nextInt(MAX_RANDOM_DELAY_IN_MILLIS)
-        val effectiveDelayInMillis = delay.inWholeMilliseconds + randomDelayInMillis
-        log.trace("Added random delay so effective retry delay is $effectiveDelayInMillis")
-        // don't want to block the main thread in case of Android so using executor service
-        executorService.execute {
-            try {
-                Thread.sleep(effectiveDelayInMillis)
-                call.clone().enqueue(this)
-            } catch (e: InterruptedException) {
-                e.printStackTrace()
-            }
+        val randomDelayInMillis: Int = random.nextInt(MAX_RANDOM_DELAY_IN_MILLIS)
+        val effectiveDelay: Duration = delay + randomDelayInMillis.milliseconds
+        log.trace("Added random delay so effective retry delay is ${effectiveDelay.inWholeMilliseconds} millis")
+        // don't want to block the main thread in case of Android so using executorService
+        executorService.scheduleWithDelay(effectiveDelay) {
+            call.clone().enqueue(this)
         }
     }
 

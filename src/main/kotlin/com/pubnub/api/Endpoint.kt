@@ -114,7 +114,8 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
             call = call,
             retryConfiguration = pubnub.configuration.retryConfiguration,
             endpointGroupName = getEndpointGroupName(),
-            isEndpointRetryable = isEndpointRetryable()
+            isEndpointRetryable = isEndpointRetryable(),
+            executorService = pubnub.executorService
         ) {
                 override fun onFinalResponse(call: Call<Input>, response: Response<Input>) {
                     when {

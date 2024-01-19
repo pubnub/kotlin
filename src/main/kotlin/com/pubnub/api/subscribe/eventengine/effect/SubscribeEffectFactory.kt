@@ -11,7 +11,6 @@ import com.pubnub.api.subscribe.eventengine.effect.effectprovider.HandshakeProvi
 import com.pubnub.api.subscribe.eventengine.effect.effectprovider.ReceiveMessagesProvider
 import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
-import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 
 internal data class ReceiveMessagesResult(
@@ -24,7 +23,7 @@ internal class SubscribeEffectFactory(
     private val receiveMessagesProvider: ReceiveMessagesProvider,
     private val subscribeEventSink: Sink<SubscribeEvent>,
     private val retryConfiguration: RetryConfiguration,
-    private val executorService: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor(),
+    private val executorService: ScheduledExecutorService,
     private val messagesConsumer: MessagesConsumer,
     private val statusConsumer: StatusConsumer,
     private val presenceData: PresenceData,
