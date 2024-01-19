@@ -7,10 +7,4 @@ package com.pubnub.api.models.consumer.presence
  */
 class PNWhereNowResult internal constructor(
     val channels: List<String>
-) {
-    companion object {
-        fun from(data: com.pubnub.internal.models.consumer.presence.PNWhereNowResult): PNWhereNowResult {
-            return PNWhereNowResult(data.channels)
-        }
-    }
-}
+)

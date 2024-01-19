@@ -41,7 +41,7 @@ data class PNFetchMessageItem(
     val message: JsonElement,
     val meta: JsonElement?,
     val timetoken: Long?,
-    val actions: Map<String, Map<String, List<com.pubnub.api.models.consumer.history.Action>>>? = null,
+    val actions: Map<String, Map<String, List<Action>>>? = null,
     val messageType: HistoryMessageType?,
     val error: PubNubError? = null
 ) {

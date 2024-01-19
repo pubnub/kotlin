@@ -7,7 +7,7 @@ import com.pubnub.api.suite.AUTH
 import com.pubnub.api.suite.EndpointTestSuite
 import com.pubnub.api.suite.SUB
 import com.pubnub.internal.endpoints.presence.WhereNow
-import com.pubnub.internal.models.consumer.presence.PNWhereNowResult
+import com.pubnub.api.models.consumer.presence.PNWhereNowResult
 import org.junit.Assert.assertEquals
 
 class WhereNowTestSuite : EndpointTestSuite<WhereNow, PNWhereNowResult>() {

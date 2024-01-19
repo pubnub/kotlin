@@ -16,12 +16,11 @@ public class Publish extends ValidatingEndpoint<PNPublishResult> {
     private Boolean shouldStore;
     private boolean usePOST;
     private Object meta;
-    private boolean replicate;
+    private boolean replicate = true;
     private Integer ttl;
 
     public Publish(com.pubnub.internal.PubNub pubnub) {
         super(pubnub);
-        this.replicate = true;
     }
 
     @Override

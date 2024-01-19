@@ -3,7 +3,7 @@ package com.pubnub.internal.endpoints.presence
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.PubNub
-import com.pubnub.internal.models.consumer.presence.PNWhereNowResult
+import com.pubnub.api.models.consumer.presence.PNWhereNowResult
 import com.pubnub.internal.models.server.Envelope
 import com.pubnub.internal.models.server.presence.WhereNowPayload
 import retrofit2.Call

@@ -1,5 +1,6 @@
 package com.pubnub.api.models.consumer.objects
 
+//todo this was in another package in java sdk, need to split impl/api
 sealed class PNPage {
     abstract val pageHash: String
 
