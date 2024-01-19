@@ -94,6 +94,7 @@ import com.pubnub.api.subscribe.Subscribe
 import com.pubnub.api.subscribe.eventengine.configuration.EventEnginesConf
 import com.pubnub.api.workers.SubscribeMessageProcessor
 import java.io.InputStream
+import java.lang.Integer.min
 import java.util.Date
 import java.util.UUID
 import java.util.concurrent.Executors
@@ -128,7 +129,8 @@ class PubNub internal constructor(
      */
     val mapper = MapperManager()
 
-    internal val executorService: ScheduledExecutorService = Executors.newScheduledThreadPool(15)
+    private val numberOfThreadsInPool = min(Runtime.getRuntime().availableProcessors(), 8)
+    internal val executorService: ScheduledExecutorService = Executors.newScheduledThreadPool(numberOfThreadsInPool)
 
     private val basePathManager = BasePathManager(configuration)
     internal val retrofitManager = RetrofitManager(this)
