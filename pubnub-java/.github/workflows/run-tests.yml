@@ -1,0 +1,100 @@
+name: Tests
+
+on:
+  push:
+  workflow_dispatch:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  tests:
+    name: Integration and Unit tests
+    runs-on: ubuntu-latest
+    env:
+      SUB_KEY: ${{ secrets.SUB_KEY }}
+      PUB_KEY: ${{ secrets.PUB_KEY }}
+      PAM_SUB_KEY: ${{ secrets.PAM_SUB_KEY }}
+      PAM_PUB_KEY: ${{ secrets.PAM_PUB_KEY }}
+      PAM_SEC_KEY: ${{ secrets.PAM_SEC_KEY }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+      - name: Checkout actions
+        uses: actions/checkout@v3
+        with:
+          repository: pubnub/client-engineering-deployment-tools
+          ref: v1
+          token: ${{ secrets.GH_TOKEN }}
+          path: .github/.release/actions
+      - name: Build and run tests
+        run: |
+          ./gradlew assemble
+          ./gradlew check
+      - name: Cancel workflow runs for commit on error
+        if: failure()
+        uses: ./.github/.release/actions/actions/utils/fast-jobs-failure
+  acceptance-tests:
+    name: Acceptance tests
+    runs-on: ubuntu-latest
+    env:
+      pubKey: somePubKey
+      subKey: someSubKey
+      pamPubKey: somePamPubKey
+      pamSubKey: somePamSubKey
+      pamSecKey: someSecKey
+      serverHostPort: "localhost:8090"
+      serverMock: true
+      dataFileLocation: "src/test/resources/sdk-specifications/features/data"
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v3
+      - name: Checkout mock-server action
+        uses: actions/checkout@v3
+        with:
+          repository: pubnub/client-engineering-deployment-tools
+          ref: v1
+          token: ${{ secrets.GH_TOKEN }}
+          path: .github/.release/actions
+      - name: Run mock server action
+        uses: ./.github/.release/actions/actions/mock-server
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+      - name: Cache Gradle
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - name: Run acceptance tests (optional)
+        run: |
+          ln -s /home/runner/work/java/java/sdk-specifications src/test/resources/sdk-specifications
+          ./gradlew cucumber --tests RunBetaCucumberTest -Dcucumber.features="sdk-specifications/features/" -i
+        continue-on-error: true
+      - name: Run acceptance tests (required)
+        run: ./gradlew cucumber --tests RunMainCucumberTest -Dcucumber.features="sdk-specifications/features/" -i
+      - name: Expose acceptance tests reports
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: acceptance-test-reports
+          path: ./build/reports/cucumber-reports
+          retention-days: 7
+      - name: Cancel workflow runs for commit on error
+        if: failure()
+        uses: ./.github/.release/actions/actions/utils/fast-jobs-failure
+  all-tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    needs: [tests, acceptance-tests]
+    steps:
+      - name: Tests summary
+        run: echo -e "\033[38;2;95;215;0m\033[1mAll tests successfully passed"

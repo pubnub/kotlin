@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Error>
+    <Code>EntityTooLarge</Code>
+    <Message>Your proposed upload exceeds the maximum allowed size</Message>
+    <ProposedSize>5282</ProposedSize>
+    <MaxSizeAllowed>5120</MaxSizeAllowed>
+    <RequestId>ES1J0M4J8Z1K9R1T</RequestId>
+    <HostId>hADJBPzd5nX3X6t/jS/0NwFChBR2qUG/APFr2S6cJURmS/0XEszOVkPJ2KEssTMoN1xCN2+Uqhk=</HostId>
+</Error>
