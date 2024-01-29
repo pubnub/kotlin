@@ -94,38 +94,6 @@ internal class PresenceTest {
         assertThat(presence, Matchers.isA(PresenceNoOp::class.java))
     }
 
-    @Test
-    fun `when left is called PresenceData state is cleared for relevant channels`() {
-        // given
-        val presenceData = PresenceData()
-        val state = mapOf("aaa" to "bbb")
-        presenceData.channelStates[CHANNEL_01] = state
-        presenceData.channelStates[CHANNEL_02] = state
-        val presence = Presence.create(listenerManager = listenerManager, enableEventEngine = true, presenceData = presenceData)
-
-        // when
-        presence.left(setOf(CHANNEL_02))
-
-        // then
-        assertThat(presenceData.channelStates, Matchers.`is`(mapOf(CHANNEL_01 to state)))
-    }
-
-    @Test
-    fun `when leftAll is called PresenceData state is cleared for all channels`() {
-        // given
-        val presenceData = PresenceData()
-        val state = mapOf("aaa" to "bbb")
-        presenceData.channelStates[CHANNEL_01] = state
-        presenceData.channelStates[CHANNEL_02] = state
-        val presence = Presence.create(listenerManager = listenerManager, enableEventEngine = true, presenceData = presenceData)
-
-        // when
-        presence.leftAll()
-
-        // then
-        assertThat(presenceData.channelStates, Matchers.anEmptyMap())
-    }
-
     private fun Presence.Companion.create(
         listenerManager: ListenerManager,
         heartbeatInterval: Duration = 3.seconds,

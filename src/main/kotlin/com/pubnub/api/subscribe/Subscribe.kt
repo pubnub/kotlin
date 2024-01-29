@@ -25,7 +25,8 @@ private const val PRESENCE_CHANNEL_SUFFIX = "-pnpres"
 
 internal class Subscribe(
     private val subscribeEventEngineManager: SubscribeEventEngineManager,
-    private val subscriptionData: SubscriptionData = SubscriptionData()
+    private val presenceData: PresenceData,
+    private val subscriptionData: SubscriptionData = SubscriptionData(),
 ) {
     companion object {
         internal fun create(
@@ -49,7 +50,7 @@ internal class Subscribe(
                 executorService
             )
 
-            return Subscribe(subscribeEventEngineManager)
+            return Subscribe(subscribeEventEngineManager, presenceData)
         }
 
         private fun createAndStartSubscribeEventEngineManager(
@@ -137,6 +138,8 @@ internal class Subscribe(
         removeChannelsFromSubscriptionData(channels)
         removeChannelGroupsFromSubscriptionData(channelGroups)
 
+        presenceData.channelStates.keys.removeAll(channels)
+
         if (subscriptionData.channels.size > 0 || subscriptionData.channelGroups.size > 0) {
             val channelsInLocalStorage = subscriptionData.channels
             val channelGroupsInLocalStorage = subscriptionData.channelGroups
@@ -155,6 +158,7 @@ internal class Subscribe(
     fun unsubscribeAll() {
         removeAllChannelsFromLocalStorage()
         removeAllChannelGroupsFromLocalStorage()
+        presenceData.channelStates.clear()
         subscribeEventEngineManager.addEventToQueue(SubscribeEvent.UnsubscribeAll)
     }
 

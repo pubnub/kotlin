@@ -1,6 +1,7 @@
 package com.pubnub.api.subscribe
 
 import com.pubnub.api.managers.SubscribeEventEngineManager
+import com.pubnub.api.presence.eventengine.data.PresenceData
 import com.pubnub.api.subscribe.eventengine.data.SubscriptionData
 import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import io.mockk.CapturingSlot
@@ -9,6 +10,7 @@ import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -32,11 +34,12 @@ internal class SubscribeTest {
     private val withPresence = false
     private val withTimetoken = 12345345452L
     private val subscribeEvent: CapturingSlot<SubscribeEvent> = slot()
+    private val presenceData = PresenceData()
 
     @BeforeEach
     internal fun setUp() {
         every { subscribeEventEngineManager.addEventToQueue(capture(subscribeEvent)) } returns Unit
-        objectUnderTest = Subscribe(subscribeEventEngineManager, subscriptionData)
+        objectUnderTest = Subscribe(subscribeEventEngineManager, presenceData, subscriptionData)
     }
 
     @Test
@@ -152,6 +155,34 @@ internal class SubscribeTest {
         objectUnderTest.reconnect()
 
         assertEquals(SubscribeEvent.Reconnect(), subscribeEvent.captured)
+    }
+
+    @Test
+    fun `should remove presence data when unsubscribing`() {
+        // given
+        val channel = "someChannel"
+        presenceData.channelStates[channel] = Any()
+
+        // when
+        objectUnderTest.unsubscribe(setOf(channel))
+
+        // then
+        assertFalse(channel in presenceData.channelStates.keys)
+    }
+
+    @Test
+    fun `should remove all presence data when unsubscribeAll`() {
+        // given
+        val channel = "someChannel"
+        val otherChannel = "otherChannel"
+        presenceData.channelStates[channel] = Any()
+        presenceData.channelStates[otherChannel] = Any()
+
+        // when
+        objectUnderTest.unsubscribeAll()
+
+        // then
+        assertTrue(presenceData.channelStates.isEmpty())
     }
 
     private fun createSubscriptionStateContainingValues(): SubscriptionData {
