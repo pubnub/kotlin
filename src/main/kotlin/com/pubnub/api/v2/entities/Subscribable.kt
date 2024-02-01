@@ -4,5 +4,5 @@ import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 
 interface Subscribable {
-    fun subscription(options: SubscriptionOptions = SubscriptionOptions.Default): Subscription
+    fun subscription(options: SubscriptionOptions? = null): Subscription
 }

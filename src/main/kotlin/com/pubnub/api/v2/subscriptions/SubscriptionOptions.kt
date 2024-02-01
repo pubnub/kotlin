@@ -1,8 +1,8 @@
 package com.pubnub.api.v2.subscriptions
 
 import com.pubnub.api.models.consumer.pubsub.PNEvent
-import com.pubnub.internal.v2.subscription.Filter
-import com.pubnub.internal.v2.subscription.ReceivePresenceEvents
+import com.pubnub.internal.v2.subscription.FilterImpl
+import com.pubnub.internal.v2.subscription.ReceivePresenceEventsImpl
 
 /**
  * SubscriptionOptions is a mechanism used for supplying optional modifiers for subscriptions.
@@ -24,57 +24,20 @@ open class SubscriptionOptions internal constructor(
      *
      * val options = `SubscriptionOptions.filter( { /* some expression*/ }) + ChannelOptions.receivePresenceEvents()`
      */
-    open operator fun plus(options: SubscriptionOptions): SubscriptionOptions {
+    open operator fun plus(options: SubscriptionOptions?): SubscriptionOptions {
         val newOptions = buildSet {
             addAll(allOptions)
-            addAll(options.allOptions)
+            options?.let {
+                addAll(it.allOptions)
+            }
         }
         return SubscriptionOptions(newOptions)
     }
-
-    /**
-     * Filter the events received through the subscriptions only to those that match the [predicate]
-     *
-     * @param predicate return `true` to deliver an event to listeners, `false` to discard it
-     */
-    fun filter(predicate: (PNEvent) -> Boolean): SubscriptionOptions =
-        this + Filter(predicate)
-
-    object Default : SubscriptionOptions()
-
-    companion object {
-        /**
-         * Filter the events received through the subscriptions only to those that match the [predicate]
-         *
-         * @param predicate return `true` to deliver an event to listeners, `false` to discard it
-         */
-        fun filter(predicate: (PNEvent) -> Boolean): SubscriptionOptions = Default.filter(predicate)
-    }
 }
 
-open class ChannelOptions internal constructor(
-    optionsSet: Set<SubscriptionOptions> = emptySet()
-) : SubscriptionOptions(optionsSet) {
-    override operator fun plus(options: SubscriptionOptions): ChannelOptions {
-        return ChannelOptions(super.plus(options).allOptions)
-    }
+fun ReceivePresenceEvents(): SubscriptionOptions = ReceivePresenceEventsImpl()
+fun Filter(predicate: (PNEvent) -> Boolean): SubscriptionOptions = FilterImpl(predicate)
 
-    object Default : ChannelOptions()
-
-    /**
-     * Enable receiving presence events with this subscription.
-     *
-     * This is the equivalent of `pubnub.subscribe( ... , withPresence = true)` in the legacy API.
-     */
-    fun receivePresenceEvents(): ChannelOptions =
-        this + ReceivePresenceEvents()
-
-    companion object {
-        /**
-         * Enable receiving presence events with this subscription.
-         *
-         * This is the equivalent of `pubnub.subscribe( ... , withPresence = true)` in the legacy API.
-         */
-        fun receivePresenceEvents(): ChannelOptions = ReceivePresenceEvents()
-    }
+fun main() {
+    println((ReceivePresenceEvents() + Filter { true }).allOptions)
 }

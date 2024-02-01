@@ -17,13 +17,13 @@ internal class SubscriptionImpl(
     internal val pubnub: PubNub,
     channels: Set<ChannelName> = emptySet(),
     channelGroups: Set<ChannelGroupName> = emptySet(),
-    options: SubscriptionOptions = SubscriptionOptions.Default,
+    options: SubscriptionOptions? = null,
 ) : Subscription(), EventEmitter {
 
     internal val channels = channels.toSet()
     internal val channelGroups = channelGroups.toSet()
 
-    private val filters = options.allOptions.filterIsInstance<Filter>()
+    private val filters: List<FilterImpl> = options?.allOptions?.filterIsInstance<FilterImpl>() ?: emptyList()
 
     @get:TestOnly
     internal val eventEmitter = EventEmitterImpl(pubnub, this::accepts)

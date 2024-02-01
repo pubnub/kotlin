@@ -7,7 +7,7 @@ import com.pubnub.api.v2.callbacks.EventEmitter
  *
  * Create objects of this class through the [com.pubnub.api.v2.entities.Subscribable.subscription] method of the
  * respective entities, such as [com.pubnub.api.v2.entities.Channel], [com.pubnub.api.v2.entities.ChannelGroup],
- * [com.pubnub.api.v2.entities.ChannelMetadata] and [com.pubnub.api.v2.entities.UuidMetadata].
+ * [com.pubnub.api.v2.entities.ChannelMetadata] and [com.pubnub.api.v2.entities.UserMetadata].
  *
  * Created subscriptions are usually inactive, and you must call [subscribe] to start receiving events.
  *

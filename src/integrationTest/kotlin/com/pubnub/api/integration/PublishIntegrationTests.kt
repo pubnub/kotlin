@@ -22,7 +22,7 @@ import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.subscribeToBlocking
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.entities.Channel
-import com.pubnub.api.v2.subscriptions.ChannelOptions
+import com.pubnub.api.v2.subscriptions.ReceivePresenceEvents
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import org.awaitility.Awaitility
@@ -172,7 +172,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         })
 
         val testChannel = pubnub.channel(expectedChannel)
-        val testSubscription = testChannel.subscription(ChannelOptions.receivePresenceEvents())
+        val testSubscription = testChannel.subscription(ReceivePresenceEvents())
         testSubscription.addListener(object : EventListener() {
 
             override fun message(pubnub: PubNub, result: PNMessageResult) {
@@ -512,7 +512,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         val randomChannelName02 = "myChannel02"
         val subscriptionSetOf: SubscriptionSet = pubnub.subscriptionSetOf(
             channels = setOf(randomChannelName01, randomChannelName02),
-            options = ChannelOptions.receivePresenceEvents()
+            options = ReceivePresenceEvents()
         )
 
         subscriptionSetOf.addListener(object : EventListener() {
@@ -545,7 +545,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         val randomChannelName02 = "myChannel.02"
         val myChannel: Channel = pubnub.channel("myChannel.*")
 //        val myChannel: Channel = pubnub.channel(randomChannelName01)
-        val subscription = myChannel.subscription(options = SubscriptionOptions.Default)
+        val subscription = myChannel.subscription()
         subscription.addListener(object : EventListener() {
             override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
                 println("-= message =-")
@@ -577,7 +577,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         val randomChannelName02 = "myChannel02"
         val subscriptionSetOf: SubscriptionSet = pubnub.subscriptionSetOf(
             channels = setOf(randomChannelName01, randomChannelName02),
-            options = ChannelOptions.receivePresenceEvents()
+            options = ReceivePresenceEvents()
         )
 
         subscriptionSetOf.addListener(object : EventListener() {

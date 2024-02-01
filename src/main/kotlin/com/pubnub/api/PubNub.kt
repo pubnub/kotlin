@@ -98,8 +98,8 @@ import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.api.v2.entities.Channel
 import com.pubnub.api.v2.entities.ChannelGroup
 import com.pubnub.api.v2.entities.ChannelMetadata
-import com.pubnub.api.v2.entities.UuidMetadata
-import com.pubnub.api.v2.subscriptions.ChannelOptions
+import com.pubnub.api.v2.entities.UserMetadata
+import com.pubnub.api.v2.subscriptions.ReceivePresenceEvents
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionCursor
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
@@ -363,9 +363,9 @@ class PubNub internal constructor(
             channelSubscriptionMap.computeIfAbsent(channelName) { newChannelName ->
                 val channel = ChannelImpl(this, newChannelName)
                 val options = if (withPresence) {
-                    ChannelOptions.receivePresenceEvents()
+                    ReceivePresenceEvents()
                 } else {
-                    SubscriptionOptions.Default
+                    null
                 }
                 channel.subscription(options).also { sub ->
                     toSubscribe.add(sub)
@@ -390,9 +390,9 @@ class PubNub internal constructor(
                 val channelGroup = ChannelGroupImpl(this, newChannelGroupName)
                 val options =
                     if (withPresence) {
-                        ChannelOptions.receivePresenceEvents()
+                        ReceivePresenceEvents()
                     } else {
-                        SubscriptionOptions.Default
+                        null
                     }
                 channelGroup.subscription(options).also { sub ->
                     toSubscribe.add(sub)
@@ -2307,7 +2307,7 @@ class PubNub internal constructor(
         return ChannelMetadataImpl(this, ChannelName(id))
     }
 
-    fun uuidMetadata(id: String): UuidMetadata {
+    fun userMetadata(id: String): UserMetadata {
         return UserMetadataImpl(this, ChannelName(id))
     }
 
@@ -2328,8 +2328,9 @@ class PubNub internal constructor(
      *
      * Please note that the subscriptions are not active until you call [SubscriptionSet.subscribe].
      *
-     * This is the same as calling [PubNub.channel] followed by [Channel.subscription] for each channel,
-     * then creating a [subscriptionSetOf] using these [Subscription] objects (similarly for channel groups).
+     * This is a convenience method, and it is equal to calling [PubNub.channel] followed by [Channel.subscription] for
+     * each channel, then creating a [subscriptionSetOf] using the returned [Subscription] objects (and similarly for
+     * channel groups).
      *
      * @param channels the channels to create subscriptions for
      * @param channelGroups the channel groups to create subscriptions for
@@ -2340,7 +2341,7 @@ class PubNub internal constructor(
     fun subscriptionSetOf(
         channels: Set<String> = emptySet(),
         channelGroups: Set<String> = emptySet(),
-        options: SubscriptionOptions = SubscriptionOptions.Default
+        options: SubscriptionOptions? = null
     ): SubscriptionSet {
         val subscriptionSet = SubscriptionSetImpl(this)
         channels.forEach {

@@ -35,5 +35,5 @@ interface Channel : Subscribable {
      * @param options optional [SubscriptionOptions]. Also supports [com.pubnub.api.v2.subscriptions.ChannelOptions].
      * @return an inactive [Subscription] to this channel. You must call [Subscription.subscribe] to start receiving events.
      */
-    override fun subscription(options: SubscriptionOptions): Subscription
+    override fun subscription(options: SubscriptionOptions?): Subscription
 }

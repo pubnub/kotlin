@@ -3,30 +3,29 @@ package com.pubnub.internal.v2.entities
 import com.pubnub.api.PubNub
 import com.pubnub.api.subscribe.PRESENCE_CHANNEL_SUFFIX
 import com.pubnub.api.v2.entities.Channel
-import com.pubnub.api.v2.subscriptions.ChannelOptions
+import com.pubnub.api.v2.subscriptions.Filter
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
-import com.pubnub.internal.v2.subscription.ReceivePresenceEvents
+import com.pubnub.internal.v2.subscription.ReceivePresenceEventsImpl
 import com.pubnub.internal.v2.subscription.SubscriptionImpl
 
 internal class ChannelImpl(internal val pubnub: PubNub, private val channelName: ChannelName) : Channel {
 
     override val name: String = channelName.id
 
-    override fun subscription(options: SubscriptionOptions): SubscriptionImpl {
-        val channelOptions = options.allOptions.filterIsInstance<ChannelOptions>()
+    override fun subscription(options: SubscriptionOptions?): SubscriptionImpl {
         val channels = buildSet<ChannelName> {
             add(channelName)
-            if (channelOptions.filterIsInstance<ReceivePresenceEvents>().isNotEmpty()) {
+            if (options?.allOptions?.filterIsInstance<ReceivePresenceEventsImpl>()?.isNotEmpty() == true) {
                 add(channelName.withPresence)
             }
         }
         return SubscriptionImpl(
             pubnub,
             channels = channels,
-            options = options.filter { result ->
+            options = Filter { result ->
                 // simple channel name or presence channel
                 if (channels.any { it.id == result.channel }) {
-                    return@filter true
+                    return@Filter true
                 }
 
                 // wildcard channels
@@ -36,10 +35,10 @@ internal class ChannelImpl(internal val pubnub: PubNub, private val channelName:
                                     result.channel.startsWith(name.substringBeforeLast("*"))
                             )
                 ) {
-                    return@filter true
+                    return@Filter true
                 }
-                return@filter false
-            }
+                return@Filter false
+            } + options
         )
     }
 
