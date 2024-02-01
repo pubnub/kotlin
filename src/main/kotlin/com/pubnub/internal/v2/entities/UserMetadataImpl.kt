@@ -5,7 +5,7 @@ import com.pubnub.api.v2.entities.UuidMetadata
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.internal.v2.subscription.SubscriptionImpl
 
-internal class UuidMetadataImpl(internal val pubnub: PubNub, val channelName: ChannelName) : UuidMetadata {
+internal class UserMetadataImpl(internal val pubnub: PubNub, val channelName: ChannelName) : UuidMetadata {
 
     override val id: String = channelName.id
 

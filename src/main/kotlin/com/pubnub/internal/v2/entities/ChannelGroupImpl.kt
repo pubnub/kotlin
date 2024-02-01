@@ -49,7 +49,7 @@ internal class ChannelGroupImpl(internal val pubNub: PubNub, private val channel
 }
 
 @JvmInline
-internal value class ChannelGroupName(val id: String)
-
-internal val ChannelGroupName.withPresence get() = ChannelGroupName("${this.id}$PRESENCE_CHANNEL_SUFFIX")
-internal val ChannelGroupName.isPresence get() = id.endsWith(PRESENCE_CHANNEL_SUFFIX)
+internal value class ChannelGroupName(val id: String) {
+    val withPresence get() = ChannelGroupName("${this.id}$PRESENCE_CHANNEL_SUFFIX")
+    val isPresence get() = id.endsWith(PRESENCE_CHANNEL_SUFFIX)
+}

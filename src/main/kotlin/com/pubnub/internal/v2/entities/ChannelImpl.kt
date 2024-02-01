@@ -65,7 +65,7 @@ internal class ChannelImpl(internal val pubnub: PubNub, private val channelName:
 }
 
 @JvmInline
-internal value class ChannelName(val id: String)
-
-internal val ChannelName.withPresence get() = ChannelName("${this.id}$PRESENCE_CHANNEL_SUFFIX")
-internal val ChannelName.isPresence get() = id.endsWith(PRESENCE_CHANNEL_SUFFIX)
+internal value class ChannelName(val id: String) {
+    val withPresence get() = ChannelName("${this.id}$PRESENCE_CHANNEL_SUFFIX")
+    val isPresence get() = id.endsWith(PRESENCE_CHANNEL_SUFFIX)
+}

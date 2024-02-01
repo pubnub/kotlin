@@ -51,10 +51,12 @@ internal class SubscriptionSetImpl(
 
     override fun subscribe(cursor: SubscriptionCursor) {
         pubnub.subscribe(*subscriptionSet.toTypedArray(), cursor = cursor)
+        subscriptionSet.forEach { it.deliverEventsFrom = cursor }
     }
 
     override fun unsubscribe() {
         pubnub.unsubscribe(*subscriptionSet.toTypedArray())
+        subscriptionSet.forEach { it.deliverEventsFrom = null }
     }
 
     override fun close() {

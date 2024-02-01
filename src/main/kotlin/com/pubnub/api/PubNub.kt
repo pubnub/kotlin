@@ -111,9 +111,7 @@ import com.pubnub.internal.v2.entities.ChannelGroupName
 import com.pubnub.internal.v2.entities.ChannelImpl
 import com.pubnub.internal.v2.entities.ChannelMetadataImpl
 import com.pubnub.internal.v2.entities.ChannelName
-import com.pubnub.internal.v2.entities.UuidMetadataImpl
-import com.pubnub.internal.v2.entities.isPresence
-import com.pubnub.internal.v2.entities.withPresence
+import com.pubnub.internal.v2.entities.UserMetadataImpl
 import com.pubnub.internal.v2.subscription.SubscriptionImpl
 import com.pubnub.internal.v2.subscription.SubscriptionSetImpl
 import java.io.InputStream
@@ -2272,7 +2270,7 @@ class PubNub internal constructor(
     }
 
     /**
-     * Create a [Channel] that can be used to obtain a [Subscription].
+     * Create a handle to a [Channel] that can be used to obtain a [Subscription].
      *
      * The function is cheap to call, and the returned object is lightweight, as it doesn't change any client or server
      * state. It is therefore permitted to use this method whenever a representation of a channel is required.
@@ -2289,7 +2287,7 @@ class PubNub internal constructor(
     }
 
     /**
-     * Create a [ChannelGroup] that can be used to obtain a [Subscription].
+     * Create a handle to a [ChannelGroup] that can be used to obtain a [Subscription].
      *
      * The function is cheap to call, and the returned object is lightweight, as it doesn't change any client or server
      * state. It is therefore permitted to use this method whenever a representation of a channel group is required.
@@ -2310,7 +2308,7 @@ class PubNub internal constructor(
     }
 
     fun uuidMetadata(id: String): UuidMetadata {
-        return UuidMetadataImpl(this, ChannelName(id))
+        return UserMetadataImpl(this, ChannelName(id))
     }
 
     /**
@@ -2435,15 +2433,3 @@ class PubNub internal constructor(
         }
     }
 }
-
-// fun ChannelMetadata.setMetadata(
-//    name: String? = null,
-//    description: String? = null,
-//    custom: Any? = null,
-//    includeCustom: Boolean = false,
-//    type: String? = null,
-//    status: String? = null
-// ): SetChannelMetadata {
-//    require(this is ChannelMetadataImpl)
-//    return this.pubnub.setChannelMetadata(this.id, name, description, custom, includeCustom, type, status)
-// }

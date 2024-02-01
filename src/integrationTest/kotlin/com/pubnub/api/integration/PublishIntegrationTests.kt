@@ -6,6 +6,7 @@ import com.pubnub.api.CommonUtils.generateMessage
 import com.pubnub.api.CommonUtils.generatePayload
 import com.pubnub.api.CommonUtils.generatePayloadJSON
 import com.pubnub.api.CommonUtils.randomChannel
+import com.pubnub.api.CommonUtils.randomValue
 import com.pubnub.api.CommonUtils.retry
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
@@ -20,7 +21,10 @@ import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.subscribeToBlocking
 import com.pubnub.api.v2.callbacks.EventListener
+import com.pubnub.api.v2.entities.Channel
 import com.pubnub.api.v2.subscriptions.ChannelOptions
+import com.pubnub.api.v2.subscriptions.SubscriptionOptions
+import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.hamcrest.Matchers
@@ -36,6 +40,12 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
 class PublishIntegrationTests : BaseIntegrationTest() {
+
+    lateinit var guestClient: PubNub
+
+    override fun onBefore() {
+        guestClient = createPubNub()
+    }
 
     @Test
     fun testPublishMessage() {
@@ -492,5 +502,110 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         Awaitility.await()
             .atMost(Durations.ONE_MINUTE)
             .untilAtomic(count, IsEqual.equalTo(2))
+    }
+
+    @Test
+    fun testSubscriptionSet(){
+        val success = AtomicBoolean()
+        val expectedMessage = randomValue()
+        val randomChannelName01 = "myChannel01"
+        val randomChannelName02 = "myChannel02"
+        val subscriptionSetOf: SubscriptionSet = pubnub.subscriptionSetOf(
+            channels = setOf(randomChannelName01, randomChannelName02),
+            options = ChannelOptions.receivePresenceEvents()
+        )
+
+        subscriptionSetOf.addListener(object : EventListener() {
+            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
+                println("-= message for subscriptionSetOf=-")
+                println(pnMessageResult)
+                success.set(true)
+            }
+        })
+
+        subscriptionSetOf.subscribe()
+
+        guestClient.publish(
+            channel = randomChannelName01,
+            message = expectedMessage + "01"
+        ).sync()
+        guestClient.publish(
+            channel = randomChannelName02,
+            message = expectedMessage + "02"
+        ).sync()
+
+        success.listen(20)
+    }
+
+    @Test
+    fun testSubscribeToSingleChannelUsingNewEventListeners_channelNameWithWildcard() {
+        val success = AtomicBoolean()
+        val expectedMessage = randomValue()
+        val randomChannelName01 = "myChannel.01"
+        val randomChannelName02 = "myChannel.02"
+        val myChannel: Channel = pubnub.channel("myChannel.*")
+//        val myChannel: Channel = pubnub.channel(randomChannelName01)
+        val subscription = myChannel.subscription(options = SubscriptionOptions.Default)
+        subscription.addListener(object : EventListener() {
+            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
+                println("-= message =-")
+                assertEquals(expectedMessage, pnMessageResult.message.asString)
+                success.set(true)
+            }
+        })
+
+        subscription.subscribe()
+
+        guestClient.publish(
+            channel = randomChannelName01,
+            message = expectedMessage
+        ).sync()
+        guestClient.publish(
+            channel = randomChannelName02,
+            message = expectedMessage
+        ).sync()
+
+        success.listen(20)
+    }
+
+    @Test
+    fun `when Subscription object is not subscribed then events are not delivered`(){
+        val success = AtomicBoolean()
+        val failure = AtomicBoolean()
+        val expectedMessage = randomValue()
+        val randomChannelName01 = "myChannel01"
+        val randomChannelName02 = "myChannel02"
+        val subscriptionSetOf: SubscriptionSet = pubnub.subscriptionSetOf(
+            channels = setOf(randomChannelName01, randomChannelName02),
+            options = ChannelOptions.receivePresenceEvents()
+        )
+
+        subscriptionSetOf.addListener(object : EventListener() {
+            override fun message(pubnub: PubNub, result: PNMessageResult) {
+                println("-= message for subscriptionSetOf=-")
+                println(result)
+                failure.set(true)
+            }
+        })
+
+        val sub = pubnub.channel(randomChannelName01).subscription()
+        sub.addListener(object : EventListener() {
+            override fun message(pubnub: PubNub, result: PNMessageResult) {
+                println("-= message for subscription=-")
+                println(result)
+                success.set(true)
+            }
+        })
+        sub.subscribe()
+        Thread.sleep(2000)
+
+        guestClient.publish(
+            channel = randomChannelName01,
+            message = expectedMessage + "01"
+        ).sync()
+
+        success.listen(20)
+        Thread.sleep(2000)
+        assertFalse(failure.get())
     }
 }

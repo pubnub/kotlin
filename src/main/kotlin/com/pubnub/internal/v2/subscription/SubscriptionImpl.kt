@@ -29,7 +29,7 @@ internal class SubscriptionImpl(
     internal val eventEmitter = EventEmitterImpl(pubnub, this::accepts)
 
     // helps deliver events only after subscribe was called, starting AT LEAST with the requested cursor.timetoken
-    private var deliverEventsFrom: SubscriptionCursor? = null
+    internal var deliverEventsFrom: SubscriptionCursor? = null
 
     internal fun accepts(event: PNEvent): Boolean {
         val cursorTimetoken = deliverEventsFrom?.timetoken ?: return false
