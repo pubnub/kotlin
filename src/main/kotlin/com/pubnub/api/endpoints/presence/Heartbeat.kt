@@ -8,7 +8,6 @@ import com.pubnub.api.PubNubUtil
 import com.pubnub.api.enums.PNOperationType
 import retrofit2.Call
 import retrofit2.Response
-import java.util.HashMap
 
 class Heartbeat internal constructor(
     pubnub: PubNub,

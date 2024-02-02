@@ -111,8 +111,7 @@ class SubscriptionSetImplTest {
         // when
         subscriptionSet.close()
 
-        (subscriptionSet as SubscriptionSetImpl).eventEmitter.subscribeCallback.message(
-            pubnub,
+        pubnub.listenerManager.announce(
             PNMessageResult(
                 BasePubSubResult(channelName, null, null, null, null),
                 JsonNull.INSTANCE

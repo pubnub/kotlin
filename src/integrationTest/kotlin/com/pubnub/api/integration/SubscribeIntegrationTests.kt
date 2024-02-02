@@ -10,6 +10,9 @@ import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.subscribeToBlocking
 import com.pubnub.api.unsubscribeFromBlocking
+import com.pubnub.api.v2.callbacks.EventListener
+import com.pubnub.api.v2.subscriptions.SubscriptionCursor
+import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.logging.HttpLoggingInterceptor
@@ -19,6 +22,7 @@ import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 
 class SubscribeIntegrationTests : BaseIntegrationTest() {
 
@@ -191,5 +195,268 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         // then
         assertNotNull(interceptedUrl)
         assertFalse(interceptedUrl!!.queryParameterNames.contains("ee"))
+    }
+
+    @Test
+    fun testSubscriptionSet() {
+        val success = AtomicInteger(0)
+        val expectedMessage = randomValue()
+        val chan01 = pubnub.channel(randomChannel() + "01")
+        val chan02 = pubnub.channel(randomChannel() + "02")
+        val sub01 = chan01.subscription()
+        val sub02 = chan02.subscription()
+
+        sub01.addListener(object : EventListener() {
+            override fun message(pubnub: PubNub, result: PNMessageResult) {
+                println("01: $result")
+                success.incrementAndGet()
+            }
+        })
+
+        sub02.addListener(object : EventListener() {
+            override fun message(pubnub: PubNub, result: PNMessageResult) {
+                println("02: $result")
+                success.incrementAndGet()
+            }
+        })
+
+        val subscriptionSetOf: SubscriptionSet = pubnub.subscriptionSetOf(
+            setOf(sub02, sub01)
+        )
+
+        subscriptionSetOf.addListener(object : EventListener() {
+            override fun message(pubnub: PubNub, result: PNMessageResult) {
+                println("set: $result")
+                success.incrementAndGet()
+            }
+        })
+
+        subscriptionSetOf.subscribe()
+        Thread.sleep(2000)
+
+        pubnub.publish(chan01.name, expectedMessage).sync()
+        pubnub.publish(chan02.name, expectedMessage).sync()
+        pubnub.publish(chan01.name, expectedMessage).sync()
+
+        Thread.sleep(5000)
+
+        assertEquals(6, success.get())
+    }
+
+    @Test
+    fun testSubscriptionSetStartWithOlderTimetoken() {
+        val success = AtomicInteger(0)
+        val expectedMessage = randomValue()
+        val chan01 = pubnub.channel(randomChannel() + "01")
+        val chan02 = pubnub.channel(randomChannel() + "02")
+        val sub01 = chan01.subscription()
+        val sub02 = chan02.subscription()
+
+        sub01.addListener(object : EventListener() {
+            override fun message(pubnub: PubNub, result: PNMessageResult) {
+                println("01: $result")
+                success.incrementAndGet()
+            }
+        })
+
+        sub02.addListener(object : EventListener() {
+            override fun message(pubnub: PubNub, result: PNMessageResult) {
+                println("02: $result")
+                success.incrementAndGet()
+            }
+        })
+
+        val subscriptionSetOf: SubscriptionSet = pubnub.subscriptionSetOf(
+            setOf(sub02, sub01)
+        )
+
+        pubnub.publish(chan01.name, expectedMessage).sync()
+        pubnub.publish(chan02.name, expectedMessage).sync()
+        pubnub.publish(chan01.name, expectedMessage).sync()
+
+        subscriptionSetOf.addListener(object : EventListener() {
+            override fun message(pubnub: PubNub, result: PNMessageResult) {
+                println("set: $result")
+                success.incrementAndGet()
+            }
+        })
+
+        subscriptionSetOf.subscribe(SubscriptionCursor((System.currentTimeMillis() - 10_000) * 10_000))
+        Thread.sleep(2000)
+
+        pubnub.publish(chan01.name, expectedMessage).sync()
+        pubnub.publish(chan02.name, expectedMessage).sync()
+        pubnub.publish(chan01.name, expectedMessage).sync()
+
+        Thread.sleep(5000)
+
+        assertEquals(12, success.get())
+    }
+
+    @Test
+    fun testSubscriptionSetResubscribeWithOlderTimetoken() {
+        val success = AtomicInteger(0)
+        val expectedMessage = randomValue()
+        val chan01 = pubnub.channel(randomChannel() + "01")
+        val chan02 = pubnub.channel(randomChannel() + "02")
+        val sub01 = chan01.subscription()
+        val sub02 = chan02.subscription()
+
+        pubnub.publish(chan01.name, expectedMessage + "01").sync()
+        pubnub.publish(chan02.name, expectedMessage + "02").sync()
+        pubnub.publish(chan01.name, expectedMessage + "03").sync()
+
+        sub01.addListener(object : EventListener() {
+            override fun message(pubnub: PubNub, result: PNMessageResult) {
+                println("-=01: ${result.message}")
+                success.incrementAndGet()
+            }
+        })
+
+        sub02.addListener(object : EventListener() {
+            override fun message(pubnub: PubNub, result: PNMessageResult) {
+                println("-=02: ${result.message}")
+                success.incrementAndGet()
+            }
+        })
+
+        val subscriptionSetOf: SubscriptionSet = pubnub.subscriptionSetOf(
+            setOf(sub02, sub01)
+        )
+
+        subscriptionSetOf.addListener(object : EventListener() {
+            override fun message(pubnub: PubNub, result: PNMessageResult) {
+                println("-=set: ${result.message}")
+                success.incrementAndGet()
+            }
+        })
+
+        subscriptionSetOf.subscribe()
+        Thread.sleep(3000)
+
+        pubnub.publish(chan01.name, expectedMessage + "04").sync()
+        pubnub.publish(chan02.name, expectedMessage + "05").sync()
+        pubnub.publish(chan01.name, expectedMessage + "06").sync()
+
+        Thread.sleep(2000)
+
+        subscriptionSetOf.subscribe(SubscriptionCursor((System.currentTimeMillis() - 30_000) * 10_000))
+        Thread.sleep(3000)
+
+        assertEquals(18, success.get())
+    }
+
+    @Test
+    fun `testSubscriptionSet resubscribe unrelated Subscription with older timetoken`() {
+        val success = AtomicInteger(0)
+        val expectedMessage = randomValue()
+        val chan01 = pubnub.channel(randomChannel() + "01")
+        val chan02 = pubnub.channel(randomChannel() + "02")
+        val sub01 = chan01.subscription()
+        val sub02 = chan02.subscription()
+
+        val unrelatedSubscription = chan02.subscription()
+
+        pubnub.publish(chan01.name, expectedMessage + "01").sync()
+        pubnub.publish(chan02.name, expectedMessage + "02").sync()
+        pubnub.publish(chan01.name, expectedMessage + "03").sync()
+
+        sub01.addListener(object : EventListener() {
+            override fun message(pubnub: PubNub, result: PNMessageResult) {
+                println("-=01: ${result.message}")
+                success.incrementAndGet()
+            }
+        })
+
+        sub02.addListener(object : EventListener() {
+            override fun message(pubnub: PubNub, result: PNMessageResult) {
+                println("-=02: ${result.message}")
+                success.incrementAndGet()
+            }
+        })
+
+        unrelatedSubscription.addListener(object : EventListener() {
+            override fun message(pubnub: PubNub, result: PNMessageResult) {
+                println("-=03: ${result.message}")
+            }
+        })
+
+        val subscriptionSetOf: SubscriptionSet = pubnub.subscriptionSetOf(
+            setOf(sub02, sub01)
+        )
+
+        subscriptionSetOf.addListener(object : EventListener() {
+            override fun message(pubnub: PubNub, result: PNMessageResult) {
+                println("-=set: ${result.message}")
+                success.incrementAndGet()
+            }
+        })
+
+        subscriptionSetOf.subscribe()
+        Thread.sleep(3000)
+
+        pubnub.publish(chan01.name, expectedMessage + "04").sync()
+        pubnub.publish(chan02.name, expectedMessage + "05").sync()
+        pubnub.publish(chan01.name, expectedMessage + "06").sync()
+
+        Thread.sleep(2000)
+
+        unrelatedSubscription.subscribe(SubscriptionCursor((System.currentTimeMillis() - 30_000) * 10_000))
+        Thread.sleep(3000)
+
+        assertEquals(6, success.get())
+    }
+
+    @Test
+    fun `testSubscriptionSet resubscribe one of the subscriptions with older timetoken`() {
+        val success = AtomicInteger(0)
+        val expectedMessage = randomValue()
+        val chan01 = pubnub.channel(randomChannel() + "01")
+        val chan02 = pubnub.channel(randomChannel() + "02")
+        val sub01 = chan01.subscription()
+        val sub02 = chan02.subscription()
+
+        pubnub.publish(chan01.name, expectedMessage + "01").sync()
+        pubnub.publish(chan02.name, expectedMessage + "02").sync()
+        pubnub.publish(chan01.name, expectedMessage + "03").sync()
+
+        sub01.addListener(object : EventListener() {
+            override fun message(pubnub: PubNub, result: PNMessageResult) {
+                println("-=01: ${result.message}")
+                success.incrementAndGet()
+            }
+        })
+
+        sub02.addListener(object : EventListener() {
+            override fun message(pubnub: PubNub, result: PNMessageResult) {
+                println("-=02: ${result.message}")
+                success.incrementAndGet()
+            }
+        })
+
+        val subscriptionSetOf: SubscriptionSet = pubnub.subscriptionSetOf(
+            setOf(sub02, sub01)
+        )
+
+        subscriptionSetOf.addListener(object : EventListener() {
+            override fun message(pubnub: PubNub, result: PNMessageResult) {
+                println("-=set: ${result.message}")
+                success.incrementAndGet()
+            }
+        })
+
+        subscriptionSetOf.subscribe()
+        Thread.sleep(3000)
+
+        pubnub.publish(chan01.name, expectedMessage + "04").sync()
+        pubnub.publish(chan02.name, expectedMessage + "05").sync()
+        pubnub.publish(chan01.name, expectedMessage + "06").sync()
+
+        Thread.sleep(2000)
+
+        sub02.subscribe(SubscriptionCursor((System.currentTimeMillis() - 30_000) * 10_000))
+        Thread.sleep(3000)
+
+        assertEquals(10, success.get())
     }
 }

@@ -1,13 +1,14 @@
 package com.pubnub.internal.v2.subscription
 
 import com.pubnub.api.PubNub
+import com.pubnub.api.managers.AnnouncementCallback
+import com.pubnub.api.managers.AnnouncementEnvelope
 import com.pubnub.api.v2.callbacks.EventEmitter
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionCursor
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.internal.v2.callbacks.EventEmitterImpl
-import org.jetbrains.annotations.TestOnly
 import java.util.concurrent.CopyOnWriteArraySet
 
 private const val ERROR_SUBSCRIPTION_WRONG_CLASS =
@@ -20,48 +21,49 @@ internal class SubscriptionSetImpl(
     private val pubnub: PubNub,
     initialSubscriptions: Set<SubscriptionImpl> = emptySet(),
 ) : SubscriptionSet(), EventEmitter {
+    private val _subscriptions: CopyOnWriteArraySet<SubscriptionImpl> = CopyOnWriteArraySet()
+    private val eventEmitter = EventEmitterImpl(pubnub, AnnouncementCallback.Phase.SET, ::accepts)
 
-    @get:TestOnly
-    internal val eventEmitter = EventEmitterImpl(pubnub) { event ->
-        subscriptionSet.any { subscription -> subscription.accepts(event) }
-    }
-    private val subscriptionSet: CopyOnWriteArraySet<SubscriptionImpl> = CopyOnWriteArraySet()
+    override val subscriptions get() = _subscriptions.toSet()
 
     init {
         require(initialSubscriptions.all { it.pubnub == pubnub }) { ERROR_WRONG_PUBNUB_INSTANCE }
-        subscriptionSet.addAll(initialSubscriptions)
+        _subscriptions.addAll(initialSubscriptions)
+        pubnub.listenerManager.addAnnouncementCallback(eventEmitter)
     }
 
-    override val subscriptions get() = subscriptionSet.toSet()
+    private fun accepts(envelope: AnnouncementEnvelope<*>) =
+        subscriptions.any { subscription -> subscription in envelope.acceptedBy }
 
     override fun add(subscription: Subscription) {
         require(subscription is SubscriptionImpl) { ERROR_SUBSCRIPTION_WRONG_CLASS }
         require(subscription.pubnub == pubnub) { ERROR_WRONG_PUBNUB_INSTANCE }
-        subscriptionSet.add(subscription)
+        _subscriptions.add(subscription)
     }
 
     override fun remove(subscription: Subscription) {
-        subscriptionSet.remove(subscription)
+        _subscriptions.remove(subscription)
     }
 
-    override fun plus(subscription: Subscription): SubscriptionSet {
+    override operator fun plus(subscription: Subscription): SubscriptionSet {
         add(subscription)
         return this
     }
 
     override fun subscribe(cursor: SubscriptionCursor) {
-        pubnub.subscribe(*subscriptionSet.toTypedArray(), cursor = cursor)
-        subscriptionSet.forEach { it.deliverEventsFrom = cursor }
+        _subscriptions.forEach { it.onSubscriptionActive(cursor) }
+        pubnub.subscribe(*_subscriptions.toTypedArray(), cursor = cursor)
     }
 
     override fun unsubscribe() {
-        pubnub.unsubscribe(*subscriptionSet.toTypedArray())
-        subscriptionSet.forEach { it.deliverEventsFrom = null }
+        _subscriptions.forEach { it.onSubscriptionInactive() }
+        pubnub.unsubscribe(*_subscriptions.toTypedArray())
     }
 
     override fun close() {
         unsubscribe()
         eventEmitter.removeAllListeners()
+        pubnub.listenerManager.removeAnnouncementCallback(eventEmitter)
     }
 
     override fun addListener(listener: EventListener) {

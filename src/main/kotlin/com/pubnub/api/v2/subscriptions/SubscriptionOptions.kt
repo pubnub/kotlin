@@ -8,8 +8,8 @@ import com.pubnub.internal.v2.subscription.ReceivePresenceEventsImpl
  * SubscriptionOptions is a mechanism used for supplying optional modifiers for subscriptions.
  *
  * The options currently available in the PubNub client are:
- * * [SubscriptionOptions.filter]
- * * [ChannelOptions.receivePresenceEvents]
+ * * [Filter]
+ * * [ReceivePresenceEvents]
  */
 open class SubscriptionOptions internal constructor(
     optionsSet: Set<SubscriptionOptions> = emptySet()
@@ -22,7 +22,7 @@ open class SubscriptionOptions internal constructor(
     /**
      * Combine multiple options, for example:
      *
-     * val options = `SubscriptionOptions.filter( { /* some expression*/ }) + ChannelOptions.receivePresenceEvents()`
+     * val options = `filter { /* some expression*/ } + receivePresenceEvents()`
      */
     open operator fun plus(options: SubscriptionOptions?): SubscriptionOptions {
         val newOptions = buildSet {
@@ -33,11 +33,19 @@ open class SubscriptionOptions internal constructor(
         }
         return SubscriptionOptions(newOptions)
     }
-}
 
-fun ReceivePresenceEvents(): SubscriptionOptions = ReceivePresenceEventsImpl()
-fun Filter(predicate: (PNEvent) -> Boolean): SubscriptionOptions = FilterImpl(predicate)
+    companion object {
+        /**
+         * Enable receiving presence events for a given subscription to a channel or channel group.
+         */
+        @JvmStatic
+        fun receivePresenceEvents(): SubscriptionOptions = ReceivePresenceEventsImpl
 
-fun main() {
-    println((ReceivePresenceEvents() + Filter { true }).allOptions)
+        /**
+         * Create a filter for messages delivered to [com.pubnub.api.v2.callbacks.EventListener].
+         * Please see [com.pubnub.api.v2.callbacks.EventListener] for available events.
+         */
+        @JvmStatic
+        fun filter(predicate: (PNEvent) -> Boolean): SubscriptionOptions = FilterImpl(predicate)
+    }
 }

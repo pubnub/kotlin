@@ -11,7 +11,6 @@ import com.pubnub.api.models.consumer.history.PNHistoryResult
 import com.pubnub.extension.tryDecryptMessage
 import retrofit2.Call
 import retrofit2.Response
-import java.util.HashMap
 import java.util.Locale
 
 /**

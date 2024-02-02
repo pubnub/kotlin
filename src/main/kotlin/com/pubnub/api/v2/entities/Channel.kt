@@ -21,18 +21,17 @@ interface Channel : Subscribable {
     /**
      * Returns a [Subscription] that can be used to subscribe to this channel.
      *
-     * Channel subscriptions support passing [com.pubnub.api.v2.subscriptions.ChannelOptions.receivePresenceEvents] in
+     * Channel subscriptions support passing [com.pubnub.api.v2.subscriptions.SubscriptionOptions.receivePresenceEvents] in
      * [options] to enable receiving presence events.
      *
-     * The default [SubscriptionOptions] such as [SubscriptionOptions.filter] can also be used to filter events
-     * delivered to the subscription.
+     * [com.pubnub.api.v2.subscriptions.Filter] can be used to filter events delivered to the subscription.
      *
      * For example, to create a subscription that only listens to presence events:
      * ```
-     * channel.subscription(ChannelOptions.receivePresenceEvents() + SubscriptionOptions.filter( { it is PNPresenceEventResult } ))
+     * channel.subscription(SubscriptionOptions.receivePresenceEvents() + SubscriptionOptions.filter { it is PNPresenceEventResult } )
      * ```
      *
-     * @param options optional [SubscriptionOptions]. Also supports [com.pubnub.api.v2.subscriptions.ChannelOptions].
+     * @param options optional [SubscriptionOptions].
      * @return an inactive [Subscription] to this channel. You must call [Subscription.subscribe] to start receiving events.
      */
     override fun subscription(options: SubscriptionOptions?): Subscription

@@ -9,7 +9,6 @@ import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataResult
 import com.pubnub.api.models.server.objects_api.EntityEnvelope
 import retrofit2.Call
 import retrofit2.Response
-import java.util.HashMap
 
 /**
  * @see [PubNub.getChannelMetadata]

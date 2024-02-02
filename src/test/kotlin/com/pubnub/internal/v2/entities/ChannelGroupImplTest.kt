@@ -3,7 +3,7 @@ package com.pubnub.internal.v2.entities
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
-import com.pubnub.api.v2.subscriptions.ReceivePresenceEvents
+import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -38,7 +38,7 @@ class ChannelGroupImplTest {
     fun `create subscription with presence`() {
         val channelGrp = ChannelGroupImpl(pn, ChannelGroupName(CHANNEL_GROUP_NAME))
 
-        val subscription = channelGrp.subscription(ReceivePresenceEvents())
+        val subscription = channelGrp.subscription(SubscriptionOptions.receivePresenceEvents())
 
         Assertions.assertEquals(
             setOf(

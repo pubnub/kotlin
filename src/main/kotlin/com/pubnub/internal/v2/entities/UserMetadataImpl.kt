@@ -2,7 +2,6 @@ package com.pubnub.internal.v2.entities
 
 import com.pubnub.api.PubNub
 import com.pubnub.api.v2.entities.UserMetadata
-import com.pubnub.api.v2.subscriptions.Filter
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.internal.v2.subscription.SubscriptionImpl
 
@@ -15,7 +14,7 @@ internal class UserMetadataImpl(internal val pubnub: PubNub, val channelName: Ch
         return SubscriptionImpl(
             pubnub,
             channels = channels,
-            options = Filter { result ->
+            options = SubscriptionOptions.filter { result ->
                 // simple channel name or presence channel
                 channels.any { it.id == result.channel }
             } + options

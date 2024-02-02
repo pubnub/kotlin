@@ -140,7 +140,7 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
             }
         )
 
-        pubnub.subscribeToBlocking(channel)
+        pubnub.subscribeToBlocking(pubnub.configuration.userId.value)
 
         pubnub.setMemberships(
             channels = channels

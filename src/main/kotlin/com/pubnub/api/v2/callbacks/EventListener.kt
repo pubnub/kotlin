@@ -20,8 +20,8 @@ abstract class EventListener {
     open fun message(pubnub: PubNub, result: PNMessageResult) {}
 
     /**
-     * Receive presence events for channels subscribed to with presence enabled via
-     * passing [com.pubnub.api.v2.subscriptions.ChannelOptions.receivePresenceEvents]
+     * Receive presence events for channels subscribed with presence enabled via
+     * passing [com.pubnub.api.v2.subscriptions.SubscriptionOptions.receivePresenceEvents]
      * in [com.pubnub.api.v2.entities.Channel.subscription].
      *
      * @param pubnub The client instance which has this listener attached.

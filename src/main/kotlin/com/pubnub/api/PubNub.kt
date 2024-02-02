@@ -99,7 +99,6 @@ import com.pubnub.api.v2.entities.Channel
 import com.pubnub.api.v2.entities.ChannelGroup
 import com.pubnub.api.v2.entities.ChannelMetadata
 import com.pubnub.api.v2.entities.UserMetadata
-import com.pubnub.api.v2.subscriptions.ReceivePresenceEvents
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionCursor
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
@@ -153,7 +152,7 @@ class PubNub internal constructor(
     internal val telemetryManager = TelemetryManager()
     internal val tokenManager: TokenManager = TokenManager()
     private val tokenParser: TokenParser = TokenParser()
-    private val listenerManager = ListenerManager(this)
+    internal val listenerManager = ListenerManager(this)
     internal val subscriptionManager = SubscriptionManager(this, listenerManager)
     private val presenceData = PresenceData()
     private val subscribe = Subscribe.create(
@@ -363,7 +362,7 @@ class PubNub internal constructor(
             channelSubscriptionMap.computeIfAbsent(channelName) { newChannelName ->
                 val channel = ChannelImpl(this, newChannelName)
                 val options = if (withPresence) {
-                    ReceivePresenceEvents()
+                    SubscriptionOptions.receivePresenceEvents()
                 } else {
                     null
                 }
@@ -390,7 +389,7 @@ class PubNub internal constructor(
                 val channelGroup = ChannelGroupImpl(this, newChannelGroupName)
                 val options =
                     if (withPresence) {
-                        ReceivePresenceEvents()
+                        SubscriptionOptions.receivePresenceEvents()
                     } else {
                         null
                     }

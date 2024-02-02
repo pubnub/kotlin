@@ -1,6 +1,8 @@
 package com.pubnub.internal.v2.subscription
 
 import com.pubnub.api.PubNub
+import com.pubnub.api.managers.AnnouncementCallback
+import com.pubnub.api.managers.AnnouncementEnvelope
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.v2.callbacks.EventEmitter
 import com.pubnub.api.v2.callbacks.EventListener
@@ -11,7 +13,6 @@ import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.internal.v2.callbacks.EventEmitterImpl
 import com.pubnub.internal.v2.entities.ChannelGroupName
 import com.pubnub.internal.v2.entities.ChannelName
-import org.jetbrains.annotations.TestOnly
 
 internal class SubscriptionImpl(
     internal val pubnub: PubNub,
@@ -20,23 +21,49 @@ internal class SubscriptionImpl(
     options: SubscriptionOptions? = null,
 ) : Subscription(), EventEmitter {
 
+    @Volatile
+    var isActive = false
+        @Synchronized
+        set(newValue) {
+            if (!field && newValue) { // wasn't active && is now active
+                pubnub.listenerManager.addAnnouncementCallback(eventEmitter)
+            } else if (field && !newValue) { // was active && no longer active
+                pubnub.listenerManager.removeAnnouncementCallback(eventEmitter)
+            }
+            field = newValue
+        }
+
+    private val eventEmitter = EventEmitterImpl(pubnub, AnnouncementCallback.Phase.SUBSCRIPTION, ::accepts)
+
     internal val channels = channels.toSet()
     internal val channelGroups = channelGroups.toSet()
 
     private val filters: List<FilterImpl> = options?.allOptions?.filterIsInstance<FilterImpl>() ?: emptyList()
 
-    @get:TestOnly
-    internal val eventEmitter = EventEmitterImpl(pubnub, this::accepts)
+    /**
+     * To ensure that events are delivered with timestamps growing monotonically,
+     * we will set this to the highest received timestamp and compare incoming messages against it.
+     */
+    private var lastTimetoken: Long = 0L
 
-    // helps deliver events only after subscribe was called, starting AT LEAST with the requested cursor.timetoken
-    internal var deliverEventsFrom: SubscriptionCursor? = null
+    private fun checkAndUpdateTimetoken(result: PNEvent): Boolean {
+        result.timetoken?.let { resultTimetoken ->
+            if (resultTimetoken <= lastTimetoken) {
+                return false
+            } else {
+                lastTimetoken = resultTimetoken
+                return true
+            }
+        } ?: return false
+    }
 
-    internal fun accepts(event: PNEvent): Boolean {
-        val cursorTimetoken = deliverEventsFrom?.timetoken ?: return false
-        val eventTimetoken = event.timetoken ?: return false
-
-        return cursorTimetoken <= eventTimetoken &&
-            filters.all { filter -> filter.predicate(event) }
+    private fun accepts(envelope: AnnouncementEnvelope<out PNEvent>): Boolean {
+        val event = envelope.event
+        val accepted = isActive && filters.all { filter -> filter.predicate(event) } && checkAndUpdateTimetoken(event)
+        if (accepted) {
+            envelope.acceptedBy += this@SubscriptionImpl
+        }
+        return accepted
     }
 
     override fun plus(subscription: Subscription): SubscriptionSet {
@@ -44,13 +71,22 @@ internal class SubscriptionImpl(
     }
 
     override fun subscribe(cursor: SubscriptionCursor) {
-        deliverEventsFrom = cursor
+        onSubscriptionActive(cursor)
         pubnub.subscribe(this, cursor = cursor)
     }
 
+    internal fun onSubscriptionActive(cursor: SubscriptionCursor) {
+        lastTimetoken = cursor.timetoken
+        isActive = true
+    }
+
     override fun unsubscribe() {
-        deliverEventsFrom = null
+        onSubscriptionInactive()
         pubnub.unsubscribe(this)
+    }
+
+    internal fun onSubscriptionInactive() {
+        isActive = false
     }
 
     override fun close() {

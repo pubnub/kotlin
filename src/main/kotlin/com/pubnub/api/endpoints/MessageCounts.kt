@@ -10,7 +10,6 @@ import com.pubnub.api.models.consumer.history.PNMessageCountResult
 import com.pubnub.api.toCsv
 import retrofit2.Call
 import retrofit2.Response
-import java.util.HashMap
 
 /**
  * @see [PubNub.messageCounts]

@@ -5,4 +5,4 @@ import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 
 internal class FilterImpl(internal val predicate: (PNEvent) -> Boolean) : SubscriptionOptions()
 
-internal class ReceivePresenceEventsImpl : SubscriptionOptions()
+internal object ReceivePresenceEventsImpl : SubscriptionOptions()

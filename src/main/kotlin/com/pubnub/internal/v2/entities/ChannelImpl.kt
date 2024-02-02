@@ -3,7 +3,6 @@ package com.pubnub.internal.v2.entities
 import com.pubnub.api.PubNub
 import com.pubnub.api.subscribe.PRESENCE_CHANNEL_SUFFIX
 import com.pubnub.api.v2.entities.Channel
-import com.pubnub.api.v2.subscriptions.Filter
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.internal.v2.subscription.ReceivePresenceEventsImpl
 import com.pubnub.internal.v2.subscription.SubscriptionImpl
@@ -22,22 +21,22 @@ internal class ChannelImpl(internal val pubnub: PubNub, private val channelName:
         return SubscriptionImpl(
             pubnub,
             channels = channels,
-            options = Filter { result ->
+            options = SubscriptionOptions.filter { result ->
                 // simple channel name or presence channel
                 if (channels.any { it.id == result.channel }) {
-                    return@Filter true
+                    return@filter true
                 }
 
                 // wildcard channels
                 if (name.endsWith(".*") &&
                     (
-                            result.subscription == name ||
-                                    result.channel.startsWith(name.substringBeforeLast("*"))
-                            )
+                        result.subscription == name ||
+                            result.channel.startsWith(name.substringBeforeLast("*"))
+                        )
                 ) {
-                    return@Filter true
+                    return@filter true
                 }
-                return@Filter false
+                return@filter false
             } + options
         )
     }
@@ -59,8 +58,6 @@ internal class ChannelImpl(internal val pubnub: PubNub, private val channelName:
         result = 31 * result + name.hashCode()
         return result
     }
-
-
 }
 
 @JvmInline

@@ -3,10 +3,8 @@ package com.pubnub.internal.v2.entities
 import com.pubnub.api.PubNub
 import com.pubnub.api.subscribe.PRESENCE_CHANNEL_SUFFIX
 import com.pubnub.api.v2.entities.ChannelGroup
-import com.pubnub.api.v2.subscriptions.Filter
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.internal.v2.subscription.ReceivePresenceEventsImpl
-
 import com.pubnub.internal.v2.subscription.SubscriptionImpl
 
 internal class ChannelGroupImpl(internal val pubNub: PubNub, private val channelGroupName: ChannelGroupName) : ChannelGroup {
@@ -23,7 +21,7 @@ internal class ChannelGroupImpl(internal val pubNub: PubNub, private val channel
         return SubscriptionImpl(
             pubNub,
             channelGroups = channelGroups,
-            options = Filter { result ->
+            options = SubscriptionOptions.filter { result ->
                 channelGroups.any { it.id == result.subscription }
             } + options
         )

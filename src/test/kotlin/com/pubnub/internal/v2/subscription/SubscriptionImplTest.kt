@@ -7,7 +7,6 @@ import com.pubnub.api.UserId
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.v2.callbacks.EventListener
-import com.pubnub.api.v2.subscriptions.Filter
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import org.junit.jupiter.api.AfterEach
@@ -34,7 +33,7 @@ class SubscriptionImplTest {
     }
 
     @Test
-    fun `subscription + subscription should return subscriptionSet`()  {
+    fun `subscription + subscription should return subscriptionSet`() {
         // given
         val anotherSubscription = pubnub.channel("anotherChannel").subscription()
 
@@ -81,8 +80,8 @@ class SubscriptionImplTest {
         // when
         subscription.close()
 
-        (subscription as SubscriptionImpl).eventEmitter.subscribeCallback.message(
-            pubnub,
+
+        pubnub.listenerManager.announce(
             PNMessageResult(
                 BasePubSubResult(channelName, null, null, null, null),
                 JsonNull.INSTANCE
@@ -97,7 +96,7 @@ class SubscriptionImplTest {
     @Test
     fun `subscription with filter`() {
         // given
-        val subWithFilter = pubnub.channel(channelName).subscription(Filter { it !is PNMessageResult })
+        val subWithFilter = pubnub.channel(channelName).subscription(SubscriptionOptions.filter { it !is PNMessageResult })
         subWithFilter.addListener(object : EventListener() {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 throw IllegalStateException("Message should have been filtered out!")
@@ -106,8 +105,7 @@ class SubscriptionImplTest {
 
         // when
         subWithFilter.subscribe()
-        (subWithFilter as SubscriptionImpl).eventEmitter.subscribeCallback.message(
-            pubnub,
+        pubnub.listenerManager.announce(
             PNMessageResult(
                 BasePubSubResult(channelName, null, null, null, null),
                 JsonNull.INSTANCE
@@ -128,8 +126,7 @@ class SubscriptionImplTest {
         })
 
         // when
-        (subscription as SubscriptionImpl).eventEmitter.subscribeCallback.message(
-            pubnub,
+        pubnub.listenerManager.announce(
             PNMessageResult(
                 BasePubSubResult(channelName, null, 1000L, null, null),
                 JsonNull.INSTANCE

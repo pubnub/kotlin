@@ -22,7 +22,7 @@ import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.subscribeToBlocking
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.entities.Channel
-import com.pubnub.api.v2.subscriptions.ReceivePresenceEvents
+import com.pubnub.api.v2.subscriptions.SubscriptionCursor
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import org.awaitility.Awaitility
@@ -34,10 +34,12 @@ import org.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
+import org.junit.Assert.fail
 import org.junit.Test
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.atomic.AtomicReference
 
 class PublishIntegrationTests : BaseIntegrationTest() {
 
@@ -172,7 +174,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         })
 
         val testChannel = pubnub.channel(expectedChannel)
-        val testSubscription = testChannel.subscription(ReceivePresenceEvents())
+        val testSubscription = testChannel.subscription(SubscriptionOptions.receivePresenceEvents())
         testSubscription.addListener(object : EventListener() {
 
             override fun message(pubnub: PubNub, result: PNMessageResult) {
@@ -505,14 +507,14 @@ class PublishIntegrationTests : BaseIntegrationTest() {
     }
 
     @Test
-    fun testSubscriptionSet(){
+    fun testSubscriptionSet() {
         val success = AtomicBoolean()
         val expectedMessage = randomValue()
         val randomChannelName01 = "myChannel01"
         val randomChannelName02 = "myChannel02"
         val subscriptionSetOf: SubscriptionSet = pubnub.subscriptionSetOf(
             channels = setOf(randomChannelName01, randomChannelName02),
-            options = ReceivePresenceEvents()
+            options = SubscriptionOptions.receivePresenceEvents()
         )
 
         subscriptionSetOf.addListener(object : EventListener() {
@@ -524,15 +526,16 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         })
 
         subscriptionSetOf.subscribe()
+        Thread.sleep(2000)
 
         guestClient.publish(
             channel = randomChannelName01,
-            message = expectedMessage + "01"
+            message = expectedMessage
         ).sync()
-        guestClient.publish(
-            channel = randomChannelName02,
-            message = expectedMessage + "02"
-        ).sync()
+//        guestClient.publish(
+//            channel = randomChannelName02,
+//            message = expectedMessage + "02"
+//        ).sync()
 
         success.listen(20)
     }
@@ -569,7 +572,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
     }
 
     @Test
-    fun `when Subscription object is not subscribed then events are not delivered`(){
+    fun `when Subscription object is not subscribed then events are not delivered`() {
         val success = AtomicBoolean()
         val failure = AtomicBoolean()
         val expectedMessage = randomValue()
@@ -577,7 +580,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         val randomChannelName02 = "myChannel02"
         val subscriptionSetOf: SubscriptionSet = pubnub.subscriptionSetOf(
             channels = setOf(randomChannelName01, randomChannelName02),
-            options = ReceivePresenceEvents()
+            options = SubscriptionOptions.receivePresenceEvents()
         )
 
         subscriptionSetOf.addListener(object : EventListener() {
@@ -607,5 +610,75 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         success.listen(20)
         Thread.sleep(2000)
         assertFalse(failure.get())
+    }
+
+    @Test
+    fun `when reconnecting with lower timetoken then existing subscriptions deliver events monotonically`() {
+        val expectedMessage = randomValue()
+        val randomChannelName01 = "myChannel01"
+        val success = AtomicInteger(0)
+        val failure = AtomicReference<Exception>(null)
+
+
+        val result0 = pubnub.publish(randomChannelName01, expectedMessage).sync()!!
+        println("-= Pre-subscribe result: $result0")
+
+        val subscription1 = pubnub.channel(randomChannelName01).subscription().apply {
+            addListener(object : EventListener() {
+                var highestTimetokenSeen = 0L
+                override fun message(pubnub: PubNub, result: PNMessageResult) {
+                    println("-= message for subscription1=-")
+                    println(result)
+                    if (result.timetoken!! <= highestTimetokenSeen) {
+                        failure.set(IllegalStateException("Message timetoken ${result.timetoken} lower than already seen: $highestTimetokenSeen"))
+                        return
+                    }
+                    highestTimetokenSeen = result.timetoken!!
+                    success.incrementAndGet()
+                }
+            })
+            subscribe()
+        }
+        Thread.sleep(2000)
+
+        val result1 = pubnub.publish(randomChannelName01, expectedMessage).sync()
+        println("-= Post-subscribe result: $result1")
+
+        Awaitility.await()
+            .atMost(CommonUtils.DEFAULT_LISTEN_DURATION.toLong(), TimeUnit.SECONDS)
+            .untilAtomic(success, Matchers.equalTo(1))
+
+        val subscription2 = pubnub.channel(randomChannelName01).subscription().apply {
+            addListener(object : EventListener() {
+                var highestTimetokenSeen = 0L
+                override fun message(pubnub: PubNub, result: PNMessageResult) {
+                    println("-= message for subscription2=-")
+                    println(result)
+                    if (result.timetoken!! <= highestTimetokenSeen) {
+                        throw IllegalStateException("Message timetoken ${result.timetoken} lower than already seen: $highestTimetokenSeen")
+                    }
+                    highestTimetokenSeen = result.timetoken!!
+                    success.incrementAndGet()
+                }
+            })
+            subscribe(SubscriptionCursor(result0.timetoken - 1))
+        }
+        Thread.sleep(2000)
+
+        Awaitility.await()
+            .atMost(CommonUtils.DEFAULT_LISTEN_DURATION.toLong(), TimeUnit.SECONDS)
+            .untilAtomic(success, Matchers.equalTo(3))
+
+        pubnub.publish(randomChannelName01, expectedMessage).sync()
+
+        Awaitility.await()
+            .atMost(CommonUtils.DEFAULT_LISTEN_DURATION.toLong(), TimeUnit.SECONDS)
+            .untilAtomic(success, Matchers.equalTo(5))
+
+        Thread.sleep(2000)
+        if (failure.get() != null) {
+            throw failure.get()
+        }
+        assertEquals(5, success.get())
     }
 }

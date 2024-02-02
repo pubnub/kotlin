@@ -2,6 +2,8 @@ package com.pubnub.internal.v2.callbacks
 
 import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.SubscribeCallback
+import com.pubnub.api.managers.AnnouncementCallback
+import com.pubnub.api.managers.AnnouncementEnvelope
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
@@ -25,113 +27,114 @@ interface Emitter<T> {
 internal abstract class EmitterImpl<T>(
     protected val pubnub: PubNub
 ) : Emitter<T> {
-    abstract val subscribeCallback: SubscribeCallback
     protected val listeners = CopyOnWriteArraySet<T>()
 
     override fun addListener(listener: T) {
-        synchronized(listeners) {
-            listeners.add(listener)
-            if (listeners.size == 1) {
-                pubnub.addListener(subscribeCallback)
-            }
-        }
+        listeners.add(listener)
     }
 
     override fun removeListener(listener: T) {
-        synchronized(listeners) {
-            listeners.remove(listener)
-            if (listeners.isEmpty()) {
-                pubnub.removeListener(subscribeCallback)
-            }
-        }
+        listeners.remove(listener)
     }
 
     override fun removeAllListeners() {
-        synchronized(listeners) {
-            listeners.clear()
-            pubnub.removeListener(subscribeCallback)
-        }
+        listeners.clear()
     }
 }
 
 internal class StatusEmitterImpl(
     pubnub: PubNub
 ) : EmitterImpl<StatusListener>(pubnub), StatusEmitter {
-    override val subscribeCallback: SubscribeCallback = object : SubscribeCallback() {
-        override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-            listeners.forEach {
-                it.status(pubnub, pnStatus)
+
+    init {
+        pubnub.addListener(object : SubscribeCallback() {
+            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
+                listeners.forEach {
+                    it.status(pubnub, pnStatus)
+                }
             }
-        }
+        })
     }
 }
 
 internal class EventEmitterImpl(
     pubnub: PubNub,
-    val filter: (PNEvent) -> Boolean = { true }
-) : EmitterImpl<EventListener>(pubnub), EventEmitter {
-    private var lastTimetoken: Long? = null
+    override val phase: AnnouncementCallback.Phase,
+    val accepts: (AnnouncementEnvelope<out PNEvent>) -> Boolean = { true }
+) : EmitterImpl<EventListener>(pubnub), EventEmitter, AnnouncementCallback {
 
-    private fun checkAndUpdateTimetoken(result: PNEvent): Boolean {
-        lastTimetoken?.let { lastTimetokenNonNull ->
-            result.timetoken?.let { resultTimetokenNonNull ->
-                if (resultTimetokenNonNull <= lastTimetokenNonNull) {
-                    return false
-                }
-            }
-        }
-        lastTimetoken = result.timetoken
-        return true
-    }
-
-    override val subscribeCallback: SubscribeCallback = object : SubscribeCallback() {
-        override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-            // empty
-        }
-
-        override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
-            if (!shouldDeliverEvent(pnMessageResult)) return
-            listeners.forEach {
-                it.message(pubnub, pnMessageResult)
-            }
-        }
-
-        override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
-            if (!shouldDeliverEvent(pnPresenceEventResult)) return
-            listeners.forEach {
-                it.presence(pubnub, pnPresenceEventResult)
-            }
-        }
-
-        override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {
-            if (!shouldDeliverEvent(pnSignalResult)) return
-            listeners.forEach {
-                it.signal(pubnub, pnSignalResult)
-            }
-        }
-
-        override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {
-            if (!shouldDeliverEvent(pnMessageActionResult)) return
-            listeners.forEach {
-                it.messageAction(pubnub, pnMessageActionResult)
-            }
-        }
-
-        override fun objects(pubnub: PubNub, objectEvent: PNObjectEventResult) {
-            if (!shouldDeliverEvent(objectEvent)) return
-            listeners.forEach {
-                it.objects(pubnub, objectEvent)
-            }
-        }
-
-        override fun file(pubnub: PubNub, pnFileEventResult: PNFileEventResult) {
-            if (!shouldDeliverEvent(pnFileEventResult)) return
-            listeners.forEach {
-                it.file(pubnub, pnFileEventResult)
-            }
+    // EventEmitter
+    fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
+        listeners.forEach {
+            it.message(pubnub, pnMessageResult)
         }
     }
 
-    private fun shouldDeliverEvent(pnFileEventResult: PNEvent): Boolean =
-        filter(pnFileEventResult) && checkAndUpdateTimetoken(pnFileEventResult)
+    fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
+        listeners.forEach {
+            it.presence(pubnub, pnPresenceEventResult)
+        }
+    }
+
+    fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {
+        listeners.forEach {
+            it.signal(pubnub, pnSignalResult)
+        }
+    }
+
+    fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {
+        listeners.forEach {
+            it.messageAction(pubnub, pnMessageActionResult)
+        }
+    }
+
+    fun objects(pubnub: PubNub, objectEvent: PNObjectEventResult) {
+        listeners.forEach {
+            it.objects(pubnub, objectEvent)
+        }
+    }
+
+    fun file(pubnub: PubNub, pnFileEventResult: PNFileEventResult) {
+        listeners.forEach {
+            it.file(pubnub, pnFileEventResult)
+        }
+    }
+
+    // AnnouncementCallback
+
+    override fun message(pubnub: PubNub, envelope: AnnouncementEnvelope<PNMessageResult>) {
+        if (accepts(envelope)) {
+            message(pubnub, envelope.event)
+        }
+    }
+
+    override fun presence(pubnub: PubNub, envelope: AnnouncementEnvelope<PNPresenceEventResult>) {
+        if (accepts(envelope)) {
+            presence(pubnub, envelope.event)
+        }
+    }
+
+    override fun signal(pubnub: PubNub, envelope: AnnouncementEnvelope<PNSignalResult>) {
+        if (accepts(envelope)) {
+            signal(pubnub, envelope.event)
+        }
+    }
+
+    override fun messageAction(pubnub: PubNub, envelope: AnnouncementEnvelope<PNMessageActionResult>) {
+        if (accepts(envelope)) {
+            messageAction(pubnub, envelope.event)
+        }
+    }
+
+    override fun objects(pubnub: PubNub, envelope: AnnouncementEnvelope<PNObjectEventResult>) {
+        if (accepts(envelope)) {
+            objects(pubnub, envelope.event)
+        }
+    }
+
+    override fun file(pubnub: PubNub, envelope: AnnouncementEnvelope<PNFileEventResult>) {
+        if (accepts(envelope)) {
+            file(pubnub, envelope.event)
+        }
+    }
 }

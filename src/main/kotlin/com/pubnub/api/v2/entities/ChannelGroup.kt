@@ -21,15 +21,14 @@ interface ChannelGroup : Subscribable {
     /**
      * Returns a [Subscription] that can be used to subscribe to this channel group.
      *
-     * Channel group subscriptions support passing [com.pubnub.api.v2.subscriptions.ChannelOptions.receivePresenceEvents]
+     * Channel group subscriptions support passing [com.pubnub.api.v2.subscriptions.SubscriptionOptions.receivePresenceEvents]
      * in [options] to enable receiving presence events.
      *
-     * The default [SubscriptionOptions] such as [SubscriptionOptions.filter] can also be used to filter events
-     * delivered to the subscription.
+     * [com.pubnub.api.v2.subscriptions.SubscriptionOptions.filter] can be used to filter events delivered to the subscription.
      *
      * For example, to create a subscription that only listens to presence events:
      * ```
-     * channelGroup.subscription(ChannelOptions.receivePresenceEvents() + SubscriptionOptions.filter( { it is PNPresenceEventResult } ))
+     * channelGroup.subscription(SubscriptionOptions.receivePresenceEvents() + SubscriptionOptions.filter { it is PNPresenceEventResult } )
      * ```
      *
      * *Warning:* if a channel is part of more than one channel group, and you create subscriptions to both (or more)
@@ -43,7 +42,7 @@ interface ChannelGroup : Subscribable {
      *
      * This limitation is due to how the server manages channels and channel groups.
      *
-     * @param options optional [SubscriptionOptions]. Also supports [com.pubnub.api.v2.subscriptions.ChannelOptions].
+     * @param options optional [SubscriptionOptions].
      * @return an inactive [Subscription] to this channel group. You must call [Subscription.subscribe] to start receiving events.
      */
     override fun subscription(options: SubscriptionOptions?): Subscription

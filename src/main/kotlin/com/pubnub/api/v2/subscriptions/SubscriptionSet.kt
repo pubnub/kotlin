@@ -25,6 +25,15 @@ abstract class SubscriptionSet internal constructor() : EventEmitter, SubscribeC
     abstract fun remove(subscription: Subscription)
 
     /**
+     * Remove a [Subscription] from this set. Equivalent to calling [remove].
+     *
+     * Please note that removing a subscription from the set does not automatically [unsubscribe] or [close] it.
+     *
+     * @see [remove]
+     */
+    operator fun minus(subscription: Subscription) = remove(subscription)
+
+    /**
      * Adds a [Subscription] to this set. Equivalent to calling [add].
      *
      * Please note that this [SubscriptionSet] will *not* attempt to ensure all subscriptions match their
