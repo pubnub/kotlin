@@ -5,6 +5,8 @@ import java.math.RoundingMode
 import java.text.NumberFormat
 import java.util.Date
 import java.util.Locale
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ConcurrentMap
 import kotlin.collections.set
 
 class TelemetryManager {
@@ -15,7 +17,7 @@ class TelemetryManager {
         private const val MAXIMUM_LATENCY_DATA_AGE = 60.0
     }
 
-    private val latencies: HashMap<String, MutableList<Latency>> = HashMap()
+    private val latencies: ConcurrentMap<String, MutableList<Latency>> = ConcurrentHashMap()
     private val numberFormat by lazy {
         NumberFormat.getNumberInstance(Locale.US).apply {
             maximumFractionDigits = MAX_FRACTION_DIGITS
@@ -24,13 +26,12 @@ class TelemetryManager {
         }
     }
 
-    @Synchronized
     internal fun operationsLatency(currentDate: Long = Date().time): Map<String, String> {
         cleanUpTelemetryData(currentDate)
         val operationLatencies = HashMap<String, String>()
-        latencies.entries.forEach {
-            val latencyKey = "l_${it.key}"
-            val endpointAverageLatency = averageLatencyFromData(it.value)
+        latencies.forEach { key, latencies ->
+            val latencyKey = "l_$key"
+            val endpointAverageLatency = averageLatencyFromData(latencies)
             if (endpointAverageLatency > 0.0f) {
                 operationLatencies[latencyKey] = numberFormat.format(endpointAverageLatency)
             }
@@ -38,21 +39,15 @@ class TelemetryManager {
         return operationLatencies
     }
 
-    @Synchronized
     private fun cleanUpTelemetryData(currentDate: Long = Date().time) {
         val date = currentDate / TIMESTAMP_DIVIDER.toDouble()
 
-        // remove outdated latencies
-        latencies.forEach { (_, operationLatencies) ->
-            val outdated = operationLatencies.filter { it.isOutdated(date) }
-            operationLatencies -= outdated
+        // remove outdated latencies, may result in an empty list but no null values
+        latencies.replaceAll { _, operationLatencies ->
+            val outdated = operationLatencies.filterTo(mutableSetOf()) { it.isOutdated(date) }
+            operationLatencies.removeAll(outdated)
+            operationLatencies
         }
-
-        // remove empty latency list
-        latencies.filterValues { it.isNullOrEmpty() }
-            .forEach { (endpoint, _) ->
-                latencies -= endpoint
-            }
     }
 
     private fun averageLatencyFromData(endpointLatencies: List<Latency>): Double {
@@ -60,21 +55,17 @@ class TelemetryManager {
         return sumOfLatencies / endpointLatencies.size
     }
 
-    @Synchronized
     internal fun storeLatency(latency: Long, type: PNOperationType, currentDate: Long = Date().time) {
         type.queryParam?.let { queryParam: String ->
             if (latency > 0) {
                 val storeDate = currentDate / (TIMESTAMP_DIVIDER.toDouble())
-                if (latencies[queryParam] == null) {
-                    latencies[queryParam] = ArrayList()
-                }
-
-                latencies[queryParam]?.let {
-                    val latencyEntry = Latency(
-                        date = storeDate,
-                        latency = latency.toDouble() / TIMESTAMP_DIVIDER
-                    )
-                    it.add(latencyEntry)
+                val calculatedLatency = Latency(
+                    date = storeDate,
+                    latency = latency.toDouble() / TIMESTAMP_DIVIDER
+                )
+                latencies.merge(queryParam, mutableListOf(calculatedLatency)) { latencies, _ ->
+                    latencies.add(calculatedLatency)
+                    latencies
                 }
             }
         }
