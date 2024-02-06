@@ -74,7 +74,7 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                 }
 
                 is SubscribeEvent.SubscriptionChanged -> {
-                    transitionTo(Handshaking(event.channels, event.channelGroups))
+                    transitionTo(Handshaking(event.channels, event.channelGroups, subscriptionCursor))
                 }
 
                 is SubscribeEvent.Disconnect -> {
@@ -233,7 +233,7 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
         override fun transition(event: SubscribeEvent): Pair<SubscribeState, Set<SubscribeEffectInvocation>> {
             return when (event) {
                 is SubscribeEvent.SubscriptionChanged -> {
-                    transitionTo(Handshaking(event.channels, event.channelGroups))
+                    transitionTo(Handshaking(event.channels, event.channelGroups, subscriptionCursor))
                 }
 
                 is SubscribeEvent.SubscriptionRestored -> {

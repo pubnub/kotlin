@@ -44,7 +44,7 @@ internal class TransitionFromHandshakeFailedStateTest {
 
         // when
         val (state, invocations) = transition(
-            SubscribeState.HandshakeFailed(channels, channelGroups, exception),
+            SubscribeState.HandshakeFailed(channels, channelGroups, exception, subscriptionCursor),
             SubscribeEvent.SubscriptionChanged(newChannels, newChannelGroup)
         )
 
@@ -53,6 +53,7 @@ internal class TransitionFromHandshakeFailedStateTest {
         val handshaking = state as SubscribeState.Handshaking
         assertEquals(newChannels, handshaking.channels)
         assertEquals(newChannelGroup, handshaking.channelGroups)
+        assertEquals(subscriptionCursor, handshaking.subscriptionCursor)
         assertEquals(
             setOf(SubscribeEffectInvocation.Handshake(newChannels, newChannelGroup)), invocations
         )

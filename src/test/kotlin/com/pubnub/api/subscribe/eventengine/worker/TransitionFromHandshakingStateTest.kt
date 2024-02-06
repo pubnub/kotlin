@@ -116,7 +116,7 @@ class TransitionFromHandshakingStateTest {
     }
 
     @Test
-    fun can_transit_from_HANDSHAKING_to_RECEIVING_when_there_is_SUBSCRIPTION_RESTORED_event() {
+    fun can_transit_from_HANDSHAKING_to_HANDSHAKING_when_there_is_SUBSCRIPTION_RESTORED_event() {
         // when
         val (state, invocations) = transition(
             SubscribeState.Handshaking(channels, channelGroups),
@@ -146,7 +146,7 @@ class TransitionFromHandshakingStateTest {
 
         // when
         val (state, invocations) = transition(
-            SubscribeState.Handshaking(channels, channelGroups),
+            SubscribeState.Handshaking(channels, channelGroups, subscriptionCursor),
             SubscribeEvent.SubscriptionChanged(newChannels, newChannelGroups)
         )
 
@@ -155,6 +155,7 @@ class TransitionFromHandshakingStateTest {
         val handshaking = state as SubscribeState.Handshaking
         assertEquals(newChannels, handshaking.channels)
         assertEquals(newChannelGroups, handshaking.channelGroups)
+        assertEquals(subscriptionCursor, handshaking.subscriptionCursor)
         assertEquals(
             setOf(
                 CancelHandshake,

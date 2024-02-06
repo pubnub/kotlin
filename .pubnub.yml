@@ -1,9 +1,9 @@
 name: kotlin
-version: 7.8.0
+version: 7.8.1
 schema: 1
 scm: github.com/pubnub/kotlin
 files:
-  - build/libs/pubnub-kotlin-7.8.0-all.jar
+  - build/libs/pubnub-kotlin-7.8.1-all.jar
 sdks:
   - 
       type: library
@@ -23,8 +23,8 @@ sdks:
             -
               distribution-type: library
               distribution-repository: maven
-              package-name: pubnub-kotlin-7.8.0
-              location: https://repo.maven.apache.org/maven2/com/pubnub/pubnub-kotlin/7.8.0/pubnub-kotlin-7.8.0.jar
+              package-name: pubnub-kotlin-7.8.1
+              location: https://repo.maven.apache.org/maven2/com/pubnub/pubnub-kotlin/7.8.1/pubnub-kotlin-7.8.1.jar
               supported-platforms:
                 supported-operating-systems:
                   Android:
@@ -114,6 +114,13 @@ sdks:
                   license-url: https://www.apache.org/licenses/LICENSE-2.0.txt
                   is-required: Required
 changelog:
+  - date: 2024-02-06
+    version: v7.8.1
+    changes:
+      - type: bug
+        text: "Fixed transitions so that SubscribeEvenEngine can handle multiple subscribe calls executed one by one."
+      - type: bug
+        text: "Add missing Leave events with EE enabled and heartbeat = 0."
   - date: 2024-01-17
     version: v7.8.0
     changes:
