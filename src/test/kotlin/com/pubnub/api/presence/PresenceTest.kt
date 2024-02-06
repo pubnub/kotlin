@@ -1,6 +1,5 @@
 package com.pubnub.api.presence
 
-import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.eventengine.EventEngineConf
 import com.pubnub.api.eventengine.QueueEventEngineConf
@@ -12,7 +11,9 @@ import com.pubnub.api.presence.eventengine.event.PresenceEvent
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.subscribe.eventengine.effect.successfulRemoteAction
 import com.pubnub.contract.subscribe.eventEngine.state.TestSinkSource
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Assertions
@@ -22,7 +23,6 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.concurrent.ScheduledExecutorService
-import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
@@ -100,16 +100,12 @@ internal class PresenceTest {
     @Test
     fun `Leave events not created when suppressLeaveEvents is true and heartbeat interval is 0`() {
         // given
+        val leaveProviderMock: LeaveProvider = mockk()
         val presence = Presence.create(
-            listenerManager = listenerManager, heartbeatInterval = 0.seconds, suppressLeaveEvents = true,
-            leaveProvider = object : LeaveProvider {
-                override fun getLeaveRemoteAction(
-                    channels: Set<String>,
-                    channelGroups: Set<String>
-                ): RemoteAction<Boolean> {
-                    throw IllegalStateException("Leave events should not be created!")
-                }
-            },
+            listenerManager = listenerManager,
+            heartbeatInterval = 0.seconds,
+            suppressLeaveEvents = true,
+            leaveProvider = leaveProviderMock,
         )
 
         // when
@@ -117,24 +113,20 @@ internal class PresenceTest {
         presence.leftAll()
 
         // then
-        // no exception
+        verify(exactly = 0) { leaveProviderMock.getLeaveRemoteAction(any(), any()) }
     }
 
     @Test
     fun `Leave events created when suppressLeaveEvents is false and heartbeat interval is 0`() {
         // given
-        val success = AtomicBoolean(false)
+        val leaveProviderMock: LeaveProvider = mockk()
+        every { leaveProviderMock.getLeaveRemoteAction(any(), any()) } returns successfulRemoteAction(true)
+
         val presence = Presence.create(
-            listenerManager = listenerManager, heartbeatInterval = 0.seconds, suppressLeaveEvents = false,
-            leaveProvider = object : LeaveProvider {
-                override fun getLeaveRemoteAction(
-                    channels: Set<String>,
-                    channelGroups: Set<String>
-                ): RemoteAction<Boolean> {
-                    success.set(true)
-                    return successfulRemoteAction(true)
-                }
-            },
+            listenerManager = listenerManager,
+            heartbeatInterval = 0.seconds,
+            suppressLeaveEvents = false,
+            leaveProvider = leaveProviderMock,
         )
 
         // when
@@ -142,7 +134,7 @@ internal class PresenceTest {
         presence.leftAll()
 
         // then
-        Assertions.assertTrue(success.get())
+        verify { leaveProviderMock.getLeaveRemoteAction(any(), any()) }
     }
 
     private fun Presence.Companion.create(
