@@ -1,11 +1,13 @@
 package com.pubnub.api.presence
 
+import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.eventengine.EventEngineConf
 import com.pubnub.api.eventengine.QueueEventEngineConf
 import com.pubnub.api.managers.ListenerManager
 import com.pubnub.api.presence.eventengine.data.PresenceData
 import com.pubnub.api.presence.eventengine.effect.PresenceEffectInvocation
+import com.pubnub.api.presence.eventengine.effect.effectprovider.LeaveProvider
 import com.pubnub.api.presence.eventengine.event.PresenceEvent
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.subscribe.eventengine.effect.successfulRemoteAction
@@ -20,6 +22,7 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
@@ -94,20 +97,70 @@ internal class PresenceTest {
         assertThat(presence, Matchers.isA(PresenceNoOp::class.java))
     }
 
+    @Test
+    fun `Leave events not created when suppressLeaveEvents is true and heartbeat interval is 0`() {
+        // given
+        val presence = Presence.create(
+            listenerManager = listenerManager, heartbeatInterval = 0.seconds, suppressLeaveEvents = true,
+            leaveProvider = object : LeaveProvider {
+                override fun getLeaveRemoteAction(
+                    channels: Set<String>,
+                    channelGroups: Set<String>
+                ): RemoteAction<Boolean> {
+                    throw IllegalStateException("Leave events should not be created!")
+                }
+            },
+        )
+
+        // when
+        presence.joined(setOf("abc"))
+        presence.leftAll()
+
+        // then
+        // no exception
+    }
+
+    @Test
+    fun `Leave events created when suppressLeaveEvents is false and heartbeat interval is 0`() {
+        // given
+        val success = AtomicBoolean(false)
+        val presence = Presence.create(
+            listenerManager = listenerManager, heartbeatInterval = 0.seconds, suppressLeaveEvents = false,
+            leaveProvider = object : LeaveProvider {
+                override fun getLeaveRemoteAction(
+                    channels: Set<String>,
+                    channelGroups: Set<String>
+                ): RemoteAction<Boolean> {
+                    success.set(true)
+                    return successfulRemoteAction(true)
+                }
+            },
+        )
+
+        // when
+        presence.joined(setOf("abc"))
+        presence.leftAll()
+
+        // then
+        Assertions.assertTrue(success.get())
+    }
+
     private fun Presence.Companion.create(
         listenerManager: ListenerManager,
         heartbeatInterval: Duration = 3.seconds,
         enableEventEngine: Boolean = true,
         heartbeatNotificationOptions: PNHeartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL,
         eventEngineConf: EventEngineConf<PresenceEffectInvocation, PresenceEvent> = QueueEventEngineConf(),
-        presenceData: PresenceData = PresenceData()
+        presenceData: PresenceData = PresenceData(),
+        suppressLeaveEvents: Boolean = false,
+        leaveProvider: LeaveProvider = LeaveProvider { _, _ -> successfulRemoteAction(true) },
     ) = create(
         heartbeatProvider = { _, _, _ -> successfulRemoteAction(true) },
-        leaveProvider = { _, _ -> successfulRemoteAction(true) },
+        leaveProvider = leaveProvider,
         heartbeatInterval = heartbeatInterval,
         enableEventEngine = enableEventEngine,
         retryConfiguration = RetryConfiguration.None,
-        suppressLeaveEvents = false,
+        suppressLeaveEvents = suppressLeaveEvents,
         heartbeatNotificationOptions = heartbeatNotificationOptions,
         listenerManager = listenerManager,
         eventEngineConf = eventEngineConf,
