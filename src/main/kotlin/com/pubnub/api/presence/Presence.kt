@@ -33,7 +33,7 @@ internal interface Presence {
             executorService: ScheduledExecutorService
         ): Presence {
             if (heartbeatInterval <= Duration.ZERO || !enableEventEngine) {
-                return PresenceNoOp()
+                return PresenceNoOp(suppressLeaveEvents, leaveProvider)
             }
 
             val effectFactory = PresenceEffectFactory(
@@ -90,12 +90,33 @@ internal interface Presence {
     fun destroy()
 }
 
-internal class PresenceNoOp : Presence {
-    override fun joined(channels: Set<String>, channelGroups: Set<String>) = noAction()
+internal class PresenceNoOp(private val suppressLeaveEvents: Boolean = false, private val leaveProvider: LeaveProvider) : Presence {
+    private val channels = mutableSetOf<String>()
+    private val channelGroups = mutableSetOf<String>()
 
-    override fun left(channels: Set<String>, channelGroups: Set<String>) = noAction()
+    @Synchronized
+    override fun joined(channels: Set<String>, channelGroups: Set<String>) {
+        this.channels.addAll(channels)
+        this.channelGroups.addAll(channelGroups)
+    }
 
-    override fun leftAll() = noAction()
+    @Synchronized
+    override fun left(channels: Set<String>, channelGroups: Set<String>) {
+        if (!suppressLeaveEvents) {
+            leaveProvider.getLeaveRemoteAction(channels, channelGroups).async { _, _ -> }
+        }
+        this.channels.removeAll(channels)
+        this.channelGroups.removeAll(channelGroups)
+    }
+
+    @Synchronized
+    override fun leftAll() {
+        if (!suppressLeaveEvents) {
+            leaveProvider.getLeaveRemoteAction(channels, channelGroups).async { _, _ -> }
+        }
+        channels.clear()
+        channelGroups.clear()
+    }
 
     override fun presence(channels: Set<String>, channelGroups: Set<String>, connected: Boolean) = noAction()
 
