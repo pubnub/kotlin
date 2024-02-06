@@ -20,6 +20,8 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 
 class SubscribeIntegrationTests : BaseIntegrationTest() {
@@ -113,6 +115,55 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         ).sync()!!
 
         success.listen()
+    }
+
+    @Test
+    fun testTwoAndMoreConsecutiveSubscribeCallFirstWithTimeTokenShouldReceiveMessages() {
+        val countDownLatch = CountDownLatch(3)
+
+        // make two pubnub instances
+        val pubnub1 = PubNub(getBasicPnConfiguration())
+        val pubnub2 = PubNub(getBasicPnConfiguration())
+
+        // create a channel
+        val channel01 = randomChannel()
+
+        // create messages
+        val expectedMessage01 = randomValue()
+        val expectedMessage02 = randomValue()
+        val expectedMessage03 = randomValue()
+
+        // send a message from user 1
+        pubnub1.publish(channel01, expectedMessage01).sync()
+
+        // send a message from user 2
+        pubnub2.publish(channel01, expectedMessage02).sync()
+
+        // get timestamp for 10 minutes ago
+        val timeToken10minAgo = (System.currentTimeMillis() - 600_000L) * 10_000L
+
+        pubnub1.addListener(object : SubscribeCallback() {
+            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
+                // nothing here
+            }
+
+            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
+                println("-=message ${pnMessageResult.message}") // <-- here I am able to get msgFromUser1ToChannel01 and msgFromUser2ToChannel01
+                assertTrue(listOf(expectedMessage01, expectedMessage02, expectedMessage03).contains(pnMessageResult.message.asString))
+                countDownLatch.countDown()
+            }
+        })
+
+        pubnub1.subscribe(channels = listOf(channel01), withTimetoken = timeToken10minAgo)
+        pubnub1.publish(channel01, expectedMessage03).sync()
+        // we are subscribing for the second time immediately after first subscribe
+        pubnub1.subscribe(channels = listOf("ch03"))
+        pubnub1.subscribe(channels = listOf("ch04"))
+        pubnub1.subscribe(channels = listOf("ch05"))
+        pubnub1.subscribe(channels = listOf("ch06"))
+        pubnub1.subscribe(channels = listOf("ch07"))
+
+        assertTrue(countDownLatch.await(5000, TimeUnit.MILLISECONDS))
     }
 
     @Test
