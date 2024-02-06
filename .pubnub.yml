@@ -117,7 +117,10 @@ changelog:
   - date: 2024-02-06
     version: v7.8.1
     changes:
-
+      - type: bug
+        text: "Fixed transitions so that SubscribeEvenEngine can handle multiple subscribe calls executed one by one."
+      - type: bug
+        text: "Add missing Leave events with EE enabled and heartbeat = 0."
   - date: 2024-01-17
     version: v7.8.0
     changes:

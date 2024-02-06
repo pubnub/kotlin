@@ -1,6 +1,12 @@
 ## v7.8.1
 February 06 2024
 
+#### Fixed
+- Fixed transitions so that SubscribeEvenEngine can handle multiple subscribe calls executed one by one.
+- Add missing Leave events with EE enabled and heartbeat = 0.
+
+
+
 ## v7.8.0
 January 17 2024
 
