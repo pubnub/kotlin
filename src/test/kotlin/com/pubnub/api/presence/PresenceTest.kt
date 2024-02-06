@@ -6,11 +6,14 @@ import com.pubnub.api.eventengine.QueueEventEngineConf
 import com.pubnub.api.managers.ListenerManager
 import com.pubnub.api.presence.eventengine.data.PresenceData
 import com.pubnub.api.presence.eventengine.effect.PresenceEffectInvocation
+import com.pubnub.api.presence.eventengine.effect.effectprovider.LeaveProvider
 import com.pubnub.api.presence.eventengine.event.PresenceEvent
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.subscribe.eventengine.effect.successfulRemoteAction
 import com.pubnub.contract.subscribe.eventEngine.state.TestSinkSource
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Assertions
@@ -94,20 +97,62 @@ internal class PresenceTest {
         assertThat(presence, Matchers.isA(PresenceNoOp::class.java))
     }
 
+    @Test
+    fun `Leave events not created when suppressLeaveEvents is true and heartbeat interval is 0`() {
+        // given
+        val leaveProviderMock: LeaveProvider = mockk()
+        val presence = Presence.create(
+            listenerManager = listenerManager,
+            heartbeatInterval = 0.seconds,
+            suppressLeaveEvents = true,
+            leaveProvider = leaveProviderMock,
+        )
+
+        // when
+        presence.joined(setOf("abc"))
+        presence.leftAll()
+
+        // then
+        verify(exactly = 0) { leaveProviderMock.getLeaveRemoteAction(any(), any()) }
+    }
+
+    @Test
+    fun `Leave events created when suppressLeaveEvents is false and heartbeat interval is 0`() {
+        // given
+        val leaveProviderMock: LeaveProvider = mockk()
+        every { leaveProviderMock.getLeaveRemoteAction(any(), any()) } returns successfulRemoteAction(true)
+
+        val presence = Presence.create(
+            listenerManager = listenerManager,
+            heartbeatInterval = 0.seconds,
+            suppressLeaveEvents = false,
+            leaveProvider = leaveProviderMock,
+        )
+
+        // when
+        presence.joined(setOf("abc"))
+        presence.leftAll()
+
+        // then
+        verify { leaveProviderMock.getLeaveRemoteAction(any(), any()) }
+    }
+
     private fun Presence.Companion.create(
         listenerManager: ListenerManager,
         heartbeatInterval: Duration = 3.seconds,
         enableEventEngine: Boolean = true,
         heartbeatNotificationOptions: PNHeartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL,
         eventEngineConf: EventEngineConf<PresenceEffectInvocation, PresenceEvent> = QueueEventEngineConf(),
-        presenceData: PresenceData = PresenceData()
+        presenceData: PresenceData = PresenceData(),
+        suppressLeaveEvents: Boolean = false,
+        leaveProvider: LeaveProvider = LeaveProvider { _, _ -> successfulRemoteAction(true) },
     ) = create(
         heartbeatProvider = { _, _, _ -> successfulRemoteAction(true) },
-        leaveProvider = { _, _ -> successfulRemoteAction(true) },
+        leaveProvider = leaveProvider,
         heartbeatInterval = heartbeatInterval,
         enableEventEngine = enableEventEngine,
         retryConfiguration = RetryConfiguration.None,
-        suppressLeaveEvents = false,
+        suppressLeaveEvents = suppressLeaveEvents,
         heartbeatNotificationOptions = heartbeatNotificationOptions,
         listenerManager = listenerManager,
         eventEngineConf = eventEngineConf,

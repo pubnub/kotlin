@@ -67,16 +67,13 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
             }
         })
 
-        // todo: check it
-        // guest.unsubscribeFromBlocking(expectedChannel)
-        // success.listen()
+        guest.unsubscribeFromBlocking(expectedChannel)
 
         Awaitility.await()
             .atMost(CommonUtils.DEFAULT_LISTEN_DURATION.toLong(), TimeUnit.SECONDS)
             .with()
             .pollInterval(Durations.TWO_SECONDS)
             .until {
-                guest.unsubscribeFromBlocking(expectedChannel)
                 success.get()
             }
     }
