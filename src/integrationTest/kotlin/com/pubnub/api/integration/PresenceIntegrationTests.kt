@@ -17,16 +17,17 @@ import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.logging.HttpLoggingInterceptor
 import org.awaitility.Awaitility
-import org.awaitility.Durations
-import org.hamcrest.core.IsEqual
 import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import org.junit.jupiter.api.Timeout
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
+import kotlin.time.Duration.Companion.seconds
 
 class PresenceIntegrationTests : BaseIntegrationTest() {
 
@@ -129,57 +130,37 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
         }
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
+    @Timeout(10, unit = TimeUnit.SECONDS)
     fun testPresenceState() {
-        val hits = AtomicInteger()
-        val expectedHits = 2
         val expectedStatePayload = generatePayload()
         val expectedChannel = randomChannel()
 
-        pubnub.addListener(object : SubscribeCallback() {
-            override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
-                if (pnPresenceEventResult.event == "state-change" &&
-                    pnPresenceEventResult.channel == expectedChannel &&
-                    pnPresenceEventResult.uuid == pubnub.configuration.userId.value
-                ) {
-                    assertEquals(expectedStatePayload, pnPresenceEventResult.state)
-                    hits.incrementAndGet()
-                }
-            }
-        })
+        pubnub.test(withPresence = true) {
+            subscribe(expectedChannel)
+            assertEquals("join", nextEvent<PNPresenceEventResult>().event)
 
-        pubnub.subscribeToBlocking(expectedChannel)
+            pubnub.setPresenceState(
+                channels = listOf(expectedChannel),
+                state = expectedStatePayload
+            ).sync()
 
-        pubnub.setPresenceState(
-            channels = listOf(expectedChannel),
-            state = expectedStatePayload
-        ).await { result, status ->
-            assertFalse(status.error)
-            assertEquals(expectedStatePayload, result!!.state)
-        }
+            val pnPresenceEventResult = nextEvent<PNPresenceEventResult>()
+            assertEquals("state-change", pnPresenceEventResult.event)
+            assertEquals(expectedChannel, pnPresenceEventResult.channel)
+            assertEquals(pubnub.configuration.userId.value, pnPresenceEventResult.uuid)
+            assertEquals(expectedStatePayload, pnPresenceEventResult.state)
 
-        Awaitility.await()
-            .atMost(Durations.FIVE_SECONDS)
-            .untilAtomic(hits, IsEqual.equalTo(1))
-
-        pubnub.getPresenceState(
-            channels = listOf(expectedChannel)
-        ).await { result, status ->
-            assertFalse(status.error)
+            val result = pubnub.getPresenceState(
+                channels = listOf(expectedChannel)
+            ).sync()
             assertEquals(expectedStatePayload, result!!.stateByUUID[expectedChannel])
-            hits.incrementAndGet()
         }
-
-        Awaitility.await()
-            .atMost(Durations.FIVE_SECONDS)
-            .untilAtomic(hits, IsEqual.equalTo(expectedHits))
     }
 
-    @Test
-    fun testHeartbeatsDisabled() {
-        val heartbeatCallsCount = AtomicInteger()
-        val subscribeSuccess = AtomicBoolean()
+    @org.junit.jupiter.api.Test
+    @Timeout(25, unit = TimeUnit.SECONDS)
+    fun testHeartbeatsDisabled2() {
         val expectedChannel = randomChannel()
 
         pubnub.configuration.heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
@@ -191,30 +172,33 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
         assertEquals(20, pubnub.configuration.presenceTimeout)
         assertEquals(0, pubnub.configuration.heartbeatInterval)
 
-        pubnub.addListener(object : SubscribeCallback() {
-            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (!pnStatus.error && pnStatus.affectedChannels.contains(expectedChannel)) {
-                    if (pnStatus.operation == PNOperationType.PNSubscribeOperation) {
-                        subscribeSuccess.set(true)
-                    }
-                    if (pnStatus.operation == PNOperationType.PNHeartbeatOperation) {
-                        heartbeatCallsCount.incrementAndGet()
-                    }
-                }
-            }
-        })
+        pubnub.test(withPresence = true) {
+            subscribe(expectedChannel)
+            assertNull(nextStatus(20.seconds)) // no heartbeats in the next 20 seconds
+            skip(2)
+        }
+    }
 
-        pubnub.subscribe(
-            channels = listOf(expectedChannel),
-            withPresence = true
+    @org.junit.jupiter.api.Test
+    @Timeout(25, unit = TimeUnit.SECONDS)
+    fun testHeartbeatsEnabled2() {
+        val expectedChannel: String = randomValue()
+
+        val pubnub = createPubNub(
+            getBasicPnConfiguration().apply {
+                heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
+                presenceTimeout = 20
+            }
         )
+        assertEquals(PNHeartbeatNotificationOptions.ALL, pubnub.configuration.heartbeatNotificationOptions)
+        assertEquals(20, pubnub.configuration.presenceTimeout)
+        assertEquals(9, pubnub.configuration.heartbeatInterval)
 
-        Awaitility.await()
-            .atMost(20, TimeUnit.SECONDS)
-            .pollDelay(19, TimeUnit.SECONDS)
-            .until {
-                subscribeSuccess.get() && heartbeatCallsCount.get() == 0
-            }
+        pubnub.test(withPresence = true) {
+            subscribe(expectedChannel)
+            assertEquals(PNOperationType.PNHeartbeatOperation, nextStatus().operation)
+            skip(2)
+        }
     }
 
     @Test

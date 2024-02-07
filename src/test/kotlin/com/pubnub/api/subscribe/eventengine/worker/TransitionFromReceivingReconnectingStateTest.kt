@@ -86,6 +86,7 @@ internal class TransitionFromReceivingReconnectingStateTest {
         assertEquals(
             setOf(
                 SubscribeEffectInvocation.CancelReceiveReconnect,
+                SubscribeEffectInvocation.EmitStatus(createSubscriptionChangedStatus(channels, channelGroups)),
                 SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
             ),
             invocations
@@ -209,6 +210,7 @@ internal class TransitionFromReceivingReconnectingStateTest {
         assertEquals(
             setOf(
                 SubscribeEffectInvocation.CancelReceiveReconnect,
+                SubscribeEffectInvocation.EmitStatus(createSubscriptionChangedStatus(channels, channelGroups)),
                 SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, expectedSubscriptionCursor),
             ),
             invocations
@@ -259,3 +261,11 @@ internal class TransitionFromReceivingReconnectingStateTest {
         return PNMessageResult(pubSubResult, message)
     }
 }
+
+internal fun createSubscriptionChangedStatus(channels: Collection<String>, channelGroups: Collection<String>) = PNStatus(
+    PNStatusCategory.PNSubscriptionChanged,
+    error = false,
+    operation = PNOperationType.PNSubscribeOperation,
+    affectedChannels = channels.toList(),
+    affectedChannelGroups = channelGroups.toList()
+)

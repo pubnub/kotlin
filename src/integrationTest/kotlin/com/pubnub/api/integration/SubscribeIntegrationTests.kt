@@ -20,6 +20,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import org.junit.jupiter.api.Timeout
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
@@ -299,5 +300,16 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         })
 
         success.listen(10)
+    }
+
+    @org.junit.jupiter.api.Test
+    @Timeout(10, unit = TimeUnit.SECONDS)
+    fun `second consecutive subscribe works with new test helper`() = pubnub.test {
+        subscribe(listOf("abc"))
+        val tt = pubnub.publish("abc", "myMessage").sync()!!.timetoken
+        assertEquals(tt, nextMessage().timetoken!!)
+        subscribe(listOf("def"))
+        val tt2 = pubnub.publish("def", "myMessage").sync()!!.timetoken
+        assertEquals(tt2, nextMessage().timetoken!!)
     }
 }

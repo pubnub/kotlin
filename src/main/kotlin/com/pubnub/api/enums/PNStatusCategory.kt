@@ -32,9 +32,15 @@ enum class PNStatusCategory {
     PNTimeoutCategory,
 
     /**
-     * SDK subscribed with a new mix of channels (fired every time the channel / channel group mix changed).
+     * SDK successfully connected the Subscribe loop.
      */
     PNConnectedCategory,
+
+    /**
+     * SDK subscribed with a new mix of channels (fired every time the channel / channel group mix changed) since the
+     * initial connection.
+     */
+    PNSubscriptionChanged,
 
     /**
      * SDK was able to reconnect to PubNub, i.e. the subscription loop has been reconnected.
