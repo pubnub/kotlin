@@ -459,4 +459,8 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
 
         assertEquals(10, success.get())
     }
+
+    @Test
+    fun testSubscriptionWithOnlyPnpres() {
+    }
 }

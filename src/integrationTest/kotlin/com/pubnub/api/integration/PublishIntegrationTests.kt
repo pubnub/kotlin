@@ -1,7 +1,7 @@
 package com.pubnub.api.integration
 
 import com.google.gson.JsonObject
-import com.pubnub.api.CommonUtils
+import com.pubnub.api.CommonUtils.DEFAULT_LISTEN_DURATION
 import com.pubnub.api.CommonUtils.generateMessage
 import com.pubnub.api.CommonUtils.generatePayload
 import com.pubnub.api.CommonUtils.generatePayloadJSON
@@ -244,7 +244,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         observer.subscribeToBlocking(expectedChannel)
 
         Awaitility.await()
-            .atMost(CommonUtils.DEFAULT_LISTEN_DURATION.toLong(), TimeUnit.SECONDS)
+            .atMost(DEFAULT_LISTEN_DURATION.toLong(), TimeUnit.SECONDS)
             .untilAtomic(success, Matchers.greaterThanOrEqualTo(2))
     }
 
@@ -507,10 +507,10 @@ class PublishIntegrationTests : BaseIntegrationTest() {
 
     @Test
     fun testSubscriptionSet() {
-        val success = AtomicBoolean()
+        val success = AtomicInteger(0)
         val expectedMessage = randomValue()
-        val randomChannelName01 = "myChannel01"
-        val randomChannelName02 = "myChannel02"
+        val randomChannelName01 = randomChannel()
+        val randomChannelName02 = randomChannel()
         val subscriptionSetOf: SubscriptionSet = pubnub.subscriptionSetOf(
             channels = setOf(randomChannelName01, randomChannelName02),
             options = SubscriptionOptions.receivePresenceEvents()
@@ -520,7 +520,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
                 println("-= message for subscriptionSetOf=-")
                 println(pnMessageResult)
-                success.set(true)
+                success.incrementAndGet()
             }
         })
 
@@ -531,32 +531,35 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             channel = randomChannelName01,
             message = expectedMessage
         ).sync()
-//        guestClient.publish(
-//            channel = randomChannelName02,
-//            message = expectedMessage + "02"
-//        ).sync()
+        guestClient.publish(
+            channel = randomChannelName02,
+            message = expectedMessage
+        ).sync()
 
-        success.listen(20)
+        Awaitility.await()
+            .atMost(DEFAULT_LISTEN_DURATION.toLong(), TimeUnit.SECONDS)
+            .untilAtomic(success, Matchers.equalTo(2))
     }
 
     @Test
     fun testSubscribeToSingleChannelUsingNewEventListeners_channelNameWithWildcard() {
-        val success = AtomicBoolean()
+        val success = AtomicInteger()
         val expectedMessage = randomValue()
-        val randomChannelName01 = "myChannel.01"
-        val randomChannelName02 = "myChannel.02"
+        val randomChannelName01 = "myChannel.${randomChannel()}"
+        val randomChannelName02 = "myChannel.${randomChannel()}"
         val myChannel: Channel = pubnub.channel("myChannel.*")
-//        val myChannel: Channel = pubnub.channel(randomChannelName01)
+
         val subscription = myChannel.subscription()
         subscription.addListener(object : EventListener {
             override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
                 println("-= message =-")
-                assertEquals(expectedMessage, pnMessageResult.message.asString)
-                success.set(true)
+                println(pnMessageResult)
+                success.incrementAndGet()
             }
         })
 
         subscription.subscribe()
+        Thread.sleep(2000)
 
         guestClient.publish(
             channel = randomChannelName01,
@@ -567,16 +570,18 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             message = expectedMessage
         ).sync()
 
-        success.listen(20)
+        Awaitility.await()
+            .atMost(DEFAULT_LISTEN_DURATION.toLong(), TimeUnit.SECONDS)
+            .untilAtomic(success, Matchers.equalTo(2))
     }
 
     @Test
-    fun `when Subscription object is not subscribed then events are not delivered`() {
+    fun `when Subscription in Set is not subscribed then events are not delivered`() {
         val success = AtomicBoolean()
         val failure = AtomicBoolean()
         val expectedMessage = randomValue()
-        val randomChannelName01 = "myChannel01"
-        val randomChannelName02 = "myChannel02"
+        val randomChannelName01 = randomChannel()
+        val randomChannelName02 = randomChannel()
         val subscriptionSetOf: SubscriptionSet = pubnub.subscriptionSetOf(
             channels = setOf(randomChannelName01, randomChannelName02),
             options = SubscriptionOptions.receivePresenceEvents()
@@ -603,10 +608,10 @@ class PublishIntegrationTests : BaseIntegrationTest() {
 
         guestClient.publish(
             channel = randomChannelName01,
-            message = expectedMessage + "01"
+            message = expectedMessage
         ).sync()
 
-        success.listen(20)
+        success.listen()
         Thread.sleep(2000)
         assertFalse(failure.get())
     }
@@ -614,14 +619,14 @@ class PublishIntegrationTests : BaseIntegrationTest() {
     @Test
     fun `when reconnecting with lower timetoken then existing subscriptions deliver events monotonically`() {
         val expectedMessage = randomValue()
-        val randomChannelName01 = "myChannel01"
+        val randomChannelName01 = randomChannel()
         val success = AtomicInteger(0)
         val failure = AtomicReference<Exception>(null)
 
         val result0 = pubnub.publish(randomChannelName01, expectedMessage).sync()!!
         println("-= Pre-subscribe result: $result0")
 
-        val subscription1 = pubnub.channel(randomChannelName01).subscription().apply {
+        pubnub.channel(randomChannelName01).subscription().apply {
             addListener(object : EventListener {
                 var highestTimetokenSeen = 0L
                 override fun message(pubnub: PubNub, result: PNMessageResult) {
@@ -643,10 +648,10 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         println("-= Post-subscribe result: $result1")
 
         Awaitility.await()
-            .atMost(CommonUtils.DEFAULT_LISTEN_DURATION.toLong(), TimeUnit.SECONDS)
+            .atMost(DEFAULT_LISTEN_DURATION.toLong(), TimeUnit.SECONDS)
             .untilAtomic(success, Matchers.equalTo(1))
 
-        val subscription2 = pubnub.channel(randomChannelName01).subscription().apply {
+        pubnub.channel(randomChannelName01).subscription().apply {
             addListener(object : EventListener {
                 var highestTimetokenSeen = 0L
                 override fun message(pubnub: PubNub, result: PNMessageResult) {
@@ -664,13 +669,13 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         Thread.sleep(2000)
 
         Awaitility.await()
-            .atMost(CommonUtils.DEFAULT_LISTEN_DURATION.toLong(), TimeUnit.SECONDS)
+            .atMost(DEFAULT_LISTEN_DURATION.toLong(), TimeUnit.SECONDS)
             .untilAtomic(success, Matchers.equalTo(3))
 
         pubnub.publish(randomChannelName01, expectedMessage).sync()
 
         Awaitility.await()
-            .atMost(CommonUtils.DEFAULT_LISTEN_DURATION.toLong(), TimeUnit.SECONDS)
+            .atMost(DEFAULT_LISTEN_DURATION.toLong(), TimeUnit.SECONDS)
             .untilAtomic(success, Matchers.equalTo(5))
 
         Thread.sleep(2000)

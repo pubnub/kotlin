@@ -44,6 +44,8 @@ internal class SubscriptionImpl(
     /**
      * To ensure that events are delivered with timestamps growing monotonically,
      * we will set this to the highest received timestamp and compare incoming messages against it.
+     *
+     * This will be reset on subscribe(cursor) with the value from the SubscriptionCursor.
      */
     private var lastTimetoken: Long = 0L
 
