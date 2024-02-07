@@ -24,7 +24,7 @@ interface Channel : Subscribable {
      * Channel subscriptions support passing [com.pubnub.api.v2.subscriptions.SubscriptionOptions.receivePresenceEvents] in
      * [options] to enable receiving presence events.
      *
-     * [com.pubnub.api.v2.subscriptions.Filter] can be used to filter events delivered to the subscription.
+     * [com.pubnub.api.v2.subscriptions.SubscriptionOptions.filter] can be used to filter events delivered to the subscription.
      *
      * For example, to create a subscription that only listens to presence events:
      * ```

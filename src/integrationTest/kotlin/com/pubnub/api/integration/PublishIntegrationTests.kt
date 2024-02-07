@@ -34,7 +34,6 @@ import org.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
-import org.junit.Assert.fail
 import org.junit.Test
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
@@ -175,7 +174,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
 
         val testChannel = pubnub.channel(expectedChannel)
         val testSubscription = testChannel.subscription(SubscriptionOptions.receivePresenceEvents())
-        testSubscription.addListener(object : EventListener() {
+        testSubscription.addListener(object : EventListener {
 
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 assertEquals(expectedChannel, result.channel)
@@ -517,7 +516,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             options = SubscriptionOptions.receivePresenceEvents()
         )
 
-        subscriptionSetOf.addListener(object : EventListener() {
+        subscriptionSetOf.addListener(object : EventListener {
             override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
                 println("-= message for subscriptionSetOf=-")
                 println(pnMessageResult)
@@ -549,7 +548,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         val myChannel: Channel = pubnub.channel("myChannel.*")
 //        val myChannel: Channel = pubnub.channel(randomChannelName01)
         val subscription = myChannel.subscription()
-        subscription.addListener(object : EventListener() {
+        subscription.addListener(object : EventListener {
             override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
                 println("-= message =-")
                 assertEquals(expectedMessage, pnMessageResult.message.asString)
@@ -583,7 +582,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             options = SubscriptionOptions.receivePresenceEvents()
         )
 
-        subscriptionSetOf.addListener(object : EventListener() {
+        subscriptionSetOf.addListener(object : EventListener {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 println("-= message for subscriptionSetOf=-")
                 println(result)
@@ -592,7 +591,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         })
 
         val sub = pubnub.channel(randomChannelName01).subscription()
-        sub.addListener(object : EventListener() {
+        sub.addListener(object : EventListener {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 println("-= message for subscription=-")
                 println(result)
@@ -619,12 +618,11 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         val success = AtomicInteger(0)
         val failure = AtomicReference<Exception>(null)
 
-
         val result0 = pubnub.publish(randomChannelName01, expectedMessage).sync()!!
         println("-= Pre-subscribe result: $result0")
 
         val subscription1 = pubnub.channel(randomChannelName01).subscription().apply {
-            addListener(object : EventListener() {
+            addListener(object : EventListener {
                 var highestTimetokenSeen = 0L
                 override fun message(pubnub: PubNub, result: PNMessageResult) {
                     println("-= message for subscription1=-")
@@ -649,7 +647,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             .untilAtomic(success, Matchers.equalTo(1))
 
         val subscription2 = pubnub.channel(randomChannelName01).subscription().apply {
-            addListener(object : EventListener() {
+            addListener(object : EventListener {
                 var highestTimetokenSeen = 0L
                 override fun message(pubnub: PubNub, result: PNMessageResult) {
                     println("-= message for subscription2=-")

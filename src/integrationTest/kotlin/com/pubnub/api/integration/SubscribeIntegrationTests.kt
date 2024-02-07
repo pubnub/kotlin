@@ -206,14 +206,14 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         val sub01 = chan01.subscription()
         val sub02 = chan02.subscription()
 
-        sub01.addListener(object : EventListener() {
+        sub01.addListener(object : EventListener {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 println("01: $result")
                 success.incrementAndGet()
             }
         })
 
-        sub02.addListener(object : EventListener() {
+        sub02.addListener(object : EventListener {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 println("02: $result")
                 success.incrementAndGet()
@@ -224,7 +224,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
             setOf(sub02, sub01)
         )
 
-        subscriptionSetOf.addListener(object : EventListener() {
+        subscriptionSetOf.addListener(object : EventListener {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 println("set: $result")
                 success.incrementAndGet()
@@ -252,14 +252,14 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         val sub01 = chan01.subscription()
         val sub02 = chan02.subscription()
 
-        sub01.addListener(object : EventListener() {
+        sub01.addListener(object : EventListener {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 println("01: $result")
                 success.incrementAndGet()
             }
         })
 
-        sub02.addListener(object : EventListener() {
+        sub02.addListener(object : EventListener {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 println("02: $result")
                 success.incrementAndGet()
@@ -274,7 +274,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         pubnub.publish(chan02.name, expectedMessage).sync()
         pubnub.publish(chan01.name, expectedMessage).sync()
 
-        subscriptionSetOf.addListener(object : EventListener() {
+        subscriptionSetOf.addListener(object : EventListener {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 println("set: $result")
                 success.incrementAndGet()
@@ -306,14 +306,14 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         pubnub.publish(chan02.name, expectedMessage + "02").sync()
         pubnub.publish(chan01.name, expectedMessage + "03").sync()
 
-        sub01.addListener(object : EventListener() {
+        sub01.addListener(object : EventListener {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 println("-=01: ${result.message}")
                 success.incrementAndGet()
             }
         })
 
-        sub02.addListener(object : EventListener() {
+        sub02.addListener(object : EventListener {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 println("-=02: ${result.message}")
                 success.incrementAndGet()
@@ -324,7 +324,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
             setOf(sub02, sub01)
         )
 
-        subscriptionSetOf.addListener(object : EventListener() {
+        subscriptionSetOf.addListener(object : EventListener {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 println("-=set: ${result.message}")
                 success.incrementAndGet()
@@ -361,21 +361,21 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         pubnub.publish(chan02.name, expectedMessage + "02").sync()
         pubnub.publish(chan01.name, expectedMessage + "03").sync()
 
-        sub01.addListener(object : EventListener() {
+        sub01.addListener(object : EventListener {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 println("-=01: ${result.message}")
                 success.incrementAndGet()
             }
         })
 
-        sub02.addListener(object : EventListener() {
+        sub02.addListener(object : EventListener {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 println("-=02: ${result.message}")
                 success.incrementAndGet()
             }
         })
 
-        unrelatedSubscription.addListener(object : EventListener() {
+        unrelatedSubscription.addListener(object : EventListener {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 println("-=03: ${result.message}")
             }
@@ -385,7 +385,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
             setOf(sub02, sub01)
         )
 
-        subscriptionSetOf.addListener(object : EventListener() {
+        subscriptionSetOf.addListener(object : EventListener {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 println("-=set: ${result.message}")
                 success.incrementAndGet()
@@ -420,14 +420,14 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         pubnub.publish(chan02.name, expectedMessage + "02").sync()
         pubnub.publish(chan01.name, expectedMessage + "03").sync()
 
-        sub01.addListener(object : EventListener() {
+        sub01.addListener(object : EventListener {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 println("-=01: ${result.message}")
                 success.incrementAndGet()
             }
         })
 
-        sub02.addListener(object : EventListener() {
+        sub02.addListener(object : EventListener {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 println("-=02: ${result.message}")
                 success.incrementAndGet()
@@ -438,7 +438,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
             setOf(sub02, sub01)
         )
 
-        subscriptionSetOf.addListener(object : EventListener() {
+        subscriptionSetOf.addListener(object : EventListener {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 println("-=set: ${result.message}")
                 success.incrementAndGet()

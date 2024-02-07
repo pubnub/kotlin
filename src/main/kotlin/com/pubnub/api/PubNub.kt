@@ -93,6 +93,8 @@ import com.pubnub.api.presence.eventengine.effect.effectprovider.LeaveProviderIm
 import com.pubnub.api.subscribe.PRESENCE_CHANNEL_SUFFIX
 import com.pubnub.api.subscribe.Subscribe
 import com.pubnub.api.subscribe.eventengine.configuration.EventEnginesConf
+import com.pubnub.api.v2.callbacks.EventEmitter
+import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusEmitter
 import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.api.v2.entities.Channel
@@ -104,7 +106,6 @@ import com.pubnub.api.v2.subscriptions.SubscriptionCursor
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.api.workers.SubscribeMessageProcessor
-import com.pubnub.internal.v2.callbacks.StatusEmitterImpl
 import com.pubnub.internal.v2.entities.ChannelGroupImpl
 import com.pubnub.internal.v2.entities.ChannelGroupName
 import com.pubnub.internal.v2.entities.ChannelImpl
@@ -121,7 +122,7 @@ import java.util.UUID
 class PubNub internal constructor(
     val configuration: PNConfiguration,
     eventEnginesConf: EventEnginesConf
-) {
+) : EventEmitter, StatusEmitter {
 
     constructor(configuration: PNConfiguration) : this(configuration, EventEnginesConf())
 
@@ -2085,7 +2086,7 @@ class PubNub internal constructor(
     // public meth
 
     /**
-     * Add a listener.
+     * Add a legacy listener for both client status and events.
      *
      * @param listener The listener to be added.
      */
@@ -2094,12 +2095,37 @@ class PubNub internal constructor(
     }
 
     /**
+     * Add a listener for client status changes.
+     *
+     * @param listener The listener to be added.
+     */
+    override fun addListener(listener: StatusListener) {
+        listenerManager.addListener(listener)
+    }
+
+    /**
+     * Add a global listener for events in all active subscriptions.
+     *
+     * @param listener The listener to be added.
+     */
+    override fun addListener(listener: EventListener) {
+        listenerManager.addListener(listener)
+    }
+
+    /**
      * Remove a listener.
      *
      * @param listener The listener to be removed.
      */
-    fun removeListener(listener: Listener) {
+    override fun removeListener(listener: Listener) {
         listenerManager.removeListener(listener)
+    }
+
+    /**
+     * Removes all status and event listeners.
+     */
+    override fun removeAllListeners() {
+        listenerManager.removeAllListeners()
     }
 
     //region Encryption
@@ -2238,35 +2264,7 @@ class PubNub internal constructor(
     }
 
     // begin V2
-
-    private val statusEmitter: StatusEmitter = StatusEmitterImpl(this)
-
     // public
-
-    /**
-     * Add a listener for status events only.
-     *
-     * @param listener The [StatusListener] to be added.
-     */
-    fun addStatusListener(listener: StatusListener) {
-        statusEmitter.addListener(listener)
-    }
-
-    /**
-     * Remove a listener for status events.
-     *
-     * @param listener The [StatusListener] to be removed.
-     */
-    fun removeStatusListener(listener: StatusListener) {
-        statusEmitter.removeListener(listener)
-    }
-
-    /**
-     * Remove all status listeners.
-     */
-    fun removeAllStatusListeners() {
-        statusEmitter.removeAllListeners()
-    }
 
     /**
      * Create a handle to a [Channel] that can be used to obtain a [Subscription].

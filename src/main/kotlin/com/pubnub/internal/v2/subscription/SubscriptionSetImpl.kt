@@ -1,6 +1,7 @@
 package com.pubnub.internal.v2.subscription
 
 import com.pubnub.api.PubNub
+import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.managers.AnnouncementCallback
 import com.pubnub.api.managers.AnnouncementEnvelope
 import com.pubnub.api.v2.callbacks.EventEmitter
@@ -22,7 +23,7 @@ internal class SubscriptionSetImpl(
     initialSubscriptions: Set<SubscriptionImpl> = emptySet(),
 ) : SubscriptionSet(), EventEmitter {
     private val _subscriptions: CopyOnWriteArraySet<SubscriptionImpl> = CopyOnWriteArraySet()
-    private val eventEmitter = EventEmitterImpl(pubnub, AnnouncementCallback.Phase.SET, ::accepts)
+    private val eventEmitter = EventEmitterImpl(AnnouncementCallback.Phase.SET, ::accepts)
 
     override val subscriptions get() = _subscriptions.toSet()
 
@@ -70,7 +71,7 @@ internal class SubscriptionSetImpl(
         eventEmitter.addListener(listener)
     }
 
-    override fun removeListener(listener: EventListener) {
+    override fun removeListener(listener: Listener) {
         eventEmitter.removeListener(listener)
     }
 

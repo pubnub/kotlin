@@ -1,6 +1,7 @@
 package com.pubnub.internal.v2.subscription
 
 import com.pubnub.api.PubNub
+import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.managers.AnnouncementCallback
 import com.pubnub.api.managers.AnnouncementEnvelope
 import com.pubnub.api.models.consumer.pubsub.PNEvent
@@ -33,7 +34,7 @@ internal class SubscriptionImpl(
             field = newValue
         }
 
-    private val eventEmitter = EventEmitterImpl(pubnub, AnnouncementCallback.Phase.SUBSCRIPTION, ::accepts)
+    private val eventEmitter = EventEmitterImpl(AnnouncementCallback.Phase.SUBSCRIPTION, ::accepts)
 
     internal val channels = channels.toSet()
     internal val channelGroups = channelGroups.toSet()
@@ -86,6 +87,7 @@ internal class SubscriptionImpl(
     }
 
     internal fun onSubscriptionInactive() {
+        lastTimetoken = 0L
         isActive = false
     }
 
@@ -98,7 +100,7 @@ internal class SubscriptionImpl(
         eventEmitter.addListener(listener)
     }
 
-    override fun removeListener(listener: EventListener) {
+    override fun removeListener(listener: Listener) {
         eventEmitter.removeListener(listener)
     }
 

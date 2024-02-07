@@ -13,13 +13,17 @@ import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResu
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.subscribe.eventengine.effect.MessagesConsumer
 import com.pubnub.api.subscribe.eventengine.effect.StatusConsumer
+import com.pubnub.api.v2.callbacks.EventListener
+import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.internal.v2.subscription.SubscriptionImpl
 import java.util.concurrent.CopyOnWriteArrayList
 
 internal class ListenerManager(val pubnub: PubNub) : MessagesConsumer, StatusConsumer {
 
     // TODO this should probably be a set, but for backward compatibility leaving as list for now
-    private val listeners = CopyOnWriteArrayList<SubscribeCallback>()
+    private val listeners = CopyOnWriteArrayList<Listener>()
+    private val statusListeners get() = listeners.filterIsInstance<StatusListener>()
+    private val eventListeners get() = listeners.filterIsInstance<EventListener>()
 
     fun addListener(listener: SubscribeCallback) {
         listeners.add(listener)
@@ -27,6 +31,10 @@ internal class ListenerManager(val pubnub: PubNub) : MessagesConsumer, StatusCon
 
     fun removeListener(listener: Listener) {
         listeners.remove(listener)
+    }
+
+    fun removeAllListeners() {
+        listeners.clear()
     }
 
     // for use by v2 listeners
@@ -43,49 +51,57 @@ internal class ListenerManager(val pubnub: PubNub) : MessagesConsumer, StatusCon
     }
 
     override fun announce(status: PNStatus) {
-        listeners.forEach { it.status(pubnub, status) }
+        statusListeners.forEach { it.status(pubnub, status) }
     }
 
     override fun announce(message: PNMessageResult) {
-        listeners.forEach { it.message(pubnub, message) }
+        eventListeners.forEach { it.message(pubnub, message) }
         val envelope = AnnouncementEnvelope(message)
         subscriptionCallbacks.forEach { it.message(pubnub, envelope) }
         setCallbacks.forEach { it.message(pubnub, envelope) }
     }
 
     override fun announce(presence: PNPresenceEventResult) {
-        listeners.forEach { it.presence(pubnub, presence) }
+        eventListeners.forEach { it.presence(pubnub, presence) }
         val envelope = AnnouncementEnvelope(presence)
         subscriptionCallbacks.forEach { it.presence(pubnub, envelope) }
         setCallbacks.forEach { it.presence(pubnub, envelope) }
     }
 
     override fun announce(signal: PNSignalResult) {
-        listeners.forEach { it.signal(pubnub, signal) }
+        eventListeners.forEach { it.signal(pubnub, signal) }
         val envelope = AnnouncementEnvelope(signal)
         subscriptionCallbacks.forEach { it.signal(pubnub, envelope) }
         setCallbacks.forEach { it.signal(pubnub, envelope) }
     }
 
     override fun announce(messageAction: PNMessageActionResult) {
-        listeners.forEach { it.messageAction(pubnub, messageAction) }
+        eventListeners.forEach { it.messageAction(pubnub, messageAction) }
         val envelope = AnnouncementEnvelope(messageAction)
         subscriptionCallbacks.forEach { it.messageAction(pubnub, envelope) }
         setCallbacks.forEach { it.messageAction(pubnub, envelope) }
     }
 
     override fun announce(pnObjectEventResult: PNObjectEventResult) {
-        listeners.forEach { it.objects(pubnub, pnObjectEventResult) }
+        eventListeners.forEach { it.objects(pubnub, pnObjectEventResult) }
         val envelope = AnnouncementEnvelope(pnObjectEventResult)
         subscriptionCallbacks.forEach { it.objects(pubnub, envelope) }
         setCallbacks.forEach { it.objects(pubnub, envelope) }
     }
 
     override fun announce(pnFileEventResult: PNFileEventResult) {
-        listeners.forEach { it.file(pubnub, pnFileEventResult) }
+        eventListeners.forEach { it.file(pubnub, pnFileEventResult) }
         val envelope = AnnouncementEnvelope(pnFileEventResult)
         subscriptionCallbacks.forEach { it.file(pubnub, envelope) }
         setCallbacks.forEach { it.file(pubnub, envelope) }
+    }
+
+    fun addListener(listener: StatusListener) {
+        listeners.add(listener)
+    }
+
+    fun addListener(listener: EventListener) {
+        listeners.add(listener)
     }
 }
 
@@ -96,7 +112,7 @@ internal data class AnnouncementEnvelope<T : PNEvent>(
 }
 
 internal interface AnnouncementCallback {
-    enum class Phase { SUBSCRIPTION, SET}
+    enum class Phase { SUBSCRIPTION, SET }
 
     val phase: Phase
     fun message(pubnub: PubNub, envelope: AnnouncementEnvelope<PNMessageResult>)

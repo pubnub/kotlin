@@ -1,10 +1,9 @@
 package com.pubnub.internal.v2.callbacks
 
 import com.pubnub.api.PubNub
-import com.pubnub.api.callbacks.SubscribeCallback
+import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.managers.AnnouncementCallback
 import com.pubnub.api.managers.AnnouncementEnvelope
-import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
@@ -14,54 +13,26 @@ import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResu
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.v2.callbacks.EventEmitter
 import com.pubnub.api.v2.callbacks.EventListener
-import com.pubnub.api.v2.callbacks.StatusEmitter
-import com.pubnub.api.v2.callbacks.StatusListener
 import java.util.concurrent.CopyOnWriteArraySet
 
-interface Emitter<T> {
-    fun addListener(listener: T)
-    fun removeListener(listener: T)
-    fun removeAllListeners()
-}
+internal class EventEmitterImpl(
+    override val phase: AnnouncementCallback.Phase,
+    val accepts: (AnnouncementEnvelope<out PNEvent>) -> Boolean = { true }
+) : EventEmitter, AnnouncementCallback {
 
-internal abstract class EmitterImpl<T>(
-    protected val pubnub: PubNub
-) : Emitter<T> {
-    protected val listeners = CopyOnWriteArraySet<T>()
+    private val listeners = CopyOnWriteArraySet<EventListener>()
 
-    override fun addListener(listener: T) {
+    override fun addListener(listener: EventListener) {
         listeners.add(listener)
     }
 
-    override fun removeListener(listener: T) {
+    override fun removeListener(listener: Listener) {
         listeners.remove(listener)
     }
 
     override fun removeAllListeners() {
         listeners.clear()
     }
-}
-
-internal class StatusEmitterImpl(
-    pubnub: PubNub
-) : EmitterImpl<StatusListener>(pubnub), StatusEmitter {
-
-    init {
-        pubnub.addListener(object : SubscribeCallback() {
-            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                listeners.forEach {
-                    it.status(pubnub, pnStatus)
-                }
-            }
-        })
-    }
-}
-
-internal class EventEmitterImpl(
-    pubnub: PubNub,
-    override val phase: AnnouncementCallback.Phase,
-    val accepts: (AnnouncementEnvelope<out PNEvent>) -> Boolean = { true }
-) : EmitterImpl<EventListener>(pubnub), EventEmitter, AnnouncementCallback {
 
     // EventEmitter
     fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {

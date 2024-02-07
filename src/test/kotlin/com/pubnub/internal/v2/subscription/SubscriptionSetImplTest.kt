@@ -102,7 +102,7 @@ class SubscriptionSetImplTest {
     fun close() {
         // given
         subscriptionSet.subscribe()
-        subscriptionSet.addListener(object : EventListener() {
+        subscriptionSet.addListener(object : EventListener {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 throw IllegalStateException("We should not get a message after close!")
             }

@@ -71,7 +71,7 @@ class SubscriptionImplTest {
     fun close() {
         // given
         subscription.subscribe()
-        subscription.addListener(object : EventListener() {
+        subscription.addListener(object : EventListener {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 throw IllegalStateException("We should not get a message after close!")
             }
@@ -79,7 +79,6 @@ class SubscriptionImplTest {
 
         // when
         subscription.close()
-
 
         pubnub.listenerManager.announce(
             PNMessageResult(
@@ -97,7 +96,7 @@ class SubscriptionImplTest {
     fun `subscription with filter`() {
         // given
         val subWithFilter = pubnub.channel(channelName).subscription(SubscriptionOptions.filter { it !is PNMessageResult })
-        subWithFilter.addListener(object : EventListener() {
+        subWithFilter.addListener(object : EventListener {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 throw IllegalStateException("Message should have been filtered out!")
             }
@@ -119,7 +118,7 @@ class SubscriptionImplTest {
     @Test
     fun `subscription shouldn't get events until subscribe is called`() {
         // given
-        subscription.addListener(object : EventListener() {
+        subscription.addListener(object : EventListener {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 throw IllegalStateException("Message should not be received without subscribe call!")
             }
