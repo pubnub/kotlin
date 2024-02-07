@@ -13,6 +13,7 @@ import com.pubnub.api.presence.eventengine.effect.effectprovider.HeartbeatProvid
 import com.pubnub.api.presence.eventengine.effect.effectprovider.LeaveProvider
 import com.pubnub.api.presence.eventengine.event.PresenceEvent
 import com.pubnub.api.retry.RetryConfiguration
+import org.slf4j.LoggerFactory
 import java.util.concurrent.ScheduledExecutorService
 import kotlin.time.Duration
 
@@ -91,6 +92,7 @@ internal interface Presence {
 }
 
 internal class PresenceNoOp(private val suppressLeaveEvents: Boolean = false, private val leaveProvider: LeaveProvider) : Presence {
+    private val log = LoggerFactory.getLogger(PresenceNoOp::class.java)
     private val channels = mutableSetOf<String>()
     private val channelGroups = mutableSetOf<String>()
 
@@ -102,8 +104,12 @@ internal class PresenceNoOp(private val suppressLeaveEvents: Boolean = false, pr
 
     @Synchronized
     override fun left(channels: Set<String>, channelGroups: Set<String>) {
-        if (!suppressLeaveEvents) {
-            leaveProvider.getLeaveRemoteAction(channels, channelGroups).async { _, _ -> }
+        if (!suppressLeaveEvents && (channels.isNotEmpty() || channelGroups.isNotEmpty())) {
+            leaveProvider.getLeaveRemoteAction(channels, channelGroups).async { _, status ->
+                if (status.error) {
+                    log.error("LeaveEffect failed", status.exception)
+                }
+            }
         }
         this.channels.removeAll(channels)
         this.channelGroups.removeAll(channelGroups)
@@ -111,8 +117,12 @@ internal class PresenceNoOp(private val suppressLeaveEvents: Boolean = false, pr
 
     @Synchronized
     override fun leftAll() {
-        if (!suppressLeaveEvents) {
-            leaveProvider.getLeaveRemoteAction(channels, channelGroups).async { _, _ -> }
+        if (!suppressLeaveEvents && (channels.isNotEmpty() || channelGroups.isNotEmpty())) {
+            leaveProvider.getLeaveRemoteAction(channels, channelGroups).async { _, status ->
+                if (status.error) {
+                    log.error("LeaveEffect failed", status.exception)
+                }
+            }
         }
         channels.clear()
         channelGroups.clear()
