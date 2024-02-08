@@ -1,5 +1,8 @@
 package com.pubnub.api.v2.subscriptions
 
+import com.pubnub.api.PubNub
+import com.pubnub.api.models.consumer.pubsub.PNMessageResult
+import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.v2.callbacks.EventEmitter
 
 /**
@@ -15,6 +18,9 @@ import com.pubnub.api.v2.callbacks.EventEmitter
  * and removing all listeners on [close]. Remember to always call [close] when you no longer need this Subscription.
  */
 abstract class Subscription internal constructor() : EventEmitter, SubscribeCapable, AutoCloseable {
+    abstract var onMessage: (PubNub, PNMessageResult) -> Unit
+    abstract var onSignal: (PubNub, PNSignalResult) -> Unit
+
     /**
      * Create a [SubscriptionSet] that contains both subscriptions.
      *

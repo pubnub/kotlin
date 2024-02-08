@@ -10,11 +10,13 @@ import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.listen
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
+import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.subscribeToBlocking
 import com.pubnub.api.unsubscribeFromBlocking
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
+import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionCursor
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import okhttp3.HttpUrl
@@ -29,6 +31,7 @@ import org.junit.jupiter.api.Timeout
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 
 class SubscribeIntegrationTests : BaseIntegrationTest() {
 
@@ -617,5 +620,76 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         subscribe(listOf("def"))
         val tt2 = pubnub.publish("def", "myMessage").sync()!!.timetoken
         assertEquals(tt2, nextMessage().timetoken!!)
+    }
+
+    @Test
+    fun testAssigningEventBehaviourToSubscriptionAnd() {
+        val successMessage = AtomicInteger(0)
+        val successSignal = AtomicInteger(0)
+        val expectedMessage = randomValue()
+        val chan01 = pubnub.channel(randomChannel() + "01")
+
+        val subscription: Subscription = chan01.subscription()
+
+        val onMessage: (PubNub, PNMessageResult) -> Unit = { pubnub, pnMessageResult ->
+            successMessage.incrementAndGet()
+        }
+        val onSignal: (PubNub, PNSignalResult) -> Unit = { pubNub, pnSignalResult ->
+            successSignal.incrementAndGet()
+        }
+        subscription.onMessage = onMessage
+        subscription.onSignal = onSignal
+        subscription.subscribe()
+
+        Thread.sleep(2000)
+
+        pubnub.publish(chan01.name, expectedMessage).sync()
+        pubnub.signal(chan01.name, expectedMessage).sync()
+        pubnub.publish(chan01.name, expectedMessage).sync()
+
+        Thread.sleep(2000)
+        assertEquals(2, successMessage.get())
+        assertEquals(1, successSignal.get())
+    }
+
+    @Test
+    fun testAssigningEventBehaviourToSubscriptionSet() {
+        val successMessage = AtomicInteger(0)
+        val successSignal = AtomicInteger(0)
+        val expectedMessage = randomValue()
+        val chan01 = pubnub.channel(randomChannel() + "01")
+        val chan02 = pubnub.channel(randomChannel() + "02")
+
+        val onMessage: (PubNub, PNMessageResult) -> Unit = { pubnub, pnMessageResult ->
+            println("-=Handling MESSAGE for one channel: Channel01. Message: $pnMessageResult")
+            successMessage.incrementAndGet()
+        }
+        val onSignal: (PubNub, PNSignalResult) -> Unit = { pubNub, pnSignalResult ->
+            println("-=Handling SIGNAL for one channel: Channel01. Message: $pnSignalResult\")")
+            successSignal.incrementAndGet()
+        }
+
+        val sub01 = chan01.subscription()
+        val sub02 = chan02.subscription()
+        val subscriptionSetOf: SubscriptionSet = pubnub.subscriptionSetOf(
+            setOf(sub02, sub01)
+        )
+        subscriptionSetOf.onMessage = onMessage
+        subscriptionSetOf.onSignal = onSignal
+        subscriptionSetOf.subscribe()
+
+        Thread.sleep(2000)
+
+        pubnub.publish(chan01.name, expectedMessage).sync()
+        pubnub.publish(chan02.name, expectedMessage).sync()
+        pubnub.publish(chan01.name, expectedMessage).sync()
+        pubnub.publish(chan02.name, expectedMessage).sync()
+        pubnub.signal(chan01.name, expectedMessage).sync()
+        pubnub.signal(chan02.name, expectedMessage).sync()
+
+        Thread.sleep(2000)
+
+        assertEquals(4, successMessage.get())
+        assertEquals(2, successSignal.get())
     }
 }

@@ -4,6 +4,8 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.managers.AnnouncementCallback
 import com.pubnub.api.managers.AnnouncementEnvelope
+import com.pubnub.api.models.consumer.pubsub.PNMessageResult
+import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.v2.callbacks.EventEmitter
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.subscriptions.Subscription
@@ -22,6 +24,28 @@ internal class SubscriptionSetImpl(
     private val pubnub: PubNub,
     initialSubscriptions: Set<SubscriptionImpl> = emptySet(),
 ) : SubscriptionSet(), EventEmitter {
+
+    override var onMessage: (PubNub, PNMessageResult) -> Unit = { _, _ -> }
+        set(value) {
+            val eventListenerWithMessageHandling = object : EventListener {
+                override fun message(pubnub: PubNub, result: PNMessageResult) {
+                    value(pubnub, result)
+                }
+            }
+            eventEmitter.addListener(eventListenerWithMessageHandling)
+            field = value
+        }
+    override var onSignal: (PubNub, PNSignalResult) -> Unit = { _, _ -> }
+        set(value) {
+            val eventListenerWithSignalHandling = object : EventListener {
+                override fun signal(pubnub: PubNub, result: PNSignalResult) {
+                    value(pubnub, result)
+                }
+            }
+            eventEmitter.addListener(eventListenerWithSignalHandling)
+            field = value
+        }
+
     private val _subscriptions: CopyOnWriteArraySet<SubscriptionImpl> = CopyOnWriteArraySet()
     private val eventEmitter = EventEmitterImpl(AnnouncementCallback.Phase.SET, ::accepts)
 
