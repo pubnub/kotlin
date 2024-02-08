@@ -164,5 +164,4 @@ class AppTest {
             includeState = false
         ).sync()
     }
-
 }
