@@ -344,7 +344,6 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         pubnub.publish(chan01.name, expectedMessage).sync()
 
         assertTrue(countDown.await(DEFAULT_LISTEN_DURATION.toLong(), TimeUnit.SECONDS))
-
     }
 
     @Test
@@ -546,7 +545,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         val success = AtomicBoolean()
         val channelMetaDataName = randomChannel()
         val channelMetaSubscription = pubnub.channelMetadata(channelMetaDataName).subscription()
-        channelMetaSubscription.addListener( object : EventListener{
+        channelMetaSubscription.addListener(object : EventListener {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 success.set(true)
             }
@@ -563,7 +562,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         val success = AtomicBoolean()
         val userMetaDataName = randomChannel()
         val channelMetaSubscription = pubnub.userMetadata(userMetaDataName).subscription()
-        channelMetaSubscription.addListener( object : EventListener{
+        channelMetaSubscription.addListener(object : EventListener {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 success.set(true)
             }
@@ -585,8 +584,9 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
 
         pubnub.addListener(object : StatusListener {
             override fun status(pubnub: PubNub, status: PNStatus) {
-                if (status.operation == PNOperationType.PNUnsubscribeOperation
-                    && status.category == PNStatusCategory.PNDisconnectedCategory){
+                if (status.operation == PNOperationType.PNUnsubscribeOperation &&
+                    status.category == PNStatusCategory.PNDisconnectedCategory
+                ) {
                     unsubscribed.countDown()
                 }
             }

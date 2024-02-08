@@ -159,7 +159,6 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
         assertTrue(countDownLatch.await(5000, TimeUnit.MILLISECONDS))
     }
 
-
     @Test
     fun testListeningToAllObjectsEventsV2() {
         val countDownLatch = CountDownLatch(16)
