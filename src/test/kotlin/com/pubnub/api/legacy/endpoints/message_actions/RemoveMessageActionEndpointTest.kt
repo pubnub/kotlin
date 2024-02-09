@@ -16,10 +16,8 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.listen
-import com.pubnub.api.param
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotNull
 import org.junit.Test
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -45,7 +43,7 @@ class RemoveMessageActionEndpointTest : BaseTest() {
             channel = "coolChannel",
             messageTimetoken = 123L,
             actionTimetoken = 100L
-        ).sync()!!
+        ).sync()
     }
 
     @Test
@@ -70,9 +68,8 @@ class RemoveMessageActionEndpointTest : BaseTest() {
             channel = "coolChannel",
             messageTimetoken = 123L,
             actionTimetoken = 100L
-        ).async { _, status ->
-            assertFalse(status.error)
-            assertEquals(PNOperationType.PNDeleteMessageAction, status.operation)
+        ).async { result ->
+            assertFalse(result.isFailure)
             success.set(true)
         }
 
@@ -100,7 +97,7 @@ class RemoveMessageActionEndpointTest : BaseTest() {
                 channel = "coolChannel",
                 messageTimetoken = 123L,
                 actionTimetoken = 100L
-            ).sync()!!
+            ).sync()
         } catch (e: Exception) {
             failTest()
         }
@@ -118,7 +115,7 @@ class RemoveMessageActionEndpointTest : BaseTest() {
                 channel = "coolChannel",
                 messageTimetoken = 123L,
                 actionTimetoken = 100L
-            ).sync()!!
+            ).sync()
         } catch (e: Exception) {
             failTest()
         }
@@ -136,7 +133,7 @@ class RemoveMessageActionEndpointTest : BaseTest() {
                 channel = "coolChannel",
                 messageTimetoken = 123L,
                 actionTimetoken = 100L
-            ).sync()!!
+            ).sync()
         } catch (e: Exception) {
             failTest()
         }
@@ -162,7 +159,7 @@ class RemoveMessageActionEndpointTest : BaseTest() {
                 channel = "coolChannel",
                 messageTimetoken = 123L,
                 actionTimetoken = 100L
-            ).sync()!!
+            ).sync()
         } catch (e: Exception) {
             failTest()
         }
@@ -189,7 +186,7 @@ class RemoveMessageActionEndpointTest : BaseTest() {
                 channel = "coolChannel",
                 messageTimetoken = 123L,
                 actionTimetoken = 100L
-            ).sync()!!
+            ).sync()
         } catch (e: Exception) {
             failTest()
         }
@@ -202,7 +199,7 @@ class RemoveMessageActionEndpointTest : BaseTest() {
                 channel = " ",
                 messageTimetoken = 123L,
                 actionTimetoken = 100L
-            ).sync()!!
+            ).sync()
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.CHANNEL_MISSING, e)
@@ -217,7 +214,7 @@ class RemoveMessageActionEndpointTest : BaseTest() {
                 channel = "coolChannel",
                 messageTimetoken = 123L,
                 actionTimetoken = 100L
-            ).sync()!!
+            ).sync()
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.SUBSCRIBE_KEY_MISSING, e)
@@ -246,7 +243,7 @@ class RemoveMessageActionEndpointTest : BaseTest() {
             channel = "coolChannel",
             messageTimetoken = 123L,
             actionTimetoken = 100L
-        ).sync()!!
+        ).sync()
 
         val requests = findAll(deleteRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -283,20 +280,19 @@ class RemoveMessageActionEndpointTest : BaseTest() {
             channel = "coolChannel",
             messageTimetoken = 123L,
             actionTimetoken = 100L
-        ).async { _, status ->
-            assertFalse(status.error)
-            assertEquals(PNOperationType.PNDeleteMessageAction, status.operation)
-            telemetryParamName = "l_${status.operation.queryParam}"
-            assertEquals("l_msga", telemetryParamName)
+        ).async { result ->
+            assertFalse(result.isFailure)
+//            telemetryParamName = "l_${status.operation.queryParam}" //TODO no longer available
+//            assertEquals("l_msga", telemetryParamName)
             success.set(true)
         }
 
         success.listen()
 
-        pubnub.time().async { _, status ->
-            assertFalse(status.error)
-            assertNotNull(status.param(telemetryParamName))
-            success.set(true)
+        pubnub.time().async { result ->
+            assertFalse(result.isFailure)
+//            assertNotNull(status.param(telemetryParamName)) //TODO no longer available
+//            success.set(true)
         }
 
         success.listen()

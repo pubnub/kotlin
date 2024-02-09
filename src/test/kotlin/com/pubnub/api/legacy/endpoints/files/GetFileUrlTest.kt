@@ -29,7 +29,7 @@ class GetFileUrlTest {
             channel = channel,
             fileName = fileName,
             fileId = fileId
-        ).sync()!!.url
+        ).sync().url
 
         // then
         val queryParamNames = queryParameterNames(url)
@@ -48,7 +48,7 @@ class GetFileUrlTest {
             channel = channel,
             fileName = fileName,
             fileId = fileId
-        ).sync()!!.url
+        ).sync().url
 
         // then
         val queryParamNames = queryParameterNames(url)
@@ -67,7 +67,7 @@ class GetFileUrlTest {
             channel = channel,
             fileName = fileName,
             fileId = fileId
-        ).sync()!!.url
+        ).sync().url
 
         // then
         val queryParamNames = queryParameterNames(url)
@@ -86,7 +86,7 @@ class GetFileUrlTest {
             channel = channel,
             fileName = fileName,
             fileId = fileId
-        ).sync()!!.url
+        ).sync().url
 
         // then
         println(url)

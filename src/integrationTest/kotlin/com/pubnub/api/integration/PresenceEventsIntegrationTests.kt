@@ -95,7 +95,7 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
 
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
                 //
-                if (pnStatus.category == PNStatusCategory.PNConnectedCategory &&
+                if (pnStatus is PNStatus.Connected &&
                     pnStatus.operation == PNOperationType.PNSubscribeOperation
                 ) {
                     subscribed.set(true)
@@ -146,7 +146,7 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
         pubnub.setPresenceState(
             channels = listOf(expectedChannel),
             state = generatePayload()
-        ).sync()!!
+        ).sync()
 
         success.listen()
     }

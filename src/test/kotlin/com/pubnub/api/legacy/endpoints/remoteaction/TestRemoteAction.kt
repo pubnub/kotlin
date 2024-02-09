@@ -17,7 +17,7 @@ class TestRemoteAction<Output> internal constructor(
     private val executor: Executor = Executors.newSingleThreadExecutor()
     private val asyncCallmeter = AtomicInteger(0)
     private val callsToFail: AtomicInteger
-    private lateinit var callback: (result: Output?, status: PNStatus) -> Unit
+    private lateinit var callback: (result: Result<Output>) -> Unit
 
     @Throws(PubNubException::class)
     override fun sync(): Output {
@@ -30,37 +30,16 @@ class TestRemoteAction<Output> internal constructor(
         }
     }
 
-    override fun async(callback: (result: Output?, status: PNStatus) -> Unit) {
+    override fun async(callback: (result: Result<Output>) -> Unit) {
         this.callback = callback
         asyncCallmeter.incrementAndGet()
         executor.execute {
             if (failingStrategy == FailingStrategy.ALWAYS_FAIL) {
-                callback(
-                    null,
-                    PNStatus(
-                        error = true,
-                        operation = operationType(),
-                        category = PNStatusCategory.PNBadRequestCategory
-                    )
-                )
+                callback(Result.failure(PubNubException()))
             } else if (failingStrategy == FailingStrategy.FAIL_FIRST_CALLS && callsToFail.getAndDecrement() > 0) {
-                callback(
-                    null,
-                    PNStatus(
-                        error = true,
-                        operation = operationType(),
-                        category = PNStatusCategory.PNBadRequestCategory
-                    )
-                )
+                callback(Result.failure(PubNubException()))
             } else {
-                callback(
-                    output,
-                    PNStatus(
-                        error = false,
-                        operation = operationType(),
-                        category = PNStatusCategory.PNAcknowledgmentCategory
-                    )
-                )
+                callback(Result.success(output!!))
             }
         }
     }

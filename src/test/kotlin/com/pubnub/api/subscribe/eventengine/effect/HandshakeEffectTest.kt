@@ -83,23 +83,16 @@ class TestEventSink<T> : Sink<T> {
 fun <T> successfulRemoteAction(result: T): RemoteAction<T> = object : RemoteAction<T> {
     private val executors = Executors.newSingleThreadExecutor()
 
-    override fun sync(): T? {
+    override fun sync(): T {
         throw PubNubException("Sync not supported")
     }
 
     override fun silentCancel() {
     }
 
-    override fun async(callback: (result: T?, status: PNStatus) -> Unit) {
+    override fun async(callback: (result: Result<T>) -> Unit) {
         executors.submit {
-            callback(
-                result,
-                PNStatus(
-                    PNStatusCategory.PNAcknowledgmentCategory,
-                    error = false,
-                    operation = PNOperationType.PNSubscribeOperation
-                )
-            )
+            callback(Result.success(result))
         }
     }
 }
@@ -108,24 +101,16 @@ fun <T> failingRemoteAction(exception: PubNubException = PubNubException("Except
     object : RemoteAction<T> {
         private val executors = Executors.newSingleThreadExecutor()
 
-        override fun sync(): T? {
+        override fun sync(): T {
             throw PubNubException("Sync not supported")
         }
 
         override fun silentCancel() {
         }
 
-        override fun async(callback: (result: T?, status: PNStatus) -> Unit) {
+        override fun async(callback: (result: Result<T>) -> Unit) {
             executors.submit {
-                callback(
-                    null,
-                    PNStatus(
-                        PNStatusCategory.PNUnknownCategory,
-                        error = true,
-                        exception = exception,
-                        operation = PNOperationType.PNSubscribeOperation
-                    )
-                )
+                callback(Result.failure(exception))
             }
         }
     }

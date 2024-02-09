@@ -135,15 +135,8 @@ class RemoveAllPushChannelsForDeviceTest : BaseTest() {
         pubnub.removeAllPushNotificationsFromDeviceWithPushToken(
             deviceId = "niceDevice",
             pushType = PNPushType.FCM
-        ).async { _, status ->
-            assertFalse(status.error)
-            assertEquals(
-                PNOperationType.PNRemoveAllPushNotificationsOperation,
-                status.operation
-            )
-            assertEquals(PNStatusCategory.PNAcknowledgmentCategory, status.category)
-            assertTrue(status.affectedChannels.isEmpty())
-            assertTrue(status.affectedChannelGroups.isEmpty())
+        ).async { result ->
+            assertFalse(result.isFailure)
             success.set(true)
         }
 
@@ -158,7 +151,7 @@ class RemoveAllPushChannelsForDeviceTest : BaseTest() {
             pubnub.removeAllPushNotificationsFromDeviceWithPushToken(
                 deviceId = "niceDevice",
                 pushType = PNPushType.FCM
-            ).sync()!!
+            ).sync()
             failTest()
         } catch (e: PubNubException) {
             assertPnException(PubNubError.SUBSCRIBE_KEY_MISSING, e)
@@ -171,7 +164,7 @@ class RemoveAllPushChannelsForDeviceTest : BaseTest() {
             pubnub.removeAllPushNotificationsFromDeviceWithPushToken(
                 pushType = PNPushType.FCM,
                 deviceId = " "
-            ).sync()!!
+            ).sync()
         } catch (e: PubNubException) {
             assertPnException(PubNubError.DEVICE_ID_MISSING, e)
         }

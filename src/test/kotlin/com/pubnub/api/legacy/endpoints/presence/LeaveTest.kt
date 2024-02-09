@@ -40,7 +40,7 @@ class LeaveTest : BaseTest() {
 
         Leave(pubnub).apply {
             channels = listOf("coolChannel")
-        }.sync()!!
+        }.sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -122,11 +122,10 @@ class LeaveTest : BaseTest() {
         Leave(pubnub).apply {
             channels = listOf("coolChannel", "coolChannel2")
             channelGroups = listOf("cg1")
-        }.async { _, status ->
-            assertEquals(status.affectedChannels[0], "coolChannel")
-            assertEquals(status.affectedChannels[1], "coolChannel2")
-            assertEquals(status.affectedChannelGroups[0], "cg1")
-            statusArrived.set(true)
+        }.async { result ->
+            result.onSuccess {
+                statusArrived.set(true)
+            }
         }
 
         Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(

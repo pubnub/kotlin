@@ -53,9 +53,9 @@ class ListAllChannelGroupTestSuite : EndpointTestSuite<ListAllChannelGroup, PNCh
                 responseBuilder = {
                     withBody("""{"payload":{"groups":[]}}""")
                 }
-                additionalChecks = { status: PNStatus, result: PNChannelGroupsListAllResult? ->
-                    assertFalse(status.error)
-                    assertTrue(result!!.groups.isEmpty())
+                additionalChecks = { result ->
+                    assertFalse(result.isFailure)
+                    assertTrue(result.getOrThrow().groups.isEmpty())
                 }
                 result = Result.SUCCESS
             }

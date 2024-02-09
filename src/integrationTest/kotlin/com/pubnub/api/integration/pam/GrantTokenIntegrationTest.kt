@@ -41,7 +41,7 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
             )
         )
 
-        val token = grantTokenEndpoint.sync()!!.token
+        val token = grantTokenEndpoint.sync().token
 
         // then
         val (_, _, ttl, _, resources, patterns) = pubNubUnderTest.parseToken(token)
@@ -89,7 +89,7 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
                     ChannelGroupGrant.pattern(pattern = expectedChannelGroupPattern, manage = true)
                 )
             )
-            .sync()!!
+            .sync()
             .token
         val (_, _, ttl, _, resources, patterns) = pubNubUnderTest.parseToken(token)
 

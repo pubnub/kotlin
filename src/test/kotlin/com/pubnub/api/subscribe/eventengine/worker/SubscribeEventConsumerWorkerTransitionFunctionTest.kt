@@ -42,25 +42,13 @@ class SubscribeEventConsumerWorkerTransitionFunctionTest {
                 SubscribeEffectInvocation.Handshake(channels, channelGroups),
                 SubscribeEffectInvocation.CancelHandshake,
                 SubscribeEffectInvocation.EmitStatus(
-                    PNStatus(
-                        category = PNStatusCategory.PNConnectedCategory,
-                        operation = PNOperationType.PNSubscribeOperation,
-                        error = false,
-                        affectedChannels = channels.toList(),
-                        affectedChannelGroups = channelGroups.toList()
-                    )
+                    PNStatus.Connected(timeToken, channels = channels.toList(), channelGroups = channelGroups.toList())
                 ),
                 SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
                 SubscribeEffectInvocation.CancelReceiveMessages,
                 SubscribeEffectInvocation.EmitMessages(listOf()),
                 SubscribeEffectInvocation.EmitStatus(
-                    PNStatus(
-                        category = PNStatusCategory.PNConnectedCategory,
-                        operation = PNOperationType.PNSubscribeOperation,
-                        error = false,
-                        affectedChannels = channels.toList(),
-                        affectedChannelGroups = channelGroups.toList()
-                    )
+                    PNStatus.Connected(timeToken, channels = channels.toList(), channelGroups = channelGroups.toList())
                 ),
                 SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)
             ),

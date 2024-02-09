@@ -50,7 +50,7 @@ class ListAllChannelGroupEndpointTest : BaseTest() {
                 )
         )
 
-        val response = pubnub.listAllChannelGroups().sync()!!
+        val response = pubnub.listAllChannelGroups().sync()
         assertThat(response.groups, Matchers.contains("a", "b")) // todo matchers
     }
 
@@ -72,7 +72,7 @@ class ListAllChannelGroupEndpointTest : BaseTest() {
         )
 
         try {
-            pubnub.listAllChannelGroups().sync()!!
+            pubnub.listAllChannelGroups().sync()
             failTest()
         } catch (e: PubNubException) {
             assertPnException(PubNubError.PARSING_ERROR, e)
@@ -87,7 +87,7 @@ class ListAllChannelGroupEndpointTest : BaseTest() {
         )
 
         try {
-            pubnub.listAllChannelGroups().sync()!!
+            pubnub.listAllChannelGroups().sync()
             failTest()
         } catch (e: PubNubException) {
             assertPnException(PubNubError.PARSING_ERROR, e)
@@ -119,7 +119,7 @@ class ListAllChannelGroupEndpointTest : BaseTest() {
 
         pubnub.configuration.authKey = "myKey"
 
-        pubnub.listAllChannelGroups().sync()!!
+        pubnub.listAllChannelGroups().sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -152,12 +152,8 @@ class ListAllChannelGroupEndpointTest : BaseTest() {
         val atomic = AtomicInteger(0)
 
         pubnub.listAllChannelGroups()
-            .async { _, status ->
-                assertFalse(status.error)
-                assertEquals(PNOperationType.PNChannelGroupsOperation, status.operation)
-                assertEquals(PNStatusCategory.PNAcknowledgmentCategory, status.category)
-                assertTrue(status.affectedChannels.isEmpty())
-                assertTrue(status.affectedChannelGroups.isEmpty())
+            .async { result ->
+                assertFalse(result.isFailure)
                 atomic.incrementAndGet()
             }
 

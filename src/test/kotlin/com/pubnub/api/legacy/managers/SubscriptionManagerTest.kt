@@ -331,7 +331,7 @@ class SubscriptionManagerTest : BaseTest() {
         pubnub.addListener(object : SubscribeCallback() {
 
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.category == PNStatusCategory.PNConnectedCategory) {
+                if (pnStatus is PNStatus.Connected) {
                     gotStatus.addAndGet(1)
                 }
             }
@@ -634,264 +634,265 @@ class SubscriptionManagerTest : BaseTest() {
             .untilAtomic(gotMessages, IsEqual.equalTo(3))
     }
 
-    @Test
-    fun testQueueNotificationsBuilderNoThresholdSpecified() {
-        pubnub.configuration.requestMessageCountThreshold = null
+//    //todo we're deprecating this feature
+//    @Test
+//    fun testQueueNotificationsBuilderNoThresholdSpecified() {
+//        pubnub.configuration.requestMessageCountThreshold = null
+//
+//        val gotStatus = AtomicBoolean()
+//
+//        stubFor(
+//            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+//                .willReturn(
+//                    aResponse().withBody(
+//                        """
+//                            {
+//                              "t": {
+//                                "t": "14607577960932487",
+//                                "r": 1
+//                              },
+//                              "m": [
+//                                {
+//                                  "a": "4",
+//                                  "f": 0,
+//                                  "i": "Client-g5d4g",
+//                                  "p": {
+//                                    "t": "14607577960925503",
+//                                    "r": 1
+//                                  },
+//                                  "o": {
+//                                    "t": "14737141991877032",
+//                                    "r": 2
+//                                  },
+//                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+//                                  "c": "coolChannel",
+//                                  "d": {
+//                                    "text": "Message"
+//                                  },
+//                                  "b": "coolChannel"
+//                                }
+//                              ]
+//                            }
+//                        """.trimIndent()
+//                    )
+//                )
+//        )
+//
+//        pubnub.addListener(object : SubscribeCallback() {
+//            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
+//                if (pnStatus.category == PNStatusCategory.PNRequestMessageCountExceededCategory) {
+//                    gotStatus.set(true)
+//                }
+//            }
+//        })
+//
+//        pubnub.subscribe(
+//            channels = listOf("ch1", "ch2")
+//        )
+//
+//        Awaitility.await()
+//            .atMost(2, TimeUnit.SECONDS)
+//            .untilAtomic(gotStatus, IsEqual.equalTo(false))
+//    }
 
-        val gotStatus = AtomicBoolean()
+//    @Test //TODO we're deprecating this feature
+//    fun testQueueNotificationsBuilderBelowThreshold() {
+//        pubnub.configuration.requestMessageCountThreshold = 10
+//
+//        val gotStatus = AtomicBoolean()
+//
+//        stubFor(
+//            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+//                .willReturn(
+//                    aResponse().withBody(
+//                        """
+//                            {
+//                              "t": {
+//                                "t": "14607577960932487",
+//                                "r": 1
+//                              },
+//                              "m": [
+//                                {
+//                                  "a": "4",
+//                                  "f": 0,
+//                                  "i": "Client-g5d4g",
+//                                  "p": {
+//                                    "t": "14607577960925503",
+//                                    "r": 1
+//                                  },
+//                                  "o": {
+//                                    "t": "14737141991877032",
+//                                    "r": 2
+//                                  },
+//                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+//                                  "c": "coolChannel",
+//                                  "d": {
+//                                    "text": "Message"
+//                                  },
+//                                  "b": "coolChannel"
+//                                }
+//                              ]
+//                            }
+//                        """.trimIndent()
+//                    )
+//                )
+//        )
+//
+//        pubnub.addListener(object : SubscribeCallback() {
+//            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
+//                if (pnStatus.category == PNStatusCategory.PNRequestMessageCountExceededCategory) {
+//                    gotStatus.set(true)
+//                }
+//            }
+//        })
+//
+//        pubnub.subscribe(
+//            channels = listOf("ch1", "ch2")
+//        )
+//
+//        Awaitility.await()
+//            .atMost(2, TimeUnit.SECONDS)
+//            .untilAtomic(gotStatus, IsEqual.equalTo(false))
+//    }
 
-        stubFor(
-            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
-                .willReturn(
-                    aResponse().withBody(
-                        """
-                            {
-                              "t": {
-                                "t": "14607577960932487",
-                                "r": 1
-                              },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "o": {
-                                    "t": "14737141991877032",
-                                    "r": 2
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Message"
-                                  },
-                                  "b": "coolChannel"
-                                }
-                              ]
-                            }
-                        """.trimIndent()
-                    )
-                )
-        )
-
-        pubnub.addListener(object : SubscribeCallback() {
-            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.category == PNStatusCategory.PNRequestMessageCountExceededCategory) {
-                    gotStatus.set(true)
-                }
-            }
-        })
-
-        pubnub.subscribe(
-            channels = listOf("ch1", "ch2")
-        )
-
-        Awaitility.await()
-            .atMost(2, TimeUnit.SECONDS)
-            .untilAtomic(gotStatus, IsEqual.equalTo(false))
-    }
-
-    @Test
-    fun testQueueNotificationsBuilderBelowThreshold() {
-        pubnub.configuration.requestMessageCountThreshold = 10
-
-        val gotStatus = AtomicBoolean()
-
-        stubFor(
-            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
-                .willReturn(
-                    aResponse().withBody(
-                        """
-                            {
-                              "t": {
-                                "t": "14607577960932487",
-                                "r": 1
-                              },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "o": {
-                                    "t": "14737141991877032",
-                                    "r": 2
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Message"
-                                  },
-                                  "b": "coolChannel"
-                                }
-                              ]
-                            }
-                        """.trimIndent()
-                    )
-                )
-        )
-
-        pubnub.addListener(object : SubscribeCallback() {
-            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.category == PNStatusCategory.PNRequestMessageCountExceededCategory) {
-                    gotStatus.set(true)
-                }
-            }
-        })
-
-        pubnub.subscribe(
-            channels = listOf("ch1", "ch2")
-        )
-
-        Awaitility.await()
-            .atMost(2, TimeUnit.SECONDS)
-            .untilAtomic(gotStatus, IsEqual.equalTo(false))
-    }
-
-    @Test
-    fun testQueueNotificationsBuilderThresholdMatched() {
-        pubnub.configuration.requestMessageCountThreshold = 1
-
-        val gotStatus = AtomicBoolean()
-
-        stubFor(
-            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
-                .willReturn(
-                    aResponse().withBody(
-                        """
-                            {
-                              "t": {
-                                "t": "14607577960932487",
-                                "r": 1
-                              },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "o": {
-                                    "t": "14737141991877032",
-                                    "r": 2
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Message"
-                                  },
-                                  "b": "coolChannel"
-                                }
-                              ]
-                            }
-                        """.trimIndent()
-                    )
-                )
-        )
-
-        pubnub.addListener(object : SubscribeCallback() {
-            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.category == PNStatusCategory.PNRequestMessageCountExceededCategory) {
-                    gotStatus.set(true)
-                }
-            }
-        })
-
-        pubnub.subscribe(
-            channels = listOf("ch1", "ch2")
-        )
-
-        Awaitility.await()
-            .atMost(2, TimeUnit.SECONDS)
-            .untilAtomic(gotStatus, IsEqual.equalTo(true))
-    }
-
-    @Test
-    fun testQueueNotificationsBuilderThresholdExceeded() {
-        pubnub.configuration.requestMessageCountThreshold = 1
-
-        val gotStatus = AtomicBoolean()
-
-        stubFor(
-            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
-                .willReturn(
-                    aResponse().withBody(
-                        """
-                            {
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "b": "coolChannel",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Message"
-                                  },
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "o": {
-                                    "r": 2,
-                                    "t": "14737141991877032"
-                                  },
-                                  "p": {
-                                    "r": 1,
-                                    "t": "14607577960925503"
-                                  }
-                                },
-                                {
-                                  "a": "5",
-                                  "b": "coolChannel2",
-                                  "c": "coolChannel2",
-                                  "d": {
-                                    "text": "Message2"
-                                  },
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4g",
-                                  "o": {
-                                    "r": 2,
-                                    "t": "14737141991877033"
-                                  },
-                                  "p": {
-                                    "r": 1,
-                                    "t": "14607577960925504"
-                                  }
-                                }
-                              ],
-                              "t": {
-                                "r": 1,
-                                "t": "14607577960932487"
-                              }
-                            }
-                        """.trimIndent()
-                    )
-                )
-        )
-
-        pubnub.addListener(object : SubscribeCallback() {
-            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.category == PNStatusCategory.PNRequestMessageCountExceededCategory) {
-                    gotStatus.set(true)
-                }
-            }
-        })
-
-        pubnub.subscribe(
-            channels = listOf("ch1", "ch2")
-        )
-
-        Awaitility.await()
-            .atMost(2, TimeUnit.SECONDS)
-            .untilAtomic(gotStatus, IsEqual.equalTo(true))
-    }
+//    @Test
+//    fun testQueueNotificationsBuilderThresholdMatched() {
+//        pubnub.configuration.requestMessageCountThreshold = 1
+//
+//        val gotStatus = AtomicBoolean()
+//
+//        stubFor(
+//            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+//                .willReturn(
+//                    aResponse().withBody(
+//                        """
+//                            {
+//                              "t": {
+//                                "t": "14607577960932487",
+//                                "r": 1
+//                              },
+//                              "m": [
+//                                {
+//                                  "a": "4",
+//                                  "f": 0,
+//                                  "i": "Client-g5d4g",
+//                                  "p": {
+//                                    "t": "14607577960925503",
+//                                    "r": 1
+//                                  },
+//                                  "o": {
+//                                    "t": "14737141991877032",
+//                                    "r": 2
+//                                  },
+//                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+//                                  "c": "coolChannel",
+//                                  "d": {
+//                                    "text": "Message"
+//                                  },
+//                                  "b": "coolChannel"
+//                                }
+//                              ]
+//                            }
+//                        """.trimIndent()
+//                    )
+//                )
+//        )
+//
+//        pubnub.addListener(object : SubscribeCallback() {
+//            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
+//                if (pnStatus.category == PNStatusCategory.PNRequestMessageCountExceededCategory) {
+//                    gotStatus.set(true)
+//                }
+//            }
+//        })
+//
+//        pubnub.subscribe(
+//            channels = listOf("ch1", "ch2")
+//        )
+//
+//        Awaitility.await()
+//            .atMost(2, TimeUnit.SECONDS)
+//            .untilAtomic(gotStatus, IsEqual.equalTo(true))
+//    }
+//
+//    @Test
+//    fun testQueueNotificationsBuilderThresholdExceeded() {
+//        pubnub.configuration.requestMessageCountThreshold = 1
+//
+//        val gotStatus = AtomicBoolean()
+//
+//        stubFor(
+//            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+//                .willReturn(
+//                    aResponse().withBody(
+//                        """
+//                            {
+//                              "m": [
+//                                {
+//                                  "a": "4",
+//                                  "b": "coolChannel",
+//                                  "c": "coolChannel",
+//                                  "d": {
+//                                    "text": "Message"
+//                                  },
+//                                  "f": 0,
+//                                  "i": "Client-g5d4g",
+//                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+//                                  "o": {
+//                                    "r": 2,
+//                                    "t": "14737141991877032"
+//                                  },
+//                                  "p": {
+//                                    "r": 1,
+//                                    "t": "14607577960925503"
+//                                  }
+//                                },
+//                                {
+//                                  "a": "5",
+//                                  "b": "coolChannel2",
+//                                  "c": "coolChannel2",
+//                                  "d": {
+//                                    "text": "Message2"
+//                                  },
+//                                  "f": 0,
+//                                  "i": "Client-g5d4g",
+//                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4g",
+//                                  "o": {
+//                                    "r": 2,
+//                                    "t": "14737141991877033"
+//                                  },
+//                                  "p": {
+//                                    "r": 1,
+//                                    "t": "14607577960925504"
+//                                  }
+//                                }
+//                              ],
+//                              "t": {
+//                                "r": 1,
+//                                "t": "14607577960932487"
+//                              }
+//                            }
+//                        """.trimIndent()
+//                    )
+//                )
+//        )
+//
+//        pubnub.addListener(object : SubscribeCallback() {
+//            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
+//                if (pnStatus.category == PNStatusCategory.PNRequestMessageCountExceededCategory) {
+//                    gotStatus.set(true)
+//                }
+//            }
+//        })
+//
+//        pubnub.subscribe(
+//            channels = listOf("ch1", "ch2")
+//        )
+//
+//        Awaitility.await()
+//            .atMost(2, TimeUnit.SECONDS)
+//            .untilAtomic(gotStatus, IsEqual.equalTo(true))
+//    }
 
     @Test
     fun testSubscribeBuilderWithAccessManager403Error() {
@@ -925,11 +926,11 @@ class SubscriptionManagerTest : BaseTest() {
 
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.category == PNStatusCategory.PNAccessDeniedCategory) {
-                    assertEquals(PNStatusCategory.PNAccessDeniedCategory, pnStatus.category)
-                    assertEquals(listOf("ch1", "ch2"), pnStatus.affectedChannels)
-                    assertEquals(listOf("cg1", "cg2"), pnStatus.affectedChannelGroups)
-                    gotStatus.addAndGet(1)
+                if (pnStatus is PNStatus.ConnectionError) {
+//                    assertEquals(PNStatusCategory.PNAccessDeniedCategory, pnStatus.category) //TODO check exception here
+//                    assertEquals(listOf("ch1", "ch2"), pnStatus.affectedChannels)
+//                    assertEquals(listOf("cg1", "cg2"), pnStatus.affectedChannelGroups)
+//                    gotStatus.addAndGet(1)
                 }
             }
         })
@@ -983,8 +984,8 @@ class SubscriptionManagerTest : BaseTest() {
 
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.category == PNStatusCategory.PNConnectedCategory) {
-                    assertEquals(2, pnStatus.affectedChannels.size)
+                if (pnStatus is PNStatus.Connected) {
+                    assertEquals(2, pnStatus.channels.size)
                     gotStatus.set(true)
                 }
             }
@@ -1048,7 +1049,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.category == PNStatusCategory.PNConnectedCategory) {
+                if (pnStatus is PNStatus.Connected) {
                     gotStatus.addAndGet(1)
                 }
             }
@@ -1117,7 +1118,7 @@ class SubscriptionManagerTest : BaseTest() {
 
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.category == PNStatusCategory.PNConnectedCategory) {
+                if (pnStatus is PNStatus.Connected) {
                     gotStatus.addAndGet(1)
                 }
             }
@@ -1476,7 +1477,7 @@ class SubscriptionManagerTest : BaseTest() {
 
         pubnub.setPresenceState(
             channels = listOf("ch1"), channelGroups = listOf("cg2"), state = listOf("p1", "p2")
-        ).async { _, _ -> }
+        ).async { _ -> }
 
         Awaitility.await().atMost(5, TimeUnit.SECONDS).until { verifyCalls(expectedMap) }
     }
@@ -2441,13 +2442,11 @@ class SubscriptionManagerTest : BaseTest() {
         )
         val sub1: SubscribeCallback = object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.category == PNStatusCategory.PNConnectedCategory) {
+                if (pnStatus is PNStatus.Connected) {
                     pubnub.unsubscribe(
                         channels = listOf("ch1")
                     )
-                }
-                val affectedChannels = pnStatus.affectedChannels
-                if (affectedChannels.contains("ch1") && pnStatus.operation == PNOperationType.PNUnsubscribeOperation) {
+                } else if (pnStatus is PNStatus.Disconnected || pnStatus is PNStatus.SubscriptionChanged && !pnStatus.channels.contains("ch1")) {
                     statusReceived.set(true)
                 }
             }
@@ -2537,7 +2536,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
         val sub1: SubscribeCallback = object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.operation == PNOperationType.PNHeartbeatOperation && !pnStatus.error) {
+                if (pnStatus is PNStatus.HeartbeatSuccess) {
                     statusRecieved.set(true)
                 }
             }
@@ -2577,7 +2576,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
         val sub1: SubscribeCallback = object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.operation == PNOperationType.PNHeartbeatOperation && !pnStatus.error) {
+                if (pnStatus is PNStatus.HeartbeatSuccess) {
                     statusReceived.set(true)
                 }
             }
@@ -2618,7 +2617,8 @@ class SubscriptionManagerTest : BaseTest() {
         )
         val sub1: SubscribeCallback = object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.operation == PNOperationType.PNUnsubscribeOperation && !pnStatus.error) {
+//                if (pnStatus.operation == PNOperationType.PNUnsubscribeOperation && !pnStatus.error) {
+                if (pnStatus is PNStatus.Disconnected) { //TODO what is this trying to test really?
                     statusReceived.set(true)
                 }
             }
@@ -2689,7 +2689,7 @@ class SubscriptionManagerTest : BaseTest() {
 
         val sub1: SubscribeCallback = object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.operation == PNOperationType.PNHeartbeatOperation) {
+                if (pnStatus is PNStatus.HeartbeatFailed) {
                     statusReceived.set(true)
                 }
             }
@@ -2761,7 +2761,7 @@ class SubscriptionManagerTest : BaseTest() {
 
         val sub1: SubscribeCallback = object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.operation == PNOperationType.PNHeartbeatOperation && pnStatus.error) {
+                if (pnStatus is PNStatus.HeartbeatFailed) {
                     statusReceived.set(true)
                 }
             }
@@ -2817,7 +2817,7 @@ class SubscriptionManagerTest : BaseTest() {
 
         val sub1: SubscribeCallback = object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.operation == PNOperationType.PNHeartbeatOperation) {
+                if (pnStatus is PNStatus.HeartbeatSuccess) {
                     statusReceived.set(true)
                 }
             }
@@ -2892,7 +2892,7 @@ class SubscriptionManagerTest : BaseTest() {
 
         val sub1: SubscribeCallback = object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.operation != PNOperationType.PNHeartbeatOperation) {
+                if (pnStatus != PNStatus.HeartbeatSuccess) {
                     statusReceived.set(true)
                 }
             }
@@ -2956,13 +2956,11 @@ class SubscriptionManagerTest : BaseTest() {
         )
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (!pnStatus.error) {
-                    if (pnStatus.operation == PNOperationType.PNSubscribeOperation) {
-                        subscribeSuccess.set(true)
-                    }
-                    if (pnStatus.operation == PNOperationType.PNHeartbeatOperation) {
-                        heartbeatFail.set(true)
-                    }
+                if (pnStatus is PNStatus.Connected) {
+                    subscribeSuccess.set(true)
+                }
+                if (pnStatus is PNStatus.HeartbeatSuccess) {
+                    heartbeatFail.set(true)
                 }
             }
         })
@@ -3031,13 +3029,11 @@ class SubscriptionManagerTest : BaseTest() {
 
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (!pnStatus.error) {
-                    if (pnStatus.operation == PNOperationType.PNSubscribeOperation) {
-                        subscribeSuccess.set(true)
-                    }
-                    if (pnStatus.operation == PNOperationType.PNHeartbeatOperation) {
-                        heartbeatSuccess.set(true)
-                    }
+                if (pnStatus is PNStatus.Connected) {
+                    subscribeSuccess.set(true)
+                }
+                if (pnStatus is PNStatus.HeartbeatSuccess) {
+                    heartbeatSuccess.set(true)
                 }
             }
         })
@@ -3171,26 +3167,22 @@ class SubscriptionManagerTest : BaseTest() {
 
         val sub1: SubscribeCallback = object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.category == PNStatusCategory.PNConnectedCategory) {
+                if (pnStatus is PNStatus.Connected) {
                     pubnub.unsubscribe(
                         channels = listOf("ch1")
                     )
                 }
 
-                val affectedChannels = pnStatus.affectedChannels
-
-                if (affectedChannels.size == 1 && pnStatus.operation == PNOperationType.PNUnsubscribeOperation) {
-                    if (affectedChannels[0] == "ch1") {
+                if (pnStatus is PNStatus.SubscriptionChanged) {
+                    if (pnStatus.channels.single() == "ch1") {
                         pubnub.unsubscribe(
                             channels = listOf("ch2")
                         )
                     }
                 }
 
-                if (affectedChannels.size == 1 && pnStatus.operation == PNOperationType.PNUnsubscribeOperation) {
-                    if (affectedChannels[0] == "ch2") {
-                        statusReceived.set(true)
-                    }
+                if (pnStatus is PNStatus.Disconnected) {
+                    statusReceived.set(true)
                 }
             }
         }

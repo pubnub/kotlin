@@ -117,7 +117,7 @@ class FilesIntegrationTest : BaseIntegrationTest() {
             return
         }
         fileEventReceived.await(10, TimeUnit.SECONDS)
-        val (_, _, _, data) = pubnub.listFiles(channel = channel).sync()!!
+        val (_, _, _, data) = pubnub.listFiles(channel = channel).sync()
         val fileFoundOnList = data.find { it.id == sendResult.file.id } != null
 
         Assert.assertTrue(fileFoundOnList)
@@ -125,7 +125,7 @@ class FilesIntegrationTest : BaseIntegrationTest() {
             channel = channel,
             fileName = fileName,
             fileId = sendResult.file.id
-        ).sync()!!
+        ).sync()
 
         byteStream?.use {
             Assert.assertEquals(content, readToString(it))

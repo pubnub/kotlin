@@ -95,7 +95,7 @@ class AppTest {
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
                 assertTrue(pnStatus.operation == PNOperationType.PNSubscribeOperation)
-                assertTrue(pnStatus.category == PNStatusCategory.PNConnectedCategory)
+                assertTrue(pnStatus is PNStatus.Connected)
                 assertTrue(pnStatus.affectedChannels.contains(expectedChannel))
                 success.set(true)
             }
@@ -153,7 +153,7 @@ class AppTest {
             .until {
                 pubnub.whereNow(
                     uuid = pubnub.configuration.userId.value
-                ).sync()!!
+                ).sync()
                     .channels
                     .containsAll(expectedChannels)
             }

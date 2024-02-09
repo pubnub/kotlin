@@ -78,7 +78,7 @@ class HereNowEndpointTest : BaseTest() {
         val response = pubnub.hereNow(
             channels = listOf("ch1", "ch2"),
             includeState = true
-        ).sync()!!
+        ).sync()
 
         assertEquals(response.totalChannels, 2)
         assertEquals(response.totalOccupancy, 3)
@@ -147,7 +147,7 @@ class HereNowEndpointTest : BaseTest() {
         val response = pubnub.hereNow(
             channels = listOf("ch1", "ch2"),
             includeState = true
-        ).sync()!!
+        ).sync()
 
         assertEquals(response.totalChannels, 2)
         assertEquals(response.totalOccupancy, 3)
@@ -203,7 +203,7 @@ class HereNowEndpointTest : BaseTest() {
         val response = pubnub.hereNow(
             channels = listOf("game1", "game2"),
             includeState = false
-        ).sync()!!
+        ).sync()
 
         assertEquals(response.totalChannels, 1)
         assertEquals(response.totalOccupancy, 1)
@@ -248,7 +248,7 @@ class HereNowEndpointTest : BaseTest() {
             channels = listOf("game1", "game2"),
             includeState = false,
             includeUUIDs = false
-        ).sync()!!
+        ).sync()
 
         assertEquals(response.totalChannels, 1)
         assertEquals(response.totalOccupancy, 1)
@@ -283,7 +283,7 @@ class HereNowEndpointTest : BaseTest() {
         val response = pubnub.hereNow(
             channels = listOf("game1"),
             includeUUIDs = false
-        ).sync()!!
+        ).sync()
 
         assertEquals(response.totalChannels, 1)
         assertEquals(response.totalOccupancy, 3)
@@ -317,7 +317,7 @@ class HereNowEndpointTest : BaseTest() {
         val response = pubnub.hereNow(
             channels = listOf("game1"),
             includeState = false
-        ).sync()!!
+        ).sync()
 
         assertEquals(response.totalChannels, 1)
         assertEquals(response.totalOccupancy, 1)
@@ -359,7 +359,7 @@ class HereNowEndpointTest : BaseTest() {
         val response = pubnub.hereNow(
             channels = listOf("game1"),
             includeState = true
-        ).sync()!!
+        ).sync()
 
         assertEquals(response.totalChannels, 1)
         assertEquals(response.totalOccupancy, 1)
@@ -402,7 +402,7 @@ class HereNowEndpointTest : BaseTest() {
             channels = listOf("game1"),
             channelGroups = listOf("grp1"),
             includeState = true
-        ).sync()!!
+        ).sync()
 
         assertEquals(response.totalOccupancy, 0)
     }
@@ -463,7 +463,7 @@ class HereNowEndpointTest : BaseTest() {
         pubnub.hereNow(
             channels = listOf("ch1", "ch2"),
             includeState = true
-        ).sync()!!
+        ).sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -501,10 +501,10 @@ class HereNowEndpointTest : BaseTest() {
 
         val atomic = AtomicInteger(0)
 
-        pubnub.hereNow().async { result, status ->
-            if (status.operation == PNHereNowOperation) {
-                assertEquals(1, result!!.channels.size)
-                assertEquals(pubnub.configuration.userId.value, result.channels["ch1"]!!.occupants[0].uuid)
+        pubnub.hereNow().async { result ->
+            result.onSuccess {
+                assertEquals(1, it.channels.size)
+                assertEquals(pubnub.configuration.userId.value, it.channels["ch1"]!!.occupants[0].uuid)
                 atomic.incrementAndGet()
             }
         }

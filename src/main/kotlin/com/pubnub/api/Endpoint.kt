@@ -3,8 +3,6 @@ package com.pubnub.api
 import com.google.gson.JsonElement
 import com.pubnub.api.PNConfiguration.Companion.isValid
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
-import com.pubnub.api.enums.PNStatusCategory
-import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.retry.RetryableCallback
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.api.retry.RetryableRestCaller

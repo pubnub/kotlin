@@ -18,6 +18,8 @@ data class PubNubException(
     val statusCode: Int = 0,
     val affectedCall: Call<*>? = null,
     val retryAfterHeaderValue: Int? = null,
+    val affectedChannels: List<String> = emptyList(),
+    val affectedChannelGroups: List<String> = emptyList(),
     override val cause: Throwable? = null,
 ) : Exception(errorMessage, cause) {
 
@@ -27,7 +29,7 @@ data class PubNubException(
     )
 
     companion object {
-        fun from(e: Throwable) : PubNubException = if (e is PubNubException) {
+        fun from(e: Throwable): PubNubException = if (e is PubNubException) {
             e
         } else {
             PubNubException(e.message, cause = e)

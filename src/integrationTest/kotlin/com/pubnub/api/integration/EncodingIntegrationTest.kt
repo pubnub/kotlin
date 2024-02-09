@@ -43,8 +43,8 @@ class EncodingIntegrationTest(
             usePost = false
         ).apply {
             queryParam += mapOf(propertyName to regular)
-        }.async { _, status ->
-            assertFalse(status.error)
+        }.async { result ->
+            assertFalse(result.isFailure)
             val encodedParam = status.encodedParam(propertyName)
             assertEquals(encoded, encodedParam)
             SignatureUtils.decomposeAndVerifySignature(server.configuration, status.clientRequest!!)

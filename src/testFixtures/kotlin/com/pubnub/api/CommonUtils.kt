@@ -34,12 +34,7 @@ object CommonUtils {
             .untilTrue(success)
     }
 
-    fun assertPnException(expectedPubNubError: PubNubError, pnStatus: PNStatus) {
-        assertTrue(pnStatus.error)
-        assertEquals(expectedPubNubError, pnStatus.exception!!.pubnubError)
-    }
-
-    fun assertPnException(expectedPubNubError: PubNubError, exception: Exception) {
+    fun assertPnException(expectedPubNubError: PubNubError, exception: Throwable?) {
         exception as PubNubException
         assertEquals(expectedPubNubError, exception.pubnubError)
     }

@@ -52,9 +52,8 @@ class RemoveChannelChannelGroupTestSuite :
             OptionalScenario<PNChannelGroupsRemoveChannelResult>().apply {
                 responseBuilder = { withBody("").withStatus(400) }
                 result = Result.FAIL
-                additionalChecks = { pnStatus: PNStatus, result: PNChannelGroupsRemoveChannelResult? ->
-                    assertTrue(pnStatus.error)
-                    assertNull(result)
+                additionalChecks = { result ->
+                    assertTrue(result.isFailure)
                 }
             }
         )

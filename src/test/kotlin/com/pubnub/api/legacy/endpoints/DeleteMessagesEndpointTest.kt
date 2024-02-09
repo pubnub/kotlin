@@ -38,7 +38,7 @@ class DeleteMessagesEndpointTest : BaseTest() {
 
         pubnub.deleteMessages(
             channels = listOf("mychannel,my_channel")
-        ).sync()!!
+        ).sync()
     }
 
     @Test
@@ -62,7 +62,7 @@ class DeleteMessagesEndpointTest : BaseTest() {
 
         pubnub.deleteMessages(
             channels = listOf("mychannel,my_channel")
-        ).sync()!!
+        ).sync()
 
         val requests = findAll(deleteRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -89,7 +89,7 @@ class DeleteMessagesEndpointTest : BaseTest() {
         try {
             pubnub.deleteMessages(
                 channels = listOf("mychannel,my_channel")
-            ).sync()!!
+            ).sync()
         } catch (e: Exception) {
             failTest()
         }
@@ -116,10 +116,8 @@ class DeleteMessagesEndpointTest : BaseTest() {
 
         pubnub.deleteMessages(
             channels = listOf("mychannel,my_channel")
-        ).async { result, status ->
-            result!!
-            assertFalse(status.error)
-            assertEquals(PNOperationType.PNDeleteMessagesOperation, status.operation)
+        ).async { result ->
+            assertFalse(result.isFailure)
             success.set(true)
         }
 

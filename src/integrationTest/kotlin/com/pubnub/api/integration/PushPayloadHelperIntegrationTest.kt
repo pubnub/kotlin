@@ -21,7 +21,7 @@ class PushPayloadHelperIntegrationTest : BaseIntegrationTest() {
                 pubnub.publish(
                     channel = expectedChannel,
                     message = payload
-                ).sync()!!
+                ).sync()
             }
         })
 

@@ -14,14 +14,11 @@ import com.pubnub.api.CommonUtils.assertPnException
 import com.pubnub.api.CommonUtils.emptyJson
 import com.pubnub.api.CommonUtils.failTest
 import com.pubnub.api.PubNubError
-import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.listen
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
-import com.pubnub.api.param
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotNull
 import org.junit.Test
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -57,7 +54,7 @@ class AddMessageActionEndpointTest : BaseTest() {
                 value = "smiley",
                 messageTimetoken = 123
             )
-        ).sync()!!
+        ).sync()
 
         assertEquals(result.messageTimetoken, 123L)
         assertEquals(result.type, "emoji")
@@ -98,15 +95,16 @@ class AddMessageActionEndpointTest : BaseTest() {
                 value = "smiley",
                 messageTimetoken = 123
             )
-        ).async { result, status ->
-            assertFalse(status.error)
-            assertEquals(PNOperationType.PNAddMessageAction, status.operation)
-            assertEquals(result!!.messageTimetoken, 123L)
-            assertEquals(result.type, "emoji")
-            assertEquals(result.uuid, "someUuid")
-            assertEquals(result.value, "smiley")
-            assertEquals(result.actionTimetoken, 1000L)
-            success.set(true)
+        ).async { result ->
+            assertFalse(result.isFailure)
+            result.onSuccess {
+                assertEquals(it.messageTimetoken, 123L)
+                assertEquals(it.type, "emoji")
+                assertEquals(it.uuid, "someUuid")
+                assertEquals(it.value, "smiley")
+                assertEquals(it.actionTimetoken, 1000L)
+                success.set(true)
+            }
         }
 
         success.listen()
@@ -142,7 +140,7 @@ class AddMessageActionEndpointTest : BaseTest() {
                     value = "smiley",
                     messageTimetoken = 123
                 )
-            ).sync()!!
+            ).sync()
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.PARSING_ERROR, e)
@@ -165,7 +163,7 @@ class AddMessageActionEndpointTest : BaseTest() {
                     value = "smiley",
                     messageTimetoken = 123
                 )
-            ).sync()!!
+            ).sync()
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.PARSING_ERROR, e)
@@ -188,7 +186,7 @@ class AddMessageActionEndpointTest : BaseTest() {
                     value = "smiley",
                     messageTimetoken = 123
                 )
-            ).sync()!!
+            ).sync()
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.PARSING_ERROR, e)
@@ -219,7 +217,7 @@ class AddMessageActionEndpointTest : BaseTest() {
                     value = "smiley",
                     messageTimetoken = 123
                 )
-            ).sync()!!
+            ).sync()
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.PARSING_ERROR, e)
@@ -251,7 +249,7 @@ class AddMessageActionEndpointTest : BaseTest() {
                     value = "smiley",
                     messageTimetoken = 123
                 )
-            ).sync()!!
+            ).sync()
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.PARSING_ERROR, e)
@@ -268,7 +266,7 @@ class AddMessageActionEndpointTest : BaseTest() {
                     value = "smiley",
                     messageTimetoken = 123
                 )
-            ).sync()!!
+            ).sync()
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.CHANNEL_MISSING, e)
@@ -285,7 +283,7 @@ class AddMessageActionEndpointTest : BaseTest() {
                     value = "smiley",
                     messageTimetoken = 123
                 )
-            ).sync()!!
+            ).sync()
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.MESSAGE_ACTION_TYPE_MISSING, e)
@@ -302,7 +300,7 @@ class AddMessageActionEndpointTest : BaseTest() {
                     value = " ",
                     messageTimetoken = 123
                 )
-            ).sync()!!
+            ).sync()
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.MESSAGE_ACTION_VALUE_MISSING, e)
@@ -320,7 +318,7 @@ class AddMessageActionEndpointTest : BaseTest() {
                     value = " ",
                     messageTimetoken = 123
                 )
-            ).sync()!!
+            ).sync()
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.SUBSCRIBE_KEY_MISSING, e)
@@ -359,7 +357,7 @@ class AddMessageActionEndpointTest : BaseTest() {
                 value = "smiley",
                 messageTimetoken = 123
             )
-        ).sync()!!
+        ).sync()
 
         val requests = findAll(postRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -406,20 +404,19 @@ class AddMessageActionEndpointTest : BaseTest() {
                 value = "smiley",
                 messageTimetoken = 123
             )
-        ).async { _, status ->
-            assertFalse(status.error)
-            assertEquals(PNOperationType.PNAddMessageAction, status.operation)
-            telemetryParamName = "l_${status.operation.queryParam}"
-            assertEquals("l_msga", telemetryParamName)
-            success.set(true)
+        ).async { result ->
+            assertFalse(result.isFailure)
+//            telemetryParamName = "l_${status.operation.queryParam}" //TODO this is no longer available
+//            assertEquals("l_cg", telemetryParamName)
+//            success.set(true)
         }
 
         success.listen()
 
-        pubnub.time().async { _, status ->
-            assertFalse(status.error)
-            assertNotNull(status.param(telemetryParamName))
-            success.set(true)
+        pubnub.time().async { result ->
+            assertFalse(result.isFailure)
+//            assertNotNull(status.param(telemetryParamName)) //TODO no longer available
+//            success.set(true)
         }
 
         success.listen()

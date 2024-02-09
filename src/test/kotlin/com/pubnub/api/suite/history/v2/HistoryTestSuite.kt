@@ -5,6 +5,7 @@ import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.PubNubError
+import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.History
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNStatus
@@ -67,9 +68,9 @@ class HistoryTestSuite : EndpointTestSuite<History, PNHistoryResult>() {
             responseBuilder = {
                 withBody("""["First Element Not An Array",0,0]""")
             }
-            additionalChecks = { status: PNStatus, _: PNHistoryResult? ->
-                assertTrue(status.error)
-                assertEquals(status.exception!!.errorMessage, "History is disabled")
+            additionalChecks = { result ->
+                assertTrue(result.isFailure)
+                assertEquals((result.exceptionOrNull() as? PubNubException)?.errorMessage, "History is disabled")
             }
             result = Result.FAIL
             pnError = PubNubError.HTTP_ERROR

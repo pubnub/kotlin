@@ -42,7 +42,7 @@ class RemoveChannelChannelGroupEndpointTest : BaseTest() {
         pubnub.removeChannelsFromChannelGroup(
             channelGroup = "groupA",
             channels = arrayListOf("ch1", "ch2")
-        ).sync()!!
+        ).sync()
     }
 
     @Test
@@ -68,7 +68,7 @@ class RemoveChannelChannelGroupEndpointTest : BaseTest() {
         pubnub.removeChannelsFromChannelGroup(
             channelGroup = "groupA",
             channels = arrayListOf("ch1", "ch2")
-        ).sync()!!
+        ).sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -98,12 +98,8 @@ class RemoveChannelChannelGroupEndpointTest : BaseTest() {
         pubnub.removeChannelsFromChannelGroup(
             channelGroup = "groupA",
             channels = arrayListOf("ch1", "ch2")
-        ).async { _, status ->
-            assertFalse(status.error)
-            assertEquals(PNOperationType.PNRemoveChannelsFromGroupOperation, status.operation)
-            assertEquals(PNStatusCategory.PNAcknowledgmentCategory, status.category)
-            assertTrue(status.affectedChannels == listOf("ch1", "ch2"))
-            assertTrue(status.affectedChannelGroups == listOf("groupA"))
+        ).async { result ->
+            assertFalse(result.isFailure)
             atomic.incrementAndGet()
         }
 

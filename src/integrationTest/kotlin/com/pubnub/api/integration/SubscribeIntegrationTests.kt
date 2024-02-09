@@ -89,7 +89,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         guestClient.publish(
             channel = "my.test",
             message = expectedMessage
-        ).sync()!!
+        ).sync()
 
         success.listen()
     }
@@ -117,7 +117,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
             channel = "my.test",
             message = expectedMessage,
             meta = meta
-        ).sync()!!
+        ).sync()
 
         success.listen()
     }
@@ -612,10 +612,10 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
     @Timeout(10, unit = TimeUnit.SECONDS)
     fun `second consecutive subscribe works with new test helper`() = pubnub.test {
         subscribe(listOf("abc"))
-        val tt = pubnub.publish("abc", "myMessage").sync()!!.timetoken
+        val tt = pubnub.publish("abc", "myMessage").sync().timetoken
         assertEquals(tt, nextMessage().timetoken!!)
         subscribe(listOf("def"))
-        val tt2 = pubnub.publish("def", "myMessage").sync()!!.timetoken
+        val tt2 = pubnub.publish("def", "myMessage").sync().timetoken
         assertEquals(tt2, nextMessage().timetoken!!)
     }
 }

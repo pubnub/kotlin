@@ -38,7 +38,7 @@ class ListPushProvisionsTest : BaseTest() {
             deviceId = "niceDevice",
             pushType = PNPushType.APNS,
             topic = "irrelevant"
-        ).sync()!!
+        ).sync()
 
         assertEquals(listOf("ch1", "ch2", "ch3"), response.channels)
 
@@ -60,7 +60,7 @@ class ListPushProvisionsTest : BaseTest() {
             deviceId = "niceDevice",
             pushType = PNPushType.FCM,
             topic = "irrelevant"
-        ).sync()!!
+        ).sync()
 
         assertEquals(listOf("ch1", "ch2", "ch3"), response.channels)
 
@@ -82,7 +82,7 @@ class ListPushProvisionsTest : BaseTest() {
             deviceId = "niceDevice",
             pushType = PNPushType.MPNS,
             topic = "irrelevant"
-        ).sync()!!
+        ).sync()
 
         assertEquals(listOf("ch1", "ch2", "ch3"), response.channels)
 
@@ -104,7 +104,7 @@ class ListPushProvisionsTest : BaseTest() {
             deviceId = "niceDevice",
             pushType = PNPushType.APNS2,
             topic = "news"
-        ).sync()!!
+        ).sync()
 
         assertEquals(listOf("ch1", "ch2", "ch3"), response.channels)
 
@@ -126,7 +126,7 @@ class ListPushProvisionsTest : BaseTest() {
             pushType = PNPushType.APNS2,
             topic = "news",
             environment = PNPushEnvironment.PRODUCTION
-        ).sync()!!
+        ).sync()
 
         assertEquals(listOf("ch1", "ch2", "ch3"), response.channels)
 
@@ -146,7 +146,7 @@ class ListPushProvisionsTest : BaseTest() {
         val response = pubnub.auditPushChannelProvisions(
             deviceId = "niceDevice",
             pushType = PNPushType.FCM
-        ).sync()!!
+        ).sync()
 
         assertEquals(emptyList<String>(), response.channels)
 
@@ -165,7 +165,7 @@ class ListPushProvisionsTest : BaseTest() {
             pubnub.auditPushChannelProvisions(
                 deviceId = "niceDevice",
                 pushType = PNPushType.FCM
-            ).sync()!!
+            ).sync()
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.PARSING_ERROR, e)
@@ -183,7 +183,7 @@ class ListPushProvisionsTest : BaseTest() {
             pubnub.auditPushChannelProvisions(
                 deviceId = "niceDevice",
                 pushType = PNPushType.FCM
-            ).sync()!!
+            ).sync()
             failTest()
         } catch (e: PubNubException) {
             assertPnException(PubNubError.PARSING_ERROR, e)
@@ -201,10 +201,11 @@ class ListPushProvisionsTest : BaseTest() {
         pubnub.auditPushChannelProvisions(
             deviceId = "niceDevice",
             pushType = PNPushType.FCM
-        ).async { _, status ->
-            assertPnException(PubNubError.PARSING_ERROR, status)
-            assertEquals(PNStatusCategory.PNMalformedResponseCategory, status.category)
-            success.set(true)
+        ).async { result ->
+            result.onFailure {
+                assertPnException(PubNubError.PARSING_ERROR, it)
+                success.set(true)
+            }
         }
         success.listen()
     }
@@ -221,7 +222,7 @@ class ListPushProvisionsTest : BaseTest() {
         pubnub.auditPushChannelProvisions(
             deviceId = "niceDevice",
             pushType = PNPushType.APNS
-        ).sync()!!
+        ).sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -240,16 +241,13 @@ class ListPushProvisionsTest : BaseTest() {
         pubnub.auditPushChannelProvisions(
             deviceId = "niceDevice",
             pushType = PNPushType.APNS
-        ).async { _, status ->
-            assertFalse(status.error)
-            assertEquals(
-                PNOperationType.PNPushNotificationEnabledChannelsOperation,
-                status.operation
-            )
-            assertEquals(PNStatusCategory.PNAcknowledgmentCategory, status.category)
-            assertTrue(status.affectedChannels.isEmpty())
-            assertTrue(status.affectedChannelGroups.isEmpty())
-            success.set(true)
+        ).async { result ->
+            assertFalse(result.isFailure)
+            result.onSuccess {
+//                assertTrue(status.affectedChannels.isEmpty()) //TODO should we hgave this
+//                assertTrue(status.affectedChannelGroups.isEmpty())
+                success.set(true)
+            }
         }
 
         success.listen()
@@ -268,7 +266,7 @@ class ListPushProvisionsTest : BaseTest() {
             pubnub.auditPushChannelProvisions(
                 deviceId = "niceDevice",
                 pushType = PNPushType.APNS
-            ).sync()!!
+            ).sync()
             failTest("Didn't throw SUBSCRIBE_KEY_MISSING")
         } catch (e: Exception) {
             assertPnException(PubNubError.SUBSCRIBE_KEY_MISSING, e)
@@ -281,7 +279,7 @@ class ListPushProvisionsTest : BaseTest() {
             pubnub.auditPushChannelProvisions(
                 deviceId = "niceDevice",
                 pushType = PNPushType.APNS2
-            ).sync()!!
+            ).sync()
             failTest("Should throw no topic")
         } catch (e: PubNubException) {
             assertPnException(PubNubError.PUSH_TOPIC_MISSING, e)
@@ -299,7 +297,7 @@ class ListPushProvisionsTest : BaseTest() {
             deviceId = "niceDevice",
             pushType = PNPushType.APNS2,
             topic = UUID.randomUUID().toString()
-        ).sync()!!
+        ).sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)

@@ -123,7 +123,7 @@ class HeartbeatEndpointTest : BaseTest() {
                 )
         )
 
-        Heartbeat(pubnub, channelGroups = listOf("cg1", "cg2")).sync()!!
+        Heartbeat(pubnub, channelGroups = listOf("cg1", "cg2")).sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -154,7 +154,7 @@ class HeartbeatEndpointTest : BaseTest() {
         )
 
         try {
-            Heartbeat(pubnub).sync()!!
+            Heartbeat(pubnub).sync()
             failTest()
         } catch (e: Exception) {
             assertPnException(
@@ -211,7 +211,7 @@ class HeartbeatEndpointTest : BaseTest() {
         pubnub.configuration.subscribeKey = " "
 
         try {
-            Heartbeat(pubnub, listOf("ch1")).sync()!!
+            Heartbeat(pubnub, listOf("ch1")).sync()
             failTest()
         } catch (e: Exception) {
             assertPnException(
@@ -242,7 +242,7 @@ class HeartbeatEndpointTest : BaseTest() {
         pubnub.configuration.subscribeKey = ""
 
         try {
-            Heartbeat(pubnub, listOf("ch1")).sync()!!
+            Heartbeat(pubnub, listOf("ch1")).sync()
             failTest()
         } catch (e: Exception) {
             assertPnException(

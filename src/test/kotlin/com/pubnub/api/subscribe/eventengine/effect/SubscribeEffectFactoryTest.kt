@@ -71,14 +71,10 @@ class SubscribeEffectFactoryTest {
     fun `should return emitStatus effect when getting EmitStatus invocation`() {
         // when
         val effect = subscribeEffectFactory.create(
-            SubscribeEffectInvocation.EmitStatus(
-                status =
-                PNStatus(
-                    category = PNStatusCategory.PNConnectedCategory,
-                    operation = PNOperationType.PNSubscribeOperation,
-                    error = false,
-                    affectedChannels = channels.toList(),
-                    affectedChannelGroups = channelGroups.toList()
+            SubscribeEffectInvocation.EmitStatus(PNStatus.Connected(
+                    currentTimetoken = 0L,
+                    channels = channels.toList(),
+                    channelGroups = channelGroups.toList(),
                 )
             )
         )

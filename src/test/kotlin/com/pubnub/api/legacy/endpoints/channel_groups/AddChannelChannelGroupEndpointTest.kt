@@ -15,7 +15,6 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.listen
-import com.pubnub.api.param
 import org.awaitility.Awaitility
 import org.hamcrest.core.IsEqual
 import org.junit.Assert.assertEquals
@@ -40,7 +39,7 @@ class AddChannelChannelGroupEndpointTest : BaseTest() {
         pubnub.addChannelsToChannelGroup(
             channelGroup = "groupA",
             channels = listOf("ch1", "ch2")
-        ).sync()!!
+        ).sync()
     }
 
     @Test
@@ -92,7 +91,7 @@ class AddChannelChannelGroupEndpointTest : BaseTest() {
         pubnub.addChannelsToChannelGroup(
             channelGroup = "groupA",
             channels = listOf("ch1", "ch2")
-        ).sync()!!
+        ).sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -112,13 +111,11 @@ class AddChannelChannelGroupEndpointTest : BaseTest() {
         pubnub.addChannelsToChannelGroup(
             channelGroup = "groupA",
             channels = listOf("ch1", "ch2")
-        ).async { _, status ->
-            assertFalse(status.error)
-            assertEquals(PNOperationType.PNAddChannelsToGroupOperation, status.operation)
-            assertEquals(PNStatusCategory.PNAcknowledgmentCategory, status.category)
-            assertTrue(status.affectedChannels == listOf("ch1", "ch2"))
-            assertTrue(status.affectedChannelGroups == listOf("groupA"))
-            atomic.incrementAndGet()
+        ).async { result ->
+            assertFalse(result.isFailure)
+            result.onSuccess {
+                atomic.incrementAndGet()
+            }
         }
 
         Awaitility.await()
@@ -139,11 +136,12 @@ class AddChannelChannelGroupEndpointTest : BaseTest() {
         pubnub.addChannelsToChannelGroup(
             channelGroup = "groupA",
             channels = listOf("ch1", "ch2")
-        ).async { _, status ->
-            assertTrue(status.error)
-            assertEquals(PNOperationType.PNAddChannelsToGroupOperation, status.operation)
-            assertEquals(PNStatusCategory.PNAccessDeniedCategory, status.category)
-            atomic.incrementAndGet()
+        ).async { result ->
+            assertTrue(result.isFailure)
+            result.onFailure {
+//                assertEquals(PNStatusCategory.PNAccessDeniedCategory, status.category) // TODO how to check forbidden
+//                atomic.incrementAndGet()
+            }
         }
 
         Awaitility.await().atMost(15, TimeUnit.SECONDS).untilAtomic(atomic, IsEqual.equalTo(1))
@@ -168,20 +166,19 @@ class AddChannelChannelGroupEndpointTest : BaseTest() {
         pubnub.addChannelsToChannelGroup(
             channelGroup = "groupA",
             channels = listOf("ch1", "ch2")
-        ).async { _, status ->
-            assertFalse(status.error)
-            assertEquals(PNOperationType.PNAddChannelsToGroupOperation, status.operation)
-            telemetryParamName = "l_${status.operation.queryParam}"
-            assertEquals("l_cg", telemetryParamName)
-            success.set(true)
+        ).async { result ->
+            assertFalse(result.isFailure)
+//            telemetryParamName = "l_${status.operation.queryParam}" //TODO this is no longer available
+//            assertEquals("l_cg", telemetryParamName)
+//            success.set(true)
         }
 
         success.listen()
 
-        pubnub.time().async { _, status ->
-            assertFalse(status.error)
-            assertNotNull(status.param(telemetryParamName))
-            success.set(true)
+        pubnub.time().async { result ->
+            assertFalse(result.isFailure)
+//            assertNotNull(status.param(telemetryParamName)) //TODO no longer available
+//            success.set(true)
         }
 
         success.listen()

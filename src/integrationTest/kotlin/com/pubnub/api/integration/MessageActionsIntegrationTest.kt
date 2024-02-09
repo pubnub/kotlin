@@ -55,7 +55,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
         publishResult = pubnub.publish(
             channel = expectedChannel,
             message = generatePayload()
-        ).sync()!!
+        ).sync()
     }
 
     @Test
@@ -68,8 +68,8 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
                 value = "smiley",
                 messageTimetoken = publishResult.timetoken
             )
-        ).await { _, status ->
-            assertFalse(status.error)
+        ).await { result ->
+            assertFalse(result.isFailure)
             assertEquals(PNOperationType.PNAddMessageAction, status.operation)
         }
     }
@@ -84,12 +84,12 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
                 value = unicode(),
                 messageTimetoken = publishResult.timetoken
             )
-        ).sync()!!
+        ).sync()
 
         pubnub.getMessageActions(
             channel = expectedChannel
-        ).await { _, status ->
-            assertFalse(status.error)
+        ).await { result ->
+            assertFalse(result.isFailure)
             assertEquals(PNOperationType.PNGetMessageActions, status.operation)
         }
     }
@@ -106,14 +106,14 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
                 value = expectedValue,
                 messageTimetoken = publishResult.timetoken
             )
-        ).sync()!!
+        ).sync()
 
         pubnub.removeMessageAction(
             messageTimetoken = publishResult.timetoken,
             actionTimetoken = addMessageActionResult.actionTimetoken!!,
             channel = expectedChannel
-        ).asyncRetry { _, status ->
-            assertFalse(status.error)
+        ).asyncRetry { result ->
+            assertFalse(result.isFailure)
             assertEquals(PNOperationType.PNDeleteMessageAction, status.operation)
         }
     }
@@ -157,7 +157,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
                     value = emoji(),
                     messageTimetoken = pnPublishResult.timetoken
                 )
-            ).sync()!!
+            ).sync()
         }
 
         pubnub.getMessageActions(
@@ -196,7 +196,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
 
         pubnub.getMessageActions(
             channel = expectedChannelName
-        ).sync()!!.run {
+        ).sync().run {
             assertEquals(messageCount, messages.size)
         }
 
@@ -249,7 +249,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
             pubnub.publish(
                 channel = expectedChannel,
                 message = "${i}_${randomValue()}"
-            ).sync()!!.run {
+            ).sync().run {
                 publishList.add(this)
             }
         }
@@ -265,7 +265,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
                     value = "${(i + 1)}_${randomValue(5)}",
                     messageTimetoken = it.timetoken
                 )
-            ).sync()!!
+            ).sync()
         }
 
         val pnActionList = mutableListOf<PNMessageAction>()
@@ -319,7 +319,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
                         value = emoji(),
                         messageTimetoken = it.timetoken
                     )
-                ).sync()!!
+                ).sync()
             }
             if (i % 3 == 0) {
                 pubnub.addMessageAction(
@@ -329,7 +329,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
                         value = emoji(),
                         messageTimetoken = it.timetoken
                     )
-                ).sync()!!
+                ).sync()
             }
             if (i % 2 == 0) {
                 pubnub.addMessageAction(
@@ -339,7 +339,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
                         value = emoji(),
                         messageTimetoken = it.timetoken
                     )
-                ).sync()!!
+                ).sync()
             }
             if (i % 5 == 0) {
                 pubnub.addMessageAction(
@@ -349,7 +349,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
                         value = emoji(),
                         messageTimetoken = it.timetoken
                     )
-                ).sync()!!
+                ).sync()
             }
         }
 
@@ -357,7 +357,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
             channels = Collections.singletonList(expectedChannel),
             includeMeta = true,
             includeMessageActions = true
-        ).sync()!!
+        ).sync()
 
         fetchMessagesResultWithActions.channels.forEach { (channel, item: List<PNFetchMessageItem>) ->
             println("Channel: " + channel + ". Messages: " + item.size)
@@ -397,7 +397,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
         }
         val fetchMessagesResultNoActions: PNFetchMessagesResult = pubnub.fetchMessages(
             channels = listOf(expectedChannel)
-        ).sync()!!
+        ).sync()
         fetchMessagesResultNoActions.channels.forEach { (_: String?, pnFetchMessageItems: List<PNFetchMessageItem>) ->
             pnFetchMessageItems.forEach(
                 Consumer { pnFetchMessageItem: PNFetchMessageItem ->
@@ -421,7 +421,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
                 channel = expectedChannelName,
                 message = "${it}_msg",
                 meta = if (it % 2 == 0) generateMap() else null
-            ).sync()!!.run {
+            ).sync().run {
                 publishResultList.add(this)
             }
         }
@@ -432,7 +432,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
 
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.category == PNStatusCategory.PNConnectedCategory) {
+                if (pnStatus is PNStatus.Connected) {
                     if (pnStatus.operation == PNOperationType.PNSubscribeOperation) {
                         publishResultList.forEach {
                             pubnub.addMessageAction(
@@ -442,7 +442,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
                                     value = emoji(),
                                     messageTimetoken = it.timetoken
                                 )
-                            ).sync()!!
+                            ).sync()
                         }
                     }
                 }
@@ -517,7 +517,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
             channel = expectedChannel,
             message = randomValue(),
             shouldStore = true
-        ).sync()!!.timetoken
+        ).sync().timetoken
 
         pubnub.addMessageAction(
             channel = expectedChannel,
@@ -526,7 +526,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
                 value = expectedEmoji,
                 messageTimetoken = timetoken
             )
-        ).sync()!!
+        ).sync()
 
         pubnub.addMessageAction(
             channel = expectedChannel,

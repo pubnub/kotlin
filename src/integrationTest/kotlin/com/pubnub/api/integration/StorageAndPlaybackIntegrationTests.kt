@@ -37,7 +37,7 @@ class StorageAndPlaybackIntegrationTests : BaseIntegrationTest() {
             pubnub.publish(
                 channel = expectedChannel,
                 message = randomValue()
-            ).sync()!!
+            ).sync()
         }
 
         pubnub.history(
@@ -59,7 +59,7 @@ class StorageAndPlaybackIntegrationTests : BaseIntegrationTest() {
             pubnub.publish(
                 channel = expectedChannel,
                 message = randomValue()
-            ).sync()!!
+            ).sync()
         }
 
         pubnub.history(
@@ -81,7 +81,7 @@ class StorageAndPlaybackIntegrationTests : BaseIntegrationTest() {
             pubnub.publish(
                 channel = expectedChannel,
                 message = randomValue()
-            ).sync()!!
+            ).sync()
         }
         wait(5)
         val now = System.currentTimeMillis() * 10000
@@ -107,12 +107,12 @@ class StorageAndPlaybackIntegrationTests : BaseIntegrationTest() {
         pubnub.publish(
             channel = expectedChannel,
             message = message1
-        ).sync()!!
+        ).sync()
 
         pubnub.publish(
             channel = expectedChannel,
             message = message2
-        ).sync()!!
+        ).sync()
 
         pubnub.history(
             channel = expectedChannel,

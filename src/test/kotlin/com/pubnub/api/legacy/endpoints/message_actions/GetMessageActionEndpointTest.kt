@@ -18,10 +18,8 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.listen
 import com.pubnub.api.models.consumer.PNBoundedPage
-import com.pubnub.api.param
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotNull
 import org.junit.Test
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -53,7 +51,7 @@ class GetMessageActionEndpointTest : BaseTest() {
 
         val result = pubnub.getMessageActions(
             channel = "coolChannel"
-        ).sync()!!
+        ).sync()
 
         assertEquals(result.actions.size, 1)
         assertEquals(result.actions[0].messageTimetoken, 123L)
@@ -103,7 +101,7 @@ class GetMessageActionEndpointTest : BaseTest() {
 
         val result = pubnub.getMessageActions(
             channel = "coolChannel"
-        ).sync()!!
+        ).sync()
 
         assertEquals(result.actions.size, 3)
 
@@ -154,16 +152,17 @@ class GetMessageActionEndpointTest : BaseTest() {
 
         pubnub.getMessageActions(
             channel = "coolChannel"
-        ).async { result, status ->
-            assertFalse(status.error)
-            assertEquals(PNOperationType.PNGetMessageActions, status.operation)
-            assertEquals(result!!.actions.size, 1)
-            assertEquals(result.actions[0].messageTimetoken, 123L)
-            assertEquals(result.actions[0].type, "emoji")
-            assertEquals(result.actions[0].uuid, "someUuid")
-            assertEquals(result.actions[0].value, "smiley")
-            assertEquals(result.actions[0].actionTimetoken, 1000L)
-            success.set(true)
+        ).async { result ->
+            assertFalse(result.isFailure)
+            result.onSuccess {
+                assertEquals(it.actions.size, 1)
+                assertEquals(it.actions[0].messageTimetoken, 123L)
+                assertEquals(it.actions[0].type, "emoji")
+                assertEquals(it.actions[0].uuid, "someUuid")
+                assertEquals(it.actions[0].value, "smiley")
+                assertEquals(it.actions[0].actionTimetoken, 1000L)
+                success.set(true)
+            }
         }
 
         success.listen()
@@ -196,7 +195,7 @@ class GetMessageActionEndpointTest : BaseTest() {
         try {
             pubnub.getMessageActions(
                 channel = "coolChannel"
-            ).sync()!!
+            ).sync()
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.PARSING_ERROR, e)
@@ -213,7 +212,7 @@ class GetMessageActionEndpointTest : BaseTest() {
         try {
             pubnub.getMessageActions(
                 channel = "coolChannel"
-            ).sync()!!
+            ).sync()
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.PARSING_ERROR, e)
@@ -230,7 +229,7 @@ class GetMessageActionEndpointTest : BaseTest() {
         try {
             pubnub.getMessageActions(
                 channel = "coolChannel"
-            ).sync()!!
+            ).sync()
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.PARSING_ERROR, e)
@@ -255,7 +254,7 @@ class GetMessageActionEndpointTest : BaseTest() {
         try {
             pubnub.getMessageActions(
                 channel = "coolChannel"
-            ).sync()!!
+            ).sync()
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.PARSING_ERROR, e)
@@ -281,7 +280,7 @@ class GetMessageActionEndpointTest : BaseTest() {
         try {
             pubnub.getMessageActions(
                 channel = "coolChannel"
-            ).sync()!!
+            ).sync()
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.PARSING_ERROR, e)
@@ -293,7 +292,7 @@ class GetMessageActionEndpointTest : BaseTest() {
         try {
             pubnub.getMessageActions(
                 channel = " "
-            ).sync()!!
+            ).sync()
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.CHANNEL_MISSING, e)
@@ -306,7 +305,7 @@ class GetMessageActionEndpointTest : BaseTest() {
         try {
             pubnub.getMessageActions(
                 channel = "coolChannel"
-            ).sync()!!
+            ).sync()
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.SUBSCRIBE_KEY_MISSING, e)
@@ -341,7 +340,7 @@ class GetMessageActionEndpointTest : BaseTest() {
 
         pubnub.getMessageActions(
             channel = "coolChannel"
-        ).sync()!!
+        ).sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -385,7 +384,7 @@ class GetMessageActionEndpointTest : BaseTest() {
                 end = 20,
                 limit = 10
             )
-        ).sync()!!
+        ).sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -426,7 +425,7 @@ class GetMessageActionEndpointTest : BaseTest() {
 
         pubnub.getMessageActions(
             channel = "coolChannel"
-        ).sync()!!
+        ).sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -471,20 +470,19 @@ class GetMessageActionEndpointTest : BaseTest() {
 
         pubnub.getMessageActions(
             channel = "coolChannel"
-        ).async { _, status ->
-            assertFalse(status.error)
-            assertEquals(PNOperationType.PNGetMessageActions, status.operation)
-            telemetryParamName = "l_${status.operation.queryParam}"
-            assertEquals("l_msga", telemetryParamName)
-            success.set(true)
+        ).async { result ->
+            assertFalse(result.isFailure)
+//            telemetryParamName = "l_${status.operation.queryParam}" //TODO no longer available
+//            assertEquals("l_msga", telemetryParamName)
+//            success.set(true)
         }
 
         success.listen()
 
-        pubnub.time().async { _, status ->
-            assertFalse(status.error)
-            assertNotNull(status.param(telemetryParamName))
-            success.set(true)
+        pubnub.time().async { result ->
+            assertFalse(result.isFailure)
+//            assertNotNull(status.param(telemetryParamName)) //TODO no longer available
+//            success.set(true)
         }
 
         success.listen()

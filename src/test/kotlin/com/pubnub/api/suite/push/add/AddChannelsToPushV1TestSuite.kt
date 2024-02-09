@@ -5,6 +5,7 @@ import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.PubNubError
+import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.push.AddChannelsToPush
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNPushType
@@ -64,9 +65,9 @@ class AddChannelsToPushV1TestSuite : EndpointTestSuite<AddChannelsToPush, PNPush
                 result = Result.FAIL
                 responseBuilder = { withBody(body).withStatus(400) }
                 pnError = PubNubError.HTTP_ERROR
-                additionalChecks = { status: PNStatus, _: PNPushAddChannelResult? ->
+                additionalChecks = { result ->
                     assertTrue(voidResponse())
-                    assertEquals(body, status.exception!!.jso)
+                    assertEquals(body, (result.exceptionOrNull() as? PubNubException)?.jso)
                 }
             }
         )

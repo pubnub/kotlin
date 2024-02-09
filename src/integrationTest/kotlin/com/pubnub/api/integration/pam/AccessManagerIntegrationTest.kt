@@ -333,7 +333,7 @@ abstract class AccessManagerIntegrationTest() : BaseIntegrationTest() {
         pubnubToTest.addListener(object : SubscribeCallback() {
 
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.category == PNStatusCategory.PNConnectedCategory &&
+                if (pnStatus is PNStatus.Connected &&
                     pnStatus.operation == PNOperationType.PNSubscribeOperation &&
                     pnStatus.uuid == this@AccessManagerIntegrationTest.pubnubToTest.configuration.userId.value
                 ) {
@@ -549,7 +549,7 @@ abstract class AccessManagerIntegrationTest() : BaseIntegrationTest() {
                     value = (emoji()),
                     messageTimetoken = (1L)
                 )
-            ).sync()!!
+            ).sync()
         }
 
         revokeAllAccess()
@@ -577,7 +577,7 @@ abstract class AccessManagerIntegrationTest() : BaseIntegrationTest() {
                 channel = expectedChannel,
                 message = randomValue(),
                 shouldStore = true
-            ).sync()!!
+            ).sync()
         }
 
         val addMessageActionResult = pubnubToTest.addMessageAction(
@@ -642,7 +642,7 @@ abstract class AccessManagerIntegrationTest() : BaseIntegrationTest() {
         )
 
         retry {
-            val grantResult = grantOperation.sync()!!
+            val grantResult = grantOperation.sync()
             logger.info("Access request result: " + Gson().toJson(grantResult))
             assertNotNull(grantResult)
 

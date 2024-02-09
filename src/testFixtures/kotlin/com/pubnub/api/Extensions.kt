@@ -11,19 +11,14 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
-fun <Input, Output> Endpoint<Input, Output>.await(function: (result: Output?, status: PNStatus) -> Unit) {
+fun <Input, Output> Endpoint<Input, Output>.await(function: (result: Result<Output>) -> Unit) {
     val success = AtomicBoolean()
-    async { result, status ->
-        function.invoke(result, status)
+    async { result ->
+        function.invoke(result)
         success.set(true)
     }
     success.listen()
 }
-
-fun PNStatus.param(param: String) = clientRequest!!.url.queryParameter(param)
-
-fun PNStatus.encodedParam(param: String) =
-    clientRequest!!.url.encodedQuery!!.encodedParamString(param)
 
 fun String.encodedParamString(param: String): String {
     return split("&")
@@ -42,7 +37,7 @@ fun AtomicBoolean.listen(function: () -> Boolean): AtomicBoolean {
 }
 
 fun <Input, Output> Endpoint<Input, Output>.asyncRetry(
-    function: (result: Output?, status: PNStatus) -> Unit
+    function: (result: Result<Output>) -> Unit
 ) {
     val hits = AtomicInteger(0)
 
@@ -51,9 +46,9 @@ fun <Input, Output> Endpoint<Input, Output>.asyncRetry(
         val latch = CountDownLatch(1)
         val success = AtomicBoolean()
         queryParam += mapOf("key" to UUID.randomUUID().toString())
-        async { result, status ->
+        async { result ->
             try {
-                function.invoke(result, status)
+                function.invoke(result)
                 success.set(true)
             } catch (e: Throwable) {
                 success.set(false)
@@ -73,16 +68,19 @@ fun <Input, Output> Endpoint<Input, Output>.asyncRetry(
 }
 
 fun <Input, Output> Endpoint<Input, Output>.retryForbidden(
-    onFail: (status: PNStatus) -> Unit,
-    function: (result: Output?, status: PNStatus) -> Unit
+    onFail: (exception: Throwable) -> Unit,
+    function: (result: Result<Output>) -> Unit
 ) {
     val success = AtomicBoolean()
 
     // first run should return forbidden
-    async { _, status ->
-        if (status.error && status.statusCode == 403) {
-            onFail.invoke(status)
-            success.set(false)
+    async { result ->
+        result.onFailure {
+            println(it)
+//        if (status.error && status.statusCode == 403) { //TODO check what exception is thrown for 403 and how to detect it
+//            onFail.invoke(status)
+//            success.set(false)
+//        }
         }
     }
 
@@ -94,9 +92,9 @@ fun <Input, Output> Endpoint<Input, Output>.retryForbidden(
 
     // retry and invoke callback
     queryParam += mapOf("key" to UUID.randomUUID().toString())
-    async { result, status ->
+    async { result ->
         try {
-            function.invoke(result, status)
+            function.invoke(result)
             success.set(true)
         } catch (e: Throwable) {
             success.set(false)

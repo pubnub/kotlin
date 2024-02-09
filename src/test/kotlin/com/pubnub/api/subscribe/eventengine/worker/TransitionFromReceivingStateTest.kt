@@ -3,8 +3,6 @@ package com.pubnub.api.subscribe.eventengine.worker
 import com.google.gson.JsonObject
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
-import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.eventengine.transition
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
@@ -70,13 +68,7 @@ class TransitionFromReceivingStateTest {
             setOf(
                 SubscribeEffectInvocation.CancelReceiveMessages,
                 SubscribeEffectInvocation.EmitStatus(
-                    PNStatus(
-                        category = PNStatusCategory.PNDisconnectedCategory,
-                        operation = PNOperationType.PNDisconnectOperation,
-                        error = false,
-                        affectedChannels = channels.toList(),
-                        affectedChannelGroups = channelGroups.toList()
-                    )
+                    PNStatus.Disconnected
                 )
             ),
             invocations
@@ -102,7 +94,7 @@ class TransitionFromReceivingStateTest {
         assertEquals(
             setOf(
                 SubscribeEffectInvocation.CancelReceiveMessages,
-                SubscribeEffectInvocation.EmitStatus(createSubscriptionChangedStatus(channels, channelGroups)),
+                SubscribeEffectInvocation.EmitStatus(createSubscriptionChangedStatus(state.subscriptionCursor, channels, channelGroups)),
                 SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
             ),
             invocations
@@ -134,7 +126,11 @@ class TransitionFromReceivingStateTest {
         assertEquals(
             setOf(
                 SubscribeEffectInvocation.CancelReceiveMessages,
-                SubscribeEffectInvocation.EmitStatus(createSubscriptionChangedStatus(channels, channelGroups)),
+                SubscribeEffectInvocation.EmitStatus(createSubscriptionChangedStatus(
+                    state.subscriptionCursor,
+                    channels,
+                    channelGroups
+                )),
                 SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, expectedSubscriptionCursor),
             ),
             invocations
@@ -184,13 +180,7 @@ class TransitionFromReceivingStateTest {
             setOf(
                 SubscribeEffectInvocation.CancelReceiveMessages,
                 SubscribeEffectInvocation.EmitStatus(
-                    PNStatus(
-                        category = PNStatusCategory.PNDisconnectedCategory,
-                        operation = PNOperationType.PNUnsubscribeOperation,
-                        error = false,
-                        affectedChannels = channels.toList(),
-                        affectedChannelGroups = channelGroups.toList()
-                    )
+                    PNStatus.Disconnected
                 )
             ),
             invocations

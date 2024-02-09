@@ -1,8 +1,6 @@
 package com.pubnub.api.subscribe.eventengine.state
 
 import com.pubnub.api.PubNubException
-import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.eventengine.State
 import com.pubnub.api.eventengine.noTransition
 import com.pubnub.api.eventengine.transitionTo
@@ -294,8 +292,8 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                         SubscribeEffectInvocation.EmitStatus(
                             PNStatus.SubscriptionChanged(
                                 currentTimetoken = subscriptionCursor.timetoken,
-                                channels = event.channels.toList(),
-                                channelGroups = event.channelGroups.toList()
+                                channels = event.channels,
+                                channelGroups = event.channelGroups
                             )
                         )
                     )
@@ -311,8 +309,8 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                         SubscribeEffectInvocation.EmitStatus(
                             PNStatus.SubscriptionChanged(
                                 currentTimetoken = event.subscriptionCursor.timetoken,
-                                channels = event.channels.toList(),
-                                channelGroups = event.channelGroups.toList()
+                                channels = event.channels,
+                                channelGroups = event.channelGroups
                             )
                         )
                     )
@@ -380,8 +378,8 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                         SubscribeEffectInvocation.EmitStatus(
                             PNStatus.SubscriptionChanged(
                                 currentTimetoken = subscriptionCursor.timetoken,
-                                channels = event.channels.toList(),
-                                channelGroups = event.channelGroups.toList()
+                                channels = event.channels,
+                                channelGroups = event.channelGroups
                             )
                         )
                     )
@@ -424,8 +422,8 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                         SubscribeEffectInvocation.EmitStatus(
                             PNStatus.SubscriptionChanged(
                                 currentTimetoken = event.subscriptionCursor.timetoken,
-                                channels = event.channels.toList(),
-                                channelGroups = event.channelGroups.toList()
+                                channels = event.channels,
+                                channelGroups = event.channelGroups
                             )
                         )
                     )

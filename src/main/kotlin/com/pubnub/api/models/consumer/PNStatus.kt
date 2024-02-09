@@ -3,22 +3,22 @@ package com.pubnub.api.models.consumer
 import com.pubnub.api.PubNubException
 
 sealed interface PNStatus {
-    data class Connected (
+    data class Connected(
         val currentTimetoken: Long,
-        val channels: List<String> = emptyList(),
-        val channelGroups: List<String> = emptyList()
+        val channels: Collection<String> = emptyList(),
+        val channelGroups: Collection<String> = emptyList()
     ) : PNStatus
 
     data class SubscriptionChanged(
         val currentTimetoken: Long,
-        val channels: List<String?> = emptyList(),
-        val channelGroups: List<String?> = emptyList()
+        val channels: Collection<String> = emptyList(),
+        val channelGroups: Collection<String> = emptyList()
     ) : PNStatus
 
-    data class Reconnected (
+    data class Reconnected(
         val currentTimetoken: Long,
-        val channels: List<String> = emptyList(),
-        val channelGroups: List<String> = emptyList()
+        val channels: Collection<String> = emptyList(),
+        val channelGroups: Collection<String> = emptyList()
     ) : PNStatus
 
     data class UnexpectedDisconnect(

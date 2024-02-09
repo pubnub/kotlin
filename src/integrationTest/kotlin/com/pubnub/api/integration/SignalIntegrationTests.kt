@@ -46,7 +46,7 @@ class SignalIntegrationTests : BaseIntegrationTest() {
         pubnub.signal(
             message = expectedPayload,
             channel = expectedChannel
-        ).sync()!!
+        ).sync()
     }
 
     @Test

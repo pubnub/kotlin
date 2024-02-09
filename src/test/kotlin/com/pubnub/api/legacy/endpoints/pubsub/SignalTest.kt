@@ -92,12 +92,12 @@ class SignalTest : BaseTest() {
         pubnub.signal(
             channel = "coolChannel",
             message = payload
-        ).async { result, status ->
-            result!!
-            assertFalse(status.error)
-            assertEquals(PNOperationType.PNSignalOperation, status.operation)
-            assertEquals("1000", result.timetoken.toString())
-            success.set(true)
+        ).async { result ->
+            assertFalse(result.isFailure)
+            result.onSuccess {
+                assertEquals("1000", it.timetoken.toString())
+                success.set(true)
+            }
         }
 
         success.listen()
@@ -165,7 +165,7 @@ class SignalTest : BaseTest() {
             pubnub.signal(
                 channel = " ",
                 message = UUID.randomUUID().toString()
-            ).sync()!!
+            ).sync()
             throw RuntimeException()
         } catch (e: PubNubException) {
             assertPnException(PubNubError.CHANNEL_MISSING, e)
@@ -194,7 +194,7 @@ class SignalTest : BaseTest() {
         pubnub.signal(
             channel = "coolChannel",
             message = UUID.randomUUID().toString()
-        ).sync()!!
+        ).sync()
 
         pubnub.time()
             .sync()

@@ -71,7 +71,7 @@ class GrantEndpointTest : BaseTest() {
         val result = pubnub.grant(
             authKeys = listOf("key1"),
             channels = listOf("ch1")
-        ).sync()!!
+        ).sync()
 
         assertEquals(1, result.channels.size)
         assertEquals(0, result.channelGroups.size)
@@ -132,7 +132,7 @@ class GrantEndpointTest : BaseTest() {
         val result = pubnub.grant(
             authKeys = listOf("key1", "key2"),
             channels = listOf("ch1")
-        ).sync()!!
+        ).sync()
 
         assertEquals(1, result.channels.size)
         assertEquals(0, result.channelGroups.size)
@@ -203,7 +203,7 @@ class GrantEndpointTest : BaseTest() {
         val result = pubnub.grant(
             authKeys = listOf("key1"),
             channels = listOf("ch1", "ch2")
-        ).sync()!!
+        ).sync()
 
         assertEquals(2, result.channels.size)
         assertEquals(0, result.channelGroups.size)
@@ -284,7 +284,7 @@ class GrantEndpointTest : BaseTest() {
         val result = pubnub.grant(
             authKeys = (listOf("key1", "key2")),
             channels = (listOf("ch1", "ch2"))
-        ).sync()!!
+        ).sync()
 
         assertEquals(2, result.channels.size)
         assertEquals(0, result.channelGroups.size)
@@ -348,7 +348,7 @@ class GrantEndpointTest : BaseTest() {
         val result = pubnub.grant(
             authKeys = listOf("key1"),
             channelGroups = listOf("cg1")
-        ).sync()!!
+        ).sync()
 
         assertEquals(0, result.channels.size)
         assertEquals(1, result.channelGroups.size)
@@ -408,7 +408,7 @@ class GrantEndpointTest : BaseTest() {
         val result = pubnub.grant(
             authKeys = listOf("key1", "key2"),
             channelGroups = listOf("cg1")
-        ).sync()!!
+        ).sync()
 
         assertEquals(0, result.channels.size)
         assertEquals(1, result.channelGroups.size)
@@ -471,7 +471,7 @@ class GrantEndpointTest : BaseTest() {
             authKeys = listOf("key1"),
             channels = listOf("ch1"),
             channelGroups = listOf("cg1")
-        ).sync()!!
+        ).sync()
 
         assertEquals(1, result.channels.size)
         assertEquals(1, result.channelGroups.size)
@@ -539,7 +539,7 @@ class GrantEndpointTest : BaseTest() {
             authKeys = listOf("key1", "key2"),
             channels = listOf("ch1"),
             channelGroups = listOf("cg1")
-        ).sync()!!
+        ).sync()
 
         assertEquals(1, result.channels.size)
         assertEquals(1, result.channelGroups.size)
@@ -625,7 +625,7 @@ class GrantEndpointTest : BaseTest() {
             authKeys = listOf("key1"),
             channels = listOf("ch1", "ch2"),
             channelGroups = listOf("cg1")
-        ).sync()!!
+        ).sync()
 
         assertEquals(2, result.channels.size)
         assertEquals(1, result.channelGroups.size)
@@ -725,7 +725,7 @@ class GrantEndpointTest : BaseTest() {
             authKeys = listOf("key1", "key2"),
             channels = listOf("ch1", "ch2"),
             channelGroups = listOf("cg1")
-        ).sync()!!
+        ).sync()
 
         assertEquals(2, result.channels.size)
         assertEquals(1, result.channelGroups.size)
@@ -804,7 +804,7 @@ class GrantEndpointTest : BaseTest() {
         val result = pubnub.grant(
             authKeys = listOf("key1"),
             channelGroups = listOf("cg1", "cg2")
-        ).sync()!!
+        ).sync()
 
         assertEquals(0, result.channels.size)
         assertEquals(2, result.channelGroups.size)
@@ -886,7 +886,7 @@ class GrantEndpointTest : BaseTest() {
         val result = pubnub.grant(
             authKeys = listOf("key1", "key2"),
             channelGroups = listOf("cg1", "cg2")
-        ).sync()!!
+        ).sync()
 
         assertEquals(0, result.channels.size)
         assertEquals(2, result.channelGroups.size)
@@ -975,7 +975,7 @@ class GrantEndpointTest : BaseTest() {
             authKeys = listOf("key1"),
             channels = listOf("ch1"),
             channelGroups = listOf("cg1", "cg2")
-        ).sync()!!
+        ).sync()
 
         assertEquals(1, result.channels.size)
         assertEquals(2, result.channelGroups.size)
@@ -1074,7 +1074,7 @@ class GrantEndpointTest : BaseTest() {
             authKeys = listOf("key1", "key2"),
             channels = listOf("ch1"),
             channelGroups = listOf("cg1", "cg2")
-        ).sync()!!
+        ).sync()
 
         assertEquals(1, result.channels.size)
         assertEquals(2, result.channelGroups.size)
@@ -1175,7 +1175,7 @@ class GrantEndpointTest : BaseTest() {
             authKeys = listOf("key1"),
             channels = listOf("ch1", "ch2"),
             channelGroups = listOf("cg1", "cg2")
-        ).sync()!!
+        ).sync()
 
         assertEquals(2, result.channels.size)
         assertEquals(2, result.channelGroups.size)
@@ -1293,7 +1293,7 @@ class GrantEndpointTest : BaseTest() {
             authKeys = listOf("key1", "key2"),
             channels = listOf("ch1", "ch2"),
             channelGroups = listOf("cg1", "cg2")
-        ).sync()!!
+        ).sync()
 
         assertEquals(2, result.channels.size)
         assertEquals(2, result.channelGroups.size)
@@ -1366,7 +1366,7 @@ class GrantEndpointTest : BaseTest() {
             authKeys = listOf("key1"),
             channels = listOf("ch1"),
             ttl = 1334
-        ).sync()!!
+        ).sync()
 
         assertEquals(1, result.channels.size)
         assertEquals(0, result.channelGroups.size)
@@ -1423,7 +1423,7 @@ class GrantEndpointTest : BaseTest() {
             authKeys = listOf("key1"),
             channels = listOf("ch1"),
             read = true
-        ).sync()!!
+        ).sync()
 
         assertEquals(1, result.channels.size)
         assertEquals(0, result.channelGroups.size)
@@ -1480,7 +1480,7 @@ class GrantEndpointTest : BaseTest() {
             authKeys = listOf("key1"),
             channels = listOf("ch1"),
             write = true
-        ).sync()!!
+        ).sync()
 
         assertEquals(1, result.channels.size)
         assertEquals(0, result.channelGroups.size)
@@ -1538,7 +1538,7 @@ class GrantEndpointTest : BaseTest() {
             authKeys = listOf("key1"),
             channels = listOf("ch1"),
             delete = true
-        ).sync()!!
+        ).sync()
 
         assertEquals(1, result.channels.size)
         assertEquals(0, result.channelGroups.size)
@@ -1595,7 +1595,7 @@ class GrantEndpointTest : BaseTest() {
             authKeys = listOf("key1"),
             channels = listOf("ch1"),
             manage = true
-        ).sync()!!
+        ).sync()
 
         assertEquals(1, result.channels.size)
         assertEquals(0, result.channelGroups.size)
@@ -1652,7 +1652,7 @@ class GrantEndpointTest : BaseTest() {
         pubnub.grant(
             authKeys = listOf("key1"),
             channels = listOf("ch1")
-        ).sync()!!
+        ).sync()
 
         val requests =
             findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")))
@@ -1701,9 +1701,8 @@ class GrantEndpointTest : BaseTest() {
         pubnub.grant(
             authKeys = listOf("key1"),
             channels = listOf("ch1")
-        ).async { _, status ->
-            assertFalse(status.error)
-            assertEquals(PNOperationType.PNAccessManagerGrant, status.operation)
+        ).async { result ->
+            assertFalse(result.isFailure)
             atomic.set(true)
         }
 
@@ -1717,7 +1716,7 @@ class GrantEndpointTest : BaseTest() {
             pubnub.grant(
                 authKeys = listOf("key1"),
                 channels = listOf("ch1")
-            ).sync()!!
+            ).sync()
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.SECRET_KEY_MISSING, e)
@@ -1731,7 +1730,7 @@ class GrantEndpointTest : BaseTest() {
             pubnub.grant(
                 authKeys = listOf("key1"),
                 channels = listOf("ch1")
-            ).sync()!!
+            ).sync()
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.SECRET_KEY_MISSING, e)
@@ -1745,7 +1744,7 @@ class GrantEndpointTest : BaseTest() {
             pubnub.grant(
                 authKeys = listOf("key1"),
                 channels = listOf("ch1")
-            ).sync()!!
+            ).sync()
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.SUBSCRIBE_KEY_MISSING, e)
@@ -1759,7 +1758,7 @@ class GrantEndpointTest : BaseTest() {
             pubnub.grant(
                 authKeys = listOf("key1"),
                 channels = listOf("ch1")
-            ).sync()!!
+            ).sync()
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.SUBSCRIBE_KEY_MISSING, e)
@@ -1797,7 +1796,7 @@ class GrantEndpointTest : BaseTest() {
         )
 
         try {
-            val grantResult = pubnub.grant().sync()!!
+            val grantResult = pubnub.grant().sync()
             assertEquals("subkey", grantResult.level)
             assertEquals(1440, grantResult.ttl)
             assertEquals(0, grantResult.channels.size)
@@ -1828,7 +1827,7 @@ class GrantEndpointTest : BaseTest() {
             pubnub.grant(
                 authKeys = listOf("key1"),
                 channels = listOf("ch1")
-            ).sync()!!
+            ).sync()
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.PARSING_ERROR, e)
@@ -1873,8 +1872,8 @@ class GrantEndpointTest : BaseTest() {
 
         pubnub.grant(
             channels = listOf("ch1")
-        ).async { _, status ->
-            if (status.operation == PNOperationType.PNAccessManagerGrant && !status.error) {
+        ).async { result ->
+            result.onSuccess {
                 atomic.set(true)
             }
         }

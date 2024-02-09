@@ -63,13 +63,7 @@ class TransitionFromHandshakingStateTest {
             setOf(
                 CancelHandshake,
                 EmitStatus(
-                    PNStatus(
-                        category = PNStatusCategory.PNConnectedCategory,
-                        operation = PNOperationType.PNSubscribeOperation,
-                        error = false,
-                        affectedChannels = channels.toList(),
-                        affectedChannelGroups = channelGroups.toList()
-                    )
+                    PNStatus.Connected(timeToken, channels = channels.toList(), channelGroups = channelGroups.toList())
                 ),
                 ReceiveMessages(channels, channelGroups, subscriptionCursor)
             ),
@@ -101,13 +95,7 @@ class TransitionFromHandshakingStateTest {
             setOf(
                 CancelHandshake,
                 EmitStatus(
-                    PNStatus(
-                        category = PNStatusCategory.PNConnectedCategory,
-                        operation = PNOperationType.PNSubscribeOperation,
-                        error = false,
-                        affectedChannels = channels.toList(),
-                        affectedChannelGroups = channelGroups.toList()
-                    )
+                    PNStatus.Connected(timeTokenForHandshake, channels = channels.toList(), channelGroups = channelGroups.toList())
                 ),
                 ReceiveMessages(channels, channelGroups, SubscriptionCursor(timeTokenForHandshake, regionReturnedByHandshake))
             ),

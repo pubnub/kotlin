@@ -57,16 +57,16 @@ class GetStateTestSuite : EndpointTestSuite<GetState, PNGetStateResult>() {
         return listOf(
             OptionalScenario<PNGetStateResult>().apply {
                 responseBuilder = { withBody("""{"payload":{}}""") }
-                additionalChecks = { pnStatus, result ->
-                    assertFalse(pnStatus.error)
-                    assertEquals(JsonObject(), result!!.stateByUUID["ch1"])
+                additionalChecks = { result ->
+                    assertFalse(result.isFailure)
+                    assertEquals(JsonObject(), result.getOrThrow().stateByUUID["ch1"])
                 }
             },
             OptionalScenario<PNGetStateResult>().apply {
                 responseBuilder = { withBody("""{"payload":null}""") }
-                additionalChecks = { pnStatus, result ->
-                    assertFalse(pnStatus.error)
-                    assertEquals(JsonNull.INSTANCE, result!!.stateByUUID["ch1"])
+                additionalChecks = { result ->
+                    assertFalse(result.isFailure)
+                    assertEquals(JsonNull.INSTANCE, result.getOrThrow().stateByUUID["ch1"])
                 }
             }
         )

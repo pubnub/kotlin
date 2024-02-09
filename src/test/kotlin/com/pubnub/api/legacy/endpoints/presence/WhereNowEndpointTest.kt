@@ -48,7 +48,7 @@ class WhereNowEndpointTest : BaseTest() {
                 )
         )
 
-        val response = pubnub.whereNow().sync()!!
+        val response = pubnub.whereNow().sync()
         assertThat(response.channels, Matchers.contains("a", "b"))
     }
 
@@ -77,7 +77,7 @@ class WhereNowEndpointTest : BaseTest() {
 
         val response = pubnub.whereNow(
             uuid = "customUUID"
-        ).sync()!!
+        ).sync()
 
         assertThat(response.channels, Matchers.contains("a", "b"))
     }
@@ -169,10 +169,12 @@ class WhereNowEndpointTest : BaseTest() {
 
         val atomic = AtomicInteger(0)
 
-        pubnub.whereNow().async { result, status ->
-            assertFalse(status.error)
-            assertThat(result!!.channels, Matchers.contains("a", "b"))
-            atomic.incrementAndGet()
+        pubnub.whereNow().async { result ->
+            assertFalse(result.isFailure)
+            result.onSuccess {
+                assertThat(it.channels, Matchers.contains("a", "b"))
+                atomic.incrementAndGet()
+            }
         }
 
         Awaitility.await().atMost(5, SECONDS).untilAtomic(atomic, IsEqual.equalTo(1))
@@ -192,10 +194,12 @@ class WhereNowEndpointTest : BaseTest() {
 
         val atomic = AtomicInteger(0)
 
-        pubnub.whereNow().async { _, status ->
-            assertTrue(status.error)
-            assertPnException(PubNubError.PARSING_ERROR, status)
-            atomic.incrementAndGet()
+        pubnub.whereNow().async { result ->
+            assertTrue(result.isFailure)
+            result.onFailure {
+                assertPnException(PubNubError.PARSING_ERROR, it)
+                atomic.incrementAndGet()
+            }
         }
 
         Awaitility.await().atMost(5, SECONDS).untilAtomic(atomic, IsEqual.equalTo(1))
@@ -215,10 +219,12 @@ class WhereNowEndpointTest : BaseTest() {
 
         val atomic = AtomicInteger(0)
 
-        pubnub.whereNow().async { _, status ->
-            assertTrue(status.error)
-            assertPnException(PubNubError.PARSING_ERROR, status)
-            atomic.incrementAndGet()
+        pubnub.whereNow().async { result ->
+            assertTrue(result.isFailure)
+            result.onFailure {
+                assertPnException(PubNubError.PARSING_ERROR, it)
+                atomic.incrementAndGet()
+            }
         }
 
         Awaitility.await().atMost(5, SECONDS).untilAtomic(atomic, IsEqual.equalTo(1))
@@ -251,11 +257,12 @@ class WhereNowEndpointTest : BaseTest() {
 
         val atomic = AtomicInteger(0)
 
-        pubnub.whereNow().async { _, status ->
-            assertTrue(status.error)
-            assertPnException(PubNubError.HTTP_ERROR, status)
-            assertEquals(PNStatusCategory.PNBadRequestCategory, status.category)
-            atomic.incrementAndGet()
+        pubnub.whereNow().async { result ->
+            assertTrue(result.isFailure)
+            result.onFailure {
+                assertPnException(PubNubError.HTTP_ERROR, it)
+                atomic.incrementAndGet()
+            }
         }
 
         Awaitility.await().atMost(5, SECONDS).untilAtomic(atomic, IsEqual.equalTo(1))
@@ -286,7 +293,7 @@ class WhereNowEndpointTest : BaseTest() {
 
         pubnub.configuration.authKey = "myKey"
 
-        pubnub.whereNow().sync()!!
+        pubnub.whereNow().sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -319,7 +326,7 @@ class WhereNowEndpointTest : BaseTest() {
         pubnub.configuration.subscribeKey = " "
 
         try {
-            pubnub.whereNow().sync()!!
+            pubnub.whereNow().sync()
         } catch (e: Exception) {
             assertPnException(PubNubError.SUBSCRIBE_KEY_MISSING, e)
         }
@@ -351,7 +358,7 @@ class WhereNowEndpointTest : BaseTest() {
         pubnub.configuration.subscribeKey = ""
 
         try {
-            pubnub.whereNow().sync()!!
+            pubnub.whereNow().sync()
         } catch (e: Exception) {
             assertPnException(PubNubError.SUBSCRIBE_KEY_MISSING, e)
         }
@@ -375,7 +382,7 @@ class WhereNowEndpointTest : BaseTest() {
         )
 
         try {
-            pubnub.whereNow().sync()!!
+            pubnub.whereNow().sync()
         } catch (e: Exception) {
             assertPnException(PubNubError.PARSING_ERROR, e)
         }

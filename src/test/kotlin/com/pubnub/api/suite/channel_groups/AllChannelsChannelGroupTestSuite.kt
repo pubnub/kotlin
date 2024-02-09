@@ -78,9 +78,9 @@ class AllChannelsChannelGroupTestSuite :
                     """.trimIndent()
                 )
             }
-            additionalChecks = { status: PNStatus, result: PNChannelGroupsAllChannelsResult? ->
-                assertFalse(status.error)
-                assertTrue(result!!.channels.isEmpty())
+            additionalChecks = { result ->
+                assertFalse(result.isFailure)
+                assertTrue(result.getOrThrow().channels.isEmpty())
             }
         },
         OptionalScenario<PNChannelGroupsAllChannelsResult>().apply {
@@ -97,8 +97,8 @@ class AllChannelsChannelGroupTestSuite :
             }
             pnError = PubNubError.PARSING_ERROR
             result = Result.FAIL
-            additionalChecks = { status: PNStatus, _: PNChannelGroupsAllChannelsResult? ->
-                assertTrue(status.error)
+            additionalChecks = { result ->
+                assertTrue(result.isFailure)
             }
         }
 

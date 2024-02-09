@@ -38,16 +38,16 @@ class TimeTestSuite : EndpointTestSuite<Time, PNTimeResult>() {
             OptionalScenario<PNTimeResult>().apply {
                 responseBuilder = { withBody("[wrong]") }
                 result = Result.FAIL
-                additionalChecks = { status: PNStatus, result: PNTimeResult? ->
-                    assertTrue(status.error)
+                additionalChecks = { result ->
+                    assertTrue(result.isFailure)
                     assertNull(result)
                 }
             },
             OptionalScenario<PNTimeResult>().apply {
                 responseBuilder = { withBody("[123]") }
-                additionalChecks = { status: PNStatus, result: PNTimeResult? ->
-                    assertFalse(status.error)
-                    assertEquals(123, result!!.timetoken)
+                additionalChecks = { result ->
+                    assertFalse(result.isFailure)
+                    assertEquals(123, result.getOrThrow().timetoken)
                 }
             }
         )

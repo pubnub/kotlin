@@ -17,10 +17,7 @@ import com.pubnub.api.endpoints.presence.Heartbeat
 import com.pubnub.api.endpoints.presence.Leave
 import com.pubnub.api.endpoints.pubsub.Subscribe
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
-import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
-import com.pubnub.api.models.server.SubscribeEnvelope
 import com.pubnub.api.models.server.SubscribeMessage
 import com.pubnub.api.workers.SubscribeMessageWorker
 import java.net.SocketTimeoutException
@@ -232,7 +229,6 @@ internal class SubscriptionManager(val pubnub: PubNub, private val listenerManag
                         null
                     }
 
-
                     if (data.messages.isNotEmpty()) {
                         messageQueue.addAll(data.messages)
                     }
@@ -285,10 +281,12 @@ internal class SubscriptionManager(val pubnub: PubNub, private val listenerManag
                 channelGroups = unsubscribeOperation.channelGroups
             }.async { result ->
                 result.onSuccess {
-                    listenerManager.announce(PNStatus.Leave(
-                        unsubscribeOperation.channels,
-                        unsubscribeOperation.channelGroups
-                    ))
+                    listenerManager.announce(
+                        PNStatus.Leave(
+                            unsubscribeOperation.channels,
+                            unsubscribeOperation.channelGroups
+                        )
+                    )
                 }
             }
         }

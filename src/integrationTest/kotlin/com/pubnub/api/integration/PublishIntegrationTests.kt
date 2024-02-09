@@ -56,8 +56,8 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         pubnub.publish(
             channel = expectedChannel,
             message = generatePayload()
-        ).await { _, status ->
-            assertFalse(status.error)
+        ).await { result ->
+            assertFalse(result.isFailure)
             assertEquals(status.uuid, pubnub.configuration.userId.value)
         }
     }
@@ -76,7 +76,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         pubnub.publish(
             channel = expectedChannel,
             message = expectedPayload
-        ).sync()!!
+        ).sync()
 
         pubnub.fetchMessages(
             channels = listOf(expectedChannel),
@@ -100,8 +100,8 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             message = messagePayload,
             channel = expectedChannel,
             shouldStore = false
-        ).await { _, status ->
-            assertFalse(status.error)
+        ).await { result ->
+            assertFalse(result.isFailure)
             assertEquals(status.uuid, pubnub.configuration.userId.value)
         }
 
@@ -282,13 +282,13 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             message = expectedPayload,
             channel = expectedChannel,
             usePost = true
-        ).sync()!!
+        ).sync()
 
         retry {
             pubnub.history(
                 channel = expectedChannel,
                 count = 1
-            ).sync()!!.run {
+            ).sync().run {
                 assertEquals(
                     expectedPayload.toString(),
                     JSONObject(messages[0].entry.toString()).toString()
@@ -306,13 +306,13 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             channel = expectedChannel,
             message = expectedPayload,
             usePost = true
-        ).sync()!!
+        ).sync()
 
         retry {
             pubnub.history(
                 channel = expectedChannel,
                 count = 1
-            ).sync()!!.run {
+            ).sync().run {
                 assertEquals(
                     expectedPayload.toString(),
                     JSONObject(messages[0].entry.toString()).toString()
@@ -339,7 +339,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         pubnub.publish(
             message = expectedPayload,
             channel = expectedChannel
-        ).sync()!!
+        ).sync()
 
         success.listen()
     }
@@ -363,7 +363,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             message = expectedPayload,
             channel = expectedChannel,
             usePost = true
-        ).sync()!!
+        ).sync()
 
         success.listen()
     }
@@ -378,13 +378,13 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         pubnub.publish(
             message = expectedPayload,
             channel = expectedChannel
-        ).sync()!!
+        ).sync()
 
         retry {
             pubnub.history(
                 channel = expectedChannel,
                 count = 1
-            ).sync()!!.run {
+            ).sync().run {
                 assertEquals(
                     expectedPayload.toString(),
                     JSONArray(messages[0].entry.toString()).toString()
@@ -404,13 +404,13 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             message = expectedPayload,
             channel = expectedChannel,
             usePost = true
-        ).sync()!!
+        ).sync()
 
         retry {
             pubnub.history(
                 channel = expectedChannel,
                 count = 1
-            ).sync()!!.run {
+            ).sync().run {
                 assertEquals(
                     expectedPayload.toString(),
                     JSONArray(messages[0].entry.toString()).toString()
@@ -467,7 +467,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             message = expectedPayload,
             channel = expectedChannel,
             usePost = true
-        ).sync()!!
+        ).sync()
 
         success.listen()
     }
@@ -513,7 +513,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             page = PNBoundedPage(
                 limit = 1
             )
-        ).sync()!!.run {
+        ).sync().run {
             assertEquals(
                 expectedPayload.toString(),
                 JSONObject(channels[expectedChannel]!![0].message.toString()).toString()
@@ -636,7 +636,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         val success = AtomicInteger(0)
         val failure = AtomicReference<Exception>(null)
 
-        val result0 = pubnub.publish(randomChannelName01, expectedMessage).sync()!!
+        val result0 = pubnub.publish(randomChannelName01, expectedMessage).sync()
 
         pubnub.channel(randomChannelName01).subscription().apply {
             addListener(object : EventListener {

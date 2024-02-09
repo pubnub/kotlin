@@ -36,16 +36,16 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
     fun setGetAndRemoveChannelMetadata() {
         val setResult = pubnub.setChannelMetadata(
             channel = channel, name = randomValue(15), status = status, type = type
-        ).sync()!!
+        ).sync()
 
-        val getAllResult = pubnub.getAllChannelMetadata().sync()!!
-        val getSingleResult = pubnub.getChannelMetadata(channel = channel).sync()!!
-        pubnub.removeChannelMetadata(channel = channel).sync()!!
+        val getAllResult = pubnub.getAllChannelMetadata().sync()
+        val getSingleResult = pubnub.getChannelMetadata(channel = channel).sync()
+        pubnub.removeChannelMetadata(channel = channel).sync()
 
         assertTrue(getAllResult.data.any { it.id == channel })
         assertEquals(setResult, getSingleResult)
 
-        val getAllAfterRemovalResult = pubnub.getAllChannelMetadata().sync()!!
+        val getAllAfterRemovalResult = pubnub.getAllChannelMetadata().sync()
 
         assertTrue(getAllAfterRemovalResult.data.none { it.id == channel })
     }
@@ -54,19 +54,19 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
     fun setGetAndRemoveUUIDMetadata() {
         val setResult = pubnub.setUUIDMetadata(
             uuid = testUuid, name = randomValue(15), status = status, type = type
-        ).sync()!!
+        ).sync()
 
         assertEquals(status, setResult.data?.status)
         assertEquals(type, setResult.data?.type)
 
-        val getAllResult = pubnub.getAllUUIDMetadata().sync()!!
-        val getSingleResult = pubnub.getUUIDMetadata(uuid = testUuid).sync()!!
-        pubnub.removeUUIDMetadata(uuid = testUuid).sync()!!
+        val getAllResult = pubnub.getAllUUIDMetadata().sync()
+        val getSingleResult = pubnub.getUUIDMetadata(uuid = testUuid).sync()
+        pubnub.removeUUIDMetadata(uuid = testUuid).sync()
 
         assertTrue(getAllResult.data.any { it.id == testUuid })
         assertEquals(setResult, getSingleResult)
 
-        val getAllAfterRemovalResult = pubnub.getAllUUIDMetadata().sync()!!
+        val getAllAfterRemovalResult = pubnub.getAllUUIDMetadata().sync()
 
         assertTrue(getAllAfterRemovalResult.data.none { it.id == testUuid })
     }
@@ -76,11 +76,11 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
         val channels = listOf(PNChannelMembership.Partial(channelId = channel))
         val setResult = pubnub.setMemberships(
             channels = channels, uuid = testUuid, includeChannelDetails = PNChannelDetailsLevel.CHANNEL
-        ).sync()!!
+        ).sync()
 
         val getAllResult = pubnub.getMemberships(
             uuid = testUuid, includeChannelDetails = PNChannelDetailsLevel.CHANNEL
-        ).sync()!!
+        ).sync()
 
         assertEquals(setResult, getAllResult)
 
@@ -88,11 +88,11 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
             channels = channels.map { it.channel },
             uuid = testUuid,
             includeChannelDetails = PNChannelDetailsLevel.CHANNEL
-        ).sync()!!
+        ).sync()
 
         val getAllAfterRemovalResult = pubnub.getMemberships(
             uuid = testUuid, includeChannelDetails = PNChannelDetailsLevel.CHANNEL
-        ).sync()!!
+        ).sync()
 
         assertTrue(getAllAfterRemovalResult.data.filter { it.channel != null }.none { it.channel!!.id == channel })
     }
@@ -103,21 +103,21 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
 
         val setResult = pubnub.setChannelMembers(
             channel = channel, uuids = uuids, includeUUIDDetails = PNUUIDDetailsLevel.UUID
-        ).sync()!!
+        ).sync()
 
         val getAllResult = pubnub.getChannelMembers(
             channel = channel, includeUUIDDetails = PNUUIDDetailsLevel.UUID
-        ).sync()!!
+        ).sync()
 
         assertEquals(setResult, getAllResult)
 
         pubnub.removeChannelMembers(
             channel = channel, uuids = uuids.map { it.uuid }, includeUUIDDetails = PNUUIDDetailsLevel.UUID
-        ).sync()!!
+        ).sync()
 
         val getAllAfterRemovalResult = pubnub.getChannelMembers(
             channel = channel, includeUUIDDetails = PNUUIDDetailsLevel.UUID
-        ).sync()!!
+        ).sync()
 
         assertTrue(getAllAfterRemovalResult.data.filter { it.uuid != null }.none { it.uuid!!.id == testUuid })
     }
@@ -145,16 +145,16 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
 
         pubnub.setMemberships(
             channels = channels
-        ).sync()!!
-        pubnub.setChannelMembers(channel = channel, uuids = uuids).sync()!!
-        pubnub.setChannelMetadata(channel = channel, name = randomValue(15)).sync()!!
-        pubnub.setUUIDMetadata(name = randomValue(15)).sync()!!
+        ).sync()
+        pubnub.setChannelMembers(channel = channel, uuids = uuids).sync()
+        pubnub.setChannelMetadata(channel = channel, name = randomValue(15)).sync()
+        pubnub.setUUIDMetadata(name = randomValue(15)).sync()
 
-        pubnub.setChannelMetadata(channel = channel, description = "aaa").sync()!!
-        pubnub.removeChannelMetadata(channel = channel).sync()!!
-        pubnub.removeUUIDMetadata().sync()!!
-        pubnub.removeChannelMembers(channel = channel, uuids = uuids.map { it.uuid }).sync()!!
-        pubnub.removeMemberships(channels = channels.map { it.channel }).sync()!!
+        pubnub.setChannelMetadata(channel = channel, description = "aaa").sync()
+        pubnub.removeChannelMetadata(channel = channel).sync()
+        pubnub.removeUUIDMetadata().sync()
+        pubnub.removeChannelMembers(channel = channel, uuids = uuids.map { it.uuid }).sync()
+        pubnub.removeMemberships(channels = channels.map { it.channel }).sync()
 
         assertTrue(countDownLatch.await(5000, TimeUnit.MILLISECONDS))
     }
@@ -191,16 +191,16 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
 
         pubnub.setMemberships(
             channels = channels
-        ).sync()!!
-        pubnub.setChannelMembers(channel = channel, uuids = uuids).sync()!!
-        pubnub.setChannelMetadata(channel = channel, name = randomValue(15)).sync()!!
-        pubnub.setUUIDMetadata(name = randomValue(15)).sync()!!
+        ).sync()
+        pubnub.setChannelMembers(channel = channel, uuids = uuids).sync()
+        pubnub.setChannelMetadata(channel = channel, name = randomValue(15)).sync()
+        pubnub.setUUIDMetadata(name = randomValue(15)).sync()
 
-        pubnub.setChannelMetadata(channel = channel, description = "aaa").sync()!!
-        pubnub.removeChannelMetadata(channel = channel).sync()!!
-        pubnub.removeUUIDMetadata().sync()!!
-        pubnub.removeChannelMembers(channel = channel, uuids = uuids.map { it.uuid }).sync()!!
-        pubnub.removeMemberships(channels = channels.map { it.channel }).sync()!!
+        pubnub.setChannelMetadata(channel = channel, description = "aaa").sync()
+        pubnub.removeChannelMetadata(channel = channel).sync()
+        pubnub.removeUUIDMetadata().sync()
+        pubnub.removeChannelMembers(channel = channel, uuids = uuids.map { it.uuid }).sync()
+        pubnub.removeMemberships(channels = channels.map { it.channel }).sync()
 
         assertTrue(countDownLatch.await(5000, TimeUnit.MILLISECONDS))
     }
@@ -248,7 +248,7 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
         ).sync()
 
         val getAllResult =
-            pubnub.getChannelMembers(channel = channel, includeUUIDDetails = PNUUIDDetailsLevel.UUID).sync()!!.data
+            pubnub.getChannelMembers(channel = channel, includeUUIDDetails = PNUUIDDetailsLevel.UUID).sync().data
 
         val otherTestUuidMatcher = PNMember(
             uuidMetadata(id = otherTestUuid),
@@ -272,7 +272,7 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
 
         val removeResult = pubnub.manageChannelMembers(
             channel = channel, uuidsToSet = listOf(), uuidsToRemove = listOf(testUuid, otherTestUuid)
-        ).sync()!!.data
+        ).sync().data
 
         assertThat(removeResult, not(containsInAnyOrder(testUuidMatcher, otherTestUuidMatcher)))
     }
@@ -290,7 +290,7 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
         ).sync()
 
         val getAllResult =
-            pubnub.getMemberships(uuid = testUuid, includeChannelDetails = PNChannelDetailsLevel.CHANNEL).sync()!!.data
+            pubnub.getMemberships(uuid = testUuid, includeChannelDetails = PNChannelDetailsLevel.CHANNEL).sync().data
 
         val channelMatcher = PNChannelMembership(
             channelMetadata(id = channel),
@@ -314,7 +314,7 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
 
         val removeResult = pubnub.manageMemberships(
             uuid = testUuid, channelsToSet = listOf(), channelsToRemove = listOf(channel, otherChannel)
-        ).sync()!!.data
+        ).sync().data
 
         assertThat(
             removeResult,

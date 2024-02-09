@@ -38,7 +38,7 @@ class MessageCountTest : BaseTest() {
         val response = pubnub.messageCounts(
             channels = listOf("my_channel"),
             channelsTimetoken = listOf(10000L)
-        ).sync()!!
+        ).sync()
 
         assertEquals(response.channels.size, 1)
         assertFalse(response.channels.containsKey("channel_does_not_exist"))
@@ -110,7 +110,7 @@ class MessageCountTest : BaseTest() {
         val response = pubnub.messageCounts(
             channels = listOf("my_channel", "new_channel"),
             channelsTimetoken = listOf(10000L)
-        ).sync()!!
+        ).sync()
 
         assertEquals(response.channels.size, 2)
         assertFalse(response.channels.containsKey("channel_does_not_exist"))
@@ -150,7 +150,7 @@ class MessageCountTest : BaseTest() {
         val response = pubnub.messageCounts(
             channels = listOf("my_channel", "new_channel"),
             channelsTimetoken = listOf(10000L, 20000L)
-        ).sync()!!
+        ).sync()
 
         assertEquals(response.channels.size, 2)
         assertFalse(response.channels.containsKey("channel_does_not_exist"))

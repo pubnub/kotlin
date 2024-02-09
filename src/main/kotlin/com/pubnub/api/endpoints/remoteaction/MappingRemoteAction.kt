@@ -31,7 +31,6 @@ class MappingRemoteAction<T, U>(private val remoteAction: ExtendedRemoteAction<T
             }.onFailure {
                 callback(Result.failure(it))
             }
-
         }
     }
 }

@@ -9,6 +9,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.spec.AlgorithmParameterSpec;
+import java.util.Collections;
 import java.util.Random;
 
 public class Crypto {
@@ -79,6 +80,8 @@ public class Crypto {
                 0,
                 null,
                 null,
+                Collections.emptyList(),
+                Collections.emptyList(),
                 exception
         );
     }

@@ -25,7 +25,7 @@ class ComposableRemoteActionTest {
             .then { TestRemoteAction.successful(it + 1) }
 
         // when
-        val result = composedAction.sync()!!
+        val result = composedAction.sync()
 
         // then
         Assert.assertEquals(1337, result.toLong())
@@ -36,22 +36,22 @@ class ComposableRemoteActionTest {
     fun async_happyPath() {
         // given
         val latch = CountDownLatch(1)
-        val result = AtomicInteger(0)
+        val res = AtomicInteger(0)
         val composedAction: RemoteAction<Int> = firstDo(TestRemoteAction.successful(668))
             .then { TestRemoteAction.successful(it * 2) }
             .then { TestRemoteAction.successful(it + 1) }
 
         // when
-        composedAction.async { r: Int?, _: PNStatus? ->
-            if (r != null) {
-                result.set(r)
+        composedAction.async { result ->
+            result.onSuccess {
+                res.set(it)
                 latch.countDown()
             }
         }
 
         // then
         Assert.assertTrue(latch.await(1, TimeUnit.SECONDS))
-        Assert.assertEquals(1337, result.get().toLong())
+        Assert.assertEquals(1337, res.get().toLong())
     }
 
     @Test(expected = PubNubException::class)
@@ -72,7 +72,7 @@ class ComposableRemoteActionTest {
         val successful: TestRemoteAction<Int> = TestRemoteAction.successful(15)
         firstDo(TestRemoteAction.failing<Int>())
             .then { successful } // when
-            .async { _, _ -> latch.countDown() }
+            .async { _ -> latch.countDown() }
 
         // then
         Assert.assertTrue(latch.await(1, TimeUnit.SECONDS))
@@ -88,10 +88,10 @@ class ComposableRemoteActionTest {
         val firstAsyncFinished = AtomicBoolean(false)
         val longRunningTask: CancellableRemoteAction<Any?> = object : CancellableRemoteAction<Any?> {
             @Throws(InterruptedException::class)
-            override fun doAsync(callback: (result: Any?, status: PNStatus) -> Unit) {
+            override fun doAsync(callback: (result: Result<Any?>) -> Unit) {
                 cancelSynchronisingLatch.await()
                 println("async")
-                callback(null, PNStatus(category = PNStatusCategory.PNAcknowledgmentCategory, error = false, operation = operationType()))
+                callback(Result.success(null))
                 firstAsyncFinished.set(true)
                 resultSynchronisingLatch.countDown()
             }
@@ -107,7 +107,7 @@ class ComposableRemoteActionTest {
         }
         val successful: TestRemoteAction<Int> = TestRemoteAction.successful(15)
         val composedAction: RemoteAction<Int> = firstDo(longRunningTask).then { successful }
-        composedAction.async { _: Int?, _: PNStatus? -> }
+        composedAction.async { _ -> }
 
         // when
         composedAction.silentCancel()
@@ -131,10 +131,10 @@ class ComposableRemoteActionTest {
             .then { firstFailing }
 
         // when
-        composedAction.async { _: Int?, s: PNStatus ->
+        composedAction.async { result ->
             countDownLatch.countDown()
-            if (s.error) {
-                s.retry()
+            result.onFailure {
+//                s.retry() // TODO we lost retry
             }
         }
 
@@ -159,10 +159,10 @@ class ComposableRemoteActionTest {
             .then { firstFailing }
 
         // when
-        composedAction.async { _: Int?, s: PNStatus ->
+        composedAction.async { result ->
             countDownLatch.countDown()
-            if (s.error) {
-                s.retry()
+            if (result.isFailure) {
+//                s.retry() // TODO we lost retry
             }
         }
 

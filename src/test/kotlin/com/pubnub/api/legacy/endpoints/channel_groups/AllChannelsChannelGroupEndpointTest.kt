@@ -14,7 +14,6 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.listen
-import com.pubnub.api.param
 import org.awaitility.Awaitility
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
@@ -55,7 +54,7 @@ class AllChannelsChannelGroupEndpointTest : BaseTest() {
 
         val response = pubnub.listChannelsForChannelGroup(
             channelGroup = "groupA"
-        ).sync()!!
+        ).sync()
 
         assertThat(response.channels, Matchers.contains("a", "b"))
     }
@@ -65,7 +64,7 @@ class AllChannelsChannelGroupEndpointTest : BaseTest() {
         try {
             pubnub.listChannelsForChannelGroup(
                 channelGroup = " "
-            ).sync()!!
+            ).sync()
         } catch (e: Exception) {
             assertPnException(PubNubError.GROUP_MISSING, e)
         }
@@ -97,7 +96,7 @@ class AllChannelsChannelGroupEndpointTest : BaseTest() {
 
         pubnub.listChannelsForChannelGroup(
             channelGroup = "groupA"
-        ).sync()!!
+        ).sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -131,14 +130,12 @@ class AllChannelsChannelGroupEndpointTest : BaseTest() {
 
         pubnub.listChannelsForChannelGroup(
             channelGroup = "groupA"
-        ).async { result, status ->
-            assertFalse(status.error)
-            assertEquals(PNOperationType.PNChannelsForGroupOperation, status.operation)
-            assertEquals(PNStatusCategory.PNAcknowledgmentCategory, status.category)
-            assertTrue(status.affectedChannels.isEmpty())
-            assertEquals(listOf("groupA"), status.affectedChannelGroups)
-            assertEquals(listOf("a", "b"), result!!.channels)
-            atomic.incrementAndGet()
+        ).async { result ->
+            assertFalse(result.isFailure)
+            result.onSuccess {
+                assertEquals(listOf("a", "b"), it.channels)
+                atomic.incrementAndGet()
+            }
         }
 
         Awaitility.await()
@@ -152,7 +149,7 @@ class AllChannelsChannelGroupEndpointTest : BaseTest() {
         try {
             pubnub.listChannelsForChannelGroup(
                 channelGroup = "groupA"
-            ).sync()!!
+            ).sync()
             throw RuntimeException()
         } catch (e: PubNubException) {
             assertPnException(PubNubError.SUBSCRIBE_KEY_MISSING, e)
@@ -193,19 +190,18 @@ class AllChannelsChannelGroupEndpointTest : BaseTest() {
 
         pubnub.listChannelsForChannelGroup(
             channelGroup = "groupA"
-        ).async { _, status ->
-            assertFalse(status.error)
-            assertEquals(PNOperationType.PNChannelsForGroupOperation, status.operation)
-            telemetryParamName = "l_${status.operation.queryParam}"
-            assertEquals("l_cg", telemetryParamName)
-            success.set(true)
+        ).async { result ->
+            assertFalse(result.isFailure)
+//            telemetryParamName = "l_${status.operation.queryParam} //TODO no longer available
+//            assertEquals("l_cg", telemetryParamName)
+//            success.set(true)
         }
 
         success.listen()
 
-        pubnub.time().async { _, status ->
-            assertFalse(status.error)
-            assertNotNull(status.param(telemetryParamName))
+        pubnub.time().async { result ->
+            assertFalse(result.isFailure)
+//            assertNotNull(status.param(telemetryParamName)) //TODO no longer available
             success.set(true)
         }
 

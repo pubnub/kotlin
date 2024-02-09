@@ -93,11 +93,13 @@ class RetryingRemoteActionTest {
         val asyncSynchronization = CountDownLatch(1)
 
         // when
-        retryingRemoteAction.async { result: Int?, _: PNStatus? ->
+        retryingRemoteAction.async { result ->
             // then
-            Assert.assertEquals(expectedValue, result)
-            verify(exactly = 1) { remoteAction.async(any()) }
-            asyncSynchronization.countDown()
+            result.onSuccess {
+                Assert.assertEquals(expectedValue, result)
+                verify(exactly = 1) { remoteAction.async(any()) }
+                asyncSynchronization.countDown()
+            }
         }
         if (!asyncSynchronization.await(3, TimeUnit.SECONDS)) {
             Assert.fail("Callback have not been called")
@@ -118,7 +120,7 @@ class RetryingRemoteActionTest {
         val asyncSynchronization = CountDownLatch(1)
 
         // when
-        retryingRemoteAction.async { result: Int?, _: PNStatus? ->
+        retryingRemoteAction.async { result ->
             // then
             Assert.assertEquals(expectedValue, result)
             verify(exactly = numberOfRetries) { remoteAction.async(any()) }
@@ -143,9 +145,9 @@ class RetryingRemoteActionTest {
         val asyncSynchronization = CountDownLatch(1)
 
         // when
-        retryingRemoteAction.async { _: Int?, status: PNStatus ->
+        retryingRemoteAction.async { result ->
             // then
-            Assert.assertTrue(status.error)
+            Assert.assertTrue(result.isFailure)
             verify(exactly = numberOfRetries) { remoteAction.async(any()) }
             asyncSynchronization.countDown()
         }
@@ -168,15 +170,15 @@ class RetryingRemoteActionTest {
         val asyncSynchronization = CountDownLatch(2)
 
         // when
-        retryingRemoteAction.async { _: Int?, status: PNStatus ->
+        retryingRemoteAction.async { result ->
             // then
             if (asyncSynchronization.count == 1L) {
-                Assert.assertTrue(status.error)
+                Assert.assertTrue(result.isFailure)
                 verify(exactly = 2 * numberOfRetries) { remoteAction.async(any()) }
             }
             asyncSynchronization.countDown()
             if (asyncSynchronization.count == 1L) {
-                status.retry()
+//                status.retry() //TODO we lost retry
             }
         }
         if (!asyncSynchronization.await(3, TimeUnit.SECONDS)) {

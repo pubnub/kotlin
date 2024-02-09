@@ -39,7 +39,7 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
             meta = expectedMeta,
             shouldStore = true,
             ttl = 60
-        ).sync()!!
+        ).sync()
 
         var historyResult: PNHistoryResult? = null
 
@@ -82,7 +82,7 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
             meta = expectedMeta,
             shouldStore = true,
             ttl = 60
-        ).sync()!!
+        ).sync()
 
         var historyResult: PNHistoryResult? = null
 
@@ -128,7 +128,7 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
             meta = expectedMeta,
             shouldStore = true,
             ttl = 60
-        ).sync()!!
+        ).sync()
 
         val actionResult = pubnub.addMessageAction(
             channel = channel,
@@ -137,7 +137,7 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
                 value = expectedActionValue,
                 messageTimetoken = result.timetoken
             )
-        ).sync()!!
+        ).sync()
 
         var fetchResult: PNFetchMessagesResult? = null
 
@@ -191,7 +191,7 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
             includeMessageType = true,
             includeUUID = true,
             channels = listOf(channel)
-        ).sync()!!
+        ).sync()
 
         assertEquals(
             mapOf(
@@ -221,7 +221,7 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
             meta = expectedMeta,
             shouldStore = true,
             ttl = 60
-        ).sync()!!
+        ).sync()
 
         var fetchResult: PNFetchMessagesResult? = null
 

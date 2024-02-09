@@ -29,7 +29,7 @@ class AddChannelsToPushTest : BaseTest() {
             deviceId = "niceDevice",
             pushType = PNPushType.APNS,
             channels = listOf("ch1", "ch2", "ch3")
-        ).sync()!!
+        ).sync()
 
         val requests = WireMock.findAll(WireMock.getRequestedFor(WireMock.urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -50,7 +50,7 @@ class AddChannelsToPushTest : BaseTest() {
             deviceId = "niceDevice",
             pushType = PNPushType.FCM,
             channels = listOf("ch1", "ch2", "ch3")
-        ).sync()!!
+        ).sync()
 
         val requests = WireMock.findAll(WireMock.getRequestedFor(WireMock.urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -71,7 +71,7 @@ class AddChannelsToPushTest : BaseTest() {
             deviceId = "niceDevice",
             pushType = PNPushType.MPNS,
             channels = listOf("ch1", "ch2", "ch3")
-        ).sync()!!
+        ).sync()
 
         val requests = WireMock.findAll(WireMock.getRequestedFor(WireMock.urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -93,7 +93,7 @@ class AddChannelsToPushTest : BaseTest() {
             pushType = PNPushType.APNS2,
             channels = listOf("ch1", "ch2", "ch3"),
             topic = "topic"
-        ).sync()!!
+        ).sync()
 
         val requests = WireMock.findAll(WireMock.getRequestedFor(WireMock.urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -116,7 +116,7 @@ class AddChannelsToPushTest : BaseTest() {
             deviceId = "niceDevice",
             pushType = PNPushType.FCM,
             channels = listOf("ch1", "ch2", "ch3")
-        ).sync()!!
+        ).sync()
 
         val requests = WireMock.findAll(WireMock.getRequestedFor(WireMock.urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -136,15 +136,8 @@ class AddChannelsToPushTest : BaseTest() {
             deviceId = "niceDevice",
             pushType = PNPushType.FCM,
             channels = listOf("ch1", "ch2", "ch3")
-        ).async { _, status ->
-            assertFalse(status.error)
-            assertEquals(
-                PNOperationType.PNAddPushNotificationsOnChannelsOperation,
-                status.operation
-            )
-            assertEquals(PNStatusCategory.PNAcknowledgmentCategory, status.category)
-            assertEquals(status.affectedChannels, listOf("ch1", "ch2", "ch3"))
-            assertTrue(status.affectedChannelGroups.isEmpty())
+        ).async { result ->
+            assertFalse(result.isFailure)
             success.set(true)
         }
 
@@ -160,7 +153,7 @@ class AddChannelsToPushTest : BaseTest() {
                 deviceId = "niceDevice",
                 pushType = PNPushType.FCM,
                 channels = listOf("ch1", "ch2", "ch3")
-            ).sync()!!
+            ).sync()
             failTest()
         } catch (e: PubNubException) {
             assertPnException(PubNubError.SUBSCRIBE_KEY_MISSING, e)
@@ -174,7 +167,7 @@ class AddChannelsToPushTest : BaseTest() {
                 pushType = PNPushType.FCM,
                 channels = listOf("ch1", "ch2", "ch3"),
                 deviceId = " "
-            ).sync()!!
+            ).sync()
             failTest()
         } catch (e: PubNubException) {
             assertPnException(PubNubError.DEVICE_ID_MISSING, e)
@@ -188,7 +181,7 @@ class AddChannelsToPushTest : BaseTest() {
                 deviceId = "niceDevice",
                 pushType = PNPushType.FCM,
                 channels = emptyList()
-            ).sync()!!
+            ).sync()
             failTest()
         } catch (e: PubNubException) {
             assertPnException(PubNubError.CHANNEL_MISSING, e)

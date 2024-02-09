@@ -18,7 +18,6 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.listen
-import com.pubnub.api.param
 import org.awaitility.Awaitility
 import org.hamcrest.core.IsEqual
 import org.junit.Assert.assertEquals
@@ -45,7 +44,7 @@ class DeleteChannelGroupEndpointTest : BaseTest() {
 
         pubnub.deleteChannelGroup(
             channelGroup = "groupA"
-        ).sync()!!
+        ).sync()
     }
 
     @Test
@@ -55,7 +54,7 @@ class DeleteChannelGroupEndpointTest : BaseTest() {
         try {
             pubnub.deleteChannelGroup(
                 channelGroup = " "
-            ).sync()!!
+            ).sync()
             failTest()
         } catch (e: PubNubException) {
             assertPnException(PubNubError.GROUP_MISSING, e)
@@ -77,7 +76,7 @@ class DeleteChannelGroupEndpointTest : BaseTest() {
 
         pubnub.deleteChannelGroup(
             channelGroup = "groupA"
-        ).sync()!!
+        ).sync()
 
         val requests =
             findAll(getRequestedFor(urlMatching("/.*")))
@@ -94,7 +93,7 @@ class DeleteChannelGroupEndpointTest : BaseTest() {
 
         pubnub.deleteChannelGroup(
             channelGroup = "groupA"
-        ).sync()!!
+        ).sync()
     }
 
     @Test
@@ -112,13 +111,11 @@ class DeleteChannelGroupEndpointTest : BaseTest() {
 
         pubnub.deleteChannelGroup(
             channelGroup = "groupA"
-        ).async { _, status ->
-            assertFalse(status.error)
-            assertEquals(PNOperationType.PNRemoveGroupOperation, status.operation)
-            assertEquals(PNStatusCategory.PNAcknowledgmentCategory, status.category)
-            assertTrue(status.affectedChannels == emptyList<String>())
-            assertTrue(status.affectedChannelGroups == listOf("groupA"))
-            atomic.incrementAndGet()
+        ).async { result ->
+            assertFalse(result.isFailure)
+//            assertTrue(status.affectedChannels ==  // TODO no longer available
+//            assertTrue(status.affectedChannelGroups == listOf("groupA"))
+//            atomic.incrementAndGet()
         }
 
         Awaitility.await().atMost(5, TimeUnit.SECONDS).untilAtomic(atomic, IsEqual.equalTo(1))
@@ -146,19 +143,18 @@ class DeleteChannelGroupEndpointTest : BaseTest() {
 
         pubnub.deleteChannelGroup(
             channelGroup = "groupA"
-        ).async { _, status ->
-            assertFalse(status.error)
-            assertEquals(PNOperationType.PNRemoveGroupOperation, status.operation)
-            telemetryParamName = "l_${status.operation.queryParam}"
-            assertEquals("l_cg", telemetryParamName)
-            success.set(true)
+        ).async { result ->
+            assertFalse(result.isFailure)
+//            telemetryParamName = "l_${status.operation.queryParam} //TODO no longer available
+//            assertEquals("l_cg", telemetryParamName)
+//            success.set(true)
         }
 
         success.listen()
 
-        pubnub.time().async { _, status ->
-            assertFalse(status.error)
-            assertNotNull(status.param(telemetryParamName))
+        pubnub.time().async { result ->
+            assertFalse(result.isFailure)
+//            assertNotNull(status.param(telemetryParamName)) //TODO no longer available
             success.set(true)
         }
 

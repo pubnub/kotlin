@@ -30,8 +30,8 @@ class GroupManagementIntegrationTests : BaseIntegrationTest() {
         pubnub.removeChannelsFromChannelGroup(
             channelGroup = expectedGroup,
             channels = listOf(expectedChannel1, expectedChannel2, expectedChannel3)
-        ).await { _, status ->
-            assertFalse(status.error)
+        ).await { result ->
+            assertFalse(result.isFailure)
             assertEquals(3, status.affectedChannels.size)
             assertEquals(0, pubnub.getSubscribedChannels().size)
             assertEquals(1, status.affectedChannelGroups.size)
@@ -46,8 +46,8 @@ class GroupManagementIntegrationTests : BaseIntegrationTest() {
         pubnub.removeChannelsFromChannelGroup(
             channelGroup = expectedGroup,
             channels = listOf(expectedChannel1)
-        ).await { _, status ->
-            assertFalse(status.error)
+        ).await { result ->
+            assertFalse(result.isFailure)
         }
     }
 
@@ -102,8 +102,8 @@ class GroupManagementIntegrationTests : BaseIntegrationTest() {
         pubnub.addChannelsToChannelGroup(
             channelGroup = expectedGroup,
             channels = listOf(expectedChannel1, expectedChannel2, expectedChannel3)
-        ).await { _, status ->
-            assertFalse(status.error)
+        ).await { result ->
+            assertFalse(result.isFailure)
             assertEquals(1, status.affectedChannelGroups.size)
             assertEquals(3, status.affectedChannels.size)
         }
@@ -113,8 +113,8 @@ class GroupManagementIntegrationTests : BaseIntegrationTest() {
         pubnub.addChannelsToChannelGroup(
             channelGroup = expectedGroup,
             channels = listOf(expectedChannel1, expectedChannel2, expectedChannel3)
-        ).await { _, status ->
-            assertFalse(status.error)
+        ).await { result ->
+            assertFalse(result.isFailure)
         }
     }
 }

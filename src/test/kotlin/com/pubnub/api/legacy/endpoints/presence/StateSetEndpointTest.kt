@@ -44,7 +44,7 @@ class StateSetEndpointTest : BaseTest() {
         val result = pubnub.setPresenceState(
             channels = listOf("testChannel"),
             state = mapOf("age" to 20)
-        ).sync()!!
+        ).sync()
 
         assertEquals(pubnub.mapper.elementToInt(result.state, "age"), 20)
         assertEquals(pubnub.mapper.elementToString(result.state, "status"), "online")
@@ -80,7 +80,7 @@ class StateSetEndpointTest : BaseTest() {
             channels = listOf("testChannel"),
             state = mapOf("age" to 20),
             uuid = "someoneElseUUID"
-        ).sync()!!
+        ).sync()
 
         assertEquals(pubnub.mapper.elementToInt(result.state, "age"), 20)
         assertEquals(pubnub.mapper.elementToString(result.state, "status"), "online")
@@ -115,7 +115,7 @@ class StateSetEndpointTest : BaseTest() {
         val result = pubnub.setPresenceState(
             channels = listOf("testChannel", "testChannel2"),
             state = mapOf("age" to 20)
-        ).sync()!!
+        ).sync()
 
         assertEquals(pubnub.mapper.elementToInt(result.state, "age"), 20)
         assertEquals(pubnub.mapper.elementToString(result.state, "status"), "online")
@@ -150,7 +150,7 @@ class StateSetEndpointTest : BaseTest() {
         val result = pubnub.setPresenceState(
             channelGroups = listOf("cg1"),
             state = mapOf("age" to 20)
-        ).sync()!!
+        ).sync()
 
         assertEquals(pubnub.mapper.elementToInt(result.state, "age"), 20)
         assertEquals(pubnub.mapper.elementToString(result.state, "status"), "online")
@@ -185,7 +185,7 @@ class StateSetEndpointTest : BaseTest() {
         val result = pubnub.setPresenceState(
             channelGroups = listOf("cg1", "cg2"),
             state = mapOf("age" to 20)
-        ).sync()!!
+        ).sync()
 
         assertEquals(pubnub.mapper.elementToInt(result.state, "age"), 20)
         assertEquals(pubnub.mapper.elementToString(result.state, "status"), "online")
@@ -222,7 +222,7 @@ class StateSetEndpointTest : BaseTest() {
             channels = listOf("ch1"),
             channelGroups = listOf("cg1", "cg2"),
             state = mapOf("age" to 20)
-        ).sync()!!
+        ).sync()
 
         assertEquals(pubnub.mapper.elementToInt(result.state, "age"), 20)
         assertEquals(pubnub.mapper.elementToString(result.state, "status"), "online")
@@ -259,7 +259,7 @@ class StateSetEndpointTest : BaseTest() {
                 channels = listOf("ch1"),
                 channelGroups = listOf("cg1", "cg2"),
                 state = mapOf("age" to 20)
-            ).sync()!!
+            ).sync()
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.HTTP_ERROR, e)
@@ -294,7 +294,7 @@ class StateSetEndpointTest : BaseTest() {
         pubnub.setPresenceState(
             channels = listOf("testChannel"),
             state = mapOf("age" to 20)
-        ).sync()!!
+        ).sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
 
@@ -323,7 +323,7 @@ class StateSetEndpointTest : BaseTest() {
             pubnub.setPresenceState(
                 channels = listOf("testChannel"),
                 state = mapOf("age" to 20)
-            ).sync()!!
+            ).sync()
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.SUBSCRIBE_KEY_MISSING, e)
@@ -351,7 +351,7 @@ class StateSetEndpointTest : BaseTest() {
             pubnub.setPresenceState(
                 channels = listOf("testChannel"),
                 state = mapOf("age" to 20)
-            ).sync()!!
+            ).sync()
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.SUBSCRIBE_KEY_MISSING, e)
@@ -384,7 +384,7 @@ class StateSetEndpointTest : BaseTest() {
         try {
             pubnub.setPresenceState(
                 state = mapOf("age" to 20)
-            ).sync()!!
+            ).sync()
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.CHANNEL_AND_GROUP_MISSING, e)
@@ -414,7 +414,7 @@ class StateSetEndpointTest : BaseTest() {
             pubnub.setPresenceState(
                 channels = listOf("testChannel"),
                 state = mapOf("age" to 20)
-            ).sync()!!
+            ).sync()
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.PARSING_ERROR, e)

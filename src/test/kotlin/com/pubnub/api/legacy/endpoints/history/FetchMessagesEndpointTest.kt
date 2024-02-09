@@ -78,7 +78,7 @@ class FetchMessagesEndpointTest : BaseTest() {
             page = PNBoundedPage(
                 limit = 25
             )
-        ).sync()!!
+        ).sync()
 
         assertEquals(response.channels.size, 2)
 
@@ -132,7 +132,7 @@ class FetchMessagesEndpointTest : BaseTest() {
                 limit = 25
             ),
             includeUUID = false
-        ).sync()!!
+        ).sync()
 
         assertEquals(response.channels.size, 2)
         assertTrue(response.channels.containsKey("mychannel"))
@@ -186,7 +186,7 @@ class FetchMessagesEndpointTest : BaseTest() {
             page = PNBoundedPage(
                 limit = 25
             )
-        ).sync()!!
+        ).sync()
 
         assertEquals(response.channels.size, 2)
         assertTrue(response.channels.containsKey("mychannel"))
@@ -236,7 +236,7 @@ class FetchMessagesEndpointTest : BaseTest() {
             page = PNBoundedPage(
                 limit = 25
             )
-        ).sync()!!
+        ).sync()
 
         assertEquals(response.channels.size, 2)
         assertTrue(response.channels.containsKey("mychannel"))
@@ -428,7 +428,7 @@ class FetchMessagesEndpointTest : BaseTest() {
 
         pubnub.fetchMessages(
             channels = listOf(channel), includeMessageType = true
-        ).sync()!!
+        ).sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -452,7 +452,7 @@ class FetchMessagesEndpointTest : BaseTest() {
 
         pubnub.fetchMessages(
             channels = listOf(channel)
-        ).sync()!!
+        ).sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -476,7 +476,7 @@ class FetchMessagesEndpointTest : BaseTest() {
 
         val response = pubnub.fetchMessages(
             channels = listOf(channel), includeMessageType = true
-        ).sync()!!
+        ).sync()
 
         assertThat(
             response.channels.values.flatMap { items -> items.map { it.messageType } },

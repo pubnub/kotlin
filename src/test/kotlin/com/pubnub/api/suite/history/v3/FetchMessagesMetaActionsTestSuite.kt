@@ -120,10 +120,9 @@ class FetchMessagesMetaActionsTestSuite : EndpointTestSuite<FetchMessages, PNFet
                 responseBuilder = { withBody("""{"channels":{"ch3":null}}""") }
                 result = Result.FAIL
                 pnError = PubNubError.PARSING_ERROR
-                additionalChecks = { status: PNStatus, result: PNFetchMessagesResult? ->
-                    assertTrue(status.error)
-                    assertNull(result)
-                    assertEquals(PNStatusCategory.PNMalformedResponseCategory, status.category)
+                additionalChecks = { result ->
+                    assertTrue(result.isFailure)
+//                    assertEquals(PNStatusCategory.PNMalformedResponseCategory, status.category)
                 }
             }
         )

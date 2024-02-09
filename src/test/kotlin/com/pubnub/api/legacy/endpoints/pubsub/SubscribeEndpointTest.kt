@@ -57,7 +57,7 @@ class SubscribeEndpointTest : BaseTest() {
 
         val subscribeEnvelope = Subscribe(pubnub).apply {
             channels = listOf("coolChannel")
-        }.sync()!!
+        }.sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -112,7 +112,7 @@ class SubscribeEndpointTest : BaseTest() {
 
         val subscribeEnvelope = Subscribe(pubnub).apply {
             channels = listOf("coolChannel")
-        }.sync()!!
+        }.sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -169,7 +169,7 @@ class SubscribeEndpointTest : BaseTest() {
 
         Subscribe(pubnub).apply {
             channels = listOf("coolChannel", "coolChannel2")
-        }.sync()!!
+        }.sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -214,7 +214,7 @@ class SubscribeEndpointTest : BaseTest() {
         Subscribe(pubnub).apply {
             channels = listOf("coolChannel", "coolChannel2")
             channelGroups = listOf("cg1")
-        }.sync()!!
+        }.sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -258,7 +258,7 @@ class SubscribeEndpointTest : BaseTest() {
 
         Subscribe(pubnub).apply {
             channelGroups = listOf("cg1", "cg2")
-        }.sync()!!
+        }.sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -303,7 +303,7 @@ class SubscribeEndpointTest : BaseTest() {
 
         Subscribe(pubnub).apply {
             channelGroups = listOf("cg1")
-        }.sync()!!
+        }.sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -349,7 +349,7 @@ class SubscribeEndpointTest : BaseTest() {
         Subscribe(pubnub).apply {
             channelGroups = listOf("cg1")
             timetoken = 1337L
-        }.sync()!!
+        }.sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -399,7 +399,7 @@ class SubscribeEndpointTest : BaseTest() {
         Subscribe(pubnub).apply {
             channelGroups = listOf("cg1")
             filterExpression = "this=1&that=cool"
-        }.sync()!!
+        }.sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -443,7 +443,7 @@ class SubscribeEndpointTest : BaseTest() {
         Subscribe(pubnub).apply {
             channelGroups = listOf("cg1")
             region = "10"
-        }.sync()!!
+        }.sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -455,7 +455,7 @@ class SubscribeEndpointTest : BaseTest() {
     fun subscribeMissingChannelAndGroupSync() {
         try {
             Subscribe(pubnub).apply {
-            }.sync()!!
+            }.sync()
             throw RuntimeException()
         } catch (e: PubNubException) {
             assertPnException(PubNubError.CHANNEL_AND_GROUP_MISSING, e)
@@ -468,7 +468,7 @@ class SubscribeEndpointTest : BaseTest() {
 
         try {
             Subscribe(pubnub).apply {
-            }.sync()!!
+            }.sync()
             throw RuntimeException()
         } catch (e: PubNubException) {
             assertPnException(PubNubError.SUBSCRIBE_KEY_MISSING, e)
@@ -512,14 +512,14 @@ class SubscribeEndpointTest : BaseTest() {
 
         Subscribe(pubnub).apply {
             channels = listOf("coolChannel", "coolChannel2")
-        }.sync()!!
+        }.sync()
 
         pubnub.disconnect()
         pubnub.reconnect()
 
         Subscribe(pubnub).apply {
             channels = listOf("coolChannel", "coolChannel2")
-        }.sync()!!
+        }.sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(2, requests.size)

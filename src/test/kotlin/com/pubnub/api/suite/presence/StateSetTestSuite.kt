@@ -63,17 +63,16 @@ class StateSetTestSuite : EndpointTestSuite<SetState, PNSetStateResult>() {
             OptionalScenario<PNSetStateResult>().apply {
                 result = Result.SUCCESS
                 responseBuilder = { withBody("""{"payload":{}}""") }
-                additionalChecks = { pnStatus: PNStatus, result: PNSetStateResult? ->
-                    assertFalse(pnStatus.error)
-                    assertTrue(result!!.state.asJsonObject.keySet().isEmpty())
+                additionalChecks = { result ->
+                    assertFalse(result.isFailure)
+                    assertTrue(result.getOrThrow().state.asJsonObject.keySet().isEmpty())
                 }
             },
             OptionalScenario<PNSetStateResult>().apply {
                 result = Result.FAIL
                 responseBuilder = { withBody("""{"payload":null}""") }
-                additionalChecks = { pnStatus: PNStatus, result: PNSetStateResult? ->
-                    assertTrue(pnStatus.error)
-                    assertNull(result)
+                additionalChecks = { result ->
+                    assertTrue(result.isFailure)
                 }
             }
         )

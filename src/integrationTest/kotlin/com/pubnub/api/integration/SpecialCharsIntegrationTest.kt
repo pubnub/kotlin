@@ -35,8 +35,8 @@ class SpecialCharsIntegrationTest : BaseIntegrationTest() {
                 "ZZZ" to value,
                 "123" to value
             )
-        }.async { _, status ->
-            assertFalse(status.error)
+        }.async { result ->
+            assertFalse(result.isFailure)
             SignatureUtils.decomposeAndVerifySignature(server.configuration, status.clientRequest!!)
             success.set(true)
         }
@@ -50,7 +50,7 @@ class SpecialCharsIntegrationTest : BaseIntegrationTest() {
                 val messages = server.history(
                     channel = expectedChannel,
                     includeMeta = true
-                ).sync()!!.messages
+                ).sync().messages
 
                 assertEquals(1, messages.size)
                 assertEquals(value, messages[0].meta!!.asJsonObject[keyName].asString)

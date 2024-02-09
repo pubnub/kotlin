@@ -80,9 +80,11 @@ class SendFileTest : TestsWithFiles {
                 channel,
                 fileName(),
                 inputStream
-            ).async { result: PNFileUploadResult?, _: PNStatus? ->
-                Assert.assertEquals(expectedResponse, result)
-                countDownLatch.countDown()
+            ).async { result ->
+                result.onSuccess {
+                    Assert.assertEquals(expectedResponse, it)
+                    countDownLatch.countDown()
+                }
             }
         }
         Assert.assertTrue(countDownLatch.await(1, TimeUnit.SECONDS))
@@ -115,15 +117,17 @@ class SendFileTest : TestsWithFiles {
                 fileName(),
                 inputStream,
                 numberOfRetries
-            ).async { result: PNFileUploadResult?, _: PNStatus? ->
-                Assert.assertEquals(expectedResponse, result)
-                countDownLatch.countDown()
+            ).async { result ->
+                result.onSuccess {
+                    Assert.assertEquals(expectedResponse, it)
+                    countDownLatch.countDown()
+                }
             }
         }
 
         // then
         Assert.assertTrue(countDownLatch.await(1, TimeUnit.SECONDS))
-        verify(exactly = numberOfRetries) { publishFileMessage.async(any()) }
+        verify(exactly = numberOfRetries) { publishFileMessage.sync() }
     }
 
     @Test
@@ -212,30 +216,16 @@ class SendFileTest : TestsWithFiles {
             pubNub = pubNub
         ) {
         private val numberOfFails = AtomicInteger(0)
-        override fun async(callback: (result: PNPublishFileMessageResult?, status: PNStatus) -> Unit) {
+        override fun async(callback: (result: Result<PNPublishFileMessageResult>) -> Unit) {
             if (numberOfFails.getAndAdd(1) < numberOfFailsBeforeSuccess) {
-                callback(
-                    null,
-                    PNStatus(
-                        category = PNStatusCategory.PNBadRequestCategory,
-                        error = true,
-                        operation = PNOperationType.FileOperation
-                    )
-                )
+                callback(Result.failure(PubNubException()))
             } else {
-                callback(
-                    result,
-                    PNStatus(
-                        category = PNStatusCategory.PNAcknowledgmentCategory,
-                        error = false,
-                        operation = PNOperationType.FileOperation
-                    )
-                )
+                callback(Result.success(result))
             }
         }
 
         @Throws(PubNubException::class)
-        override fun sync(): PNPublishFileMessageResult? {
+        override fun sync(): PNPublishFileMessageResult {
             if (numberOfFails.getAndAdd(1) < numberOfFailsBeforeSuccess) {
                 throw PubNubException()
             }
@@ -265,19 +255,12 @@ class SendFileTest : TestsWithFiles {
 
         ) {
         @Throws(PubNubException::class)
-        override fun sync(): PNPublishFileMessageResult? {
+        override fun sync(): PNPublishFileMessageResult {
             return result
         }
 
-        override fun async(callback: (result: PNPublishFileMessageResult?, status: PNStatus) -> Unit) {
-            callback(
-                result,
-                PNStatus(
-                    category = PNStatusCategory.PNAcknowledgmentCategory,
-                    error = false,
-                    operation = PNOperationType.FileOperation
-                )
-            )
+        override fun async(callback: (result: Result<PNPublishFileMessageResult>) -> Unit) {
+            callback(Result.success(result))
         }
 
         companion object {

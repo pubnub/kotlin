@@ -59,9 +59,9 @@ class ListPushProvisionsV1TestSuite : EndpointTestSuite<ListPushProvisions, PNPu
             OptionalScenario<PNPushListProvisionsResult>().apply {
                 responseBuilder = { withBody("[]") }
                 result = Result.SUCCESS
-                additionalChecks = { status: PNStatus, result: PNPushListProvisionsResult? ->
-                    assertFalse(status.error)
-                    assertEquals(0, result!!.channels.size)
+                additionalChecks = { result ->
+                    assertFalse(result.isFailure)
+                    assertEquals(0, result.getOrThrow().channels.size)
                 }
             }
         )

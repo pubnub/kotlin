@@ -2,8 +2,6 @@ package com.pubnub.api.endpoints.remoteaction
 
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.enums.PNStatusCategory
-import com.pubnub.api.models.consumer.PNStatus
 
 class ComposableRemoteAction<T, U>(
     private val remoteAction: ExtendedRemoteAction<T>,
