@@ -25,7 +25,7 @@ class GetFileUrl(
     pubNub: PubNub
 ) : Endpoint<ResponseBody, PNFileUrlResult>(pubNub) {
 
-    private lateinit var cachedCallback: (result: PNFileUrlResult?, status: PNStatus) -> Unit
+    private lateinit var cachedCallback: (result: Result<PNFileUrlResult>) -> Unit
     private val executorService: ExecutorService = pubNub.retrofitManager.getTransactionClientExecutorService()
 
     @Throws(PubNubException::class)
@@ -40,7 +40,7 @@ class GetFileUrl(
     // other hand the code that adds signature uses okhttp request. To produce
     // properly constructed url the code creates a request which isn't executed
     @Throws(PubNubException::class)
-    override fun sync(): PNFileUrlResult? {
+    override fun sync(): PNFileUrlResult {
         return try {
             val baseParams: Map<String, String> = createBaseParams()
             val call: Call<ResponseBody> = pubnub.retrofitManager.filesService
@@ -66,30 +66,16 @@ class GetFileUrl(
     // the code shouldn't call any outside endpoints it's necessary to achieve asynchronous
     // behavior using other means than OkHttp. That's why the code is using executorService
     // to asynchronously call sync()
-    override fun async(callback: (result: PNFileUrlResult?, status: PNStatus) -> Unit) {
+    override fun async(callback: (result: Result<PNFileUrlResult>) -> Unit) {
         cachedCallback = callback
         executorService.execute {
             try {
-                val res: PNFileUrlResult? = sync()
+                val res: PNFileUrlResult = sync()
                 callback(
-                    res,
-                    PNStatus(
-                        category = PNStatusCategory.PNAcknowledgmentCategory,
-                        operation = this.operationType(),
-                        error = false
-                    )
+                    Result.success(res)
                 )
             } catch (ex: PubNubException) {
-                callback(
-                    null,
-                    PNStatus(
-                        category = PNStatusCategory.PNUnknownCategory,
-                        operation = this.operationType(),
-                        error = true,
-                        exception = ex,
-                        affectedChannels = getAffectedChannels()
-                    ).apply { executedEndpoint = this@GetFileUrl }
-                )
+                callback(Result.failure(ex))
             }
         }
     }

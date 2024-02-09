@@ -1,6 +1,7 @@
 package com.pubnub.api.managers
 
 import com.pubnub.api.PubNub
+import com.pubnub.api.PubNubException
 import com.pubnub.api.builder.ConnectedStatusAnnouncedOperation
 import com.pubnub.api.builder.NoOpOperation
 import com.pubnub.api.builder.PresenceOperation
@@ -19,8 +20,10 @@ import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
+import com.pubnub.api.models.server.SubscribeEnvelope
 import com.pubnub.api.models.server.SubscribeMessage
 import com.pubnub.api.workers.SubscribeMessageWorker
+import java.net.SocketTimeoutException
 import java.util.Timer
 import java.util.concurrent.LinkedBlockingQueue
 import kotlin.concurrent.timerTask
@@ -53,12 +56,10 @@ internal class SubscriptionManager(val pubnub: PubNub, private val listenerManag
                 reconnect()
                 subscriptionState.subscriptionStateData(true).let {
                     listenerManager.announce(
-                        PNStatus(
-                            category = PNStatusCategory.PNReconnectedCategory,
-                            operation = PNOperationType.PNSubscribeOperation,
-                            error = false,
-                            affectedChannels = it.channels,
-                            affectedChannelGroups = it.channelGroups
+                        PNStatus.Reconnected(
+                            currentTimetoken = it.timetoken,
+                            channels = it.channels,
+                            channelGroups = it.channelGroups
                         )
                     )
                 }
@@ -68,13 +69,7 @@ internal class SubscriptionManager(val pubnub: PubNub, private val listenerManag
                 subscriptionState.subscriptionStateData(true).let {
 
                     listenerManager.announce(
-                        PNStatus(
-                            category = PNStatusCategory.PNReconnectionAttemptsExhausted,
-                            operation = PNOperationType.PNSubscribeOperation,
-                            error = false,
-                            affectedChannels = it.channels,
-                            affectedChannelGroups = it.channelGroups
-                        )
+                        PNStatus.UnexpectedDisconnect(PubNubException("Maximum reconnect retries exhausted."))
                     )
                 }
 
@@ -164,20 +159,20 @@ internal class SubscriptionManager(val pubnub: PubNub, private val listenerManag
         val channels = subscriptionStateData.channels + subscriptionStateData.heartbeatChannels
         val groups = subscriptionStateData.channelGroups + subscriptionStateData.heartbeatChannelGroups
         heartbeatCall = Heartbeat(pubnub, channels, groups)
-        heartbeatCall?.async { _, status ->
+        heartbeatCall?.async { result ->
             val heartbeatVerbosity = pubnub.configuration.heartbeatNotificationOptions
 
-            if (status.error) {
+            if (result.isFailure) {
                 if (heartbeatVerbosity == PNHeartbeatNotificationOptions.ALL ||
                     heartbeatVerbosity == PNHeartbeatNotificationOptions.FAILURES
                 ) {
-                    listenerManager.announce(status)
+//                    listenerManager.announce(status) // TODO announce heartbeat status
                 }
                 // stop the heartbeating logic since an error happened.
                 heartbeatTimer?.cancel()
             } else {
                 if (heartbeatVerbosity == PNHeartbeatNotificationOptions.ALL) {
-                    listenerManager.announce(status)
+//                    listenerManager.announce(status) // TODO announce heartbeat status
                 }
             }
         }
@@ -208,59 +203,49 @@ internal class SubscriptionManager(val pubnub: PubNub, private val listenerManag
             region = stateData.region
             filterExpression = pubnub.configuration.filterExpression.ifBlank { null }
             state = stateData.statePayload
-        }
+        }.also { call ->
+            call.async { result ->
+                result.onFailure { exception ->
+                    if (exception is SocketTimeoutException || exception.cause is SocketTimeoutException) {
+                        startSubscribeLoop()
+                        return@async
+                    }
 
-        subscribeCall?.async { result, status ->
-            if (status.error) {
-                if (status.category == PNStatusCategory.PNTimeoutCategory) {
-                    startSubscribeLoop()
+                    disconnect()
+                    listenerManager.announce(PNStatus.UnexpectedDisconnect(exception = PubNubException.from(exception)))
+
+                    reconnectionManager.startPolling(pubnub.configuration)
                     return@async
                 }
 
-                disconnect()
-                listenerManager.announce(status)
+                result.onSuccess { data ->
+                    val announcedOperation = if (stateData.shouldAnnounce) {
+                        listenerManager.announce(
+                            PNStatus.Connected(
+                                data.metadata.timetoken,
+                                call.channels,
+                                call.channelGroups
+                            )
+                        )
+                        ConnectedStatusAnnouncedOperation
+                    } else {
+                        null
+                    }
 
-                if (status.category == PNStatusCategory.PNUnexpectedDisconnectCategory) {
-                    // stop all announcements and ask the reconnection manager to start polling for connection restoration..
-                    reconnectionManager.startPolling(pubnub.configuration)
-                }
 
-                return@async
-            }
+                    if (data.messages.isNotEmpty()) {
+                        messageQueue.addAll(data.messages)
+                    }
 
-            val announcedOperation = if (stateData.shouldAnnounce) {
-                val pnStatus = createPublicStatus(status).apply {
-                    category = PNStatusCategory.PNConnectedCategory
-                    error = false
-                }
-
-                listenerManager.announce(pnStatus)
-                ConnectedStatusAnnouncedOperation
-            } else null
-
-            pubnub.configuration.requestMessageCountThreshold?.let {
-                // todo default value of size if all ?s are null
-                if (it <= result!!.messages.size) {
-                    listenerManager.announce(
-                        createPublicStatus(status).apply {
-                            category = PNStatusCategory.PNRequestMessageCountExceededCategory
-                            error = false
-                        }
+                    startSubscribeLoop(
+                        TimetokenRegionOperation(
+                            timetoken = data.metadata.timetoken,
+                            region = data.metadata.region
+                        ),
+                        announcedOperation ?: NoOpOperation
                     )
                 }
             }
-
-            if (result!!.messages.isNotEmpty()) {
-                messageQueue.addAll(result.messages)
-            }
-
-            startSubscribeLoop(
-                TimetokenRegionOperation(
-                    timetoken = result.metadata.timetoken,
-                    region = result.metadata.region
-                ),
-                announcedOperation ?: NoOpOperation
-            )
         }
     }
 
@@ -278,8 +263,15 @@ internal class SubscriptionManager(val pubnub: PubNub, private val listenerManag
             Leave(pubnub).apply {
                 channels = presenceOperation.channels
                 channelGroups = presenceOperation.channelGroups
-            }.async { _, status ->
-                listenerManager.announce(status)
+            }.async { result ->
+                result.onSuccess {
+                    listenerManager.announce(
+                        PNStatus.Leave(
+                            presenceOperation.channels,
+                            presenceOperation.channelGroups
+                        )
+                    )
+                }
             }
         }
 
@@ -291,8 +283,13 @@ internal class SubscriptionManager(val pubnub: PubNub, private val listenerManag
             Leave(pubnub).apply {
                 channels = unsubscribeOperation.channels
                 channelGroups = unsubscribeOperation.channelGroups
-            }.async { _, status ->
-                listenerManager.announce(status)
+            }.async { result ->
+                result.onSuccess {
+                    listenerManager.announce(PNStatus.Leave(
+                        unsubscribeOperation.channels,
+                        unsubscribeOperation.channelGroups
+                    ))
+                }
             }
         }
         reconnect(pubSubOperation = unsubscribeOperation)
@@ -305,24 +302,6 @@ internal class SubscriptionManager(val pubnub: PubNub, private val listenerManag
                     channels = it.channels,
                     channelGroups = it.channelGroups
                 )
-            )
-        }
-    }
-
-    private fun createPublicStatus(privateStatus: PNStatus): PNStatus {
-        with(privateStatus) {
-            return PNStatus(
-                category = category,
-                error = this.error,
-                operation = operation,
-                exception = exception,
-                statusCode = statusCode,
-                tlsEnabled = tlsEnabled,
-                origin = origin,
-                uuid = uuid,
-                authKey = authKey,
-                affectedChannels = affectedChannels,
-                affectedChannelGroups = affectedChannelGroups
             )
         }
     }

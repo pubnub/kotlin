@@ -80,74 +80,47 @@ internal class UploadFile(
         }
     }
 
-    override fun async(callback: (result: Unit?, status: PNStatus) -> Unit) {
+    override fun async(callback: (result: Result<Unit>) -> Unit) {
         try {
             call = prepareCall()
             call!!.enqueue(object : Callback<Unit> {
                 override fun onResponse(performedCall: Call<Unit>, response: Response<Unit>) {
                     if (!response.isSuccessful) {
                         val ex = createException(response)
-                        val pnStatusCategory = response.getCategory()
-                        callback(
-                            null,
-                            createStatusResponse(pnStatusCategory, response, ex)
-                        )
+                        callback(Result.failure(ex))
                         return
                     }
-                    callback(
-                        Unit,
-                        createStatusResponse(
-                            PNStatusCategory.PNAcknowledgmentCategory, response,
-                            null
-                        )
-                    )
+                    callback(Result.success(Unit))
                 }
 
                 override fun onFailure(performedCall: Call<Unit>, throwable: Throwable) {
                     if (call!!.isCanceled) {
                         return
                     }
-                    val (statusCategory, error) = when (throwable) {
-                        is UnknownHostException -> PNStatusCategory.PNUnexpectedDisconnectCategory to PubNubError.CONNECTION_NOT_SET
-                        is SocketException, is SSLException -> PNStatusCategory.PNUnexpectedDisconnectCategory to PubNubError.CONNECT_EXCEPTION
-                        is SocketTimeoutException -> PNStatusCategory.PNTimeoutCategory to PubNubError.SUBSCRIBE_TIMEOUT
+                    val error = when (throwable) {
+                        is UnknownHostException, is SocketException, is SSLException -> PubNubError.CONNECT_EXCEPTION
+                        is SocketTimeoutException -> PubNubError.SUBSCRIBE_TIMEOUT
                         else -> if (performedCall.isCanceled) {
-                            PNStatusCategory.PNCancelledCategory to PubNubError.HTTP_ERROR
+                            PubNubError.HTTP_ERROR
                         } else {
-                            PNStatusCategory.PNBadRequestCategory to PubNubError.HTTP_ERROR
+                            PubNubError.HTTP_ERROR
                         }
                     }
                     callback(
-                        null,
-                        createStatusResponse(
-                            statusCategory,
-                            null,
+                        Result.failure(
                             PubNubException(error).copy(
-                                errorMessage = throwable.message ?: error.message
+                                errorMessage = throwable.message ?: error.message,
+                                cause = throwable
                             )
                         )
                     )
                 }
             })
         } catch (e: IOException) {
-            callback(
-                null,
-                createStatusResponse(PNStatusCategory.PNUnknownCategory, null, e)
-            )
+            callback(Result.failure(e))
         } catch (e: PubNubException) {
-            callback(
-                null,
-                createStatusResponse(PNStatusCategory.PNUnknownCategory, null, e)
-            )
+            callback(Result.failure(e))
         }
-    }
-
-    private fun Response<*>.getCategory(): PNStatusCategory = when (code()) {
-        HttpURLConnection.HTTP_UNAUTHORIZED,
-        HttpURLConnection.HTTP_FORBIDDEN -> PNStatusCategory.PNAccessDeniedCategory
-
-        HttpURLConnection.HTTP_BAD_REQUEST -> PNStatusCategory.PNBadRequestCategory
-        else -> PNStatusCategory.PNUnknownCategory
     }
 
     override fun retry() {}
@@ -180,21 +153,6 @@ internal class UploadFile(
         doc.documentElement.normalize()
         val elements = doc.getElementsByTagName("Message")
         return elements.item(0)?.firstChild?.nodeValue ?: "N/A"
-    }
-
-    private fun createStatusResponse(
-        category: PNStatusCategory,
-        response: Response<Unit>?,
-        throwable: Exception?
-    ): PNStatus {
-        return PNStatus(
-            category = category,
-            operation = operationType(),
-            statusCode = response?.code(),
-            tlsEnabled = response?.raw()?.request?.url?.isHttps,
-            origin = response?.raw()?.request?.url?.host,
-            error = response == null || throwable != null
-        ).apply { executedEndpoint = this@UploadFile }
     }
 
     internal class Factory(private val pubNub: PubNub) {

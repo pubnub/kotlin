@@ -17,16 +17,15 @@ internal class HandshakeEffect(
     override fun runEffect() {
         log.trace("Running HandshakeEffect")
 
-        handshakeRemoteAction.async { result, status ->
-            if (status.error) {
+        handshakeRemoteAction.async { result ->
+            result.onFailure {
                 subscribeEventSink.add(
                     SubscribeEvent.HandshakeFailure(
-                        status.exception
-                            ?: PubNubException("Unknown error")
+                        PubNubException.from(it)
                     )
                 )
-            } else {
-                subscribeEventSink.add(SubscribeEvent.HandshakeSuccess(result!!))
+            }.onSuccess { cursor ->
+                subscribeEventSink.add(SubscribeEvent.HandshakeSuccess(cursor))
             }
         }
     }

@@ -51,7 +51,7 @@ class Grant internal constructor(
             )
     }
 
-    override fun createResponse(input: Response<Envelope<AccessManagerGrantPayload>>): PNAccessManagerGrantResult? {
+    override fun createResponse(input: Response<Envelope<AccessManagerGrantPayload>>): PNAccessManagerGrantResult {
         val data = input.body()!!.payload!!
 
         val constructedChannels = mutableMapOf<String, Map<String, PNAccessManagerKeyData>?>()

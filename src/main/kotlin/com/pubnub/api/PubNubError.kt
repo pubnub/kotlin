@@ -41,11 +41,6 @@ enum class PubNubError(private val code: Int, val message: String) {
         131,
         "Invalid arguments"
     ),
-    CONNECTION_NOT_SET(
-        133,
-        "PubNub Connection not set"
-    ),
-
     GROUP_MISSING(
         136,
         "Group Missing"

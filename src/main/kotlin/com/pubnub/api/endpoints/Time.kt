@@ -19,7 +19,7 @@ class Time internal constructor(pubnub: PubNub, private val excludeFromRetry: Bo
     override fun doWork(queryParams: HashMap<String, String>) =
         pubnub.retrofitManager.timeService.fetchTime(queryParams)
 
-    override fun createResponse(input: Response<List<Long>>): PNTimeResult? {
+    override fun createResponse(input: Response<List<Long>>): PNTimeResult {
         return PNTimeResult(input.body()!![0])
     }
 

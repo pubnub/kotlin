@@ -43,7 +43,7 @@ class ManageChannelMembers(
         )
     }
 
-    override fun createResponse(input: Response<EntityArrayEnvelope<PNMember>>): PNMemberArrayResult? =
+    override fun createResponse(input: Response<EntityArrayEnvelope<PNMember>>): PNMemberArrayResult =
         input.toPNMemberArrayResult()
 
     override fun operationType(): PNOperationType = PNOperationType.ObjectsOperation()

@@ -78,7 +78,8 @@ public class Crypto {
                 null,
                 0,
                 null,
-                null
+                null,
+                exception
         );
     }
 

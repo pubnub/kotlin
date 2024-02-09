@@ -43,10 +43,7 @@ internal class SubscribeMessageWorker(
                     is PNFileEventResult -> listenerManager.announce(event)
                 }
             } catch (e: PubNubException) {
-                val pnStatus = PNStatus(
-                    PNStatusCategory.PNMalformedResponseCategory, true, PNOperationType.PNSubscribeOperation, e
-                )
-                listenerManager.announce(pnStatus)
+                listenerManager.announce(PNStatus.MalformedMessage(e))
             } catch (e: InterruptedException) {
                 Thread.currentThread().interrupt()
                 log.trace("take message interrupted!", e)

@@ -1,7 +1,6 @@
 package com.pubnub.api.endpoints.remoteaction
 
 import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.models.consumer.PNStatus
 
 class MappingRemoteAction<T, U>(private val remoteAction: ExtendedRemoteAction<T>, private val function: (T) -> U) :
     ExtendedRemoteAction<U> {
@@ -13,15 +12,26 @@ class MappingRemoteAction<T, U>(private val remoteAction: ExtendedRemoteAction<T
         remoteAction.retry()
     }
 
-    override fun sync(): U? = remoteAction.sync()?.let { function(it) }
+    override fun sync(): U = function(remoteAction.sync())
 
     override fun silentCancel() {
         remoteAction.silentCancel()
     }
 
-    override fun async(callback: (result: U?, status: PNStatus) -> Unit) {
-        remoteAction.async { r, s ->
-            callback(r?.let(function), s)
+    override fun async(callback: (result: Result<U>) -> Unit) {
+        remoteAction.async { r ->
+
+            r.onSuccess {
+                try {
+                    val newValue = function(it)
+                    callback(Result.success(newValue))
+                } catch (e: Exception) {
+                    callback(Result.failure(e))
+                }
+            }.onFailure {
+                callback(Result.failure(it))
+            }
+
         }
     }
 }

@@ -50,17 +50,15 @@ internal class HandshakeReconnectEffect(
 
         val effectiveDelay = getEffectiveDelay(statusCode = reason?.statusCode ?: 0, retryAfterHeaderValue = reason?.retryAfterHeaderValue ?: 0)
         scheduled = executorService.scheduleWithDelay(effectiveDelay) {
-            handshakeRemoteAction.async { result, status ->
-                if (status.error) {
+            handshakeRemoteAction.async { result ->
+                result.onFailure {
                     subscribeEventSink.add(
                         SubscribeEvent.HandshakeReconnectFailure(
-                            status.exception ?: PubNubException(
-                                "Unknown error"
-                            )
+                            PubNubException.from(it)
                         )
                     )
-                } else {
-                    subscribeEventSink.add(SubscribeEvent.HandshakeReconnectSuccess(result!!))
+                }.onSuccess { cursor ->
+                    subscribeEventSink.add(SubscribeEvent.HandshakeReconnectSuccess(cursor))
                 }
             }
         }

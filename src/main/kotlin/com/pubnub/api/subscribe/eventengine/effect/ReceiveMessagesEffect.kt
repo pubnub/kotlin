@@ -16,16 +16,15 @@ internal class ReceiveMessagesEffect(
     override fun runEffect() {
         log.trace("Running ReceiveMessagesEffect")
 
-        receiveMessagesRemoteAction.async { result, status ->
-            if (status.error) {
+        receiveMessagesRemoteAction.async { result ->
+            result.onFailure {
                 subscribeEventSink.add(
                     SubscribeEvent.ReceiveFailure(
-                        status.exception
-                            ?: PubNubException("Unknown error")
+                        PubNubException.from(it)
                     )
                 )
-            } else {
-                subscribeEventSink.add(SubscribeEvent.ReceiveSuccess(result!!.messages, result.subscriptionCursor))
+            }.onSuccess {
+                subscribeEventSink.add(SubscribeEvent.ReceiveSuccess(it.messages, it.subscriptionCursor))
             }
         }
     }

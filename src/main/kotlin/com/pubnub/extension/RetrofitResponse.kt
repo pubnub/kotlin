@@ -8,8 +8,8 @@ import com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArra
 import com.pubnub.api.models.server.objects_api.EntityArrayEnvelope
 import retrofit2.Response
 
-internal fun Response<EntityArrayEnvelope<PNMember>>.toPNMemberArrayResult(): PNMemberArrayResult? =
-    body()?.let { arrayEnvelope ->
+internal fun Response<EntityArrayEnvelope<PNMember>>.toPNMemberArrayResult(): PNMemberArrayResult =
+    body()!!.let { arrayEnvelope ->
         PNMemberArrayResult(
             status = arrayEnvelope.status,
             data = arrayEnvelope.data,
@@ -19,8 +19,8 @@ internal fun Response<EntityArrayEnvelope<PNMember>>.toPNMemberArrayResult(): PN
         )
     }
 
-internal fun Response<EntityArrayEnvelope<PNChannelMembership>>.toPNChannelMembershipArrayResult(): PNChannelMembershipArrayResult? =
-    body()?.let { arrayEnvelope ->
+internal fun Response<EntityArrayEnvelope<PNChannelMembership>>.toPNChannelMembershipArrayResult(): PNChannelMembershipArrayResult =
+    body()!!.let { arrayEnvelope ->
         PNChannelMembershipArrayResult(
             status = arrayEnvelope.status,
             data = arrayEnvelope.data,

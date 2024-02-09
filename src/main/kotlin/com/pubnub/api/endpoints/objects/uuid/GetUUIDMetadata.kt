@@ -29,8 +29,8 @@ class GetUUIDMetadata internal constructor(
         )
     }
 
-    override fun createResponse(input: Response<EntityEnvelope<PNUUIDMetadata>>): PNUUIDMetadataResult? {
-        return input.body()?.let {
+    override fun createResponse(input: Response<EntityEnvelope<PNUUIDMetadata>>): PNUUIDMetadataResult {
+        return input.body()!!.let {
             PNUUIDMetadataResult(
                 status = it.status,
                 data = it.data

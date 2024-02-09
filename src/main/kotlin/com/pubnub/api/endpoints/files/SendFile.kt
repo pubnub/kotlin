@@ -14,6 +14,7 @@ import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.files.PNBaseFile
 import com.pubnub.api.models.consumer.files.PNFileUploadResult
+import com.pubnub.api.models.consumer.files.PNFileUrlResult
 import com.pubnub.api.models.consumer.files.PNPublishFileMessageResult
 import com.pubnub.api.models.server.files.FileUploadRequestDetails
 import java.io.InputStream
@@ -45,25 +46,19 @@ class SendFile internal constructor(
     )
 
     @Throws(PubNubException::class)
-    override fun sync(): PNFileUploadResult? {
+    override fun sync(): PNFileUploadResult {
         validate()
         return sendFileMultistepAction.sync()
     }
 
-    override fun async(callback: (result: PNFileUploadResult?, status: PNStatus) -> Unit) {
+    override fun async(callback: (result: Result<PNFileUploadResult>) -> Unit) {
         executorService.execute {
             try {
                 validate()
                 sendFileMultistepAction.async(callback)
             } catch (ex: PubNubException) {
                 callback(
-                    null,
-                    PNStatus(
-                        category = PNStatusCategory.PNBadRequestCategory,
-                        error = true,
-                        operation = operationType(),
-                        exception = ex
-                    )
+                    Result.failure(ex)
                 )
             }
         }

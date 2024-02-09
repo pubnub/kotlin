@@ -123,8 +123,8 @@ internal class ReconnectionManager(val pubnub: PubNub) {
     private fun callTime() {
         // Time endpoint by default is retryable, here we don't want it to retry
         Time(pubnub = pubnub, excludeFromRetry = true)
-            .async { _, status ->
-                if (!status.error) {
+            .async { result ->
+                if (!result.isFailure) {
                     stopRetryTimer()
                     reconnectionCallback.onReconnection()
                 } else {

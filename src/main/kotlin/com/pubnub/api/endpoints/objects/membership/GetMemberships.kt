@@ -33,7 +33,7 @@ class GetMemberships internal constructor(
         )
     }
 
-    override fun createResponse(input: Response<EntityArrayEnvelope<PNChannelMembership>>): PNChannelMembershipArrayResult? =
+    override fun createResponse(input: Response<EntityArrayEnvelope<PNChannelMembership>>): PNChannelMembershipArrayResult =
         input.toPNChannelMembershipArrayResult()
 
     override fun operationType(): PNOperationType = PNOperationType.PNGetMembershipsOperation

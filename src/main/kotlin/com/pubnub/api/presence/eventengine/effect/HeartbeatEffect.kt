@@ -5,6 +5,7 @@ import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.eventengine.Effect
 import com.pubnub.api.eventengine.Sink
+import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.presence.eventengine.event.PresenceEvent
 import com.pubnub.api.subscribe.eventengine.effect.StatusConsumer
 import org.slf4j.LoggerFactory
@@ -19,19 +20,19 @@ internal class HeartbeatEffect(
 
     override fun runEffect() {
         log.trace("Running HeartbeatEffect")
-        heartbeatRemoteAction.async { _, status ->
-            if (status.error) {
+        heartbeatRemoteAction.async { result ->
+            result.onFailure { exception ->
                 if (heartbeatNotificationOptions == PNHeartbeatNotificationOptions.ALL ||
                     heartbeatNotificationOptions == PNHeartbeatNotificationOptions.FAILURES
                 ) {
-                    statusConsumer.announce(status)
+                    statusConsumer.announce(PNStatus.HeartbeatFailed(PubNubException.from(exception)))
                 }
                 presenceEventSink.add(
-                    PresenceEvent.HeartbeatFailure(status.exception ?: PubNubException("Unknown error"))
+                    PresenceEvent.HeartbeatFailure(PubNubException.from(exception))
                 )
-            } else {
+            }.onSuccess {
                 if (heartbeatNotificationOptions == PNHeartbeatNotificationOptions.ALL) {
-                    statusConsumer.announce(status)
+                    statusConsumer.announce(PNStatus.HeartbeatSuccess)
                 }
                 presenceEventSink.add(
                     PresenceEvent.HeartbeatSuccess

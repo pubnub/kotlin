@@ -23,48 +23,37 @@ class ComposableRemoteAction<T, U>(
     }
 
     @Throws(PubNubException::class)
-    override fun sync(): U? {
-        return remoteAction.sync()?.let { result ->
+    override fun sync(): U {
+        return remoteAction.sync().let { result ->
             createNextRemoteAction(result).sync()
         }
     }
 
-    override fun async(callback: (result: U?, status: PNStatus) -> Unit) {
-        remoteAction.async { r: T?, s: PNStatus ->
-            if (s.error) {
-                callback(null, switchRetryReceiver(s))
-            } else {
+    override fun async(callback: (result: Result<U>) -> Unit) {
+        remoteAction.async { r: Result<T> ->
+            r.onFailure {
+                callback(Result.failure(it))
+            }.onSuccess {
                 try {
                     synchronized(this) {
                         if (!isCancelled) {
                             val newNextRemoteAction =
-                                createNextRemoteAction(r!!) // if s is not error r shouldn't be null
+                                createNextRemoteAction(it) // if s is not error r shouldn't be null
                             nextRemoteAction = newNextRemoteAction
-                            newNextRemoteAction.async { r2: U?, s2: PNStatus ->
-                                if (s2.error) {
-                                    callback(null, switchRetryReceiver(s2))
-                                } else {
-                                    callback(r2, switchRetryReceiver(s2))
+                            newNextRemoteAction.async { r2: Result<U> ->
+                                r2.onFailure {
+                                    callback(Result.failure(it))
+                                }.onSuccess {
+                                    callback(Result.success(it))
                                 }
                             }
                         }
                     }
                 } catch (ex: PubNubException) {
-                    callback(
-                        null,
-                        PNStatus(
-                            category = PNStatusCategory.PNBadRequestCategory,
-                            error = true,
-                            operation = operationType()
-                        )
-                    )
+                    callback(Result.failure(ex))
                 }
             }
         }
-    }
-
-    private fun switchRetryReceiver(s: PNStatus): PNStatus {
-        return s.copy().apply { executedEndpoint = this@ComposableRemoteAction }
     }
 
     @Synchronized

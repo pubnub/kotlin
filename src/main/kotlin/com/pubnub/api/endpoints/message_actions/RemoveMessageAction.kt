@@ -39,7 +39,7 @@ class RemoveMessageAction internal constructor(
             )
     }
 
-    override fun createResponse(input: Response<Void>): PNRemoveMessageActionResult? {
+    override fun createResponse(input: Response<Void>): PNRemoveMessageActionResult {
         return PNRemoveMessageActionResult()
     }
 

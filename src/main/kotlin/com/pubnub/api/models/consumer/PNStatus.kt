@@ -1,52 +1,48 @@
 package com.pubnub.api.models.consumer
 
-import com.pubnub.api.Endpoint
 import com.pubnub.api.PubNubException
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
-import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.enums.PNStatusCategory
-import okhttp3.Request
 
-/**
- * Metadata related to executed PubNub API operations.
- *
- * @property category The [PNStatusCategory] of an executed operation.
- * @property error Is `true` if the operation didn't succeed. Always check for it in [async][Endpoint.async] blocks.
- * @property operation The concrete API operation type that's been executed.
- * @property exception Error information if the request didn't succeed.
- * @property statusCode HTTP status code.
- * @property tlsEnabled Whether the API operation was executed over HTTPS.
- * @property origin Origin of the HTTP request. See more at [PNConfiguration.origin].
- * @property uuid The UUID which requested the API operation to be executed. See more at [PNConfiguration.uuid].
- * @property authKey The authentication key attached to the request, if needed. See more at [PNConfiguration.authKey].
- * @property affectedChannels List of channels affected by the this API operation.
- * @property affectedChannelGroups List of channel groups affected by the this API operation.
- */
-data class PNStatus(
-    var category: PNStatusCategory,
-    var error: Boolean,
-    val operation: PNOperationType,
+sealed interface PNStatus {
+    data class Connected (
+        val currentTimetoken: Long,
+        val channels: List<String> = emptyList(),
+        val channelGroups: List<String> = emptyList()
+    ) : PNStatus
 
-    val exception: PubNubException? = null,
+    data class SubscriptionChanged(
+        val currentTimetoken: Long,
+        val channels: List<String?> = emptyList(),
+        val channelGroups: List<String?> = emptyList()
+    ) : PNStatus
 
-    var statusCode: Int? = null,
-    var tlsEnabled: Boolean? = null,
-    var origin: String? = null,
-    var uuid: String? = null,
-    var authKey: String? = null,
+    data class Reconnected (
+        val currentTimetoken: Long,
+        val channels: List<String> = emptyList(),
+        val channelGroups: List<String> = emptyList()
+    ) : PNStatus
 
-    var affectedChannels: List<String?> = emptyList(),
-    var affectedChannelGroups: List<String?> = emptyList()
+    data class UnexpectedDisconnect(
+        val exception: PubNubException
+    ) : PNStatus
 
-) {
-    internal var executedEndpoint: ExtendedRemoteAction<*>? = null
+    object Disconnected : PNStatus
 
-    var clientRequest: Request? = null
+    data class ConnectionError(
+        val exception: PubNubException
+    ) : PNStatus
 
-    /**
-     * Execute the API operation again.
-     */
-    fun retry() {
-        executedEndpoint?.retry()
-    }
+    data class Leave(
+        val channels: List<String>,
+        val channelGroups: List<String>
+    ) : PNStatus
+
+    data class HeartbeatFailed(
+        val exception: PubNubException
+    ) : PNStatus
+
+    object HeartbeatSuccess : PNStatus
+
+    data class MalformedMessage(
+        val exception: PubNubException
+    ) : PNStatus
 }

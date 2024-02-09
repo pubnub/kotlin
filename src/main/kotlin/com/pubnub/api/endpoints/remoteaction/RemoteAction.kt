@@ -11,8 +11,8 @@ interface ExtendedRemoteAction<Output> : RemoteAction<Output> {
 
 interface RemoteAction<Output> : Cancelable {
     @Throws(PubNubException::class)
-    fun sync(): Output?
-    fun async(callback: (result: Output?, status: PNStatus) -> Unit)
+    fun sync(): Output
+    fun async(callback: (result: Result<Output>) -> Unit)
 }
 
 interface Cancelable {

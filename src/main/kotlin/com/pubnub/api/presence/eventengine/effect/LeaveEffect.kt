@@ -11,9 +11,9 @@ internal class LeaveEffect(
 
     override fun runEffect() {
         log.trace("Running LeaveEffect")
-        leaveRemoteAction.async { _, status ->
-            if (status.error) {
-                log.error("LeaveEffect failed", status.exception)
+        leaveRemoteAction.async { result ->
+            result.onFailure {
+                log.error("LeaveEffect failed", it)
             }
         }
     }

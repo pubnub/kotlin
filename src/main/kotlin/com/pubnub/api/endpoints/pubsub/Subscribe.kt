@@ -68,7 +68,7 @@ class Subscribe internal constructor(pubnub: PubNub) : Endpoint<SubscribeEnvelop
         PubNubUtil.maybeAddEeQueryParam(pubnub.configuration, queryParams)
     }
 
-    override fun createResponse(input: Response<SubscribeEnvelope>): SubscribeEnvelope? {
+    override fun createResponse(input: Response<SubscribeEnvelope>): SubscribeEnvelope {
         return input.body()!!
     }
 

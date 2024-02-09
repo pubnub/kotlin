@@ -105,9 +105,9 @@ internal class PresenceNoOp(private val suppressLeaveEvents: Boolean = false, pr
     @Synchronized
     override fun left(channels: Set<String>, channelGroups: Set<String>) {
         if (!suppressLeaveEvents && (channels.isNotEmpty() || channelGroups.isNotEmpty())) {
-            leaveProvider.getLeaveRemoteAction(channels, channelGroups).async { _, status ->
-                if (status.error) {
-                    log.error("LeaveEffect failed", status.exception)
+            leaveProvider.getLeaveRemoteAction(channels, channelGroups).async { result ->
+                result.onFailure {
+                    log.error("LeaveEffect failed", it)
                 }
             }
         }
@@ -118,9 +118,9 @@ internal class PresenceNoOp(private val suppressLeaveEvents: Boolean = false, pr
     @Synchronized
     override fun leftAll() {
         if (!suppressLeaveEvents && (channels.isNotEmpty() || channelGroups.isNotEmpty())) {
-            leaveProvider.getLeaveRemoteAction(channels, channelGroups).async { _, status ->
-                if (status.error) {
-                    log.error("LeaveEffect failed", status.exception)
+            leaveProvider.getLeaveRemoteAction(channels, channelGroups).async { result ->
+                result.onFailure {
+                    log.error("LeaveEffect failed", it)
                 }
             }
         }

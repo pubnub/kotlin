@@ -21,8 +21,8 @@ class RemoveUUIDMetadata(
         )
     }
 
-    override fun createResponse(input: Response<EntityEnvelope<Any?>>): PNRemoveMetadataResult? {
-        return input.body()?.let { PNRemoveMetadataResult(it.status) }
+    override fun createResponse(input: Response<EntityEnvelope<Any?>>): PNRemoveMetadataResult {
+        return PNRemoveMetadataResult(input.body()!!.status)
     }
 
     override fun operationType(): PNOperationType = PNOperationType.PNRemoveUUIDMetadataOperation

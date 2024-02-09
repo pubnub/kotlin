@@ -42,8 +42,8 @@ class SetChannelMetadata internal constructor(
         )
     }
 
-    override fun createResponse(input: Response<EntityEnvelope<PNChannelMetadata>>): PNChannelMetadataResult? {
-        return input.body()?.let {
+    override fun createResponse(input: Response<EntityEnvelope<PNChannelMetadata>>): PNChannelMetadataResult {
+        return input.body()!!.let {
             PNChannelMetadataResult(
                 status = it.status,
                 data = it.data

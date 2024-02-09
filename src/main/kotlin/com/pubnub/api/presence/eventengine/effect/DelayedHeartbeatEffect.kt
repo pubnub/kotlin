@@ -44,10 +44,10 @@ internal class DelayedHeartbeatEffect(
 
         val effectiveDelay = getEffectiveDelay(statusCode = reason?.statusCode ?: 0, retryAfterHeaderValue = reason?.retryAfterHeaderValue ?: 0)
         scheduled = executorService.scheduleWithDelay(effectiveDelay) {
-            heartbeatRemoteAction.async { _, status ->
-                if (status.error) {
-                    presenceEventSink.add(PresenceEvent.HeartbeatFailure(status.exception ?: PubNubException("Unknown error")))
-                } else {
+            heartbeatRemoteAction.async { result ->
+                result.onFailure {
+                    presenceEventSink.add(PresenceEvent.HeartbeatFailure(PubNubException.from(it)))
+                }.onSuccess {
                     presenceEventSink.add(PresenceEvent.HeartbeatSuccess)
                 }
             }

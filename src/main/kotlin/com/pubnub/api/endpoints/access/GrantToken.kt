@@ -54,8 +54,8 @@ class GrantToken(
             .grantToken(pubnub.configuration.subscribeKey, requestBody, queryParams)
     }
 
-    override fun createResponse(input: Response<GrantTokenResponse>): PNGrantTokenResult? {
-        return input.body()?.data?.token?.let { PNGrantTokenResult(it) }
+    override fun createResponse(input: Response<GrantTokenResponse>): PNGrantTokenResult {
+        return input.body()!!.data.token.let { PNGrantTokenResult(it) }
     }
 
     override fun operationType(): PNOperationType = PNOperationType.PNAccessManagerGrantToken

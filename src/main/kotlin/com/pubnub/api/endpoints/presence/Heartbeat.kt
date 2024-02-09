@@ -57,7 +57,7 @@ class Heartbeat internal constructor(
         PubNubUtil.maybeAddEeQueryParam(pubnub.configuration, queryParams)
     }
 
-    override fun createResponse(input: Response<Void>): Boolean? {
+    override fun createResponse(input: Response<Void>): Boolean {
         return true
     }
 

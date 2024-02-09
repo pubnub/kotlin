@@ -45,18 +45,18 @@ internal class ReceiveReconnectEffect(
 
         val effectiveDelay = getEffectiveDelay(statusCode = reason?.statusCode ?: 0, retryAfterHeaderValue = reason?.retryAfterHeaderValue ?: 0)
         scheduled = executorService.scheduleWithDelay(effectiveDelay) {
-            receiveMessagesRemoteAction.async { result, status ->
-                if (status.error) {
+            receiveMessagesRemoteAction.async { result ->
+                result.onFailure {
                     subscribeEventSink.add(
                         SubscribeEvent.ReceiveReconnectFailure(
-                            status.exception ?: PubNubException("Unknown error")
+                            PubNubException.from(it)
                         )
                     )
-                } else {
+                }.onSuccess {
                     subscribeEventSink.add(
                         SubscribeEvent.ReceiveReconnectSuccess(
-                            result!!.messages,
-                            result.subscriptionCursor
+                            it.messages,
+                            it.subscriptionCursor
                         )
                     )
                 }
