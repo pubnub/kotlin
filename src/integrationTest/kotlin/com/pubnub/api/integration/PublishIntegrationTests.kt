@@ -29,6 +29,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Test
+import org.junit.jupiter.api.Timeout
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -133,6 +134,26 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         pubnub.subscribeToBlocking(expectedChannel)
 
         success.listen()
+    }
+
+    @org.junit.jupiter.api.Test
+    @Timeout(10, unit = TimeUnit.SECONDS)
+    fun testReceiveMessageV2() {
+        val expectedChannel = randomChannel()
+        val messagePayload = generateMessage(pubnub)
+        val observer = createPubNub()
+        pubnub.test {
+            subscribe(expectedChannel)
+            observer.publish(
+                message = messagePayload,
+                channel = expectedChannel
+            ).sync()
+
+            val pnMessageResult = nextMessage()
+            assertEquals(expectedChannel, pnMessageResult.channel)
+            assertEquals(observer.configuration.userId.value, pnMessageResult.publisher)
+            assertEquals(messagePayload, pnMessageResult.message)
+        }
     }
 
     @Test

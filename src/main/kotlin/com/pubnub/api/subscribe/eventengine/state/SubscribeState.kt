@@ -303,7 +303,18 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                 }
 
                 is SubscribeEvent.SubscriptionChanged -> {
-                    transitionTo(Receiving(event.channels, event.channelGroups, subscriptionCursor))
+                    transitionTo(
+                        Receiving(event.channels, event.channelGroups, subscriptionCursor),
+                        SubscribeEffectInvocation.EmitStatus(
+                            PNStatus(
+                                category = PNStatusCategory.PNSubscriptionChanged,
+                                operation = PNOperationType.PNSubscribeOperation,
+                                error = false,
+                                affectedChannels = event.channels.toList(),
+                                affectedChannelGroups = event.channelGroups.toList()
+                            )
+                        )
+                    )
                 }
 
                 is SubscribeEvent.SubscriptionRestored -> {
@@ -312,6 +323,15 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                             event.channels,
                             event.channelGroups,
                             SubscriptionCursor(event.subscriptionCursor.timetoken, subscriptionCursor.region)
+                        ),
+                        SubscribeEffectInvocation.EmitStatus(
+                            PNStatus(
+                                category = PNStatusCategory.PNSubscriptionChanged,
+                                operation = PNOperationType.PNSubscribeOperation,
+                                error = false,
+                                affectedChannels = event.channels.toList(),
+                                affectedChannelGroups = event.channelGroups.toList()
+                            )
                         )
                     )
                 }
@@ -380,7 +400,16 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
 
                 is SubscribeEvent.SubscriptionChanged -> {
                     transitionTo(
-                        Receiving(event.channels, event.channelGroups, subscriptionCursor)
+                        Receiving(event.channels, event.channelGroups, subscriptionCursor),
+                        SubscribeEffectInvocation.EmitStatus(
+                            PNStatus(
+                                category = PNStatusCategory.PNSubscriptionChanged,
+                                operation = PNOperationType.PNSubscribeOperation,
+                                error = false,
+                                affectedChannels = event.channels.toList(),
+                                affectedChannelGroups = event.channelGroups.toList()
+                            )
+                        )
                     )
                 }
 
@@ -427,6 +456,15 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                             event.channels,
                             event.channelGroups,
                             SubscriptionCursor(event.subscriptionCursor.timetoken, subscriptionCursor.region)
+                        ),
+                        SubscribeEffectInvocation.EmitStatus(
+                            PNStatus(
+                                category = PNStatusCategory.PNSubscriptionChanged,
+                                operation = PNOperationType.PNSubscribeOperation,
+                                error = false,
+                                affectedChannels = event.channels.toList(),
+                                affectedChannelGroups = event.channelGroups.toList()
+                            )
                         )
                     )
                 }
