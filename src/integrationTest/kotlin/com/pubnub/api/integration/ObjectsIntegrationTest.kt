@@ -12,6 +12,7 @@ import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.subscribeToBlocking
+import com.pubnub.api.v2.callbacks.EventListener
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.containsInAnyOrder
 import org.hamcrest.Matchers.not
@@ -141,6 +142,52 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
         )
 
         pubnub.subscribeToBlocking(channel)
+
+        pubnub.setMemberships(
+            channels = channels
+        ).sync()!!
+        pubnub.setChannelMembers(channel = channel, uuids = uuids).sync()!!
+        pubnub.setChannelMetadata(channel = channel, name = randomValue(15)).sync()!!
+        pubnub.setUUIDMetadata(name = randomValue(15)).sync()!!
+
+        pubnub.setChannelMetadata(channel = channel, description = "aaa").sync()!!
+        pubnub.removeChannelMetadata(channel = channel).sync()!!
+        pubnub.removeUUIDMetadata().sync()!!
+        pubnub.removeChannelMembers(channel = channel, uuids = uuids.map { it.uuid }).sync()!!
+        pubnub.removeMemberships(channels = channels.map { it.channel }).sync()!!
+
+        assertTrue(countDownLatch.await(5000, TimeUnit.MILLISECONDS))
+    }
+
+    @Test
+    fun testListeningToAllObjectsEventsV2() {
+        val countDownLatch = CountDownLatch(16)
+        val uuids = listOf(PNMember.Partial(uuidId = testUuid, custom = null, null))
+        val channels = listOf(
+            PNChannelMembership.Partial(channelId = channel)
+        )
+
+        val metadataSub = pubnub.channelMetadata(channel).subscription()
+        val userMetadataSub = pubnub.userMetadata(channel).subscription()
+
+        metadataSub.addListener(
+            listener = object : EventListener {
+                override fun objects(pubnub: PubNub, result: PNObjectEventResult) {
+                    countDownLatch.countDown()
+                }
+            }
+        )
+        userMetadataSub.addListener(
+            listener = object : EventListener {
+                override fun objects(pubnub: PubNub, result: PNObjectEventResult) {
+                    countDownLatch.countDown()
+                }
+            }
+        )
+        metadataSub.subscribe()
+        userMetadataSub.subscribe()
+
+        Thread.sleep(2000)
 
         pubnub.setMemberships(
             channels = channels

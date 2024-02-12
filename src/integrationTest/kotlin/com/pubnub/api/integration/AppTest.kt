@@ -14,6 +14,7 @@ import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
+import com.pubnub.api.v2.callbacks.StatusListener
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.junit.After
@@ -103,6 +104,28 @@ class AppTest {
             override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
             override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
             override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
+        })
+
+        pubnub.subscribe(
+            channels = listOf(expectedChannel),
+            withPresence = true
+        )
+
+        success.listen()
+    }
+
+    @Test
+    fun testSubscribeV2() {
+        val success = AtomicBoolean()
+        val expectedChannel = UUID.randomUUID().toString()
+
+        pubnub.addListener(object : StatusListener {
+            override fun status(pubnub: PubNub, status: PNStatus) {
+                assertTrue(status.operation == PNOperationType.PNSubscribeOperation)
+                assertTrue(status.category == PNStatusCategory.PNConnectedCategory)
+                assertTrue(status.affectedChannels.contains(expectedChannel))
+                success.set(true)
+            }
         })
 
         pubnub.subscribe(

@@ -9,4 +9,8 @@ import com.pubnub.api.PubNub
  */
 class PNPublishResult internal constructor(
     val timetoken: Long
-)
+) {
+    override fun toString(): String {
+        return "PNPublishResult(timetoken=$timetoken)"
+    }
+}
