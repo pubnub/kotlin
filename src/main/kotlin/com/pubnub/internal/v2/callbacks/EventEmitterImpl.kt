@@ -22,6 +22,122 @@ internal class EventEmitterImpl(
 
     private val listeners = CopyOnWriteArraySet<EventListener>()
 
+    @Volatile
+    private var onMessageListener: Listener? = null
+
+    @Volatile
+    private var onPresenceListener: Listener? = null
+
+    @Volatile
+    private var onSignalListener: Listener? = null
+
+    @Volatile
+    private var onMessageActionListener: Listener? = null
+
+    @Volatile
+    private var onObjectListener: Listener? = null
+
+    @Volatile
+    private var onFileListener: Listener? = null
+
+    override var onMessage: ((PubNub, PNMessageResult) -> Unit)? = null
+        @Synchronized
+        set(value) {
+            if (value == null) {
+                onMessageListener?.let { removeListener(it) }
+            } else {
+                val eventListenerWithMessageHandling = object : EventListener {
+                    override fun message(pubnub: PubNub, result: PNMessageResult) {
+                        value.invoke(pubnub, result)
+                    }
+                }
+                onMessageListener = eventListenerWithMessageHandling
+                addListener(eventListenerWithMessageHandling)
+            }
+            field = value
+        }
+
+    override var onPresence: ((PubNub, PNPresenceEventResult) -> Unit)? = null
+        set(value) {
+            if (value == null) {
+                onPresenceListener?.let { removeListener(it) }
+            } else {
+                val eventListenerWithPresenceHandling = object : EventListener {
+                    override fun presence(pubnub: PubNub, result: PNPresenceEventResult) {
+                        value.invoke(pubnub, result)
+                    }
+                }
+                onPresenceListener = eventListenerWithPresenceHandling
+                addListener(eventListenerWithPresenceHandling)
+            }
+            field = value
+        }
+
+    override var onSignal: ((PubNub, PNSignalResult) -> Unit)? = null
+        @Synchronized
+        set(value) {
+            if (value == null) {
+                onSignalListener?.let { removeListener(it) }
+            } else {
+                val eventListenerWithSignalHandling = object : EventListener {
+                    override fun signal(pubnub: PubNub, result: PNSignalResult) {
+                        value.invoke(pubnub, result)
+                    }
+                }
+                onSignalListener = eventListenerWithSignalHandling
+                addListener(eventListenerWithSignalHandling)
+            }
+            field = value
+        }
+    override var onMessageAction: ((PubNub, PNMessageActionResult) -> Unit)? = null
+        @Synchronized
+        set(value) {
+            if (value == null) {
+                onMessageActionListener?.let { removeListener(it) }
+            } else {
+                val eventListenerWithMessageActionHandling = object : EventListener {
+                    override fun messageAction(pubnub: PubNub, result: PNMessageActionResult) {
+                        value.invoke(pubnub, result)
+                    }
+                }
+                onMessageActionListener = eventListenerWithMessageActionHandling
+                addListener(eventListenerWithMessageActionHandling)
+            }
+            field = value
+        }
+
+    override var onObjects: ((PubNub, PNObjectEventResult) -> Unit)? = null
+        set(value) {
+            if (value == null) {
+                onObjectListener?.let { removeListener(it) }
+            } else {
+                val eventListenerWithOnObjectHandling = object : EventListener {
+                    override fun objects(pubnub: PubNub, result: PNObjectEventResult) {
+                        value.invoke(pubnub, result)
+                    }
+                }
+                onObjectListener = eventListenerWithOnObjectHandling
+                addListener(eventListenerWithOnObjectHandling)
+            }
+            field = value
+        }
+
+    override var onFile: ((PubNub, PNFileEventResult) -> Unit)? = null
+        set(value) {
+            if (value == null) {
+                onFileListener?.let { removeListener(it) }
+            } else {
+                val eventListenerWithOnFileHandling = object : EventListener {
+                    override fun file(pubnub: PubNub, result: PNFileEventResult) {
+                        value.invoke(pubnub, result)
+                    }
+                }
+                onFileListener = eventListenerWithOnFileHandling
+                addListener(eventListenerWithOnFileHandling)
+            }
+            field = value
+        }
+
     override fun addListener(listener: EventListener) {
         listeners.add(listener)
     }

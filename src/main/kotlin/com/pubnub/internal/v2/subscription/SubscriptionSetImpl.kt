@@ -4,6 +4,12 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.managers.AnnouncementCallback
 import com.pubnub.api.managers.AnnouncementEnvelope
+import com.pubnub.api.models.consumer.pubsub.PNMessageResult
+import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
+import com.pubnub.api.models.consumer.pubsub.PNSignalResult
+import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
+import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
+import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.v2.callbacks.EventEmitter
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.subscriptions.Subscription
@@ -22,6 +28,43 @@ internal class SubscriptionSetImpl(
     private val pubnub: PubNub,
     initialSubscriptions: Set<SubscriptionImpl> = emptySet(),
 ) : SubscriptionSet(), EventEmitter {
+
+    override var onMessage: ((PubNub, PNMessageResult) -> Unit)? = null
+        set(value) {
+            eventEmitter.onMessage = value
+            field = value
+        }
+
+    override var onPresence: ((PubNub, PNPresenceEventResult) -> Unit)? = null
+        set(value) {
+            eventEmitter.onPresence = value
+            field = value
+        }
+
+    override var onSignal: ((PubNub, PNSignalResult) -> Unit)? = null
+        set(value) {
+            eventEmitter.onSignal = value
+            field = value
+        }
+
+    override var onMessageAction: ((PubNub, PNMessageActionResult) -> Unit)? = null
+        set(value) {
+            eventEmitter.onMessageAction = value
+            field = value
+        }
+
+    override var onObjects: ((PubNub, PNObjectEventResult) -> Unit)? = null
+        set(value) {
+            eventEmitter.onObjects = value
+            field = value
+        }
+
+    override var onFile: ((PubNub, PNFileEventResult) -> Unit)? = null
+        set(value) {
+            eventEmitter.onFile = value
+            field = value
+        }
+
     private val _subscriptions: CopyOnWriteArraySet<SubscriptionImpl> = CopyOnWriteArraySet()
     private val eventEmitter = EventEmitterImpl(AnnouncementCallback.Phase.SET, ::accepts)
 
