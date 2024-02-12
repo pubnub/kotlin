@@ -19,13 +19,13 @@ class StorageAndPlaybackIntegrationTests : BaseIntegrationTest() {
         pubnub.publish(
             channel = expectedChannel,
             message = expectedMessage
-        ).await { _, _ -> }
+        ).await { result -> }
 
         pubnub.history(
             channel = expectedChannel
-        ).asyncRetry { result, status ->
-            assertFalse(status.error)
-            assertEquals(expectedMessage, result!!.messages[0].entry.asString)
+        ).asyncRetry { result ->
+            assertFalse(result.isFailure)
+            assertEquals(expectedMessage, result.getOrThrow().messages[0].entry.asString)
         }
     }
 
@@ -43,9 +43,9 @@ class StorageAndPlaybackIntegrationTests : BaseIntegrationTest() {
         pubnub.history(
             channel = expectedChannel,
             includeTimetoken = true
-        ).asyncRetry { result, status ->
-            assertFalse(status.error)
-            result!!.messages.forEach {
+        ).asyncRetry { result ->
+            assertFalse(result.isFailure)
+            result.getOrThrow().messages.forEach {
                 assertNotNull(it.timetoken)
             }
         }
@@ -65,9 +65,9 @@ class StorageAndPlaybackIntegrationTests : BaseIntegrationTest() {
         pubnub.history(
             channel = expectedChannel,
             count = 10
-        ).asyncRetry { result, status ->
-            assertFalse(status.error)
-            assertEquals(10, result!!.messages.size)
+        ).asyncRetry { result ->
+            assertFalse(result.isFailure)
+            assertEquals(10, result.getOrThrow().messages.size)
         }
     }
 
@@ -92,9 +92,9 @@ class StorageAndPlaybackIntegrationTests : BaseIntegrationTest() {
             start = now,
             end = before,
             count = 10
-        ).await { result, status ->
-            assertFalse(status.error)
-            assertEquals(3, result!!.messages.size)
+        ).await { result ->
+            assertFalse(result.isFailure)
+            assertEquals(3, result.getOrThrow().messages.size)
         }
     }
 
@@ -118,10 +118,10 @@ class StorageAndPlaybackIntegrationTests : BaseIntegrationTest() {
             channel = expectedChannel,
             count = 10,
             reverse = true
-        ).asyncRetry { result, status ->
-            assertFalse(status.error)
-            assertEquals(message1, result!!.messages[0].entry.asString)
-            assertEquals(message2, result.messages[1].entry.asString)
+        ).asyncRetry { result ->
+            assertFalse(result.isFailure)
+            assertEquals(message1, result.getOrThrow().messages[0].entry.asString)
+            assertEquals(message2, result.getOrThrow().messages[1].entry.asString)
         }
     }
 }

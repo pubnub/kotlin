@@ -58,7 +58,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             message = generatePayload()
         ).await { result ->
             assertFalse(result.isFailure)
-            assertEquals(status.uuid, pubnub.configuration.userId.value)
+//            assertEquals(result.getOrThrow().uuid, pubnub.configuration.userId.value) // TODO Can't verify this now
         }
     }
 
@@ -83,11 +83,13 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             page = PNBoundedPage(
                 limit = 1
             )
-        ).asyncRetry { result, status ->
-            assertFalse(status.error)
-            assertEquals(1, result!!.channels.size)
-            assertEquals(1, result.channels[expectedChannel]!!.size)
-            assertEquals(convertedPayload, result.channels[expectedChannel]!![0].message)
+        ).asyncRetry { result ->
+            assertFalse(result.isFailure)
+            result.onSuccess {
+                assertEquals(1, it.channels.size)
+                assertEquals(1, it.channels[expectedChannel]!!.size)
+                assertEquals(convertedPayload, it.channels[expectedChannel]!![0].message)
+            }
         }
     }
 
@@ -102,58 +104,23 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             shouldStore = false
         ).await { result ->
             assertFalse(result.isFailure)
-            assertEquals(status.uuid, pubnub.configuration.userId.value)
+//            assertEquals(status.uuid, pubnub.configuration.userId.value) // TODO Can't verify this now
         }
 
         pubnub.history(
             count = 1,
             channel = expectedChannel
-        ).asyncRetry { result, status ->
-            assertFalse(status.error)
-            assertEquals(0, result!!.messages.size)
+        ).asyncRetry { result ->
+            assertFalse(result.isFailure)
+            assertEquals(0, result.getOrThrow().messages.size)
         }
     }
 
     @Test
     fun testReceiveMessage() {
-        val success = AtomicBoolean()
         val expectedChannel = randomChannel()
         val messagePayload = generateMessage(pubnub)
 
-        val observer = createPubNub()
-
-        pubnub.addListener(object : SubscribeCallback() {
-            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.operation == PNOperationType.PNSubscribeOperation &&
-                    pnStatus.affectedChannels.contains(expectedChannel)
-                ) {
-                    observer.publish(
-                        message = messagePayload,
-                        channel = expectedChannel
-                    ).async { _, status ->
-                        assertFalse(status.error)
-                    }
-                }
-            }
-
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
-                assertEquals(expectedChannel, pnMessageResult.channel)
-                assertEquals(observer.configuration.userId.value, pnMessageResult.publisher)
-                assertEquals(messagePayload, pnMessageResult.message)
-                success.set(true)
-            }
-        })
-
-        pubnub.subscribeToBlocking(expectedChannel)
-
-        success.listen()
-    }
-
-    @org.junit.jupiter.api.Test
-    @Timeout(10, unit = TimeUnit.SECONDS)
-    fun testReceiveMessageV2() {
-        val expectedChannel = randomChannel()
-        val messagePayload = generateMessage(pubnub)
         val observer = createPubNub()
         pubnub.test {
             subscribe(expectedChannel)
@@ -161,11 +128,10 @@ class PublishIntegrationTests : BaseIntegrationTest() {
                 message = messagePayload,
                 channel = expectedChannel
             ).sync()
-
-            val pnMessageResult = nextMessage()
-            assertEquals(expectedChannel, pnMessageResult.channel)
-            assertEquals(observer.configuration.userId.value, pnMessageResult.publisher)
-            assertEquals(messagePayload, pnMessageResult.message)
+            val msg = nextMessage()
+            assertEquals(expectedChannel, msg.channel)
+            assertEquals(observer.configuration.userId.value, msg.publisher)
+            assertEquals(messagePayload, msg.message)
         }
     }
 
@@ -180,14 +146,14 @@ class PublishIntegrationTests : BaseIntegrationTest() {
 
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.operation == PNOperationType.PNSubscribeOperation &&
-                    pnStatus.affectedChannels.contains(expectedChannel)
+                if (pnStatus is PNStatus.Connected &&
+                    pnStatus.channels.contains(expectedChannel)
                 ) {
                     observer.publish(
                         message = messagePayload,
                         channel = expectedChannel
-                    ).async { _, status ->
-                        assertFalse(status.error)
+                    ).async { result ->
+                        assertFalse(result.isFailure)
                     }
                 }
             }
@@ -227,19 +193,19 @@ class PublishIntegrationTests : BaseIntegrationTest() {
 
         observer.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.operation == PNOperationType.PNSubscribeOperation &&
-                    pnStatus.affectedChannels.contains(expectedChannel)
+                if (pnStatus is PNStatus.Connected &&
+                    pnStatus.channels.contains(expectedChannel)
                 ) {
                     sender.publish(
                         message = messagePayload,
                         channel = expectedChannel
-                    ).async { _, status ->
-                        assertFalse(status.error)
+                    ).async { result ->
+                        assertFalse(result.isFailure)
                         observer.publish(
                             message = messagePayload,
                             channel = expectedChannel
-                        ).async { _, status2 ->
-                            assertFalse(status2.error)
+                        ).async { result ->
+                            assertFalse(result.isFailure)
                         }
                     }
                 }

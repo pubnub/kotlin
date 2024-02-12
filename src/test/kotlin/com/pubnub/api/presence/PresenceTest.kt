@@ -145,9 +145,9 @@ internal class PresenceTest {
         eventEngineConf: EventEngineConf<PresenceEffectInvocation, PresenceEvent> = QueueEventEngineConf(),
         presenceData: PresenceData = PresenceData(),
         suppressLeaveEvents: Boolean = false,
-        leaveProvider: LeaveProvider = LeaveProvider { _, _ -> successfulRemoteAction(true) },
+        leaveProvider: LeaveProvider = LeaveProvider { result -> successfulRemoteAction(true) },
     ) = create(
-        heartbeatProvider = { _, _, _ -> successfulRemoteAction(true) },
+        heartbeatProvider = { _, result -> successfulRemoteAction(true) },
         leaveProvider = leaveProvider,
         heartbeatInterval = heartbeatInterval,
         enableEventEngine = enableEventEngine,

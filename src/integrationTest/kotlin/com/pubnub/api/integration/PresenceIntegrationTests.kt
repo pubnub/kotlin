@@ -38,10 +38,12 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
 
         pubnub.subscribeToBlocking(*expectedChannels.toTypedArray())
 
-        pubnub.whereNow().await { result, status ->
-            assertFalse(status.error)
-            assertEquals(expectedChannelsCount, result!!.channels.size)
-            assertEquals(expectedChannels.sorted(), result.channels.sorted())
+        pubnub.whereNow().await { result ->
+            assertFalse(result.isFailure)
+            result.onSuccess {
+                assertEquals(expectedChannelsCount, it.channels.size)
+                assertEquals(expectedChannels.sorted(), it.channels.sorted())
+            }
         }
     }
 
@@ -62,23 +64,25 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
 
         pubnub.hereNow(
             includeUUIDs = true
-        ).asyncRetry { result, status ->
-            assertFalse(status.error)
-            assertTrue(result!!.totalOccupancy >= expectedClientsCount)
-            assertTrue(result.totalChannels >= expectedChannelsCount)
-            assertTrue(result.channels.size >= expectedChannelsCount)
+        ).asyncRetry { result ->
+            assertFalse(result.isFailure)
+            result.onSuccess {
+                assertTrue(it.totalOccupancy >= expectedClientsCount)
+                assertTrue(it.totalChannels >= expectedChannelsCount)
+                assertTrue(it.channels.size >= expectedChannelsCount)
 
-            assertTrue(result.channels.keys.containsAll(expectedChannels))
+                assertTrue(it.channels.keys.containsAll(expectedChannels))
 
-            result.channels.forEach { (key, value) ->
-                if (expectedChannels.contains(key)) {
-                    assertTrue(value.occupancy >= expectedClientsCount)
-                    assertTrue(value.occupants.size >= expectedClientsCount)
+                it.channels.forEach { (key, value) ->
+                    if (expectedChannels.contains(key)) {
+                        assertTrue(value.occupancy >= expectedClientsCount)
+                        assertTrue(value.occupants.size >= expectedClientsCount)
 
-                    assertEquals(
-                        clients.map { it.configuration.userId.value }.toList(),
-                        value.occupants.map { it.uuid }.toList()
-                    )
+                        assertEquals(
+                            clients.map { it.configuration.userId.value }.toList(),
+                            value.occupants.map { it.uuid }.toList()
+                        )
+                    }
                 }
             }
         }
@@ -105,26 +109,28 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
         pubnub.hereNow(
             channels = expectedChannels,
             includeUUIDs = true
-        ).asyncRetry { result, status ->
-            assertFalse(status.error)
-            assertEquals(expectedChannelsCount, result!!.totalChannels)
-            assertEquals(expectedChannelsCount, result.channels.size)
-            assertEquals(expectedChannelsCount * expectedClientsCount, result.totalOccupancy)
-            result.channels.forEach { (key, value) ->
-                assertTrue(expectedChannels.contains(key))
-                assertTrue(expectedChannels.contains(value.channelName))
-                assertEquals(expectedClientsCount, value.occupancy)
-                assertEquals(expectedClientsCount, value.occupants.size)
-                value.occupants.forEach { occupant ->
-                    val uuid = occupant.uuid
-                    var contains = false
-                    for (client in clients) {
-                        if (client.configuration.userId.value == uuid) {
-                            contains = true
-                            break
+        ).asyncRetry { result ->
+            assertFalse(result.isFailure)
+            result.onSuccess {
+                assertEquals(expectedChannelsCount, it.totalChannels)
+                assertEquals(expectedChannelsCount, it.channels.size)
+                assertEquals(expectedChannelsCount * expectedClientsCount, it.totalOccupancy)
+                it.channels.forEach { (key, value) ->
+                    assertTrue(expectedChannels.contains(key))
+                    assertTrue(expectedChannels.contains(value.channelName))
+                    assertEquals(expectedClientsCount, value.occupancy)
+                    assertEquals(expectedClientsCount, value.occupants.size)
+                    value.occupants.forEach { occupant ->
+                        val uuid = occupant.uuid
+                        var contains = false
+                        for (client in clients) {
+                            if (client.configuration.userId.value == uuid) {
+                                contains = true
+                                break
+                            }
                         }
+                        assertTrue(contains)
                     }
-                    assertTrue(contains)
                 }
             }
         }
@@ -196,8 +202,8 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
 
         pubnub.test(withPresence = true) {
             subscribe(expectedChannel)
-            assertEquals(PNOperationType.PNHeartbeatOperation, nextStatus().operation)
-            skip(2)
+            assertEquals(PNStatus.HeartbeatSuccess, nextStatus())
+            skip(1)
         }
     }
 
@@ -219,16 +225,12 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
 
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                println(pnStatus.operation)
-                if (!pnStatus.error && pnStatus.affectedChannels.contains(expectedChannel)) {
-                    if (pnStatus.operation == PNOperationType.PNSubscribeOperation) {
+                    if (pnStatus is PNStatus.Connected && pnStatus.channels.contains(expectedChannel)) {
                         subscribeSuccess.set(true)
-                    }
-                    if (pnStatus.operation == PNOperationType.PNHeartbeatOperation) {
+                    } else if (pnStatus is PNStatus.HeartbeatSuccess) {
                         heartbeatCallsCount.incrementAndGet()
                     }
                 }
-            }
         })
 
         pubnub.subscribe(

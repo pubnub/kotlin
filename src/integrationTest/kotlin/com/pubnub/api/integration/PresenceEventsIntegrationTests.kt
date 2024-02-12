@@ -94,13 +94,9 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
         pubnub.addListener(object : SubscribeCallback() {
 
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                //
-                if (pnStatus is PNStatus.Connected &&
-                    pnStatus.operation == PNOperationType.PNSubscribeOperation
-                ) {
+                if (pnStatus is PNStatus.Connected) {
                     subscribed.set(true)
                 }
-                //
             }
 
             override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {

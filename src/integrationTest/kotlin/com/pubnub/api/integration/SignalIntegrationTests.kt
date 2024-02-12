@@ -33,10 +33,10 @@ class SignalIntegrationTests : BaseIntegrationTest() {
         pubnub.signal(
             message = expectedPayload,
             channel = expectedChannel
-        ).await { result, status ->
-            assertFalse(status.error)
-            assertEquals(PNOperationType.PNSignalOperation, status.operation)
-            assertEquals(status.uuid, pubnub.configuration.userId.value)
+        ).await { result ->
+            assertFalse(result.isFailure)
+//            assertEquals(PNOperationType.PNSignalOperation, status.operation) // TODO can't check this now
+//            assertEquals(status.uuid, pubnub.configuration.userId.value)
             assertNotNull(result)
         }
     }
@@ -51,40 +51,18 @@ class SignalIntegrationTests : BaseIntegrationTest() {
 
     @Test
     fun testReceiveSignalMessage() {
-        val success = AtomicBoolean()
-
         val observerClient = createPubNub()
-
-        observerClient.addListener(object : SubscribeCallback() {
-            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.operation == PNOperationType.PNSubscribeOperation &&
-                    pnStatus.affectedChannels.contains(expectedChannel)
-                ) {
-                    pubnub.signal(
-                        message = expectedPayload,
-                        channel = expectedChannel
-                    ).async { result, status ->
-                        assertFalse(status.error)
-                        assertEquals(PNOperationType.PNSignalOperation, status.operation)
-                        assertEquals(status.uuid, pubnub.configuration.userId.value)
-                        assertNotNull(result)
-                    }
-                }
-            }
-
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {
-                assertEquals(pubnub.configuration.userId.value, pnSignalResult.publisher)
-                assertEquals(expectedChannel, pnSignalResult.channel)
-                assertEquals(expectedPayload, Gson().fromJson(pnSignalResult.message, String::class.java))
-                success.set(true)
-            }
-        })
-
-        observerClient.subscribe(
-            channels = listOf(expectedChannel)
-        )
-
-        success.listen()
+        pubnub.test {
+            subscribe(expectedChannel)
+            observerClient.signal(
+                message = expectedPayload,
+                channel = expectedChannel
+            ).sync()
+            val pnSignalResult = nextEvent<PNSignalResult>()
+            assertEquals(observerClient.configuration.userId.value, pnSignalResult.publisher)
+            assertEquals(expectedChannel, pnSignalResult.channel)
+            assertEquals(expectedPayload, Gson().fromJson(pnSignalResult.message, String::class.java))
+        }
     }
 
     @Test

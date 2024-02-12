@@ -172,46 +172,22 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
 
     @Test
     fun testUnsubscribeFromChannel() {
-        val success = AtomicBoolean()
-
         val expectedChannel = randomChannel()
 
-        pubnub.subscribeToBlocking(expectedChannel)
-
-        pubnub.addListener(object : SubscribeCallback() {
-            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                // because we have one channel subscribed unsubscribing from it will cause UnsubscribeAll
-                if (pnStatus.affectedChannels.contains(expectedChannel) && pnStatus.operation == PNOperationType.PNUnsubscribeOperation) {
-                    success.set(pubnub.getSubscribedChannels().none { it == expectedChannel })
-                }
-            }
-        })
-
-        pubnub.unsubscribeFromBlocking(expectedChannel)
-
-        success.listen()
+        pubnub.test {
+            subscribe(expectedChannel)
+            unsubscribe(listOf(expectedChannel))
+        }
     }
 
     @Test
     fun testUnsubscribeFromAllChannels() {
-        val success = AtomicBoolean()
         val randomChannel = randomChannel()
 
-        pubnub.subscribeToBlocking(randomChannel)
-
-        pubnub.addListener(object : SubscribeCallback() {
-            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.affectedChannels.contains(randomChannel) &&
-                    pnStatus.operation == PNOperationType.PNUnsubscribeOperation
-                ) {
-                    success.set(pubnub.getSubscribedChannels().isEmpty())
-                }
-            }
-        })
-
-        pubnub.unsubscribeAll()
-
-        success.listen()
+        pubnub.test {
+            subscribe(randomChannel)
+            unsubscribeAll()
+        }
     }
 
     @Test
@@ -297,7 +273,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
 
         guestClient.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                assertEquals(PNStatusCategory.PNConnectionError, pnStatus.category)
+                assertTrue(pnStatus is PNStatus.ConnectionError)
                 success.set(true)
             }
         })
@@ -584,8 +560,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
 
         pubnub.addListener(object : StatusListener {
             override fun status(pubnub: PubNub, status: PNStatus) {
-                if (status.operation == PNOperationType.PNUnsubscribeOperation &&
-                    status.category == PNStatusCategory.PNDisconnectedCategory
+                if (status is PNStatus.Disconnected || status is PNStatus.SubscriptionChanged
                 ) {
                     unsubscribed.countDown()
                 }

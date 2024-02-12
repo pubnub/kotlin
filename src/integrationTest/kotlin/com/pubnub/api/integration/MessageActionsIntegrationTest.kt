@@ -11,6 +11,7 @@ import com.pubnub.api.CommonUtils.randomValue
 import com.pubnub.api.CommonUtils.unicode
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
+import com.pubnub.api.PubNubException
 import com.pubnub.api.asyncRetry
 import com.pubnub.api.await
 import com.pubnub.api.callbacks.SubscribeCallback
@@ -70,7 +71,6 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
             )
         ).await { result ->
             assertFalse(result.isFailure)
-            assertEquals(PNOperationType.PNAddMessageAction, status.operation)
         }
     }
 
@@ -90,7 +90,6 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
             channel = expectedChannel
         ).await { result ->
             assertFalse(result.isFailure)
-            assertEquals(PNOperationType.PNGetMessageActions, status.operation)
         }
     }
 
@@ -114,7 +113,6 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
             channel = expectedChannel
         ).asyncRetry { result ->
             assertFalse(result.isFailure)
-            assertEquals(PNOperationType.PNDeleteMessageAction, status.operation)
         }
     }
 
@@ -133,14 +131,15 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
 
         pubnub.getMessageActions(
             channel = expectedChannel
-        ).asyncRetry { result, status ->
-            assertFalse(status.error)
-            assertEquals(PNOperationType.PNGetMessageActions, status.operation)
-            assertEquals(1, result!!.actions.size)
-            assertEquals(
-                result.actions[0].actionTimetoken,
-                addMessageActionResult!!.actionTimetoken
-            )
+        ).asyncRetry { result ->
+            assertFalse(result.isFailure)
+            result.onSuccess {
+                assertEquals(1, it.actions.size)
+                assertEquals(
+                    it.actions[0].actionTimetoken,
+                    addMessageActionResult.actionTimetoken
+                )
+            }
         }
     }
 
@@ -162,10 +161,11 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
 
         pubnub.getMessageActions(
             channel = expectedChannel
-        ).asyncRetry { result, status ->
-            assertFalse(status.error)
-            assertEquals(PNOperationType.PNGetMessageActions, status.operation)
-            assertEquals(expectedMessageCount, result!!.actions.size)
+        ).asyncRetry { result ->
+            assertFalse(result.isFailure)
+            result.onSuccess {
+                assertEquals(expectedMessageCount, it.actions.size)
+            }
         }
     }
 
@@ -229,10 +229,12 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
                 start = start,
                 limit = 3
             )
-        ).await { result, status ->
-            if (!status.error && result!!.actions.isNotEmpty()) {
-                callback.onMore(result.actions)
-                page(channel, result.actions[0].actionTimetoken!!, callback)
+        ).await { result ->
+            if (!result.isFailure && result.getOrThrow().actions.isNotEmpty()) {
+                result.onSuccess {
+                    callback.onMore(it.actions)
+                    page(channel, it.actions[0].actionTimetoken!!, callback)
+                }
             } else {
                 callback.onDone()
             }
@@ -433,7 +435,6 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
                 if (pnStatus is PNStatus.Connected) {
-                    if (pnStatus.operation == PNOperationType.PNSubscribeOperation) {
                         publishResultList.forEach {
                             pubnub.addMessageAction(
                                 channel = expectedChannelName,
@@ -443,7 +444,6 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
                                     messageTimetoken = it.timetoken
                                 )
                             ).sync()
-                        }
                     }
                 }
             }
@@ -535,9 +535,11 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
                 value = expectedEmoji,
                 messageTimetoken = timetoken
             )
-        ).await { _, status ->
-            assertTrue(status.error)
-            assertEquals(409, status.statusCode)
+        ).await { result ->
+            assertTrue(result.isFailure)
+            result.onFailure {
+                assertEquals(409, (it as PubNubException).statusCode)
+            }
         }
     }
 }

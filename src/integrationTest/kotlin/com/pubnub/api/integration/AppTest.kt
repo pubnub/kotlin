@@ -63,10 +63,10 @@ class AppTest {
         pubnub.publish(
             channel = UUID.randomUUID().toString(),
             message = UUID.randomUUID().toString()
-        ).async { result, status ->
-            assertFalse(status.error)
-            result!!.timetoken
-            success.set(true)
+        ).async { result ->
+            result.onSuccess {
+                success.set(true)
+            }
         }
 
         success.listen()
@@ -78,10 +78,10 @@ class AppTest {
         pubnub.publish(
             channel = UUID.randomUUID().toString(),
             message = UUID.randomUUID().toString()
-        ).async { result, status ->
-            assertFalse(status.error)
-            result!!.timetoken
-            success.set(true)
+        ).async { result ->
+            result.onSuccess {
+                success.set(true)
+            }
         }
 
         success.listen()
@@ -89,51 +89,10 @@ class AppTest {
 
     @Test
     fun testSubscribe() {
-        val success = AtomicBoolean()
         val expectedChannel = UUID.randomUUID().toString()
-
-        pubnub.addListener(object : SubscribeCallback() {
-            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                assertTrue(pnStatus.operation == PNOperationType.PNSubscribeOperation)
-                assertTrue(pnStatus is PNStatus.Connected)
-                assertTrue(pnStatus.affectedChannels.contains(expectedChannel))
-                success.set(true)
-            }
-
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {}
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
-        })
-
-        pubnub.subscribe(
-            channels = listOf(expectedChannel),
-            withPresence = true
-        )
-
-        success.listen()
-    }
-
-    @Test
-    fun testSubscribeV2() {
-        val success = AtomicBoolean()
-        val expectedChannel = UUID.randomUUID().toString()
-
-        pubnub.addListener(object : StatusListener {
-            override fun status(pubnub: PubNub, status: PNStatus) {
-                assertTrue(status.operation == PNOperationType.PNSubscribeOperation)
-                assertTrue(status.category == PNStatusCategory.PNConnectedCategory)
-                assertTrue(status.affectedChannels.contains(expectedChannel))
-                success.set(true)
-            }
-        })
-
-        pubnub.subscribe(
-            channels = listOf(expectedChannel),
-            withPresence = true
-        )
-
-        success.listen()
+        pubnub.test {
+            subscribe(expectedChannel, withPresence = true)
+        }
     }
 
     @Test

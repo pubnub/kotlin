@@ -64,41 +64,36 @@ class PubNubTest(private val pubNub: PubNub, private val withPresenceOverride: B
     fun subscribe(channels: Collection<String> = emptyList(), channelGroups: Collection<String> = emptyList(), withPresence: Boolean = false) {
         pubNub.subscribe(channels.toList(), channelGroups.toList(), withPresence = withPresence || withPresenceOverride)
         val status = statusQueue.take()
-        Assert.assertFalse(status.error)
-        Assert.assertEquals(PNOperationType.PNSubscribeOperation, status.operation)
-        Assert.assertTrue(status.affectedChannels.containsAll(channels))
-        Assert.assertTrue(status.affectedChannelGroups.containsAll(channelGroups))
+        Assert.assertTrue(status is PNStatus.Connected || status is PNStatus.SubscriptionChanged)
+        if (status is PNStatus.Connected) {
+            Assert.assertTrue(status.channels.containsAll(channels))
+            Assert.assertTrue(status.channelGroups.containsAll(channelGroups))
+        } else if (status is PNStatus.SubscriptionChanged) {
+            Assert.assertTrue(status.channels.containsAll(channels))
+            Assert.assertTrue(status.channelGroups.containsAll(channelGroups))
+        }
     }
 
     fun unsubscribe(channels: Collection<String> = emptyList(), channelGroups: Collection<String> = emptyList()) {
         pubNub.unsubscribe(channels.toList(), channelGroups.toList())
         val status = statusQueue.take()
-        Assert.assertFalse(status.error)
-        Assert.assertTrue(
-            status.operation in setOf(
-                PNOperationType.PNSubscribeOperation,
-                PNOperationType.PNUnsubscribeOperation
-            )
-        )
-        if (status.operation == PNOperationType.PNSubscribeOperation) {
+        Assert.assertTrue(status is PNStatus.Disconnected || status is PNStatus.SubscriptionChanged)
+        if (status is PNStatus.SubscriptionChanged) {
             Assert.assertTrue(
-                "Subscribe list still contains some channels from unsubscribe request: ${channels.filter { it in status.affectedChannels }}",
-                channels.none { it in status.affectedChannels }
+                "Unsubscribe list: ${status.channels} doesn't contain all requested channels: $channels",
+                status.channels.containsAll(channels)
             )
             Assert.assertTrue(
-                "Subscribe list still contains some channels from unsubscribe request: ${channelGroups.filter { it in status.affectedChannelGroups }}",
-                channelGroups.none { it in status.affectedChannelGroups }
-            )
-        } else {
-            Assert.assertTrue(
-                "Unsubscribe list: ${status.affectedChannels} doesn't contain all requested channels: $channels",
-                status.affectedChannels.containsAll(channels)
-            )
-            Assert.assertTrue(
-                "Unsubscribe list: ${status.affectedChannelGroups} doesn't contain all requested channelGroups: $channelGroups",
-                status.affectedChannelGroups.containsAll(channelGroups)
+                "Unsubscribe list: ${status.channelGroups} doesn't contain all requested channelGroups: $channelGroups",
+                status.channelGroups.containsAll(channelGroups)
             )
         }
+    }
+
+    fun unsubscribeAll() {
+        pubNub.unsubscribeAll()
+        val status = statusQueue.take()
+        Assert.assertTrue(status is PNStatus.Disconnected)
     }
 
     fun nextStatus(): PNStatus = statusQueue.take()

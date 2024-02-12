@@ -50,9 +50,9 @@ class FilesIntegrationTest : BaseIntegrationTest() {
                 inputStream = it,
                 message = message,
                 meta = meta
-            ).async { r, s ->
-                if (!s.error) {
-                    sendResultReference.set(r)
+            ).async { result ->
+                result.onSuccess {
+                    sendResultReference.set(it)
                 }
                 fileSent.countDown()
             }
@@ -89,7 +89,7 @@ class FilesIntegrationTest : BaseIntegrationTest() {
         val fileEventReceived = CountDownLatch(1)
         pubnub.addListener(object : LimitedListener() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.category === PNStatusCategory.PNConnectedCategory) {
+                if (pnStatus is PNStatus.Connected) {
                     connectedLatch.countDown()
                 }
             }

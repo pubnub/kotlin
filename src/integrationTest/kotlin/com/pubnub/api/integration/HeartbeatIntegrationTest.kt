@@ -51,8 +51,8 @@ class HeartbeatIntegrationTest : BaseIntegrationTest() {
         observer.addListener(object : SubscribeCallback() {
 
             override fun status(p: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.operation == PNOperationType.PNSubscribeOperation &&
-                    pnStatus.affectedChannels.contains(expectedChannel)
+                if (pnStatus is PNStatus.Connected &&
+                    pnStatus.channels.contains(expectedChannel)
                 ) {
                     pubnub.subscribe(
                         channels = listOf(expectedChannel),
@@ -78,11 +78,13 @@ class HeartbeatIntegrationTest : BaseIntegrationTest() {
                                 pubnub.setPresenceState(
                                     state = expectedStatePayload,
                                     channels = listOf(expectedChannel)
-                                ).async { result, status ->
-                                    assertFalse(status.error)
-                                    assertEquals(expectedStatePayload, result!!.state)
-                                    hits.incrementAndGet()
-                                    stateSet.set(true)
+                                ).async { result ->
+                                    assertFalse(result.isFailure)
+                                    result.onSuccess {
+                                        assertEquals(expectedStatePayload, it.state)
+                                        hits.incrementAndGet()
+                                        stateSet.set(true)
+                                    }
                                 }
 
                                 Awaitility.await().atMost(Durations.FIVE_SECONDS)

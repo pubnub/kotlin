@@ -237,7 +237,7 @@ class EndpointTest : BaseTest() {
 //        val success = AtomicBoolean()
 //
 //        pubnub.time()
-//            .async { _, status ->
+//            .async { result ->
 //                assertNotNull(status.param("signature"))
 //                success.set(true)
 //            }

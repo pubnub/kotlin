@@ -13,9 +13,9 @@ class TimeIntegrationTest : BaseIntegrationTest() {
         val success = AtomicBoolean()
 
         pubnub.time()
-            .async { result, status ->
-                assertFalse(status.error)
-                assertNotNull(result!!.timetoken)
+            .async { result ->
+                assertFalse(result.isFailure)
+                assertNotNull(result.getOrThrow().timetoken)
                 success.set(true)
             }
         success.listen()
