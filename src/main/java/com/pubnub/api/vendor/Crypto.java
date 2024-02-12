@@ -82,7 +82,8 @@ public class Crypto {
                 null,
                 Collections.emptyList(),
                 Collections.emptyList(),
-                exception
+                exception,
+                null
         );
     }
 

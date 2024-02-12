@@ -260,8 +260,8 @@ class EndpointTest : BaseTest() {
             .async { result ->
                 assertTrue(result.isFailure)
                 result.onFailure {
-//                    assertEquals(PNStatusCategory.PNAccessDeniedCategory, status.category) // TODO how to check forbidden
-//                    success.set(true)
+                    assertEquals(403, (it as PubNubException).statusCode)
+                    success.set(true)
                 }
             }
 

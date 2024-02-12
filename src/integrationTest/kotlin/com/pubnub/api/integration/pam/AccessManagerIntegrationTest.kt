@@ -1,36 +1,36 @@
-//package com.pubnub.api.integration.pam
+// package com.pubnub.api.integration.pam
 //
-//import com.google.gson.Gson
-//import com.pubnub.api.CommonUtils.emoji
-//import com.pubnub.api.CommonUtils.generateMap
-//import com.pubnub.api.CommonUtils.generatePayload
-//import com.pubnub.api.CommonUtils.randomChannel
-//import com.pubnub.api.CommonUtils.randomValue
-//import com.pubnub.api.CommonUtils.retry
-//import com.pubnub.api.CommonUtils.unicode
-//import com.pubnub.api.PubNub
-//import com.pubnub.api.asyncRetry
-//import com.pubnub.api.callbacks.SubscribeCallback
-//import com.pubnub.api.enums.PNOperationType
-//import com.pubnub.api.enums.PNStatusCategory
-//import com.pubnub.api.integration.BaseIntegrationTest
-//import com.pubnub.api.models.consumer.PNPublishResult
-//import com.pubnub.api.models.consumer.PNStatus
-//import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult
-//import com.pubnub.api.models.consumer.message_actions.PNMessageAction
-//import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
-//import com.pubnub.api.retryForbidden
-//import org.awaitility.Awaitility
-//import org.awaitility.Durations
-//import org.junit.Assert.assertEquals
-//import org.junit.Assert.assertFalse
-//import org.junit.Assert.assertNotNull
-//import org.junit.Assert.assertTrue
-//import org.junit.Test
-//import java.util.Locale
-//import java.util.concurrent.atomic.AtomicBoolean
+// import com.google.gson.Gson
+// import com.pubnub.api.CommonUtils.emoji
+// import com.pubnub.api.CommonUtils.generateMap
+// import com.pubnub.api.CommonUtils.generatePayload
+// import com.pubnub.api.CommonUtils.randomChannel
+// import com.pubnub.api.CommonUtils.randomValue
+// import com.pubnub.api.CommonUtils.retry
+// import com.pubnub.api.CommonUtils.unicode
+// import com.pubnub.api.PubNub
+// import com.pubnub.api.asyncRetry
+// import com.pubnub.api.callbacks.SubscribeCallback
+// import com.pubnub.api.enums.PNOperationType
+// import com.pubnub.api.enums.PNStatusCategory
+// import com.pubnub.api.integration.BaseIntegrationTest
+// import com.pubnub.api.models.consumer.PNPublishResult
+// import com.pubnub.api.models.consumer.PNStatus
+// import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult
+// import com.pubnub.api.models.consumer.message_actions.PNMessageAction
+// import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
+// import com.pubnub.api.retryForbidden
+// import org.awaitility.Awaitility
+// import org.awaitility.Durations
+// import org.junit.Assert.assertEquals
+// import org.junit.Assert.assertFalse
+// import org.junit.Assert.assertNotNull
+// import org.junit.Assert.assertTrue
+// import org.junit.Test
+// import java.util.Locale
+// import java.util.concurrent.atomic.AtomicBoolean
 //
-//abstract class AccessManagerIntegrationTest() : BaseIntegrationTest() {
+// abstract class AccessManagerIntegrationTest() : BaseIntegrationTest() {
 //
 //    companion object {
 //        const val LEVEL_APP = "subkey"
@@ -697,4 +697,4 @@
 //    open fun performOnServer(): Boolean {
 //        return false
 //    }
-//}
+// }

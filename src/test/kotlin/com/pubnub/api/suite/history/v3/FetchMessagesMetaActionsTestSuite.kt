@@ -8,8 +8,6 @@ import com.google.gson.JsonObject
 import com.pubnub.api.PubNubError
 import com.pubnub.api.endpoints.FetchMessages
 import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.enums.PNStatusCategory
-import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
 import com.pubnub.api.suite.AUTH
 import com.pubnub.api.suite.EndpointTestSuite
@@ -17,7 +15,6 @@ import com.pubnub.api.suite.OptionalScenario
 import com.pubnub.api.suite.Result
 import com.pubnub.api.suite.SUB
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 
 class FetchMessagesMetaActionsTestSuite : EndpointTestSuite<FetchMessages, PNFetchMessagesResult>() {

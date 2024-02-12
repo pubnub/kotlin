@@ -4,19 +4,13 @@ import com.google.gson.Gson
 import com.pubnub.api.CommonUtils.assertPnException
 import com.pubnub.api.CommonUtils.randomChannel
 import com.pubnub.api.CommonUtils.randomValue
-import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.await
-import com.pubnub.api.callbacks.SubscribeCallback
-import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.listen
-import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Test
-import java.util.concurrent.atomic.AtomicBoolean
 
 class SignalIntegrationTests : BaseIntegrationTest() {
 

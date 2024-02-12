@@ -1,5 +1,6 @@
 package com.pubnub.api
 
+import okhttp3.Request
 import retrofit2.Call
 
 /**
@@ -21,7 +22,10 @@ data class PubNubException(
     val affectedChannels: List<String> = emptyList(),
     val affectedChannelGroups: List<String> = emptyList(),
     override val cause: Throwable? = null,
+    val requestInfo: RequestInfo? = null,
 ) : Exception(errorMessage, cause) {
+
+    data class RequestInfo(val tlsEnabled: Boolean, val origin: String, val uuid: String?, val authKey: String?, val clientRequest: Request)
 
     internal constructor(pubnubError: PubNubError) : this(
         errorMessage = pubnubError.message,
@@ -35,28 +39,6 @@ data class PubNubException(
             PubNubException(e.message, cause = e)
         }
     }
-
-//    override fun toString(): String {
-//        return "PubNubException(errorMessage=$errorMessage, pubnubError=$pubnubError, jso=$jso, statusCode=$statusCode, affectedCall=$affectedCall, retryAfterHeaderValue=$retryAfterHeaderValue)"
-//    }
-//
-//    fun copy(
-//        errorMessage: String? = this.errorMessage,
-//        pubnubError: PubNubError? = this.pubnubError,
-//        jso: String? = this.jso,
-//        statusCode: Int = this.statusCode,
-//        affectedCall: Call<*>? = this.affectedCall,
-//        retryAfterHeaderValue: Int? = this.retryAfterHeaderValue,
-//        cause: Throwable? = this.cause,
-//    ) = PubNubException(
-//        errorMessage,
-//        pubnubError,
-//        jso,
-//        statusCode,
-//        affectedCall,
-//        retryAfterHeaderValue,
-//        cause
-//    )
 }
 
 internal data class PubNubRetryableException(

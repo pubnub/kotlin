@@ -11,7 +11,6 @@ import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.pubnub.api.PubNubError.SUBSCRIBE_KEY_MISSING
 import com.pubnub.api.PubNubException
-import com.pubnub.api.enums.PNOperationType.PNHereNowOperation
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.models.consumer.presence.PNHereNowResult
 import org.awaitility.Awaitility

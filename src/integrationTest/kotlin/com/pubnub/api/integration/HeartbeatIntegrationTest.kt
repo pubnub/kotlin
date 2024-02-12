@@ -5,7 +5,6 @@ import com.pubnub.api.CommonUtils.randomChannel
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
 import com.pubnub.api.callbacks.SubscribeCallback
-import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import org.awaitility.Awaitility

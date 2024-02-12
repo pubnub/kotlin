@@ -9,7 +9,6 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.push.AddChannelsToPush
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNPushType
-import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.push.PNPushAddChannelResult
 import com.pubnub.api.suite.AUTH
 import com.pubnub.api.suite.EndpointTestSuite

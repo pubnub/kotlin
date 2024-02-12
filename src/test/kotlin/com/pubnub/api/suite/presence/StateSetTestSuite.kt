@@ -7,7 +7,6 @@ import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.google.gson.JsonObject
 import com.pubnub.api.endpoints.presence.SetState
 import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.presence.PNSetStateResult
 import com.pubnub.api.suite.AUTH
 import com.pubnub.api.suite.EndpointTestSuite
@@ -16,7 +15,6 @@ import com.pubnub.api.suite.Result
 import com.pubnub.api.suite.SUB
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 
 class StateSetTestSuite : EndpointTestSuite<SetState, PNSetStateResult>() {

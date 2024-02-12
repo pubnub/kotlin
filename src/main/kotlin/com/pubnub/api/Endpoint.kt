@@ -3,6 +3,7 @@ package com.pubnub.api
 import com.google.gson.JsonElement
 import com.pubnub.api.PNConfiguration.Companion.isValid
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
+import com.pubnub.api.retry.RetryableBase
 import com.pubnub.api.retry.RetryableCallback
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.api.retry.RetryableRestCaller
@@ -66,13 +67,7 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
             }
             else -> {
                 val (errorString, errorJson) = extractErrorBody(response)
-                throw PubNubException(
-                    pubnubError = PubNubError.HTTP_ERROR,
-                    errorMessage = errorString,
-                    jso = errorJson.toString(),
-                    statusCode = response.code(),
-                    affectedCall = call
-                )
+                throw createException(response, errorString, errorJson)
             }
         }
     }
@@ -116,17 +111,13 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
                         else -> {
                             val (errorString, errorJson) = extractErrorBody(response)
 
-                            val exception = PubNubException(
-                                pubnubError = PubNubError.HTTP_ERROR,
-                                errorMessage = errorString,
-                                jso = errorJson.toString(),
-                                statusCode = response.code(),
-                                affectedCall = call,
-                                retryAfterHeaderValue = response.headers()[RETRY_AFTER_HEADER_NAME]?.toIntOrNull()
+                            callback.invoke(
+                                Result.failure(
+                                    createException(
+                                        response, errorString, errorJson
+                                    )
+                                )
                             )
-
-                            callback.invoke(Result.failure(exception))
-                            return
                         }
                     }
                 }
@@ -210,96 +201,86 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
         }
     }
 
-//    private fun createStatusResponse(
-//        category: PNStatusCategory,
-//        response: Response<Input>? = null,
-//        exception: PubNubException? = null,
-//        errorBody: JsonElement? = null
-//    ): PNStatus {
-//
-//        val pnStatus = PNStatus(
-//            category = category,
-//            error = response == null || exception != null,
-//            operation = operationType(),
-//            exception = exception
-//        )
-//
-//        pnStatus.executedEndpoint = this
-//
-//        response?.let {
-//
-//            with(pnStatus) {
-//                statusCode = it.code()
-//                tlsEnabled = it.raw().request.url.isHttps
-//                origin = it.raw().request.url.host
-//                uuid = it.raw().request.url.queryParameter("uuid")
-//                authKey = it.raw().request.url.queryParameter("auth")
-//                clientRequest = it.raw().request
-//            }
-//        }
-//
-//        val errorChannels = mutableListOf<String>()
-//        val errorGroups = mutableListOf<String>()
-//
-//        if (errorBody != null) {
-//            if (pubnub.mapper.isJsonObject(errorBody) && pubnub.mapper.hasField(
-//                    errorBody,
-//                    "payload"
-//                )
-//            ) {
-//
-//                val payloadBody = pubnub.mapper.getField(errorBody, "payload")!!
-//
-//                if (pubnub.mapper.hasField(payloadBody, "channels")) {
-//                    val iterator = pubnub.mapper.getArrayIterator(payloadBody, "channels")
-//                    while (iterator.hasNext()) {
-//                        errorChannels.add(pubnub.mapper.elementToString(iterator.next())!!)
-//                    }
-//                }
-//
-//                if (pubnub.mapper.hasField(payloadBody, "channel-groups")) {
-//                    val iterator = pubnub.mapper.getArrayIterator(payloadBody, "channel-groups")
-//                    while (iterator.hasNext()) {
-//                        val node = iterator.next()
-//
-//                        val channelGroupName = pubnub.mapper.elementToString(node)!!.let {
-//                            if (it.first().toString() == ":") {
-//                                it.substring(1)
-//                            } else {
-//                                it
-//                            }
-//                        }
-//
-//                        errorGroups.add(channelGroupName)
-//                    }
-//                }
-//            }
-//        }
-//
-//        pnStatus.affectedChannels =
-//            if (errorChannels.isNotEmpty()) {
-//                errorChannels
-//            } else {
-//                try {
-//                    getAffectedChannels()
-//                } catch (e: UninitializedPropertyAccessException) {
-//                    emptyList<String>()
-//                }
-//            }
-//
-//        pnStatus.affectedChannelGroups =
-//            if (errorGroups.isNotEmpty()) {
-//                errorGroups
-//            } else {
-//                try {
-//                    getAffectedChannelGroups()
-//                } catch (e: UninitializedPropertyAccessException) {
-//                    emptyList<String>()
-//                }
-//            }
-//
-//        return pnStatus
-//    }
+    private fun createException(
+        response: Response<Input>,
+        errorString: String? = null,
+        errorBody: JsonElement? = null
+    ): PubNubException {
+
+        val errorChannels = mutableListOf<String>()
+        val errorGroups = mutableListOf<String>()
+
+        if (errorBody != null) {
+            if (pubnub.mapper.isJsonObject(errorBody) && pubnub.mapper.hasField(
+                    errorBody,
+                    "payload"
+                )
+            ) {
+
+                val payloadBody = pubnub.mapper.getField(errorBody, "payload")!!
+
+                if (pubnub.mapper.hasField(payloadBody, "channels")) {
+                    val iterator = pubnub.mapper.getArrayIterator(payloadBody, "channels")
+                    while (iterator.hasNext()) {
+                        errorChannels.add(pubnub.mapper.elementToString(iterator.next())!!)
+                    }
+                }
+
+                if (pubnub.mapper.hasField(payloadBody, "channel-groups")) {
+                    val iterator = pubnub.mapper.getArrayIterator(payloadBody, "channel-groups")
+                    while (iterator.hasNext()) {
+                        val node = iterator.next()
+
+                        val channelGroupName = pubnub.mapper.elementToString(node)!!.let {
+                            if (it.first().toString() == ":") {
+                                it.substring(1)
+                            } else {
+                                it
+                            }
+                        }
+
+                        errorGroups.add(channelGroupName)
+                    }
+                }
+            }
+        }
+
+        val affectedChannels =
+            errorChannels.ifEmpty {
+                try {
+                    getAffectedChannels()
+                } catch (e: UninitializedPropertyAccessException) {
+                    emptyList<String>()
+                }
+            }
+
+        val affectedChannelGroups =
+            errorGroups.ifEmpty {
+                try {
+                    getAffectedChannelGroups()
+                } catch (e: UninitializedPropertyAccessException) {
+                    emptyList<String>()
+                }
+            }
+
+        return PubNubException(
+            pubnubError = PubNubError.HTTP_ERROR,
+            errorMessage = errorString,
+            jso = errorBody?.toString(),
+            statusCode = response.code(),
+            affectedCall = call,
+            retryAfterHeaderValue = response.headers()[RetryableBase.RETRY_AFTER_HEADER_NAME]?.toIntOrNull(),
+            affectedChannels = affectedChannels,
+            affectedChannelGroups = affectedChannelGroups,
+            requestInfo = PubNubException.RequestInfo(
+                tlsEnabled = response.raw().request.url.isHttps,
+                origin = response.raw().request.url.host,
+                uuid = response.raw().request.url.queryParameter("uuid"),
+                authKey = response.raw().request.url.queryParameter("auth"),
+                clientRequest = response.raw().request,
+            )
+        )
+    }
 
     override fun retry() {
         silenceFailures = false

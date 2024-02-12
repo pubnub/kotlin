@@ -12,7 +12,6 @@ import com.pubnub.api.CommonUtils.assertPnException
 import com.pubnub.api.CommonUtils.failTest
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
-import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.listen
 import org.junit.Assert.assertEquals
@@ -378,7 +377,7 @@ class HistoryEndpointTest : BaseTest() {
             includeTimetoken = true
         ).async { result ->
             result.onSuccess {
-                with (it) {
+                with(it) {
                     assertEquals(1234L, startTimetoken)
                     assertEquals(4321L, endTimetoken)
 
@@ -443,7 +442,6 @@ class HistoryEndpointTest : BaseTest() {
             end = 2L,
             includeTimetoken = true
         ).sync()
-        
 
         val requests = findAll(
             getRequestedFor(

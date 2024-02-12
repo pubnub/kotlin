@@ -2,8 +2,6 @@ package com.pubnub.api.subscribe.eventengine.effect
 
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
-import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.eventengine.ManagedEffect
 import com.pubnub.api.eventengine.Sink
 import com.pubnub.api.models.consumer.PNStatus
@@ -71,7 +69,8 @@ class SubscribeEffectFactoryTest {
     fun `should return emitStatus effect when getting EmitStatus invocation`() {
         // when
         val effect = subscribeEffectFactory.create(
-            SubscribeEffectInvocation.EmitStatus(PNStatus.Connected(
+            SubscribeEffectInvocation.EmitStatus(
+                PNStatus.Connected(
                     currentTimetoken = 0L,
                     channels = channels.toList(),
                     channelGroups = channelGroups.toList(),

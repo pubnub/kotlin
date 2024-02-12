@@ -84,11 +84,13 @@ internal class TransitionFromReceivingReconnectingStateTest {
         assertEquals(
             setOf(
                 SubscribeEffectInvocation.CancelReceiveReconnect,
-                SubscribeEffectInvocation.EmitStatus(createSubscriptionChangedStatus(
-                    state.subscriptionCursor,
-                    channels,
-                    channelGroups
-                )),
+                SubscribeEffectInvocation.EmitStatus(
+                    createSubscriptionChangedStatus(
+                        state.subscriptionCursor,
+                        channels,
+                        channelGroups
+                    )
+                ),
                 SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
             ),
             invocations
@@ -200,11 +202,13 @@ internal class TransitionFromReceivingReconnectingStateTest {
         assertEquals(
             setOf(
                 SubscribeEffectInvocation.CancelReceiveReconnect,
-                SubscribeEffectInvocation.EmitStatus(createSubscriptionChangedStatus(
-                    state.subscriptionCursor,
-                    channels,
-                    channelGroups
-                )),
+                SubscribeEffectInvocation.EmitStatus(
+                    createSubscriptionChangedStatus(
+                        state.subscriptionCursor,
+                        channels,
+                        channelGroups
+                    )
+                ),
                 SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, expectedSubscriptionCursor),
             ),
             invocations

@@ -126,11 +126,13 @@ class TransitionFromReceivingStateTest {
         assertEquals(
             setOf(
                 SubscribeEffectInvocation.CancelReceiveMessages,
-                SubscribeEffectInvocation.EmitStatus(createSubscriptionChangedStatus(
-                    state.subscriptionCursor,
-                    channels,
-                    channelGroups
-                )),
+                SubscribeEffectInvocation.EmitStatus(
+                    createSubscriptionChangedStatus(
+                        state.subscriptionCursor,
+                        channels,
+                        channelGroups
+                    )
+                ),
                 SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, expectedSubscriptionCursor),
             ),
             invocations

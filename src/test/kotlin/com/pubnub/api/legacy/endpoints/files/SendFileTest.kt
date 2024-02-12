@@ -7,10 +7,7 @@ import com.pubnub.api.endpoints.files.GenerateUploadUrl
 import com.pubnub.api.endpoints.files.PublishFileMessage
 import com.pubnub.api.endpoints.files.SendFile
 import com.pubnub.api.endpoints.files.UploadFile
-import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.legacy.endpoints.remoteaction.TestRemoteAction
-import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.files.PNBaseFile
 import com.pubnub.api.models.consumer.files.PNFileUploadResult
 import com.pubnub.api.models.consumer.files.PNPublishFileMessageResult

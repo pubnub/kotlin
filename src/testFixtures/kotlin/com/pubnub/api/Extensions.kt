@@ -1,6 +1,5 @@
 package com.pubnub.api
 
-import com.pubnub.api.models.consumer.PNStatus
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.awaitility.pollinterval.FibonacciPollInterval

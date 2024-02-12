@@ -5,13 +5,11 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 import com.pubnub.api.models.consumer.PNPublishResult
-import com.pubnub.api.models.consumer.PNStatus
 import okhttp3.logging.HttpLoggingInterceptor
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.slf4j.Logger
 import java.io.BufferedReader
@@ -129,7 +127,7 @@ object CommonUtils {
                     else -> null
                 }
             ).sync()
-            list.add(sync!!)
+            list.add(sync)
         }
         return list
     }

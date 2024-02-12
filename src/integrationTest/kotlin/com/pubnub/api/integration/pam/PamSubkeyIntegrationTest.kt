@@ -1,6 +1,6 @@
-//package com.pubnub.api.integration.pam
+// package com.pubnub.api.integration.pam
 //
-//class PamSubkeyIntegrationTest : AccessManagerIntegrationTest() {
+// class PamSubkeyIntegrationTest : AccessManagerIntegrationTest() {
 //
 //    override fun getPamLevel() = LEVEL_APP
-//}
+// }

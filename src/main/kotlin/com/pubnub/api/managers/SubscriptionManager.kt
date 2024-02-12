@@ -159,17 +159,17 @@ internal class SubscriptionManager(val pubnub: PubNub, private val listenerManag
         heartbeatCall?.async { result ->
             val heartbeatVerbosity = pubnub.configuration.heartbeatNotificationOptions
 
-            if (result.isFailure) {
+            result.onFailure {
                 if (heartbeatVerbosity == PNHeartbeatNotificationOptions.ALL ||
                     heartbeatVerbosity == PNHeartbeatNotificationOptions.FAILURES
                 ) {
-//                    listenerManager.announce(status) // TODO announce heartbeat status
+                    listenerManager.announce(PNStatus.HeartbeatFailed(PubNubException.from(it)))
                 }
                 // stop the heartbeating logic since an error happened.
                 heartbeatTimer?.cancel()
-            } else {
+            }.onSuccess {
                 if (heartbeatVerbosity == PNHeartbeatNotificationOptions.ALL) {
-//                    listenerManager.announce(status) // TODO announce heartbeat status
+                    listenerManager.announce(PNStatus.HeartbeatSuccess)
                 }
             }
         }

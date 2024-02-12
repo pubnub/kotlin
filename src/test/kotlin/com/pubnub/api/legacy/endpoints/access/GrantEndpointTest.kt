@@ -13,7 +13,6 @@ import com.pubnub.api.CommonUtils.failTest
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.SignatureUtils.decomposeAndVerifySignature
-import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.models.consumer.access_manager.PNAccessManagerKeyData
 import org.awaitility.Awaitility

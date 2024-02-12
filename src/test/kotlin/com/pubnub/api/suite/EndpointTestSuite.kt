@@ -72,8 +72,8 @@ abstract class EndpointTestSuite<T : Endpoint<*, R>, R> : BaseTest() {
 //
 //        snippet().await { result ->
 //            assertFalse(result.isFailure)
-////            telemetryParamName = "l_${status.operation.queryParam!!}"
-////            assertEquals(telemetryParamName(), telemetryParamName)
+// //            telemetryParamName = "l_${status.operation.queryParam!!}"
+// //            assertEquals(telemetryParamName(), telemetryParamName)
 //        }
 //
 //        Awaitility.await()

@@ -16,8 +16,6 @@ import com.pubnub.api.asyncRetry
 import com.pubnub.api.await
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.endpoints.message_actions.GetMessageActions
-import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.listen
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.PNPublishResult
@@ -435,15 +433,15 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
                 if (pnStatus is PNStatus.Connected) {
-                        publishResultList.forEach {
-                            pubnub.addMessageAction(
-                                channel = expectedChannelName,
-                                messageAction = PNMessageAction(
-                                    type = "reaction",
-                                    value = emoji(),
-                                    messageTimetoken = it.timetoken
-                                )
-                            ).sync()
+                    publishResultList.forEach {
+                        pubnub.addMessageAction(
+                            channel = expectedChannelName,
+                            messageAction = PNMessageAction(
+                                type = "reaction",
+                                value = emoji(),
+                                messageTimetoken = it.timetoken
+                            )
+                        ).sync()
                     }
                 }
             }

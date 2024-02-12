@@ -1,8 +1,19 @@
 package com.pubnub.api.integration
 
 import com.pubnub.api.CommonUtils.getSpecialCharsMap
+import com.pubnub.api.CommonUtils.randomChannel
+import com.pubnub.api.listen
+import org.awaitility.Awaitility
+import org.awaitility.Durations
+import org.junit.Test
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
 
 @RunWith(Parameterized::class)
 class EncodingIntegrationTest(
@@ -11,76 +22,67 @@ class EncodingIntegrationTest(
     val encoded: String
 ) : BaseIntegrationTest() {
 
-//    @Test TODO can't check this now using result
-//    fun testVerifySignature() {
-//        val success = AtomicBoolean()
-//
-//        server.configuration.includeRequestIdentifier = false
-//        server.configuration.includeInstanceIdentifier = false
-//
-//        val expectedChannel = randomChannel()
-//        val expectedMessage = "msg${regular}msg"
-//        val expectedMetadata = "meta${regular}meta"
-//
-//        val propertyName = "target"
-//
-//        server.publish(
-//            channel = expectedChannel,
-//            message = expectedMessage,
-//            meta = expectedMetadata,
-//            usePost = false
-//        ).apply {
-//            queryParam += mapOf(propertyName to regular)
-//        }.async { result ->
-//            assertFalse(result.isFailure)
-//            val encodedParam = status.encodedParam(propertyName)
-//            assertEquals(encoded, encodedParam)
-//            SignatureUtils.decomposeAndVerifySignature(server.configuration, status.clientRequest!!)
-//            success.set(true)
-//        }
-//
-//        success.listen()
-//
-//        val historyTest = {
-//            Awaitility.await()
-//                .pollInterval(Durations.FIVE_HUNDRED_MILLISECONDS)
-//                .atMost(Durations.FIVE_SECONDS)
-//                .until {
-//                    val latch = CountDownLatch(1)
-//                    server.history(
-//                        channel = expectedChannel,
-//                        includeMeta = true
-//                    ).async { result ->
-//                        assertEquals(1, result!!.messages.size)
-//                        SignatureUtils.decomposeAndVerifySignature(
-//                            server.configuration,
-//                            status.clientRequest!!
-//                        )
-//                        assertFalse(result.isFailure)
-//                        assertEquals(
-//                            expectedMessage,
-//                            result.messages[0].entry.asString
-//                        )
-//                        assertEquals(
-//                            expectedMetadata,
-//                            result.messages[0].meta!!.asString
-//                        )
-//                        assertEquals(
-//                            regular,
-//                            result.messages[0].entry.asString.replace("msg", "")
-//                        )
-//                        assertEquals(
-//                            regular,
-//                            result.messages[0].meta!!.asString.replace("meta", "")
-//                        )
-//                        latch.countDown()
-//                    }
-//                    latch.await(1, TimeUnit.SECONDS)
-//                }
-//        }
-//
-//        historyTest.invoke()
-//    }
+    @Test
+    fun testVerifySignature() {
+        val success = AtomicBoolean()
+
+        server.configuration.includeRequestIdentifier = false
+        server.configuration.includeInstanceIdentifier = false
+
+        val expectedChannel = randomChannel()
+        val expectedMessage = "msg${regular}msg"
+        val expectedMetadata = "meta${regular}meta"
+
+        val propertyName = "target"
+
+        server.publish(
+            channel = expectedChannel,
+            message = expectedMessage,
+            meta = expectedMetadata,
+            usePost = false
+        ).apply {
+            queryParam += mapOf(propertyName to regular)
+        }.sync()
+
+        success.listen()
+
+        val historyTest = {
+            Awaitility.await()
+                .pollInterval(Durations.FIVE_HUNDRED_MILLISECONDS)
+                .atMost(Durations.FIVE_SECONDS)
+                .until {
+                    val latch = CountDownLatch(1)
+                    server.history(
+                        channel = expectedChannel,
+                        includeMeta = true
+                    ).async { result ->
+                        result.onSuccess { 
+                            assertEquals(1, it.messages.size)
+                            assertEquals(
+                                expectedMessage,
+                                it.messages[0].entry.asString
+                            )
+                            assertEquals(
+                                expectedMetadata,
+                                it.messages[0].meta!!.asString
+                            )
+                            assertEquals(
+                                regular,
+                                it.messages[0].entry.asString.replace("msg", "")
+                            )
+                            assertEquals(
+                                regular,
+                                it.messages[0].meta!!.asString.replace("meta", "")
+                            )
+                            latch.countDown()
+                        }
+                    }
+                    latch.await(1, TimeUnit.SECONDS)
+                }
+        }
+
+        historyTest.invoke()
+    }
 
     companion object {
 

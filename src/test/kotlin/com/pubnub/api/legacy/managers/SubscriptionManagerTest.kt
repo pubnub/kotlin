@@ -17,8 +17,6 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubUtil
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
-import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
@@ -2618,7 +2616,7 @@ class SubscriptionManagerTest : BaseTest() {
         val sub1: SubscribeCallback = object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
 //                if (pnStatus.operation == PNOperationType.PNUnsubscribeOperation && !pnStatus.error) {
-                if (pnStatus is PNStatus.Disconnected) { //TODO what is this trying to test really?
+                if (pnStatus is PNStatus.Disconnected) { // TODO what is this trying to test really?
                     statusReceived.set(true)
                 }
             }

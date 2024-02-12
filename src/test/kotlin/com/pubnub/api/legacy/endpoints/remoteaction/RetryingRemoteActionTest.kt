@@ -3,7 +3,6 @@ package com.pubnub.api.legacy.endpoints.remoteaction
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RetryingRemoteAction
 import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.models.consumer.PNStatus
 import io.mockk.spyk
 import io.mockk.verify
 import org.junit.Assert

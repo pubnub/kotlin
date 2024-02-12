@@ -1,19 +1,19 @@
-//package com.pubnub.api.integration.pam
+// package com.pubnub.api.integration.pam
 //
-//import com.pubnub.api.PubNub
-//import com.pubnub.api.SpaceId
-//import com.pubnub.api.UserId
-//import com.pubnub.api.enums.PNLogVerbosity
-//import com.pubnub.api.integration.BaseIntegrationTest
-//import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions
-//import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions
-//import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
-//import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
-//import com.pubnub.api.models.consumer.access_manager.v3.PNToken.PNResourcePermissions
-//import org.junit.Assert.assertEquals
-//import org.junit.Test
+// import com.pubnub.api.PubNub
+// import com.pubnub.api.SpaceId
+// import com.pubnub.api.UserId
+// import com.pubnub.api.enums.PNLogVerbosity
+// import com.pubnub.api.integration.BaseIntegrationTest
+// import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions
+// import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions
+// import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
+// import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
+// import com.pubnub.api.models.consumer.access_manager.v3.PNToken.PNResourcePermissions
+// import org.junit.Assert.assertEquals
+// import org.junit.Test
 //
-//class GrantTokenIntegrationTest : BaseIntegrationTest() {
+// class GrantTokenIntegrationTest : BaseIntegrationTest() {
 //    private val pubNubUnderTest: PubNub = server
 //
 //    @Test
@@ -121,4 +121,4 @@
 //            patterns.channelGroups[expectedChannelGroupPattern]
 //        )
 //    }
-//}
+// }
