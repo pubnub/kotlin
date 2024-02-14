@@ -43,100 +43,90 @@ internal class EventEmitterImpl(
     override var onMessage: ((PubNub, PNMessageResult) -> Unit)? = null
         @Synchronized
         set(value) {
-            if (value == null) {
-                onMessageListener?.let { removeListener(it) }
-            } else {
-                val eventListenerWithMessageHandling = object : EventListener {
-                    override fun message(pubnub: PubNub, result: PNMessageResult) {
-                        value.invoke(pubnub, result)
-                    }
-                }
-                onMessageListener = eventListenerWithMessageHandling
-                addListener(eventListenerWithMessageHandling)
+            onMessageListener = handleListenerRegistration(onMessageListener, value) { pubNub, result ->
+                (result as? PNMessageResult)?.let { value?.invoke(pubNub, it) }
             }
-            field = value
         }
 
     override var onPresence: ((PubNub, PNPresenceEventResult) -> Unit)? = null
+        @Synchronized
         set(value) {
-            if (value == null) {
-                onPresenceListener?.let { removeListener(it) }
-            } else {
-                val eventListenerWithPresenceHandling = object : EventListener {
-                    override fun presence(pubnub: PubNub, result: PNPresenceEventResult) {
-                        value.invoke(pubnub, result)
-                    }
-                }
-                onPresenceListener = eventListenerWithPresenceHandling
-                addListener(eventListenerWithPresenceHandling)
+            onPresenceListener = handleListenerRegistration(onPresenceListener, value) { pubNub, result ->
+                (result as? PNPresenceEventResult)?.let { value?.invoke(pubNub, it) }
             }
-            field = value
         }
 
     override var onSignal: ((PubNub, PNSignalResult) -> Unit)? = null
         @Synchronized
         set(value) {
-            if (value == null) {
-                onSignalListener?.let { removeListener(it) }
-            } else {
-                val eventListenerWithSignalHandling = object : EventListener {
-                    override fun signal(pubnub: PubNub, result: PNSignalResult) {
-                        value.invoke(pubnub, result)
-                    }
-                }
-                onSignalListener = eventListenerWithSignalHandling
-                addListener(eventListenerWithSignalHandling)
+            onSignalListener = handleListenerRegistration(onSignalListener, value) { pubNub, result ->
+                (result as? PNSignalResult)?.let { value?.invoke(pubNub, it) }
             }
-            field = value
         }
+
     override var onMessageAction: ((PubNub, PNMessageActionResult) -> Unit)? = null
         @Synchronized
         set(value) {
-            if (value == null) {
-                onMessageActionListener?.let { removeListener(it) }
-            } else {
-                val eventListenerWithMessageActionHandling = object : EventListener {
-                    override fun messageAction(pubnub: PubNub, result: PNMessageActionResult) {
-                        value.invoke(pubnub, result)
-                    }
-                }
-                onMessageActionListener = eventListenerWithMessageActionHandling
-                addListener(eventListenerWithMessageActionHandling)
+            onMessageActionListener = handleListenerRegistration(onMessageActionListener, value) { pubNub, result ->
+                (result as? PNMessageActionResult)?.let { value?.invoke(pubNub, it) }
             }
-            field = value
         }
 
     override var onObjects: ((PubNub, PNObjectEventResult) -> Unit)? = null
+        @Synchronized
         set(value) {
-            if (value == null) {
-                onObjectListener?.let { removeListener(it) }
-            } else {
-                val eventListenerWithOnObjectHandling = object : EventListener {
-                    override fun objects(pubnub: PubNub, result: PNObjectEventResult) {
-                        value.invoke(pubnub, result)
-                    }
-                }
-                onObjectListener = eventListenerWithOnObjectHandling
-                addListener(eventListenerWithOnObjectHandling)
+            onObjectListener = handleListenerRegistration(onObjectListener, value) { pubNub, result ->
+                (result as? PNObjectEventResult)?.let { value?.invoke(pubNub, it) }
             }
-            field = value
         }
 
     override var onFile: ((PubNub, PNFileEventResult) -> Unit)? = null
+        @Synchronized
         set(value) {
-            if (value == null) {
-                onFileListener?.let { removeListener(it) }
-            } else {
-                val eventListenerWithOnFileHandling = object : EventListener {
-                    override fun file(pubnub: PubNub, result: PNFileEventResult) {
-                        value.invoke(pubnub, result)
-                    }
-                }
-                onFileListener = eventListenerWithOnFileHandling
-                addListener(eventListenerWithOnFileHandling)
+            onFileListener = handleListenerRegistration(onFileListener, value) { pubNub, result ->
+                (result as? PNFileEventResult)?.let { value?.invoke(pubNub, it) }
             }
-            field = value
         }
+
+    private fun <T> handleListenerRegistration(
+        currentListener: Listener?,
+        newValue: ((PubNub, T) -> Unit)?,
+        eventHandler: (PubNub, Any) -> Unit
+    ): EventListener? {
+        currentListener?.let { removeListener(it) }
+
+        return if (newValue == null) {
+            null
+        } else {
+            val newEventListener = object : EventListener {
+                override fun message(pubnub: PubNub, result: PNMessageResult) {
+                    eventHandler(pubnub, result)
+                }
+
+                override fun presence(pubnub: PubNub, result: PNPresenceEventResult) {
+                    eventHandler(pubnub, result)
+                }
+
+                override fun signal(pubnub: PubNub, result: PNSignalResult) {
+                    eventHandler(pubnub, result)
+                }
+
+                override fun messageAction(pubnub: PubNub, result: PNMessageActionResult) {
+                    eventHandler(pubnub, result)
+                }
+
+                override fun objects(pubnub: PubNub, result: PNObjectEventResult) {
+                    eventHandler(pubnub, result)
+                }
+
+                override fun file(pubnub: PubNub, result: PNFileEventResult) {
+                    eventHandler(pubnub, result)
+                }
+            }
+            addListener(newEventListener)
+            newEventListener
+        }
+    }
 
     override fun addListener(listener: EventListener) {
         listeners.add(listener)

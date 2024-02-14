@@ -28,47 +28,12 @@ internal class SubscriptionSetImpl(
     private val pubnub: PubNub,
     initialSubscriptions: Set<SubscriptionImpl> = emptySet(),
 ) : SubscriptionSet(), EventEmitter {
-
-    override var onMessage: ((PubNub, PNMessageResult) -> Unit)? = null
-        set(value) {
-            eventEmitter.onMessage = value
-            field = value
-        }
-
-    override var onPresence: ((PubNub, PNPresenceEventResult) -> Unit)? = null
-        set(value) {
-            eventEmitter.onPresence = value
-            field = value
-        }
-
-    override var onSignal: ((PubNub, PNSignalResult) -> Unit)? = null
-        set(value) {
-            eventEmitter.onSignal = value
-            field = value
-        }
-
-    override var onMessageAction: ((PubNub, PNMessageActionResult) -> Unit)? = null
-        set(value) {
-            eventEmitter.onMessageAction = value
-            field = value
-        }
-
-    override var onObjects: ((PubNub, PNObjectEventResult) -> Unit)? = null
-        set(value) {
-            eventEmitter.onObjects = value
-            field = value
-        }
-
-    override var onFile: ((PubNub, PNFileEventResult) -> Unit)? = null
-        set(value) {
-            eventEmitter.onFile = value
-            field = value
-        }
-
     private val _subscriptions: CopyOnWriteArraySet<SubscriptionImpl> = CopyOnWriteArraySet()
+    override val subscriptions get() = _subscriptions.toSet()
     private val eventEmitter = EventEmitterImpl(AnnouncementCallback.Phase.SET, ::accepts)
 
-    override val subscriptions get() = _subscriptions.toSet()
+    private fun accepts(envelope: AnnouncementEnvelope<*>) =
+        subscriptions.any { subscription -> subscription in envelope.acceptedBy }
 
     init {
         require(initialSubscriptions.all { it.pubnub == pubnub }) { ERROR_WRONG_PUBNUB_INSTANCE }
@@ -76,8 +41,12 @@ internal class SubscriptionSetImpl(
         pubnub.listenerManager.addAnnouncementCallback(eventEmitter)
     }
 
-    private fun accepts(envelope: AnnouncementEnvelope<*>) =
-        subscriptions.any { subscription -> subscription in envelope.acceptedBy }
+    override var onMessage: ((PubNub, PNMessageResult) -> Unit)? by eventEmitter::onMessage
+    override var onPresence: ((PubNub, PNPresenceEventResult) -> Unit)? by eventEmitter::onPresence
+    override var onSignal: ((PubNub, PNSignalResult) -> Unit)? by eventEmitter::onSignal
+    override var onMessageAction: ((PubNub, PNMessageActionResult) -> Unit)? by eventEmitter::onMessageAction
+    override var onObjects: ((PubNub, PNObjectEventResult) -> Unit)? by eventEmitter::onObjects
+    override var onFile: ((PubNub, PNFileEventResult) -> Unit)? by eventEmitter::onFile
 
     override fun add(subscription: Subscription) {
         require(subscription is SubscriptionImpl) { ERROR_SUBSCRIPTION_WRONG_CLASS }

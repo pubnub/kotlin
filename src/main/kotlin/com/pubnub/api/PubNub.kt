@@ -58,7 +58,6 @@ import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.enums.PNReconnectionPolicy
 import com.pubnub.api.managers.AnnouncementCallback
-import com.pubnub.api.managers.AnnouncementEnvelope
 import com.pubnub.api.managers.BasePathManager
 import com.pubnub.api.managers.DuplicationManager
 import com.pubnub.api.managers.ListenerManager
@@ -170,7 +169,7 @@ class PubNub internal constructor(
     internal val tokenManager: TokenManager = TokenManager()
     private val tokenParser: TokenParser = TokenParser()
     internal val listenerManager = ListenerManager(this)
-    private val eventEmitter = EventEmitterImpl(AnnouncementCallback.Phase.SUBSCRIPTION, ::accepts) // todo I tried to used it but doesn't work yet
+    private val eventEmitter = EventEmitterImpl(AnnouncementCallback.Phase.SUBSCRIPTION) { true }
     internal val subscriptionManager = SubscriptionManager(this, listenerManager)
     private val presenceData = PresenceData()
     private val subscribe = Subscribe.create(
@@ -183,8 +182,6 @@ class PubNub internal constructor(
         configuration.maintainPresenceState,
         executorService
     )
-
-    private fun accepts(envelope: AnnouncementEnvelope<*>) = true
 
     private val presence = Presence.create(
         heartbeatProvider = HeartbeatProviderImpl(this),
@@ -200,6 +197,10 @@ class PubNub internal constructor(
         sendStateWithHeartbeat = configuration.maintainPresenceState,
         executorService = executorService
     )
+
+    init {
+        listenerManager.addAnnouncementCallback(eventEmitter)
+    }
 
     //endregion
 
@@ -2150,153 +2151,12 @@ class PubNub internal constructor(
         listenerManager.removeAllListeners()
     }
 
-    @Volatile
-    private var onMessageListener: Listener? = null
-    @Volatile
-    private var onPresenceListener: Listener? = null
-    @Volatile
-    private var onSignalListener: Listener? = null
-    @Volatile
-    private var onMessageActionListener: Listener? = null
-    @Volatile
-    private var onObjectListener: Listener? = null
-    @Volatile
-    private var onFileListener: Listener? = null
-
-    override var onMessage: ((PubNub, PNMessageResult) -> Unit)? = null
-        @Synchronized
-        set(value) {
-            if (value == null) {
-                onMessageListener?.let { removeListener(it) }
-            } else {
-                val eventListenerWithMessageHandling = object : EventListener {
-                    override fun message(pubnub: PubNub, result: PNMessageResult) {
-                        value.invoke(pubnub, result)
-                    }
-                }
-                onMessageListener = eventListenerWithMessageHandling
-                addListener(eventListenerWithMessageHandling)
-            }
-            field = value
-        }
-
-    override var onPresence: ((PubNub, PNPresenceEventResult) -> Unit)? = null
-        set(value) {
-            if (value == null) {
-                onPresenceListener?.let { removeListener(it) }
-            } else {
-                val eventListenerWithPresenceHandling = object : EventListener {
-                    override fun presence(pubnub: PubNub, result: PNPresenceEventResult) {
-                        value.invoke(pubnub, result)
-                    }
-                }
-                onPresenceListener = eventListenerWithPresenceHandling
-                addListener(eventListenerWithPresenceHandling)
-            }
-            field = value
-        }
-
-    override var onSignal: ((PubNub, PNSignalResult) -> Unit)? = null
-        @Synchronized
-        set(value) {
-            if (value == null) {
-                onSignalListener?.let { removeListener(it) }
-            } else {
-                val eventListenerWithSignalHandling = object : EventListener {
-                    override fun signal(pubnub: PubNub, result: PNSignalResult) {
-                        value.invoke(pubnub, result)
-                    }
-                }
-                onSignalListener = eventListenerWithSignalHandling
-                addListener(eventListenerWithSignalHandling)
-            }
-            field = value
-        }
-
-    override var onMessageAction: ((PubNub, PNMessageActionResult) -> Unit)? = null
-        @Synchronized
-        set(value) {
-            if (value == null) {
-                onMessageActionListener?.let { removeListener(it) }
-            } else {
-                val eventListenerWithMessageActionHandling = object : EventListener {
-                    override fun messageAction(pubnub: PubNub, result: PNMessageActionResult) {
-                        value.invoke(pubnub, result)
-                    }
-                }
-                onMessageActionListener = eventListenerWithMessageActionHandling
-                addListener(eventListenerWithMessageActionHandling)
-            }
-            field = value
-        }
-
-    override var onObjects: ((PubNub, PNObjectEventResult) -> Unit)? = null
-        set(value) {
-            if (value == null) {
-                onObjectListener?.let { removeListener(it) }
-            } else {
-                val eventListenerWithOnObjectHandling = object : EventListener {
-                    override fun objects(pubnub: PubNub, result: PNObjectEventResult) {
-                        value.invoke(pubnub, result)
-                    }
-                }
-                onObjectListener = eventListenerWithOnObjectHandling
-                addListener(eventListenerWithOnObjectHandling)
-            }
-            field = value
-        }
-
-    override var onFile: ((PubNub, PNFileEventResult) -> Unit)? = null
-        set(value) {
-            if (value == null) {
-                onFileListener?.let { removeListener(it) }
-            } else {
-                val eventListenerWithOnFileHandling = object : EventListener {
-                    override fun file(pubnub: PubNub, result: PNFileEventResult) {
-                        value.invoke(pubnub, result)
-                    }
-                }
-                onFileListener = eventListenerWithOnFileHandling
-                addListener(eventListenerWithOnFileHandling)
-            }
-            field = value
-        }
-
-//    override var onMessage: ((PubNub, PNMessageResult) -> Unit)? = null
-//        set(value) {
-//            eventEmitter.onMessage = value
-//            field = value
-//        }
-//
-//    override var onPresence: ((PubNub, PNPresenceEventResult) -> Unit)? = null
-//        set(value) {
-//            eventEmitter.onPresence = value
-//            field = value
-//        }
-//
-//    override var onSignal: ((PubNub, PNSignalResult) -> Unit)? = null
-//        set(value) {
-//            eventEmitter.onSignal = value
-//            field = value
-//        }
-//
-//    override var onMessageAction: ((PubNub, PNMessageActionResult) -> Unit)? = null
-//        set(value) {
-//            eventEmitter.onMessageAction = value
-//            field = value
-//        }
-//
-//    override var onObjects: ((PubNub, PNObjectEventResult) -> Unit)? = null
-//        set(value) {
-//            eventEmitter.onObjects = value
-//            field = value
-//        }
-//
-//    override var onFile: ((PubNub, PNFileEventResult) -> Unit)? = null
-//        set(value) {
-//            eventEmitter.onFile = value
-//            field = value
-//        }
+    override var onMessage: ((PubNub, PNMessageResult) -> Unit)? by eventEmitter::onMessage
+    override var onPresence: ((PubNub, PNPresenceEventResult) -> Unit)? by eventEmitter::onPresence
+    override var onSignal: ((PubNub, PNSignalResult) -> Unit)? by eventEmitter::onSignal
+    override var onMessageAction: ((PubNub, PNMessageActionResult) -> Unit)? by eventEmitter::onMessageAction
+    override var onObjects: ((PubNub, PNObjectEventResult) -> Unit)? by eventEmitter::onObjects
+    override var onFile: ((PubNub, PNFileEventResult) -> Unit)? by eventEmitter::onFile
 
     //region Encryption
     /**
