@@ -15,7 +15,7 @@ data class PNMember(
         override val custom: Any? = null,
         override val status: String? = null,
 
-        ) : MemberInput {
+    ) : MemberInput {
         override val uuid: String = uuidId
     }
 

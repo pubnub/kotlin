@@ -1,14 +1,14 @@
 package com.pubnub.internal.endpoints
 
 import com.google.gson.JsonElement
-import com.pubnub.internal.Endpoint
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.history.PNHistoryItemResult
 import com.pubnub.api.models.consumer.history.PNHistoryResult
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.BasePubNub.PubNubImpl
+import com.pubnub.internal.Endpoint
+import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.extension.tryDecryptMessage
 import retrofit2.Call
 import retrofit2.Response

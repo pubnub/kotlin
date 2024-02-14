@@ -65,7 +65,6 @@ import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.internal.BasePubNub
-import com.pubnub.internal.managers.ListenerManager
 import com.pubnub.internal.models.consumer.objects.toInternal
 import com.pubnub.internal.models.consumer.objects.toInternalChannelGrants
 import com.pubnub.internal.models.consumer.objects.toInternalChannelGroupGrants
@@ -78,14 +77,11 @@ import com.pubnub.internal.models.consumer.objects.toInternalUuidGrants
 import java.io.InputStream
 
 class PubNub(
-    configuration: PNConfiguration,
-//    private val pubNubImpl: pubNubImpl = pubNubImpl(configuration)
+    val configuration: PNConfiguration,
 ) : BasePubNub(configuration) {
     companion object {
         fun generateUUID() = BasePubNub.generateUUID()
     }
-
-    override val listenerManager = ListenerManager(this)
 
     fun publish(
         channel: String,
@@ -623,8 +619,8 @@ class PubNub(
     @Deprecated(
         replaceWith = ReplaceWith(
             "setMemberships(channels = channels, uuid = uuid, limit = limit, " +
-                    "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
-                    "includeChannelDetails = includeChannelDetails)"
+                "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
+                "includeChannelDetails = includeChannelDetails)"
         ),
         level = DeprecationLevel.ERROR,
         message = "Use setMemberships instead"
@@ -969,7 +965,6 @@ class PubNub(
         connected: Boolean = false
     ) = pubNubImpl.presence(channels, channelGroups, connected)
 
-
     /**
      * Perform Cryptographic decryption of an input string using cipher key provided by [PNConfiguration.cipherKey].
      *
@@ -1046,4 +1041,3 @@ class PubNub(
         return pubNubImpl.setToken(token)
     }
 }
-

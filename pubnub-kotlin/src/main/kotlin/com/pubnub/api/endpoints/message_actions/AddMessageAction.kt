@@ -8,5 +8,6 @@ import com.pubnub.internal.endpoints.message_actions.IAddMessageAction
 /**
  * @see [PubNub.addMessageAction]
  */
-class AddMessageAction internal constructor(addMessageAction: IAddMessageAction) : Endpoint<PNAddMessageActionResult>(),
+class AddMessageAction internal constructor(addMessageAction: IAddMessageAction) :
+    Endpoint<PNAddMessageActionResult>(),
     IAddMessageAction by addMessageAction

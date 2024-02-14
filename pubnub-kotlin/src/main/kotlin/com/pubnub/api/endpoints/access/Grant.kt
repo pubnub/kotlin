@@ -14,7 +14,8 @@ import com.pubnub.internal.endpoints.access.IGrant
 class Grant internal constructor(grant: Grant) :
     DelegatingEndpoint<PNAccessManagerGrantResult, com.pubnub.internal.models.consumer.access_manager.PNAccessManagerGrantResult>(
         grant
-    ), IGrant by grant {
+    ),
+    IGrant by grant {
     override fun convertAction(remoteAction: ExtendedRemoteAction<com.pubnub.internal.models.consumer.access_manager.PNAccessManagerGrantResult>): ExtendedRemoteAction<PNAccessManagerGrantResult> {
         return MappingRemoteAction(remoteAction, PNAccessManagerGrantResult.Companion::from)
     }

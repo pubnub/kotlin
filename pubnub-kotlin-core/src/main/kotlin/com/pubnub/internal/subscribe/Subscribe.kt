@@ -3,7 +3,7 @@ package com.pubnub.internal.subscribe
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.retry.RetryConfiguration
-import com.pubnub.internal.BasePubNub.PubNubImpl
+import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.eventengine.EffectDispatcher
 import com.pubnub.internal.managers.ListenerManager
 import com.pubnub.internal.managers.SubscribeEventEngineManager

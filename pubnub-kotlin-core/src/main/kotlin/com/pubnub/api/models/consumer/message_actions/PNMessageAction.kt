@@ -51,7 +51,7 @@ open class PNMessageAction(
         return this
     }
 
-    fun setMessageTimetoken(messageTimetoken: Long) : PNMessageAction {
+    fun setMessageTimetoken(messageTimetoken: Long): PNMessageAction {
         this.messageTimetoken = messageTimetoken
         return this
     }
@@ -61,7 +61,7 @@ open class PNMessageAction(
         return this
     }
 
-    fun setActionTimetoken(actionTimetoken: Long) : PNMessageAction {
+    fun setActionTimetoken(actionTimetoken: Long): PNMessageAction {
         this.actionTimetoken = actionTimetoken
         return this
     }
@@ -74,7 +74,7 @@ open class PNMessageAction(
         return this.value
     }
 
-    fun getMessageTimetoken() : Long? {
+    fun getMessageTimetoken(): Long? {
         return this.messageTimetoken
     }
 
@@ -82,7 +82,7 @@ open class PNMessageAction(
         return this.uuid
     }
 
-    fun getActionTimetoken() : Long? {
+    fun getActionTimetoken(): Long? {
         return this.actionTimetoken
     }
 }

@@ -6,7 +6,7 @@ import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions;
 import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions;
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant;
-import com.pubnub.internal.BasePubNub.PubNubImpl;
+import com.pubnub.internal.PubNubImpl;
 
 import java.util.ArrayList;
 import java.util.List;

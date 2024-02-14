@@ -14,7 +14,8 @@ import com.pubnub.internal.endpoints.objects.membership.ManageMemberships
 class ManageMemberships internal constructor(manageMemberships: ManageMemberships) :
     DelegatingEndpoint<PNChannelMembershipArrayResult, com.pubnub.internal.models.consumer.objects.membership.PNChannelMembershipArrayResult>(
         manageMemberships
-    ), IManageMemberships by manageMemberships {
+    ),
+    IManageMemberships by manageMemberships {
     override fun convertAction(remoteAction: ExtendedRemoteAction<com.pubnub.internal.models.consumer.objects.membership.PNChannelMembershipArrayResult>): ExtendedRemoteAction<PNChannelMembershipArrayResult> {
         return MappingRemoteAction(remoteAction, PNChannelMembershipArrayResult.Companion::from)
     }

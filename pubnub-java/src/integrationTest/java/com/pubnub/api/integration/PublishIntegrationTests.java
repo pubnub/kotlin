@@ -6,12 +6,9 @@ import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
-import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.crypto.CryptoModule;
-import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
-import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult;
 import com.pubnub.api.models.consumer.history.PNHistoryResult;
@@ -64,9 +61,8 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
         pubNub.publish()
                 .message(messagePayload)
                 .channel(expectedChannel)
-                .async((result, status) -> {
-                    assertFalse(status.isError());
-                    assertEquals(status.getUuid(), pubNub.getConfiguration().getUserId().getValue());
+                .async((result) -> {
+                    assertFalse(result.isFailure());
                     success.set(true);
                 });
 
@@ -98,13 +94,13 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
         pubNub.fetchMessages()
                 .channels(Collections.singletonList(expectedChannel))
                 .maximumPerChannel(1)
-                .async((result, status) -> {
-                    assertFalse(status.isError());
-                    assert result != null;
-                    assertEquals(1, result.getChannels().size());
-                    assertEquals(1, result.getChannels().get(expectedChannel).size());
-                    assertEquals(whatToExpect, result.getChannels().get(expectedChannel).get(
+                .async((result) -> {
+                    assertFalse(result.isFailure());
+                    assertEquals(1, result.getOrNull().getChannels().size());
+                    assertEquals(1, result.getOrNull().getChannels().get(expectedChannel).size());
+                    assertEquals(whatToExpect, result.getOrNull().getChannels().get(expectedChannel).get(
                             0).getMessage());
+
                     success.set(true);
                 });
 
@@ -121,9 +117,8 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
                 .message(messagePayload)
                 .channel(expectedChannel)
                 .shouldStore(false)
-                .async((result, status) -> {
-                    assertFalse(status.isError());
-                    assertEquals(status.getUuid(), pubNub.getConfiguration().getUserId().getValue());
+                .async((result) -> {
+                    assertFalse(result.isFailure());
                 });
 
         pause(2);
@@ -131,10 +126,9 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
         pubNub.history()
                 .count(1)
                 .channel(expectedChannel)
-                .async((pnHistoryResult, pnStatus) -> {
-                    assertFalse(pnStatus.isError());
-                    assert pnHistoryResult != null;
-                    assertEquals(0, pnHistoryResult.getMessages().size());
+                .async((result) -> {
+                    assertFalse(result.isFailure());
+                    assertEquals(0, result.getOrNull().getMessages().size());
                     success.set(true);
                 });
 
@@ -157,13 +151,12 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
 
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
-                if (status.getOperation() == PNOperationType.PNSubscribeOperation) {
-                    assert status.getAffectedChannels() != null;
-                    if (status.getAffectedChannels().contains(expectedChannel)) {
+                if (status instanceof PNStatus.Connected) {
+                    if (((PNStatus.Connected) status).getChannels().contains(expectedChannel)) {
                         observer.publish()
                                 .message(messagePayload)
                                 .channel(expectedChannel)
-                                .async((PNCallback<PNPublishResult>) (result, status1) -> assertFalse(status1.isError()));
+                                .async((result) -> assertFalse(result.isFailure()));
                     }
                 }
             }
@@ -231,21 +224,20 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
 
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
-                if (status.getOperation() == PNOperationType.PNSubscribeOperation) {
-                    assert status.getAffectedChannels() != null;
-                    if (status.getAffectedChannels().contains(expectedChannel)) {
+                if (status instanceof PNStatus.Connected) {
+                    if (((PNStatus.Connected) status).getChannels().contains(expectedChannel)) {
                         // send an unencrypted message first to try to crash the SubscribeMessageProcessor
                         sender.publish()
                                 .message(messagePayload)
                                 .channel(expectedChannel)
-                                .async((result, status1) -> {
-                                    assertFalse(status1.isError());
+                                .async((result) -> {
+                                    assertFalse(result.isFailure());
 
                                     // then verify if the subscribe loop is still working by sending an encrypted message
                                     observer.publish()
                                             .message(messagePayload)
                                             .channel(expectedChannel)
-                                            .async((PNCallback<PNPublishResult>) (result2, status2) -> assertFalse(status2.isError()));
+                                            .async(result2 -> assertFalse(result2.isFailure()));
                                 });
                     }
                 }

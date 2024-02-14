@@ -1,11 +1,11 @@
 package com.pubnub.internal.endpoints.pubsub
 
-import com.pubnub.internal.Endpoint
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.BasePubNub.PubNubImpl
+import com.pubnub.internal.Endpoint
+import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.PubNubUtil
 import com.pubnub.internal.models.server.SubscribeEnvelope
 import com.pubnub.internal.toCsv

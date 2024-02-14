@@ -1,9 +1,9 @@
 package com.pubnub.internal.endpoints.objects.uuid
 
-import com.pubnub.internal.Endpoint
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.BasePubNub.PubNubImpl
+import com.pubnub.internal.Endpoint
+import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.models.consumer.objects.PNRemoveMetadataResult
 import com.pubnub.internal.models.server.objects_api.EntityEnvelope
 import retrofit2.Call

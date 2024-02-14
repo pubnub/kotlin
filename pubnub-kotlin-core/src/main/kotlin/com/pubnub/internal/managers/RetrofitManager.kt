@@ -1,7 +1,7 @@
 package com.pubnub.internal.managers
 
 import com.pubnub.api.enums.PNLogVerbosity
-import com.pubnub.internal.BasePubNub.PubNubImpl
+import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.interceptor.SignatureInterceptor
 import com.pubnub.internal.services.AccessManagerService
 import com.pubnub.internal.services.ChannelGroupService

@@ -27,5 +27,3 @@ interface UUIDGrant : PNGrant {
         )
     }
 }
-
-

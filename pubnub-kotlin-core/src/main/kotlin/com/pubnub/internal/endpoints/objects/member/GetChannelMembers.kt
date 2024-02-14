@@ -1,9 +1,9 @@
 package com.pubnub.internal.endpoints.objects.member
 
-import com.pubnub.internal.Endpoint
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.BasePubNub.PubNubImpl
+import com.pubnub.internal.Endpoint
+import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.endpoints.objects.internal.CollectionQueryParameters
 import com.pubnub.internal.endpoints.objects.internal.IncludeQueryParam
 import com.pubnub.internal.extension.toPNMemberArrayResult

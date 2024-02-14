@@ -4,7 +4,7 @@ import com.pubnub.api.endpoints.access.GrantToken;
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant;
-import com.pubnub.internal.BasePubNub.PubNubImpl;
+import com.pubnub.internal.PubNubImpl;
 
 import java.util.List;
 

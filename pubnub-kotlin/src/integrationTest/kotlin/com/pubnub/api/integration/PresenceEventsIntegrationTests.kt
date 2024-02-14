@@ -34,9 +34,9 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
 
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
-                assertEquals("join", pnPresenceEventResult.event)
-                assertEquals(expectedChannel, pnPresenceEventResult.channel)
+            override fun presence(pubnub: PubNub, event: PNPresenceEventResult) {
+                assertEquals("join", event.event)
+                assertEquals(expectedChannel, event.channel)
                 success.set(true)
             }
         })
@@ -57,9 +57,9 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
 
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
-                if (pnPresenceEventResult.event == "leave") {
-                    assertEquals(expectedChannel, pnPresenceEventResult.channel)
+            override fun presence(pubnub: PubNub, event: PNPresenceEventResult) {
+                if (event.event == "leave") {
+                    assertEquals(expectedChannel, event.channel)
                     success.set(true)
                 }
             }
@@ -97,9 +97,9 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
                 }
             }
 
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
-                if (pnPresenceEventResult.event == "timeout") {
-                    assertEquals(expectedChannel, pnPresenceEventResult.channel)
+            override fun presence(pubnub: PubNub, event: PNPresenceEventResult) {
+                if (event.event == "timeout") {
+                    assertEquals(expectedChannel, event.channel)
                     timeoutReceived.set(true)
                 }
             }
@@ -129,9 +129,9 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
 
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
 
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
-                if (pnPresenceEventResult.event == "state-change") {
-                    assertEquals(pubnub.configuration.userId.value, pnPresenceEventResult.uuid)
+            override fun presence(pubnub: PubNub, event: PNPresenceEventResult) {
+                if (event.event == "state-change") {
+                    assertEquals(pubnub.configuration.userId.value, event.uuid)
                     success.set(true)
                 }
             }

@@ -2,7 +2,7 @@ package com.pubnub.api.endpoints;
 
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.history.PNDeleteMessagesResult;
-import com.pubnub.internal.BasePubNub.PubNubImpl;
+import com.pubnub.internal.PubNubImpl;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 

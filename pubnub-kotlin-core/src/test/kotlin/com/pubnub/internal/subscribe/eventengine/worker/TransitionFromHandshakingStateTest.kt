@@ -1,8 +1,8 @@
 package com.pubnub.internal.subscribe.eventengine.worker
 
 import com.pubnub.api.PubNubException
-import com.pubnub.internal.eventengine.transition
 import com.pubnub.api.models.consumer.PNStatus
+import com.pubnub.internal.eventengine.transition
 import com.pubnub.internal.subscribe.eventengine.effect.SubscribeEffectInvocation.CancelHandshake
 import com.pubnub.internal.subscribe.eventengine.effect.SubscribeEffectInvocation.EmitStatus
 import com.pubnub.internal.subscribe.eventengine.effect.SubscribeEffectInvocation.Handshake

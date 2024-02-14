@@ -4,7 +4,7 @@ import com.google.gson.JsonElement
 import com.pubnub.api.PubNubError
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.history.PNFetchMessageItem.Action
-import com.pubnub.internal.BasePubNub.PubNubImpl
+import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.endpoints.FetchMessages
 
 /**

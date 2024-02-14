@@ -62,4 +62,3 @@ fun SpacePermissions.toChannelGrant(): ChannelGrant {
         else -> throw PubNubException(pubnubError = PubNubError.INVALID_ARGUMENTS)
     }
 }
-

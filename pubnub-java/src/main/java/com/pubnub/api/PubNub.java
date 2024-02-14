@@ -54,8 +54,6 @@ import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice;
 import com.pubnub.api.endpoints.push.RemoveChannelsFromPush;
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken;
 import com.pubnub.internal.BasePubNub;
-import com.pubnub.internal.PNConfiguration;
-import com.pubnub.internal.managers.ListenerManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,8 +63,16 @@ import java.util.UUID;
 
 public class PubNub extends BasePubNub {
 
+    private final PNConfiguration configuration;
+
     public PubNub(@NotNull PNConfiguration configuration) {
-        super(configuration);
+        super(configuration.getPnConfiguration());
+        this.configuration = configuration;
+    }
+
+    @NotNull
+    public PNConfiguration getConfiguration() {
+        return configuration;
     }
 
     @NotNull
@@ -449,11 +455,5 @@ public class PubNub extends BasePubNub {
 
     public void setToken(String token) {
         getPubNubImpl().setToken(token);
-    }
-
-    @NotNull
-    @Override
-    public ListenerManager getListenerManager() {
-        return new ListenerManager(this);
     }
 }

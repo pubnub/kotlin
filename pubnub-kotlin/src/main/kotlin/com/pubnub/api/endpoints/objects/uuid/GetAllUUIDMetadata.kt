@@ -14,7 +14,8 @@ import com.pubnub.internal.models.consumer.objects.uuid.PNUUIDMetadataArrayResul
 class GetAllUUIDMetadata internal constructor(getAllUUIDMetadata: GetAllUUIDMetadata) :
     DelegatingEndpoint<com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult, PNUUIDMetadataArrayResult>(
         getAllUUIDMetadata
-    ), IGetAllUUIDMetadata by getAllUUIDMetadata {
+    ),
+    IGetAllUUIDMetadata by getAllUUIDMetadata {
     override fun convertAction(remoteAction: ExtendedRemoteAction<PNUUIDMetadataArrayResult>): ExtendedRemoteAction<com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult> {
         return MappingRemoteAction(
             remoteAction,

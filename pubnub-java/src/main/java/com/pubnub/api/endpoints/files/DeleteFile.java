@@ -7,7 +7,7 @@ import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps.Fil
 import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps.FileNameStep;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.files.PNDeleteFileResult;
-import com.pubnub.internal.BasePubNub.PubNubImpl;
+import com.pubnub.internal.PubNubImpl;
 import lombok.experimental.Accessors;
 
 @Accessors(chain = true, fluent = true)

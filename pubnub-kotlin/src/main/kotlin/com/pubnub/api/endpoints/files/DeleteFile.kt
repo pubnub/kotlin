@@ -8,5 +8,6 @@ import com.pubnub.internal.endpoints.files.IDeleteFile
 /**
  * @see [PubNub.deleteFile]
  */
-class DeleteFile internal constructor(deleteFile: IDeleteFile) : Endpoint<PNDeleteFileResult?>(),
+class DeleteFile internal constructor(deleteFile: IDeleteFile) :
+    Endpoint<PNDeleteFileResult?>(),
     IDeleteFile by deleteFile

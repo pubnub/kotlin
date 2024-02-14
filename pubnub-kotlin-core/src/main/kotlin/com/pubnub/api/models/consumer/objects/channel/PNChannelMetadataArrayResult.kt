@@ -10,7 +10,7 @@ data class PNChannelMetadataArrayResult(
     val prev: PNPage.PNPrev?
 ) {
     companion object {
-        fun from (data: com.pubnub.internal.models.consumer.objects.channel.PNChannelMetadataArrayResult): PNChannelMetadataArrayResult{
+        fun from(data: com.pubnub.internal.models.consumer.objects.channel.PNChannelMetadataArrayResult): PNChannelMetadataArrayResult {
             return PNChannelMetadataArrayResult(
                 data.status,
                 data.data,
@@ -21,4 +21,3 @@ data class PNChannelMetadataArrayResult(
         }
     }
 }
-

@@ -1,6 +1,6 @@
 package com.pubnub.api.models.consumer.access_manager
 
-import com.pubnub.internal.BasePubNub.PubNubImpl
+import com.pubnub.internal.PubNubImpl
 
 /**
  * Result of the [PubNubImpl.grant] operation
@@ -35,7 +35,6 @@ private fun Map<String, Map<String, com.pubnub.internal.models.consumer.access_m
         it.value?.mapValues { PNAccessManagerKeyData.from(it.value) }
     }
 }
-
 
 open class PNAccessManagerKeyData {
 

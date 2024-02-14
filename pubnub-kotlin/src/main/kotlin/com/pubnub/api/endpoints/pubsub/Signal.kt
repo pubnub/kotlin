@@ -7,4 +7,3 @@ import com.pubnub.internal.endpoints.pubsub.ISignal
  * @see [PubNub.signal]
  */
 class Signal internal constructor(signal: ISignal) : ISignal by signal
-

@@ -3,6 +3,9 @@ package com.pubnub.api.models.consumer
 import com.pubnub.api.PubNubException
 
 sealed interface PNStatus {
+    val isError: Boolean
+        get() = false
+
     data class Connected(
         val currentTimetoken: Long,
         val channels: Collection<String> = emptyList(),
@@ -23,13 +26,17 @@ sealed interface PNStatus {
 
     data class UnexpectedDisconnect(
         val exception: PubNubException
-    ) : PNStatus
+    ) : PNStatus {
+        override val isError: Boolean = true
+    }
 
     object Disconnected : PNStatus
 
     data class ConnectionError(
         val exception: PubNubException
-    ) : PNStatus
+    ) : PNStatus {
+        override val isError: Boolean = true
+    }
 
     data class Leave(
         val channels: List<String>,
@@ -38,11 +45,15 @@ sealed interface PNStatus {
 
     data class HeartbeatFailed(
         val exception: PubNubException
-    ) : PNStatus
+    ) : PNStatus {
+        override val isError: Boolean = true
+    }
 
     object HeartbeatSuccess : PNStatus
 
     data class MalformedMessage(
         val exception: PubNubException
-    ) : PNStatus
+    ) : PNStatus {
+        override val isError: Boolean = true
+    }
 }

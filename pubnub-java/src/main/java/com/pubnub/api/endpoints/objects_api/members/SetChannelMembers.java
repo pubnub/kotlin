@@ -10,7 +10,7 @@ import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects_api.member.PNSetChannelMembersResult;
 import com.pubnub.api.models.consumer.objects_api.member.PNUUID;
-import com.pubnub.internal.BasePubNub.PubNubImpl;
+import com.pubnub.internal.PubNubImpl;
 import com.pubnub.internal.models.consumer.objects.PNMemberKey;
 import com.pubnub.internal.models.consumer.objects.member.MemberInput;
 import com.pubnub.internal.models.consumer.objects.member.PNMember;

@@ -5,7 +5,7 @@ import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects_api.channel.PNRemoveChannelMetadataResult;
-import com.pubnub.internal.BasePubNub.PubNubImpl;
+import com.pubnub.internal.PubNubImpl;
 import lombok.AllArgsConstructor;
 
 public class RemoveChannelMetadata extends Endpoint<PNRemoveChannelMetadataResult> {

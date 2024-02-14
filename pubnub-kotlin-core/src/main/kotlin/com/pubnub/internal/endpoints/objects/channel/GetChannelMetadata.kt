@@ -1,11 +1,11 @@
 package com.pubnub.internal.endpoints.objects.channel
 
-import com.pubnub.internal.Endpoint
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataResult
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.BasePubNub.PubNubImpl
+import com.pubnub.internal.Endpoint
+import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.endpoints.objects.internal.IncludeQueryParam
 import com.pubnub.internal.models.server.objects_api.EntityEnvelope
 import retrofit2.Call

@@ -1,7 +1,6 @@
 package com.pubnub.api.callbacks
 
 import com.pubnub.api.PubNub
-import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
@@ -13,33 +12,33 @@ import com.pubnub.internal.BasePubNub
 import com.pubnub.internal.callbacks.SubscribeCallback
 import com.pubnub.internal.models.consumer.objects.toApi
 
-abstract class SubscribeCallback : SubscribeCallback, com.pubnub.internal.v2.callbacks.StatusListener, com.pubnub.internal.v2.callbacks.EventListener {
+abstract class SubscribeCallback : SubscribeCallback {
 
-    final override fun message(pubnub: BasePubNub, result: PNMessageResult) {
-        message(pubnub as PubNub, result)
+    final override fun message(pubnub: BasePubNub, event: PNMessageResult) {
+        message(pubnub as PubNub, event)
     }
 
-    final override fun presence(pubnub: BasePubNub, result: PNPresenceEventResult) {
-        presence(pubnub as PubNub, result)
+    final override fun presence(pubnub: BasePubNub, event: PNPresenceEventResult) {
+        presence(pubnub as PubNub, event)
     }
 
-    final override fun signal(pubnub: BasePubNub, result: PNSignalResult) {
-        signal(pubnub as PubNub, result)
+    final override fun signal(pubnub: BasePubNub, event: PNSignalResult) {
+        signal(pubnub as PubNub, event)
     }
 
-    final override fun messageAction(pubnub: BasePubNub, result: PNMessageActionResult) {
-        messageAction(pubnub as PubNub, result)
+    final override fun messageAction(pubnub: BasePubNub, event: PNMessageActionResult) {
+        messageAction(pubnub as PubNub, event)
     }
 
     final override fun objects(
         pubnub: BasePubNub,
-        result: com.pubnub.internal.models.consumer.pubsub.objects.PNObjectEventResult
+        event: com.pubnub.internal.models.consumer.pubsub.objects.PNObjectEventResult
     ) {
-        objects(pubnub as PubNub, result.toApi())
+        objects(pubnub as PubNub, event.toApi())
     }
 
-    final override fun file(pubnub: BasePubNub, result: PNFileEventResult) {
-        file(pubnub as PubNub, result)
+    final override fun file(pubnub: BasePubNub, event: PNFileEventResult) {
+        file(pubnub as PubNub, event)
     }
 
     final override fun status(pubnub: BasePubNub, status: PNStatus) {
@@ -48,16 +47,16 @@ abstract class SubscribeCallback : SubscribeCallback, com.pubnub.internal.v2.cal
 
     /**
      * Receive status events like
-     * [PNStatusCategory.PNAcknowledgmentCategory],
-     * [PNStatusCategory.PNConnectedCategory],
-     * [PNStatusCategory.PNReconnectedCategory]
+     * [PNStatus.Connected],
+     * [PNStatus.Disconnected],
+     * [PNStatus.SubscriptionChanged]
      *
      * and other events related to the subscribe loop and channel mix.
      *
      * @param pubnub The client instance which has this listener attached.
-     * @param pnStatus API operation metadata.
+     * @param status API operation metadata.
      */
-    open fun status(pubnub: PubNub, pnStatus: PNStatus) {}
+    open fun status(pubnub: PubNub, status: PNStatus) {}
 
     /**
      * Receive messages at subscribed channels.
@@ -65,18 +64,18 @@ abstract class SubscribeCallback : SubscribeCallback, com.pubnub.internal.v2.cal
      * @see [PubNub.subscribe]
      *
      * @param pubnub The client instance which has this listener attached.
-     * @param pnMessageResult Wrapper around the actual message content.
+     * @param event Wrapper around the actual message content.
      */
-    open fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {}
+    open fun message(pubnub: PubNub, event: PNMessageResult) {}
 
     /**
      * Receive presence events for channels subscribed to with presence enabled via `withPresence = true` in
      * [PubNub.subscribe]
      *
      * @param pubnub The client instance which has this listener attached.
-     * @param pnPresenceEventResult Wrapper around a presence event.
+     * @param event Wrapper around a presence event.
      */
-    open fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
+    open fun presence(pubnub: PubNub, event: PNPresenceEventResult) {}
 
     /**
      * Receive signals at subscribed channels.
@@ -84,17 +83,17 @@ abstract class SubscribeCallback : SubscribeCallback, com.pubnub.internal.v2.cal
      * @see [PubNub.signal]
      *
      * @param pubnub The client instance which has this listener attached.
-     * @param pnSignalResult Wrapper around a signal event.
+     * @param event Wrapper around a signal event.
      */
-    open fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
+    open fun signal(pubnub: PubNub, event: PNSignalResult) {}
 
     /**
      * Receive message actions for messages in subscribed channels.
      *
      * @param pubnub The client instance which has this listener attached.
-     * @param pnMessageActionResult Wrapper around a message action event.
+     * @param event Wrapper around a message action event.
      */
-    open fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
+    open fun messageAction(pubnub: PubNub, event: PNMessageActionResult) {}
 
     fun objects(
         pubnub: PubNub,
@@ -103,7 +102,7 @@ abstract class SubscribeCallback : SubscribeCallback, com.pubnub.internal.v2.cal
         objects(pubnub, objectEvent.toApi())
     }
 
-    open fun objects(pubnub: PubNub, objectEvent: PNObjectEventResult) {}
+    open fun objects(pubnub: PubNub, event: PNObjectEventResult) {}
 
-    open fun file(pubnub: PubNub, pnFileEventResult: PNFileEventResult) {}
+    open fun file(pubnub: PubNub, event: PNFileEventResult) {}
 }

@@ -4,6 +4,7 @@ import com.pubnub.api.CommonUtils.randomChannel
 import com.pubnub.api.CommonUtils.randomValue
 import com.pubnub.api.asyncRetry
 import com.pubnub.api.await
+import com.pubnub.api.v2.callbacks.getOrThrow
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull

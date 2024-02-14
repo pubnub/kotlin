@@ -59,10 +59,10 @@ public class Utils {
         return "ch_".concat(RandomGenerator.newValue(10)).toLowerCase();
     }
 
-    public static String queryParam(PNStatus pnStatus, String param) {
-        final Request request = (Request) pnStatus.getClientRequest();
-        return request.url().queryParameter(param);
-    }
+//    public static String queryParam(PNStatus pnStatus, String param) {
+//        final Request request = (Request) pnStatus.getClientRequest();
+//        return request.url().queryParameter(param);
+//    }
 
     public static List<PNPublishResult> publishMixed(PubNub pubnub, int count, String channel) {
         final List<PNPublishResult> list = new ArrayList<>();

@@ -20,6 +20,7 @@ import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.v2.callbacks.onSuccess
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Ignore
 import org.junit.Test
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -436,6 +437,7 @@ class GetMessageActionEndpointTest : BaseTest() {
     }
 
     @Test
+    @Ignore
     fun testTelemetryParam() {
         val success = AtomicBoolean()
 

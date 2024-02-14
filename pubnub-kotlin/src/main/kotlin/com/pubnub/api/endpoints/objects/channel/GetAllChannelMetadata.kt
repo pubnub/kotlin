@@ -14,7 +14,8 @@ import com.pubnub.internal.models.consumer.objects.channel.PNChannelMetadataArra
 class GetAllChannelMetadata internal constructor(getAllChannelMetadata: GetAllChannelMetadata) :
     DelegatingEndpoint<com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataArrayResult, PNChannelMetadataArrayResult>(
         getAllChannelMetadata
-    ), IGetAllChannelMetadata by getAllChannelMetadata {
+    ),
+    IGetAllChannelMetadata by getAllChannelMetadata {
     override fun convertAction(remoteAction: ExtendedRemoteAction<PNChannelMetadataArrayResult>): ExtendedRemoteAction<com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataArrayResult> {
         return MappingRemoteAction(
             remoteAction,

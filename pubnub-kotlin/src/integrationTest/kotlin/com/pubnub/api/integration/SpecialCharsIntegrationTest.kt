@@ -1,15 +1,14 @@
 package com.pubnub.api.integration
 
 import com.pubnub.api.CommonUtils
-import com.pubnub.api.SignatureUtils
-import org.junit.Assert.assertFalse
+import org.junit.Assert.assertEquals
 import org.junit.Ignore
 import org.junit.Test
 
 class SpecialCharsIntegrationTest : BaseIntegrationTest() {
 
     @Test
-    @Ignore //TODO didn't work on master either
+    @Ignore // TODO didn't work on master either
     fun testSpecialCharsPathAndUrl() {
         val expectedChannel = CommonUtils.randomChannel()
         val keyName = "special_char"
@@ -32,11 +31,11 @@ class SpecialCharsIntegrationTest : BaseIntegrationTest() {
 //            )
         }.sync()
 
-        }.async { _, status ->
-            assertFalse(status.error)
-            SignatureUtils.decomposeAndVerifySignature(server.configuration, status.clientRequest!!)
-            success.set(true)
-        }
+//        }.async { result ->
+//            assertFalse(status.error)
+//            SignatureUtils.decomposeAndVerifySignature(server.configuration, status.clientRequest!!)
+//            success.set(true)
+//        }
 
         val messages = server.history(
             channel = expectedChannel,
@@ -46,6 +45,5 @@ class SpecialCharsIntegrationTest : BaseIntegrationTest() {
         assertEquals(1, messages.size)
         assertEquals(value, messages[0].meta!!.asJsonObject[keyName].asString)
         assertEquals(value, messages[0].entry.asString)
-
     }
 }

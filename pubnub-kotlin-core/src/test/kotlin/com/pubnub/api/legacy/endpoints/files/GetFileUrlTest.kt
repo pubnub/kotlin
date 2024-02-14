@@ -1,11 +1,11 @@
 package com.pubnub.api.legacy.endpoints.files
 
 import com.pubnub.api.PubNubException
-import com.pubnub.internal.TestPubNub
 import com.pubnub.api.UserId
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.internal.BasePubNub
 import com.pubnub.internal.PNConfiguration
+import com.pubnub.internal.TestPubNub
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers

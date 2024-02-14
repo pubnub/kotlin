@@ -8,7 +8,6 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
 import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.enums.PNLogVerbosity;
-import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadataResult;
 import com.pubnub.api.models.consumer.objects_api.membership.PNMembershipResult;
@@ -191,9 +190,12 @@ public abstract class BaseIntegrationTest {
             }
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
-                if (status.getOperation() == PNOperationType.PNSubscribeOperation) {
-                    assert status.getAffectedChannels() != null;
-                    if (status.getAffectedChannels().containsAll(channels)) {
+                if (status instanceof PNStatus.Connected ) {
+                    if (((PNStatus.Connected) status).getChannels().containsAll(channels)) {
+                        subscribeSuccess.set(true);
+                    }
+                } else if (status instanceof PNStatus.SubscriptionChanged) {
+                    if (((PNStatus.SubscriptionChanged) status).getChannels().containsAll(channels)) {
                         subscribeSuccess.set(true);
                     }
                 }
@@ -314,7 +316,7 @@ public abstract class BaseIntegrationTest {
                 .message(generateMessage(pubNub, message))
                 .channel(channel)
                 .shouldStore(true)
-                .async((result, status) -> {
+                .async((result) -> {
 
                 });
     }
@@ -325,7 +327,7 @@ public abstract class BaseIntegrationTest {
                 .channel(channel)
                 .meta(meta)
                 .shouldStore(true)
-                .async((result, status) -> {
+                .async((result) -> {
 
                 });
     }

@@ -5,7 +5,7 @@ import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects_api.uuid.PNGetUUIDMetadataResult;
 import com.pubnub.api.models.consumer.objects_api.uuid.PNUUIDMetadata;
-import com.pubnub.internal.BasePubNub.PubNubImpl;
+import com.pubnub.internal.PubNubImpl;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 

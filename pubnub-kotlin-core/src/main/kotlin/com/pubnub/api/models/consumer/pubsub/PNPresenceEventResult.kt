@@ -1,7 +1,7 @@
 package com.pubnub.api.models.consumer.pubsub
 
 import com.google.gson.JsonElement
-import com.pubnub.internal.BasePubNub.PubNubImpl
+import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.callbacks.SubscribeCallback
 
 /**

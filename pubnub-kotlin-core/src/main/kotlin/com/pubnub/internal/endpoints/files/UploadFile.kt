@@ -5,7 +5,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.v2.callbacks.Result
-import com.pubnub.internal.BasePubNub.PubNubImpl
+import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.models.server.files.FileUploadRequestDetails
 import com.pubnub.internal.models.server.files.FormField
 import com.pubnub.internal.services.S3Service

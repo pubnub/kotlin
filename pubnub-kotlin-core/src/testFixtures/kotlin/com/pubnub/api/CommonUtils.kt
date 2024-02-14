@@ -5,7 +5,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 import com.pubnub.api.models.consumer.PNPublishResult
-import com.pubnub.internal.BasePubNub
+import com.pubnub.internal.PubNubImpl
 import okhttp3.logging.HttpLoggingInterceptor
 import org.awaitility.Awaitility
 import org.awaitility.Durations
@@ -116,7 +116,7 @@ object CommonUtils {
             .joinToString(separator = "")
     }
 
-    fun publishMixed(pubnub: BasePubNub.PubNubImpl, count: Int, channel: String): List<PNPublishResult> {
+    fun publishMixed(pubnub: PubNubImpl, count: Int, channel: String): List<PNPublishResult> {
         val list = mutableListOf<PNPublishResult>()
         repeat(count) {
             val sync = pubnub.publish(
@@ -141,7 +141,7 @@ object CommonUtils {
         }
     }
 
-    fun generateMessage(pubnub: BasePubNub.PubNubImpl): JsonObject {
+    fun generateMessage(pubnub: PubNubImpl): JsonObject {
         return JsonObject().apply {
             addProperty("publisher", pubnub.configuration.userId.value)
             addProperty("text", randomValue())

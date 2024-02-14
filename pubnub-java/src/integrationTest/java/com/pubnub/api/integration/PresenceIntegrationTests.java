@@ -4,20 +4,14 @@ import com.google.gson.JsonObject;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions;
-import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
 import com.pubnub.api.integration.util.RandomGenerator;
 import com.pubnub.api.models.consumer.PNStatus;
-import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadataResult;
-import com.pubnub.api.models.consumer.objects_api.membership.PNMembershipResult;
-import com.pubnub.api.models.consumer.objects_api.uuid.PNUUIDMetadataResult;
 import com.pubnub.api.models.consumer.presence.PNHereNowChannelData;
 import com.pubnub.api.models.consumer.presence.PNHereNowOccupantData;
-import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
-import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
-import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult;
-import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
+import com.pubnub.api.v2.callbacks.Results;
+import kotlin.Unit;
 import org.awaitility.Awaitility;
 import org.awaitility.Durations;
 import org.hamcrest.core.IsEqual;
@@ -57,11 +51,10 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
         pause(TIMEOUT_MEDIUM);
 
         pubNub.whereNow()
-                .async((result, status) -> {
-                    assertFalse(status.isError());
-                    assert result != null;
-                    assertEquals(expectedChannelsCount, result.getChannels().size());
-                    for (String channel : result.getChannels()) {
+                .async((result) -> {
+                    assertFalse(result.isFailure());
+                    assertEquals(expectedChannelsCount, result.getOrNull().getChannels().size());
+                    for (String channel : result.getOrNull().getChannels()) {
                         assertTrue(expectedChannels.contains(channel));
                     }
                     success.set(true);
@@ -104,44 +97,49 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
 
         pubNub.hereNow()
                 .includeUUIDs(true)
-                .async((result, status) -> {
-                    assertFalse(status.isError());
-                    assert result != null;
-                    assertTrue(result.getTotalOccupancy() >= expectedClientsCount);
-                    assertTrue(result.getTotalChannels() >= expectedChannelsCount);
-                    assertTrue(result.getChannels().size() >= expectedChannelsCount);
+                .async((result) -> {
+                    assertFalse(result.isFailure());
+                    Results.onSuccess(result, pnHereNowResult -> {
+                                assertTrue(pnHereNowResult.getTotalOccupancy() >= expectedClientsCount);
+                                assertTrue(pnHereNowResult.getTotalChannels() >= expectedChannelsCount);
+                                assertTrue(pnHereNowResult.getChannels().size() >= expectedChannelsCount);
 
-                    final List<String> channelsResult = new ArrayList<String>() {{
-                        addAll(result.getChannels().keySet());
-                    }};
+                                final List<String> channelsResult = new ArrayList<String>() {{
+                                    addAll(pnHereNowResult.getChannels().keySet());
+                                }};
+                                assertTrue(channelsResult.containsAll(expectedChannels));
 
-                    assertTrue(channelsResult.containsAll(expectedChannels));
 
-                    for (Map.Entry<String, PNHereNowChannelData> entry : result.getChannels().entrySet()) {
-                        if (expectedChannels.contains(entry.getKey())) {
-                            assertTrue(entry.getValue().getOccupancy() >= expectedClientsCount);
-                            assertTrue(entry.getValue().getOccupants().size() >= expectedClientsCount);
-                            final List<PNHereNowOccupantData> occupants = entry.getValue().getOccupants();
 
-                            final List<String> resultUuidList = new ArrayList<>();
-                            for (PNHereNowOccupantData occupant : occupants) {
-                                resultUuidList.add(occupant.getUuid());
+
+                                for (Map.Entry<String, PNHereNowChannelData> entry : pnHereNowResult.getChannels().entrySet()) {
+                                    if (expectedChannels.contains(entry.getKey())) {
+                                        assertTrue(entry.getValue().getOccupancy() >= expectedClientsCount);
+                                        assertTrue(entry.getValue().getOccupants().size() >= expectedClientsCount);
+                                        final List<PNHereNowOccupantData> occupants = entry.getValue().getOccupants();
+
+                                        final List<String> resultUuidList = new ArrayList<>();
+                                        for (PNHereNowOccupantData occupant : occupants) {
+                                            resultUuidList.add(occupant.getUuid());
+                                        }
+
+                                        final List<String> expectedUuidList = new ArrayList<>();
+                                        for (PubNub client : clients) {
+                                            expectedUuidList.add(client.getConfiguration().getUserId().getValue());
+                                        }
+
+                                        Collections.sort(expectedUuidList);
+                                        Collections.sort(resultUuidList);
+
+                                        assertEquals(expectedUuidList, resultUuidList);
+                                    }
+
+                                }
+
+                                success.set(true);
+                                return Unit.INSTANCE;
                             }
-
-                            final List<String> expectedUuidList = new ArrayList<>();
-                            for (PubNub client : clients) {
-                                expectedUuidList.add(client.getConfiguration().getUserId().getValue());
-                            }
-
-                            Collections.sort(expectedUuidList);
-                            Collections.sort(resultUuidList);
-
-                            assertEquals(expectedUuidList, resultUuidList);
-                        }
-
-                    }
-
-                    success.set(true);
+                    );
                 });
 
         listen(success);
@@ -178,32 +176,34 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
         pubNub.hereNow()
                 .channels(expectedChannels)
                 .includeUUIDs(true)
-                .async((result, status) -> {
-                    assertFalse(status.isError());
-                    assert result != null;
-                    assertEquals(expectedChannelsCount, result.getTotalChannels());
-                    assertEquals(expectedChannelsCount, result.getChannels().size());
-                    assertEquals(expectedChannelsCount * expectedClientsCount, result.getTotalOccupancy());
+                .async((result) -> {
+                    assertFalse(result.isFailure());
+                    Results.onSuccess(result, pnHereNowResult -> {
+                        assertEquals(expectedChannelsCount, pnHereNowResult.getTotalChannels());
+                        assertEquals(expectedChannelsCount, pnHereNowResult.getChannels().size());
+                        assertEquals(expectedChannelsCount * expectedClientsCount, pnHereNowResult.getTotalOccupancy());
 
-                    for (Map.Entry<String, PNHereNowChannelData> entry : result.getChannels().entrySet()) {
-                        assertTrue(expectedChannels.contains(entry.getKey()));
-                        assertTrue(expectedChannels.contains(entry.getValue().getChannelName()));
-                        assertEquals(expectedClientsCount, entry.getValue().getOccupancy());
-                        assertEquals(expectedClientsCount, entry.getValue().getOccupants().size());
-                        for (PNHereNowOccupantData occupant : entry.getValue().getOccupants()) {
-                            final String uuid = occupant.getUuid();
-                            boolean contains = false;
-                            for (PubNub client : clients) {
-                                if (client.getConfiguration().getUserId().getValue().equals(uuid)) {
-                                    contains = true;
-                                    break;
+                        for (Map.Entry<String, PNHereNowChannelData> entry : pnHereNowResult.getChannels().entrySet()) {
+                            assertTrue(expectedChannels.contains(entry.getKey()));
+                            assertTrue(expectedChannels.contains(entry.getValue().getChannelName()));
+                            assertEquals(expectedClientsCount, entry.getValue().getOccupancy());
+                            assertEquals(expectedClientsCount, entry.getValue().getOccupants().size());
+                            for (PNHereNowOccupantData occupant : entry.getValue().getOccupants()) {
+                                final String uuid = occupant.getUuid();
+                                boolean contains = false;
+                                for (PubNub client : clients) {
+                                    if (client.getConfiguration().getUserId().getValue().equals(uuid)) {
+                                        contains = true;
+                                        break;
+                                    }
                                 }
+                                assertTrue(contains);
                             }
-                            assertTrue(contains);
                         }
-                    }
 
-                    success.set(true);
+                        success.set(true);
+                        return Unit.INSTANCE;
+                    });
                 });
 
         listen(success);
@@ -221,21 +221,7 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
         final JsonObject expectedStatePayload = generatePayload();
         final String expectedChannel = RandomGenerator.get();
 
-        pubNub.addListener(new SubscribeCallback() {
-            @Override
-            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
-
-            }
-
-            @Override
-            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
-                System.out.println("---" + status.getCategory());
-            }
-
-            @Override
-            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult message) {
-
-            }
+        pubNub.addListener(new SubscribeCallback.BaseSubscribeCallback() {
 
             @Override
             public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult presence) {
@@ -247,31 +233,6 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
                     hits.incrementAndGet();
                 }
             }
-
-            @Override
-            public void signal(@NotNull PubNub pubNub, @NotNull PNSignalResult pnSignalResult) {
-
-            }
-
-            @Override
-            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
-
-            }
-
-            @Override
-            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
-
-            }
-
-            @Override
-            public void membership(@NotNull final PubNub pubnub, @NotNull final PNMembershipResult pnMembershipResult) {
-
-            }
-
-            @Override
-            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnActionResult) {
-
-            }
         });
 
         subscribeToChannel(pubNub, expectedChannel);
@@ -280,10 +241,9 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
                 .channels(Collections.singletonList(expectedChannel))
                 .state(expectedStatePayload)
                 .withHeartbeat(WITH_HEARTBEAT_TRUE)
-                .async((result, status) -> {
-                    assertFalse(status.isError());
-                    assert result != null;
-                    assertEquals(expectedStatePayload, result.getState());
+                .async((result) -> {
+                    assertFalse(result.isFailure());
+                    assertEquals(expectedStatePayload, result.getOrNull().getState());
                 });
 
 //        Awaitility.await().atMost(Durations.FIVE_SECONDS).untilAtomic(hits, IsEqual.equalTo(1));
@@ -291,12 +251,11 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
 
         pubNub.getPresenceState()
                 .channels(Collections.singletonList(expectedChannel))
-                .async((result, status) -> {
-                    assertFalse(status.isError());
-                    assert result != null;
-                    assertEquals(expectedStatePayload.get("text"), result.getStateByUUID().get(expectedChannel).getAsJsonObject().get("text"));
-                    assertEquals(expectedStatePayload.get("info"), result.getStateByUUID().get(expectedChannel).getAsJsonObject().get("info"));
-                    assertEquals(expectedStatePayload.get("uncd"), result.getStateByUUID().get(expectedChannel).getAsJsonObject().get("uncd"));
+                .async((result) -> {
+                    assertFalse(result.isFailure());
+                    assertEquals(expectedStatePayload.get("text"), result.getOrNull().getStateByUUID().get(expectedChannel).getAsJsonObject().get("text"));
+                    assertEquals(expectedStatePayload.get("info"), result.getOrNull().getStateByUUID().get(expectedChannel).getAsJsonObject().get("info"));
+                    assertEquals(expectedStatePayload.get("uncd"), result.getOrNull().getStateByUUID().get(expectedChannel).getAsJsonObject().get("uncd"));
                     hits.incrementAndGet();
                 });
 
@@ -312,22 +271,7 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
         final JsonObject expectedStatePayload = generatePayload();
         final String expectedChannel = RandomGenerator.get();
 
-        pubNub.addListener(new SubscribeCallback() {
-            @Override
-            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
-
-            }
-
-            @Override
-            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
-
-            }
-
-            @Override
-            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult message) {
-
-            }
-
+        pubNub.addListener(new SubscribeCallback.BaseSubscribeCallback() {
             @Override
             public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult presence) {
                 if (presence.getEvent().equals(STATE_CHANGE_EVENT)
@@ -337,31 +281,6 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
                     hits.incrementAndGet();
                 }
             }
-
-            @Override
-            public void signal(@NotNull PubNub pubNub, @NotNull PNSignalResult pnSignalResult) {
-
-            }
-
-            @Override
-            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
-
-            }
-
-            @Override
-            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
-
-            }
-
-            @Override
-            public void membership(@NotNull final PubNub pubnub, @NotNull final PNMembershipResult pnMembershipResult) {
-
-            }
-
-            @Override
-            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnActionResult) {
-
-            }
         });
 
         subscribeToChannel(pubNub, expectedChannel);
@@ -369,20 +288,18 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
         pubNub.setPresenceState()
                 .channels(Collections.singletonList(expectedChannel))
                 .state(expectedStatePayload)
-                .async((result, status) -> {
-                    assertFalse(status.isError());
-                    assert result != null;
-                    assertEquals(expectedStatePayload, result.getState());
+                .async((result) -> {
+                    assertFalse(result.isFailure());
+                    assertEquals(expectedStatePayload, result.getOrNull().getState());
                 });
 
         Awaitility.await().atMost(Durations.FIVE_SECONDS).untilAtomic(hits, IsEqual.equalTo(1));
 
         pubNub.getPresenceState()
                 .channels(Collections.singletonList(expectedChannel))
-                .async((result, status) -> {
-                    assertFalse(status.isError());
-                    assert result != null;
-                    assertEquals(expectedStatePayload, result.getStateByUUID().get(expectedChannel));
+                .async((result) -> {
+                    assertFalse(result.isFailure());
+                    assertEquals(expectedStatePayload, result.getOrNull().getStateByUUID().get(expectedChannel));
                     hits.incrementAndGet();
                 });
 
@@ -406,61 +323,19 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
         assertEquals(20, pubNub.getConfiguration().getPresenceTimeout());
         assertEquals(0, pubNub.getConfiguration().getHeartbeatInterval());
 
-        pubNub.addListener(new SubscribeCallback() {
-            @Override
-            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
-
-            }
-
+        pubNub.addListener(new SubscribeCallback.BaseSubscribeCallback() {
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
                 if (!status.isError()) {
-                    assert status.getAffectedChannels() != null;
-                    if (status.getAffectedChannels().contains(expectedChannel)) {
-                        if (status.getOperation() == PNOperationType.PNSubscribeOperation) {
-                            subscribeSuccess.set(true);
-                        }
-                        if (status.getOperation() == PNOperationType.PNHeartbeatOperation) {
+                        if (status instanceof PNStatus.Connected) {
+                            if (((PNStatus.Connected) status).getChannels().contains(expectedChannel)) {
+                                subscribeSuccess.set(true);
+                            }
+                        } else if (status instanceof PNStatus.HeartbeatSuccess) {
                             heartbeatCallsCount.incrementAndGet();
                         }
                     }
                 }
-            }
-
-            @Override
-            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult message) {
-
-            }
-
-            @Override
-            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult presence) {
-
-            }
-
-            @Override
-            public void signal(@NotNull PubNub pubNub, @NotNull PNSignalResult pnSignalResult) {
-
-            }
-
-            @Override
-            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
-
-            }
-
-            @Override
-            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
-
-            }
-
-            @Override
-            public void membership(@NotNull PubNub pubNub, @NotNull PNMembershipResult pnMembershipResult) {
-
-            }
-
-            @Override
-            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnActionResult) {
-
-            }
         });
 
         pubNub.subscribe()
@@ -490,60 +365,18 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
         assertEquals(20, pubNub.getConfiguration().getPresenceTimeout());
         assertEquals(9, pubNub.getConfiguration().getHeartbeatInterval());
 
-        pubNub.addListener(new SubscribeCallback() {
-            @Override
-            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
-
-            }
-
+        pubNub.addListener(new SubscribeCallback.BaseSubscribeCallback() {
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
                 if (!status.isError()) {
-                    assert status.getAffectedChannels() != null;
-                    if (status.getAffectedChannels().contains(expectedChannel)) {
-                        if (status.getOperation() == PNOperationType.PNSubscribeOperation) {
+                    if (status instanceof PNStatus.Connected) {
+                        if (((PNStatus.Connected) status).getChannels().contains(expectedChannel)) {
                             subscribeSuccess.set(true);
                         }
-                        if (status.getOperation() == PNOperationType.PNHeartbeatOperation) {
-                            heartbeatCallsCount.incrementAndGet();
-                        }
+                    } else if (status instanceof PNStatus.HeartbeatSuccess) {
+                        heartbeatCallsCount.incrementAndGet();
                     }
                 }
-            }
-
-            @Override
-            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult message) {
-
-            }
-
-            @Override
-            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult presence) {
-
-            }
-
-            @Override
-            public void signal(@NotNull PubNub pubNub, @NotNull PNSignalResult pnSignalResult) {
-
-            }
-
-            @Override
-            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
-
-            }
-
-            @Override
-            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
-
-            }
-
-            @Override
-            public void membership(@NotNull PubNub pubNub, @NotNull PNMembershipResult pnMembershipResult) {
-
-            }
-
-            @Override
-            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnActionResult) {
-
             }
         });
 

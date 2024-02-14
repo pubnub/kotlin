@@ -1,6 +1,6 @@
 package com.pubnub.internal.models.consumer.presence
 
-import com.pubnub.internal.BasePubNub.PubNubImpl
+import com.pubnub.internal.PubNubImpl
 
 /**
  * Result of the [PubNubImpl.whereNow] operation.

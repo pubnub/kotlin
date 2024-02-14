@@ -2,13 +2,13 @@ package com.pubnub.internal.endpoints.presence
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonNull
-import com.pubnub.internal.Endpoint
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.presence.PNSetStateResult
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.BasePubNub.PubNubImpl
+import com.pubnub.internal.Endpoint
+import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.models.server.Envelope
 import com.pubnub.internal.presence.eventengine.data.PresenceData
 import com.pubnub.internal.toCsv

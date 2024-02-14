@@ -28,6 +28,10 @@ import java.util.concurrent.ConcurrentMap;
 public class PNConfiguration {
     private final com.pubnub.internal.PNConfiguration pnConfiguration;
 
+    com.pubnub.internal.PNConfiguration getPnConfiguration() {
+        return pnConfiguration;
+    }
+
     private static final int DEFAULT_DEDUPE_SIZE = 100;
     private static final int PRESENCE_TIMEOUT = 300;
     private static final int MINIMUM_PRESENCE_TIMEOUT = 20;

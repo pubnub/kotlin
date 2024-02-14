@@ -14,10 +14,9 @@ public class TimeIntegrationTests extends BaseIntegrationTest {
         final AtomicBoolean success = new AtomicBoolean();
 
         pubNub.time()
-                .async((result, status) -> {
-                    assert result != null;
-                    Assert.assertNotNull(result.getTimetoken());
-                    Assert.assertFalse(status.isError());
+                .async((result) -> {
+                    Assert.assertFalse(result.isFailure());
+                    Assert.assertNotNull(result.getOrNull().getTimetoken());
                     success.set(true);
                 });
 

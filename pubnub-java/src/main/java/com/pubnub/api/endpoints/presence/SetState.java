@@ -4,7 +4,7 @@ import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.presence.PNSetStateResult;
-import com.pubnub.internal.BasePubNub.PubNubImpl;
+import com.pubnub.internal.PubNubImpl;
 import com.pubnub.internal.endpoints.presence.Heartbeat;
 import kotlin.jvm.functions.Function1;
 import lombok.Setter;

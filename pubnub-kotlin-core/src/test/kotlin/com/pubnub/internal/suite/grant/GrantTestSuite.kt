@@ -5,12 +5,12 @@ import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.matching
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
-import com.pubnub.internal.endpoints.access.Grant
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.internal.endpoints.access.Grant
+import com.pubnub.internal.models.consumer.access_manager.PNAccessManagerGrantResult
 import com.pubnub.internal.suite.EndpointTestSuite
 import com.pubnub.internal.suite.SEC
 import com.pubnub.internal.suite.SUB
-import com.pubnub.internal.models.consumer.access_manager.PNAccessManagerGrantResult
 import org.junit.Assert.assertEquals
 
 class GrantTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Grant, PNAccessManagerGrantResult>() {

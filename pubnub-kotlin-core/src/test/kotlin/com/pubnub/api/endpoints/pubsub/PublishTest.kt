@@ -1,10 +1,10 @@
 package com.pubnub.api.endpoints.pubsub
 
-import com.pubnub.internal.TestPubNub
 import com.pubnub.api.UserId
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.internal.BasePubNub
 import com.pubnub.internal.PNConfiguration
+import com.pubnub.internal.TestPubNub
 import com.pubnub.internal.endpoints.pubsub.Publish
 import com.pubnub.internal.managers.RetrofitManager
 import com.pubnub.internal.services.PublishService

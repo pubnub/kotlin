@@ -21,9 +21,9 @@ fun <Output> RemoteAction<Output>.await(function: (result: Result<Output>) -> Un
     success.listen()
 }
 //
-//fun PNStatus.param(param: String) = clientRequest!!.url.queryParameter(param)
+// fun PNStatus.param(param: String) = clientRequest!!.url.queryParameter(param)
 //
-//fun PNStatus.encodedParam(param: String) =
+// fun PNStatus.encodedParam(param: String) =
 //    clientRequest!!.url.encodedQuery!!.encodedParamString(param)
 
 fun String.encodedParamString(param: String): String {
@@ -82,7 +82,7 @@ fun <Output> RemoteAction<Output>.retryForbidden(
     // first run should return forbidden
     async { result ->
         result.onFailure {
-            //TODO check forbidden
+            // TODO check forbidden
             if (it.statusCode == 403) {
                 onFail.invoke(it)
                 success.set(false)

@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints;
 
 import com.pubnub.api.models.consumer.PNTimeResult;
-import com.pubnub.internal.BasePubNub.PubNubImpl;
+import com.pubnub.internal.PubNubImpl;
 
 public class Time extends Endpoint<PNTimeResult> {
 

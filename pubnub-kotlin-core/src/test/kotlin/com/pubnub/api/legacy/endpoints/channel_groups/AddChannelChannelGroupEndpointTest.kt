@@ -1,6 +1,5 @@
 package com.pubnub.api.legacy.endpoints.channel_groups
 
-import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.findAll
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
@@ -12,7 +11,6 @@ import com.pubnub.api.CommonUtils.assertPnException
 import com.pubnub.api.CommonUtils.emptyJson
 import com.pubnub.api.PubNubError
 import com.pubnub.api.legacy.BaseTest
-import com.pubnub.api.listen
 import com.pubnub.api.v2.callbacks.onFailure
 import com.pubnub.api.v2.callbacks.onSuccess
 import org.awaitility.Awaitility
@@ -22,7 +20,6 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
 class AddChannelChannelGroupEndpointTest : BaseTest() {
@@ -146,40 +143,40 @@ class AddChannelChannelGroupEndpointTest : BaseTest() {
         Awaitility.await().atMost(15, TimeUnit.SECONDS).untilAtomic(atomic, IsEqual.equalTo(1))
     }
 
-    @Test
-    fun testTelemetryParam() {
-        val success = AtomicBoolean()
-
-        stubFor(
-            get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group/groupA"))
-                .willReturn(emptyJson())
-        )
-
-        stubFor(
-            get(urlMatching("/time/0.*"))
-                .willReturn(aResponse().withBody("[1000]"))
-        )
-
-        lateinit var telemetryParamName: String
-
-        pubnub.addChannelsToChannelGroup(
-            channelGroup = "groupA",
-            channels = listOf("ch1", "ch2")
-        ).async { result ->
-            assertFalse(result.isFailure)
-//            telemetryParamName = "l_${status.operation.queryParam}" //TODO this is no longer available
-//            assertEquals("l_cg", telemetryParamName)
-//            success.set(true)
-        }
-
-        success.listen()
-
-        pubnub.time().async { result ->
-            assertFalse(result.isFailure)
-//            assertNotNull(status.param(telemetryParamName)) //TODO no longer available
-//            success.set(true)
-        }
-
-        success.listen()
-    }
+//    @Test // TODO try to bring back?
+//    fun testTelemetryParam() {
+//        val success = AtomicBoolean()
+//
+//        stubFor(
+//            get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group/groupA"))
+//                .willReturn(emptyJson())
+//        )
+//
+//        stubFor(
+//            get(urlMatching("/time/0.*"))
+//                .willReturn(aResponse().withBody("[1000]"))
+//        )
+//
+//        lateinit var telemetryParamName: String
+//
+//        pubnub.addChannelsToChannelGroup(
+//            channelGroup = "groupA",
+//            channels = listOf("ch1", "ch2")
+//        ).async { result ->
+//            assertFalse(result.isFailure)
+// //            telemetryParamName = "l_${status.operation.queryParam}" //TODO this is no longer available
+// //            assertEquals("l_cg", telemetryParamName)
+// //            success.set(true)
+//        }
+//
+//        success.listen()
+//
+//        pubnub.time().async { result ->
+//            assertFalse(result.isFailure)
+// //            assertNotNull(status.param(telemetryParamName)) //TODO no longer available
+// //            success.set(true)
+//        }
+//
+//        success.listen()
+//    }
 }

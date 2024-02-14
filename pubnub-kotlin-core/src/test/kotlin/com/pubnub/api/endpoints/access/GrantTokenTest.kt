@@ -1,11 +1,11 @@
 package com.pubnub.api.endpoints.access
 
-import com.pubnub.internal.TestPubNub
 import com.pubnub.api.UserId
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult
-import com.pubnub.internal.BasePubNub
 import com.pubnub.internal.PNConfiguration
+import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.SpaceId
+import com.pubnub.internal.TestPubNub
 import com.pubnub.internal.endpoints.access.GrantToken
 import com.pubnub.internal.managers.RetrofitManager
 import com.pubnub.internal.models.consumer.access_manager.sum.SpacePermissions
@@ -26,7 +26,7 @@ import retrofit2.Call
 import retrofit2.Response
 
 internal class GrantTokenTest {
-    private lateinit var pubnub: BasePubNub.PubNubImpl
+    private lateinit var pubnub: PubNubImpl
 
     @BeforeEach
     internal fun setUp() {

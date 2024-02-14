@@ -3,8 +3,8 @@ package com.pubnub.internal.suite.presence
 import com.github.tomakehurst.wiremock.client.MappingBuilder
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
-import com.pubnub.internal.endpoints.presence.Leave
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.internal.endpoints.presence.Leave
 import com.pubnub.internal.suite.AUTH
 import com.pubnub.internal.suite.EndpointTestSuite
 import com.pubnub.internal.suite.SUB

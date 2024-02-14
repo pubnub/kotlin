@@ -20,10 +20,13 @@ import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.subscribeToBlocking
 import com.pubnub.api.v2.callbacks.EventListener
+import com.pubnub.api.v2.callbacks.getOrThrow
+import com.pubnub.api.v2.callbacks.onSuccess
 import com.pubnub.api.v2.entities.Channel
 import com.pubnub.api.v2.subscriptions.SubscriptionCursor
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
+import com.pubnub.internal.managers.MapperManager
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.hamcrest.Matchers
@@ -68,6 +71,8 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             addProperty("name", "joe")
             addProperty("age", 48)
         }
+
+        val convertedPayload = MapperManager().convertValue(expectedPayload, JsonObject::class.java)
 
         pubnub.publish(
             channel = expectedChannel,
@@ -157,7 +162,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
 
         val testChannel = pubnub.channel(expectedChannel)
         val testSubscription = testChannel.subscription(SubscriptionOptions.receivePresenceEvents())
-        testSubscription.addListener(object : EventListener {
+        testSubscription.addListener(object : EventListener() {
 
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 assertEquals(expectedChannel, result.channel)
@@ -207,18 +212,18 @@ class PublishIntegrationTests : BaseIntegrationTest() {
                 }
             }
 
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
+            override fun message(pubnub: PubNub, event: PNMessageResult) {
                 if (success.get() == 0) {
-                    assertEquals(expectedChannel, pnMessageResult.channel)
-                    assertEquals(sender.configuration.userId.value, pnMessageResult.publisher)
-                    assertEquals(messagePayload, pnMessageResult.message)
-                    assertEquals(PubNubError.CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED, pnMessageResult.error)
+                    assertEquals(expectedChannel, event.channel)
+                    assertEquals(sender.configuration.userId.value, event.publisher)
+                    assertEquals(messagePayload, event.message)
+                    assertEquals(PubNubError.CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED, event.error)
                     success.incrementAndGet()
                 } else if (success.get() == 1) {
-                    assertEquals(expectedChannel, pnMessageResult.channel)
-                    assertEquals(observer.configuration.userId.value, pnMessageResult.publisher)
-                    assertEquals(messagePayload, pnMessageResult.message)
-                    assertNull(pnMessageResult.error)
+                    assertEquals(expectedChannel, event.channel)
+                    assertEquals(observer.configuration.userId.value, event.publisher)
+                    assertEquals(messagePayload, event.message)
+                    assertNull(event.error)
                     success.incrementAndGet()
                 }
             }
@@ -291,8 +296,8 @@ class PublishIntegrationTests : BaseIntegrationTest() {
 
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
-                success.set(expectedPayload.toString() == JSONObject(pnMessageResult.message.toString()).toString())
+            override fun message(pubnub: PubNub, event: PNMessageResult) {
+                success.set(expectedPayload.toString() == JSONObject(event.message.toString()).toString())
             }
         })
 
@@ -314,8 +319,8 @@ class PublishIntegrationTests : BaseIntegrationTest() {
 
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
-                success.set(expectedPayload.toString() == JSONObject(pnMessageResult.message.toString()).toString())
+            override fun message(pubnub: PubNub, event: PNMessageResult) {
+                success.set(expectedPayload.toString() == JSONObject(event.message.toString()).toString())
             }
         })
 
@@ -392,8 +397,8 @@ class PublishIntegrationTests : BaseIntegrationTest() {
 
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
-                success.set(expectedPayload.toString() == JSONArray(pnMessageResult.message.toString()).toString())
+            override fun message(pubnub: PubNub, event: PNMessageResult) {
+                success.set(expectedPayload.toString() == JSONArray(event.message.toString()).toString())
             }
         })
 
@@ -418,8 +423,8 @@ class PublishIntegrationTests : BaseIntegrationTest() {
 
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
-                success.set(expectedPayload.toString() == JSONArray(pnMessageResult.message.toString()).toString())
+            override fun message(pubnub: PubNub, event: PNMessageResult) {
+                success.set(expectedPayload.toString() == JSONArray(event.message.toString()).toString())
             }
         })
 
@@ -451,10 +456,10 @@ class PublishIntegrationTests : BaseIntegrationTest() {
 
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
+            override fun message(pubnub: PubNub, event: PNMessageResult) {
                 assertEquals(
                     expectedPayload.toString(),
-                    JSONObject(pnMessageResult.message.toString()).toString()
+                    JSONObject(event.message.toString()).toString()
                 )
                 count.incrementAndGet()
             }
@@ -499,8 +504,8 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             options = SubscriptionOptions.receivePresenceEvents()
         )
 
-        subscriptionSetOf.addListener(object : EventListener {
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
+        subscriptionSetOf.addListener(object : EventListener() {
+            override fun message(pubnub: PubNub, result: PNMessageResult) {
                 success.incrementAndGet()
             }
         })
@@ -531,8 +536,8 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         val myChannel: Channel = pubnub.channel("myChannel.*")
 
         val subscription = myChannel.subscription()
-        subscription.addListener(object : EventListener {
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
+        subscription.addListener(object : EventListener() {
+            override fun message(pubnub: PubNub, result: PNMessageResult) {
                 success.incrementAndGet()
             }
         })
@@ -566,14 +571,14 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             options = SubscriptionOptions.receivePresenceEvents()
         )
 
-        subscriptionSetOf.addListener(object : EventListener {
+        subscriptionSetOf.addListener(object : EventListener() {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 failure.set(true)
             }
         })
 
         val sub = pubnub.channel(randomChannelName01).subscription()
-        sub.addListener(object : EventListener {
+        sub.addListener(object : EventListener() {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 success.set(true)
             }
@@ -601,7 +606,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         val result0 = pubnub.publish(randomChannelName01, expectedMessage).sync()
 
         pubnub.channel(randomChannelName01).subscription().apply {
-            addListener(object : EventListener {
+            addListener(object : EventListener() {
                 var highestTimetokenSeen = 0L
                 override fun message(pubnub: PubNub, result: PNMessageResult) {
                     if (result.timetoken!! <= highestTimetokenSeen) {
@@ -623,7 +628,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             .untilAtomic(success, Matchers.equalTo(1))
 
         pubnub.channel(randomChannelName01).subscription().apply {
-            addListener(object : EventListener {
+            addListener(object : EventListener() {
                 var highestTimetokenSeen = 0L
                 override fun message(pubnub: PubNub, result: PNMessageResult) {
                     if (result.timetoken!! <= highestTimetokenSeen) {

@@ -27,28 +27,28 @@ class PubNubTest(private val pubNub: PubNub, private val withPresenceOverride: B
             statusQueue.put(pnStatus)
         }
 
-        override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
-            messageQueue.put(pnMessageResult)
+        override fun message(pubnub: PubNub, event: PNMessageResult) {
+            messageQueue.put(event)
         }
 
-        override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {
-            messageQueue.put(pnSignalResult)
+        override fun signal(pubnub: PubNub, event: PNSignalResult) {
+            messageQueue.put(event)
         }
 
-        override fun file(pubnub: PubNub, pnFileEventResult: PNFileEventResult) {
-            messageQueue.put(pnFileEventResult)
+        override fun file(pubnub: PubNub, event: PNFileEventResult) {
+            messageQueue.put(event)
         }
 
-        override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {
-            messageQueue.put(pnMessageActionResult)
+        override fun messageAction(pubnub: PubNub, event: PNMessageActionResult) {
+            messageQueue.put(event)
         }
 
-        override fun objects(pubnub: PubNub, objectEvent: PNObjectEventResult) {
-            messageQueue.put(objectEvent)
+        override fun objects(pubnub: PubNub, event: PNObjectEventResult) {
+            messageQueue.put(event)
         }
 
-        override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
-            messageQueue.put(pnPresenceEventResult)
+        override fun presence(pubnub: PubNub, event: PNPresenceEventResult) {
+            messageQueue.put(event)
         }
     }
 

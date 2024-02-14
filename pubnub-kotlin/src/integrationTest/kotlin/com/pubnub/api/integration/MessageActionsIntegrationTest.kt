@@ -28,6 +28,9 @@ import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
+import com.pubnub.api.v2.callbacks.getOrThrow
+import com.pubnub.api.v2.callbacks.onFailure
+import com.pubnub.api.v2.callbacks.onSuccess
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.hamcrest.core.IsEqual
@@ -446,20 +449,20 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
                 }
             }
 
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
+            override fun message(pubnub: PubNub, event: PNMessageResult) {
                 failTest()
             }
 
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
+            override fun presence(pubnub: PubNub, event: PNPresenceEventResult) {
                 failTest()
             }
 
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {
+            override fun signal(pubnub: PubNub, event: PNSignalResult) {
                 failTest()
             }
 
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {
-                assertEquals(expectedChannelName, pnMessageActionResult.channel)
+            override fun messageAction(pubnub: PubNub, event: PNMessageActionResult) {
+                assertEquals(expectedChannelName, event.channel)
                 actionsCount.incrementAndGet()
             }
         })

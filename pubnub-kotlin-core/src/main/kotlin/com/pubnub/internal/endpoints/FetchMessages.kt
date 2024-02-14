@@ -1,6 +1,5 @@
 package com.pubnub.internal.endpoints
 
-import com.pubnub.internal.Endpoint
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
@@ -9,7 +8,8 @@ import com.pubnub.api.models.consumer.history.HistoryMessageType
 import com.pubnub.api.models.consumer.history.PNFetchMessageItem
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.BasePubNub.PubNubImpl
+import com.pubnub.internal.Endpoint
+import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.extension.limit
 import com.pubnub.internal.extension.nonPositiveToNull
 import com.pubnub.internal.extension.tryDecryptMessage

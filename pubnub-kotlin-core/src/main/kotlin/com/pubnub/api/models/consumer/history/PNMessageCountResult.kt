@@ -1,6 +1,6 @@
 package com.pubnub.api.models.consumer.history
 
-import com.pubnub.internal.BasePubNub.PubNubImpl
+import com.pubnub.internal.PubNubImpl
 
 /**
  * Result of the [PubNubImpl.messageCounts] operation.

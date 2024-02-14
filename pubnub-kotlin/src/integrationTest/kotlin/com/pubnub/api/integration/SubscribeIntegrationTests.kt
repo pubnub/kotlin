@@ -10,15 +10,14 @@ import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.subscribeToBlocking
+import com.pubnub.api.v2.callbacks.EventListener
+import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.api.v2.subscriptions.SubscriptionCursor
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
-import com.pubnub.internal.v2.callbacks.EventListener
-import com.pubnub.internal.v2.callbacks.StatusListener
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.logging.HttpLoggingInterceptor
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -77,8 +76,8 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
 
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
-                assertEquals(expectedMessage, pnMessageResult.message.asString)
+            override fun message(pubnub: PubNub, event: PNMessageResult) {
+                assertEquals(expectedMessage, event.message.asString)
                 success.set(true)
             }
         })
@@ -104,8 +103,8 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
 
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
-                assertEquals(expectedMessage, pnMessageResult.message.asString)
+            override fun message(pubnub: PubNub, event: PNMessageResult) {
+                assertEquals(expectedMessage, event.message.asString)
                 success.set(true)
             }
         })
@@ -149,8 +148,8 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
                 // nothing here
             }
 
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
-                assertTrue(listOf(expectedMessage01, expectedMessage02, expectedMessage03).contains(pnMessageResult.message.asString))
+            override fun message(pubnub: PubNub, event: PNMessageResult) {
+                assertTrue(listOf(expectedMessage01, expectedMessage02, expectedMessage03).contains(event.message.asString))
                 countDownLatch.countDown()
             }
         })
@@ -192,7 +191,6 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         // given
         val success = AtomicBoolean()
         val config = getBasicPnConfiguration()
-        config.enableEventEngine = true
         config.heartbeatInterval = 1
         var interceptedUrl: HttpUrl? = null
         config.httpLoggingInterceptor = HttpLoggingInterceptor {
@@ -221,38 +219,6 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
     }
 
     @Test
-    fun `when eventEngine disabled then subscribe REST call doesn't contain "ee" query parameter`() {
-        // given
-        val success = AtomicBoolean()
-        val config = getBasicPnConfiguration()
-        config.enableEventEngine = false
-        var interceptedUrl: HttpUrl? = null
-        config.httpLoggingInterceptor = HttpLoggingInterceptor {
-            if (it.startsWith("--> GET https://")) {
-                interceptedUrl = it.substringAfter("--> GET ").toHttpUrlOrNull()
-                success.set(true)
-            }
-        }.apply { level = HttpLoggingInterceptor.Level.BASIC }
-
-        val pubnub = PubNub(config)
-
-        // when
-        try {
-            pubnub.subscribe(
-                channels = listOf("a")
-            )
-
-            success.listen()
-        } finally {
-            pubnub.forceDestroy()
-        }
-
-        // then
-        assertNotNull(interceptedUrl)
-        assertFalse(interceptedUrl!!.queryParameterNames.contains("ee"))
-    }
-
-    @Test
     fun `when retryConfiguration is defined should get proper status`() {
         val success = AtomicBoolean()
 
@@ -261,7 +227,6 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
                 val notExistingUri = "ps.pndsn_notExisting_URI.com" // we want to trigger UnknownHostException to initiate retry
                 origin = notExistingUri
                 retryConfiguration = RetryConfiguration.Linear(delayInSec = 1, maxRetryNumber = 2)
-                enableEventEngine = true
                 heartbeatInterval = 1
             }
         )
@@ -287,13 +252,13 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         val sub01 = chan01.subscription()
         val sub02 = chan02.subscription()
 
-        sub01.addListener(object : EventListener {
+        sub01.addListener(object : EventListener() {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 countDown.countDown()
             }
         })
 
-        sub02.addListener(object : EventListener {
+        sub02.addListener(object : EventListener() {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 countDown.countDown()
             }
@@ -303,7 +268,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
             setOf(sub02, sub01)
         )
 
-        subscriptionSetOf.addListener(object : EventListener {
+        subscriptionSetOf.addListener(object : EventListener() {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 countDown.countDown()
             }
@@ -328,13 +293,13 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         val sub01 = chan01.subscription()
         val sub02 = chan02.subscription()
 
-        sub01.addListener(object : EventListener {
+        sub01.addListener(object : EventListener() {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 success.countDown()
             }
         })
 
-        sub02.addListener(object : EventListener {
+        sub02.addListener(object : EventListener() {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 success.countDown()
             }
@@ -348,7 +313,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         pubnub.publish(chan02.name, expectedMessage).sync()
         pubnub.publish(chan01.name, expectedMessage).sync()
 
-        subscriptionSetOf.addListener(object : EventListener {
+        subscriptionSetOf.addListener(object : EventListener() {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 success.countDown()
             }
@@ -377,13 +342,13 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         pubnub.publish(chan02.name, expectedMessage + "02").sync()
         pubnub.publish(chan01.name, expectedMessage + "03").sync()
 
-        sub01.addListener(object : EventListener {
+        sub01.addListener(object : EventListener() {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 success.countDown()
             }
         })
 
-        sub02.addListener(object : EventListener {
+        sub02.addListener(object : EventListener() {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 success.countDown()
             }
@@ -393,7 +358,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
             setOf(sub02, sub01)
         )
 
-        subscriptionSetOf.addListener(object : EventListener {
+        subscriptionSetOf.addListener(object : EventListener() {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 success.countDown()
             }
@@ -428,13 +393,13 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         pubnub.publish(chan02.name, expectedMessage + "02").sync()
         pubnub.publish(chan01.name, expectedMessage + "03").sync()
 
-        sub01.addListener(object : EventListener {
+        sub01.addListener(object : EventListener() {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 success.countDown()
             }
         })
 
-        sub02.addListener(object : EventListener {
+        sub02.addListener(object : EventListener() {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 success.countDown()
             }
@@ -444,7 +409,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
             setOf(sub02, sub01)
         )
 
-        subscriptionSetOf.addListener(object : EventListener {
+        subscriptionSetOf.addListener(object : EventListener() {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 success.countDown()
             }
@@ -477,13 +442,13 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         pubnub.publish(chan02.name, expectedMessage + "02").sync()
         pubnub.publish(chan01.name, expectedMessage + "03").sync()
 
-        sub01.addListener(object : EventListener {
+        sub01.addListener(object : EventListener() {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 success.countDown()
             }
         })
 
-        sub02.addListener(object : EventListener {
+        sub02.addListener(object : EventListener() {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 success.countDown()
             }
@@ -493,7 +458,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
             setOf(sub02, sub01)
         )
 
-        subscriptionSet.addListener(object : EventListener {
+        subscriptionSet.addListener(object : EventListener() {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 success.countDown()
             }
@@ -518,7 +483,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         val success = AtomicBoolean()
         val channelMetaDataName = randomChannel()
         val channelMetaSubscription = pubnub.channelMetadata(channelMetaDataName).subscription()
-        channelMetaSubscription.addListener(object : EventListener {
+        channelMetaSubscription.addListener(object : EventListener() {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 success.set(true)
             }
@@ -535,7 +500,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         val success = AtomicBoolean()
         val userMetaDataName = randomChannel()
         val channelMetaSubscription = pubnub.userMetadata(userMetaDataName).subscription()
-        channelMetaSubscription.addListener(object : EventListener {
+        channelMetaSubscription.addListener(object : EventListener() {
             override fun message(pubnub: PubNub, result: PNMessageResult) {
                 success.set(true)
             }
@@ -555,7 +520,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         val chan01 = pubnub.channel(randomChannel() + "01")
         val sub01 = chan01.subscription()
 
-        pubnub.addListener(object : StatusListener {
+        pubnub.addListener(object : StatusListener() {
             override fun status(pubnub: PubNub, status: PNStatus) {
                 if (status is PNStatus.Disconnected || status is PNStatus.SubscriptionChanged
                 ) {
@@ -565,7 +530,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         })
 
         sub01.use { sub ->
-            sub.addListener(object : EventListener {
+            sub.addListener(object : EventListener() {
                 override fun message(pubnub: PubNub, result: PNMessageResult) {
                     countDown.countDown()
                 }

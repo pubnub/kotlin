@@ -10,7 +10,8 @@ import com.pubnub.internal.endpoints.objects.channel.RemoveChannelMetadata
 class RemoveChannelMetadata internal constructor(removeChannelMetadata: RemoveChannelMetadata) :
     DelegatingEndpoint<PNRemoveMetadataResult, com.pubnub.internal.models.consumer.objects.PNRemoveMetadataResult>(
         removeChannelMetadata
-    ), IRemoveChannelMetadata by removeChannelMetadata {
+    ),
+    IRemoveChannelMetadata by removeChannelMetadata {
     override fun convertAction(remoteAction: ExtendedRemoteAction<com.pubnub.internal.models.consumer.objects.PNRemoveMetadataResult>): ExtendedRemoteAction<PNRemoveMetadataResult> {
         return MappingRemoteAction(remoteAction, PNRemoveMetadataResult::from)
     }

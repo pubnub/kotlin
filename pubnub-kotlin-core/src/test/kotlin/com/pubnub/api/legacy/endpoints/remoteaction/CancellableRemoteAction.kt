@@ -17,8 +17,10 @@ internal interface CancellableRemoteAction<T> : ExtendedRemoteAction<T> {
 
     override fun async(callback: Consumer<Result<T>>) {
         Executors.newSingleThreadExecutor()
-            .execute { doAsync {
-                callback.accept(it)
-            } }
+            .execute {
+                doAsync {
+                    callback.accept(it)
+                }
+            }
     }
 }

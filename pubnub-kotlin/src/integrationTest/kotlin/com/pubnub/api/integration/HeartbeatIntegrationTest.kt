@@ -6,6 +6,7 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
+import com.pubnub.api.v2.callbacks.onSuccess
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.hamcrest.core.IsEqual
@@ -42,7 +43,6 @@ class HeartbeatIntegrationTest : BaseIntegrationTest() {
             getBasicPnConfiguration().apply {
                 presenceTimeout = 20
                 heartbeatInterval = 4
-                enableEventEngine = enableEE
             }
         )
 
@@ -59,18 +59,18 @@ class HeartbeatIntegrationTest : BaseIntegrationTest() {
                 }
             }
 
-            override fun presence(p: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
-                if (pnPresenceEventResult.uuid.equals(pubnub.configuration.userId.value) &&
-                    pnPresenceEventResult.channel.equals(expectedChannel)
+            override fun presence(p: PubNub, event: PNPresenceEventResult) {
+                if (event.uuid.equals(pubnub.configuration.userId.value) &&
+                    event.channel.equals(expectedChannel)
                 ) {
-                    when (pnPresenceEventResult.event) {
+                    when (event.event) {
                         "state-change" -> {
-                            assertEquals(expectedStatePayload, pnPresenceEventResult.state)
+                            assertEquals(expectedStatePayload, event.state)
                             hits.incrementAndGet()
                             pubnub.disconnect()
                         }
                         "join" -> {
-                            if (pnPresenceEventResult.state == null) {
+                            if (event.state == null) {
                                 hits.incrementAndGet()
                                 val stateSet = AtomicBoolean()
                                 pubnub.setPresenceState(
@@ -88,7 +88,7 @@ class HeartbeatIntegrationTest : BaseIntegrationTest() {
                                 Awaitility.await().atMost(Durations.FIVE_SECONDS)
                                     .untilTrue(stateSet)
                             } else {
-                                assertEquals(expectedStatePayload, pnPresenceEventResult.state)
+                                assertEquals(expectedStatePayload, event.state)
                                 hits.incrementAndGet()
                             }
                         }

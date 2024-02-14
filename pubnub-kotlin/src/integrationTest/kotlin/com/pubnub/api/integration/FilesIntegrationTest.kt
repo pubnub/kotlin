@@ -10,6 +10,7 @@ import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
+import com.pubnub.api.v2.callbacks.onSuccess
 import org.junit.Assert
 import org.junit.Test
 import java.io.ByteArrayInputStream
@@ -92,8 +93,8 @@ class FilesIntegrationTest : BaseIntegrationTest() {
                 }
             }
 
-            override fun file(pubnub: PubNub, pnFileEventResult: PNFileEventResult) {
-                if (pnFileEventResult.file.name == fileName) {
+            override fun file(pubnub: PubNub, event: PNFileEventResult) {
+                if (event.file.name == fileName) {
                     fileEventReceived.countDown()
                 }
             }
@@ -140,10 +141,10 @@ class FilesIntegrationTest : BaseIntegrationTest() {
     }
 
     private abstract class LimitedListener : com.pubnub.api.callbacks.SubscribeCallback() {
-        override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-        override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {}
-        override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-        override fun objects(pubnub: PubNub, objectEvent: PNObjectEventResult) {}
-        override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
+        override fun presence(pubnub: PubNub, event: PNPresenceEventResult) {}
+        override fun message(pubnub: PubNub, event: PNMessageResult) {}
+        override fun signal(pubnub: PubNub, event: PNSignalResult) {}
+        override fun objects(pubnub: PubNub, event: PNObjectEventResult) {}
+        override fun messageAction(pubnub: PubNub, event: PNMessageActionResult) {}
     }
 }

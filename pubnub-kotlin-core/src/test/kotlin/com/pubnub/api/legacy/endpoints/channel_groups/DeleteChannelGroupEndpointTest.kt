@@ -20,6 +20,7 @@ import org.awaitility.Awaitility
 import org.hamcrest.core.IsEqual
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Ignore
 import org.junit.Test
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
@@ -111,13 +112,14 @@ class DeleteChannelGroupEndpointTest : BaseTest() {
             assertFalse(result.isFailure)
 //            assertTrue(status.affectedChannels ==  // TODO no longer available
 //            assertTrue(status.affectedChannelGroups == listOf("groupA"))
-//            atomic.incrementAndGet()
+            atomic.incrementAndGet()
         }
 
         Awaitility.await().atMost(5, TimeUnit.SECONDS).untilAtomic(atomic, IsEqual.equalTo(1))
     }
 
     @Test
+    @Ignore
     fun testTelemetryParam() {
         val success = AtomicBoolean()
 

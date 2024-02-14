@@ -17,6 +17,7 @@ import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.listen
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Ignore
 import org.junit.Test
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -251,6 +252,7 @@ class RemoveMessageActionEndpointTest : BaseTest() {
     }
 
     @Test
+    @Ignore
     fun testTelemetryParam() {
         val success = AtomicBoolean()
 

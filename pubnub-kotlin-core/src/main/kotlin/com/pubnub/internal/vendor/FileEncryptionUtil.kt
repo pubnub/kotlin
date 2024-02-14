@@ -1,8 +1,8 @@
 package com.pubnub.internal.vendor
 
 import com.pubnub.api.PubNubException
-import com.pubnub.internal.BasePubNub.PubNubImpl
 import com.pubnub.internal.PNConfiguration.Companion.isValid
+import com.pubnub.internal.PubNubImpl
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.IOException

@@ -3,7 +3,6 @@ package com.pubnub.api.integration;
 import com.google.gson.JsonObject;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.callbacks.SubscribeCallback;
-import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadataResult;
@@ -59,9 +58,8 @@ public class HeartbeatIntegrationTest extends BaseIntegrationTest {
 
             @Override
             public void status(@NotNull PubNub pn, @NotNull PNStatus status) {
-                if (status.getOperation() == PNOperationType.PNSubscribeOperation) {
-                    assert status.getAffectedChannels() != null;
-                    if (status.getAffectedChannels().contains(expectedChannel)) {
+                if (status instanceof PNStatus.Connected) {
+                    if (((PNStatus.Connected) status).getChannels().contains(expectedChannel)) {
 
                         pubNub.subscribe()
                                 .channels(Collections.singletonList(expectedChannel))
@@ -95,10 +93,9 @@ public class HeartbeatIntegrationTest extends BaseIntegrationTest {
                                 pubNub.setPresenceState()
                                         .state(expectedStatePayload)
                                         .channels(Collections.singletonList(expectedChannel))
-                                        .async((result, status) -> {
-                                            assertFalse(status.isError());
-                                            assert result != null;
-                                            assertEquals(expectedStatePayload, result.getState());
+                                        .async((result) -> {
+                                            assertFalse(result.isFailure());
+                                            assertEquals(expectedStatePayload, result.getOrNull().getState());
                                             hits.incrementAndGet();
                                             stateSet.set(true);
                                         });

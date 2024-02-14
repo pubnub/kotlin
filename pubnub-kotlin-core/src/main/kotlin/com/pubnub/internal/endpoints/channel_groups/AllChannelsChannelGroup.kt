@@ -1,12 +1,12 @@
 package com.pubnub.internal.endpoints.channel_groups
 
-import com.pubnub.internal.Endpoint
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsAllChannelsResult
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.BasePubNub.PubNubImpl
+import com.pubnub.internal.Endpoint
+import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.models.server.Envelope
 import retrofit2.Call
 import retrofit2.Response

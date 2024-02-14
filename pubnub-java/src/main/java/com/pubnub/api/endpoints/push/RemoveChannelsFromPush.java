@@ -4,7 +4,7 @@ import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNPushEnvironment;
 import com.pubnub.api.enums.PNPushType;
 import com.pubnub.api.models.consumer.push.PNPushRemoveChannelResult;
-import com.pubnub.internal.BasePubNub.PubNubImpl;
+import com.pubnub.internal.PubNubImpl;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 

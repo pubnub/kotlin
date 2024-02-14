@@ -288,7 +288,7 @@ public class PresenceEventsIntegrationTests extends BaseIntegrationTest {
         pubNub.setPresenceState()
                 .channels(Collections.singletonList(channel))
                 .state(state)
-                .async((result, status) -> {
+                .async((result) -> {
 
                 });
 

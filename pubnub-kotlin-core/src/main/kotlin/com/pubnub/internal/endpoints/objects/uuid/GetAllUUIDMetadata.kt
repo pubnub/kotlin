@@ -1,11 +1,11 @@
 package com.pubnub.internal.endpoints.objects.uuid
 
-import com.pubnub.internal.Endpoint
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.BasePubNub.PubNubImpl
+import com.pubnub.internal.Endpoint
+import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.endpoints.objects.internal.CollectionQueryParameters
 import com.pubnub.internal.endpoints.objects.internal.IncludeQueryParam
 import com.pubnub.internal.models.consumer.objects.uuid.PNUUIDMetadataArrayResult

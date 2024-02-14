@@ -1,12 +1,12 @@
 package com.pubnub.internal.endpoints.files
 
-import com.pubnub.internal.Endpoint
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.BasePubNub.PubNubImpl
+import com.pubnub.internal.Endpoint
+import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.models.server.files.FileUploadRequestDetails
 import com.pubnub.internal.models.server.files.FormField
 import com.pubnub.internal.models.server.files.GenerateUploadUrlPayload

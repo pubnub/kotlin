@@ -7,7 +7,7 @@ import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
-import com.pubnub.internal.BasePubNub.PubNubImpl
+import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.managers.DuplicationManager
 import com.pubnub.internal.managers.ListenerManager
 import com.pubnub.internal.models.consumer.pubsub.objects.PNObjectEventResult

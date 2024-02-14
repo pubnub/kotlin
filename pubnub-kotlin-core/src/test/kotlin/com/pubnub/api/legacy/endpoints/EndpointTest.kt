@@ -8,7 +8,6 @@ import com.github.tomakehurst.wiremock.matching.UrlPattern
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.pubnub.api.PubNubException
-import com.pubnub.internal.TestPubNub
 import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.legacy.BaseTest
@@ -18,6 +17,7 @@ import com.pubnub.api.v2.callbacks.onFailure
 import com.pubnub.internal.BasePubNub
 import com.pubnub.internal.Endpoint
 import com.pubnub.internal.PNConfiguration
+import com.pubnub.internal.TestPubNub
 import okhttp3.Request
 import okio.Timeout
 import org.junit.Assert.assertEquals

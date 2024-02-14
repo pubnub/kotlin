@@ -1,13 +1,13 @@
 package com.pubnub.internal.endpoints.files
 
-import com.pubnub.internal.Endpoint
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.files.PNFileUrlResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.api.v2.callbacks.Result
-import com.pubnub.internal.BasePubNub.PubNubImpl
+import com.pubnub.internal.Endpoint
+import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.PubNubUtil
 import okhttp3.ResponseBody
 import retrofit2.Call

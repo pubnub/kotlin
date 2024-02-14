@@ -1,16 +1,17 @@
 package com.pubnub.internal.endpoints
 
-import com.pubnub.internal.Endpoint
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNTimeResult
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.BasePubNub.PubNubImpl
+import com.pubnub.internal.Endpoint
+import com.pubnub.internal.PubNubImpl
 import retrofit2.Response
 
 /**
  * @see [PubNubImpl.time]
  */
-class Time internal constructor(pubnub: PubNubImpl, private val excludeFromRetry: Boolean = false) : Endpoint<List<Long>, PNTimeResult>(pubnub),
+class Time internal constructor(pubnub: PubNubImpl, private val excludeFromRetry: Boolean = false) :
+    Endpoint<List<Long>, PNTimeResult>(pubnub),
     ITime {
 
     override fun getAffectedChannels() = emptyList<String>()

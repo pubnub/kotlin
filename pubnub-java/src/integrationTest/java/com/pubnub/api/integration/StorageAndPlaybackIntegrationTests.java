@@ -37,10 +37,9 @@ public class StorageAndPlaybackIntegrationTests extends BaseIntegrationTest {
 
         pubNub.history()
                 .channel(channel)
-                .async((result, status) -> {
-                    assertNotNull(result);
-                    final String message = result.getMessages().get(0).getEntry().toString();
-                    assertFalse(status.isError());
+                .async((result) -> {
+                    assertFalse(result.isFailure());
+                    final String message = result.getOrNull().getMessages().get(0).getEntry().toString();
                     assertTrue(message.contains(pubNub.getConfiguration().getUserId().getValue()));
                     assertTrue(message.contains(messageText));
                     success.set(true);
@@ -64,12 +63,12 @@ public class StorageAndPlaybackIntegrationTests extends BaseIntegrationTest {
         pubNub.history()
                 .channel(channel)
                 .includeTimetoken(true)
-                .async((result, status) -> {
-                    assertFalse(status.isError());
+                .async((result) -> {
+                    assertFalse(result.isFailure());
                     assertNotNull(result);
                     int timeTokenCounter = 0;
-                    for (int i = 0; i < result.getMessages().size(); i++) {
-                        if (result.getMessages().get(i).getTimetoken() != null) {
+                    for (int i = 0; i < result.getOrNull().getMessages().size(); i++) {
+                        if (result.getOrNull().getMessages().get(i).getTimetoken() != null) {
                             timeTokenCounter++;
                         }
                     }
@@ -93,10 +92,10 @@ public class StorageAndPlaybackIntegrationTests extends BaseIntegrationTest {
         pubNub.history()
                 .channel(expectedChannel)
                 .count(10)
-                .async((result, status) -> {
-                    assertFalse(status.isError());
+                .async((result) -> {
+                    assertFalse(result.isFailure());
                     assertNotNull(result);
-                    final int numberOfMessages = result.getMessages().size();
+                    final int numberOfMessages = result.getOrNull().getMessages().size();
                     assertEquals(10, numberOfMessages);
                     success.set(true);
                 });
@@ -123,10 +122,10 @@ public class StorageAndPlaybackIntegrationTests extends BaseIntegrationTest {
                 .start(now)
                 .end(before)
                 .count(10)
-                .async((result, status) -> {
-                    assertFalse(status.isError());
+                .async((result) -> {
+                    assertFalse(result.isFailure());
                     assertNotNull(result);
-                    assertEquals(3, result.getMessages().size());
+                    assertEquals(3, result.getOrNull().getMessages().size());
                     success.set(true);
                 });
         success.set(true);
@@ -148,11 +147,11 @@ public class StorageAndPlaybackIntegrationTests extends BaseIntegrationTest {
                 .channel(channel)
                 .count(10)
                 .reverse(true)
-                .async((result, status) -> {
-                    assertFalse(status.isError());
+                .async((result) -> {
+                    assertFalse(result.isFailure());
                     assertNotNull(result);
-                    if (!result.getMessages().isEmpty()) {
-                        final String message = result.getMessages().get(0).getEntry().toString();
+                    if (!result.getOrNull().getMessages().isEmpty()) {
+                        final String message = result.getOrNull().getMessages().get(0).getEntry().toString();
                         assertTrue(message.contains(message_1));
                     } else {
                         fail("Messages are empty");

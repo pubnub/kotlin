@@ -10,9 +10,6 @@ plugins {
     id "com.github.ben-manes.versions" version '0.42.0'
     id "com.vanniktech.maven.publish" version '0.22.0'
 }
-apply plugin: "com.vanniktech.maven.publish"
-apply plugin: 'org.jetbrains.kotlin.jvm'
-apply plugin: "org.jlleitschuh.gradle.ktlint"
 
 testing {
     suites {
@@ -83,7 +80,7 @@ dependencies {
     testImplementation group: 'io.cucumber', name: 'cucumber-junit', version: '6.10.4'
     testImplementation group: 'io.cucumber', name: 'cucumber-picocontainer', version: '6.10.4'
     testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
-    integrationTestImplementation(testFixtures(project(":")))
+//    integrationTestImplementation(testFixtures(project(":")))
 
     allTest "org.awaitility:awaitility-kotlin:4.0.3"
     allTest "junit:junit:4.13.2"
@@ -92,9 +89,9 @@ dependencies {
     allTest 'org.junit.jupiter:junit-jupiter:5.8.2'
     allTest "io.mockk:mockk:1.11.0"
     allTest "org.aeonbits.owner:owner:1.0.12"
-
-    integrationTestImplementation project(":")
-    integrationTestImplementation project
+//
+//    integrationTestImplementation project(":")
+//    integrationTestImplementation project
 
 }
 

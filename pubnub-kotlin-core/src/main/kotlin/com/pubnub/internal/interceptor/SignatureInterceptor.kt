@@ -1,6 +1,6 @@
 package com.pubnub.internal.interceptor
 
-import com.pubnub.internal.BasePubNub.PubNubImpl
+import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.PubNubUtil
 import okhttp3.Interceptor
 import okhttp3.Response

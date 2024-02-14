@@ -11,7 +11,6 @@ import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
-
 import com.pubnub.api.subscribeToBlocking
 import com.pubnub.internal.v2.callbacks.EventListener
 import org.hamcrest.MatcherAssert.assertThat
@@ -135,8 +134,8 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
             listener = object : SubscribeCallback() {
                 override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
 
-                override fun objects(pubnub: PubNub, objectEvent: PNObjectEventResult) {
-                    println(objectEvent)
+                override fun objects(pubnub: PubNub, event: PNObjectEventResult) {
+                    println(event)
                     countDownLatch.countDown()
                 }
             }
@@ -172,14 +171,14 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
         val userMetadataSub = pubnub.userMetadata(channel).subscription()
 
         metadataSub.addListener(
-            listener = object : EventListener {
+            listener = object : com.pubnub.api.v2.callbacks.EventListener() {
                 override fun objects(pubnub: PubNub, result: PNObjectEventResult) {
                     countDownLatch.countDown()
                 }
             }
         )
         userMetadataSub.addListener(
-            listener = object : EventListener {
+            listener = object : com.pubnub.api.v2.callbacks.EventListener() {
                 override fun objects(pubnub: PubNub, result: PNObjectEventResult) {
                     countDownLatch.countDown()
                 }

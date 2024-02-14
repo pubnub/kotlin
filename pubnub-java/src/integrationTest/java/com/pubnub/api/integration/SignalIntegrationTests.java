@@ -7,7 +7,6 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.callbacks.SubscribeCallback;
-import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
 import com.pubnub.api.integration.util.RandomGenerator;
 import com.pubnub.api.models.consumer.PNPublishResult;
@@ -54,11 +53,8 @@ public class SignalIntegrationTests extends BaseIntegrationTest {
         pubNub.signal()
                 .message(expectedPayload)
                 .channel(expectedChannel)
-                .async((result, status) -> {
-                    assertFalse(status.isError());
-                    assertEquals(PNOperationType.PNSignalOperation, status.getOperation());
-                    assertEquals(status.getUuid(), pubNub.getConfiguration().getUserId().getValue());
-                    assertNotNull(result);
+                .async((result) -> {
+                    assertFalse(result.isFailure());
                     success.set(true);
                 });
 
@@ -94,16 +90,13 @@ public class SignalIntegrationTests extends BaseIntegrationTest {
             }
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
-                if (status.getOperation() == PNOperationType.PNSubscribeOperation) {
-                    assert status.getAffectedChannels() != null;
-                    if (status.getAffectedChannels().contains(expectedChannel)) {
+                if (status instanceof PNStatus.Connected) {
+                    if (((PNStatus.Connected) status).getChannels().contains(expectedChannel)) {
                         pubNub.signal()
                                 .message(expectedPayload)
                                 .channel(expectedChannel)
-                                .async((result, status1) -> {
-                                    assertFalse(status1.isError());
-                                    assertEquals(PNOperationType.PNSignalOperation, status1.getOperation());
-                                    assertEquals(status1.getUuid(), pubNub.getConfiguration().getUserId().getValue());
+                                .async((result) -> {
+                                    assertFalse(result.isFailure());
                                     assertNotNull(result);
                                 });
                     }

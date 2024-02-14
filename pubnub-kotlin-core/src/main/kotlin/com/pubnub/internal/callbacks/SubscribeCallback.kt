@@ -9,10 +9,9 @@ import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResu
 import com.pubnub.internal.BasePubNub
 import com.pubnub.internal.models.consumer.pubsub.objects.PNObjectEventResult
 
-
 interface Listener
 
-interface SubscribeCallback : Listener {
+interface SubscribeCallback : Listener, com.pubnub.internal.v2.callbacks.StatusListener, com.pubnub.internal.v2.callbacks.EventListener {
 
     /**
      * Receive status events like
@@ -25,7 +24,7 @@ interface SubscribeCallback : Listener {
      * @param pubnub The client instance which has this listener attached.
      * @param status subscription status update.
      */
-    fun status(pubnub: BasePubNub, status: PNStatus) {}
+    override fun status(pubnub: BasePubNub, status: PNStatus) {}
 
     /**
      * Receive messages at subscribed channels.
@@ -33,18 +32,18 @@ interface SubscribeCallback : Listener {
      * @see [PubNub.subscribe]
      *
      * @param pubnub The client instance which has this listener attached.
-     * @param message Wrapper around the actual message content.
+     * @param event Wrapper around the actual message content.
      */
-    fun message(pubnub: BasePubNub, message: PNMessageResult) {}
+    override fun message(pubnub: BasePubNub, event: PNMessageResult) {}
 
     /**
      * Receive presence events for channels subscribed to with presence enabled via `withPresence = true` in
      * [PubNub.subscribe]
      *
      * @param pubnub The client instance which has this listener attached.
-     * @param presenceEvent Wrapper around a presence event.
+     * @param event Wrapper around a presence event.
      */
-    fun presence(pubnub: BasePubNub, presenceEvent: PNPresenceEventResult) {}
+    override fun presence(pubnub: BasePubNub, event: PNPresenceEventResult) {}
 
     /**
      * Receive signals at subscribed channels.
@@ -52,18 +51,18 @@ interface SubscribeCallback : Listener {
      * @see [PubNub.signal]
      *
      * @param pubnub The client instance which has this listener attached.
-     * @param signal Wrapper around a signal event.
+     * @param event Wrapper around a signal event.
      */
-    fun signal(pubnub: BasePubNub, signal: PNSignalResult) {}
+    override fun signal(pubnub: BasePubNub, event: PNSignalResult) {}
 
     /**
      * Receive message actions for messages in subscribed channels.
      *
      * @param pubnub The client instance which has this listener attached.
-     * @param messageAction Wrapper around a message action event.
+     * @param event Wrapper around a message action event.
      */
-    fun messageAction(pubnub: BasePubNub, messageAction: PNMessageActionResult) {}
+    override fun messageAction(pubnub: BasePubNub, event: PNMessageActionResult) {}
 
-    fun objects(pubnub: BasePubNub, objectEvent: PNObjectEventResult) {}
-    fun file(pubnub: BasePubNub, fileEvent: PNFileEventResult) {}
+    override fun objects(pubnub: BasePubNub, event: PNObjectEventResult) {}
+    override fun file(pubnub: BasePubNub, event: PNFileEventResult) {}
 }

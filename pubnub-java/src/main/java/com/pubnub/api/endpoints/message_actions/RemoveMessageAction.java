@@ -4,7 +4,7 @@ import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.models.consumer.message_actions.PNRemoveMessageActionResult;
-import com.pubnub.internal.BasePubNub.PubNubImpl;
+import com.pubnub.internal.PubNubImpl;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 

@@ -2,8 +2,8 @@ package com.pubnub.internal.presence.eventengine.effect
 
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
-import com.pubnub.internal.presence.eventengine.event.PresenceEvent
 import com.pubnub.api.retry.RetryConfiguration
+import com.pubnub.internal.presence.eventengine.event.PresenceEvent
 import com.pubnub.internal.subscribe.eventengine.effect.TestEventSink
 import com.pubnub.internal.subscribe.eventengine.effect.failingRemoteAction
 import com.pubnub.internal.subscribe.eventengine.effect.successfulRemoteAction

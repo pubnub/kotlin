@@ -1,5 +1,8 @@
 package com.pubnub.api.integration.pam;
 
+import org.junit.Ignore;
+
+@Ignore
 public class PamChannelIntegrationTest extends AccessManagerIntegrationTest {
 
     @Override

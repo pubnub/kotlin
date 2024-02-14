@@ -3,7 +3,6 @@ package com.pubnub.internal.presence.eventengine.effect
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.retry.RetryConfiguration
-import com.pubnub.internal.retry.RetryableBase
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.api.v2.callbacks.onFailure
 import com.pubnub.api.v2.callbacks.onSuccess
@@ -12,6 +11,7 @@ import com.pubnub.internal.eventengine.Sink
 import com.pubnub.internal.extension.scheduleWithDelay
 import com.pubnub.internal.models.server.SubscribeEnvelope
 import com.pubnub.internal.presence.eventengine.event.PresenceEvent
+import com.pubnub.internal.retry.RetryableBase
 import org.slf4j.LoggerFactory
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture

@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints;
 
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult;
-import com.pubnub.internal.BasePubNub.PubNubImpl;
+import com.pubnub.internal.PubNubImpl;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;

@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints.access;
 
 import com.pubnub.api.endpoints.Endpoint;
-import com.pubnub.internal.BasePubNub.PubNubImpl;
+import com.pubnub.internal.PubNubImpl;
 import kotlin.Unit;
 import lombok.Setter;
 import lombok.experimental.Accessors;

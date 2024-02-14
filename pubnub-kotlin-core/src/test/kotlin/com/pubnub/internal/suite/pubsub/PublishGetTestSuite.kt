@@ -4,9 +4,9 @@ import com.github.tomakehurst.wiremock.client.MappingBuilder
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.google.gson.Gson
-import com.pubnub.internal.endpoints.pubsub.Publish
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNPublishResult
+import com.pubnub.internal.endpoints.pubsub.Publish
 import com.pubnub.internal.suite.AUTH
 import com.pubnub.internal.suite.EndpointTestSuite
 import com.pubnub.internal.suite.PUB

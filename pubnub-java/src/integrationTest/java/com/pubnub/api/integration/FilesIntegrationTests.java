@@ -3,7 +3,6 @@ package com.pubnub.api.integration;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.callbacks.SubscribeCallback;
-import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.files.PNDownloadFileResult;
@@ -62,7 +61,7 @@ public class FilesIntegrationTests extends BaseIntegrationTest {
         pubNub.addListener(new LimitedListener() {
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus) {
-                if (pnStatus.getCategory() == PNStatusCategory.PNConnectedCategory) {
+                if (pnStatus instanceof PNStatus.Connected) {
                     connectedLatch.countDown();
                 }
             }

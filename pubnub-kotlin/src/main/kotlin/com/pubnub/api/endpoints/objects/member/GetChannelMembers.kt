@@ -14,7 +14,8 @@ import com.pubnub.internal.models.consumer.objects.member.PNMemberArrayResult
 class GetChannelMembers internal constructor(getChannelMembers: GetChannelMembers) :
     DelegatingEndpoint<com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult, PNMemberArrayResult>(
         getChannelMembers
-    ), IGetChannelMembers by getChannelMembers {
+    ),
+    IGetChannelMembers by getChannelMembers {
     override fun convertAction(remoteAction: ExtendedRemoteAction<PNMemberArrayResult>): ExtendedRemoteAction<com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult> {
         return MappingRemoteAction(
             remoteAction,

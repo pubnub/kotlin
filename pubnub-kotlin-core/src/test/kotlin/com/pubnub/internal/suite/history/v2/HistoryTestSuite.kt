@@ -6,9 +6,9 @@ import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
-import com.pubnub.internal.endpoints.History
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.history.PNHistoryResult
+import com.pubnub.internal.endpoints.History
 import com.pubnub.internal.suite.AUTH
 import com.pubnub.internal.suite.EndpointTestSuite
 import com.pubnub.internal.suite.OptionalScenario

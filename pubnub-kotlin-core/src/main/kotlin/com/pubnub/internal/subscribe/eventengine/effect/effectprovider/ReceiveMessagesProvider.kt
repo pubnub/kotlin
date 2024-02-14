@@ -11,4 +11,3 @@ internal fun interface ReceiveMessagesProvider {
         subscriptionCursor: SubscriptionCursor
     ): RemoteAction<ReceiveMessagesResult>
 }
-

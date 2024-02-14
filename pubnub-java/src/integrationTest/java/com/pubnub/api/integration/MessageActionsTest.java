@@ -4,8 +4,6 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.endpoints.message_actions.GetMessageActions;
-import com.pubnub.api.enums.PNOperationType;
-import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
 import com.pubnub.api.integration.util.RandomGenerator;
 import com.pubnub.api.models.consumer.PNPublishResult;
@@ -83,9 +81,8 @@ public class MessageActionsTest extends BaseIntegrationTest {
                         .setType("reaction")
                         .setValue("smiley")
                         .setMessageTimetoken(publishResult.getTimetoken()))
-                .async((result, status) -> {
-                    assertFalse(status.isError());
-                    assertEquals(PNOperationType.PNAddMessageAction, status.getOperation());
+                .async((result) -> {
+                    assertFalse(result.isFailure());
                     success.set(true);
                 });
 
@@ -106,9 +103,8 @@ public class MessageActionsTest extends BaseIntegrationTest {
 
         pubNub.getMessageActions()
                 .channel(expectedChannel)
-                .async((result, status) -> {
-                    assertFalse(status.isError());
-                    assertEquals(PNOperationType.PNGetMessageActions, status.getOperation());
+                .async((result) -> {
+                    assertFalse(result.isFailure());
                     success.set(true);
                 });
 
@@ -134,9 +130,8 @@ public class MessageActionsTest extends BaseIntegrationTest {
                 .messageTimetoken(publishResult.getTimetoken())
                 .actionTimetoken(addMessageActionResult.getActionTimetoken())
                 .channel(expectedChannel)
-                .async((result, status) -> {
-                    assertFalse(status.isError());
-                    assertEquals(PNOperationType.PNDeleteMessageAction, status.getOperation());
+                .async((result) -> {
+                    assertFalse(result.isFailure());
                     success.set(true);
                 });
 
@@ -159,11 +154,9 @@ public class MessageActionsTest extends BaseIntegrationTest {
 
         pubNub.getMessageActions()
                 .channel(expectedChannel)
-                .async((result, status) -> {
-                    assertFalse(status.isError());
-                    assertEquals(PNOperationType.PNGetMessageActions, status.getOperation());
-                    assert result != null;
-                    result.getActions().forEach(pnAction -> {
+                .async((result) -> {
+                    assertFalse(result.isFailure());
+                    result.getOrNull().getActions().forEach(pnAction -> {
                                 assert addMessageActionResult != null;
                                 if (pnAction.getActionTimetoken().equals(addMessageActionResult.getActionTimetoken())) {
                                     success.set(true);
@@ -198,11 +191,9 @@ public class MessageActionsTest extends BaseIntegrationTest {
 
         pubNub.getMessageActions()
                 .channel(expectedChannel)
-                .async((result, status) -> {
-                    assertFalse(status.isError());
-                    assertEquals(PNOperationType.PNGetMessageActions, status.getOperation());
-                    assert result != null;
-                    assertEquals(expectedMessageCount, result.getActions().size());
+                .async((result) -> {
+                    assertFalse(result.isFailure());
+                    assertEquals(expectedMessageCount, result.getOrNull().getActions().size());
                     success.set(true);
                 });
 
@@ -256,11 +247,11 @@ public class MessageActionsTest extends BaseIntegrationTest {
                 .channel(channel)
                 .start(start)
                 .limit(5)
-                .async((result, status) -> {
+                .async((result) -> {
                     assert result != null;
-                    if (!status.isError() && !result.getActions().isEmpty()) {
-                        callback.onMore(result.getActions());
-                        page(channel, result.getActions().get(0).getActionTimetoken(), callback);
+                    if (!result.isFailure() && !result.getOrNull().getActions().isEmpty()) {
+                        callback.onMore(result.getOrNull().getActions());
+                        page(channel, result.getOrNull().getActions().get(0).getActionTimetoken(), callback);
                     } else {
                         callback.onDone();
                     }
@@ -499,20 +490,18 @@ public class MessageActionsTest extends BaseIntegrationTest {
             }
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus) {
-                if (pnStatus.getCategory() == PNStatusCategory.PNConnectedCategory) {
-                    if (pnStatus.getOperation() == PNOperationType.PNSubscribeOperation) {
-                        for (PNPublishResult pnPublishResult : publishResultList) {
-                            try {
-                                pubNub.addMessageAction()
-                                        .channel(expectedChannelName)
-                                        .messageAction(new PNMessageAction()
-                                                .setType("reaction")
-                                                .setValue(RandomGenerator.emoji())
-                                                .setMessageTimetoken(pnPublishResult.getTimetoken()))
-                                        .sync();
-                            } catch (PubNubException e) {
-                                e.printStackTrace();
-                            }
+                if (pnStatus instanceof PNStatus.Connected) {
+                    for (PNPublishResult pnPublishResult : publishResultList) {
+                        try {
+                            pubNub.addMessageAction()
+                                    .channel(expectedChannelName)
+                                    .messageAction(new PNMessageAction()
+                                            .setType("reaction")
+                                            .setValue(RandomGenerator.emoji())
+                                            .setMessageTimetoken(pnPublishResult.getTimetoken()))
+                                    .sync();
+                        } catch (PubNubException e) {
+                            e.printStackTrace();
                         }
                     }
                 }
@@ -706,9 +695,9 @@ public class MessageActionsTest extends BaseIntegrationTest {
                         .setValue(expectedEmoji)
                         .setMessageTimetoken(pnPublishResult.getTimetoken())
                 )
-                .async((result, status) -> {
-                    assertTrue(status.isError());
-                    assertEquals(409, status.getStatusCode().intValue());
+                .async((result) -> {
+                    assertTrue(result.isFailure());
+                    assertEquals(409, result.exceptionOrNull().getStatusCode());
                     success.set(true);
 
                 });

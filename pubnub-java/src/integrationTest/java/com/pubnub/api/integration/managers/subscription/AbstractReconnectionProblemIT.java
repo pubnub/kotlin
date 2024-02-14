@@ -4,7 +4,6 @@ import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
-import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.integration.util.ITTestConfig;
 import com.pubnub.api.models.consumer.PNStatus;
 import org.aeonbits.owner.ConfigFactory;
@@ -120,7 +119,9 @@ public abstract class AbstractReconnectionProblemIT {
                     collectedStatuses.add(new CollectedStatus(pnStatus, exception));
                 }
                 System.out.println("status: " + pnStatus);
-                System.out.println("affected channels: " + pnStatus.getAffectedChannels());
+                if (pnStatus instanceof PNStatus.Connected) {
+                    System.out.println("affected channels: " + ((PNStatus.Connected) pnStatus).getChannels());
+                }
                 if (reportCallStack) {
                     exception.printStackTrace(System.out);
                 }
@@ -154,8 +155,10 @@ public abstract class AbstractReconnectionProblemIT {
                     collectedStatuses.add(new CollectedStatus(pnStatus, exception));
                 }
                 System.out.println("status: " + pnStatus);
-                System.out.println("affected channels: " + pnStatus.getAffectedChannels());
-                System.out.println("affected channel groups: " + pnStatus.getAffectedChannelGroups());
+                if (pnStatus instanceof PNStatus.Connected) {
+                    System.out.println("affected channels: " + ((PNStatus.Connected) pnStatus).getChannels());
+                    System.out.println("affected channel groups: " + ((PNStatus.Connected) pnStatus).getChannelGroups());
+                }
                 if (reportCallStack) {
                     exception.printStackTrace(System.out);
                 }
@@ -211,8 +214,8 @@ public abstract class AbstractReconnectionProblemIT {
 
         long countAccessDenied = collectedStatuses.stream()
                 .filter(collectedStatus ->
-                        collectedStatus.getPnStatus().getCategory() == PNStatusCategory.PNAccessDeniedCategory
-                                && collectedStatus.getPnStatus().getAffectedChannelGroups().contains(channelGroup))
+                        collectedStatus.getPnStatus() instanceof PNStatus.ConnectionError
+                                && ((PNStatus.ConnectionError) collectedStatus.getPnStatus()).getException().getAffectedChannelGroups().contains(channelGroup))
                 .count();
 
         assertThat(countAccessDenied, greaterThan(1L));
@@ -229,8 +232,8 @@ public abstract class AbstractReconnectionProblemIT {
 
         long countAccessDenied = collectedStatuses.stream()
                 .filter(collectedStatus ->
-                        collectedStatus.getPnStatus().getCategory() == PNStatusCategory.PNAccessDeniedCategory
-                                && collectedStatus.getPnStatus().getAffectedChannels().contains(channel))
+                        collectedStatus.getPnStatus() instanceof PNStatus.ConnectionError
+                                && ((PNStatus.ConnectionError) collectedStatus.getPnStatus()).getException().getAffectedChannelGroups().contains(channel))
                 .count();
 
         assertThat(countAccessDenied, greaterThan(1L));
@@ -246,9 +249,9 @@ public abstract class AbstractReconnectionProblemIT {
         subscribe(pn, true, new BiConsumer<PubNub, PNStatus>() {
             @Override
             public void accept(final PubNub pubNub, final PNStatus status) {
-                if (status.isError()) {
-                    if (status.getCategory() == PNStatusCategory.PNAccessDeniedCategory) {
-                        final List<String> channelsToUnsubscribe = status.getAffectedChannels();
+                if (status instanceof PNStatus.ConnectionError) {
+                    if (((PNStatus.ConnectionError) status).getException().getStatusCode() == 403) {
+                        final List<String> channelsToUnsubscribe = ((PNStatus.ConnectionError) status).getException().getAffectedChannels();
                         try {
                             System.out.println("Unsubscribing from: " + channelsToUnsubscribe);
                             pubNub.unsubscribe().channels(channelsToUnsubscribe).execute();
@@ -264,14 +267,14 @@ public abstract class AbstractReconnectionProblemIT {
 
         long countAccessDenied = collectedStatuses.stream()
                 .filter(collectedStatus ->
-                        collectedStatus.getPnStatus().getCategory() == PNStatusCategory.PNAccessDeniedCategory
-                                && collectedStatus.getPnStatus().getAffectedChannels().contains(channel2))
+                        collectedStatus.getPnStatus() instanceof PNStatus.ConnectionError
+                                && ((PNStatus.Connected) collectedStatus.getPnStatus()).getChannels().contains(channel2))
                 .count();
 
         long countConnected = collectedStatuses.stream()
                 .filter(collectedStatus ->
-                        collectedStatus.getPnStatus().getCategory() == PNStatusCategory.PNConnectedCategory
-                                && collectedStatus.getPnStatus().getAffectedChannels().contains(channel1))
+                        collectedStatus.getPnStatus() instanceof PNStatus.Connected
+                                && ((PNStatus.Connected) collectedStatus.getPnStatus()).getChannels().contains(channel1))
                 .count();
 
         assertThat(countAccessDenied, equalTo(1L));
@@ -291,9 +294,10 @@ public abstract class AbstractReconnectionProblemIT {
         subscribeToGroup(pn, true, new BiConsumer<PubNub, PNStatus>() {
             @Override
             public void accept(final PubNub pubNub, final PNStatus status) {
-                if (status.isError()) {
-                    if (status.getCategory() == PNStatusCategory.PNAccessDeniedCategory) {
-                        final List<String> channelGroupsToUnsubscribe = status.getAffectedChannelGroups();
+                if (status instanceof PNStatus.ConnectionError) {
+                    if (((PNStatus.ConnectionError) status).getException().getStatusCode() == 403) {
+                        final List<String> channelGroupsToUnsubscribe = ((PNStatus.ConnectionError) status).getException().getAffectedChannelGroups();
+
                         try {
                             System.out.println("Unsubscribing from groups: " + channelGroupsToUnsubscribe);
                             pubNub.unsubscribe().channelGroups(channelGroupsToUnsubscribe).execute();
@@ -309,14 +313,14 @@ public abstract class AbstractReconnectionProblemIT {
 
         long countAccessDenied = collectedStatuses.stream()
                 .filter(collectedStatus ->
-                        collectedStatus.getPnStatus().getCategory() == PNStatusCategory.PNAccessDeniedCategory
-                                && collectedStatus.getPnStatus().getAffectedChannelGroups().contains(channelGroup2))
+                        collectedStatus.getPnStatus() instanceof PNStatus.ConnectionError
+                                && ((PNStatus.Connected) collectedStatus.getPnStatus()).getChannelGroups().contains(channelGroup2))
                 .count();
 
         long countConnected = collectedStatuses.stream()
                 .filter(collectedStatus ->
-                        collectedStatus.getPnStatus().getCategory() == PNStatusCategory.PNConnectedCategory
-                                && collectedStatus.getPnStatus().getAffectedChannelGroups().contains(channelGroup1))
+                        collectedStatus.getPnStatus() instanceof PNStatus.Connected
+                                && ((PNStatus.Connected) collectedStatus.getPnStatus()).getChannelGroups().contains(channelGroup1))
                 .count();
 
         assertThat(countAccessDenied, equalTo(1L));
@@ -331,8 +335,8 @@ public abstract class AbstractReconnectionProblemIT {
         subscribe(pn, true, new BiConsumer<PubNub, PNStatus>() {
             @Override
             public void accept(final PubNub pubNub, final PNStatus status) {
-                if (status.isError()) {
-                    if (status.getCategory() == PNStatusCategory.PNAccessDeniedCategory) {
+                if (status instanceof PNStatus.ConnectionError) {
+                    if (((PNStatus.ConnectionError) status).getException().getStatusCode() == 403) {
                         pn.disconnect();
                     }
                 }
@@ -343,8 +347,8 @@ public abstract class AbstractReconnectionProblemIT {
 
         long countAccessDenied = collectedStatuses.stream()
                 .filter(collectedStatus ->
-                        collectedStatus.getPnStatus().getCategory() == PNStatusCategory.PNAccessDeniedCategory
-                                && collectedStatus.getPnStatus().getAffectedChannels().contains(channel))
+                        collectedStatus.getPnStatus() instanceof PNStatus.ConnectionError
+                                && ((PNStatus.ConnectionError) collectedStatus.getPnStatus()).getException().getAffectedChannels().contains(channel))
                 .count();
 
         assertThat(countAccessDenied, equalTo(1L));
@@ -358,8 +362,8 @@ public abstract class AbstractReconnectionProblemIT {
         subscribeToGroup(pn, true, new BiConsumer<PubNub, PNStatus>() {
             @Override
             public void accept(final PubNub pubNub, final PNStatus status) {
-                if (status.isError()) {
-                    if (status.getCategory() == PNStatusCategory.PNAccessDeniedCategory) {
+                if (status instanceof PNStatus.ConnectionError) {
+                    if (((PNStatus.ConnectionError) status).getException().getStatusCode() == 403) {
                         pn.disconnect();
                     }
                 }
@@ -370,8 +374,8 @@ public abstract class AbstractReconnectionProblemIT {
 
         long countAccessDenied = collectedStatuses.stream()
                 .filter(collectedStatus ->
-                        collectedStatus.getPnStatus().getCategory() == PNStatusCategory.PNAccessDeniedCategory
-                                && collectedStatus.getPnStatus().getAffectedChannelGroups().contains(channelGroup))
+                        collectedStatus.getPnStatus() instanceof PNStatus.ConnectionError
+                                && ((PNStatus.Connected) collectedStatus.getPnStatus()).getChannelGroups().contains(channelGroup))
                 .count();
 
         assertThat(countAccessDenied, equalTo(1L));
@@ -386,8 +390,8 @@ public abstract class AbstractReconnectionProblemIT {
         subscribe(pn, true, new BiConsumer<PubNub, PNStatus>() {
             @Override
             public void accept(final PubNub pubNub, final PNStatus status) {
-                if (status.isError()) {
-                    if (status.getCategory() == PNStatusCategory.PNAccessDeniedCategory) {
+                if (status instanceof PNStatus.ConnectionError) {
+                    if (((PNStatus.ConnectionError) status).getException().getStatusCode() == 403) {
                         pn.forceDestroy();
                     }
                 }
@@ -398,8 +402,8 @@ public abstract class AbstractReconnectionProblemIT {
 
         long countAccessDenied = collectedStatuses.stream()
                 .filter(collectedStatus ->
-                        collectedStatus.getPnStatus().getCategory() == PNStatusCategory.PNAccessDeniedCategory
-                                && collectedStatus.getPnStatus().getAffectedChannels().contains(channel))
+                        collectedStatus.getPnStatus() instanceof PNStatus.ConnectionError
+                                && ((PNStatus.ConnectionError) collectedStatus.getPnStatus()).getException().getAffectedChannels().contains(channel))
                 .count();
 
         assertThat(countAccessDenied, equalTo(1L));
@@ -413,8 +417,8 @@ public abstract class AbstractReconnectionProblemIT {
         subscribeToGroup(pn, true, new BiConsumer<PubNub, PNStatus>() {
             @Override
             public void accept(final PubNub pubNub, final PNStatus status) {
-                if (status.isError()) {
-                    if (status.getCategory() == PNStatusCategory.PNAccessDeniedCategory) {
+                if (status instanceof PNStatus.ConnectionError) {
+                    if (((PNStatus.ConnectionError) status).getException().getStatusCode() == 403) {
                         pn.forceDestroy();
                     }
                 }
@@ -425,8 +429,8 @@ public abstract class AbstractReconnectionProblemIT {
 
         long countAccessDenied = collectedStatuses.stream()
                 .filter(collectedStatus ->
-                        collectedStatus.getPnStatus().getCategory() == PNStatusCategory.PNAccessDeniedCategory
-                                && collectedStatus.getPnStatus().getAffectedChannelGroups().contains(channelGroup))
+                        collectedStatus.getPnStatus() instanceof PNStatus.ConnectionError
+                                && ((PNStatus.ConnectionError) collectedStatus.getPnStatus()).getException().getAffectedChannelGroups().contains(channelGroup))
                 .count();
 
         assertThat(countAccessDenied, equalTo(1L));

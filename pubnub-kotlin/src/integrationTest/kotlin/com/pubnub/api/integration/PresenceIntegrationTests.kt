@@ -12,6 +12,7 @@ import com.pubnub.api.listen
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.subscribeToBlocking
+import com.pubnub.api.v2.callbacks.onSuccess
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.logging.HttpLoggingInterceptor
@@ -249,7 +250,6 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
         // given
         val success = AtomicBoolean()
         val config = getBasicPnConfiguration()
-        config.enableEventEngine = true
         config.heartbeatInterval = 1
         var interceptedUrl: HttpUrl? = null
         config.httpLoggingInterceptor = HttpLoggingInterceptor {
@@ -276,40 +276,5 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
         // then
         Assert.assertNotNull(interceptedUrl)
         assertTrue(interceptedUrl!!.queryParameterNames.contains("ee"))
-    }
-
-    @Test
-    fun `when hearbeatInterval greater than 0 and eventEngine disabled then REST call doesn't contain "ee" query parameter`() {
-
-        // given
-        val success = AtomicBoolean()
-        val config = getBasicPnConfiguration()
-        config.enableEventEngine = false
-        config.heartbeatInterval = 1
-        var interceptedUrl: HttpUrl? = null
-        config.httpLoggingInterceptor = HttpLoggingInterceptor {
-            if (it.startsWith("--> GET https://")) {
-                interceptedUrl = it.substringAfter("--> GET ").toHttpUrlOrNull()
-                success.set(true)
-            }
-        }.apply { level = HttpLoggingInterceptor.Level.BASIC }
-
-        val pubnub = PubNub(config)
-
-        // when
-        try {
-            pubnub.presence(
-                channels = listOf("a"),
-                connected = true
-            )
-
-            success.listen()
-        } finally {
-            pubnub.forceDestroy()
-        }
-
-        // then
-        Assert.assertNotNull(interceptedUrl)
-        assertFalse(interceptedUrl!!.queryParameterNames.contains("ee"))
     }
 }

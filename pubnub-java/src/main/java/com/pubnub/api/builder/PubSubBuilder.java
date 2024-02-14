@@ -1,7 +1,7 @@
 package com.pubnub.api.builder;
 
 
-import com.pubnub.internal.BasePubNub.PubNubImpl;
+import com.pubnub.internal.PubNubImpl;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;

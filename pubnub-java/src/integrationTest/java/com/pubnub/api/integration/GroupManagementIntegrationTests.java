@@ -43,13 +43,9 @@ public class GroupManagementIntegrationTests extends BaseIntegrationTest {
         pubNub.removeChannelsFromChannelGroup()
                 .channelGroup(mGroup)
                 .channels(Arrays.asList(mChannel1, mChannel2, mChannel3))
-                .async((result, status) -> {
-                    assertFalse(status.isError());
-                    assert status.getAffectedChannels() != null;
-                    assertEquals(3, status.getAffectedChannels().size());
+                .async((result) -> {
+                    assertFalse(result.isFailure());
                     assertEquals(0, pubNub.getSubscribedChannels().size());
-                    assert status.getAffectedChannelGroups() != null;
-                    assertEquals(1, status.getAffectedChannelGroups().size());
                     assertEquals(0, pubNub.getSubscribedChannelGroups().size());
                     signal.countDown();
                 });
@@ -66,8 +62,8 @@ public class GroupManagementIntegrationTests extends BaseIntegrationTest {
         pubNub.removeChannelsFromChannelGroup()
                 .channelGroup(mGroup)
                 .channels(Collections.singletonList(mChannel1))
-                .async((result, status) -> {
-                    assertFalse(status.isError());
+                .async((result) -> {
+                    assertFalse(result.isFailure());
                     signal.countDown();
                 });
 
@@ -111,10 +107,9 @@ public class GroupManagementIntegrationTests extends BaseIntegrationTest {
 
         pubNub.listChannelsForChannelGroup()
                 .channelGroup(mGroup)
-                .async((result, status) -> {
-                    assertFalse(status.isError());
-                    assert result != null;
-                    assertEquals(3, result.getChannels().size());
+                .async((result) -> {
+                    assertFalse(result.isFailure());
+                    assertEquals(3, result.getOrNull().getChannels().size());
                     signal.countDown();
                 });
 
@@ -128,12 +123,8 @@ public class GroupManagementIntegrationTests extends BaseIntegrationTest {
         pubNub.addChannelsToChannelGroup()
                 .channelGroup(mGroup)
                 .channels(Arrays.asList(mChannel1, mChannel2, mChannel3))
-                .async((result, status) -> {
-                    assertFalse(status.isError());
-                    assert status.getAffectedChannelGroups() != null;
-                    assertEquals(1, status.getAffectedChannelGroups().size());
-                    assert status.getAffectedChannels() != null;
-                    assertEquals(3, status.getAffectedChannels().size());
+                .async((result) -> {
+                    assertFalse(result.isFailure());
                     signal.countDown();
                 });
 
@@ -146,8 +137,8 @@ public class GroupManagementIntegrationTests extends BaseIntegrationTest {
         pubNub.addChannelsToChannelGroup()
                 .channelGroup(mGroup)
                 .channels(Arrays.asList(mChannel1, mChannel2, mChannel3))
-                .async((result, status) -> {
-                    assertFalse(status.isError());
+                .async((result) -> {
+                    assertFalse(result.isFailure());
                     signal.countDown();
                 });
 

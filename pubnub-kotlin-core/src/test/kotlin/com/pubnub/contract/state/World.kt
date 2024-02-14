@@ -1,12 +1,12 @@
 package com.pubnub.contract.state
 
-import com.pubnub.internal.PNConfiguration
 import com.pubnub.api.PubNubException
-import com.pubnub.internal.TestPubNub
 import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.contract.ContractTestConfig
 import com.pubnub.internal.BasePubNub
+import com.pubnub.internal.PNConfiguration
+import com.pubnub.internal.TestPubNub
 
 interface WorldState {
     val configuration: PNConfiguration

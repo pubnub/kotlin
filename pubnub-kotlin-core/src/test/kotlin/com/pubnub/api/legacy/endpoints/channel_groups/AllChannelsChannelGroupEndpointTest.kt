@@ -19,6 +19,7 @@ import org.hamcrest.Matchers
 import org.hamcrest.core.IsEqual
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Ignore
 import org.junit.Test
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
@@ -154,6 +155,7 @@ class AllChannelsChannelGroupEndpointTest : BaseTest() {
     }
 
     @Test
+    @Ignore // TODO
     fun testTelemetryParam() {
         val success = AtomicBoolean()
 

@@ -17,6 +17,6 @@ enum class PNPushType(s: String) {
     }
 
     override fun toString(): String {
-        return value;
+        return value
     }
 }

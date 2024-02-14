@@ -1,20 +1,20 @@
 package com.pubnub.contract.access.step
 
+import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult
+import com.pubnub.contract.access.parameter.PermissionType
+import com.pubnub.contract.access.parameter.ResourceType
+import com.pubnub.contract.access.state.FutureCallGrant
+import com.pubnub.contract.access.state.GrantTokenState
+import com.pubnub.contract.state.World
 import com.pubnub.internal.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.internal.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.internal.models.consumer.access_manager.v3.PNChannelGroupPatternGrant
 import com.pubnub.internal.models.consumer.access_manager.v3.PNChannelGroupResourceGrant
 import com.pubnub.internal.models.consumer.access_manager.v3.PNChannelPatternGrant
 import com.pubnub.internal.models.consumer.access_manager.v3.PNChannelResourceGrant
-import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult
 import com.pubnub.internal.models.consumer.access_manager.v3.PNUUIDPatternGrant
 import com.pubnub.internal.models.consumer.access_manager.v3.PNUUIDResourceGrant
 import com.pubnub.internal.models.consumer.access_manager.v3.UUIDGrant
-import com.pubnub.contract.access.parameter.PermissionType
-import com.pubnub.contract.access.parameter.ResourceType
-import com.pubnub.contract.access.state.FutureCallGrant
-import com.pubnub.contract.access.state.GrantTokenState
-import com.pubnub.contract.state.World
 import io.cucumber.java.en.And
 import io.cucumber.java.en.Given
 import kotlin.random.Random

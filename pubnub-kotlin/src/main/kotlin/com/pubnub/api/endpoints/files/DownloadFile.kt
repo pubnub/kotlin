@@ -8,5 +8,6 @@ import com.pubnub.internal.endpoints.files.IDownloadFile
 /**
  * @see [PubNub.downloadFile]
  */
-class DownloadFile internal constructor(downloadFile: IDownloadFile) : Endpoint<PNDownloadFileResult>(),
+class DownloadFile internal constructor(downloadFile: IDownloadFile) :
+    Endpoint<PNDownloadFileResult>(),
     IDownloadFile by downloadFile

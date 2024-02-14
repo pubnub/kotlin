@@ -12,9 +12,9 @@ import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.ObjectPayload
-import com.pubnub.internal.BasePubNub.PubNubImpl
 import com.pubnub.internal.PNConfiguration
 import com.pubnub.internal.PNConfiguration.Companion.isValid
+import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.PubNubUtil
 import com.pubnub.internal.extension.tryDecryptMessage
 import com.pubnub.internal.managers.DuplicationManager

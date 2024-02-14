@@ -3,7 +3,9 @@
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
-//@file:Suppress("UNCHECKED_CAST", "RedundantVisibilityModifier")
+@file:JvmName("Results")
+
+// @file:Suppress("UNCHECKED_CAST", "RedundantVisibilityModifier")
 package com.pubnub.api.v2.callbacks
 
 import com.pubnub.api.PubNubException
@@ -17,6 +19,7 @@ import kotlin.contracts.contract
  */
 class Result<out T> @PublishedApi internal constructor(
     @PublishedApi
+    @get:JvmSynthetic
     internal val value: Any?
 ) {
     // discovery
@@ -245,7 +248,7 @@ public inline fun <R, T> Result<T>.mapCatching(transform: (value: T) -> R): Resu
     }
 }
 //
-///**
+// /**
 // * Returns the encapsulated result of the given [transform] function applied to the encapsulated [Throwable] exception
 // * if this instance represents [failure][Result.isFailure] or the
 // * original encapsulated value if it is [success][Result.isSuccess].
@@ -253,8 +256,8 @@ public inline fun <R, T> Result<T>.mapCatching(transform: (value: T) -> R): Resu
 // * Note, that this function rethrows any [Throwable] exception thrown by [transform] function.
 // * See [recoverCatching] for an alternative that encapsulates exceptions.
 // */
-//@OptIn(ExperimentalContracts::class)
-//public inline fun <R, T : R> Result<T>.recover(transform: (exception: Throwable) -> R): Result<R> {
+// @OptIn(ExperimentalContracts::class)
+// public inline fun <R, T : R> Result<T>.recover(transform: (exception: Throwable) -> R): Result<R> {
 //    contract {
 //        callsInPlace(transform, InvocationKind.AT_MOST_ONCE)
 //    }
@@ -262,9 +265,9 @@ public inline fun <R, T> Result<T>.mapCatching(transform: (value: T) -> R): Resu
 //        null -> this
 //        else -> Result.success(transform(exception))
 //    }
-//}
+// }
 //
-///**
+// /**
 // * Returns the encapsulated result of the given [transform] function applied to the encapsulated [Throwable] exception
 // * if this instance represents [failure][Result.isFailure] or the
 // * original encapsulated value if it is [success][Result.isSuccess].
@@ -272,12 +275,12 @@ public inline fun <R, T> Result<T>.mapCatching(transform: (value: T) -> R): Resu
 // * This function catches any [Throwable] exception thrown by [transform] function and encapsulates it as a failure.
 // * See [recover] for an alternative that rethrows exceptions.
 // */
-//public inline fun <R, T : R> Result<T>.recoverCatching(transform: (exception: Throwable) -> R): Result<R> {
+// public inline fun <R, T : R> Result<T>.recoverCatching(transform: (exception: Throwable) -> R): Result<R> {
 //    return when (val exception = exceptionOrNull()) {
 //        null -> this
 //        else -> runCatching { transform(exception) }
 //    }
-//}
+// }
 
 // "peek" onto value/exception and pipe
 

@@ -1,7 +1,7 @@
 package com.pubnub.internal.models.consumer.access_manager
 
 import com.google.gson.annotations.SerializedName
-import com.pubnub.internal.BasePubNub.PubNubImpl
+import com.pubnub.internal.PubNubImpl
 
 /**
  * Result of the [PubNubImpl.grant] operation

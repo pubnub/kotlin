@@ -2,7 +2,7 @@ package com.pubnub.api.models.consumer.message_actions
 
 import com.google.gson.annotations.SerializedName
 import com.pubnub.api.models.consumer.PNBoundedPage
-import com.pubnub.internal.BasePubNub.PubNubImpl
+import com.pubnub.internal.PubNubImpl
 
 /**
  * Result for the [PubNubImpl.getMessageActions] API operation.

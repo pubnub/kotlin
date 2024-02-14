@@ -6,6 +6,7 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.listen
+import com.pubnub.api.v2.callbacks.onSuccess
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.junit.After

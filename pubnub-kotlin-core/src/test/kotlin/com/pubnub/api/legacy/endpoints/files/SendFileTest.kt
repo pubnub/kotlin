@@ -10,6 +10,7 @@ import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.api.v2.callbacks.onSuccess
 import com.pubnub.internal.BasePubNub
 import com.pubnub.internal.PNConfiguration
+import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.endpoints.files.GenerateUploadUrl
 import com.pubnub.internal.endpoints.files.PublishFileMessage
 import com.pubnub.internal.endpoints.files.SendFile
@@ -197,10 +198,11 @@ class SendFileTest : TestsWithFiles {
     private fun getPubNubMock(): BasePubNub {
         val mockConfig = mockk<PNConfiguration>()
         val mockPubNub = mockk<BasePubNub>()
+        val mockPubNubImpl = mockk<PubNubImpl>()
         val retryConfiguration = RetryConfiguration.None
-        every { mockPubNub.configuration } returns mockConfig
         every { mockConfig.retryConfiguration } returns retryConfiguration
-
+        every { mockPubNub.pubNubImpl } returns mockPubNubImpl
+        every { mockPubNubImpl.configuration } returns mockConfig
         return mockPubNub
     }
 
