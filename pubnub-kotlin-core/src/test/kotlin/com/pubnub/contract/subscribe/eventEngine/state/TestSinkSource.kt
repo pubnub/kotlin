@@ -1,11 +1,11 @@
 package com.pubnub.contract.subscribe.eventEngine.state
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy
-import com.pubnub.api.eventengine.EffectInvocation
-import com.pubnub.api.eventengine.Event
-import com.pubnub.api.eventengine.QueueSinkSource
-import com.pubnub.api.eventengine.SinkSource
-import com.pubnub.api.eventengine.Source
+import com.pubnub.internal.eventengine.EffectInvocation
+import com.pubnub.internal.eventengine.Event
+import com.pubnub.internal.eventengine.QueueSinkSource
+import com.pubnub.internal.eventengine.SinkSource
+import com.pubnub.internal.eventengine.Source
 
 internal class TestSinkSource<T>(
     private val testSink: MutableList<Pair<String, String>>,

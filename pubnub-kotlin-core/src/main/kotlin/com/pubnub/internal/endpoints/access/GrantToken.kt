@@ -1,5 +1,6 @@
 package com.pubnub.internal.endpoints.access
 
+import com.pubnub.internal.Endpoint
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
@@ -23,7 +24,7 @@ class GrantToken(
     private val channels: List<ChannelGrant>,
     private val channelGroups: List<ChannelGroupGrant>,
     private val uuids: List<UUIDGrant>
-) : com.pubnub.internal.Endpoint<GrantTokenResponse, PNGrantTokenResult>(pubnub), IGrantToken {
+) : Endpoint<GrantTokenResponse, PNGrantTokenResult>(pubnub), IGrantToken {
     override fun getAffectedChannels(): List<String> = channels.map { it.id }
     override fun getAffectedChannelGroups(): List<String> = channelGroups.map { it.id }
 

@@ -839,7 +839,8 @@ abstract class AccessManagerIntegrationTest extends BaseIntegrationTest {
         requestAccess(READ);
         pubNub.getMessageActions()
                 .channel(expectedChannel)
-                .async((result, status) -> {
+                .async(result -> {})
+                .async((result) -> {
                     try {
                         requestAccess(READ);
                         assertAuthKey(status);

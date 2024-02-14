@@ -1,5 +1,6 @@
 package com.pubnub.internal.endpoints.presence
 
+import com.pubnub.internal.Endpoint
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.BasePubNub.PubNubImpl
@@ -15,7 +16,7 @@ import retrofit2.Response
 class WhereNow internal constructor(
     pubnub: PubNubImpl,
     override val uuid: String = pubnub.configuration.userId.value
-) : com.pubnub.internal.Endpoint<Envelope<WhereNowPayload>, PNWhereNowResult>(pubnub), IWhereNow {
+) : Endpoint<Envelope<WhereNowPayload>, PNWhereNowResult>(pubnub), IWhereNow {
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<WhereNowPayload>> {
 

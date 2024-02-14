@@ -2,9 +2,9 @@ package com.pubnub.api.legacy.endpoints.files
 
 import com.pubnub.api.PubNubException
 import com.pubnub.api.crypto.CryptoModule
-import com.pubnub.api.endpoints.files.UploadFile
-import com.pubnub.api.models.server.files.FormField
-import com.pubnub.api.services.S3Service
+import com.pubnub.internal.endpoints.files.UploadFile
+import com.pubnub.internal.models.server.files.FormField
+import com.pubnub.internal.services.S3Service
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

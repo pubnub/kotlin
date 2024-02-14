@@ -10,6 +10,7 @@ import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.CommonUtils.assertPnException
 import com.pubnub.api.PubNubError
 import com.pubnub.api.legacy.BaseTest
+import com.pubnub.api.v2.callbacks.onSuccess
 import org.awaitility.Awaitility
 import org.hamcrest.core.IsEqual
 import org.junit.Assert.assertEquals

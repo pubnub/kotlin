@@ -16,6 +16,8 @@ import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.listen
+import com.pubnub.api.v2.callbacks.onFailure
+import com.pubnub.api.v2.callbacks.onSuccess
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Test
@@ -241,7 +243,7 @@ class ListPushProvisionsTest : BaseTest() {
         ).async { result ->
             assertFalse(result.isFailure)
             result.onSuccess {
-//                assertTrue(status.affectedChannels.isEmpty()) //TODO should we hgave this
+//                assertTrue(status.affectedChannels.isEmpty()) //TODO should we have this
 //                assertTrue(status.affectedChannelGroups.isEmpty())
                 success.set(true)
             }

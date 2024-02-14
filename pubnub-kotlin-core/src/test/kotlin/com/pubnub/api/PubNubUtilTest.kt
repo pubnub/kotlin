@@ -1,5 +1,6 @@
 package com.pubnub.api
 
+import com.pubnub.internal.PubNubUtil
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
 import org.junit.Test

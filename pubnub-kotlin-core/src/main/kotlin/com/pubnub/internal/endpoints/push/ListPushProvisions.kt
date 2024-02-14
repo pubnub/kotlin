@@ -1,5 +1,6 @@
 package com.pubnub.internal.endpoints.push
 
+import com.pubnub.internal.Endpoint
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
@@ -21,7 +22,7 @@ class ListPushProvisions internal constructor(
     override val deviceId: String,
     override val topic: String? = null,
     override val environment: PNPushEnvironment = PNPushEnvironment.DEVELOPMENT
-) : com.pubnub.internal.Endpoint<List<String>, PNPushListProvisionsResult>(pubnub), IListPushProvisions {
+) : Endpoint<List<String>, PNPushListProvisionsResult>(pubnub), IListPushProvisions {
 
     override fun validateParams() {
         super.validateParams()

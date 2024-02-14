@@ -1,6 +1,7 @@
 package com.pubnub.internal.endpoints.message_actions
 
 import com.google.gson.JsonObject
+import com.pubnub.internal.Endpoint
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
@@ -20,7 +21,7 @@ class AddMessageAction internal constructor(
     pubnub: PubNubImpl,
     override val channel: String,
     override val messageAction: PNMessageAction
-) : com.pubnub.internal.Endpoint<EntityEnvelope<PNMessageAction>, PNAddMessageActionResult>(pubnub), IAddMessageAction {
+) : Endpoint<EntityEnvelope<PNMessageAction>, PNAddMessageActionResult>(pubnub), IAddMessageAction {
 
     override fun validateParams() {
         super.validateParams()

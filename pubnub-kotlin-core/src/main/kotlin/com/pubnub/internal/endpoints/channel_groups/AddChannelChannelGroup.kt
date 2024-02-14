@@ -1,5 +1,6 @@
 package com.pubnub.internal.endpoints.channel_groups
 
+import com.pubnub.internal.Endpoint
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
@@ -17,7 +18,7 @@ class AddChannelChannelGroup internal constructor(
     pubnub: PubNubImpl,
     override val channelGroup: String,
     override val channels: List<String>
-) : com.pubnub.internal.Endpoint<Void, PNChannelGroupsAddChannelResult>(pubnub), IAddChannelChannelGroup {
+) : Endpoint<Void, PNChannelGroupsAddChannelResult>(pubnub), IAddChannelChannelGroup {
 
     override fun getAffectedChannels() = channels
     override fun getAffectedChannelGroups() = listOf(channelGroup)

@@ -1,5 +1,6 @@
 package com.pubnub.internal.endpoints.files
 
+import com.pubnub.internal.Endpoint
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
@@ -19,7 +20,7 @@ class ListFiles(
     private val limit: Int? = null,
     private val next: PNPage.PNNext? = null,
     pubNub: PubNubImpl
-) : com.pubnub.internal.Endpoint<ListFilesResult, PNListFilesResult>(pubNub), IListFiles {
+) : Endpoint<ListFilesResult, PNListFilesResult>(pubNub), IListFiles {
 
     @Throws(PubNubException::class)
     override fun validateParams() {

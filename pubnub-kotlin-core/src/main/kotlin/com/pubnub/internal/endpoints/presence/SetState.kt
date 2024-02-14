@@ -2,6 +2,7 @@ package com.pubnub.internal.endpoints.presence
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonNull
+import com.pubnub.internal.Endpoint
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
@@ -24,7 +25,7 @@ class SetState internal constructor(
     override val state: Any,
     override val uuid: String = pubnub.configuration.userId.value,
     private val presenceData: PresenceData
-) : com.pubnub.internal.Endpoint<Envelope<JsonElement>, PNSetStateResult>(pubnub), ISetState {
+) : Endpoint<Envelope<JsonElement>, PNSetStateResult>(pubnub), ISetState {
 
     override fun getAffectedChannels() = channels
     override fun getAffectedChannelGroups() = channelGroups

@@ -1,5 +1,6 @@
 package com.pubnub.internal.endpoints.objects.channel
 
+import com.pubnub.internal.Endpoint
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.BasePubNub.PubNubImpl
@@ -11,7 +12,7 @@ import retrofit2.Response
 class RemoveChannelMetadata(
     pubnub: PubNubImpl,
     private val channel: String
-) : com.pubnub.internal.Endpoint<EntityEnvelope<Any?>, PNRemoveMetadataResult>(pubnub), IRemoveChannelMetadata {
+) : Endpoint<EntityEnvelope<Any?>, PNRemoveMetadataResult>(pubnub), IRemoveChannelMetadata {
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<Any?>> {
         return pubnub.retrofitManager.objectsService.deleteChannelMetadata(

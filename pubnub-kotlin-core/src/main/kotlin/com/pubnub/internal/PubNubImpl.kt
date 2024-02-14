@@ -123,8 +123,11 @@ import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import kotlin.time.Duration.Companion.seconds
 
-abstract class BasePubNub(val configuration: PNConfiguration) : EventEmitter, StatusEmitter {
-    val pubNubImpl = PubNubImpl(configuration)
+abstract class BasePubNub internal constructor(val configuration: PNConfiguration, eventEnginesConf: EventEnginesConf) : EventEmitter, StatusEmitter {
+    constructor(configuration: PNConfiguration) : this(configuration, EventEnginesConf())
+
+    val pubNubImpl = PubNubImpl(configuration, eventEnginesConf)
+
     abstract val listenerManager: ListenerManager
 
     /**
@@ -195,6 +198,19 @@ abstract class BasePubNub(val configuration: PNConfiguration) : EventEmitter, St
         listenerManager.removeAllListeners()
     }
 
+    /**
+     * Force destroy the SDK to evict the connection pools and close executors.
+     */
+    fun forceDestroy() {
+        pubNubImpl.forceDestroy()
+    }
+
+    /**
+     * Destroy the SDK to cancel all ongoing requests and stop heartbeat timer.
+     */
+    fun destroy() {
+        pubNubImpl.destroy()
+    }
 
     inner class PubNubImpl internal constructor(
         val configuration: PNConfiguration,

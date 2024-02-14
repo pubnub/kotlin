@@ -1,9 +1,10 @@
 package com.pubnub.api.legacy.endpoints.files
 
-import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
+import com.pubnub.internal.TestPubNub
 import com.pubnub.api.UserId
 import com.pubnub.api.retry.RetryConfiguration
+import com.pubnub.internal.BasePubNub
 import com.pubnub.internal.PNConfiguration
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.hamcrest.MatcherAssert.assertThat
@@ -22,7 +23,7 @@ class GetFileUrlTest {
     @Throws(PubNubException::class)
     fun noAdditionalQueryParamsWhenNotSecretNorAuth() {
         // given
-        val pubnub = PubNub(config())
+        val pubnub = TestPubNub(config()).pubNubImpl
 
         // when
         val url = pubnub.getFileUrl(
@@ -41,7 +42,7 @@ class GetFileUrlTest {
     @Throws(PubNubException::class)
     fun signatureAndTimestampQueryParamsAreSetWhenSecret() {
         // given
-        val pubnub = PubNub(withSecret(config()))
+        val pubnub = TestPubNub(withSecret(config())).pubNubImpl
 
         // when
         val url = pubnub.getFileUrl(
@@ -60,7 +61,7 @@ class GetFileUrlTest {
     @Throws(PubNubException::class)
     fun authQueryParamIsSetWhenAuth() {
         // given
-        val pubnub = PubNub(withAuth(config()))
+        val pubnub = TestPubNub(withAuth(config())).pubNubImpl
 
         // when
         val url = pubnub.getFileUrl(
@@ -79,7 +80,7 @@ class GetFileUrlTest {
     @Throws(PubNubException::class)
     fun signatureAndTimestampAndAuthQueryParamsAreSetWhenSecretAndAuth() {
         // given
-        val pubnub = PubNub(withSecret(withAuth(config())))
+        val pubnub = TestPubNub(withSecret(withAuth(config()))).pubNubImpl
 
         // when
         val url = pubnub.getFileUrl(
@@ -99,7 +100,7 @@ class GetFileUrlTest {
     }
 
     private fun config(): PNConfiguration {
-        val config = PNConfiguration(userId = UserId(PubNub.generateUUID()))
+        val config = PNConfiguration(userId = UserId(BasePubNub.generateUUID()))
         config.publishKey = "pk"
         config.subscribeKey = "sk"
         config.retryConfiguration = RetryConfiguration.Linear(delayInSec = 4, maxRetryNumber = 3)

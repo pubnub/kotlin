@@ -1,5 +1,6 @@
 package com.pubnub.internal.endpoints.objects.uuid
 
+import com.pubnub.internal.Endpoint
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.retry.RetryableEndpointGroup
@@ -17,7 +18,7 @@ class GetUUIDMetadata internal constructor(
     pubnub: PubNubImpl,
     override val uuid: String,
     private val includeQueryParam: IncludeQueryParam
-) : com.pubnub.internal.Endpoint<EntityEnvelope<PNUUIDMetadata>, PNUUIDMetadataResult>(pubnub), IGetUUIDMetadata {
+) : Endpoint<EntityEnvelope<PNUUIDMetadata>, PNUUIDMetadataResult>(pubnub), IGetUUIDMetadata {
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNUUIDMetadata>> {
         val params = queryParams + includeQueryParam.createIncludeQueryParams()

@@ -7,14 +7,17 @@ import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.matching.UrlPattern
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import com.pubnub.internal.PNConfiguration
-import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
+import com.pubnub.internal.TestPubNub
 import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.listen
 import com.pubnub.api.retry.RetryableEndpointGroup
+import com.pubnub.api.v2.callbacks.onFailure
+import com.pubnub.internal.BasePubNub
+import com.pubnub.internal.Endpoint
+import com.pubnub.internal.PNConfiguration
 import okhttp3.Request
 import okio.Timeout
 import org.junit.Assert.assertEquals
@@ -93,7 +96,7 @@ class EndpointTest : BaseTest() {
 
     @Test
     fun testUuid() {
-        val expectedUuid = UserId(PubNub.generateUUID())
+        val expectedUuid = UserId(BasePubNub.generateUUID())
         pubnub.configuration.userId = expectedUuid
 
         fakeEndpoint {
@@ -166,7 +169,6 @@ class EndpointTest : BaseTest() {
         pubnub.time()
             .async { result ->
                 result.onFailure {
-                    it as PubNubException
                     assertEquals(listOf("ch1", "ch2"), it.affectedChannels)
                     assertEquals(listOf("cg1"), it.affectedChannelGroups)
                     success.set(true)
@@ -269,7 +271,7 @@ class EndpointTest : BaseTest() {
 
     @Test
     fun testDefaultTimeoutValues() {
-        val p = PubNub(PNConfiguration(userId = UserId(PubNub.generateUUID())))
+        val p = TestPubNub(PNConfiguration(userId = UserId(BasePubNub.generateUUID())))
         assertEquals(300, p.configuration.presenceTimeout)
         assertEquals(0, p.configuration.heartbeatInterval)
         p.forceDestroy()
@@ -277,7 +279,7 @@ class EndpointTest : BaseTest() {
 
     @Test
     fun testCustomTimeoutValues1() {
-        val p = PubNub(PNConfiguration(userId = UserId(PubNub.generateUUID())))
+        val p = TestPubNub(PNConfiguration(userId = UserId(BasePubNub.generateUUID())))
         p.configuration.presenceTimeout = 100
         assertEquals(100, p.configuration.presenceTimeout)
         assertEquals(49, p.configuration.heartbeatInterval)
@@ -286,7 +288,7 @@ class EndpointTest : BaseTest() {
 
     @Test
     fun testCustomTimeoutValues2() {
-        val p = PubNub(PNConfiguration(userId = UserId(PubNub.generateUUID())))
+        val p = TestPubNub(PNConfiguration(userId = UserId(BasePubNub.generateUUID())))
         p.configuration.heartbeatInterval = 100
         assertEquals(300, p.configuration.presenceTimeout)
         assertEquals(100, p.configuration.heartbeatInterval)
@@ -295,7 +297,7 @@ class EndpointTest : BaseTest() {
 
     @Test
     fun testCustomTimeoutValues3() {
-        val p = PubNub(PNConfiguration(userId = UserId(PubNub.generateUUID())))
+        val p = TestPubNub(PNConfiguration(userId = UserId(BasePubNub.generateUUID())))
         p.configuration.heartbeatInterval = 40
         p.configuration.presenceTimeout = 50
         assertEquals(50, p.configuration.presenceTimeout)
@@ -305,7 +307,7 @@ class EndpointTest : BaseTest() {
 
     private fun fakeEndpoint(
         paramsCondition: (map: HashMap<String, String>) -> Unit
-    ) = object : com.pubnub.internal.Endpoint<Any, Any>(pubnub) {
+    ) = object : Endpoint<Any, Any>(pubnub) {
 
         override fun doWork(queryParams: HashMap<String, String>): Call<Any> {
             paramsCondition.invoke(queryParams)

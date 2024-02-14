@@ -1,5 +1,6 @@
 package com.pubnub.internal.endpoints.objects.member
 
+import com.pubnub.internal.Endpoint
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.BasePubNub.PubNubImpl
@@ -20,7 +21,7 @@ class GetChannelMembers internal constructor(
     private val channel: String,
     private val collectionQueryParameters: CollectionQueryParameters,
     private val includeQueryParam: IncludeQueryParam
-) : com.pubnub.internal.Endpoint<EntityArrayEnvelope<PNMember>, PNMemberArrayResult>(pubnub), IGetChannelMembers {
+) : Endpoint<EntityArrayEnvelope<PNMember>, PNMemberArrayResult>(pubnub), IGetChannelMembers {
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityArrayEnvelope<PNMember>> {
         val params = queryParams + collectionQueryParameters.createCollectionQueryParams() + includeQueryParam.createIncludeQueryParams()

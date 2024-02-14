@@ -1,6 +1,8 @@
 package com.pubnub.api
 
 import com.pubnub.api.v2.callbacks.Result
+import com.pubnub.api.v2.callbacks.onFailure
+import com.pubnub.internal.Endpoint
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.awaitility.pollinterval.FibonacciPollInterval
@@ -11,7 +13,7 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
-fun <Input, Output> com.pubnub.internal.Endpoint<Input, Output>.await(function: (result: Result<Output>) -> Unit) {
+fun <Input, Output> Endpoint<Input, Output>.await(function: (result: Result<Output>) -> Unit) {
     val success = AtomicBoolean()
     async { result ->
         function.invoke(result)
@@ -36,7 +38,7 @@ fun AtomicBoolean.listen(function: () -> Boolean): AtomicBoolean {
     return this
 }
 
-fun <Input, Output> com.pubnub.internal.Endpoint<Input, Output>.asyncRetry(
+fun <Input, Output> Endpoint<Input, Output>.asyncRetry(
     function: (result: Result<Output>) -> Unit
 ) {
     val hits = AtomicInteger(0)
@@ -67,7 +69,7 @@ fun <Input, Output> com.pubnub.internal.Endpoint<Input, Output>.asyncRetry(
         }
 }
 
-fun <Input, Output> com.pubnub.internal.Endpoint<Input, Output>.retryForbidden(
+fun <Input, Output> Endpoint<Input, Output>.retryForbidden(
     onFail: (exception: Throwable) -> Unit,
     function: (result: Result<Output>) -> Unit
 ) {
@@ -77,6 +79,7 @@ fun <Input, Output> com.pubnub.internal.Endpoint<Input, Output>.retryForbidden(
     async { result ->
         result.onFailure {
             println(it)
+            TODO("check what exception is thrown for 403 and how to detect it")
 //        if (status.error && status.statusCode == 403) { //TODO check what exception is thrown for 403 and how to detect it
 //            onFail.invoke(status)
 //            success.set(false)
@@ -109,19 +112,4 @@ fun <Input, Output> com.pubnub.internal.Endpoint<Input, Output>.retryForbidden(
 
 fun AtomicBoolean.listen(seconds: Int = CommonUtils.DEFAULT_LISTEN_DURATION) {
     CommonUtils.observe(this, seconds)
-}
-
-fun PubNub.subscribeToBlocking(vararg channels: String) {
-    this.subscribe(
-        channels = listOf(*channels),
-        withPresence = true
-    )
-    Thread.sleep(2000)
-}
-
-fun PubNub.unsubscribeFromBlocking(vararg channels: String) {
-    unsubscribe(
-        channels = listOf(*channels)
-    )
-    Thread.sleep(2000)
 }

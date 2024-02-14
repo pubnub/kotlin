@@ -5,13 +5,14 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.v2.callbacks.Result
 import java.util.concurrent.ExecutorService
+import java.util.function.Consumer
 
 internal class RetryingRemoteAction<T>(
     private val remoteAction: ExtendedRemoteAction<T>,
     private val maxNumberOfAutomaticRetries: Int,
     private val executorService: ExecutorService
 ) : ExtendedRemoteAction<T> {
-    private lateinit var cachedCallback: (result: Result<T>) -> Unit
+    private lateinit var cachedCallback: Consumer<Result<T>>
 
     @Throws(PubNubException::class)
     override fun sync(): T {
@@ -27,14 +28,14 @@ internal class RetryingRemoteAction<T>(
         throw thrownException!!
     }
 
-    override fun async(callback: (result: Result<T>) -> Unit) {
+    override fun async(callback: Consumer<Result<T>>) {
         cachedCallback = callback
         executorService.execute(
             Runnable {
                 try {
                     validate()
                 } catch (ex: PubNubException) {
-                    callback(
+                    callback.accept(
                         Result.failure(ex)
                     )
                     return@Runnable
@@ -42,12 +43,12 @@ internal class RetryingRemoteAction<T>(
                 var lastException: Throwable? = null
                 for (i in 0 until maxNumberOfAutomaticRetries) {
                     try {
-                        callback(Result.success(remoteAction.sync()))
+                        callback.accept(Result.success(remoteAction.sync()))
                     } catch (e: Throwable) {
                         lastException = e
                     }
                 }
-                callback(Result.failure(PubNubException.from(lastException!!)))
+                callback.accept(Result.failure(PubNubException.from(lastException!!)))
             }
         )
     }

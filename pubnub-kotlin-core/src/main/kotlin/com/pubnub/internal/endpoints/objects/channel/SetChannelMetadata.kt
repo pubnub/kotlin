@@ -1,5 +1,6 @@
 package com.pubnub.internal.endpoints.objects.channel
 
+import com.pubnub.internal.Endpoint
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataResult
@@ -23,7 +24,7 @@ class SetChannelMetadata internal constructor(
     private val includeQueryParam: IncludeQueryParam,
     private val type: String?,
     private val status: String?
-) : com.pubnub.internal.Endpoint<EntityEnvelope<PNChannelMetadata>, PNChannelMetadataResult>(pubnub),
+) : Endpoint<EntityEnvelope<PNChannelMetadata>, PNChannelMetadataResult>(pubnub),
     ISetChannelMetadata {
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNChannelMetadata>> {

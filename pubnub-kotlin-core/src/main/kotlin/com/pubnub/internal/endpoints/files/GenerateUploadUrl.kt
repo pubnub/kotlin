@@ -1,5 +1,6 @@
 package com.pubnub.internal.endpoints.files
 
+import com.pubnub.internal.Endpoint
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
@@ -17,7 +18,7 @@ internal class GenerateUploadUrl(
     private val channel: String,
     private val fileName: String,
     pubNub: PubNubImpl
-) : com.pubnub.internal.Endpoint<GeneratedUploadUrlResponse, FileUploadRequestDetails>(pubNub) {
+) : Endpoint<GeneratedUploadUrlResponse, FileUploadRequestDetails>(pubNub) {
 
     @Throws(PubNubException::class)
     override fun validateParams() {

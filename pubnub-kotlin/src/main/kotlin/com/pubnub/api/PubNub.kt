@@ -1038,16 +1038,6 @@ class PubNub(
      */
     fun disconnect() = pubNubImpl.disconnect()
 
-    /**
-     * Frees up threads and allows for a clean exit.
-     */
-    fun destroy() = pubNubImpl.destroy()
-
-    /**
-     * Same as [destroy] but immediately.
-     */
-    fun forceDestroy() = pubNubImpl.forceDestroy()
-
     fun parseToken(token: String): PNToken {
         return pubNubImpl.parseToken(token)
     }

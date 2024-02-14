@@ -1,5 +1,6 @@
 package com.pubnub.internal.endpoints.message_actions
 
+import com.pubnub.internal.Endpoint
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
@@ -18,7 +19,7 @@ class RemoveMessageAction internal constructor(
     override val channel: String,
     override val messageTimetoken: Long,
     override val actionTimetoken: Long
-) : com.pubnub.internal.Endpoint<Void, PNRemoveMessageActionResult>(pubnub), IRemoveMessageAction {
+) : Endpoint<Void, PNRemoveMessageActionResult>(pubnub), IRemoveMessageAction {
 
     override fun validateParams() {
         super.validateParams()

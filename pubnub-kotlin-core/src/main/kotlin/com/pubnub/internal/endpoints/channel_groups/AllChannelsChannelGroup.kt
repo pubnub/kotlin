@@ -1,5 +1,6 @@
 package com.pubnub.internal.endpoints.channel_groups
 
+import com.pubnub.internal.Endpoint
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
@@ -16,7 +17,7 @@ import retrofit2.Response
 class AllChannelsChannelGroup internal constructor(
     pubnub: PubNubImpl,
     override val channelGroup: String
-) : com.pubnub.internal.Endpoint<Envelope<Map<String, Any>>, PNChannelGroupsAllChannelsResult>(pubnub),
+) : Endpoint<Envelope<Map<String, Any>>, PNChannelGroupsAllChannelsResult>(pubnub),
     IAllChannelsChannelGroup {
 
     override fun getAffectedChannelGroups() = listOf(channelGroup)

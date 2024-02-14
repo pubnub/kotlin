@@ -4,6 +4,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.v2.callbacks.Result
 import java.util.concurrent.Executors
+import java.util.function.Consumer
 
 internal interface CancellableRemoteAction<T> : ExtendedRemoteAction<T> {
     override fun sync(): T {
@@ -13,8 +14,11 @@ internal interface CancellableRemoteAction<T> : ExtendedRemoteAction<T> {
     override fun retry() {}
 
     fun doAsync(callback: (result: Result<T>) -> Unit)
-    override fun async(callback: (Result<T>) -> Unit) {
+
+    override fun async(callback: Consumer<Result<T>>) {
         Executors.newSingleThreadExecutor()
-            .execute { doAsync(callback) }
+            .execute { doAsync {
+                callback.accept(it)
+            } }
     }
 }

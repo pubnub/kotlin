@@ -13,6 +13,7 @@ import com.pubnub.api.PubNubError.SUBSCRIBE_KEY_MISSING
 import com.pubnub.api.PubNubException
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.models.consumer.presence.PNHereNowResult
+import com.pubnub.api.v2.callbacks.onSuccess
 import org.awaitility.Awaitility
 import org.hamcrest.core.IsEqual
 import org.junit.Assert.assertEquals

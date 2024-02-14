@@ -5,6 +5,8 @@ import com.pubnub.api.endpoints.remoteaction.ComposableRemoteAction.Companion.fi
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.v2.callbacks.Result
+import com.pubnub.api.v2.callbacks.onFailure
+import com.pubnub.api.v2.callbacks.onSuccess
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
 import org.junit.Assert

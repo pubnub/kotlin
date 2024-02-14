@@ -1,5 +1,6 @@
 package com.pubnub.internal.endpoints.message_actions
 
+import com.pubnub.internal.Endpoint
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
@@ -18,7 +19,7 @@ class GetMessageActions internal constructor(
     pubnub: PubNubImpl,
     override val channel: String,
     override val page: PNBoundedPage
-) : com.pubnub.internal.Endpoint<PNGetMessageActionsResult, PNGetMessageActionsResult>(pubnub), IGetMessageActions {
+) : Endpoint<PNGetMessageActionsResult, PNGetMessageActionsResult>(pubnub), IGetMessageActions {
 
     override fun validateParams() {
         super.validateParams()

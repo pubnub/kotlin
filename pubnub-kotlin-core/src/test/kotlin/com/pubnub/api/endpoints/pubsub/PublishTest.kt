@@ -1,11 +1,13 @@
 package com.pubnub.api.endpoints.pubsub
 
-import com.pubnub.internal.PNConfiguration
-import com.pubnub.api.PubNub
+import com.pubnub.internal.TestPubNub
 import com.pubnub.api.UserId
 import com.pubnub.api.crypto.CryptoModule
-import com.pubnub.api.managers.RetrofitManager
-import com.pubnub.api.services.PublishService
+import com.pubnub.internal.BasePubNub
+import com.pubnub.internal.PNConfiguration
+import com.pubnub.internal.endpoints.pubsub.Publish
+import com.pubnub.internal.managers.RetrofitManager
+import com.pubnub.internal.services.PublishService
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
@@ -27,20 +29,20 @@ private const val TEST_PUBKEY = "pubKey"
 private const val CIPHER_KEY = "enigma"
 
 class PublishTest {
-    private val pnConfigurationHardcodedIV = PNConfiguration(userId = UserId(PubNub.generateUUID())).apply {
+    private val pnConfigurationHardcodedIV = PNConfiguration(userId = UserId(BasePubNub.generateUUID())).apply {
         subscribeKey = TEST_SUBKEY
         publishKey = TEST_PUBKEY
         cipherKey = CIPHER_KEY
     }
-    private val pnConfigurationRandomIV = PNConfiguration(userId = UserId(PubNub.generateUUID())).apply {
+    private val pnConfigurationRandomIV = PNConfiguration(userId = UserId(BasePubNub.generateUUID())).apply {
         subscribeKey = TEST_SUBKEY
         publishKey = TEST_PUBKEY
         cipherKey = CIPHER_KEY
         useRandomInitializationVector = true
     }
 
-    private val pubNubHardcodedIVMock = spyk(PubNub(pnConfigurationHardcodedIV))
-    private val pubNubRandomIVMock = spyk(PubNub(pnConfigurationRandomIV))
+    private val pubNubHardcodedIVMock = spyk(TestPubNub(pnConfigurationHardcodedIV).pubNubImpl)
+    private val pubNubRandomIVMock = spyk(TestPubNub(pnConfigurationRandomIV).pubNubImpl)
 
     private val retrofitManagerMock = mockk<RetrofitManager>()
     private val publishServiceMock = mockk<PublishService>()

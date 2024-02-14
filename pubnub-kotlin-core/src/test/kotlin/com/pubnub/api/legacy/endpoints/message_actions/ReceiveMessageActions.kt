@@ -5,8 +5,6 @@ import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.CommonUtils.failTest
-import com.pubnub.api.PubNub
-import com.pubnub.internal.callbacks.SubscribeCallback
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.listen
 import com.pubnub.api.models.consumer.PNStatus
@@ -14,6 +12,8 @@ import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
+import com.pubnub.internal.BasePubNub
+import com.pubnub.internal.callbacks.SubscribeCallback
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.util.concurrent.atomic.AtomicBoolean
@@ -66,23 +66,23 @@ class ReceiveMessageActions : BaseTest() {
 
         val success = AtomicBoolean()
 
-        pubnub.addListener(object : SubscribeCallback() {
-            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
+        pubnubBase.addListener(object : SubscribeCallback {
+            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
             }
 
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
+            override fun message(pubnub: BasePubNub, pnMessageResult: PNMessageResult) {
                 failTest()
             }
 
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
+            override fun presence(pubnub: BasePubNub, pnPresenceEventResult: PNPresenceEventResult) {
                 failTest()
             }
 
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {
+            override fun signal(pubnub: BasePubNub, pnSignalResult: PNSignalResult) {
                 failTest()
             }
 
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {
+            override fun messageAction(pubnub: BasePubNub, pnMessageActionResult: PNMessageActionResult) {
                 assertEquals(pnMessageActionResult.channel, "coolChannel")
                 assertEquals(pnMessageActionResult.messageAction.messageTimetoken, 500L)
                 assertEquals(pnMessageActionResult.messageAction.uuid, "client-1639ed91")
@@ -169,24 +169,24 @@ class ReceiveMessageActions : BaseTest() {
         val count = AtomicInteger()
         val success = AtomicBoolean()
 
-        pubnub.addListener(object : SubscribeCallback() {
-            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
+        pubnubBase.addListener(object : SubscribeCallback {
+            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
             }
 
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
+            override fun message(pubnub: BasePubNub, pnMessageResult: PNMessageResult) {
                 failTest()
                 pnMessageResult.message
             }
 
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
+            override fun presence(pubnub: BasePubNub, pnPresenceEventResult: PNPresenceEventResult) {
                 failTest()
             }
 
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {
+            override fun signal(pubnub: BasePubNub, pnSignalResult: PNSignalResult) {
                 failTest()
             }
 
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {
+            override fun messageAction(pubnub: BasePubNub, pnMessageActionResult: PNMessageActionResult) {
                 count.incrementAndGet()
                 if (count.get() == 2) {
                     success.set(true)

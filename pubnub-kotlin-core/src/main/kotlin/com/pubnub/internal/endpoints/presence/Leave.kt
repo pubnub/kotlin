@@ -1,5 +1,6 @@
 package com.pubnub.internal.endpoints.presence
 
+import com.pubnub.internal.Endpoint
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
@@ -10,7 +11,7 @@ import com.pubnub.internal.toCsv
 import retrofit2.Call
 import retrofit2.Response
 
-class Leave internal constructor(pubnub: PubNubImpl) : com.pubnub.internal.Endpoint<Void, Boolean>(pubnub) {
+class Leave internal constructor(pubnub: PubNubImpl) : Endpoint<Void, Boolean>(pubnub) {
 
     var channels = emptyList<String>()
     var channelGroups = emptyList<String>()

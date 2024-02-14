@@ -3,6 +3,7 @@ package com.pubnub.api.endpoints.remoteaction
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.v2.callbacks.Result
+import java.util.function.Consumer
 
 interface ExtendedRemoteAction<Output> : RemoteAction<Output> {
     fun operationType(): PNOperationType
@@ -12,7 +13,9 @@ interface ExtendedRemoteAction<Output> : RemoteAction<Output> {
 interface RemoteAction<Output> : Cancelable {
     @Throws(PubNubException::class)
     fun sync(): Output
-    fun async(callback: (result: Result<Output>) -> Unit)
+//    @JvmSynthetic
+//    fun async(callback: (result: Result<Output>) -> Unit)
+    fun async(callback: Consumer<Result<Output>>)
     fun retry()
     override fun silentCancel()
 }

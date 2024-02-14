@@ -19,6 +19,7 @@ import java.io.InputStream
 import java.net.HttpURLConnection
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.atomic.AtomicReference
+import java.util.function.Consumer
 
 /**
  * @see [PubNubImpl.sendFile]
@@ -49,13 +50,13 @@ class SendFile internal constructor(
         return sendFileMultistepAction.sync()
     }
 
-    override fun async(callback: (result: Result<PNFileUploadResult>) -> Unit) {
+    override fun async(callback: Consumer<Result<PNFileUploadResult>>) {
         executorService.execute {
             try {
                 validate()
                 sendFileMultistepAction.async(callback)
             } catch (ex: PubNubException) {
-                callback(
+                callback.accept(
                     Result.failure(ex)
                 )
             }

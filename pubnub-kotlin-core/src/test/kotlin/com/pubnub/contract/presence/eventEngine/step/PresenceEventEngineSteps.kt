@@ -1,10 +1,10 @@
 package com.pubnub.contract.presence.eventEngine.step
 
-import com.pubnub.api.PubNub
-import com.pubnub.internal.callbacks.SubscribeCallback
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.contract.subscribe.eventEngine.state.EventEngineState
+import com.pubnub.internal.BasePubNub
+import com.pubnub.internal.callbacks.SubscribeCallback
 import io.cucumber.datatable.DataTable
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
@@ -34,12 +34,12 @@ class PresenceEventEngineSteps(private val state: EventEngineState) {
 
     @When("I join {string}, {string}, {string} channels")
     fun I_join_channels(firstChannel: String, secondChannel: String, thirdChannel: String) {
-        state.pubnub.subscribe(channels = listOf(firstChannel, secondChannel, thirdChannel))
+        state.pubnub.pubNubImpl.subscribe(channels = listOf(firstChannel, secondChannel, thirdChannel))
     }
 
     @When("I join {string}, {string}, {string} channels with presence")
     fun I_join_channels_with_presence(firstChannel: String, secondChannel: String, thirdChannel: String) {
-        state.pubnub.subscribe(channels = listOf(firstChannel, secondChannel, thirdChannel), withPresence = true)
+        state.pubnub.pubNubImpl.subscribe(channels = listOf(firstChannel, secondChannel, thirdChannel), withPresence = true)
     }
 
     @When("The timeout expires")
@@ -55,12 +55,12 @@ class PresenceEventEngineSteps(private val state: EventEngineState) {
     @Then("I wait for getting Presence joined events")
     fun I_wait_for_getting_Presence_joined_events() {
         val atomic = AtomicInteger(0)
-        state.pubnub.addListener(object : SubscribeCallback() {
-            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
+        state.pubnub.addListener(object : SubscribeCallback {
+            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
                 // do nothing
             }
 
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
+            override fun presence(pubnub: BasePubNub, pnPresenceEventResult: PNPresenceEventResult) {
                 if (pnPresenceEventResult.event == "join" && (pnPresenceEventResult.channel == "first" || pnPresenceEventResult.channel == "second" || pnPresenceEventResult.channel == "third")) {
                     atomic.incrementAndGet()
                 }
@@ -81,7 +81,7 @@ class PresenceEventEngineSteps(private val state: EventEngineState) {
 
     @Then("I leave {string} and {string} channels")
     fun I_leave_channels(firstChannel: String, secondChannel: String) {
-        state.pubnub.unsubscribe(channels = listOf(firstChannel, secondChannel))
+        state.pubnub.pubNubImpl.unsubscribe(channels = listOf(firstChannel, secondChannel))
     }
 
     @Then("I observe the following Events and Invocations of the Presence EE:")
@@ -108,6 +108,6 @@ class PresenceEventEngineSteps(private val state: EventEngineState) {
 
     @Then("I leave {string} and {string} channels with presence")
     fun I_leave_channels_with_presence(firstChannel: String, secondChannel: String) {
-        state.pubnub.unsubscribe(channels = listOf(firstChannel, secondChannel))
+        state.pubnub.pubNubImpl.unsubscribe(channels = listOf(firstChannel, secondChannel))
     }
 }

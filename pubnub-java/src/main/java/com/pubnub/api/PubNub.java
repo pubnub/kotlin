@@ -411,20 +411,6 @@ public class PubNub extends BasePubNub {
     }
 
     /**
-     * Destroy the SDK to cancel all ongoing requests and stop heartbeat timer.
-     */
-    public void destroy() {
-        getPubNubImpl().destroy();
-    }
-
-    /**
-     * Force destroy the SDK to evict the connection pools and close executors.
-     */
-    public void forceDestroy() {
-        getPubNubImpl().forceDestroy();
-    }
-
-    /**
      * Perform a Reconnect to the network
      */
     public void reconnect() {

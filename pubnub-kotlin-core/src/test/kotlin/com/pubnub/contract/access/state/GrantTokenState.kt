@@ -1,6 +1,6 @@
 package com.pubnub.contract.access.state
 
-import com.pubnub.api.models.consumer.access_manager.v3.PNGrant
+import com.pubnub.internal.models.consumer.access_manager.v3.PNGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 

@@ -1,6 +1,7 @@
 package com.pubnub.internal.endpoints
 
 import com.google.gson.JsonElement
+import com.pubnub.internal.Endpoint
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
@@ -25,7 +26,7 @@ class History internal constructor(
     override val reverse: Boolean,
     override val includeTimetoken: Boolean,
     override val includeMeta: Boolean,
-) : com.pubnub.internal.Endpoint<JsonElement, PNHistoryResult>(pubnub), IHistory {
+) : Endpoint<JsonElement, PNHistoryResult>(pubnub), IHistory {
 
     companion object {
         const val MAX_COUNT = 100

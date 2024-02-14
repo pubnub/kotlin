@@ -17,6 +17,7 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.listen
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
+import com.pubnub.api.v2.callbacks.onSuccess
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Test

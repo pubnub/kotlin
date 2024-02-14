@@ -5,6 +5,7 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.api.v2.callbacks.onFailure
 import com.pubnub.api.v2.callbacks.onSuccess
+import java.util.function.Consumer
 
 class ComposableRemoteAction<T, U>(
     private val remoteAction: ExtendedRemoteAction<T>,
@@ -30,10 +31,10 @@ class ComposableRemoteAction<T, U>(
         }
     }
 
-    override fun async(callback: (result: Result<U>) -> Unit) {
+    override fun async(callback: Consumer<Result<U>>) {
         remoteAction.async { r: Result<T> ->
             r.onFailure {
-                callback(Result.failure(it))
+                callback.accept(Result.failure(it))
             }.onSuccess {
                 try {
                     synchronized(this) {
@@ -43,15 +44,15 @@ class ComposableRemoteAction<T, U>(
                             nextRemoteAction = newNextRemoteAction
                             newNextRemoteAction.async { r2: Result<U> ->
                                 r2.onFailure {
-                                    callback(Result.failure(it))
+                                    callback.accept(Result.failure(it))
                                 }.onSuccess {
-                                    callback(Result.success(it))
+                                    callback.accept(Result.success(it))
                                 }
                             }
                         }
                     }
                 } catch (ex: PubNubException) {
-                    callback(Result.failure(ex))
+                    callback.accept(Result.failure(ex))
                 }
             }
         }

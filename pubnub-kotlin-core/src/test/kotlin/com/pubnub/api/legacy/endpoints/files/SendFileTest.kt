@@ -1,20 +1,21 @@
 package com.pubnub.api.legacy.endpoints.files
 
-import com.pubnub.api.PNConfiguration
-import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
-import com.pubnub.api.endpoints.files.GenerateUploadUrl
-import com.pubnub.api.endpoints.files.PublishFileMessage
-import com.pubnub.api.endpoints.files.SendFile
-import com.pubnub.api.endpoints.files.UploadFile
 import com.pubnub.api.legacy.endpoints.remoteaction.TestRemoteAction
 import com.pubnub.api.models.consumer.files.PNBaseFile
 import com.pubnub.api.models.consumer.files.PNFileUploadResult
 import com.pubnub.api.models.consumer.files.PNPublishFileMessageResult
-import com.pubnub.api.models.server.files.FileUploadRequestDetails
-import com.pubnub.api.models.server.files.FormField
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.v2.callbacks.Result
+import com.pubnub.api.v2.callbacks.onSuccess
+import com.pubnub.internal.BasePubNub
+import com.pubnub.internal.PNConfiguration
+import com.pubnub.internal.endpoints.files.GenerateUploadUrl
+import com.pubnub.internal.endpoints.files.PublishFileMessage
+import com.pubnub.internal.endpoints.files.SendFile
+import com.pubnub.internal.endpoints.files.UploadFile
+import com.pubnub.internal.models.server.files.FileUploadRequestDetails
+import com.pubnub.internal.models.server.files.FormField
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.spyk
@@ -27,6 +28,7 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
+import java.util.function.Consumer
 
 class SendFileTest : TestsWithFiles {
     private val channel = "channel"
@@ -192,9 +194,9 @@ class SendFileTest : TestsWithFiles {
             fileMessagePublishRetryLimit = numberOfRetries
         )
     }
-    private fun getPubNubMock(): PubNub {
+    private fun getPubNubMock(): BasePubNub {
         val mockConfig = mockk<PNConfiguration>()
-        val mockPubNub = mockk<PubNub>()
+        val mockPubNub = mockk<BasePubNub>()
         val retryConfiguration = RetryConfiguration.None
         every { mockPubNub.configuration } returns mockConfig
         every { mockConfig.retryConfiguration } returns retryConfiguration
@@ -205,20 +207,20 @@ class SendFileTest : TestsWithFiles {
     internal class FailingPublishFileMessage(
         private val result: PNPublishFileMessageResult,
         private val numberOfFailsBeforeSuccess: Int,
-        pubNub: PubNub
+        pubNub: BasePubNub
     ) :
         PublishFileMessage(
             channel = "channel",
             fileName = "fileName",
             fileId = "fileId",
-            pubNub = pubNub
+            pubNub = pubNub.pubNubImpl
         ) {
         private val numberOfFails = AtomicInteger(0)
-        override fun async(callback: (result: Result<PNPublishFileMessageResult>) -> Unit) {
+        override fun async(callback: Consumer<Result<PNPublishFileMessageResult>>) {
             if (numberOfFails.getAndAdd(1) < numberOfFailsBeforeSuccess) {
-                callback(Result.failure(PubNubException()))
+                callback.accept(Result.failure(PubNubException()))
             } else {
-                callback(Result.success(result))
+                callback.accept(Result.success(result))
             }
         }
 
@@ -231,7 +233,7 @@ class SendFileTest : TestsWithFiles {
         }
 
         companion object {
-            fun create(result: PNPublishFileMessageResult, numberOfFailsBeforeSuccess: Int, pubNub: PubNub): PublishFileMessage {
+            fun create(result: PNPublishFileMessageResult, numberOfFailsBeforeSuccess: Int, pubNub: BasePubNub): PublishFileMessage {
                 return FailingPublishFileMessage(
                     result,
                     numberOfFailsBeforeSuccess,
@@ -243,13 +245,13 @@ class SendFileTest : TestsWithFiles {
 
     internal class AlwaysSuccessfulPublishFileMessage(
         private val result: PNPublishFileMessageResult,
-        pubNub: PubNub
+        pubNub: BasePubNub
     ) :
         PublishFileMessage(
             channel = "channel",
             fileName = "fileName",
             fileId = "fileId",
-            pubNub = pubNub
+            pubNub = pubNub.pubNubImpl
 
         ) {
         @Throws(PubNubException::class)
@@ -257,12 +259,12 @@ class SendFileTest : TestsWithFiles {
             return result
         }
 
-        override fun async(callback: (result: Result<PNPublishFileMessageResult>) -> Unit) {
-            callback(Result.success(result))
+        override fun async(callback: Consumer<Result<PNPublishFileMessageResult>>) {
+            callback.accept(Result.success(result))
         }
 
         companion object {
-            fun create(result: PNPublishFileMessageResult, pubNub: PubNub): PublishFileMessage {
+            fun create(result: PNPublishFileMessageResult, pubNub: BasePubNub): PublishFileMessage {
                 return AlwaysSuccessfulPublishFileMessage(result, pubNub)
             }
         }

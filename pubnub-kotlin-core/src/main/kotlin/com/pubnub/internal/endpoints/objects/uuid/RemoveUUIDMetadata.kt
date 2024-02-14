@@ -1,5 +1,6 @@
 package com.pubnub.internal.endpoints.objects.uuid
 
+import com.pubnub.internal.Endpoint
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.BasePubNub.PubNubImpl
@@ -11,7 +12,7 @@ import retrofit2.Response
 class RemoveUUIDMetadata(
     pubnub: PubNubImpl,
     override val uuid: String? = null
-) : com.pubnub.internal.Endpoint<EntityEnvelope<Any?>, PNRemoveMetadataResult>(pubnub), IRemoveUUIDMetadata {
+) : Endpoint<EntityEnvelope<Any?>, PNRemoveMetadataResult>(pubnub), IRemoveUUIDMetadata {
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<Any?>> {
         return pubnub.retrofitManager.objectsService.deleteUUIDMetadata(

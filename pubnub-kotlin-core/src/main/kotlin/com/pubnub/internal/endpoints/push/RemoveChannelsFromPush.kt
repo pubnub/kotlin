@@ -1,5 +1,6 @@
 package com.pubnub.internal.endpoints.push
 
+import com.pubnub.internal.Endpoint
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
@@ -23,7 +24,7 @@ class RemoveChannelsFromPush internal constructor(
     override val deviceId: String,
     override val topic: String? = null,
     override val environment: PNPushEnvironment = PNPushEnvironment.DEVELOPMENT
-) : com.pubnub.internal.Endpoint<Void, PNPushRemoveChannelResult>(pubnub), IRemoveChannelsFromPush {
+) : Endpoint<Void, PNPushRemoveChannelResult>(pubnub), IRemoveChannelsFromPush {
 
     override fun getAffectedChannels() = channels
 

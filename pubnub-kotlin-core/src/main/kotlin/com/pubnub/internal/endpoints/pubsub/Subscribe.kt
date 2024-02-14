@@ -1,5 +1,6 @@
 package com.pubnub.internal.endpoints.pubsub
 
+import com.pubnub.internal.Endpoint
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
@@ -11,7 +12,7 @@ import com.pubnub.internal.toCsv
 import retrofit2.Call
 import retrofit2.Response
 
-class Subscribe internal constructor(pubnub: PubNubImpl) : com.pubnub.internal.Endpoint<SubscribeEnvelope, SubscribeEnvelope>(pubnub) {
+class Subscribe internal constructor(pubnub: PubNubImpl) : Endpoint<SubscribeEnvelope, SubscribeEnvelope>(pubnub) {
 
     var channels = emptyList<String>()
     var channelGroups = emptyList<String>()

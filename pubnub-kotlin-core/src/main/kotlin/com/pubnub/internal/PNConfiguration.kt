@@ -29,6 +29,15 @@ import javax.net.ssl.X509ExtendedTrustManager
 open class PNConfiguration @Throws(PubNubException::class) constructor(
     var userId: UserId
 ) {
+    @Deprecated(
+        replaceWith = ReplaceWith(
+            "PNConfiguration(userId = UserId(uuid))",
+            "com.pubnub.api.PNConfiguration"
+        ),
+        level = DeprecationLevel.WARNING,
+        message = "Use PNConfiguration(UserId) instead."
+    )
+    constructor(uuid: String) : this(UserId(uuid))
 
     @Deprecated(
         level = DeprecationLevel.WARNING,

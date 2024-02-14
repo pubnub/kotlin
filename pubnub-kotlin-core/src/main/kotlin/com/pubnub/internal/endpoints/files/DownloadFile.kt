@@ -1,5 +1,6 @@
 package com.pubnub.internal.endpoints.files
 
+import com.pubnub.internal.Endpoint
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.crypto.CryptoModule
@@ -20,7 +21,7 @@ class DownloadFile(
     private val fileId: String,
     private val cryptoModule: CryptoModule? = null,
     pubNub: PubNubImpl
-) : com.pubnub.internal.Endpoint<ResponseBody, PNDownloadFileResult>(pubNub), IDownloadFile {
+) : Endpoint<ResponseBody, PNDownloadFileResult>(pubNub), IDownloadFile {
 
     @Throws(PubNubException::class)
     override fun validateParams() {

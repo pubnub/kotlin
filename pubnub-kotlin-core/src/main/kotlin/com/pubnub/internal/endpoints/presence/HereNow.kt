@@ -1,6 +1,7 @@
 package com.pubnub.internal.endpoints.presence
 
 import com.google.gson.JsonElement
+import com.pubnub.internal.Endpoint
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.presence.PNHereNowChannelData
 import com.pubnub.api.models.consumer.presence.PNHereNowOccupantData
@@ -21,7 +22,7 @@ class HereNow internal constructor(
     override val channelGroups: List<String> = emptyList(),
     override val includeState: Boolean = false,
     override val includeUUIDs: Boolean = true
-) : com.pubnub.internal.Endpoint<Envelope<JsonElement>, PNHereNowResult>(pubnub), IHereNow {
+) : Endpoint<Envelope<JsonElement>, PNHereNowResult>(pubnub), IHereNow {
 
     private fun isGlobalHereNow() = channels.isEmpty() && channelGroups.isEmpty()
 

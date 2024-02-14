@@ -3,6 +3,7 @@ package com.pubnub.api
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.v2.callbacks.Result
+import java.util.function.Consumer
 
 abstract class Endpoint<OUTPUT> : ExtendedRemoteAction<OUTPUT>
 
@@ -18,8 +19,8 @@ abstract class DelegatingEndpoint<OUTPUT, DELEGATED>(remoteAction: ExtendedRemot
         return remoteAction.sync()
     }
 
-    override fun async(callback: (result: Result<OUTPUT>) -> Unit) {
-        remoteAction.async { result -> callback(result) }
+    override fun async(callback: Consumer<Result<OUTPUT>>) {
+        remoteAction.async(callback)
     }
 
     override fun retry() {

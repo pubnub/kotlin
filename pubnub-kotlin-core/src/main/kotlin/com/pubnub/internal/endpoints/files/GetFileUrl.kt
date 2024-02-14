@@ -1,5 +1,6 @@
 package com.pubnub.internal.endpoints.files
 
+import com.pubnub.internal.Endpoint
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
@@ -12,6 +13,7 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
 import java.util.concurrent.ExecutorService
+import java.util.function.Consumer
 
 /**
  * @see [PubNubImpl.getFileUrl]
@@ -21,9 +23,9 @@ class GetFileUrl(
     private val fileName: String,
     private val fileId: String,
     pubNub: PubNubImpl
-) : com.pubnub.internal.Endpoint<ResponseBody, PNFileUrlResult>(pubNub), IGetFileUrl {
+) : Endpoint<ResponseBody, PNFileUrlResult>(pubNub), IGetFileUrl {
 
-    private lateinit var cachedCallback: (result: Result<PNFileUrlResult>) -> Unit
+    private lateinit var cachedCallback: Consumer<Result<PNFileUrlResult>>
     private val executorService: ExecutorService = pubNub.retrofitManager.getTransactionClientExecutorService()
 
     @Throws(PubNubException::class)
@@ -64,16 +66,16 @@ class GetFileUrl(
     // the code shouldn't call any outside endpoints it's necessary to achieve asynchronous
     // behavior using other means than OkHttp. That's why the code is using executorService
     // to asynchronously call sync()
-    override fun async(callback: (result: Result<PNFileUrlResult>) -> Unit) {
+    override fun async(callback: Consumer<Result<PNFileUrlResult>>) {
         cachedCallback = callback
         executorService.execute {
             try {
                 val res: PNFileUrlResult = sync()
-                callback(
+                callback.accept(
                     Result.success(res)
                 )
             } catch (ex: PubNubException) {
-                callback(Result.failure(ex))
+                callback.accept(Result.failure(ex))
             }
         }
     }

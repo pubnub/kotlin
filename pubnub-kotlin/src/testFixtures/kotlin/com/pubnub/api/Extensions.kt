@@ -1,7 +1,8 @@
 package com.pubnub.api
 
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
-import com.pubnub.api.models.consumer.PNStatus
+import com.pubnub.api.v2.callbacks.Result
+import com.pubnub.api.v2.callbacks.onFailure
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.awaitility.pollinterval.FibonacciPollInterval
@@ -11,19 +12,19 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
-fun <Output> RemoteAction<Output>.await(function: (result: Output?, status: PNStatus) -> Unit) {
+fun <Output> RemoteAction<Output>.await(function: (result: Result<Output>) -> Unit) {
     val success = AtomicBoolean()
-    async { result, status ->
-        function.invoke(result, status)
+    async { result ->
+        function.invoke(result)
         success.set(true)
     }
     success.listen()
 }
-
-fun PNStatus.param(param: String) = clientRequest!!.url.queryParameter(param)
-
-fun PNStatus.encodedParam(param: String) =
-    clientRequest!!.url.encodedQuery!!.encodedParamString(param)
+//
+//fun PNStatus.param(param: String) = clientRequest!!.url.queryParameter(param)
+//
+//fun PNStatus.encodedParam(param: String) =
+//    clientRequest!!.url.encodedQuery!!.encodedParamString(param)
 
 fun String.encodedParamString(param: String): String {
     return split("&")
@@ -42,7 +43,7 @@ fun AtomicBoolean.listen(function: () -> Boolean): AtomicBoolean {
 }
 
 fun <Output> RemoteAction<Output>.asyncRetry(
-    function: (result: Output?, status: PNStatus) -> Unit
+    function: (result: Result<Output>) -> Unit
 ) {
     val hits = AtomicInteger(0)
 
@@ -51,9 +52,9 @@ fun <Output> RemoteAction<Output>.asyncRetry(
         val latch = CountDownLatch(1)
         val success = AtomicBoolean()
 // TODO FIX        queryParam += mapOf("key" to UUID.randomUUID().toString())
-        async { result, status ->
+        async { result ->
             try {
-                function.invoke(result, status)
+                function.invoke(result)
                 success.set(true)
             } catch (e: Throwable) {
                 success.set(false)
@@ -73,16 +74,19 @@ fun <Output> RemoteAction<Output>.asyncRetry(
 }
 
 fun <Output> RemoteAction<Output>.retryForbidden(
-    onFail: (status: PNStatus) -> Unit,
-    function: (result: Output?, status: PNStatus) -> Unit
+    onFail: (exception: PubNubException) -> Unit,
+    function: (result: Result<Output>) -> Unit
 ) {
     val success = AtomicBoolean()
 
     // first run should return forbidden
-    async { _, status ->
-        if (status.error && status.statusCode == 403) {
-            onFail.invoke(status)
-            success.set(false)
+    async { result ->
+        result.onFailure {
+            //TODO check forbidden
+            if (it.statusCode == 403) {
+                onFail.invoke(it)
+                success.set(false)
+            }
         }
     }
 
@@ -94,9 +98,9 @@ fun <Output> RemoteAction<Output>.retryForbidden(
 
     // retry and invoke callback
     // TODO fix queryParam += mapOf("key" to UUID.randomUUID().toString())
-    async { result, status ->
+    async { result ->
         try {
-            function.invoke(result, status)
+            function.invoke(result)
             success.set(true)
         } catch (e: Throwable) {
             success.set(false)

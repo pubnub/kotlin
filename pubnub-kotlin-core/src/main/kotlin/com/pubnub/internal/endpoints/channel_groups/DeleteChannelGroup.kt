@@ -1,5 +1,6 @@
 package com.pubnub.internal.endpoints.channel_groups
 
+import com.pubnub.internal.Endpoint
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
@@ -15,7 +16,7 @@ import retrofit2.Response
 class DeleteChannelGroup internal constructor(
     pubnub: PubNubImpl,
     override val channelGroup: String
-) : com.pubnub.internal.Endpoint<Void, PNChannelGroupsDeleteGroupResult>(pubnub), IDeleteChannelGroup {
+) : Endpoint<Void, PNChannelGroupsDeleteGroupResult>(pubnub), IDeleteChannelGroup {
 
     override fun validateParams() {
         super.validateParams()

@@ -1,5 +1,6 @@
 package com.pubnub.internal.endpoints.files
 
+import com.pubnub.internal.Endpoint
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
@@ -17,7 +18,7 @@ class DeleteFile(
     private val fileName: String,
     private val fileId: String,
     pubNub: PubNubImpl
-) : com.pubnub.internal.Endpoint<Unit, PNDeleteFileResult?>(pubNub), IDeleteFile {
+) : Endpoint<Unit, PNDeleteFileResult?>(pubNub), IDeleteFile {
     @Throws(PubNubException::class)
     override fun validateParams() {
         if (channel.isEmpty()) {

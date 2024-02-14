@@ -4,12 +4,12 @@ import com.google.gson.JsonElement
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
-import com.pubnub.internal.retry.RetryableBase
-import com.pubnub.internal.retry.RetryableCallback
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.retry.RetryableRestCaller
 import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.internal.PNConfiguration.Companion.isValid
+import com.pubnub.internal.retry.RetryableBase
+import com.pubnub.internal.retry.RetryableCallback
+import com.pubnub.internal.retry.RetryableRestCaller
 import org.slf4j.LoggerFactory
 import retrofit2.Call
 import retrofit2.Response
@@ -17,6 +17,7 @@ import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import java.util.function.Consumer
 
 /**
  * Base class for all PubNub API operation implementations.
@@ -36,7 +37,7 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
         private const val SERVER_RESPONSE_NOT_FOUND = 404
     }
 
-    private lateinit var cachedCallback: (Result<Output>) -> Unit
+    private lateinit var cachedCallback: Consumer<Result<Output>>
     private lateinit var call: Call<Input>
     private var silenceFailures = false
     private val retryableRestCaller =
@@ -80,14 +81,14 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
      *
      * @param callback The callback to receive the response in.
      */
-    override fun async(callback: (result: Result<Output>) -> Unit) {
+    override fun async(callback: Consumer<Result<Output>>) {
         cachedCallback = callback
 
         try {
             validateParams()
             call = doWork(createBaseParams())
         } catch (pubnubException: PubNubException) {
-            callback.invoke(Result.failure(pubnubException))
+            callback.accept(Result.failure(pubnubException))
             return
         }
 
@@ -108,13 +109,13 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
                             } catch (e: PubNubException) {
                                 Result.failure(e)
                             }.let { result ->
-                                callback.invoke(result)
+                                callback.accept(result)
                             }
                         }
                         else -> {
                             val (errorString, errorJson) = extractErrorBody(response)
 
-                            callback.invoke(
+                            callback.accept(
                                 Result.failure(
                                     createException(
                                         response, errorString, errorJson
@@ -149,7 +150,7 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
                         }
 
                     val pubnubException = PubNubException(errorMessage = t.toString(), pubnubError = error, cause = t)
-                    callback.invoke(Result.failure(pubnubException))
+                    callback.accept(Result.failure(pubnubException))
                 }
             })
     }

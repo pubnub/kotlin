@@ -5,6 +5,7 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.api.v2.callbacks.onFailure
 import com.pubnub.api.v2.callbacks.onSuccess
+import java.util.function.Consumer
 
 class MappingRemoteAction<T, U>(private val remoteAction: ExtendedRemoteAction<T>, private val function: (T) -> U) :
     ExtendedRemoteAction<U> {
@@ -22,18 +23,18 @@ class MappingRemoteAction<T, U>(private val remoteAction: ExtendedRemoteAction<T
         remoteAction.silentCancel()
     }
 
-    override fun async(callback: (result: Result<U>) -> Unit) {
+    override fun async(callback: Consumer<Result<U>>) {
         remoteAction.async { r ->
 
             r.onSuccess {
                 try {
                     val newValue = function(it)
-                    callback(Result.success(newValue))
+                    callback.accept(Result.success(newValue))
                 } catch (e: Throwable) {
-                    callback(Result.failure(PubNubException.from(e)))
+                    callback.accept(Result.failure(PubNubException.from(e)))
                 }
             }.onFailure {
-                callback(Result.failure(it))
+                callback.accept(Result.failure(it))
             }
         }
     }

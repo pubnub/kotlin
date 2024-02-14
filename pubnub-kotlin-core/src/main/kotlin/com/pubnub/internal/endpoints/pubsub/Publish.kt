@@ -1,5 +1,6 @@
 package com.pubnub.internal.endpoints.pubsub
 
+import com.pubnub.internal.Endpoint
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.crypto.encryptString
@@ -25,7 +26,7 @@ class Publish internal constructor(
     override val usePost: Boolean = false,
     override val replicate: Boolean = true,
     override val ttl: Int? = null
-) : com.pubnub.internal.Endpoint<List<Any>, PNPublishResult>(pubnub), IPublish {
+) : Endpoint<List<Any>, PNPublishResult>(pubnub), IPublish {
 
     override fun validateParams() {
         super.validateParams()

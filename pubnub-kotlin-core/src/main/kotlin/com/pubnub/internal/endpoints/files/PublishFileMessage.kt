@@ -1,5 +1,6 @@
 package com.pubnub.internal.endpoints.files
 
+import com.pubnub.internal.Endpoint
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.crypto.encryptString
@@ -27,7 +28,7 @@ open class PublishFileMessage(
     private val ttl: Int? = null,
     private val shouldStore: Boolean? = null,
     pubNub: PubNubImpl,
-) : com.pubnub.internal.Endpoint<List<Any>, PNPublishFileMessageResult>(pubNub), IPublishFileMessage {
+) : Endpoint<List<Any>, PNPublishFileMessageResult>(pubNub), IPublishFileMessage {
     private val pnFile = PNBaseFile(fileId, fileName)
 
     @Throws(PubNubException::class)

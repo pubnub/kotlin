@@ -1,5 +1,6 @@
 package com.pubnub.internal.endpoints
 
+import com.pubnub.internal.Endpoint
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
@@ -29,7 +30,7 @@ class FetchMessages internal constructor(
     override val includeMeta: Boolean,
     override val includeMessageActions: Boolean,
     override val includeMessageType: Boolean
-) : com.pubnub.internal.Endpoint<FetchMessagesEnvelope, PNFetchMessagesResult>(pubnub), IFetchMessages {
+) : Endpoint<FetchMessagesEnvelope, PNFetchMessagesResult>(pubnub), IFetchMessages {
 
     internal companion object {
         private const val SINGLE_CHANNEL_DEFAULT_MESSAGES = 100

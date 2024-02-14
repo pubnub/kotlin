@@ -7,6 +7,7 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.history.PNMessageCountResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.BasePubNub.PubNubImpl
+import com.pubnub.internal.Endpoint
 import com.pubnub.internal.toCsv
 import retrofit2.Call
 import retrofit2.Response
@@ -18,7 +19,7 @@ class MessageCounts internal constructor(
     pubnub: PubNubImpl,
     override val channels: List<String>,
     override val channelsTimetoken: List<Long>
-) : com.pubnub.internal.Endpoint<JsonElement, PNMessageCountResult>(pubnub), IMessageCounts {
+) : Endpoint<JsonElement, PNMessageCountResult>(pubnub), IMessageCounts {
 
     override fun validateParams() {
         super.validateParams()

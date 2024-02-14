@@ -1,6 +1,7 @@
 package com.pubnub.internal.endpoints.access
 
 import com.google.gson.JsonElement
+import com.pubnub.internal.Endpoint
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
@@ -29,7 +30,7 @@ open class Grant(
     override val authKeys: List<String> = emptyList(),
     override val channels: List<String> = emptyList(),
     override val channelGroups: List<String> = emptyList()
-) : com.pubnub.internal.Endpoint<Envelope<AccessManagerGrantPayload>, PNAccessManagerGrantResult>(pubnub), IGrant {
+) : Endpoint<Envelope<AccessManagerGrantPayload>, PNAccessManagerGrantResult>(pubnub), IGrant {
 
     override fun validateParams() {
         super.validateParams()

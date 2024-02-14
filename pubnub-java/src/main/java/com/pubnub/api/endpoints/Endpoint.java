@@ -1,14 +1,13 @@
 package com.pubnub.api.endpoints;
 
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.v2.callbacks.Result;
 import com.pubnub.internal.BasePubNub.PubNubImpl;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Consumer;
 
 public abstract class Endpoint<T> implements ExtendedRemoteAction<T> {
     protected final PubNubImpl pubnub;
@@ -25,22 +24,22 @@ public abstract class Endpoint<T> implements ExtendedRemoteAction<T> {
         return getRemoteAction().sync();
     }
 
-    public void async(@NotNull final PNCallback<T> callback) {
-        try {
-            validateParams();
-        } catch (PubNubException pubnubException) {
-            callback.onResponse(null, pubnubException);
-            return;
-        }
-        getRemoteAction().async(result -> {
-            if (result.isFailure()) {
-                callback.onResponse(null, PubNubException.Companion.from(result.exceptionOrNull()));
-            } else {
-                callback.onResponse(result.getOrNull(), null);
-            }
-            return Unit.INSTANCE;
-        });
-    }
+//    public void async(@NotNull final PNCallback<T> callback) {
+//        try {
+//            validateParams();
+//        } catch (PubNubException pubnubException) {
+//            callback.onResponse(null, pubnubException);
+//            return;
+//        }
+//        getRemoteAction().async(result -> {
+//            if (result.isFailure()) {
+//                callback.onResponse(null, PubNubException.Companion.from(result.exceptionOrNull()));
+//            } else {
+//                callback.onResponse(result.getOrNull(), null);
+//            }
+//            return Unit.INSTANCE;
+//        });
+//    }
 
     protected void validateParams() throws PubNubException { }
 
@@ -57,10 +56,26 @@ public abstract class Endpoint<T> implements ExtendedRemoteAction<T> {
         return localRef;
     }
 
+//    @Override
+//    public void async(@NotNull Function1<? super Result<? extends T>, Unit> callback) {
+//        try {
+//            validateParams();
+//        } catch (PubNubException pubnubException) {
+//            callback.invoke(Result.failure(pubnubException));
+//            return;
+//        }
+//        getRemoteAction().async(callback);
+//    }
+
     @Override
-    public void async(@NotNull Function1<? super Result<? extends T>, Unit> callback) {
-        //TODO MUST CHANGE THIS!!!
-        async(callback::invoke);
+    public void async(@NotNull Consumer<Result<T>> callback) {
+        try {
+            validateParams();
+        } catch (PubNubException pubnubException) {
+            callback.accept(Result.failure(pubnubException));
+            return;
+        }
+        getRemoteAction().async(callback);
     }
 
     @Override

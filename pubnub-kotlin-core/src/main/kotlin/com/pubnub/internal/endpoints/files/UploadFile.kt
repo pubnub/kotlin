@@ -21,6 +21,7 @@ import java.io.IOException
 import java.net.SocketException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import java.util.function.Consumer
 import javax.net.ssl.SSLException
 import javax.xml.parsers.DocumentBuilderFactory
 
@@ -79,17 +80,17 @@ internal class UploadFile(
         }
     }
 
-    override fun async(callback: (result: Result<Unit>) -> Unit) {
+    override fun async(callback: Consumer<Result<Unit>>) {
         try {
             call = prepareCall()
             call!!.enqueue(object : Callback<Unit> {
                 override fun onResponse(performedCall: Call<Unit>, response: Response<Unit>) {
                     if (!response.isSuccessful) {
                         val ex = createException(response)
-                        callback(Result.failure(ex))
+                        callback.accept(Result.failure(ex))
                         return
                     }
-                    callback(Result.success(Unit))
+                    callback.accept(Result.success(Unit))
                 }
 
                 override fun onFailure(performedCall: Call<Unit>, throwable: Throwable) {
@@ -105,7 +106,7 @@ internal class UploadFile(
                             PubNubError.HTTP_ERROR
                         }
                     }
-                    callback(
+                    callback.accept(
                         Result.failure(
                             PubNubException(error).copy(
                                 errorMessage = throwable.message ?: error.message,
@@ -116,7 +117,7 @@ internal class UploadFile(
                 }
             })
         } catch (e: Throwable) {
-            callback(Result.failure(PubNubException.from(e)))
+            callback.accept(Result.failure(PubNubException.from(e)))
         }
     }
 

@@ -6,6 +6,7 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.history.PNDeleteMessagesResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.BasePubNub.PubNubImpl
+import com.pubnub.internal.Endpoint
 import com.pubnub.internal.toCsv
 import retrofit2.Call
 import retrofit2.Response
@@ -19,7 +20,7 @@ class DeleteMessages internal constructor(
     override val channels: List<String>,
     override val start: Long? = null,
     override val end: Long? = null
-) : com.pubnub.internal.Endpoint<Void, PNDeleteMessagesResult>(pubnub), IDeleteMessages {
+) : Endpoint<Void, PNDeleteMessagesResult>(pubnub), IDeleteMessages {
 
     override fun validateParams() {
         super.validateParams()

@@ -14,6 +14,7 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.listen
+import com.pubnub.api.v2.callbacks.onSuccess
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test

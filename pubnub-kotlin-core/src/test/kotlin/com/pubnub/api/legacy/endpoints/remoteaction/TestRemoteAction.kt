@@ -8,6 +8,7 @@ import com.pubnub.api.v2.callbacks.Result
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
+import java.util.function.Consumer
 
 class TestRemoteAction<Output> internal constructor(
     private val output: Output?,
@@ -16,7 +17,7 @@ class TestRemoteAction<Output> internal constructor(
     private val executor: Executor = Executors.newSingleThreadExecutor()
     private val asyncCallmeter = AtomicInteger(0)
     private val callsToFail: AtomicInteger
-    private lateinit var callback: (result: Result<Output>) -> Unit
+    private lateinit var callback: Consumer<Result<Output>>
 
     @Throws(PubNubException::class)
     override fun sync(): Output {
@@ -29,16 +30,16 @@ class TestRemoteAction<Output> internal constructor(
         }
     }
 
-    override fun async(callback: (result: Result<Output>) -> Unit) {
+    override fun async(callback: Consumer<Result<Output>>) {
         this.callback = callback
         asyncCallmeter.incrementAndGet()
         executor.execute {
             if (failingStrategy == FailingStrategy.ALWAYS_FAIL) {
-                callback(Result.failure(PubNubException()))
+                callback.accept(Result.failure(PubNubException()))
             } else if (failingStrategy == FailingStrategy.FAIL_FIRST_CALLS && callsToFail.getAndDecrement() > 0) {
-                callback(Result.failure(PubNubException()))
+                callback.accept(Result.failure(PubNubException()))
             } else {
-                callback(Result.success(output!!))
+                callback.accept(Result.success(output!!))
             }
         }
     }

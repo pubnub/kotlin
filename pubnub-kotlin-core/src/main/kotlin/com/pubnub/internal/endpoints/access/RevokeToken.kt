@@ -1,5 +1,6 @@
 package com.pubnub.internal.endpoints.access
 
+import com.pubnub.internal.Endpoint
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
@@ -14,7 +15,7 @@ import java.net.URLEncoder
 class RevokeToken(
     pubnub: PubNubImpl,
     private val token: String
-) : com.pubnub.internal.Endpoint<RevokeTokenResponse, Unit>(pubnub), IRevokeToken {
+) : Endpoint<RevokeTokenResponse, Unit>(pubnub), IRevokeToken {
     override fun validateParams() {
         super.validateParams()
         if (!pubnub.configuration.secretKey.isValid()) {

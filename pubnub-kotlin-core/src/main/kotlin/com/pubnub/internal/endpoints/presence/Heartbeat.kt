@@ -1,5 +1,6 @@
 package com.pubnub.internal.endpoints.presence
 
+import com.pubnub.internal.Endpoint
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
@@ -14,7 +15,7 @@ class Heartbeat internal constructor(
     val channels: List<String> = listOf(),
     val channelGroups: List<String> = listOf(),
     val state: Any? = null
-) : com.pubnub.internal.Endpoint<Void, Boolean>(pubnub) {
+) : Endpoint<Void, Boolean>(pubnub) {
 
     override fun getAffectedChannels() = channels
     override fun getAffectedChannelGroups() = channelGroups

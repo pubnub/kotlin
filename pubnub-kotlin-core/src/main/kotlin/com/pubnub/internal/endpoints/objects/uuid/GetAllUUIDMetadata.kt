@@ -1,5 +1,6 @@
 package com.pubnub.internal.endpoints.objects.uuid
 
+import com.pubnub.internal.Endpoint
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
@@ -19,7 +20,7 @@ class GetAllUUIDMetadata internal constructor(
     pubnub: PubNubImpl,
     private val collectionQueryParameters: CollectionQueryParameters,
     private val withInclude: IncludeQueryParam
-) : com.pubnub.internal.Endpoint<EntityArrayEnvelope<PNUUIDMetadata>, PNUUIDMetadataArrayResult>(pubnub),
+) : Endpoint<EntityArrayEnvelope<PNUUIDMetadata>, PNUUIDMetadataArrayResult>(pubnub),
     IGetAllUUIDMetadata {
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityArrayEnvelope<PNUUIDMetadata>> {

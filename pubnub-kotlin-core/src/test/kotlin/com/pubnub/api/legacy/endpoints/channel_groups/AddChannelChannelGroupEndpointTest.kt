@@ -13,6 +13,8 @@ import com.pubnub.api.CommonUtils.emptyJson
 import com.pubnub.api.PubNubError
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.listen
+import com.pubnub.api.v2.callbacks.onFailure
+import com.pubnub.api.v2.callbacks.onSuccess
 import org.awaitility.Awaitility
 import org.hamcrest.core.IsEqual
 import org.junit.Assert.assertEquals
@@ -136,8 +138,8 @@ class AddChannelChannelGroupEndpointTest : BaseTest() {
         ).async { result ->
             assertTrue(result.isFailure)
             result.onFailure {
-//                assertEquals(PNStatusCategory.PNAccessDeniedCategory, status.category) // TODO how to check forbidden
-//                atomic.incrementAndGet()
+                assertEquals(403, it.statusCode)
+                atomic.incrementAndGet()
             }
         }
 
