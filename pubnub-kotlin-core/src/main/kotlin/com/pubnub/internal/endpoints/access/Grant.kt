@@ -25,11 +25,15 @@ open class Grant(
     override val write: Boolean = false,
     override val manage: Boolean = false,
     override val delete: Boolean = false,
+    override val get: Boolean = false,
+    override val update: Boolean = false,
+    override val join: Boolean = false,
     override val ttl: Int = -1,
 
     override val authKeys: List<String> = emptyList(),
     override val channels: List<String> = emptyList(),
-    override val channelGroups: List<String> = emptyList()
+    override val channelGroups: List<String> = emptyList(),
+    override val uuids: List<String> = emptyList(),
 ) : Endpoint<Envelope<AccessManagerGrantPayload>, PNAccessManagerGrantResult>(pubnub), IGrant {
 
     override fun validateParams() {
@@ -76,12 +80,18 @@ open class Grant(
             constructedChannels[it.key] = data.channels[it.key]!!.authKeys
         }
 
+        val constructedUuids = mutableMapOf<String, Map<String, PNAccessManagerKeyData>?>()
+        data.uuids?.forEach {
+            constructedUuids[it.key] = data.uuids[it.key]!!.authKeys
+        }
+
         return PNAccessManagerGrantResult(
             level = data.level!!,
             ttl = data.ttl,
             subscribeKey = data.subscribeKey!!,
             channels = constructedChannels,
-            channelGroups = constructedGroups
+            channelGroups = constructedGroups,
+            uuids = constructedUuids
         )
     }
 
@@ -103,6 +113,9 @@ open class Grant(
             pnAccessManagerKeyData.writeEnabled = (pubnub.mapper.getAsBoolean(keyMap.value, "w"))
             pnAccessManagerKeyData.readEnabled = (pubnub.mapper.getAsBoolean(keyMap.value, "r"))
             pnAccessManagerKeyData.deleteEnabled = (pubnub.mapper.getAsBoolean(keyMap.value, "d"))
+            pnAccessManagerKeyData.getEnabled = (pubnub.mapper.getAsBoolean(keyMap.value, "g"))
+            pnAccessManagerKeyData.updateEnabled = (pubnub.mapper.getAsBoolean(keyMap.value, "u"))
+            pnAccessManagerKeyData.joinEnabled = (pubnub.mapper.getAsBoolean(keyMap.value, "j"))
             result[keyMap.key] = pnAccessManagerKeyData
         }
         return result
@@ -112,6 +125,7 @@ open class Grant(
         channels.run { if (isNotEmpty()) queryParams["channel"] = toCsv() }
         channelGroups.run { if (isNotEmpty()) queryParams["channel-group"] = toCsv() }
         authKeys.run { if (isNotEmpty()) queryParams["auth"] = toCsv() }
+        uuids.run { if (isNotEmpty()) queryParams["target-uuid"] = toCsv() }
 
         if (ttl >= -1) {
             queryParams["ttl"] = ttl.toString()
@@ -121,5 +135,8 @@ open class Grant(
         queryParams["w"] = if (write) "1" else "0"
         queryParams["m"] = if (manage) "1" else "0"
         queryParams["d"] = if (delete) "1" else "0"
+        queryParams["g"] = if (get) "1" else "0"
+        queryParams["u"] = if (update) "1" else "0"
+        queryParams["j"] = if (join) "1" else "0"
     }
 }

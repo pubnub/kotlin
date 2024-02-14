@@ -233,7 +233,7 @@ public abstract class AbstractReconnectionProblemIT {
         long countAccessDenied = collectedStatuses.stream()
                 .filter(collectedStatus ->
                         collectedStatus.getPnStatus() instanceof PNStatus.ConnectionError
-                                && ((PNStatus.ConnectionError) collectedStatus.getPnStatus()).getException().getAffectedChannelGroups().contains(channel))
+                                && ((PNStatus.ConnectionError) collectedStatus.getPnStatus()).getException().getAffectedChannels().contains(channel))
                 .count();
 
         assertThat(countAccessDenied, greaterThan(1L));
@@ -268,7 +268,7 @@ public abstract class AbstractReconnectionProblemIT {
         long countAccessDenied = collectedStatuses.stream()
                 .filter(collectedStatus ->
                         collectedStatus.getPnStatus() instanceof PNStatus.ConnectionError
-                                && ((PNStatus.Connected) collectedStatus.getPnStatus()).getChannels().contains(channel2))
+                                && ((PNStatus.ConnectionError) collectedStatus.getPnStatus()).getException().getAffectedChannels().contains(channel2))
                 .count();
 
         long countConnected = collectedStatuses.stream()
@@ -314,7 +314,7 @@ public abstract class AbstractReconnectionProblemIT {
         long countAccessDenied = collectedStatuses.stream()
                 .filter(collectedStatus ->
                         collectedStatus.getPnStatus() instanceof PNStatus.ConnectionError
-                                && ((PNStatus.Connected) collectedStatus.getPnStatus()).getChannelGroups().contains(channelGroup2))
+                                && ((PNStatus.ConnectionError) collectedStatus.getPnStatus()).getException().getAffectedChannelGroups().contains(channelGroup2))
                 .count();
 
         long countConnected = collectedStatuses.stream()
@@ -375,7 +375,7 @@ public abstract class AbstractReconnectionProblemIT {
         long countAccessDenied = collectedStatuses.stream()
                 .filter(collectedStatus ->
                         collectedStatus.getPnStatus() instanceof PNStatus.ConnectionError
-                                && ((PNStatus.Connected) collectedStatus.getPnStatus()).getChannelGroups().contains(channelGroup))
+                                && ((PNStatus.ConnectionError) collectedStatus.getPnStatus()).getException().getAffectedChannelGroups().contains(channelGroup))
                 .count();
 
         assertThat(countAccessDenied, equalTo(1L));

@@ -1059,7 +1059,8 @@ class PubNubImpl internal constructor(
         ttl: Int = -1,
         authKeys: List<String> = emptyList(),
         channels: List<String> = emptyList(),
-        channelGroups: List<String> = emptyList()
+        channelGroups: List<String> = emptyList(),
+        uuids: List<String> = emptyList(),
     ) = Grant(
         pubnub = this,
         read = read,
@@ -1069,7 +1070,41 @@ class PubNubImpl internal constructor(
         ttl = ttl,
         authKeys = authKeys,
         channels = channels,
-        channelGroups = channelGroups
+        channelGroups = channelGroups,
+        uuids = uuids,
+    )
+
+
+    /**
+     * See [grant]
+     */
+    fun grant(
+        read: Boolean = false,
+        write: Boolean = false,
+        manage: Boolean = false,
+        delete: Boolean = false,
+        get: Boolean = false,
+        update: Boolean = false,
+        join: Boolean = false,
+        ttl: Int = -1,
+        authKeys: List<String> = emptyList(),
+        channels: List<String> = emptyList(),
+        channelGroups: List<String> = emptyList(),
+        uuids: List<String> = emptyList(),
+    ) = Grant(
+        pubnub = this,
+        read = read,
+        write = write,
+        manage = manage,
+        delete = delete,
+        get = get,
+        update = update,
+        join = join,
+        ttl = ttl,
+        authKeys = authKeys,
+        channels = channels,
+        channelGroups = channelGroups,
+        uuids = uuids,
     )
 
     /**

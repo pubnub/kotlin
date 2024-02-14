@@ -18,7 +18,7 @@ import com.pubnub.internal.v2.callbacks.EventListener
 import com.pubnub.internal.v2.callbacks.StatusListener
 import java.util.UUID
 
-abstract class BasePubNub internal constructor(configuration: PNConfiguration, eventEnginesConf: EventEnginesConf) : EventEmitter, StatusEmitter {
+abstract class BasePubNub internal constructor(val configuration: PNConfiguration, eventEnginesConf: EventEnginesConf) : EventEmitter, StatusEmitter {
     constructor(configuration: PNConfiguration) : this(configuration, EventEnginesConf())
 
     val listenerManager: ListenerManager = ListenerManager(this)

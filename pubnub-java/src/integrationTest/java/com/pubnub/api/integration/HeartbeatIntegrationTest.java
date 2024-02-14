@@ -5,14 +5,7 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
 import com.pubnub.api.models.consumer.PNStatus;
-import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadataResult;
-import com.pubnub.api.models.consumer.objects_api.membership.PNMembershipResult;
-import com.pubnub.api.models.consumer.objects_api.uuid.PNUUIDMetadataResult;
-import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
-import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
-import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult;
-import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
 import org.awaitility.Awaitility;
 import org.awaitility.Durations;
 import org.hamcrest.core.IsEqual;
@@ -48,30 +41,19 @@ public class HeartbeatIntegrationTest extends BaseIntegrationTest {
         final JsonObject expectedStatePayload = generatePayload();
         final PubNub observer = getPubNub();
 
-        pubNub.getConfiguration().setPresenceTimeoutWithCustomInterval(20, 4);
+        pubNub = getPubNub(getBasicPnConfiguration().setPresenceTimeoutWithCustomInterval(20, 4));
 
-        observer.addListener(new SubscribeCallback() {
-            @Override
-            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
-
-            }
-
+        observer.addListener(new SubscribeCallback.BaseSubscribeCallback() {
             @Override
             public void status(@NotNull PubNub pn, @NotNull PNStatus status) {
                 if (status instanceof PNStatus.Connected) {
                     if (((PNStatus.Connected) status).getChannels().contains(expectedChannel)) {
-
                         pubNub.subscribe()
                                 .channels(Collections.singletonList(expectedChannel))
                                 .withPresence()
                                 .execute();
                     }
                 }
-            }
-
-            @Override
-            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult message) {
-
             }
 
             @Override
@@ -112,31 +94,6 @@ public class HeartbeatIntegrationTest extends BaseIntegrationTest {
                             break;
                     }
                 }
-            }
-
-            @Override
-            public void signal(@NotNull PubNub pubNub, @NotNull PNSignalResult pnSignalResult) {
-
-            }
-
-            @Override
-            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
-
-            }
-
-            @Override
-            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
-
-            }
-
-            @Override
-            public void membership(@NotNull final PubNub pubnub, @NotNull final PNMembershipResult pnMembershipResult) {
-
-            }
-
-            @Override
-            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnActionResult) {
-
             }
         });
 

@@ -116,7 +116,7 @@ public abstract class BaseIntegrationTest {
         return pubNub;
     }
 
-    private void registerGuestClient(PubNub guestClient) {
+    protected void registerGuestClient(PubNub guestClient) {
         if (mGuestClients == null) {
             mGuestClients = new ArrayList<>();
         }

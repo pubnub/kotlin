@@ -32,7 +32,7 @@ public class PNAccessManagerGrantResult {
                 .subscribeKey(data.getSubscribeKey())
                 .channels(from(data.getChannels()))
                 .channelGroups(from(data.getChannelGroups()))
-                // TODO why no uuids in Kotlin? where do we get them from?
+                .uuids(from(data.getUuids()))
                 .build();
     }
 

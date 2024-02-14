@@ -13,33 +13,22 @@ import java.util.Collections;
 import java.util.List;
 
 
+@Setter
 @Accessors(chain = true, fluent = true)
 public class Grant extends Endpoint<PNAccessManagerGrantResult> {
 
-    @Setter
     private boolean read;
-    @Setter
     private boolean write;
-    @Setter
     private boolean manage;
-    @Setter
     private boolean delete;
-    @Setter
     private boolean get;
-    @Setter
     private boolean update;
-    @Setter
     private boolean join;
-    @Setter
     private int ttl = -1;
 
-    @Setter
     private List<String> authKeys = new ArrayList<>();
-    @Setter
     private List<String> channels = new ArrayList<>();
-    @Setter
     private List<String> channelGroups = new ArrayList<>();
-    @Setter
     private List<String> uuids = Collections.emptyList();
 
     public Grant(PubNubImpl pubnub) {
@@ -54,10 +43,14 @@ public class Grant extends Endpoint<PNAccessManagerGrantResult> {
                         write,
                         manage,
                         delete,
+                        get,
+                        update,
+                        join,
                         ttl,
                         authKeys,
                         channels,
-                        channelGroups
+                        channelGroups,
+                        uuids
                 ), PNAccessManagerGrantResult::from
         );
     }

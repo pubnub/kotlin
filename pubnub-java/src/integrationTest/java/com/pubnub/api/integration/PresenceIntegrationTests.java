@@ -354,15 +354,12 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
         final AtomicInteger heartbeatCallsCount = new AtomicInteger(0);
         final AtomicBoolean subscribeSuccess = new AtomicBoolean();
         final String expectedChannel = RandomGenerator.get();
-
-        pubNub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.ALL);
-
-        assertEquals(PNHeartbeatNotificationOptions.ALL, pubNub.getConfiguration().getHeartbeatNotificationOptions());
-        assertEquals(300, pubNub.getConfiguration().getPresenceTimeout());
-        assertEquals(0, pubNub.getConfiguration().getHeartbeatInterval());
-
-        pubNub.getConfiguration().setPresenceTimeout(20);
-        assertEquals(20, pubNub.getConfiguration().getPresenceTimeout());
+        pubNub = getPubNub(
+                getBasicPnConfiguration()
+                        .setPresenceTimeout(20)
+                        .setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.ALL)
+        );
+        registerGuestClient(pubNub);
         assertEquals(9, pubNub.getConfiguration().getHeartbeatInterval());
 
         pubNub.addListener(new SubscribeCallback.BaseSubscribeCallback() {

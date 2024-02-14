@@ -22,8 +22,8 @@ import java.util.Collections;
 @Setter
 @Accessors(chain = true, fluent = true)
 public class ManageMemberships extends Endpoint<PNManageMembershipResult> {
-    private Collection<PNChannelMembership> set;
-    private Collection<PNChannelMembership> remove;
+    private Collection<PNChannelMembership> set = Collections.emptySet();
+    private Collection<PNChannelMembership> remove = Collections.emptySet();
     private String uuid;
     private Integer limit;
     private PNPage page;
@@ -35,6 +35,8 @@ public class ManageMemberships extends Endpoint<PNManageMembershipResult> {
 
     public ManageMemberships(Collection<PNChannelMembership> channelsToSet, Collection<PNChannelMembership> channelsToRemove, final PubNubImpl pubnubInstance) {
         super(pubnubInstance);
+        set = channelsToSet;
+        remove = channelsToRemove;
     }
 
     @Override

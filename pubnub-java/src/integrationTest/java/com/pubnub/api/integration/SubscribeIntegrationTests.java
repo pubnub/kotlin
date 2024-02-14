@@ -203,51 +203,13 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
     @Test
     public void testUnsubscribeFromAllChannels() {
         final AtomicBoolean success = new AtomicBoolean();
+        subscribeToChannel(pubNub, randomChannel());
 
-        pubNub.addListener(new SubscribeCallback() {
-            @Override
-            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
-
-            }
+        pubNub.addListener(new SubscribeCallback.BaseSubscribeCallback() {
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
                 assertEquals(0, pubNub.getSubscribedChannels().size());
                 success.set(true);
-            }
-
-            @Override
-            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult message) {
-                success.set(true);
-            }
-
-            @Override
-            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult presence) {
-                success.set(true);
-            }
-
-            @Override
-            public void signal(@NotNull PubNub pubNub, @NotNull PNSignalResult pnSignalResult) {
-
-            }
-
-            @Override
-            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
-
-            }
-
-            @Override
-            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
-
-            }
-
-            @Override
-            public void membership(@NotNull PubNub pubNub, @NotNull PNMembershipResult pnMembershipResult) {
-
-            }
-
-            @Override
-            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnActionResult) {
-
             }
         });
 
