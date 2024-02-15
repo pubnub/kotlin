@@ -13,31 +13,31 @@ import com.pubnub.internal.v2.callbacks.EventListener
 
 abstract class EventListener : EventListener {
 
-    final override fun message(pubnub: BasePubNub, result: PNMessageResult) {
-        message(pubnub as PubNub, result)
+    final override fun message(pubnub: BasePubNub, event: PNMessageResult) {
+        message(pubnub as PubNub, event)
     }
 
-    final override fun presence(pubnub: BasePubNub, result: PNPresenceEventResult) {
-        presence(pubnub as PubNub, result)
+    final override fun presence(pubnub: BasePubNub, event: PNPresenceEventResult) {
+        presence(pubnub as PubNub, event)
     }
 
-    final override fun signal(pubnub: BasePubNub, result: PNSignalResult) {
-        signal(pubnub as PubNub, result)
+    final override fun signal(pubnub: BasePubNub, event: PNSignalResult) {
+        signal(pubnub as PubNub, event)
     }
 
-    final override fun messageAction(pubnub: BasePubNub, result: PNMessageActionResult) {
-        messageAction(pubnub as PubNub, result)
+    final override fun messageAction(pubnub: BasePubNub, event: PNMessageActionResult) {
+        messageAction(pubnub as PubNub, event)
     }
 
     final override fun objects(
         pubnub: BasePubNub,
-        result: com.pubnub.internal.models.consumer.pubsub.objects.PNObjectEventResult
+        event: com.pubnub.internal.models.consumer.pubsub.objects.PNObjectEventResult
     ) {
-        objects(pubnub as PubNub, result.toApi())
+        objects(pubnub as PubNub, event.toApi())
     }
 
-    final override fun file(pubnub: BasePubNub, result: PNFileEventResult) {
-        file(pubnub as PubNub, result)
+    final override fun file(pubnub: BasePubNub, event: PNFileEventResult) {
+        file(pubnub as PubNub, event)
     }
 
     /**
@@ -53,7 +53,7 @@ abstract class EventListener : EventListener {
     /**
      * Receive presence events for channels subscribed with presence enabled via
      * passing [com.pubnub.api.v2.subscriptions.SubscriptionOptions.receivePresenceEvents]
-     * in [com.pubnub.api.v2.entities.Channel.subscription].
+     * in [com.pubnub.api.v2.entities.BaseChannel.subscription].
      *
      * @param pubnub The client instance which has this listener attached.
      * @param result Wrapper around a presence event.

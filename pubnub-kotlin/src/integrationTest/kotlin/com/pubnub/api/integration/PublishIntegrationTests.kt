@@ -22,10 +22,10 @@ import com.pubnub.api.subscribeToBlocking
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.getOrThrow
 import com.pubnub.api.v2.callbacks.onSuccess
-import com.pubnub.api.v2.entities.Channel
+import com.pubnub.api.v2.entities.BaseChannel
+import com.pubnub.api.v2.subscriptions.BaseSubscriptionSet
 import com.pubnub.api.v2.subscriptions.SubscriptionCursor
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
-import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.internal.managers.MapperManager
 import org.awaitility.Awaitility
 import org.awaitility.Durations
@@ -499,7 +499,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         val expectedMessage = randomValue()
         val randomChannelName01 = randomChannel()
         val randomChannelName02 = randomChannel()
-        val subscriptionSetOf: SubscriptionSet = pubnub.subscriptionSetOf(
+        val subscriptionSetOf: BaseSubscriptionSet = pubnub.subscriptionSetOf(
             channels = setOf(randomChannelName01, randomChannelName02),
             options = SubscriptionOptions.receivePresenceEvents()
         )
@@ -533,7 +533,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         val expectedMessage = randomValue()
         val randomChannelName01 = "myChannel.${randomChannel()}"
         val randomChannelName02 = "myChannel.${randomChannel()}"
-        val myChannel: Channel = pubnub.channel("myChannel.*")
+        val myChannel: BaseChannel = pubnub.channel("myChannel.*")
 
         val subscription = myChannel.subscription()
         subscription.addListener(object : EventListener() {
@@ -566,7 +566,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         val expectedMessage = randomValue()
         val randomChannelName01 = randomChannel()
         val randomChannelName02 = randomChannel()
-        val subscriptionSetOf: SubscriptionSet = pubnub.subscriptionSetOf(
+        val subscriptionSetOf: BaseSubscriptionSet = pubnub.subscriptionSetOf(
             channels = setOf(randomChannelName01, randomChannelName02),
             options = SubscriptionOptions.receivePresenceEvents()
         )

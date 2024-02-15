@@ -1,18 +1,12 @@
 package com.pubnub.internal.v2.subscription
 
 import com.pubnub.api.callbacks.Listener
+import com.pubnub.api.v2.callbacks.BaseEventEmitter
 import com.pubnub.api.v2.callbacks.BaseEventListener
-import com.pubnub.api.models.consumer.pubsub.PNMessageResult
-import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
-import com.pubnub.api.models.consumer.pubsub.PNSignalResult
-import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
-import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
-import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
-import com.pubnub.api.v2.callbacks.EventEmitter
-import com.pubnub.api.v2.subscriptions.Subscription
+import com.pubnub.api.v2.subscriptions.BaseSubscription
+import com.pubnub.api.v2.subscriptions.BaseSubscriptionSet
 import com.pubnub.api.v2.subscriptions.SubscriptionCursor
-import com.pubnub.api.v2.subscriptions.SubscriptionSet
-import com.pubnub.internal.BasePubNub
+import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.managers.AnnouncementCallback
 import com.pubnub.internal.managers.AnnouncementEnvelope
 import com.pubnub.internal.v2.callbacks.EventEmitterImpl
@@ -24,13 +18,13 @@ private const val ERROR_SUBSCRIPTION_WRONG_CLASS =
 private const val ERROR_WRONG_PUBNUB_INSTANCE =
     "Adding Subscriptions from another PubNub instance to a SubscriptionSet is not allowed."
 
-internal class SubscriptionSetImpl(
-    private val pubnub: BasePubNub,
-    initialSubscriptions: Set<SubscriptionImpl> = emptySet(),
-) : SubscriptionSet(), EventEmitter {
-    private val _subscriptions: CopyOnWriteArraySet<SubscriptionImpl> = CopyOnWriteArraySet()
+open class BaseSubscriptionSetImpl(
+    private val pubnub: PubNubImpl,
+    initialSubscriptions: Set<BaseSubscriptionImpl> = emptySet(),
+) : BaseSubscriptionSet(), BaseEventEmitter {
+    private val _subscriptions: CopyOnWriteArraySet<BaseSubscriptionImpl> = CopyOnWriteArraySet()
     override val subscriptions get() = _subscriptions.toSet()
-    private val eventEmitter = EventEmitterImpl(AnnouncementCallback.Phase.SET, ::accepts)
+    protected val eventEmitter = EventEmitterImpl(AnnouncementCallback.Phase.SET, ::accepts)
 
     private fun accepts(envelope: AnnouncementEnvelope<*>) =
         subscriptions.any { subscription -> subscription in envelope.acceptedBy }
@@ -41,36 +35,29 @@ internal class SubscriptionSetImpl(
         pubnub.listenerManager.addAnnouncementCallback(eventEmitter)
     }
 
-    override var onMessage: ((PNMessageResult) -> Unit)? by eventEmitter::onMessage
-    override var onPresence: ((PNPresenceEventResult) -> Unit)? by eventEmitter::onPresence
-    override var onSignal: ((PNSignalResult) -> Unit)? by eventEmitter::onSignal
-    override var onMessageAction: ((PNMessageActionResult) -> Unit)? by eventEmitter::onMessageAction
-    override var onObjects: ((PNObjectEventResult) -> Unit)? by eventEmitter::onObjects
-    override var onFile: ((PNFileEventResult) -> Unit)? by eventEmitter::onFile
-
-    override fun add(subscription: Subscription) {
-        require(subscription is SubscriptionImpl) { ERROR_SUBSCRIPTION_WRONG_CLASS }
+    override fun add(subscription: BaseSubscription) {
+        require(subscription is BaseSubscriptionImpl) { ERROR_SUBSCRIPTION_WRONG_CLASS }
         require(subscription.pubnub == pubnub) { ERROR_WRONG_PUBNUB_INSTANCE }
         _subscriptions.add(subscription)
     }
 
-    override fun remove(subscription: Subscription) {
+    override fun remove(subscription: BaseSubscription) {
         _subscriptions.remove(subscription)
     }
 
-    override operator fun plus(subscription: Subscription): SubscriptionSet {
+    override operator fun plus(subscription: BaseSubscription): BaseSubscriptionSet {
         add(subscription)
         return this
     }
 
     override fun subscribe(cursor: SubscriptionCursor) {
         _subscriptions.forEach { it.onSubscriptionActive(cursor) }
-        pubnub.pubNubImpl.subscribe(*_subscriptions.toTypedArray(), cursor = cursor)
+        pubnub.subscribe(*_subscriptions.toTypedArray(), cursor = cursor)
     }
 
     override fun unsubscribe() {
         _subscriptions.forEach { it.onSubscriptionInactive() }
-        pubnub.pubNubImpl.unsubscribe(*_subscriptions.toTypedArray())
+        pubnub.unsubscribe(*_subscriptions.toTypedArray())
     }
 
     override fun close() {

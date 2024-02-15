@@ -4,6 +4,7 @@ import com.pubnub.api.UserId
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.internal.PNConfiguration
 import com.pubnub.internal.TestPubNub
+import com.pubnub.internal.v2.subscription.BaseSubscriptionImpl
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -26,7 +27,7 @@ class ChannelImplTest {
 
     @Test
     fun `create subscription`() {
-        val channel = ChannelImpl(pn, ChannelName(CHANNEL_NAME))
+        val channel = BaseChannelImpl(pn.pubNubImpl, ChannelName(CHANNEL_NAME), ::BaseSubscriptionImpl)
 
         val subscription = channel.subscription()
 
@@ -36,7 +37,7 @@ class ChannelImplTest {
 
     @Test
     fun `create subscription with presence`() {
-        val channel = ChannelImpl(pn, ChannelName(CHANNEL_NAME))
+        val channel = BaseChannelImpl(pn.pubNubImpl, ChannelName(CHANNEL_NAME), ::BaseSubscriptionImpl)
 
         val subscription = channel.subscription(SubscriptionOptions.receivePresenceEvents())
 

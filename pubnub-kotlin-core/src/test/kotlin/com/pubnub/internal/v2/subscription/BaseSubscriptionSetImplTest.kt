@@ -4,7 +4,7 @@ import com.google.gson.JsonNull
 import com.pubnub.api.UserId
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
-import com.pubnub.api.v2.subscriptions.SubscriptionSet
+import com.pubnub.api.v2.subscriptions.BaseSubscriptionSet
 import com.pubnub.internal.BasePubNub
 import com.pubnub.internal.PNConfiguration
 import com.pubnub.internal.TestPubNub
@@ -16,9 +16,9 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class SubscriptionSetImplTest {
+class BaseSubscriptionSetImplTest {
     private lateinit var pubnub: TestPubNub
-    private lateinit var subscriptionSet: SubscriptionSet
+    private lateinit var subscriptionSet: BaseSubscriptionSet
     private val channelName = "myChannel"
 
     @BeforeEach

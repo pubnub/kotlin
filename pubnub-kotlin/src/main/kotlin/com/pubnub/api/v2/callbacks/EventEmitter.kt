@@ -1,6 +1,5 @@
 package com.pubnub.api.v2.callbacks
 
-import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
@@ -8,8 +7,7 @@ import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 
-interface EventEmitter {
-
+interface EventEmitter : BaseEventEmitter {
     /**
      * A nullable property that can be set to a function (or lambda expression) to handle incoming message events.
      * This function is invoked whenever a new message is received, providing a convenient way to process or react to messages.
@@ -147,23 +145,4 @@ interface EventEmitter {
      * ```
      */
     var onFile: ((PNFileEventResult) -> Unit)?
-
-    /**
-     * Add a listener.
-     *
-     * @param listener The listener to be added.
-     */
-    fun addListener(listener: BaseEventListener)
-
-    /**
-     * Remove a listener.
-     *
-     * @param listener The listener to be removed, previously added with [addListener].
-     */
-    fun removeListener(listener: Listener)
-
-    /**
-     * Removes all listeners.
-     */
-    fun removeAllListeners()
 }

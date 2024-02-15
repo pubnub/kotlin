@@ -1,16 +1,16 @@
 package com.pubnub.api.v2.entities
 
-import com.pubnub.api.v2.subscriptions.Subscription
+import com.pubnub.api.v2.subscriptions.BaseSubscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 
 /**
  * A representation of a PubNub channel identified by its [name].
  *
- * You can get a [Subscription] to this channel through [subscription].
+ * You can get a [BaseSubscription] to this channel through [subscription].
  *
  * Use the [com.pubnub.api.PubNub.channel] factory method to create instances of this interface.
  */
-interface Channel : Subscribable {
+interface BaseChannel : Subscribable {
     /**
      * The name of this channel. Supports wildcards by ending it with ".*"
      *
@@ -19,7 +19,7 @@ interface Channel : Subscribable {
     val name: String
 
     /**
-     * Returns a [Subscription] that can be used to subscribe to this channel.
+     * Returns a [BaseSubscription] that can be used to subscribe to this channel.
      *
      * Channel subscriptions support passing [com.pubnub.api.v2.subscriptions.SubscriptionOptions.receivePresenceEvents] in
      * [options] to enable receiving presence events.
@@ -32,7 +32,7 @@ interface Channel : Subscribable {
      * ```
      *
      * @param options optional [SubscriptionOptions].
-     * @return an inactive [Subscription] to this channel. You must call [Subscription.subscribe] to start receiving events.
+     * @return an inactive [BaseSubscription] to this channel. You must call [BaseSubscription.subscribe] to start receiving events.
      */
-    override fun subscription(options: SubscriptionOptions): Subscription
+    override fun subscription(options: SubscriptionOptions): BaseSubscription
 }

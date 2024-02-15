@@ -8,6 +8,7 @@ import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
+import com.pubnub.api.v2.callbacks.BaseEventEmitter
 import com.pubnub.api.v2.callbacks.BaseEventListener
 import com.pubnub.api.v2.callbacks.BaseStatusListener
 import com.pubnub.internal.BasePubNub
@@ -17,10 +18,10 @@ import com.pubnub.internal.subscribe.eventengine.effect.MessagesConsumer
 import com.pubnub.internal.subscribe.eventengine.effect.StatusConsumer
 import com.pubnub.internal.v2.callbacks.EventListener
 import com.pubnub.internal.v2.callbacks.StatusListener
-import com.pubnub.internal.v2.subscription.SubscriptionImpl
+import com.pubnub.internal.v2.subscription.BaseSubscriptionImpl
 import java.util.concurrent.CopyOnWriteArrayList
 
-class ListenerManager(val pubnub: BasePubNub) : MessagesConsumer, StatusConsumer {
+class ListenerManager(val pubnub: BasePubNub) : MessagesConsumer, StatusConsumer, BaseEventEmitter {
     private val listeners = CopyOnWriteArrayList<Listener>()
 
     private val statusListeners get() = listeners.filterIsInstance<StatusListener>()
@@ -30,11 +31,11 @@ class ListenerManager(val pubnub: BasePubNub) : MessagesConsumer, StatusConsumer
         listeners.add(listener)
     }
 
-    fun removeListener(listener: Listener) {
+    override fun removeListener(listener: Listener) {
         listeners.remove(listener)
     }
 
-    fun removeAllListeners() {
+    override fun removeAllListeners() {
         listeners.clear()
     }
 
@@ -47,7 +48,7 @@ class ListenerManager(val pubnub: BasePubNub) : MessagesConsumer, StatusConsumer
         listeners.add(listener)
     }
 
-    fun addListener(listener: BaseEventListener) {
+    override fun addListener(listener: BaseEventListener) {
         listeners.add(listener)
     }
 
@@ -106,13 +107,13 @@ class ListenerManager(val pubnub: BasePubNub) : MessagesConsumer, StatusConsumer
     }
 }
 
-internal data class AnnouncementEnvelope<T : PNEvent>(
+data class AnnouncementEnvelope<T : PNEvent>(
     val event: T
 ) {
-    val acceptedBy = mutableSetOf<SubscriptionImpl>()
+    val acceptedBy = mutableSetOf<BaseSubscriptionImpl>()
 }
 
-internal interface AnnouncementCallback {
+interface AnnouncementCallback {
     enum class Phase { SUBSCRIPTION, SET }
 
     val phase: Phase

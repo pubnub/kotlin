@@ -16,7 +16,7 @@ import org.junit.Test
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 
-class RemoveChannelChannelGroupEndpointTest : BaseTest() {
+class RemoveChannelBaseChannelGroupEndpointTest : BaseTest() {
 
     @Test
     fun testSyncSuccess() {

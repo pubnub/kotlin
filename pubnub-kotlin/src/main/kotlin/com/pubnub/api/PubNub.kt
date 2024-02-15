@@ -64,7 +64,28 @@ import com.pubnub.api.models.consumer.objects.member.MemberInput
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
+import com.pubnub.api.models.consumer.pubsub.PNMessageResult
+import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
+import com.pubnub.api.models.consumer.pubsub.PNSignalResult
+import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
+import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
+import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
+import com.pubnub.api.v2.callbacks.EventEmitter
+import com.pubnub.api.v2.entities.BaseChannel
+import com.pubnub.api.v2.entities.BaseChannelGroup
+import com.pubnub.api.v2.entities.BaseChannelMetadata
+import com.pubnub.api.v2.entities.BaseUserMetadata
+import com.pubnub.api.v2.entities.Channel
+import com.pubnub.api.v2.entities.ChannelGroup
+import com.pubnub.api.v2.entities.ChannelMetadata
+import com.pubnub.api.v2.entities.UserMetadata
+import com.pubnub.api.v2.subscription.Subscription
+import com.pubnub.api.v2.subscription.SubscriptionSet
+import com.pubnub.api.v2.subscriptions.BaseSubscription
+import com.pubnub.api.v2.subscriptions.BaseSubscriptionSet
+import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.internal.BasePubNub
+import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.models.consumer.objects.toInternal
 import com.pubnub.internal.models.consumer.objects.toInternalChannelGrants
 import com.pubnub.internal.models.consumer.objects.toInternalChannelGroupGrants
@@ -74,13 +95,128 @@ import com.pubnub.internal.models.consumer.objects.toInternalSortKeys
 import com.pubnub.internal.models.consumer.objects.toInternalSpacePermissions
 import com.pubnub.internal.models.consumer.objects.toInternalUserPermissions
 import com.pubnub.internal.models.consumer.objects.toInternalUuidGrants
+import com.pubnub.internal.v2.entities.ChannelGroupName
+import com.pubnub.internal.v2.entities.ChannelName
+import com.pubnub.internal.v2.subscription.EmitterHelper
 import java.io.InputStream
+import kotlin.reflect.KFunction4
 
 class PubNub(
     val configuration: PNConfiguration,
-) : BasePubNub(configuration) {
+    private val subscriptionFactory: KFunction4<PubNubImpl, Set<ChannelName>, Set<ChannelGroupName>, SubscriptionOptions?, Subscription> = ::Subscription,
+) : BasePubNub(configuration, subscriptionFactory, ::SubscriptionSet), EventEmitter {
     companion object {
         fun generateUUID() = BasePubNub.generateUUID()
+    }
+
+    private val emitterHelper = EmitterHelper(listenerManager)
+    override var onMessage: ((PNMessageResult) -> Unit)? by emitterHelper::onMessage
+    override var onPresence: ((PNPresenceEventResult) -> Unit)? by emitterHelper::onPresence
+    override var onSignal: ((PNSignalResult) -> Unit)? by emitterHelper::onSignal
+    override var onMessageAction: ((PNMessageActionResult) -> Unit)? by emitterHelper::onMessageAction
+    override var onObjects: ((PNObjectEventResult) -> Unit)? by emitterHelper::onObjects
+    override var onFile: ((PNFileEventResult) -> Unit)? by emitterHelper::onFile
+
+    /**
+     * Create a handle to a [BaseChannel] that can be used to obtain a [BaseSubscription].
+     *
+     * The function is cheap to call, and the returned object is lightweight, as it doesn't change any client or server
+     * state. It is therefore permitted to use this method whenever a representation of a channel is required.
+     *
+     * The returned [BaseChannel] holds a reference to this [PubNub] instance internally.
+     *
+     * @param name the name of the channel to return. Supports wildcards by ending it with ".*". See more in the
+     * [documentation](https://www.pubnub.com/docs/general/channels/overview)
+     *
+     * @return a [BaseChannel] instance representing the channel with the given [name]
+     */
+    override fun channel(name: String): Channel {
+        return Channel(pubNubImpl, ChannelName(name), subscriptionFactory)
+    }
+
+    /**
+     * Create a handle to a [BaseChannelGroup] that can be used to obtain a [BaseSubscription].
+     *
+     * The function is cheap to call, and the returned object is lightweight, as it doesn't change any client or server
+     * state. It is therefore permitted to use this method whenever a representation of a channel group is required.
+     *
+     * The returned [BaseChannelGroup] holds a reference to this [PubNub] instance internally.
+     *
+     * @param name the name of the channel group to return. See more in the
+     * [documentation](https://www.pubnub.com/docs/general/channels/subscribe#channel-groups)
+     *
+     * @return a [BaseChannelGroup] instance representing the channel group with the given [name]
+     */
+    override fun channelGroup(name: String): ChannelGroup {
+        return ChannelGroup(pubNubImpl, ChannelGroupName(name), subscriptionFactory)
+    }
+
+    /**
+     * Create a handle to a [BaseChannelMetadata] object that can be used to obtain a [BaseSubscription] to metadata events.
+     *
+     * The function is cheap to call, and the returned object is lightweight, as it doesn't change any client or server
+     * state. It is therefore permitted to use this method whenever a representation of a metadata channel is required.
+     *
+     * The returned [BaseChannelMetadata] holds a reference to this [PubNub] instance internally.
+     *
+     * @param id the id of the channel metadata to return. See more in the
+     * [documentation](https://www.pubnub.com/docs/general/metadata/channel-metadata)
+     *
+     * @return a [BaseChannelMetadata] instance representing the channel metadata with the given [id]
+     */
+    override fun channelMetadata(id: String): ChannelMetadata {
+        return ChannelMetadata(pubNubImpl, ChannelName(id), subscriptionFactory)
+    }
+
+    /**
+     * Create a handle to a [BaseUserMetadata] object that can be used to obtain a [BaseSubscription] to user metadata events.
+     *
+     * The function is cheap to call, and the returned object is lightweight, as it doesn't change any client or server
+     * state. It is therefore permitted to use this method whenever a representation of a user metadata is required.
+     *
+     * The returned [BaseUserMetadata] holds a reference to this [PubNub] instance internally.
+     *
+     * @param id the id of the user. See more in the
+     * [documentation](https://www.pubnub.com/docs/general/metadata/users-metadata)
+     *
+     * @return a [BaseUserMetadata] instance representing the channel metadata with the given [id]
+     */
+    override fun userMetadata(id: String): UserMetadata {
+        return UserMetadata(pubNubImpl, ChannelName(id), subscriptionFactory)
+    }
+
+    /**
+     * Create a [BaseSubscriptionSet] from the given [subscriptions].
+     *
+     * @param subscriptions the subscriptions that will be added to the returned [BaseSubscriptionSet]
+     * @return a [BaseSubscriptionSet] containing all [subscriptions]
+     */
+    override fun subscriptionSetOf(subscriptions: Set<BaseSubscription>): SubscriptionSet {
+        return super.subscriptionSetOf(subscriptions) as SubscriptionSet
+    }
+
+    /**
+     * Create a [BaseSubscriptionSet] containing [BaseSubscription] objects for the given sets of [channels] and
+     * [channelGroups].
+     *
+     * Please note that the subscriptions are not active until you call [BaseSubscriptionSet.subscribe].
+     *
+     * This is a convenience method, and it is equal to calling [PubNub.channel] followed by [BaseChannel.subscription] for
+     * each channel, then creating a [subscriptionSetOf] using the returned [BaseSubscription] objects (and similarly for
+     * channel groups).
+     *
+     * @param channels the channels to create subscriptions for
+     * @param channelGroups the channel groups to create subscriptions for
+     * @param options the [SubscriptionOptions] to pass for each subscription. Refer to supported options in [BaseChannel] and
+     * [BaseChannelGroup] documentation.
+     * @return a [BaseSubscriptionSet] containing subscriptions for the given [channels] and [channelGroups]
+     */
+    override fun subscriptionSetOf(
+        channels: Set<String>,
+        channelGroups: Set<String>,
+        options: SubscriptionOptions
+    ): SubscriptionSet {
+        return super.subscriptionSetOf(channels, channelGroups, options) as SubscriptionSet
     }
 
     fun publish(

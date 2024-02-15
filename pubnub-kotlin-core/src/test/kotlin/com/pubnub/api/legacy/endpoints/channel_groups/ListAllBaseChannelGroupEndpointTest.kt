@@ -22,7 +22,7 @@ import org.junit.Test
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 
-class ListAllChannelGroupEndpointTest : BaseTest() {
+class ListAllBaseChannelGroupEndpointTest : BaseTest() {
 
     @Test
     fun testSyncSuccess() {

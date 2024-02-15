@@ -13,9 +13,8 @@ import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.subscribeToBlocking
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
-import com.pubnub.api.v2.subscriptions.Subscription
+import com.pubnub.api.v2.subscriptions.BaseSubscriptionSet
 import com.pubnub.api.v2.subscriptions.SubscriptionCursor
-import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.logging.HttpLoggingInterceptor
@@ -274,7 +273,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
             }
         })
 
-        val subscriptionSetOf: SubscriptionSet = pubnub.subscriptionSetOf(
+        val subscriptionSetOf = pubnub.subscriptionSetOf(
             setOf(sub02, sub01)
         )
 
@@ -315,7 +314,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
             }
         })
 
-        val subscriptionSetOf: SubscriptionSet = pubnub.subscriptionSetOf(
+        val subscriptionSetOf: BaseSubscriptionSet = pubnub.subscriptionSetOf(
             setOf(sub02, sub01)
         )
 
@@ -364,7 +363,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
             }
         })
 
-        val subscriptionSetOf: SubscriptionSet = pubnub.subscriptionSetOf(
+        val subscriptionSetOf: BaseSubscriptionSet = pubnub.subscriptionSetOf(
             setOf(sub02, sub01)
         )
 
@@ -415,7 +414,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
             }
         })
 
-        val subscriptionSetOf: SubscriptionSet = pubnub.subscriptionSetOf(
+        val subscriptionSetOf: BaseSubscriptionSet = pubnub.subscriptionSetOf(
             setOf(sub02, sub01)
         )
 
@@ -464,7 +463,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
             }
         })
 
-        val subscriptionSet: SubscriptionSet = pubnub.subscriptionSetOf(
+        val subscriptionSet: BaseSubscriptionSet = pubnub.subscriptionSetOf(
             setOf(sub02, sub01)
         )
 
@@ -573,7 +572,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         val expectedMessage = randomValue()
         val chan01 = pubnub.channel(randomChannel())
 
-        val subscription: Subscription = chan01.subscription()
+        val subscription = chan01.subscription()
 
         val onMessage: (PNMessageResult) -> Unit = { successMessage.incrementAndGet() }
         val onSignal: (PNSignalResult) -> Unit = { successSignal.incrementAndGet() }
@@ -612,7 +611,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
 
         val sub01 = chan01.subscription()
         val sub02 = chan02.subscription()
-        val subscriptionSetOf: SubscriptionSet = pubnub.subscriptionSetOf(
+        val subscriptionSetOf = pubnub.subscriptionSetOf(
             setOf(sub02, sub01)
         )
         subscriptionSetOf.onMessage = { successMessage.incrementAndGet() }

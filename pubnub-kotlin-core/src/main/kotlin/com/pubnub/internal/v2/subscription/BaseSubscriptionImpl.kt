@@ -2,31 +2,25 @@ package com.pubnub.internal.v2.subscription
 
 import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.models.consumer.pubsub.PNEvent
+import com.pubnub.api.v2.callbacks.BaseEventEmitter
 import com.pubnub.api.v2.callbacks.BaseEventListener
-import com.pubnub.api.models.consumer.pubsub.PNMessageResult
-import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
-import com.pubnub.api.models.consumer.pubsub.PNSignalResult
-import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
-import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
-import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
-import com.pubnub.api.v2.callbacks.EventEmitter
-import com.pubnub.api.v2.subscriptions.Subscription
+import com.pubnub.api.v2.subscriptions.BaseSubscription
+import com.pubnub.api.v2.subscriptions.BaseSubscriptionSet
 import com.pubnub.api.v2.subscriptions.SubscriptionCursor
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
-import com.pubnub.api.v2.subscriptions.SubscriptionSet
-import com.pubnub.internal.BasePubNub
+import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.managers.AnnouncementCallback
 import com.pubnub.internal.managers.AnnouncementEnvelope
 import com.pubnub.internal.v2.callbacks.EventEmitterImpl
 import com.pubnub.internal.v2.entities.ChannelGroupName
 import com.pubnub.internal.v2.entities.ChannelName
 
-internal class SubscriptionImpl(
-    internal val pubnub: BasePubNub,
+open class BaseSubscriptionImpl(
+    internal val pubnub: PubNubImpl,
     channels: Set<ChannelName> = emptySet(),
     channelGroups: Set<ChannelGroupName> = emptySet(),
     options: SubscriptionOptions? = null,
-) : Subscription(), EventEmitter {
+) : BaseSubscription(), BaseEventEmitter {
 
     @Volatile
     var isActive = false
@@ -53,12 +47,12 @@ internal class SubscriptionImpl(
      */
     private var lastTimetoken: Long = 0L
 
-    private val eventEmitter = EventEmitterImpl(AnnouncementCallback.Phase.SUBSCRIPTION, ::accepts)
+    protected val eventEmitter = EventEmitterImpl(AnnouncementCallback.Phase.SUBSCRIPTION, ::accepts)
     private fun accepts(envelope: AnnouncementEnvelope<out PNEvent>): Boolean {
         val event = envelope.event
         val accepted = isActive && filters.all { filter -> filter.predicate(event) } && checkAndUpdateTimetoken(event)
         if (accepted) {
-            envelope.acceptedBy += this@SubscriptionImpl
+            envelope.acceptedBy += this@BaseSubscriptionImpl
         }
         return accepted
     }
@@ -74,20 +68,13 @@ internal class SubscriptionImpl(
         } ?: return false
     }
 
-    override var onMessage: ((PNMessageResult) -> Unit)? by eventEmitter::onMessage
-    override var onPresence: ((PNPresenceEventResult) -> Unit)? by eventEmitter::onPresence
-    override var onSignal: ((PNSignalResult) -> Unit)? by eventEmitter::onSignal
-    override var onMessageAction: ((PNMessageActionResult) -> Unit)? by eventEmitter::onMessageAction
-    override var onObjects: ((PNObjectEventResult) -> Unit)? by eventEmitter::onObjects
-    override var onFile: ((PNFileEventResult) -> Unit)? by eventEmitter::onFile
-
-    override fun plus(subscription: Subscription): SubscriptionSet {
-        return pubnub.pubNubImpl.subscriptionSetOf(setOf(this, subscription))
+    override fun plus(subscription: BaseSubscription): BaseSubscriptionSet {
+        return pubnub.subscriptionSetOf(setOf(this, subscription))
     }
 
     override fun subscribe(cursor: SubscriptionCursor) {
         onSubscriptionActive(cursor)
-        pubnub.pubNubImpl.subscribe(this, cursor = cursor)
+        pubnub.subscribe(this, cursor = cursor)
     }
 
     internal fun onSubscriptionActive(cursor: SubscriptionCursor) {
@@ -97,7 +84,7 @@ internal class SubscriptionImpl(
 
     override fun unsubscribe() {
         onSubscriptionInactive()
-        pubnub.pubNubImpl.unsubscribe(this)
+        pubnub.unsubscribe(this)
     }
 
     internal fun onSubscriptionInactive() {

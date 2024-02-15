@@ -1,27 +1,29 @@
 package com.pubnub.internal.v2.entities
 
-import com.pubnub.api.v2.entities.Channel
+import com.pubnub.api.v2.entities.BaseChannel
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
-import com.pubnub.internal.BasePubNub
+import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.SubscriptionFactory
 import com.pubnub.internal.subscribe.PRESENCE_CHANNEL_SUFFIX
+import com.pubnub.internal.v2.subscription.BaseSubscriptionImpl
 import com.pubnub.internal.v2.subscription.ReceivePresenceEventsImpl
-import com.pubnub.internal.v2.subscription.SubscriptionImpl
 
-internal class ChannelImpl(internal val pubnub: BasePubNub, private val channelName: ChannelName) : Channel {
+open class BaseChannelImpl<T : BaseSubscriptionImpl>(internal val pubnub: PubNubImpl, private val channelName: ChannelName, private val subscriptionFactory: SubscriptionFactory<T>) : BaseChannel {
 
     override val name: String = channelName.id
 
-    override fun subscription(options: SubscriptionOptions): SubscriptionImpl {
+    override fun subscription(options: SubscriptionOptions): T {
         val channels = buildSet<ChannelName> {
             add(channelName)
             if (options.allOptions.filterIsInstance<ReceivePresenceEventsImpl>().isNotEmpty()) {
                 add(channelName.withPresence)
             }
         }
-        return SubscriptionImpl(
+        return subscriptionFactory(
             pubnub,
-            channels = channels,
-            options = SubscriptionOptions.filter { result ->
+            channels,
+            emptySet(),
+            SubscriptionOptions.filter { result ->
                 // simple channel name or presence channel
                 if (channels.any { it.id == result.channel }) {
                     return@filter true
@@ -43,9 +45,7 @@ internal class ChannelImpl(internal val pubnub: BasePubNub, private val channelN
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as ChannelImpl
+        if (other !is BaseChannelImpl<*>) return false
 
         if (pubnub != other.pubnub) return false
         if (name != other.name) return false
@@ -61,7 +61,7 @@ internal class ChannelImpl(internal val pubnub: BasePubNub, private val channelN
 }
 
 @JvmInline
-internal value class ChannelName(val id: String) {
+value class ChannelName(val id: String) {
     val withPresence get() = ChannelName("${this.id}$PRESENCE_CHANNEL_SUFFIX")
     val isPresence get() = id.endsWith(PRESENCE_CHANNEL_SUFFIX)
 }

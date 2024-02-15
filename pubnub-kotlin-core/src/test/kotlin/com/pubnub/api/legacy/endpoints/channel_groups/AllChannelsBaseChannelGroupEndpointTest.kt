@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
-class AllChannelsChannelGroupEndpointTest : BaseTest() {
+class AllChannelsBaseChannelGroupEndpointTest : BaseTest() {
 
     @Test
     fun testSyncSuccess() {

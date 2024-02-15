@@ -23,7 +23,7 @@ interface EventListener : BaseEventListener {
     /**
      * Receive presence events for channels subscribed with presence enabled via
      * passing [com.pubnub.api.v2.subscriptions.SubscriptionOptions.receivePresenceEvents]
-     * in [com.pubnub.api.v2.entities.Channel.subscription].
+     * in [com.pubnub.api.v2.entities.BaseChannel.subscription].
      *
      * @param pubnub The client instance which has this listener attached.
      * @param event Wrapper around a presence event.
