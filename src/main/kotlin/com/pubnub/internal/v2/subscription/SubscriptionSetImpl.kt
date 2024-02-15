@@ -4,6 +4,12 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.managers.AnnouncementCallback
 import com.pubnub.api.managers.AnnouncementEnvelope
+import com.pubnub.api.models.consumer.pubsub.PNMessageResult
+import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
+import com.pubnub.api.models.consumer.pubsub.PNSignalResult
+import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
+import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
+import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.v2.callbacks.EventEmitter
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.subscriptions.Subscription
@@ -23,9 +29,11 @@ internal class SubscriptionSetImpl(
     initialSubscriptions: Set<SubscriptionImpl> = emptySet(),
 ) : SubscriptionSet(), EventEmitter {
     private val _subscriptions: CopyOnWriteArraySet<SubscriptionImpl> = CopyOnWriteArraySet()
+    override val subscriptions get() = _subscriptions.toSet()
     private val eventEmitter = EventEmitterImpl(AnnouncementCallback.Phase.SET, ::accepts)
 
-    override val subscriptions get() = _subscriptions.toSet()
+    private fun accepts(envelope: AnnouncementEnvelope<*>) =
+        subscriptions.any { subscription -> subscription in envelope.acceptedBy }
 
     init {
         require(initialSubscriptions.all { it.pubnub == pubnub }) { ERROR_WRONG_PUBNUB_INSTANCE }
@@ -33,8 +41,12 @@ internal class SubscriptionSetImpl(
         pubnub.listenerManager.addAnnouncementCallback(eventEmitter)
     }
 
-    private fun accepts(envelope: AnnouncementEnvelope<*>) =
-        subscriptions.any { subscription -> subscription in envelope.acceptedBy }
+    override var onMessage: ((PNMessageResult) -> Unit)? by eventEmitter::onMessage
+    override var onPresence: ((PNPresenceEventResult) -> Unit)? by eventEmitter::onPresence
+    override var onSignal: ((PNSignalResult) -> Unit)? by eventEmitter::onSignal
+    override var onMessageAction: ((PNMessageActionResult) -> Unit)? by eventEmitter::onMessageAction
+    override var onObjects: ((PNObjectEventResult) -> Unit)? by eventEmitter::onObjects
+    override var onFile: ((PNFileEventResult) -> Unit)? by eventEmitter::onFile
 
     override fun add(subscription: Subscription) {
         require(subscription is SubscriptionImpl) { ERROR_SUBSCRIPTION_WRONG_CLASS }

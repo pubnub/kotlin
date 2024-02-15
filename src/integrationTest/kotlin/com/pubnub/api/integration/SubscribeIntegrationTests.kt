@@ -10,11 +10,13 @@ import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.listen
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
+import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.subscribeToBlocking
 import com.pubnub.api.unsubscribeFromBlocking
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
+import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionCursor
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import okhttp3.HttpUrl
@@ -29,6 +31,7 @@ import org.junit.jupiter.api.Timeout
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 
 class SubscribeIntegrationTests : BaseIntegrationTest() {
 
@@ -153,7 +156,13 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
             }
 
             override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
-                assertTrue(listOf(expectedMessage01, expectedMessage02, expectedMessage03).contains(pnMessageResult.message.asString))
+                assertTrue(
+                    listOf(
+                        expectedMessage01,
+                        expectedMessage02,
+                        expectedMessage03
+                    ).contains(pnMessageResult.message.asString)
+                )
                 countDownLatch.countDown()
             }
         })
@@ -285,7 +294,8 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
 
         guestClient = createPubNub(
             getBasicPnConfiguration().apply {
-                val notExistingUri = "ps.pndsn_notExisting_URI.com" // we want to trigger UnknownHostException to initiate retry
+                val notExistingUri =
+                    "ps.pndsn_notExisting_URI.com" // we want to trigger UnknownHostException to initiate retry
                 origin = notExistingUri
                 retryConfiguration = RetryConfiguration.Linear(delayInSec = 1, maxRetryNumber = 2)
                 enableEventEngine = true
@@ -617,5 +627,113 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         subscribe(listOf("def"))
         val tt2 = pubnub.publish("def", "myMessage").sync()!!.timetoken
         assertEquals(tt2, nextMessage().timetoken!!)
+    }
+
+    @Test
+    fun testAssigningEventBehaviourToSubscriptionAnd() {
+        val successMessage = AtomicInteger(0)
+        val successSignal = AtomicInteger(0)
+        val expectedMessage = randomValue()
+        val chan01 = pubnub.channel(randomChannel())
+
+        val subscription: Subscription = chan01.subscription()
+
+        val onMessage: (PNMessageResult) -> Unit = { successMessage.incrementAndGet() }
+        val onSignal: (PNSignalResult) -> Unit = { successSignal.incrementAndGet() }
+
+        subscription.onMessage = onMessage
+        subscription.onSignal = onSignal
+
+        subscription.subscribe()
+
+        Thread.sleep(2000)
+
+        pubnub.publish(chan01.name, expectedMessage).sync()
+        pubnub.signal(chan01.name, expectedMessage).sync()
+
+        Thread.sleep(1000)
+        assertEquals(1, successMessage.get())
+        assertEquals(1, successSignal.get())
+
+        subscription.onMessage = null
+        subscription.onSignal = null
+        pubnub.signal(chan01.name, expectedMessage).sync()
+        pubnub.publish(chan01.name, expectedMessage).sync()
+
+        Thread.sleep(1000)
+        assertEquals(1, successMessage.get())
+        assertEquals(1, successSignal.get())
+    }
+
+    @Test
+    fun testAssigningEventBehaviourToSubscriptionSet() {
+        val successMessage = AtomicInteger(0)
+        val successSignal = AtomicInteger(0)
+        val expectedMessage = randomValue()
+        val chan01 = pubnub.channel(randomChannel())
+        val chan02 = pubnub.channel(randomChannel())
+
+        val sub01 = chan01.subscription()
+        val sub02 = chan02.subscription()
+        val subscriptionSetOf: SubscriptionSet = pubnub.subscriptionSetOf(
+            setOf(sub02, sub01)
+        )
+        subscriptionSetOf.onMessage = { successMessage.incrementAndGet() }
+        subscriptionSetOf.onSignal = { successSignal.incrementAndGet() }
+        subscriptionSetOf.subscribe()
+
+        Thread.sleep(2000)
+
+        pubnub.publish(chan01.name, expectedMessage).sync()
+        pubnub.publish(chan02.name, expectedMessage).sync()
+        pubnub.publish(chan01.name, expectedMessage).sync()
+        pubnub.publish(chan02.name, expectedMessage).sync()
+        pubnub.signal(chan01.name, expectedMessage).sync()
+        pubnub.signal(chan02.name, expectedMessage).sync()
+
+        Thread.sleep(1000)
+        assertEquals(4, successMessage.get())
+        assertEquals(2, successSignal.get())
+
+        subscriptionSetOf.onMessage = null
+        subscriptionSetOf.onSignal = null
+
+        pubnub.publish(chan01.name, expectedMessage).sync()
+        pubnub.signal(chan02.name, expectedMessage).sync()
+
+        Thread.sleep(1000)
+        assertEquals(4, successMessage.get())
+        assertEquals(2, successSignal.get())
+    }
+
+    @Test
+    fun testAssigningEventBehaviourToPubNub() {
+        val successMessagesCount = AtomicInteger()
+        val successSignalCont = AtomicInteger()
+        val channel = randomChannel()
+        val expectedMessage = randomValue()
+
+        pubnub.onMessage = { successMessagesCount.incrementAndGet() }
+        pubnub.onSignal = { successSignalCont.incrementAndGet() }
+
+        pubnub.subscribeToBlocking(channel)
+
+        pubnub.publish(channel, expectedMessage).sync()
+        pubnub.signal(channel, expectedMessage).sync()
+
+        Thread.sleep(1000)
+        assertEquals(1, successMessagesCount.get())
+        assertEquals(1, successSignalCont.get())
+
+        pubnub.onMessage = null
+        pubnub.onSignal = null
+        pubnub.onPresence = null
+
+        pubnub.publish(channel, expectedMessage).sync()
+        pubnub.signal(channel, expectedMessage).sync()
+
+        Thread.sleep(1000)
+        assertEquals(1, successMessagesCount.get())
+        assertEquals(1, successSignalCont.get())
     }
 }

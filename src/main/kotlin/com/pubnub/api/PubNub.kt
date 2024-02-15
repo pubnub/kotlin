@@ -57,6 +57,7 @@ import com.pubnub.api.endpoints.push.RemoveChannelsFromPush
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.enums.PNReconnectionPolicy
+import com.pubnub.api.managers.AnnouncementCallback
 import com.pubnub.api.managers.BasePathManager
 import com.pubnub.api.managers.DuplicationManager
 import com.pubnub.api.managers.ListenerManager
@@ -86,6 +87,12 @@ import com.pubnub.api.models.consumer.objects.member.MemberInput
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
+import com.pubnub.api.models.consumer.pubsub.PNMessageResult
+import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
+import com.pubnub.api.models.consumer.pubsub.PNSignalResult
+import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
+import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
+import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.presence.Presence
 import com.pubnub.api.presence.eventengine.data.PresenceData
 import com.pubnub.api.presence.eventengine.effect.effectprovider.HeartbeatProviderImpl
@@ -107,6 +114,7 @@ import com.pubnub.api.v2.subscriptions.SubscriptionCursor
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.api.workers.SubscribeMessageProcessor
+import com.pubnub.internal.v2.callbacks.EventEmitterImpl
 import com.pubnub.internal.v2.entities.ChannelGroupImpl
 import com.pubnub.internal.v2.entities.ChannelGroupName
 import com.pubnub.internal.v2.entities.ChannelImpl
@@ -161,6 +169,7 @@ class PubNub internal constructor(
     internal val tokenManager: TokenManager = TokenManager()
     private val tokenParser: TokenParser = TokenParser()
     internal val listenerManager = ListenerManager(this)
+    private val eventEmitter = EventEmitterImpl(AnnouncementCallback.Phase.SUBSCRIPTION) { true }
     internal val subscriptionManager = SubscriptionManager(this, listenerManager)
     private val presenceData = PresenceData()
     private val subscribe = Subscribe.create(
@@ -188,6 +197,10 @@ class PubNub internal constructor(
         sendStateWithHeartbeat = configuration.maintainPresenceState,
         executorService = executorService
     )
+
+    init {
+        listenerManager.addAnnouncementCallback(eventEmitter)
+    }
 
     //endregion
 
@@ -2097,6 +2110,7 @@ class PubNub internal constructor(
 
     /**
      * Add a legacy listener for both client status and events.
+     * Use fun addListener(listener: EventListener) and fun addListener(listener: StatusListener) instead if possible.
      *
      * @param listener The listener to be added.
      */
@@ -2137,6 +2151,13 @@ class PubNub internal constructor(
     override fun removeAllListeners() {
         listenerManager.removeAllListeners()
     }
+
+    override var onMessage: ((PNMessageResult) -> Unit)? by eventEmitter::onMessage
+    override var onPresence: ((PNPresenceEventResult) -> Unit)? by eventEmitter::onPresence
+    override var onSignal: ((PNSignalResult) -> Unit)? by eventEmitter::onSignal
+    override var onMessageAction: ((PNMessageActionResult) -> Unit)? by eventEmitter::onMessageAction
+    override var onObjects: ((PNObjectEventResult) -> Unit)? by eventEmitter::onObjects
+    override var onFile: ((PNFileEventResult) -> Unit)? by eventEmitter::onFile
 
     //region Encryption
     /**

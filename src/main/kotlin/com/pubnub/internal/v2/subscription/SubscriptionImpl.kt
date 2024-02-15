@@ -5,6 +5,12 @@ import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.managers.AnnouncementCallback
 import com.pubnub.api.managers.AnnouncementEnvelope
 import com.pubnub.api.models.consumer.pubsub.PNEvent
+import com.pubnub.api.models.consumer.pubsub.PNMessageResult
+import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
+import com.pubnub.api.models.consumer.pubsub.PNSignalResult
+import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
+import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
+import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.v2.callbacks.EventEmitter
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.subscriptions.Subscription
@@ -34,8 +40,6 @@ internal class SubscriptionImpl(
             field = newValue
         }
 
-    private val eventEmitter = EventEmitterImpl(AnnouncementCallback.Phase.SUBSCRIPTION, ::accepts)
-
     internal val channels = channels.toSet()
     internal val channelGroups = channelGroups.toSet()
 
@@ -49,6 +53,16 @@ internal class SubscriptionImpl(
      */
     private var lastTimetoken: Long = 0L
 
+    private val eventEmitter = EventEmitterImpl(AnnouncementCallback.Phase.SUBSCRIPTION, ::accepts)
+    private fun accepts(envelope: AnnouncementEnvelope<out PNEvent>): Boolean {
+        val event = envelope.event
+        val accepted = isActive && filters.all { filter -> filter.predicate(event) } && checkAndUpdateTimetoken(event)
+        if (accepted) {
+            envelope.acceptedBy += this@SubscriptionImpl
+        }
+        return accepted
+    }
+
     private fun checkAndUpdateTimetoken(result: PNEvent): Boolean {
         result.timetoken?.let { resultTimetoken ->
             if (resultTimetoken <= lastTimetoken) {
@@ -60,14 +74,12 @@ internal class SubscriptionImpl(
         } ?: return false
     }
 
-    private fun accepts(envelope: AnnouncementEnvelope<out PNEvent>): Boolean {
-        val event = envelope.event
-        val accepted = isActive && filters.all { filter -> filter.predicate(event) } && checkAndUpdateTimetoken(event)
-        if (accepted) {
-            envelope.acceptedBy += this@SubscriptionImpl
-        }
-        return accepted
-    }
+    override var onMessage: ((PNMessageResult) -> Unit)? by eventEmitter::onMessage
+    override var onPresence: ((PNPresenceEventResult) -> Unit)? by eventEmitter::onPresence
+    override var onSignal: ((PNSignalResult) -> Unit)? by eventEmitter::onSignal
+    override var onMessageAction: ((PNMessageActionResult) -> Unit)? by eventEmitter::onMessageAction
+    override var onObjects: ((PNObjectEventResult) -> Unit)? by eventEmitter::onObjects
+    override var onFile: ((PNFileEventResult) -> Unit)? by eventEmitter::onFile
 
     override fun plus(subscription: Subscription): SubscriptionSet {
         return pubnub.subscriptionSetOf(setOf(this, subscription))
