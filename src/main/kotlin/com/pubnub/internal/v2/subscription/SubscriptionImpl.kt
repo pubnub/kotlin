@@ -74,12 +74,12 @@ internal class SubscriptionImpl(
         } ?: return false
     }
 
-    override var onMessage: ((PubNub, PNMessageResult) -> Unit)? by eventEmitter::onMessage
-    override var onPresence: ((PubNub, PNPresenceEventResult) -> Unit)? by eventEmitter::onPresence
-    override var onSignal: ((PubNub, PNSignalResult) -> Unit)? by eventEmitter::onSignal
-    override var onMessageAction: ((PubNub, PNMessageActionResult) -> Unit)? by eventEmitter::onMessageAction
-    override var onObjects: ((PubNub, PNObjectEventResult) -> Unit)? by eventEmitter::onObjects
-    override var onFile: ((PubNub, PNFileEventResult) -> Unit)? by eventEmitter::onFile
+    override var onMessage: ((PNMessageResult) -> Unit)? by eventEmitter::onMessage
+    override var onPresence: ((PNPresenceEventResult) -> Unit)? by eventEmitter::onPresence
+    override var onSignal: ((PNSignalResult) -> Unit)? by eventEmitter::onSignal
+    override var onMessageAction: ((PNMessageActionResult) -> Unit)? by eventEmitter::onMessageAction
+    override var onObjects: ((PNObjectEventResult) -> Unit)? by eventEmitter::onObjects
+    override var onFile: ((PNFileEventResult) -> Unit)? by eventEmitter::onFile
 
     override fun plus(subscription: Subscription): SubscriptionSet {
         return pubnub.subscriptionSetOf(setOf(this, subscription))

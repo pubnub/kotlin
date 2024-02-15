@@ -41,12 +41,12 @@ internal class SubscriptionSetImpl(
         pubnub.listenerManager.addAnnouncementCallback(eventEmitter)
     }
 
-    override var onMessage: ((PubNub, PNMessageResult) -> Unit)? by eventEmitter::onMessage
-    override var onPresence: ((PubNub, PNPresenceEventResult) -> Unit)? by eventEmitter::onPresence
-    override var onSignal: ((PubNub, PNSignalResult) -> Unit)? by eventEmitter::onSignal
-    override var onMessageAction: ((PubNub, PNMessageActionResult) -> Unit)? by eventEmitter::onMessageAction
-    override var onObjects: ((PubNub, PNObjectEventResult) -> Unit)? by eventEmitter::onObjects
-    override var onFile: ((PubNub, PNFileEventResult) -> Unit)? by eventEmitter::onFile
+    override var onMessage: ((PNMessageResult) -> Unit)? by eventEmitter::onMessage
+    override var onPresence: ((PNPresenceEventResult) -> Unit)? by eventEmitter::onPresence
+    override var onSignal: ((PNSignalResult) -> Unit)? by eventEmitter::onSignal
+    override var onMessageAction: ((PNMessageActionResult) -> Unit)? by eventEmitter::onMessageAction
+    override var onObjects: ((PNObjectEventResult) -> Unit)? by eventEmitter::onObjects
+    override var onFile: ((PNFileEventResult) -> Unit)? by eventEmitter::onFile
 
     override fun add(subscription: Subscription) {
         require(subscription is SubscriptionImpl) { ERROR_SUBSCRIPTION_WRONG_CLASS }

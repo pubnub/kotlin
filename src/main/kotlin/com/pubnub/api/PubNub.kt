@@ -2110,6 +2110,7 @@ class PubNub internal constructor(
 
     /**
      * Add a legacy listener for both client status and events.
+     * Use fun addListener(listener: EventListener) and fun addListener(listener: StatusListener) instead if possible.
      *
      * @param listener The listener to be added.
      */
@@ -2151,12 +2152,12 @@ class PubNub internal constructor(
         listenerManager.removeAllListeners()
     }
 
-    override var onMessage: ((PubNub, PNMessageResult) -> Unit)? by eventEmitter::onMessage
-    override var onPresence: ((PubNub, PNPresenceEventResult) -> Unit)? by eventEmitter::onPresence
-    override var onSignal: ((PubNub, PNSignalResult) -> Unit)? by eventEmitter::onSignal
-    override var onMessageAction: ((PubNub, PNMessageActionResult) -> Unit)? by eventEmitter::onMessageAction
-    override var onObjects: ((PubNub, PNObjectEventResult) -> Unit)? by eventEmitter::onObjects
-    override var onFile: ((PubNub, PNFileEventResult) -> Unit)? by eventEmitter::onFile
+    override var onMessage: ((PNMessageResult) -> Unit)? by eventEmitter::onMessage
+    override var onPresence: ((PNPresenceEventResult) -> Unit)? by eventEmitter::onPresence
+    override var onSignal: ((PNSignalResult) -> Unit)? by eventEmitter::onSignal
+    override var onMessageAction: ((PNMessageActionResult) -> Unit)? by eventEmitter::onMessageAction
+    override var onObjects: ((PNObjectEventResult) -> Unit)? by eventEmitter::onObjects
+    override var onFile: ((PNFileEventResult) -> Unit)? by eventEmitter::onFile
 
     //region Encryption
     /**

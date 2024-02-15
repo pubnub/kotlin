@@ -638,8 +638,8 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
 
         val subscription: Subscription = chan01.subscription()
 
-        val onMessage: (PubNub, PNMessageResult) -> Unit = { _, _ -> successMessage.incrementAndGet() }
-        val onSignal: (PubNub, PNSignalResult) -> Unit = { _, _ -> successSignal.incrementAndGet() }
+        val onMessage: (PNMessageResult) -> Unit = { successMessage.incrementAndGet() }
+        val onSignal: (PNSignalResult) -> Unit = { successSignal.incrementAndGet() }
 
         subscription.onMessage = onMessage
         subscription.onSignal = onSignal
@@ -678,8 +678,8 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         val subscriptionSetOf: SubscriptionSet = pubnub.subscriptionSetOf(
             setOf(sub02, sub01)
         )
-        subscriptionSetOf.onMessage = { _, _ -> successMessage.incrementAndGet() }
-        subscriptionSetOf.onSignal = { _, _ -> successSignal.incrementAndGet() }
+        subscriptionSetOf.onMessage = { successMessage.incrementAndGet() }
+        subscriptionSetOf.onSignal = { successSignal.incrementAndGet() }
         subscriptionSetOf.subscribe()
 
         Thread.sleep(2000)
@@ -713,8 +713,8 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         val channel = randomChannel()
         val expectedMessage = randomValue()
 
-        pubnub.onMessage = { _, _ -> successMessagesCount.incrementAndGet() }
-        pubnub.onSignal = { _, _ -> successSignalCont.incrementAndGet() }
+        pubnub.onMessage = { successMessagesCount.incrementAndGet() }
+        pubnub.onSignal = { successSignalCont.incrementAndGet() }
 
         pubnub.subscribeToBlocking(channel)
 

@@ -22,31 +22,31 @@ internal class EventEmitterImpl(
 
     private val listeners = CopyOnWriteArraySet<EventListener>()
 
-    override var onMessage: ((PubNub, PNMessageResult) -> Unit)? = null
-    override var onPresence: ((PubNub, PNPresenceEventResult) -> Unit)? = null
-    override var onSignal: ((PubNub, PNSignalResult) -> Unit)? = null
-    override var onMessageAction: ((PubNub, PNMessageActionResult) -> Unit)? = null
-    override var onObjects: ((PubNub, PNObjectEventResult) -> Unit)? = null
-    override var onFile: ((PubNub, PNFileEventResult) -> Unit)? = null
+    override var onMessage: ((PNMessageResult) -> Unit)? = null
+    override var onPresence: ((PNPresenceEventResult) -> Unit)? = null
+    override var onSignal: ((PNSignalResult) -> Unit)? = null
+    override var onMessageAction: ((PNMessageActionResult) -> Unit)? = null
+    override var onObjects: ((PNObjectEventResult) -> Unit)? = null
+    override var onFile: ((PNFileEventResult) -> Unit)? = null
 
     private val pluggableListener = object : EventListener {
         override fun message(pubnub: PubNub, result: PNMessageResult) {
-            onMessage?.invoke(pubnub, result)
+            onMessage?.invoke(result)
         }
         override fun presence(pubnub: PubNub, result: PNPresenceEventResult) {
-            onPresence?.invoke(pubnub, result)
+            onPresence?.invoke(result)
         }
         override fun signal(pubnub: PubNub, result: PNSignalResult) {
-            onSignal?.invoke(pubnub, result)
+            onSignal?.invoke(result)
         }
         override fun messageAction(pubnub: PubNub, result: PNMessageActionResult) {
-            onMessageAction?.invoke(pubnub, result)
+            onMessageAction?.invoke(result)
         }
         override fun objects(pubnub: PubNub, result: PNObjectEventResult) {
-            onObjects?.invoke(pubnub, result)
+            onObjects?.invoke(result)
         }
         override fun file(pubnub: PubNub, result: PNFileEventResult) {
-            onFile?.invoke(pubnub, result)
+            onFile?.invoke(result)
         }
     }.apply {
         addListener(this)
