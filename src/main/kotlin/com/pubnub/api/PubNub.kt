@@ -2481,10 +2481,12 @@ class PubNub internal constructor(
                     }
                 }
             }
-            unsubscribeInternal(
-                channels = channelsToUnsubscribe.map(ChannelName::id),
-                channelGroups = groupsToUnsubscribe.map(ChannelGroupName::id)
-            )
+            if (channelsToUnsubscribe.isNotEmpty() || groupsToUnsubscribe.isNotEmpty()) {
+                unsubscribeInternal(
+                    channels = channelsToUnsubscribe.map(ChannelName::id),
+                    channelGroups = groupsToUnsubscribe.map(ChannelGroupName::id)
+                )
+            }
         }
     }
 }
