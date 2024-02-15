@@ -1,6 +1,6 @@
 package com.pubnub.api.v2.callbacks
 
-import com.pubnub.internal.callbacks.Listener
+import com.pubnub.api.callbacks.Listener
 import com.pubnub.internal.v2.callbacks.EventListener
 
 interface EventEmitter {

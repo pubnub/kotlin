@@ -1,5 +1,6 @@
 package com.pubnub.internal.v2.subscription
 
+import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.v2.callbacks.EventEmitter
 import com.pubnub.api.v2.subscriptions.Subscription
@@ -7,7 +8,6 @@ import com.pubnub.api.v2.subscriptions.SubscriptionCursor
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.internal.BasePubNub
-import com.pubnub.internal.callbacks.Listener
 import com.pubnub.internal.managers.AnnouncementCallback
 import com.pubnub.internal.managers.AnnouncementEnvelope
 import com.pubnub.internal.v2.callbacks.EventEmitterImpl

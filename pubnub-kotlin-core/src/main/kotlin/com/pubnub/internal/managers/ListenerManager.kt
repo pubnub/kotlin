@@ -1,5 +1,6 @@
 package com.pubnub.internal.managers
 
+import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
@@ -8,7 +9,6 @@ import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.internal.BasePubNub
-import com.pubnub.internal.callbacks.Listener
 import com.pubnub.internal.callbacks.SubscribeCallback
 import com.pubnub.internal.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.internal.subscribe.eventengine.effect.MessagesConsumer

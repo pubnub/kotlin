@@ -2,10 +2,9 @@ package com.pubnub.api.models.consumer.history
 
 import com.google.gson.JsonElement
 import com.pubnub.api.PubNubError
-import com.pubnub.internal.endpoints.History
 
 /**
- * Result of the [PubNubImpl.history] operation.
+ * Result of a History operation.
  *
  * @property messages List of messages as instances of [PNHistoryItemResult].
  * @property startTimetoken Start timetoken of the returned list of messages.

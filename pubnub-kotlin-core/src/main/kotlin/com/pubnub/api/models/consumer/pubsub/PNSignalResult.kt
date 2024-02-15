@@ -1,10 +1,9 @@
 package com.pubnub.api.models.consumer.pubsub
 
 import com.google.gson.JsonElement
-import com.pubnub.internal.callbacks.SubscribeCallback
 
 /**
- * Wrapper around a signal received in [SubscribeCallback.signal].
+ * Wrapper around a received signal.
  */
 data class PNSignalResult internal constructor(
     private val basePubSubResult: PubSubResult,

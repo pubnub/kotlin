@@ -272,36 +272,36 @@ class EndpointTest : BaseTest() {
     @Test
     fun testDefaultTimeoutValues() {
         val p = TestPubNub(PNConfiguration(userId = UserId(BasePubNub.generateUUID())))
-        assertEquals(300, p.configuration.presenceTimeout)
-        assertEquals(0, p.configuration.heartbeatInterval)
+        assertEquals(300, p.pubNubImpl.configuration.presenceTimeout)
+        assertEquals(0, p.pubNubImpl.configuration.heartbeatInterval)
         p.forceDestroy()
     }
 
     @Test
     fun testCustomTimeoutValues1() {
         val p = TestPubNub(PNConfiguration(userId = UserId(BasePubNub.generateUUID())))
-        p.configuration.presenceTimeout = 100
-        assertEquals(100, p.configuration.presenceTimeout)
-        assertEquals(49, p.configuration.heartbeatInterval)
+        p.pubNubImpl.configuration.presenceTimeout = 100
+        assertEquals(100, p.pubNubImpl.configuration.presenceTimeout)
+        assertEquals(49, p.pubNubImpl.configuration.heartbeatInterval)
         p.forceDestroy()
     }
 
     @Test
     fun testCustomTimeoutValues2() {
         val p = TestPubNub(PNConfiguration(userId = UserId(BasePubNub.generateUUID())))
-        p.configuration.heartbeatInterval = 100
-        assertEquals(300, p.configuration.presenceTimeout)
-        assertEquals(100, p.configuration.heartbeatInterval)
+        p.pubNubImpl.configuration.heartbeatInterval = 100
+        assertEquals(300, p.pubNubImpl.configuration.presenceTimeout)
+        assertEquals(100, p.pubNubImpl.configuration.heartbeatInterval)
         p.forceDestroy()
     }
 
     @Test
     fun testCustomTimeoutValues3() {
         val p = TestPubNub(PNConfiguration(userId = UserId(BasePubNub.generateUUID())))
-        p.configuration.heartbeatInterval = 40
-        p.configuration.presenceTimeout = 50
-        assertEquals(50, p.configuration.presenceTimeout)
-        assertEquals(24, p.configuration.heartbeatInterval)
+        p.pubNubImpl.configuration.heartbeatInterval = 40
+        p.pubNubImpl.configuration.presenceTimeout = 50
+        assertEquals(50, p.pubNubImpl.configuration.presenceTimeout)
+        assertEquals(24, p.pubNubImpl.configuration.heartbeatInterval)
         p.forceDestroy()
     }
 

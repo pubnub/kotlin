@@ -1,9 +1,7 @@
 package com.pubnub.api.models.consumer.message_actions
 
-import com.pubnub.internal.PubNubImpl
-
 /**
- * Result for the [PubNubImpl.addMessageAction] API operation.
+ * Result for the AddMessageAction API operation.
  *
  * Essentially a wrapper around [PNMessageAction].
  */

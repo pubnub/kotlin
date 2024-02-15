@@ -1,11 +1,9 @@
 package com.pubnub.api.models.consumer.pubsub
 
 import com.google.gson.JsonElement
-import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.callbacks.SubscribeCallback
 
 /**
- * Wrapper around a presence event received in [SubscribeCallback.presence].
+ * Wrapper around a presence event.
  *
  * @property event The presence event. Could be `join`, `leave`, `state-change` or `interval`.
  * @property uuid The UUID which the presence event is related to.
@@ -21,7 +19,7 @@ import com.pubnub.internal.callbacks.SubscribeCallback
  * This needs to be enabled under **presence_deltas** at the Admin Dashboard.
  * @property timeout List of users that have *timed out* of the `channel` if the `event` is an `interval`.
  * This needs to be enabled under **presence_deltas** at the Admin Dashboard.
- * @property hereNowRefresh Indicates to the user that a manual [PubNubImpl.hereNow] should be called to get
+ * @property hereNowRefresh Indicates to the user that a manual HereNow should be called to get
  * the complete list of users present in the channel.
  * @property userMetadata User metadata if any.
  */

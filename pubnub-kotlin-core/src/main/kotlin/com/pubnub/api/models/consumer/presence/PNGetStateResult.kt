@@ -1,10 +1,9 @@
 package com.pubnub.api.models.consumer.presence
 
 import com.google.gson.JsonElement
-import com.pubnub.internal.PubNubImpl
 
 /**
- * Result of the [PubNubImpl.getPresenceState] operation.
+ * Result of the GetPresenceState operation.
  *
  * @property stateByUUID Map of UUIDs and the user states.
  */

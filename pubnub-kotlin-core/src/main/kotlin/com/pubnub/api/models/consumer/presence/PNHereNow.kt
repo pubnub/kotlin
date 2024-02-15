@@ -1,14 +1,12 @@
 package com.pubnub.api.models.consumer.presence
 
 import com.google.gson.JsonElement
-import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.endpoints.presence.HereNow
 
 /**
- * Result of the [PubNubImpl.hereNow] operation.
+ * Result of the HereNow operation.
  *
- * @property totalChannels Total number channels matching the associated [PubNubImpl.hereNow] call.
- * @property totalOccupancy Total occupancy matching the associated [PubNubImpl.hereNow] call.
+ * @property totalChannels Total number channels matching the associated HereNow call.
+ * @property totalOccupancy Total occupancy matching the associated HereNow call.
  * @property channels A map with values of [PNHereNowChannelData] for each channel.
  */
 class PNHereNowResult internal constructor(
@@ -31,10 +29,10 @@ class PNHereNowChannelData internal constructor(
 )
 
 /**
- * Wrapper class representing a UUID (user) within the means of [PubNubImpl.hereNow] calls.
+ * Wrapper class representing a UUID (user) within the means of HereNow calls.
  *
- * @property uuid UUID of the user if requested via [HereNow.includeUUIDs].
- * @property state Presence State of the user if requested via [HereNow.includeState].
+ * @property uuid UUID of the user if requested via HereNow.includeUUIDs.
+ * @property state Presence State of the user if requested via HereNow.includeState.
  */
 class PNHereNowOccupantData internal constructor(
     val uuid: String,

@@ -1,8 +1,8 @@
 package com.pubnub.internal.v2.callbacks
 
+import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.internal.BasePubNub
-import com.pubnub.internal.callbacks.Listener
 
 interface StatusListener : Listener {
     /**

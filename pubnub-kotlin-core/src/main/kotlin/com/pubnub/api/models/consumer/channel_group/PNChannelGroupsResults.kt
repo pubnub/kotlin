@@ -1,24 +1,22 @@
 package com.pubnub.api.models.consumer.channel_group
 
-import com.pubnub.internal.PubNubImpl
-
 /**
- * Result of the [PubNubImpl.addChannelsToChannelGroup] operation.
+ * Result of the AddChannelsToChannelGroup operation.
  */
 class PNChannelGroupsAddChannelResult
 
 /**
- * Result of the [PubNubImpl.deleteChannelGroup] operation.
+ * Result of the DeleteChannelGroup operation.
  */
 class PNChannelGroupsDeleteGroupResult
 
 /**
- * Result of the [PubNubImpl.removeChannelsFromChannelGroup] operation.
+ * Result of the RemoveChannelsFromChannelGroup operation.
  */
 class PNChannelGroupsRemoveChannelResult
 
 /**
- * Result of the [PubNubImpl.listChannelsForChannelGroup] operation.
+ * Result of the ListChannelsForChannelGroup operation.
  *
  * @property channels List of channels belonging to a channel group.
  */
@@ -27,7 +25,7 @@ class PNChannelGroupsAllChannelsResult internal constructor(
 )
 
 /**
- * Result of the [PubNubImpl.listAllChannelGroups] operation.
+ * Result of the ListAllChannelGroups operation.
  *
  * @property groups List of all channel groups
  */

@@ -19,7 +19,7 @@ class GetAllChannelMetadata internal constructor(getAllChannelMetadata: GetAllCh
     override fun convertAction(remoteAction: ExtendedRemoteAction<PNChannelMetadataArrayResult>): ExtendedRemoteAction<com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataArrayResult> {
         return MappingRemoteAction(
             remoteAction,
-            com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataArrayResult::from
+            PNChannelMetadataArrayResult::toApi
         )
     }
 }

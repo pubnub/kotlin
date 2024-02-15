@@ -2,10 +2,9 @@ package com.pubnub.api.models.consumer.pubsub
 
 import com.google.gson.JsonElement
 import com.pubnub.api.PubNubError
-import com.pubnub.internal.callbacks.SubscribeCallback
 
 /**
- * Wrapper around an actual message received in [SubscribeCallback.message].
+ * Wrapper around an actual message.
  */
 data class PNMessageResult internal constructor(
     private val basePubSubResult: PubSubResult,

@@ -1,6 +1,5 @@
 package com.pubnub.internal
 
-import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.internal.PNConfiguration.Companion.isValid
 import okhttp3.Request
@@ -225,12 +224,6 @@ internal object PubNubUtil {
                 .replace("+", "%20")
         }.run {
             replace("*", "%2A")
-        }
-    }
-
-    internal fun require(value: Boolean, error: PubNubError) {
-        if (!value) {
-            throw PubNubException(error)
         }
     }
 

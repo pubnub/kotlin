@@ -1,5 +1,6 @@
 package com.pubnub.internal
 
+import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.v2.callbacks.EventEmitter
 import com.pubnub.api.v2.callbacks.StatusEmitter
 import com.pubnub.api.v2.entities.Channel
@@ -10,7 +11,6 @@ import com.pubnub.api.v2.subscriptions.EmptyOptions
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
-import com.pubnub.internal.callbacks.Listener
 import com.pubnub.internal.callbacks.SubscribeCallback
 import com.pubnub.internal.managers.ListenerManager
 import com.pubnub.internal.subscribe.eventengine.configuration.EventEnginesConf
@@ -18,7 +18,7 @@ import com.pubnub.internal.v2.callbacks.EventListener
 import com.pubnub.internal.v2.callbacks.StatusListener
 import java.util.UUID
 
-abstract class BasePubNub internal constructor(val configuration: PNConfiguration, eventEnginesConf: EventEnginesConf) : EventEmitter, StatusEmitter {
+abstract class BasePubNub internal constructor(configuration: PNConfiguration, eventEnginesConf: EventEnginesConf) : EventEmitter, StatusEmitter {
     constructor(configuration: PNConfiguration) : this(configuration, EventEnginesConf())
 
     val listenerManager: ListenerManager = ListenerManager(this)

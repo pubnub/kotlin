@@ -4,11 +4,9 @@ import com.google.gson.JsonElement
 import com.pubnub.api.PubNubError
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.history.PNFetchMessageItem.Action
-import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.endpoints.FetchMessages
 
 /**
- * Result of the [PubNubImpl.fetchMessages] operation.
+ * Result of the FetchMessages operation.
  *
  * @property channels Map of channels and their respective lists of [PNFetchMessageItem].
  */
@@ -23,13 +21,13 @@ data class PNFetchMessagesResult(
  * @property uuid Publisher uuid. Is `null` if not requested.
  * @property message The actual message content.
  * @property timetoken Publish timetoken of the message.
- * @property meta Metadata of the message, if requested via [FetchMessages.includeMeta].
+ * @property meta Metadata of the message, if requested via `includeMeta`.
  * Is `null` if not requested, otherwise an empty string if requested but no associated metadata.
  * @property actions The message actions associated with the message.
- * Is `null` if not requested via [FetchMessages.includeMessageActions].
+ * Is `null` if not requested via `includeMessageActions`.
  * The key of the map is the action type. The value is another map,
  * which key is the actual value of the message action,
- * and the key being a list of actions, ie. a list of UUIDs which have posted such a message action.
+ * and the key being a list of actions, i.e. a list of UUIDs which have posted such a message action.
  * @see [Action]
  * @property messageType The message type associated with the item.
  * @property error The error associated with message retrieval, if any.
