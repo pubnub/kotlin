@@ -1,15 +1,15 @@
 package com.pubnub.internal.v2.callbacks
 
-import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
+import com.pubnub.api.v2.callbacks.BaseEventListener
 import com.pubnub.internal.BasePubNub
 import com.pubnub.internal.models.consumer.pubsub.objects.PNObjectEventResult
 
-interface EventListener : Listener {
+interface EventListener : BaseEventListener {
     /**
      * Receive messages at subscribed channels.
      *

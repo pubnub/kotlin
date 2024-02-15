@@ -1,6 +1,7 @@
 package com.pubnub.internal.v2.subscription
 
 import com.pubnub.api.callbacks.Listener
+import com.pubnub.api.v2.callbacks.BaseEventListener
 import com.pubnub.api.v2.callbacks.EventEmitter
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionCursor
@@ -9,7 +10,6 @@ import com.pubnub.internal.BasePubNub
 import com.pubnub.internal.managers.AnnouncementCallback
 import com.pubnub.internal.managers.AnnouncementEnvelope
 import com.pubnub.internal.v2.callbacks.EventEmitterImpl
-import com.pubnub.internal.v2.callbacks.EventListener
 import java.util.concurrent.CopyOnWriteArraySet
 
 private const val ERROR_SUBSCRIPTION_WRONG_CLASS =
@@ -66,7 +66,7 @@ internal class SubscriptionSetImpl(
         pubnub.listenerManager.removeAnnouncementCallback(eventEmitter)
     }
 
-    override fun addListener(listener: EventListener) {
+    override fun addListener(listener: BaseEventListener) {
         eventEmitter.addListener(listener)
     }
 

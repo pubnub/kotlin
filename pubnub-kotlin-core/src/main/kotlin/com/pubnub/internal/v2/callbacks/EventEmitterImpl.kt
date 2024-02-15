@@ -7,6 +7,7 @@ import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
+import com.pubnub.api.v2.callbacks.BaseEventListener
 import com.pubnub.api.v2.callbacks.EventEmitter
 import com.pubnub.internal.BasePubNub
 import com.pubnub.internal.managers.AnnouncementCallback
@@ -21,8 +22,8 @@ internal class EventEmitterImpl(
 
     private val listeners = CopyOnWriteArraySet<EventListener>()
 
-    override fun addListener(listener: EventListener) {
-        listeners.add(listener)
+    override fun addListener(listener: BaseEventListener) {
+        (listener as? EventListener)?.let { listeners.add(it) }
     }
 
     override fun removeListener(listener: Listener) {

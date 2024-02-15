@@ -2,6 +2,7 @@ package com.pubnub.internal.v2.subscription
 
 import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.models.consumer.pubsub.PNEvent
+import com.pubnub.api.v2.callbacks.BaseEventListener
 import com.pubnub.api.v2.callbacks.EventEmitter
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionCursor
@@ -11,7 +12,6 @@ import com.pubnub.internal.BasePubNub
 import com.pubnub.internal.managers.AnnouncementCallback
 import com.pubnub.internal.managers.AnnouncementEnvelope
 import com.pubnub.internal.v2.callbacks.EventEmitterImpl
-import com.pubnub.internal.v2.callbacks.EventListener
 import com.pubnub.internal.v2.entities.ChannelGroupName
 import com.pubnub.internal.v2.entities.ChannelName
 
@@ -97,7 +97,7 @@ internal class SubscriptionImpl(
         unsubscribe()
     }
 
-    override fun addListener(listener: EventListener) {
+    override fun addListener(listener: BaseEventListener) {
         eventEmitter.addListener(listener)
     }
 

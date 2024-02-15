@@ -1,7 +1,6 @@
 package com.pubnub.api.v2.callbacks
 
 import com.pubnub.api.callbacks.Listener
-import com.pubnub.internal.v2.callbacks.StatusListener
 
 interface StatusEmitter {
     /**
@@ -9,7 +8,7 @@ interface StatusEmitter {
      *
      * @param listener The listener to be added.
      */
-    fun addListener(listener: StatusListener)
+    fun addListener(listener: BaseStatusListener)
 
     /**
      * Remove a listener.

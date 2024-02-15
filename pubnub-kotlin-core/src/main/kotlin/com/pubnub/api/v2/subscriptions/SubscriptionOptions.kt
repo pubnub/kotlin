@@ -40,8 +40,8 @@ open class SubscriptionOptions internal constructor(
         fun receivePresenceEvents(): SubscriptionOptions = ReceivePresenceEventsImpl
 
         /**
-         * Create a filter for messages delivered to [com.pubnub.api.v2.callbacks.EventListener].
-         * Please see [com.pubnub.api.v2.callbacks.EventListener] for available events.
+         * Create a filter for messages delivered to [com.pubnub.api.v2.callbacks.BaseEventListener].
+         * Please see [com.pubnub.api.v2.callbacks.BaseEventListener] for available events.
          */
         @JvmStatic
         fun filter(predicate: (PNEvent) -> Boolean): SubscriptionOptions = FilterImpl(predicate)

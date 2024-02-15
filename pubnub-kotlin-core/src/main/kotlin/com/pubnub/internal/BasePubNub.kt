@@ -1,6 +1,8 @@
 package com.pubnub.internal
 
 import com.pubnub.api.callbacks.Listener
+import com.pubnub.api.v2.callbacks.BaseEventListener
+import com.pubnub.api.v2.callbacks.BaseStatusListener
 import com.pubnub.api.v2.callbacks.EventEmitter
 import com.pubnub.api.v2.callbacks.StatusEmitter
 import com.pubnub.api.v2.entities.Channel
@@ -14,8 +16,6 @@ import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.internal.callbacks.SubscribeCallback
 import com.pubnub.internal.managers.ListenerManager
 import com.pubnub.internal.subscribe.eventengine.configuration.EventEnginesConf
-import com.pubnub.internal.v2.callbacks.EventListener
-import com.pubnub.internal.v2.callbacks.StatusListener
 import java.util.UUID
 
 abstract class BasePubNub internal constructor(configuration: PNConfiguration, eventEnginesConf: EventEnginesConf) : EventEmitter, StatusEmitter {
@@ -153,7 +153,7 @@ abstract class BasePubNub internal constructor(configuration: PNConfiguration, e
      *
      * @param listener The listener to be added.
      */
-    override fun addListener(listener: StatusListener) {
+    override fun addListener(listener: BaseStatusListener) {
         listenerManager.addListener(listener)
     }
 
@@ -162,7 +162,7 @@ abstract class BasePubNub internal constructor(configuration: PNConfiguration, e
      *
      * @param listener The listener to be added.
      */
-    override fun addListener(listener: EventListener) {
+    override fun addListener(listener: BaseEventListener) {
         listenerManager.addListener(listener)
     }
 

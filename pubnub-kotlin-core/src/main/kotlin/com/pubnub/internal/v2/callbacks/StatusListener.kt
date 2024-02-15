@@ -1,10 +1,10 @@
 package com.pubnub.internal.v2.callbacks
 
-import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.models.consumer.PNStatus
+import com.pubnub.api.v2.callbacks.BaseStatusListener
 import com.pubnub.internal.BasePubNub
 
-interface StatusListener : Listener {
+interface StatusListener : BaseStatusListener {
     /**
      * Receive status updates from the PubNub client.
      *

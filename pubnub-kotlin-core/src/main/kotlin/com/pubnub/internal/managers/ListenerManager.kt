@@ -8,6 +8,8 @@ import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
+import com.pubnub.api.v2.callbacks.BaseEventListener
+import com.pubnub.api.v2.callbacks.BaseStatusListener
 import com.pubnub.internal.BasePubNub
 import com.pubnub.internal.callbacks.SubscribeCallback
 import com.pubnub.internal.models.consumer.pubsub.objects.PNObjectEventResult
@@ -40,6 +42,14 @@ class ListenerManager(val pubnub: BasePubNub) : MessagesConsumer, StatusConsumer
     private val announcementCallbacks = CopyOnWriteArrayList<AnnouncementCallback>()
     private val subscriptionCallbacks get() = announcementCallbacks.filter { it.phase == AnnouncementCallback.Phase.SUBSCRIPTION }
     private val setCallbacks get() = announcementCallbacks.filter { it.phase == AnnouncementCallback.Phase.SET }
+
+    fun addListener(listener: BaseStatusListener) {
+        listeners.add(listener)
+    }
+
+    fun addListener(listener: BaseEventListener) {
+        listeners.add(listener)
+    }
 
     internal fun addAnnouncementCallback(listener: AnnouncementCallback) {
         announcementCallbacks.add(listener)
@@ -93,14 +103,6 @@ class ListenerManager(val pubnub: BasePubNub) : MessagesConsumer, StatusConsumer
         val envelope = AnnouncementEnvelope(pnFileEventResult)
         subscriptionCallbacks.forEach { it.file(pubnub, envelope) }
         setCallbacks.forEach { it.file(pubnub, envelope) }
-    }
-
-    fun addListener(listener: StatusListener) {
-        listeners.add(listener)
-    }
-
-    fun addListener(listener: EventListener) {
-        listeners.add(listener)
     }
 }
 

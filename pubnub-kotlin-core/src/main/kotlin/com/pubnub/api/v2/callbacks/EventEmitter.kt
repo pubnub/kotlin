@@ -1,7 +1,6 @@
 package com.pubnub.api.v2.callbacks
 
 import com.pubnub.api.callbacks.Listener
-import com.pubnub.internal.v2.callbacks.EventListener
 
 interface EventEmitter {
     /**
@@ -9,7 +8,7 @@ interface EventEmitter {
      *
      * @param listener The listener to be added.
      */
-    fun addListener(listener: EventListener)
+    fun addListener(listener: BaseEventListener)
 
     /**
      * Remove a listener.
