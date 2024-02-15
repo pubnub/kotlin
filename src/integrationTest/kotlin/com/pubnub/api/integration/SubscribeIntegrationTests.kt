@@ -634,7 +634,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         val successMessage = AtomicInteger(0)
         val successSignal = AtomicInteger(0)
         val expectedMessage = randomValue()
-        val chan01 = pubnub.channel(randomChannel() + "01")
+        val chan01 = pubnub.channel(randomChannel())
 
         val subscription: Subscription = chan01.subscription()
 
@@ -651,7 +651,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         pubnub.publish(chan01.name, expectedMessage).sync()
         pubnub.signal(chan01.name, expectedMessage).sync()
 
-        Thread.sleep(2000)
+        Thread.sleep(1000)
         assertEquals(1, successMessage.get())
         assertEquals(1, successSignal.get())
 
@@ -660,7 +660,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         pubnub.signal(chan01.name, expectedMessage).sync()
         pubnub.publish(chan01.name, expectedMessage).sync()
 
-        Thread.sleep(2000)
+        Thread.sleep(1000)
         assertEquals(1, successMessage.get())
         assertEquals(1, successSignal.get())
     }
@@ -670,8 +670,8 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         val successMessage = AtomicInteger(0)
         val successSignal = AtomicInteger(0)
         val expectedMessage = randomValue()
-        val chan01 = pubnub.channel(randomChannel() + "01")
-        val chan02 = pubnub.channel(randomChannel() + "02")
+        val chan01 = pubnub.channel(randomChannel())
+        val chan02 = pubnub.channel(randomChannel())
 
         val sub01 = chan01.subscription()
         val sub02 = chan02.subscription()
@@ -691,8 +691,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         pubnub.signal(chan01.name, expectedMessage).sync()
         pubnub.signal(chan02.name, expectedMessage).sync()
 
-        Thread.sleep(2000)
-
+        Thread.sleep(1000)
         assertEquals(4, successMessage.get())
         assertEquals(2, successSignal.get())
 
@@ -702,6 +701,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         pubnub.publish(chan01.name, expectedMessage).sync()
         pubnub.signal(chan02.name, expectedMessage).sync()
 
+        Thread.sleep(1000)
         assertEquals(4, successMessage.get())
         assertEquals(2, successSignal.get())
     }
@@ -716,14 +716,12 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         pubnub.onMessage = { _, _ -> successMessagesCount.incrementAndGet() }
         pubnub.onSignal = { _, _ -> successSignalCont.incrementAndGet() }
 
-        pubnub.subscribe(listOf(channel))
-        Thread.sleep(2000)
+        pubnub.subscribeToBlocking(channel)
 
         pubnub.publish(channel, expectedMessage).sync()
         pubnub.signal(channel, expectedMessage).sync()
 
-        Thread.sleep(2000)
-
+        Thread.sleep(1000)
         assertEquals(1, successMessagesCount.get())
         assertEquals(1, successSignalCont.get())
 
@@ -731,13 +729,10 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         pubnub.onSignal = null
         pubnub.onPresence = null
 
-        Thread.sleep(2000)
-
         pubnub.publish(channel, expectedMessage).sync()
         pubnub.signal(channel, expectedMessage).sync()
 
-        Thread.sleep(2000)
-
+        Thread.sleep(1000)
         assertEquals(1, successMessagesCount.get())
         assertEquals(1, successSignalCont.get())
     }

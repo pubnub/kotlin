@@ -22,110 +22,34 @@ internal class EventEmitterImpl(
 
     private val listeners = CopyOnWriteArraySet<EventListener>()
 
-    @Volatile
-    private var onMessageListener: Listener? = null
-
-    @Volatile
-    private var onPresenceListener: Listener? = null
-
-    @Volatile
-    private var onSignalListener: Listener? = null
-
-    @Volatile
-    private var onMessageActionListener: Listener? = null
-
-    @Volatile
-    private var onObjectListener: Listener? = null
-
-    @Volatile
-    private var onFileListener: Listener? = null
-
     override var onMessage: ((PubNub, PNMessageResult) -> Unit)? = null
-        @Synchronized
-        set(value) {
-            onMessageListener = handleListenerRegistration(onMessageListener, value) { pubNub, result ->
-                (result as? PNMessageResult)?.let { value?.invoke(pubNub, it) }
-            }
-        }
-
     override var onPresence: ((PubNub, PNPresenceEventResult) -> Unit)? = null
-        @Synchronized
-        set(value) {
-            onPresenceListener = handleListenerRegistration(onPresenceListener, value) { pubNub, result ->
-                (result as? PNPresenceEventResult)?.let { value?.invoke(pubNub, it) }
-            }
-        }
-
     override var onSignal: ((PubNub, PNSignalResult) -> Unit)? = null
-        @Synchronized
-        set(value) {
-            onSignalListener = handleListenerRegistration(onSignalListener, value) { pubNub, result ->
-                (result as? PNSignalResult)?.let { value?.invoke(pubNub, it) }
-            }
-        }
-
     override var onMessageAction: ((PubNub, PNMessageActionResult) -> Unit)? = null
-        @Synchronized
-        set(value) {
-            onMessageActionListener = handleListenerRegistration(onMessageActionListener, value) { pubNub, result ->
-                (result as? PNMessageActionResult)?.let { value?.invoke(pubNub, it) }
-            }
-        }
-
     override var onObjects: ((PubNub, PNObjectEventResult) -> Unit)? = null
-        @Synchronized
-        set(value) {
-            onObjectListener = handleListenerRegistration(onObjectListener, value) { pubNub, result ->
-                (result as? PNObjectEventResult)?.let { value?.invoke(pubNub, it) }
-            }
-        }
-
     override var onFile: ((PubNub, PNFileEventResult) -> Unit)? = null
-        @Synchronized
-        set(value) {
-            onFileListener = handleListenerRegistration(onFileListener, value) { pubNub, result ->
-                (result as? PNFileEventResult)?.let { value?.invoke(pubNub, it) }
-            }
+
+    private val pluggableListener = object : EventListener {
+        override fun message(pubnub: PubNub, result: PNMessageResult) {
+            onMessage?.invoke(pubnub, result)
         }
-
-    private fun <T> handleListenerRegistration(
-        currentListener: Listener?,
-        newValue: ((PubNub, T) -> Unit)?,
-        eventHandler: (PubNub, Any) -> Unit
-    ): EventListener? {
-        currentListener?.let { removeListener(it) }
-
-        return if (newValue == null) {
-            null
-        } else {
-            val newEventListener = object : EventListener {
-                override fun message(pubnub: PubNub, result: PNMessageResult) {
-                    eventHandler(pubnub, result)
-                }
-
-                override fun presence(pubnub: PubNub, result: PNPresenceEventResult) {
-                    eventHandler(pubnub, result)
-                }
-
-                override fun signal(pubnub: PubNub, result: PNSignalResult) {
-                    eventHandler(pubnub, result)
-                }
-
-                override fun messageAction(pubnub: PubNub, result: PNMessageActionResult) {
-                    eventHandler(pubnub, result)
-                }
-
-                override fun objects(pubnub: PubNub, result: PNObjectEventResult) {
-                    eventHandler(pubnub, result)
-                }
-
-                override fun file(pubnub: PubNub, result: PNFileEventResult) {
-                    eventHandler(pubnub, result)
-                }
-            }
-            addListener(newEventListener)
-            newEventListener
+        override fun presence(pubnub: PubNub, result: PNPresenceEventResult) {
+            onPresence?.invoke(pubnub, result)
         }
+        override fun signal(pubnub: PubNub, result: PNSignalResult) {
+            onSignal?.invoke(pubnub, result)
+        }
+        override fun messageAction(pubnub: PubNub, result: PNMessageActionResult) {
+            onMessageAction?.invoke(pubnub, result)
+        }
+        override fun objects(pubnub: PubNub, result: PNObjectEventResult) {
+            onObjects?.invoke(pubnub, result)
+        }
+        override fun file(pubnub: PubNub, result: PNFileEventResult) {
+            onFile?.invoke(pubnub, result)
+        }
+    }.apply {
+        addListener(this)
     }
 
     override fun addListener(listener: EventListener) {

@@ -67,7 +67,6 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
         pubnub.onPresence = null
         guest.subscribeToBlocking(expectedChannel)
 
-        Thread.sleep(2000)
         assertEquals(1, successPresenceEventCont.get())
     }
 
