@@ -10,13 +10,16 @@ import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.subscribeToBlocking
 import com.pubnub.api.unsubscribeFromBlocking
+import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.hamcrest.core.IsEqual
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 
 class PresenceEventsIntegrationTests : BaseIntegrationTest() {
 
@@ -44,6 +47,62 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
         pubnub.subscribeToBlocking(expectedChannel)
 
         success.listen()
+    }
+
+    @Test
+    fun testJoinChannelUsingOnPresenceField() {
+        val successPresenceEventCont = AtomicInteger()
+        val expectedChannel = randomChannel()
+
+        pubnub.onPresence = { pnPresenceEventResult: PNPresenceEventResult ->
+            assertEquals("join", pnPresenceEventResult.event)
+            assertEquals(expectedChannel, pnPresenceEventResult.channel)
+            successPresenceEventCont.incrementAndGet()
+        }
+
+        pubnub.subscribeToBlocking(expectedChannel)
+
+        pubnub.onPresence = null
+        guest.subscribeToBlocking(expectedChannel)
+
+        assertEquals(1, successPresenceEventCont.get())
+    }
+
+    @Test
+    fun testJoinChannelUsingSubscription() {
+        val successPresenceEventCont = AtomicInteger()
+        val expectedChannel = randomChannel()
+        val subscription = pubnub.channel(expectedChannel).subscription(SubscriptionOptions.receivePresenceEvents())
+
+        subscription.onPresence = { pnPresenceEventResult: PNPresenceEventResult ->
+            assertEquals("join", pnPresenceEventResult.event)
+            assertEquals(expectedChannel, pnPresenceEventResult.channel)
+            successPresenceEventCont.incrementAndGet()
+        }
+
+        subscription.subscribe()
+
+        Thread.sleep(2000)
+        assertEquals(1, successPresenceEventCont.get())
+    }
+
+    @Test
+    fun testJoinChannelUsingSubscriptionSet() {
+        val successPresenceEventCont = AtomicInteger()
+        val expectedChannel01 = randomChannel()
+        val expectedChannel02 = randomChannel()
+        val subscriptionSetOf = pubnub.subscriptionSetOf(channels = setOf(expectedChannel01, expectedChannel02), options = SubscriptionOptions.receivePresenceEvents())
+
+        subscriptionSetOf.onPresence = { pnPresenceEventResult: PNPresenceEventResult ->
+            assertEquals("join", pnPresenceEventResult.event)
+            assertTrue(pnPresenceEventResult.channel == expectedChannel01 || pnPresenceEventResult.channel == expectedChannel02)
+            successPresenceEventCont.incrementAndGet()
+        }
+
+        subscriptionSetOf.subscribe()
+
+        Thread.sleep(2000)
+        assertEquals(2, successPresenceEventCont.get())
     }
 
     @Test

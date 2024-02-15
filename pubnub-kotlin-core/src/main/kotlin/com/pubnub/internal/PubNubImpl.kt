@@ -68,6 +68,7 @@ import com.pubnub.internal.endpoints.push.AddChannelsToPush
 import com.pubnub.internal.endpoints.push.ListPushProvisions
 import com.pubnub.internal.endpoints.push.RemoveAllPushChannelsForDevice
 import com.pubnub.internal.endpoints.push.RemoveChannelsFromPush
+import com.pubnub.internal.managers.AnnouncementCallback
 import com.pubnub.internal.managers.BasePathManager
 import com.pubnub.internal.managers.DuplicationManager
 import com.pubnub.internal.managers.ListenerManager
@@ -99,6 +100,7 @@ import com.pubnub.internal.presence.eventengine.effect.effectprovider.LeaveProvi
 import com.pubnub.internal.subscribe.PRESENCE_CHANNEL_SUFFIX
 import com.pubnub.internal.subscribe.Subscribe
 import com.pubnub.internal.subscribe.eventengine.configuration.EventEnginesConf
+import com.pubnub.internal.v2.callbacks.EventEmitterImpl
 import com.pubnub.internal.v2.entities.ChannelGroupImpl
 import com.pubnub.internal.v2.entities.ChannelGroupName
 import com.pubnub.internal.v2.entities.ChannelImpl
@@ -141,7 +143,7 @@ class PubNubImpl internal constructor(
     internal val telemetryManager = TelemetryManager()
     internal val tokenManager: TokenManager = TokenManager()
     private val tokenParser: TokenParser = TokenParser()
-
+    private val eventEmitter = EventEmitterImpl(AnnouncementCallback.Phase.SUBSCRIPTION) { true }
     private val presenceData = PresenceData()
     private val subscribe = Subscribe.create(
         this,
@@ -167,6 +169,10 @@ class PubNubImpl internal constructor(
         sendStateWithHeartbeat = configuration.maintainPresenceState,
         executorService = executorService
     )
+
+    init {
+        listenerManager.addAnnouncementCallback(eventEmitter)
+    }
 
     //endregion
 
