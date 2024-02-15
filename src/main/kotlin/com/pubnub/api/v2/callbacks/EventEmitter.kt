@@ -16,7 +16,7 @@ interface EventEmitter {
      *
      * Note that this property allows for the assignment of a singular behavior at a time, as any new assignment will override the previous one.
      * For scenarios requiring multiple behaviors in response to message events, it is advisable
-     * to utilize `com.pubnub.api.PubNub.addListener(listener: EventListener)`.
+     * to utilize [EventEmitter.addListener].
      *
      * To deactivate the current behavior, simply set this property to `null`.
      *
@@ -39,7 +39,7 @@ interface EventEmitter {
      *
      * Note that this property allows for the assignment of a singular behavior at a time, as any new assignment will override the previous one.
      * For scenarios requiring multiple behaviors in response to presence events, it is advisable
-     * to utilize `com.pubnub.api.PubNub.addListener(listener: EventListener)`.
+     * to utilize [EventEmitter.addListener].
      *
      * To deactivate the current behavior, simply set this property to `null`.
      *
@@ -62,7 +62,7 @@ interface EventEmitter {
      *
      * Note that this property allows for the assignment of a singular behavior at a time, as any new assignment will override the previous one.
      * For scenarios requiring multiple behaviors in response to signal events, it is advisable
-     * to utilize `com.pubnub.api.PubNub.addListener(listener: EventListener)`.
+     * to utilize [EventEmitter.addListener].
      *
      * To deactivate a behavior, assign `null` to this property.
      *
@@ -85,7 +85,7 @@ interface EventEmitter {
      *
      * Note that this property allows for the assignment of a singular behavior at a time, as any new assignment will override the previous one.
      * For scenarios requiring multiple behaviors in response to message action events, it is advisable
-     * to utilize `com.pubnub.api.PubNub.addListener(listener: EventListener)`.
+     * to utilize [EventEmitter.addListener].
      *
      * To deactivate the current behavior, simply set this property to `null`.
      *
@@ -108,7 +108,7 @@ interface EventEmitter {
      *
      * Note that this property allows for the assignment of a singular behavior at a time, as any new assignment will override the previous one.
      * For scenarios requiring multiple behaviors in response to object event, it is advisable
-     * to utilize `com.pubnub.api.PubNub.addListener(listener: EventListener)`.
+     * to utilize [EventEmitter.addListener].
      *
      * To deactivate the current behavior, simply set this property to `null`.
      *
@@ -131,7 +131,7 @@ interface EventEmitter {
      *
      * Note that this property allows for the assignment of a singular behavior at a time, as any new assignment will override the previous one.
      * For scenarios requiring multiple behaviors in response to file event, it is advisable
-     * to utilize `com.pubnub.api.PubNub.addListener(listener: EventListener)`.
+     * to utilize [EventEmitter.addListener].
      *
      * To deactivate the current behavior, simply set this property to `null`.
      *
