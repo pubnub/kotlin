@@ -21,8 +21,8 @@ internal class RetryingRemoteAction<T>(
         for (i in 0 until maxNumberOfAutomaticRetries) {
             thrownException = try {
                 return remoteAction.sync()
-            } catch (ex: PubNubException) {
-                ex
+            } catch (ex: Throwable) {
+                PubNubException.from(ex)
             }
         }
         throw thrownException!!
@@ -48,7 +48,7 @@ internal class RetryingRemoteAction<T>(
                         lastException = e
                     }
                 }
-                callback.accept(Result.failure(PubNubException.from(lastException!!)))
+                callback.accept(Result.failure(PubNubException.from(lastException!!).copy(remoteAction = this)))
             }
         )
     }
@@ -76,7 +76,6 @@ internal class RetryingRemoteAction<T>(
         fun <T> autoRetry(
             remoteAction: ExtendedRemoteAction<T>,
             maxNumberOfAutomaticRetries: Int,
-            operationType: PNOperationType,
             executorService: ExecutorService
         ): RetryingRemoteAction<T> {
             return RetryingRemoteAction(remoteAction, maxNumberOfAutomaticRetries, executorService)

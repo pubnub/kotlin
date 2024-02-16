@@ -159,7 +159,12 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
                             }
                         }
 
-                    val pubnubException = PubNubException(errorMessage = t.toString(), pubnubError = error, cause = t)
+                    val pubnubException = PubNubException(
+                        errorMessage = t.toString(),
+                        pubnubError = error,
+                        cause = t,
+                        remoteAction = this@Endpoint
+                    )
                     callback.accept(Result.failure(pubnubException))
                 }
             })
@@ -292,7 +297,8 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
                 uuid = response.raw().request.url.queryParameter("uuid"),
                 authKey = response.raw().request.url.queryParameter("auth"),
                 clientRequest = response.raw().request,
-            )
+            ),
+            remoteAction = this
         )
     }
 

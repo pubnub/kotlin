@@ -25,16 +25,16 @@ class MappingRemoteAction<T, U>(private val remoteAction: ExtendedRemoteAction<T
 
     override fun async(callback: Consumer<Result<U>>) {
         remoteAction.async { r ->
-
             r.onSuccess {
-                try {
-                    val newValue = function(it)
-                    callback.accept(Result.success(newValue))
+                val newValue = try {
+                     function(it)
                 } catch (e: Throwable) {
                     callback.accept(Result.failure(PubNubException.from(e)))
+                    return@onSuccess
                 }
+                callback.accept(Result.success(newValue))
             }.onFailure {
-                callback.accept(Result.failure(it))
+                callback.accept(Result.failure(it.copy(remoteAction = this)))
             }
         }
     }

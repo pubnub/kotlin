@@ -1,5 +1,6 @@
 package com.pubnub.api
 
+import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import okhttp3.Request
 import retrofit2.Call
 
@@ -23,8 +24,8 @@ data class PubNubException(
     val affectedChannelGroups: List<String> = emptyList(),
     override val cause: Throwable? = null,
     val requestInfo: RequestInfo? = null,
+    val remoteAction: ExtendedRemoteAction<*>? = null
 ) : Exception(errorMessage, cause) {
-
     data class RequestInfo(
         val tlsEnabled: Boolean,
         val origin: String,

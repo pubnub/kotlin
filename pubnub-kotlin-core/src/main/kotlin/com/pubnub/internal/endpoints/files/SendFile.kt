@@ -101,7 +101,7 @@ class SendFile internal constructor(
                         ttl = ttl,
                         shouldStore = shouldStore,
                     ),
-                    fileMessagePublishRetryLimit, PNOperationType.FileOperation, executorService
+                    fileMessagePublishRetryLimit, executorService
                 ) // publish file message
             }.map { mapPublishFileMessageToFileUpload(result.get(), it) }
     }
