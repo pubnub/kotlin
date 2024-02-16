@@ -26,7 +26,8 @@ class TransitionFromHandshakeStoppedStateTest {
         val channelGroupName = "ChannelGroup01"
         val myMutableSetOfChannels = mutableSetOf(channelName)
         val myMutableSetOfChannelGroups = mutableSetOf(channelGroupName)
-        val handshakeStopped: SubscribeState.HandshakeStopped = SubscribeState.HandshakeStopped(myMutableSetOfChannels, myMutableSetOfChannelGroups, reason)
+        val handshakeStopped: SubscribeState.HandshakeStopped =
+            SubscribeState.HandshakeStopped(myMutableSetOfChannels, myMutableSetOfChannelGroups, reason)
 
         // when
         myMutableSetOfChannels.remove(channelName)

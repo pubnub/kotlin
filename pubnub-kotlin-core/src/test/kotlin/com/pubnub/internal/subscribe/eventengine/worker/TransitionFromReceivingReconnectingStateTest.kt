@@ -31,7 +31,13 @@ internal class TransitionFromReceivingReconnectingStateTest {
         val channelGroupName = "ChannelGroup01"
         val myMutableSetOfChannels = mutableSetOf(channelName)
         val myMutableSetOfChannelGroups = mutableSetOf(channelGroupName)
-        val receiveReconnecting: SubscribeState.ReceiveReconnecting = SubscribeState.ReceiveReconnecting(myMutableSetOfChannels, myMutableSetOfChannelGroups, subscriptionCursor, 0, reason)
+        val receiveReconnecting: SubscribeState.ReceiveReconnecting = SubscribeState.ReceiveReconnecting(
+            myMutableSetOfChannels,
+            myMutableSetOfChannelGroups,
+            subscriptionCursor,
+            0,
+            reason
+        )
 
         // when
         myMutableSetOfChannels.remove(channelName)
@@ -181,18 +187,26 @@ internal class TransitionFromReceivingReconnectingStateTest {
     fun can_transit_from_RECEIVE_RECONNECTING_to_RECEIVING_when_there_is_SUBSCRIPTION_RESTORED_event() {
         // given
         val regionStoredInStoredInReceiveReconnecting = "12"
-        val subscriptionCursorStoredInReceiveReconnecting = SubscriptionCursor(timeToken, regionStoredInStoredInReceiveReconnecting)
+        val subscriptionCursorStoredInReceiveReconnecting =
+            SubscriptionCursor(timeToken, regionStoredInStoredInReceiveReconnecting)
         val timeTokenFromSubscriptionRestored = 99945345452L
         val subscriptionCursorStoredInSubscriptionRestored = SubscriptionCursor(timeTokenFromSubscriptionRestored, null)
 
         // when
         val (state, invocations) = transition(
-            SubscribeState.ReceiveReconnecting(channels, channelGroups, subscriptionCursorStoredInReceiveReconnecting, 0, reason),
+            SubscribeState.ReceiveReconnecting(
+                channels,
+                channelGroups,
+                subscriptionCursorStoredInReceiveReconnecting,
+                0,
+                reason
+            ),
             SubscribeEvent.SubscriptionRestored(channels, channelGroups, subscriptionCursorStoredInSubscriptionRestored)
         )
 
         // then
-        val expectedSubscriptionCursor = SubscriptionCursor(timeTokenFromSubscriptionRestored, regionStoredInStoredInReceiveReconnecting)
+        val expectedSubscriptionCursor =
+            SubscriptionCursor(timeTokenFromSubscriptionRestored, regionStoredInStoredInReceiveReconnecting)
         assertTrue(state is SubscribeState.Receiving)
         state as SubscribeState.Receiving // Safe cast
 

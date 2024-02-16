@@ -69,6 +69,7 @@ class HeartbeatIntegrationTest : BaseIntegrationTest() {
                             hits.incrementAndGet()
                             pubnub.disconnect()
                         }
+
                         "join" -> {
                             if (event.state == null) {
                                 hits.incrementAndGet()
@@ -92,6 +93,7 @@ class HeartbeatIntegrationTest : BaseIntegrationTest() {
                                 hits.incrementAndGet()
                             }
                         }
+
                         "timeout", "leave" -> {
                             pubnub.reconnect()
                         }

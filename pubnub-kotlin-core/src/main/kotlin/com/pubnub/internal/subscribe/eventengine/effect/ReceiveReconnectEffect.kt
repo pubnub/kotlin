@@ -45,7 +45,10 @@ internal class ReceiveReconnectEffect(
             return
         }
 
-        val effectiveDelay = getEffectiveDelay(statusCode = reason?.statusCode ?: 0, retryAfterHeaderValue = reason?.retryAfterHeaderValue ?: 0)
+        val effectiveDelay = getEffectiveDelay(
+            statusCode = reason?.statusCode ?: 0,
+            retryAfterHeaderValue = reason?.retryAfterHeaderValue ?: 0
+        )
         scheduled = executorService.scheduleWithDelay(effectiveDelay) {
             receiveMessagesRemoteAction.async { result ->
                 result.onFailure {

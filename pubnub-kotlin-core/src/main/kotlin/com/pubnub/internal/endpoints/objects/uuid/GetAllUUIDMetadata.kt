@@ -24,7 +24,8 @@ class GetAllUUIDMetadata internal constructor(
     IGetAllUUIDMetadata {
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityArrayEnvelope<PNUUIDMetadata>> {
-        val params = queryParams + collectionQueryParameters.createCollectionQueryParams() + withInclude.createIncludeQueryParams()
+        val params =
+            queryParams + collectionQueryParameters.createCollectionQueryParams() + withInclude.createIncludeQueryParams()
 
         return pubnub.retrofitManager.objectsService.getAllUUIDMetadata(
             subKey = pubnub.configuration.subscribeKey,

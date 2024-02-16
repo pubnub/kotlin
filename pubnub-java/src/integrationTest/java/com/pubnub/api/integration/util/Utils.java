@@ -4,8 +4,6 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.endpoints.pubsub.Publish;
 import com.pubnub.api.models.consumer.PNPublishResult;
-import com.pubnub.api.models.consumer.PNStatus;
-import okhttp3.Request;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

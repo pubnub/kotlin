@@ -488,6 +488,7 @@ public class MessageActionsTest extends BaseIntegrationTest {
             public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
 
             }
+
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus) {
                 if (pnStatus instanceof PNStatus.Connected) {

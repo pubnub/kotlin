@@ -34,9 +34,11 @@ internal class SubscribeEffectFactory(
             is SubscribeEffectInvocation.EmitMessages -> {
                 EmitMessagesEffect(messagesConsumer, effectInvocation.messages)
             }
+
             is SubscribeEffectInvocation.EmitStatus -> {
                 EmitStatusEffect(statusConsumer, effectInvocation.status)
             }
+
             is SubscribeEffectInvocation.Handshake -> {
                 val handshakeRemoteAction =
                     handshakeProvider.getHandshakeRemoteAction(
@@ -50,6 +52,7 @@ internal class SubscribeEffectFactory(
                     )
                 HandshakeEffect(handshakeRemoteAction, subscribeEventSink)
             }
+
             is SubscribeEffectInvocation.HandshakeReconnect -> {
                 val handshakeRemoteAction =
                     handshakeProvider.getHandshakeRemoteAction(
@@ -70,6 +73,7 @@ internal class SubscribeEffectFactory(
                     effectInvocation.reason
                 )
             }
+
             is SubscribeEffectInvocation.ReceiveMessages -> {
                 val receiveMessagesRemoteAction: RemoteAction<ReceiveMessagesResult> =
                     receiveMessagesProvider.getReceiveMessagesRemoteAction(
@@ -79,6 +83,7 @@ internal class SubscribeEffectFactory(
                     )
                 ReceiveMessagesEffect(receiveMessagesRemoteAction, subscribeEventSink)
             }
+
             is SubscribeEffectInvocation.ReceiveReconnect -> {
                 val receiveMessagesRemoteAction = receiveMessagesProvider.getReceiveMessagesRemoteAction(
                     effectInvocation.channels,

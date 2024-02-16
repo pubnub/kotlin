@@ -24,7 +24,8 @@ class GetAllChannelMetadata internal constructor(
     IGetAllChannelMetadata {
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityArrayEnvelope<PNChannelMetadata>> {
-        val params = queryParams + collectionQueryParameters.createCollectionQueryParams() + includeQueryParam.createIncludeQueryParams()
+        val params =
+            queryParams + collectionQueryParameters.createCollectionQueryParams() + includeQueryParam.createIncludeQueryParams()
 
         return pubnub.retrofitManager.objectsService.getAllChannelMetadata(
             subKey = pubnub.configuration.subscribeKey,

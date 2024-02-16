@@ -36,6 +36,7 @@ internal class BasePathManager(private val config: PNConfiguration) {
             config.origin.isValid() -> {
                 basePathBuilder.append(config.origin)
             }
+
             config.cacheBusting -> {
                 basePathBuilder
                     .append("ps")
@@ -45,6 +46,7 @@ internal class BasePathManager(private val config: PNConfiguration) {
 
                 incrementSubdomain()
             }
+
             else -> {
                 basePathBuilder
                     .append(DEFAULT_SUBDOMAIN)

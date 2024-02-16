@@ -26,7 +26,8 @@ class EventEngineSteps(private val state: EventEngineState) {
 
     @Given("a linear reconnection policy with {int} retries")
     fun a_linear_reconnection_policy_with_retries(maxRetries: Int) {
-        state.configuration.retryConfiguration = RetryConfiguration.Linear(delayInSec = 1.milliseconds, maxRetryNumber = maxRetries, isInternal = true)
+        state.configuration.retryConfiguration =
+            RetryConfiguration.Linear(delayInSec = 1.milliseconds, maxRetryNumber = maxRetries, isInternal = true)
     }
 
     @When("I subscribe")
@@ -123,7 +124,10 @@ class EventEngineSteps(private val state: EventEngineState) {
     @Then("I receive an error in my subscribe response")
     fun i_receive_an_error_in_my_subscribe_response() {
         await.pollInterval(50, TimeUnit.MILLISECONDS).atMost(2, TimeUnit.SECONDS).untilAsserted {
-            MatcherAssert.assertThat(state.statusesList, CoreMatchers.hasItems(CoreMatchers.instanceOf(PNStatus.ConnectionError::class.java)))
+            MatcherAssert.assertThat(
+                state.statusesList,
+                CoreMatchers.hasItems(CoreMatchers.instanceOf(PNStatus.ConnectionError::class.java))
+            )
         }
     }
 }

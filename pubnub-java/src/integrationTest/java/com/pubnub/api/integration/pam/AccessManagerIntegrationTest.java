@@ -554,6 +554,7 @@ abstract class AccessManagerIntegrationTest extends BaseIntegrationTest {
             public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
 
             }
+
             @Override
             public void status(@NotNull PubNub pubNub, @NotNull PNStatus pnStatus) {
 

@@ -130,9 +130,11 @@ class CryptoModuleSteps(
                 LEGACY_NEW -> {
                     CryptoModule.createNewCryptoModule(LegacyCryptor(cipherKey, randoIv))
                 }
+
                 AES_CBC -> {
                     CryptoModule.createNewCryptoModule(AesCbcCryptor(cipherKey))
                 }
+
                 else -> throw PubNubException("Invalid cryptor type")
             }
         } else {
@@ -149,9 +151,11 @@ class CryptoModuleSteps(
             LEGACY_NEW -> {
                 LegacyCryptor(cipherKey, useRandomIv)
             }
+
             AES_CBC -> {
                 AesCbcCryptor(cipherKey)
             }
+
             else -> {
                 throw PubNubException("Invalid cryptor type")
             }
@@ -164,12 +168,16 @@ class CryptoModuleSteps(
             "unknown cryptor error" -> {
                 assertTrue(cryptoModuleState.decryptionError == PubNubError.UNKNOWN_CRYPTOR || cryptoModuleState.decryptionError == PubNubError.CRYPTOR_HEADER_VERSION_UNKNOWN)
             }
+
             "decryption error" -> {
-                val isDecryptionError01 = PubNubError.CRYPTOR_DATA_HEADER_SIZE_TO_SMALL == cryptoModuleState.decryptionError
-                val isDecryptionError02 = PubNubError.ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED == cryptoModuleState.decryptionError
+                val isDecryptionError01 =
+                    PubNubError.CRYPTOR_DATA_HEADER_SIZE_TO_SMALL == cryptoModuleState.decryptionError
+                val isDecryptionError02 =
+                    PubNubError.ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED == cryptoModuleState.decryptionError
                 val isDecryptionError03 = PubNubError.UNKNOWN_CRYPTOR == cryptoModuleState.decryptionError
                 assertTrue(isDecryptionError01 || isDecryptionError02 || isDecryptionError03)
             }
+
             "success" -> assertNull(cryptoModuleState.decryptionError)
             "encryption error" -> assertEquals(
                 PubNubError.ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED,
@@ -181,7 +189,8 @@ class CryptoModuleSteps(
     @Then("Successfully decrypt an encrypted file with legacy code")
     fun successfully_decrypt_an_encrypted_file_with_legacy_code() {
         val encryptedData = cryptoModuleState.encryptedData
-        val encryptedDataAsStringBase64 = String(com.pubnub.internal.vendor.Base64.encode(encryptedData, com.pubnub.internal.vendor.Base64.NO_WRAP))
+        val encryptedDataAsStringBase64 =
+            String(com.pubnub.internal.vendor.Base64.encode(encryptedData, com.pubnub.internal.vendor.Base64.NO_WRAP))
         val randoIv: Boolean = cryptoModuleState.initializationVectorType == RANDOM_IV
         val cipherKey = cryptoModuleState.cryptorCipherKey
 
@@ -191,12 +200,17 @@ class CryptoModuleSteps(
                 val crypto = com.pubnub.internal.vendor.Crypto(cipherKey, randoIv)
                 crypto.decrypt(encryptedDataAsStringBase64)
             }
+
             CRYPTION_TYPE_STREAM -> {
                 val byteArrayInputStream = ByteArrayInputStream(encryptedData)
-                val decryptedStreamAsByteArray = FileEncryptionUtil.decrypt(byteArrayInputStream, cipherKey!!).readBytes()
+                val decryptedStreamAsByteArray =
+                    FileEncryptionUtil.decrypt(byteArrayInputStream, cipherKey!!).readBytes()
                 String(decryptedStreamAsByteArray)
             }
-            else -> { throw PubNubException("Invalid cryptor type") }
+
+            else -> {
+                throw PubNubException("Invalid cryptor type")
+            }
         }
 
         assertEquals(String(cryptoModuleState.fileContent!!), decryptedDataAsString)

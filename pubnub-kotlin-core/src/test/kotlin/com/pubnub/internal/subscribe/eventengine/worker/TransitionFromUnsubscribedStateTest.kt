@@ -40,7 +40,8 @@ internal class TransitionFromUnsubscribedStateTest {
     fun can_transit_from_UNSUBSRIBED_to_RECEIVING_when_there_is_subscriptionRestoredEvent() {
         // when
         val (state, invocations) = transition(
-            SubscribeState.Unsubscribed, SubscribeEvent.SubscriptionRestored(channels, channelGroups, subscriptionCursor)
+            SubscribeState.Unsubscribed,
+            SubscribeEvent.SubscriptionRestored(channels, channelGroups, subscriptionCursor)
         )
 
         // then

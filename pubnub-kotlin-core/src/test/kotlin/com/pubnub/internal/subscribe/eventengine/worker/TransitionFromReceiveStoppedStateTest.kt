@@ -23,7 +23,8 @@ class TransitionFromReceiveStoppedStateTest {
         val channelGroupName = "ChannelGroup01"
         val myMutableSetOfChannels = mutableSetOf(channelName)
         val myMutableSetOfChannelGroups = mutableSetOf(channelGroupName)
-        val receiveStopped: SubscribeState.ReceiveStopped = SubscribeState.ReceiveStopped(myMutableSetOfChannels, myMutableSetOfChannelGroups, subscriptionCursor)
+        val receiveStopped: SubscribeState.ReceiveStopped =
+            SubscribeState.ReceiveStopped(myMutableSetOfChannels, myMutableSetOfChannelGroups, subscriptionCursor)
 
         // when
         myMutableSetOfChannels.remove(channelName)

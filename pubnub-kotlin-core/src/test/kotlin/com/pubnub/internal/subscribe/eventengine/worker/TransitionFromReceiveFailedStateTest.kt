@@ -26,7 +26,12 @@ internal class TransitionFromReceiveFailedStateTest {
         val channelGroupName = "ChannelGroup01"
         val myMutableSetOfChannels = mutableSetOf(channelName)
         val myMutableSetOfChannelGroups = mutableSetOf(channelGroupName)
-        val receiveFailed: SubscribeState.ReceiveFailed = SubscribeState.ReceiveFailed(myMutableSetOfChannels, myMutableSetOfChannelGroups, subscriptionCursor, reason)
+        val receiveFailed: SubscribeState.ReceiveFailed = SubscribeState.ReceiveFailed(
+            myMutableSetOfChannels,
+            myMutableSetOfChannelGroups,
+            subscriptionCursor,
+            reason
+        )
 
         // when
         myMutableSetOfChannels.remove(channelName)

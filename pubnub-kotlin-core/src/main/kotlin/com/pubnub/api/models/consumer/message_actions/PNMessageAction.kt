@@ -20,7 +20,7 @@ open class PNMessageAction(
     @JvmField var messageTimetoken: Long
 ) {
 
-    constructor() : this ("", "", 0L)
+    constructor() : this("", "", 0L)
 
     internal constructor(pnMessageAction: PNMessageAction) : this(
         pnMessageAction.type,
@@ -34,12 +34,14 @@ open class PNMessageAction(
     /**
      * Message action's author.
      */
-    @JvmField var uuid: String? = null
+    @JvmField
+    var uuid: String? = null
 
     /**
      * Timestamp when the message action was created.
      */
-    @JvmField var actionTimetoken: Long? = null
+    @JvmField
+    var actionTimetoken: Long? = null
 
     fun setType(type: String): PNMessageAction {
         this.type = type

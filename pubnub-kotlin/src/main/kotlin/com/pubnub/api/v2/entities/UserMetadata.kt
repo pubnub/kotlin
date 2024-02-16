@@ -6,5 +6,9 @@ import com.pubnub.internal.SubscriptionFactory
 import com.pubnub.internal.v2.entities.BaseUserMetadataImpl
 import com.pubnub.internal.v2.entities.ChannelName
 
-class UserMetadata(pubnub: PubNubImpl, channelName: ChannelName, subscriptionFactory: SubscriptionFactory<Subscription>) :
+class UserMetadata(
+    pubnub: PubNubImpl,
+    channelName: ChannelName,
+    subscriptionFactory: SubscriptionFactory<Subscription>
+) :
     BaseUserMetadataImpl<Subscription>(pubnub, channelName, subscriptionFactory)

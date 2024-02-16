@@ -29,7 +29,8 @@ class HeaderParserTest {
 
         val cipherKey = "enigma"
         val cryptoModule = CryptoModule.createLegacyCryptoModule(cipherKey, false)
-        val cryptorData = byteArrayOf(0x50, 0x56, 0x56, 0x56, 0x56, 0x01, 0x43, 0x52, 0x49, 0x56, 0x10, 0x10, 0x56, 0x56, 0x56, 0x10)
+        val cryptorData =
+            byteArrayOf(0x50, 0x56, 0x56, 0x56, 0x56, 0x01, 0x43, 0x52, 0x49, 0x56, 0x10, 0x10, 0x56, 0x56, 0x56, 0x10)
         val cryptorHeader = objectUnderTest.createCryptorHeader(cryptorId, cryptorData)
 
         val dataToBeEncrypted = byteArrayOf('D'.code.toByte(), 'A'.code.toByte())
@@ -71,7 +72,30 @@ class HeaderParserTest {
     @Test
     fun `should return NoHeader when there is no sentinel`() {
         val cryptorHeaderWithInvalidSentinel =
-            byteArrayOf(0x56, 0x56, 0x56, 0x56, 0x01, 0x43, 0x52, 0x49, 0x56, 0x10, 0x10, 0x56, 0x56, 0x56, 0x56, 0x01, 0x43, 0x52, 0x49, 0x56, 0x10, 0x10)
+            byteArrayOf(
+                0x56,
+                0x56,
+                0x56,
+                0x56,
+                0x01,
+                0x43,
+                0x52,
+                0x49,
+                0x56,
+                0x10,
+                0x10,
+                0x56,
+                0x56,
+                0x56,
+                0x56,
+                0x01,
+                0x43,
+                0x52,
+                0x49,
+                0x56,
+                0x10,
+                0x10
+            )
         val parseResult = objectUnderTest.parseDataWithHeader(cryptorHeaderWithInvalidSentinel)
 
         assertThat(parseResult, `is`(ParseResult.NoHeader))

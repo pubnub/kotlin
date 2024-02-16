@@ -27,6 +27,33 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class EventListener implements com.pubnub.internal.v2.callbacks.EventListener {
 
+    public void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus) {
+    }
+
+    public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult pnMessageResult) {
+    }
+
+    public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult pnPresenceEventResult) {
+    }
+
+    public void signal(@NotNull PubNub pubnub, @NotNull PNSignalResult pnSignalResult) {
+    }
+
+    public void uuid(@NotNull PubNub pubnub, @NotNull PNUUIDMetadataResult pnUUIDMetadataResult) {
+    }
+
+    public void channel(@NotNull PubNub pubnub, @NotNull PNChannelMetadataResult pnChannelMetadataResult) {
+    }
+
+    public void membership(@NotNull PubNub pubnub, @NotNull PNMembershipResult pnMembershipResult) {
+    }
+
+    public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
+    }
+
+    public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+    }
+
     @Override
     public final void objects(@NotNull BasePubNub pubnub, @NotNull PNObjectEventResult objectEvent) {
         PNObjectEventMessage message = objectEvent.getExtractedMessage();
@@ -168,24 +195,6 @@ public abstract class EventListener implements com.pubnub.internal.v2.callbacks.
         );
     }
 
-    public void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus) {};
-
-    public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult pnMessageResult) {};
-
-    public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult pnPresenceEventResult) {};
-
-    public void signal(@NotNull PubNub pubnub, @NotNull PNSignalResult pnSignalResult) {};
-
-    public void uuid(@NotNull PubNub pubnub, @NotNull PNUUIDMetadataResult pnUUIDMetadataResult) {};
-
-    public void channel(@NotNull PubNub pubnub, @NotNull PNChannelMetadataResult pnChannelMetadataResult) {};
-
-    public void membership(@NotNull PubNub pubnub, @NotNull PNMembershipResult pnMembershipResult) {};
-
-    public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {};
-
-    public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {};
-
     @Override
     public void message(@NotNull BasePubNub pubnub, @NotNull PNMessageResult message) {
         message((PubNub) pubnub, message);
@@ -193,15 +202,18 @@ public abstract class EventListener implements com.pubnub.internal.v2.callbacks.
 
     @Override
     public void presence(@NotNull BasePubNub pubnub, @NotNull PNPresenceEventResult presenceEvent) {
-        presence((PubNub) pubnub, presenceEvent);    }
+        presence((PubNub) pubnub, presenceEvent);
+    }
 
     @Override
     public void signal(@NotNull BasePubNub pubnub, @NotNull PNSignalResult signal) {
-        signal((PubNub) pubnub, signal);    }
+        signal((PubNub) pubnub, signal);
+    }
 
     @Override
     public void messageAction(@NotNull BasePubNub pubnub, @NotNull PNMessageActionResult messageAction) {
-        messageAction((PubNub) pubnub, messageAction);    }
+        messageAction((PubNub) pubnub, messageAction);
+    }
 
     @Override
     public void file(@NotNull BasePubNub pubnub, @NotNull PNFileEventResult fileEvent) {

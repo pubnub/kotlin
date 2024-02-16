@@ -401,6 +401,7 @@ open class PNConfiguration @Throws(PubNubException::class) constructor(
                 PNReconnectionPolicy.LINEAR -> RetryConfiguration.Linear(
                     maxRetryNumber = calculateMaximumReconnectionRetries(defaultRetryNumberForLinear),
                 )
+
                 PNReconnectionPolicy.EXPONENTIAL -> RetryConfiguration.Exponential(
                     maxRetryNumber = calculateMaximumReconnectionRetries(defaultRetryNumberForExponential),
                 )

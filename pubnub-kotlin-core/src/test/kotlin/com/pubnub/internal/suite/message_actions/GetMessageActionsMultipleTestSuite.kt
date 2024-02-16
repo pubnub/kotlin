@@ -12,7 +12,8 @@ import com.pubnub.internal.suite.EndpointTestSuite
 import com.pubnub.internal.suite.SUB
 import org.junit.Assert.assertEquals
 
-class GetMessageActionsMultipleTestSuite : com.pubnub.internal.suite.EndpointTestSuite<GetMessageActions, PNGetMessageActionsResult>() {
+class GetMessageActionsMultipleTestSuite :
+    com.pubnub.internal.suite.EndpointTestSuite<GetMessageActions, PNGetMessageActionsResult>() {
 
     override fun telemetryParamName() = "l_msga"
 

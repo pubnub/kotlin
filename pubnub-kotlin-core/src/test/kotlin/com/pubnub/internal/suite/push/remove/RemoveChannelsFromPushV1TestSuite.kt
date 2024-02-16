@@ -12,7 +12,8 @@ import com.pubnub.internal.suite.AUTH
 import com.pubnub.internal.suite.EndpointTestSuite
 import com.pubnub.internal.suite.SUB
 
-class RemoveChannelsFromPushV1TestSuite : com.pubnub.internal.suite.EndpointTestSuite<RemoveChannelsFromPush, PNPushRemoveChannelResult>() {
+class RemoveChannelsFromPushV1TestSuite :
+    com.pubnub.internal.suite.EndpointTestSuite<RemoveChannelsFromPush, PNPushRemoveChannelResult>() {
 
     override fun telemetryParamName() = "l_push"
 

@@ -97,7 +97,8 @@ class SubscriptionImplTest {
     @Test
     fun `subscription with filter`() {
         // given
-        val subWithFilter = pubnub.pubNubImpl.channel(channelName).subscription(SubscriptionOptions.filter { it !is PNMessageResult })
+        val subWithFilter =
+            pubnub.pubNubImpl.channel(channelName).subscription(SubscriptionOptions.filter { it !is PNMessageResult })
         subWithFilter.addListener(object : EventListener {
             override fun message(pubnub: BasePubNub, result: PNMessageResult) {
                 throw IllegalStateException("Message should have been filtered out!")

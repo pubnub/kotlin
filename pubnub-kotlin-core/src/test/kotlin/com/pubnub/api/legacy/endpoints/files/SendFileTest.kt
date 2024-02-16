@@ -195,6 +195,7 @@ class SendFileTest : TestsWithFiles {
             fileMessagePublishRetryLimit = numberOfRetries
         )
     }
+
     private fun getPubNubMock(): BasePubNub {
         val mockConfig = mockk<PNConfiguration>()
         val mockPubNub = mockk<BasePubNub>()
@@ -235,7 +236,11 @@ class SendFileTest : TestsWithFiles {
         }
 
         companion object {
-            fun create(result: PNPublishFileMessageResult, numberOfFailsBeforeSuccess: Int, pubNub: BasePubNub): PublishFileMessage {
+            fun create(
+                result: PNPublishFileMessageResult,
+                numberOfFailsBeforeSuccess: Int,
+                pubNub: BasePubNub
+            ): PublishFileMessage {
                 return FailingPublishFileMessage(
                     result,
                     numberOfFailsBeforeSuccess,

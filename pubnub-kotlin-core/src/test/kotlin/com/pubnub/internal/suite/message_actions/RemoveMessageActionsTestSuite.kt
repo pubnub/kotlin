@@ -9,7 +9,8 @@ import com.pubnub.internal.suite.AUTH
 import com.pubnub.internal.suite.EndpointTestSuite
 import com.pubnub.internal.suite.SUB
 
-class RemoveMessageActionsTestSuite : com.pubnub.internal.suite.EndpointTestSuite<RemoveMessageAction, PNRemoveMessageActionResult>() {
+class RemoveMessageActionsTestSuite :
+    com.pubnub.internal.suite.EndpointTestSuite<RemoveMessageAction, PNRemoveMessageActionResult>() {
 
     override fun telemetryParamName() = "l_msga"
 

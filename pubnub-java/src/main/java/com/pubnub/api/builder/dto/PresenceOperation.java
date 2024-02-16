@@ -9,7 +9,9 @@ import java.util.List;
 @Builder
 @Data
 public class PresenceOperation implements PubSubOperation {
-    @Builder.Default private final List<String> channels = Collections.emptyList();
-    @Builder.Default private final List<String> channelGroups = Collections.emptyList();
+    @Builder.Default
+    private final List<String> channels = Collections.emptyList();
+    @Builder.Default
+    private final List<String> channelGroups = Collections.emptyList();
     private final boolean connected;
 }

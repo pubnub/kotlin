@@ -30,7 +30,7 @@ public class PNRemoveMembershipResult extends EntityArrayEnvelope<PNMembership> 
                 result.getStatus(),
                 result.getTotalCount(),
                 result.getPrev() != null ? result.getPrev().getPageHash() : null,
-                result.getNext()!= null ? result.getNext().getPageHash() : null,
+                result.getNext() != null ? result.getNext().getPageHash() : null,
                 PNMembership.from(result.getData())
         );
     }

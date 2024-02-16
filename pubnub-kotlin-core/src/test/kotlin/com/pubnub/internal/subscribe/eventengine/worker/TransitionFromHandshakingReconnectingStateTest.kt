@@ -24,7 +24,8 @@ class TransitionFromHandshakingReconnectingStateTest {
         val channelGroupName = "ChannelGroup01"
         val myMutableSetOfChannels = mutableSetOf(channelName)
         val myMutableSetOfChannelGroups = mutableSetOf(channelGroupName)
-        val handshakeReconnecting: SubscribeState.HandshakeReconnecting = SubscribeState.HandshakeReconnecting(myMutableSetOfChannels, myMutableSetOfChannelGroups, 0, reason)
+        val handshakeReconnecting: SubscribeState.HandshakeReconnecting =
+            SubscribeState.HandshakeReconnecting(myMutableSetOfChannels, myMutableSetOfChannelGroups, 0, reason)
 
         // when
         myMutableSetOfChannels.remove(channelName)
@@ -135,11 +136,18 @@ class TransitionFromHandshakingReconnectingStateTest {
         val subscriptionCursorStoredInHandshakeReconnecting = SubscriptionCursor(timeToken, null)
         val regionStoredInStoredInHandshakeReconnectSuccess = "12"
         val timeTokenFromSubscriptionRestored = 99945345452L
-        val subscriptionCursorStoredInHandshakeReconnectSuccess = SubscriptionCursor(timeTokenFromSubscriptionRestored, regionStoredInStoredInHandshakeReconnectSuccess)
+        val subscriptionCursorStoredInHandshakeReconnectSuccess =
+            SubscriptionCursor(timeTokenFromSubscriptionRestored, regionStoredInStoredInHandshakeReconnectSuccess)
 
         // when
         val (state, invocations) = transition(
-            SubscribeState.HandshakeReconnecting(channels, channelGroups, 0, reason, subscriptionCursorStoredInHandshakeReconnecting),
+            SubscribeState.HandshakeReconnecting(
+                channels,
+                channelGroups,
+                0,
+                reason,
+                subscriptionCursorStoredInHandshakeReconnecting
+            ),
             SubscribeEvent.HandshakeReconnectSuccess(subscriptionCursorStoredInHandshakeReconnectSuccess)
         )
 
@@ -172,7 +180,13 @@ class TransitionFromHandshakingReconnectingStateTest {
 
         // when
         val (state, invocations) = transition(
-            SubscribeState.HandshakeReconnecting(channels, channelGroups, 0, reason, subscriptionCursorStoredInHandshakeReconnecting),
+            SubscribeState.HandshakeReconnecting(
+                channels,
+                channelGroups,
+                0,
+                reason,
+                subscriptionCursorStoredInHandshakeReconnecting
+            ),
             SubscribeEvent.SubscriptionRestored(channels, channelGroups, subscriptionCursorStoredInSubscriptionRestored)
         )
 

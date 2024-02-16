@@ -67,8 +67,7 @@ public class PAMFilesIntegrationTests extends BaseIntegrationTest {
 
             final String retrievedContent = IOUtils.toString(pnDownloadFileResult.getByteStream());
             assertEquals(FILE_CONTENT, retrievedContent);
-        }
-        finally {
+        } finally {
             adminPubnub.forceDestroy();
             pubnub.forceDestroy();
         }

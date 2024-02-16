@@ -11,8 +11,8 @@ import com.pubnub.internal.PubNubImpl;
 public class GetFileUrl extends Endpoint<PNFileUrlResult> {
 
     private final String channel;
-    private final  String fileId;
-    private final  String fileName;
+    private final String fileId;
+    private final String fileName;
 
     public GetFileUrl(String channel, String fileId, String fileName, PubNubImpl pubnub) {
         super(pubnub);

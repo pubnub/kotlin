@@ -1264,9 +1264,11 @@ class SubscriptionManagerTest : BaseTest() {
                     "Message" -> {
                         gotMessage1.set(true)
                     }
+
                     "Message3" -> {
                         gotMessage2.set(true)
                     }
+
                     "Message10" -> {
                         gotMessage3.set(true)
                     }
@@ -1410,6 +1412,7 @@ class SubscriptionManagerTest : BaseTest() {
             .atMost(5, TimeUnit.SECONDS)
             .untilAtomic(atomic, Matchers.greaterThan(0))
     }
+
     @Test
     fun testSubscribeBuilderWithState() {
         val expectedPayload = PubNubUtil.urlDecode(
@@ -1453,11 +1456,15 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         stubFor(
-            get(getMatchingUrlWithChannels("/v2/presence/sub-key/mySubscribeKey/channel/ch2,ch1/heartbeat")).willReturn(emptyJson())
+            get(getMatchingUrlWithChannels("/v2/presence/sub-key/mySubscribeKey/channel/ch2,ch1/heartbeat")).willReturn(
+                emptyJson()
+            )
         )
 
         stubFor(
-            get(getMatchingUrlWithChannels("/v2/presence/sub-key/mySubscribeKey/channel/ch1/uuid/myUUID/data")).willReturn(emptyJson())
+            get(getMatchingUrlWithChannels("/v2/presence/sub-key/mySubscribeKey/channel/ch1/uuid/myUUID/data")).willReturn(
+                emptyJson()
+            )
         )
 
         pubnub.configuration.presenceTimeout = 20
@@ -2444,7 +2451,10 @@ class SubscriptionManagerTest : BaseTest() {
                     pubnub.pubNubImpl.unsubscribe(
                         channels = listOf("ch1")
                     )
-                } else if (pnStatus is PNStatus.Disconnected || pnStatus is PNStatus.SubscriptionChanged && !pnStatus.channels.contains("ch1")) {
+                } else if (pnStatus is PNStatus.Disconnected || pnStatus is PNStatus.SubscriptionChanged && !pnStatus.channels.contains(
+                        "ch1"
+                    )
+                ) {
                     statusReceived.set(true)
                 }
             }

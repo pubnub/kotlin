@@ -25,7 +25,10 @@ class SubscribeEventConsumerWorkerTransitionFunctionTest {
         val messages = listOf<PNEvent>()
 
         // when
-        val (handshaking, effectInvocationsForSubscriptionChange) = transition(SubscribeState.Unsubscribed, subscriptionChangeSubscribeEvent)
+        val (handshaking, effectInvocationsForSubscriptionChange) = transition(
+            SubscribeState.Unsubscribed,
+            subscriptionChangeSubscribeEvent
+        )
         val (receiving01, effectInvocationsForHandshakingSuccess) = transition(
             handshaking, SubscribeEvent.HandshakeSuccess(subscriptionCursor)
         )

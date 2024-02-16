@@ -49,7 +49,10 @@ class HandshakeReconnectEffectTest {
             .with()
             .pollInterval(Duration.ofMillis(20))
             .untilAsserted {
-                assertEquals(listOf(SubscribeEvent.HandshakeReconnectSuccess(subscriptionCursor)), subscribeEventSink.events)
+                assertEquals(
+                    listOf(SubscribeEvent.HandshakeReconnectSuccess(subscriptionCursor)),
+                    subscribeEventSink.events
+                )
             }
     }
 
@@ -73,7 +76,12 @@ class HandshakeReconnectEffectTest {
             .atMost(Durations.FIVE_SECONDS)
             .with()
             .pollInterval(Duration.ofMillis(20))
-            .untilAsserted { assertEquals(listOf(SubscribeEvent.HandshakeReconnectFailure(reason)), subscribeEventSink.events) }
+            .untilAsserted {
+                assertEquals(
+                    listOf(SubscribeEvent.HandshakeReconnectFailure(reason)),
+                    subscribeEventSink.events
+                )
+            }
     }
 
     @Test

@@ -11,7 +11,8 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 
-class ListAllChannelGroupTestSuite : com.pubnub.internal.suite.EndpointTestSuite<ListAllChannelGroup, PNChannelGroupsListAllResult>() {
+class ListAllChannelGroupTestSuite :
+    com.pubnub.internal.suite.EndpointTestSuite<ListAllChannelGroup, PNChannelGroupsListAllResult>() {
 
     override fun telemetryParamName() = "l_cg"
 

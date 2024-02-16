@@ -22,6 +22,7 @@ public class RemoveAllPushChannelsForDevice extends Endpoint<PNPushRemoveAllChan
     public RemoveAllPushChannelsForDevice(PubNubImpl pubnub) {
         super(pubnub);
     }
+
     @Override
     protected com.pubnub.internal.endpoints.push.RemoveAllPushChannelsForDevice createAction() {
         return pubnub.removeAllPushNotificationsFromDeviceWithPushToken(

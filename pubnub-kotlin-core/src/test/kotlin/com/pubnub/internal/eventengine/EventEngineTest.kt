@@ -18,6 +18,7 @@ class EventEngineTest {
             return transitionTo(TestState, TestEffectInvocation)
         }
     }
+
     private val executorService: ScheduledExecutorService = mockk()
 
     @Test

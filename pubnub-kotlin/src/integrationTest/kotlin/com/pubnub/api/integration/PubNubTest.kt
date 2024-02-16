@@ -60,7 +60,11 @@ class PubNubTest(private val pubNub: PubNub, private val withPresenceOverride: B
         subscribe(channels.toSet())
     }
 
-    fun subscribe(channels: Collection<String> = emptyList(), channelGroups: Collection<String> = emptyList(), withPresence: Boolean = false) {
+    fun subscribe(
+        channels: Collection<String> = emptyList(),
+        channelGroups: Collection<String> = emptyList(),
+        withPresence: Boolean = false
+    ) {
         pubNub.subscribe(channels.toList(), channelGroups.toList(), withPresence = withPresence || withPresenceOverride)
         val status = statusQueue.take()
         Assert.assertTrue(status is PNStatus.Connected || status is PNStatus.SubscriptionChanged)
@@ -125,8 +129,12 @@ class PubNubTest(private val pubNub: PubNub, private val withPresenceOverride: B
             Thread.sleep(1000)
         }
         pubNub.removeListener(verificationListener)
-        Assert.assertTrue("There were ${messageQueue.size} unverified events in the test: ${messageQueue.joinToString(", ")}", messageQueue.isEmpty())
+        Assert.assertTrue(
+            "There were ${messageQueue.size} unverified events in the test: ${messageQueue.joinToString(", ")}",
+            messageQueue.isEmpty()
+        )
     }
 }
 
-fun PubNub.test(withPresence: Boolean = false, action: PubNubTest.() -> Unit) = PubNubTest(this, withPresence).use(action)
+fun PubNub.test(withPresence: Boolean = false, action: PubNubTest.() -> Unit) =
+    PubNubTest(this, withPresence).use(action)

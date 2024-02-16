@@ -20,7 +20,8 @@ class TransitionFromHeartbeatingStateTest {
         val channelGroupName = "ChannelGroup01"
         val myMutableSetOfChannels = mutableSetOf(channelName)
         val myMutableSetOfChannelGroups = mutableSetOf(channelGroupName)
-        val heartbeating: PresenceState.Heartbeating = PresenceState.Heartbeating(myMutableSetOfChannels, myMutableSetOfChannelGroups)
+        val heartbeating: PresenceState.Heartbeating =
+            PresenceState.Heartbeating(myMutableSetOfChannels, myMutableSetOfChannelGroups)
 
         // when
         myMutableSetOfChannels.remove(channelName)

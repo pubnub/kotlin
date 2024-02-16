@@ -56,6 +56,7 @@ object FileEncryptionUtil {
                 is BadPaddingException -> {
                     throw PubNubException(errorMessage = e.message)
                 }
+
                 else -> throw e
             }
         }
@@ -93,6 +94,7 @@ object FileEncryptionUtil {
                 is IllegalBlockSizeException -> {
                     throw PubNubException(errorMessage = e.message)
                 }
+
                 else -> throw e
             }
         }
@@ -142,7 +144,13 @@ object FileEncryptionUtil {
     @Throws(UnsupportedEncodingException::class, PubNubException::class)
     private fun keyBytes(cipherKey: String): ByteArray {
         return String(
-            com.pubnub.internal.vendor.Crypto.hexEncode(com.pubnub.internal.vendor.Crypto.sha256(cipherKey.toByteArray(charset(ENCODING_UTF_8)))),
+            com.pubnub.internal.vendor.Crypto.hexEncode(
+                com.pubnub.internal.vendor.Crypto.sha256(
+                    cipherKey.toByteArray(
+                        charset(ENCODING_UTF_8)
+                    )
+                )
+            ),
             charset(ENCODING_UTF_8)
         )
             .substring(0, 32)

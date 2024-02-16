@@ -63,6 +63,8 @@ public class GetAllChannelsMetadata
                 case UPDATED:
                     key = PNKey.UPDATED;
                     break;
+                default:
+                    throw new IllegalStateException("Should never happen");
             }
             if (pnSortKey.getDir().equals(PNSortKey.Dir.ASC)) {
                 list.add(new com.pubnub.internal.models.consumer.objects.PNSortKey.PNAsc<>(key));

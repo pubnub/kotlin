@@ -9,6 +9,7 @@ internal sealed class SubscribeEvent : Event {
         val channels: Set<String> = channels.toSet()
         val channelGroups: Set<String> = channelGroups.toSet()
     }
+
     class SubscriptionRestored(
         channels: Set<String>,
         channelGroups: Set<String>,

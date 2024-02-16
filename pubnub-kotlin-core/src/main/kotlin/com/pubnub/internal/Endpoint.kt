@@ -41,7 +41,11 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
     private lateinit var call: Call<Input>
     private var silenceFailures = false
     private val retryableRestCaller =
-        RetryableRestCaller<Input>(pubnub.configuration.retryConfiguration, getEndpointGroupName(), isEndpointRetryable())
+        RetryableRestCaller<Input>(
+            pubnub.configuration.retryConfiguration,
+            getEndpointGroupName(),
+            isEndpointRetryable()
+        )
 
     /**
      * Key-value object to pass with every PubNub API operation. Used for debugging purposes.
@@ -69,6 +73,7 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
                 storeRequestLatency(response)
                 return checkAndCreateResponse(response)
             }
+
             else -> {
                 val (errorString, errorJson) = extractErrorBody(response)
                 throw createException(response, errorString, errorJson)
@@ -112,6 +117,7 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
                                 callback.accept(result)
                             }
                         }
+
                         else -> {
                             val (errorString, errorJson) = extractErrorBody(response)
 
@@ -135,15 +141,19 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
                             is UnknownHostException, is ConnectException -> {
                                 PubNubError.CONNECT_EXCEPTION
                             }
+
                             is SocketTimeoutException -> {
                                 PubNubError.SUBSCRIBE_TIMEOUT
                             }
+
                             is IOException -> {
                                 PubNubError.PARSING_ERROR
                             }
+
                             is IllegalStateException -> {
                                 PubNubError.PARSING_ERROR
                             }
+
                             else -> {
                                 PubNubError.HTTP_ERROR
                             }

@@ -99,7 +99,10 @@ class SubscribeMessageProcessorTest(
 
         assertThat(result, isA(PNFileEventResult::class.java))
         assertThat((result as PNFileEventResult).jsonMessage, iz(messageJson))
-        assertThat((result as PNFileEventResult).error, iz(PubNubError.CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED))
+        assertThat(
+            (result as PNFileEventResult).error,
+            iz(PubNubError.CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED)
+        )
     }
 
     @Test
@@ -184,6 +187,7 @@ class SubscribeMessageProcessorTest(
     private fun message(messageJson: JsonElement): String {
         return "{\"a\":\"2\",\"f\":0,\"i\":\"client-2bdc6006-1b48-45e4-9c09-9cc4c5ac5e8c\",\"s\":1,\"p\":{\"t\":\"17000393136828867\",\"r\":43},\"k\":\"sub-c-33f55052-190b-11e6-bfbc-02ee2ddab7fe\",\"c\":\"ch_cxnysctxlw\",\"d\":$messageJson,\"b\":\"ch_cxnysctxlw\"}"
     }
+
     private fun fileMessage(messageJson: String) =
         """{"a":"0","f":0,"e":4,"i":"client-52774e6f-2f4e-4915-aefd-e8bb75cd2e7d","p":{"t":"16632349939765880","r":43},"k":"sub-c-4b1dbfef-2fa9-495f-a316-2b634063083d","c":"ch_1663234993171_F4FC4F460F","u":"This is meta","d":{"message":$messageJson,"file":{"id":"30ce0095-3c50-4cdc-a626-bf402d233731","name":"fileNamech_1663234993171_F4FC4F460F.txt"}}}"""
 }

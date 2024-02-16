@@ -18,7 +18,8 @@ import com.pubnub.internal.suite.SUB
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 
-class AddChannelsToPushV1TestSuite : com.pubnub.internal.suite.EndpointTestSuite<AddChannelsToPush, PNPushAddChannelResult>() {
+class AddChannelsToPushV1TestSuite :
+    com.pubnub.internal.suite.EndpointTestSuite<AddChannelsToPush, PNPushAddChannelResult>() {
 
     override fun telemetryParamName() = "l_push"
 

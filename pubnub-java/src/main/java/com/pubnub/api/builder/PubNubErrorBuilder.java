@@ -5,6 +5,9 @@ import com.pubnub.api.PubNubError;
 
 public final class PubNubErrorBuilder {
 
+    private PubNubErrorBuilder() {
+    }
+
     // Error Codes
 
     /**
@@ -239,7 +242,6 @@ public final class PubNubErrorBuilder {
 
 
     public static final PubNubError PNERROBJ_HTTP_ERROR = PubNubError.HTTP_ERROR;
-
 
 
     public static final PubNubError PNERROBJ_PARSING_ERROR = PubNubError.PARSING_ERROR;

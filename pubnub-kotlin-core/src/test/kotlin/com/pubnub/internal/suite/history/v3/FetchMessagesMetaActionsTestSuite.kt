@@ -17,7 +17,8 @@ import com.pubnub.internal.suite.SUB
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 
-class FetchMessagesMetaActionsTestSuite : com.pubnub.internal.suite.EndpointTestSuite<FetchMessages, PNFetchMessagesResult>() {
+class FetchMessagesMetaActionsTestSuite :
+    com.pubnub.internal.suite.EndpointTestSuite<FetchMessages, PNFetchMessagesResult>() {
 
     override fun telemetryParamName() = "l_hist"
 

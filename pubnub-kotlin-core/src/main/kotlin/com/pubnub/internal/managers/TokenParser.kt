@@ -18,7 +18,10 @@ import co.nstant.`in`.cbor.model.Map as CborMap
 internal class TokenParser {
 
     fun unwrapToken(token: String): PNToken {
-        val byteArray = com.pubnub.internal.vendor.Base64.decode(token.toByteArray(StandardCharsets.UTF_8), com.pubnub.internal.vendor.Base64.URL_SAFE)
+        val byteArray = com.pubnub.internal.vendor.Base64.decode(
+            token.toByteArray(StandardCharsets.UTF_8),
+            com.pubnub.internal.vendor.Base64.URL_SAFE
+        )
         val firstElement = CborDecoder(byteArray.inputStream()).decode().firstOrNull() ?: throw PubNubException(
             pubnubError = PubNubError.INVALID_ACCESS_TOKEN, errorMessage = "Empty token"
         )

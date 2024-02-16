@@ -8,7 +8,11 @@ import com.pubnub.internal.subscribe.PRESENCE_CHANNEL_SUFFIX
 import com.pubnub.internal.v2.subscription.BaseSubscriptionImpl
 import com.pubnub.internal.v2.subscription.ReceivePresenceEventsImpl
 
-open class BaseChannelImpl<T : BaseSubscriptionImpl>(internal val pubnub: PubNubImpl, private val channelName: ChannelName, private val subscriptionFactory: SubscriptionFactory<T>) : BaseChannel {
+open class BaseChannelImpl<T : BaseSubscriptionImpl>(
+    internal val pubnub: PubNubImpl,
+    private val channelName: ChannelName,
+    private val subscriptionFactory: SubscriptionFactory<T>
+) : BaseChannel {
 
     override val name: String = channelName.id
 

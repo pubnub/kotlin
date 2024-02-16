@@ -19,20 +19,29 @@ class TransitionFromHeartbeatInactiveStateTest {
         val newChannelGroup = channelGroups + setOf("NewChannelGroup")
 
         // when
-        val (newState, invocations) = transition(PresenceState.HeartbeatInactive, PresenceEvent.Joined(newChannels, newChannelGroup))
+        val (newState, invocations) = transition(
+            PresenceState.HeartbeatInactive,
+            PresenceEvent.Joined(newChannels, newChannelGroup)
+        )
 
         // then
         Assertions.assertTrue(newState is PresenceState.Heartbeating)
         val heartbeating = newState as PresenceState.Heartbeating
         Assertions.assertEquals(newChannels, heartbeating.channels)
         Assertions.assertEquals(newChannelGroup, heartbeating.channelGroups)
-        assertEquals(setOf<PresenceEffectInvocation>(PresenceEffectInvocation.Heartbeat(newChannels, newChannelGroup)), invocations)
+        assertEquals(
+            setOf<PresenceEffectInvocation>(PresenceEffectInvocation.Heartbeat(newChannels, newChannelGroup)),
+            invocations
+        )
     }
 
     @Test
     fun `should not make transition from INACTIVE and create no invocation when there is LEFT event`() {
         // when
-        val (newState, invocations) = transition(PresenceState.HeartbeatInactive, PresenceEvent.Left(channels, channelGroups))
+        val (newState, invocations) = transition(
+            PresenceState.HeartbeatInactive,
+            PresenceEvent.Left(channels, channelGroups)
+        )
 
         // then
         assertEquals(PresenceState.HeartbeatInactive, newState)

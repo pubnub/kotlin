@@ -25,7 +25,8 @@ internal class TransitionFromHandshakeFailedStateTest {
         val channelGroupName = "ChannelGroup01"
         val myMutableSetOfChannels = mutableSetOf(channelName)
         val myMutableSetOfChannelGroups = mutableSetOf(channelGroupName)
-        val handshakeFailed: SubscribeState.HandshakeFailed = SubscribeState.HandshakeFailed(myMutableSetOfChannels, myMutableSetOfChannelGroups, exception)
+        val handshakeFailed: SubscribeState.HandshakeFailed =
+            SubscribeState.HandshakeFailed(myMutableSetOfChannels, myMutableSetOfChannelGroups, exception)
 
         // when
         myMutableSetOfChannels.remove(channelName)
@@ -106,7 +107,8 @@ internal class TransitionFromHandshakeFailedStateTest {
 
         // when
         val (state, invocations) = transition(
-            SubscribeState.HandshakeFailed(channels, channelGroups, exception), SubscribeEvent.Reconnect(subscriptionCursorForReconnect)
+            SubscribeState.HandshakeFailed(channels, channelGroups, exception),
+            SubscribeEvent.Reconnect(subscriptionCursorForReconnect)
         )
 
         // then

@@ -98,7 +98,8 @@ class PNConfigurationTest {
     @Test
     fun `should set minDelayInSec to 2 in RetryConfiguration Exponential when user set it lower than 2`() {
         val config = PNConfiguration(userId = UserId(BasePubNub.generateUUID()))
-        config.retryConfiguration = RetryConfiguration.Exponential(minDelayInSec = 1, maxDelayInSec = 10, maxRetryNumber = 10)
+        config.retryConfiguration =
+            RetryConfiguration.Exponential(minDelayInSec = 1, maxDelayInSec = 10, maxRetryNumber = 10)
 
         assertEquals(2, (config.retryConfiguration as RetryConfiguration.Exponential).minDelayInSec.inWholeSeconds)
     }
@@ -106,7 +107,8 @@ class PNConfigurationTest {
     @Test
     fun `should set maxRetry to 6 in RetryConfiguration Exponential when user set it above 6`() {
         val config = PNConfiguration(userId = UserId(BasePubNub.generateUUID()))
-        config.retryConfiguration = RetryConfiguration.Exponential(minDelayInSec = 5, maxDelayInSec = 10, maxRetryNumber = 10)
+        config.retryConfiguration =
+            RetryConfiguration.Exponential(minDelayInSec = 5, maxDelayInSec = 10, maxRetryNumber = 10)
 
         assertEquals(6, (config.retryConfiguration as RetryConfiguration.Exponential).maxRetryNumber)
     }
@@ -114,7 +116,8 @@ class PNConfigurationTest {
     @Test
     fun `should set maxDelayInSec to 150 in RetryConfiguration Exponential when user set it above 150`() {
         val config = PNConfiguration(userId = UserId(BasePubNub.generateUUID()))
-        config.retryConfiguration = RetryConfiguration.Exponential(minDelayInSec = 5, maxDelayInSec = 10, maxRetryNumber = 10)
+        config.retryConfiguration =
+            RetryConfiguration.Exponential(minDelayInSec = 5, maxDelayInSec = 10, maxRetryNumber = 10)
 
         assertEquals(6, (config.retryConfiguration as RetryConfiguration.Exponential).maxRetryNumber)
     }

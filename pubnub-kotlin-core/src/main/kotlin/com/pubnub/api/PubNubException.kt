@@ -25,7 +25,13 @@ data class PubNubException(
     val requestInfo: RequestInfo? = null,
 ) : Exception(errorMessage, cause) {
 
-    data class RequestInfo(val tlsEnabled: Boolean, val origin: String, val uuid: String?, val authKey: String?, val clientRequest: Request)
+    data class RequestInfo(
+        val tlsEnabled: Boolean,
+        val origin: String,
+        val uuid: String?,
+        val authKey: String?,
+        val clientRequest: Request
+    )
 
     internal constructor(pubnubError: PubNubError) : this(
         errorMessage = pubnubError.message,

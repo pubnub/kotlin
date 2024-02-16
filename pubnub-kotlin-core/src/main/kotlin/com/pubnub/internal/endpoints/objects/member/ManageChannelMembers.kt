@@ -38,7 +38,13 @@ class ManageChannelMembers(
             options = params,
             body = ChangeMemberInput(
                 delete = uuidsToRemove.map { ServerMemberInput(UUIDId(id = it)) },
-                set = uuidsToSet.map { ServerMemberInput(uuid = UUIDId(id = it.uuid), custom = it.custom, status = it.status) }
+                set = uuidsToSet.map {
+                    ServerMemberInput(
+                        uuid = UUIDId(id = it.uuid),
+                        custom = it.custom,
+                        status = it.status
+                    )
+                }
             )
         )
     }

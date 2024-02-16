@@ -21,7 +21,8 @@ class SignalTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Signal, PNPu
 
     override fun pnOperation() = PNOperationType.PNSignalOperation
 
-    override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.PUB + com.pubnub.internal.suite.AUTH
+    override fun requiredKeys() =
+        com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.PUB + com.pubnub.internal.suite.AUTH
 
     override fun snippet(): Signal {
         return pubnub.signal(

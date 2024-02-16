@@ -32,7 +32,8 @@ class TransitionFromHandshakingStateTest {
         val channelGroupName = "ChannelGroup01"
         val myMutableSetOfChannels = mutableSetOf(channelName)
         val myMutableSetOfChannelGroups = mutableSetOf(channelGroupName)
-        val handshaking: SubscribeState.Handshaking = SubscribeState.Handshaking(myMutableSetOfChannels, myMutableSetOfChannelGroups, subscriptionCursor = null)
+        val handshaking: SubscribeState.Handshaking =
+            SubscribeState.Handshaking(myMutableSetOfChannels, myMutableSetOfChannelGroups, subscriptionCursor = null)
 
         // when
         myMutableSetOfChannels.remove(channelName)
@@ -93,9 +94,17 @@ class TransitionFromHandshakingStateTest {
             setOf(
                 CancelHandshake,
                 EmitStatus(
-                    PNStatus.Connected(timeTokenForHandshake, channels = channels.toList(), channelGroups = channelGroups.toList())
+                    PNStatus.Connected(
+                        timeTokenForHandshake,
+                        channels = channels.toList(),
+                        channelGroups = channelGroups.toList()
+                    )
                 ),
-                ReceiveMessages(channels, channelGroups, SubscriptionCursor(timeTokenForHandshake, regionReturnedByHandshake))
+                ReceiveMessages(
+                    channels,
+                    channelGroups,
+                    SubscriptionCursor(timeTokenForHandshake, regionReturnedByHandshake)
+                )
             ),
             invocations
         )

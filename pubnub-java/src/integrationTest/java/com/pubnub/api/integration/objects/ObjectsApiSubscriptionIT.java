@@ -34,31 +34,40 @@ public class ObjectsApiSubscriptionIT extends ObjectsApiBaseIT {
 
     class TestSubscribeCallbackAdapter extends SubscribeCallback {
         @Override
-        public void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus) {}
+        public void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus) {
+        }
 
         @Override
-        public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult pnMessageResult) {}
+        public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult pnMessageResult) {
+        }
 
         @Override
-        public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult pnPresenceEventResult) {}
+        public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult pnPresenceEventResult) {
+        }
 
         @Override
-        public void signal(@NotNull PubNub pubnub, @NotNull PNSignalResult pnSignalResult) {}
+        public void signal(@NotNull PubNub pubnub, @NotNull PNSignalResult pnSignalResult) {
+        }
 
         @Override
-        public void uuid(@NotNull PubNub pubnub, @NotNull PNUUIDMetadataResult pnUUIDMetadataResult) {}
+        public void uuid(@NotNull PubNub pubnub, @NotNull PNUUIDMetadataResult pnUUIDMetadataResult) {
+        }
 
         @Override
-        public void channel(@NotNull PubNub pubnub, @NotNull PNChannelMetadataResult pnChannelMetadataResult) {}
+        public void channel(@NotNull PubNub pubnub, @NotNull PNChannelMetadataResult pnChannelMetadataResult) {
+        }
 
         @Override
-        public void membership(@NotNull PubNub pubnub, @NotNull PNMembershipResult pnMembershipResult) {}
+        public void membership(@NotNull PubNub pubnub, @NotNull PNMembershipResult pnMembershipResult) {
+        }
 
         @Override
-        public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {}
+        public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
+        }
 
         @Override
-        public void file(@NotNull final PubNub pubnub, @NotNull final PNFileEventResult pnFileEventResult) {}
+        public void file(@NotNull final PubNub pubnub, @NotNull final PNFileEventResult pnFileEventResult) {
+        }
     }
 
     @Test

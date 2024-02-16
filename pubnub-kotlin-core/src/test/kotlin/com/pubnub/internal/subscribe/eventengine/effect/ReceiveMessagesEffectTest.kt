@@ -26,7 +26,8 @@ class ReceiveMessagesEffectTest {
     @Test
     fun `should deliver ReceiveSuccess event when ReceiveMessagesEffect succeeded `() {
         // given
-        val receiveMessagesEffect = ReceiveMessagesEffect(successfulRemoteAction(receiveMessageResult), subscribeEventSink)
+        val receiveMessagesEffect =
+            ReceiveMessagesEffect(successfulRemoteAction(receiveMessageResult), subscribeEventSink)
 
         // when
         receiveMessagesEffect.runEffect()
@@ -36,7 +37,12 @@ class ReceiveMessagesEffectTest {
             .atMost(Durations.ONE_SECOND)
             .with()
             .pollInterval(Duration.ofMillis(20))
-            .untilAsserted { assertEquals(listOf(SubscribeEvent.ReceiveSuccess(messages, subscriptionCursor)), subscribeEventSink.events) }
+            .untilAsserted {
+                assertEquals(
+                    listOf(SubscribeEvent.ReceiveSuccess(messages, subscriptionCursor)),
+                    subscribeEventSink.events
+                )
+            }
     }
 
     @Test

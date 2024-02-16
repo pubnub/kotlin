@@ -39,7 +39,10 @@ class PresenceEventEngineSteps(private val state: EventEngineState) {
 
     @When("I join {string}, {string}, {string} channels with presence")
     fun I_join_channels_with_presence(firstChannel: String, secondChannel: String, thirdChannel: String) {
-        state.pubnub.pubNubImpl.subscribe(channels = listOf(firstChannel, secondChannel, thirdChannel), withPresence = true)
+        state.pubnub.pubNubImpl.subscribe(
+            channels = listOf(firstChannel, secondChannel, thirdChannel),
+            withPresence = true
+        )
     }
 
     @When("The timeout expires")

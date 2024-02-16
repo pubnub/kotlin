@@ -137,7 +137,10 @@ internal object PubNubUtil {
         }
         hmacData = sha256HMAC.doFinal(data.toByteArray(charset(CHARSET)))
 
-        val signed = String(com.pubnub.internal.vendor.Base64.encode(hmacData, com.pubnub.internal.vendor.Base64.NO_WRAP), Charset.forName(CHARSET))
+        val signed = String(
+            com.pubnub.internal.vendor.Base64.encode(hmacData, com.pubnub.internal.vendor.Base64.NO_WRAP),
+            Charset.forName(CHARSET)
+        )
             .replace('+', '-')
             .replace('/', '_')
         return signed

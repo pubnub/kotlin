@@ -44,7 +44,10 @@ internal class DelayedHeartbeatEffect(
             return
         }
 
-        val effectiveDelay = getEffectiveDelay(statusCode = reason?.statusCode ?: 0, retryAfterHeaderValue = reason?.retryAfterHeaderValue ?: 0)
+        val effectiveDelay = getEffectiveDelay(
+            statusCode = reason?.statusCode ?: 0,
+            retryAfterHeaderValue = reason?.retryAfterHeaderValue ?: 0
+        )
         scheduled = executorService.scheduleWithDelay(effectiveDelay) {
             heartbeatRemoteAction.async { result ->
                 result.onFailure {

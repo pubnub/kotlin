@@ -44,7 +44,8 @@ data class PNFetchMessageItem(
     val error: PubNubError? = null
 ) {
     // for compatibility with legacy Java SDK
-    class Action(uuid: String, actionTimetoken: String) : com.pubnub.api.models.consumer.history.Action(uuid, actionTimetoken)
+    class Action(uuid: String, actionTimetoken: String) :
+        com.pubnub.api.models.consumer.history.Action(uuid, actionTimetoken)
 }
 
 /**

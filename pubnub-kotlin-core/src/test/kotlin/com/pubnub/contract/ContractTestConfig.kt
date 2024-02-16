@@ -36,4 +36,5 @@ interface ContractTestKeysConfig : Config {
     val cryptoFilesLocation: String
 }
 
-val ContractTestConfig: ContractTestKeysConfig = ConfigFactory.create(ContractTestKeysConfig::class.java, System.getenv())
+val ContractTestConfig: ContractTestKeysConfig =
+    ConfigFactory.create(ContractTestKeysConfig::class.java, System.getenv())

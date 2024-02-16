@@ -377,7 +377,11 @@ class PubNubImpl internal constructor(
                 channelSubscriptionMap.computeIfAbsent(channelName.withPresence) { presenceChannelName ->
                     // this will either be the subscription we just created in the previous step,
                     // or if we were already subscribed to the channel WITHOUT presence, we need to create a new one
-                    subscription ?: BaseChannelImpl<BaseSubscriptionImpl>(this, presenceChannelName, subscriptionFactory).subscription().also { sub ->
+                    subscription ?: BaseChannelImpl<BaseSubscriptionImpl>(
+                        this,
+                        presenceChannelName,
+                        subscriptionFactory
+                    ).subscription().also { sub ->
                         toSubscribe.add(sub)
                     }
                 }
@@ -404,9 +408,10 @@ class PubNubImpl internal constructor(
                 channelGroupSubscriptionMap.computeIfAbsent(channelGroupName.withPresence) { presenceGroupName ->
                     // this will either be the subscription we just created in the previous step,
                     // or if we were already subscribed to the channel WITHOUT presence, we need to create a new one
-                    subscription ?: BaseChannelGroupImpl(this, presenceGroupName, subscriptionFactory).subscription().also { sub ->
-                        toSubscribe.add(sub)
-                    }
+                    subscription ?: BaseChannelGroupImpl(this, presenceGroupName, subscriptionFactory).subscription()
+                        .also { sub ->
+                            toSubscribe.add(sub)
+                        }
                 }
             }
         }

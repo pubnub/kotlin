@@ -345,7 +345,8 @@ public class HistoryIntegrationTest extends BaseIntegrationTest {
         final String expectedCipherKey = random();
 
         final PNConfiguration config = getBasicPnConfiguration();
-        config.setCryptoModule(CryptoModule.createLegacyCryptoModule(expectedCipherKey, true));;
+        config.setCryptoModule(CryptoModule.createLegacyCryptoModule(expectedCipherKey, true));
+        ;
         final PubNub observer = getPubNub(config);
 
         final String expectedChannelName = random();
@@ -675,7 +676,7 @@ public class HistoryIntegrationTest extends BaseIntegrationTest {
 
         assert fetchMessagesResult != null;
         for (PNFetchMessageItem messageItem : fetchMessagesResult.getChannels().get(expectedChannelName)) {
-            assertEquals(null ,messageItem.getMessageType());
+            assertEquals(null, messageItem.getMessageType());
         }
     }
 }

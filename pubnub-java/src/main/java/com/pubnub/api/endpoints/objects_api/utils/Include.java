@@ -6,6 +6,9 @@ public class Include {
     static final String INCLUDE_UUID_PARAM_VALUE = "uuid";
     static final String INCLUDE_UUID_CUSTOM_PARAM_VALUE = "uuid.custom";
 
+    private Include() {
+    }
+
     public enum PNChannelDetailsLevel {
         CHANNEL(INCLUDE_CHANNEL_PARAM_VALUE),
         CHANNEL_WITH_CUSTOM(INCLUDE_CHANNEL_CUSTOM_PARAM_VALUE);

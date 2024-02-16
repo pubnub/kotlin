@@ -10,8 +10,8 @@ public class PNChannelMetadataResult implements ObjectResult<PNChannelMetadata>,
 
     private final String event;
     private final String channel;
-    private final String Subscription;
-    private final Long timetoken ;
+    private final String subscription;
+    private final Long timetoken;
     private final JsonElement userMetadata;
     private final String publisher;
     private final PNChannelMetadata data;
@@ -19,7 +19,7 @@ public class PNChannelMetadataResult implements ObjectResult<PNChannelMetadata>,
     public PNChannelMetadataResult(String event, String channel, String subscription, Long getTimetoken, JsonElement userMetadata, String publisher, PNChannelMetadata data) {
         this.event = event;
         this.channel = channel;
-        Subscription = subscription;
+        this.subscription = subscription;
         this.timetoken = getTimetoken;
         this.userMetadata = userMetadata;
         this.publisher = publisher;

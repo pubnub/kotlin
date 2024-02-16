@@ -54,6 +54,7 @@ internal abstract class RetryableBase<T>(
             val excludedOperations = retryConfiguration.excludedOperations
             endpointIsNotExcludedFromRetryConfiguration(excludedOperations)
         }
+
         is RetryConfiguration.Exponential -> {
             val excludedOperations = retryConfiguration.excludedOperations
             endpointIsNotExcludedFromRetryConfiguration(excludedOperations)
@@ -124,6 +125,7 @@ internal abstract class RetryableBase<T>(
             delayInSeconds != null && delayInSeconds > 0 -> {
                 delayInSeconds.seconds
             }
+
             else -> {
                 getDelayFromRetryConfiguration()
             }

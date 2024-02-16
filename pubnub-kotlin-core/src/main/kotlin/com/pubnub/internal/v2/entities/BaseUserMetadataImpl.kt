@@ -6,7 +6,11 @@ import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.SubscriptionFactory
 import com.pubnub.internal.v2.subscription.BaseSubscriptionImpl
 
-open class BaseUserMetadataImpl<T : BaseSubscriptionImpl>(internal val pubnub: PubNubImpl, val channelName: ChannelName, private val subscriptionFactory: SubscriptionFactory<T>) : BaseUserMetadata {
+open class BaseUserMetadataImpl<T : BaseSubscriptionImpl>(
+    internal val pubnub: PubNubImpl,
+    val channelName: ChannelName,
+    private val subscriptionFactory: SubscriptionFactory<T>
+) : BaseUserMetadata {
 
     override val id: String = channelName.id
 

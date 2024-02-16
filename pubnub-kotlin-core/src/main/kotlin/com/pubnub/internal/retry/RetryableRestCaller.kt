@@ -66,7 +66,10 @@ internal class RetryableRestCaller<T>(
                 }
             }
         } catch (e: PubNubRetryableException) {
-            return Pair(Response.error(e.statusCode, e.errorMessage?.toResponseBody() ?: "".toResponseBody()), pubNubException)
+            return Pair(
+                Response.error(e.statusCode, e.errorMessage?.toResponseBody() ?: "".toResponseBody()),
+                pubNubException
+            )
         }
     }
 

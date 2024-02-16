@@ -44,8 +44,7 @@ class AssumingProperConfig implements TestRule {
             public void evaluate() throws Throwable {
                 if (itPamTestConfig.pamSecKey() != null) {
                     base.evaluate();
-                }
-                else {
+                } else {
                     throw new AssumptionViolatedException("missing config");
                 }
             }
@@ -61,7 +60,7 @@ public abstract class AbstractReconnectionProblemIT {
 
     protected static final int SUBSCRIBE_TIMEOUT = 5;
     protected final List<CollectedStatus> collectedStatuses = Collections.synchronizedList(new ArrayList<>());
-    protected PubNub  pn;
+    protected PubNub pn;
 
     protected String authKey = randomId();
 
@@ -174,7 +173,6 @@ public abstract class AbstractReconnectionProblemIT {
     }
 
 
-
     protected void createChannelGroup(final PubNub pnClient, final String channelGroup, final String... channelNames) throws PubNubException {
         pnClient.addChannelsToChannelGroup()
                 .channelGroup(channelGroup)
@@ -184,7 +182,7 @@ public abstract class AbstractReconnectionProblemIT {
 
     protected abstract PubNub privilegedClientPubNub();
 
-    PNConfiguration getPNConfiguration(){
+    PNConfiguration getPNConfiguration() {
         PNConfiguration pnConfiguration = null;
         try {
             pnConfiguration = new PNConfiguration(new UserId("pn-" + UUID.randomUUID()));

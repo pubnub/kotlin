@@ -20,7 +20,8 @@ class TransitionFromHeartbeatCooldownStateTest {
         val channelGroupName = "ChannelGroup01"
         val myMutableSetOfChannels = mutableSetOf(channelName)
         val myMutableSetOfChannelGroups = mutableSetOf(channelGroupName)
-        val heartbeatCooldown: PresenceState.HeartbeatCooldown = PresenceState.HeartbeatCooldown(myMutableSetOfChannels, myMutableSetOfChannelGroups)
+        val heartbeatCooldown: PresenceState.HeartbeatCooldown =
+            PresenceState.HeartbeatCooldown(myMutableSetOfChannels, myMutableSetOfChannelGroups)
 
         // when
         myMutableSetOfChannels.remove(channelName)

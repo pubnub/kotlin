@@ -100,6 +100,7 @@ class ThenSteps(
     }
 
     private fun parsedToken(): PNToken? {
-        return grantTokenState.parsedToken ?: grantTokenState.result?.let { world.pubnub.pubNubImpl.parseToken(it.token) }
+        return grantTokenState.parsedToken
+            ?: grantTokenState.result?.let { world.pubnub.pubNubImpl.parseToken(it.token) }
     }
 }

@@ -91,7 +91,10 @@ internal interface Presence {
     fun destroy()
 }
 
-internal class PresenceNoOp(private val suppressLeaveEvents: Boolean = false, private val leaveProvider: LeaveProvider) : Presence {
+internal class PresenceNoOp(
+    private val suppressLeaveEvents: Boolean = false,
+    private val leaveProvider: LeaveProvider
+) : Presence {
     private val log = LoggerFactory.getLogger(PresenceNoOp::class.java)
     private val channels = mutableSetOf<String>()
     private val channelGroups = mutableSetOf<String>()

@@ -27,7 +27,8 @@ class BaseChannelGroupImplTest {
 
     @Test
     fun `create subscription`() {
-        val channelGrp = BaseChannelGroupImpl(pn.pubNubImpl, ChannelGroupName(CHANNEL_GROUP_NAME), ::BaseSubscriptionImpl)
+        val channelGrp =
+            BaseChannelGroupImpl(pn.pubNubImpl, ChannelGroupName(CHANNEL_GROUP_NAME), ::BaseSubscriptionImpl)
 
         val subscription = channelGrp.subscription()
 
@@ -37,7 +38,8 @@ class BaseChannelGroupImplTest {
 
     @Test
     fun `create subscription with presence`() {
-        val channelGrp = BaseChannelGroupImpl(pn.pubNubImpl, ChannelGroupName(CHANNEL_GROUP_NAME), ::BaseSubscriptionImpl)
+        val channelGrp =
+            BaseChannelGroupImpl(pn.pubNubImpl, ChannelGroupName(CHANNEL_GROUP_NAME), ::BaseSubscriptionImpl)
 
         val subscription = channelGrp.subscription(SubscriptionOptions.receivePresenceEvents())
 

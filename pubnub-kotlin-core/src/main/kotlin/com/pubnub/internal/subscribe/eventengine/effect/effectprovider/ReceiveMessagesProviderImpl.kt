@@ -9,7 +9,8 @@ import com.pubnub.internal.subscribe.eventengine.effect.ReceiveMessagesResult
 import com.pubnub.internal.subscribe.eventengine.event.SubscriptionCursor
 import com.pubnub.internal.workers.SubscribeMessageProcessor
 
-internal class ReceiveMessagesProviderImpl(val pubNub: PubNubImpl, val messageProcessor: SubscribeMessageProcessor) : ReceiveMessagesProvider {
+internal class ReceiveMessagesProviderImpl(val pubNub: PubNubImpl, val messageProcessor: SubscribeMessageProcessor) :
+    ReceiveMessagesProvider {
 
     override fun getReceiveMessagesRemoteAction(
         channels: Set<String>,

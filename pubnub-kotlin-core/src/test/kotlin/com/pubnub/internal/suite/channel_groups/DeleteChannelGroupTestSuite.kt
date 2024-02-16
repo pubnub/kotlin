@@ -10,7 +10,8 @@ import com.pubnub.internal.suite.AUTH
 import com.pubnub.internal.suite.EndpointTestSuite
 import com.pubnub.internal.suite.SUB
 
-class DeleteChannelGroupTestSuite : com.pubnub.internal.suite.EndpointTestSuite<DeleteChannelGroup, PNChannelGroupsDeleteGroupResult>() {
+class DeleteChannelGroupTestSuite :
+    com.pubnub.internal.suite.EndpointTestSuite<DeleteChannelGroup, PNChannelGroupsDeleteGroupResult>() {
 
     override fun telemetryParamName() = "l_cg"
 

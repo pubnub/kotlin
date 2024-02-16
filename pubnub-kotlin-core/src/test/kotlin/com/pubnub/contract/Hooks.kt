@@ -42,8 +42,8 @@ class Hooks {
                 ) {
                     fail(
                         """Scenario ${responseBody.contract} considered failure: 
-                            pending - ${responseBody.expectations.pending.joinToString() },
-                            failed - ${responseBody.expectations.failed.joinToString() }
+                            pending - ${responseBody.expectations.pending.joinToString()},
+                            failed - ${responseBody.expectations.failed.joinToString()}
                         """.trimIndent()
                     )
                 }

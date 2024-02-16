@@ -6,7 +6,7 @@ import lombok.Getter;
 import static com.pubnub.api.endpoints.objects_api.utils.PNSortKey.Dir.ASC;
 import static com.pubnub.api.endpoints.objects_api.utils.PNSortKey.Dir.DESC;
 
-final public class PNSortKey {
+public final class PNSortKey {
     public enum Dir {
         ASC("asc"), DESC("desc");
 

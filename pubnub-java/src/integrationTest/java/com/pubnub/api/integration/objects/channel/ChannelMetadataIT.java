@@ -112,7 +112,7 @@ public class ChannelMetadataIT extends ObjectsApiBaseIT {
     public void getAllChannelHappyPath() throws PubNubException {
         //given
 
-        for (String testChannelName: randomChannelMetadataIds) {
+        for (String testChannelName : randomChannelMetadataIds) {
             final PNSetChannelMetadataResult setChannelMetadataResult = pubNubUnderTest.setChannelMetadata()
                     .channel(testChannelName)
                     .description(randomDescription)
@@ -146,7 +146,7 @@ public class ChannelMetadataIT extends ObjectsApiBaseIT {
     public void getAllChannelsTraversingPagesHappyPath() throws PubNubException {
         //given
 
-        for (String testChannelMetadataId: randomChannelMetadataIds) {
+        for (String testChannelMetadataId : randomChannelMetadataIds) {
             final PNSetChannelMetadataResult setChannelMetadataResult = pubNubUnderTest.setChannelMetadata()
                     .channel(testChannelMetadataId)
                     .description(randomDescription)
@@ -223,8 +223,7 @@ public class ChannelMetadataIT extends ObjectsApiBaseIT {
                 pubNubUnderTest.removeChannelMetadata()
                         .channel(setChannelMetadataResult.getData().getId())
                         .sync();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 LOG.warn("Could not cleanup {}", setChannelMetadataResult, e);
             }
         });
@@ -256,7 +255,7 @@ public class ChannelMetadataIT extends ObjectsApiBaseIT {
     @NotNull
     private static List<String> extractChannelIds(final PNGetAllChannelsMetadataResult pnGetAllChannelsMetadataResult) {
         final List<String> ids = new ArrayList<>();
-        for (PNChannelMetadata pnChannelMetadata: pnGetAllChannelsMetadataResult.getData()) {
+        for (PNChannelMetadata pnChannelMetadata : pnGetAllChannelsMetadataResult.getData()) {
             ids.add(pnChannelMetadata.getId());
         }
         return ids;

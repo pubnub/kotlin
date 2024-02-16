@@ -19,7 +19,10 @@ class ThenSteps(
         val firstChannelMembership = loadChannelMembership(firstChannelMembershipName)
         val secondChannelMembership = loadChannelMembership(secondChannelMembershipName)
 
-        assertThat(membershipState.returnedMemberships, containsInAnyOrder(firstChannelMembership, secondChannelMembership))
+        assertThat(
+            membershipState.returnedMemberships,
+            containsInAnyOrder(firstChannelMembership, secondChannelMembership)
+        )
     }
 
     @Then("the response contains list with {string} membership")

@@ -75,6 +75,7 @@ class CryptoModule private constructor(
             is ParseResult.NoHeader -> {
                 getDecryptedDataForLegacyCryptor(encryptedData)
             }
+
             is ParseResult.Success -> {
                 getDecryptedDataForCryptorWithHeader(parsedData)
             }
@@ -173,10 +174,17 @@ class CryptoModule private constructor(
 }
 
 internal fun CryptoModule.encryptString(inputString: String): String =
-    String(com.pubnub.internal.vendor.Base64.encode(encrypt(inputString.toByteArray()), com.pubnub.internal.vendor.Base64.NO_WRAP))
+    String(
+        com.pubnub.internal.vendor.Base64.encode(
+            encrypt(inputString.toByteArray()),
+            com.pubnub.internal.vendor.Base64.NO_WRAP
+        )
+    )
 
 internal fun CryptoModule.decryptString(inputString: String): String =
-    decrypt(com.pubnub.internal.vendor.Base64.decode(inputString, com.pubnub.internal.vendor.Base64.NO_WRAP)).toString(Charsets.UTF_8)
+    decrypt(com.pubnub.internal.vendor.Base64.decode(inputString, com.pubnub.internal.vendor.Base64.NO_WRAP)).toString(
+        Charsets.UTF_8
+    )
 
 // this method read data from stream and allows to read them again in subsequent reads without manual reset or repositioning
 internal fun BufferedInputStream.checkMinSize(size: Int, exceptionBlock: (Int) -> Unit) {

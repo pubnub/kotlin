@@ -200,15 +200,18 @@ public abstract class SubscribeCallback implements com.pubnub.internal.callbacks
 
     @Override
     public void presence(@NotNull BasePubNub pubnub, @NotNull PNPresenceEventResult presenceEvent) {
-        presence((PubNub) pubnub, presenceEvent);    }
+        presence((PubNub) pubnub, presenceEvent);
+    }
 
     @Override
     public void signal(@NotNull BasePubNub pubnub, @NotNull PNSignalResult signal) {
-        signal((PubNub) pubnub, signal);    }
+        signal((PubNub) pubnub, signal);
+    }
 
     @Override
     public void messageAction(@NotNull BasePubNub pubnub, @NotNull PNMessageActionResult messageAction) {
-        messageAction((PubNub) pubnub, messageAction);    }
+        messageAction((PubNub) pubnub, messageAction);
+    }
 
     @Override
     public void file(@NotNull BasePubNub pubnub, @NotNull PNFileEventResult fileEvent) {

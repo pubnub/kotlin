@@ -76,7 +76,8 @@ class History internal constructor(
                 val historyMessageWithError: Pair<JsonElement, PubNubError?>
 
                 if (includeTimetoken || includeMeta) {
-                    historyMessageWithError = pubnub.mapper.getField(historyEntry, "message")!!.tryDecryptMessage(pubnub.cryptoModule, pubnub.mapper)
+                    historyMessageWithError = pubnub.mapper.getField(historyEntry, "message")!!
+                        .tryDecryptMessage(pubnub.cryptoModule, pubnub.mapper)
                     if (includeTimetoken) {
                         timetoken = pubnub.mapper.elementToLong(historyEntry, "timetoken")
                     }

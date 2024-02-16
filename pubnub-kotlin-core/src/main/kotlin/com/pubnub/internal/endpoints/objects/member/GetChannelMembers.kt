@@ -24,7 +24,8 @@ class GetChannelMembers internal constructor(
 ) : Endpoint<EntityArrayEnvelope<PNMember>, PNMemberArrayResult>(pubnub), IGetChannelMembers {
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityArrayEnvelope<PNMember>> {
-        val params = queryParams + collectionQueryParameters.createCollectionQueryParams() + includeQueryParam.createIncludeQueryParams()
+        val params =
+            queryParams + collectionQueryParameters.createCollectionQueryParams() + includeQueryParam.createIncludeQueryParams()
 
         return pubnub.retrofitManager.objectsService.getChannelMembers(
             channel = channel,

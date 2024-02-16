@@ -10,7 +10,10 @@ import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResu
 import com.pubnub.internal.BasePubNub
 import com.pubnub.internal.models.consumer.pubsub.objects.PNObjectEventResult
 
-interface SubscribeCallback : Listener, com.pubnub.internal.v2.callbacks.StatusListener, com.pubnub.internal.v2.callbacks.EventListener {
+interface SubscribeCallback :
+    Listener,
+    com.pubnub.internal.v2.callbacks.StatusListener,
+    com.pubnub.internal.v2.callbacks.EventListener {
 
     /**
      * Receive status events like

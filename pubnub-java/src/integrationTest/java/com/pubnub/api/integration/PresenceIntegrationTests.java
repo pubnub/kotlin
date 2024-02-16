@@ -110,8 +110,6 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
                                 assertTrue(channelsResult.containsAll(expectedChannels));
 
 
-
-
                                 for (Map.Entry<String, PNHereNowChannelData> entry : pnHereNowResult.getChannels().entrySet()) {
                                     if (expectedChannels.contains(entry.getKey())) {
                                         assertTrue(entry.getValue().getOccupancy() >= expectedClientsCount);
@@ -327,15 +325,15 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
                 if (!status.isError()) {
-                        if (status instanceof PNStatus.Connected) {
-                            if (((PNStatus.Connected) status).getChannels().contains(expectedChannel)) {
-                                subscribeSuccess.set(true);
-                            }
-                        } else if (status instanceof PNStatus.HeartbeatSuccess) {
-                            heartbeatCallsCount.incrementAndGet();
+                    if (status instanceof PNStatus.Connected) {
+                        if (((PNStatus.Connected) status).getChannels().contains(expectedChannel)) {
+                            subscribeSuccess.set(true);
                         }
+                    } else if (status instanceof PNStatus.HeartbeatSuccess) {
+                        heartbeatCallsCount.incrementAndGet();
                     }
                 }
+            }
         });
 
         pubNub.subscribe()

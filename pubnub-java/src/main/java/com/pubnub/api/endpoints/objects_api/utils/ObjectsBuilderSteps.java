@@ -18,6 +18,7 @@ public interface ObjectsBuilderSteps extends BuilderSteps {
 
     interface RemoveOrSetStep<T, E> {
         RemoveStep<T, E> set(Collection<E> entitiesToSet);
+
         SetStep<T, E> remove(Collection<E> entitiesToRemove);
 
         interface RemoveStep<T, E> {

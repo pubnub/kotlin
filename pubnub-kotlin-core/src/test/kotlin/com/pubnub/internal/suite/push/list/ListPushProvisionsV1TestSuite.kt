@@ -12,7 +12,8 @@ import com.pubnub.internal.endpoints.push.ListPushProvisions
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 
-class ListPushProvisionsV1TestSuite : com.pubnub.internal.suite.EndpointTestSuite<ListPushProvisions, PNPushListProvisionsResult>() {
+class ListPushProvisionsV1TestSuite :
+    com.pubnub.internal.suite.EndpointTestSuite<ListPushProvisions, PNPushListProvisionsResult>() {
 
     override fun telemetryParamName() = "l_push"
 

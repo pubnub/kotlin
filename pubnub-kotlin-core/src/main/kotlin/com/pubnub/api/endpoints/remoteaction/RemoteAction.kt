@@ -13,7 +13,8 @@ interface ExtendedRemoteAction<Output> : RemoteAction<Output> {
 interface RemoteAction<Output> : Cancelable {
     @Throws(PubNubException::class)
     fun sync(): Output
-//    @JvmSynthetic
+
+    //    @JvmSynthetic
 //    fun async(callback: (result: Result<Output>) -> Unit)
     fun async(callback: Consumer<Result<Output>>)
     fun retry()

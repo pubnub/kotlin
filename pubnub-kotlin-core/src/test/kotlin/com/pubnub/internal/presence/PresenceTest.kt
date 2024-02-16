@@ -78,6 +78,7 @@ internal class PresenceTest {
         // then
         Assertions.assertEquals(listOf("event" to eventName), queuedElements)
     }
+
     @Test
     fun `create returns PresenceNoOp if heartbeat interval is 0`() {
         // when

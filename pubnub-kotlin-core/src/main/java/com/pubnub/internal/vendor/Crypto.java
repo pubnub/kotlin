@@ -48,11 +48,10 @@ public class Crypto {
             keyBytes = new String(hexEncode(sha256(this.cipherKey.getBytes(ENCODING_UTF_8))), ENCODING_UTF_8)
                     .substring(0, 32)
                     .toLowerCase().getBytes(ENCODING_UTF_8);
-            if (dynamicIV){
+            if (dynamicIV) {
                 ivBytes = new byte[16];
                 new Random().nextBytes(ivBytes);
-            }
-            else {
+            } else {
                 ivBytes = initializationVector.getBytes(ENCODING_UTF_8);
                 INIT = true;
             }
@@ -104,8 +103,7 @@ public class Crypto {
                 System.arraycopy(ivBytes, 0, encryptedWithIV, 0, ivBytes.length);
                 System.arraycopy(encrypted, 0, encryptedWithIV, ivBytes.length, encrypted.length);
                 return new String(Base64.encode(encryptedWithIV, flags), ENCODING_UTF_8);
-            }
-            else {
+            } else {
                 return new String(Base64.encode(cipher.doFinal(input.getBytes(ENCODING_UTF_8)), flags), ENCODING_UTF_8);
             }
         } catch (Exception e) {
@@ -122,14 +120,13 @@ public class Crypto {
         try {
             byte[] dataBytes;
             initCiphers();
-            if (dynamicIV){
+            if (dynamicIV) {
                 dataBytes = Base64.decode(cipher_text, flags);
                 System.arraycopy(dataBytes, 0, ivBytes, 0, 16);
                 byte[] receivedCipherBytes = new byte[dataBytes.length - 16];
-                System.arraycopy(dataBytes, 16, receivedCipherBytes, 0, dataBytes.length-16);
+                System.arraycopy(dataBytes, 16, receivedCipherBytes, 0, dataBytes.length - 16);
                 dataBytes = receivedCipherBytes;
-            }
-            else {
+            } else {
                 dataBytes = Base64.decode(cipher_text, flags);
             }
             AlgorithmParameterSpec ivSpec = new IvParameterSpec(ivBytes);
@@ -142,7 +139,7 @@ public class Crypto {
         }
     }
 
-     /**
+    /**
      * Get SHA256
      *
      * @param input

@@ -21,7 +21,8 @@ class PublishPostTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Publish
 
     override fun pnOperation() = PNOperationType.PNPublishOperation
 
-    override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.PUB + com.pubnub.internal.suite.AUTH
+    override fun requiredKeys() =
+        com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.PUB + com.pubnub.internal.suite.AUTH
 
     override fun snippet(): Publish {
         return pubnub.publish(

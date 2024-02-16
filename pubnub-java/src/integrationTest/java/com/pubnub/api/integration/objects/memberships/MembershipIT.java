@@ -68,9 +68,9 @@ public class MembershipIT extends ObjectsApiBaseIT {
                 hasProperty("data",
                         hasItem(
                                 allOf(
-                                    hasProperty(CHANNEL,
-                                            hasProperty("id", is(testChannelId1))),
-                                    hasProperty("custom", nullValue())))),
+                                        hasProperty(CHANNEL,
+                                                hasProperty("id", is(testChannelId1))),
+                                        hasProperty("custom", nullValue())))),
                 hasProperty("data",
                         hasItem(
                                 allOf(

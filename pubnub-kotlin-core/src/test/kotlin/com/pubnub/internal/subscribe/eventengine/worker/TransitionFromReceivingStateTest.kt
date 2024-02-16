@@ -23,6 +23,7 @@ class TransitionFromReceivingStateTest {
     private val region = "42"
     private val subscriptionCursor = SubscriptionCursor(timeToken, region)
     private val reason = PubNubException(PubNubError.PARSING_ERROR)
+
     @Test
     fun can_transit_from_RECEIVING_to_RECEIVING_RECONNECTING_when_there_is_RECEIVE_FAILURE_event() {
         // when
@@ -94,7 +95,13 @@ class TransitionFromReceivingStateTest {
         assertEquals(
             setOf(
                 SubscribeEffectInvocation.CancelReceiveMessages,
-                SubscribeEffectInvocation.EmitStatus(createSubscriptionChangedStatus(state.subscriptionCursor, channels, channelGroups)),
+                SubscribeEffectInvocation.EmitStatus(
+                    createSubscriptionChangedStatus(
+                        state.subscriptionCursor,
+                        channels,
+                        channelGroups
+                    )
+                ),
                 SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
             ),
             invocations
@@ -116,7 +123,8 @@ class TransitionFromReceivingStateTest {
         )
 
         // then
-        val expectedSubscriptionCursor = SubscriptionCursor(timeTokenFromSubscriptionRestored, regionStoredInStoredInReceive)
+        val expectedSubscriptionCursor =
+            SubscriptionCursor(timeTokenFromSubscriptionRestored, regionStoredInStoredInReceive)
         Assertions.assertTrue(state is SubscribeState.Receiving)
         state as SubscribeState.Receiving
 

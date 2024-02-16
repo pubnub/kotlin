@@ -276,7 +276,8 @@ class RetryableRestCallerTest {
             maxRetryNumber = 2,
             excludedOperations = listOf(RetryableEndpointGroup.MESSAGE_PERSISTENCE)
         )
-        val retryableRestCaller = getRetryableRestCaller(retryConfiguration = retryConfiguration, isEndpointRetryable = false)
+        val retryableRestCaller =
+            getRetryableRestCaller(retryConfiguration = retryConfiguration, isEndpointRetryable = false)
         val errorResponse: Response<FetchMessagesEnvelope> = Response.error(500, ResponseBody.create(null, ""))
         val mockCall = mockk<Call<FetchMessagesEnvelope>>()
         every { mockCall.execute() } returns errorResponse

@@ -37,7 +37,8 @@ abstract class BasePubNub internal constructor(
 
     val listenerManager: ListenerManager = ListenerManager(this)
 
-    val pubNubImpl = PubNubImpl(configuration, listenerManager, eventEnginesConf, subscriptionFactory, subscriptionSetFactory)
+    val pubNubImpl =
+        PubNubImpl(configuration, listenerManager, eventEnginesConf, subscriptionFactory, subscriptionSetFactory)
 
     /**
      * The current version of the Kotlin SDK.
@@ -130,7 +131,8 @@ abstract class BasePubNub internal constructor(
      * @param subscriptions the subscriptions that will be added to the returned [BaseSubscriptionSet]
      * @return a [BaseSubscriptionSet] containing all [subscriptions]
      */
-    open fun subscriptionSetOf(subscriptions: Set<BaseSubscription> = emptySet()) = pubNubImpl.subscriptionSetOf(subscriptions)
+    open fun subscriptionSetOf(subscriptions: Set<BaseSubscription> = emptySet()) =
+        pubNubImpl.subscriptionSetOf(subscriptions)
 
     /**
      * Create a [BaseSubscriptionSet] containing [BaseSubscription] objects for the given sets of [channels] and

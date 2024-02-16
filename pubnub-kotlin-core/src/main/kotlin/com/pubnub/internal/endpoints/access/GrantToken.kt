@@ -36,7 +36,10 @@ class GrantToken(
             throw PubNubException(PubNubError.SUBSCRIBE_KEY_MISSING)
         }
         if ((channels + channelGroups + uuids).isEmpty()) {
-            throw PubNubException(pubnubError = PubNubError.RESOURCES_MISSING, errorMessage = "At least one grant required")
+            throw PubNubException(
+                pubnubError = PubNubError.RESOURCES_MISSING,
+                errorMessage = "At least one grant required"
+            )
         }
     }
 

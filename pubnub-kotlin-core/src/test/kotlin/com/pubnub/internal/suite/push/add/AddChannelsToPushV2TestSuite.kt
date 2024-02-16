@@ -12,7 +12,8 @@ import com.pubnub.internal.suite.AUTH
 import com.pubnub.internal.suite.EndpointTestSuite
 import com.pubnub.internal.suite.SUB
 
-class AddChannelsToPushV2TestSuite : com.pubnub.internal.suite.EndpointTestSuite<AddChannelsToPush, PNPushAddChannelResult>() {
+class AddChannelsToPushV2TestSuite :
+    com.pubnub.internal.suite.EndpointTestSuite<AddChannelsToPush, PNPushAddChannelResult>() {
 
     override fun telemetryParamName() = "l_push"
 

@@ -27,7 +27,8 @@ class DelayedHeartbeatEffectTest {
     private val resultFromHeartbeat = true
     private val retryConfiguration = RetryConfiguration.Linear(delayInSec = 10.milliseconds, isInternal = true)
     private val executorService = Executors.newSingleThreadScheduledExecutor()
-    private val delayedHeartbeatInvocation = PresenceEffectInvocation.DelayedHeartbeat(channels, channelGroups, attempts, reason)
+    private val delayedHeartbeatInvocation =
+        PresenceEffectInvocation.DelayedHeartbeat(channels, channelGroups, attempts, reason)
 
     @Test
     fun `should deliver HeartbeatSuccess event when DelayedHeartbeatEffect succeeded`() {

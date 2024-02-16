@@ -108,7 +108,7 @@ public class ManageChannelMembers extends Endpoint<PNManageChannelMembersResult>
                                     uuidsToSet,
                                     uuidsToRemove,
                                     pubnubInstance
-                                    );
+                            );
                         }
                     };
                 }

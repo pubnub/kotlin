@@ -91,7 +91,10 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
         val successPresenceEventCont = AtomicInteger()
         val expectedChannel01 = randomChannel()
         val expectedChannel02 = randomChannel()
-        val subscriptionSetOf = pubnub.subscriptionSetOf(channels = setOf(expectedChannel01, expectedChannel02), options = SubscriptionOptions.receivePresenceEvents())
+        val subscriptionSetOf = pubnub.subscriptionSetOf(
+            channels = setOf(expectedChannel01, expectedChannel02),
+            options = SubscriptionOptions.receivePresenceEvents()
+        )
 
         subscriptionSetOf.onPresence = { pnPresenceEventResult: PNPresenceEventResult ->
             assertEquals("join", pnPresenceEventResult.event)

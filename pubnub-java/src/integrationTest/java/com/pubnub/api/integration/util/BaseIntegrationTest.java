@@ -128,7 +128,7 @@ public abstract class BaseIntegrationTest {
         client.forceDestroy();
     }
 
-    protected PNConfiguration getBasicPnConfiguration()  {
+    protected PNConfiguration getBasicPnConfiguration() {
         final PNConfiguration pnConfiguration;
         try {
             pnConfiguration = new PNConfiguration(new UserId("pn-" + UUID.randomUUID()));
@@ -149,7 +149,7 @@ public abstract class BaseIntegrationTest {
         return pnConfiguration;
     }
 
-    private PNConfiguration getServerPnConfiguration(){
+    private PNConfiguration getServerPnConfiguration() {
         final PNConfiguration pnConfiguration;
         try {
             pnConfiguration = new PNConfiguration(new UserId("pn-" + UUID.randomUUID()));
@@ -188,9 +188,10 @@ public abstract class BaseIntegrationTest {
             public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
 
             }
+
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
-                if (status instanceof PNStatus.Connected ) {
+                if (status instanceof PNStatus.Connected) {
                     if (((PNStatus.Connected) status).getChannels().containsAll(channels)) {
                         subscribeSuccess.set(true);
                     }

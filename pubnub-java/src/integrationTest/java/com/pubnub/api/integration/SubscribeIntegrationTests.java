@@ -85,6 +85,7 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
             public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
 
             }
+
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
 
@@ -145,6 +146,7 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
             public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
 
             }
+
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
                 boolean channelSubscribed = false;
