@@ -404,12 +404,6 @@ public class PubNub extends BasePubNub {
         return getPubNubImpl().encryptInputStream(inputStream, cipherKey);
     }
 
-//    TODO bring back?
-//    public int getTimestamp() {
-//        return (int) ((new Date().getTime()) / TIMESTAMP_DIVIDER);
-//    }
-
-
     /**
      * @return request uuid.
      */

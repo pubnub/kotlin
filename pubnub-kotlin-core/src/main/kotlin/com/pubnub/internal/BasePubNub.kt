@@ -46,6 +46,9 @@ abstract class BasePubNub internal constructor(
     val version: String
         get() = pubNubImpl.version
 
+    val timestamp
+        get() = pubNubImpl.timestamp()
+
     /**
      * Unique id of this PubNub instance.
      *
