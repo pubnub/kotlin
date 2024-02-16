@@ -27,7 +27,7 @@ class MappingRemoteAction<T, U>(private val remoteAction: ExtendedRemoteAction<T
         remoteAction.async { r ->
             r.onSuccess {
                 val newValue = try {
-                     function(it)
+                    function(it)
                 } catch (e: Throwable) {
                     callback.accept(Result.failure(PubNubException.from(e)))
                     return@onSuccess

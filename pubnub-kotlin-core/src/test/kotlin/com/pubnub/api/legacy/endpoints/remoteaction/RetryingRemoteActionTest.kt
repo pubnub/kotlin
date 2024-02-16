@@ -2,6 +2,7 @@ package com.pubnub.api.legacy.endpoints.remoteaction
 
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RetryingRemoteAction
+import com.pubnub.api.v2.callbacks.onFailure
 import com.pubnub.api.v2.callbacks.onSuccess
 import io.mockk.spyk
 import io.mockk.verify
@@ -92,8 +93,8 @@ class RetryingRemoteActionTest {
         retryingRemoteAction.async { result ->
             // then
             result.onSuccess {
-                Assert.assertEquals(expectedValue, result)
-                verify(exactly = 1) { remoteAction.async(any()) }
+                Assert.assertEquals(expectedValue, it)
+                verify(exactly = 1) { remoteAction.sync() }
                 asyncSynchronization.countDown()
             }
         }
@@ -117,9 +118,11 @@ class RetryingRemoteActionTest {
         // when
         retryingRemoteAction.async { result ->
             // then
-            Assert.assertEquals(expectedValue, result)
-            verify(exactly = numberOfRetries) { remoteAction.async(any()) }
-            asyncSynchronization.countDown()
+            result.onSuccess {
+                Assert.assertEquals(expectedValue, it)
+                verify(exactly = numberOfRetries) { remoteAction.sync() }
+                asyncSynchronization.countDown()
+            }
         }
         if (!asyncSynchronization.await(3, TimeUnit.SECONDS)) {
             Assert.fail("Callback have not been called")
@@ -142,7 +145,7 @@ class RetryingRemoteActionTest {
         retryingRemoteAction.async { result ->
             // then
             Assert.assertTrue(result.isFailure)
-            verify(exactly = numberOfRetries) { remoteAction.async(any()) }
+            verify(exactly = numberOfRetries) { remoteAction.sync() }
             asyncSynchronization.countDown()
         }
         if (!asyncSynchronization.await(3, TimeUnit.SECONDS)) {
@@ -167,11 +170,11 @@ class RetryingRemoteActionTest {
             // then
             if (asyncSynchronization.count == 1L) {
                 Assert.assertTrue(result.isFailure)
-                verify(exactly = 2 * numberOfRetries) { remoteAction.async(any()) }
+                verify(exactly = 2 * numberOfRetries) { remoteAction.sync() }
             }
             asyncSynchronization.countDown()
             if (asyncSynchronization.count == 1L) {
-//                status.retry() //TODO we lost retry
+                result.onFailure { it.remoteAction?.retry() }
             }
         }
         if (!asyncSynchronization.await(3, TimeUnit.SECONDS)) {

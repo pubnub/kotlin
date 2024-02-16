@@ -135,7 +135,7 @@ class ComposableRemoteActionTest {
         composedAction.async { result ->
             countDownLatch.countDown()
             result.onFailure {
-//                s.retry() // TODO we lost retry
+                it.remoteAction?.retry()
             }
         }
 
@@ -162,8 +162,8 @@ class ComposableRemoteActionTest {
         // when
         composedAction.async { result ->
             countDownLatch.countDown()
-            if (result.isFailure) {
-//                s.retry() // TODO we lost retry
+            result.onFailure {
+                it.remoteAction?.retry()
             }
         }
 

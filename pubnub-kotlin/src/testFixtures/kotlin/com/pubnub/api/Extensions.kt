@@ -82,7 +82,6 @@ fun <Output> RemoteAction<Output>.retryForbidden(
     // first run should return forbidden
     async { result ->
         result.onFailure {
-            // TODO check forbidden
             if (it.statusCode == 403) {
                 onFail.invoke(it)
                 success.set(false)

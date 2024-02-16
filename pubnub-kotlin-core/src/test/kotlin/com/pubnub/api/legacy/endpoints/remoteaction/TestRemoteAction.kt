@@ -35,9 +35,9 @@ class TestRemoteAction<Output> internal constructor(
         asyncCallmeter.incrementAndGet()
         executor.execute {
             if (failingStrategy == FailingStrategy.ALWAYS_FAIL) {
-                callback.accept(Result.failure(PubNubException()))
+                callback.accept(Result.failure(PubNubException(remoteAction = this)))
             } else if (failingStrategy == FailingStrategy.FAIL_FIRST_CALLS && callsToFail.getAndDecrement() > 0) {
-                callback.accept(Result.failure(PubNubException()))
+                callback.accept(Result.failure(PubNubException(remoteAction = this)))
             } else {
                 callback.accept(Result.success(output!!))
             }

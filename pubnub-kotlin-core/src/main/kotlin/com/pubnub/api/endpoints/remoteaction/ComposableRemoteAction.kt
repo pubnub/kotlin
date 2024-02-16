@@ -34,7 +34,7 @@ class ComposableRemoteAction<T, U>(
     override fun async(callback: Consumer<Result<U>>) {
         remoteAction.async { r: Result<T> ->
             r.onFailure {
-                callback.accept(Result.failure(it))
+                callback.accept(Result.failure(it.copy(remoteAction = this)))
             }.onSuccess {
                 try {
                     synchronized(this) {
@@ -44,7 +44,7 @@ class ComposableRemoteAction<T, U>(
                             nextRemoteAction = newNextRemoteAction
                             newNextRemoteAction.async { r2: Result<U> ->
                                 r2.onFailure {
-                                    callback.accept(Result.failure(it))
+                                    callback.accept(Result.failure(it.copy(remoteAction = this)))
                                 }.onSuccess {
                                     callback.accept(Result.success(it))
                                 }
@@ -52,7 +52,7 @@ class ComposableRemoteAction<T, U>(
                         }
                     }
                 } catch (ex: PubNubException) {
-                    callback.accept(Result.failure(ex))
+                    callback.accept(Result.failure(ex.copy(remoteAction = this)))
                 }
             }
         }
