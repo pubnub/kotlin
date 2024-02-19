@@ -97,9 +97,13 @@ class SubscriptionManagerTest : BaseTest() {
     @Test
     fun testGetSubscribedEmptyChannel() {
         val gotMessages = AtomicInteger()
-        initPubNub(TestPubNub(createConfiguration().apply {
-            retryConfiguration = RetryConfiguration.None
-        }))
+        initPubNub(
+            TestPubNub(
+                createConfiguration().apply {
+                    retryConfiguration = RetryConfiguration.None
+                }
+            )
+        )
 
         stubFor(
             get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
@@ -1479,11 +1483,15 @@ class SubscriptionManagerTest : BaseTest() {
             )
         )
 
-        initPubNub(TestPubNub(createConfiguration().apply {
-            presenceTimeout = 20
-            heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
-            maintainPresenceState = true
-        }))
+        initPubNub(
+            TestPubNub(
+                createConfiguration().apply {
+                    presenceTimeout = 20
+                    heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
+                    maintainPresenceState = true
+                }
+            )
+        )
 
         pubnubBase.addListener(object : SubscribeCallback {
             override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
@@ -2519,10 +2527,14 @@ class SubscriptionManagerTest : BaseTest() {
     fun testAllHeartbeats() {
         val statusRecieved = AtomicBoolean()
 
-        initPubNub(TestPubNub(createConfiguration().apply {
-            presenceTimeout = 20
-            heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
-        }))
+        initPubNub(
+            TestPubNub(
+                createConfiguration().apply {
+                    presenceTimeout = 20
+                    heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
+                }
+            )
+        )
 
         stubFor(
             get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
@@ -2593,10 +2605,14 @@ class SubscriptionManagerTest : BaseTest() {
     @Test
     fun testAllHeartbeatsViaPresence() {
         val statusReceived = AtomicBoolean()
-        initPubNub(TestPubNub(createConfiguration().apply {
-            presenceTimeout = 20
-            heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
-        }))
+        initPubNub(
+            TestPubNub(
+                createConfiguration().apply {
+                    presenceTimeout = 20
+                    heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
+                }
+            )
+        )
 
         stubFor(
             get(getMatchingUrlWithChannels("/v2/presence/sub-key/mySubscribeKey/channel/ch2,ch1/heartbeat"))
@@ -2639,9 +2655,13 @@ class SubscriptionManagerTest : BaseTest() {
     @Ignore("Presence EE doesn't support this right now") // TODO
     fun testAllHeartbeatsLeaveViaPresence() {
         val statusReceived = AtomicBoolean()
-        initPubNub(TestPubNub(createConfiguration().apply {
-            heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
-        }))
+        initPubNub(
+            TestPubNub(
+                createConfiguration().apply {
+                    heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
+                }
+            )
+        )
 
         stubFor(
             get(getMatchingUrlWithChannels("/v2/presence/sub-key/mySubscribeKey/channel/ch1,ch2/leave"))
@@ -2684,10 +2704,14 @@ class SubscriptionManagerTest : BaseTest() {
     fun testSuccessOnFailureVerbosityHeartbeats() {
         val statusReceived = AtomicBoolean()
 
-        initPubNub(TestPubNub(createConfiguration().apply {
-            presenceTimeout = 20
-            heartbeatNotificationOptions = PNHeartbeatNotificationOptions.FAILURES
-        }))
+        initPubNub(
+            TestPubNub(
+                createConfiguration().apply {
+                    presenceTimeout = 20
+                    heartbeatNotificationOptions = PNHeartbeatNotificationOptions.FAILURES
+                }
+            )
+        )
 
         stubFor(
             get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
@@ -2757,10 +2781,14 @@ class SubscriptionManagerTest : BaseTest() {
     fun testFailedHeartbeats() {
         val statusReceived = AtomicBoolean()
 
-        initPubNub(TestPubNub(createConfiguration().apply {
-            presenceTimeout = 20
-            heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
-        }))
+        initPubNub(
+            TestPubNub(
+                createConfiguration().apply {
+                    presenceTimeout = 20
+                    heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
+                }
+            )
+        )
 
         stubHandshaking(2, "ch2,ch1,ch2-pnpres,ch1-pnpres")
 
@@ -2832,9 +2860,13 @@ class SubscriptionManagerTest : BaseTest() {
     fun testSilencedHeartbeats() {
         val statusReceived = AtomicBoolean()
 
-        initPubNub(TestPubNub(createConfiguration().apply {
-            heartbeatNotificationOptions = PNHeartbeatNotificationOptions.NONE
-        }))
+        initPubNub(
+            TestPubNub(
+                createConfiguration().apply {
+                    heartbeatNotificationOptions = PNHeartbeatNotificationOptions.NONE
+                }
+            )
+        )
 
         stubFor(
             get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
@@ -2891,10 +2923,14 @@ class SubscriptionManagerTest : BaseTest() {
     fun testFailedNoneHeartbeats() {
         val statusReceived = AtomicBoolean()
 
-        initPubNub(TestPubNub(createConfiguration().apply {
-            presenceTimeout = 20
-            heartbeatNotificationOptions = PNHeartbeatNotificationOptions.NONE
-        }))
+        initPubNub(
+            TestPubNub(
+                createConfiguration().apply {
+                    presenceTimeout = 20
+                    heartbeatNotificationOptions = PNHeartbeatNotificationOptions.NONE
+                }
+            )
+        )
         stubFor(
             get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
                 .willReturn(
@@ -2968,9 +3004,13 @@ class SubscriptionManagerTest : BaseTest() {
         val subscribeSuccess = AtomicBoolean()
         val heartbeatFail = AtomicBoolean()
 
-        initPubNub(TestPubNub(createConfiguration().apply {
-            heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
-        }))
+        initPubNub(
+            TestPubNub(
+                createConfiguration().apply {
+                    heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
+                }
+            )
+        )
 
         assertEquals(PNHeartbeatNotificationOptions.ALL, pubnub.configuration.heartbeatNotificationOptions)
         assertEquals(300, pubnub.configuration.presenceTimeout)
@@ -3036,12 +3076,15 @@ class SubscriptionManagerTest : BaseTest() {
         val subscribeSuccess = AtomicBoolean()
         val heartbeatSuccess = AtomicBoolean()
 
-        initPubNub(TestPubNub(createConfiguration().apply {
-            heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
-            presenceTimeout = 20
-            assertEquals(9, heartbeatInterval)
-
-        }))
+        initPubNub(
+            TestPubNub(
+                createConfiguration().apply {
+                    heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
+                    presenceTimeout = 20
+                    assertEquals(9, heartbeatInterval)
+                }
+            )
+        )
 
         stubFor(
             get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch1,ch1-pnpres/0"))

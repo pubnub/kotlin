@@ -295,7 +295,7 @@ open class PNConfiguration @Throws(PubNubException::class) constructor(
      *
      * Defaults to `false`.
      */
-    var googleAppEngineNetworking = false
+    var googleAppEngineNetworking = false // TODO check if this works after merge
 
     /**
      * Whether to start a separate subscriber thread when creating the instance.

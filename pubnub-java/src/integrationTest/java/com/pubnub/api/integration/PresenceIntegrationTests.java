@@ -10,8 +10,6 @@ import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.presence.PNHereNowChannelData;
 import com.pubnub.api.models.consumer.presence.PNHereNowOccupantData;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
-import com.pubnub.api.v2.callbacks.Results;
-import kotlin.Unit;
 import org.awaitility.Awaitility;
 import org.awaitility.Durations;
 import org.hamcrest.core.IsEqual;
@@ -99,7 +97,7 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
                 .includeUUIDs(true)
                 .async((result) -> {
                     assertFalse(result.isFailure());
-                    Results.onSuccess(result, pnHereNowResult -> {
+                    result.onSuccess( pnHereNowResult -> {
                                 assertTrue(pnHereNowResult.getTotalOccupancy() >= expectedClientsCount);
                                 assertTrue(pnHereNowResult.getTotalChannels() >= expectedChannelsCount);
                                 assertTrue(pnHereNowResult.getChannels().size() >= expectedChannelsCount);
@@ -135,7 +133,6 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
                                 }
 
                                 success.set(true);
-                                return Unit.INSTANCE;
                             }
                     );
                 });
@@ -176,7 +173,7 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
                 .includeUUIDs(true)
                 .async((result) -> {
                     assertFalse(result.isFailure());
-                    Results.onSuccess(result, pnHereNowResult -> {
+                    result.onSuccess(pnHereNowResult -> {
                         assertEquals(expectedChannelsCount, pnHereNowResult.getTotalChannels());
                         assertEquals(expectedChannelsCount, pnHereNowResult.getChannels().size());
                         assertEquals(expectedChannelsCount * expectedClientsCount, pnHereNowResult.getTotalOccupancy());
@@ -200,7 +197,6 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
                         }
 
                         success.set(true);
-                        return Unit.INSTANCE;
                     });
                 });
 

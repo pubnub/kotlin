@@ -9,6 +9,7 @@
 package com.pubnub.api.v2.callbacks
 
 import com.pubnub.api.PubNubException
+import java.util.function.Consumer
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
@@ -73,6 +74,18 @@ class Result<out T> @PublishedApi internal constructor(
             is Failure -> value.toString() // "Failure($exception)"
             else -> "Success($value)"
         }
+
+    @OptIn(ExperimentalContracts::class)
+    public inline fun onFailure(action: Consumer<PubNubException>): Result<T> {
+        exceptionOrNull()?.let { action.accept(it) }
+        return this
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    inline fun onSuccess(action: Consumer<in T>): Result<T> {
+        if (isSuccess) action.accept(value as T)
+        return this
+    }
 
     // companion with constructors
 
@@ -289,6 +302,7 @@ public inline fun <R, T> Result<T>.mapCatching(transform: (value: T) -> R): Resu
  * Returns the original `Result` unchanged.
  */
 @OptIn(ExperimentalContracts::class)
+@JvmSynthetic
 public inline fun <T> Result<T>.onFailure(action: (exception: PubNubException) -> Unit): Result<T> {
     contract {
         callsInPlace(action, InvocationKind.AT_MOST_ONCE)
@@ -302,6 +316,7 @@ public inline fun <T> Result<T>.onFailure(action: (exception: PubNubException) -
  * Returns the original `Result` unchanged.
  */
 @OptIn(ExperimentalContracts::class)
+@JvmSynthetic
 public inline fun <T> Result<T>.onSuccess(action: (value: T) -> Unit): Result<T> {
     contract {
         callsInPlace(action, InvocationKind.AT_MOST_ONCE)

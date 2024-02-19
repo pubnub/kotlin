@@ -18,11 +18,11 @@ sealed interface PNStatus {
         val channelGroups: Collection<String> = emptyList()
     ) : PNStatus
 
-    data class Reconnected(
-        val currentTimetoken: Long,
-        val channels: Collection<String> = emptyList(),
-        val channelGroups: Collection<String> = emptyList()
-    ) : PNStatus
+//    data class Reconnected( //TODO only used in previous subscribe loop?
+//        val currentTimetoken: Long,
+//        val channels: Collection<String> = emptyList(),
+//        val channelGroups: Collection<String> = emptyList()
+//    ) : PNStatus
 
     data class UnexpectedDisconnect(
         val exception: PubNubException

@@ -183,7 +183,7 @@ public class PNConfiguration {
     /**
      * if set, the SDK will alert once the number of messages arrived in one call equal to the threshold
      */
-    private Integer requestMessageCountThreshold;
+    private Integer requestMessageCountThreshold; // TODO not supported in EE
 
     /**
      * Enables explicit presence control.
@@ -357,6 +357,7 @@ public class PNConfiguration {
         return pnConfiguration.getRequestMessageCountThreshold();
     }
 
+    @Deprecated // TODO not supported in EE
     public PNConfiguration setRequestMessageCountThreshold(@Nullable Integer integer) {
         pnConfiguration.setRequestMessageCountThreshold(integer);
         return this;
