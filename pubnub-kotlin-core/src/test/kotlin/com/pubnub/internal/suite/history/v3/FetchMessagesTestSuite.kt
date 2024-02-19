@@ -9,11 +9,6 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
 import com.pubnub.internal.endpoints.FetchMessages
-import com.pubnub.internal.suite.AUTH
-import com.pubnub.internal.suite.EndpointTestSuite
-import com.pubnub.internal.suite.OptionalScenario
-import com.pubnub.internal.suite.Result
-import com.pubnub.internal.suite.SUB
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
@@ -35,7 +30,7 @@ class FetchMessagesTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Fetch
         assertEquals(1, result.channels.size)
         assertTrue(result.channels.containsKey("ch1"))
         assertEquals("hello", result.channels["ch1"]!![0].message.asString)
-        assertEquals(100, result.channels["ch1"]!![0].timetoken)
+        assertEquals(100L, result.channels["ch1"]!![0].timetoken)
         assertNull(result.channels["ch1"]!![0].meta)
     }
 

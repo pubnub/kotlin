@@ -8,7 +8,6 @@ import com.pubnub.api.v2.callbacks.getOrThrow
 import com.pubnub.internal.endpoints.Time
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 
 class TimeTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Time, PNTimeResult>() {
@@ -40,7 +39,6 @@ class TimeTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Time, PNTimeRe
                 result = com.pubnub.internal.suite.Result.FAIL
                 additionalChecks = { result ->
                     assertTrue(result.isFailure)
-                    assertNull(result)
                 }
             },
             com.pubnub.internal.suite.OptionalScenario<PNTimeResult>().apply {

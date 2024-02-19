@@ -9,11 +9,6 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
 import com.pubnub.internal.endpoints.FetchMessages
-import com.pubnub.internal.suite.AUTH
-import com.pubnub.internal.suite.EndpointTestSuite
-import com.pubnub.internal.suite.OptionalScenario
-import com.pubnub.internal.suite.Result
-import com.pubnub.internal.suite.SUB
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 
@@ -41,7 +36,7 @@ class FetchMessagesMetaActionsTestSuite :
             JsonObject().apply { addProperty("color", "red") },
             result.channels["ch1"]!![0].meta
         )
-        assertEquals(100, result.channels["ch1"]!![0].timetoken)
+        assertEquals(100L, result.channels["ch1"]!![0].timetoken)
 
         val actions = result.channels["ch1"]!![0].actions
         assertEquals(1, actions!!.keys.size)
