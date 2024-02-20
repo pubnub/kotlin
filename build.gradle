@@ -60,24 +60,23 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
     implementation "com.squareup.retrofit2:converter-gson:2.9.0"
+    implementation 'com.squareup.okhttp3:okhttp:4.11.0'
+    api 'com.squareup.okhttp3:logging-interceptor:4.11.0'
 
-    implementation 'org.json:json:20231013'
+    implementation 'org.json:json:20240205'
 
-    implementation "org.slf4j:slf4j-api:1.7.30"
+    implementation "org.slf4j:slf4j-api:1.7.36"
 
-    api 'com.squareup.okhttp3:logging-interceptor:4.9.3'
-    api 'com.google.code.gson:gson:2.9.0'
+    api 'com.google.code.gson:gson:2.10.1'
     implementation 'co.nstant.in:cbor:0.9'
 
     allTest "com.github.tomakehurst:wiremock:2.27.2"
 
     allTest "ch.qos.logback:logback-classic:1.2.11"
     allTest "ch.qos.logback:logback-core:1.2.11"
-    allTest "org.json:json:20231013"
+    allTest "org.json:json:20240205"
 
     testImplementation group: 'io.cucumber', name: 'cucumber-java', version: '6.10.4'
     testImplementation group: 'io.cucumber', name: 'cucumber-junit', version: '6.10.4'
