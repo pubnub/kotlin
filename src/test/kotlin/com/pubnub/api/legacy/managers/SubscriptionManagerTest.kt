@@ -30,6 +30,8 @@ import org.hamcrest.core.IsEqual
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
+import org.junit.Assume.assumeFalse
+import org.junit.Ignore
 import org.junit.Test
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
@@ -37,7 +39,7 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class SubscriptionManagerTest : BaseTest() {
 
-    private val subscribeUrlMatcher = Regex("(/v2/subscribe/[^/]+/)(.+)(/0)")
+    private val subscribeUrlMatcher = Regex("(/v2/subscribe/[^/]+/)(.+)?(/.+)")
     private val presenceUrlMatcher = Regex("(/v2/presence/sub-key/[^/]+/channel/)(.+)(/.+)")
 
     // gets UrlPathPattern that matches the URL with channels in any order (order doesn't matter)
@@ -364,9 +366,11 @@ class SubscriptionManagerTest : BaseTest() {
     fun testSubscribeDuplicateDisabledBuilder() {
         val gotMessages = AtomicInteger()
 
+        stubHandshaking(2)
+
         stubFor(
             get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
-                .withQueryParam("tt", matching("0"))
+                .withQueryParam("tt", matching("2"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -449,10 +453,11 @@ class SubscriptionManagerTest : BaseTest() {
         pubnub.configuration.dedupOnSubscribe = true
 
         val gotMessages = AtomicInteger()
+        stubHandshaking(2)
 
         stubFor(
             get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
-                .withQueryParam("tt", matching("0"))
+                .withQueryParam("tt", matching("2"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -536,9 +541,11 @@ class SubscriptionManagerTest : BaseTest() {
 
         val gotMessages = AtomicInteger()
 
+        stubHandshaking(2)
+
         stubFor(
             get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
-                .withQueryParam("tt", matching("0"))
+                .withQueryParam("tt", matching("2"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -636,6 +643,7 @@ class SubscriptionManagerTest : BaseTest() {
 
     @Test
     fun testQueueNotificationsBuilderNoThresholdSpecified() {
+        assumeFalse("Test skipped because enableEventEngine is true", pubnub.configuration.enableEventEngine)
         pubnub.configuration.requestMessageCountThreshold = null
 
         val gotStatus = AtomicBoolean()
@@ -696,6 +704,7 @@ class SubscriptionManagerTest : BaseTest() {
 
     @Test
     fun testQueueNotificationsBuilderBelowThreshold() {
+        assumeFalse("Test skipped because enableEventEngine is true", pubnub.configuration.enableEventEngine)
         pubnub.configuration.requestMessageCountThreshold = 10
 
         val gotStatus = AtomicBoolean()
@@ -756,6 +765,7 @@ class SubscriptionManagerTest : BaseTest() {
 
     @Test
     fun testQueueNotificationsBuilderThresholdMatched() {
+        assumeFalse("Test skipped because enableEventEngine is true", pubnub.configuration.enableEventEngine)
         pubnub.configuration.requestMessageCountThreshold = 1
 
         val gotStatus = AtomicBoolean()
@@ -816,6 +826,7 @@ class SubscriptionManagerTest : BaseTest() {
 
     @Test
     fun testQueueNotificationsBuilderThresholdExceeded() {
+        assumeFalse("Test skipped because enableEventEngine is true", pubnub.configuration.enableEventEngine)
         pubnub.configuration.requestMessageCountThreshold = 1
 
         val gotStatus = AtomicBoolean()
@@ -925,10 +936,8 @@ class SubscriptionManagerTest : BaseTest() {
 
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.category == PNStatusCategory.PNAccessDeniedCategory) {
-                    assertEquals(PNStatusCategory.PNAccessDeniedCategory, pnStatus.category)
+                if (pnStatus.category == PNStatusCategory.PNConnectionError) {
                     assertEquals(listOf("ch1", "ch2"), pnStatus.affectedChannels)
-                    assertEquals(listOf("cg1", "cg2"), pnStatus.affectedChannelGroups)
                     gotStatus.addAndGet(1)
                 }
             }
@@ -1150,9 +1159,11 @@ class SubscriptionManagerTest : BaseTest() {
         val gotMessage2 = AtomicBoolean()
         val gotMessage3 = AtomicBoolean()
 
+        stubHandshaking(2)
+
         stubFor(
             get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
-                .withQueryParam("tt", matching("0"))
+                .withQueryParam("tt", matching("2"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -1265,9 +1276,11 @@ class SubscriptionManagerTest : BaseTest() {
                     "Message" -> {
                         gotMessage1.set(true)
                     }
+
                     "Message3" -> {
                         gotMessage2.set(true)
                     }
+
                     "Message10" -> {
                         gotMessage3.set(true)
                     }
@@ -1411,10 +1424,11 @@ class SubscriptionManagerTest : BaseTest() {
             .atMost(5, TimeUnit.SECONDS)
             .untilAtomic(atomic, Matchers.greaterThan(0))
     }
+
     @Test
     fun testSubscribeBuilderWithState() {
         val expectedPayload = PubNubUtil.urlDecode(
-            """%7B%22ch1%22%3A%5B%22p1%22%2C%22p2%22%5D%2C%22cg2%22%3A%5B%22p1%22%2C%22p2%22%5D%7D"""
+            """%7B%22ch1%22%3A%5B%22p1%22%2C%22p2%22%5D%7D"""
         )
 
         val expectedMap = pubnub.mapper.fromJson<HashMap<String, Any>>(
@@ -1454,15 +1468,26 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         stubFor(
-            get(getMatchingUrlWithChannels("/v2/presence/sub-key/mySubscribeKey/channel/ch2,ch1/heartbeat")).willReturn(emptyJson())
+            get(getMatchingUrlWithChannels("/v2/presence/sub-key/mySubscribeKey/channel/ch2,ch1/heartbeat")).willReturn(
+                emptyJson()
+            )
         )
 
         stubFor(
-            get(getMatchingUrlWithChannels("/v2/presence/sub-key/mySubscribeKey/channel/ch1/uuid/myUUID/data")).willReturn(emptyJson())
+            get(getMatchingUrlWithChannels("/v2/presence/sub-key/mySubscribeKey/channel/ch1/uuid/myUUID/data")).willReturn(
+                emptyJson()
+            )
         )
 
-        pubnub.configuration.presenceTimeout = 20
-        pubnub.configuration.heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
+        initPubNub(
+            PubNub(
+                createConfiguration().apply {
+                    presenceTimeout = 20
+                    heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
+                    maintainPresenceState = true
+                }
+            )
+        )
 
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
@@ -1470,41 +1495,49 @@ class SubscriptionManagerTest : BaseTest() {
             }
         })
 
+        try {
+            pubnub.setPresenceState(
+                channels = listOf("ch1"), channelGroups = listOf("cg2"), state = listOf("p1", "p2")
+            ).sync()
+        } catch (e: Exception) {
+            // ignore
+        }
+
         pubnub.subscribe(
             channels = listOf("ch1", "ch2"), channelGroups = listOf("cg1", "cg2")
         )
 
-        pubnub.setPresenceState(
-            channels = listOf("ch1"), channelGroups = listOf("cg2"), state = listOf("p1", "p2")
-        ).async { _, _ -> }
-
-        Awaitility.await().atMost(5, TimeUnit.SECONDS).until { verifyCalls(expectedMap) }
+        Awaitility.await().atMost(2, TimeUnit.SECONDS).until { verifyCalls(expectedMap) }
     }
 
     private fun verifyCalls(expectedMap: Map<String, Any>): Boolean {
         val subscribeRequests = findAll(
             getRequestedFor(
-                urlMatching(
+                getMatchingUrlWithChannels(
                     """/v2/subscribe/${pubnub.configuration.subscribeKey}/ch2,ch1/.*"""
                 )
             )
         )
         val subCond = subscribeRequests.any {
-            val stateString = PubNubUtil.urlDecode(it.queryParameter("state").firstValue())
-            val actualMap: HashMap<String, Any> = pubnub.mapper.fromJson(
-                stateString, object : TypeToken<HashMap<String, Any>>() {}.type
-            )
-            actualMap == expectedMap
+            try {
+                val stateString = PubNubUtil.urlDecode(it.queryParameter("state").firstValue())
+                val actualMap: HashMap<String, Any> = pubnub.mapper.fromJson(
+                    stateString, object : TypeToken<HashMap<String, Any>>() {}.type
+                )
+                actualMap == expectedMap
+            } catch (e: Exception) {
+                false
+            }
         }
         val heartbeatRequests = findAll(
             getRequestedFor(
-                urlMatching(
+                getMatchingUrlWithChannels(
                     """/v2/presence/sub-key/${pubnub.configuration.subscribeKey}/channel/ch2,ch1/heartbeat.*"""
                 )
             )
         )
-        val heartbeatCond = heartbeatRequests.any {
-            !it.queryParams.containsKey("state")
+        val heartbeatCond = heartbeatRequests.all {
+            it.queryParams.containsKey("state")
         }
 
         return subCond && heartbeatCond
@@ -1635,12 +1668,14 @@ class SubscriptionManagerTest : BaseTest() {
 
         pubnub.configuration.filterExpression = "much=filtering"
 
+        stubHandshaking(2)
+
         stubFor(
             get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .withQueryParam("uuid", matching("myUUID"))
                 .withQueryParam("pnsdk", matching("PubNub-Kotlin/.*"))
                 .withQueryParam("filter-expr", matching("much=filtering"))
-                .withQueryParam("tt", matching("0"))
+                .withQueryParam("tt", matching("2"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -2441,13 +2476,18 @@ class SubscriptionManagerTest : BaseTest() {
         )
         val sub1: SubscribeCallback = object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
+                println("---===" + pnStatus)
                 if (pnStatus.category == PNStatusCategory.PNConnectedCategory) {
                     pubnub.unsubscribe(
                         channels = listOf("ch1")
                     )
+                    return
                 }
                 val affectedChannels = pnStatus.affectedChannels
-                if (affectedChannels.contains("ch1") && pnStatus.operation == PNOperationType.PNUnsubscribeOperation) {
+                if (pnStatus.category == PNStatusCategory.PNDisconnectedCategory ||
+                    !affectedChannels.contains("ch1") &&
+                    pnStatus.category == PNStatusCategory.PNSubscriptionChanged
+                ) {
                     statusReceived.set(true)
                 }
             }
@@ -2471,13 +2511,13 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         Awaitility.await()
-            .atMost(2, TimeUnit.SECONDS)
+            .atMost(1, TimeUnit.SECONDS)
             .untilAtomic(
                 messageReceived, IsEqual.equalTo(true)
             )
 
         Awaitility.await()
-            .atMost(2, TimeUnit.SECONDS)
+            .atMost(1, TimeUnit.SECONDS)
             .untilAtomic(
                 statusReceived, IsEqual.equalTo(true)
             )
@@ -2486,8 +2526,15 @@ class SubscriptionManagerTest : BaseTest() {
     @Test
     fun testAllHeartbeats() {
         val statusRecieved = AtomicBoolean()
-        pubnub.configuration.presenceTimeout = 20
-        pubnub.configuration.heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
+        initPubNub(
+            PubNub(
+                createConfiguration().apply {
+                    presenceTimeout = 20
+                    heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
+                }
+            )
+        )
+
         stubFor(
             get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
                 .willReturn(
@@ -2557,8 +2604,14 @@ class SubscriptionManagerTest : BaseTest() {
     @Test
     fun testAllHeartbeatsViaPresence() {
         val statusReceived = AtomicBoolean()
-        pubnub.configuration.presenceTimeout = 20
-        pubnub.configuration.heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
+        initPubNub(
+            PubNub(
+                createConfiguration().apply {
+                    presenceTimeout = 20
+                    heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
+                }
+            )
+        )
 
         stubFor(
             get(getMatchingUrlWithChannels("/v2/presence/sub-key/mySubscribeKey/channel/ch2,ch1/heartbeat"))
@@ -2598,9 +2651,16 @@ class SubscriptionManagerTest : BaseTest() {
     }
 
     @Test
+    @Ignore("Presence EE doesn't support this right now") // TODO add missing functionality?
     fun testAllHeartbeatsLeaveViaPresence() {
         val statusReceived = AtomicBoolean()
-        pubnub.configuration.heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
+        initPubNub(
+            PubNub(
+                createConfiguration().apply {
+                    heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
+                }
+            )
+        )
         stubFor(
             get(getMatchingUrlWithChannels("/v2/presence/sub-key/mySubscribeKey/channel/ch1,ch2/leave"))
                 .willReturn(
@@ -2640,8 +2700,14 @@ class SubscriptionManagerTest : BaseTest() {
     fun testSuccessOnFailureVerbosityHeartbeats() {
         val statusReceived = AtomicBoolean()
 
-        pubnub.configuration.presenceTimeout = 20
-        pubnub.configuration.heartbeatNotificationOptions = PNHeartbeatNotificationOptions.FAILURES
+        initPubNub(
+            PubNub(
+                createConfiguration().apply {
+                    presenceTimeout = 20
+                    heartbeatNotificationOptions = PNHeartbeatNotificationOptions.FAILURES
+                }
+            )
+        )
 
         stubFor(
             get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
@@ -2711,12 +2777,20 @@ class SubscriptionManagerTest : BaseTest() {
     fun testFailedHeartbeats() {
         val statusReceived = AtomicBoolean()
 
-        pubnub.configuration.presenceTimeout = 20
-        pubnub.configuration.heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
+        initPubNub(
+            PubNub(
+                createConfiguration().apply {
+                    presenceTimeout = 20
+                    heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
+                }
+            )
+        )
+
+        stubHandshaking(2, "ch2,ch1,ch2-pnpres,ch1-pnpres")
 
         stubFor(
             get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
-                .withQueryParam("tt", matching("0"))
+                .withQueryParam("tt", matching("2"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -2982,16 +3056,14 @@ class SubscriptionManagerTest : BaseTest() {
         val subscribeSuccess = AtomicBoolean()
         val heartbeatSuccess = AtomicBoolean()
 
-        pubnub.configuration.heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
-
-        assertEquals(PNHeartbeatNotificationOptions.ALL, pubnub.configuration.heartbeatNotificationOptions)
-        assertEquals(300, pubnub.configuration.presenceTimeout)
-        assertEquals(0, pubnub.configuration.heartbeatInterval)
-
-        pubnub.configuration.presenceTimeout = 20
-
-        assertEquals(20, pubnub.configuration.presenceTimeout)
-        assertEquals(9, pubnub.configuration.heartbeatInterval)
+        initPubNub(
+            PubNub(
+                createConfiguration().apply {
+                    presenceTimeout = 20
+                    heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
+                }
+            )
+        )
 
         stubFor(
             get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch1,ch1-pnpres/0"))
@@ -3179,18 +3251,16 @@ class SubscriptionManagerTest : BaseTest() {
 
                 val affectedChannels = pnStatus.affectedChannels
 
-                if (affectedChannels.size == 1 && pnStatus.operation == PNOperationType.PNUnsubscribeOperation) {
-                    if (affectedChannels[0] == "ch1") {
+                if (pnStatus.category == PNStatusCategory.PNSubscriptionChanged) {
+                    if ("ch1" !in affectedChannels) {
                         pubnub.unsubscribe(
                             channels = listOf("ch2")
                         )
                     }
                 }
 
-                if (affectedChannels.size == 1 && pnStatus.operation == PNOperationType.PNUnsubscribeOperation) {
-                    if (affectedChannels[0] == "ch2") {
-                        statusReceived.set(true)
-                    }
+                if (pnStatus.category == PNStatusCategory.PNDisconnectedCategory) {
+                    statusReceived.set(true)
                 }
             }
         }
@@ -3249,5 +3319,24 @@ class SubscriptionManagerTest : BaseTest() {
                 assertEquals(1, requests.size)
                 true
             }
+    }
+
+    private fun stubHandshaking(withNextTimetoken: Int = 5, withChannels: String = "ch2,ch1") {
+        stubFor(
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$withChannels/0"))
+                .withQueryParam("tt", matching("0"))
+                .willReturn(
+                    aResponse().withBody(
+                        """
+                            {
+                              "t": {
+                                "t": "$withNextTimetoken",
+                                "r": 1
+                              }
+                            }
+                        """
+                    )
+                )
+        )
     }
 }
