@@ -515,16 +515,14 @@ class PubNub internal constructor(
      */
     @Synchronized
     fun unsubscribeAll() {
-        synchronized(channelSubscriptions) {
-            synchronized(channelGroupSubscriptions) {
-                channelSubscriptions.clear()
-                channelGroupSubscriptions.clear()
-                if (configuration.enableEventEngine) {
-                    subscribe.unsubscribeAll()
-                    presence.leftAll()
-                } else {
-                    subscriptionManager.unsubscribeAll()
-                }
+        synchronized(lockChannelsAndGroups) {
+            channelSubscriptions.clear()
+            channelGroupSubscriptions.clear()
+            if (configuration.enableEventEngine) {
+                subscribe.unsubscribeAll()
+                presence.leftAll()
+            } else {
+                subscriptionManager.unsubscribeAll()
             }
         }
     }
@@ -2408,12 +2406,12 @@ class PubNub internal constructor(
     }
 
     // internal
-    private val LOCK_CHANNELS_AND_GROUPS = Any()
+    private val lockChannelsAndGroups = Any()
     private val channelSubscriptions = mutableMapOf<ChannelName, MutableSet<Subscription>>()
     private val channelGroupSubscriptions = mutableMapOf<ChannelGroupName, MutableSet<Subscription>>()
 
     internal fun subscribe(vararg subscriptions: SubscriptionImpl, cursor: SubscriptionCursor) {
-        synchronized(LOCK_CHANNELS_AND_GROUPS) {
+        synchronized(lockChannelsAndGroups) {
             val channelsToSubscribe = mutableSetOf<ChannelName>()
             subscriptions.forEach { subscription ->
                 subscription.channels.forEach { channelName ->
@@ -2457,7 +2455,7 @@ class PubNub internal constructor(
     }
 
     internal fun unsubscribe(vararg subscriptions: SubscriptionImpl) {
-        synchronized(LOCK_CHANNELS_AND_GROUPS) {
+        synchronized(lockChannelsAndGroups) {
             val channelsToUnsubscribe = mutableSetOf<ChannelName>()
             subscriptions.forEach { subscription ->
                 subscription.channels.forEach { channelName ->
