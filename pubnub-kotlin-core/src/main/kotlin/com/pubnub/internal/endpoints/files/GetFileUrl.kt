@@ -13,6 +13,7 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
 import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 import java.util.function.Consumer
 
 /**
@@ -26,7 +27,7 @@ class GetFileUrl(
 ) : Endpoint<ResponseBody, PNFileUrlResult>(pubNub), IGetFileUrl {
 
     private lateinit var cachedCallback: Consumer<Result<PNFileUrlResult>>
-    private val executorService: ExecutorService = pubNub.retrofitManager.getTransactionClientExecutorService()
+    private val executorService: ExecutorService = pubNub.retrofitManager.getTransactionClientExecutorService() ?: Executors.newSingleThreadExecutor()
 
     @Throws(PubNubException::class)
     override fun validateParams() {

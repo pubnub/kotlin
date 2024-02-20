@@ -1955,7 +1955,7 @@ class PubNubImpl internal constructor(
             meta = meta,
             ttl = ttl,
             shouldStore = shouldStore,
-            executorService = retrofitManager.getTransactionClientExecutorService(),
+            executorService = retrofitManager.getTransactionClientExecutorService() ?: Executors.newSingleThreadExecutor(),
             fileMessagePublishRetryLimit = configuration.fileMessagePublishRetryLimit,
             generateUploadUrlFactory = GenerateUploadUrl.Factory(this),
             publishFileMessageFactory = PublishFileMessage.Factory(this),

@@ -16,6 +16,7 @@ import com.pubnub.internal.services.S3Service
 import com.pubnub.internal.services.SignalService
 import com.pubnub.internal.services.SubscribeService
 import com.pubnub.internal.services.TimeService
+import com.pubnub.internal.vendor.AppEngineFactory.Factory
 import okhttp3.Call
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -25,11 +26,11 @@ import java.util.concurrent.TimeUnit
 
 class RetrofitManager(val pubnub: PubNubImpl) {
 
-    private lateinit var transactionClientInstance: OkHttpClient
+    private var transactionClientInstance: OkHttpClient? = null
 
-    private lateinit var subscriptionClientInstance: OkHttpClient
+    private var subscriptionClientInstance: OkHttpClient? = null
 
-    private lateinit var noSignatureClientInstance: OkHttpClient
+    private var noSignatureClientInstance: OkHttpClient? = null
 
     private var signatureInterceptor: SignatureInterceptor
 
@@ -78,8 +79,8 @@ class RetrofitManager(val pubnub: PubNubImpl) {
         subscribeService = subscriptionInstance.create(SubscribeService::class.java)
     }
 
-    fun getTransactionClientExecutorService(): ExecutorService {
-        return transactionClientInstance.dispatcher.executorService
+    fun getTransactionClientExecutorService(): ExecutorService? {
+        return transactionClientInstance?.dispatcher?.executorService
     }
 
     private fun createOkHttpClient(readTimeout: Int, withSignature: Boolean = true): OkHttpClient {
@@ -126,12 +127,18 @@ class RetrofitManager(val pubnub: PubNubImpl) {
         return okHttpClient
     }
 
-    private fun createRetrofit(callFactory: Call.Factory): Retrofit {
+    private fun createRetrofit(callFactory: Call.Factory?): Retrofit {
         val retrofitBuilder = Retrofit.Builder()
-            .callFactory(callFactory)
             .baseUrl(pubnub.baseUrl())
             .addConverterFactory(pubnub.mapper.converterFactory)
 
+        if (pubnub.configuration.googleAppEngineNetworking) {
+            retrofitBuilder.callFactory(Factory(pubnub))
+        } else if (callFactory != null) {
+            retrofitBuilder.callFactory(callFactory)
+        } else {
+            throw IllegalStateException("Can't instantiate PubNub")
+        }
         return retrofitBuilder.build()
     }
 
@@ -141,12 +148,14 @@ class RetrofitManager(val pubnub: PubNubImpl) {
         closeExecutor(noSignatureClientInstance, force)
     }
 
-    private fun closeExecutor(client: OkHttpClient, force: Boolean) {
-        client.dispatcher.cancelAll()
-        if (force) {
-            client.connectionPool.evictAll()
-            val executorService = client.dispatcher.executorService
-            executorService.shutdown()
+    private fun closeExecutor(client: OkHttpClient?, force: Boolean) {
+        if (client != null) {
+            client.dispatcher.cancelAll()
+            if (force) {
+                client.connectionPool.evictAll()
+                val executorService = client.dispatcher.executorService
+                executorService.shutdown()
+            }
         }
     }
 }
