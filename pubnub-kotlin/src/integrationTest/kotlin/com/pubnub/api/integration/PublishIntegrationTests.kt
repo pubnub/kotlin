@@ -14,6 +14,7 @@ import com.pubnub.api.asyncRetry
 import com.pubnub.api.await
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.crypto.CryptoModule
+import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.listen
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.PNStatus
@@ -147,7 +148,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
 
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus is PNStatus.Connected &&
+                if (pnStatus.category == PNStatusCategory.Connected &&
                     pnStatus.channels.contains(expectedChannel)
                 ) {
                     observer.publish(
@@ -194,7 +195,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
 
         observer.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus is PNStatus.Connected &&
+                if (pnStatus.category == PNStatusCategory.Connected &&
                     pnStatus.channels.contains(expectedChannel)
                 ) {
                     sender.publish(

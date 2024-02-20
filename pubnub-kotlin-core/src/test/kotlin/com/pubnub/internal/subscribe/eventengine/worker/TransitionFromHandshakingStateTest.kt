@@ -1,6 +1,7 @@
 package com.pubnub.internal.subscribe.eventengine.worker
 
 import com.pubnub.api.PubNubException
+import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.internal.eventengine.transition
 import com.pubnub.internal.subscribe.eventengine.effect.SubscribeEffectInvocation.CancelHandshake
@@ -62,7 +63,7 @@ class TransitionFromHandshakingStateTest {
             setOf(
                 CancelHandshake,
                 EmitStatus(
-                    PNStatus.Connected(timeToken, channels = channels.toList(), channelGroups = channelGroups.toList())
+                    PNStatus(PNStatusCategory.Connected, currentTimetoken = timeToken, channels = channels.toList(), channelGroups = channelGroups.toList())
                 ),
                 ReceiveMessages(channels, channelGroups, subscriptionCursor)
             ),
@@ -94,8 +95,9 @@ class TransitionFromHandshakingStateTest {
             setOf(
                 CancelHandshake,
                 EmitStatus(
-                    PNStatus.Connected(
-                        timeTokenForHandshake,
+                    PNStatus(
+                        PNStatusCategory.Connected,
+                        currentTimetoken = timeTokenForHandshake,
                         channels = channels.toList(),
                         channelGroups = channelGroups.toList()
                     )

@@ -3,6 +3,7 @@ package com.pubnub.api.integration;
 import com.google.gson.JsonObject;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.callbacks.SubscribeCallback;
+import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
@@ -46,8 +47,8 @@ public class HeartbeatIntegrationTest extends BaseIntegrationTest {
         observer.addListener(new SubscribeCallback.BaseSubscribeCallback() {
             @Override
             public void status(@NotNull PubNub pn, @NotNull PNStatus status) {
-                if (status instanceof PNStatus.Connected) {
-                    if (((PNStatus.Connected) status).getChannels().contains(expectedChannel)) {
+                if (status.getCategory() == PNStatusCategory.Connected) {
+                    if (status.getChannels().contains(expectedChannel)) {
                         pubNub.subscribe()
                                 .channels(Collections.singletonList(expectedChannel))
                                 .withPresence()

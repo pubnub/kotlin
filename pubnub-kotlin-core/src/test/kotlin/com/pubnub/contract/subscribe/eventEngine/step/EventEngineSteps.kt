@@ -124,10 +124,7 @@ class EventEngineSteps(private val state: EventEngineState) {
     @Then("I receive an error in my subscribe response")
     fun i_receive_an_error_in_my_subscribe_response() {
         await.pollInterval(50, TimeUnit.MILLISECONDS).atMost(2, TimeUnit.SECONDS).untilAsserted {
-            MatcherAssert.assertThat(
-                state.statusesList,
-                CoreMatchers.hasItems(CoreMatchers.instanceOf(PNStatus.ConnectionError::class.java))
-            )
+            MatcherAssert.assertThat(state.statusesList.map { it.error }, CoreMatchers.hasItems(true))
         }
     }
 }

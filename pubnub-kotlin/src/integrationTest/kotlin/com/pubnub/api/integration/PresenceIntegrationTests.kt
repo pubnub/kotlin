@@ -8,6 +8,7 @@ import com.pubnub.api.asyncRetry
 import com.pubnub.api.await
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
+import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.listen
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
@@ -202,7 +203,7 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
 
         pubnub.test(withPresence = true) {
             subscribe(expectedChannel)
-            assertEquals(PNStatus.HeartbeatSuccess, nextStatus())
+            assertEquals(PNStatusCategory.HeartbeatSuccess, nextStatus())
             skip(1)
         }
     }
@@ -225,9 +226,9 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
 
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus is PNStatus.Connected && pnStatus.channels.contains(expectedChannel)) {
+                if (pnStatus.category == PNStatusCategory.Connected && pnStatus.channels.contains(expectedChannel)) {
                     subscribeSuccess.set(true)
-                } else if (pnStatus is PNStatus.HeartbeatSuccess) {
+                } else if (pnStatus.category == PNStatusCategory.HeartbeatSuccess) {
                     heartbeatCallsCount.incrementAndGet()
                 }
             }

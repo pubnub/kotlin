@@ -14,6 +14,7 @@ import com.github.tomakehurst.wiremock.matching.UrlPathPattern
 import com.google.gson.reflect.TypeToken
 import com.pubnub.api.CommonUtils.emptyJson
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
+import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
@@ -339,7 +340,7 @@ class SubscriptionManagerTest : BaseTest() {
         pubnubBase.addListener(object : SubscribeCallback {
 
             override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
-                if (pnStatus is PNStatus.Connected) {
+                if (pnStatus.category == PNStatusCategory.Connected) {
                     gotStatus.addAndGet(1)
                 }
             }
@@ -939,9 +940,9 @@ class SubscriptionManagerTest : BaseTest() {
 
         pubnubBase.addListener(object : SubscribeCallback {
             override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
-                if (pnStatus is PNStatus.ConnectionError && pnStatus.exception.statusCode == 403) {
-                    assertEquals(listOf("ch1", "ch2"), pnStatus.exception.affectedChannels)
-                    assertEquals(listOf("cg1", "cg2"), pnStatus.exception.affectedChannelGroups)
+                if (pnStatus.category == PNStatusCategory.ConnectionError && pnStatus.exception?.statusCode == 403) {
+                    assertEquals(listOf("ch1", "ch2"), pnStatus.exception?.affectedChannels)
+                    assertEquals(listOf("cg1", "cg2"), pnStatus.exception?.affectedChannelGroups)
                     gotStatus.addAndGet(1)
                 }
             }
@@ -996,7 +997,7 @@ class SubscriptionManagerTest : BaseTest() {
 
         pubnubBase.addListener(object : SubscribeCallback {
             override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
-                if (pnStatus is PNStatus.Connected) {
+                if (pnStatus.category == PNStatusCategory.Connected) {
                     assertEquals(2, pnStatus.channels.size)
                     gotStatus.set(true)
                 }
@@ -1061,7 +1062,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
         pubnubBase.addListener(object : SubscribeCallback {
             override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
-                if (pnStatus is PNStatus.Connected) {
+                if (pnStatus.category == PNStatusCategory.Connected) {
                     gotStatus.addAndGet(1)
                 }
             }
@@ -1130,7 +1131,7 @@ class SubscriptionManagerTest : BaseTest() {
 
         pubnubBase.addListener(object : SubscribeCallback {
             override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
-                if (pnStatus is PNStatus.Connected) {
+                if (pnStatus.category == PNStatusCategory.Connected) {
                     gotStatus.addAndGet(1)
                 }
             }
@@ -1522,7 +1523,7 @@ class SubscriptionManagerTest : BaseTest() {
                 )
             )
         )
-        val subCond = subscribeRequests/*.onEach { println("---===" + it) }*/.any {
+        val subCond = subscribeRequests.any {
             try {
                 val stateString = PubNubUtil.urlDecode(it.queryParameter("state").firstValue())
                 val actualMap: HashMap<String, Any> = pubnub.mapper.fromJson(
@@ -2480,13 +2481,13 @@ class SubscriptionManagerTest : BaseTest() {
         )
         val sub1: SubscribeCallback = object : SubscribeCallback {
             override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
-                if (pnStatus is PNStatus.Connected) {
+                if (pnStatus.category == PNStatusCategory.Connected) {
                     pubnub.pubNubImpl.unsubscribe(
                         channels = listOf("ch1")
                     )
-                } else if (pnStatus is PNStatus.Disconnected || pnStatus is PNStatus.SubscriptionChanged && !pnStatus.channels.contains(
-                        "ch1"
-                    )
+                } else if (pnStatus.category == PNStatusCategory.Disconnected ||
+                    pnStatus.category == PNStatusCategory.SubscriptionChanged &&
+                    !pnStatus.channels.contains("ch1")
                 ) {
                     statusReceived.set(true)
                 }
@@ -2585,7 +2586,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
         val sub1: SubscribeCallback = object : SubscribeCallback {
             override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
-                if (pnStatus is PNStatus.HeartbeatSuccess) {
+                if (pnStatus.category == PNStatusCategory.HeartbeatSuccess) {
                     statusRecieved.set(true)
                 }
             }
@@ -2631,7 +2632,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
         val sub1: SubscribeCallback = object : SubscribeCallback {
             override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
-                if (pnStatus is PNStatus.HeartbeatSuccess) {
+                if (pnStatus.category == PNStatusCategory.HeartbeatSuccess) {
                     statusReceived.set(true)
                 }
             }
@@ -2682,7 +2683,7 @@ class SubscriptionManagerTest : BaseTest() {
             override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
                 println(pnStatus)
 //                if (pnStatus.operation == PNOperationType.PNUnsubscribeOperation && !pnStatus.error) {
-                if (pnStatus is PNStatus.Disconnected) { // TODO what is this trying to test really?
+                if (pnStatus.category == PNStatusCategory.Disconnected) { // TODO what is this trying to test really?
                     statusReceived.set(true)
                 }
             }
@@ -2759,7 +2760,7 @@ class SubscriptionManagerTest : BaseTest() {
 
         val sub1: SubscribeCallback = object : SubscribeCallback {
             override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
-                if (pnStatus is PNStatus.HeartbeatFailed) {
+                if (pnStatus.category == PNStatusCategory.HeartbeatFailed) {
                     statusReceived.set(true)
                 }
             }
@@ -2839,7 +2840,7 @@ class SubscriptionManagerTest : BaseTest() {
 
         val sub1: SubscribeCallback = object : SubscribeCallback {
             override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
-                if (pnStatus is PNStatus.HeartbeatFailed) {
+                if (pnStatus.category == PNStatusCategory.HeartbeatFailed) {
                     statusReceived.set(true)
                 }
             }
@@ -2901,7 +2902,7 @@ class SubscriptionManagerTest : BaseTest() {
 
         val sub1: SubscribeCallback = object : SubscribeCallback {
             override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
-                if (pnStatus is PNStatus.HeartbeatSuccess) {
+                if (pnStatus.category == PNStatusCategory.HeartbeatSuccess) {
                     statusReceived.set(true)
                 }
             }
@@ -2982,7 +2983,7 @@ class SubscriptionManagerTest : BaseTest() {
 
         val sub1: SubscribeCallback = object : SubscribeCallback {
             override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
-                if (pnStatus != PNStatus.HeartbeatSuccess) {
+                if (pnStatus.category != PNStatusCategory.HeartbeatSuccess) {
                     statusReceived.set(true)
                 }
             }
@@ -3052,10 +3053,10 @@ class SubscriptionManagerTest : BaseTest() {
         )
         pubnubBase.addListener(object : SubscribeCallback {
             override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
-                if (pnStatus is PNStatus.Connected) {
+                if (pnStatus.category == PNStatusCategory.Connected) {
                     subscribeSuccess.set(true)
                 }
-                if (pnStatus is PNStatus.HeartbeatSuccess) {
+                if (pnStatus.category == PNStatusCategory.HeartbeatSuccess) {
                     heartbeatFail.set(true)
                 }
             }
@@ -3124,10 +3125,10 @@ class SubscriptionManagerTest : BaseTest() {
 
         pubnubBase.addListener(object : SubscribeCallback {
             override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
-                if (pnStatus is PNStatus.Connected) {
+                if (pnStatus.category == PNStatusCategory.Connected) {
                     subscribeSuccess.set(true)
                 }
-                if (pnStatus is PNStatus.HeartbeatSuccess) {
+                if (pnStatus.category == PNStatusCategory.HeartbeatSuccess) {
                     heartbeatSuccess.set(true)
                 }
             }
@@ -3262,13 +3263,13 @@ class SubscriptionManagerTest : BaseTest() {
 
         val sub1: SubscribeCallback = object : SubscribeCallback {
             override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
-                if (pnStatus is PNStatus.Connected) {
+                if (pnStatus.category == PNStatusCategory.Connected) {
                     pubnub.pubNubImpl.unsubscribe(
                         channels = listOf("ch1")
                     )
                 }
 
-                if (pnStatus is PNStatus.SubscriptionChanged) {
+                if (pnStatus.category == PNStatusCategory.SubscriptionChanged) {
                     if ("ch1" !in pnStatus.channels) {
                         pubnub.pubNubImpl.unsubscribe(
                             channels = listOf("ch2")
@@ -3276,7 +3277,7 @@ class SubscriptionManagerTest : BaseTest() {
                     }
                 }
 
-                if (pnStatus is PNStatus.Disconnected) {
+                if (pnStatus.category == PNStatusCategory.Disconnected) {
                     statusReceived.set(true)
                 }
             }

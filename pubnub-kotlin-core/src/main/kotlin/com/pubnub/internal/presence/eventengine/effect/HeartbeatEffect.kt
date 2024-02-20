@@ -3,6 +3,7 @@ package com.pubnub.internal.presence.eventengine.effect
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
+import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.v2.callbacks.onFailure
 import com.pubnub.api.v2.callbacks.onSuccess
@@ -27,14 +28,14 @@ internal class HeartbeatEffect(
                 if (heartbeatNotificationOptions == PNHeartbeatNotificationOptions.ALL ||
                     heartbeatNotificationOptions == PNHeartbeatNotificationOptions.FAILURES
                 ) {
-                    statusConsumer.announce(PNStatus.HeartbeatFailed(PubNubException.from(exception)))
+                    statusConsumer.announce(PNStatus(PNStatusCategory.HeartbeatFailed, PubNubException.from(exception)))
                 }
                 presenceEventSink.add(
                     PresenceEvent.HeartbeatFailure(PubNubException.from(exception))
                 )
             }.onSuccess {
                 if (heartbeatNotificationOptions == PNHeartbeatNotificationOptions.ALL) {
-                    statusConsumer.announce(PNStatus.HeartbeatSuccess)
+                    statusConsumer.announce(PNStatus(PNStatusCategory.HeartbeatSuccess))
                 }
                 presenceEventSink.add(
                     PresenceEvent.HeartbeatSuccess

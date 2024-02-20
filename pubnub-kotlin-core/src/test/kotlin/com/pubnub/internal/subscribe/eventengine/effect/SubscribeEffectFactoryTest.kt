@@ -2,6 +2,7 @@ package com.pubnub.internal.subscribe.eventengine.effect
 
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
+import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.internal.eventengine.ManagedEffect
@@ -70,7 +71,8 @@ class SubscribeEffectFactoryTest {
         // when
         val effect = subscribeEffectFactory.create(
             SubscribeEffectInvocation.EmitStatus(
-                PNStatus.Connected(
+                PNStatus(
+                    PNStatusCategory.Connected,
                     currentTimetoken = 0L,
                     channels = channels.toList(),
                     channelGroups = channelGroups.toList(),

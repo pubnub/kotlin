@@ -5,6 +5,7 @@ import com.pubnub.api.CommonUtils.generatePayload
 import com.pubnub.api.CommonUtils.randomChannel
 import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.SubscribeCallback
+import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.listen
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
@@ -154,7 +155,7 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
         pubnub.addListener(object : SubscribeCallback() {
 
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus is PNStatus.Connected) {
+                if (pnStatus.category == PNStatusCategory.Connected) {
                     subscribed.set(true)
                 }
             }

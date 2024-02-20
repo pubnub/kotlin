@@ -4,6 +4,7 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.endpoints.message_actions.GetMessageActions;
+import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
 import com.pubnub.api.integration.util.RandomGenerator;
 import com.pubnub.api.models.consumer.PNPublishResult;
@@ -491,7 +492,7 @@ public class MessageActionsTest extends BaseIntegrationTest {
 
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus) {
-                if (pnStatus instanceof PNStatus.Connected) {
+                if (pnStatus.getCategory() == PNStatusCategory.Connected) {
                     for (PNPublishResult pnPublishResult : publishResultList) {
                         try {
                             pubNub.addMessageAction()

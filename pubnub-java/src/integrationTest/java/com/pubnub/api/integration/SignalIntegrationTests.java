@@ -7,6 +7,7 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.callbacks.SubscribeCallback;
+import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
 import com.pubnub.api.integration.util.RandomGenerator;
 import com.pubnub.api.models.consumer.PNPublishResult;
@@ -91,8 +92,8 @@ public class SignalIntegrationTests extends BaseIntegrationTest {
 
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
-                if (status instanceof PNStatus.Connected) {
-                    if (((PNStatus.Connected) status).getChannels().contains(expectedChannel)) {
+                if (status.getCategory() == PNStatusCategory.Connected) {
+                    if (status.getChannels().contains(expectedChannel)) {
                         pubNub.signal()
                                 .message(expectedPayload)
                                 .channel(expectedChannel)

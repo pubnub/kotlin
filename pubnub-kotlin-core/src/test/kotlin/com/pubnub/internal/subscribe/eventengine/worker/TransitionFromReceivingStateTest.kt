@@ -3,6 +3,7 @@ package com.pubnub.internal.subscribe.eventengine.worker
 import com.google.gson.JsonObject
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.api.models.consumer.pubsub.PNEvent
@@ -69,7 +70,7 @@ class TransitionFromReceivingStateTest {
             setOf(
                 SubscribeEffectInvocation.CancelReceiveMessages,
                 SubscribeEffectInvocation.EmitStatus(
-                    PNStatus.Disconnected
+                    PNStatus(PNStatusCategory.Disconnected)
                 )
             ),
             invocations
@@ -190,7 +191,7 @@ class TransitionFromReceivingStateTest {
             setOf(
                 SubscribeEffectInvocation.CancelReceiveMessages,
                 SubscribeEffectInvocation.EmitStatus(
-                    PNStatus.Disconnected
+                    PNStatus(PNStatusCategory.Disconnected)
                 )
             ),
             invocations

@@ -5,6 +5,7 @@ import com.pubnub.api.CommonUtils.randomChannel
 import com.pubnub.api.CommonUtils.randomValue
 import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.SubscribeCallback
+import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.listen
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
@@ -244,7 +245,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
 
         guestClient.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                assertTrue(pnStatus is PNStatus.ConnectionError)
+                assertTrue(pnStatus.category == PNStatusCategory.ConnectionError)
                 success.set(true)
             }
         })
@@ -531,7 +532,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
 
         pubnub.addListener(object : StatusListener() {
             override fun status(pubnub: PubNub, status: PNStatus) {
-                if (status is PNStatus.Disconnected || status is PNStatus.SubscriptionChanged
+                if (status.category == PNStatusCategory.Disconnected || status.category == PNStatusCategory.SubscriptionChanged
                 ) {
                     unsubscribed.countDown()
                 }

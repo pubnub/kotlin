@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions;
+import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
 import com.pubnub.api.integration.util.RandomGenerator;
 import com.pubnub.api.models.consumer.PNStatus;
@@ -321,11 +322,11 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
                 if (!status.isError()) {
-                    if (status instanceof PNStatus.Connected) {
-                        if (((PNStatus.Connected) status).getChannels().contains(expectedChannel)) {
+                    if (status.getCategory() == PNStatusCategory.Connected) {
+                        if (status.getChannels().contains(expectedChannel)) {
                             subscribeSuccess.set(true);
                         }
-                    } else if (status instanceof PNStatus.HeartbeatSuccess) {
+                    } else if (status.getCategory() == PNStatusCategory.HeartbeatSuccess) {
                         heartbeatCallsCount.incrementAndGet();
                     }
                 }
@@ -360,11 +361,11 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
                 if (!status.isError()) {
-                    if (status instanceof PNStatus.Connected) {
-                        if (((PNStatus.Connected) status).getChannels().contains(expectedChannel)) {
+                    if (status.getCategory() == PNStatusCategory.Connected) {
+                        if (status.getChannels().contains(expectedChannel)) {
                             subscribeSuccess.set(true);
                         }
-                    } else if (status instanceof PNStatus.HeartbeatSuccess) {
+                    } else if (status.getCategory() == PNStatusCategory.HeartbeatSuccess) {
                         heartbeatCallsCount.incrementAndGet();
                     }
                 }

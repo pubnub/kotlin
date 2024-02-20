@@ -2,6 +2,7 @@ package com.pubnub.api.integration
 
 import com.pubnub.api.CommonUtils.randomChannel
 import com.pubnub.api.PubNub
+import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.files.PNFileUploadResult
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
@@ -88,7 +89,7 @@ class FilesIntegrationTest : BaseIntegrationTest() {
         val fileEventReceived = CountDownLatch(1)
         pubnub.addListener(object : LimitedListener() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus is PNStatus.Connected) {
+                if (pnStatus.category == PNStatusCategory.Connected) {
                     connectedLatch.countDown()
                 }
             }

@@ -8,6 +8,7 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
 import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.enums.PNLogVerbosity;
+import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadataResult;
 import com.pubnub.api.models.consumer.objects_api.membership.PNMembershipResult;
@@ -191,12 +192,12 @@ public abstract class BaseIntegrationTest {
 
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
-                if (status instanceof PNStatus.Connected) {
-                    if (((PNStatus.Connected) status).getChannels().containsAll(channels)) {
+                if (status.getCategory() == PNStatusCategory.Connected) {
+                    if (status.getChannels().containsAll(channels)) {
                         subscribeSuccess.set(true);
                     }
-                } else if (status instanceof PNStatus.SubscriptionChanged) {
-                    if (((PNStatus.SubscriptionChanged) status).getChannels().containsAll(channels)) {
+                } else if (status.getCategory() == PNStatusCategory.SubscriptionChanged) {
+                    if (status.getChannels().containsAll(channels)) {
                         subscribeSuccess.set(true);
                     }
                 }

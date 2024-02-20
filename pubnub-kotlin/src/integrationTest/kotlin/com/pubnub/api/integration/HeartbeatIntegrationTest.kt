@@ -4,6 +4,7 @@ import com.pubnub.api.CommonUtils.generatePayload
 import com.pubnub.api.CommonUtils.randomChannel
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
+import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.v2.callbacks.onSuccess
@@ -49,7 +50,7 @@ class HeartbeatIntegrationTest : BaseIntegrationTest() {
         observer.addListener(object : com.pubnub.api.callbacks.SubscribeCallback() {
 
             override fun status(p: PubNub, pnStatus: PNStatus) {
-                if (pnStatus is PNStatus.Connected &&
+                if (pnStatus.category == PNStatusCategory.Connected &&
                     pnStatus.channels.contains(expectedChannel)
                 ) {
                     pubnub.subscribe(

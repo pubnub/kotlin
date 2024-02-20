@@ -1,5 +1,6 @@
 package com.pubnub.internal.subscribe.eventengine.worker
 
+import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.internal.eventengine.transition
@@ -43,13 +44,13 @@ class SubscribeEventConsumerWorkerTransitionFunctionTest {
                 SubscribeEffectInvocation.Handshake(channels, channelGroups),
                 SubscribeEffectInvocation.CancelHandshake,
                 SubscribeEffectInvocation.EmitStatus(
-                    PNStatus.Connected(timeToken, channels = channels.toList(), channelGroups = channelGroups.toList())
+                    PNStatus(PNStatusCategory.Connected, currentTimetoken = timeToken, channels = channels.toList(), channelGroups = channelGroups.toList())
                 ),
                 SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
                 SubscribeEffectInvocation.CancelReceiveMessages,
                 SubscribeEffectInvocation.EmitMessages(listOf()),
                 SubscribeEffectInvocation.EmitStatus(
-                    PNStatus.Connected(timeToken, channels = channels.toList(), channelGroups = channelGroups.toList())
+                    PNStatus(PNStatusCategory.Connected, currentTimetoken = timeToken, channels = channels.toList(), channelGroups = channelGroups.toList())
                 ),
                 SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)
             ),

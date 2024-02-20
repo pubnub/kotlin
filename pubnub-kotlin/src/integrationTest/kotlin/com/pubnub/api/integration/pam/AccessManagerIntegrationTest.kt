@@ -333,7 +333,7 @@
 //        pubnubToTest.addListener(object : SubscribeCallback() {
 //
 //            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-//                if (pnStatus is PNStatus.Connected &&
+//                if (pnStatus.category == PNStatusCategory.Connected &&
 //                    pnStatus.operation == PNOperationType.PNSubscribeOperation &&
 //                    pnStatus.uuid == this@AccessManagerIntegrationTest.pubnubToTest.configuration.userId.value
 //                ) {

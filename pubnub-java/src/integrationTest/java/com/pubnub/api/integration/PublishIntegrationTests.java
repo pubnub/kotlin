@@ -8,6 +8,7 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.crypto.CryptoModule;
+import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult;
@@ -151,8 +152,8 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
 
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
-                if (status instanceof PNStatus.Connected) {
-                    if (((PNStatus.Connected) status).getChannels().contains(expectedChannel)) {
+                if (status.getCategory() == PNStatusCategory.Connected) {
+                    if (status.getChannels().contains(expectedChannel)) {
                         observer.publish()
                                 .message(messagePayload)
                                 .channel(expectedChannel)
@@ -224,8 +225,8 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
 
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
-                if (status instanceof PNStatus.Connected) {
-                    if (((PNStatus.Connected) status).getChannels().contains(expectedChannel)) {
+                if (status.getCategory() == PNStatusCategory.Connected) {
+                    if (status.getChannels().contains(expectedChannel)) {
                         // send an unencrypted message first to try to crash the SubscribeMessageProcessor
                         sender.publish()
                                 .message(messagePayload)

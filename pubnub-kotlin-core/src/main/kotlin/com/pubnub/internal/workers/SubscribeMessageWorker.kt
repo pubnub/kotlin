@@ -1,6 +1,7 @@
 package com.pubnub.internal.workers
 
 import com.pubnub.api.PubNubException
+import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
@@ -41,7 +42,7 @@ internal class SubscribeMessageWorker(
                     is PNFileEventResult -> listenerManager.announce(event)
                 }
             } catch (e: PubNubException) {
-                listenerManager.announce(PNStatus.MalformedMessage(e))
+                listenerManager.announce(PNStatus(PNStatusCategory.MalformedMessage, e))
             } catch (e: InterruptedException) {
                 Thread.currentThread().interrupt()
                 log.trace("take message interrupted!", e)

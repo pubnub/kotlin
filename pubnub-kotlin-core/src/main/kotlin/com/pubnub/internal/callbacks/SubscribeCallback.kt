@@ -17,9 +17,9 @@ interface SubscribeCallback :
 
     /**
      * Receive status events like
-     * [PNStatus.Connected],
+     * [PNStatusCategory.Connected],
      * [PNStatus.Disconnected],
-     * [PNStatus.SubscriptionChanged]
+     * [PNStatusCategory.SubscriptionChanged]
      *
      * and other events related to the subscribe loop and channel mix.
      *
