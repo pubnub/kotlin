@@ -15,4 +15,4 @@ local.properties
 # GitHub Actions #
 ##################
 .github/.release
-src/test/resources/sdk-specifications
+pubnub-kotlin-core/src/test/resources/sdk-specifications
