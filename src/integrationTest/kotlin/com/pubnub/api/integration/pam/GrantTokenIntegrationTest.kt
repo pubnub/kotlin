@@ -1,5 +1,9 @@
 package com.pubnub.api.integration.pam
 
+import com.pubnub.api.CommonUtils
+import com.pubnub.api.CommonUtils.randomChannel
+import com.pubnub.api.Keys
+import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.SpaceId
 import com.pubnub.api.UserId
@@ -11,6 +15,7 @@ import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken.PNResourcePermissions
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class GrantTokenIntegrationTest : BaseIntegrationTest() {
@@ -120,5 +125,51 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
             ),
             patterns.channelGroups[expectedChannelGroupPattern]
         )
+    }
+
+    @Test
+    fun canReadGroupsInChannelGroupWhenPamEnabled() {
+        val expectedTTL = 1337
+        val channelGroupName = "channelGroup" + randomChannel()
+        val channel01 = "channel" + randomChannel()
+        val channel02 = "channel" + randomChannel()
+        val channel03 = "channel" + randomChannel()
+
+        // create token
+        val token = server.grantToken(
+            ttl = expectedTTL,
+            channelGroups = listOf(
+                ChannelGroupGrant.id(id = channelGroupName, read = true, manage = true)
+            )
+        ).sync()!!.token
+
+        // create pubnub instance with PAM enabled but not server(secretKey is not configured)
+        val pnConfiguration = PNConfiguration(userId = UserId(PubNub.generateUUID())).apply {
+            subscribeKey = Keys.pamSubKey
+            publishKey = Keys.pamPubKey
+            logVerbosity = PNLogVerbosity.NONE
+            httpLoggingInterceptor = CommonUtils.createInterceptor(logger)
+            enableEventEngine = true
+        }
+        val pubNubTest = createPubNub(pnConfiguration)
+
+        // setToken
+        pubNubTest.setToken(token)
+
+        // add channels to channelGroup
+        pubNubTest.addChannelsToChannelGroup(
+            channelGroup = channelGroupName,
+            channels = listOf(channel01, channel02, channel03)
+        ).sync()
+
+        // get channels in channelGroup
+        val channelsInChannelGroup = pubNubTest.listChannelsForChannelGroup(channelGroup = channelGroupName).sync()
+
+        channelsInChannelGroup?.channels?.let { channels ->
+            assertTrue(channels.contains(channel01))
+            assertTrue(channels.contains(channel02))
+            assertTrue(channels.contains(channel03))
+            assertEquals(3, channels.size)
+        }
     }
 }

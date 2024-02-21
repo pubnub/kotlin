@@ -35,7 +35,7 @@ open class PNConfiguration(
         level = DeprecationLevel.WARNING,
         message = "Use PNConfiguration(UserId) instead, and set the enableEventEngine property separately."
     )
-    constructor(uuid: String, enableEventEngine: Boolean = false) : this(UserId(uuid)) {
+    constructor(uuid: String, enableEventEngine: Boolean = true) : this(UserId(uuid)) {
         this.enableEventEngine = enableEventEngine
     }
 
@@ -63,16 +63,16 @@ open class PNConfiguration(
     }
 
     /**
-     *  This controls whether to enable a new, experimental implementation of Subscription and Presence handling.
+     *  This controls whether to enable the new implementation of Subscription and Presence handling.
      *
-     *  The current default is `false`.
+     *  The current default is `true`.
      *
-     *  This switch can help you verify the behavior of the PubNub SDK with the new engine enabled
-     *  in your app, however the change should be transparent for users.
+     *  If you encounter errors with the setting enabled you can set it to `false` to go back to the previous behavior.
      *
-     *  It will default to true in a future SDK release.
+     *  Please note that this setting will be removed in a future version of the SDK, so please report any errors that
+     *  are preventing your from keeping it enabled.
      */
-    var enableEventEngine: Boolean = false
+    var enableEventEngine: Boolean = true
 
     /**
      * The subscribe key from the admin panel.
@@ -300,6 +300,10 @@ open class PNConfiguration(
      *
      * [PNStatusCategory.PNRequestMessageCountExceededCategory] is thrown.
      */
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = """This setting is no longer used when `enableEventEngine` is set to `true` and it will be removed in a future SDK version.""",
+    )
     var requestMessageCountThreshold: Int? = null
 
     /**

@@ -379,7 +379,7 @@ class PubNub internal constructor(
         withTimetoken: Long = 0L
     ) {
         val toSubscribe = mutableSetOf<SubscriptionImpl>()
-        channels.map { ChannelName(it) }.forEach { channelName ->
+        channels.filter { it.isNotEmpty() }.map { ChannelName(it) }.forEach { channelName ->
             // if we are adding a NEW subscription in this step, this var will contain it:
             var subscription: SubscriptionImpl? = null
             channelSubscriptionMap.computeIfAbsent(channelName) { newChannelName ->
@@ -405,7 +405,7 @@ class PubNub internal constructor(
                 }
             }
         }
-        channelGroups.map { ChannelGroupName(it) }.forEach { channelGroupName ->
+        channelGroups.filter { it.isNotEmpty() }.map { ChannelGroupName(it) }.forEach { channelGroupName ->
             var subscription: SubscriptionImpl? = null
 
             channelGroupSubscriptionMap.computeIfAbsent(channelGroupName) { newChannelGroupName ->
