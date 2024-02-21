@@ -3,7 +3,6 @@ package com.pubnub.api.integration
 import com.pubnub.api.CommonUtils.getSpecialCharsMap
 import com.pubnub.api.CommonUtils.randomChannel
 import com.pubnub.api.listen
-import com.pubnub.api.v2.callbacks.onSuccess
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.junit.Ignore

@@ -22,7 +22,6 @@ import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.subscribeToBlocking
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.getOrThrow
-import com.pubnub.api.v2.callbacks.onSuccess
 import com.pubnub.api.v2.entities.BaseChannel
 import com.pubnub.api.v2.subscriptions.BaseSubscriptionSet
 import com.pubnub.api.v2.subscriptions.SubscriptionCursor

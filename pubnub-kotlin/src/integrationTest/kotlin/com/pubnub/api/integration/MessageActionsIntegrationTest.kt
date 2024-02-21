@@ -30,8 +30,6 @@ import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.v2.callbacks.getOrThrow
-import com.pubnub.api.v2.callbacks.onFailure
-import com.pubnub.api.v2.callbacks.onSuccess
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.hamcrest.core.IsEqual

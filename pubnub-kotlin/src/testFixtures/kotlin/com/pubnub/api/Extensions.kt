@@ -2,7 +2,6 @@ package com.pubnub.api
 
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.v2.callbacks.Result
-import com.pubnub.api.v2.callbacks.onFailure
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.awaitility.pollinterval.FibonacciPollInterval

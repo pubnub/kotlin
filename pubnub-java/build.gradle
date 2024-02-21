@@ -53,7 +53,8 @@ configurations {
 }
 
 dependencies {
-    api(project(":pubnub-kotlin-core"))
+    api(project(":pubnub-kotlin-core:core-api"))
+    implementation(project(":pubnub-kotlin-core:core-impl"))
     implementation group: 'com.squareup.retrofit2', name: 'retrofit', version: '2.6.2'
     api group: 'com.squareup.okhttp3', name: 'logging-interceptor', version: '4.10.0'
 
@@ -90,7 +91,7 @@ dependencies {
 
 //    integrationTestImplementation group: 'junit', name: 'junit', version: '4.13.2'
     integrationTestImplementation group: 'org.aeonbits.owner', name: 'owner', version: '1.0.8'
-    integrationTestImplementation(project(":pubnub-kotlin-core"))
+//    integrationTestImplementation(project(":pubnub-kotlin-core"))
 }
 
 jacoco {

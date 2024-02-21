@@ -11,7 +11,6 @@ import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
-import com.pubnub.api.v2.callbacks.onSuccess
 import org.junit.Assert
 import org.junit.Test
 import java.io.ByteArrayInputStream
