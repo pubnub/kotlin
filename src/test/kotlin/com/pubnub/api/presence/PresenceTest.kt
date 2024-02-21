@@ -152,7 +152,7 @@ internal class PresenceTest {
         )
 
         // when
-        presence.presence(channels = setOf("abc"), connected = false )
+        presence.presence(channels = setOf("abc"), connected = false)
 
         // then
         assertInstanceOf(PresenceNoOp::class.java, presence)
