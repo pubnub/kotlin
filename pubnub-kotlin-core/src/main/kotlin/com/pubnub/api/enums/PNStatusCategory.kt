@@ -15,7 +15,6 @@ enum class PNStatusCategory {
     UnexpectedDisconnect,
     Disconnected,
     ConnectionError,
-    Leave,
     HeartbeatFailed,
     HeartbeatSuccess,
     MalformedMessage,

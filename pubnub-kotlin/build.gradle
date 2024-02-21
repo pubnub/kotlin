@@ -121,12 +121,6 @@ shadowJar {
     }
 }
 
-task cucumber(type: Test) {
-    systemProperty "cucumber.filter.tags", System.getProperty("cucumber.filter.tags")
-    systemProperty "cucumber.features", System.getProperty("cucumber.features")
-    systemProperty "cucumber.plugins", System.getProperty("cucumber.plugins")
-}
-
 
 dokkaGfm {
     dokkaSourceSets {
