@@ -31,7 +31,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Assume.assumeFalse
-import org.junit.Ignore
 import org.junit.Test
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
@@ -2651,8 +2650,9 @@ class SubscriptionManagerTest : BaseTest() {
     }
 
     @Test
-    @Ignore("Presence EE doesn't support this right now") // TODO add missing functionality?
     fun testAllHeartbeatsLeaveViaPresence() {
+        // in case of EE the leave event is sent, but EE spec doesn't send status for it, so there's no way to check
+        assumeFalse("Test skipped because enableEventEngine is true", pubnub.configuration.enableEventEngine)
         val statusReceived = AtomicBoolean()
         initPubNub(
             PubNub(
