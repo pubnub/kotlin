@@ -9,10 +9,10 @@ interface [PubSubResult](index.md) : [PNEvent](../-p-n-event/index.md)
 
 | Name | Summary |
 |---|---|
-| [channel](channel.md) | [jvm]<br>abstract val [channel](channel.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [channel](channel.md) | [jvm]<br>abstract override val [channel](channel.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
 | [publisher](publisher.md) | [jvm]<br>abstract val [publisher](publisher.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? |
-| [subscription](subscription.md) | [jvm]<br>abstract val [subscription](subscription.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? |
-| [timetoken](timetoken.md) | [jvm]<br>abstract val [timetoken](timetoken.md): [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)? |
+| [subscription](subscription.md) | [jvm]<br>abstract override val [subscription](subscription.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? |
+| [timetoken](timetoken.md) | [jvm]<br>abstract override val [timetoken](timetoken.md): [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)? |
 | [userMetadata](user-metadata.md) | [jvm]<br>abstract val [userMetadata](user-metadata.md): JsonElement? |
 
 ## Inheritors

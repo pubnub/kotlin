@@ -3,7 +3,7 @@
 # requestMessageCountThreshold
 
 [jvm]\
-var [requestMessageCountThreshold](request-message-count-threshold.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)? = null
+~~var~~ [~~requestMessageCountThreshold~~](request-message-count-threshold.md)~~:~~ [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)? ~~=~~ ~~null~~
 
 If the number of messages into the payload is above this value,
 

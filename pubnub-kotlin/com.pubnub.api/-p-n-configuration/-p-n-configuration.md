@@ -3,6 +3,6 @@
 # PNConfiguration
 
 [jvm]\
-~~fun~~ [~~PNConfiguration~~](-p-n-configuration.md)~~(~~uuid: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), enableEventEngine: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false~~)~~
+~~fun~~ [~~PNConfiguration~~](-p-n-configuration.md)~~(~~uuid: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), enableEventEngine: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = true~~)~~
 
 fun [PNConfiguration](-p-n-configuration.md)(userId: [UserId](../-user-id/index.md))

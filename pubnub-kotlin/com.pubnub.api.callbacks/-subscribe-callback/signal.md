@@ -3,7 +3,7 @@
 # signal
 
 [jvm]\
-open fun [signal](signal.md)(pubnub: [PubNub](../../com.pubnub.api/-pub-nub/index.md), pnSignalResult: [PNSignalResult](../../com.pubnub.api.models.consumer.pubsub/-p-n-signal-result/index.md))
+open override fun [signal](signal.md)(pubnub: [PubNub](../../com.pubnub.api/-pub-nub/index.md), pnSignalResult: [PNSignalResult](../../com.pubnub.api.models.consumer.pubsub/-p-n-signal-result/index.md))
 
 Receive signals at subscribed channels.
 

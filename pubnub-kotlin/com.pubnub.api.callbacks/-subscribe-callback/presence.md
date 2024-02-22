@@ -3,7 +3,7 @@
 # presence
 
 [jvm]\
-open fun [presence](presence.md)(pubnub: [PubNub](../../com.pubnub.api/-pub-nub/index.md), pnPresenceEventResult: [PNPresenceEventResult](../../com.pubnub.api.models.consumer.pubsub/-p-n-presence-event-result/index.md))
+open override fun [presence](presence.md)(pubnub: [PubNub](../../com.pubnub.api/-pub-nub/index.md), pnPresenceEventResult: [PNPresenceEventResult](../../com.pubnub.api.models.consumer.pubsub/-p-n-presence-event-result/index.md))
 
 Receive presence events for channels subscribed to with presence enabled via `withPresence = true` in [PubNub.subscribe](../../com.pubnub.api/-pub-nub/subscribe.md)
 

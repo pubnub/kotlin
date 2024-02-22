@@ -3,11 +3,6 @@ $dokka.linkExtension:md
 $dokka.location:com.pubnub.api.builder////PointingToDeclaration/pubnub-kotlin/com.pubnub.api.builder/index.md
 $dokka.location:com.pubnub.api.builder/PubSub///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.builder/-pub-sub/index.md
 $dokka.location:com.pubnub.api.callbacks////PointingToDeclaration/pubnub-kotlin/com.pubnub.api.callbacks/index.md
-$dokka.location:com.pubnub.api.callbacks/Disposable///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.callbacks/-disposable/index.md
-$dokka.location:com.pubnub.api.callbacks/Disposable/dispose/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.callbacks/-disposable/dispose.md
-$dokka.location:com.pubnub.api.callbacks/DisposableListener///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.callbacks/-disposable-listener/index.md
-$dokka.location:com.pubnub.api.callbacks/DisposableListener/DisposableListener/#com.pubnub.api.PubNub#com.pubnub.api.callbacks.Listener/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.callbacks/-disposable-listener/-disposable-listener.md
-$dokka.location:com.pubnub.api.callbacks/DisposableListener/dispose/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.callbacks/-disposable-listener/dispose.md
 $dokka.location:com.pubnub.api.callbacks/Listener///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.callbacks/-listener/index.md
 $dokka.location:com.pubnub.api.callbacks/SubscribeCallback///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.callbacks/-subscribe-callback/index.md
 $dokka.location:com.pubnub.api.callbacks/SubscribeCallback/SubscribeCallback/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.callbacks/-subscribe-callback/-subscribe-callback.md
@@ -448,6 +443,7 @@ $dokka.location:com.pubnub.api.enums/PNStatusCategory.PNNotFoundCategory///Point
 $dokka.location:com.pubnub.api.enums/PNStatusCategory.PNReconnectedCategory///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api.enums/-p-n-status-category/-p-n-reconnected-category/index.md
 $dokka.location:com.pubnub.api.enums/PNStatusCategory.PNReconnectionAttemptsExhausted///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api.enums/-p-n-status-category/-p-n-reconnection-attempts-exhausted/index.md
 $dokka.location:com.pubnub.api.enums/PNStatusCategory.PNRequestMessageCountExceededCategory///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api.enums/-p-n-status-category/-p-n-request-message-count-exceeded-category/index.md
+$dokka.location:com.pubnub.api.enums/PNStatusCategory.PNSubscriptionChanged///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api.enums/-p-n-status-category/-p-n-subscription-changed/index.md
 $dokka.location:com.pubnub.api.enums/PNStatusCategory.PNTimeoutCategory///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api.enums/-p-n-status-category/-p-n-timeout-category/index.md
 $dokka.location:com.pubnub.api.enums/PNStatusCategory.PNUnexpectedDisconnectCategory///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api.enums/-p-n-status-category/-p-n-unexpected-disconnect-category/index.md
 $dokka.location:com.pubnub.api.enums/PNStatusCategory.PNUnknownCategory///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api.enums/-p-n-status-category/-p-n-unknown-category/index.md
@@ -860,13 +856,14 @@ $dokka.location:com.pubnub.api.models.consumer.presence/PNWhereNowResult///Point
 $dokka.location:com.pubnub.api.models.consumer.presence/PNWhereNowResult/channels/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer.presence/-p-n-where-now-result/channels.md
 $dokka.location:com.pubnub.api.models.consumer.pubsub.files////PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer.pubsub.files/index.md
 $dokka.location:com.pubnub.api.models.consumer.pubsub.files/PNFileEventResult///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer.pubsub.files/-p-n-file-event-result/index.md
-$dokka.location:com.pubnub.api.models.consumer.pubsub.files/PNFileEventResult/PNFileEventResult/#kotlin.String#kotlin.Long?#kotlin.String?#kotlin.Any?#com.pubnub.api.models.consumer.files.PNDownloadableFile#com.google.gson.JsonElement#com.pubnub.api.PubNubError?/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer.pubsub.files/-p-n-file-event-result/-p-n-file-event-result.md
+$dokka.location:com.pubnub.api.models.consumer.pubsub.files/PNFileEventResult/PNFileEventResult/#kotlin.String#kotlin.Long?#kotlin.String?#kotlin.Any?#com.pubnub.api.models.consumer.files.PNDownloadableFile#com.google.gson.JsonElement#kotlin.String?#com.pubnub.api.PubNubError?/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer.pubsub.files/-p-n-file-event-result/-p-n-file-event-result.md
 $dokka.location:com.pubnub.api.models.consumer.pubsub.files/PNFileEventResult/channel/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer.pubsub.files/-p-n-file-event-result/channel.md
 $dokka.location:com.pubnub.api.models.consumer.pubsub.files/PNFileEventResult/error/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer.pubsub.files/-p-n-file-event-result/error.md
 $dokka.location:com.pubnub.api.models.consumer.pubsub.files/PNFileEventResult/file/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer.pubsub.files/-p-n-file-event-result/file.md
 $dokka.location:com.pubnub.api.models.consumer.pubsub.files/PNFileEventResult/jsonMessage/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer.pubsub.files/-p-n-file-event-result/json-message.md
 $dokka.location:com.pubnub.api.models.consumer.pubsub.files/PNFileEventResult/message/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer.pubsub.files/-p-n-file-event-result/message.md
 $dokka.location:com.pubnub.api.models.consumer.pubsub.files/PNFileEventResult/publisher/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer.pubsub.files/-p-n-file-event-result/publisher.md
+$dokka.location:com.pubnub.api.models.consumer.pubsub.files/PNFileEventResult/subscription/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer.pubsub.files/-p-n-file-event-result/subscription.md
 $dokka.location:com.pubnub.api.models.consumer.pubsub.files/PNFileEventResult/timetoken/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer.pubsub.files/-p-n-file-event-result/timetoken.md
 $dokka.location:com.pubnub.api.models.consumer.pubsub.message_actions////PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer.pubsub.message_actions/index.md
 $dokka.location:com.pubnub.api.models.consumer.pubsub.message_actions/PNMessageActionResult///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer.pubsub.message_actions/-p-n-message-action-result/index.md
@@ -958,11 +955,14 @@ $dokka.location:com.pubnub.api.models.consumer.pubsub/BasePubSubResult/userMetad
 $dokka.location:com.pubnub.api.models.consumer.pubsub/MessageResult///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer.pubsub/-message-result/index.md
 $dokka.location:com.pubnub.api.models.consumer.pubsub/MessageResult/message/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer.pubsub/-message-result/message.md
 $dokka.location:com.pubnub.api.models.consumer.pubsub/PNEvent///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer.pubsub/-p-n-event/index.md
+$dokka.location:com.pubnub.api.models.consumer.pubsub/PNEvent/channel/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer.pubsub/-p-n-event/channel.md
+$dokka.location:com.pubnub.api.models.consumer.pubsub/PNEvent/subscription/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer.pubsub/-p-n-event/subscription.md
+$dokka.location:com.pubnub.api.models.consumer.pubsub/PNEvent/timetoken/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer.pubsub/-p-n-event/timetoken.md
 $dokka.location:com.pubnub.api.models.consumer.pubsub/PNMessageResult///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer.pubsub/-p-n-message-result/index.md
 $dokka.location:com.pubnub.api.models.consumer.pubsub/PNMessageResult/error/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer.pubsub/-p-n-message-result/error.md
 $dokka.location:com.pubnub.api.models.consumer.pubsub/PNMessageResult/message/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer.pubsub/-p-n-message-result/message.md
 $dokka.location:com.pubnub.api.models.consumer.pubsub/PNPresenceEventResult///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer.pubsub/-p-n-presence-event-result/index.md
-$dokka.location:com.pubnub.api.models.consumer.pubsub/PNPresenceEventResult/PNPresenceEventResult/#kotlin.String?#kotlin.String?#kotlin.Long?#kotlin.Int?#com.google.gson.JsonElement?#kotlin.String?#kotlin.String?#kotlin.Long?#kotlin.collections.List[kotlin.String]?#kotlin.collections.List[kotlin.String]?#kotlin.collections.List[kotlin.String]?#kotlin.Boolean?#kotlin.Any?/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer.pubsub/-p-n-presence-event-result/-p-n-presence-event-result.md
+$dokka.location:com.pubnub.api.models.consumer.pubsub/PNPresenceEventResult/PNPresenceEventResult/#kotlin.String?#kotlin.String?#kotlin.Long?#kotlin.Int?#com.google.gson.JsonElement?#kotlin.String#kotlin.String?#kotlin.Long?#kotlin.collections.List[kotlin.String]?#kotlin.collections.List[kotlin.String]?#kotlin.collections.List[kotlin.String]?#kotlin.Boolean?#kotlin.Any?/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer.pubsub/-p-n-presence-event-result/-p-n-presence-event-result.md
 $dokka.location:com.pubnub.api.models.consumer.pubsub/PNPresenceEventResult/channel/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer.pubsub/-p-n-presence-event-result/channel.md
 $dokka.location:com.pubnub.api.models.consumer.pubsub/PNPresenceEventResult/event/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer.pubsub/-p-n-presence-event-result/event.md
 $dokka.location:com.pubnub.api.models.consumer.pubsub/PNPresenceEventResult/hereNowRefresh/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer.pubsub/-p-n-presence-event-result/here-now-refresh.md
@@ -1057,6 +1057,7 @@ $dokka.location:com.pubnub.api.models.consumer/PNBoundedPage/limit/#/PointingToD
 $dokka.location:com.pubnub.api.models.consumer/PNBoundedPage/start/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer/-p-n-bounded-page/start.md
 $dokka.location:com.pubnub.api.models.consumer/PNPublishResult///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer/-p-n-publish-result/index.md
 $dokka.location:com.pubnub.api.models.consumer/PNPublishResult/timetoken/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer/-p-n-publish-result/timetoken.md
+$dokka.location:com.pubnub.api.models.consumer/PNPublishResult/toString/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer/-p-n-publish-result/to-string.md
 $dokka.location:com.pubnub.api.models.consumer/PNStatus///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer/-p-n-status/index.md
 $dokka.location:com.pubnub.api.models.consumer/PNStatus/PNStatus/#com.pubnub.api.enums.PNStatusCategory#kotlin.Boolean#com.pubnub.api.enums.PNOperationType#com.pubnub.api.PubNubException?#kotlin.Int?#kotlin.Boolean?#kotlin.String?#kotlin.String?#kotlin.String?#kotlin.collections.List[kotlin.String?]#kotlin.collections.List[kotlin.String?]/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer/-p-n-status/-p-n-status.md
 $dokka.location:com.pubnub.api.models.consumer/PNStatus/affectedChannelGroups/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models.consumer/-p-n-status/affected-channel-groups.md
@@ -1255,6 +1256,65 @@ $dokka.location:com.pubnub.api.services/FilesService/listFiles/#kotlin.String#ko
 $dokka.location:com.pubnub.api.services/FilesService/notifyAboutFileUpload/#kotlin.String#kotlin.String#kotlin.String#kotlin.String#kotlin.collections.Map[kotlin.String,kotlin.String]/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.services/-files-service/notify-about-file-upload.md
 $dokka.location:com.pubnub.api.services/S3Service///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.services/-s3-service/index.md
 $dokka.location:com.pubnub.api.services/S3Service/upload/#kotlin.String#okhttp3.MultipartBody/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.services/-s3-service/upload.md
+$dokka.location:com.pubnub.api.v2.callbacks////PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.callbacks/index.md
+$dokka.location:com.pubnub.api.v2.callbacks/EventEmitter///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.callbacks/-event-emitter/index.md
+$dokka.location:com.pubnub.api.v2.callbacks/EventEmitter/addListener/#com.pubnub.api.v2.callbacks.EventListener/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.callbacks/-event-emitter/add-listener.md
+$dokka.location:com.pubnub.api.v2.callbacks/EventEmitter/onFile/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.callbacks/-event-emitter/on-file.md
+$dokka.location:com.pubnub.api.v2.callbacks/EventEmitter/onMessage/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.callbacks/-event-emitter/on-message.md
+$dokka.location:com.pubnub.api.v2.callbacks/EventEmitter/onMessageAction/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.callbacks/-event-emitter/on-message-action.md
+$dokka.location:com.pubnub.api.v2.callbacks/EventEmitter/onObjects/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.callbacks/-event-emitter/on-objects.md
+$dokka.location:com.pubnub.api.v2.callbacks/EventEmitter/onPresence/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.callbacks/-event-emitter/on-presence.md
+$dokka.location:com.pubnub.api.v2.callbacks/EventEmitter/onSignal/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.callbacks/-event-emitter/on-signal.md
+$dokka.location:com.pubnub.api.v2.callbacks/EventEmitter/removeAllListeners/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.callbacks/-event-emitter/remove-all-listeners.md
+$dokka.location:com.pubnub.api.v2.callbacks/EventEmitter/removeListener/#com.pubnub.api.callbacks.Listener/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.callbacks/-event-emitter/remove-listener.md
+$dokka.location:com.pubnub.api.v2.callbacks/EventListener///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.callbacks/-event-listener/index.md
+$dokka.location:com.pubnub.api.v2.callbacks/EventListener/file/#com.pubnub.api.PubNub#com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.callbacks/-event-listener/file.md
+$dokka.location:com.pubnub.api.v2.callbacks/EventListener/message/#com.pubnub.api.PubNub#com.pubnub.api.models.consumer.pubsub.PNMessageResult/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.callbacks/-event-listener/message.md
+$dokka.location:com.pubnub.api.v2.callbacks/EventListener/messageAction/#com.pubnub.api.PubNub#com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.callbacks/-event-listener/message-action.md
+$dokka.location:com.pubnub.api.v2.callbacks/EventListener/objects/#com.pubnub.api.PubNub#com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.callbacks/-event-listener/objects.md
+$dokka.location:com.pubnub.api.v2.callbacks/EventListener/presence/#com.pubnub.api.PubNub#com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.callbacks/-event-listener/presence.md
+$dokka.location:com.pubnub.api.v2.callbacks/EventListener/signal/#com.pubnub.api.PubNub#com.pubnub.api.models.consumer.pubsub.PNSignalResult/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.callbacks/-event-listener/signal.md
+$dokka.location:com.pubnub.api.v2.callbacks/StatusEmitter///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.callbacks/-status-emitter/index.md
+$dokka.location:com.pubnub.api.v2.callbacks/StatusEmitter/addListener/#com.pubnub.api.v2.callbacks.StatusListener/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.callbacks/-status-emitter/add-listener.md
+$dokka.location:com.pubnub.api.v2.callbacks/StatusEmitter/removeAllListeners/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.callbacks/-status-emitter/remove-all-listeners.md
+$dokka.location:com.pubnub.api.v2.callbacks/StatusEmitter/removeListener/#com.pubnub.api.callbacks.Listener/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.callbacks/-status-emitter/remove-listener.md
+$dokka.location:com.pubnub.api.v2.callbacks/StatusListener///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.callbacks/-status-listener/index.md
+$dokka.location:com.pubnub.api.v2.callbacks/StatusListener/status/#com.pubnub.api.PubNub#com.pubnub.api.models.consumer.PNStatus/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.callbacks/-status-listener/status.md
+$dokka.location:com.pubnub.api.v2.entities////PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.entities/index.md
+$dokka.location:com.pubnub.api.v2.entities/Channel///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.entities/-channel/index.md
+$dokka.location:com.pubnub.api.v2.entities/Channel/name/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.entities/-channel/name.md
+$dokka.location:com.pubnub.api.v2.entities/Channel/subscription/#com.pubnub.api.v2.subscriptions.SubscriptionOptions/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.entities/-channel/subscription.md
+$dokka.location:com.pubnub.api.v2.entities/ChannelGroup///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.entities/-channel-group/index.md
+$dokka.location:com.pubnub.api.v2.entities/ChannelGroup/name/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.entities/-channel-group/name.md
+$dokka.location:com.pubnub.api.v2.entities/ChannelGroup/subscription/#com.pubnub.api.v2.subscriptions.SubscriptionOptions/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.entities/-channel-group/subscription.md
+$dokka.location:com.pubnub.api.v2.entities/ChannelMetadata///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.entities/-channel-metadata/index.md
+$dokka.location:com.pubnub.api.v2.entities/ChannelMetadata/id/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.entities/-channel-metadata/id.md
+$dokka.location:com.pubnub.api.v2.entities/ChannelMetadata/subscription/#com.pubnub.api.v2.subscriptions.SubscriptionOptions/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.entities/-channel-metadata/subscription.md
+$dokka.location:com.pubnub.api.v2.entities/Subscribable///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.entities/-subscribable/index.md
+$dokka.location:com.pubnub.api.v2.entities/Subscribable/subscription/#com.pubnub.api.v2.subscriptions.SubscriptionOptions/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.entities/-subscribable/subscription.md
+$dokka.location:com.pubnub.api.v2.entities/UserMetadata///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.entities/-user-metadata/index.md
+$dokka.location:com.pubnub.api.v2.entities/UserMetadata/id/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.entities/-user-metadata/id.md
+$dokka.location:com.pubnub.api.v2.entities/UserMetadata/subscription/#com.pubnub.api.v2.subscriptions.SubscriptionOptions/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.entities/-user-metadata/subscription.md
+$dokka.location:com.pubnub.api.v2.subscriptions////PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.subscriptions/index.md
+$dokka.location:com.pubnub.api.v2.subscriptions/SubscribeCapable///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.subscriptions/-subscribe-capable/index.md
+$dokka.location:com.pubnub.api.v2.subscriptions/SubscribeCapable/subscribe/#com.pubnub.api.v2.subscriptions.SubscriptionCursor/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.subscriptions/-subscribe-capable/subscribe.md
+$dokka.location:com.pubnub.api.v2.subscriptions/SubscribeCapable/unsubscribe/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.subscriptions/-subscribe-capable/unsubscribe.md
+$dokka.location:com.pubnub.api.v2.subscriptions/Subscription///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.subscriptions/-subscription/index.md
+$dokka.location:com.pubnub.api.v2.subscriptions/Subscription/plus/#com.pubnub.api.v2.subscriptions.Subscription/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.subscriptions/-subscription/plus.md
+$dokka.location:com.pubnub.api.v2.subscriptions/SubscriptionCursor///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.subscriptions/-subscription-cursor/index.md
+$dokka.location:com.pubnub.api.v2.subscriptions/SubscriptionCursor/SubscriptionCursor/#kotlin.Long/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.subscriptions/-subscription-cursor/-subscription-cursor.md
+$dokka.location:com.pubnub.api.v2.subscriptions/SubscriptionCursor/timetoken/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.subscriptions/-subscription-cursor/timetoken.md
+$dokka.location:com.pubnub.api.v2.subscriptions/SubscriptionOptions.Companion///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.subscriptions/-subscription-options/-companion/index.md
+$dokka.location:com.pubnub.api.v2.subscriptions/SubscriptionOptions.Companion/filter/#kotlin.Function1[com.pubnub.api.models.consumer.pubsub.PNEvent,kotlin.Boolean]/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.subscriptions/-subscription-options/-companion/filter.md
+$dokka.location:com.pubnub.api.v2.subscriptions/SubscriptionOptions.Companion/receivePresenceEvents/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.subscriptions/-subscription-options/-companion/receive-presence-events.md
+$dokka.location:com.pubnub.api.v2.subscriptions/SubscriptionOptions///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.subscriptions/-subscription-options/index.md
+$dokka.location:com.pubnub.api.v2.subscriptions/SubscriptionOptions/plus/#com.pubnub.api.v2.subscriptions.SubscriptionOptions/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.subscriptions/-subscription-options/plus.md
+$dokka.location:com.pubnub.api.v2.subscriptions/SubscriptionSet///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.subscriptions/-subscription-set/index.md
+$dokka.location:com.pubnub.api.v2.subscriptions/SubscriptionSet/add/#com.pubnub.api.v2.subscriptions.Subscription/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.subscriptions/-subscription-set/add.md
+$dokka.location:com.pubnub.api.v2.subscriptions/SubscriptionSet/minus/#com.pubnub.api.v2.subscriptions.Subscription/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.subscriptions/-subscription-set/minus.md
+$dokka.location:com.pubnub.api.v2.subscriptions/SubscriptionSet/plus/#com.pubnub.api.v2.subscriptions.Subscription/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.subscriptions/-subscription-set/plus.md
+$dokka.location:com.pubnub.api.v2.subscriptions/SubscriptionSet/remove/#com.pubnub.api.v2.subscriptions.Subscription/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.subscriptions/-subscription-set/remove.md
+$dokka.location:com.pubnub.api.v2.subscriptions/SubscriptionSet/subscriptions/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.v2.subscriptions/-subscription-set/subscriptions.md
 $dokka.location:com.pubnub.api.vendor////PointingToDeclaration/pubnub-kotlin/com.pubnub.api.vendor/index.md
 $dokka.location:com.pubnub.api.vendor/Base64///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.vendor/-base64/index.md
 $dokka.location:com.pubnub.api.vendor/Base64/CRLF/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.vendor/-base64/-c-r-l-f.md
@@ -1350,11 +1410,16 @@ $dokka.location:com.pubnub.api/PubNub///PointingToDeclaration/pubnub-kotlin/com
 $dokka.location:com.pubnub.api/PubNub/PubNub/#com.pubnub.api.PNConfiguration/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/-pub-nub.md
 $dokka.location:com.pubnub.api/PubNub/addChannelsToChannelGroup/#kotlin.collections.List[kotlin.String]#kotlin.String/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/add-channels-to-channel-group.md
 $dokka.location:com.pubnub.api/PubNub/addListener/#com.pubnub.api.callbacks.SubscribeCallback/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/add-listener.md
+$dokka.location:com.pubnub.api/PubNub/addListener/#com.pubnub.api.v2.callbacks.EventListener/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/add-listener.md
+$dokka.location:com.pubnub.api/PubNub/addListener/#com.pubnub.api.v2.callbacks.StatusListener/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/add-listener.md
 $dokka.location:com.pubnub.api/PubNub/addMembers/#kotlin.String#kotlin.collections.List[com.pubnub.api.models.consumer.objects.member.MemberInput]#kotlin.Int?#com.pubnub.api.models.consumer.objects.PNPage?#kotlin.String?#kotlin.collections.Collection[com.pubnub.api.models.consumer.objects.PNSortKey[com.pubnub.api.models.consumer.objects.PNMemberKey]]#kotlin.Boolean#kotlin.Boolean#com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel?/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/add-members.md
 $dokka.location:com.pubnub.api/PubNub/addMemberships/#kotlin.collections.List[com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput]#kotlin.String?#kotlin.Int?#com.pubnub.api.models.consumer.objects.PNPage?#kotlin.String?#kotlin.collections.Collection[com.pubnub.api.models.consumer.objects.PNSortKey[com.pubnub.api.models.consumer.objects.PNMembershipKey]]#kotlin.Boolean#kotlin.Boolean#com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel?/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/add-memberships.md
 $dokka.location:com.pubnub.api/PubNub/addMessageAction/#kotlin.String#com.pubnub.api.models.consumer.message_actions.PNMessageAction/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/add-message-action.md
 $dokka.location:com.pubnub.api/PubNub/addPushNotificationsOnChannels/#com.pubnub.api.enums.PNPushType#kotlin.collections.List[kotlin.String]#kotlin.String#kotlin.String?#com.pubnub.api.enums.PNPushEnvironment/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/add-push-notifications-on-channels.md
 $dokka.location:com.pubnub.api/PubNub/auditPushChannelProvisions/#com.pubnub.api.enums.PNPushType#kotlin.String#kotlin.String?#com.pubnub.api.enums.PNPushEnvironment/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/audit-push-channel-provisions.md
+$dokka.location:com.pubnub.api/PubNub/channel/#kotlin.String/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/channel.md
+$dokka.location:com.pubnub.api/PubNub/channelGroup/#kotlin.String/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/channel-group.md
+$dokka.location:com.pubnub.api/PubNub/channelMetadata/#kotlin.String/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/channel-metadata.md
 $dokka.location:com.pubnub.api/PubNub/configuration/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/configuration.md
 $dokka.location:com.pubnub.api/PubNub/decrypt/#kotlin.String#kotlin.String?/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/decrypt.md
 $dokka.location:com.pubnub.api/PubNub/decrypt/#kotlin.String/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/decrypt.md
@@ -1397,11 +1462,18 @@ $dokka.location:com.pubnub.api/PubNub/manageChannelMembers/#kotlin.String#kotlin
 $dokka.location:com.pubnub.api/PubNub/manageMemberships/#kotlin.collections.List[com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput]#kotlin.collections.List[kotlin.String]#kotlin.String?#kotlin.Int?#com.pubnub.api.models.consumer.objects.PNPage?#kotlin.String?#kotlin.collections.Collection[com.pubnub.api.models.consumer.objects.PNSortKey[com.pubnub.api.models.consumer.objects.PNMembershipKey]]#kotlin.Boolean#kotlin.Boolean#com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel?/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/manage-memberships.md
 $dokka.location:com.pubnub.api/PubNub/mapper/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/mapper.md
 $dokka.location:com.pubnub.api/PubNub/messageCounts/#kotlin.collections.List[kotlin.String]#kotlin.collections.List[kotlin.Long]/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/message-counts.md
+$dokka.location:com.pubnub.api/PubNub/onFile/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/on-file.md
+$dokka.location:com.pubnub.api/PubNub/onMessage/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/on-message.md
+$dokka.location:com.pubnub.api/PubNub/onMessageAction/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/on-message-action.md
+$dokka.location:com.pubnub.api/PubNub/onObjects/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/on-objects.md
+$dokka.location:com.pubnub.api/PubNub/onPresence/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/on-presence.md
+$dokka.location:com.pubnub.api/PubNub/onSignal/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/on-signal.md
 $dokka.location:com.pubnub.api/PubNub/parseToken/#kotlin.String/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/parse-token.md
 $dokka.location:com.pubnub.api/PubNub/presence/#kotlin.collections.List[kotlin.String]#kotlin.collections.List[kotlin.String]#kotlin.Boolean/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/presence.md
 $dokka.location:com.pubnub.api/PubNub/publish/#kotlin.String#kotlin.Any#kotlin.Any?#kotlin.Boolean?#kotlin.Boolean#kotlin.Boolean#kotlin.Int?/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/publish.md
 $dokka.location:com.pubnub.api/PubNub/publishFileMessage/#kotlin.String#kotlin.String#kotlin.String#kotlin.Any?#kotlin.Any?#kotlin.Int?#kotlin.Boolean?/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/publish-file-message.md
 $dokka.location:com.pubnub.api/PubNub/reconnect/#kotlin.Long/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/reconnect.md
+$dokka.location:com.pubnub.api/PubNub/removeAllListeners/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/remove-all-listeners.md
 $dokka.location:com.pubnub.api/PubNub/removeAllPushNotificationsFromDeviceWithPushToken/#com.pubnub.api.enums.PNPushType#kotlin.String#kotlin.String?#com.pubnub.api.enums.PNPushEnvironment/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/remove-all-push-notifications-from-device-with-push-token.md
 $dokka.location:com.pubnub.api/PubNub/removeChannelMembers/#kotlin.String#kotlin.collections.List[kotlin.String]#kotlin.Int?#com.pubnub.api.models.consumer.objects.PNPage?#kotlin.String?#kotlin.collections.Collection[com.pubnub.api.models.consumer.objects.PNSortKey[com.pubnub.api.models.consumer.objects.PNMemberKey]]#kotlin.Boolean#kotlin.Boolean#com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel?/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/remove-channel-members.md
 $dokka.location:com.pubnub.api/PubNub/removeChannelMetadata/#kotlin.String/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/remove-channel-metadata.md
@@ -1422,9 +1494,12 @@ $dokka.location:com.pubnub.api/PubNub/setToken/#kotlin.String?/PointingToDeclara
 $dokka.location:com.pubnub.api/PubNub/setUUIDMetadata/#kotlin.String?#kotlin.String?#kotlin.String?#kotlin.String?#kotlin.String?#kotlin.Any?#kotlin.Boolean#kotlin.String?#kotlin.String?/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/set-u-u-i-d-metadata.md
 $dokka.location:com.pubnub.api/PubNub/signal/#kotlin.String#kotlin.Any/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/signal.md
 $dokka.location:com.pubnub.api/PubNub/subscribe/#kotlin.collections.List[kotlin.String]#kotlin.collections.List[kotlin.String]#kotlin.Boolean#kotlin.Long/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/subscribe.md
+$dokka.location:com.pubnub.api/PubNub/subscriptionSetOf/#kotlin.collections.Set[com.pubnub.api.v2.subscriptions.Subscription]/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/subscription-set-of.md
+$dokka.location:com.pubnub.api/PubNub/subscriptionSetOf/#kotlin.collections.Set[kotlin.String]#kotlin.collections.Set[kotlin.String]#com.pubnub.api.v2.subscriptions.SubscriptionOptions/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/subscription-set-of.md
 $dokka.location:com.pubnub.api/PubNub/time/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/time.md
 $dokka.location:com.pubnub.api/PubNub/unsubscribe/#kotlin.collections.List[kotlin.String]#kotlin.collections.List[kotlin.String]/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/unsubscribe.md
 $dokka.location:com.pubnub.api/PubNub/unsubscribeAll/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/unsubscribe-all.md
+$dokka.location:com.pubnub.api/PubNub/userMetadata/#kotlin.String/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/user-metadata.md
 $dokka.location:com.pubnub.api/PubNub/version/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/version.md
 $dokka.location:com.pubnub.api/PubNub/whereNow/#kotlin.String/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/where-now.md
 $dokka.location:com.pubnub.api/PubNubError.CHANNELS_TIMETOKEN_MISMATCH///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api/-pub-nub-error/-c-h-a-n-n-e-l-s_-t-i-m-e-t-o-k-e-n_-m-i-s-m-a-t-c-h/index.md
@@ -1547,6 +1622,9 @@ com.pubnub.api.models.server.objects_api
 com.pubnub.api.models.server.presence
 com.pubnub.api.retry
 com.pubnub.api.services
+com.pubnub.api.v2.callbacks
+com.pubnub.api.v2.entities
+com.pubnub.api.v2.subscriptions
 com.pubnub.api.vendor
 com.pubnub.extension
 

@@ -3,7 +3,7 @@
 # removeListener
 
 [jvm]\
-fun [removeListener](remove-listener.md)(listener: [Listener](../../com.pubnub.api.callbacks/-listener/index.md))
+open override fun [removeListener](remove-listener.md)(listener: [Listener](../../com.pubnub.api.callbacks/-listener/index.md))
 
 Remove a listener.
 

@@ -5,7 +5,7 @@
 [jvm]\
 [PNConnectedCategory](index.md)
 
-SDK subscribed with a new mix of channels (fired every time the channel / channel group mix changed).
+SDK successfully connected the Subscribe loop.
 
 ## Properties
 

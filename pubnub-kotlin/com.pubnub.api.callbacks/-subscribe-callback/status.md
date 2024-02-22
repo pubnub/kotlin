@@ -3,9 +3,9 @@
 # status
 
 [jvm]\
-abstract fun [status](status.md)(pubnub: [PubNub](../../com.pubnub.api/-pub-nub/index.md), pnStatus: [PNStatus](../../com.pubnub.api.models.consumer/-p-n-status/index.md))
+abstract override fun [status](status.md)(pubnub: [PubNub](../../com.pubnub.api/-pub-nub/index.md), pnStatus: [PNStatus](../../com.pubnub.api.models.consumer/-p-n-status/index.md))
 
-Receive status events like [PNStatusCategory.PNAcknowledgmentCategory](../../com.pubnub.api.enums/-p-n-status-category/-p-n-acknowledgment-category/index.md), [PNStatusCategory.PNConnectedCategory](../../com.pubnub.api.enums/-p-n-status-category/-p-n-connected-category/index.md), [PNStatusCategory.PNReconnectedCategory](../../com.pubnub.api.enums/-p-n-status-category/-p-n-reconnected-category/index.md)
+Receive status events like [PNStatusCategory.PNConnectedCategory](../../com.pubnub.api.enums/-p-n-status-category/-p-n-connected-category/index.md), [PNStatusCategory.PNDisconnectedCategory](../../com.pubnub.api.enums/-p-n-status-category/-p-n-disconnected-category/index.md), [PNStatusCategory.PNSubscriptionChanged](../../com.pubnub.api.enums/-p-n-status-category/-p-n-connection-error/index.md), [PNStatusCategory.PNUnexpectedDisconnectCategory](../../com.pubnub.api.enums/-p-n-status-category/-p-n-unexpected-disconnect-category/index.md), [PNStatusCategory.PNAcknowledgmentCategory](../../com.pubnub.api.enums/-p-n-status-category/-p-n-acknowledgment-category/index.md)
 
 and other events related to the subscribe loop and channel mix.
 

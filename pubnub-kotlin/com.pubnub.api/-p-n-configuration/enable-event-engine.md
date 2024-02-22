@@ -3,12 +3,12 @@
 # enableEventEngine
 
 [jvm]\
-var [enableEventEngine](enable-event-engine.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false
+var [enableEventEngine](enable-event-engine.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = true
 
-This controls whether to enable a new, experimental implementation of Subscription and Presence handling.
+This controls whether to enable the new implementation of Subscription and Presence handling.
 
-The current default is `false`.
+The current default is `true`.
 
-This switch can help you verify the behavior of the PubNub SDK with the new engine enabled in your app, however the change should be transparent for users.
+If you encounter errors with the setting enabled you can set it to `false` to go back to the previous behavior.
 
-It will default to true in a future SDK release.
+Please note that this setting will be removed in a future version of the SDK, so please report any errors that are preventing your from keeping it enabled.

@@ -7,6 +7,12 @@ class [PNPublishResult](index.md)
 
 Result of the [PubNub.publish](../../com.pubnub.api/-pub-nub/publish.md) operation
 
+## Functions
+
+| Name | Summary |
+|---|---|
+| [toString](to-string.md) | [jvm]<br>open override fun [toString](to-string.md)(): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+
 ## Properties
 
 | Name | Summary |

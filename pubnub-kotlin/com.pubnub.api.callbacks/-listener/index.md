@@ -9,5 +9,6 @@ interface [Listener](index.md)
 
 | Name |
 |---|
-| [DisposableListener](../-disposable-listener/index.md) |
 | [SubscribeCallback](../-subscribe-callback/index.md) |
+| [EventListener](../../com.pubnub.api.v2.callbacks/-event-listener/index.md) |
+| [StatusListener](../../com.pubnub.api.v2.callbacks/-status-listener/index.md) |
