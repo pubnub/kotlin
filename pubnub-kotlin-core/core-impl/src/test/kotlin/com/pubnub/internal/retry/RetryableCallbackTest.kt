@@ -137,6 +137,7 @@ class RetryableCallbackTest {
     @Test
     fun `should retry onResponse when exponential retryConfiguration is set and retryable error 500 occurs`() {
         // given
+        @Suppress("INVISIBLE_MEMBER")
         val retryConfiguration = RetryConfiguration.Exponential(
             minDelayInSec = 10.milliseconds,
             maxDelayInSec = 15.milliseconds,
@@ -172,6 +173,7 @@ class RetryableCallbackTest {
     @Test
     fun `should retry onFailure when exponential retryConfiguration is set and SocketTimeoutException`() {
         // given
+        @Suppress("INVISIBLE_MEMBER")
         val retryConfiguration = RetryConfiguration.Exponential(
             minDelayInSec = 10.milliseconds,
             maxDelayInSec = 15.milliseconds,
@@ -206,6 +208,7 @@ class RetryableCallbackTest {
     @Test
     fun `should retry onFailure and fail when exponential retryConfiguration is set and UnknownHostException`() {
         // given
+        @Suppress("INVISIBLE_MEMBER")
         val retryConfiguration = RetryConfiguration.Exponential(
             minDelayInSec = 10.milliseconds,
             maxDelayInSec = 15.milliseconds,

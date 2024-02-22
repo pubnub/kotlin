@@ -35,7 +35,7 @@ internal class GrantTokenTest {
             subscribeKey = "something"
             secretKey = "something"
         }
-        pubnub = spyk(TestPubNub(configuration = pnConfiguration).pubNubImpl)
+        pubnub = spyk(TestPubNub(configuration = pnConfiguration).internalPubNubClient)
     }
 
     @MockK

@@ -18,7 +18,6 @@ open class BaseUserMetadataImpl<Lis: BaseEventListener, Sub: BaseSubscription<Li
     override fun subscription(options: SubscriptionOptions): Sub {
         val channels = setOf(channelName)
         return subscriptionFactory(
-            pubnub,
             channels,
             emptySet(),
             SubscriptionOptions.filter { result ->

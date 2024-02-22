@@ -29,21 +29,21 @@ class ThenSteps(
     @Then("the token contains the authorized UUID {string}")
     fun the_token_contains_the_authorized_uuid(uuid: String) {
         val result = grantTokenState.result!!
-        val parsedToken = world.pubnub.pubNubImpl.parseToken(result.token)
+        val parsedToken = world.pubnub.internalPubNubClient.parseToken(result.token)
         MatcherAssert.assertThat(parsedToken.authorizedUUID, Matchers.`is`(uuid))
     }
 
     @Then("the token contains the TTL {ttl}")
     fun the_token_contains_the_ttl(ttl: Long) {
         val result = grantTokenState.result!!
-        val token = world.pubnub.pubNubImpl.parseToken(result.token)
+        val token = world.pubnub.internalPubNubClient.parseToken(result.token)
         MatcherAssert.assertThat(token.ttl, Matchers.`is`(ttl))
     }
 
     @Then("the token does not contain an authorized uuid")
     fun the_token_does_not_contain_an_authorized_uuid() {
         val result = grantTokenState.result!!
-        val token = world.pubnub.pubNubImpl.parseToken(result.token)
+        val token = world.pubnub.internalPubNubClient.parseToken(result.token)
         MatcherAssert.assertThat(token.authorizedUUID, Matchers.nullValue())
     }
 
@@ -101,6 +101,6 @@ class ThenSteps(
 
     private fun parsedToken(): PNToken? {
         return grantTokenState.parsedToken
-            ?: grantTokenState.result?.let { world.pubnub.pubNubImpl.parseToken(it.token) }
+            ?: grantTokenState.result?.let { world.pubnub.internalPubNubClient.parseToken(it.token) }
     }
 }

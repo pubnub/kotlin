@@ -125,6 +125,11 @@ class InternalPubNubClient internal constructor(
     internal val cryptoModule: CryptoModule?
         get() = configuration.cryptoModule
 
+    private val subscriptionFactory: SubscriptionFactory<BaseSubscriptionImpl<InternalEventListener>> =
+        { channels, channelGroups, options ->
+            BaseSubscriptionImpl(this, channels, channelGroups, options)
+        }
+
     //region Managers
 
     /**
@@ -2192,7 +2197,11 @@ class InternalPubNubClient internal constructor(
             // if we are adding a NEW subscription in this step, this var will contain it:
             var subscription: BaseSubscriptionImpl<*>? = null
             channelSubscriptionMap.computeIfAbsent(channelName) { newChannelName ->
-                val channel = BaseChannelImpl<InternalEventListener, BaseSubscriptionImpl<InternalEventListener>>(this, newChannelName, ::BaseSubscriptionImpl)
+                val channel = BaseChannelImpl<InternalEventListener, BaseSubscriptionImpl<InternalEventListener>>(
+                    this,
+                    newChannelName,
+                    subscriptionFactory
+                )
                 val options = if (withPresence) {
                     SubscriptionOptions.receivePresenceEvents()
                 } else {
@@ -2211,7 +2220,7 @@ class InternalPubNubClient internal constructor(
                     subscription ?: BaseChannelImpl(
                         this,
                         presenceChannelName,
-                        ::BaseSubscriptionImpl
+                        subscriptionFactory
                     ).subscription().also { sub ->
                         toSubscribe.add(sub)
                     }
@@ -2222,7 +2231,7 @@ class InternalPubNubClient internal constructor(
             var subscription: BaseSubscriptionImpl<*>? = null
 
             channelGroupSubscriptionMap.computeIfAbsent(channelGroupName) { newChannelGroupName ->
-                val channelGroup = BaseChannelGroupImpl(this, newChannelGroupName, ::BaseSubscriptionImpl)
+                val channelGroup = BaseChannelGroupImpl(this, newChannelGroupName, subscriptionFactory)
                 val options =
                     if (withPresence) {
                         SubscriptionOptions.receivePresenceEvents()
@@ -2239,7 +2248,7 @@ class InternalPubNubClient internal constructor(
                 channelGroupSubscriptionMap.computeIfAbsent(channelGroupName.withPresence) { presenceGroupName ->
                     // this will either be the subscription we just created in the previous step,
                     // or if we were already subscribed to the channel WITHOUT presence, we need to create a new one
-                    subscription ?: BaseChannelGroupImpl(this, presenceGroupName, ::BaseSubscriptionImpl)
+                    subscription ?: BaseChannelGroupImpl(this, presenceGroupName, subscriptionFactory)
                         .subscription().also { sub ->
                             toSubscribe.add(sub)
                         }

@@ -25,7 +25,6 @@ open class BaseChannelGroupImpl<Lis: BaseEventListener, Sub: BaseSubscription<Li
             }
         }
         return subscriptionFactory(
-            pubNub,
             emptySet(),
             channelGroups,
             SubscriptionOptions.filter { result ->

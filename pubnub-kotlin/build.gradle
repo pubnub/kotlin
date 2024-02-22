@@ -41,11 +41,8 @@ ktlint {
     }
 }
 
-compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
-}
-compileTestKotlin {
-    kotlinOptions.jvmTarget = "1.8"
+kotlin {
+    jvmToolchain(8)
 }
 
 //compileKotlin.finalizedBy(task("compileIntegrationTest"))
@@ -90,6 +87,7 @@ dependencies {
     testImplementation "io.mockk:mockk:1.11.0"
     testImplementation "org.aeonbits.owner:owner:1.0.12"
     testFixturesImplementation "org.aeonbits.owner:owner:1.0.12"
+    testFixturesImplementation(project(":pubnub-kotlin-core:core-impl"))
 
 
 //    integrationTestImplementation testFixtures(project(":pubnub-kotlin"))

@@ -78,6 +78,7 @@ fun <Input, Output> Endpoint<Input, Output>.retryForbidden(
     async { result ->
         result.onFailure {
             println(it)
+
             TODO("check what exception is thrown for 403 and how to detect it")
 //        if (status.error && status.statusCode == 403) { //TODO check what exception is thrown for 403 and how to detect it
 //            onFail.invoke(status)

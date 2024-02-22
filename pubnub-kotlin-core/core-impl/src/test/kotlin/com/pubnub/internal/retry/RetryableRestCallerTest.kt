@@ -316,6 +316,7 @@ class RetryableRestCallerTest {
     @Test
     fun `should retry successfully when exponential retryConfiguration is set and response is not successful and http error is 500 and endpoint is not excluded from retryConfiguration`() {
         // given
+        @Suppress("INVISIBLE_MEMBER")
         val retryConfiguration = RetryConfiguration.Exponential(
             minDelayInSec = 10.milliseconds,
             maxDelayInSec = 15.milliseconds,

@@ -54,8 +54,8 @@ private fun instantiateLegacyCryptor(cipherKey: String, randomIv: Boolean = true
     ) as Cryptor
 }
 
-private fun instantiateAesCbcCryptor(cipherKey: String, randomIv: Boolean = true): Cryptor {
-    return Class.forName("com.pubnub.internal.crypto.cryptor.AesCbcCryptor").getConstructor(String::class.java, Boolean::class.java).newInstance(
-        cipherKey, randomIv
+private fun instantiateAesCbcCryptor(cipherKey: String): Cryptor {
+    return Class.forName("com.pubnub.internal.crypto.cryptor.AesCbcCryptor").getConstructor(String::class.java).newInstance(
+        cipherKey
     ) as Cryptor
 }

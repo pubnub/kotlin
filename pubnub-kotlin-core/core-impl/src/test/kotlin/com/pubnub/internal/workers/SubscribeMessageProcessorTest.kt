@@ -180,7 +180,7 @@ class SubscribeMessageProcessorTest(
 
     private fun config() = PNConfiguration(userId = UserId("test"))
     private fun messageProcessor(configuration: PNConfiguration) = SubscribeMessageProcessor(
-        pubnub = TestPubNub(configuration).pubNubImpl,
+        pubnub = TestPubNub(configuration).internalPubNubClient,
         duplicationManager = DuplicationManager(configuration)
     )
 

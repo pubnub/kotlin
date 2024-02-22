@@ -18,7 +18,7 @@ class WhenSteps(
     fun grant_token() {
         val definedGrants = grantTokenState.definedGrants.map { it.evaluate() }
         @Suppress("DEPRECATION")
-        grantTokenState.result = world.pubnub.pubNubImpl.grantToken(
+        grantTokenState.result = world.pubnub.internalPubNubClient.grantToken(
             ttl = grantTokenState.TTL?.toInt() ?: throw RuntimeException("TTL expected"),
             authorizedUUID = grantTokenState.authorizedUUID,
             channels = definedGrants.filterIsInstance(ChannelGrant::class.java),
@@ -43,13 +43,13 @@ class WhenSteps(
 
     @When("I parse the token")
     fun i_parse_the_token() {
-        grantTokenState.parsedToken = world.pubnub.pubNubImpl.parseToken(grantTokenState.result?.token!!)
+        grantTokenState.parsedToken = world.pubnub.internalPubNubClient.parseToken(grantTokenState.result?.token!!)
     }
 
     @When("I revoke a token")
     fun i_revoke_the_token() {
         try {
-            world.pubnub.pubNubImpl.revokeToken(world.tokenString!!).sync()
+            world.pubnub.internalPubNubClient.revokeToken(world.tokenString!!).sync()
         } catch (e: PubNubException) {
             world.pnException = e
         }
@@ -57,8 +57,8 @@ class WhenSteps(
 
     @When("I publish a message using that auth token with channel {string}")
     fun i_publish_a_message_using_that_auth_token_with_channel(channel: String) {
-        world.pubnub.pubNubImpl.setToken(world.tokenString)
-        world.pubnub.pubNubImpl.publish(
+        world.pubnub.internalPubNubClient.setToken(world.tokenString)
+        world.pubnub.internalPubNubClient.publish(
             channel = channel,
             message = "Message"
         ).sync()
@@ -66,10 +66,10 @@ class WhenSteps(
 
     @When("I attempt to publish a message using that auth token with channel {string}")
     fun i_attempt_to_publish_a_message_using_that_auth_token_with_channel(channel: String) {
-        world.pubnub.pubNubImpl.setToken(world.tokenString)
+        world.pubnub.internalPubNubClient.setToken(world.tokenString)
 
         try {
-            world.pubnub.pubNubImpl.publish(
+            world.pubnub.internalPubNubClient.publish(
                 channel = channel,
                 message = "Message"
             ).sync()

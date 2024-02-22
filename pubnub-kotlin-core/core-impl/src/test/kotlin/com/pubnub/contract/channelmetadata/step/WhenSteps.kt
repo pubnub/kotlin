@@ -11,7 +11,7 @@ class WhenSteps(
 
     @When("I get the channel metadata")
     fun i_get_the_channel_metadata() {
-        world.pubnub.pubNubImpl.getChannelMetadata(channel = channelMetadataState.channelId).sync()?.let {
+        world.pubnub.internalPubNubClient.getChannelMetadata(channel = channelMetadataState.channelId).sync()?.let {
             channelMetadataState.channelMetadata = it.data
             world.responseStatus = it.status
         }
@@ -20,7 +20,7 @@ class WhenSteps(
     @When("I set the channel metadata")
     fun i_set_the_channel_metadata() {
         val channelMetadata = channelMetadataState.channelMetadata!!
-        world.pubnub.pubNubImpl.setChannelMetadata(
+        world.pubnub.internalPubNubClient.setChannelMetadata(
             channel = channelMetadata.id,
             name = channelMetadata.name,
             description = channelMetadata.description,
@@ -35,7 +35,7 @@ class WhenSteps(
 
     @When("I get the channel metadata with custom")
     fun i_get_the_channel_metadata_with_custom() {
-        world.pubnub.pubNubImpl.getChannelMetadata(
+        world.pubnub.internalPubNubClient.getChannelMetadata(
             channel = channelMetadataState.channelId, includeCustom = true
         ).sync().let {
             channelMetadataState.channelMetadata = it.data
@@ -45,14 +45,14 @@ class WhenSteps(
 
     @When("I remove the channel metadata")
     fun i_remove_the_channel_metadata() {
-        world.responseStatus = world.pubnub.pubNubImpl.removeChannelMetadata(
+        world.responseStatus = world.pubnub.internalPubNubClient.removeChannelMetadata(
             channel = channelMetadataState.channelId
         ).sync().status
     }
 
     @When("I get all channel metadata")
     fun i_get_all_channel_metadata() {
-        world.pubnub.pubNubImpl.getAllChannelMetadata().sync().let {
+        world.pubnub.internalPubNubClient.getAllChannelMetadata().sync().let {
             channelMetadataState.channelMetadatas = it.data
             world.responseStatus = it.status
         }
@@ -60,7 +60,7 @@ class WhenSteps(
 
     @When("I get all channel metadata with custom")
     fun i_get_all_channel_metadata_with_custom() {
-        world.pubnub.pubNubImpl.getAllChannelMetadata(
+        world.pubnub.internalPubNubClient.getAllChannelMetadata(
             includeCustom = true
         ).sync().let {
             channelMetadataState.channelMetadatas = it.data

@@ -14,32 +14,36 @@ import com.pubnub.api.v2.subscriptions.BaseSubscription
 import com.pubnub.api.v2.subscriptions.BaseSubscriptionSet
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.internal.managers.ListenerManager
+import com.pubnub.internal.subscribe.eventengine.configuration.EventEnginesConf
 import java.util.UUID
 
 abstract class BasePubNubImpl<EventListener : BaseEventListener,
         Subscription : BaseSubscription<EventListener>,
         Channel : BaseChannel<EventListener, Subscription>,
         ChannelGroup : BaseChannelGroup<EventListener, Subscription>,
-        ChannelMetadata: BaseChannelMetadata<EventListener, Subscription>,
-        UserMetadata: BaseUserMetadata<EventListener, Subscription>,
-        SubscriptionSet: BaseSubscriptionSet<EventListener, Subscription>,
-        StatusListener : BaseStatusListener>(
-    configuration: PNConfiguration,
+        ChannelMetadata : BaseChannelMetadata<EventListener, Subscription>,
+        UserMetadata : BaseUserMetadata<EventListener, Subscription>,
+        SubscriptionSet : BaseSubscriptionSet<EventListener, Subscription>,
+        StatusListener : BaseStatusListener>
+internal constructor(
+    configuration: PNConfiguration, eventEnginesConf: EventEnginesConf
 ) : BasePubNub<EventListener, Subscription, Channel, ChannelGroup, ChannelMetadata, UserMetadata, SubscriptionSet, StatusListener>,
     BaseEventEmitter<EventListener>,
     BaseStatusEmitter<StatusListener> {
 
+    constructor(configuration: PNConfiguration) : this(configuration, eventEnginesConf = EventEnginesConf())
+
     val listenerManager: ListenerManager = ListenerManager(this)
-    val internalPubnub = InternalPubNubClient(configuration, listenerManager)
+    val internalPubNubClient = InternalPubNubClient(configuration, listenerManager, eventEnginesConf)
 
     /**
      * The current version of the Kotlin SDK.
      */
     val version: String
-        get() = internalPubnub.version
+        get() = internalPubNubClient.version
 
     val timestamp
-        get() = internalPubnub.timestamp()
+        get() = internalPubNubClient.timestamp()
 
     /**
      * Unique id of this PubNub instance.
@@ -47,7 +51,7 @@ abstract class BasePubNubImpl<EventListener : BaseEventListener,
      * @see [PNConfiguration.includeInstanceIdentifier]
      */
     val instanceId: String
-        get() = internalPubnub.instanceId
+        get() = internalPubNubClient.instanceId
 
     companion object {
         internal const val TIMESTAMP_DIVIDER = 1000
@@ -95,13 +99,13 @@ abstract class BasePubNubImpl<EventListener : BaseEventListener,
      * Force destroy the SDK to evict the connection pools and close executors.
      */
     open fun forceDestroy() { // TODO open for mockito for integration tests, should not be open
-        internalPubnub.forceDestroy()
+        internalPubNubClient.forceDestroy()
     }
 
     /**
      * Destroy the SDK to cancel all ongoing requests and stop heartbeat timer.
      */
     fun destroy() {
-        internalPubnub.destroy()
+        internalPubNubClient.destroy()
     }
 }

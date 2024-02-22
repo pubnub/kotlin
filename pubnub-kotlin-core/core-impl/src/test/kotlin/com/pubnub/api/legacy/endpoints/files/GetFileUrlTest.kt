@@ -23,7 +23,7 @@ class GetFileUrlTest {
     @Throws(PubNubException::class)
     fun noAdditionalQueryParamsWhenNotSecretNorAuth() {
         // given
-        val pubnub = TestPubNub(config()).pubNubImpl
+        val pubnub = TestPubNub(config()).internalPubNubClient
 
         // when
         val url = pubnub.getFileUrl(
@@ -42,7 +42,7 @@ class GetFileUrlTest {
     @Throws(PubNubException::class)
     fun signatureAndTimestampQueryParamsAreSetWhenSecret() {
         // given
-        val pubnub = TestPubNub(withSecret(config())).pubNubImpl
+        val pubnub = TestPubNub(withSecret(config())).internalPubNubClient
 
         // when
         val url = pubnub.getFileUrl(
@@ -61,7 +61,7 @@ class GetFileUrlTest {
     @Throws(PubNubException::class)
     fun authQueryParamIsSetWhenAuth() {
         // given
-        val pubnub = TestPubNub(withAuth(config())).pubNubImpl
+        val pubnub = TestPubNub(withAuth(config())).internalPubNubClient
 
         // when
         val url = pubnub.getFileUrl(
@@ -80,7 +80,7 @@ class GetFileUrlTest {
     @Throws(PubNubException::class)
     fun signatureAndTimestampAndAuthQueryParamsAreSetWhenSecretAndAuth() {
         // given
-        val pubnub = TestPubNub(withSecret(withAuth(config()))).pubNubImpl
+        val pubnub = TestPubNub(withSecret(withAuth(config()))).internalPubNubClient
 
         // when
         val url = pubnub.getFileUrl(

@@ -11,7 +11,7 @@ class WhenSteps(
 
     @When("I get the UUID metadata")
     fun i_get_uuid_metadata() {
-        world.pubnub.pubNubImpl.getUUIDMetadata(uuid = uuidMetadataState.uuid).sync()?.let {
+        world.pubnub.internalPubNubClient.getUUIDMetadata(uuid = uuidMetadataState.uuid).sync()?.let {
             uuidMetadataState.uuidMetadata = it.data
             world.responseStatus = it.status
         }
@@ -19,7 +19,7 @@ class WhenSteps(
 
     @When("I get the UUID metadata with custom for current user")
     fun i_get_uuid_metadata_with_custom_for_current_user() {
-        world.pubnub.pubNubImpl.getUUIDMetadata(includeCustom = true).sync()?.let {
+        world.pubnub.internalPubNubClient.getUUIDMetadata(includeCustom = true).sync()?.let {
             uuidMetadataState.uuidMetadata = it.data
             world.responseStatus = it.status
         }
@@ -28,7 +28,7 @@ class WhenSteps(
     @When("I set the UUID metadata")
     fun i_set_the_uuid_metadata() {
         val uuidMetadata = uuidMetadataState.uuidMetadata!!
-        world.pubnub.pubNubImpl.setUUIDMetadata(
+        world.pubnub.internalPubNubClient.setUUIDMetadata(
             uuid = uuidMetadata.id,
             custom = uuidMetadata.custom,
             externalId = uuidMetadata.externalId,
@@ -45,17 +45,17 @@ class WhenSteps(
 
     @When("I remove the UUID metadata")
     fun i_remove_uuid_metadata_for_id() {
-        world.responseStatus = world.pubnub.pubNubImpl.removeUUIDMetadata(uuid = uuidMetadataState.uuid).sync()?.status
+        world.responseStatus = world.pubnub.internalPubNubClient.removeUUIDMetadata(uuid = uuidMetadataState.uuid).sync()?.status
     }
 
     @When("I remove the UUID metadata for current user")
     fun i_remove_uuid_metadata_of_current_user() {
-        world.responseStatus = world.pubnub.pubNubImpl.removeUUIDMetadata().sync()?.status
+        world.responseStatus = world.pubnub.internalPubNubClient.removeUUIDMetadata().sync()?.status
     }
 
     @When("I get all UUID metadata")
     fun i_get_all_uuid_metadata() {
-        world.pubnub.pubNubImpl.getAllUUIDMetadata().sync()?.let {
+        world.pubnub.internalPubNubClient.getAllUUIDMetadata().sync()?.let {
             uuidMetadataState.uuidMetadatas = it.data
             world.responseStatus = it.status
         }
@@ -63,7 +63,7 @@ class WhenSteps(
 
     @When("I get all UUID metadata with custom")
     fun i_get_all_uuid_metadata_with_custom() {
-        world.pubnub.pubNubImpl.getAllUUIDMetadata(includeCustom = true).sync()?.let {
+        world.pubnub.internalPubNubClient.getAllUUIDMetadata(includeCustom = true).sync()?.let {
             uuidMetadataState.uuidMetadatas = it.data
             world.responseStatus = it.status
         }

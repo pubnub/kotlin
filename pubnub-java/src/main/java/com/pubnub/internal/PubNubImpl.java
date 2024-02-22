@@ -106,81 +106,81 @@ public class PubNubImpl extends BasePubNubImpl<
 
     @NotNull
     public SubscribeBuilder subscribe() {
-        return new SubscribeBuilder(getInternalPubnub());
+        return new SubscribeBuilder(getInternalPubNubClient());
     }
 
     @NotNull
     public UnsubscribeBuilder unsubscribe() {
-        return new UnsubscribeBuilder(getInternalPubnub());
+        return new UnsubscribeBuilder(getInternalPubNubClient());
     }
 
     @NotNull
     public PresenceBuilder presence() {
-        return new PresenceBuilder(getInternalPubnub());
+        return new PresenceBuilder(getInternalPubNubClient());
     }
 
     // start push
 
     @NotNull
     public AddChannelsToPush addPushNotificationsOnChannels() {
-        return new AddChannelsToPush(getInternalPubnub());
+        return new AddChannelsToPush(getInternalPubNubClient());
     }
 
     @NotNull
     public RemoveChannelsFromPush removePushNotificationsFromChannels() {
-        return new RemoveChannelsFromPush(getInternalPubnub());
+        return new RemoveChannelsFromPush(getInternalPubNubClient());
     }
 
     @NotNull
     public RemoveAllPushChannelsForDevice removeAllPushNotificationsFromDeviceWithPushToken() {
-        return new RemoveAllPushChannelsForDevice(getInternalPubnub());
+        return new RemoveAllPushChannelsForDevice(getInternalPubNubClient());
     }
 
     @NotNull
     public ListPushProvisions auditPushChannelProvisions() {
-        return new ListPushProvisions(getInternalPubnub());
+        return new ListPushProvisions(getInternalPubNubClient());
     }
 
     // end push
 
     @NotNull
     public WhereNow whereNow() {
-        return new WhereNow(getInternalPubnub());
+        return new WhereNow(getInternalPubNubClient());
     }
 
     @NotNull
     public HereNow hereNow() {
-        return new HereNow(getInternalPubnub());
+        return new HereNow(getInternalPubNubClient());
     }
 
     @NotNull
     public Time time() {
-        return new Time(getInternalPubnub());
+        return new Time(getInternalPubNubClient());
     }
 
     @NotNull
     public History history() {
-        return new History(getInternalPubnub());
+        return new History(getInternalPubNubClient());
     }
 
     @NotNull
     public FetchMessages fetchMessages() {
-        return new FetchMessages(getInternalPubnub());
+        return new FetchMessages(getInternalPubNubClient());
     }
 
     @NotNull
     public DeleteMessages deleteMessages() {
-        return new DeleteMessages(getInternalPubnub());
+        return new DeleteMessages(getInternalPubNubClient());
     }
 
     @NotNull
     public MessageCounts messageCounts() {
-        return new MessageCounts(getInternalPubnub());
+        return new MessageCounts(getInternalPubNubClient());
     }
 
     @NotNull
     public Grant grant() {
-        return new Grant(getInternalPubnub());
+        return new Grant(getInternalPubNubClient());
     }
 
     /**
@@ -188,136 +188,136 @@ public class PubNubImpl extends BasePubNubImpl<
      */
     @NotNull
     public GrantTokenBuilder grantToken() {
-        return new GrantTokenBuilder(getInternalPubnub(), new GrantToken(getInternalPubnub()));
+        return new GrantTokenBuilder(getInternalPubNubClient(), new GrantToken(getInternalPubNubClient()));
     }
 
     @NotNull
     @SuppressWarnings("deprecation")
     public GrantTokenBuilder grantToken(Integer ttl) {
-        return new GrantTokenBuilder(getInternalPubnub(), new GrantToken(getInternalPubnub()).ttl(ttl));
+        return new GrantTokenBuilder(getInternalPubNubClient(), new GrantToken(getInternalPubNubClient()).ttl(ttl));
     }
 
     @NotNull
     public RevokeToken revokeToken() {
-        return new RevokeToken(getInternalPubnub());
+        return new RevokeToken(getInternalPubNubClient());
     }
 
     @NotNull
     public GetState getPresenceState() {
-        return new GetState(getInternalPubnub());
+        return new GetState(getInternalPubNubClient());
     }
 
     @NotNull
     public SetState setPresenceState() {
-        return new SetState(getInternalPubnub());
+        return new SetState(getInternalPubNubClient());
     }
 
     @NotNull
     public Publish publish() {
-        return new Publish(getInternalPubnub());
+        return new Publish(getInternalPubNubClient());
     }
 
     @NotNull
     public Signal signal() {
-        return new Signal(getInternalPubnub());
+        return new Signal(getInternalPubNubClient());
     }
 
     @NotNull
     public ListAllChannelGroup listAllChannelGroups() {
-        return new ListAllChannelGroup(getInternalPubnub());
+        return new ListAllChannelGroup(getInternalPubNubClient());
     }
 
     @NotNull
     public AllChannelsChannelGroup listChannelsForChannelGroup() {
-        return new AllChannelsChannelGroup(getInternalPubnub());
+        return new AllChannelsChannelGroup(getInternalPubNubClient());
     }
 
     @NotNull
     public AddChannelChannelGroup addChannelsToChannelGroup() {
-        return new AddChannelChannelGroup(getInternalPubnub());
+        return new AddChannelChannelGroup(getInternalPubNubClient());
     }
 
     @NotNull
     public RemoveChannelChannelGroup removeChannelsFromChannelGroup() {
-        return new RemoveChannelChannelGroup(getInternalPubnub());
+        return new RemoveChannelChannelGroup(getInternalPubNubClient());
     }
 
     @NotNull
     public DeleteChannelGroup deleteChannelGroup() {
-        return new DeleteChannelGroup(getInternalPubnub());
+        return new DeleteChannelGroup(getInternalPubNubClient());
     }
 
     // Start Objects API
 
     public SetUUIDMetadata setUUIDMetadata() {
-        return new SetUUIDMetadata(getInternalPubnub());
+        return new SetUUIDMetadata(getInternalPubNubClient());
     }
 
     @NotNull
     public GetAllUUIDMetadata getAllUUIDMetadata() {
-        return new GetAllUUIDMetadata(getInternalPubnub());
+        return new GetAllUUIDMetadata(getInternalPubNubClient());
     }
 
     @NotNull
     public GetUUIDMetadata getUUIDMetadata() {
-        return new GetUUIDMetadata(getInternalPubnub());
+        return new GetUUIDMetadata(getInternalPubNubClient());
     }
 
     @NotNull
     public RemoveUUIDMetadata removeUUIDMetadata() {
-        return new RemoveUUIDMetadata(getInternalPubnub());
+        return new RemoveUUIDMetadata(getInternalPubNubClient());
     }
 
     public SetChannelMetadata.Builder setChannelMetadata() {
-        return SetChannelMetadata.builder(getInternalPubnub());
+        return SetChannelMetadata.builder(getInternalPubNubClient());
     }
 
     @NotNull
     public GetAllChannelsMetadata getAllChannelsMetadata() {
-        return new GetAllChannelsMetadata(getInternalPubnub());
+        return new GetAllChannelsMetadata(getInternalPubNubClient());
     }
 
     @NotNull
     public GetChannelMetadata.Builder getChannelMetadata() {
-        return GetChannelMetadata.builder(getInternalPubnub());
+        return GetChannelMetadata.builder(getInternalPubNubClient());
     }
 
     public RemoveChannelMetadata.Builder removeChannelMetadata() {
-        return RemoveChannelMetadata.builder(getInternalPubnub());
+        return RemoveChannelMetadata.builder(getInternalPubNubClient());
     }
 
     @NotNull
     public GetMemberships getMemberships() {
-        return new GetMemberships(getInternalPubnub());
+        return new GetMemberships(getInternalPubNubClient());
     }
 
     @NotNull
     public SetMemberships.Builder setMemberships() {
-        return SetMemberships.builder(getInternalPubnub());
+        return SetMemberships.builder(getInternalPubNubClient());
     }
 
     public RemoveMemberships.Builder removeMemberships() {
-        return RemoveMemberships.builder(getInternalPubnub());
+        return RemoveMemberships.builder(getInternalPubNubClient());
     }
 
     public ManageMemberships.Builder manageMemberships() {
-        return ManageMemberships.builder(getInternalPubnub());
+        return ManageMemberships.builder(getInternalPubNubClient());
     }
 
     public GetChannelMembers.Builder getChannelMembers() {
-        return GetChannelMembers.builder(getInternalPubnub());
+        return GetChannelMembers.builder(getInternalPubNubClient());
     }
 
     public SetChannelMembers.Builder setChannelMembers() {
-        return SetChannelMembers.builder(getInternalPubnub());
+        return SetChannelMembers.builder(getInternalPubNubClient());
     }
 
     public RemoveChannelMembers.Builder removeChannelMembers() {
-        return RemoveChannelMembers.builder(getInternalPubnub());
+        return RemoveChannelMembers.builder(getInternalPubNubClient());
     }
 
     public ManageChannelMembers.Builder manageChannelMembers() {
-        return ManageChannelMembers.builder(getInternalPubnub());
+        return ManageChannelMembers.builder(getInternalPubNubClient());
     }
 
     // End Objects API
@@ -326,43 +326,43 @@ public class PubNubImpl extends BasePubNubImpl<
 
     @NotNull
     public AddMessageAction addMessageAction() {
-        return new AddMessageAction(getInternalPubnub());
+        return new AddMessageAction(getInternalPubNubClient());
     }
 
     @NotNull
     public GetMessageActions getMessageActions() {
-        return new GetMessageActions(getInternalPubnub());
+        return new GetMessageActions(getInternalPubNubClient());
     }
 
     @NotNull
     public RemoveMessageAction removeMessageAction() {
-        return new RemoveMessageAction(getInternalPubnub());
+        return new RemoveMessageAction(getInternalPubNubClient());
     }
 
     // End Message Actions API
 
     public SendFile.Builder sendFile() {
-        return SendFile.builder(getInternalPubnub());
+        return SendFile.builder(getInternalPubNubClient());
     }
 
     public ListFiles.Builder listFiles() {
-        return new ListFiles.Builder(getInternalPubnub());
+        return new ListFiles.Builder(getInternalPubNubClient());
     }
 
     public GetFileUrl.Builder getFileUrl() {
-        return GetFileUrl.builder(getInternalPubnub());
+        return GetFileUrl.builder(getInternalPubNubClient());
     }
 
     public DownloadFile.Builder downloadFile() {
-        return DownloadFile.builder(getInternalPubnub());
+        return DownloadFile.builder(getInternalPubNubClient());
     }
 
     public DeleteFile.Builder deleteFile() {
-        return DeleteFile.builder(getInternalPubnub());
+        return DeleteFile.builder(getInternalPubNubClient());
     }
 
     public PublishFileMessage.Builder publishFileMessage() {
-        return PublishFileMessage.builder(getInternalPubnub());
+        return PublishFileMessage.builder(getInternalPubNubClient());
     }
 
     // public methods
@@ -375,7 +375,7 @@ public class PubNubImpl extends BasePubNubImpl<
      */
     @Nullable
     public String decrypt(String inputString) throws PubNubException {
-        return decrypt(inputString, getInternalPubnub().getConfiguration().getCipherKey());
+        return decrypt(inputString, getInternalPubNubClient().getConfiguration().getCipherKey());
     }
 
     /**
@@ -388,15 +388,15 @@ public class PubNubImpl extends BasePubNubImpl<
      */
     @Nullable
     public String decrypt(String inputString, String cipherKey) throws PubNubException {
-        return getInternalPubnub().decrypt(inputString, cipherKey);
+        return getInternalPubNubClient().decrypt(inputString, cipherKey);
     }
 
     public InputStream decryptInputStream(InputStream inputStream) throws PubNubException {
-        return decryptInputStream(inputStream, getInternalPubnub().getConfiguration().getCipherKey());
+        return decryptInputStream(inputStream, getInternalPubNubClient().getConfiguration().getCipherKey());
     }
 
     public InputStream decryptInputStream(InputStream inputStream, String cipherKey) throws PubNubException {
-        return getInternalPubnub().decryptInputStream(inputStream, cipherKey);
+        return getInternalPubNubClient().decryptInputStream(inputStream, cipherKey);
     }
 
     /**
@@ -407,7 +407,7 @@ public class PubNubImpl extends BasePubNubImpl<
      */
     @Nullable
     public String encrypt(String inputString) throws PubNubException {
-        return encrypt(inputString, getInternalPubnub().getConfiguration().getCipherKey());
+        return encrypt(inputString, getInternalPubNubClient().getConfiguration().getCipherKey());
     }
 
     /**
@@ -420,15 +420,15 @@ public class PubNubImpl extends BasePubNubImpl<
      */
     @Nullable
     public String encrypt(String inputString, String cipherKey) throws PubNubException {
-        return getInternalPubnub().encrypt(inputString, cipherKey);
+        return getInternalPubNubClient().encrypt(inputString, cipherKey);
     }
 
     public InputStream encryptInputStream(InputStream inputStream) throws PubNubException {
-        return encryptInputStream(inputStream, getInternalPubnub().getConfiguration().getCipherKey());
+        return encryptInputStream(inputStream, getInternalPubNubClient().getConfiguration().getCipherKey());
     }
 
     public InputStream encryptInputStream(InputStream inputStream, String cipherKey) throws PubNubException {
-        return getInternalPubnub().encryptInputStream(inputStream, cipherKey);
+        return getInternalPubNubClient().encryptInputStream(inputStream, cipherKey);
     }
 
     /**
@@ -443,14 +443,14 @@ public class PubNubImpl extends BasePubNubImpl<
      * Perform a Reconnect to the network
      */
     public void reconnect() {
-        getInternalPubnub().reconnect(0L);
+        getInternalPubNubClient().reconnect(0L);
     }
 
     /**
      * Perform a disconnect from the listeners
      */
     public void disconnect() {
-        getInternalPubnub().disconnect();
+        getInternalPubNubClient().disconnect();
     }
 
     @NotNull
@@ -460,53 +460,53 @@ public class PubNubImpl extends BasePubNubImpl<
 
     @NotNull
     public List<String> getSubscribedChannels() {
-        return getInternalPubnub().getSubscribedChannels();
+        return getInternalPubNubClient().getSubscribedChannels();
     }
 
     @NotNull
     public List<String> getSubscribedChannelGroups() {
-        return getInternalPubnub().getSubscribedChannelGroups();
+        return getInternalPubNubClient().getSubscribedChannelGroups();
     }
 
     public void unsubscribeAll() {
-        getInternalPubnub().unsubscribeAll();
+        getInternalPubNubClient().unsubscribeAll();
     }
 
     public PNToken parseToken(String token) throws PubNubException {
-        return getInternalPubnub().parseToken(token);
+        return getInternalPubNubClient().parseToken(token);
     }
 
     public void setToken(String token) {
-        getInternalPubnub().setToken(token);
+        getInternalPubNubClient().setToken(token);
     }
 
     @NotNull
     @Override
     public Channel channel(@NotNull String name) {
-        return new ChannelImpl(getInternalPubnub(), name);
+        return new ChannelImpl(this, name);
     }
 
     @NotNull
     @Override
     public ChannelGroup channelGroup(@NotNull String name) {
-        return new ChannelGroupImpl(getInternalPubnub(), name);    }
+        return new ChannelGroupImpl(this, name);    }
 
     @NotNull
     @Override
     public ChannelMetadata channelMetadata(@NotNull String id) {
-        return new ChannelMetadataImpl(getInternalPubnub(), id);
+        return new ChannelMetadataImpl(this, id);
     }
 
     @NotNull
     @Override
     public UserMetadata userMetadata(@NotNull String id) {
-        return new UserMetadataImpl(getInternalPubnub(), id);
+        return new UserMetadataImpl(this, id);
     }
 
     @NotNull
     @Override
     public SubscriptionSet subscriptionSetOf(@NotNull Set<? extends Subscription> subscriptions) {
-        return new SubscriptionSetImpl(getInternalPubnub(), Collections.emptySet());
+        return new SubscriptionSetImpl(getInternalPubNubClient(), Collections.emptySet());
     }
 
     @Override

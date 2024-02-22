@@ -3,7 +3,7 @@ package com.pubnub.api
 import org.aeonbits.owner.Config
 import org.aeonbits.owner.ConfigFactory
 
-@Config.Sources("file:../test.properties")
+@Config.Sources("file:../../test.properties")
 interface KeysConfig : Config {
     @get:Config.Key("subKey")
     val subKey: String

@@ -5,11 +5,10 @@ import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 import com.pubnub.api.CommonUtils.DEFAULT_LISTEN_DURATION
 import com.pubnub.api.UserId
-import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.internal.BasePubNubImpl
-import com.pubnub.internal.PNConfiguration
 import com.pubnub.internal.InternalPubNubClient
+import com.pubnub.internal.PNConfiguration
 import com.pubnub.internal.TestPubNub
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.junit.After
@@ -19,7 +18,7 @@ import org.junit.Before
 abstract class BaseTest {
 
     lateinit var wireMockServer: WireMockServer
-    protected lateinit var pubnubBase: BasePubNubImpl<Listener> private set
+    protected lateinit var pubnubBase: TestPubNub private set
     protected lateinit var pubnub: InternalPubNubClient private set
     protected lateinit var config: PNConfiguration private set
 
@@ -72,11 +71,11 @@ abstract class BaseTest {
         config = PNConfiguration(userId = UserId(BasePubNubImpl.generateUUID()))
     }
 
-    fun initPubNub(customPubNub: BasePubNubImpl<Listener>? = null) {
+    fun initPubNub(customPubNub: TestPubNub? = null) {
         if (::pubnub.isInitialized) {
             pubnub.destroy()
         }
         pubnubBase = customPubNub ?: TestPubNub(config)
-        pubnub = pubnubBase.pubNubImpl
+        pubnub = pubnubBase.internalPubNubClient
     }
 }
