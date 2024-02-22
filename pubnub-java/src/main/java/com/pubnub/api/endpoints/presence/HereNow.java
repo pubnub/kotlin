@@ -3,7 +3,7 @@ package com.pubnub.api.endpoints.presence;
 
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.models.consumer.presence.PNHereNowResult;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -21,7 +21,7 @@ public class HereNow extends Endpoint<PNHereNowResult> {
     @Setter
     private boolean includeUUIDs = true;
 
-    public HereNow(PubNubImpl pubnub) {
+    public HereNow(InternalPubNubClient pubnub) {
         super(pubnub);
         channels = new ArrayList<>();
         channelGroups = new ArrayList<>();

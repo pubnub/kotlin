@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints;
 
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +31,7 @@ public class FetchMessages extends Endpoint<PNFetchMessagesResult> {
     @Setter
     private boolean includeUUID = true;
 
-    public FetchMessages(PubNubImpl pubnub) {
+    public FetchMessages(InternalPubNubClient pubnub) {
         super(pubnub);
     }
 

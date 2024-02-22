@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints;
 
 import com.pubnub.api.models.consumer.history.PNHistoryResult;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ public class History extends Endpoint<PNHistoryResult> {
     @Setter
     private boolean includeMeta;
 
-    public History(PubNubImpl pubnub) {
+    public History(InternalPubNubClient pubnub) {
         super(pubnub);
     }
 

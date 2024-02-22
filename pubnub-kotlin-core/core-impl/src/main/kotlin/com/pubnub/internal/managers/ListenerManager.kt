@@ -1,5 +1,6 @@
 package com.pubnub.internal.managers
 
+import com.pubnub.api.BasePubNub
 import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNEvent
@@ -9,27 +10,20 @@ import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.v2.callbacks.BaseEventEmitter
-import com.pubnub.api.v2.callbacks.BaseEventListener
-import com.pubnub.api.v2.callbacks.BaseStatusListener
-import com.pubnub.internal.BasePubNub
+import com.pubnub.api.v2.subscriptions.BaseSubscription
 import com.pubnub.internal.callbacks.SubscribeCallback
 import com.pubnub.internal.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.internal.subscribe.eventengine.effect.MessagesConsumer
 import com.pubnub.internal.subscribe.eventengine.effect.StatusConsumer
-import com.pubnub.internal.v2.callbacks.EventListener
-import com.pubnub.internal.v2.callbacks.StatusListener
-import com.pubnub.internal.v2.subscription.BaseSubscriptionImpl
+import com.pubnub.internal.v2.callbacks.InternalEventListener
+import com.pubnub.internal.v2.callbacks.InternalStatusListener
 import java.util.concurrent.CopyOnWriteArrayList
 
-class ListenerManager(val pubnub: BasePubNub) : MessagesConsumer, StatusConsumer, BaseEventEmitter {
+class ListenerManager(val pubnub: BasePubNub<*,*,*,*,*,*,*,*>) : MessagesConsumer, StatusConsumer, BaseEventEmitter<InternalEventListener> {
     private val listeners = CopyOnWriteArrayList<Listener>()
 
-    private val statusListeners get() = listeners.filterIsInstance<StatusListener>()
-    private val eventListeners get() = listeners.filterIsInstance<EventListener>()
-
-    fun addListener(listener: SubscribeCallback) {
-        listeners.add(listener)
-    }
+    private val statusListeners get() = listeners.filterIsInstance<InternalStatusListener>()
+    private val eventListeners get() = listeners.filterIsInstance<InternalEventListener>()
 
     override fun removeListener(listener: Listener) {
         listeners.remove(listener)
@@ -44,11 +38,15 @@ class ListenerManager(val pubnub: BasePubNub) : MessagesConsumer, StatusConsumer
     private val subscriptionCallbacks get() = announcementCallbacks.filter { it.phase == AnnouncementCallback.Phase.SUBSCRIPTION }
     private val setCallbacks get() = announcementCallbacks.filter { it.phase == AnnouncementCallback.Phase.SET }
 
-    fun addListener(listener: BaseStatusListener) {
+    fun addListener(listener: SubscribeCallback) {
         listeners.add(listener)
     }
 
-    override fun addListener(listener: BaseEventListener) {
+    fun addListener(listener: InternalStatusListener) {
+        listeners.add(listener)
+    }
+
+    override fun addListener(listener: InternalEventListener) {
         listeners.add(listener)
     }
 
@@ -110,17 +108,17 @@ class ListenerManager(val pubnub: BasePubNub) : MessagesConsumer, StatusConsumer
 data class AnnouncementEnvelope<T : PNEvent>(
     val event: T
 ) {
-    val acceptedBy = mutableSetOf<BaseSubscriptionImpl>()
+    val acceptedBy = mutableSetOf<BaseSubscription<*>>()
 }
 
 interface AnnouncementCallback {
     enum class Phase { SUBSCRIPTION, SET }
 
     val phase: Phase
-    fun message(pubnub: BasePubNub, envelope: AnnouncementEnvelope<PNMessageResult>)
-    fun presence(pubnub: BasePubNub, envelope: AnnouncementEnvelope<PNPresenceEventResult>)
-    fun signal(pubnub: BasePubNub, envelope: AnnouncementEnvelope<PNSignalResult>)
-    fun messageAction(pubnub: BasePubNub, envelope: AnnouncementEnvelope<PNMessageActionResult>)
-    fun objects(pubnub: BasePubNub, envelope: AnnouncementEnvelope<PNObjectEventResult>)
-    fun file(pubnub: BasePubNub, envelope: AnnouncementEnvelope<PNFileEventResult>)
+    fun message(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, envelope: AnnouncementEnvelope<PNMessageResult>)
+    fun presence(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, envelope: AnnouncementEnvelope<PNPresenceEventResult>)
+    fun signal(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, envelope: AnnouncementEnvelope<PNSignalResult>)
+    fun messageAction(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, envelope: AnnouncementEnvelope<PNMessageActionResult>)
+    fun objects(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, envelope: AnnouncementEnvelope<PNObjectEventResult>)
+    fun file(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, envelope: AnnouncementEnvelope<PNFileEventResult>)
 }

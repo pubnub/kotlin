@@ -8,16 +8,16 @@ import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.push.PNPushListProvisionsResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.Endpoint
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import retrofit2.Call
 import retrofit2.Response
 import java.util.Locale
 
 /**
- * @see [PubNubImpl.auditPushChannelProvisions]
+ * @see [InternalPubNubClient.auditPushChannelProvisions]
  */
 class ListPushProvisions internal constructor(
-    pubnub: PubNubImpl,
+    pubnub: InternalPubNubClient,
     override val pushType: PNPushType,
     override val deviceId: String,
     override val topic: String? = null,

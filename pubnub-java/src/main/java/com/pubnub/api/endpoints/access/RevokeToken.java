@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints.access;
 
 import com.pubnub.api.endpoints.Endpoint;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import kotlin.Unit;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -12,7 +12,7 @@ public class RevokeToken extends Endpoint<Unit> {
     @Setter
     private String token;
 
-    public RevokeToken(PubNubImpl pubnub) {
+    public RevokeToken(InternalPubNubClient pubnub) {
         super(pubnub);
     }
 

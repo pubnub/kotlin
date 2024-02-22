@@ -6,7 +6,7 @@ import com.pubnub.api.endpoints.files.requiredparambuilder.ChannelFileNameFileId
 import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.files.PNPublishFileMessageResult;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -27,7 +27,7 @@ public class PublishFileMessage extends Endpoint<PNPublishFileMessageResult> {
     private final String fileName;
     private final String fileId;
 
-    public PublishFileMessage(String channel, String fileName, String fileId, PubNubImpl pubnub) {
+    public PublishFileMessage(String channel, String fileName, String fileId, InternalPubNubClient pubnub) {
         super(pubnub);
         this.channel = channel;
         this.fileName = fileName;
@@ -54,7 +54,7 @@ public class PublishFileMessage extends Endpoint<PNPublishFileMessageResult> {
         }
     }
 
-    public static Builder builder(PubNubImpl pubNub) {
+    public static Builder builder(InternalPubNubClient pubNub) {
         return new Builder(ChannelFileNameFileIdBuilder.create((channel, fileName, fileId) ->
                 new PublishFileMessage(channel, fileName, fileId, pubNub)));
     }

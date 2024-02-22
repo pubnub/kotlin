@@ -1,6 +1,7 @@
 package com.pubnub.api.v2.subscriptions
 
 import com.pubnub.api.v2.callbacks.BaseEventEmitter
+import com.pubnub.api.v2.callbacks.BaseEventListener
 
 /**
  * A helper class that manages multiple [BaseSubscription]s that can be added to it.
@@ -14,7 +15,7 @@ import com.pubnub.api.v2.callbacks.BaseEventEmitter
  * Remember to always [close] the set when you're done with it to avoid memory leaks.
  * Closing the set also closes all `Subscription`s that are part of this set.
  */
-abstract class BaseSubscriptionSet : BaseEventEmitter, SubscribeCapable, AutoCloseable {
+interface BaseSubscriptionSet<EvLis: BaseEventListener, Sub: BaseSubscription<EvLis>> : BaseEventEmitter<EvLis>, SubscribeCapable, AutoCloseable {
     /**
      * Add a [BaseSubscription] to this set.
      *
@@ -25,7 +26,7 @@ abstract class BaseSubscriptionSet : BaseEventEmitter, SubscribeCapable, AutoClo
      * @param subscription the [BaseSubscription] to add.
      * @see [plus]
      */
-    abstract fun add(subscription: BaseSubscription)
+    abstract fun add(subscription: Sub)
 
     /**
      * Remove a [BaseSubscription] from this set.
@@ -34,7 +35,7 @@ abstract class BaseSubscriptionSet : BaseEventEmitter, SubscribeCapable, AutoClo
      *
      * @param subscription the [BaseSubscription] to remove.
      */
-    abstract fun remove(subscription: BaseSubscription)
+    abstract fun remove(subscription: Sub)
 
     /**
      * Remove a [BaseSubscription] from this set. Equivalent to calling [remove].
@@ -43,22 +44,10 @@ abstract class BaseSubscriptionSet : BaseEventEmitter, SubscribeCapable, AutoClo
      *
      * @see [remove]
      */
-    operator fun minus(subscription: BaseSubscription) = remove(subscription)
-
-    /**
-     * Adds a [BaseSubscription] to this set. Equivalent to calling [add].
-     *
-     * Please note that this [BaseSubscriptionSet] will *not* attempt to ensure all subscriptions match their
-     * active/inactive state. That is, if you previously called [subscribe] or [unsubscribe] on this set, it will not be
-     * called on the newly added [subscription] automatically.
-     *
-     * @param subscription the [BaseSubscription] to add.
-     * @see [add]
-     */
-    abstract operator fun plus(subscription: BaseSubscription): BaseSubscriptionSet
+    operator fun minus(subscription: Sub) = remove(subscription)
 
     /**
      * Returns an immutable copy of the set of subscriptions contained in this [BaseSubscriptionSet].
      */
-    abstract val subscriptions: Set<BaseSubscription>
+    abstract val subscriptions: Set<Sub>
 }

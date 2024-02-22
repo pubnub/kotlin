@@ -9,7 +9,7 @@ import com.pubnub.api.models.consumer.history.PNFetchMessageItem
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.Endpoint
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.extension.limit
 import com.pubnub.internal.extension.nonPositiveToNull
 import com.pubnub.internal.extension.tryDecryptMessage
@@ -20,10 +20,10 @@ import retrofit2.Response
 import java.util.Locale
 
 /**
- * @see [PubNubImpl.fetchMessages]
+ * @see [InternalPubNubClient.fetchMessages]
  */
 class FetchMessages internal constructor(
-    pubnub: PubNubImpl,
+    pubnub: InternalPubNubClient,
     override val channels: List<String>,
     override val page: PNBoundedPage,
     override val includeUUID: Boolean,

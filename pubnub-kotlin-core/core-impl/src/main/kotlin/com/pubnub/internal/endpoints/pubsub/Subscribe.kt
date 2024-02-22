@@ -5,14 +5,14 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.Endpoint
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.PubNubUtil
 import com.pubnub.internal.models.server.SubscribeEnvelope
 import com.pubnub.internal.toCsv
 import retrofit2.Call
 import retrofit2.Response
 
-class Subscribe internal constructor(pubnub: PubNubImpl) : Endpoint<SubscribeEnvelope, SubscribeEnvelope>(pubnub) {
+class Subscribe internal constructor(pubnub: InternalPubNubClient) : Endpoint<SubscribeEnvelope, SubscribeEnvelope>(pubnub) {
 
     var channels = emptyList<String>()
     var channelGroups = emptyList<String>()

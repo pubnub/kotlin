@@ -9,6 +9,7 @@ import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.pubnub.api.CommonUtils.assertPnException
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.listen
 import com.pubnub.api.models.consumer.PNStatus
@@ -16,7 +17,7 @@ import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
-import com.pubnub.internal.BasePubNub
+import com.pubnub.internal.BasePubNubImpl
 import com.pubnub.internal.callbacks.SubscribeCallback
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.junit.Assert.assertEquals
@@ -138,17 +139,17 @@ class SignalTest : BaseTest() {
         val success = AtomicBoolean()
 
         pubnubBase.addListener(object : SubscribeCallback {
-            override fun signal(pubnub: BasePubNub, pnSignalResult: PNSignalResult) {
+            override fun signal(pubnub: BasePubNubImpl<Listener>, pnSignalResult: PNSignalResult) {
                 assertEquals("coolChannel", pnSignalResult.channel)
                 assertEquals("hello", pnSignalResult.message.asString)
                 assertEquals("uuid", pnSignalResult.publisher)
                 success.set(true)
             }
 
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {}
-            override fun message(pubnub: BasePubNub, pnMessageResult: PNMessageResult) {}
-            override fun presence(pubnub: BasePubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun messageAction(pubnub: BasePubNub, pnMessageActionResult: PNMessageActionResult) {}
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {}
+            override fun message(pubnub: BasePubNubImpl<Listener>, pnMessageResult: PNMessageResult) {}
+            override fun presence(pubnub: BasePubNubImpl<Listener>, pnPresenceEventResult: PNPresenceEventResult) {}
+            override fun messageAction(pubnub: BasePubNubImpl<Listener>, pnMessageActionResult: PNMessageActionResult) {}
         })
 
         pubnub.subscribe(

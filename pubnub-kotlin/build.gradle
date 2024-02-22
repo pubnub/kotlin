@@ -1,27 +1,16 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.7.20'
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'org.jetbrains.kotlin.jvm'
+    id 'com.github.johnrengelman.shadow'
     id 'java-library'
     id 'java-test-fixtures'
-    id "org.jlleitschuh.gradle.ktlint" version "11.0.0"
+    id "org.jlleitschuh.gradle.ktlint"
     id "jacoco"
-    id 'org.jetbrains.dokka' version '1.7.10'
-    id 'org.unbroken-dome.test-sets' version '4.0.0'
-    id "com.github.ben-manes.versions" version '0.42.0'
-    id "com.vanniktech.maven.publish" version '0.22.0'
-    id 'me.champeau.gradle.japicmp' version '0.4.2'
+    id 'org.jetbrains.dokka'
+    id 'org.unbroken-dome.test-sets'
+    id "com.github.ben-manes.versions"
+    id "com.vanniktech.maven.publish"
 }
 
-//testing {
-//    suites {
-//        integrationTest(JvmTestSuite) {
-//        }
-//    }
-//}
-
-repositories {
-    mavenCentral()
-}
 
 sourceSets {
     integrationTest {
@@ -103,13 +92,11 @@ dependencies {
     testFixturesImplementation "org.aeonbits.owner:owner:1.0.12"
 
 
-
-
 //    integrationTestImplementation testFixtures(project(":pubnub-kotlin"))
 }
 
 shadowJar {
-    classifier = "all"
+//    classifier = "all"
     dependencies {
         exclude(dependency('org.jetbrains.kotlin:.*'))
     }

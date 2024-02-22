@@ -9,7 +9,7 @@ import com.pubnub.api.CommonUtils.publishMixed
 import com.pubnub.api.CommonUtils.randomChannel
 import com.pubnub.api.CommonUtils.randomValue
 import com.pubnub.api.CommonUtils.unicode
-import com.pubnub.api.PubNub
+import com.pubnub.internal.PubNubImpl
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.asyncRetry
@@ -433,7 +433,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
         val actionsCount = AtomicInteger()
 
         pubnub.addListener(object : SubscribeCallback() {
-            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
+            override fun status(pubnub: PubNubImpl, pnStatus: PNStatus) {
                 if (pnStatus.category == PNStatusCategory.Connected) {
                     publishResultList.forEach {
                         pubnub.addMessageAction(
@@ -448,19 +448,19 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
                 }
             }
 
-            override fun message(pubnub: PubNub, event: PNMessageResult) {
+            override fun message(pubnub: PubNubImpl, event: PNMessageResult) {
                 failTest()
             }
 
-            override fun presence(pubnub: PubNub, event: PNPresenceEventResult) {
+            override fun presence(pubnub: PubNubImpl, event: PNPresenceEventResult) {
                 failTest()
             }
 
-            override fun signal(pubnub: PubNub, event: PNSignalResult) {
+            override fun signal(pubnub: PubNubImpl, event: PNSignalResult) {
                 failTest()
             }
 
-            override fun messageAction(pubnub: PubNub, event: PNMessageActionResult) {
+            override fun messageAction(pubnub: PubNubImpl, event: PNMessageActionResult) {
                 assertEquals(expectedChannelName, event.channel)
                 actionsCount.incrementAndGet()
             }

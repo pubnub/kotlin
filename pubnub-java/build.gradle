@@ -1,18 +1,24 @@
 buildscript {
     dependencies {
-        classpath ("com.github.siom79.japicmp:japicmp:0.18.2") {
-            force = true
-        }
+//        classpath ("com.github.siom79.japicmp:japicmp:0.18.2") {
+////            force = true
+//        }
     }
 }
+
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.7.20'
+    id 'org.jetbrains.kotlin.jvm'
     id 'io.franzbecker.gradle-lombok' version '5.0.0'
-    id "com.vanniktech.maven.publish" version '0.22.0'
+    id 'com.github.johnrengelman.shadow'
     id 'java-library'
-    id 'jacoco'
+    id 'java-test-fixtures'
+    id "org.jlleitschuh.gradle.ktlint"
+    id "jacoco"
     id 'checkstyle'
-    id 'me.champeau.gradle.japicmp' version '0.4.2'
+    id 'org.jetbrains.dokka'
+    id 'org.unbroken-dome.test-sets'
+    id "com.github.ben-manes.versions"
+    id "com.vanniktech.maven.publish"
 }
 
 group = 'com.pubnub'
@@ -20,6 +26,9 @@ group = 'com.pubnub'
 version = '6.3.6'
 
 description = """"""
+kotlin {
+    jvmToolchain(8)
+}
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -146,7 +155,7 @@ javadoc {
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
+//    classifier = 'sources'
     from "$buildDir/delombok"
 }
 

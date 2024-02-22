@@ -8,17 +8,17 @@ import com.pubnub.api.models.consumer.history.PNHistoryItemResult
 import com.pubnub.api.models.consumer.history.PNHistoryResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.Endpoint
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.extension.tryDecryptMessage
 import retrofit2.Call
 import retrofit2.Response
 import java.util.Locale
 
 /**
- * @see [PubNubImpl.history]
+ * @see [InternalPubNubClient.history]
  */
 class History internal constructor(
-    pubnub: PubNubImpl,
+    pubnub: InternalPubNubClient,
     override val channel: String,
     override val start: Long? = null,
     override val end: Long? = null,

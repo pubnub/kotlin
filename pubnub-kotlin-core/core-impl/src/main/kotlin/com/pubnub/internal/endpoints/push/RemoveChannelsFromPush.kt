@@ -8,17 +8,17 @@ import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.push.PNPushRemoveChannelResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.Endpoint
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.toCsv
 import retrofit2.Call
 import retrofit2.Response
 import java.util.Locale
 
 /**
- * @see [PubNubImpl.removePushNotificationsFromChannels]
+ * @see [InternalPubNubClient.removePushNotificationsFromChannels]
  */
 class RemoveChannelsFromPush internal constructor(
-    pubnub: PubNubImpl,
+    pubnub: InternalPubNubClient,
     override val pushType: PNPushType,
     override val channels: List<String>,
     override val deviceId: String,

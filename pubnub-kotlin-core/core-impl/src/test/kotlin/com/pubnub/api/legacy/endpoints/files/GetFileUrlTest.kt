@@ -3,7 +3,7 @@ package com.pubnub.api.legacy.endpoints.files
 import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
 import com.pubnub.api.retry.RetryConfiguration
-import com.pubnub.internal.BasePubNub
+import com.pubnub.internal.BasePubNubImpl
 import com.pubnub.internal.PNConfiguration
 import com.pubnub.internal.TestPubNub
 import okhttp3.HttpUrl.Companion.toHttpUrl
@@ -100,7 +100,7 @@ class GetFileUrlTest {
     }
 
     private fun config(): PNConfiguration {
-        val config = PNConfiguration(userId = UserId(BasePubNub.generateUUID()))
+        val config = PNConfiguration(userId = UserId(BasePubNubImpl.generateUUID()))
         config.publishKey = "pk"
         config.subscribeKey = "sk"
         config.retryConfiguration = RetryConfiguration.Linear(delayInSec = 4, maxRetryNumber = 3)

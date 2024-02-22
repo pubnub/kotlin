@@ -8,7 +8,7 @@ import com.pubnub.api.models.consumer.files.PNBaseFile
 import com.pubnub.api.models.consumer.files.PNPublishFileMessageResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.Endpoint
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.crypto.encryptString
 import com.pubnub.internal.extension.numericString
 import com.pubnub.internal.extension.quoted
@@ -17,7 +17,7 @@ import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [PubNubImpl.publishFileMessage]
+ * @see [InternalPubNubClient.publishFileMessage]
  */
 open class PublishFileMessage(
     private val channel: String,
@@ -27,7 +27,7 @@ open class PublishFileMessage(
     private val meta: Any? = null,
     private val ttl: Int? = null,
     private val shouldStore: Boolean? = null,
-    pubNub: PubNubImpl,
+    pubNub: InternalPubNubClient,
 ) : Endpoint<List<Any>, PNPublishFileMessageResult>(pubNub), IPublishFileMessage {
     private val pnFile = PNBaseFile(fileId, fileName)
 
@@ -73,7 +73,7 @@ open class PublishFileMessage(
     override fun isSubKeyRequired(): Boolean = true
     override fun isPubKeyRequired(): Boolean = true
 
-    internal class Factory(private val pubNub: PubNubImpl) {
+    internal class Factory(private val pubNub: InternalPubNubClient) {
         fun create(
             channel: String,
             fileName: String,

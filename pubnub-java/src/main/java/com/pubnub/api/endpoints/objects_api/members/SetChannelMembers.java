@@ -10,7 +10,7 @@ import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects_api.member.PNSetChannelMembersResult;
 import com.pubnub.api.models.consumer.objects_api.member.PNUUID;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import com.pubnub.internal.models.consumer.objects.PNMemberKey;
 import com.pubnub.internal.models.consumer.objects.member.MemberInput;
 import com.pubnub.internal.models.consumer.objects.member.PNMember;
@@ -40,7 +40,7 @@ public class SetChannelMembers extends Endpoint<PNSetChannelMembersResult> {
     private final String channel;
     private final Collection<PNUUID> uuids;
 
-    public SetChannelMembers(final PubNubImpl pubnubInstance, String channel, Collection<PNUUID> uuids) {
+    public SetChannelMembers(final InternalPubNubClient pubnubInstance, String channel, Collection<PNUUID> uuids) {
         super(pubnubInstance);
         this.channel = channel;
         this.uuids = uuids;
@@ -98,13 +98,13 @@ public class SetChannelMembers extends Endpoint<PNSetChannelMembersResult> {
         return list;
     }
 
-    public static Builder builder(final PubNubImpl pubnubInstance) {
+    public static Builder builder(final InternalPubNubClient pubnubInstance) {
         return new Builder(pubnubInstance);
     }
 
     @AllArgsConstructor
     public static class Builder implements BuilderSteps.ChannelStep<ObjectsBuilderSteps.UUIDsStep<SetChannelMembers>> {
-        private final PubNubImpl pubnubInstance;
+        private final InternalPubNubClient pubnubInstance;
 
         @Override
         public ObjectsBuilderSteps.UUIDsStep<SetChannelMembers> channel(final String channel) {

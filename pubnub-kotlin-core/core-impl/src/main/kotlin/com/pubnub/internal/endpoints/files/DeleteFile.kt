@@ -6,18 +6,18 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.files.PNDeleteFileResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.Endpoint
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [PubNubImpl.deleteFile]
+ * @see [InternalPubNubClient.deleteFile]
  */
 class DeleteFile(
     private val channel: String,
     private val fileName: String,
     private val fileId: String,
-    pubNub: PubNubImpl
+    pubNub: InternalPubNubClient
 ) : Endpoint<Unit, PNDeleteFileResult?>(pubNub), IDeleteFile {
     @Throws(PubNubException::class)
     override fun validateParams() {

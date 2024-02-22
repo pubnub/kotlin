@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints.presence;
 
 import com.pubnub.api.endpoints.Endpoint;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -18,7 +18,7 @@ public class Heartbeat extends Endpoint<Boolean> {
     @Setter
     private Object state;
 
-    public Heartbeat(PubNubImpl pubnub) {
+    public Heartbeat(InternalPubNubClient pubnub) {
         super(pubnub);
         channels = new ArrayList<>();
         channelGroups = new ArrayList<>();

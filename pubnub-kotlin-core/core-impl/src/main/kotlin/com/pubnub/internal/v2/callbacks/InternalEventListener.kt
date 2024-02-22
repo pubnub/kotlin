@@ -1,15 +1,15 @@
 package com.pubnub.internal.v2.callbacks
 
+import com.pubnub.api.BasePubNub
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.v2.callbacks.BaseEventListener
-import com.pubnub.internal.BasePubNub
 import com.pubnub.internal.models.consumer.pubsub.objects.PNObjectEventResult
 
-interface EventListener : BaseEventListener {
+interface InternalEventListener : BaseEventListener {
     /**
      * Receive messages at subscribed channels.
      *
@@ -18,7 +18,7 @@ interface EventListener : BaseEventListener {
      * @param pubnub The client instance which has this listener attached.
      * @param event Wrapper around the actual message content.
      */
-    fun message(pubnub: BasePubNub, event: PNMessageResult) {}
+    fun message(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, event: PNMessageResult) {}
 
     /**
      * Receive presence events for channels subscribed with presence enabled via
@@ -28,7 +28,7 @@ interface EventListener : BaseEventListener {
      * @param pubnub The client instance which has this listener attached.
      * @param event Wrapper around a presence event.
      */
-    fun presence(pubnub: BasePubNub, event: PNPresenceEventResult) {}
+    fun presence(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, event: PNPresenceEventResult) {}
 
     /**
      * Receive signals at subscribed channels.
@@ -38,7 +38,7 @@ interface EventListener : BaseEventListener {
      * @param pubnub The client instance which has this listener attached.
      * @param event Wrapper around a signal event.
      */
-    fun signal(pubnub: BasePubNub, event: PNSignalResult) {}
+    fun signal(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, event: PNSignalResult) {}
 
     /**
      * Receive message actions for messages in subscribed channels.
@@ -46,7 +46,7 @@ interface EventListener : BaseEventListener {
      * @param pubnub The client instance which has this listener attached.
      * @param event Wrapper around a message action event.
      */
-    fun messageAction(pubnub: BasePubNub, event: PNMessageActionResult) {}
+    fun messageAction(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, event: PNMessageActionResult) {}
 
     /**
      * Receive channel metadata and UUID metadata events in subscribed channels.
@@ -54,7 +54,7 @@ interface EventListener : BaseEventListener {
      * @param pubnub The client instance which has this listener attached.
      * @param event Wrapper around the object event.
      */
-    fun objects(pubnub: BasePubNub, event: PNObjectEventResult) {}
+    fun objects(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, event: PNObjectEventResult) {}
 
     /**
      * Receive file events in subscribed channels.
@@ -62,5 +62,5 @@ interface EventListener : BaseEventListener {
      * @param pubnub The client instance which has this listener attached.
      * @param event Wrapper around the file event.
      */
-    fun file(pubnub: BasePubNub, event: PNFileEventResult) {}
+    fun file(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, event: PNFileEventResult) {}
 }

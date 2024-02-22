@@ -7,7 +7,7 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.Endpoint
 import com.pubnub.internal.PNConfiguration.Companion.isValid
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.models.consumer.access_manager.PNAccessManagerGrantResult
 import com.pubnub.internal.models.consumer.access_manager.PNAccessManagerKeyData
 import com.pubnub.internal.models.server.Envelope
@@ -17,10 +17,10 @@ import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [PubNubImpl.grant]
+ * @see [InternalPubNubClient.grant]
  */
 open class Grant(
-    pubnub: PubNubImpl,
+    pubnub: InternalPubNubClient,
     override val read: Boolean = false,
     override val write: Boolean = false,
     override val manage: Boolean = false,

@@ -1,9 +1,10 @@
 package com.pubnub.contract.presence.eventEngine.step
 
+import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.contract.subscribe.eventEngine.state.EventEngineState
-import com.pubnub.internal.BasePubNub
+import com.pubnub.internal.BasePubNubImpl
 import com.pubnub.internal.callbacks.SubscribeCallback
 import io.cucumber.datatable.DataTable
 import io.cucumber.java.en.Given
@@ -59,11 +60,11 @@ class PresenceEventEngineSteps(private val state: EventEngineState) {
     fun I_wait_for_getting_Presence_joined_events() {
         val atomic = AtomicInteger(0)
         state.pubnub.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {
                 // do nothing
             }
 
-            override fun presence(pubnub: BasePubNub, pnPresenceEventResult: PNPresenceEventResult) {
+            override fun presence(pubnub: BasePubNubImpl<Listener>, pnPresenceEventResult: PNPresenceEventResult) {
                 if (pnPresenceEventResult.event == "join" && (pnPresenceEventResult.channel == "first" || pnPresenceEventResult.channel == "second" || pnPresenceEventResult.channel == "third")) {
                     atomic.incrementAndGet()
                 }

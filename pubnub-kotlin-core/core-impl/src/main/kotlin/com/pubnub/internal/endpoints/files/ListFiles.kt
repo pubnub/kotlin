@@ -7,19 +7,19 @@ import com.pubnub.api.models.consumer.files.PNListFilesResult
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.Endpoint
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.models.server.files.ListFilesResult
 import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [PubNubImpl.listFiles]
+ * @see [InternalPubNubClient.listFiles]
  */
 class ListFiles(
     private val channel: String,
     private val limit: Int? = null,
     private val next: PNPage.PNNext? = null,
-    pubNub: PubNubImpl
+    pubNub: InternalPubNubClient
 ) : Endpoint<ListFilesResult, PNListFilesResult>(pubNub), IListFiles {
 
     @Throws(PubNubException::class)

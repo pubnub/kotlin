@@ -8,7 +8,7 @@ import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects_api.member.PNGetChannelMembersResult;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -29,7 +29,7 @@ public class GetChannelMembers extends Endpoint<PNGetChannelMembersResult> {
     private boolean includeCustom;
     private Include.PNUUIDDetailsLevel includeUUID;
 
-    public GetChannelMembers(String channel, final PubNubImpl pubnubInstance) {
+    public GetChannelMembers(String channel, final InternalPubNubClient pubnubInstance) {
         super(pubnubInstance);
         this.channel = channel;
     }
@@ -48,13 +48,13 @@ public class GetChannelMembers extends Endpoint<PNGetChannelMembersResult> {
         ), PNGetChannelMembersResult::from);
     }
 
-    public static Builder builder(final PubNubImpl pubnubInstance) {
+    public static Builder builder(final InternalPubNubClient pubnubInstance) {
         return new Builder(pubnubInstance);
     }
 
     @AllArgsConstructor
     public static class Builder implements BuilderSteps.ChannelStep<GetChannelMembers> {
-        private final PubNubImpl pubnubInstance;
+        private final InternalPubNubClient pubnubInstance;
 
         @Override
         public GetChannelMembers channel(final String channel) {

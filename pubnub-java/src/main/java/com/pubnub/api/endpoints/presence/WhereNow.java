@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints.presence;
 
 import com.pubnub.api.endpoints.Endpoint;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import com.pubnub.internal.models.consumer.presence.PNWhereNowResult;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -12,7 +12,7 @@ public class WhereNow extends Endpoint<PNWhereNowResult> {
     @Setter
     private String uuid;
 
-    public WhereNow(PubNubImpl pubnub) {
+    public WhereNow(InternalPubNubClient pubnub) {
         super(pubnub);
         uuid = pubnub.getConfiguration().getUuid();
     }

@@ -9,7 +9,7 @@ import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects_api.membership.PNChannelMembership;
 import com.pubnub.api.models.consumer.objects_api.membership.PNRemoveMembershipResult;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -32,7 +32,7 @@ public class RemoveMemberships extends Endpoint<PNRemoveMembershipResult> {
     private boolean includeCustom;
     private Include.PNChannelDetailsLevel includeChannel;
 
-    public RemoveMemberships(@NotNull Collection<PNChannelMembership> channelMemberships, final PubNubImpl pubnubInstance) {
+    public RemoveMemberships(@NotNull Collection<PNChannelMembership> channelMemberships, final InternalPubNubClient pubnubInstance) {
         super(pubnubInstance);
         this.channelMemberships = channelMemberships;
     }
@@ -58,13 +58,13 @@ public class RemoveMemberships extends Endpoint<PNRemoveMembershipResult> {
                 PNRemoveMembershipResult::from);
     }
 
-    public static Builder builder(final PubNubImpl pubnubInstance) {
+    public static Builder builder(final InternalPubNubClient pubnubInstance) {
         return new Builder(pubnubInstance);
     }
 
     @AllArgsConstructor
     public static class Builder implements ObjectsBuilderSteps.ChannelMembershipsStep<RemoveMemberships> {
-        private final PubNubImpl pubnubInstance;
+        private final InternalPubNubClient pubnubInstance;
 
         @Override
         public RemoveMemberships channelMemberships(@NotNull final Collection<PNChannelMembership> channelMemberships) {

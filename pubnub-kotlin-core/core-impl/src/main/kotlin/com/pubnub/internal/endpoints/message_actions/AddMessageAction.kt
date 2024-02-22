@@ -8,17 +8,17 @@ import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.Endpoint
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.models.server.objects_api.EntityEnvelope
 import retrofit2.Call
 import retrofit2.Response
 import java.util.Locale
 
 /**
- * @see [PubNubImpl.addMessageAction]
+ * @see [InternalPubNubClient.addMessageAction]
  */
 class AddMessageAction internal constructor(
-    pubnub: PubNubImpl,
+    pubnub: InternalPubNubClient,
     override val channel: String,
     override val messageAction: PNMessageAction
 ) : Endpoint<EntityEnvelope<PNMessageAction>, PNAddMessageActionResult>(pubnub), IAddMessageAction {

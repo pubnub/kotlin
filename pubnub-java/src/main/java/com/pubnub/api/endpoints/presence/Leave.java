@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints.presence;
 
 import com.pubnub.api.endpoints.Endpoint;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -15,7 +15,7 @@ public class Leave extends Endpoint<Boolean> {
     @Setter
     private List<String> channelGroups;
 
-    public Leave(PubNubImpl pubnub) {
+    public Leave(InternalPubNubClient pubnub) {
         super(pubnub);
         channels = new ArrayList<>();
         channelGroups = new ArrayList<>();

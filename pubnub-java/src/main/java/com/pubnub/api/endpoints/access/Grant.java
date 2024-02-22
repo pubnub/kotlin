@@ -4,7 +4,7 @@ import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.access_manager.PNAccessManagerGrantResult;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -31,7 +31,7 @@ public class Grant extends Endpoint<PNAccessManagerGrantResult> {
     private List<String> channelGroups = new ArrayList<>();
     private List<String> uuids = Collections.emptyList();
 
-    public Grant(PubNubImpl pubnub) {
+    public Grant(InternalPubNubClient pubnub) {
         super(pubnub);
     }
 

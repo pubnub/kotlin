@@ -7,7 +7,7 @@ import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.Endpoint
 import com.pubnub.internal.PNConfiguration.Companion.isValid
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.internal.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.internal.models.consumer.access_manager.v3.UUIDGrant
@@ -17,7 +17,7 @@ import retrofit2.Call
 import retrofit2.Response
 
 class GrantToken(
-    pubnub: PubNubImpl,
+    pubnub: InternalPubNubClient,
     override val ttl: Int,
     private val meta: Any?,
     private val authorizedUUID: String?,

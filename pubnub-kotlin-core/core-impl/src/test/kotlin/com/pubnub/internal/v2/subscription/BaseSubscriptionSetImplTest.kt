@@ -2,13 +2,14 @@ package com.pubnub.internal.v2.subscription
 
 import com.google.gson.JsonNull
 import com.pubnub.api.UserId
+import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.v2.subscriptions.BaseSubscriptionSet
-import com.pubnub.internal.BasePubNub
+import com.pubnub.internal.BasePubNubImpl
 import com.pubnub.internal.PNConfiguration
 import com.pubnub.internal.TestPubNub
-import com.pubnub.internal.v2.callbacks.EventListener
+import com.pubnub.internal.v2.callbacks.InternalEventListener
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -103,8 +104,8 @@ class BaseSubscriptionSetImplTest {
     fun close() {
         // given
         subscriptionSet.subscribe()
-        subscriptionSet.addListener(object : EventListener {
-            override fun message(pubnub: BasePubNub, result: PNMessageResult) {
+        subscriptionSet.addListener(object : InternalEventListener {
+            override fun message(pubnub: BasePubNubImpl<Listener>, result: PNMessageResult) {
                 throw IllegalStateException("We should not get a message after close!")
             }
         })

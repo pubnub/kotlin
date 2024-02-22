@@ -1,11 +1,11 @@
 package com.pubnub.internal.interceptor
 
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.PubNubUtil
 import okhttp3.Interceptor
 import okhttp3.Response
 
-class SignatureInterceptor(val pubnub: PubNubImpl) : Interceptor {
+class SignatureInterceptor(val pubnub: InternalPubNubClient) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()

@@ -5,7 +5,7 @@ import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.Endpoint
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.endpoints.objects.internal.CollectionQueryParameters
 import com.pubnub.internal.endpoints.objects.internal.IncludeQueryParam
 import com.pubnub.internal.models.consumer.objects.uuid.PNUUIDMetadataArrayResult
@@ -14,10 +14,10 @@ import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [PubNubImpl.getAllUUIDMetadata]
+ * @see [InternalPubNubClient.getAllUUIDMetadata]
  */
 class GetAllUUIDMetadata internal constructor(
-    pubnub: PubNubImpl,
+    pubnub: InternalPubNubClient,
     private val collectionQueryParameters: CollectionQueryParameters,
     private val withInclude: IncludeQueryParam
 ) : Endpoint<EntityArrayEnvelope<PNUUIDMetadata>, PNUUIDMetadataArrayResult>(pubnub),

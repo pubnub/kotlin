@@ -4,7 +4,7 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult;
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -21,7 +21,7 @@ public class AddMessageAction extends Endpoint<PNAddMessageActionResult> {
     private String channel;
     private PNMessageAction messageAction;
 
-    public AddMessageAction(PubNubImpl pubnub) {
+    public AddMessageAction(InternalPubNubClient pubnub) {
         super(pubnub);
     }
 

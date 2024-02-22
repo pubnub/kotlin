@@ -6,7 +6,7 @@ import com.pubnub.api.endpoints.files.requiredparambuilder.ChannelFileNameFileId
 import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.files.PNFileUrlResult;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 
 public class GetFileUrl extends Endpoint<PNFileUrlResult> {
 
@@ -14,7 +14,7 @@ public class GetFileUrl extends Endpoint<PNFileUrlResult> {
     private final String fileId;
     private final String fileName;
 
-    public GetFileUrl(String channel, String fileId, String fileName, PubNubImpl pubnub) {
+    public GetFileUrl(String channel, String fileId, String fileName, InternalPubNubClient pubnub) {
         super(pubnub);
         this.channel = channel;
         this.fileId = fileId;
@@ -36,7 +36,7 @@ public class GetFileUrl extends Endpoint<PNFileUrlResult> {
         }
     }
 
-    public static Builder builder(PubNubImpl pubNub) {
+    public static Builder builder(InternalPubNubClient pubNub) {
         return new Builder(ChannelFileNameFileIdBuilder.create((channel, fileName, fileId) ->
                 new GetFileUrl(channel, fileName, fileId, pubNub)));
     }

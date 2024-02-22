@@ -7,7 +7,7 @@ import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 
-interface EventEmitter : BaseEventEmitter {
+interface EventEmitter : BaseEventEmitter<EventListener> {
     /**
      * A nullable property that can be set to a function (or lambda expression) to handle incoming message events.
      * This function is invoked whenever a new message is received, providing a convenient way to process or react to messages.

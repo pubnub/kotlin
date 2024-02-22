@@ -2,26 +2,25 @@ package com.pubnub.internal.v2.subscription
 
 import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.models.consumer.pubsub.PNEvent
-import com.pubnub.api.v2.callbacks.BaseEventEmitter
 import com.pubnub.api.v2.callbacks.BaseEventListener
 import com.pubnub.api.v2.subscriptions.BaseSubscription
-import com.pubnub.api.v2.subscriptions.BaseSubscriptionSet
 import com.pubnub.api.v2.subscriptions.FilterImpl
 import com.pubnub.api.v2.subscriptions.SubscriptionCursor
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.managers.AnnouncementCallback
 import com.pubnub.internal.managers.AnnouncementEnvelope
 import com.pubnub.internal.v2.callbacks.EventEmitterImpl
+import com.pubnub.internal.v2.callbacks.InternalEventListener
 import com.pubnub.internal.v2.entities.ChannelGroupName
 import com.pubnub.internal.v2.entities.ChannelName
 
-open class BaseSubscriptionImpl(
-    internal val pubnub: PubNubImpl,
+open class BaseSubscriptionImpl<T: BaseEventListener>(
+    internal val pubnub: InternalPubNubClient,
     channels: Set<ChannelName> = emptySet(),
     channelGroups: Set<ChannelGroupName> = emptySet(),
     options: SubscriptionOptions? = null,
-) : BaseSubscription(), BaseEventEmitter {
+) : BaseSubscription<T> {
 
     @Volatile
     var isActive = false
@@ -69,10 +68,6 @@ open class BaseSubscriptionImpl(
         } ?: return false
     }
 
-    override fun plus(subscription: BaseSubscription): BaseSubscriptionSet {
-        return pubnub.subscriptionSetOf(setOf(this, subscription))
-    }
-
     override fun subscribe(cursor: SubscriptionCursor) {
         onSubscriptionActive(cursor)
         pubnub.subscribe(this, cursor = cursor)
@@ -97,8 +92,17 @@ open class BaseSubscriptionImpl(
         unsubscribe()
     }
 
-    override fun addListener(listener: BaseEventListener) {
+    protected fun addListener(listener: InternalEventListener) {
         eventEmitter.addListener(listener)
+    }
+
+    /**
+     * Add a listener.
+     *
+     * @param listener The listener to be added.
+     */
+    override fun addListener(listener: T) {
+        TODO("not implemented here")
     }
 
     override fun removeListener(listener: Listener) {

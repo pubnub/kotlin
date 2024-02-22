@@ -1,5 +1,6 @@
 package com.pubnub.api.v2.entities
 
+import com.pubnub.api.v2.callbacks.BaseEventListener
 import com.pubnub.api.v2.subscriptions.BaseSubscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 
@@ -10,7 +11,7 @@ import com.pubnub.api.v2.subscriptions.SubscriptionOptions
  *
  * Use the [com.pubnub.api.PubNub.channel] factory method to create instances of this interface.
  */
-interface BaseChannel : Subscribable {
+interface BaseChannel<Lis: BaseEventListener, Sub: BaseSubscription<Lis>> : Subscribable<Lis> {
     /**
      * The name of this channel. Supports wildcards by ending it with ".*"
      *
@@ -34,5 +35,5 @@ interface BaseChannel : Subscribable {
      * @param options optional [SubscriptionOptions].
      * @return an inactive [BaseSubscription] to this channel. You must call [BaseSubscription.subscribe] to start receiving events.
      */
-    override fun subscription(options: SubscriptionOptions): BaseSubscription
+    override fun subscription(options: SubscriptionOptions): Sub
 }

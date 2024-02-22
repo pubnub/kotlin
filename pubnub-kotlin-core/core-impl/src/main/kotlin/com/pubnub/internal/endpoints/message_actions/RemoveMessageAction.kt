@@ -6,16 +6,16 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.message_actions.PNRemoveMessageActionResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.Endpoint
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import retrofit2.Call
 import retrofit2.Response
 import java.util.Locale
 
 /**
- * @see [PubNubImpl.removeMessageAction]
+ * @see [InternalPubNubClient.removeMessageAction]
  */
 class RemoveMessageAction internal constructor(
-    pubnub: PubNubImpl,
+    pubnub: InternalPubNubClient,
     override val channel: String,
     override val messageTimetoken: Long,
     override val actionTimetoken: Long

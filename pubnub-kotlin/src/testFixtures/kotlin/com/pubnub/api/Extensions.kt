@@ -2,6 +2,7 @@ package com.pubnub.api
 
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.v2.callbacks.Result
+import com.pubnub.internal.PubNubImpl
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.awaitility.pollinterval.FibonacciPollInterval
@@ -115,7 +116,7 @@ fun AtomicBoolean.listen(seconds: Int = CommonUtils.DEFAULT_LISTEN_DURATION) {
     CommonUtils.observe(this, seconds)
 }
 
-fun PubNub.subscribeToBlocking(vararg channels: String) {
+fun PubNubImpl.subscribeToBlocking(vararg channels: String) {
     this.subscribe(
         channels = listOf(*channels),
         withPresence = true
@@ -123,7 +124,7 @@ fun PubNub.subscribeToBlocking(vararg channels: String) {
     Thread.sleep(2000)
 }
 
-fun PubNub.unsubscribeFromBlocking(vararg channels: String) {
+fun PubNubImpl.unsubscribeFromBlocking(vararg channels: String) {
     unsubscribe(
         channels = listOf(*channels)
     )

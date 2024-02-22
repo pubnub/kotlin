@@ -6,16 +6,16 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsAllChannelsResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.Endpoint
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.models.server.Envelope
 import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [PubNubImpl.listChannelsForChannelGroup]
+ * @see [InternalPubNubClient.listChannelsForChannelGroup]
  */
 class AllChannelsChannelGroup internal constructor(
-    pubnub: PubNubImpl,
+    pubnub: InternalPubNubClient,
     override val channelGroup: String
 ) : Endpoint<Envelope<Map<String, Any>>, PNChannelGroupsAllChannelsResult>(pubnub),
     IAllChannelsChannelGroup {

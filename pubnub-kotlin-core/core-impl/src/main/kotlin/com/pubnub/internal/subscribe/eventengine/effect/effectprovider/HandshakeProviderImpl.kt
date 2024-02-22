@@ -2,11 +2,11 @@ package com.pubnub.internal.subscribe.eventengine.effect.effectprovider
 
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.endpoints.remoteaction.map
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.endpoints.pubsub.Subscribe
 import com.pubnub.internal.subscribe.eventengine.event.SubscriptionCursor
 
-internal class HandshakeProviderImpl(val pubNub: PubNubImpl) : HandshakeProvider {
+internal class HandshakeProviderImpl(val pubNub: InternalPubNubClient) : HandshakeProvider {
 
     override fun getHandshakeRemoteAction(
         channels: Set<String>,

@@ -6,7 +6,7 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNPublishResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.Endpoint
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.crypto.encryptString
 import com.pubnub.internal.extension.numericString
 import com.pubnub.internal.extension.quoted
@@ -15,10 +15,10 @@ import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [PubNubImpl.publish]
+ * @see [InternalPubNubClient.publish]
  */
 class Publish internal constructor(
-    pubnub: PubNubImpl,
+    pubnub: InternalPubNubClient,
     override val message: Any,
     override val channel: String,
     override val meta: Any? = null,

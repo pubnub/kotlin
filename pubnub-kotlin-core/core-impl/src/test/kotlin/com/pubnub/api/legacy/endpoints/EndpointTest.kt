@@ -13,7 +13,7 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.listen
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.BasePubNub
+import com.pubnub.internal.BasePubNubImpl
 import com.pubnub.internal.Endpoint
 import com.pubnub.internal.PNConfiguration
 import com.pubnub.internal.TestPubNub
@@ -95,7 +95,7 @@ class EndpointTest : BaseTest() {
 
     @Test
     fun testUuid() {
-        val expectedUuid = UserId(BasePubNub.generateUUID())
+        val expectedUuid = UserId(BasePubNubImpl.generateUUID())
         pubnub.configuration.userId = expectedUuid
 
         fakeEndpoint {
@@ -270,7 +270,7 @@ class EndpointTest : BaseTest() {
 
     @Test
     fun testDefaultTimeoutValues() {
-        val p = TestPubNub(PNConfiguration(userId = UserId(BasePubNub.generateUUID())))
+        val p = TestPubNub(PNConfiguration(userId = UserId(BasePubNubImpl.generateUUID())))
         assertEquals(300, p.pubNubImpl.configuration.presenceTimeout)
         assertEquals(0, p.pubNubImpl.configuration.heartbeatInterval)
         p.forceDestroy()
@@ -278,7 +278,7 @@ class EndpointTest : BaseTest() {
 
     @Test
     fun testCustomTimeoutValues1() {
-        val p = TestPubNub(PNConfiguration(userId = UserId(BasePubNub.generateUUID())))
+        val p = TestPubNub(PNConfiguration(userId = UserId(BasePubNubImpl.generateUUID())))
         p.pubNubImpl.configuration.presenceTimeout = 100
         assertEquals(100, p.pubNubImpl.configuration.presenceTimeout)
         assertEquals(49, p.pubNubImpl.configuration.heartbeatInterval)
@@ -287,7 +287,7 @@ class EndpointTest : BaseTest() {
 
     @Test
     fun testCustomTimeoutValues2() {
-        val p = TestPubNub(PNConfiguration(userId = UserId(BasePubNub.generateUUID())))
+        val p = TestPubNub(PNConfiguration(userId = UserId(BasePubNubImpl.generateUUID())))
         p.pubNubImpl.configuration.heartbeatInterval = 100
         assertEquals(300, p.pubNubImpl.configuration.presenceTimeout)
         assertEquals(100, p.pubNubImpl.configuration.heartbeatInterval)
@@ -296,7 +296,7 @@ class EndpointTest : BaseTest() {
 
     @Test
     fun testCustomTimeoutValues3() {
-        val p = TestPubNub(PNConfiguration(userId = UserId(BasePubNub.generateUUID())))
+        val p = TestPubNub(PNConfiguration(userId = UserId(BasePubNubImpl.generateUUID())))
         p.pubNubImpl.configuration.heartbeatInterval = 40
         p.pubNubImpl.configuration.presenceTimeout = 50
         assertEquals(50, p.pubNubImpl.configuration.presenceTimeout)

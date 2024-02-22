@@ -4,13 +4,13 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNTimeResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.Endpoint
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import retrofit2.Response
 
 /**
- * @see [PubNubImpl.time]
+ * @see [InternalPubNubClient.time]
  */
-class Time(pubnub: PubNubImpl, private val excludeFromRetry: Boolean = false) :
+class Time(pubnub: InternalPubNubClient, private val excludeFromRetry: Boolean = false) :
     Endpoint<List<Long>, PNTimeResult>(pubnub),
     ITime {
 

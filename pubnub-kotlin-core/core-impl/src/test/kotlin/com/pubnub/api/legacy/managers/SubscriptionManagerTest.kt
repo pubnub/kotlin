@@ -13,6 +13,7 @@ import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.github.tomakehurst.wiremock.matching.UrlPathPattern
 import com.google.gson.reflect.TypeToken
 import com.pubnub.api.CommonUtils.emptyJson
+import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.legacy.BaseTest
@@ -20,7 +21,7 @@ import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.retry.RetryConfiguration
-import com.pubnub.internal.BasePubNub
+import com.pubnub.internal.BasePubNubImpl
 import com.pubnub.internal.PubNubUtil
 import com.pubnub.internal.TestPubNub
 import com.pubnub.internal.callbacks.SubscribeCallback
@@ -144,15 +145,15 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {
                 gotMessages.addAndGet(1)
             }
 
-            override fun message(pubnub: BasePubNub, pnMessageResult: PNMessageResult) {
+            override fun message(pubnub: BasePubNubImpl<Listener>, pnMessageResult: PNMessageResult) {
                 gotMessages.addAndGet(1)
             }
 
-            override fun presence(pubnub: BasePubNub, pnPresenceEventResult: PNPresenceEventResult) {
+            override fun presence(pubnub: BasePubNubImpl<Listener>, pnPresenceEventResult: PNPresenceEventResult) {
                 gotMessages.addAndGet(1)
             }
         })
@@ -204,15 +205,15 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {
                 gotMessages.addAndGet(1)
             }
 
-            override fun message(pubnub: BasePubNub, pnMessageResult: PNMessageResult) {
+            override fun message(pubnub: BasePubNubImpl<Listener>, pnMessageResult: PNMessageResult) {
                 gotMessages.addAndGet(1)
             }
 
-            override fun presence(pubnub: BasePubNub, pnPresenceEventResult: PNPresenceEventResult) {
+            override fun presence(pubnub: BasePubNubImpl<Listener>, pnPresenceEventResult: PNPresenceEventResult) {
                 gotMessages.addAndGet(1)
             }
         })
@@ -339,13 +340,13 @@ class SubscriptionManagerTest : BaseTest() {
         )
         pubnubBase.addListener(object : SubscribeCallback {
 
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {
                 if (pnStatus.category == PNStatusCategory.Connected) {
                     gotStatus.addAndGet(1)
                 }
             }
 
-            override fun message(pubnub: BasePubNub, pnMessageResult: PNMessageResult) {
+            override fun message(pubnub: BasePubNubImpl<Listener>, pnMessageResult: PNMessageResult) {
                 val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
                 assertTrue(requests.size > 0)
                 assertEquals("Message", pubnub.pubNubImpl.mapper.elementToString(pnMessageResult.message, "text"))
@@ -439,11 +440,11 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         pubnubBase.addListener(object : SubscribeCallback {
-            override fun message(pubnub: BasePubNub, pnMessageResult: PNMessageResult) {
+            override fun message(pubnub: BasePubNubImpl<Listener>, pnMessageResult: PNMessageResult) {
                 gotMessages.addAndGet(1)
             }
 
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {}
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {}
         })
 
         pubnub.subscribe(
@@ -526,8 +527,8 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {}
-            override fun message(pubnub: BasePubNub, pnMessageResult: PNMessageResult) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {}
+            override fun message(pubnub: BasePubNubImpl<Listener>, pnMessageResult: PNMessageResult) {
                 gotMessages.addAndGet(1)
             }
         })
@@ -633,8 +634,8 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {}
-            override fun message(pubnub: BasePubNub, pnMessageResult: PNMessageResult) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {}
+            override fun message(pubnub: BasePubNubImpl<Listener>, pnMessageResult: PNMessageResult) {
                 gotMessages.addAndGet(1)
             }
         })
@@ -939,7 +940,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {
                 if (pnStatus.category == PNStatusCategory.ConnectionError && pnStatus.exception?.statusCode == 403) {
                     assertEquals(listOf("ch1", "ch2"), pnStatus.exception?.affectedChannels)
                     assertEquals(listOf("cg1", "cg2"), pnStatus.exception?.affectedChannelGroups)
@@ -996,14 +997,14 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {
                 if (pnStatus.category == PNStatusCategory.Connected) {
                     assertEquals(2, pnStatus.channels.size)
                     gotStatus.set(true)
                 }
             }
 
-            override fun message(pubnub: BasePubNub, pnMessageResult: PNMessageResult) {
+            override fun message(pubnub: BasePubNubImpl<Listener>, pnMessageResult: PNMessageResult) {
                 val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
                 assertTrue(requests.size > 0)
                 assertEquals("Message", pubnub.pubNubImpl.mapper.elementToString(pnMessageResult.message, "text"))
@@ -1061,13 +1062,13 @@ class SubscriptionManagerTest : BaseTest() {
                 )
         )
         pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {
                 if (pnStatus.category == PNStatusCategory.Connected) {
                     gotStatus.addAndGet(1)
                 }
             }
 
-            override fun presence(pubnub: BasePubNub, pnPresenceEventResult: PNPresenceEventResult) {
+            override fun presence(pubnub: BasePubNubImpl<Listener>, pnPresenceEventResult: PNPresenceEventResult) {
                 val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
                 assertTrue(requests.size >= 1)
                 assertEquals("coolChannel", pnPresenceEventResult.channel)
@@ -1130,13 +1131,13 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {
                 if (pnStatus.category == PNStatusCategory.Connected) {
                     gotStatus.addAndGet(1)
                 }
             }
 
-            override fun presence(pubnub: BasePubNub, pnPresenceEventResult: PNPresenceEventResult) {
+            override fun presence(pubnub: BasePubNubImpl<Listener>, pnPresenceEventResult: PNPresenceEventResult) {
                 val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
                 assertTrue(requests.size >= 1)
                 assertEquals("coolChannel", pnPresenceEventResult.channel)
@@ -1272,10 +1273,10 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {
             }
 
-            override fun message(pubnub: BasePubNub, pnMessageResult: PNMessageResult) {
+            override fun message(pubnub: BasePubNubImpl<Listener>, pnMessageResult: PNMessageResult) {
                 println("--==" + pnMessageResult.message)
                 when (pnMessageResult.message.asJsonObject["text"].asString) {
 //                    "Message" -> { // TODO is it ever the case that we get messages on TT=0?
@@ -1347,8 +1348,8 @@ class SubscriptionManagerTest : BaseTest() {
                 )
         )
         pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {}
-            override fun message(pubnub: BasePubNub, pnMessageResult: PNMessageResult) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {}
+            override fun message(pubnub: BasePubNubImpl<Listener>, pnMessageResult: PNMessageResult) {
                 val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
                 assertTrue(requests.size >= 1)
                 assertEquals(10, pnMessageResult.message.asInt)
@@ -1409,8 +1410,8 @@ class SubscriptionManagerTest : BaseTest() {
                 )
         )
         pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {}
-            override fun message(pubnub: BasePubNub, pnMessageResult: PNMessageResult) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {}
+            override fun message(pubnub: BasePubNubImpl<Listener>, pnMessageResult: PNMessageResult) {
                 val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
                 assertTrue(requests.size >= 1)
                 assertEquals(
@@ -1495,7 +1496,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {
                 // do nothing
             }
         })
@@ -1584,8 +1585,8 @@ class SubscriptionManagerTest : BaseTest() {
                 )
         )
         pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {}
-            override fun message(pubnub: BasePubNub, pnMessageResult: PNMessageResult) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {}
+            override fun message(pubnub: BasePubNubImpl<Listener>, pnMessageResult: PNMessageResult) {
                 val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
                 for (request in requests) {
                     val channelGroupQuery = request.queryParameter("channel-group")
@@ -1641,8 +1642,8 @@ class SubscriptionManagerTest : BaseTest() {
                 )
         )
         pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {}
-            override fun message(pubnub: BasePubNub, pnMessageResult: PNMessageResult) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {}
+            override fun message(pubnub: BasePubNubImpl<Listener>, pnMessageResult: PNMessageResult) {
                 val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
                 for (request in requests) {
                     val channelGroups = request.queryParameter("channel-group")
@@ -1719,8 +1720,8 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {}
-            override fun message(pubnub: BasePubNub, pnMessageResult: PNMessageResult) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {}
+            override fun message(pubnub: BasePubNubImpl<Listener>, pnMessageResult: PNMessageResult) {
                 val requests =
                     findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
                 assertTrue(requests.size > 0)
@@ -1770,8 +1771,8 @@ class SubscriptionManagerTest : BaseTest() {
         pubnub.configuration.cipherKey = "hello"
         pubnub.configuration.useRandomInitializationVector = false
         pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {}
-            override fun message(pubnub: BasePubNub, pnMessageResult: PNMessageResult) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {}
+            override fun message(pubnub: BasePubNubImpl<Listener>, pnMessageResult: PNMessageResult) {
                 val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
                 assertTrue(requests.size > 0)
                 assertEquals("hey", pubnub.pubNubImpl.mapper.elementToString(pnMessageResult.message, "text"))
@@ -1827,8 +1828,8 @@ class SubscriptionManagerTest : BaseTest() {
         pubnub.configuration.cipherKey = "hello"
 
         pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {}
-            override fun message(pubnub: BasePubNub, pnMessageResult: PNMessageResult) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {}
+            override fun message(pubnub: BasePubNubImpl<Listener>, pnMessageResult: PNMessageResult) {
                 val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
                 assertTrue(requests.size > 0)
                 assertEquals(
@@ -1884,8 +1885,8 @@ class SubscriptionManagerTest : BaseTest() {
                 )
         )
         pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {}
-            override fun message(pubnub: BasePubNub, pnMessageResult: PNMessageResult) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {}
+            override fun message(pubnub: BasePubNubImpl<Listener>, pnMessageResult: PNMessageResult) {
                 val requests =
                     findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
                 assertTrue(requests.size >= 1)
@@ -1946,8 +1947,8 @@ class SubscriptionManagerTest : BaseTest() {
                 )
         )
         pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {}
-            override fun presence(pubnub: BasePubNub, pnPresenceEventResult: PNPresenceEventResult) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {}
+            override fun presence(pubnub: BasePubNubImpl<Listener>, pnPresenceEventResult: PNPresenceEventResult) {
                 if (atomic.get() == 0) {
                     assertEquals(true, pnPresenceEventResult.hereNowRefresh)
                     assertTrue(pnPresenceEventResult.occupancy!! == 2)
@@ -2007,8 +2008,8 @@ class SubscriptionManagerTest : BaseTest() {
                 )
         )
         pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {}
-            override fun presence(pubnub: BasePubNub, pnPresenceEventResult: PNPresenceEventResult) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {}
+            override fun presence(pubnub: BasePubNubImpl<Listener>, pnPresenceEventResult: PNPresenceEventResult) {
                 if (atomic.get() == 0) {
                     val joinList: MutableList<String> = ArrayList()
                     joinList.add("2220E216-5A30-49AD-A89C-1E0B5AE26AD7")
@@ -2072,8 +2073,8 @@ class SubscriptionManagerTest : BaseTest() {
                 )
         )
         pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {}
-            override fun presence(pubnub: BasePubNub, pnPresenceEventResult: PNPresenceEventResult) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {}
+            override fun presence(pubnub: BasePubNubImpl<Listener>, pnPresenceEventResult: PNPresenceEventResult) {
                 if (atomic.get() == 0) {
                     val leaveList: MutableList<String> = ArrayList()
                     leaveList.add("2220E216-5A30-49AD-A89C-1E0B5AE26AD7")
@@ -2137,8 +2138,8 @@ class SubscriptionManagerTest : BaseTest() {
                 )
         )
         pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {}
-            override fun presence(pubnub: BasePubNub, pnPresenceEventResult: PNPresenceEventResult) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {}
+            override fun presence(pubnub: BasePubNubImpl<Listener>, pnPresenceEventResult: PNPresenceEventResult) {
                 if (atomic.get() == 0) {
                     val timeoutList = listOf(
                         "2220E216-5A30-49AD-A89C-1E0B5AE26AD7",
@@ -2201,8 +2202,8 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {}
-            override fun presence(pubnub: BasePubNub, pnPresenceEventResult: PNPresenceEventResult) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {}
+            override fun presence(pubnub: BasePubNubImpl<Listener>, pnPresenceEventResult: PNPresenceEventResult) {
                 if (atomic.get() == 0) {
                     assertEquals("join", pnPresenceEventResult.event)
                     assertEquals("4a6d5df7-e301-4e73-a7b7-6af9ab484eb0", pnPresenceEventResult.uuid)
@@ -2281,8 +2282,8 @@ class SubscriptionManagerTest : BaseTest() {
                 )
         )
         pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {}
-            override fun presence(pubnub: BasePubNub, pnPresenceEventResult: PNPresenceEventResult) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {}
+            override fun presence(pubnub: BasePubNubImpl<Listener>, pnPresenceEventResult: PNPresenceEventResult) {
                 if (pnPresenceEventResult.event == "state-change") {
                     if (pnPresenceEventResult.state!!.asJsonObject.has("state") &&
                         pnPresenceEventResult.state!!.asJsonObject.get("state").asString == "cool"
@@ -2341,8 +2342,8 @@ class SubscriptionManagerTest : BaseTest() {
                 )
         )
         pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {}
-            override fun message(pubnub: BasePubNub, pnMessageResult: PNMessageResult) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {}
+            override fun message(pubnub: BasePubNubImpl<Listener>, pnMessageResult: PNMessageResult) {
                 val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
                 if (requests.size > 1) {
                     assertEquals("8", requests[1].queryParameter("tr").firstValue())
@@ -2370,15 +2371,15 @@ class SubscriptionManagerTest : BaseTest() {
 
         val atomic = AtomicInteger(0)
         val sub1: SubscribeCallback = object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {
                 atomic.addAndGet(1)
             }
 
-            override fun message(pubnub: BasePubNub, pnMessageResult: PNMessageResult) {
+            override fun message(pubnub: BasePubNubImpl<Listener>, pnMessageResult: PNMessageResult) {
                 atomic.addAndGet(1)
             }
 
-            override fun presence(pubnub: BasePubNub, pnPresenceEventResult: PNPresenceEventResult) {
+            override fun presence(pubnub: BasePubNubImpl<Listener>, pnPresenceEventResult: PNPresenceEventResult) {
                 atomic.addAndGet(1)
             }
         }
@@ -2480,7 +2481,7 @@ class SubscriptionManagerTest : BaseTest() {
                 )
         )
         val sub1: SubscribeCallback = object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {
                 if (pnStatus.category == PNStatusCategory.Connected) {
                     pubnub.pubNubImpl.unsubscribe(
                         channels = listOf("ch1")
@@ -2493,7 +2494,7 @@ class SubscriptionManagerTest : BaseTest() {
                 }
             }
 
-            override fun message(pubnub: BasePubNub, pnMessageResult: PNMessageResult) {
+            override fun message(pubnub: BasePubNubImpl<Listener>, pnMessageResult: PNMessageResult) {
                 val requests = findAll(
                     getRequestedFor(
                         getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres/0")
@@ -2585,7 +2586,7 @@ class SubscriptionManagerTest : BaseTest() {
                 )
         )
         val sub1: SubscribeCallback = object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {
                 if (pnStatus.category == PNStatusCategory.HeartbeatSuccess) {
                     statusRecieved.set(true)
                 }
@@ -2631,7 +2632,7 @@ class SubscriptionManagerTest : BaseTest() {
                 )
         )
         val sub1: SubscribeCallback = object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {
                 if (pnStatus.category == PNStatusCategory.HeartbeatSuccess) {
                     statusReceived.set(true)
                 }
@@ -2680,7 +2681,7 @@ class SubscriptionManagerTest : BaseTest() {
                 )
         )
         val sub1: SubscribeCallback = object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {
                 println(pnStatus)
 //                if (pnStatus.operation == PNOperationType.PNUnsubscribeOperation && !pnStatus.error) {
                 if (pnStatus.category == PNStatusCategory.Disconnected) { // TODO what is this trying to test really?
@@ -2759,7 +2760,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         val sub1: SubscribeCallback = object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {
                 if (pnStatus.category == PNStatusCategory.HeartbeatFailed) {
                     statusReceived.set(true)
                 }
@@ -2839,7 +2840,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         val sub1: SubscribeCallback = object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {
                 if (pnStatus.category == PNStatusCategory.HeartbeatFailed) {
                     statusReceived.set(true)
                 }
@@ -2901,7 +2902,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         val sub1: SubscribeCallback = object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {
                 if (pnStatus.category == PNStatusCategory.HeartbeatSuccess) {
                     statusReceived.set(true)
                 }
@@ -2982,7 +2983,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         val sub1: SubscribeCallback = object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {
                 if (pnStatus.category != PNStatusCategory.HeartbeatSuccess) {
                     statusReceived.set(true)
                 }
@@ -3052,7 +3053,7 @@ class SubscriptionManagerTest : BaseTest() {
                 )
         )
         pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {
                 if (pnStatus.category == PNStatusCategory.Connected) {
                     subscribeSuccess.set(true)
                 }
@@ -3124,7 +3125,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {
                 if (pnStatus.category == PNStatusCategory.Connected) {
                     subscribeSuccess.set(true)
                 }
@@ -3262,7 +3263,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         val sub1: SubscribeCallback = object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub, pnStatus: PNStatus) {
+            override fun status(pubnub: BasePubNubImpl<Listener>, pnStatus: PNStatus) {
                 if (pnStatus.category == PNStatusCategory.Connected) {
                     pubnub.pubNubImpl.unsubscribe(
                         channels = listOf("ch1")

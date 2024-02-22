@@ -2,7 +2,7 @@ package com.pubnub.internal.vendor
 
 import com.pubnub.api.PubNubException
 import com.pubnub.internal.PNConfiguration.Companion.isValid
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -27,7 +27,7 @@ object FileEncryptionUtil {
     const val CIPHER_TRANSFORMATION = "AES/CBC/PKCS5Padding"
 
     /**
-     * @see [PubNubImpl.encryptInputStream]
+     * @see [InternalPubNubClient.encryptInputStream]
      */
     @Throws(PubNubException::class)
     fun encrypt(inputStream: InputStream, cipherKey: String): InputStream {
@@ -35,7 +35,7 @@ object FileEncryptionUtil {
     }
 
     /**
-     * @see [PubNubImpl.decryptInputStream]
+     * @see [InternalPubNubClient.decryptInputStream]
      */
     @Throws(PubNubException::class)
     fun decrypt(inputStream: InputStream, cipherKey: String): InputStream {
@@ -62,7 +62,7 @@ object FileEncryptionUtil {
         }
     }
 
-    internal fun effectiveCipherKey(pubNub: PubNubImpl, cipherKey: String?): String? {
+    internal fun effectiveCipherKey(pubNub: InternalPubNubClient, cipherKey: String?): String? {
         return cipherKey
             ?: if (pubNub.configuration.cipherKey.isValid()) {
                 pubNub.configuration.cipherKey

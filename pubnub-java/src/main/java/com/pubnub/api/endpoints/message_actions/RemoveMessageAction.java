@@ -4,7 +4,7 @@ import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.models.consumer.message_actions.PNRemoveMessageActionResult;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -16,7 +16,7 @@ public class RemoveMessageAction extends Endpoint<PNRemoveMessageActionResult> {
     private Long messageTimetoken;
     private Long actionTimetoken;
 
-    public RemoveMessageAction(PubNubImpl pubnub) {
+    public RemoveMessageAction(InternalPubNubClient pubnub) {
         super(pubnub);
     }
 

@@ -5,7 +5,7 @@ import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects_api.uuid.PNSetUUIDMetadataResult;
 import com.pubnub.api.models.consumer.objects_api.uuid.PNUUIDMetadata;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -33,7 +33,7 @@ public class SetUUIDMetadata extends Endpoint<PNSetUUIDMetadataResult> {
     @Setter
     private String status;
 
-    public SetUUIDMetadata(final PubNubImpl pubnub) {
+    public SetUUIDMetadata(final InternalPubNubClient pubnub) {
         super(pubnub);
     }
 

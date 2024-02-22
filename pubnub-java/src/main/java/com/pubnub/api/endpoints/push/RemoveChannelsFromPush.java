@@ -4,7 +4,7 @@ import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNPushEnvironment;
 import com.pubnub.api.enums.PNPushType;
 import com.pubnub.api.models.consumer.push.PNPushRemoveChannelResult;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -24,7 +24,7 @@ public class RemoveChannelsFromPush extends Endpoint<PNPushRemoveChannelResult> 
     @Setter
     private String topic;
 
-    public RemoveChannelsFromPush(PubNubImpl pubnub) {
+    public RemoveChannelsFromPush(InternalPubNubClient pubnub) {
         super(pubnub);
     }
 

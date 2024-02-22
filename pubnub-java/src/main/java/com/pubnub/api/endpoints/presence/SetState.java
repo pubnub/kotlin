@@ -5,7 +5,7 @@ import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.presence.PNSetStateResult;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import com.pubnub.internal.endpoints.presence.Heartbeat;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -28,7 +28,7 @@ public class SetState extends Endpoint<PNSetStateResult> {
     private boolean withHeartbeat;
 
 
-    public SetState(PubNubImpl pubnub) {
+    public SetState(InternalPubNubClient pubnub) {
         super(pubnub);
     }
 

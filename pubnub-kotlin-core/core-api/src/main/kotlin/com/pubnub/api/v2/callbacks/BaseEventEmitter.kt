@@ -2,13 +2,13 @@ package com.pubnub.api.v2.callbacks
 
 import com.pubnub.api.callbacks.Listener
 
-interface BaseEventEmitter {
+interface BaseEventEmitter<T: BaseEventListener> {
     /**
      * Add a listener.
      *
      * @param listener The listener to be added.
      */
-    fun addListener(listener: BaseEventListener)
+    fun addListener(listener: T)
 
     /**
      * Remove a listener.

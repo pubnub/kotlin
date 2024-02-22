@@ -1,13 +1,13 @@
 package com.pubnub.api.builder;
 
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class UnsubscribeBuilder extends PubSubBuilder {
-    public UnsubscribeBuilder(PubNubImpl pubnub) {
+    public UnsubscribeBuilder(InternalPubNubClient pubnub) {
         super(pubnub);
     }
 

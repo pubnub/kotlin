@@ -7,17 +7,17 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.presence.PNGetStateResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.Endpoint
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.models.server.Envelope
 import com.pubnub.internal.toCsv
 import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [PubNubImpl.getPresenceState]
+ * @see [InternalPubNubClient.getPresenceState]
  */
 class GetState internal constructor(
-    pubnub: PubNubImpl,
+    pubnub: InternalPubNubClient,
     override val channels: List<String>,
     override val channelGroups: List<String>,
     override val uuid: String = pubnub.configuration.userId.value

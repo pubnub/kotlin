@@ -5,7 +5,7 @@ import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.Endpoint
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.endpoints.objects.internal.IncludeQueryParam
 import com.pubnub.internal.models.server.objects_api.ChannelMetadataInput
 import com.pubnub.internal.models.server.objects_api.EntityEnvelope
@@ -13,10 +13,10 @@ import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [PubNubImpl.setChannelMetadata]
+ * @see [InternalPubNubClient.setChannelMetadata]
  */
 class SetChannelMetadata internal constructor(
-    pubnub: PubNubImpl,
+    pubnub: InternalPubNubClient,
     private val name: String?,
     private val description: String?,
     private val custom: Any?,

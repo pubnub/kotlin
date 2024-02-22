@@ -4,16 +4,16 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.v2.callbacks.Result;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
 public abstract class Endpoint<T> implements ExtendedRemoteAction<T> {
-    protected final PubNubImpl pubnub;
+    protected final InternalPubNubClient pubnub;
     private volatile ExtendedRemoteAction<T> remoteAction = null;
 
-    public Endpoint(PubNubImpl pubnub) {
+    public Endpoint(InternalPubNubClient pubnub) {
         this.pubnub = pubnub;
     }
 

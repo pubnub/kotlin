@@ -1,9 +1,10 @@
 package com.pubnub.api.v2.entities
 
+import com.pubnub.api.v2.callbacks.BaseEventListener
 import com.pubnub.api.v2.subscriptions.BaseSubscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 
-interface BaseChannelMetadata : Subscribable {
+interface BaseChannelMetadata<Lis: BaseEventListener, Sub: BaseSubscription<Lis>> : Subscribable<Lis> {
     val id: String
-    override fun subscription(options: SubscriptionOptions): BaseSubscription
+    override fun subscription(options: SubscriptionOptions): Sub
 }

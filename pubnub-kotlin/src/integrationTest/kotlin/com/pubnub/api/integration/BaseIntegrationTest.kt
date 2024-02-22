@@ -3,7 +3,7 @@ package com.pubnub.api.integration
 import com.pubnub.api.CommonUtils.createInterceptor
 import com.pubnub.api.Keys
 import com.pubnub.api.PNConfiguration
-import com.pubnub.api.PubNub
+import com.pubnub.internal.PubNubImpl
 import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNLogVerbosity
 import org.junit.After
@@ -17,10 +17,10 @@ abstract class BaseIntegrationTest {
 
     protected val logger = LoggerFactory.getLogger(this.javaClass.simpleName)
 
-    val pubnub: PubNub by lazy { createPubNub() }
-    val server: PubNub by lazy { createServer() }
+    val pubnub: PubNubImpl by lazy { createPubNub() }
+    val server: PubNubImpl by lazy { createServer() }
 
-    private var mGuestClients = mutableListOf<PubNub>()
+    private var mGuestClients = mutableListOf<PubNubImpl>()
 
     @Before
     @BeforeEach
@@ -39,34 +39,34 @@ abstract class BaseIntegrationTest {
         mGuestClients.clear()
     }
 
-    protected fun createPubNub(): PubNub {
+    protected fun createPubNub(): PubNubImpl {
         var pnConfiguration = provideStagingConfiguration()
         if (pnConfiguration == null) {
             pnConfiguration = getBasicPnConfiguration()
         }
-        val pubNub = PubNub(pnConfiguration)
+        val pubNub = PubNubImpl(pnConfiguration)
         registerGuestClient(pubNub)
         return pubNub
     }
 
-    protected fun createPubNub(config: PNConfiguration): PubNub {
-        val pubNub = PubNub(config)
+    protected fun createPubNub(config: PNConfiguration): PubNubImpl {
+        val pubNub = PubNubImpl(config)
         registerGuestClient(pubNub)
         return pubNub
     }
 
-    private fun createServer(): PubNub {
-        val pubNub = PubNub(getServerPnConfiguration())
+    private fun createServer(): PubNubImpl {
+        val pubNub = PubNubImpl(getServerPnConfiguration())
         registerGuestClient(pubNub)
         return pubNub
     }
 
-    private fun registerGuestClient(guestClient: PubNub) {
+    private fun registerGuestClient(guestClient: PubNubImpl) {
         mGuestClients.add(guestClient)
     }
 
     protected open fun getBasicPnConfiguration(): PNConfiguration {
-        val pnConfiguration = PNConfiguration(userId = UserId(PubNub.generateUUID()))
+        val pnConfiguration = PNConfiguration(userId = UserId(PubNubImpl.generateUUID()))
         if (!needsServer()) {
             pnConfiguration.subscribeKey = Keys.subKey
             pnConfiguration.publishKey = Keys.pubKey
@@ -83,7 +83,7 @@ abstract class BaseIntegrationTest {
     }
 
     private fun getServerPnConfiguration(): PNConfiguration {
-        val pnConfiguration = PNConfiguration(userId = UserId(PubNub.generateUUID()))
+        val pnConfiguration = PNConfiguration(userId = UserId(PubNubImpl.generateUUID()))
         pnConfiguration.subscribeKey = Keys.pamSubKey
         pnConfiguration.publishKey = Keys.pamPubKey
         pnConfiguration.secretKey = Keys.pamSecKey
@@ -94,7 +94,7 @@ abstract class BaseIntegrationTest {
         return pnConfiguration
     }
 
-    private fun destroyClient(client: PubNub) {
+    private fun destroyClient(client: PubNubImpl) {
         client.unsubscribeAll()
         client.forceDestroy()
     }

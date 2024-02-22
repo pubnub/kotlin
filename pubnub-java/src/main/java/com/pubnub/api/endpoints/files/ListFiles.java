@@ -5,7 +5,7 @@ import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.files.PNListFilesResult;
 import com.pubnub.api.models.consumer.objects.PNPage;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -20,7 +20,7 @@ public class ListFiles extends Endpoint<PNListFilesResult> {
     @Setter
     private PNPage.PNNext next;
 
-    public ListFiles(String channel, PubNubImpl pubnub) {
+    public ListFiles(String channel, InternalPubNubClient pubnub) {
         super(pubnub);
         this.channel = channel;
     }
@@ -36,9 +36,9 @@ public class ListFiles extends Endpoint<PNListFilesResult> {
 
     public static class Builder implements BuilderSteps.ChannelStep<ListFiles> {
 
-        private final PubNubImpl pubnubInstance;
+        private final InternalPubNubClient pubnubInstance;
 
-        public Builder(PubNubImpl pubnubInstance) {
+        public Builder(InternalPubNubClient pubnubInstance) {
             this.pubnubInstance = pubnubInstance;
         }
 

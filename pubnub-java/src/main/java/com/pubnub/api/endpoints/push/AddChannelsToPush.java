@@ -4,7 +4,7 @@ import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNPushEnvironment;
 import com.pubnub.api.enums.PNPushType;
 import com.pubnub.api.models.consumer.push.PNPushAddChannelResult;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +25,7 @@ public class AddChannelsToPush extends Endpoint<PNPushAddChannelResult> {
     @Setter
     private String topic;
 
-    public AddChannelsToPush(PubNubImpl pubnub) {
+    public AddChannelsToPush(InternalPubNubClient pubnub) {
         super(pubnub);
     }
 

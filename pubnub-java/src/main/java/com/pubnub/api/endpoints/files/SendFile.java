@@ -5,7 +5,7 @@ import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.files.PNFileUploadResult;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -30,7 +30,7 @@ public class SendFile extends Endpoint<PNFileUploadResult> {
     @Setter
     private String cipherKey;
 
-    public SendFile(PubNubImpl pubnub, String channel, String fileName, InputStream inputStream) {
+    public SendFile(InternalPubNubClient pubnub, String channel, String fileName, InputStream inputStream) {
         super(pubnub);
         this.channel = channel;
         this.fileName = fileName;
@@ -51,15 +51,15 @@ public class SendFile extends Endpoint<PNFileUploadResult> {
         );
     }
 
-    public static Builder builder(PubNubImpl pubnub) {
+    public static Builder builder(InternalPubNubClient pubnub) {
         return new Builder(pubnub);
     }
 
     public static class Builder implements BuilderSteps.ChannelStep<FilesBuilderSteps.FileNameStep<FilesBuilderSteps.InputStreamStep<SendFile>>> {
 
-        private final PubNubImpl pubnub;
+        private final InternalPubNubClient pubnub;
 
-        Builder(PubNubImpl pubnub) {
+        Builder(InternalPubNubClient pubnub) {
             this.pubnub = pubnub;
         }
 
@@ -72,11 +72,11 @@ public class SendFile extends Endpoint<PNFileUploadResult> {
                 BuilderSteps.ChannelStep<FilesBuilderSteps.FileNameStep<FilesBuilderSteps.InputStreamStep<SendFile>>>,
                 FilesBuilderSteps.FileNameStep<FilesBuilderSteps.InputStreamStep<SendFile>>,
                 FilesBuilderSteps.InputStreamStep<SendFile> {
-            private final PubNubImpl pubnub;
+            private final InternalPubNubClient pubnub;
             private String channelValue;
             private String fileNameValue;
 
-            private InnerBuilder(PubNubImpl pubnub) {
+            private InnerBuilder(InternalPubNubClient pubnub) {
                 this.pubnub = pubnub;
             }
 

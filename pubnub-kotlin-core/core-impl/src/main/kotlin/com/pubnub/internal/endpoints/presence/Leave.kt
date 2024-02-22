@@ -5,13 +5,13 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.Endpoint
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.PubNubUtil
 import com.pubnub.internal.toCsv
 import retrofit2.Call
 import retrofit2.Response
 
-class Leave internal constructor(pubnub: PubNubImpl) : Endpoint<Void, Boolean>(pubnub) {
+class Leave internal constructor(pubnub: InternalPubNubClient) : Endpoint<Void, Boolean>(pubnub) {
 
     var channels = emptyList<String>()
     var channelGroups = emptyList<String>()

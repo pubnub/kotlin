@@ -3,7 +3,7 @@ package com.pubnub.api.integration
 import com.pubnub.api.CommonUtils.generatePayload
 import com.pubnub.api.CommonUtils.randomChannel
 import com.pubnub.api.CommonUtils.randomValue
-import com.pubnub.api.PubNub
+import com.pubnub.internal.PubNubImpl
 import com.pubnub.api.asyncRetry
 import com.pubnub.api.await
 import com.pubnub.api.callbacks.SubscribeCallback
@@ -224,7 +224,7 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
         assertEquals(9, pubnub.configuration.heartbeatInterval)
 
         pubnub.addListener(object : SubscribeCallback() {
-            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
+            override fun status(pubnub: PubNubImpl, pnStatus: PNStatus) {
                 if (pnStatus.category == PNStatusCategory.Connected && pnStatus.channels.contains(expectedChannel)) {
                     subscribeSuccess.set(true)
                 } else if (pnStatus.category == PNStatusCategory.HeartbeatSuccess) {
@@ -259,7 +259,7 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
             }
         }.apply { level = HttpLoggingInterceptor.Level.BASIC }
 
-        val pubnub = PubNub(config)
+        val pubnub = PubNubImpl(config)
 
         // when
         try {

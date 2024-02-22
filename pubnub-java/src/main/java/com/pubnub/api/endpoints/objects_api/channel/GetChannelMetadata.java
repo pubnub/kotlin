@@ -6,14 +6,14 @@ import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadata;
 import com.pubnub.api.models.consumer.objects_api.channel.PNGetChannelMetadataResult;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Accessors(chain = true, fluent = true)
 public class GetChannelMetadata extends Endpoint<PNGetChannelMetadataResult> {
-    public GetChannelMetadata(String channel, final PubNubImpl pubnubInstance) {
+    public GetChannelMetadata(String channel, final InternalPubNubClient pubnubInstance) {
         super(pubnubInstance);
         this.channel = channel;
     }
@@ -35,13 +35,13 @@ public class GetChannelMetadata extends Endpoint<PNGetChannelMetadataResult> {
         );
     }
 
-    public static Builder builder(final PubNubImpl pubnubInstance) {
+    public static Builder builder(final InternalPubNubClient pubnubInstance) {
         return new Builder(pubnubInstance);
     }
 
     @AllArgsConstructor
     public static class Builder implements BuilderSteps.ChannelStep<GetChannelMetadata> {
-        private final PubNubImpl pubnubInstance;
+        private final InternalPubNubClient pubnubInstance;
 
         @Override
         public GetChannelMetadata channel(final String channel) {

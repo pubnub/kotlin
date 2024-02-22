@@ -7,7 +7,7 @@ import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects_api.membership.PNGetMembershipsResult;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -27,7 +27,7 @@ public class GetMemberships extends Endpoint<PNGetMembershipsResult> {
     private boolean includeCustom;
     private Include.PNChannelDetailsLevel includeChannel;
 
-    public GetMemberships(PubNubImpl pubnub) {
+    public GetMemberships(InternalPubNubClient pubnub) {
         super(pubnub);
     }
 

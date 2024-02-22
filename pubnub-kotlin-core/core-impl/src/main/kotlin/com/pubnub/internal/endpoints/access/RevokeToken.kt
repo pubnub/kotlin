@@ -6,14 +6,14 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.Endpoint
 import com.pubnub.internal.PNConfiguration.Companion.isValid
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.models.server.access_manager.v3.RevokeTokenResponse
 import retrofit2.Call
 import retrofit2.Response
 import java.net.URLEncoder
 
 class RevokeToken(
-    pubnub: PubNubImpl,
+    pubnub: InternalPubNubClient,
     private val token: String
 ) : Endpoint<RevokeTokenResponse, Unit>(pubnub), IRevokeToken {
     override fun validateParams() {

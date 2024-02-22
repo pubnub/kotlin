@@ -7,20 +7,20 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.files.PNDownloadFileResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.Endpoint
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [PubNubImpl.downloadFile]
+ * @see [InternalPubNubClient.downloadFile]
  */
 class DownloadFile(
     private val channel: String,
     private val fileName: String,
     private val fileId: String,
     private val cryptoModule: CryptoModule? = null,
-    pubNub: PubNubImpl
+    pubNub: InternalPubNubClient
 ) : Endpoint<ResponseBody, PNDownloadFileResult>(pubNub), IDownloadFile {
 
     @Throws(PubNubException::class)

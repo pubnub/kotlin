@@ -2,7 +2,7 @@ package com.pubnub.api.endpoints.pubsub;
 
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.models.consumer.PNPublishResult;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -24,7 +24,7 @@ public class Publish extends Endpoint<PNPublishResult> {
     @Setter
     private Integer ttl;
 
-    public Publish(PubNubImpl pubnub) {
+    public Publish(InternalPubNubClient pubnub) {
         super(pubnub);
         this.replicate = true;
     }

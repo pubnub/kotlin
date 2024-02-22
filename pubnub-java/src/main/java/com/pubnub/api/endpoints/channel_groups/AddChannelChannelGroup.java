@@ -2,7 +2,7 @@ package com.pubnub.api.endpoints.channel_groups;
 
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsAddChannelResult;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -16,7 +16,7 @@ public class AddChannelChannelGroup extends Endpoint<PNChannelGroupsAddChannelRe
     @Setter
     private List<String> channels;
 
-    public AddChannelChannelGroup(PubNubImpl pubnub) {
+    public AddChannelChannelGroup(InternalPubNubClient pubnub) {
         super(pubnub);
         channels = new ArrayList<>();
     }

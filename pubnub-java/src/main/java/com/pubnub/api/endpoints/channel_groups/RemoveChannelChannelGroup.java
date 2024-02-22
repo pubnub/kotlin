@@ -2,7 +2,7 @@ package com.pubnub.api.endpoints.channel_groups;
 
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsRemoveChannelResult;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -17,7 +17,7 @@ public class RemoveChannelChannelGroup extends Endpoint<PNChannelGroupsRemoveCha
     private List<String> channels;
 
 
-    public RemoveChannelChannelGroup(PubNubImpl pubnub) {
+    public RemoveChannelChannelGroup(InternalPubNubClient pubnub) {
         super(pubnub);
         channels = new ArrayList<>();
     }

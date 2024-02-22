@@ -26,7 +26,7 @@ import java.util.function.Consumer
  * @param Output Parsed and encapsulated response for endusers.
  * @property pubnub The client instance.
  */
-abstract class Endpoint<Input, Output> protected constructor(protected val pubnub: PubNubImpl) :
+abstract class Endpoint<Input, Output> protected constructor(protected val pubnub: InternalPubNubClient) :
     ExtendedRemoteAction<Output> {
 
     private val log = LoggerFactory.getLogger(this.javaClass.simpleName)

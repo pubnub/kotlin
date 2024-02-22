@@ -1,7 +1,7 @@
 package com.pubnub.api.integration
 
 import com.pubnub.api.CommonUtils.randomChannel
-import com.pubnub.api.PubNub
+import com.pubnub.internal.PubNubImpl
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.files.PNFileUploadResult
@@ -87,13 +87,13 @@ class FilesIntegrationTest : BaseIntegrationTest() {
         val connectedLatch = CountDownLatch(1)
         val fileEventReceived = CountDownLatch(1)
         pubnub.addListener(object : LimitedListener() {
-            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
+            override fun status(pubnub: PubNubImpl, pnStatus: PNStatus) {
                 if (pnStatus.category == PNStatusCategory.Connected) {
                     connectedLatch.countDown()
                 }
             }
 
-            override fun file(pubnub: PubNub, event: PNFileEventResult) {
+            override fun file(pubnub: PubNubImpl, event: PNFileEventResult) {
                 if (event.file.name == fileName) {
                     fileEventReceived.countDown()
                 }
@@ -141,10 +141,10 @@ class FilesIntegrationTest : BaseIntegrationTest() {
     }
 
     private abstract class LimitedListener : com.pubnub.api.callbacks.SubscribeCallback() {
-        override fun presence(pubnub: PubNub, event: PNPresenceEventResult) {}
-        override fun message(pubnub: PubNub, event: PNMessageResult) {}
-        override fun signal(pubnub: PubNub, event: PNSignalResult) {}
-        override fun objects(pubnub: PubNub, event: PNObjectEventResult) {}
-        override fun messageAction(pubnub: PubNub, event: PNMessageActionResult) {}
+        override fun presence(pubnub: PubNubImpl, event: PNPresenceEventResult) {}
+        override fun message(pubnub: PubNubImpl, event: PNMessageResult) {}
+        override fun signal(pubnub: PubNubImpl, event: PNSignalResult) {}
+        override fun objects(pubnub: PubNubImpl, event: PNObjectEventResult) {}
+        override fun messageAction(pubnub: PubNubImpl, event: PNMessageActionResult) {}
     }
 }

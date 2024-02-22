@@ -14,7 +14,7 @@ import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResu
 import com.pubnub.api.models.consumer.pubsub.objects.ObjectPayload
 import com.pubnub.internal.PNConfiguration
 import com.pubnub.internal.PNConfiguration.Companion.isValid
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.PubNubUtil
 import com.pubnub.internal.extension.tryDecryptMessage
 import com.pubnub.internal.managers.DuplicationManager
@@ -28,7 +28,7 @@ import com.pubnub.internal.subscribe.PRESENCE_CHANNEL_SUFFIX
 import org.slf4j.LoggerFactory
 
 internal class SubscribeMessageProcessor(
-    private val pubnub: PubNubImpl,
+    private val pubnub: InternalPubNubClient,
     private val duplicationManager: DuplicationManager
 ) {
 

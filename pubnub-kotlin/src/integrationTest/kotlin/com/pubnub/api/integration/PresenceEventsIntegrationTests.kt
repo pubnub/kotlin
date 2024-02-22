@@ -3,7 +3,7 @@ package com.pubnub.api.integration
 import com.pubnub.api.CommonUtils
 import com.pubnub.api.CommonUtils.generatePayload
 import com.pubnub.api.CommonUtils.randomChannel
-import com.pubnub.api.PubNub
+import com.pubnub.internal.PubNubImpl
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.listen
@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class PresenceEventsIntegrationTests : BaseIntegrationTest() {
 
-    lateinit var guest: PubNub
+    lateinit var guest: PubNubImpl
 
     override fun onBefore() {
         guest = createPubNub()
@@ -36,9 +36,9 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
         val expectedChannel = randomChannel()
 
         pubnub.addListener(object : SubscribeCallback() {
-            override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
+            override fun status(pubnub: PubNubImpl, pnStatus: PNStatus) {}
 
-            override fun presence(pubnub: PubNub, event: PNPresenceEventResult) {
+            override fun presence(pubnub: PubNubImpl, event: PNPresenceEventResult) {
                 assertEquals("join", event.event)
                 assertEquals(expectedChannel, event.channel)
                 success.set(true)
@@ -118,9 +118,9 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
         guest.subscribeToBlocking(expectedChannel)
 
         pubnub.addListener(object : SubscribeCallback() {
-            override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
+            override fun status(pubnub: PubNubImpl, pnStatus: PNStatus) {}
 
-            override fun presence(pubnub: PubNub, event: PNPresenceEventResult) {
+            override fun presence(pubnub: PubNubImpl, event: PNPresenceEventResult) {
                 if (event.event == "leave") {
                     assertEquals(expectedChannel, event.channel)
                     success.set(true)
@@ -154,13 +154,13 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
 
         pubnub.addListener(object : SubscribeCallback() {
 
-            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
+            override fun status(pubnub: PubNubImpl, pnStatus: PNStatus) {
                 if (pnStatus.category == PNStatusCategory.Connected) {
                     subscribed.set(true)
                 }
             }
 
-            override fun presence(pubnub: PubNub, event: PNPresenceEventResult) {
+            override fun presence(pubnub: PubNubImpl, event: PNPresenceEventResult) {
                 if (event.event == "timeout") {
                     assertEquals(expectedChannel, event.channel)
                     timeoutReceived.set(true)
@@ -190,9 +190,9 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
 
         pubnub.addListener(object : SubscribeCallback() {
 
-            override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
+            override fun status(pubnub: PubNubImpl, pnStatus: PNStatus) {}
 
-            override fun presence(pubnub: PubNub, event: PNPresenceEventResult) {
+            override fun presence(pubnub: PubNubImpl, event: PNPresenceEventResult) {
                 if (event.event == "state-change") {
                     assertEquals(pubnub.configuration.userId.value, event.uuid)
                     success.set(true)

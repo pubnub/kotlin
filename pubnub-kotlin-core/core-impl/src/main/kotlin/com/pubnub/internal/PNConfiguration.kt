@@ -251,14 +251,14 @@ open class PNConfiguration @Throws(PubNubException::class) constructor(
     var filterExpression: String = ""
 
     /**
-     * Whether to include a [PubNubImpl.instanceId] with every request.
+     * Whether to include a [InternalPubNubClient.instanceId] with every request.
      *
      * Defaults to `false`.
      */
     var includeInstanceIdentifier = false
 
     /**
-     * Whether to include a [PubNubImpl.requestId] with every request.
+     * Whether to include a [InternalPubNubClient.requestId] with every request.
      *
      * Defaults to `true`.
      */

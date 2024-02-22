@@ -1,7 +1,7 @@
 package com.pubnub.internal.managers
 
 import com.pubnub.api.enums.PNLogVerbosity
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.interceptor.SignatureInterceptor
 import com.pubnub.internal.services.AccessManagerService
 import com.pubnub.internal.services.ChannelGroupService
@@ -24,7 +24,7 @@ import retrofit2.Retrofit
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.TimeUnit
 
-class RetrofitManager(val pubnub: PubNubImpl) {
+class RetrofitManager(val pubnub: InternalPubNubClient) {
 
     private var transactionClientInstance: OkHttpClient? = null
 

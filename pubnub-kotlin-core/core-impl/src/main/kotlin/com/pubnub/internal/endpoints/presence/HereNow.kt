@@ -7,17 +7,17 @@ import com.pubnub.api.models.consumer.presence.PNHereNowOccupantData
 import com.pubnub.api.models.consumer.presence.PNHereNowResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.Endpoint
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.models.server.Envelope
 import com.pubnub.internal.toCsv
 import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [PubNubImpl.hereNow]
+ * @see [InternalPubNubClient.hereNow]
  */
 class HereNow internal constructor(
-    pubnub: PubNubImpl,
+    pubnub: InternalPubNubClient,
     override val channels: List<String> = emptyList(),
     override val channelGroups: List<String> = emptyList(),
     override val includeState: Boolean = false,

@@ -1,7 +1,7 @@
 package com.pubnub.api.integration
 
 import com.pubnub.api.CommonUtils.randomValue
-import com.pubnub.api.PubNub
+import com.pubnub.internal.PubNubImpl
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
@@ -131,9 +131,9 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
 
         pubnub.addListener(
             listener = object : SubscribeCallback() {
-                override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
+                override fun status(pubnub: PubNubImpl, pnStatus: PNStatus) {}
 
-                override fun objects(pubnub: PubNub, event: PNObjectEventResult) {
+                override fun objects(pubnub: PubNubImpl, event: PNObjectEventResult) {
                     println(event)
                     countDownLatch.countDown()
                 }
@@ -171,14 +171,14 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
 
         metadataSub.addListener(
             listener = object : com.pubnub.api.v2.callbacks.EventListener() {
-                override fun objects(pubnub: PubNub, result: PNObjectEventResult) {
+                override fun objects(pubnub: PubNubImpl, result: PNObjectEventResult) {
                     countDownLatch.countDown()
                 }
             }
         )
         userMetadataSub.addListener(
             listener = object : com.pubnub.api.v2.callbacks.EventListener() {
-                override fun objects(pubnub: PubNub, result: PNObjectEventResult) {
+                override fun objects(pubnub: PubNubImpl, result: PNObjectEventResult) {
                     countDownLatch.countDown()
                 }
             }

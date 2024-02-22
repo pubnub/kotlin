@@ -1,22 +1,23 @@
 package com.pubnub.internal.v2.entities
 
+import com.pubnub.api.v2.callbacks.BaseEventListener
 import com.pubnub.api.v2.entities.BaseChannel
+import com.pubnub.api.v2.subscriptions.BaseSubscription
 import com.pubnub.api.v2.subscriptions.ReceivePresenceEventsImpl
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.SubscriptionFactory
 import com.pubnub.internal.subscribe.PRESENCE_CHANNEL_SUFFIX
-import com.pubnub.internal.v2.subscription.BaseSubscriptionImpl
 
-open class BaseChannelImpl<T : BaseSubscriptionImpl>(
-    internal val pubnub: PubNubImpl,
+open class BaseChannelImpl<Lis: BaseEventListener, Sub: BaseSubscription<Lis>>(
+    internal val pubnub: InternalPubNubClient,
     private val channelName: ChannelName,
-    private val subscriptionFactory: SubscriptionFactory<T>
-) : BaseChannel {
+    private val subscriptionFactory: SubscriptionFactory<Sub>
+) : BaseChannel<Lis, Sub> {
 
     override val name: String = channelName.id
 
-    override fun subscription(options: SubscriptionOptions): T {
+    override fun subscription(options: SubscriptionOptions): Sub {
         val channels = buildSet<ChannelName> {
             add(channelName)
             if (options.allOptions.filterIsInstance<ReceivePresenceEventsImpl>().isNotEmpty()) {
@@ -49,7 +50,7 @@ open class BaseChannelImpl<T : BaseSubscriptionImpl>(
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is BaseChannelImpl<*>) return false
+        if (other !is BaseChannelImpl<*,*>) return false
 
         if (pubnub != other.pubnub) return false
         if (name != other.name) return false

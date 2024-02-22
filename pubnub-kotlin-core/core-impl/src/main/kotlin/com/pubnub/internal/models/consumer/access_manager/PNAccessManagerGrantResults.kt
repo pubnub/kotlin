@@ -1,10 +1,10 @@
 package com.pubnub.internal.models.consumer.access_manager
 
 import com.google.gson.annotations.SerializedName
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 
 /**
- * Result of the [PubNubImpl.grant] operation
+ * Result of the [InternalPubNubClient.grant] operation
  *
  * @property level Permissions level, one of `subkey`, `subkey+auth`, `channel`, `channel-group`,
  * `channel-group+auth` level.

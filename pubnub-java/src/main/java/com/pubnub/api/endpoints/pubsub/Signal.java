@@ -4,7 +4,7 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.models.consumer.PNPublishResult;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -17,7 +17,7 @@ public class Signal extends Endpoint<PNPublishResult> {
     @Setter
     private String channel;
 
-    public Signal(PubNubImpl pubnub) {
+    public Signal(InternalPubNubClient pubnub) {
         super(pubnub);
     }
 

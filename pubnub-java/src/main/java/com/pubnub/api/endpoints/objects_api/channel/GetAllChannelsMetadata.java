@@ -6,7 +6,7 @@ import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects_api.channel.PNGetAllChannelsMetadataResult;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import com.pubnub.internal.models.consumer.objects.PNKey;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -33,7 +33,7 @@ public class GetAllChannelsMetadata
     @Setter
     private boolean includeCustom;
 
-    public GetAllChannelsMetadata(final PubNubImpl pubnubInstance) {
+    public GetAllChannelsMetadata(final InternalPubNubClient pubnubInstance) {
         super(pubnubInstance);
     }
 

@@ -6,16 +6,16 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsRemoveChannelResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.Endpoint
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.toCsv
 import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [PubNubImpl.removeChannelsFromChannelGroup]
+ * @see [InternalPubNubClient.removeChannelsFromChannelGroup]
  */
 class RemoveChannelChannelGroup internal constructor(
-    pubnub: PubNubImpl,
+    pubnub: InternalPubNubClient,
     override val channelGroup: String,
     override val channels: List<String>
 ) : Endpoint<Void, PNChannelGroupsRemoveChannelResult>(pubnub), IRemoveChannelChannelGroup {

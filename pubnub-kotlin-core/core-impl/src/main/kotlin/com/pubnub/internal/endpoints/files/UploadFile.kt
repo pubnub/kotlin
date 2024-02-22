@@ -5,7 +5,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.v2.callbacks.Result
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.models.server.files.FileUploadRequestDetails
 import com.pubnub.internal.models.server.files.FormField
 import com.pubnub.internal.services.S3Service
@@ -153,7 +153,7 @@ internal class UploadFile(
         return elements.item(0)?.firstChild?.nodeValue ?: "N/A"
     }
 
-    internal class Factory(private val pubNub: PubNubImpl) {
+    internal class Factory(private val pubNub: InternalPubNubClient) {
         fun create(
             fileName: String,
             content: ByteArray,

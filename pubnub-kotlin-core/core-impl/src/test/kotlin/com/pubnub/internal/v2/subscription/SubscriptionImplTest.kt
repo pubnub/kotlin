@@ -2,14 +2,15 @@ package com.pubnub.internal.v2.subscription
 
 import com.google.gson.JsonNull
 import com.pubnub.api.UserId
+import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.v2.subscriptions.BaseSubscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
-import com.pubnub.internal.BasePubNub
+import com.pubnub.internal.BasePubNubImpl
 import com.pubnub.internal.PNConfiguration
 import com.pubnub.internal.TestPubNub
-import com.pubnub.internal.v2.callbacks.EventListener
+import com.pubnub.internal.v2.callbacks.InternalEventListener
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -72,8 +73,8 @@ class SubscriptionImplTest {
     fun close() {
         // given
         subscription.subscribe()
-        subscription.addListener(object : EventListener {
-            override fun message(pubnub: BasePubNub, result: PNMessageResult) {
+        subscription.addListener(object : InternalEventListener {
+            override fun message(pubnub: BasePubNubImpl<Listener>, result: PNMessageResult) {
                 throw IllegalStateException("We should not get a message after close!")
             }
         })
@@ -99,8 +100,8 @@ class SubscriptionImplTest {
         // given
         val subWithFilter =
             pubnub.pubNubImpl.channel(channelName).subscription(SubscriptionOptions.filter { it !is PNMessageResult })
-        subWithFilter.addListener(object : EventListener {
-            override fun message(pubnub: BasePubNub, result: PNMessageResult) {
+        subWithFilter.addListener(object : InternalEventListener {
+            override fun message(pubnub: BasePubNubImpl<Listener>, result: PNMessageResult) {
                 throw IllegalStateException("Message should have been filtered out!")
             }
         })
@@ -121,8 +122,8 @@ class SubscriptionImplTest {
     @Test
     fun `subscription shouldn't get events until subscribe is called`() {
         // given
-        subscription.addListener(object : EventListener {
-            override fun message(pubnub: BasePubNub, result: PNMessageResult) {
+        subscription.addListener(object : InternalEventListener {
+            override fun message(pubnub: BasePubNubImpl<Listener>, result: PNMessageResult) {
                 throw IllegalStateException("Message should not be received without subscribe call!")
             }
         })

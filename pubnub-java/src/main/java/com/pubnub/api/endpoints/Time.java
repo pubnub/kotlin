@@ -1,11 +1,11 @@
 package com.pubnub.api.endpoints;
 
 import com.pubnub.api.models.consumer.PNTimeResult;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 
 public class Time extends Endpoint<PNTimeResult> {
 
-    public Time(PubNubImpl pubnub) {
+    public Time(InternalPubNubClient pubnub) {
         super(pubnub);
     }
 

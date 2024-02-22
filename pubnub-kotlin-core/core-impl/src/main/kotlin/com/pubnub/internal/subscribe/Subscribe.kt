@@ -3,7 +3,7 @@ package com.pubnub.internal.subscribe
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.retry.RetryConfiguration
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.eventengine.EffectDispatcher
 import com.pubnub.internal.managers.ListenerManager
 import com.pubnub.internal.managers.SubscribeEventEngineManager
@@ -30,7 +30,7 @@ internal class Subscribe(
 ) {
     companion object {
         internal fun create(
-            pubNub: PubNubImpl,
+            pubNub: InternalPubNubClient,
             listenerManager: ListenerManager,
             retryConfiguration: RetryConfiguration,
             eventEnginesConf: EventEnginesConf,
@@ -54,7 +54,7 @@ internal class Subscribe(
         }
 
         private fun createAndStartSubscribeEventEngineManager(
-            pubNub: PubNubImpl,
+            pubNub: InternalPubNubClient,
             messageProcessor: SubscribeMessageProcessor,
             eventEnginesConf: EventEnginesConf,
             retryConfiguration: RetryConfiguration,

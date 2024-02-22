@@ -5,7 +5,7 @@ import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects_api.uuid.PNGetUUIDMetadataResult;
 import com.pubnub.api.models.consumer.objects_api.uuid.PNUUIDMetadata;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -16,7 +16,7 @@ public class GetUUIDMetadata extends Endpoint<PNGetUUIDMetadataResult> {
     private String uuid;
     private boolean includeCustom;
 
-    public GetUUIDMetadata(final PubNubImpl pubnub) {
+    public GetUUIDMetadata(final InternalPubNubClient pubnub) {
         super(pubnub);
     }
 

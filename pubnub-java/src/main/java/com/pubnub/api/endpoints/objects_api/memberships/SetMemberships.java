@@ -8,7 +8,7 @@ import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects_api.membership.PNChannelMembership;
 import com.pubnub.api.models.consumer.objects_api.membership.PNSetMembershipResult;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import com.pubnub.internal.models.consumer.objects.PNMembershipKey;
 import com.pubnub.internal.models.consumer.objects.membership.ChannelMembershipInput;
 import com.pubnub.internal.models.consumer.objects.membership.PNChannelMembership.Partial;
@@ -36,7 +36,7 @@ public class SetMemberships extends Endpoint<PNSetMembershipResult> {
     private boolean includeCustom;
     private Include.PNChannelDetailsLevel includeChannel;
 
-    public SetMemberships(@NotNull Collection<PNChannelMembership> channelMemberships, final PubNubImpl pubnubInstance) {
+    public SetMemberships(@NotNull Collection<PNChannelMembership> channelMemberships, final InternalPubNubClient pubnubInstance) {
         super(pubnubInstance);
         this.channels = channelMemberships;
     }
@@ -69,13 +69,13 @@ public class SetMemberships extends Endpoint<PNSetMembershipResult> {
         );
     }
 
-    public static Builder builder(final PubNubImpl pubnubInstance) {
+    public static Builder builder(final InternalPubNubClient pubnubInstance) {
         return new Builder(pubnubInstance);
     }
 
     @AllArgsConstructor
     public static class Builder {
-        private final PubNubImpl pubnubInstance;
+        private final InternalPubNubClient pubnubInstance;
 
         public SetMemberships channelMemberships(@NotNull final Collection<PNChannelMembership> channelMemberships) {
             return new SetMemberships(channelMemberships, pubnubInstance);

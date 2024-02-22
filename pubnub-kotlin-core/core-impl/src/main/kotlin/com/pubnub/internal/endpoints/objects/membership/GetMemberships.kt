@@ -3,7 +3,7 @@ package com.pubnub.internal.endpoints.objects.membership
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.Endpoint
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.endpoints.objects.internal.CollectionQueryParameters
 import com.pubnub.internal.endpoints.objects.internal.IncludeQueryParam
 import com.pubnub.internal.extension.toPNChannelMembershipArrayResult
@@ -14,10 +14,10 @@ import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [PubNubImpl.getMemberships]
+ * @see [InternalPubNubClient.getMemberships]
  */
 class GetMemberships internal constructor(
-    pubnub: PubNubImpl,
+    pubnub: InternalPubNubClient,
     private val uuid: String,
     private val collectionQueryParameters: CollectionQueryParameters,
     private val includeQueryParam: IncludeQueryParam

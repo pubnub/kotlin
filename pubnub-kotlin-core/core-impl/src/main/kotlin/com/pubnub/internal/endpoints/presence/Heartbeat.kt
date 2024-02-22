@@ -5,13 +5,13 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.Endpoint
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.PubNubUtil
 import retrofit2.Call
 import retrofit2.Response
 
 class Heartbeat internal constructor(
-    pubnub: PubNubImpl,
+    pubnub: InternalPubNubClient,
     val channels: List<String> = listOf(),
     val channelGroups: List<String> = listOf(),
     val state: Any? = null

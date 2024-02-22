@@ -7,13 +7,13 @@ import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions;
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 
 import java.util.List;
 
 public class GrantTokenBuilder extends AbstractGrantTokenBuilder<GrantTokenBuilder> {
 
-    public GrantTokenBuilder(PubNubImpl pubnub, GrantToken grantToken) {
+    public GrantTokenBuilder(InternalPubNubClient pubnub, GrantToken grantToken) {
         super(pubnub, grantToken);
     }
 

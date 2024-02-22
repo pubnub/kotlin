@@ -3,7 +3,7 @@ package com.pubnub.internal.endpoints.objects.membership
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.Endpoint
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.endpoints.objects.internal.CollectionQueryParameters
 import com.pubnub.internal.endpoints.objects.internal.IncludeQueryParam
 import com.pubnub.internal.extension.toPNChannelMembershipArrayResult
@@ -18,10 +18,10 @@ import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [PubNubImpl.manageMemberships]
+ * @see [InternalPubNubClient.manageMemberships]
  */
 class ManageMemberships internal constructor(
-    pubnub: PubNubImpl,
+    pubnub: InternalPubNubClient,
     private val channelsToSet: Collection<ChannelMembershipInput>,
     private val channelsToRemove: Collection<String>,
     private val uuid: String,

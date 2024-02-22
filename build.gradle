@@ -1,9 +1,10 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.7.20' apply(false)
+    id 'org.jetbrains.kotlin.jvm' version '1.8.22' apply(false)
     id 'com.github.johnrengelman.shadow' version '7.1.2' apply(false)
     id "org.jlleitschuh.gradle.ktlint" version "11.0.0" apply(false)
-    id 'org.jetbrains.dokka' version '1.7.10' apply(false)
+    id 'org.jetbrains.dokka' version '1.8.20' apply(false)
     id 'org.unbroken-dome.test-sets' version '4.0.0' apply(false)
     id "com.github.ben-manes.versions" version '0.42.0' apply(false)
     id "com.vanniktech.maven.publish" version '0.22.0' apply(false)
+    id 'me.champeau.gradle.japicmp' version '0.4.2' apply(false)
 }

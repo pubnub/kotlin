@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints;
 
 import com.pubnub.api.models.consumer.history.PNMessageCountResult;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -24,7 +24,7 @@ public class MessageCounts extends Endpoint<PNMessageCountResult> {
     @Setter
     private List<Long> channelsTimetoken;
 
-    public MessageCounts(PubNubImpl pubnub) {
+    public MessageCounts(InternalPubNubClient pubnub) {
         super(pubnub);
     }
 

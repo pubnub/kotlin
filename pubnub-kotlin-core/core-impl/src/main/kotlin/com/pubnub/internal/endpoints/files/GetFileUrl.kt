@@ -7,7 +7,7 @@ import com.pubnub.api.models.consumer.files.PNFileUrlResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.internal.Endpoint
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.PubNubUtil
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -17,13 +17,13 @@ import java.util.concurrent.Executors
 import java.util.function.Consumer
 
 /**
- * @see [PubNubImpl.getFileUrl]
+ * @see [InternalPubNubClient.getFileUrl]
  */
 class GetFileUrl(
     private val channel: String,
     private val fileName: String,
     private val fileId: String,
-    pubNub: PubNubImpl
+    pubNub: InternalPubNubClient
 ) : Endpoint<ResponseBody, PNFileUrlResult>(pubNub), IGetFileUrl {
 
     private lateinit var cachedCallback: Consumer<Result<PNFileUrlResult>>

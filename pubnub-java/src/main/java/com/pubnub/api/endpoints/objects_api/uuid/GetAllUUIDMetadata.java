@@ -6,7 +6,7 @@ import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects_api.uuid.PNGetAllUUIDMetadataResult;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -32,7 +32,7 @@ public class GetAllUUIDMetadata
     @Setter
     private Collection<PNSortKey> sort = Collections.emptyList();
 
-    public GetAllUUIDMetadata(final PubNubImpl pubnub) {
+    public GetAllUUIDMetadata(final InternalPubNubClient pubnub) {
         super(pubnub);
     }
 

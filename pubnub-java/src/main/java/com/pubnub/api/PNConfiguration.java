@@ -28,7 +28,7 @@ import java.util.concurrent.ConcurrentMap;
 public class PNConfiguration {
     private final com.pubnub.internal.PNConfiguration pnConfiguration;
 
-    com.pubnub.internal.PNConfiguration getPnConfiguration() {
+    public com.pubnub.internal.PNConfiguration getPnConfiguration() {
         return pnConfiguration;
     }
 

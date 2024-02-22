@@ -5,7 +5,7 @@ import com.google.gson.JsonPrimitive
 import com.pubnub.api.CommonUtils
 import com.pubnub.api.CommonUtils.emoji
 import com.pubnub.api.CommonUtils.randomChannel
-import com.pubnub.api.PubNub
+import com.pubnub.internal.PubNubImpl
 import com.pubnub.api.PubNubError
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.models.consumer.history.HistoryMessageType
@@ -69,7 +69,7 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
         val cipherKey = "enigma"
         pnConfigurationWithCrypto.cryptoModule =
             CryptoModule.createAesCbcCryptoModule(cipherKey = cipherKey, randomIv = false)
-        val pubNubWithCrypto = PubNub(pnConfigurationWithCrypto)
+        val pubNubWithCrypto = PubNubImpl(pnConfigurationWithCrypto)
 
         val channel = randomChannel()
         val expectedMeta = JsonObject().also { it.add("thisIsMeta", JsonPrimitive("thisIsMetaValue")) }
@@ -208,7 +208,7 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
         val cipherKey = "enigma"
         pnConfigurationWithCrypto.cryptoModule =
             CryptoModule.createLegacyCryptoModule(cipherKey = cipherKey, randomIv = true)
-        val pubNubWithCrypto = PubNub(pnConfigurationWithCrypto)
+        val pubNubWithCrypto = PubNubImpl(pnConfigurationWithCrypto)
 
         val channel = randomChannel()
         val expectedMeta = JsonObject().also { it.add("thisIsMeta", JsonPrimitive("thisIsMetaValue")) }

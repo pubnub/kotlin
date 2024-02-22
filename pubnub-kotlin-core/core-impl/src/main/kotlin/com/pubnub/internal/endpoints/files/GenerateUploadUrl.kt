@@ -6,7 +6,7 @@ import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.Endpoint
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.models.server.files.FileUploadRequestDetails
 import com.pubnub.internal.models.server.files.FormField
 import com.pubnub.internal.models.server.files.GenerateUploadUrlPayload
@@ -17,7 +17,7 @@ import retrofit2.Response
 internal class GenerateUploadUrl(
     private val channel: String,
     private val fileName: String,
-    pubNub: PubNubImpl
+    pubNub: InternalPubNubClient
 ) : Endpoint<GeneratedUploadUrlResponse, FileUploadRequestDetails>(pubNub) {
 
     @Throws(PubNubException::class)
@@ -69,7 +69,7 @@ internal class GenerateUploadUrl(
     override fun isSubKeyRequired(): Boolean = true
     override fun isPubKeyRequired(): Boolean = false
 
-    internal class Factory(private val pubNub: PubNubImpl) {
+    internal class Factory(private val pubNub: InternalPubNubClient) {
         fun create(channel: String, fileName: String): ExtendedRemoteAction<FileUploadRequestDetails> {
             return GenerateUploadUrl(channel, fileName, pubNub)
         }

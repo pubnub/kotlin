@@ -2,7 +2,7 @@ package com.pubnub.api.endpoints.channel_groups;
 
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsDeleteGroupResult;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -11,7 +11,7 @@ public class DeleteChannelGroup extends Endpoint<PNChannelGroupsDeleteGroupResul
     @Setter
     private String channelGroup;
 
-    public DeleteChannelGroup(PubNubImpl pubnub) {
+    public DeleteChannelGroup(InternalPubNubClient pubnub) {
         super(pubnub);
     }
 

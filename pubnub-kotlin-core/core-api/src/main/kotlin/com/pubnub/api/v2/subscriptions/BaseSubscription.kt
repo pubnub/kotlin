@@ -1,6 +1,7 @@
 package com.pubnub.api.v2.subscriptions
 
 import com.pubnub.api.v2.callbacks.BaseEventEmitter
+import com.pubnub.api.v2.callbacks.BaseEventListener
 
 /**
  * Represents a potential subscription to [com.pubnub.api.PubNub].
@@ -14,11 +15,4 @@ import com.pubnub.api.v2.callbacks.BaseEventEmitter
  * This class implements the [AutoCloseable] interface to help you release resources by calling [unsubscribe]
  * and removing all listeners on [close]. Remember to always call [close] when you no longer need this Subscription.
  */
-abstract class BaseSubscription() : BaseEventEmitter, SubscribeCapable, AutoCloseable {
-    /**
-     * Create a [BaseSubscriptionSet] that contains both subscriptions.
-     *
-     * @param subscription the other [BaseSubscription] to add to the [BaseSubscriptionSet]
-     */
-    abstract operator fun plus(subscription: BaseSubscription): BaseSubscriptionSet
-}
+interface BaseSubscription<EvLis: BaseEventListener> : BaseEventEmitter<EvLis>, SubscribeCapable, AutoCloseable

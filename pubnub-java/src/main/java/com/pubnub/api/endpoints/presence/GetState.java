@@ -2,7 +2,7 @@ package com.pubnub.api.endpoints.presence;
 
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.models.consumer.presence.PNGetStateResult;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -19,7 +19,7 @@ public class GetState extends Endpoint<PNGetStateResult> {
     @Setter
     private String uuid;
 
-    public GetState(PubNubImpl pubnub) {
+    public GetState(InternalPubNubClient pubnub) {
         super(pubnub);
         channels = new ArrayList<>();
         channelGroups = new ArrayList<>();

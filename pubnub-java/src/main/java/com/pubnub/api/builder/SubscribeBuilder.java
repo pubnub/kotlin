@@ -1,6 +1,6 @@
 package com.pubnub.api.builder;
 
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -23,7 +23,7 @@ public class SubscribeBuilder extends PubSubBuilder {
     @Setter(AccessLevel.NONE)
     private Long timetoken = 0L;
 
-    public SubscribeBuilder(PubNubImpl pubnub) {
+    public SubscribeBuilder(InternalPubNubClient pubnub) {
         super(pubnub);
     }
 

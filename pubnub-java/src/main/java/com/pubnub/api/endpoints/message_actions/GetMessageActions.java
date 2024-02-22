@@ -4,7 +4,7 @@ import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.models.consumer.message_actions.PNGetMessageActionsResult;
-import com.pubnub.internal.PubNubImpl;
+import com.pubnub.internal.InternalPubNubClient;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -17,7 +17,7 @@ public class GetMessageActions extends Endpoint<PNGetMessageActionsResult> {
     private Long end;
     private Integer limit;
 
-    public GetMessageActions(PubNubImpl pubnub) {
+    public GetMessageActions(InternalPubNubClient pubnub) {
         super(pubnub);
     }
 

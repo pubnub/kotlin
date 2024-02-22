@@ -6,15 +6,15 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNPublishResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.Endpoint
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.InternalPubNubClient
 import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [PubNubImpl.signal]
+ * @see [InternalPubNubClient.signal]
  */
 class Signal internal constructor(
-    pubnub: PubNubImpl,
+    pubnub: InternalPubNubClient,
     override val channel: String,
     override val message: Any
 ) : Endpoint<List<Any>, PNPublishResult>(pubnub), ISignal {
