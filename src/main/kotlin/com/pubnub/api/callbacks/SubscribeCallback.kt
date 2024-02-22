@@ -18,9 +18,13 @@ abstract class SubscribeCallback : Listener, StatusListener, EventListener {
 
     /**
      * Receive status events like
-     * [PNStatusCategory.PNAcknowledgmentCategory],
      * [PNStatusCategory.PNConnectedCategory],
-     * [PNStatusCategory.PNReconnectedCategory]
+     * [PNStatusCategory.PNDisconnectedCategory],
+     * [PNStatusCategory.PNSubscriptionChanged]
+     * [PNStatusCategory.PNConnectionError],
+     * [PNStatusCategory.PNUnexpectedDisconnectCategory],
+     * [PNStatusCategory.PNAcknowledgmentCategory]
+
      *
      * and other events related to the subscribe loop and channel mix.
      *
