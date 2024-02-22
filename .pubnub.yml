@@ -120,7 +120,7 @@ changelog:
       - type: feature
         text: "A new version of subscription and presence handling is enabled by default (`enableEventEngine` flag is set to `true`). Please consult the documentation for new PNStatus values that are emitted for subscriptions, as code changes might be required to support this change."
       - type: feature
-        text: "Channels, ChannelGroups, ChannelMetadata and UserMetadata."
+        text: "Added support for scoped event listeners using new entity objects: Channels, ChannelGroups, ChannelMetadata and UserMetadata."
   - date: 2024-02-06
     version: v7.8.1
     changes:
