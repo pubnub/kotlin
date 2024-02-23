@@ -1,10 +1,9 @@
 package com.pubnub.api.endpoints.push
 
-import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.endpoints.push.IAddChannelsToPush
+import com.pubnub.api.Endpoint
+import com.pubnub.api.models.consumer.push.PNPushAddChannelResult
 
 /**
- * @see [PubNubImpl.addPushNotificationsOnChannels]
+ * @see [PubNub.addPushNotificationsOnChannels]
  */
-class AddChannelsToPush internal constructor(addChannelsToPush: IAddChannelsToPush) :
-    IAddChannelsToPush by addChannelsToPush
+interface AddChannelsToPush : Endpoint<PNPushAddChannelResult>

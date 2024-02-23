@@ -1,9 +1,17 @@
 package com.pubnub.api.endpoints
 
-import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.endpoints.IFetchMessages
+import com.pubnub.api.Endpoint
+import com.pubnub.api.models.consumer.PNBoundedPage
+import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
 
 /**
- * @see [PubNubImpl.fetchMessages]
+ * @see [PubNub.fetchMessages]
  */
-class FetchMessages internal constructor(fetchMessages: IFetchMessages) : IFetchMessages by fetchMessages
+interface FetchMessages : Endpoint<PNFetchMessagesResult> {
+    val channels: List<String>
+    val page: PNBoundedPage
+    val includeUUID: Boolean
+    val includeMeta: Boolean
+    val includeMessageActions: Boolean
+    val includeMessageType: Boolean
+}

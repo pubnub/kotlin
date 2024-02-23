@@ -8,16 +8,4 @@ data class PNChannelMembershipArrayResult(
     val totalCount: Int?,
     val next: PNPage.PNNext?,
     val prev: PNPage.PNPrev?
-) {
-    companion object {
-        fun from(data: com.pubnub.internal.models.consumer.objects.membership.PNChannelMembershipArrayResult): PNChannelMembershipArrayResult {
-            return PNChannelMembershipArrayResult(
-                data.status,
-                data.data.map(PNChannelMembership::from),
-                data.totalCount,
-                data.next,
-                data.prev
-            )
-        }
-    }
-}
+)

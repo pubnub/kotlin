@@ -1,9 +1,17 @@
 package com.pubnub.api.endpoints.pubsub
 
-import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.endpoints.pubsub.IPublish
+import com.pubnub.api.Endpoint
+import com.pubnub.api.models.consumer.PNPublishResult
 
 /**
- * @see [PubNubImpl.publish]
+ * @see [PubNub.publish]
  */
-class Publish internal constructor(publish: IPublish) : IPublish by publish
+interface Publish : Endpoint<PNPublishResult> {
+    val message: Any
+    val channel: String
+    val meta: Any?
+    val shouldStore: Boolean?
+    val usePost: Boolean
+    val replicate: Boolean
+    val ttl: Int?
+}

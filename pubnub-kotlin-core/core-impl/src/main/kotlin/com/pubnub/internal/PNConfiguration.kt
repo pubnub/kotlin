@@ -50,7 +50,7 @@ open class PNConfiguration @Throws(PubNubException::class) constructor(
             userId = UserId(value)
         }
 
-    private val log = LoggerFactory.getLogger("PNConfiguration")
+    val log = LoggerFactory.getLogger("PNConfiguration")
 
     companion object {
         internal fun String.isValid() = isNotBlank()

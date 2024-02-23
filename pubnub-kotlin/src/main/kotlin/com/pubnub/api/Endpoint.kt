@@ -5,10 +5,10 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.v2.callbacks.Result
 import java.util.function.Consumer
 
-abstract class Endpoint<OUTPUT> : ExtendedRemoteAction<OUTPUT>
+interface Endpoint<OUTPUT> : ExtendedRemoteAction<OUTPUT>
 
 abstract class DelegatingEndpoint<OUTPUT, DELEGATED>(remoteAction: ExtendedRemoteAction<DELEGATED>) :
-    Endpoint<OUTPUT>() {
+    Endpoint<OUTPUT> {
 
     private val remoteAction: ExtendedRemoteAction<OUTPUT> = convertAction(remoteAction)
 

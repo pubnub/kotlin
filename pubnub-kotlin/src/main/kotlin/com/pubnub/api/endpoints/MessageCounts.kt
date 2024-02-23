@@ -1,9 +1,12 @@
 package com.pubnub.api.endpoints
 
-import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.endpoints.IMessageCounts
+import com.pubnub.api.Endpoint
+import com.pubnub.api.models.consumer.history.PNMessageCountResult
 
 /**
- * @see [PubNubImpl.messageCounts]
+ * @see [PubNub.messageCounts]
  */
-class MessageCounts internal constructor(messageCounts: IMessageCounts) : IMessageCounts by messageCounts
+interface MessageCounts : Endpoint<PNMessageCountResult> {
+    val channels: List<String>
+    val channelsTimetoken: List<Long>
+}

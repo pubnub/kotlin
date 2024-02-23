@@ -1,11 +1,9 @@
 package com.pubnub.api.endpoints.push
 
-import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.endpoints.push.IRemoveAllPushChannelsForDevice
+import com.pubnub.api.Endpoint
+import com.pubnub.api.models.consumer.push.PNPushRemoveAllChannelsResult
 
 /**
- * @see [PubNubImpl.removeAllPushNotificationsFromDeviceWithPushToken]
+ * @see [PubNub.removeAllPushNotificationsFromDeviceWithPushToken]
  */
-class RemoveAllPushChannelsForDevice internal constructor(
-    removeAllPushChannelsForDevice: IRemoveAllPushChannelsForDevice
-) : IRemoveAllPushChannelsForDevice by removeAllPushChannelsForDevice
+interface RemoveAllPushChannelsForDevice : Endpoint<PNPushRemoveAllChannelsResult>

@@ -7,7 +7,7 @@ import org.junit.Assert.assertNotNull
 import org.junit.Test
 import java.util.concurrent.atomic.AtomicBoolean
 
-class TimeIntegrationTest : BaseIntegrationTest() {
+class TimeImplIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun testGetPubNubTime() {

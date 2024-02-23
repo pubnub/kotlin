@@ -1,9 +1,14 @@
 package com.pubnub.api.endpoints.presence
 
-import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.endpoints.presence.ISetState
+import com.pubnub.api.Endpoint
+import com.pubnub.api.models.consumer.presence.PNSetStateResult
 
 /**
- * @see [PubNubImpl.setPresenceState]
+ * @see [PubNub.setPresenceState]
  */
-class SetState internal constructor(setState: ISetState) : ISetState by setState
+interface SetState : Endpoint<PNSetStateResult> {
+    val channels: List<String>
+    val channelGroups: List<String>
+    val state: Any
+    val uuid: String
+}

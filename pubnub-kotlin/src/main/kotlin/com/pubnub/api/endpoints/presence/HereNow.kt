@@ -1,9 +1,14 @@
 package com.pubnub.api.endpoints.presence
 
-import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.endpoints.presence.IHereNow
+import com.pubnub.api.Endpoint
+import com.pubnub.api.models.consumer.presence.PNHereNowResult
 
 /**
- * @see [PubNubImpl.hereNow]
+ * @see [PubNub.hereNow]
  */
-class HereNow internal constructor(hereNow: IHereNow) : IHereNow by hereNow
+interface HereNow : Endpoint<PNHereNowResult> {
+    val channels: List<String>
+    val channelGroups: List<String>
+    val includeState: Boolean
+    val includeUUIDs: Boolean
+}

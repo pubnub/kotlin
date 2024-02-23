@@ -1,4 +1,4 @@
-package com.pubnub.internal.models.consumer.objects
+package com.pubnub.internal.models
 
 import com.pubnub.api.UserId
 import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions
@@ -21,7 +21,10 @@ import com.pubnub.api.models.consumer.objects.member.MemberInput
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
+import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
+import com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
+import com.pubnub.api.models.consumer.presence.PNWhereNowResult
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.internal.SpaceId
 import com.pubnub.internal.models.consumer.objects.member.PNMember
@@ -354,4 +357,19 @@ private fun MemberInput.toInternal(): com.pubnub.internal.models.consumer.object
     return PNMember.Partial(
         this.uuid, custom, status
     )
+}
+
+
+fun com.pubnub.internal.models.consumer.objects.membership.PNChannelMembershipArrayResult.toApi(): PNChannelMembershipArrayResult {
+    return PNChannelMembershipArrayResult(
+        status,
+        data.map(PNChannelMembership.Companion::from),
+        totalCount,
+        next,
+        prev
+    )
+}
+
+fun com.pubnub.internal.models.consumer.presence.PNWhereNowResult.toApi(): PNWhereNowResult {
+    return PNWhereNowResult(channels)
 }

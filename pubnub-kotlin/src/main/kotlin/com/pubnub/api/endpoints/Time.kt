@@ -1,9 +1,9 @@
 package com.pubnub.api.endpoints
 
-import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.endpoints.ITime
+import com.pubnub.api.Endpoint
+import com.pubnub.api.models.consumer.PNTimeResult
 
 /**
- * @see [PubNubImpl.time]
+ * @see [PubNub.time]
  */
-class Time internal constructor(time: ITime) : ITime by time
+interface Time : Endpoint<PNTimeResult>

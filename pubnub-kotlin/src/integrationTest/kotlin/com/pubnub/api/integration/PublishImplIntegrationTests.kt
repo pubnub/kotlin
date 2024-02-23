@@ -42,7 +42,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 
-class PublishIntegrationTests : BaseIntegrationTest() {
+class PublishImplIntegrationTests : BaseIntegrationTest() {
 
     lateinit var guestClient: PubNubImpl
 

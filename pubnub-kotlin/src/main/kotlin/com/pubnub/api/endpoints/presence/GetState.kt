@@ -1,9 +1,14 @@
 package com.pubnub.api.endpoints.presence
 
-import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.endpoints.presence.IGetState
+import com.pubnub.api.Endpoint
+import com.pubnub.api.models.consumer.presence.PNGetStateResult
 
 /**
- * @see [PubNubImpl.getPresenceState]
+ * @see [PubNub.getPresenceState]
  */
-class GetState internal constructor(getState: IGetState) : IGetState by getState
+interface GetState : Endpoint<PNGetStateResult> {
+    val channels: List<String>
+    val channelGroups: List<String>
+    val uuid: String
+}
+

@@ -1,9 +1,17 @@
 package com.pubnub.api.endpoints
 
-import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.endpoints.IHistory
+import com.pubnub.api.Endpoint
+import com.pubnub.api.models.consumer.history.PNHistoryResult
 
 /**
- * @see [PubNubImpl.history]
+ * @see [PubNub.history]
  */
-class History internal constructor(history: IHistory) : IHistory by history
+interface History : Endpoint<PNHistoryResult> {
+    val channel: String
+    val start: Long?
+    val end: Long?
+    val count: Int
+    val reverse: Boolean
+    val includeTimetoken: Boolean
+    val includeMeta: Boolean
+}

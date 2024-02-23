@@ -1,9 +1,13 @@
 package com.pubnub.api.endpoints
 
-import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.endpoints.IDeleteMessages
+import com.pubnub.api.Endpoint
+import com.pubnub.api.models.consumer.history.PNDeleteMessagesResult
 
 /**
- * @see [PubNubImpl.deleteMessages]
+ * @see [PubNub.deleteMessages]
  */
-class DeleteMessages internal constructor(deleteMessages: IDeleteMessages) : IDeleteMessages by deleteMessages
+interface DeleteMessages : Endpoint<PNDeleteMessagesResult> {
+    val channels: List<String>
+    val start: Long?
+    val end: Long?
+}

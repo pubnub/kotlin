@@ -1,9 +1,12 @@
 package com.pubnub.api.endpoints.pubsub
 
-import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.endpoints.pubsub.ISignal
+import com.pubnub.api.Endpoint
+import com.pubnub.api.models.consumer.PNPublishResult
 
 /**
- * @see [PubNubImpl.signal]
+ * @see [PubNub.signal]
  */
-class Signal internal constructor(signal: ISignal) : ISignal by signal
+interface Signal : Endpoint<PNPublishResult> {
+    val channel: String
+    val message: Any
+}

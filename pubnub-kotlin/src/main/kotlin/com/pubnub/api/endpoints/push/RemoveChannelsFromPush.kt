@@ -1,11 +1,9 @@
 package com.pubnub.api.endpoints.push
 
-import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.endpoints.push.IRemoveChannelsFromPush
+import com.pubnub.api.Endpoint
+import com.pubnub.api.models.consumer.push.PNPushRemoveChannelResult
 
 /**
- * @see [PubNubImpl.removePushNotificationsFromChannels]
+ * @see [PubNub.removePushNotificationsFromChannels]
  */
-class RemoveChannelsFromPush internal constructor(
-    removeChannelsFromPush: IRemoveChannelsFromPush
-) : IRemoveChannelsFromPush by removeChannelsFromPush
+interface RemoveChannelsFromPush : Endpoint<PNPushRemoveChannelResult>

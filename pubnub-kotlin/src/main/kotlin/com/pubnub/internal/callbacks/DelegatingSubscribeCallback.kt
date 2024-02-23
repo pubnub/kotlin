@@ -10,7 +10,7 @@ import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.models.consumer.objects.toApi
+import com.pubnub.internal.models.toApi
 
 class DelegatingSubscribeCallback(private val listener: SubscribeCallback) : com.pubnub.internal.callbacks.SubscribeCallback {
 

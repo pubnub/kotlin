@@ -9,10 +9,4 @@ import com.pubnub.internal.InternalPubNubClient
  */
 class PNWhereNowResult internal constructor(
     val channels: List<String>
-) {
-    companion object {
-        fun from(data: com.pubnub.internal.models.consumer.presence.PNWhereNowResult): PNWhereNowResult {
-            return PNWhereNowResult(data.channels)
-        }
-    }
-}
+)

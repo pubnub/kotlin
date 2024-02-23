@@ -1,25 +1,10 @@
 package com.pubnub.api.endpoints.objects.member
 
-import com.pubnub.api.DelegatingEndpoint
-import com.pubnub.internal.PubNubImpl
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
-import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction
-import com.pubnub.internal.endpoints.objects.member.GetChannelMembers
-import com.pubnub.internal.endpoints.objects.member.IGetChannelMembers
-import com.pubnub.internal.models.consumer.objects.member.PNMemberArrayResult
+import com.pubnub.api.Endpoint
+import com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult
 
 /**
- * @see [PubNubImpl.getChannelMembers]
+ * @see [PubNub.getChannelMembers]
  */
-class GetChannelMembers internal constructor(getChannelMembers: GetChannelMembers) :
-    DelegatingEndpoint<com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult, PNMemberArrayResult>(
-        getChannelMembers
-    ),
-    IGetChannelMembers by getChannelMembers {
-    override fun convertAction(remoteAction: ExtendedRemoteAction<PNMemberArrayResult>): ExtendedRemoteAction<com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult> {
-        return MappingRemoteAction(
-            remoteAction,
-            com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult::from
-        )
-    }
-}
+interface GetChannelMembers  :
+    Endpoint<PNMemberArrayResult>

@@ -7,14 +7,13 @@ import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
-import com.pubnub.internal.PubNubImpl
 
 interface EventListener : BaseEventListener {
 
     /**
      * Receive messages at subscribed channels.
      *
-     * @see [PubNubImpl.subscribe]
+     * @see [PubNub.subscribe]
      *
      * @param pubnub The client instance which has this listener attached.
      * @param result Wrapper around the actual message content.
@@ -34,7 +33,7 @@ interface EventListener : BaseEventListener {
     /**
      * Receive signals at subscribed channels.
      *
-     * @see [PubNubImpl.signal]
+     * @see [PubNub.signal]
      *
      * @param pubnub The client instance which has this listener attached.
      * @param result Wrapper around a signal event.
