@@ -2033,7 +2033,7 @@ class InternalPubNubClient internal constructor(
     /**
      * Force the SDK to try and reach out PubNub. Monitor the results in [SubscribeCallback.status]
      *
-     * @param timetoken optional timetoken to use for the subscription on reconnection.
+     * @param timetoken optional timetoken to use for the subscriptions on reconnection.
      * Only applicable when [PNConfiguration.enableEventEngine] is true, otherwise ignored
      */
     fun reconnect(timetoken: Long = 0L) {
@@ -2197,7 +2197,7 @@ class InternalPubNubClient internal constructor(
     ) {
         val toSubscribe = mutableSetOf<BaseSubscriptionImpl<*>>()
         channels.filter { it.isNotEmpty() }.map { ChannelName(it) }.forEach { channelName ->
-            // if we are adding a NEW subscription in this step, this var will contain it:
+            // if we are adding a NEW subscriptions in this step, this var will contain it:
             var subscription: BaseSubscriptionImpl<*>? = null
             channelSubscriptionMap.computeIfAbsent(channelName) { newChannelName ->
                 val channel = BaseChannelImpl<InternalEventListener, BaseSubscriptionImpl<InternalEventListener>>(
@@ -2218,7 +2218,7 @@ class InternalPubNubClient internal constructor(
             // make sure we are also subscribed and tracking the -pnpres channel if withPresence==true
             if (withPresence) {
                 channelSubscriptionMap.computeIfAbsent(channelName.withPresence) { presenceChannelName ->
-                    // this will either be the subscription we just created in the previous step,
+                    // this will either be the subscriptions we just created in the previous step,
                     // or if we were already subscribed to the channel WITHOUT presence, we need to create a new one
                     subscription ?: BaseChannelImpl(
                         this,
@@ -2249,7 +2249,7 @@ class InternalPubNubClient internal constructor(
             // make sure we are also subscribed and tracking the -pnpres channel if withPresence==true
             if (withPresence) {
                 channelGroupSubscriptionMap.computeIfAbsent(channelGroupName.withPresence) { presenceGroupName ->
-                    // this will either be the subscription we just created in the previous step,
+                    // this will either be the subscriptions we just created in the previous step,
                     // or if we were already subscribed to the channel WITHOUT presence, we need to create a new one
                     subscription ?: BaseChannelGroupImpl(this, presenceGroupName, subscriptionFactory)
                         .subscription().also { sub ->
@@ -2275,7 +2275,7 @@ class InternalPubNubClient internal constructor(
      * Subscribing to channel Y and then unsubscribing from the previously subscribed channel(s).
      *
      * Unsubscribing from all the channels resets the timetoken and thus,
-     * there could be some gaps in the subscription that may lead to a message loss.
+     * there could be some gaps in the subscriptions that may lead to a message loss.
      *
      * @param channels Channels to subscribe/unsubscribe. Either `channel` or [channelGroups] are required.
      * @param channelGroups Channel groups to subscribe/unsubscribe. Either `channelGroups` or [channels] are required.

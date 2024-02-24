@@ -1,4 +1,4 @@
-//package com.pubnub.internal.v2.subscription
+//package com.pubnub.internal.v2.subscriptions
 //
 //import com.google.gson.JsonNull
 //import com.pubnub.api.UserId
@@ -37,7 +37,7 @@
 //    @Test
 //    fun add() {
 //        // given
-//        val anotherSubscription = pubnub.channel("anotherChannel").subscription()
+//        val anotherSubscription = pubnub.channel("anotherChannel").subscriptions()
 //
 //        // when
 //        subscriptionSet.add(anotherSubscription)
@@ -51,7 +51,7 @@
 //    @Test
 //    fun remove() {
 //        // given
-//        val anotherSubscription = pubnub.channel("anotherChannel").subscription()
+//        val anotherSubscription = pubnub.channel("anotherChannel").subscriptions()
 //        subscriptionSet.add(anotherSubscription)
 //
 //        // when
@@ -66,7 +66,7 @@
 //    @Test
 //    fun plus() {
 //        // given
-//        val anotherSubscription = pubnub.channel("anotherChannel").subscription()
+//        val anotherSubscription = pubnub.channel("anotherChannel").subscriptions()
 //
 //        // when
 //        val originalSet = subscriptionSet

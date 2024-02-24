@@ -32,7 +32,7 @@ open class SubscriptionOptions internal constructor(
 
     companion object {
         /**
-         * Enable receiving presence events for a given subscription to a channel or channel group.
+         * Enable receiving presence events for a given subscriptions to a channel or channel group.
          */
         @JvmStatic
         fun receivePresenceEvents(): SubscriptionOptions = ReceivePresenceEventsImpl

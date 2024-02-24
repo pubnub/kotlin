@@ -1,8 +1,8 @@
 package com.pubnub.internal.v2.subscription
 
 import com.pubnub.api.v2.callbacks.EventListener
-import com.pubnub.api.v2.subscription.Subscription
-import com.pubnub.api.v2.subscription.SubscriptionSet
+import com.pubnub.api.v2.subscriptions.Subscription
+import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.api.v2.subscriptions.BaseSubscription
 import com.pubnub.api.v2.subscriptions.BaseSubscriptionSet
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions

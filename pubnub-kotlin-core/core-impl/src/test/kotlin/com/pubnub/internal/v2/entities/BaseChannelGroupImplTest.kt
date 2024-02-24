@@ -4,7 +4,7 @@
 //import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 //import com.pubnub.internal.PNConfiguration
 //import com.pubnub.internal.TestPubNub
-//import com.pubnub.internal.v2.subscription.BaseSubscriptionImpl
+//import com.pubnub.internal.v2.subscriptions.BaseSubscriptionImpl
 //import org.junit.jupiter.api.AfterEach
 //import org.junit.jupiter.api.Assertions
 //import org.junit.jupiter.api.BeforeEach
@@ -26,31 +26,31 @@
 //    }
 //
 //    @Test
-//    fun `create subscription`() {
+//    fun `create subscriptions`() {
 //        val channelGrp =
 //            BaseChannelGroupImpl(pn.internalPubNubClient, ChannelGroupName(CHANNEL_GROUP_NAME), ::BaseSubscriptionImpl)
 //
-//        val subscription = channelGrp.subscription()
+//        val subscriptions = channelGrp.subscriptions()
 //
-//        Assertions.assertEquals(setOf(ChannelGroupName(CHANNEL_GROUP_NAME)), subscription.channelGroups)
-//        Assertions.assertTrue(subscription.channels.isEmpty())
+//        Assertions.assertEquals(setOf(ChannelGroupName(CHANNEL_GROUP_NAME)), subscriptions.channelGroups)
+//        Assertions.assertTrue(subscriptions.channels.isEmpty())
 //    }
 //
 //    @Test
-//    fun `create subscription with presence`() {
+//    fun `create subscriptions with presence`() {
 //        val channelGrp =
 //            BaseChannelGroupImpl(pn.internalPubNubClient, ChannelGroupName(CHANNEL_GROUP_NAME), ::BaseSubscriptionImpl)
 //
-//        val subscription = channelGrp.subscription(SubscriptionOptions.receivePresenceEvents())
+//        val subscriptions = channelGrp.subscriptions(SubscriptionOptions.receivePresenceEvents())
 //
 //        Assertions.assertEquals(
 //            setOf(
 //                ChannelGroupName(CHANNEL_GROUP_NAME),
 //                ChannelGroupName(CHANNEL_GROUP_NAME).withPresence
 //            ),
-//            subscription.channelGroups
+//            subscriptions.channelGroups
 //        )
-//        Assertions.assertTrue(subscription.channels.isEmpty())
+//        Assertions.assertTrue(subscriptions.channels.isEmpty())
 //    }
 //
 //    @Test

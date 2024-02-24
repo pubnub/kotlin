@@ -14,7 +14,7 @@ import java.util.concurrent.CopyOnWriteArraySet
 
 private const val ERROR_SUBSCRIPTION_WRONG_CLASS =
     "Only Subscriptions returned from objects created" +
-        "through the PubNub instance and their methods, such as channel(...).subscription() are supported."
+        "through the PubNub instance and their methods, such as channel(...).subscriptions() are supported."
 private const val ERROR_WRONG_PUBNUB_INSTANCE =
     "Adding Subscriptions from another PubNub instance to a SubscriptionSet is not allowed."
 

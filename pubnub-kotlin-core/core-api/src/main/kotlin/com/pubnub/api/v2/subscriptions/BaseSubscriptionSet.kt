@@ -31,7 +31,7 @@ interface BaseSubscriptionSet<EvLis: BaseEventListener, Sub: BaseSubscription<Ev
     /**
      * Remove a [BaseSubscription] from this set.
      *
-     * Please note that removing a subscription from the set does not automatically [unsubscribe] or [close] it.
+     * Please note that removing a subscriptions from the set does not automatically [unsubscribe] or [close] it.
      *
      * @param subscription the [BaseSubscription] to remove.
      */
@@ -40,7 +40,7 @@ interface BaseSubscriptionSet<EvLis: BaseEventListener, Sub: BaseSubscription<Ev
     /**
      * Remove a [BaseSubscription] from this set. Equivalent to calling [remove].
      *
-     * Please note that removing a subscription from the set does not automatically [unsubscribe] or [close] it.
+     * Please note that removing a subscriptions from the set does not automatically [unsubscribe] or [close] it.
      *
      * @see [remove]
      */

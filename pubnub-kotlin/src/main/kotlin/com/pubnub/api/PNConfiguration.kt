@@ -241,15 +241,6 @@ class PNConfiguration(userId: UserId) {
      * @see [okhttp3.Dispatcher.setMaxRequestsPerHost]
      */
     var maximumConnections by configuration::maximumConnections
-        
-
-    /**
-     * If the number of messages into the payload is above this value,
-     *
-     * [PNStatusCategory.PNRequestMessageCountExceededCategory] is thrown.
-     */
-    var requestMessageCountThreshold by configuration::requestMessageCountThreshold
-        
 
     /**
      * Enable Google App Engine networking.

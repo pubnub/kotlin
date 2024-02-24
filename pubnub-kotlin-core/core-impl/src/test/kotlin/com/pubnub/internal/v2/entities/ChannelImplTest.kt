@@ -4,7 +4,7 @@
 //import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 //import com.pubnub.internal.PNConfiguration
 //import com.pubnub.internal.TestPubNub
-//import com.pubnub.internal.v2.subscription.BaseSubscriptionImpl
+//import com.pubnub.internal.v2.subscriptions.BaseSubscriptionImpl
 //import org.junit.jupiter.api.AfterEach
 //import org.junit.jupiter.api.Assertions
 //import org.junit.jupiter.api.BeforeEach
@@ -26,26 +26,26 @@
 //    }
 //
 //    @Test
-//    fun `create subscription`() {
+//    fun `create subscriptions`() {
 //        val channel = BaseChannelImpl(pn.internalPubNubClient, ChannelName(CHANNEL_NAME), ::BaseSubscriptionImpl)
 //
-//        val subscription = channel.subscription()
+//        val subscriptions = channel.subscriptions()
 //
-//        Assertions.assertEquals(setOf(ChannelName(CHANNEL_NAME)), subscription.channels)
-//        Assertions.assertTrue(subscription.channelGroups.isEmpty())
+//        Assertions.assertEquals(setOf(ChannelName(CHANNEL_NAME)), subscriptions.channels)
+//        Assertions.assertTrue(subscriptions.channelGroups.isEmpty())
 //    }
 //
 //    @Test
-//    fun `create subscription with presence`() {
+//    fun `create subscriptions with presence`() {
 //        val channel = BaseChannelImpl(pn.internalPubNubClient, ChannelName(CHANNEL_NAME), ::BaseSubscriptionImpl)
 //
-//        val subscription = channel.subscription(SubscriptionOptions.receivePresenceEvents())
+//        val subscriptions = channel.subscriptions(SubscriptionOptions.receivePresenceEvents())
 //
 //        Assertions.assertEquals(
 //            setOf(ChannelName(CHANNEL_NAME), ChannelName(CHANNEL_NAME).withPresence),
-//            subscription.channels
+//            subscriptions.channels
 //        )
-//        Assertions.assertTrue(subscription.channelGroups.isEmpty())
+//        Assertions.assertTrue(subscriptions.channelGroups.isEmpty())
 //    }
 //
 //    @Test

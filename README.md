@@ -85,7 +85,7 @@ pubnub.addListener(object : SubscribeCallback() {
             println("Message action messageTimetoken: $messageTimetoken")
         }
 
-        println("Message action subscription: ${pnMessageActionResult.subscription}")
+        println("Message action subscriptions: ${pnMessageActionResult.subscription}")
         println("Message action channel: ${pnMessageActionResult.channel}")
         println("Message action timetoken: ${pnMessageActionResult.timetoken}")
     }

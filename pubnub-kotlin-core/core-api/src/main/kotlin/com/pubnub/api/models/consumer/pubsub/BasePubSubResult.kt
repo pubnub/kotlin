@@ -12,7 +12,7 @@ interface PubSubResult : PNEvent {
 
 /**
  * @property channel The channel a PubNub API operation is related to.
- * @property subscription The subscription a PubNub API operation is related to.
+ * @property subscription The subscriptions a PubNub API operation is related to.
  * @property timetoken Timetoken of the PubNub API operation in question.
  * @property userMetadata User metadata if any.
  * @property publisher The publisher of the PubNub API operation in question.

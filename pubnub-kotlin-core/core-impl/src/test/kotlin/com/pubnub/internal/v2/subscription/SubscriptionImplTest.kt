@@ -1,4 +1,4 @@
-//package com.pubnub.internal.v2.subscription
+//package com.pubnub.internal.v2.subscriptions
 //
 //import com.google.gson.JsonNull
 //import com.pubnub.api.UserId
@@ -19,37 +19,37 @@
 //class SubscriptionImplTest {
 //
 //    private lateinit var pubnub: TestPubNub
-//    private lateinit var subscription: BaseSubscription
+//    private lateinit var subscriptions: BaseSubscription
 //    private val channelName = "myChannel"
 //
 //    @BeforeEach
 //    fun setUp() {
 //        pubnub = TestPubNub(PNConfiguration(UserId("uuid")))
-//        subscription = pubnub.internalPubNubClient.channel(channelName).subscription()
+//        subscriptions = pubnub.internalPubNubClient.channel(channelName).subscriptions()
 //    }
 //
 //    @AfterEach
 //    fun teardown() {
-//        subscription.close()
+//        subscriptions.close()
 //        pubnub.destroy()
 //    }
 //
 //    @Test
-//    fun `subscription + subscription should return subscriptionSet`() {
+//    fun `subscriptions + subscriptions should return subscriptionSet`() {
 //        // given
-//        val anotherSubscription = pubnub.internalPubNubClient.channel("anotherChannel").subscription()
+//        val anotherSubscription = pubnub.internalPubNubClient.channel("anotherChannel").subscriptions()
 //
 //        // when
-//        val subscriptionSet = subscription + anotherSubscription
+//        val subscriptionSet = subscriptions + anotherSubscription
 //
 //        // then
-//        assertEquals(setOf(subscription, anotherSubscription), subscriptionSet.subscriptions)
+//        assertEquals(setOf(subscriptions, anotherSubscription), subscriptionSet.subscriptions)
 //    }
 //
 //    @Test
 //    fun subscribe() {
 //        // when
-//        subscription.subscribe()
+//        subscriptions.subscribe()
 //
 //        // then
 //        assertEquals(listOf(channelName), pubnub.internalPubNubClient.getSubscribedChannels())
@@ -59,10 +59,10 @@
 //    @Test
 //    fun unsubscribe() {
 //        // given
-//        subscription.subscribe()
+//        subscriptions.subscribe()
 //
 //        // when
-//        subscription.unsubscribe()
+//        subscriptions.unsubscribe()
 //
 //        // then
 //        assertEquals(emptyList<String>(), pubnub.internalPubNubClient.getSubscribedChannels())
@@ -72,15 +72,15 @@
 //    @Test
 //    fun close() {
 //        // given
-//        subscription.subscribe()
-//        subscription.addListener(object : InternalEventListener {
+//        subscriptions.subscribe()
+//        subscriptions.addListener(object : InternalEventListener {
 //            override fun message(pubnub: BasePubNubImpl<Listener>, result: PNMessageResult) {
 //                throw IllegalStateException("We should not get a message after close!")
 //            }
 //        })
 //
 //        // when
-//        subscription.close()
+//        subscriptions.close()
 //
 //        pubnub.listenerManager.announce(
 //            PNMessageResult(
@@ -96,10 +96,10 @@
 //    }
 //
 //    @Test
-//    fun `subscription with filter`() {
+//    fun `subscriptions with filter`() {
 //        // given
 //        val subWithFilter =
-//            pubnub.internalPubNubClient.channel(channelName).subscription(SubscriptionOptions.filter { it !is PNMessageResult })
+//            pubnub.internalPubNubClient.channel(channelName).subscriptions(SubscriptionOptions.filter { it !is PNMessageResult })
 //        subWithFilter.addListener(object : InternalEventListener {
 //            override fun message(pubnub: BasePubNubImpl<Listener>, result: PNMessageResult) {
 //                throw IllegalStateException("Message should have been filtered out!")
@@ -120,9 +120,9 @@
 //    }
 //
 //    @Test
-//    fun `subscription shouldn't get events until subscribe is called`() {
+//    fun `subscriptions shouldn't get events until subscribe is called`() {
 //        // given
-//        subscription.addListener(object : InternalEventListener {
+//        subscriptions.addListener(object : InternalEventListener {
 //            override fun message(pubnub: BasePubNubImpl<Listener>, result: PNMessageResult) {
 //                throw IllegalStateException("Message should not be received without subscribe call!")
 //            }

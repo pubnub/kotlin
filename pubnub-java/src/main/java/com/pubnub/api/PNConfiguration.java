@@ -353,16 +353,6 @@ public class PNConfiguration {
         return this;
     }
 
-    public Integer getRequestMessageCountThreshold() {
-        return pnConfiguration.getRequestMessageCountThreshold();
-    }
-
-    @Deprecated // TODO not supported in EE
-    public PNConfiguration setRequestMessageCountThreshold(@Nullable Integer integer) {
-        pnConfiguration.setRequestMessageCountThreshold(integer);
-        return this;
-    }
-
     public boolean getGoogleAppEngineNetworking() {
         return pnConfiguration.getGoogleAppEngineNetworking();
     }

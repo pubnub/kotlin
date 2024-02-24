@@ -84,8 +84,8 @@ import com.pubnub.api.v2.entities.Channel
 import com.pubnub.api.v2.entities.ChannelGroup
 import com.pubnub.api.v2.entities.ChannelMetadata
 import com.pubnub.api.v2.entities.UserMetadata
-import com.pubnub.api.v2.subscription.Subscription
-import com.pubnub.api.v2.subscription.SubscriptionSet
+import com.pubnub.api.v2.subscriptions.Subscription
+import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.api.v2.subscriptions.BaseSubscription
 import com.pubnub.api.v2.subscriptions.BaseSubscriptionSet
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
@@ -312,7 +312,7 @@ class PubNubImpl(
      *
      * @param channels the channels to create subscriptions for
      * @param channelGroups the channel groups to create subscriptions for
-     * @param options the [SubscriptionOptions] to pass for each subscription. Refer to supported options in [BaseChannel] and
+     * @param options the [SubscriptionOptions] to pass for each subscriptions. Refer to supported options in [BaseChannel] and
      * [BaseChannelGroup] documentation.
      * @return a [BaseSubscriptionSet] containing subscriptions for the given [channels] and [channelGroups]
      */
@@ -388,7 +388,7 @@ class PubNubImpl(
      * Subscribing to channel Y and then unsubscribing from the previously subscribed channel(s).
      *
      * Unsubscribing from all the channels resets the timetoken and thus,
-     * there could be some gaps in the subscription that may lead to a message loss.
+     * there could be some gaps in the subscriptions that may lead to a message loss.
      *
      * @param channels Channels to subscribe/unsubscribe. Either `channel` or [channelGroups] are required.
      * @param channelGroups Channel groups to subscribe/unsubscribe. Either `channelGroups` or [channels] are required.

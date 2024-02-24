@@ -8,6 +8,7 @@ import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.listen
 import com.pubnub.api.models.consumer.PNStatus
+import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsAddChannelResult
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.retry.RetryConfiguration
@@ -16,7 +17,6 @@ import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.api.v2.subscriptions.SubscriptionCursor
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
-import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.logging.HttpLoggingInterceptor
@@ -611,7 +611,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         // add channels to channelGroup
         val channelGroup = "myChannelGroup"
         val channel01 = "Channel01"
-        val pnChannelGroupsAddChannelResult: PNChannelGroupsAddChannelResult? = pubnub.addChannelsToChannelGroup(
+        val pnChannelGroupsAddChannelResult: PNChannelGroupsAddChannelResult = pubnub.addChannelsToChannelGroup(
             channels = listOf(channel01, "Channel02"),
             channelGroup = channelGroup
         ).sync()

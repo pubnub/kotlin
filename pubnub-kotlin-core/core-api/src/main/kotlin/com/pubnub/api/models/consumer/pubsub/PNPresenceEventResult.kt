@@ -11,7 +11,7 @@ import com.google.gson.JsonElement
  * @property occupancy Total number of users currently present in the `channel` in question.
  * @property state Presence state of the related UUID, if any.
  * @property channel The channel which the `event` is performed on.
- * @property subscription The related subscription.
+ * @property subscription The related subscriptions.
  * @property timetoken The timetoken of the event.
  * @property join List of users that have *joined* the `channel` if the `event` is an `interval`.
  * This needs to be enabled under **presence_deltas** at the Admin Dashboard.
