@@ -1,15 +1,15 @@
 package com.pubnub.api.endpoints.access;
 
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.internal.InternalPubNubClient;
 import kotlin.Unit;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+@Setter
 @Accessors(chain = true, fluent = true)
-public class RevokeToken extends Endpoint<Unit> {
+public class RevokeToken extends DelegatingEndpoint<Unit> {
 
-    @Setter
     private String token;
 
     public RevokeToken(InternalPubNubClient pubnub) {

@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints.message_actions;
 
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult;
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction;
 import com.pubnub.internal.InternalPubNubClient;
@@ -16,7 +16,7 @@ import static com.pubnub.api.builder.PubNubErrorBuilder.PNERROBJ_MESSAGE_TIMETOK
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class AddMessageAction extends Endpoint<PNAddMessageActionResult> {
+public class AddMessageAction extends DelegatingEndpoint<PNAddMessageActionResult> {
 
     private String channel;
     private PNMessageAction messageAction;

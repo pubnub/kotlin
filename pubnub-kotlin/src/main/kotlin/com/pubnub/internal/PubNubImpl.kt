@@ -74,7 +74,6 @@ import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
-import com.pubnub.api.v2.callbacks.EventEmitter
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.api.v2.entities.BaseChannel
@@ -159,7 +158,7 @@ import java.io.InputStream
 
 class PubNubImpl(
     override val configuration: PNConfiguration,
-) : BasePubNubImpl<EventListener, Subscription, Channel, ChannelGroup, ChannelMetadata, UserMetadata, SubscriptionSet, StatusListener>(configuration.configuration), PubNub, EventEmitter {
+) : BasePubNubImpl<EventListener, Subscription, Channel, ChannelGroup, ChannelMetadata, UserMetadata, SubscriptionSet, StatusListener>(configuration.configuration), PubNub {
     companion object {
         fun generateUUID() = BasePubNubImpl.generateUUID()
     }
@@ -365,7 +364,7 @@ class PubNubImpl(
      * Unsubscribe from all channels and all channel groups
      */
     override fun unsubscribeAll() {
-        TODO("Not yet implemented")
+        internalPubNubClient.unsubscribeAll()
     }
 
     override fun subscribe(
@@ -374,7 +373,7 @@ class PubNubImpl(
         withPresence: Boolean,
         withTimetoken: Long
     ) {
-        TODO("Not yet implemented")
+        internalPubNubClient.subscribe(channels, channelGroups, withPresence, withTimetoken)
     }
 
     /**
@@ -395,7 +394,7 @@ class PubNubImpl(
      * @param channelGroups Channel groups to subscribe/unsubscribe. Either `channelGroups` or [channels] are required.
      */
     override fun unsubscribe(channels: List<String>, channelGroups: List<String>) {
-        TODO("Not yet implemented")
+        internalPubNubClient.unsubscribe(channels, channelGroups)
     }
 
     override fun addPushNotificationsOnChannels(

@@ -5,7 +5,6 @@ import com.google.gson.JsonPrimitive
 import com.pubnub.api.CommonUtils
 import com.pubnub.api.CommonUtils.emoji
 import com.pubnub.api.CommonUtils.randomChannel
-import com.pubnub.internal.PubNubImpl
 import com.pubnub.api.PubNubError
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.models.consumer.history.HistoryMessageType
@@ -14,6 +13,7 @@ import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
 import com.pubnub.api.models.consumer.history.PNHistoryItemResult
 import com.pubnub.api.models.consumer.history.PNHistoryResult
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
+import com.pubnub.api.PubNub
 import org.awaitility.kotlin.await
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.aMapWithSize
@@ -69,7 +69,7 @@ class HistoryImplIntegrationTest : BaseIntegrationTest() {
         val cipherKey = "enigma"
         pnConfigurationWithCrypto.cryptoModule =
             CryptoModule.createAesCbcCryptoModule(cipherKey = cipherKey, randomIv = false)
-        val pubNubWithCrypto = PubNubImpl(pnConfigurationWithCrypto)
+        val pubNubWithCrypto = PubNub.create(pnConfigurationWithCrypto)
 
         val channel = randomChannel()
         val expectedMeta = JsonObject().also { it.add("thisIsMeta", JsonPrimitive("thisIsMetaValue")) }
@@ -208,7 +208,7 @@ class HistoryImplIntegrationTest : BaseIntegrationTest() {
         val cipherKey = "enigma"
         pnConfigurationWithCrypto.cryptoModule =
             CryptoModule.createLegacyCryptoModule(cipherKey = cipherKey, randomIv = true)
-        val pubNubWithCrypto = PubNubImpl(pnConfigurationWithCrypto)
+        val pubNubWithCrypto = PubNub.create(pnConfigurationWithCrypto)
 
         val channel = randomChannel()
         val expectedMeta = JsonObject().also { it.add("thisIsMeta", JsonPrimitive("thisIsMetaValue")) }

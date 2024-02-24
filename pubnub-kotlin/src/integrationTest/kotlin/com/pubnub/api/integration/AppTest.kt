@@ -2,7 +2,8 @@ package com.pubnub.api.integration
 
 import com.pubnub.api.Keys
 import com.pubnub.api.PNConfiguration
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.api.PubNub
+
 import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.listen
@@ -17,12 +18,12 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 class AppTest {
 
-    lateinit var pubnub: PubNubImpl
+    lateinit var pubnub: PubNub
 
     @Before
     fun initPubnub() {
-        pubnub = PubNubImpl(
-            PNConfiguration(userId = UserId(PubNubImpl.generateUUID())).apply {
+        pubnub = PubNub.create(
+            PNConfiguration(userId = UserId(PubNub.generateUUID())).apply {
                 subscribeKey = Keys.subKey
                 publishKey = Keys.pubKey
                 logVerbosity = PNLogVerbosity.BODY

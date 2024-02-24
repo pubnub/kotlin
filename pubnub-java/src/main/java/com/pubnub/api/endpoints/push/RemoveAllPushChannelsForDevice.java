@@ -1,35 +1,14 @@
 package com.pubnub.api.endpoints.push;
 
 import com.pubnub.api.endpoints.Endpoint;
-import com.pubnub.api.enums.PNPushEnvironment;
-import com.pubnub.api.enums.PNPushType;
 import com.pubnub.api.models.consumer.push.PNPushRemoveAllChannelsResult;
-import com.pubnub.internal.InternalPubNubClient;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 
-@Accessors(chain = true, fluent = true)
-public class RemoveAllPushChannelsForDevice extends Endpoint<PNPushRemoveAllChannelsResult> {
-    @Setter
-    private PNPushType pushType;
-    @Setter
-    private String deviceId;
-    @Setter
-    private PNPushEnvironment environment;
-    @Setter
-    private String topic;
+public interface RemoveAllPushChannelsForDevice extends Endpoint<PNPushRemoveAllChannelsResult> {
+    RemoveAllPushChannelsForDevice pushType(com.pubnub.api.enums.PNPushType pushType);
 
-    public RemoveAllPushChannelsForDevice(InternalPubNubClient pubnub) {
-        super(pubnub);
-    }
+    RemoveAllPushChannelsForDevice deviceId(String deviceId);
 
-    @Override
-    protected com.pubnub.internal.endpoints.push.RemoveAllPushChannelsForDevice createAction() {
-        return pubnub.removeAllPushNotificationsFromDeviceWithPushToken(
-                pushType,
-                deviceId,
-                topic,
-                environment
-        );
-    }
+    RemoveAllPushChannelsForDevice environment(com.pubnub.api.enums.PNPushEnvironment environment);
+
+    RemoveAllPushChannelsForDevice topic(String topic);
 }

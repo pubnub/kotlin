@@ -1,6 +1,6 @@
 package com.pubnub.api.endpoints.objects_api.uuid;
 
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.api.endpoints.objects_api.utils.PNSortKey;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
@@ -17,7 +17,7 @@ import static com.pubnub.api.endpoints.objects_api.channel.GetAllChannelsMetadat
 
 @Accessors(chain = true, fluent = true)
 public class GetAllUUIDMetadata
-        extends Endpoint<PNGetAllUUIDMetadataResult> {
+        extends DelegatingEndpoint<PNGetAllUUIDMetadataResult> {
 
     @Setter
     private boolean includeCustom;

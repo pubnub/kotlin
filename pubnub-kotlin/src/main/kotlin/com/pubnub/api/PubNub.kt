@@ -64,6 +64,7 @@ import com.pubnub.api.models.consumer.objects.member.MemberInput
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
+import com.pubnub.api.v2.callbacks.EventEmitter
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.api.v2.entities.Channel
@@ -72,15 +73,19 @@ import com.pubnub.api.v2.entities.ChannelMetadata
 import com.pubnub.api.v2.entities.UserMetadata
 import com.pubnub.api.v2.subscription.Subscription
 import com.pubnub.api.v2.subscription.SubscriptionSet
+import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.PubNubImpl
 import java.io.InputStream
 
-interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup, ChannelMetadata, UserMetadata, SubscriptionSet, StatusListener> {
+interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup, ChannelMetadata, UserMetadata, SubscriptionSet, StatusListener>,
+    EventEmitter {
     companion object {
         @JvmStatic
         fun create(configuration: PNConfiguration): PubNub {
             return PubNubImpl(configuration)
         }
+        @JvmStatic
+        fun generateUUID(): String = InternalPubNubClient.generateUUID()
     }
 
     val configuration: PNConfiguration
@@ -1451,30 +1456,6 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
         cipherKey: String? = null
     ): InputStream
 
-    /**
-     * Force the SDK to try and reach out PubNub. Monitor the results in [SubscribeCallback.status]
-     *
-     * @param timetoken optional timetoken to use for the subscription on reconnection.
-     * Only applicable when [PNConfiguration.enableEventEngine] is true, otherwise ignored
-     */
-    fun reconnect(timetoken: Long = 0L)
-
-    /**
-     * Cancel any subscribe and heartbeat loops or ongoing re-connections.
-     *
-     * Monitor the results in [SubscribeCallback.status]
-     */
-    fun disconnect()
-
-    /**
-     * Frees up threads and allows for a clean exit.
-     */
-    fun destroy()
-
-    /**
-     * Same as [destroy] but immediately.
-     */
-    fun forceDestroy()
     fun parseToken(token: String): PNToken
     fun setToken(token: String?)
 

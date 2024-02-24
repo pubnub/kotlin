@@ -1,6 +1,6 @@
 package com.pubnub.api.endpoints.objects_api.memberships;
 
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.api.endpoints.objects_api.utils.Include;
 import com.pubnub.api.endpoints.objects_api.utils.ObjectsBuilderSteps;
 import com.pubnub.api.endpoints.objects_api.utils.PNSortKey;
@@ -21,7 +21,7 @@ import java.util.Collections;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class ManageMemberships extends Endpoint<PNManageMembershipResult> {
+public class ManageMemberships extends DelegatingEndpoint<PNManageMembershipResult> {
     private Collection<PNChannelMembership> set = Collections.emptySet();
     private Collection<PNChannelMembership> remove = Collections.emptySet();
     private String uuid;

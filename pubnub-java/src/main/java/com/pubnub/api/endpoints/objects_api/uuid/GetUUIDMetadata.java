@@ -1,6 +1,6 @@
 package com.pubnub.api.endpoints.objects_api.uuid;
 
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects_api.uuid.PNGetUUIDMetadataResult;
@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class GetUUIDMetadata extends Endpoint<PNGetUUIDMetadataResult> {
+public class GetUUIDMetadata extends DelegatingEndpoint<PNGetUUIDMetadataResult> {
 
     private String uuid;
     private boolean includeCustom;

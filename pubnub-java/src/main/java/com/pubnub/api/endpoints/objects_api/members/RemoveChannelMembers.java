@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints.objects_api.members;
 
 import com.pubnub.api.endpoints.BuilderSteps;
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.api.endpoints.objects_api.utils.Include;
 import com.pubnub.api.endpoints.objects_api.utils.ObjectsBuilderSteps;
 import com.pubnub.api.endpoints.objects_api.utils.PNSortKey;
@@ -23,7 +23,7 @@ import java.util.List;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class RemoveChannelMembers extends Endpoint<PNRemoveChannelMembersResult> {
+public class RemoveChannelMembers extends DelegatingEndpoint<PNRemoveChannelMembersResult> {
 
     private Integer limit = null;
     private PNPage page;

@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints.files;
 
 import com.pubnub.api.endpoints.BuilderSteps.ChannelStep;
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.api.endpoints.files.requiredparambuilder.ChannelFileNameFileIdBuilder;
 import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps.FileIdStep;
 import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps.FileNameStep;
@@ -11,7 +11,7 @@ import com.pubnub.internal.InternalPubNubClient;
 import lombok.experimental.Accessors;
 
 @Accessors(chain = true, fluent = true)
-public class DeleteFile extends Endpoint<PNDeleteFileResult> {
+public class DeleteFile extends DelegatingEndpoint<PNDeleteFileResult> {
 
     private final String channel;
     private final String fileId;

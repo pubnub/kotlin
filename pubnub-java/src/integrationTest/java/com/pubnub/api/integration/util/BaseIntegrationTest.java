@@ -100,19 +100,19 @@ public abstract class BaseIntegrationTest {
         if (pnConfiguration == null) {
             pnConfiguration = getBasicPnConfiguration();
         }
-        final PubNub pubNub = new PubNub(pnConfiguration);
+        final PubNub pubNub = PubNub.create(pnConfiguration);
         registerGuestClient(pubNub);
         return pubNub;
     }
 
     protected PubNub getServer() {
-        final PubNub pubNub = new PubNub(getServerPnConfiguration());
+        final PubNub pubNub = PubNub.create(getServerPnConfiguration());
         registerGuestClient(pubNub);
         return pubNub;
     }
 
     public PubNub getPubNub(PNConfiguration pnConfiguration) {
-        final PubNub pubNub = new PubNub(pnConfiguration);
+        final PubNub pubNub = PubNub.create(pnConfiguration);
         registerGuestClient(pubNub);
         return pubNub;
     }

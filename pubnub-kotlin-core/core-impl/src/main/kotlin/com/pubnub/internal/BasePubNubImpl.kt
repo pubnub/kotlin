@@ -69,7 +69,7 @@ internal constructor(
         channelGroups: Set<String>,
         options: SubscriptionOptions
     ): SubscriptionSet {
-        val subscriptionSet = subscriptionSetOf(emptySet())
+        val subscriptionSet = subscriptionSetOf(subscriptions = emptySet())
         channels.forEach {
             subscriptionSet.add(channel(it).subscription(options))
         }
@@ -98,14 +98,18 @@ internal constructor(
     /**
      * Force destroy the SDK to evict the connection pools and close executors.
      */
-    open fun forceDestroy() { // TODO open for mockito for integration tests, should not be open
+    override fun forceDestroy() { // TODO open for mockito for integration tests, should not be open
         internalPubNubClient.forceDestroy()
     }
 
     /**
      * Destroy the SDK to cancel all ongoing requests and stop heartbeat timer.
      */
-    fun destroy() {
+    override fun destroy() {
         internalPubNubClient.destroy()
+    }
+
+    override fun reconnect(timetoken: Long) {
+        internalPubNubClient.reconnect(timetoken)
     }
 }

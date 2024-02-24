@@ -1,16 +1,13 @@
 package com.pubnub.api.integration
 
 import com.pubnub.api.CommonUtils.randomChannel
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.api.PubNub
+
+import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.files.PNFileUploadResult
-import com.pubnub.api.models.consumer.pubsub.PNMessageResult
-import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
-import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
-import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
-import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import org.junit.Assert
 import org.junit.Test
 import java.io.ByteArrayInputStream
@@ -86,14 +83,14 @@ class FilesIntegrationTest : BaseIntegrationTest() {
         val fileName = "fileName$channel.txt"
         val connectedLatch = CountDownLatch(1)
         val fileEventReceived = CountDownLatch(1)
-        pubnub.addListener(object : LimitedListener() {
-            override fun status(pubnub: PubNubImpl, pnStatus: PNStatus) {
+        pubnub.addListener(object : SubscribeCallback() {
+            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
                 if (pnStatus.category == PNStatusCategory.Connected) {
                     connectedLatch.countDown()
                 }
             }
 
-            override fun file(pubnub: PubNubImpl, event: PNFileEventResult) {
+            override fun file(pubnub: PubNub, event: PNFileEventResult) {
                 if (event.file.name == fileName) {
                     fileEventReceived.countDown()
                 }
@@ -138,13 +135,5 @@ class FilesIntegrationTest : BaseIntegrationTest() {
 
     private fun readToString(inputStream: InputStream): String {
         Scanner(inputStream).useDelimiter("\\A").use { s -> return if (s.hasNext()) s.next() else "" }
-    }
-
-    private abstract class LimitedListener : com.pubnub.api.callbacks.SubscribeCallback() {
-        override fun presence(pubnub: PubNubImpl, event: PNPresenceEventResult) {}
-        override fun message(pubnub: PubNubImpl, event: PNMessageResult) {}
-        override fun signal(pubnub: PubNubImpl, event: PNSignalResult) {}
-        override fun objects(pubnub: PubNubImpl, event: PNObjectEventResult) {}
-        override fun messageAction(pubnub: PubNubImpl, event: PNMessageActionResult) {}
     }
 }

@@ -1,6 +1,6 @@
 // package com.pubnub.api.integration.pam
 //
-// import com.pubnub.api.PubNub
+//
 // import com.pubnub.api.SpaceId
 // import com.pubnub.api.UserId
 // import com.pubnub.api.enums.PNLogVerbosity

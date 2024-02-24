@@ -1,43 +1,16 @@
 package com.pubnub.api.endpoints.push;
 
 import com.pubnub.api.endpoints.Endpoint;
-import com.pubnub.api.enums.PNPushEnvironment;
-import com.pubnub.api.enums.PNPushType;
 import com.pubnub.api.models.consumer.push.PNPushAddChannelResult;
-import com.pubnub.internal.InternalPubNubClient;
-import lombok.Setter;
-import lombok.experimental.Accessors;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
+public interface AddChannelsToPush extends Endpoint<PNPushAddChannelResult> {
+    AddChannelsToPush pushType(com.pubnub.api.enums.PNPushType pushType);
 
-@Accessors(chain = true, fluent = true)
-public class AddChannelsToPush extends Endpoint<PNPushAddChannelResult> {
+    AddChannelsToPush channels(java.util.List<String> channels);
 
-    @Setter
-    private PNPushType pushType;
-    @Setter
-    private List<String> channels;
-    @Setter
-    private String deviceId;
-    @Setter
-    private PNPushEnvironment environment = PNPushEnvironment.DEVELOPMENT;
-    @Setter
-    private String topic;
+    AddChannelsToPush deviceId(String deviceId);
 
-    public AddChannelsToPush(InternalPubNubClient pubnub) {
-        super(pubnub);
-    }
+    AddChannelsToPush environment(com.pubnub.api.enums.PNPushEnvironment environment);
 
-    @NotNull
-    @Override
-    protected com.pubnub.internal.endpoints.push.AddChannelsToPush createAction() {
-        return pubnub.addPushNotificationsOnChannels(
-                pushType,
-                channels,
-                deviceId,
-                topic,
-                environment
-        );
-    }
+    AddChannelsToPush topic(String topic);
 }

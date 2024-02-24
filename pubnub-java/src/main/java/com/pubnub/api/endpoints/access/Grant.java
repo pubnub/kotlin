@@ -1,6 +1,6 @@
 package com.pubnub.api.endpoints.access;
 
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.access_manager.PNAccessManagerGrantResult;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class Grant extends Endpoint<PNAccessManagerGrantResult> {
+public class Grant extends DelegatingEndpoint<PNAccessManagerGrantResult> {
 
     private boolean read;
     private boolean write;

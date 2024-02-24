@@ -116,7 +116,7 @@ fun AtomicBoolean.listen(seconds: Int = CommonUtils.DEFAULT_LISTEN_DURATION) {
     CommonUtils.observe(this, seconds)
 }
 
-fun PubNubImpl.subscribeToBlocking(vararg channels: String) {
+fun PubNub.subscribeToBlocking(vararg channels: String) {
     this.subscribe(
         channels = listOf(*channels),
         withPresence = true
@@ -124,7 +124,7 @@ fun PubNubImpl.subscribeToBlocking(vararg channels: String) {
     Thread.sleep(2000)
 }
 
-fun PubNubImpl.unsubscribeFromBlocking(vararg channels: String) {
+fun PubNub.unsubscribeFromBlocking(vararg channels: String) {
     unsubscribe(
         channels = listOf(*channels)
     )

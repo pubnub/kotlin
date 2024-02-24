@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints.files;
 
 import com.pubnub.api.endpoints.BuilderSteps;
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.api.endpoints.files.requiredparambuilder.ChannelFileNameFileIdBuilder;
 import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
@@ -11,7 +11,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Accessors(chain = true, fluent = true)
-public class DownloadFile extends Endpoint<PNDownloadFileResult> {
+public class DownloadFile extends DelegatingEndpoint<PNDownloadFileResult> {
 
     private final String channel;
     private final String fileId;

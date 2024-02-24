@@ -198,7 +198,7 @@ public abstract class AbstractReconnectionProblemIT {
         pnConfiguration.setSubscribeKey(itPamTestConfig.pamSubKey());
         pnConfiguration.setPublishKey(itPamTestConfig.pamPubKey());
         pnConfiguration.setSecretKey(itPamTestConfig.pamSecKey());
-        return new PubNub(pnConfiguration);
+        return PubNub.create(pnConfiguration);
     }
 
     @Test

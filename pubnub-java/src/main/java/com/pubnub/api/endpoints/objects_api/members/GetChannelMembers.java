@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints.objects_api.members;
 
 import com.pubnub.api.endpoints.BuilderSteps;
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.api.endpoints.objects_api.utils.Include;
 import com.pubnub.api.endpoints.objects_api.utils.PNSortKey;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
@@ -18,7 +18,7 @@ import java.util.Collections;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class GetChannelMembers extends Endpoint<PNGetChannelMembersResult> {
+public class GetChannelMembers extends DelegatingEndpoint<PNGetChannelMembersResult> {
 
     private final String channel;
     private Integer limit = null;

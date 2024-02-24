@@ -31,7 +31,7 @@ public abstract class ObjectsApiBaseIT {
         pnConfiguration.setSubscribeKey(itTestConfig.subscribeKey());
         pnConfiguration.setLogVerbosity(PNLogVerbosity.BODY);
 
-        return new PubNub(pnConfiguration);
+        return PubNub.create(pnConfiguration);
     }
 
     @Before

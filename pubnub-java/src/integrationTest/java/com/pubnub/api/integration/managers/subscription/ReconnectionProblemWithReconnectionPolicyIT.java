@@ -17,6 +17,6 @@ public class ReconnectionProblemWithReconnectionPolicyIT extends AbstractReconne
         pnConfiguration.setLogVerbosity(PNLogVerbosity.BODY);
         pnConfiguration.setReconnectionPolicy(LINEAR);
         pnConfiguration.setAuthKey(authKey);
-        return new PubNub(pnConfiguration);
+        return PubNub.create(pnConfiguration);
     }
 }

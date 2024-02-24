@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints.presence;
 
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.presence.PNSetStateResult;
@@ -15,7 +15,7 @@ import java.util.List;
 
 
 @Accessors(chain = true, fluent = true)
-public class SetState extends Endpoint<PNSetStateResult> {
+public class SetState extends DelegatingEndpoint<PNSetStateResult> {
     @Setter
     private List<String> channels = new ArrayList<>();
     @Setter

@@ -122,6 +122,11 @@ class InternalPubNubClient internal constructor(
         EventEnginesConf(),
     )
 
+    companion object {
+        @JvmStatic
+        fun generateUUID(): String = "pn-${UUID.randomUUID()}"
+    }
+
     internal val cryptoModule: CryptoModule?
         get() = configuration.cryptoModule
 

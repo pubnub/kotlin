@@ -2,7 +2,7 @@ package com.pubnub.api.endpoints.message_actions;
 
 import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.api.models.consumer.message_actions.PNGetMessageActionsResult;
 import com.pubnub.internal.InternalPubNubClient;
 import lombok.Setter;
@@ -10,7 +10,7 @@ import lombok.experimental.Accessors;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class GetMessageActions extends Endpoint<PNGetMessageActionsResult> {
+public class GetMessageActions extends DelegatingEndpoint<PNGetMessageActionsResult> {
 
     private String channel;
     private Long start;

@@ -1,6 +1,6 @@
 package com.pubnub.api.endpoints.objects_api.channel;
 
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.api.endpoints.objects_api.utils.PNSortKey;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
@@ -18,7 +18,7 @@ import java.util.List;
 
 @Accessors(chain = true, fluent = true)
 public class GetAllChannelsMetadata
-        extends Endpoint<PNGetAllChannelsMetadataResult> {
+        extends DelegatingEndpoint<PNGetAllChannelsMetadataResult> {
 
     @Setter
     private Integer limit = null;

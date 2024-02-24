@@ -1,6 +1,6 @@
 package com.pubnub.api.integration
 
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
@@ -11,6 +11,7 @@ import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
+
 import org.junit.Assert
 import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.FutureTask
@@ -18,37 +19,37 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 import kotlin.time.Duration
 
-class PubNubTest(private val pubNub: PubNubImpl, private val withPresenceOverride: Boolean) : AutoCloseable {
+class PubNubTest(private val pubNub: PubNub, private val withPresenceOverride: Boolean) : AutoCloseable {
 
     private val messageQueue = ArrayBlockingQueue<PNEvent>(10)
     private val statusQueue = ArrayBlockingQueue<PNStatus>(10)
 
     private val verificationListener = object : SubscribeCallback() {
-        override fun status(pubnub: PubNubImpl, pnStatus: PNStatus) {
+        override fun status(pubnub: PubNub, pnStatus: PNStatus) {
             statusQueue.put(pnStatus)
         }
 
-        override fun message(pubnub: PubNubImpl, event: PNMessageResult) {
+        override fun message(pubnub: PubNub, event: PNMessageResult) {
             messageQueue.put(event)
         }
 
-        override fun signal(pubnub: PubNubImpl, event: PNSignalResult) {
+        override fun signal(pubnub: PubNub, event: PNSignalResult) {
             messageQueue.put(event)
         }
 
-        override fun file(pubnub: PubNubImpl, event: PNFileEventResult) {
+        override fun file(pubnub: PubNub, event: PNFileEventResult) {
             messageQueue.put(event)
         }
 
-        override fun messageAction(pubnub: PubNubImpl, event: PNMessageActionResult) {
+        override fun messageAction(pubnub: PubNub, event: PNMessageActionResult) {
             messageQueue.put(event)
         }
 
-        override fun objects(pubnub: PubNubImpl, event: PNObjectEventResult) {
+        override fun objects(pubnub: PubNub, event: PNObjectEventResult) {
             messageQueue.put(event)
         }
 
-        override fun presence(pubnub: PubNubImpl, event: PNPresenceEventResult) {
+        override fun presence(pubnub: PubNub, event: PNPresenceEventResult) {
             messageQueue.put(event)
         }
     }
@@ -137,5 +138,5 @@ class PubNubTest(private val pubNub: PubNubImpl, private val withPresenceOverrid
     }
 }
 
-fun PubNubImpl.test(withPresence: Boolean = false, action: PubNubTest.() -> Unit) =
+fun PubNub.test(withPresence: Boolean = false, action: PubNubTest.() -> Unit) =
     PubNubTest(this, withPresence).use(action)

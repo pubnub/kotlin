@@ -8,7 +8,7 @@ import com.pubnub.api.CommonUtils.generatePayloadJSON
 import com.pubnub.api.CommonUtils.randomChannel
 import com.pubnub.api.CommonUtils.randomValue
 import com.pubnub.api.CommonUtils.retry
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.asyncRetry
 import com.pubnub.api.await
@@ -22,8 +22,6 @@ import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.subscribeToBlocking
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.getOrThrow
-import com.pubnub.api.v2.entities.BaseChannel
-import com.pubnub.api.v2.subscriptions.BaseSubscriptionSet
 import com.pubnub.api.v2.subscriptions.SubscriptionCursor
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.internal.managers.MapperManager
@@ -44,7 +42,7 @@ import java.util.concurrent.atomic.AtomicReference
 
 class PublishImplIntegrationTests : BaseIntegrationTest() {
 
-    lateinit var guestClient: PubNubImpl
+    lateinit var guestClient: PubNub
 
     override fun onBefore() {
         guestClient = createPubNub()
@@ -146,7 +144,7 @@ class PublishImplIntegrationTests : BaseIntegrationTest() {
         val observer = createPubNub()
 
         pubnub.addListener(object : SubscribeCallback() {
-            override fun status(pubnub: PubNubImpl, pnStatus: PNStatus) {
+            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
                 if (pnStatus.category == PNStatusCategory.Connected &&
                     pnStatus.channels.contains(expectedChannel)
                 ) {
@@ -162,9 +160,9 @@ class PublishImplIntegrationTests : BaseIntegrationTest() {
 
         val testChannel = pubnub.channel(expectedChannel)
         val testSubscription = testChannel.subscription(SubscriptionOptions.receivePresenceEvents())
-        testSubscription.addListener(object : EventListener() {
+        testSubscription.addListener(object : EventListener {
 
-            override fun message(pubnub: PubNubImpl, result: PNMessageResult) {
+            override fun message(pubnub: PubNub, result: PNMessageResult) {
                 assertEquals(expectedChannel, result.channel)
                 assertEquals(observer.configuration.userId.value, result.publisher)
                 assertEquals(messagePayload, result.message)
@@ -193,7 +191,7 @@ class PublishImplIntegrationTests : BaseIntegrationTest() {
         )
 
         observer.addListener(object : SubscribeCallback() {
-            override fun status(pubnub: PubNubImpl, pnStatus: PNStatus) {
+            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
                 if (pnStatus.category == PNStatusCategory.Connected &&
                     pnStatus.channels.contains(expectedChannel)
                 ) {
@@ -212,7 +210,7 @@ class PublishImplIntegrationTests : BaseIntegrationTest() {
                 }
             }
 
-            override fun message(pubnub: PubNubImpl, event: PNMessageResult) {
+            override fun message(pubnub: PubNub, event: PNMessageResult) {
                 if (success.get() == 0) {
                     assertEquals(expectedChannel, event.channel)
                     assertEquals(sender.configuration.userId.value, event.publisher)
@@ -295,8 +293,8 @@ class PublishImplIntegrationTests : BaseIntegrationTest() {
         val success = AtomicBoolean()
 
         pubnub.addListener(object : SubscribeCallback() {
-            override fun status(pubnub: PubNubImpl, pnStatus: PNStatus) {}
-            override fun message(pubnub: PubNubImpl, event: PNMessageResult) {
+            override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
+            override fun message(pubnub: PubNub, event: PNMessageResult) {
                 success.set(expectedPayload.toString() == JSONObject(event.message.toString()).toString())
             }
         })
@@ -318,8 +316,8 @@ class PublishImplIntegrationTests : BaseIntegrationTest() {
         val success = AtomicBoolean()
 
         pubnub.addListener(object : SubscribeCallback() {
-            override fun status(pubnub: PubNubImpl, pnStatus: PNStatus) {}
-            override fun message(pubnub: PubNubImpl, event: PNMessageResult) {
+            override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
+            override fun message(pubnub: PubNub, event: PNMessageResult) {
                 success.set(expectedPayload.toString() == JSONObject(event.message.toString()).toString())
             }
         })
@@ -396,8 +394,8 @@ class PublishImplIntegrationTests : BaseIntegrationTest() {
         val success = AtomicBoolean()
 
         pubnub.addListener(object : SubscribeCallback() {
-            override fun status(pubnub: PubNubImpl, pnStatus: PNStatus) {}
-            override fun message(pubnub: PubNubImpl, event: PNMessageResult) {
+            override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
+            override fun message(pubnub: PubNub, event: PNMessageResult) {
                 success.set(expectedPayload.toString() == JSONArray(event.message.toString()).toString())
             }
         })
@@ -422,8 +420,8 @@ class PublishImplIntegrationTests : BaseIntegrationTest() {
         val success = AtomicBoolean()
 
         pubnub.addListener(object : SubscribeCallback() {
-            override fun status(pubnub: PubNubImpl, pnStatus: PNStatus) {}
-            override fun message(pubnub: PubNubImpl, event: PNMessageResult) {
+            override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
+            override fun message(pubnub: PubNub, event: PNMessageResult) {
                 success.set(expectedPayload.toString() == JSONArray(event.message.toString()).toString())
             }
         })
@@ -455,8 +453,8 @@ class PublishImplIntegrationTests : BaseIntegrationTest() {
         val count = AtomicInteger()
 
         pubnub.addListener(object : SubscribeCallback() {
-            override fun status(pubnub: PubNubImpl, pnStatus: PNStatus) {}
-            override fun message(pubnub: PubNubImpl, event: PNMessageResult) {
+            override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
+            override fun message(pubnub: PubNub, event: PNMessageResult) {
                 assertEquals(
                     expectedPayload.toString(),
                     JSONObject(event.message.toString()).toString()
@@ -499,13 +497,13 @@ class PublishImplIntegrationTests : BaseIntegrationTest() {
         val expectedMessage = randomValue()
         val randomChannelName01 = randomChannel()
         val randomChannelName02 = randomChannel()
-        val subscriptionSetOf: BaseSubscriptionSet = pubnub.subscriptionSetOf(
+        val subscriptionSetOf = pubnub.subscriptionSetOf(
             channels = setOf(randomChannelName01, randomChannelName02),
             options = SubscriptionOptions.receivePresenceEvents()
         )
 
-        subscriptionSetOf.addListener(object : EventListener() {
-            override fun message(pubnub: PubNubImpl, result: PNMessageResult) {
+        subscriptionSetOf.addListener(object : EventListener {
+            override fun message(pubnub: PubNub, result: PNMessageResult) {
                 success.incrementAndGet()
             }
         })
@@ -533,11 +531,11 @@ class PublishImplIntegrationTests : BaseIntegrationTest() {
         val expectedMessage = randomValue()
         val randomChannelName01 = "myChannel.${randomChannel()}"
         val randomChannelName02 = "myChannel.${randomChannel()}"
-        val myChannel: BaseChannel = pubnub.channel("myChannel.*")
+        val myChannel = pubnub.channel("myChannel.*")
 
         val subscription = myChannel.subscription()
-        subscription.addListener(object : EventListener() {
-            override fun message(pubnub: PubNubImpl, result: PNMessageResult) {
+        subscription.addListener(object : EventListener {
+            override fun message(pubnub: PubNub, result: PNMessageResult) {
                 success.incrementAndGet()
             }
         })
@@ -566,20 +564,20 @@ class PublishImplIntegrationTests : BaseIntegrationTest() {
         val expectedMessage = randomValue()
         val randomChannelName01 = randomChannel()
         val randomChannelName02 = randomChannel()
-        val subscriptionSetOf: BaseSubscriptionSet = pubnub.subscriptionSetOf(
+        val subscriptionSetOf = pubnub.subscriptionSetOf(
             channels = setOf(randomChannelName01, randomChannelName02),
             options = SubscriptionOptions.receivePresenceEvents()
         )
 
-        subscriptionSetOf.addListener(object : EventListener() {
-            override fun message(pubnub: PubNubImpl, result: PNMessageResult) {
+        subscriptionSetOf.addListener(object : EventListener {
+            override fun message(pubnub: PubNub, result: PNMessageResult) {
                 failure.set(true)
             }
         })
 
         val sub = pubnub.channel(randomChannelName01).subscription()
-        sub.addListener(object : EventListener() {
-            override fun message(pubnub: PubNubImpl, result: PNMessageResult) {
+        sub.addListener(object : EventListener {
+            override fun message(pubnub: PubNub, result: PNMessageResult) {
                 success.set(true)
             }
         })
@@ -606,9 +604,9 @@ class PublishImplIntegrationTests : BaseIntegrationTest() {
         val result0 = pubnub.publish(randomChannelName01, expectedMessage).sync()
 
         pubnub.channel(randomChannelName01).subscription().apply {
-            addListener(object : EventListener() {
+            addListener(object : EventListener {
                 var highestTimetokenSeen = 0L
-                override fun message(pubnub: PubNubImpl, result: PNMessageResult) {
+                override fun message(pubnub: PubNub, result: PNMessageResult) {
                     if (result.timetoken!! <= highestTimetokenSeen) {
                         failure.set(IllegalStateException("Message timetoken ${result.timetoken} lower than already seen: $highestTimetokenSeen"))
                         return
@@ -628,9 +626,9 @@ class PublishImplIntegrationTests : BaseIntegrationTest() {
             .untilAtomic(success, Matchers.equalTo(1))
 
         pubnub.channel(randomChannelName01).subscription().apply {
-            addListener(object : EventListener() {
+            addListener(object : EventListener {
                 var highestTimetokenSeen = 0L
-                override fun message(pubnub: PubNubImpl, result: PNMessageResult) {
+                override fun message(pubnub: PubNub, result: PNMessageResult) {
                     if (result.timetoken!! <= highestTimetokenSeen) {
                         throw IllegalStateException("Message timetoken ${result.timetoken} lower than already seen: $highestTimetokenSeen")
                     }

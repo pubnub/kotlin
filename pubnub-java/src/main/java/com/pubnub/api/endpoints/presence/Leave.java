@@ -1,6 +1,6 @@
 package com.pubnub.api.endpoints.presence;
 
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.internal.InternalPubNubClient;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Accessors(chain = true, fluent = true)
-public class Leave extends Endpoint<Boolean> {
+public class Leave extends DelegatingEndpoint<Boolean> {
     @Setter
     private List<String> channels;
     @Setter

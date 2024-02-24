@@ -1,6 +1,6 @@
 package com.pubnub.api.endpoints.objects_api.memberships;
 
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.api.endpoints.objects_api.utils.Include;
 import com.pubnub.api.endpoints.objects_api.utils.PNSortKey;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
@@ -16,7 +16,7 @@ import java.util.Collections;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class GetMemberships extends Endpoint<PNGetMembershipsResult> {
+public class GetMemberships extends DelegatingEndpoint<PNGetMembershipsResult> {
 
     private String uuid;
     private Integer limit;

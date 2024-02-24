@@ -1,13 +1,13 @@
 package com.pubnub.api.endpoints.channel_groups;
 
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsAllChannelsResult;
 import com.pubnub.internal.InternalPubNubClient;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Accessors(chain = true, fluent = true)
-public class AllChannelsChannelGroup extends Endpoint<PNChannelGroupsAllChannelsResult> {
+public class AllChannelsChannelGroup extends DelegatingEndpoint<PNChannelGroupsAllChannelsResult> {
     @Setter
     private String channelGroup;
 

@@ -179,7 +179,7 @@ public class SignalIntegrationTests extends BaseIntegrationTest {
     public void testPublishSignalMessageSyncWithoutSubKey() {
         try {
 //            pubNub.getConfiguration().setSubscribeKey(null);
-            PubNub pubNub1 = new PubNub(new PNConfiguration(new UserId(random())));
+            PubNub pubNub1 = PubNub.create(new PNConfiguration(new UserId(random())));
 
             pubNub1.signal()
                     .channel(randomChannel())

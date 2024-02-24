@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints.objects_api.channel;
 
 import com.pubnub.api.endpoints.BuilderSteps;
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadata;
@@ -16,7 +16,7 @@ import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
 public class SetChannelMetadata
-        extends Endpoint<PNSetChannelMetadataResult> {
+        extends DelegatingEndpoint<PNSetChannelMetadataResult> {
 
     public SetChannelMetadata(final String channel, final InternalPubNubClient pubnubInstance) {
         super(pubnubInstance);

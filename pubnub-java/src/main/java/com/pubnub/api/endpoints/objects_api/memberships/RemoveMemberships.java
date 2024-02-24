@@ -1,6 +1,6 @@
 package com.pubnub.api.endpoints.objects_api.memberships;
 
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.api.endpoints.objects_api.utils.Include;
 import com.pubnub.api.endpoints.objects_api.utils.ObjectsBuilderSteps;
 import com.pubnub.api.endpoints.objects_api.utils.PNSortKey;
@@ -21,7 +21,7 @@ import java.util.Collections;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class RemoveMemberships extends Endpoint<PNRemoveMembershipResult> {
+public class RemoveMemberships extends DelegatingEndpoint<PNRemoveMembershipResult> {
     private final Collection<PNChannelMembership> channelMemberships;
     private String uuid;
     private Integer limit;

@@ -1,6 +1,6 @@
 // package com.pubnub.api.integration.pam
 //
-// import com.pubnub.api.PubNub
+//
 //
 // class PamServerIntegrationTest : AccessManagerIntegrationTest() {
 //

@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints.files;
 
 import com.pubnub.api.endpoints.BuilderSteps;
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.api.endpoints.files.requiredparambuilder.ChannelFileNameFileIdBuilder;
 import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class PublishFileMessage extends Endpoint<PNPublishFileMessageResult> {
+public class PublishFileMessage extends DelegatingEndpoint<PNPublishFileMessageResult> {
 
     @Setter
     private Object message;

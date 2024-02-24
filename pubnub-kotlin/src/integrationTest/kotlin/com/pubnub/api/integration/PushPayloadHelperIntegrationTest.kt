@@ -2,9 +2,10 @@ package com.pubnub.api.integration
 
 import com.google.gson.Gson
 import com.google.gson.JsonObject
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.models.consumer.PNStatus
+
 import org.junit.Test
 import java.util.UUID
 
@@ -17,7 +18,7 @@ class PushPayloadHelperIntegrationTest : BaseIntegrationTest() {
         val payload = Gson().fromJson(json, JsonObject::class.java)
 
         pubnub.addListener(object : SubscribeCallback() {
-            override fun status(pubnub: PubNubImpl, pnStatus: PNStatus) {
+            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
                 pubnub.publish(
                     channel = expectedChannel,
                     message = payload

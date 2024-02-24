@@ -1,14 +1,14 @@
 package com.pubnub.api.endpoints.files;
 
 import com.pubnub.api.endpoints.BuilderSteps;
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.api.endpoints.files.requiredparambuilder.ChannelFileNameFileIdBuilder;
 import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.files.PNFileUrlResult;
 import com.pubnub.internal.InternalPubNubClient;
 
-public class GetFileUrl extends Endpoint<PNFileUrlResult> {
+public class GetFileUrl extends DelegatingEndpoint<PNFileUrlResult> {
 
     private final String channel;
     private final String fileId;

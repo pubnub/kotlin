@@ -1,6 +1,6 @@
 package com.pubnub.api.endpoints.presence;
 
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.api.models.consumer.presence.PNGetStateResult;
 import com.pubnub.internal.InternalPubNubClient;
 import lombok.Setter;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Accessors(chain = true, fluent = true)
-public class GetState extends Endpoint<PNGetStateResult> {
+public class GetState extends DelegatingEndpoint<PNGetStateResult> {
 
     @Setter
     private List<String> channels;

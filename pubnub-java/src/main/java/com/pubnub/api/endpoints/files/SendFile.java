@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints.files;
 
 import com.pubnub.api.endpoints.BuilderSteps;
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.files.PNFileUploadResult;
@@ -13,7 +13,7 @@ import java.io.InputStream;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class SendFile extends Endpoint<PNFileUploadResult> {
+public class SendFile extends DelegatingEndpoint<PNFileUploadResult> {
 
     private final String channel;
     private final String fileName;

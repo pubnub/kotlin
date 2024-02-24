@@ -1,7 +1,7 @@
 package com.pubnub.api.integration
 
 import com.pubnub.api.CommonUtils.randomValue
-import com.pubnub.internal.PubNubImpl
+import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
@@ -12,6 +12,7 @@ import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.subscribeToBlocking
+
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.containsInAnyOrder
 import org.hamcrest.Matchers.not
@@ -131,9 +132,9 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
 
         pubnub.addListener(
             listener = object : SubscribeCallback() {
-                override fun status(pubnub: PubNubImpl, pnStatus: PNStatus) {}
+                override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
 
-                override fun objects(pubnub: PubNubImpl, event: PNObjectEventResult) {
+                override fun objects(pubnub: PubNub, event: PNObjectEventResult) {
                     println(event)
                     countDownLatch.countDown()
                 }
@@ -170,15 +171,15 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
         val userMetadataSub = pubnub.userMetadata(channel).subscription()
 
         metadataSub.addListener(
-            listener = object : com.pubnub.api.v2.callbacks.EventListener() {
-                override fun objects(pubnub: PubNubImpl, result: PNObjectEventResult) {
+            listener = object : com.pubnub.api.v2.callbacks.EventListener {
+                override fun objects(pubnub: PubNub, result: PNObjectEventResult) {
                     countDownLatch.countDown()
                 }
             }
         )
         userMetadataSub.addListener(
-            listener = object : com.pubnub.api.v2.callbacks.EventListener() {
-                override fun objects(pubnub: PubNubImpl, result: PNObjectEventResult) {
+            listener = object : com.pubnub.api.v2.callbacks.EventListener {
+                override fun objects(pubnub: PubNub, result: PNObjectEventResult) {
                     countDownLatch.countDown()
                 }
             }
