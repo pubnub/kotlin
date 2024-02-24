@@ -17,6 +17,7 @@ import io.mockk.verify
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
@@ -125,6 +126,27 @@ internal class PresenceTest {
         presence.leftAll()
 
         // then
+        verify { leaveProviderMock.getLeaveRemoteAction(any(), any()) }
+    }
+
+    @Test
+    fun `Leave events created when suppressLeaveEvents is false and heartbeat interval is 0 and presence(false) called`() {
+        // given
+        val leaveProviderMock: LeaveProvider = mockk()
+        every { leaveProviderMock.getLeaveRemoteAction(any(), any()) } returns successfulRemoteAction(true)
+
+        val presence = Presence.create(
+            listenerManager = listenerManager,
+            heartbeatInterval = 0.seconds,
+            suppressLeaveEvents = false,
+            leaveProvider = leaveProviderMock,
+        )
+
+        // when
+        presence.presence(channels = setOf("abc"), connected = false)
+
+        // then
+        assertInstanceOf(PresenceNoOp::class.java, presence)
         verify { leaveProviderMock.getLeaveRemoteAction(any(), any()) }
     }
 

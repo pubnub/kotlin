@@ -56,20 +56,19 @@ dependencies {
 
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
     implementation "com.squareup.retrofit2:converter-gson:2.9.0"
+    implementation 'com.squareup.okhttp3:okhttp:4.11.0'
+    api 'com.squareup.okhttp3:logging-interceptor:4.11.0'
 
-    implementation 'org.json:json:20230227'
+    api 'org.json:json:20240205'
+    api 'com.google.code.gson:gson:2.10.1'
 
-    implementation "org.slf4j:slf4j-api:1.7.30"
-
-    api 'com.squareup.okhttp3:logging-interceptor:4.9.3'
-    api 'com.google.code.gson:gson:2.9.0'
+    implementation "org.slf4j:slf4j-api:1.7.36"
     implementation 'co.nstant.in:cbor:0.9'
 
     testImplementation "com.github.tomakehurst:wiremock:2.27.2"
 
     testImplementation "ch.qos.logback:logback-classic:1.2.11"
     testImplementation "ch.qos.logback:logback-core:1.2.11"
-    testImplementation "org.json:json:20230227"
 
     testImplementation group: 'io.cucumber', name: 'cucumber-java', version: '6.10.4'
     testImplementation group: 'io.cucumber', name: 'cucumber-junit', version: '6.10.4'
@@ -87,10 +86,8 @@ dependencies {
     testImplementation "org.aeonbits.owner:owner:1.0.12"
 
     testFixturesImplementation "com.github.tomakehurst:wiremock:2.27.2"
-//    testFixturesImplementation project(":pubnub-kotlin-core:core-impl")
     testFixturesImplementation "org.awaitility:awaitility-kotlin:4.0.3"
     testFixturesImplementation "junit:junit:4.13.2"
-    testFixturesImplementation 'org.json:json:20230227'
     testFixturesImplementation "org.aeonbits.owner:owner:1.0.12"
 
 //

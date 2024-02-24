@@ -284,13 +284,6 @@ open class PNConfiguration @Throws(PubNubException::class) constructor(
     var maximumConnections: Int? = null
 
     /**
-     * If the number of messages into the payload is above this value,
-     *
-     * [PNStatusCategory.PNRequestMessageCountExceededCategory] is thrown.
-     */
-    var requestMessageCountThreshold: Int? = null
-
-    /**
      * Enable Google App Engine networking.
      *
      * Defaults to `false`.

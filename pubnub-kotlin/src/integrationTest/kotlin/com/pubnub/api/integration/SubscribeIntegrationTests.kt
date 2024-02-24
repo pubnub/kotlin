@@ -15,6 +15,8 @@ import com.pubnub.api.subscribeToBlocking
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.api.v2.subscriptions.SubscriptionCursor
+import com.pubnub.api.v2.subscriptions.SubscriptionOptions
+import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.logging.HttpLoggingInterceptor
@@ -599,6 +601,65 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         Thread.sleep(1000)
         assertEquals(1, successMessage.get())
         assertEquals(1, successSignal.get())
+    }
+
+    @Test
+    fun testSubscribeToChannelGroup() {
+        val success = AtomicBoolean()
+        val expectedMessage = randomValue()
+
+        // add channels to channelGroup
+        val channelGroup = "myChannelGroup"
+        val channel01 = "Channel01"
+        val pnChannelGroupsAddChannelResult: PNChannelGroupsAddChannelResult? = pubnub.addChannelsToChannelGroup(
+            channels = listOf(channel01, "Channel02"),
+            channelGroup = channelGroup
+        ).sync()
+
+        val channelGroupSubscription = pubnub.channelGroup(channelGroup).subscription()
+        channelGroupSubscription.addListener(object : EventListener {
+            override fun message(pubnub: PubNub, result: PNMessageResult) {
+                assertEquals(expectedMessage, result.message.asString)
+                success.set(true)
+            }
+        })
+
+        channelGroupSubscription.subscribe()
+        Thread.sleep(2000)
+        pubnub.publish(channel01, expectedMessage).sync()
+
+        success.listen()
+    }
+
+    @Test
+    fun testSubscribeWithFilter() {
+        val success = AtomicBoolean()
+        val phraseToLookForInMessage = "abc"
+        val expectedMessage = phraseToLookForInMessage + randomValue()
+        val channelName = randomChannel()
+        val channel = pubnub.channel(channelName)
+        val subscription = channel.subscription(
+            SubscriptionOptions.filter {
+                it is PNMessageResult &&
+                    it.message.asString.contains(phraseToLookForInMessage) &&
+                    it.publisher!!.contains("client")
+            }
+        )
+        subscription.addListener(object : EventListener {
+            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
+                assertEquals(expectedMessage, pnMessageResult.message.asString)
+                success.set(true)
+            }
+        })
+        subscription.subscribe()
+        Thread.sleep(2000)
+
+        guestClient.publish(
+            channel = channelName,
+            message = expectedMessage
+        ).sync()!!
+
+        success.listen()
     }
 
     @Test

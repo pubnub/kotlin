@@ -32,6 +32,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Ignore
+import org.junit.Assume.assumeFalse
 import org.junit.Test
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
@@ -2512,13 +2513,13 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         Awaitility.await()
-            .atMost(2, TimeUnit.SECONDS)
+            .atMost(1, TimeUnit.SECONDS)
             .untilAtomic(
                 messageReceived, IsEqual.equalTo(true)
             )
 
         Awaitility.await()
-            .atMost(2, TimeUnit.SECONDS)
+            .atMost(1, TimeUnit.SECONDS)
             .untilAtomic(
                 statusReceived, IsEqual.equalTo(true)
             )

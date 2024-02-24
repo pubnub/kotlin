@@ -5,7 +5,13 @@ import com.pubnub.api.models.consumer.PNStatus
 
 interface StatusListener : BaseStatusListener {
     /**
-     * Receive status updates from the PubNub client.
+     * Receive status updates from the PubNub client, such as:
+     * * [PNStatusCategory.PNConnectedCategory],
+     * * [PNStatusCategory.PNDisconnectedCategory],
+     * * [PNStatusCategory.PNSubscriptionChanged]
+     * * [PNStatusCategory.PNConnectionError],
+     * * [PNStatusCategory.PNUnexpectedDisconnectCategory],
+     * * [PNStatusCategory.PNAcknowledgmentCategory]
      *
      * @see [PNStatus]
      *

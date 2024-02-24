@@ -81,7 +81,13 @@ internal interface Presence {
         channels: Set<String> = emptySet(),
         channelGroups: Set<String> = emptySet(),
         connected: Boolean = false
-    )
+    ) {
+        if (connected) {
+            joined(channels, channelGroups)
+        } else {
+            left(channels, channelGroups)
+        }
+    }
 
     fun reconnect()
 
@@ -130,8 +136,6 @@ internal class PresenceNoOp(
         channelGroups.clear()
     }
 
-    override fun presence(channels: Set<String>, channelGroups: Set<String>, connected: Boolean) = noAction()
-
     override fun reconnect() = noAction()
 
     override fun disconnect() = noAction()
@@ -163,18 +167,6 @@ internal class EnabledPresence(
 
     override fun leftAll() {
         presenceEventEngineManager.addEventToQueue(PresenceEvent.LeftAll)
-    }
-
-    override fun presence(
-        channels: Set<String>,
-        channelGroups: Set<String>,
-        connected: Boolean
-    ) {
-        if (connected) {
-            joined(channels, channelGroups)
-        } else {
-            left(channels, channelGroups)
-        }
     }
 
     override fun reconnect() {
