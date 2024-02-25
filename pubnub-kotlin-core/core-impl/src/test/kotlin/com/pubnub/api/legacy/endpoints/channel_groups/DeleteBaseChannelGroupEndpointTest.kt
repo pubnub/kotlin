@@ -15,15 +15,12 @@ import com.pubnub.api.CommonUtils.failTest
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.legacy.BaseTest
-import com.pubnub.api.listen
 import org.awaitility.Awaitility
 import org.hamcrest.core.IsEqual
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Ignore
 import org.junit.Test
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
 class DeleteBaseChannelGroupEndpointTest : BaseTest() {
@@ -116,46 +113,5 @@ class DeleteBaseChannelGroupEndpointTest : BaseTest() {
         }
 
         Awaitility.await().atMost(5, TimeUnit.SECONDS).untilAtomic(atomic, IsEqual.equalTo(1))
-    }
-
-    @Test
-    @Ignore
-    fun testTelemetryParam() {
-        val success = AtomicBoolean()
-
-        stubFor(
-            get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group/groupA/remove"))
-                .willReturn(
-                    aResponse().withBody(
-                        """{"status": 200, "message": "OK", "payload": {}, "service": "ChannelGroups"}"""
-                    )
-                )
-        )
-
-        stubFor(
-            get(urlMatching("/time/0.*"))
-                .willReturn(aResponse().withBody("[1000]"))
-        )
-
-        lateinit var telemetryParamName: String
-
-        pubnub.deleteChannelGroup(
-            channelGroup = "groupA"
-        ).async { result ->
-            assertFalse(result.isFailure)
-//            telemetryParamName = "l_${status.operation.queryParam} //TODO no longer available
-//            assertEquals("l_cg", telemetryParamName)
-//            success.set(true)
-        }
-
-        success.listen()
-
-        pubnub.time().async { result ->
-            assertFalse(result.isFailure)
-//            assertNotNull(status.param(telemetryParamName)) //TODO no longer available
-            success.set(true)
-        }
-
-        success.listen()
     }
 }

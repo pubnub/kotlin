@@ -13,8 +13,6 @@ import org.junit.Assert.assertEquals
 
 class PublishPostTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Publish, PNPublishResult>() {
 
-    override fun telemetryParamName() = "l_pub"
-
     override fun pnOperation() = PNOperationType.PNPublishOperation
 
     override fun requiredKeys() =

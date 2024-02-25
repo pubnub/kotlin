@@ -14,8 +14,6 @@ import org.junit.Assert.assertFalse
 
 class GetStateTestSuite : com.pubnub.internal.suite.EndpointTestSuite<GetState, PNGetStateResult>() {
 
-    override fun telemetryParamName() = "l_pres"
-
     override fun pnOperation() = PNOperationType.PNGetState
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH

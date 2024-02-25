@@ -12,8 +12,6 @@ import org.junit.Assert.assertTrue
 class RemoveChannelChannelGroupTestSuite :
     com.pubnub.internal.suite.EndpointTestSuite<RemoveChannelChannelGroup, PNChannelGroupsRemoveChannelResult>() {
 
-    override fun telemetryParamName() = "l_cg"
-
     override fun pnOperation() = PNOperationType.PNRemoveChannelsFromGroupOperation
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH

@@ -12,8 +12,6 @@ import org.junit.Assert.assertTrue
 
 class SubscribeTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Subscribe, SubscribeEnvelope>() {
 
-    override fun telemetryParamName() = ""
-
     override fun pnOperation() = PNOperationType.PNSubscribeOperation
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH

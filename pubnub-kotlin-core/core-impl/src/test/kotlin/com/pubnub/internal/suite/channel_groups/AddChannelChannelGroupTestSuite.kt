@@ -11,8 +11,6 @@ import com.pubnub.internal.endpoints.channel_groups.AddChannelChannelGroup
 class AddChannelChannelGroupTestSuite :
     com.pubnub.internal.suite.EndpointTestSuite<AddChannelChannelGroup, PNChannelGroupsAddChannelResult>() {
 
-    override fun telemetryParamName() = "l_cg"
-
     override fun pnOperation() = PNOperationType.PNAddChannelsToGroupOperation
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH

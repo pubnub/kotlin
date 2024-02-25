@@ -11,8 +11,6 @@ import org.junit.Assert.assertEquals
 
 class MessageCountsTestSuite : com.pubnub.internal.suite.EndpointTestSuite<MessageCounts, PNMessageCountResult>() {
 
-    override fun telemetryParamName() = "l_mc"
-
     override fun pnOperation() = PNOperationType.PNMessageCountOperation
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH

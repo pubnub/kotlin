@@ -11,7 +11,6 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 
 class TimeTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Time, PNTimeResult>() {
-    override fun telemetryParamName() = "l_time"
 
     override fun pnOperation() = PNOperationType.PNTimeOperation
 

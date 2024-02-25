@@ -10,8 +10,6 @@ import com.pubnub.internal.endpoints.DeleteMessages
 
 class DeleteMessagesTestSuite : com.pubnub.internal.suite.EndpointTestSuite<DeleteMessages, PNDeleteMessagesResult>() {
 
-    override fun telemetryParamName() = "l_hist"
-
     override fun pnOperation() = PNOperationType.PNDeleteMessagesOperation
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH

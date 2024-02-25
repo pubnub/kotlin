@@ -15,8 +15,6 @@ import org.junit.Assert.assertTrue
 
 class FetchMessagesTestSuite : com.pubnub.internal.suite.EndpointTestSuite<FetchMessages, PNFetchMessagesResult>() {
 
-    override fun telemetryParamName() = "l_hist"
-
     override fun pnOperation() = PNOperationType.PNFetchMessagesOperation
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH

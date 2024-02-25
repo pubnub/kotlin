@@ -14,8 +14,6 @@ import org.junit.Assert.assertTrue
 class ListAllChannelGroupTestSuite :
     com.pubnub.internal.suite.EndpointTestSuite<ListAllChannelGroup, PNChannelGroupsListAllResult>() {
 
-    override fun telemetryParamName() = "l_cg"
-
     override fun pnOperation() = PNOperationType.PNChannelGroupsOperation
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH

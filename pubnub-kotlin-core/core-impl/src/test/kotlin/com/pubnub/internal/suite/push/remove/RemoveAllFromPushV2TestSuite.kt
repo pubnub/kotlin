@@ -12,8 +12,6 @@ import com.pubnub.internal.endpoints.push.RemoveAllPushChannelsForDevice
 class RemoveAllFromPushV2TestSuite :
     com.pubnub.internal.suite.EndpointTestSuite<RemoveAllPushChannelsForDevice, PNPushRemoveAllChannelsResult>() {
 
-    override fun telemetryParamName() = "l_push"
-
     override fun pnOperation() = PNOperationType.PNRemoveAllPushNotificationsOperation
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH

@@ -15,8 +15,6 @@ import org.junit.Assert.assertTrue
 
 class HistoryTestSuite : com.pubnub.internal.suite.EndpointTestSuite<History, PNHistoryResult>() {
 
-    override fun telemetryParamName() = "l_hist"
-
     override fun pnOperation() = PNOperationType.PNHistoryOperation
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH

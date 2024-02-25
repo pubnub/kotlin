@@ -10,8 +10,6 @@ import org.junit.Assert.assertTrue
 
 class HeartbeatTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Heartbeat, Boolean>() {
 
-    override fun telemetryParamName() = "l_pres"
-
     override fun pnOperation() = PNOperationType.PNHeartbeatOperation
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH

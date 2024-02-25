@@ -9,8 +9,6 @@ import org.junit.Assert.assertTrue
 
 class LeaveTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Leave, Boolean>() {
 
-    override fun telemetryParamName() = "l_pres"
-
     override fun pnOperation() = PNOperationType.PNUnsubscribeOperation
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH

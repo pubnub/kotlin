@@ -6,4 +6,4 @@ import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsListAllResult
 /**
  * @see [PubNub.listAllChannelGroups]
  */
-interface ListAllChannelGroup :Endpoint<PNChannelGroupsListAllResult>
+interface ListAllChannelGroup : Endpoint<PNChannelGroupsListAllResult>

@@ -12,8 +12,6 @@ import org.junit.Assert.assertEquals
 class GetMessageActionsMultipleTestSuite :
     com.pubnub.internal.suite.EndpointTestSuite<GetMessageActions, PNGetMessageActionsResult>() {
 
-    override fun telemetryParamName() = "l_msga"
-
     override fun pnOperation() = PNOperationType.PNGetMessageActions
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH

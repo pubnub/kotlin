@@ -140,41 +140,4 @@ class AddChannelBaseChannelGroupEndpointTest : BaseTest() {
 
         Awaitility.await().atMost(15, TimeUnit.SECONDS).untilAtomic(atomic, IsEqual.equalTo(1))
     }
-
-//    @Test // TODO try to bring back?
-//    fun testTelemetryParam() {
-//        val success = AtomicBoolean()
-//
-//        stubFor(
-//            get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group/groupA"))
-//                .willReturn(emptyJson())
-//        )
-//
-//        stubFor(
-//            get(urlMatching("/time/0.*"))
-//                .willReturn(aResponse().withBody("[1000]"))
-//        )
-//
-//        lateinit var telemetryParamName: String
-//
-//        pubnub.addChannelsToChannelGroup(
-//            channelGroup = "groupA",
-//            channels = listOf("ch1", "ch2")
-//        ).async { result ->
-//            assertFalse(result.isFailure)
-// //            telemetryParamName = "l_${status.operation.queryParam}" //TODO this is no longer available
-// //            assertEquals("l_cg", telemetryParamName)
-// //            success.set(true)
-//        }
-//
-//        success.listen()
-//
-//        pubnub.time().async { result ->
-//            assertFalse(result.isFailure)
-// //            assertNotNull(status.param(telemetryParamName)) //TODO no longer available
-// //            success.set(true)
-//        }
-//
-//        success.listen()
-//    }
 }

@@ -9,8 +9,6 @@ import org.junit.Assert.assertEquals
 
 class WhereNowTestSuite : com.pubnub.internal.suite.EndpointTestSuite<WhereNow, PNWhereNowResult>() {
 
-    override fun telemetryParamName() = "l_pres"
-
     override fun pnOperation() = PNOperationType.PNWhereNowOperation
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH

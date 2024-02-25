@@ -19,7 +19,6 @@ import com.pubnub.api.listen
 import com.pubnub.api.models.consumer.PNBoundedPage
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Ignore
 import org.junit.Test
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -433,59 +432,5 @@ class GetMessageActionEndpointTest : BaseTest() {
         assertFalse(requests[0].queryParameter("limit").isPresent)
         assertFalse(requests[0].queryParameter("start").isPresent)
         assertFalse(requests[0].queryParameter("end").isPresent)
-    }
-
-    @Test
-    @Ignore
-    fun testTelemetryParam() {
-        val success = AtomicBoolean()
-
-        stubFor(
-            get(urlPathEqualTo("/v1/message-actions/mySubscribeKey/channel/coolChannel"))
-                .willReturn(
-                    aResponse().withBody(
-                        """
-                        {
-                          "status": 200,
-                          "data": [
-                            {
-                              "messageTimetoken": "123",
-                              "type": "emoji",
-                              "uuid": "someUuid",
-                              "value": "smiley",
-                              "actionTimetoken": "1000"
-                            }
-                          ]
-                        }
-                        """.trimIndent()
-                    )
-                )
-        )
-
-        stubFor(
-            get(urlMatching("/time/0.*"))
-                .willReturn(aResponse().withBody("[1000]"))
-        )
-
-        lateinit var telemetryParamName: String
-
-        pubnub.getMessageActions(
-            channel = "coolChannel"
-        ).async { result ->
-            assertFalse(result.isFailure)
-//            telemetryParamName = "l_${status.operation.queryParam}" //TODO no longer available
-//            assertEquals("l_msga", telemetryParamName)
-//            success.set(true)
-        }
-
-        success.listen()
-
-        pubnub.time().async { result ->
-            assertFalse(result.isFailure)
-//            assertNotNull(status.param(telemetryParamName)) //TODO no longer available
-//            success.set(true)
-        }
-
-        success.listen()
     }
 }

@@ -70,7 +70,6 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
     private fun handleResponse(response: Response<Input>): Output {
         when {
             response.isSuccessful -> {
-                storeRequestLatency(response)
                 return checkAndCreateResponse(response)
             }
 
@@ -108,7 +107,6 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
                     when {
                         response.isSuccessful -> {
                             // query params
-                            storeRequestLatency(response)
                             try {
                                 Result.success(checkAndCreateResponse(response))
                             } catch (e: PubNubException) {
@@ -170,15 +168,6 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
             })
     }
 
-    private fun storeRequestLatency(response: Response<Input>) {
-        pubnub.telemetryManager.storeLatency(
-            latency = with(response.raw()) {
-                receivedResponseAtMillis - sentRequestAtMillis
-            },
-            type = operationType()
-        )
-    }
-
     protected fun createBaseParams(): HashMap<String, String> {
         val map = hashMapOf<String, String>()
 
@@ -203,8 +192,6 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
                 map["auth"] = pubnub.configuration.authKey
             }
         }
-
-        map.putAll(pubnub.telemetryManager.operationsLatency())
         return map
     }
 

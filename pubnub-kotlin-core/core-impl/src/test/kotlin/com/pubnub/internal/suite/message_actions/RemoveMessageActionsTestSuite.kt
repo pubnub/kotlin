@@ -9,8 +9,6 @@ import com.pubnub.internal.endpoints.message_actions.RemoveMessageAction
 class RemoveMessageActionsTestSuite :
     com.pubnub.internal.suite.EndpointTestSuite<RemoveMessageAction, PNRemoveMessageActionResult>() {
 
-    override fun telemetryParamName() = "l_msga"
-
     override fun pnOperation() = PNOperationType.PNDeleteMessageAction
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH

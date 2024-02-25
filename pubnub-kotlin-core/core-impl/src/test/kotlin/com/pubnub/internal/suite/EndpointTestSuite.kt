@@ -31,7 +31,6 @@ abstract class EndpointTestSuite<T : Endpoint<*, R>, R> : BaseTest() {
 
     private lateinit var expectedStub: StubMapping
 
-    abstract fun telemetryParamName(): String
     abstract fun pnOperation(): PNOperationType
     abstract fun requiredKeys(): Int
     abstract fun snippet(): T
@@ -50,49 +49,6 @@ abstract class EndpointTestSuite<T : Endpoint<*, R>, R> : BaseTest() {
         pubnub.configuration.includeInstanceIdentifier = false
         pubnub.configuration.includeRequestIdentifier = false
     }
-
-//    @Test
-//    fun testTelemetryParameter() {
-//        if (pnOperation() == PNOperationType.PNSubscribeOperation)
-//            return
-//
-//        stubTimeEndpoint()
-//
-//        wireMockServer.removeStub(expectedStub)
-//
-//        stubFor(
-//            mappingBuilder()
-//                .willReturn(
-//                    aResponse()
-//                        .withFixedDelay(50)
-//                        .withBody(successfulResponseBody())
-//                )
-//        )
-//
-//        lateinit var telemetryParamName: String
-//
-//        snippet().await { result ->
-//            assertFalse(result.isFailure)
-// //            telemetryParamName = "l_${status.operation.queryParam!!}"
-// //            assertEquals(telemetryParamName(), telemetryParamName)
-//        }
-//
-//        Awaitility.await()
-//            .pollInterval(Durations.FIVE_HUNDRED_MILLISECONDS)
-//            .pollDelay(Durations.FIVE_HUNDRED_MILLISECONDS)
-//            .atMost(Durations.FIVE_SECONDS)
-//            .until {
-//                val latch = CountDownLatch(1)
-//
-//                pubnub.time().async { result ->
-//                    assertFalse(result.isFailure)
-//                    assertNotNull(status.param(telemetryParamName))
-//                    latch.countDown()
-//                }
-//
-//                latch.await(500, TimeUnit.MILLISECONDS)
-//            }
-//    }
 
     @Test
     fun testSuccessAsync() {

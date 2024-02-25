@@ -9,7 +9,7 @@ import com.pubnub.internal.v2.callbacks.InternalStatusListener
 
 class DelegatingSubscribeCallback(private val listener: SubscribeCallback) : com.pubnub.internal.callbacks.SubscribeCallback, DelegatingEventListener(listener), InternalStatusListener {
 
-    override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, status: PNStatus) {
+    override fun status(pubnub: BasePubNub<*, *, *, *, *, *, *, *>, status: PNStatus) {
         listener.status(pubnub as PubNub, status)
     }
 

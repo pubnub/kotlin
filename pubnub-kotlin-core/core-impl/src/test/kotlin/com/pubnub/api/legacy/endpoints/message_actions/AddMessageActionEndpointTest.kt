@@ -3,7 +3,6 @@ package com.pubnub.api.legacy.endpoints.message_actions
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.equalToJson
 import com.github.tomakehurst.wiremock.client.WireMock.findAll
-import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.noContent
 import com.github.tomakehurst.wiremock.client.WireMock.post
 import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
@@ -19,7 +18,6 @@ import com.pubnub.api.listen
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Ignore
 import org.junit.Test
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -364,63 +362,5 @@ class AddMessageActionEndpointTest : BaseTest() {
         assertEquals(1, requests.size)
 
         assertEquals("authKey", requests[0].queryParameter("auth").firstValue())
-    }
-
-    @Test
-    @Ignore
-    fun testTelemetryParam() {
-        val success = AtomicBoolean()
-
-        stubFor(
-            post(urlPathEqualTo("/v1/message-actions/mySubscribeKey/channel/coolChannel/message/123"))
-                .withRequestBody(equalToJson("""{"type":"emoji","value":"smiley"}"""))
-                .willReturn(
-                    aResponse().withBody(
-                        """
-                        {
-                          "status": 200,
-                          "data": {
-                            "messageTimetoken": "123",
-                            "type": "emoji",
-                            "uuid": "someUuid",
-                            "value": "smiley",
-                            "actionTimetoken": "1000"
-                          }
-                        }
-                        """.trimIndent()
-                    )
-                )
-        )
-
-        stubFor(
-            get(urlMatching("/time/0.*"))
-                .willReturn(aResponse().withBody("[1000]"))
-        )
-
-        lateinit var telemetryParamName: String
-
-        pubnub.addMessageAction(
-            channel = "coolChannel",
-            messageAction = PNMessageAction(
-                type = "emoji",
-                value = "smiley",
-                messageTimetoken = 123
-            )
-        ).async { result ->
-            assertFalse(result.isFailure)
-//            telemetryParamName = "l_${status.operation.queryParam}" //TODO this is no longer available
-//            assertEquals("l_cg", telemetryParamName)
-//            success.set(true)
-        }
-
-        success.listen()
-
-        pubnub.time().async { result ->
-            assertFalse(result.isFailure)
-//            assertNotNull(status.param(telemetryParamName)) //TODO no longer available
-//            success.set(true)
-        }
-
-        success.listen()
     }
 }

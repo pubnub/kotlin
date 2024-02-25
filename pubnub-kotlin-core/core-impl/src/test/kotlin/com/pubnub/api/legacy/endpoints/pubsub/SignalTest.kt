@@ -21,7 +21,6 @@ import com.pubnub.internal.callbacks.SubscribeCallback
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.util.UUID
 import java.util.concurrent.atomic.AtomicBoolean
@@ -169,38 +168,5 @@ class SignalTest : BaseTest() {
         } catch (e: PubNubException) {
             assertPnException(PubNubError.CHANNEL_MISSING, e)
         }
-    }
-
-    @Test
-    fun testSignalTelemetryParam() {
-        stubFor(
-            get(urlMatching("/signal/myPublishKey/mySubscribeKey/0/coolChannel.*")).willReturn(
-                aResponse().withBody(
-                    """
-                    [
-                      1,
-                      "Sent",
-                      "1000"
-                    ]
-                    """.trimIndent()
-                )
-            )
-        )
-        stubFor(
-            get(urlMatching("/time/0.*"))
-                .willReturn(aResponse().withBody("[1000]"))
-        )
-        pubnub.signal(
-            channel = "coolChannel",
-            message = UUID.randomUUID().toString()
-        ).sync()
-
-        pubnub.time()
-            .sync()
-
-        val requests = findAll(getRequestedFor(urlMatching("/time/0.*")))
-        assertEquals(1, requests.size)
-        val request = requests[0]
-        assertTrue(request.queryParameter("l_sig").isPresent)
     }
 }

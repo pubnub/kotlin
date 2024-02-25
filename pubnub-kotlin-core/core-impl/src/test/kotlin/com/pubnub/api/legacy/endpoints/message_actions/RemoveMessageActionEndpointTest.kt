@@ -4,7 +4,6 @@ import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.delete
 import com.github.tomakehurst.wiremock.client.WireMock.deleteRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.findAll
-import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.noContent
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
@@ -17,7 +16,6 @@ import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.listen
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Ignore
 import org.junit.Test
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -249,53 +247,5 @@ class RemoveMessageActionEndpointTest : BaseTest() {
         assertEquals(1, requests.size)
 
         assertEquals("authKey", requests[0].queryParameter("auth").firstValue())
-    }
-
-    @Test
-    @Ignore
-    fun testTelemetryParam() {
-        val success = AtomicBoolean()
-
-        stubFor(
-            delete(urlPathEqualTo("/v1/message-actions/mySubscribeKey/channel/coolChannel/message/123/action/100"))
-                .willReturn(
-                    aResponse().withBody(
-                        """
-                        {
-                          "status": 200,
-                          "data": {}
-                        }
-                        """.trimIndent()
-                    )
-                )
-        )
-
-        stubFor(
-            get(urlMatching("/time/0.*"))
-                .willReturn(aResponse().withBody("[1000]"))
-        )
-
-        lateinit var telemetryParamName: String
-
-        pubnub.removeMessageAction(
-            channel = "coolChannel",
-            messageTimetoken = 123L,
-            actionTimetoken = 100L
-        ).async { result ->
-            assertFalse(result.isFailure)
-//            telemetryParamName = "l_${status.operation.queryParam}" //TODO no longer available
-//            assertEquals("l_msga", telemetryParamName)
-            success.set(true)
-        }
-
-        success.listen()
-
-        pubnub.time().async { result ->
-            assertFalse(result.isFailure)
-//            assertNotNull(status.param(telemetryParamName)) //TODO no longer available
-//            success.set(true)
-        }
-
-        success.listen()
     }
 }

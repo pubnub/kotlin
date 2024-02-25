@@ -15,8 +15,6 @@ import org.junit.Assert.assertFalse
 class ListPushProvisionsV2TestSuite :
     com.pubnub.internal.suite.EndpointTestSuite<ListPushProvisions, PNPushListProvisionsResult>() {
 
-    override fun telemetryParamName() = "l_push"
-
     override fun pnOperation() = PNOperationType.PNPushNotificationEnabledChannelsOperation
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH

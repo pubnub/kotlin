@@ -69,7 +69,6 @@ import com.pubnub.internal.managers.ListenerManager
 import com.pubnub.internal.managers.MapperManager
 import com.pubnub.internal.managers.PublishSequenceManager
 import com.pubnub.internal.managers.RetrofitManager
-import com.pubnub.internal.managers.TelemetryManager
 import com.pubnub.internal.managers.TokenManager
 import com.pubnub.internal.managers.TokenParser
 import com.pubnub.internal.models.consumer.access_manager.sum.SpacePermissions
@@ -148,7 +147,6 @@ class InternalPubNubClient internal constructor(
     private val basePathManager = BasePathManager(configuration)
     internal val retrofitManager = RetrofitManager(this)
     internal val publishSequenceManager = PublishSequenceManager(BasePubNubImpl.MAX_SEQUENCE)
-    internal val telemetryManager = TelemetryManager()
     internal val tokenManager: TokenManager = TokenManager()
     private val tokenParser: TokenParser = TokenParser()
     private val presenceData = PresenceData()

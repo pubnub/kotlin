@@ -13,8 +13,6 @@ import java.nio.charset.StandardCharsets
 
 class SignalTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Signal, PNPublishResult>() {
 
-    override fun telemetryParamName() = "l_sig"
-
     override fun pnOperation() = PNOperationType.PNSignalOperation
 
     override fun requiredKeys() =

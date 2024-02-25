@@ -17,8 +17,6 @@ class GrantTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Grant, PNAcce
         pubnub.configuration.secretKey = "mySecretKey"
     }
 
-    override fun telemetryParamName() = "l_pam"
-
     override fun pnOperation() = PNOperationType.PNAccessManagerGrant
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.SEC

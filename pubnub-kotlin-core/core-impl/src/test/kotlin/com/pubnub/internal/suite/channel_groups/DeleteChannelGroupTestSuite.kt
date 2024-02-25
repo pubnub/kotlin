@@ -10,8 +10,6 @@ import com.pubnub.internal.endpoints.channel_groups.DeleteChannelGroup
 class DeleteChannelGroupTestSuite :
     com.pubnub.internal.suite.EndpointTestSuite<DeleteChannelGroup, PNChannelGroupsDeleteGroupResult>() {
 
-    override fun telemetryParamName() = "l_cg"
-
     override fun pnOperation() = PNOperationType.PNRemoveGroupOperation
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH
