@@ -203,7 +203,7 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
 
         pubnub.test(withPresence = true) {
             subscribe(expectedChannel)
-            assertEquals(PNStatusCategory.HeartbeatSuccess, nextStatus())
+            assertEquals(PNStatusCategory.HeartbeatSuccess, nextStatus().category)
             skip(1)
         }
     }

@@ -37,6 +37,15 @@ class TestPubNub internal constructor(configuration: PNConfiguration, eventEngin
         TODO("Not yet implemented")
     }
 
+    /**
+     * Cancel any subscribe and heartbeat loops or ongoing re-connections.
+     *
+     * Monitor the results in [SubscribeCallback.status]
+     */
+    override fun disconnect() {
+        TODO("Not yet implemented")
+    }
+
     override fun subscriptionSetOf(subscriptions: Set<BaseSubscriptionImpl<InternalEventListener>>): BaseSubscriptionSetImpl<InternalEventListener, BaseSubscriptionImpl<InternalEventListener>> {
         TODO("Not yet implemented")
     }

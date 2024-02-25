@@ -43,7 +43,6 @@ public class HeartbeatIntegrationTest extends BaseIntegrationTest {
         final PubNub observer = getPubNub();
 
         pubNub = getPubNub(getBasicPnConfiguration().setPresenceTimeoutWithCustomInterval(20, 4));
-
         observer.addListener(new SubscribeCallback.BaseSubscribeCallback() {
             @Override
             public void status(@NotNull PubNub pn, @NotNull PNStatus status) {
@@ -91,6 +90,7 @@ public class HeartbeatIntegrationTest extends BaseIntegrationTest {
                             }
                             break;
                         case "timeout":
+                        case "leave":
                             pubNub.reconnect();
                             break;
                     }
