@@ -84,6 +84,10 @@ import com.pubnub.internal.endpoints.objects_api.memberships.GetMembershipsImpl;
 import com.pubnub.internal.endpoints.objects_api.memberships.ManageMembershipsImpl;
 import com.pubnub.internal.endpoints.objects_api.memberships.RemoveMembershipsImpl;
 import com.pubnub.internal.endpoints.objects_api.memberships.SetMembershipsImpl;
+import com.pubnub.internal.endpoints.objects_api.uuid.GetAllUUIDMetadataImpl;
+import com.pubnub.internal.endpoints.objects_api.uuid.GetUUIDMetadataImpl;
+import com.pubnub.internal.endpoints.objects_api.uuid.RemoveUUIDMetadataImpl;
+import com.pubnub.internal.endpoints.objects_api.uuid.SetUUIDMetadataImpl;
 import com.pubnub.internal.endpoints.presence.GetStateImpl;
 import com.pubnub.internal.endpoints.presence.HereNowImpl;
 import com.pubnub.internal.endpoints.presence.SetStateImpl;
@@ -306,25 +310,25 @@ public class PubNubImpl extends BasePubNubImpl<
 
     @Override
     public SetUUIDMetadata setUUIDMetadata() {
-        return new SetUUIDMetadata(getInternalPubNubClient());
+        return new SetUUIDMetadataImpl(getInternalPubNubClient());
     }
 
     @Override
     @NotNull
     public GetAllUUIDMetadata getAllUUIDMetadata() {
-        return new GetAllUUIDMetadata(getInternalPubNubClient());
+        return new GetAllUUIDMetadataImpl(getInternalPubNubClient());
     }
 
     @Override
     @NotNull
     public GetUUIDMetadata getUUIDMetadata() {
-        return new GetUUIDMetadata(getInternalPubNubClient());
+        return new GetUUIDMetadataImpl(getInternalPubNubClient());
     }
 
     @Override
     @NotNull
     public RemoveUUIDMetadata removeUUIDMetadata() {
-        return new RemoveUUIDMetadata(getInternalPubNubClient());
+        return new RemoveUUIDMetadataImpl(getInternalPubNubClient());
     }
 
     @Override

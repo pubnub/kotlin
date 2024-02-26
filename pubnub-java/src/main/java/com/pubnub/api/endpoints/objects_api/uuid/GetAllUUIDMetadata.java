@@ -1,47 +1,18 @@
 package com.pubnub.api.endpoints.objects_api.uuid;
 
-import com.pubnub.api.endpoints.objects_api.utils.PNSortKey;
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
-import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
-import com.pubnub.api.models.consumer.objects.PNPage;
+import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.models.consumer.objects_api.uuid.PNGetAllUUIDMetadataResult;
-import com.pubnub.internal.InternalPubNubClient;
-import com.pubnub.internal.endpoints.DelegatingEndpoint;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 
-import java.util.Collection;
-import java.util.Collections;
+public interface GetAllUUIDMetadata extends Endpoint<PNGetAllUUIDMetadataResult> {
+    GetAllUUIDMetadata includeCustom(boolean includeCustom);
 
-import static com.pubnub.internal.endpoints.objects_api.channel.GetAllChannelsMetadataImpl.toInternal;
+    GetAllUUIDMetadata includeTotalCount(boolean includeTotalCount);
 
-@Setter
-@Accessors(chain = true, fluent = true)
-public class GetAllUUIDMetadata
-        extends DelegatingEndpoint<PNGetAllUUIDMetadataResult> {
+    GetAllUUIDMetadata limit(Integer limit);
 
-    private boolean includeCustom;
-    private boolean includeTotalCount;
-    private Integer limit;
-    private PNPage page;
-    private String filter;
-    private Collection<PNSortKey> sort = Collections.emptyList();
+    GetAllUUIDMetadata page(com.pubnub.api.models.consumer.objects.PNPage page);
 
-    public GetAllUUIDMetadata(final InternalPubNubClient pubnub) {
-        super(pubnub);
-    }
+    GetAllUUIDMetadata filter(String filter);
 
-    @Override
-    protected ExtendedRemoteAction<PNGetAllUUIDMetadataResult> createAction() {
-        return new MappingRemoteAction<>(
-                pubnub.getAllUUIDMetadata(
-                        limit,
-                        page,
-                        filter,
-                        toInternal(sort),
-                        includeTotalCount,
-                        includeCustom
-                ),
-                PNGetAllUUIDMetadataResult::from);
-    }
+    GetAllUUIDMetadata sort(java.util.Collection<com.pubnub.api.endpoints.objects_api.utils.PNSortKey> sort);
 }
