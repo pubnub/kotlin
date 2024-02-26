@@ -7,7 +7,7 @@ data class PNChannelMembership(
     val custom: Any?,
     val updated: String,
     val eTag: String,
-    val status: String?
+    val status: String?,
 ) {
     companion object {
         fun from(data: com.pubnub.internal.models.consumer.objects.membership.PNChannelMembership): PNChannelMembership {
@@ -16,7 +16,7 @@ data class PNChannelMembership(
                 data.custom,
                 data.updated,
                 data.eTag,
-                data.status
+                data.status,
             )
         }
     }
@@ -24,7 +24,7 @@ data class PNChannelMembership(
     data class Partial(
         val channelId: String,
         override val custom: Any? = null,
-        override val status: String? = null
+        override val status: String? = null,
     ) : ChannelMembershipInput {
         override val channel: String = channelId
     }

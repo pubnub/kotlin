@@ -1,64 +1,26 @@
 package com.pubnub.api.endpoints.objects_api.members;
 
 import com.pubnub.api.endpoints.BuilderSteps;
-import com.pubnub.internal.endpoints.DelegatingEndpoint;
-import com.pubnub.api.endpoints.objects_api.utils.Include;
-import com.pubnub.api.endpoints.objects_api.utils.PNSortKey;
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
-import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
-import com.pubnub.api.models.consumer.objects.PNPage;
+import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.models.consumer.objects_api.member.PNGetChannelMembersResult;
-import com.pubnub.internal.InternalPubNubClient;
-import lombok.AllArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 
-import java.util.Collection;
-import java.util.Collections;
+public interface GetChannelMembers extends Endpoint<PNGetChannelMembersResult> {
+    GetChannelMembers limit(Integer limit);
 
-@Setter
-@Accessors(chain = true, fluent = true)
-public class GetChannelMembers extends DelegatingEndpoint<PNGetChannelMembersResult> {
+    GetChannelMembers page(com.pubnub.api.models.consumer.objects.PNPage page);
 
-    private final String channel;
-    private Integer limit = null;
-    private PNPage page;
-    private String filter;
-    private Collection<PNSortKey> sort = Collections.emptyList();
-    private boolean includeTotalCount;
-    private boolean includeCustom;
-    private Include.PNUUIDDetailsLevel includeUUID;
+    GetChannelMembers filter(String filter);
 
-    public GetChannelMembers(String channel, final InternalPubNubClient pubnubInstance) {
-        super(pubnubInstance);
-        this.channel = channel;
-    }
+    GetChannelMembers sort(java.util.Collection<com.pubnub.api.endpoints.objects_api.utils.PNSortKey> sort);
 
-    @Override
-    protected ExtendedRemoteAction<PNGetChannelMembersResult> createAction() {
-        return new MappingRemoteAction<>(pubnub.getChannelMembers(
-                channel,
-                limit,
-                page,
-                filter,
-                SetChannelMembers.toInternal(sort),
-                includeTotalCount,
-                includeCustom,
-                SetChannelMembers.toInternal(includeUUID)
-        ), PNGetChannelMembersResult::from);
-    }
+    GetChannelMembers includeTotalCount(boolean includeTotalCount);
 
-    public static Builder builder(final InternalPubNubClient pubnubInstance) {
-        return new Builder(pubnubInstance);
-    }
+    GetChannelMembers includeCustom(boolean includeCustom);
 
-    @AllArgsConstructor
-    public static class Builder implements BuilderSteps.ChannelStep<GetChannelMembers> {
-        private final InternalPubNubClient pubnubInstance;
+    GetChannelMembers includeUUID(com.pubnub.api.endpoints.objects_api.utils.Include.PNUUIDDetailsLevel includeUUID);
 
+    interface Builder extends BuilderSteps.ChannelStep<GetChannelMembers> {
         @Override
-        public GetChannelMembers channel(final String channel) {
-            return new GetChannelMembers(channel, pubnubInstance);
-        }
+        GetChannelMembers channel(String channel);
     }
 }

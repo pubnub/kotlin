@@ -13,9 +13,8 @@ import retrofit2.Response
 internal class RetryableRestCaller<T>(
     retryConfiguration: RetryConfiguration,
     endpointGroupName: RetryableEndpointGroup,
-    private val isEndpointRetryable: Boolean
+    private val isEndpointRetryable: Boolean,
 ) : RetryableBase<T>(retryConfiguration, endpointGroupName) {
-
     private val log = LoggerFactory.getLogger(this.javaClass.simpleName)
     internal lateinit var call: Call<T>
 
@@ -49,17 +48,18 @@ internal class RetryableRestCaller<T>(
                 val response = call.execute()
                 Pair(response, pubNubException)
             } catch (e: Exception) {
-                pubNubException = PubNubException(
-                    pubnubError = PubNubError.PARSING_ERROR,
-                    errorMessage = e.toString(),
-                    affectedCall = call
-                )
+                pubNubException =
+                    PubNubException(
+                        pubnubError = PubNubError.PARSING_ERROR,
+                        errorMessage = e.toString(),
+                        affectedCall = call,
+                    )
 
                 if (isExceptionRetryable(e)) {
                     throw PubNubRetryableException(
                         pubnubError = PubNubError.CONNECT_EXCEPTION,
                         errorMessage = e.toString(),
-                        statusCode = SERVICE_UNAVAILABLE // all retryable exceptions internally are mapped to 503 error
+                        statusCode = SERVICE_UNAVAILABLE, // all retryable exceptions internally are mapped to 503 error
                     )
                 } else {
                     throw pubNubException
@@ -68,7 +68,7 @@ internal class RetryableRestCaller<T>(
         } catch (e: PubNubRetryableException) {
             return Pair(
                 Response.error(e.statusCode, e.errorMessage?.toResponseBody() ?: "".toResponseBody()),
-                pubNubException
+                pubNubException,
             )
         }
     }

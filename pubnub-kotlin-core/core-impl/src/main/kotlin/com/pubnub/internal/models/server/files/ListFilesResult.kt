@@ -7,5 +7,5 @@ data class ListFilesResult(
     val count: Int,
     val next: PNPage.PNNext?,
     val status: Int,
-    val data: Collection<PNUploadedFile>
+    val data: Collection<PNUploadedFile>,
 )

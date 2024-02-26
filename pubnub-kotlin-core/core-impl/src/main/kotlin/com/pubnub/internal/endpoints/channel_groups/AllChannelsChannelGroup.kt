@@ -16,10 +16,9 @@ import retrofit2.Response
  */
 class AllChannelsChannelGroup internal constructor(
     pubnub: InternalPubNubClient,
-    override val channelGroup: String
+    override val channelGroup: String,
 ) : Endpoint<Envelope<Map<String, Any>>, PNChannelGroupsAllChannelsResult>(pubnub),
     IAllChannelsChannelGroup {
-
     override fun getAffectedChannelGroups() = listOf(channelGroup)
 
     override fun validateParams() {
@@ -32,14 +31,14 @@ class AllChannelsChannelGroup internal constructor(
             .allChannelsChannelGroup(
                 pubnub.configuration.subscribeKey,
                 channelGroup,
-                queryParams
+                queryParams,
             )
     }
 
     @Suppress("UNCHECKED_CAST")
     override fun createResponse(input: Response<Envelope<Map<String, Any>>>): PNChannelGroupsAllChannelsResult =
         PNChannelGroupsAllChannelsResult(
-            channels = input.body()!!.payload!!["channels"] as List<String>
+            channels = input.body()!!.payload!!["channels"] as List<String>,
         )
 
     override fun operationType() = PNOperationType.PNChannelsForGroupOperation

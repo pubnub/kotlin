@@ -19,7 +19,7 @@ import com.pubnub.internal.v2.callbacks.InternalEventListener
 import com.pubnub.internal.v2.callbacks.InternalStatusListener
 import java.util.concurrent.CopyOnWriteArrayList
 
-class ListenerManager(val pubnub: BasePubNub<*,*,*,*,*,*,*,*>) : MessagesConsumer, StatusConsumer, BaseEventEmitter<InternalEventListener> {
+class ListenerManager(val pubnub: BasePubNub<*, *, *, *, *, *, *, *>) : MessagesConsumer, StatusConsumer, BaseEventEmitter<InternalEventListener> {
     private val listeners = CopyOnWriteArrayList<Listener>()
 
     private val statusListeners get() = listeners.filterIsInstance<InternalStatusListener>()
@@ -106,7 +106,7 @@ class ListenerManager(val pubnub: BasePubNub<*,*,*,*,*,*,*,*>) : MessagesConsume
 }
 
 data class AnnouncementEnvelope<T : PNEvent>(
-    val event: T
+    val event: T,
 ) {
     val acceptedBy = mutableSetOf<BaseSubscription<*>>()
 }
@@ -115,10 +115,34 @@ interface AnnouncementCallback {
     enum class Phase { SUBSCRIPTION, SET }
 
     val phase: Phase
-    fun message(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, envelope: AnnouncementEnvelope<PNMessageResult>)
-    fun presence(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, envelope: AnnouncementEnvelope<PNPresenceEventResult>)
-    fun signal(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, envelope: AnnouncementEnvelope<PNSignalResult>)
-    fun messageAction(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, envelope: AnnouncementEnvelope<PNMessageActionResult>)
-    fun objects(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, envelope: AnnouncementEnvelope<PNObjectEventResult>)
-    fun file(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, envelope: AnnouncementEnvelope<PNFileEventResult>)
+
+    fun message(
+        pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+        envelope: AnnouncementEnvelope<PNMessageResult>,
+    )
+
+    fun presence(
+        pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+        envelope: AnnouncementEnvelope<PNPresenceEventResult>,
+    )
+
+    fun signal(
+        pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+        envelope: AnnouncementEnvelope<PNSignalResult>,
+    )
+
+    fun messageAction(
+        pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+        envelope: AnnouncementEnvelope<PNMessageActionResult>,
+    )
+
+    fun objects(
+        pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+        envelope: AnnouncementEnvelope<PNObjectEventResult>,
+    )
+
+    fun file(
+        pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+        envelope: AnnouncementEnvelope<PNFileEventResult>,
+    )
 }

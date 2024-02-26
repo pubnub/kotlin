@@ -22,5 +22,5 @@ data class BasePubSubResult(
     override val subscription: String?,
     override val timetoken: Long?,
     override val userMetadata: JsonElement?,
-    override val publisher: String?
+    override val publisher: String?,
 ) : PubSubResult

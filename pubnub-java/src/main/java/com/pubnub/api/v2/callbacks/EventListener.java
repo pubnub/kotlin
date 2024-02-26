@@ -13,21 +13,29 @@ import org.jetbrains.annotations.NotNull;
 
 public interface EventListener extends BaseEventListener {
 
-    default void message(@NotNull PubNub pubnub, @NotNull PNMessageResult pnMessageResult) {}
+    default void message(@NotNull PubNub pubnub, @NotNull PNMessageResult pnMessageResult) {
+    }
 
-    default void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult pnPresenceEventResult) {}
+    default void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult pnPresenceEventResult) {
+    }
 
-    default void signal(@NotNull PubNub pubnub, @NotNull PNSignalResult pnSignalResult) {}
+    default void signal(@NotNull PubNub pubnub, @NotNull PNSignalResult pnSignalResult) {
+    }
 
-    default void uuid(@NotNull PubNub pubnub, @NotNull PNUUIDMetadataResult pnUUIDMetadataResult) {}
+    default void uuid(@NotNull PubNub pubnub, @NotNull PNUUIDMetadataResult pnUUIDMetadataResult) {
+    }
 
-    default void channel(@NotNull PubNub pubnub, @NotNull PNChannelMetadataResult pnChannelMetadataResult) {}
+    default void channel(@NotNull PubNub pubnub, @NotNull PNChannelMetadataResult pnChannelMetadataResult) {
+    }
 
-    default void membership(@NotNull PubNub pubnub, @NotNull PNMembershipResult pnMembershipResult) {}
+    default void membership(@NotNull PubNub pubnub, @NotNull PNMembershipResult pnMembershipResult) {
+    }
 
-    default void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {}
+    default void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
+    }
 
-    default void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {}
+    default void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+    }
 
 }
 

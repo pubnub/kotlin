@@ -94,7 +94,7 @@ class HeaderParserTest {
                 0x49,
                 0x56,
                 0x10,
-                0x10
+                0x10,
             )
         val parseResult = objectUnderTest.parseDataWithHeader(cryptorHeaderWithInvalidSentinel)
 
@@ -106,9 +106,10 @@ class HeaderParserTest {
         val cryptorHeaderWithToShortData =
             byteArrayOf(80, 78, 69, 68, 1, 43, 52, 49, 56)
 
-        val exception: PubNubException = assertThrows(PubNubException::class.java) {
-            objectUnderTest.parseDataWithHeader(cryptorHeaderWithToShortData)
-        }
+        val exception: PubNubException =
+            assertThrows(PubNubException::class.java) {
+                objectUnderTest.parseDataWithHeader(cryptorHeaderWithToShortData)
+            }
 
         assertEquals("Minimal size of encrypted data having Cryptor Data Header is: 10", exception.errorMessage)
         assertEquals(PubNubError.CRYPTOR_DATA_HEADER_SIZE_TO_SMALL, exception.pubnubError)

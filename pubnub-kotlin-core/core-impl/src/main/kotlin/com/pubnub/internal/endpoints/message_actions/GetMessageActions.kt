@@ -18,9 +18,8 @@ import java.util.Locale
 class GetMessageActions internal constructor(
     pubnub: InternalPubNubClient,
     override val channel: String,
-    override val page: PNBoundedPage
+    override val page: PNBoundedPage,
 ) : Endpoint<PNGetMessageActionsResult, PNGetMessageActionsResult>(pubnub), IGetMessageActions {
-
     override fun validateParams() {
         super.validateParams()
         if (channel.isBlank()) throw PubNubException(PubNubError.CHANNEL_MISSING)
@@ -29,21 +28,20 @@ class GetMessageActions internal constructor(
     override fun getAffectedChannels() = listOf(channel)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<PNGetMessageActionsResult> {
-
         addQueryParams(queryParams)
 
         return pubnub.retrofitManager.messageActionService
             .getMessageActions(
                 pubnub.configuration.subscribeKey,
                 channel,
-                queryParams
+                queryParams,
             )
     }
 
     override fun createResponse(input: Response<PNGetMessageActionsResult>): PNGetMessageActionsResult =
         PNGetMessageActionsResult(
             actions = input.body()!!.actions,
-            page = input.body()!!.page
+            page = input.body()!!.page,
         )
 
     override fun operationType() = PNOperationType.PNGetMessageActions

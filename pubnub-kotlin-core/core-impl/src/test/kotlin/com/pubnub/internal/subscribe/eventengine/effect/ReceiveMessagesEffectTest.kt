@@ -40,7 +40,7 @@ class ReceiveMessagesEffectTest {
             .untilAsserted {
                 assertEquals(
                     listOf(SubscribeEvent.ReceiveSuccess(messages, subscriptionCursor)),
-                    subscribeEventSink.events
+                    subscribeEventSink.events,
                 )
             }
     }
@@ -82,7 +82,7 @@ fun createPNMessageResultList(message: String = "Test"): List<PNEvent> {
             "my.*",
             16832048617009353L,
             null,
-            "client-c2804687-7d25-4f0b-a442-e3820265b46c"
+            "client-c2804687-7d25-4f0b-a442-e3820265b46c",
         )
     val pnMessageResult = PNMessageResult(basePubSubResult, JsonPrimitive(message))
     return listOf(pnMessageResult)

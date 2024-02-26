@@ -12,10 +12,9 @@ import java.util.concurrent.CopyOnWriteArrayList
 internal fun testEventEnginesConf(
     subscribeQueuedElements: MutableList<Pair<String, String>>,
     presenceQueuedElements: MutableList<Pair<String, String>>,
-
 ) = EventEnginesConf(
     QueueEventEngineConf(TestSinkSource(subscribeQueuedElements), TestSinkSource(subscribeQueuedElements)),
-    QueueEventEngineConf(TestSinkSource(presenceQueuedElements), TestSinkSource(presenceQueuedElements))
+    QueueEventEngineConf(TestSinkSource(presenceQueuedElements), TestSinkSource(presenceQueuedElements)),
 )
 
 class EventEngineState(world: World) : WorldState by world {
@@ -27,7 +26,7 @@ class EventEngineState(world: World) : WorldState by world {
     val pubnub: TestPubNub by lazy {
         TestPubNub(
             configuration,
-            eventEnginesConf = testEventEnginesConf(subscribeQueuedElements, presenceQueuedElements)
+            eventEnginesConf = testEventEnginesConf(subscribeQueuedElements, presenceQueuedElements),
         )
     }
 }

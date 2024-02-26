@@ -8,7 +8,7 @@ internal class EventEngine<Ei : EffectInvocation, Ev : Event, S : State<Ei, Ev, 
     private val effectSink: Sink<Ei>,
     private val eventSource: Source<Ev>,
     private var currentState: S,
-    private val executorService: ExecutorService = Executors.newSingleThreadExecutor()
+    private val executorService: ExecutorService = Executors.newSingleThreadExecutor(),
 ) {
     private val log = LoggerFactory.getLogger(EventEngine::class.java)
 
@@ -32,8 +32,8 @@ internal class EventEngine<Ei : EffectInvocation, Ev : Event, S : State<Ei, Ev, 
     internal fun performTransitionAndEmitEffects(event: Ev) {
         log.trace(
             "Current state is: ${currentState::class.simpleName} ; ${
-            event::class.java.name.substringAfterLast('.').substringBefore('$')
-            } to be handled is: $event "
+                event::class.java.name.substringAfterLast('.').substringBefore('$')
+            } to be handled is: $event ",
         )
         val (newState, invocations) = transition(currentState, event)
         currentState = newState

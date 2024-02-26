@@ -1,11 +1,11 @@
 package com.pubnub.api.endpoints.access;
 
-import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult;
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant;
 import com.pubnub.internal.InternalPubNubClient;
+import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 

@@ -5,9 +5,8 @@ import com.pubnub.contract.loadChannelMetadata
 import io.cucumber.java.en.Given
 
 class GivenSteps(
-    private val channelMetadataState: ChannelMetadataState
+    private val channelMetadataState: ChannelMetadataState,
 ) {
-
     @Given("the id for {string} channel")
     fun the_id_for_channel(channelFileName: String) {
         val channel = loadChannelMetadata(channelFileName)

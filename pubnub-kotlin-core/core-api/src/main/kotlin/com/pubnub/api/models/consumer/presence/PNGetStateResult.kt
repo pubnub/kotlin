@@ -8,5 +8,5 @@ import com.google.gson.JsonElement
  * @property stateByUUID Map of UUIDs and the user states.
  */
 class PNGetStateResult(
-    val stateByUUID: Map<String, JsonElement>
+    val stateByUUID: Map<String, JsonElement>,
 )

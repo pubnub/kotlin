@@ -15,7 +15,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 
 class HistoryMetaTestSuite : com.pubnub.internal.suite.EndpointTestSuite<History, PNHistoryResult>() {
-
     override fun pnOperation() = PNOperationType.PNHistoryOperation
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH
@@ -24,7 +23,7 @@ class HistoryMetaTestSuite : com.pubnub.internal.suite.EndpointTestSuite<History
         pubnub.history(
             channel = "ch1",
             includeMeta = true,
-            includeTimetoken = true
+            includeTimetoken = true,
         )
 
     override fun verifyResultExpectations(result: PNHistoryResult) {
@@ -38,14 +37,15 @@ class HistoryMetaTestSuite : com.pubnub.internal.suite.EndpointTestSuite<History
             mapOf("color" to "red"),
             Gson().fromJson(
                 result.messages[1].meta!!.asJsonObject,
-                object : TypeToken<Map<String, String>?>() {}.type
-            )
+                object : TypeToken<Map<String, String>?>() {}.type,
+            ),
         )
         assertEquals(100L, result.messages[0].timetoken)
         assertEquals(200L, result.messages[1].timetoken)
     }
 
-    override fun successfulResponseBody() = """
+    override fun successfulResponseBody() =
+        """
         [
          [
           {
@@ -64,16 +64,17 @@ class HistoryMetaTestSuite : com.pubnub.internal.suite.EndpointTestSuite<History
          100,
          200
         ]
-    """.trimIndent()
+        """.trimIndent()
 
-    override fun unsuccessfulResponseBodyList() = listOf(
-        "[]",
-        "[{}]"
-    )
+    override fun unsuccessfulResponseBodyList() =
+        listOf(
+            "[]",
+            "[{}]",
+        )
 
     override fun mappingBuilder(): MappingBuilder {
         return get(
-            urlPathEqualTo("/v2/history/sub-key/mySubscribeKey/channel/ch1")
+            urlPathEqualTo("/v2/history/sub-key/mySubscribeKey/channel/ch1"),
         )
             .withQueryParam("include_token", equalTo("true"))
             .withQueryParam("count", equalTo("100"))
@@ -83,17 +84,18 @@ class HistoryMetaTestSuite : com.pubnub.internal.suite.EndpointTestSuite<History
 
     override fun affectedChannelsAndGroups() = listOf("ch1") to emptyList<String>()
 
-    override fun optionalScenarioList() = listOf(
-        com.pubnub.internal.suite.OptionalScenario<PNHistoryResult>().apply {
-            responseBuilder = {
-                withBody("""["First Element Not An Array",0,0]""")
-            }
-            additionalChecks = { result ->
-                assertTrue(result.isFailure)
-                assertEquals((result.exceptionOrNull() as? PubNubException)?.errorMessage, "History is disabled")
-            }
-            result = com.pubnub.internal.suite.Result.FAIL
-            pnError = PubNubError.HTTP_ERROR
-        }
-    )
+    override fun optionalScenarioList() =
+        listOf(
+            com.pubnub.internal.suite.OptionalScenario<PNHistoryResult>().apply {
+                responseBuilder = {
+                    withBody("""["First Element Not An Array",0,0]""")
+                }
+                additionalChecks = { result ->
+                    assertTrue(result.isFailure)
+                    assertEquals((result.exceptionOrNull() as? PubNubException)?.errorMessage, "History is disabled")
+                }
+                result = com.pubnub.internal.suite.Result.FAIL
+                pnError = PubNubError.HTTP_ERROR
+            },
+        )
 }

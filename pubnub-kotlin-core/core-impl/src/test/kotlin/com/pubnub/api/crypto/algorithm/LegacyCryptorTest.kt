@@ -16,16 +16,16 @@ import org.junit.jupiter.params.provider.ValueSource
 import java.io.ByteArrayInputStream
 
 class LegacyCryptorTest {
-
     companion object {
         @JvmStatic
-        fun messageToBeEncrypted(): List<Arguments> = listOf(
-            Arguments.of("Hello world"),
-            Arguments.of("Zażółć gęślą jaźń"), // Polish
-            Arguments.of("हैलो वर्ल्ड"), // Hindi
-            Arguments.of("こんにちは世界"), // Japan
-            Arguments.of("你好世界"), // Chinese
-        )
+        fun messageToBeEncrypted(): List<Arguments> =
+            listOf(
+                Arguments.of("Hello world"),
+                Arguments.of("Zażółć gęślą jaźń"), // Polish
+                Arguments.of("हैलो वर्ल्ड"), // Hindi
+                Arguments.of("こんにちは世界"), // Japan
+                Arguments.of("你好世界"), // Chinese
+            )
     }
 
     @ParameterizedTest
@@ -102,9 +102,10 @@ class LegacyCryptorTest {
         val cryptor = LegacyCryptor(cipherKey = cipherKey, useRandomIv = useRandomIv)
 
         // when
-        val exception = Assertions.assertThrows(PubNubException::class.java) {
-            cryptor.encrypt(msgToEncrypt)
-        }
+        val exception =
+            Assertions.assertThrows(PubNubException::class.java) {
+                cryptor.encrypt(msgToEncrypt)
+            }
 
         // then
         Assertions.assertEquals("Encryption/Decryption of empty data not allowed.", exception.errorMessage)
@@ -120,9 +121,10 @@ class LegacyCryptorTest {
         val cryptor = LegacyCryptor(cipherKey = cipherKey, useRandomIv = true)
 
         // when
-        val exception = Assertions.assertThrows(PubNubException::class.java) {
-            cryptor.decrypt(encryptedData)
-        }
+        val exception =
+            Assertions.assertThrows(PubNubException::class.java) {
+                cryptor.decrypt(encryptedData)
+            }
 
         // then
         Assertions.assertEquals("Encryption/Decryption of empty data not allowed.", exception.errorMessage)
@@ -138,9 +140,10 @@ class LegacyCryptorTest {
         val cryptor = LegacyCryptor(cipherKey = cipherKey, useRandomIv = false)
 
         // when
-        val exception = Assertions.assertThrows(PubNubException::class.java) {
-            cryptor.decrypt(encryptedData)
-        }
+        val exception =
+            Assertions.assertThrows(PubNubException::class.java) {
+                cryptor.decrypt(encryptedData)
+            }
 
         // then
         Assertions.assertEquals("Encryption/Decryption of empty data not allowed.", exception.errorMessage)
@@ -156,9 +159,10 @@ class LegacyCryptorTest {
         val cryptor = LegacyCryptor(cipherKey = cipherKey, useRandomIv = false)
 
         // when
-        val exception = Assertions.assertThrows(PubNubException::class.java) {
-            cryptor.encryptStream(streamToEncrypt)
-        }
+        val exception =
+            Assertions.assertThrows(PubNubException::class.java) {
+                cryptor.encryptStream(streamToEncrypt)
+            }
 
         // then
         Assertions.assertEquals("Encryption/Decryption of empty data not allowed.", exception.errorMessage)
@@ -175,9 +179,10 @@ class LegacyCryptorTest {
         val cryptor = LegacyCryptor(cipherKey = cipherKey, useRandomIv = false)
 
         // when
-        val exception = Assertions.assertThrows(PubNubException::class.java) {
-            cryptor.decryptStream(encryptedStreamData)
-        }
+        val exception =
+            Assertions.assertThrows(PubNubException::class.java) {
+                cryptor.decryptStream(encryptedStreamData)
+            }
 
         // then
         Assertions.assertEquals("Encryption/Decryption of empty data not allowed.", exception.errorMessage)

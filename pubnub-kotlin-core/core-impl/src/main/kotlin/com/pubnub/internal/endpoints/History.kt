@@ -27,7 +27,6 @@ class History internal constructor(
     override val includeTimetoken: Boolean,
     override val includeMeta: Boolean,
 ) : Endpoint<JsonElement, PNHistoryResult>(pubnub), IHistory {
-
     companion object {
         const val MAX_COUNT = 100
     }
@@ -47,7 +46,7 @@ class History internal constructor(
         return pubnub.retrofitManager.historyService.fetchHistory(
             pubnub.configuration.subscribeKey,
             channel,
-            queryParams
+            queryParams,
         )
     }
 
@@ -59,16 +58,16 @@ class History internal constructor(
 
         val messages = mutableListOf<PNHistoryItemResult>()
 
-        val historyData = PNHistoryResult(
-            messages = messages,
-            startTimetoken = startTimeToken,
-            endTimetoken = endTimeToken
-        )
+        val historyData =
+            PNHistoryResult(
+                messages = messages,
+                startTimetoken = startTimeToken,
+                endTimetoken = endTimeToken,
+            )
 
         if (pubnub.mapper.getArrayElement(input.body()!!, 0).isJsonArray) {
             val iterator = pubnub.mapper.getArrayIterator(pubnub.mapper.getArrayElement(input.body()!!, 0))!!
             while (iterator.hasNext()) {
-
                 val historyEntry = iterator.next()
 
                 var timetoken: Long? = null
@@ -76,8 +75,9 @@ class History internal constructor(
                 val historyMessageWithError: Pair<JsonElement, PubNubError?>
 
                 if (includeTimetoken || includeMeta) {
-                    historyMessageWithError = pubnub.mapper.getField(historyEntry, "message")!!
-                        .tryDecryptMessage(pubnub.cryptoModule, pubnub.mapper)
+                    historyMessageWithError =
+                        pubnub.mapper.getField(historyEntry, "message")!!
+                            .tryDecryptMessage(pubnub.cryptoModule, pubnub.mapper)
                     if (includeTimetoken) {
                         timetoken = pubnub.mapper.elementToLong(historyEntry, "timetoken")
                     }
@@ -91,19 +91,20 @@ class History internal constructor(
                 val message: JsonElement = historyMessageWithError.first
                 val error: PubNubError? = historyMessageWithError.second
 
-                val historyItem = PNHistoryItemResult(
-                    entry = message,
-                    timetoken = timetoken,
-                    meta = meta,
-                    error = error
-                )
+                val historyItem =
+                    PNHistoryItemResult(
+                        entry = message,
+                        timetoken = timetoken,
+                        meta = meta,
+                        error = error,
+                    )
 
                 messages.add(historyItem)
             }
         } else {
             throw PubNubException(
                 pubnubError = PubNubError.HTTP_ERROR,
-                errorMessage = "History is disabled"
+                errorMessage = "History is disabled",
             )
         }
 

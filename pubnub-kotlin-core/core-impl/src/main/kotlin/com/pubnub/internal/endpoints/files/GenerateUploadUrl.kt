@@ -17,9 +17,8 @@ import retrofit2.Response
 internal class GenerateUploadUrl(
     private val channel: String,
     private val fileName: String,
-    pubNub: InternalPubNubClient
+    pubNub: InternalPubNubClient,
 ) : Endpoint<GeneratedUploadUrlResponse, FileUploadRequestDetails>(pubNub) {
-
     @Throws(PubNubException::class)
     override fun validateParams() {
         if (channel.isEmpty()) {
@@ -41,7 +40,7 @@ internal class GenerateUploadUrl(
             response.fileUploadRequest.method,
             response.fileUploadRequest.expirationDate,
             keyFormField,
-            response.fileUploadRequest.formFields
+            response.fileUploadRequest.formFields,
         )
     }
 
@@ -49,7 +48,7 @@ internal class GenerateUploadUrl(
     private fun getKeyFormField(response: GeneratedUploadUrlResponse): FormField {
         val formFields: List<FormField> = response.fileUploadRequest.formFields
         return formFields.find { it.key == "key" } ?: throw PubNubException(PubNubError.INTERNAL_ERROR).copy(
-            errorMessage = "Couldn't find `key` form field in GeneratedUploadUrlResponse"
+            errorMessage = "Couldn't find `key` form field in GeneratedUploadUrlResponse",
         )
     }
 
@@ -58,19 +57,27 @@ internal class GenerateUploadUrl(
             pubnub.configuration.subscribeKey,
             channel,
             GenerateUploadUrlPayload(fileName),
-            queryParams
+            queryParams,
         )
     }
 
     override fun getAffectedChannels() = listOf(channel)
+
     override fun getAffectedChannelGroups(): List<String> = listOf()
+
     override fun operationType(): PNOperationType = PNOperationType.FileOperation
+
     override fun isAuthRequired(): Boolean = true
+
     override fun isSubKeyRequired(): Boolean = true
+
     override fun isPubKeyRequired(): Boolean = false
 
     internal class Factory(private val pubNub: InternalPubNubClient) {
-        fun create(channel: String, fileName: String): ExtendedRemoteAction<FileUploadRequestDetails> {
+        fun create(
+            channel: String,
+            fileName: String,
+        ): ExtendedRemoteAction<FileUploadRequestDetails> {
             return GenerateUploadUrl(channel, fileName, pubNub)
         }
     }

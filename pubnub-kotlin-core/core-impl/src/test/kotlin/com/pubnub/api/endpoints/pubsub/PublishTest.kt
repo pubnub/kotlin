@@ -29,17 +29,19 @@ private const val TEST_PUBKEY = "pubKey"
 private const val CIPHER_KEY = "enigma"
 
 class PublishTest {
-    private val pnConfigurationHardcodedIV = PNConfiguration(userId = UserId(BasePubNubImpl.generateUUID())).apply {
-        subscribeKey = TEST_SUBKEY
-        publishKey = TEST_PUBKEY
-        cipherKey = CIPHER_KEY
-    }
-    private val pnConfigurationRandomIV = PNConfiguration(userId = UserId(BasePubNubImpl.generateUUID())).apply {
-        subscribeKey = TEST_SUBKEY
-        publishKey = TEST_PUBKEY
-        cipherKey = CIPHER_KEY
-        useRandomInitializationVector = true
-    }
+    private val pnConfigurationHardcodedIV =
+        PNConfiguration(userId = UserId(BasePubNubImpl.generateUUID())).apply {
+            subscribeKey = TEST_SUBKEY
+            publishKey = TEST_PUBKEY
+            cipherKey = CIPHER_KEY
+        }
+    private val pnConfigurationRandomIV =
+        PNConfiguration(userId = UserId(BasePubNubImpl.generateUUID())).apply {
+            subscribeKey = TEST_SUBKEY
+            publishKey = TEST_PUBKEY
+            cipherKey = CIPHER_KEY
+            useRandomInitializationVector = true
+        }
 
     private val pubNubHardcodedIVMock = spyk(TestPubNub(pnConfigurationHardcodedIV).internalPubNubClient)
     private val pubNubRandomIVMock = spyk(TestPubNub(pnConfigurationRandomIV).internalPubNubClient)
@@ -76,7 +78,7 @@ class PublishTest {
                 any(),
                 any(),
                 capture(encryptedMessageSlot),
-                any()
+                any(),
             )
         } answers { FakeCall() }
         every { retrofitManagerMock.publishService } returns publishServiceMock

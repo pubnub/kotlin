@@ -4,7 +4,6 @@ import com.pubnub.api.CommonUtils.createInterceptor
 import com.pubnub.api.Keys
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
-
 import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNLogVerbosity
 import org.junit.After
@@ -15,7 +14,6 @@ import org.slf4j.LoggerFactory
 import java.util.UUID
 
 abstract class BaseIntegrationTest {
-
     protected val logger = LoggerFactory.getLogger(this.javaClass.simpleName)
 
     val pubnub: PubNub by lazy { createPubNub() }
@@ -103,7 +101,9 @@ abstract class BaseIntegrationTest {
     private fun needsServer() = provideAuthKey() != null
 
     protected open fun onBefore() = noAction()
+
     protected open fun onAfter() = noAction()
+
     protected open fun onPrePubnub() = noAction()
 
     protected open fun provideAuthKey(): String? = null

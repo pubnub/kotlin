@@ -24,15 +24,14 @@ internal sealed class PresenceState : State<PresenceEffectInvocation, PresenceEv
 
     class Heartbeating(
         channels: Set<String>,
-        channelGroups: Set<String>
+        channelGroups: Set<String>,
     ) : PresenceState() {
         // toSet() is a must because we want to make sure that channels is immutable, and Handshaking constructor
         // doesn't prevent from providing "channels" that is mutable set.
         val channels = channels.toSet()
         val channelGroups = channelGroups.toSet()
 
-        override fun onEntry(): Set<PresenceEffectInvocation> =
-            setOf(PresenceEffectInvocation.Heartbeat(channels, channelGroups))
+        override fun onEntry(): Set<PresenceEffectInvocation> = setOf(PresenceEffectInvocation.Heartbeat(channels, channelGroups))
 
         override fun transition(event: PresenceEvent): Pair<PresenceState, Set<PresenceEffectInvocation>> {
             return when (event) {
@@ -43,7 +42,7 @@ internal sealed class PresenceState : State<PresenceEffectInvocation, PresenceEv
                 is PresenceEvent.Disconnect -> {
                     transitionTo(
                         HeartbeatStopped(channels, channelGroups),
-                        PresenceEffectInvocation.Leave(channels, channelGroups)
+                        PresenceEffectInvocation.Leave(channels, channelGroups),
                     )
                 }
 
@@ -57,7 +56,7 @@ internal sealed class PresenceState : State<PresenceEffectInvocation, PresenceEv
                     } else {
                         transitionTo(
                             Heartbeating(channels - event.channels, channelGroups - event.channelGroups),
-                            PresenceEffectInvocation.Leave(event.channels, event.channelGroups)
+                            PresenceEffectInvocation.Leave(event.channels, event.channelGroups),
                         )
                     }
                 }
@@ -81,7 +80,7 @@ internal sealed class PresenceState : State<PresenceEffectInvocation, PresenceEv
         channels: Set<String>,
         channelGroups: Set<String>,
         val attempts: Int,
-        val reason: PubNubException?
+        val reason: PubNubException?,
     ) : PresenceState() {
         val channels = channels.toSet()
         val channelGroups = channelGroups.toSet()
@@ -103,7 +102,7 @@ internal sealed class PresenceState : State<PresenceEffectInvocation, PresenceEv
                     } else {
                         transitionTo(
                             Heartbeating(channels - event.channels, channelGroups - event.channelGroups),
-                            PresenceEffectInvocation.Leave(event.channels, event.channelGroups)
+                            PresenceEffectInvocation.Leave(event.channels, event.channelGroups),
                         )
                     }
                 }
@@ -123,7 +122,7 @@ internal sealed class PresenceState : State<PresenceEffectInvocation, PresenceEv
                 is PresenceEvent.Disconnect -> {
                     transitionTo(
                         HeartbeatStopped(channels, channelGroups),
-                        PresenceEffectInvocation.Leave(channels, channelGroups)
+                        PresenceEffectInvocation.Leave(channels, channelGroups),
                     )
                 }
 
@@ -140,7 +139,7 @@ internal sealed class PresenceState : State<PresenceEffectInvocation, PresenceEv
 
     class HeartbeatStopped(
         channels: Set<String>,
-        channelGroups: Set<String>
+        channelGroups: Set<String>,
     ) : PresenceState() {
         val channels = channels.toSet()
         val channelGroups = channelGroups.toSet()
@@ -177,7 +176,7 @@ internal sealed class PresenceState : State<PresenceEffectInvocation, PresenceEv
     class HeartbeatFailed(
         channels: Set<String>,
         channelGroups: Set<String>,
-        val reason: PubNubException?
+        val reason: PubNubException?,
     ) : PresenceState() {
         val channels = channels.toSet()
         val channelGroups = channelGroups.toSet()
@@ -198,7 +197,7 @@ internal sealed class PresenceState : State<PresenceEffectInvocation, PresenceEv
                     } else {
                         transitionTo(
                             Heartbeating(channels - event.channels, channelGroups - event.channelGroups),
-                            PresenceEffectInvocation.Leave(event.channels, event.channelGroups)
+                            PresenceEffectInvocation.Leave(event.channels, event.channelGroups),
                         )
                     }
                 }
@@ -210,7 +209,7 @@ internal sealed class PresenceState : State<PresenceEffectInvocation, PresenceEv
                 is PresenceEvent.Disconnect -> {
                     transitionTo(
                         HeartbeatStopped(channels, channelGroups),
-                        PresenceEffectInvocation.Leave(channels, channelGroups)
+                        PresenceEffectInvocation.Leave(channels, channelGroups),
                     )
                 }
 
@@ -223,12 +222,13 @@ internal sealed class PresenceState : State<PresenceEffectInvocation, PresenceEv
 
     class HeartbeatCooldown(
         channels: Set<String>,
-        channelGroups: Set<String>
+        channelGroups: Set<String>,
     ) : PresenceState() {
         val channels = channels.toSet()
         val channelGroups = channelGroups.toSet()
 
         override fun onEntry(): Set<PresenceEffectInvocation> = setOf(PresenceEffectInvocation.Wait())
+
         override fun onExit(): Set<PresenceEffectInvocation> = setOf(PresenceEffectInvocation.CancelWait)
 
         override fun transition(event: PresenceEvent): Pair<PresenceState, Set<PresenceEffectInvocation>> {
@@ -243,7 +243,7 @@ internal sealed class PresenceState : State<PresenceEffectInvocation, PresenceEv
                     } else {
                         transitionTo(
                             Heartbeating(channels - event.channels, channelGroups - event.channelGroups),
-                            PresenceEffectInvocation.Leave(event.channels, event.channelGroups)
+                            PresenceEffectInvocation.Leave(event.channels, event.channelGroups),
                         )
                     }
                 }
@@ -255,7 +255,7 @@ internal sealed class PresenceState : State<PresenceEffectInvocation, PresenceEv
                 is PresenceEvent.Disconnect -> {
                     transitionTo(
                         HeartbeatStopped(channels, channelGroups),
-                        PresenceEffectInvocation.Leave(channels, channelGroups)
+                        PresenceEffectInvocation.Leave(channels, channelGroups),
                     )
                 }
 

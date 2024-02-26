@@ -24,16 +24,17 @@ class SetState internal constructor(
     override val channelGroups: List<String>,
     override val state: Any,
     override val uuid: String = pubnub.configuration.userId.value,
-    private val presenceData: PresenceData
+    private val presenceData: PresenceData,
 ) : Endpoint<Envelope<JsonElement>, PNSetStateResult>(pubnub), ISetState {
-
     override fun getAffectedChannels() = channels
+
     override fun getAffectedChannelGroups() = channelGroups
 
     override fun validateParams() {
         super.validateParams()
-        if (channels.isEmpty() && channelGroups.isEmpty())
+        if (channels.isEmpty() && channelGroups.isEmpty()) {
             throw PubNubException(PubNubError.CHANNEL_AND_GROUP_MISSING)
+        }
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<JsonElement>> {
@@ -48,7 +49,7 @@ class SetState internal constructor(
             pubnub.configuration.subscribeKey,
             channels.toCsv(),
             uuid,
-            queryParams
+            queryParams,
         )
     }
 

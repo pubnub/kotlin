@@ -3,9 +3,9 @@ package com.pubnub.internal.models.server.objects_api
 internal data class ServerMembershipInput(
     val channel: ChannelId,
     val custom: Any? = null,
-    val status: String? = null
+    val status: String? = null,
 )
 
 internal data class ChannelId(
-    val id: String
+    val id: String,
 )

@@ -79,26 +79,27 @@ class TestEventSink<T> : Sink<T> {
     }
 }
 
-fun <T> successfulRemoteAction(result: T): RemoteAction<T> = object : RemoteAction<T> {
-    private val executors = Executors.newSingleThreadExecutor()
+fun <T> successfulRemoteAction(result: T): RemoteAction<T> =
+    object : RemoteAction<T> {
+        private val executors = Executors.newSingleThreadExecutor()
 
-    override fun sync(): T {
-        throw PubNubException("Sync not supported")
-    }
+        override fun sync(): T {
+            throw PubNubException("Sync not supported")
+        }
 
-    override fun retry() {
-        TODO("Not yet implemented")
-    }
+        override fun retry() {
+            TODO("Not yet implemented")
+        }
 
-    override fun silentCancel() {
-    }
+        override fun silentCancel() {
+        }
 
-    override fun async(callback: Consumer<Result<T>>) {
-        executors.submit {
-            callback.accept(Result.success(result))
+        override fun async(callback: Consumer<Result<T>>) {
+            executors.submit {
+                callback.accept(Result.success(result))
+            }
         }
     }
-}
 
 fun <T> failingRemoteAction(exception: PubNubException = PubNubException("Exception")): RemoteAction<T> =
     object : RemoteAction<T> {

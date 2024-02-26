@@ -8,7 +8,7 @@ import org.junit.runner.RunWith
 @CucumberOptions(
     features = ["src/test/resources/sdk-specifications/features"],
     tags = "not @skip and not @na=kotlin and not @beta",
-    plugin = ["pretty", "summary", "junit:build/reports/cucumber-reports/main.xml"]
+    plugin = ["pretty", "summary", "junit:build/reports/cucumber-reports/main.xml"],
 )
 class RunMainCucumberTest
 
@@ -16,6 +16,6 @@ class RunMainCucumberTest
 @CucumberOptions(
     features = ["src/test/resources/sdk-specifications/features"],
     tags = "not @skip and not @na=kotlin and @beta",
-    plugin = ["pretty", "summary", "junit:build/reports/cucumber-reports/beta.xml"]
+    plugin = ["pretty", "summary", "junit:build/reports/cucumber-reports/beta.xml"],
 )
 class RunBetaCucumberTest

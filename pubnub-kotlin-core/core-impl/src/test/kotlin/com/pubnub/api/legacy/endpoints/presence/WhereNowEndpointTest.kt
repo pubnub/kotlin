@@ -23,7 +23,6 @@ import java.util.concurrent.TimeUnit.SECONDS
 import java.util.concurrent.atomic.AtomicInteger
 
 class WhereNowEndpointTest : BaseTest() {
-
     @Test
     fun testSyncSuccess() {
         stubFor(
@@ -42,9 +41,9 @@ class WhereNowEndpointTest : BaseTest() {
                           },
                           "service": "Presence"
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         val response = pubnub.whereNow().sync()
@@ -58,25 +57,26 @@ class WhereNowEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                              "status": 200,
-                              "message": "OK",
-                              "payload": {
-                                "channels": [
-                                  "a",
-                                  "b"
-                                ]
-                              },
-                              "service": "Presence"
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                          "status": 200,
+                          "message": "OK",
+                          "payload": {
+                            "channels": [
+                              "a",
+                              "b"
+                            ]
+                          },
+                          "service": "Presence"
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val response = pubnub.whereNow(
-            uuid = "customUUID"
-        ).sync()
+        val response =
+            pubnub.whereNow(
+                uuid = "customUUID",
+            ).sync()
 
         assertThat(response.channels, Matchers.contains("a", "b"))
     }
@@ -88,9 +88,9 @@ class WhereNowEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         "{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\"" +
-                            ": [zimp]}, \"service\": \"Presence\"}"
-                    )
-                )
+                            ": [zimp]}, \"service\": \"Presence\"}",
+                    ),
+                ),
         )
 
         try {
@@ -108,9 +108,9 @@ class WhereNowEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         "{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": " +
-                            "zimp}, \"service\": \"Presence\"}"
-                    )
-                )
+                            "zimp}, \"service\": \"Presence\"}",
+                    ),
+                ),
         )
 
         try {
@@ -130,9 +130,9 @@ class WhereNowEndpointTest : BaseTest() {
                         .withStatus(404)
                         .withBody(
                             "{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}," +
-                                " \"service\": \"Presence\"}"
-                        )
-                )
+                                " \"service\": \"Presence\"}",
+                        ),
+                ),
         )
 
         try {
@@ -150,20 +150,20 @@ class WhereNowEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                              "status": 200,
-                              "message": "OK",
-                              "payload": {
-                                "channels": [
-                                  "a",
-                                  "b"
-                                ]
-                              },
-                              "service": "Presence"
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                          "status": 200,
+                          "message": "OK",
+                          "payload": {
+                            "channels": [
+                              "a",
+                              "b"
+                            ]
+                          },
+                          "service": "Presence"
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         val atomic = AtomicInteger(0)
@@ -186,9 +186,9 @@ class WhereNowEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         "{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": " +
-                            "[zimp]}, \"service\": \"Presence\"}"
-                    )
-                )
+                            "[zimp]}, \"service\": \"Presence\"}",
+                    ),
+                ),
         )
 
         val atomic = AtomicInteger(0)
@@ -211,9 +211,9 @@ class WhereNowEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         "{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": " +
-                            "zimp}, \"service\": \"Presence\"}"
-                    )
-                )
+                            "zimp}, \"service\": \"Presence\"}",
+                    ),
+                ),
         )
 
         val atomic = AtomicInteger(0)
@@ -249,9 +249,9 @@ class WhereNowEndpointTest : BaseTest() {
                               },
                               "service": "Presence"
                             }
-                            """.trimIndent()
-                        )
-                )
+                            """.trimIndent(),
+                        ),
+                ),
         )
 
         val atomic = AtomicInteger(0)
@@ -274,20 +274,20 @@ class WhereNowEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                              "status": 200,
-                              "message": "OK",
-                              "payload": {
-                                "channels": [
-                                  "a",
-                                  "b"
-                                ]
-                              },
-                              "service": "Presence"
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                          "status": 200,
+                          "message": "OK",
+                          "payload": {
+                            "channels": [
+                              "a",
+                              "b"
+                            ]
+                          },
+                          "service": "Presence"
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         pubnub.configuration.authKey = "myKey"
@@ -306,20 +306,20 @@ class WhereNowEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                              "status": 200,
-                              "message": "OK",
-                              "payload": {
-                                "channels": [
-                                  "a",
-                                  "b"
-                                ]
-                              },
-                              "service": "Presence"
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                          "status": 200,
+                          "message": "OK",
+                          "payload": {
+                            "channels": [
+                              "a",
+                              "b"
+                            ]
+                          },
+                          "service": "Presence"
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         pubnub.configuration.subscribeKey = " "
@@ -338,20 +338,20 @@ class WhereNowEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                              "status": 200,
-                              "message": "OK",
-                              "payload": {
-                                "channels": [
-                                  "a",
-                                  "b"
-                                ]
-                              },
-                              "service": "Presence"
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                          "status": 200,
+                          "message": "OK",
+                          "payload": {
+                            "channels": [
+                              "a",
+                              "b"
+                            ]
+                          },
+                          "service": "Presence"
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         pubnub.configuration.subscribeKey = ""
@@ -375,9 +375,9 @@ class WhereNowEndpointTest : BaseTest() {
                           "message": "OK",
                           "service": "Presence"
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         try {

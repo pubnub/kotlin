@@ -14,18 +14,17 @@ import org.junit.Test
 import java.util.concurrent.atomic.AtomicBoolean
 
 class AddChannelsToPushTest : BaseTest() {
-
     @Test
     fun testAddAppleSuccessSync() {
         WireMock.stubFor(
             WireMock.get(WireMock.urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
-                .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]"))
+                .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]")),
         )
 
         pubnub.addPushNotificationsOnChannels(
             deviceId = "niceDevice",
             pushType = PNPushType.APNS,
-            channels = listOf("ch1", "ch2", "ch3")
+            channels = listOf("ch1", "ch2", "ch3"),
         ).sync()
 
         val requests = WireMock.findAll(WireMock.getRequestedFor(WireMock.urlMatching("/.*")))
@@ -40,13 +39,13 @@ class AddChannelsToPushTest : BaseTest() {
     fun testAddFirebaseSuccessSync() {
         WireMock.stubFor(
             WireMock.get(WireMock.urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
-                .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]"))
+                .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]")),
         )
 
         pubnub.addPushNotificationsOnChannels(
             deviceId = "niceDevice",
             pushType = PNPushType.FCM,
-            channels = listOf("ch1", "ch2", "ch3")
+            channels = listOf("ch1", "ch2", "ch3"),
         ).sync()
 
         val requests = WireMock.findAll(WireMock.getRequestedFor(WireMock.urlMatching("/.*")))
@@ -61,13 +60,13 @@ class AddChannelsToPushTest : BaseTest() {
     fun testAddMicrosoftSuccessSync() {
         WireMock.stubFor(
             WireMock.get(WireMock.urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
-                .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]"))
+                .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]")),
         )
 
         pubnub.addPushNotificationsOnChannels(
             deviceId = "niceDevice",
             pushType = PNPushType.MPNS,
-            channels = listOf("ch1", "ch2", "ch3")
+            channels = listOf("ch1", "ch2", "ch3"),
         ).sync()
 
         val requests = WireMock.findAll(WireMock.getRequestedFor(WireMock.urlMatching("/.*")))
@@ -82,14 +81,14 @@ class AddChannelsToPushTest : BaseTest() {
     fun testAddApns2SuccessSync() {
         WireMock.stubFor(
             WireMock.get(WireMock.urlPathEqualTo("/v2/push/sub-key/mySubscribeKey/devices-apns2/niceDevice"))
-                .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]"))
+                .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]")),
         )
 
         pubnub.addPushNotificationsOnChannels(
             deviceId = "niceDevice",
             pushType = PNPushType.APNS2,
             channels = listOf("ch1", "ch2", "ch3"),
-            topic = "topic"
+            topic = "topic",
         ).sync()
 
         val requests = WireMock.findAll(WireMock.getRequestedFor(WireMock.urlMatching("/.*")))
@@ -104,7 +103,7 @@ class AddChannelsToPushTest : BaseTest() {
     fun testIsAuthRequiredSuccessAdd() {
         WireMock.stubFor(
             WireMock.get(WireMock.urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
-                .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]"))
+                .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]")),
         )
 
         pubnub.configuration.authKey = "myKey"
@@ -112,7 +111,7 @@ class AddChannelsToPushTest : BaseTest() {
         pubnub.addPushNotificationsOnChannels(
             deviceId = "niceDevice",
             pushType = PNPushType.FCM,
-            channels = listOf("ch1", "ch2", "ch3")
+            channels = listOf("ch1", "ch2", "ch3"),
         ).sync()
 
         val requests = WireMock.findAll(WireMock.getRequestedFor(WireMock.urlMatching("/.*")))
@@ -124,7 +123,7 @@ class AddChannelsToPushTest : BaseTest() {
     fun testOperationTypeSuccessAdd() {
         WireMock.stubFor(
             WireMock.get(WireMock.urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
-                .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]"))
+                .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]")),
         )
 
         val success = AtomicBoolean()
@@ -132,7 +131,7 @@ class AddChannelsToPushTest : BaseTest() {
         pubnub.addPushNotificationsOnChannels(
             deviceId = "niceDevice",
             pushType = PNPushType.FCM,
-            channels = listOf("ch1", "ch2", "ch3")
+            channels = listOf("ch1", "ch2", "ch3"),
         ).async { result ->
             assertFalse(result.isFailure)
             success.set(true)
@@ -149,7 +148,7 @@ class AddChannelsToPushTest : BaseTest() {
             pubnub.addPushNotificationsOnChannels(
                 deviceId = "niceDevice",
                 pushType = PNPushType.FCM,
-                channels = listOf("ch1", "ch2", "ch3")
+                channels = listOf("ch1", "ch2", "ch3"),
             ).sync()
             failTest()
         } catch (e: PubNubException) {
@@ -163,7 +162,7 @@ class AddChannelsToPushTest : BaseTest() {
             pubnub.addPushNotificationsOnChannels(
                 pushType = PNPushType.FCM,
                 channels = listOf("ch1", "ch2", "ch3"),
-                deviceId = " "
+                deviceId = " ",
             ).sync()
             failTest()
         } catch (e: PubNubException) {
@@ -177,7 +176,7 @@ class AddChannelsToPushTest : BaseTest() {
             pubnub.addPushNotificationsOnChannels(
                 deviceId = "niceDevice",
                 pushType = PNPushType.FCM,
-                channels = emptyList()
+                channels = emptyList(),
             ).sync()
             failTest()
         } catch (e: PubNubException) {

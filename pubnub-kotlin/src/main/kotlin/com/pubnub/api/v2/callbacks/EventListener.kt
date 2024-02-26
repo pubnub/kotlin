@@ -9,7 +9,6 @@ import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResu
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 
 interface EventListener : BaseEventListener {
-
     /**
      * Receive messages at subscribed channels.
      *
@@ -18,7 +17,10 @@ interface EventListener : BaseEventListener {
      * @param pubnub The client instance which has this listener attached.
      * @param result Wrapper around the actual message content.
      */
-    fun message(pubnub: PubNub, result: PNMessageResult) {}
+    fun message(
+        pubnub: PubNub,
+        result: PNMessageResult,
+    ) {}
 
     /**
      * Receive presence events for channels subscribed with presence enabled via
@@ -28,7 +30,10 @@ interface EventListener : BaseEventListener {
      * @param pubnub The client instance which has this listener attached.
      * @param result Wrapper around a presence event.
      */
-    fun presence(pubnub: PubNub, result: PNPresenceEventResult) {}
+    fun presence(
+        pubnub: PubNub,
+        result: PNPresenceEventResult,
+    ) {}
 
     /**
      * Receive signals at subscribed channels.
@@ -38,7 +43,10 @@ interface EventListener : BaseEventListener {
      * @param pubnub The client instance which has this listener attached.
      * @param result Wrapper around a signal event.
      */
-    fun signal(pubnub: PubNub, result: PNSignalResult) {}
+    fun signal(
+        pubnub: PubNub,
+        result: PNSignalResult,
+    ) {}
 
     /**
      * Receive message actions for messages in subscribed channels.
@@ -46,7 +54,10 @@ interface EventListener : BaseEventListener {
      * @param pubnub The client instance which has this listener attached.
      * @param result Wrapper around a message action event.
      */
-    fun messageAction(pubnub: PubNub, result: PNMessageActionResult) {}
+    fun messageAction(
+        pubnub: PubNub,
+        result: PNMessageActionResult,
+    ) {}
 
     /**
      * Receive channel metadata and UUID metadata events in subscribed channels.
@@ -54,7 +65,10 @@ interface EventListener : BaseEventListener {
      * @param pubnub The client instance which has this listener attached.
      * @param result Wrapper around the object event.
      */
-    fun objects(pubnub: PubNub, result: PNObjectEventResult) {}
+    fun objects(
+        pubnub: PubNub,
+        result: PNObjectEventResult,
+    ) {}
 
     /**
      * Receive file events in subscribed channels.
@@ -62,5 +76,8 @@ interface EventListener : BaseEventListener {
      * @param pubnub The client instance which has this listener attached.
      * @param result Wrapper around the file event.
      */
-    fun file(pubnub: PubNub, result: PNFileEventResult) {}
+    fun file(
+        pubnub: PubNub,
+        result: PNFileEventResult,
+    ) {}
 }

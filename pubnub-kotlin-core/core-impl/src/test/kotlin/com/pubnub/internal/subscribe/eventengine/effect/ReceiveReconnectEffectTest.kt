@@ -30,14 +30,15 @@ class ReceiveReconnectEffectTest {
     @Test
     fun `should deliver ReceiveReconnectSuccess event when ReceiveReconnectEffect succeeded`() {
         // given
-        val receiveReconnectEffect = ReceiveReconnectEffect(
-            successfulRemoteAction(receiveMessageResult),
-            eventSink,
-            retryConfiguration,
-            executorService,
-            attempts,
-            reason
-        )
+        val receiveReconnectEffect =
+            ReceiveReconnectEffect(
+                successfulRemoteAction(receiveMessageResult),
+                eventSink,
+                retryConfiguration,
+                executorService,
+                attempts,
+                reason,
+            )
 
         // when
         receiveReconnectEffect.runEffect()
@@ -50,7 +51,7 @@ class ReceiveReconnectEffectTest {
             .untilAsserted {
                 assertEquals(
                     listOf(SubscribeEvent.ReceiveReconnectSuccess(messages, subscriptionCursor)),
-                    eventSink.events
+                    eventSink.events,
                 )
             }
     }
@@ -58,14 +59,15 @@ class ReceiveReconnectEffectTest {
     @Test
     fun `should deliver ReceiveReconnectFailure event when ReceiveReconnectEffect failed`() {
         // given
-        val receiveReconnectEffect = ReceiveReconnectEffect(
-            failingRemoteAction(reason),
-            eventSink,
-            retryConfiguration,
-            executorService,
-            attempts,
-            reason
-        )
+        val receiveReconnectEffect =
+            ReceiveReconnectEffect(
+                failingRemoteAction(reason),
+                eventSink,
+                retryConfiguration,
+                executorService,
+                attempts,
+                reason,
+            )
 
         // when
         receiveReconnectEffect.runEffect()
@@ -82,14 +84,15 @@ class ReceiveReconnectEffectTest {
     fun `should deliver ReceiveReconnectGiveUp event when delay is null`() {
         // given
         val retryConfiguration = RetryConfiguration.None
-        val receiveReconnectEffect = ReceiveReconnectEffect(
-            successfulRemoteAction(receiveMessageResult),
-            eventSink,
-            retryConfiguration,
-            executorService,
-            attempts,
-            reason
-        )
+        val receiveReconnectEffect =
+            ReceiveReconnectEffect(
+                successfulRemoteAction(receiveMessageResult),
+                eventSink,
+                retryConfiguration,
+                executorService,
+                attempts,
+                reason,
+            )
 
         // when
         receiveReconnectEffect.runEffect()
@@ -103,14 +106,15 @@ class ReceiveReconnectEffectTest {
         // given
         val remoteAction: RemoteAction<ReceiveMessagesResult> = mockk()
         every { remoteAction.silentCancel() } returns Unit
-        val receiveReconnectEffect = ReceiveReconnectEffect(
-            remoteAction,
-            eventSink,
-            retryConfiguration,
-            executorService,
-            attempts,
-            reason
-        )
+        val receiveReconnectEffect =
+            ReceiveReconnectEffect(
+                remoteAction,
+                eventSink,
+                retryConfiguration,
+                executorService,
+                attempts,
+                reason,
+            )
 
         // when
         receiveReconnectEffect.cancel()

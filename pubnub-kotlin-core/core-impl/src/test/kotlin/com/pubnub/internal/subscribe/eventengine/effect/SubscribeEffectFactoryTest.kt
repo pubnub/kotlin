@@ -23,7 +23,6 @@ import org.junit.jupiter.api.Test
 import java.util.concurrent.ScheduledExecutorService
 
 class SubscribeEffectFactoryTest {
-
     private val handshakeProvider = mockk<HandshakeProvider>()
     private val receiveMessageProvider = mockk<ReceiveMessagesProvider>()
     private val messagesConsumer = mockk<MessagesConsumer>()
@@ -44,17 +43,18 @@ class SubscribeEffectFactoryTest {
     @BeforeEach
     fun setUp() {
         presenceData.channelStates.clear()
-        subscribeEffectFactory = SubscribeEffectFactory(
-            handshakeProvider,
-            receiveMessageProvider,
-            subscribeEventSink,
-            retryConfiguration,
-            executorService,
-            messagesConsumer,
-            statusConsumer,
-            presenceData,
-            true,
-        )
+        subscribeEffectFactory =
+            SubscribeEffectFactory(
+                handshakeProvider,
+                receiveMessageProvider,
+                subscribeEventSink,
+                retryConfiguration,
+                executorService,
+                messagesConsumer,
+                statusConsumer,
+                presenceData,
+                true,
+            )
     }
 
     @Test
@@ -69,16 +69,17 @@ class SubscribeEffectFactoryTest {
     @Test
     fun `should return emitStatus effect when getting EmitStatus invocation`() {
         // when
-        val effect = subscribeEffectFactory.create(
-            SubscribeEffectInvocation.EmitStatus(
-                PNStatus(
-                    PNStatusCategory.Connected,
-                    currentTimetoken = 0L,
-                    channels = channels.toList(),
-                    channelGroups = channelGroups.toList(),
-                )
+        val effect =
+            subscribeEffectFactory.create(
+                SubscribeEffectInvocation.EmitStatus(
+                    PNStatus(
+                        PNStatusCategory.Connected,
+                        currentTimetoken = 0L,
+                        channels = channels.toList(),
+                        channelGroups = channelGroups.toList(),
+                    ),
+                ),
             )
-        )
 
         // then
         assertThat(effect, instanceOf(EmitStatusEffect::class.java))
@@ -92,7 +93,7 @@ class SubscribeEffectFactoryTest {
             handshakeProvider.getHandshakeRemoteAction(
                 effectInvocation.channels,
                 effectInvocation.channelGroups,
-                any()
+                any(),
             )
         } returns handshakeRemoteAction
         // when
@@ -115,7 +116,7 @@ class SubscribeEffectFactoryTest {
             handshakeProvider.getHandshakeRemoteAction(
                 effectInvocation.channels,
                 effectInvocation.channelGroups,
-                any()
+                any(),
             )
         } returns handshakeRemoteAction
 
@@ -125,12 +126,14 @@ class SubscribeEffectFactoryTest {
         // then
         verify {
             handshakeProvider.getHandshakeRemoteAction(
-                effectInvocation.channels, effectInvocation.channelGroups,
+                effectInvocation.channels,
+                effectInvocation.channelGroups,
                 mapOf(
-                    "channel1" to mapOf(
-                        "aaa" to "bbb"
-                    )
-                )
+                    "channel1" to
+                        mapOf(
+                            "aaa" to "bbb",
+                        ),
+                ),
             )
         }
     }
@@ -138,24 +141,25 @@ class SubscribeEffectFactoryTest {
     @Test
     fun `should not include state from PresenceData into handshake effect when sendStateWithSubscribe == false`() {
         // given
-        subscribeEffectFactory = SubscribeEffectFactory(
-            handshakeProvider,
-            receiveMessageProvider,
-            subscribeEventSink,
-            retryConfiguration,
-            executorService,
-            messagesConsumer,
-            statusConsumer,
-            presenceData,
-            false,
-        )
+        subscribeEffectFactory =
+            SubscribeEffectFactory(
+                handshakeProvider,
+                receiveMessageProvider,
+                subscribeEventSink,
+                retryConfiguration,
+                executorService,
+                messagesConsumer,
+                statusConsumer,
+                presenceData,
+                false,
+            )
         presenceData.channelStates[channels.first()] = mapOf("aaa" to "bbb")
         val effectInvocation = SubscribeEffectInvocation.Handshake(channels, channelGroups)
         every {
             handshakeProvider.getHandshakeRemoteAction(
                 effectInvocation.channels,
                 effectInvocation.channelGroups,
-                any()
+                any(),
             )
         } returns handshakeRemoteAction
 
@@ -165,7 +169,9 @@ class SubscribeEffectFactoryTest {
         // then
         verify {
             handshakeProvider.getHandshakeRemoteAction(
-                effectInvocation.channels, effectInvocation.channelGroups, null
+                effectInvocation.channels,
+                effectInvocation.channelGroups,
+                null,
             )
         }
     }
@@ -173,29 +179,31 @@ class SubscribeEffectFactoryTest {
     @Test
     fun `should return handshakeReconnect effect when getting HandshakeReconnect invocation`() {
         // given
-        val effectInvocation = SubscribeEffectInvocation.HandshakeReconnect(
-            channels,
-            channelGroups,
-            attempts,
-            reason
-        )
-        every {
-            handshakeProvider.getHandshakeRemoteAction(
-                effectInvocation.channels,
-                effectInvocation.channelGroups,
-                any()
-            )
-        } returns handshakeRemoteAction
-
-        // when
-        val managedEffect = subscribeEffectFactory.create(
+        val effectInvocation =
             SubscribeEffectInvocation.HandshakeReconnect(
                 channels,
                 channelGroups,
                 attempts,
-                reason
+                reason,
             )
-        )
+        every {
+            handshakeProvider.getHandshakeRemoteAction(
+                effectInvocation.channels,
+                effectInvocation.channelGroups,
+                any(),
+            )
+        } returns handshakeRemoteAction
+
+        // when
+        val managedEffect =
+            subscribeEffectFactory.create(
+                SubscribeEffectInvocation.HandshakeReconnect(
+                    channels,
+                    channelGroups,
+                    attempts,
+                    reason,
+                ),
+            )
 
         // then
         assertThat(managedEffect, instanceOf(HandshakeReconnectEffect::class.java))
@@ -208,17 +216,18 @@ class SubscribeEffectFactoryTest {
         presenceData.channelStates[channels.first()] = mapOf("aaa" to "bbb")
         presenceData.channelStates["nonSubscribedChannel"] = mapOf("aaa" to "bbb")
 
-        val effectInvocation = SubscribeEffectInvocation.HandshakeReconnect(
-            channels,
-            channelGroups,
-            attempts,
-            reason
-        )
+        val effectInvocation =
+            SubscribeEffectInvocation.HandshakeReconnect(
+                channels,
+                channelGroups,
+                attempts,
+                reason,
+            )
         every {
             handshakeProvider.getHandshakeRemoteAction(
                 effectInvocation.channels,
                 effectInvocation.channelGroups,
-                any()
+                any(),
             )
         } returns handshakeRemoteAction
 
@@ -228,19 +237,21 @@ class SubscribeEffectFactoryTest {
                 channels,
                 channelGroups,
                 attempts,
-                reason
-            )
+                reason,
+            ),
         )
 
         // then
         verify {
             handshakeProvider.getHandshakeRemoteAction(
-                effectInvocation.channels, effectInvocation.channelGroups,
+                effectInvocation.channels,
+                effectInvocation.channelGroups,
                 mapOf(
-                    "channel1" to mapOf(
-                        "aaa" to "bbb"
-                    )
-                )
+                    "channel1" to
+                        mapOf(
+                            "aaa" to "bbb",
+                        ),
+                ),
             )
         }
     }
@@ -248,27 +259,29 @@ class SubscribeEffectFactoryTest {
     @Test
     fun `should return receiveMessages effect when getting ReceiveMessages invocation`() {
         // given
-        val effectInvocation = SubscribeEffectInvocation.ReceiveMessages(
-            channels,
-            channelGroups,
-            subscriptionCursor
-        )
+        val effectInvocation =
+            SubscribeEffectInvocation.ReceiveMessages(
+                channels,
+                channelGroups,
+                subscriptionCursor,
+            )
         every {
             receiveMessageProvider.getReceiveMessagesRemoteAction(
                 effectInvocation.channels,
                 effectInvocation.channelGroups,
-                effectInvocation.subscriptionCursor
+                effectInvocation.subscriptionCursor,
             )
         } returns receiveMessagesRemoteAction
 
         // when
-        val managedEffect = subscribeEffectFactory.create(
-            SubscribeEffectInvocation.ReceiveMessages(
-                channels,
-                channelGroups,
-                subscriptionCursor
+        val managedEffect =
+            subscribeEffectFactory.create(
+                SubscribeEffectInvocation.ReceiveMessages(
+                    channels,
+                    channelGroups,
+                    subscriptionCursor,
+                ),
             )
-        )
 
         // then
         assertThat(managedEffect, instanceOf(ReceiveMessagesEffect::class.java))
@@ -278,29 +291,31 @@ class SubscribeEffectFactoryTest {
     @Test
     fun `should return receiveReconnect effect when getting ReceiveReconnect invocation`() {
         // given
-        val effectInvocation = SubscribeEffectInvocation.ReceiveMessages(
-            channels,
-            channelGroups,
-            subscriptionCursor
-        )
+        val effectInvocation =
+            SubscribeEffectInvocation.ReceiveMessages(
+                channels,
+                channelGroups,
+                subscriptionCursor,
+            )
         every {
             receiveMessageProvider.getReceiveMessagesRemoteAction(
                 effectInvocation.channels,
                 effectInvocation.channelGroups,
-                effectInvocation.subscriptionCursor
+                effectInvocation.subscriptionCursor,
             )
         } returns receiveMessagesRemoteAction
 
         // when
-        val managedEffect = subscribeEffectFactory.create(
-            SubscribeEffectInvocation.ReceiveReconnect(
-                channels,
-                channelGroups,
-                subscriptionCursor,
-                attempts,
-                reason
+        val managedEffect =
+            subscribeEffectFactory.create(
+                SubscribeEffectInvocation.ReceiveReconnect(
+                    channels,
+                    channelGroups,
+                    subscriptionCursor,
+                    attempts,
+                    reason,
+                ),
             )
-        )
 
         // then
         assertThat(managedEffect, instanceOf(ReceiveReconnectEffect::class.java))

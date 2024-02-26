@@ -26,7 +26,6 @@ private const val CRYPTION_TYPE_STREAM = "stream"
 class CryptoModuleSteps(
     private val cryptoModuleState: CryptoModuleState,
 ) {
-
     @Given("Crypto module with {string} cryptor")
     fun crypto_module_with_cryptor(cryptorType: String) {
         cryptoModuleState.defaultCryptorType = cryptorType
@@ -44,14 +43,17 @@ class CryptoModuleSteps(
 
     @Suppress("UNUSED_PARAMETER")
     @Given("Legacy code with {string} cipher key and {string} vector")
-    fun legacy_code_with_cipher_key_and_vector(cipherKey: String, initializationVectorType: String) {
+    fun legacy_code_with_cipher_key_and_vector(
+        cipherKey: String,
+        initializationVectorType: String,
+    ) {
         // this is fine, nothing here
     }
 
     @Given("Crypto module with default {string} and additional {string} cryptors")
     fun crypto_module_with_default_cryptor_and_additional_cryptor(
         defaultCryptorType: String,
-        decryptionCryptorType: String
+        decryptionCryptorType: String,
     ) {
         cryptoModuleState.defaultCryptorType = defaultCryptorType
         cryptoModuleState.decryptionOnlyCryptorType = decryptionCryptorType
@@ -75,18 +77,22 @@ class CryptoModuleSteps(
     }
 
     @When("I encrypt {string} file as {string}")
-    fun I_encrypt_file(fileName: String, encryptionType: String) {
+    fun I_encrypt_file(
+        fileName: String,
+        encryptionType: String,
+    ) {
         val notEncryptedFileContent = getFileContentAsByteArray(fileName)
         cryptoModuleState.fileContent = notEncryptedFileContent
         cryptoModuleState.encryptionType = encryptionType
         val cryptoModule = createCryptoModuleForEncryption()
         var encryptedData: ByteArray = byteArrayOf()
         try {
-            encryptedData = when (encryptionType) {
-                CRYPTION_TYPE_BINARY -> cryptoModule.encrypt(notEncryptedFileContent)
-                CRYPTION_TYPE_STREAM -> cryptoModule.encryptStream(notEncryptedFileContent.inputStream()).readBytes()
-                else -> throw PubNubException("Invalid encryptionType type. Should be binary or stream")
-            }
+            encryptedData =
+                when (encryptionType) {
+                    CRYPTION_TYPE_BINARY -> cryptoModule.encrypt(notEncryptedFileContent)
+                    CRYPTION_TYPE_STREAM -> cryptoModule.encryptStream(notEncryptedFileContent.inputStream()).readBytes()
+                    else -> throw PubNubException("Invalid encryptionType type. Should be binary or stream")
+                }
         } catch (e: PubNubException) {
             cryptoModuleState.encryptionError = e.pubnubError
         }
@@ -103,17 +109,21 @@ class CryptoModuleSteps(
     }
 
     @When("I decrypt {string} file as {string}")
-    fun I_decrypt_file_as_binary(encryptedFile: String, decryptionType: String) {
+    fun I_decrypt_file_as_binary(
+        encryptedFile: String,
+        decryptionType: String,
+    ) {
         val cryptoModule: CryptoModule = createCryptoModuleForDecryption()
 
         val encryptedFileContent = getFileContentAsByteArray(encryptedFile)
         var decryptedData = ByteArray(0)
         try {
-            decryptedData = when (decryptionType) {
-                CRYPTION_TYPE_BINARY -> cryptoModule.decrypt(encryptedFileContent)
-                CRYPTION_TYPE_STREAM -> cryptoModule.decryptStream(encryptedFileContent.inputStream()).readBytes()
-                else -> throw PubNubException("Invalid decryptionType type. Should be binary or stream")
-            }
+            decryptedData =
+                when (decryptionType) {
+                    CRYPTION_TYPE_BINARY -> cryptoModule.decrypt(encryptedFileContent)
+                    CRYPTION_TYPE_STREAM -> cryptoModule.decryptStream(encryptedFileContent.inputStream()).readBytes()
+                    else -> throw PubNubException("Invalid decryptionType type. Should be binary or stream")
+                }
         } catch (e: PubNubException) {
             cryptoModuleState.decryptionError = e.pubnubError
         }
@@ -126,17 +136,18 @@ class CryptoModuleSteps(
         val randoIv: Boolean = cryptoModuleState.initializationVectorType == RANDOM_IV
         val cryptoModule: CryptoModule
         if (cryptoModuleState.decryptionOnlyCryptorType == null) {
-            cryptoModule = when (defaultCryptorType) {
-                LEGACY_NEW -> {
-                    CryptoModule.createNewCryptoModule(LegacyCryptor(cipherKey, randoIv))
-                }
+            cryptoModule =
+                when (defaultCryptorType) {
+                    LEGACY_NEW -> {
+                        CryptoModule.createNewCryptoModule(LegacyCryptor(cipherKey, randoIv))
+                    }
 
-                AES_CBC -> {
-                    CryptoModule.createNewCryptoModule(AesCbcCryptor(cipherKey))
-                }
+                    AES_CBC -> {
+                        CryptoModule.createNewCryptoModule(AesCbcCryptor(cipherKey))
+                    }
 
-                else -> throw PubNubException("Invalid cryptor type")
-            }
+                    else -> throw PubNubException("Invalid cryptor type")
+                }
         } else {
             val decryptionOnlyCryptorType = cryptoModuleState.decryptionOnlyCryptorType
             val defaultCryptor = createCryptor(defaultCryptorType!!, cipherKey, randoIv)
@@ -146,7 +157,11 @@ class CryptoModuleSteps(
         return cryptoModule
     }
 
-    private fun createCryptor(cryptorType: String, cipherKey: String, useRandomIv: Boolean): Cryptor {
+    private fun createCryptor(
+        cryptorType: String,
+        cipherKey: String,
+        useRandomIv: Boolean,
+    ): Cryptor {
         return when (cryptorType) {
             LEGACY_NEW -> {
                 LegacyCryptor(cipherKey, useRandomIv)
@@ -166,7 +181,9 @@ class CryptoModuleSteps(
     fun I_receive_outcome(outcome: String) {
         when (outcome) {
             "unknown cryptor error" -> {
-                assertTrue(cryptoModuleState.decryptionError == PubNubError.UNKNOWN_CRYPTOR || cryptoModuleState.decryptionError == PubNubError.CRYPTOR_HEADER_VERSION_UNKNOWN)
+                assertTrue(
+                    cryptoModuleState.decryptionError == PubNubError.UNKNOWN_CRYPTOR || cryptoModuleState.decryptionError == PubNubError.CRYPTOR_HEADER_VERSION_UNKNOWN,
+                )
             }
 
             "decryption error" -> {
@@ -179,10 +196,11 @@ class CryptoModuleSteps(
             }
 
             "success" -> assertNull(cryptoModuleState.decryptionError)
-            "encryption error" -> assertEquals(
-                PubNubError.ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED,
-                cryptoModuleState.encryptionError
-            )
+            "encryption error" ->
+                assertEquals(
+                    PubNubError.ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED,
+                    cryptoModuleState.encryptionError,
+                )
         }
     }
 
@@ -195,23 +213,24 @@ class CryptoModuleSteps(
         val cipherKey = cryptoModuleState.cryptorCipherKey
 
         val encryptionType = cryptoModuleState.encryptionType
-        val decryptedDataAsString: String = when (encryptionType) {
-            CRYPTION_TYPE_BINARY -> {
-                val crypto = com.pubnub.internal.vendor.Crypto(cipherKey, randoIv)
-                crypto.decrypt(encryptedDataAsStringBase64)
-            }
+        val decryptedDataAsString: String =
+            when (encryptionType) {
+                CRYPTION_TYPE_BINARY -> {
+                    val crypto = com.pubnub.internal.vendor.Crypto(cipherKey, randoIv)
+                    crypto.decrypt(encryptedDataAsStringBase64)
+                }
 
-            CRYPTION_TYPE_STREAM -> {
-                val byteArrayInputStream = ByteArrayInputStream(encryptedData)
-                val decryptedStreamAsByteArray =
-                    FileEncryptionUtil.decrypt(byteArrayInputStream, cipherKey!!).readBytes()
-                String(decryptedStreamAsByteArray)
-            }
+                CRYPTION_TYPE_STREAM -> {
+                    val byteArrayInputStream = ByteArrayInputStream(encryptedData)
+                    val decryptedStreamAsByteArray =
+                        FileEncryptionUtil.decrypt(byteArrayInputStream, cipherKey!!).readBytes()
+                    String(decryptedStreamAsByteArray)
+                }
 
-            else -> {
-                throw PubNubException("Invalid cryptor type")
+                else -> {
+                    throw PubNubException("Invalid cryptor type")
+                }
             }
-        }
 
         assertEquals(String(cryptoModuleState.fileContent!!), decryptedDataAsString)
     }

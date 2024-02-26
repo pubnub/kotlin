@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class SubscribeEventConsumerWorkerTransitionFunctionTest {
-
     @Test
     fun can_transit_from_state_UNSUBSCRIBED_to_HANDSHAKING_on_SubscriptionChange_event_then_from_HANDSHAKING_to_RECEIVING_on_HandshakingSuccess() {
         // given
@@ -26,17 +25,21 @@ class SubscribeEventConsumerWorkerTransitionFunctionTest {
         val messages = listOf<PNEvent>()
 
         // when
-        val (handshaking, effectInvocationsForSubscriptionChange) = transition(
-            SubscribeState.Unsubscribed,
-            subscriptionChangeSubscribeEvent
-        )
-        val (receiving01, effectInvocationsForHandshakingSuccess) = transition(
-            handshaking, SubscribeEvent.HandshakeSuccess(subscriptionCursor)
-        )
-        val (_, effectInvocationsForReceivingSuccess) = transition(
-            receiving01,
-            SubscribeEvent.ReceiveSuccess(messages, subscriptionCursor)
-        )
+        val (handshaking, effectInvocationsForSubscriptionChange) =
+            transition(
+                SubscribeState.Unsubscribed,
+                subscriptionChangeSubscribeEvent,
+            )
+        val (receiving01, effectInvocationsForHandshakingSuccess) =
+            transition(
+                handshaking,
+                SubscribeEvent.HandshakeSuccess(subscriptionCursor),
+            )
+        val (_, effectInvocationsForReceivingSuccess) =
+            transition(
+                receiving01,
+                SubscribeEvent.ReceiveSuccess(messages, subscriptionCursor),
+            )
 
         // then
         Assertions.assertEquals(
@@ -44,17 +47,27 @@ class SubscribeEventConsumerWorkerTransitionFunctionTest {
                 SubscribeEffectInvocation.Handshake(channels, channelGroups),
                 SubscribeEffectInvocation.CancelHandshake,
                 SubscribeEffectInvocation.EmitStatus(
-                    PNStatus(PNStatusCategory.Connected, currentTimetoken = timeToken, channels = channels.toList(), channelGroups = channelGroups.toList())
+                    PNStatus(
+                        PNStatusCategory.Connected,
+                        currentTimetoken = timeToken,
+                        channels = channels.toList(),
+                        channelGroups = channelGroups.toList(),
+                    ),
                 ),
                 SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
                 SubscribeEffectInvocation.CancelReceiveMessages,
                 SubscribeEffectInvocation.EmitMessages(listOf()),
                 SubscribeEffectInvocation.EmitStatus(
-                    PNStatus(PNStatusCategory.Connected, currentTimetoken = timeToken, channels = channels.toList(), channelGroups = channelGroups.toList())
+                    PNStatus(
+                        PNStatusCategory.Connected,
+                        currentTimetoken = timeToken,
+                        channels = channels.toList(),
+                        channelGroups = channelGroups.toList(),
+                    ),
                 ),
-                SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)
+                SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
             ),
-            effectInvocationsForSubscriptionChange + effectInvocationsForHandshakingSuccess + effectInvocationsForReceivingSuccess
+            effectInvocationsForSubscriptionChange + effectInvocationsForHandshakingSuccess + effectInvocationsForReceivingSuccess,
         )
     }
 }

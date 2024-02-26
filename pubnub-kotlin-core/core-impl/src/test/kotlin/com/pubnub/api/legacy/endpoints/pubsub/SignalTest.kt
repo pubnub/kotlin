@@ -26,7 +26,6 @@ import java.util.UUID
 import java.util.concurrent.atomic.AtomicBoolean
 
 class SignalTest : BaseTest() {
-
     @Test
     fun testSignalGetSuccessSync() {
         stubFor(
@@ -40,16 +39,16 @@ class SignalTest : BaseTest() {
                               "Sent",
                               "1000"
                             ]
-                            """.trimIndent()
-                        )
-                )
+                            """.trimIndent(),
+                        ),
+                ),
         )
 
         val payload = mapOf("text" to "hello")
 
         pubnub.signal(
             channel = "coolChannel",
-            message = payload
+            message = payload,
         ).sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/signal.*")))
@@ -78,9 +77,9 @@ class SignalTest : BaseTest() {
                               "Sent",
                               "1000"
                             ]
-                            """.trimIndent()
-                        )
-                )
+                            """.trimIndent(),
+                        ),
+                ),
         )
 
         val payload = UUID.randomUUID().toString()
@@ -89,7 +88,7 @@ class SignalTest : BaseTest() {
 
         pubnub.signal(
             channel = "coolChannel",
-            message = payload
+            message = payload,
         ).async { result ->
             assertFalse(result.isFailure)
             result.onSuccess {
@@ -108,50 +107,70 @@ class SignalTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "m": [
                             {
-                              "m": [
-                                {
-                                  "c": "coolChannel",
-                                  "f": "0",
-                                  "i": "uuid",
-                                  "d": "hello",
-                                  "e": 1,
-                                  "p": {
-                                    "t": 1000,
-                                    "r": 1
-                                  },
-                                  "k": "mySubscribeKey",
-                                  "b": "coolChannel"
-                                }
-                              ],
-                              "t": {
-                                "r": "56",
-                                "t": 1000
-                              }
+                              "c": "coolChannel",
+                              "f": "0",
+                              "i": "uuid",
+                              "d": "hello",
+                              "e": 1,
+                              "p": {
+                                "t": 1000,
+                                "r": 1
+                              },
+                              "k": "mySubscribeKey",
+                              "b": "coolChannel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ],
+                          "t": {
+                            "r": "56",
+                            "t": 1000
+                          }
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         val success = AtomicBoolean()
 
-        pubnubBase.addListener(object : SubscribeCallback {
-            override fun signal(pubnub: BasePubNub<*, *, *, *, *, *, *, *>, pnSignalResult: PNSignalResult) {
-                assertEquals("coolChannel", pnSignalResult.channel)
-                assertEquals("hello", pnSignalResult.message.asString)
-                assertEquals("uuid", pnSignalResult.publisher)
-                success.set(true)
-            }
+        pubnubBase.addListener(
+            object : SubscribeCallback {
+                override fun signal(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnSignalResult: PNSignalResult,
+                ) {
+                    assertEquals("coolChannel", pnSignalResult.channel)
+                    assertEquals("hello", pnSignalResult.message.asString)
+                    assertEquals("uuid", pnSignalResult.publisher)
+                    success.set(true)
+                }
 
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {}
-            override fun message(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnMessageResult: PNMessageResult) {}
-            override fun presence(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun messageAction(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnMessageActionResult: PNMessageActionResult) {}
-        })
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {}
+
+                override fun message(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnMessageResult: PNMessageResult,
+                ) {}
+
+                override fun presence(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnPresenceEventResult: PNPresenceEventResult,
+                ) {}
+
+                override fun messageAction(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnMessageActionResult: PNMessageActionResult,
+                ) {}
+            },
+        )
 
         pubnub.subscribe(
-            channels = listOf("coolChannel")
+            channels = listOf("coolChannel"),
         )
 
         success.listen()
@@ -162,7 +181,7 @@ class SignalTest : BaseTest() {
         try {
             pubnub.signal(
                 channel = " ",
-                message = UUID.randomUUID().toString()
+                message = UUID.randomUUID().toString(),
             ).sync()
             throw RuntimeException()
         } catch (e: PubNubException) {

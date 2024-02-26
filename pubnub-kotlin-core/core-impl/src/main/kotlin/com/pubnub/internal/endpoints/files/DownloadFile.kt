@@ -20,9 +20,8 @@ class DownloadFile(
     private val fileName: String,
     private val fileId: String,
     private val cryptoModule: CryptoModule? = null,
-    pubNub: InternalPubNubClient
+    pubNub: InternalPubNubClient,
 ) : Endpoint<ResponseBody, PNDownloadFileResult>(pubNub), IDownloadFile {
-
     @Throws(PubNubException::class)
     override fun validateParams() {
         if (channel.isEmpty()) {
@@ -37,7 +36,7 @@ class DownloadFile(
             channel,
             fileId,
             fileName,
-            queryParams
+            queryParams,
         )
 
     @Throws(PubNubException::class)
@@ -49,17 +48,24 @@ class DownloadFile(
             throw PubNubException(PubNubError.INTERNAL_ERROR)
         }
         val bodyStream = input.body()!!.byteStream()
-        val byteStream = cryptoModule?.decryptStream(bodyStream)
-            ?: bodyStream
+        val byteStream =
+            cryptoModule?.decryptStream(bodyStream)
+                ?: bodyStream
 
         return PNDownloadFileResult(fileName, byteStream)
     }
 
     override fun getAffectedChannels() = listOf(channel)
+
     override fun getAffectedChannelGroups(): List<String> = listOf()
+
     override fun operationType(): PNOperationType = PNOperationType.FileOperation
+
     override fun isAuthRequired(): Boolean = true
+
     override fun isSubKeyRequired(): Boolean = true
+
     override fun isPubKeyRequired(): Boolean = false
+
     override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.FILE_PERSISTENCE
 }

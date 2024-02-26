@@ -3,14 +3,15 @@ package com.pubnub.internal.models.consumer.objects.membership
 @Deprecated(
     message = "Use PNChannelMembership.Partial",
     level = DeprecationLevel.WARNING,
-    replaceWith = ReplaceWith(
-        "PNChannelMembership.Partial(channelId = channel, custom = custom)",
-        "com.pubnub.internal.models.consumer.objects.membership.PNChannelMembership"
-    )
+    replaceWith =
+        ReplaceWith(
+            "PNChannelMembership.Partial(channelId = channel, custom = custom)",
+            "com.pubnub.internal.models.consumer.objects.membership.PNChannelMembership",
+        ),
 )
 data class PNChannelWithCustom(
     override val channel: String,
-    override val custom: Any? = null
+    override val custom: Any? = null,
 ) : ChannelMembershipInput {
     override val status: String? = null
 
@@ -18,14 +19,15 @@ data class PNChannelWithCustom(
         @Deprecated(
             message = "Use PNChannelMembership.Partial",
             level = DeprecationLevel.ERROR,
-            replaceWith = ReplaceWith(
-                "PNChannelMembership.Partial(channelId = channel, custom = custom)",
-                "com.pubnub.internal.models.consumer.objects.membership.PNChannelMembership"
-            )
+            replaceWith =
+                ReplaceWith(
+                    "PNChannelMembership.Partial(channelId = channel, custom = custom)",
+                    "com.pubnub.internal.models.consumer.objects.membership.PNChannelMembership",
+                ),
         )
         fun of(
             channel: String,
-            custom: Any? = null
+            custom: Any? = null,
         ) = PNChannelMembership.Partial(channelId = channel, custom = custom)
     }
 }

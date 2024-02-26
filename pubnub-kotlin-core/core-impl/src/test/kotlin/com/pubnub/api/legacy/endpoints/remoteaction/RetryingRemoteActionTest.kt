@@ -21,11 +21,12 @@ class RetryingRemoteActionTest {
     fun whenSucceedsWrappedActionIsCalledOnce() {
         // given
         val remoteAction: TestRemoteAction<Int> = spyk(TestRemoteAction.successful(expectedValue))
-        val retryingRemoteAction = RetryingRemoteAction.autoRetry(
-            remoteAction,
-            numberOfRetries,
-            executorService
-        )
+        val retryingRemoteAction =
+            RetryingRemoteAction.autoRetry(
+                remoteAction,
+                numberOfRetries,
+                executorService,
+            )
 
         // when
         val result = retryingRemoteAction.sync()
@@ -40,11 +41,12 @@ class RetryingRemoteActionTest {
     fun whenFailingOnceWrappedActionIsCalledTwice() {
         // given
         val remoteAction: TestRemoteAction<Int> = spyk(TestRemoteAction.failingFirstCall(expectedValue))
-        val retryingRemoteAction = RetryingRemoteAction.autoRetry(
-            remoteAction,
-            numberOfRetries,
-            executorService
-        )
+        val retryingRemoteAction =
+            RetryingRemoteAction.autoRetry(
+                remoteAction,
+                numberOfRetries,
+                executorService,
+            )
 
         // when
         val result = retryingRemoteAction.sync()
@@ -59,11 +61,12 @@ class RetryingRemoteActionTest {
     fun whenFailingAlwaysWrappedActionIsCalledTwiceAndThrows() {
         // given
         val remoteAction: TestRemoteAction<Int?> = spyk(TestRemoteAction.failing())
-        val retryingRemoteAction = RetryingRemoteAction.autoRetry(
-            remoteAction,
-            numberOfRetries,
-            executorService
-        )
+        val retryingRemoteAction =
+            RetryingRemoteAction.autoRetry(
+                remoteAction,
+                numberOfRetries,
+                executorService,
+            )
 
         // when
         try {
@@ -80,11 +83,12 @@ class RetryingRemoteActionTest {
     fun whenSucceedsWrappedActionIsCalledOnceAndPassesResult() {
         // given
         val remoteAction: TestRemoteAction<Int> = spyk(TestRemoteAction.successful(expectedValue))
-        val retryingRemoteAction = RetryingRemoteAction.autoRetry(
-            remoteAction,
-            numberOfRetries,
-            executorService
-        )
+        val retryingRemoteAction =
+            RetryingRemoteAction.autoRetry(
+                remoteAction,
+                numberOfRetries,
+                executorService,
+            )
         val asyncSynchronization = CountDownLatch(1)
 
         // when
@@ -106,11 +110,12 @@ class RetryingRemoteActionTest {
     fun whenFailingOnceWrappedActionIsCalledTwiceAndPassesResult() {
         // given
         val remoteAction: TestRemoteAction<Int> = spyk(TestRemoteAction.failingFirstCall(expectedValue))
-        val retryingRemoteAction = RetryingRemoteAction.autoRetry(
-            remoteAction,
-            numberOfRetries,
-            executorService
-        )
+        val retryingRemoteAction =
+            RetryingRemoteAction.autoRetry(
+                remoteAction,
+                numberOfRetries,
+                executorService,
+            )
         val asyncSynchronization = CountDownLatch(1)
 
         // when
@@ -132,11 +137,12 @@ class RetryingRemoteActionTest {
     fun whenFailingAlwaysWrappedActionIsCalledTwiceAndPassesError() {
         // given
         val remoteAction: TestRemoteAction<Int?> = spyk(TestRemoteAction.failing())
-        val retryingRemoteAction = RetryingRemoteAction.autoRetry(
-            remoteAction,
-            numberOfRetries,
-            executorService
-        )
+        val retryingRemoteAction =
+            RetryingRemoteAction.autoRetry(
+                remoteAction,
+                numberOfRetries,
+                executorService,
+            )
         val asyncSynchronization = CountDownLatch(1)
 
         // when
@@ -156,11 +162,12 @@ class RetryingRemoteActionTest {
     fun whenRetryWrappedActionWillBeCalledTwiceTheUsualTime() {
         // given
         val remoteAction: TestRemoteAction<Int?> = spyk(TestRemoteAction.failing())
-        val retryingRemoteAction = RetryingRemoteAction.autoRetry(
-            remoteAction,
-            numberOfRetries,
-            executorService
-        )
+        val retryingRemoteAction =
+            RetryingRemoteAction.autoRetry(
+                remoteAction,
+                numberOfRetries,
+                executorService,
+            )
         val asyncSynchronization = CountDownLatch(2)
 
         // when

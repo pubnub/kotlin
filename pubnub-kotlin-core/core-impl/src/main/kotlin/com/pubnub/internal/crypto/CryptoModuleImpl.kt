@@ -21,7 +21,6 @@ class CryptoModuleImpl internal constructor(
     @get:JvmSynthetic
     internal val cryptorsForDecryptionOnly: List<Cryptor> = listOf(),
 ) : CryptoModule {
-
     private val headerParser: HeaderParser = HeaderParser()
 
     override fun encrypt(data: ByteArray): ByteArray {
@@ -41,15 +40,16 @@ class CryptoModuleImpl internal constructor(
     override fun decrypt(encryptedData: ByteArray): ByteArray {
         validateData(encryptedData)
         val parsedData: ParseResult<out ByteArray> = headerParser.parseDataWithHeader(encryptedData)
-        val decryptedData: ByteArray = when (parsedData) {
-            is ParseResult.NoHeader -> {
-                getDecryptedDataForLegacyCryptor(encryptedData)
-            }
+        val decryptedData: ByteArray =
+            when (parsedData) {
+                is ParseResult.NoHeader -> {
+                    getDecryptedDataForLegacyCryptor(encryptedData)
+                }
 
-            is ParseResult.Success -> {
-                getDecryptedDataForCryptorWithHeader(parsedData)
+                is ParseResult.Success -> {
+                    getDecryptedDataForCryptorWithHeader(parsedData)
+                }
             }
-        }
         return decryptedData
     }
 
@@ -71,19 +71,20 @@ class CryptoModuleImpl internal constructor(
                 val decryptor = cryptorsForDecryptionOnly.firstOrNull { it.id().contentEquals(LEGACY_CRYPTOR_ID) }
                 decryptor?.decryptStream(EncryptedStreamData(stream = bufferedInputStream)) ?: throw PubNubException(
                     errorMessage = "LegacyCryptor not registered",
-                    pubnubError = PubNubError.UNKNOWN_CRYPTOR
+                    pubnubError = PubNubError.UNKNOWN_CRYPTOR,
                 )
             }
 
             is ParseResult.Success -> {
-                val decryptor = cryptorsForDecryptionOnly.first {
-                    it.id().contentEquals(parsedHeader.cryptoId)
-                }
+                val decryptor =
+                    cryptorsForDecryptionOnly.first {
+                        it.id().contentEquals(parsedHeader.cryptoId)
+                    }
                 decryptor.decryptStream(
                     EncryptedStreamData(
                         metadata = parsedHeader.cryptorData,
-                        stream = parsedHeader.encryptedData
-                    )
+                        stream = parsedHeader.encryptedData,
+                    ),
                 )
             }
         }
@@ -93,7 +94,7 @@ class CryptoModuleImpl internal constructor(
         if (cryptorId.size != SIZE_OF_CRYPTOR_ID) {
             throw PubNubException(
                 errorMessage = "CryptorId should be exactly 4 bytes long",
-                pubnubError = PubNubError.UNKNOWN_CRYPTOR
+                pubnubError = PubNubError.UNKNOWN_CRYPTOR,
             )
         }
     }
@@ -101,7 +102,7 @@ class CryptoModuleImpl internal constructor(
     private fun getDecryptedDataForLegacyCryptor(encryptedData: ByteArray): ByteArray {
         return getCryptorById(LEGACY_CRYPTOR_ID)?.decrypt(EncryptedData(data = encryptedData)) ?: throw PubNubException(
             errorMessage = "LegacyCryptor not available",
-            pubnubError = PubNubError.UNKNOWN_CRYPTOR
+            pubnubError = PubNubError.UNKNOWN_CRYPTOR,
         )
     }
 
@@ -126,7 +127,7 @@ class CryptoModuleImpl internal constructor(
         if (data.isEmpty()) {
             throw PubNubException(
                 errorMessage = "Encryption/Decryption of empty data not allowed.",
-                pubnubError = PubNubError.ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED
+                pubnubError = PubNubError.ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED,
             )
         }
     }
@@ -136,7 +137,7 @@ class CryptoModuleImpl internal constructor(
         bufferedInputStream.checkMinSize(1) {
             throw PubNubException(
                 errorMessage = "Encryption/Decryption of empty data not allowed.",
-                pubnubError = PubNubError.ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED
+                pubnubError = PubNubError.ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED,
             )
         }
         return bufferedInputStream
@@ -147,17 +148,20 @@ internal fun CryptoModule.encryptString(inputString: String): String =
     String(
         com.pubnub.internal.vendor.Base64.encode(
             encrypt(inputString.toByteArray()),
-            com.pubnub.internal.vendor.Base64.NO_WRAP
-        )
+            com.pubnub.internal.vendor.Base64.NO_WRAP,
+        ),
     )
 
 internal fun CryptoModule.decryptString(inputString: String): String =
     decrypt(com.pubnub.internal.vendor.Base64.decode(inputString, com.pubnub.internal.vendor.Base64.NO_WRAP)).toString(
-        Charsets.UTF_8
+        Charsets.UTF_8,
     )
 
 // this method read data from stream and allows to read them again in subsequent reads without manual reset or repositioning
-internal fun BufferedInputStream.checkMinSize(size: Int, exceptionBlock: (Int) -> Unit) {
+internal fun BufferedInputStream.checkMinSize(
+    size: Int,
+    exceptionBlock: (Int) -> Unit,
+) {
     mark(size + 1)
 
     val readBytes = readNBytez(size)
@@ -167,7 +171,10 @@ internal fun BufferedInputStream.checkMinSize(size: Int, exceptionBlock: (Int) -
     }
 }
 
-internal fun BufferedInputStream.readExactlyNBytez(size: Int, exceptionBlock: (Int) -> Unit): ByteArray {
+internal fun BufferedInputStream.readExactlyNBytez(
+    size: Int,
+    exceptionBlock: (Int) -> Unit,
+): ByteArray {
     val readBytes = readNBytez(size)
     if (readBytes.size < size) {
         exceptionBlock(size)

@@ -15,7 +15,7 @@ import com.pubnub.api.v2.callbacks.BaseEventListener
  * Remember to always [close] the set when you're done with it to avoid memory leaks.
  * Closing the set also closes all `Subscription`s that are part of this set.
  */
-interface BaseSubscriptionSet<EvLis: BaseEventListener, Sub: BaseSubscription<EvLis>> : BaseEventEmitter<EvLis>, SubscribeCapable, AutoCloseable {
+interface BaseSubscriptionSet<EvLis : BaseEventListener, Sub : BaseSubscription<EvLis>> : BaseEventEmitter<EvLis>, SubscribeCapable, AutoCloseable {
     /**
      * Add a [BaseSubscription] to this set.
      *

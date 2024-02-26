@@ -10,17 +10,17 @@ import org.junit.Assert.assertEquals
 
 class GetMessageActionsTestSuite :
     com.pubnub.internal.suite.EndpointTestSuite<GetMessageActions, PNGetMessageActionsResult>() {
-
     override fun pnOperation() = PNOperationType.PNGetMessageActions
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH
 
     override fun snippet(): GetMessageActions =
         pubnub.getMessageActions(
-            channel = "ch1"
+            channel = "ch1",
         )
 
-    override fun successfulResponseBody() = """
+    override fun successfulResponseBody() =
+        """
         {
           "status": 200,
           "data": [
@@ -33,12 +33,13 @@ class GetMessageActionsTestSuite :
             }
           ]
         }
-    """.trimIndent()
+        """.trimIndent()
 
-    override fun unsuccessfulResponseBodyList() = listOf(
-        """{"status":200,"data":null}""",
-        """{"status":200}"""
-    )
+    override fun unsuccessfulResponseBodyList() =
+        listOf(
+            """{"status":200,"data":null}""",
+            """{"status":200}""",
+        )
 
     override fun verifyResultExpectations(result: PNGetMessageActionsResult) {
         assertEquals(1, result.actions.size)

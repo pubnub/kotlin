@@ -17,7 +17,6 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 
 class RemoveChannelBaseChannelGroupEndpointTest : BaseTest() {
-
     @Test
     fun testSyncSuccess() {
         stubFor(
@@ -25,20 +24,20 @@ class RemoveChannelBaseChannelGroupEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                             "status": 200,
-                             "message": "OK",
-                             "payload": {},
-                             "service": "ChannelGroups"
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                         "status": 200,
+                         "message": "OK",
+                         "payload": {},
+                         "service": "ChannelGroups"
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         pubnub.removeChannelsFromChannelGroup(
             channelGroup = "groupA",
-            channels = arrayListOf("ch1", "ch2")
+            channels = arrayListOf("ch1", "ch2"),
         ).sync()
     }
 
@@ -49,22 +48,22 @@ class RemoveChannelBaseChannelGroupEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                             "status": 200,
-                             "message": "OK",
-                             "payload": {},
-                             "service": "ChannelGroups"
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                         "status": 200,
+                         "message": "OK",
+                         "payload": {},
+                         "service": "ChannelGroups"
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         pubnub.configuration.authKey = "myKey"
 
         pubnub.removeChannelsFromChannelGroup(
             channelGroup = "groupA",
-            channels = arrayListOf("ch1", "ch2")
+            channels = arrayListOf("ch1", "ch2"),
         ).sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
@@ -79,22 +78,22 @@ class RemoveChannelBaseChannelGroupEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                             "status": 200,
-                             "message": "OK",
-                             "payload": {},
-                             "service": "ChannelGroups"
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                         "status": 200,
+                         "message": "OK",
+                         "payload": {},
+                         "service": "ChannelGroups"
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         val atomic = AtomicInteger(0)
 
         pubnub.removeChannelsFromChannelGroup(
             channelGroup = "groupA",
-            channels = arrayListOf("ch1", "ch2")
+            channels = arrayListOf("ch1", "ch2"),
         ).async { result ->
             assertFalse(result.isFailure)
             atomic.incrementAndGet()

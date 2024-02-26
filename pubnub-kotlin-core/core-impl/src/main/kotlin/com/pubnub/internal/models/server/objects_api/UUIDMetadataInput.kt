@@ -7,5 +7,5 @@ internal data class UUIDMetadataInput(
     val email: String? = null,
     val custom: Any? = null,
     val type: String? = null,
-    val status: String? = null
+    val status: String? = null,
 )

@@ -1,7 +1,6 @@
 package com.pubnub.api.enums
 
 enum class PNReconnectionPolicy {
-
     /**
      * No reconnection policy. If the subscribe loop gets cancelled due to network or other issues,
      * the SDK will not attempt to try to restore it.
@@ -21,5 +20,5 @@ enum class PNReconnectionPolicy {
      *
      * @see [PNConfiguration.maximumReconnectionRetries]
      */
-    EXPONENTIAL
+    EXPONENTIAL,
 }

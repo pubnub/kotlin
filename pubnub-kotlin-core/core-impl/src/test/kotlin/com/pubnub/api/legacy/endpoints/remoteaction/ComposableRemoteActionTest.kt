@@ -19,9 +19,10 @@ class ComposableRemoteActionTest {
     @Throws(PubNubException::class)
     fun sync_happyPath() {
         // given
-        val composedAction: RemoteAction<Int> = firstDo(TestRemoteAction.successful(668))
-            .then { TestRemoteAction.successful(it * 2) }
-            .then { TestRemoteAction.successful(it + 1) }
+        val composedAction: RemoteAction<Int> =
+            firstDo(TestRemoteAction.successful(668))
+                .then { TestRemoteAction.successful(it * 2) }
+                .then { TestRemoteAction.successful(it + 1) }
 
         // when
         val result = composedAction.sync()
@@ -36,9 +37,10 @@ class ComposableRemoteActionTest {
         // given
         val latch = CountDownLatch(1)
         val res = AtomicInteger(0)
-        val composedAction: RemoteAction<Int> = firstDo(TestRemoteAction.successful(668))
-            .then { TestRemoteAction.successful(it * 2) }
-            .then { TestRemoteAction.successful(it + 1) }
+        val composedAction: RemoteAction<Int> =
+            firstDo(TestRemoteAction.successful(668))
+                .then { TestRemoteAction.successful(it * 2) }
+                .then { TestRemoteAction.successful(it + 1) }
 
         // when
         composedAction.async { result ->
@@ -85,25 +87,26 @@ class ComposableRemoteActionTest {
         val cancelSynchronisingLatch = CountDownLatch(1)
         val resultSynchronisingLatch = CountDownLatch(1)
         val firstAsyncFinished = AtomicBoolean(false)
-        val longRunningTask: CancellableRemoteAction<Any?> = object : CancellableRemoteAction<Any?> {
-            @Throws(InterruptedException::class)
-            override fun doAsync(callback: (result: Result<Any?>) -> Unit) {
-                cancelSynchronisingLatch.await()
-                println("async")
-                callback(Result.success(null))
-                firstAsyncFinished.set(true)
-                resultSynchronisingLatch.countDown()
-            }
+        val longRunningTask: CancellableRemoteAction<Any?> =
+            object : CancellableRemoteAction<Any?> {
+                @Throws(InterruptedException::class)
+                override fun doAsync(callback: (result: Result<Any?>) -> Unit) {
+                    cancelSynchronisingLatch.await()
+                    println("async")
+                    callback(Result.success(null))
+                    firstAsyncFinished.set(true)
+                    resultSynchronisingLatch.countDown()
+                }
 
-            override fun silentCancel() {
-                println("silentCancel")
-                cancelSynchronisingLatch.countDown()
-            }
+                override fun silentCancel() {
+                    println("silentCancel")
+                    cancelSynchronisingLatch.countDown()
+                }
 
-            override fun operationType(): PNOperationType {
-                return PNOperationType.FileOperation
+                override fun operationType(): PNOperationType {
+                    return PNOperationType.FileOperation
+                }
             }
-        }
         val successful: TestRemoteAction<Int> = TestRemoteAction.successful(15)
         val composedAction: RemoteAction<Int> = firstDo(longRunningTask).then { successful }
         composedAction.async { _ -> }
@@ -125,9 +128,10 @@ class ComposableRemoteActionTest {
         val firstSuccessful: TestRemoteAction<Int> = TestRemoteAction.successful(1)
         val secondSuccessful: TestRemoteAction<Int> = TestRemoteAction.successful(1)
         val firstFailing: TestRemoteAction<Int> = TestRemoteAction.failingFirstCall(1)
-        val composedAction: RemoteAction<Int> = firstDo(firstSuccessful)
-            .then { secondSuccessful }
-            .then { firstFailing }
+        val composedAction: RemoteAction<Int> =
+            firstDo(firstSuccessful)
+                .then { secondSuccessful }
+                .then { firstFailing }
 
         // when
         composedAction.async { result ->
@@ -152,10 +156,11 @@ class ComposableRemoteActionTest {
         val firstSuccessful: TestRemoteAction<Int> = TestRemoteAction.successful(1)
         val secondSuccessful: TestRemoteAction<Int> = TestRemoteAction.successful(1)
         val firstFailing: TestRemoteAction<Int> = TestRemoteAction.failingFirstCall(1)
-        val composedAction: RemoteAction<Int> = firstDo(firstSuccessful)
-            .checkpoint()
-            .then { secondSuccessful }
-            .then { firstFailing }
+        val composedAction: RemoteAction<Int> =
+            firstDo(firstSuccessful)
+                .checkpoint()
+                .then { secondSuccessful }
+                .then { firstFailing }
 
         // when
         composedAction.async { result ->

@@ -9,10 +9,10 @@ import com.pubnub.internal.eventengine.Source
 
 internal class TestSinkSource<T>(
     private val testSink: MutableList<Pair<String, String>>,
-    private val sinkSource: QueueSinkSource<T> = QueueSinkSource()
+    private val sinkSource: QueueSinkSource<T> = QueueSinkSource(),
 ) : SinkSource<T>, Source<T> by sinkSource {
-
     private val snakeCaseStrategy: SnakeCaseStrategy = SnakeCaseStrategy()
+
     override fun add(item: T) {
         testSink.add(item.type() to item.name())
         sinkSource.add(item)
@@ -22,9 +22,10 @@ internal class TestSinkSource<T>(
 
     private fun String.toSnakeCase(): String = snakeCaseStrategy.translate(this)
 
-    private fun T.type(): String = when (this) {
-        is Event -> "event"
-        is EffectInvocation -> "invocation"
-        else -> "unknown"
-    }
+    private fun T.type(): String =
+        when (this) {
+            is Event -> "event"
+            is EffectInvocation -> "invocation"
+            else -> "unknown"
+        }
 }

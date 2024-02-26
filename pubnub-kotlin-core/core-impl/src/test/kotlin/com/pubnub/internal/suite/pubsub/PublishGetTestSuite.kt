@@ -12,16 +12,14 @@ import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 class PublishGetTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Publish, PNPublishResult>() {
-
     override fun pnOperation() = PNOperationType.PNPublishOperation
 
-    override fun requiredKeys() =
-        com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.PUB + com.pubnub.internal.suite.AUTH
+    override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.PUB + com.pubnub.internal.suite.AUTH
 
     override fun snippet(): Publish {
         return pubnub.publish(
             channel = "ch1",
-            message = "ch2"
+            message = "ch2",
         )
     }
 
@@ -37,9 +35,9 @@ class PublishGetTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Publish,
         return get(
             urlPathEqualTo(
                 "/publish/myPublishKey/mySubscribeKey/0/ch1/0/%s".format(
-                    URLEncoder.encode(Gson().toJson("ch2"), StandardCharsets.UTF_8.name())
-                )
-            )
+                    URLEncoder.encode(Gson().toJson("ch2"), StandardCharsets.UTF_8.name()),
+                ),
+            ),
         )!!
     }
 

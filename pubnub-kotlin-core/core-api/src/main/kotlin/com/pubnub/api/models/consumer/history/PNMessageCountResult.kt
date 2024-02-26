@@ -7,5 +7,5 @@ package com.pubnub.api.models.consumer.history
  * Channels with 10,000 messages or more have a count of `10000`.
  */
 class PNMessageCountResult(
-    val channels: Map<String, Long>
+    val channels: Map<String, Long>,
 )

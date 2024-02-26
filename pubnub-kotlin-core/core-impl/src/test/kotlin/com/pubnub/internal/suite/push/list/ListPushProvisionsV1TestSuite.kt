@@ -14,7 +14,6 @@ import org.junit.Assert.assertFalse
 
 class ListPushProvisionsV1TestSuite :
     com.pubnub.internal.suite.EndpointTestSuite<ListPushProvisions, PNPushListProvisionsResult>() {
-
     override fun pnOperation() = PNOperationType.PNPushNotificationEnabledChannelsOperation
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH
@@ -22,7 +21,7 @@ class ListPushProvisionsV1TestSuite :
     override fun snippet(): ListPushProvisions {
         return pubnub.auditPushChannelProvisions(
             pushType = PNPushType.FCM,
-            deviceId = "12345"
+            deviceId = "12345",
         )
     }
 
@@ -36,9 +35,10 @@ class ListPushProvisionsV1TestSuite :
         return """["ch1", "ch2"]"""
     }
 
-    override fun unsuccessfulResponseBodyList() = listOf(
-        """["ch1","ch2",{}]"""
-    )
+    override fun unsuccessfulResponseBodyList() =
+        listOf(
+            """["ch1","ch2",{}]""",
+        )
 
     override fun mappingBuilder() =
         get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/12345"))
@@ -57,7 +57,7 @@ class ListPushProvisionsV1TestSuite :
                     assertFalse(result.isFailure)
                     assertEquals(0, result.getOrThrow().channels.size)
                 }
-            }
+            },
         )
     }
 }

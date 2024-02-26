@@ -17,7 +17,6 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 
 class DeleteMessagesEndpointTest : BaseTest() {
-
     @Test
     fun testSyncSuccess() {
         stubFor(
@@ -30,13 +29,13 @@ class DeleteMessagesEndpointTest : BaseTest() {
                           "error": false,
                           "error_message": ""
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         pubnub.deleteMessages(
-            channels = listOf("mychannel,my_channel")
+            channels = listOf("mychannel,my_channel"),
         ).sync()
     }
 
@@ -52,15 +51,15 @@ class DeleteMessagesEndpointTest : BaseTest() {
                           "error": false,
                           "error_message": ""
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         pubnub.configuration.authKey = "authKey"
 
         pubnub.deleteMessages(
-            channels = listOf("mychannel,my_channel")
+            channels = listOf("mychannel,my_channel"),
         ).sync()
 
         val requests = findAll(deleteRequestedFor(urlMatching("/.*")))
@@ -80,14 +79,14 @@ class DeleteMessagesEndpointTest : BaseTest() {
                           "error": false,
                           "error_message": "wut"
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         try {
             pubnub.deleteMessages(
-                channels = listOf("mychannel,my_channel")
+                channels = listOf("mychannel,my_channel"),
             ).sync()
         } catch (e: Exception) {
             failTest()
@@ -106,15 +105,15 @@ class DeleteMessagesEndpointTest : BaseTest() {
                           "error": false,
                           "error_message": ""
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         val success = AtomicBoolean()
 
         pubnub.deleteMessages(
-            channels = listOf("mychannel,my_channel")
+            channels = listOf("mychannel,my_channel"),
         ).async { result ->
             assertFalse(result.isFailure)
             success.set(true)

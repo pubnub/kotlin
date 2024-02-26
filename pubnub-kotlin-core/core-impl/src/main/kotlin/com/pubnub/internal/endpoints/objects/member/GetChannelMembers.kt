@@ -20,9 +20,8 @@ class GetChannelMembers internal constructor(
     pubnub: InternalPubNubClient,
     private val channel: String,
     private val collectionQueryParameters: CollectionQueryParameters,
-    private val includeQueryParam: IncludeQueryParam
+    private val includeQueryParam: IncludeQueryParam,
 ) : Endpoint<EntityArrayEnvelope<PNMember>, PNMemberArrayResult>(pubnub), IGetChannelMembers {
-
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityArrayEnvelope<PNMember>> {
         val params =
             queryParams + collectionQueryParameters.createCollectionQueryParams() + includeQueryParam.createIncludeQueryParams()
@@ -30,12 +29,11 @@ class GetChannelMembers internal constructor(
         return pubnub.retrofitManager.objectsService.getChannelMembers(
             channel = channel,
             subKey = pubnub.configuration.subscribeKey,
-            options = params
+            options = params,
         )
     }
 
-    override fun createResponse(input: Response<EntityArrayEnvelope<PNMember>>): PNMemberArrayResult =
-        input.toPNMemberArrayResult()
+    override fun createResponse(input: Response<EntityArrayEnvelope<PNMember>>): PNMemberArrayResult = input.toPNMemberArrayResult()
 
     override fun operationType(): PNOperationType = PNOperationType.ObjectsOperation()
 

@@ -7,5 +7,5 @@ import com.google.gson.JsonElement
  */
 data class PNSignalResult(
     private val basePubSubResult: PubSubResult,
-    override val message: JsonElement
+    override val message: JsonElement,
 ) : MessageResult, PubSubResult by basePubSubResult

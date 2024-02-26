@@ -26,11 +26,12 @@ class GetFileUrlTest {
         val pubnub = TestPubNub(config()).internalPubNubClient
 
         // when
-        val url = pubnub.getFileUrl(
-            channel = channel,
-            fileName = fileName,
-            fileId = fileId
-        ).sync().url
+        val url =
+            pubnub.getFileUrl(
+                channel = channel,
+                fileName = fileName,
+                fileId = fileId,
+            ).sync().url
 
         // then
         val queryParamNames = queryParameterNames(url)
@@ -45,11 +46,12 @@ class GetFileUrlTest {
         val pubnub = TestPubNub(withSecret(config())).internalPubNubClient
 
         // when
-        val url = pubnub.getFileUrl(
-            channel = channel,
-            fileName = fileName,
-            fileId = fileId
-        ).sync().url
+        val url =
+            pubnub.getFileUrl(
+                channel = channel,
+                fileName = fileName,
+                fileId = fileId,
+            ).sync().url
 
         // then
         val queryParamNames = queryParameterNames(url)
@@ -64,11 +66,12 @@ class GetFileUrlTest {
         val pubnub = TestPubNub(withAuth(config())).internalPubNubClient
 
         // when
-        val url = pubnub.getFileUrl(
-            channel = channel,
-            fileName = fileName,
-            fileId = fileId
-        ).sync().url
+        val url =
+            pubnub.getFileUrl(
+                channel = channel,
+                fileName = fileName,
+                fileId = fileId,
+            ).sync().url
 
         // then
         val queryParamNames = queryParameterNames(url)
@@ -83,11 +86,12 @@ class GetFileUrlTest {
         val pubnub = TestPubNub(withSecret(withAuth(config()))).internalPubNubClient
 
         // when
-        val url = pubnub.getFileUrl(
-            channel = channel,
-            fileName = fileName,
-            fileId = fileId
-        ).sync().url
+        val url =
+            pubnub.getFileUrl(
+                channel = channel,
+                fileName = fileName,
+                fileId = fileId,
+            ).sync().url
 
         // then
         println(url)
@@ -95,7 +99,7 @@ class GetFileUrlTest {
         queryParamNames.removeAll(defaultQueryParams)
         assertThat<Collection<String>>(
             queryParamNames,
-            Matchers.containsInAnyOrder("auth", "signature", "timestamp")
+            Matchers.containsInAnyOrder("auth", "signature", "timestamp"),
         )
     }
 

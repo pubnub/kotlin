@@ -22,7 +22,6 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 
 class AllChannelsBaseChannelGroupEndpointTest : BaseTest() {
-
     @Test
     fun testSyncSuccess() {
         stubFor(
@@ -41,14 +40,15 @@ class AllChannelsBaseChannelGroupEndpointTest : BaseTest() {
                           },
                           "service": "ChannelGroups"
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val response = pubnub.listChannelsForChannelGroup(
-            channelGroup = "groupA"
-        ).sync()
+        val response =
+            pubnub.listChannelsForChannelGroup(
+                channelGroup = "groupA",
+            ).sync()
 
         assertThat(response.channels, Matchers.contains("a", "b"))
     }
@@ -57,7 +57,7 @@ class AllChannelsBaseChannelGroupEndpointTest : BaseTest() {
     fun testSyncEmptyGroup() {
         try {
             pubnub.listChannelsForChannelGroup(
-                channelGroup = " "
+                channelGroup = " ",
             ).sync()
         } catch (e: Exception) {
             assertPnException(PubNubError.GROUP_MISSING, e)
@@ -71,25 +71,25 @@ class AllChannelsBaseChannelGroupEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                              "status": 200,
-                              "message": "OK",
-                              "payload": {
-                                "channels": [
-                                  "a",
-                                  "b"
-                                ]
-                              },
-                              "service": "ChannelGroups"
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                          "status": 200,
+                          "message": "OK",
+                          "payload": {
+                            "channels": [
+                              "a",
+                              "b"
+                            ]
+                          },
+                          "service": "ChannelGroups"
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
         pubnub.configuration.authKey = "myKey"
 
         pubnub.listChannelsForChannelGroup(
-            channelGroup = "groupA"
+            channelGroup = "groupA",
         ).sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
@@ -104,26 +104,26 @@ class AllChannelsBaseChannelGroupEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                              "status": 200,
-                              "message": "OK",
-                              "payload": {
-                                "channels": [
-                                  "a",
-                                  "b"
-                                ]
-                              },
-                              "service": "ChannelGroups"
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                          "status": 200,
+                          "message": "OK",
+                          "payload": {
+                            "channels": [
+                              "a",
+                              "b"
+                            ]
+                          },
+                          "service": "ChannelGroups"
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         val atomic = AtomicInteger(0)
 
         pubnub.listChannelsForChannelGroup(
-            channelGroup = "groupA"
+            channelGroup = "groupA",
         ).async { result ->
             assertFalse(result.isFailure)
             result.onSuccess {
@@ -142,7 +142,7 @@ class AllChannelsBaseChannelGroupEndpointTest : BaseTest() {
         pubnub.configuration.subscribeKey = " "
         try {
             pubnub.listChannelsForChannelGroup(
-                channelGroup = "groupA"
+                channelGroup = "groupA",
             ).sync()
             throw RuntimeException()
         } catch (e: PubNubException) {

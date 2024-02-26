@@ -19,7 +19,6 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 
 class LeaveTest : BaseTest() {
-
     @Test
     fun subscribeChannelSync() {
         stubFor(
@@ -33,9 +32,9 @@ class LeaveTest : BaseTest() {
                           "service": "Presence",
                           "action": "leave"
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         Leave(pubnub).apply {
@@ -59,9 +58,9 @@ class LeaveTest : BaseTest() {
                           "service": "Presence",
                           "action": "leave"
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         Leave(pubnub).apply {
@@ -85,9 +84,9 @@ class LeaveTest : BaseTest() {
                           "service": "Presence",
                           "action": "leave"
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         Leave(pubnub).apply {
@@ -114,9 +113,9 @@ class LeaveTest : BaseTest() {
                           "service": "Presence",
                           "action": "leave"
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         Leave(pubnub).apply {
@@ -130,7 +129,7 @@ class LeaveTest : BaseTest() {
 
         Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(
             statusArrived,
-            IsEqual.equalTo(true)
+            IsEqual.equalTo(true),
         )
     }
 
@@ -147,9 +146,9 @@ class LeaveTest : BaseTest() {
                           "service": "Presence",
                           "action": "leave"
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         Leave(pubnub).apply {
@@ -174,9 +173,9 @@ class LeaveTest : BaseTest() {
                           "service": "Presence",
                           "action": "leave"
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         Leave(pubnub).apply {
@@ -195,15 +194,15 @@ class LeaveTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                              "status": 200,
-                              "message": "OK",
-                              "service": "Presence",
-                              "action": "leave"
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                          "status": 200,
+                          "message": "OK",
+                          "service": "Presence",
+                          "action": "leave"
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         try {
@@ -226,9 +225,9 @@ class LeaveTest : BaseTest() {
                           "service": "Presence",
                           "action": "leave"
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         pubnub.configuration.subscribeKey = " "
@@ -253,9 +252,9 @@ class LeaveTest : BaseTest() {
                           "service": "Presence",
                           "action": "leave"
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         pubnub.configuration.subscribeKey = ""
@@ -280,9 +279,9 @@ class LeaveTest : BaseTest() {
                           "service": "Presence",
                           "action": "leave"
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         pubnub.configuration.authKey = "myKey"

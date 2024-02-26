@@ -6,5 +6,5 @@ import com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArra
 /**
  * @see [PubNub.getMemberships]
  */
-interface GetMemberships  :
-     Endpoint<PNChannelMembershipArrayResult>
+interface GetMemberships :
+    Endpoint<PNChannelMembershipArrayResult>

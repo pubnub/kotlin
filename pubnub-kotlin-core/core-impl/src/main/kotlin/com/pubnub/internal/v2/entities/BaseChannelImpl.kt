@@ -9,21 +9,21 @@ import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.SubscriptionFactory
 import com.pubnub.internal.subscribe.PRESENCE_CHANNEL_SUFFIX
 
-open class BaseChannelImpl<Lis: BaseEventListener, Sub: BaseSubscription<Lis>>(
+open class BaseChannelImpl<Lis : BaseEventListener, Sub : BaseSubscription<Lis>>(
     internal val pubnub: InternalPubNubClient,
     private val channelName: ChannelName,
-    private val subscriptionFactory: SubscriptionFactory<Sub>
+    private val subscriptionFactory: SubscriptionFactory<Sub>,
 ) : BaseChannel<Lis, Sub> {
-
     override val name: String = channelName.id
 
     override fun subscription(options: SubscriptionOptions): Sub {
-        val channels = buildSet<ChannelName> {
-            add(channelName)
-            if (options.allOptions.filterIsInstance<ReceivePresenceEventsImpl>().isNotEmpty()) {
-                add(channelName.withPresence)
+        val channels =
+            buildSet<ChannelName> {
+                add(channelName)
+                if (options.allOptions.filterIsInstance<ReceivePresenceEventsImpl>().isNotEmpty()) {
+                    add(channelName.withPresence)
+                }
             }
-        }
         return subscriptionFactory(
             channels,
             emptySet(),
@@ -38,18 +38,18 @@ open class BaseChannelImpl<Lis: BaseEventListener, Sub: BaseSubscription<Lis>>(
                     (
                         result.subscription == name ||
                             result.channel.startsWith(name.substringBeforeLast("*"))
-                        )
+                    )
                 ) {
                     return@filter true
                 }
                 return@filter false
-            } + options
+            } + options,
         )
     }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is BaseChannelImpl<*,*>) return false
+        if (other !is BaseChannelImpl<*, *>) return false
 
         if (pubnub != other.pubnub) return false
         if (name != other.name) return false

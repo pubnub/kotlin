@@ -9,7 +9,7 @@ internal interface EventEngineConf<Ei : EffectInvocation, Ev : Event> {
 
 internal class QueueEventEngineConf<Ei : EffectInvocation, Ev : Event>(
     effectSinkSource: SinkSource<Ei> = QueueSinkSource(),
-    eventSinkSource: SinkSource<Ev> = QueueSinkSource()
+    eventSinkSource: SinkSource<Ev> = QueueSinkSource(),
 ) : EventEngineConf<Ei, Ev> {
     override val eventSink: Sink<Ev> = eventSinkSource
     override val eventSource: Source<Ev> = eventSinkSource

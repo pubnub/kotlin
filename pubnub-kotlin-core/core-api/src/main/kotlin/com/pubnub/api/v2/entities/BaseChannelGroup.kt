@@ -11,7 +11,7 @@ import com.pubnub.api.v2.subscriptions.SubscriptionOptions
  *
  * Use the [com.pubnub.api.PubNub.channelGroup] factory method to create instances of this interface.
  */
-interface BaseChannelGroup<Lis: BaseEventListener, Sub: BaseSubscription<Lis>> : Subscribable<Lis> {
+interface BaseChannelGroup<Lis : BaseEventListener, Sub : BaseSubscription<Lis>> : Subscribable<Lis> {
     /**
      * The name of this channel group.
      *

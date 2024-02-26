@@ -4,7 +4,6 @@ import com.pubnub.internal.PNConfiguration
 import com.pubnub.internal.PNConfiguration.Companion.isValid
 
 internal class BasePathManager(private val config: PNConfiguration) {
-
     /**
      * for cache busting, the current subdomain number used.
      */
@@ -28,9 +27,10 @@ internal class BasePathManager(private val config: PNConfiguration) {
     private val DEFAULT_BASE_PATH = "pndsn.com"
 
     fun basePath(): String {
-        val basePathBuilder = StringBuilder("http")
-            .append(if (config.secure) "s" else "")
-            .append("://")
+        val basePathBuilder =
+            StringBuilder("http")
+                .append(if (config.secure) "s" else "")
+                .append("://")
 
         when {
             config.origin.isValid() -> {

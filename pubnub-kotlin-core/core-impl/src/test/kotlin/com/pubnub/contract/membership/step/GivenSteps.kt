@@ -7,7 +7,6 @@ import io.cucumber.java.en.Given
 class GivenSteps(
     private val membershipState: MembershipState,
 ) {
-
     @Given("the data for {string} membership")
     fun the_data_for_membership(channelMembershipName: String) {
         membershipState.memberships.add(loadChannelMembership(channelMembershipName))

@@ -6,24 +6,26 @@ interface UUIDGrant : PNGrant {
             id: String,
             get: Boolean = false,
             update: Boolean = false,
-            delete: Boolean = false
-        ): UUIDGrant = PNUUIDResourceGrant(
-            id = id,
-            delete = delete,
-            get = get,
-            update = update
-        )
+            delete: Boolean = false,
+        ): UUIDGrant =
+            PNUUIDResourceGrant(
+                id = id,
+                delete = delete,
+                get = get,
+                update = update,
+            )
 
         fun pattern(
             pattern: String,
             get: Boolean = false,
             update: Boolean = false,
-            delete: Boolean = false
-        ): UUIDGrant = PNUUIDPatternGrant(
-            id = pattern,
-            delete = delete,
-            get = get,
-            update = update
-        )
+            delete: Boolean = false,
+        ): UUIDGrant =
+            PNUUIDPatternGrant(
+                id = pattern,
+                delete = delete,
+                get = get,
+                update = update,
+            )
     }
 }

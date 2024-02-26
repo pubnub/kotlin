@@ -77,13 +77,15 @@ import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.PubNubImpl
 import java.io.InputStream
 
-interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup, ChannelMetadata, UserMetadata, SubscriptionSet, StatusListener>,
+interface PubNub :
+    BasePubNub<EventListener, Subscription, Channel, ChannelGroup, ChannelMetadata, UserMetadata, SubscriptionSet, StatusListener>,
     EventEmitter {
     companion object {
         @JvmStatic
         fun create(configuration: PNConfiguration): PubNub {
             return PubNubImpl(configuration)
         }
+
         @JvmStatic
         fun generateUUID(): String = InternalPubNubClient.generateUUID()
     }
@@ -94,7 +96,9 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
 
     //region api
     fun baseUrl(): String
+
     fun requestId(): String
+
     fun timestamp(): Int
 
     /**
@@ -148,7 +152,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
         shouldStore: Boolean? = null,
         usePost: Boolean = false,
         replicate: Boolean = true,
-        ttl: Int? = null
+        ttl: Int? = null,
     ): Publish
 
     /**
@@ -186,7 +190,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
         message: Any,
         meta: Any? = null,
         usePost: Boolean = false,
-        ttl: Int? = null
+        ttl: Int? = null,
     ): Publish
 
     /**
@@ -201,7 +205,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
      */
     fun signal(
         channel: String,
-        message: Any
+        message: Any,
     ): Signal
 
     /**
@@ -240,7 +244,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
         channels: List<String>,
         deviceId: String,
         topic: String? = null,
-        environment: PNPushEnvironment = PNPushEnvironment.DEVELOPMENT
+        environment: PNPushEnvironment = PNPushEnvironment.DEVELOPMENT,
     ): AddChannelsToPush
 
     /**
@@ -257,7 +261,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
         pushType: PNPushType,
         deviceId: String,
         topic: String? = null,
-        environment: PNPushEnvironment = PNPushEnvironment.DEVELOPMENT
+        environment: PNPushEnvironment = PNPushEnvironment.DEVELOPMENT,
     ): ListPushProvisions
 
     /**
@@ -276,7 +280,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
         channels: List<String>,
         deviceId: String,
         topic: String? = null,
-        environment: PNPushEnvironment = PNPushEnvironment.DEVELOPMENT
+        environment: PNPushEnvironment = PNPushEnvironment.DEVELOPMENT,
     ): RemoveChannelsFromPush
 
     /**
@@ -293,7 +297,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
         pushType: PNPushType,
         deviceId: String,
         topic: String? = null,
-        environment: PNPushEnvironment = PNPushEnvironment.DEVELOPMENT
+        environment: PNPushEnvironment = PNPushEnvironment.DEVELOPMENT,
     ): RemoveAllPushChannelsForDevice
 
     /**
@@ -337,7 +341,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
         count: Int = com.pubnub.internal.endpoints.History.MAX_COUNT,
         reverse: Boolean = false,
         includeTimetoken: Boolean = false,
-        includeMeta: Boolean = false
+        includeMeta: Boolean = false,
     ): History
 
     /**
@@ -377,12 +381,13 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
      *                              Defaults to `false`.
      */
     @Deprecated(
-        replaceWith = ReplaceWith(
-            "fetchMessages(channels = channels, page = PNBoundedPage(start = start, end = end, limit = maximumPerChannel),includeMeta = includeMeta, includeMessageActions = includeMessageActions, includeMessageType = includeMessageType)",
-            "com.pubnub.api.models.consumer.PNBoundedPage"
-        ),
+        replaceWith =
+            ReplaceWith(
+                "fetchMessages(channels = channels, page = PNBoundedPage(start = start, end = end, limit = maximumPerChannel),includeMeta = includeMeta, includeMessageActions = includeMessageActions, includeMessageType = includeMessageType)",
+                "com.pubnub.api.models.consumer.PNBoundedPage",
+            ),
         level = DeprecationLevel.WARNING,
-        message = "Use fetchMessages(String, PNBoundedPage, Boolean, Boolean, Boolean) instead"
+        message = "Use fetchMessages(String, PNBoundedPage, Boolean, Boolean, Boolean) instead",
     )
     fun fetchMessages(
         channels: List<String>,
@@ -391,7 +396,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
         end: Long? = null,
         includeMeta: Boolean = false,
         includeMessageActions: Boolean = false,
-        includeMessageType: Boolean = true
+        includeMessageType: Boolean = true,
     ): FetchMessages
 
     /**
@@ -435,7 +440,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
         includeUUID: Boolean = true,
         includeMeta: Boolean = false,
         includeMessageActions: Boolean = false,
-        includeMessageType: Boolean = true
+        includeMessageType: Boolean = true,
     ): FetchMessages
 
     /**
@@ -454,7 +459,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
     fun deleteMessages(
         channels: List<String>,
         start: Long? = null,
-        end: Long? = null
+        end: Long? = null,
     ): DeleteMessages
 
     /**
@@ -467,7 +472,10 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
      *                          Specify a single timetoken to apply it to all channels.
      *                          Otherwise, the list of timetokens must be the same length as the list of channels.
      */
-    fun messageCounts(channels: List<String>, channelsTimetoken: List<Long>): MessageCounts
+    fun messageCounts(
+        channels: List<String>,
+        channelsTimetoken: List<Long>,
+    ): MessageCounts
 
     /**
      * Obtain information about the current state of a channel including a list of unique user IDs
@@ -486,7 +494,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
         channels: List<String> = emptyList(),
         channelGroups: List<String> = emptyList(),
         includeState: Boolean = false,
-        includeUUIDs: Boolean = true
+        includeUUIDs: Boolean = true,
     ): HereNow
 
     /**
@@ -521,7 +529,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
         channels: List<String> = listOf(),
         channelGroups: List<String> = listOf(),
         state: Any,
-        uuid: String = configuration.userId.value
+        uuid: String = configuration.userId.value,
     ): SetState
 
     /**
@@ -537,7 +545,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
     fun getPresenceState(
         channels: List<String> = listOf(),
         channelGroups: List<String> = listOf(),
-        uuid: String = configuration.userId.value
+        uuid: String = configuration.userId.value,
     ): GetState
 
     /**
@@ -552,7 +560,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
     fun presence(
         channels: List<String> = emptyList(),
         channelGroups: List<String> = emptyList(),
-        connected: Boolean = false
+        connected: Boolean = false,
     )
 
     /**
@@ -562,7 +570,10 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
      * @param messageAction The message action object containing the message action's type,
      *                      value and the publish timetoken of the original message.
      */
-    fun addMessageAction(channel: String, messageAction: PNMessageAction): AddMessageAction
+    fun addMessageAction(
+        channel: String,
+        messageAction: PNMessageAction,
+    ): AddMessageAction
 
     /**
      * Remove a previously added action on a published message. Returns an empty response.
@@ -571,7 +582,11 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
      * @param messageTimetoken The publish timetoken of the original message.
      * @param actionTimetoken The publish timetoken of the message action to be removed.
      */
-    fun removeMessageAction(channel: String, messageTimetoken: Long, actionTimetoken: Long): RemoveMessageAction
+    fun removeMessageAction(
+        channel: String,
+        messageTimetoken: Long,
+        actionTimetoken: Long,
+    ): RemoveMessageAction
 
     /**
      * Get a list of message actions in a channel. Returns a list of actions in the response.
@@ -584,18 +599,19 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
      * @param limit Specifies the number of message actions to return in response.
      */
     @Deprecated(
-        replaceWith = ReplaceWith(
-            "getMessageActions(channel = channel, page = PNBoundedPage(start = start, end = end, limit = limit))",
-            "com.pubnub.api.models.consumer.PNBoundedPage"
-        ),
+        replaceWith =
+            ReplaceWith(
+                "getMessageActions(channel = channel, page = PNBoundedPage(start = start, end = end, limit = limit))",
+                "com.pubnub.api.models.consumer.PNBoundedPage",
+            ),
         level = DeprecationLevel.WARNING,
-        message = "Use getMessageActions(String, PNBoundedPage) instead"
+        message = "Use getMessageActions(String, PNBoundedPage) instead",
     )
     fun getMessageActions(
         channel: String,
         start: Long? = null,
         end: Long? = null,
-        limit: Int? = null
+        limit: Int? = null,
     ): GetMessageActions
 
     /**
@@ -606,7 +622,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
      */
     fun getMessageActions(
         channel: String,
-        page: PNBoundedPage = PNBoundedPage()
+        page: PNBoundedPage = PNBoundedPage(),
     ): GetMessageActions
 
     /**
@@ -615,7 +631,10 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
      * @param channels The channels to add to the channel group.
      * @param channelGroup The channel group to add the channels to.
      */
-    fun addChannelsToChannelGroup(channels: List<String>, channelGroup: String): AddChannelChannelGroup
+    fun addChannelsToChannelGroup(
+        channels: List<String>,
+        channelGroup: String,
+    ): AddChannelChannelGroup
 
     /**
      * Lists all the channels of the channel group.
@@ -630,7 +649,10 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
      * @param channelGroup The channel group to remove channels from
      * @param channels The channels to remove from the channel group.
      */
-    fun removeChannelsFromChannelGroup(channels: List<String>, channelGroup: String): RemoveChannelChannelGroup
+    fun removeChannelsFromChannelGroup(
+        channels: List<String>,
+        channelGroup: String,
+    ): RemoveChannelChannelGroup
 
     /**
      * Lists all registered channel groups for the subscribe key.
@@ -740,7 +762,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
         authorizedUUID: String? = null,
         channels: List<ChannelGrant> = emptyList(),
         channelGroups: List<ChannelGroupGrant> = emptyList(),
-        uuids: List<UUIDGrant> = emptyList()
+        uuids: List<UUIDGrant> = emptyList(),
     ): GrantToken
 
     /**
@@ -764,7 +786,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
         meta: Any? = null,
         authorizedUserId: UserId? = null,
         spacesPermissions: List<SpacePermissions> = emptyList(),
-        usersPermissions: List<UserPermissions> = emptyList()
+        usersPermissions: List<UserPermissions> = emptyList(),
     ): GrantToken
 
     /**
@@ -803,7 +825,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
         filter: String? = null,
         sort: Collection<PNSortKey<PNKey>> = listOf(),
         includeCount: Boolean = false,
-        includeCustom: Boolean = false
+        includeCustom: Boolean = false,
     ): GetAllChannelMetadata
 
     /**
@@ -812,7 +834,10 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
      * @param channel Channel name.
      * @param includeCustom Include respective additional fields in the response.
      */
-    fun getChannelMetadata(channel: String, includeCustom: Boolean = false): GetChannelMetadata
+    fun getChannelMetadata(
+        channel: String,
+        includeCustom: Boolean = false,
+    ): GetChannelMetadata
 
     /**
      * Set metadata for a Channel in the database, optionally including the custom data object for each.
@@ -830,7 +855,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
         custom: Any? = null,
         includeCustom: Boolean = false,
         type: String? = null,
-        status: String? = null
+        status: String? = null,
     ): SetChannelMetadata
 
     /**
@@ -864,7 +889,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
         filter: String? = null,
         sort: Collection<PNSortKey<PNKey>> = listOf(),
         includeCount: Boolean = false,
-        includeCustom: Boolean = false
+        includeCustom: Boolean = false,
     ): GetAllUUIDMetadata
 
     /**
@@ -875,7 +900,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
      */
     fun getUUIDMetadata(
         uuid: String? = null,
-        includeCustom: Boolean = false
+        includeCustom: Boolean = false,
     ): GetUUIDMetadata
 
     /**
@@ -898,7 +923,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
         custom: Any? = null,
         includeCustom: Boolean = false,
         type: String? = null,
-        status: String? = null
+        status: String? = null,
     ): SetUUIDMetadata
 
     /**
@@ -936,20 +961,21 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
         sort: Collection<PNSortKey<PNMembershipKey>> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
-        includeChannelDetails: PNChannelDetailsLevel? = null
+        includeChannelDetails: PNChannelDetailsLevel? = null,
     ): GetMemberships
 
     /**
      * @see [PubNub.setMemberships]
      */
     @Deprecated(
-        replaceWith = ReplaceWith(
-            "setMemberships(channels = channels, uuid = uuid, limit = limit, " +
+        replaceWith =
+            ReplaceWith(
+                "setMemberships(channels = channels, uuid = uuid, limit = limit, " +
                     "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
-                    "includeChannelDetails = includeChannelDetails)"
-        ),
+                    "includeChannelDetails = includeChannelDetails)",
+            ),
         level = DeprecationLevel.WARNING,
-        message = "Use setMemberships instead"
+        message = "Use setMemberships instead",
     )
     fun addMemberships(
         channels: List<ChannelMembershipInput>,
@@ -960,7 +986,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
         sort: Collection<PNSortKey<PNMembershipKey>> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
-        includeChannelDetails: PNChannelDetailsLevel? = null
+        includeChannelDetails: PNChannelDetailsLevel? = null,
     ): ManageMemberships
 
     /**
@@ -1027,7 +1053,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
         sort: Collection<PNSortKey<PNMembershipKey>> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
-        includeChannelDetails: PNChannelDetailsLevel? = null
+        includeChannelDetails: PNChannelDetailsLevel? = null,
     ): ManageMemberships
 
     /**
@@ -1069,13 +1095,14 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
      * @see [PubNub.getChannelMembers]
      */
     @Deprecated(
-        replaceWith = ReplaceWith(
-            "getChannelMembers(channel = channel, limit = limit, " +
+        replaceWith =
+            ReplaceWith(
+                "getChannelMembers(channel = channel, limit = limit, " +
                     "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
-                    "includeUUIDDetails = includeUUIDDetails)"
-        ),
+                    "includeUUIDDetails = includeUUIDDetails)",
+            ),
         level = DeprecationLevel.WARNING,
-        message = "Use getChannelMembers instead"
+        message = "Use getChannelMembers instead",
     )
     fun getMembers(
         channel: String,
@@ -1085,7 +1112,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
         sort: Collection<PNSortKey<PNMemberKey>> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
-        includeUUIDDetails: PNUUIDDetailsLevel? = null
+        includeUUIDDetails: PNUUIDDetailsLevel? = null,
     ): GetChannelMembers
 
     /**
@@ -1117,20 +1144,21 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
         sort: Collection<PNSortKey<PNMemberKey>> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
-        includeUUIDDetails: PNUUIDDetailsLevel? = null
+        includeUUIDDetails: PNUUIDDetailsLevel? = null,
     ): GetChannelMembers
 
     /**
      * @see [PubNub.setChannelMembers]
      */
     @Deprecated(
-        replaceWith = ReplaceWith(
-            "setChannelMembers(channel = channel, uuids = uuids, limit = limit, " +
+        replaceWith =
+            ReplaceWith(
+                "setChannelMembers(channel = channel, uuids = uuids, limit = limit, " +
                     "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
-                    "includeUUIDDetails = includeUUIDDetails)"
-        ),
+                    "includeUUIDDetails = includeUUIDDetails)",
+            ),
         level = DeprecationLevel.WARNING,
-        message = "Use setChannelMembers instead"
+        message = "Use setChannelMembers instead",
     )
     fun addMembers(
         channel: String,
@@ -1141,7 +1169,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
         sort: Collection<PNSortKey<PNMemberKey>> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
-        includeUUIDDetails: PNUUIDDetailsLevel? = null
+        includeUUIDDetails: PNUUIDDetailsLevel? = null,
     ): ManageChannelMembers
 
     /**
@@ -1182,13 +1210,14 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
      * @see [PubNub.removeChannelMembers]
      */
     @Deprecated(
-        replaceWith = ReplaceWith(
-            "removeChannelMembers(channel = channel, uuids = uuids, limit = limit, " +
+        replaceWith =
+            ReplaceWith(
+                "removeChannelMembers(channel = channel, uuids = uuids, limit = limit, " +
                     "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
-                    "includeUUIDDetails = includeUUIDDetails)"
-        ),
+                    "includeUUIDDetails = includeUUIDDetails)",
+            ),
         level = DeprecationLevel.WARNING,
-        message = "Use removeChannelMembers instead"
+        message = "Use removeChannelMembers instead",
     )
     fun removeMembers(
         channel: String,
@@ -1199,7 +1228,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
         sort: Collection<PNSortKey<PNMemberKey>> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
-        includeUUIDDetails: PNUUIDDetailsLevel? = null
+        includeUUIDDetails: PNUUIDDetailsLevel? = null,
     ): ManageChannelMembers
 
     /**
@@ -1232,7 +1261,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
         sort: Collection<PNSortKey<PNMemberKey>> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
-        includeUUIDDetails: PNUUIDDetailsLevel? = null
+        includeUUIDDetails: PNUUIDDetailsLevel? = null,
     ): ManageChannelMembers
 
     /**
@@ -1304,7 +1333,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
         meta: Any? = null,
         ttl: Int? = null,
         shouldStore: Boolean? = null,
-        cipherKey: String? = null
+        cipherKey: String? = null,
     ): SendFile
 
     /**
@@ -1317,7 +1346,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
     fun listFiles(
         channel: String,
         limit: Int? = null,
-        next: PNPage.PNNext? = null
+        next: PNPage.PNNext? = null,
     ): ListFiles
 
     /**
@@ -1330,7 +1359,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
     fun getFileUrl(
         channel: String,
         fileName: String,
-        fileId: String
+        fileId: String,
     ): GetFileUrl
 
     /**
@@ -1346,7 +1375,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
         channel: String,
         fileName: String,
         fileId: String,
-        cipherKey: String? = null
+        cipherKey: String? = null,
     ): DownloadFile
 
     /**
@@ -1359,7 +1388,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
     fun deleteFile(
         channel: String,
         fileName: String,
-        fileId: String
+        fileId: String,
     ): DeleteFile
 
     /**
@@ -1393,7 +1422,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
         message: Any? = null,
         meta: Any? = null,
         ttl: Int? = null,
-        shouldStore: Boolean? = null
+        shouldStore: Boolean? = null,
     ): PublishFileMessage
 
     /**
@@ -1415,7 +1444,10 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
      * @return String containing the decryption of `inputString` using `cipherKey`.
      * @throws PubNubException throws exception in case of failed decryption.
      */
-    fun decrypt(inputString: String, cipherKey: String? = null): String
+    fun decrypt(
+        inputString: String,
+        cipherKey: String? = null,
+    ): String
 
     /**
      * Perform Cryptographic decryption of an input stream using provided cipher key.
@@ -1428,7 +1460,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
      */
     fun decryptInputStream(
         inputStream: InputStream,
-        cipherKey: String? = null
+        cipherKey: String? = null,
     ): InputStream
 
     /**
@@ -1440,7 +1472,10 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
      * @return String containing the encryption of `inputString` using `cipherKey`.
      * @throws PubNubException Throws exception in case of failed encryption.
      */
-    fun encrypt(inputString: String, cipherKey: String? = null): String
+    fun encrypt(
+        inputString: String,
+        cipherKey: String? = null,
+    ): String
 
     /**
      * Perform Cryptographic encryption of an input stream using provided cipher key.
@@ -1453,10 +1488,11 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
      */
     fun encryptInputStream(
         inputStream: InputStream,
-        cipherKey: String? = null
+        cipherKey: String? = null,
     ): InputStream
 
     fun parseToken(token: String): PNToken
+
     fun setToken(token: String?)
 
     /**
@@ -1482,7 +1518,7 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
         channels: List<String> = emptyList(),
         channelGroups: List<String> = emptyList(),
         withPresence: Boolean = false,
-        withTimetoken: Long = 0L
+        withTimetoken: Long = 0L,
     )
 
     /**
@@ -1504,6 +1540,6 @@ interface PubNub : BasePubNub<EventListener, Subscription, Channel, ChannelGroup
      */
     fun unsubscribe(
         channels: List<String> = emptyList(),
-        channelGroups: List<String> = emptyList()
+        channelGroups: List<String> = emptyList(),
     )
 }

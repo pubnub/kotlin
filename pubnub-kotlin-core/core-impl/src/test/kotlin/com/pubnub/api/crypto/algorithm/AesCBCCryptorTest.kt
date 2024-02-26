@@ -19,13 +19,14 @@ class AesCBCCryptorTest {
 
     companion object {
         @JvmStatic
-        fun messageToBeEncrypted(): List<Arguments> = listOf(
-            Arguments.of("Hello world"),
-            Arguments.of("Zażółć gęślą jaźń"), // Polish
-            Arguments.of("हैलो वर्ल्ड"), // Hindi
-            Arguments.of("こんにちは世界"), // Japan
-            Arguments.of("你好世界"), // Chinese
-        )
+        fun messageToBeEncrypted(): List<Arguments> =
+            listOf(
+                Arguments.of("Hello world"),
+                Arguments.of("Zażółć gęślą jaźń"), // Polish
+                Arguments.of("हैलो वर्ल्ड"), // Hindi
+                Arguments.of("こんにちは世界"), // Japan
+                Arguments.of("你好世界"), // Chinese
+            )
     }
 
     @BeforeEach
@@ -82,9 +83,10 @@ class AesCBCCryptorTest {
         val msgToEncrypt = "".toByteArray()
 
         // when
-        val exception = Assertions.assertThrows(PubNubException::class.java) {
-            objectUnderTest.encrypt(msgToEncrypt)
-        }
+        val exception =
+            Assertions.assertThrows(PubNubException::class.java) {
+                objectUnderTest.encrypt(msgToEncrypt)
+            }
 
         // then
         assertEquals("Encryption/Decryption of empty data not allowed.", exception.errorMessage)
@@ -98,9 +100,10 @@ class AesCBCCryptorTest {
         val encryptedData = EncryptedData(data = msgToDecrypt)
 
         // when
-        val exception = Assertions.assertThrows(PubNubException::class.java) {
-            objectUnderTest.decrypt(encryptedData)
-        }
+        val exception =
+            Assertions.assertThrows(PubNubException::class.java) {
+                objectUnderTest.decrypt(encryptedData)
+            }
 
         // then
         assertEquals("Encryption/Decryption of empty data not allowed.", exception.errorMessage)
@@ -114,9 +117,10 @@ class AesCBCCryptorTest {
         val streamToEncrypt = msgToEncrypt.byteInputStream()
 
         // when
-        val exception = Assertions.assertThrows(PubNubException::class.java) {
-            objectUnderTest.encryptStream(streamToEncrypt)
-        }
+        val exception =
+            Assertions.assertThrows(PubNubException::class.java) {
+                objectUnderTest.encryptStream(streamToEncrypt)
+            }
 
         // then
         assertEquals("Encryption/Decryption of empty data not allowed.", exception.errorMessage)
@@ -131,9 +135,10 @@ class AesCBCCryptorTest {
         val encryptedStreamData = EncryptedStreamData(stream = streamToEncrypt)
 
         // when
-        val exception = Assertions.assertThrows(PubNubException::class.java) {
-            objectUnderTest.decryptStream(encryptedStreamData)
-        }
+        val exception =
+            Assertions.assertThrows(PubNubException::class.java) {
+                objectUnderTest.decryptStream(encryptedStreamData)
+            }
 
         // then
         assertEquals("Encryption/Decryption of empty data not allowed.", exception.errorMessage)

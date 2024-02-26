@@ -24,45 +24,55 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.reflect.Type
 
 class MapperManager {
-
     private val objectMapper: Gson
     internal val converterFactory: Converter.Factory
 
     init {
-        val booleanAsIntAdapter = object : TypeAdapter<Boolean>() {
-            override fun write(out: JsonWriter?, value: Boolean?) {
-                if (value == null) {
-                    out?.nullValue()
-                } else {
-                    out?.value(value)
+        val booleanAsIntAdapter =
+            object : TypeAdapter<Boolean>() {
+                override fun write(
+                    out: JsonWriter?,
+                    value: Boolean?,
+                ) {
+                    if (value == null) {
+                        out?.nullValue()
+                    } else {
+                        out?.value(value)
+                    }
+                }
+
+                override fun read(_in: JsonReader): Boolean? {
+                    val peek: JsonToken = _in.peek()
+                    return when (peek) {
+                        JsonToken.BOOLEAN -> _in.nextBoolean()
+                        JsonToken.NUMBER -> _in.nextInt() != 0
+                        JsonToken.STRING -> java.lang.Boolean.parseBoolean(_in.nextString())
+                        else -> throw IllegalStateException("Expected BOOLEAN or NUMBER but was $peek")
+                    }
                 }
             }
 
-            override fun read(_in: JsonReader): Boolean? {
-                val peek: JsonToken = _in.peek()
-                return when (peek) {
-                    JsonToken.BOOLEAN -> _in.nextBoolean()
-                    JsonToken.NUMBER -> _in.nextInt() != 0
-                    JsonToken.STRING -> java.lang.Boolean.parseBoolean(_in.nextString())
-                    else -> throw IllegalStateException("Expected BOOLEAN or NUMBER but was $peek")
-                }
-            }
-        }
-
-        objectMapper = GsonBuilder()
-            .registerTypeAdapter(Boolean::class.javaObjectType, booleanAsIntAdapter)
-            .registerTypeAdapter(Boolean::class.javaPrimitiveType, booleanAsIntAdapter)
-            .registerTypeAdapter(Boolean::class.java, booleanAsIntAdapter)
-            .registerTypeAdapter(JSONObject::class.java, JSONObjectAdapter())
-            .registerTypeAdapter(JSONArray::class.java, JSONArrayAdapter())
-            .disableHtmlEscaping()
-            .create()
+        objectMapper =
+            GsonBuilder()
+                .registerTypeAdapter(Boolean::class.javaObjectType, booleanAsIntAdapter)
+                .registerTypeAdapter(Boolean::class.javaPrimitiveType, booleanAsIntAdapter)
+                .registerTypeAdapter(Boolean::class.java, booleanAsIntAdapter)
+                .registerTypeAdapter(JSONObject::class.java, JSONObjectAdapter())
+                .registerTypeAdapter(JSONArray::class.java, JSONArrayAdapter())
+                .disableHtmlEscaping()
+                .create()
         converterFactory = GsonConverterFactory.create(objectMapper)
     }
 
-    fun hasField(element: JsonElement, field: String) = element.asJsonObject.has(field)
+    fun hasField(
+        element: JsonElement,
+        field: String,
+    ) = element.asJsonObject.has(field)
 
-    fun getField(element: JsonElement?, field: String): JsonElement? {
+    fun getField(
+        element: JsonElement?,
+        field: String,
+    ): JsonElement? {
         if (element?.isJsonObject!!) {
             return element.asJsonObject.get(field)
         }
@@ -71,65 +81,101 @@ class MapperManager {
 
     fun getArrayIterator(element: JsonElement?) = element?.asJsonArray?.iterator()
 
-    fun getArrayIterator(element: JsonElement, field: String) = element.asJsonObject.get(field).asJsonArray.iterator()
+    fun getArrayIterator(
+        element: JsonElement,
+        field: String,
+    ) = element.asJsonObject.get(field).asJsonArray.iterator()
 
     fun getObjectIterator(element: JsonElement) = element.asJsonObject.entrySet().iterator()
 
-    fun getObjectIterator(element: JsonElement, field: String) =
-        element.asJsonObject.get(field).asJsonObject.entrySet().iterator()
+    fun getObjectIterator(
+        element: JsonElement,
+        field: String,
+    ) = element.asJsonObject.get(field).asJsonObject.entrySet().iterator()
 
     fun elementToString(element: JsonElement?) = element?.asString
 
-    fun elementToString(element: JsonElement?, field: String) = element?.asJsonObject?.get(field)?.asString
+    fun elementToString(
+        element: JsonElement?,
+        field: String,
+    ) = element?.asJsonObject?.get(field)?.asString
 
-    fun elementToInt(element: JsonElement, field: String) = element.asJsonObject.get(field).asInt
+    fun elementToInt(
+        element: JsonElement,
+        field: String,
+    ) = element.asJsonObject.get(field).asInt
 
     fun isJsonObject(element: JsonElement) = element.isJsonObject
 
     fun getAsObject(element: JsonElement) = element.asJsonObject
 
-    fun getAsBoolean(element: JsonElement, field: String) = element.asJsonObject.get(field)?.asBoolean
+    fun getAsBoolean(
+        element: JsonElement,
+        field: String,
+    ) = element.asJsonObject.get(field)?.asBoolean
         .run { this != null }
 
-    fun putOnObject(element: JsonObject, key: String, value: JsonElement) = element.add(key, value)
+    fun putOnObject(
+        element: JsonObject,
+        key: String,
+        value: JsonElement,
+    ) = element.add(key, value)
 
-    fun getArrayElement(element: JsonElement, index: Int) = element.asJsonArray.get(index)
+    fun getArrayElement(
+        element: JsonElement,
+        index: Int,
+    ) = element.asJsonArray.get(index)
 
     fun elementToLong(element: JsonElement) = element.asLong
 
-    fun elementToLong(element: JsonElement, field: String) = element.asJsonObject.get(field).asLong
+    fun elementToLong(
+        element: JsonElement,
+        field: String,
+    ) = element.asJsonObject.get(field).asLong
 
     fun getAsArray(element: JsonElement) = element.asJsonArray
 
     fun toJsonTree(any: Any?) = objectMapper.toJsonTree(any)
 
-    fun <T> fromJson(input: String?, clazz: Class<T>): T {
+    fun <T> fromJson(
+        input: String?,
+        clazz: Class<T>,
+    ): T {
         return try {
             this.objectMapper.fromJson<T>(input, clazz)
         } catch (e: JsonParseException) {
             throw PubNubException(
                 pubnubError = PubNubError.PARSING_ERROR,
-                errorMessage = e.message
+                errorMessage = e.message,
             )
         }
     }
 
-    fun <T> fromJson(input: String?, typeOfT: Type): T {
+    fun <T> fromJson(
+        input: String?,
+        typeOfT: Type,
+    ): T {
         return try {
             this.objectMapper.fromJson<T>(input, typeOfT)
         } catch (e: JsonParseException) {
             throw PubNubException(
                 pubnubError = PubNubError.PARSING_ERROR,
-                errorMessage = e.message
+                errorMessage = e.message,
             )
         }
     }
 
-    fun <T> convertValue(input: JsonElement?, clazz: Class<T>): T {
+    fun <T> convertValue(
+        input: JsonElement?,
+        clazz: Class<T>,
+    ): T {
         return this.objectMapper.fromJson(input, clazz) as T
     }
 
-    fun <T> convertValue(o: Any?, clazz: Class<T>?): T {
+    fun <T> convertValue(
+        o: Any?,
+        clazz: Class<T>?,
+    ): T {
         return this.objectMapper.fromJson(toJson(o), clazz) as T
     }
 
@@ -147,7 +193,7 @@ class MapperManager {
         } catch (e: JsonParseException) {
             throw PubNubException(
                 pubnubError = PubNubError.JSON_ERROR,
-                errorMessage = e.message
+                errorMessage = e.message,
             )
         }
     }
@@ -156,7 +202,7 @@ class MapperManager {
         override fun serialize(
             src: JSONObject?,
             typeOfSrc: Type?,
-            context: JsonSerializationContext
+            context: JsonSerializationContext,
         ): JsonElement? {
             if (src == null) {
                 return null
@@ -175,15 +221,17 @@ class MapperManager {
         override fun deserialize(
             json: JsonElement?,
             typeOfT: Type?,
-            context: JsonDeserializationContext?
+            context: JsonDeserializationContext?,
         ): JSONObject? {
             return if (json == null) {
                 null
-            } else try {
-                JSONObject(json.toString())
-            } catch (e: JSONException) {
-                e.printStackTrace()
-                throw JsonParseException(e)
+            } else {
+                try {
+                    JSONObject(json.toString())
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                    throw JsonParseException(e)
+                }
             }
         }
     }
@@ -192,7 +240,7 @@ class MapperManager {
         override fun serialize(
             src: JSONArray?,
             typeOfSrc: Type?,
-            context: JsonSerializationContext
+            context: JsonSerializationContext,
         ): JsonElement? {
             if (src == null) {
                 return null
@@ -209,15 +257,17 @@ class MapperManager {
         override fun deserialize(
             json: JsonElement?,
             typeOfT: Type?,
-            context: JsonDeserializationContext?
+            context: JsonDeserializationContext?,
         ): JSONArray? {
             return if (json == null) {
                 null
-            } else try {
-                JSONArray(json.toString())
-            } catch (e: JSONException) {
-                e.printStackTrace()
-                throw JsonParseException(e)
+            } else {
+                try {
+                    JSONArray(json.toString())
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                    throw JsonParseException(e)
+                }
             }
         }
     }

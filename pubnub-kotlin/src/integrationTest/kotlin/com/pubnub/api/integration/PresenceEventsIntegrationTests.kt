@@ -12,7 +12,6 @@ import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.subscribeToBlocking
 import com.pubnub.api.unsubscribeFromBlocking
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
-
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.hamcrest.core.IsEqual
@@ -24,7 +23,6 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
 class PresenceEventsIntegrationTests : BaseIntegrationTest() {
-
     lateinit var guest: PubNub
 
     override fun onBefore() {
@@ -36,15 +34,23 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
         val success = AtomicBoolean()
         val expectedChannel = randomChannel()
 
-        pubnub.addListener(object : SubscribeCallback() {
-            override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
+        pubnub.addListener(
+            object : SubscribeCallback() {
+                override fun status(
+                    pubnub: PubNub,
+                    pnStatus: PNStatus,
+                ) {}
 
-            override fun presence(pubnub: PubNub, event: PNPresenceEventResult) {
-                assertEquals("join", event.event)
-                assertEquals(expectedChannel, event.channel)
-                success.set(true)
-            }
-        })
+                override fun presence(
+                    pubnub: PubNub,
+                    event: PNPresenceEventResult,
+                ) {
+                    assertEquals("join", event.event)
+                    assertEquals(expectedChannel, event.channel)
+                    success.set(true)
+                }
+            },
+        )
 
         pubnub.subscribeToBlocking(expectedChannel)
 
@@ -93,10 +99,11 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
         val successPresenceEventCont = AtomicInteger()
         val expectedChannel01 = randomChannel()
         val expectedChannel02 = randomChannel()
-        val subscriptionSetOf = pubnub.subscriptionSetOf(
-            channels = setOf(expectedChannel01, expectedChannel02),
-            options = SubscriptionOptions.receivePresenceEvents()
-        )
+        val subscriptionSetOf =
+            pubnub.subscriptionSetOf(
+                channels = setOf(expectedChannel01, expectedChannel02),
+                options = SubscriptionOptions.receivePresenceEvents(),
+            )
 
         subscriptionSetOf.onPresence = { pnPresenceEventResult: PNPresenceEventResult ->
             assertEquals("join", pnPresenceEventResult.event)
@@ -118,16 +125,24 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
         pubnub.subscribeToBlocking(expectedChannel)
         guest.subscribeToBlocking(expectedChannel)
 
-        pubnub.addListener(object : SubscribeCallback() {
-            override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
+        pubnub.addListener(
+            object : SubscribeCallback() {
+                override fun status(
+                    pubnub: PubNub,
+                    pnStatus: PNStatus,
+                ) {}
 
-            override fun presence(pubnub: PubNub, event: PNPresenceEventResult) {
-                if (event.event == "leave") {
-                    assertEquals(expectedChannel, event.channel)
-                    success.set(true)
+                override fun presence(
+                    pubnub: PubNub,
+                    event: PNPresenceEventResult,
+                ) {
+                    if (event.event == "leave") {
+                        assertEquals(expectedChannel, event.channel)
+                        success.set(true)
+                    }
                 }
-            }
-        })
+            },
+        )
 
         guest.unsubscribeFromBlocking(expectedChannel)
 
@@ -153,21 +168,28 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
         pubnub.configuration.presenceTimeout = expectedTimeout
         pubnub.configuration.heartbeatInterval = 0
 
-        pubnub.addListener(object : SubscribeCallback() {
-
-            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.category == PNStatusCategory.Connected) {
-                    subscribed.set(true)
+        pubnub.addListener(
+            object : SubscribeCallback() {
+                override fun status(
+                    pubnub: PubNub,
+                    pnStatus: PNStatus,
+                ) {
+                    if (pnStatus.category == PNStatusCategory.Connected) {
+                        subscribed.set(true)
+                    }
                 }
-            }
 
-            override fun presence(pubnub: PubNub, event: PNPresenceEventResult) {
-                if (event.event == "timeout") {
-                    assertEquals(expectedChannel, event.channel)
-                    timeoutReceived.set(true)
+                override fun presence(
+                    pubnub: PubNub,
+                    event: PNPresenceEventResult,
+                ) {
+                    if (event.event == "timeout") {
+                        assertEquals(expectedChannel, event.channel)
+                        timeoutReceived.set(true)
+                    }
                 }
-            }
-        })
+            },
+        )
 
         pubnub.subscribeToBlocking(expectedChannel)
 
@@ -189,21 +211,28 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
 
         pubnub.subscribeToBlocking(expectedChannel)
 
-        pubnub.addListener(object : SubscribeCallback() {
+        pubnub.addListener(
+            object : SubscribeCallback() {
+                override fun status(
+                    pubnub: PubNub,
+                    pnStatus: PNStatus,
+                ) {}
 
-            override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
-
-            override fun presence(pubnub: PubNub, event: PNPresenceEventResult) {
-                if (event.event == "state-change") {
-                    assertEquals(pubnub.configuration.userId.value, event.uuid)
-                    success.set(true)
+                override fun presence(
+                    pubnub: PubNub,
+                    event: PNPresenceEventResult,
+                ) {
+                    if (event.event == "state-change") {
+                        assertEquals(pubnub.configuration.userId.value, event.uuid)
+                        success.set(true)
+                    }
                 }
-            }
-        })
+            },
+        )
 
         pubnub.setPresenceState(
             channels = listOf(expectedChannel),
-            state = generatePayload()
+            state = generatePayload(),
         ).sync()
 
         success.listen()

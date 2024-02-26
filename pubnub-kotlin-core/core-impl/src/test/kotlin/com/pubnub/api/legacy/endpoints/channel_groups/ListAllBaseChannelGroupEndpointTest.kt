@@ -23,7 +23,6 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 
 class ListAllBaseChannelGroupEndpointTest : BaseTest() {
-
     @Test
     fun testSyncSuccess() {
         stubFor(
@@ -31,20 +30,20 @@ class ListAllBaseChannelGroupEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                             "status": 200,
-                             "message": "OK",
-                             "payload": {
-                              "groups": [
-                               "a",
-                               "b"
-                              ]
-                             },
-                             "service": "ChannelGroups"
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                         "status": 200,
+                         "message": "OK",
+                         "payload": {
+                          "groups": [
+                           "a",
+                           "b"
+                          ]
+                         },
+                         "service": "ChannelGroups"
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         val response = pubnub.listAllChannelGroups().sync()
@@ -63,9 +62,9 @@ class ListAllBaseChannelGroupEndpointTest : BaseTest() {
                          "message": "OK",
                          "service": "ChannelGroups"
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         try {
@@ -80,7 +79,7 @@ class ListAllBaseChannelGroupEndpointTest : BaseTest() {
     fun testNullBody() {
         stubFor(
             get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group"))
-                .willReturn(aResponse())
+                .willReturn(aResponse()),
         )
 
         try {
@@ -98,20 +97,20 @@ class ListAllBaseChannelGroupEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                             "status": 200,
-                             "message": "OK",
-                             "payload": {
-                              "groups": [
-                               "a",
-                               "b"
-                              ]
-                             },
-                             "service": "ChannelGroups"
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                         "status": 200,
+                         "message": "OK",
+                         "payload": {
+                          "groups": [
+                           "a",
+                           "b"
+                          ]
+                         },
+                         "service": "ChannelGroups"
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         pubnub.configuration.authKey = "myKey"
@@ -130,20 +129,20 @@ class ListAllBaseChannelGroupEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                             "status": 200,
-                             "message": "OK",
-                             "payload": {
-                              "groups": [
-                               "a",
-                               "b"
-                              ]
-                             },
-                             "service": "ChannelGroups"
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                         "status": 200,
+                         "message": "OK",
+                         "payload": {
+                          "groups": [
+                           "a",
+                           "b"
+                          ]
+                         },
+                         "service": "ChannelGroups"
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         val atomic = AtomicInteger(0)

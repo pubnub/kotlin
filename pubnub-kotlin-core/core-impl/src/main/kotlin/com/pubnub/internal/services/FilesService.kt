@@ -18,7 +18,7 @@ interface FilesService {
         @Path("subKey") subKey: String,
         @Path("channel") channel: String,
         @Body body: GenerateUploadUrlPayload,
-        @QueryMap options: Map<String, String>
+        @QueryMap options: Map<String, String>,
     ): Call<GeneratedUploadUrlResponse>
 
     @GET("/v1/files/publish-file/{pubKey}/{subKey}/0/{channel}/0/{message}")
@@ -27,14 +27,14 @@ interface FilesService {
         @Path("subKey") subKey: String,
         @Path("channel") channel: String,
         @Path(value = "message") message: String,
-        @QueryMap options: Map<String, String>
+        @QueryMap options: Map<String, String>,
     ): Call<List<Any>>
 
     @GET("/v1/files/{subKey}/channels/{channel}/files")
     fun listFiles(
         @Path("subKey") subKey: String,
         @Path("channel") channel: String,
-        @QueryMap options: Map<String, String>
+        @QueryMap options: Map<String, String>,
     ): Call<ListFilesResult>
 
     @GET(GET_FILE_URL)
@@ -43,7 +43,7 @@ interface FilesService {
         @Path("channel") channel: String,
         @Path("fileId") fileId: String,
         @Path("fileName") fileName: String,
-        @QueryMap options: Map<String, String>
+        @QueryMap options: Map<String, String>,
     ): Call<ResponseBody>
 
     @DELETE("/v1/files/{subKey}/channels/{channel}/files/{fileId}/{fileName}")
@@ -52,7 +52,7 @@ interface FilesService {
         @Path("channel") channel: String,
         @Path("fileId") fileId: String,
         @Path("fileName") fileName: String,
-        @QueryMap options: Map<String, String>
+        @QueryMap options: Map<String, String>,
     ): Call<Unit>
 
     companion object {

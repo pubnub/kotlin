@@ -31,14 +31,15 @@ class HandshakeReconnectEffectTest {
     @Test
     fun `should deliver HandshakeReconnectSuccess event when HandshakeReconnectEffect succeeded`() {
         // given
-        val handshakeReconnectEffect = HandshakeReconnectEffect(
-            successfulRemoteAction(subscriptionCursor),
-            subscribeEventSink,
-            retryConfiguration,
-            executorService,
-            handshakeReconnectInvocation.attempts,
-            handshakeReconnectInvocation.reason
-        )
+        val handshakeReconnectEffect =
+            HandshakeReconnectEffect(
+                successfulRemoteAction(subscriptionCursor),
+                subscribeEventSink,
+                retryConfiguration,
+                executorService,
+                handshakeReconnectInvocation.attempts,
+                handshakeReconnectInvocation.reason,
+            )
 
         // when
         handshakeReconnectEffect.runEffect()
@@ -51,7 +52,7 @@ class HandshakeReconnectEffectTest {
             .untilAsserted {
                 assertEquals(
                     listOf(SubscribeEvent.HandshakeReconnectSuccess(subscriptionCursor)),
-                    subscribeEventSink.events
+                    subscribeEventSink.events,
                 )
             }
     }
@@ -59,14 +60,15 @@ class HandshakeReconnectEffectTest {
     @Test
     fun `should deliver HandshakeReconnectFailure event when HandshakeReconnectEffect failed`() {
         // given
-        val handshakeReconnectEffect = HandshakeReconnectEffect(
-            failingRemoteAction(reason),
-            subscribeEventSink,
-            retryConfiguration,
-            executorService,
-            handshakeReconnectInvocation.attempts,
-            handshakeReconnectInvocation.reason
-        )
+        val handshakeReconnectEffect =
+            HandshakeReconnectEffect(
+                failingRemoteAction(reason),
+                subscribeEventSink,
+                retryConfiguration,
+                executorService,
+                handshakeReconnectInvocation.attempts,
+                handshakeReconnectInvocation.reason,
+            )
 
         // when
         handshakeReconnectEffect.runEffect()
@@ -79,7 +81,7 @@ class HandshakeReconnectEffectTest {
             .untilAsserted {
                 assertEquals(
                     listOf(SubscribeEvent.HandshakeReconnectFailure(reason)),
-                    subscribeEventSink.events
+                    subscribeEventSink.events,
                 )
             }
     }
@@ -88,14 +90,15 @@ class HandshakeReconnectEffectTest {
     fun `should deliver HandshakeReconnectGiveUp event when delay is null`() {
         // given
         val policy = RetryConfiguration.None
-        val handshakeReconnectEffect = HandshakeReconnectEffect(
-            failingRemoteAction(reason),
-            subscribeEventSink,
-            policy,
-            executorService,
-            handshakeReconnectInvocation.attempts,
-            handshakeReconnectInvocation.reason
-        )
+        val handshakeReconnectEffect =
+            HandshakeReconnectEffect(
+                failingRemoteAction(reason),
+                subscribeEventSink,
+                policy,
+                executorService,
+                handshakeReconnectInvocation.attempts,
+                handshakeReconnectInvocation.reason,
+            )
 
         // when
         handshakeReconnectEffect.runEffect()
@@ -109,14 +112,15 @@ class HandshakeReconnectEffectTest {
         // given
         val remoteAction = mockk<RemoteAction<SubscriptionCursor>>()
         every { remoteAction.silentCancel() } returns Unit
-        val handshakeReconnectEffect = HandshakeReconnectEffect(
-            remoteAction,
-            subscribeEventSink,
-            retryConfiguration,
-            executorService,
-            handshakeReconnectInvocation.attempts,
-            handshakeReconnectInvocation.reason
-        )
+        val handshakeReconnectEffect =
+            HandshakeReconnectEffect(
+                remoteAction,
+                subscribeEventSink,
+                retryConfiguration,
+                executorService,
+                handshakeReconnectInvocation.attempts,
+                handshakeReconnectInvocation.reason,
+            )
 
         // when
         handshakeReconnectEffect.cancel()

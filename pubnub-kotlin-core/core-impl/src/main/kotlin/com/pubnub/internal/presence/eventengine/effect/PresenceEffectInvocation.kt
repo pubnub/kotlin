@@ -30,7 +30,7 @@ internal sealed class PresenceEffectInvocation(override val type: EffectInvocati
         val channels: Set<String>,
         val channelGroups: Set<String>,
         val attempts: Int,
-        val reason: PubNubException?
+        val reason: PubNubException?,
     ) : PresenceEffectInvocation(Managed) {
         override val id: String = DelayedHeartbeat::class.java.simpleName
     }

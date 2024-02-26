@@ -2,7 +2,6 @@ package com.pubnub.api.integration
 
 import com.pubnub.api.CommonUtils.randomChannel
 import com.pubnub.api.PubNub
-
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
@@ -45,7 +44,7 @@ class FilesIntegrationTest : BaseIntegrationTest() {
                 fileName = fileName,
                 inputStream = it,
                 message = message,
-                meta = meta
+                meta = meta,
             ).async { result ->
                 result.onSuccess {
                     sendResultReference.set(it)
@@ -68,7 +67,7 @@ class FilesIntegrationTest : BaseIntegrationTest() {
         pubnub.deleteFile(
             channel = channel,
             fileName = fileName,
-            fileId = sendResult.file.id
+            fileId = sendResult.file.id,
         ).sync()
     }
 
@@ -83,30 +82,39 @@ class FilesIntegrationTest : BaseIntegrationTest() {
         val fileName = "fileName$channel.txt"
         val connectedLatch = CountDownLatch(1)
         val fileEventReceived = CountDownLatch(1)
-        pubnub.addListener(object : SubscribeCallback() {
-            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.category == PNStatusCategory.Connected) {
-                    connectedLatch.countDown()
+        pubnub.addListener(
+            object : SubscribeCallback() {
+                override fun status(
+                    pubnub: PubNub,
+                    pnStatus: PNStatus,
+                ) {
+                    if (pnStatus.category == PNStatusCategory.Connected) {
+                        connectedLatch.countDown()
+                    }
                 }
-            }
 
-            override fun file(pubnub: PubNub, event: PNFileEventResult) {
-                if (event.file.name == fileName) {
-                    fileEventReceived.countDown()
+                override fun file(
+                    pubnub: PubNub,
+                    event: PNFileEventResult,
+                ) {
+                    if (event.file.name == fileName) {
+                        fileEventReceived.countDown()
+                    }
                 }
-            }
-        })
+            },
+        )
         pubnub.subscribe(channels = listOf(channel))
         connectedLatch.await(10, TimeUnit.SECONDS)
-        val sendResult: PNFileUploadResult? = ByteArrayInputStream(content.toByteArray(StandardCharsets.UTF_8)).use {
-            pubnub.sendFile(
-                channel = channel,
-                fileName = fileName,
-                inputStream = it,
-                message = message,
-                meta = meta
-            ).sync()
-        }
+        val sendResult: PNFileUploadResult? =
+            ByteArrayInputStream(content.toByteArray(StandardCharsets.UTF_8)).use {
+                pubnub.sendFile(
+                    channel = channel,
+                    fileName = fileName,
+                    inputStream = it,
+                    message = message,
+                    meta = meta,
+                ).sync()
+            }
 
         if (sendResult == null) {
             Assert.fail()
@@ -117,11 +125,12 @@ class FilesIntegrationTest : BaseIntegrationTest() {
         val fileFoundOnList = data.find { it.id == sendResult.file.id } != null
 
         Assert.assertTrue(fileFoundOnList)
-        val (_, byteStream) = pubnub.downloadFile(
-            channel = channel,
-            fileName = fileName,
-            fileId = sendResult.file.id
-        ).sync()
+        val (_, byteStream) =
+            pubnub.downloadFile(
+                channel = channel,
+                fileName = fileName,
+                fileId = sendResult.file.id,
+            ).sync()
 
         byteStream?.use {
             Assert.assertEquals(content, readToString(it))
@@ -129,7 +138,7 @@ class FilesIntegrationTest : BaseIntegrationTest() {
         pubnub.deleteFile(
             channel = channel,
             fileName = fileName,
-            fileId = sendResult.file.id
+            fileId = sendResult.file.id,
         ).sync()
     }
 

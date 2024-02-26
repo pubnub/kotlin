@@ -25,7 +25,6 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.TimeUnit
 
 class RetrofitManager(val pubnub: InternalPubNubClient) {
-
     private var transactionClientInstance: OkHttpClient? = null
 
     private var subscriptionClientInstance: OkHttpClient? = null
@@ -83,18 +82,22 @@ class RetrofitManager(val pubnub: InternalPubNubClient) {
         return transactionClientInstance?.dispatcher?.executorService
     }
 
-    private fun createOkHttpClient(readTimeout: Int, withSignature: Boolean = true): OkHttpClient {
-        val okHttpBuilder = OkHttpClient.Builder()
-            .retryOnConnectionFailure(false)
-            .readTimeout(readTimeout.toLong(), TimeUnit.SECONDS)
-            .connectTimeout(pubnub.configuration.connectTimeout.toLong(), TimeUnit.SECONDS)
+    private fun createOkHttpClient(
+        readTimeout: Int,
+        withSignature: Boolean = true,
+    ): OkHttpClient {
+        val okHttpBuilder =
+            OkHttpClient.Builder()
+                .retryOnConnectionFailure(false)
+                .readTimeout(readTimeout.toLong(), TimeUnit.SECONDS)
+                .connectTimeout(pubnub.configuration.connectTimeout.toLong(), TimeUnit.SECONDS)
 
         with(pubnub.configuration) {
             if (logVerbosity == PNLogVerbosity.BODY) {
                 okHttpBuilder.addInterceptor(
                     HttpLoggingInterceptor().apply {
                         level = HttpLoggingInterceptor.Level.BODY
-                    }
+                    },
                 )
             }
 
@@ -105,7 +108,7 @@ class RetrofitManager(val pubnub: InternalPubNubClient) {
             if (sslSocketFactory != null && x509ExtendedTrustManager != null) {
                 okHttpBuilder.sslSocketFactory(
                     pubnub.configuration.sslSocketFactory!!,
-                    pubnub.configuration.x509ExtendedTrustManager!!
+                    pubnub.configuration.x509ExtendedTrustManager!!,
                 )
             }
             connectionSpec?.let { okHttpBuilder.connectionSpecs(listOf(it)) }
@@ -128,9 +131,10 @@ class RetrofitManager(val pubnub: InternalPubNubClient) {
     }
 
     private fun createRetrofit(callFactory: Call.Factory?): Retrofit {
-        val retrofitBuilder = Retrofit.Builder()
-            .baseUrl(pubnub.baseUrl())
-            .addConverterFactory(pubnub.mapper.converterFactory)
+        val retrofitBuilder =
+            Retrofit.Builder()
+                .baseUrl(pubnub.baseUrl())
+                .addConverterFactory(pubnub.mapper.converterFactory)
 
         if (pubnub.configuration.googleAppEngineNetworking) {
             retrofitBuilder.callFactory(Factory(pubnub))
@@ -148,7 +152,10 @@ class RetrofitManager(val pubnub: InternalPubNubClient) {
         closeExecutor(noSignatureClientInstance, force)
     }
 
-    private fun closeExecutor(client: OkHttpClient?, force: Boolean) {
+    private fun closeExecutor(
+        client: OkHttpClient?,
+        force: Boolean,
+    ) {
         if (client != null) {
             client.dispatcher.cancelAll()
             if (force) {

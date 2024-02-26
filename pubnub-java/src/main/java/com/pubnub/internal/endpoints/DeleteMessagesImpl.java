@@ -12,7 +12,7 @@ import java.util.List;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class DeleteMessagesImpl extends DelegatingEndpoint<PNDeleteMessagesResult>implements DeleteMessages {
+public class DeleteMessagesImpl extends DelegatingEndpoint<PNDeleteMessagesResult> implements DeleteMessages {
     private List<String> channels;
     private Long start;
     private Long end;

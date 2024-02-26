@@ -7,7 +7,6 @@ import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
 
 class KeysetStep(private val world: World) {
-
     @Given("I have a keyset with access manager enabled")
     fun i_have_a_keyset_with_access_manager_enabled() {
         MatcherAssert.assertThat(ContractTestConfig.pamPubKey, Matchers.notNullValue())

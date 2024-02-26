@@ -6,8 +6,10 @@ import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.v2.subscription.SubscriptionImpl
 
-class ChannelGroupImpl(pubnub: PubNubImpl, channelGroupName: String) : BaseChannelGroupImpl<EventListener, Subscription>(
-    pubnub.internalPubNubClient,
-    ChannelGroupName(channelGroupName),
-    { channels, channelGroups, options -> SubscriptionImpl(pubnub, channels, channelGroups, options) }
-), ChannelGroup
+class ChannelGroupImpl(pubnub: PubNubImpl, channelGroupName: String) :
+    BaseChannelGroupImpl<EventListener, Subscription>(
+        pubnub.internalPubNubClient,
+        ChannelGroupName(channelGroupName),
+        { channels, channelGroups, options -> SubscriptionImpl(pubnub, channels, channelGroups, options) },
+    ),
+    ChannelGroup

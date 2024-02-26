@@ -12,7 +12,6 @@ import retrofit2.Call
 import retrofit2.Response
 
 class Leave internal constructor(pubnub: InternalPubNubClient) : Endpoint<Void, Boolean>(pubnub) {
-
     var channels = emptyList<String>()
     var channelGroups = emptyList<String>()
 
@@ -24,6 +23,7 @@ class Leave internal constructor(pubnub: InternalPubNubClient) : Endpoint<Void, 
     }
 
     override fun getAffectedChannels() = channels
+
     override fun getAffectedChannelGroups() = channelGroups
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Void> {
@@ -31,7 +31,7 @@ class Leave internal constructor(pubnub: InternalPubNubClient) : Endpoint<Void, 
         return pubnub.retrofitManager.presenceService.leave(
             pubnub.configuration.subscribeKey,
             channels.toCsv(),
-            queryParams
+            queryParams,
         )
     }
 

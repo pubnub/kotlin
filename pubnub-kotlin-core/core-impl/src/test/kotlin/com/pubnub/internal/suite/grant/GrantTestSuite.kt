@@ -11,7 +11,6 @@ import com.pubnub.internal.models.consumer.access_manager.PNAccessManagerGrantRe
 import org.junit.Assert.assertEquals
 
 class GrantTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Grant, PNAccessManagerGrantResult>() {
-
     override fun onBefore() {
         super.onBefore()
         pubnub.configuration.secretKey = "mySecretKey"
@@ -34,7 +33,8 @@ class GrantTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Grant, PNAcce
         assertEquals(1, result.ttl)
     }
 
-    override fun successfulResponseBody() = """
+    override fun successfulResponseBody() =
+        """
         {
          "message": "Success",
          "payload": {
@@ -49,12 +49,13 @@ class GrantTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Grant, PNAcce
          "service": "Access Manager",
          "status": 200
         }
-    """.trimIndent()
+        """.trimIndent()
 
-    override fun unsuccessfulResponseBodyList() = listOf(
-        """{"payload":{}}""",
-        """{"payload":null}"""
-    )
+    override fun unsuccessfulResponseBodyList() =
+        listOf(
+            """{"payload":{}}""",
+            """{"payload":null}""",
+        )
 
     override fun mappingBuilder(): MappingBuilder {
         return get(urlPathEqualTo("/v2/auth/grant/sub-key/mySubscribeKey"))

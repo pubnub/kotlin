@@ -1,8 +1,8 @@
 package com.pubnub.internal.vendor
 
 import com.pubnub.api.PubNubException
-import com.pubnub.internal.PNConfiguration.Companion.isValid
 import com.pubnub.internal.InternalPubNubClient
+import com.pubnub.internal.PNConfiguration.Companion.isValid
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -30,7 +30,10 @@ object FileEncryptionUtil {
      * @see [InternalPubNubClient.encryptInputStream]
      */
     @Throws(PubNubException::class)
-    fun encrypt(inputStream: InputStream, cipherKey: String): InputStream {
+    fun encrypt(
+        inputStream: InputStream,
+        cipherKey: String,
+    ): InputStream {
         return encryptToBytes(inputStream.readBytes(), cipherKey).inputStream()
     }
 
@@ -38,7 +41,10 @@ object FileEncryptionUtil {
      * @see [InternalPubNubClient.decryptInputStream]
      */
     @Throws(PubNubException::class)
-    fun decrypt(inputStream: InputStream, cipherKey: String): InputStream {
+    fun decrypt(
+        inputStream: InputStream,
+        cipherKey: String,
+    ): InputStream {
         return try {
             val keyBytes = keyBytes(cipherKey)
             val (ivBytes, dataToDecrypt) = loadIvAndDataFromInputStream(inputStream)
@@ -53,7 +59,8 @@ object FileEncryptionUtil {
                 is InvalidKeyException,
                 is IOException,
                 is IllegalBlockSizeException,
-                is BadPaddingException -> {
+                is BadPaddingException,
+                -> {
                     throw PubNubException(errorMessage = e.message)
                 }
 
@@ -62,7 +69,10 @@ object FileEncryptionUtil {
         }
     }
 
-    internal fun effectiveCipherKey(pubNub: InternalPubNubClient, cipherKey: String?): String? {
+    internal fun effectiveCipherKey(
+        pubNub: InternalPubNubClient,
+        cipherKey: String?,
+    ): String? {
         return cipherKey
             ?: if (pubNub.configuration.cipherKey.isValid()) {
                 pubNub.configuration.cipherKey
@@ -72,7 +82,10 @@ object FileEncryptionUtil {
     }
 
     @Throws(PubNubException::class)
-    internal fun encryptToBytes(bytesToEncrypt: ByteArray, cipherKey: String): ByteArray {
+    internal fun encryptToBytes(
+        bytesToEncrypt: ByteArray,
+        cipherKey: String,
+    ): ByteArray {
         try {
             ByteArrayOutputStream().use { byteArrayOutputStream ->
                 val randomIvBytes = randomIv()
@@ -91,7 +104,8 @@ object FileEncryptionUtil {
                 is InvalidKeyException,
                 is IOException,
                 is BadPaddingException,
-                is IllegalBlockSizeException -> {
+                is IllegalBlockSizeException,
+                -> {
                     throw PubNubException(errorMessage = e.message)
                 }
 
@@ -111,9 +125,12 @@ object FileEncryptionUtil {
         NoSuchAlgorithmException::class,
         NoSuchPaddingException::class,
         InvalidKeyException::class,
-        InvalidAlgorithmParameterException::class
+        InvalidAlgorithmParameterException::class,
     )
-    private fun encryptionCipher(keyBytes: ByteArray, ivBytes: ByteArray): Cipher {
+    private fun encryptionCipher(
+        keyBytes: ByteArray,
+        ivBytes: ByteArray,
+    ): Cipher {
         return cipher(keyBytes, ivBytes, Cipher.ENCRYPT_MODE)
     }
 
@@ -121,9 +138,12 @@ object FileEncryptionUtil {
         NoSuchAlgorithmException::class,
         NoSuchPaddingException::class,
         InvalidKeyException::class,
-        InvalidAlgorithmParameterException::class
+        InvalidAlgorithmParameterException::class,
     )
-    private fun decryptionCipher(keyBytes: ByteArray, ivBytes: ByteArray): Cipher {
+    private fun decryptionCipher(
+        keyBytes: ByteArray,
+        ivBytes: ByteArray,
+    ): Cipher {
         return cipher(keyBytes, ivBytes, Cipher.DECRYPT_MODE)
     }
 
@@ -131,9 +151,13 @@ object FileEncryptionUtil {
         NoSuchAlgorithmException::class,
         NoSuchPaddingException::class,
         InvalidKeyException::class,
-        InvalidAlgorithmParameterException::class
+        InvalidAlgorithmParameterException::class,
     )
-    private fun cipher(keyBytes: ByteArray, ivBytes: ByteArray, mode: Int): Cipher {
+    private fun cipher(
+        keyBytes: ByteArray,
+        ivBytes: ByteArray,
+        mode: Int,
+    ): Cipher {
         val cipher = Cipher.getInstance(CIPHER_TRANSFORMATION)
         val iv: AlgorithmParameterSpec = IvParameterSpec(ivBytes)
         val key = SecretKeySpec(keyBytes, "AES")
@@ -147,11 +171,11 @@ object FileEncryptionUtil {
             com.pubnub.internal.vendor.Crypto.hexEncode(
                 com.pubnub.internal.vendor.Crypto.sha256(
                     cipherKey.toByteArray(
-                        charset(ENCODING_UTF_8)
-                    )
-                )
+                        charset(ENCODING_UTF_8),
+                    ),
+                ),
             ),
-            charset(ENCODING_UTF_8)
+            charset(ENCODING_UTF_8),
         )
             .substring(0, 32)
             .lowercase(Locale.getDefault()).toByteArray(charset(ENCODING_UTF_8))

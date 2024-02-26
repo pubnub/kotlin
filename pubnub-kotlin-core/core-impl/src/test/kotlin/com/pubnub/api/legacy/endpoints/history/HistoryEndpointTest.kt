@@ -20,25 +20,25 @@ import org.junit.Test
 import java.util.concurrent.atomic.AtomicBoolean
 
 class HistoryEndpointTest : BaseTest() {
-
     @Test
     fun testSyncDisabled() {
-        val payload = """
+        val payload =
+            """
             [
               "Use of the history API requires the Storage & Playback which is not enabled for this subscribe key. Login to your PubNub Dashboard Account and enable Storage & Playback. Contact support@pubnub.com if you require further assistance.",
               0,
               0
             ]
-        """.trimIndent()
+            """.trimIndent()
 
         stubFor(
             get(urlPathEqualTo("/v2/history/sub-key/mySubscribeKey/channel/niceChannel"))
-                .willReturn(aResponse().withBody(payload))
+                .willReturn(aResponse().withBody(payload)),
         )
 
         try {
             pubnub.history(
-                channel = "niceChannel"
+                channel = "niceChannel",
             ).sync()
             throw RuntimeException()
         } catch (e: PubNubException) {
@@ -49,23 +49,24 @@ class HistoryEndpointTest : BaseTest() {
 
     @Test
     fun testSyncWithTokensDisabled() {
-        val payload = """
+        val payload =
+            """
             [
               "Use of the history API requires the Storage & Playback which is not enabled for this subscribe key. Login to your PubNub Dashboard Account and enable Storage & Playback. Contact support@pubnub.com if you require further assistance.",
               0,
               0
             ]
-        """.trimIndent()
+            """.trimIndent()
 
         stubFor(
             get(urlPathEqualTo("/v2/history/sub-key/mySubscribeKey/channel/niceChannel"))
-                .willReturn(aResponse().withBody(payload))
+                .willReturn(aResponse().withBody(payload)),
         )
 
         try {
             pubnub.history(
                 channel = "niceChannel",
-                includeTimetoken = true
+                includeTimetoken = true,
             ).sync()
             failTest()
         } catch (e: PubNubException) {
@@ -76,43 +77,50 @@ class HistoryEndpointTest : BaseTest() {
 
     @Test
     fun testSyncSuccess() {
-        val historyItem1 = mapOf(
-            "a" to 11,
-            "b" to 22
-        )
-        val historyEnvelope1 = mapOf(
-            "timetoken" to 1111,
-            "message" to historyItem1
-        )
+        val historyItem1 =
+            mapOf(
+                "a" to 11,
+                "b" to 22,
+            )
+        val historyEnvelope1 =
+            mapOf(
+                "timetoken" to 1111,
+                "message" to historyItem1,
+            )
 
-        val historyItem2 = mapOf(
-            "a" to 33,
-            "b" to 44
-        )
-        val historyEnvelope2 = mapOf(
-            "timetoken" to 2222,
-            "message" to historyItem2
-        )
+        val historyItem2 =
+            mapOf(
+                "a" to 33,
+                "b" to 44,
+            )
+        val historyEnvelope2 =
+            mapOf(
+                "timetoken" to 2222,
+                "message" to historyItem2,
+            )
 
-        val historyItems = listOf(
-            historyEnvelope1,
-            historyEnvelope2
-        )
-        val testArray = listOf(
-            historyItems,
-            1234,
-            4321
-        )
+        val historyItems =
+            listOf(
+                historyEnvelope1,
+                historyEnvelope2,
+            )
+        val testArray =
+            listOf(
+                historyItems,
+                1234,
+                4321,
+            )
 
         stubFor(
             get(urlPathEqualTo("/v2/history/sub-key/mySubscribeKey/channel/niceChannel"))
-                .willReturn(aResponse().withBody(pubnub.mapper.toJson(testArray)))
+                .willReturn(aResponse().withBody(pubnub.mapper.toJson(testArray))),
         )
 
-        val result = pubnub.history(
-            channel = "niceChannel",
-            includeTimetoken = true
-        ).sync()
+        val result =
+            pubnub.history(
+                channel = "niceChannel",
+                includeTimetoken = true,
+            ).sync()
 
         with(result) {
             assertEquals(1234L, startTimetoken)
@@ -134,42 +142,48 @@ class HistoryEndpointTest : BaseTest() {
     fun testSyncAuthSuccess() {
         pubnub.configuration.authKey = "authKey"
 
-        val historyItem1 = mapOf(
-            "a" to 11,
-            "b" to 22
-        )
-        val historyEnvelope1 = mapOf(
-            "timetoken" to 1111,
-            "message" to historyItem1
-        )
+        val historyItem1 =
+            mapOf(
+                "a" to 11,
+                "b" to 22,
+            )
+        val historyEnvelope1 =
+            mapOf(
+                "timetoken" to 1111,
+                "message" to historyItem1,
+            )
 
-        val historyItem2 = mapOf(
-            "a" to 33,
-            "b" to 44
-        )
-        val historyEnvelope2 = mapOf(
-            "timetoken" to 2222,
-            "message" to historyItem2
-        )
+        val historyItem2 =
+            mapOf(
+                "a" to 33,
+                "b" to 44,
+            )
+        val historyEnvelope2 =
+            mapOf(
+                "timetoken" to 2222,
+                "message" to historyItem2,
+            )
 
-        val historyItems = listOf(
-            historyEnvelope1,
-            historyEnvelope2
-        )
-        val testArray = listOf(
-            historyItems,
-            1234,
-            4321
-        )
+        val historyItems =
+            listOf(
+                historyEnvelope1,
+                historyEnvelope2,
+            )
+        val testArray =
+            listOf(
+                historyItems,
+                1234,
+                4321,
+            )
 
         stubFor(
             get(urlPathEqualTo("/v2/history/sub-key/mySubscribeKey/channel/niceChannel"))
-                .willReturn(aResponse().withBody(pubnub.mapper.toJson(testArray)))
+                .willReturn(aResponse().withBody(pubnub.mapper.toJson(testArray))),
         )
 
         pubnub.history(
             channel = "niceChannel",
-            includeTimetoken = true
+            includeTimetoken = true,
         ).sync()
 
         val requests = findAll(getRequestedFor(anyUrl()))
@@ -187,24 +201,25 @@ class HistoryEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            [
-                              [
-                                "EGwV+Ti43wh2TprPIq7o0KMuW5j6B3yWy352ucWIOmU=\n",
-                                "EGwV+Ti43wh2TprPIq7o0KMuW5j6B3yWy352ucWIOmU=\n",
-                                "EGwV+Ti43wh2TprPIq7o0KMuW5j6B3yWy352ucWIOmU=\n"
-                              ],
-                              14606134331557852,
-                              14606134485013970
-                            ]
-                        """.trimIndent()
-                    )
-                )
+                        [
+                          [
+                            "EGwV+Ti43wh2TprPIq7o0KMuW5j6B3yWy352ucWIOmU=\n",
+                            "EGwV+Ti43wh2TprPIq7o0KMuW5j6B3yWy352ucWIOmU=\n",
+                            "EGwV+Ti43wh2TprPIq7o0KMuW5j6B3yWy352ucWIOmU=\n"
+                          ],
+                          14606134331557852,
+                          14606134485013970
+                        ]
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val result = pubnub.history(
-            channel = "niceChannel",
-            includeTimetoken = false
-        ).sync()
+        val result =
+            pubnub.history(
+                channel = "niceChannel",
+                includeTimetoken = false,
+            ).sync()
 
         with(result) {
             assertEquals(14606134331557852, startTimetoken)
@@ -247,15 +262,16 @@ class HistoryEndpointTest : BaseTest() {
                           14606134331557852,
                           14606134485013970
                         ]
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val result = pubnub.history(
-            channel = "niceChannel",
-            includeTimetoken = false
-        ).sync()
+        val result =
+            pubnub.history(
+                channel = "niceChannel",
+                includeTimetoken = false,
+            ).sync()
 
         with(result) {
             assertEquals(14606134331557852, startTimetoken)
@@ -270,32 +286,36 @@ class HistoryEndpointTest : BaseTest() {
 
     @Test
     fun testSyncSuccessWithoutTimeToken() {
-        val historyItem1 = mapOf(
-            "a" to 11,
-            "b" to 22
-        )
-        val historyItem2 = mapOf(
-            "a" to 33,
-            "b" to 44
-        )
+        val historyItem1 =
+            mapOf(
+                "a" to 11,
+                "b" to 22,
+            )
+        val historyItem2 =
+            mapOf(
+                "a" to 33,
+                "b" to 44,
+            )
 
-        val testArray = listOf(
+        val testArray =
             listOf(
-                historyItem1,
-                historyItem2
-            ),
-            1234,
-            4321
-        )
+                listOf(
+                    historyItem1,
+                    historyItem2,
+                ),
+                1234,
+                4321,
+            )
 
         stubFor(
             get(urlPathEqualTo("/v2/history/sub-key/mySubscribeKey/channel/niceChannel"))
-                .willReturn(aResponse().withBody(pubnub.mapper.toJson(testArray)))
+                .willReturn(aResponse().withBody(pubnub.mapper.toJson(testArray))),
         )
 
-        val result = pubnub.history(
-            channel = "niceChannel"
-        ).sync()
+        val result =
+            pubnub.history(
+                channel = "niceChannel",
+            ).sync()
 
         with(result) {
             assertEquals(1234, startTimetoken)
@@ -317,7 +337,7 @@ class HistoryEndpointTest : BaseTest() {
     fun testChannelIsEmpty() {
         try {
             pubnub.history(
-                channel = ""
+                channel = "",
             ).sync()
             throw RuntimeException()
         } catch (e: PubNubException) {
@@ -329,7 +349,7 @@ class HistoryEndpointTest : BaseTest() {
     fun testChannelIsBlank() {
         try {
             pubnub.history(
-                channel = "   "
+                channel = "   ",
             ).sync()
             throw RuntimeException()
         } catch (e: PubNubException) {
@@ -339,42 +359,48 @@ class HistoryEndpointTest : BaseTest() {
 
     @Test
     fun testOperationTypeSuccessAsync() {
-        val historyEnvelope1 = mapOf(
-            "timetoken" to 1111,
-            "message" to mapOf(
-                "a" to 11,
-                "b" to 22
+        val historyEnvelope1 =
+            mapOf(
+                "timetoken" to 1111,
+                "message" to
+                    mapOf(
+                        "a" to 11,
+                        "b" to 22,
+                    ),
             )
-        )
 
-        val historyEnvelope2 = mapOf(
-            "timetoken" to 2222,
-            "message" to mapOf(
-                "a" to 33,
-                "b" to 44
+        val historyEnvelope2 =
+            mapOf(
+                "timetoken" to 2222,
+                "message" to
+                    mapOf(
+                        "a" to 33,
+                        "b" to 44,
+                    ),
             )
-        )
 
-        val historyItems = listOf(
-            historyEnvelope1,
-            historyEnvelope2
-        )
-        val testArray = listOf(
-            historyItems,
-            1234,
-            4321
-        )
+        val historyItems =
+            listOf(
+                historyEnvelope1,
+                historyEnvelope2,
+            )
+        val testArray =
+            listOf(
+                historyItems,
+                1234,
+                4321,
+            )
 
         stubFor(
             get(urlPathEqualTo("/v2/history/sub-key/mySubscribeKey/channel/niceChannel"))
-                .willReturn(aResponse().withBody(pubnub.mapper.toJson(testArray)))
+                .willReturn(aResponse().withBody(pubnub.mapper.toJson(testArray))),
         )
 
         val success = AtomicBoolean()
 
         pubnub.history(
             channel = "niceChannel",
-            includeTimetoken = true
+            includeTimetoken = true,
         ).async { result ->
             result.onSuccess {
                 with(it) {
@@ -401,53 +427,61 @@ class HistoryEndpointTest : BaseTest() {
 
     @Test
     fun testSyncCountReverseStartEndSuccess() {
-        val historyItem1 = mapOf(
-            "a" to 11,
-            "b" to 22
-        )
-        val historyEnvelope1 = mapOf(
-            "timetoken" to 1111,
-            "message" to historyItem1
-        )
+        val historyItem1 =
+            mapOf(
+                "a" to 11,
+                "b" to 22,
+            )
+        val historyEnvelope1 =
+            mapOf(
+                "timetoken" to 1111,
+                "message" to historyItem1,
+            )
 
-        val historyItem2 = mapOf(
-            "a" to 33,
-            "b" to 44
-        )
-        val historyEnvelope2 = mapOf(
-            "timetoken" to 2222,
-            "message" to historyItem2
-        )
+        val historyItem2 =
+            mapOf(
+                "a" to 33,
+                "b" to 44,
+            )
+        val historyEnvelope2 =
+            mapOf(
+                "timetoken" to 2222,
+                "message" to historyItem2,
+            )
 
-        val historyItems = listOf(
-            historyEnvelope1,
-            historyEnvelope2
-        )
-        val testArray = listOf(
-            historyItems,
-            1234,
-            4321
-        )
+        val historyItems =
+            listOf(
+                historyEnvelope1,
+                historyEnvelope2,
+            )
+        val testArray =
+            listOf(
+                historyItems,
+                1234,
+                4321,
+            )
 
         stubFor(
             get(urlPathEqualTo("/v2/history/sub-key/mySubscribeKey/channel/niceChannel"))
-                .willReturn(aResponse().withBody(pubnub.mapper.toJson(testArray)))
+                .willReturn(aResponse().withBody(pubnub.mapper.toJson(testArray))),
         )
 
-        val result = pubnub.history(
-            channel = "niceChannel",
-            count = 5,
-            reverse = true,
-            start = 1L,
-            end = 2L,
-            includeTimetoken = true
-        ).sync()
+        val result =
+            pubnub.history(
+                channel = "niceChannel",
+                count = 5,
+                reverse = true,
+                start = 1L,
+                end = 2L,
+                includeTimetoken = true,
+            ).sync()
 
-        val requests = findAll(
-            getRequestedFor(
-                urlMatching("/v2/history/sub-key/mySubscribeKey/channel/niceChannel.*")
+        val requests =
+            findAll(
+                getRequestedFor(
+                    urlMatching("/v2/history/sub-key/mySubscribeKey/channel/niceChannel.*"),
+                ),
             )
-        )
 
         assertEquals(1, requests.size)
 

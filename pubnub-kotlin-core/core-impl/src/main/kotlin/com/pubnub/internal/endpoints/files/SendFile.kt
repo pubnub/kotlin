@@ -37,12 +37,16 @@ class SendFile internal constructor(
     generateUploadUrlFactory: GenerateUploadUrl.Factory,
     publishFileMessageFactory: PublishFileMessage.Factory,
     sendFileToS3Factory: UploadFile.Factory,
-    cryptoModule: CryptoModule? = null
+    cryptoModule: CryptoModule? = null,
 ) : ISendFile {
-
-    private val sendFileMultistepAction: ExtendedRemoteAction<PNFileUploadResult> = sendFileComposedActions(
-        generateUploadUrlFactory, publishFileMessageFactory, sendFileToS3Factory, inputStream, cryptoModule
-    )
+    private val sendFileMultistepAction: ExtendedRemoteAction<PNFileUploadResult> =
+        sendFileComposedActions(
+            generateUploadUrlFactory,
+            publishFileMessageFactory,
+            sendFileToS3Factory,
+            inputStream,
+            cryptoModule,
+        )
 
     @Throws(PubNubException::class)
     override fun sync(): PNFileUploadResult {
@@ -57,7 +61,7 @@ class SendFile internal constructor(
                 sendFileMultistepAction.async(callback)
             } catch (ex: PubNubException) {
                 callback.accept(
-                    Result.failure(ex)
+                    Result.failure(ex),
                 )
             }
         }
@@ -78,13 +82,14 @@ class SendFile internal constructor(
         publishFileMessageFactory: PublishFileMessage.Factory,
         sendFileToS3Factory: UploadFile.Factory,
         inputStream: InputStream,
-        cryptoModule: CryptoModule?
+        cryptoModule: CryptoModule?,
     ): ExtendedRemoteAction<PNFileUploadResult> {
         val result = AtomicReference<FileUploadRequestDetails>()
 
-        val content = cryptoModule?.encryptStream(InputStreamSeparator(inputStream))?.use {
-            it.readBytes()
-        } ?: inputStream.readBytes()
+        val content =
+            cryptoModule?.encryptStream(InputStreamSeparator(inputStream))?.use {
+                it.readBytes()
+            } ?: inputStream.readBytes()
         return ComposableRemoteAction.firstDo(generateUploadUrlFactory.create(channel, fileName)) // generateUrl
             .then { res ->
                 result.set(res)
@@ -101,16 +106,19 @@ class SendFile internal constructor(
                         ttl = ttl,
                         shouldStore = shouldStore,
                     ),
-                    fileMessagePublishRetryLimit, executorService
+                    fileMessagePublishRetryLimit,
+                    executorService,
                 ) // publish file message
             }.map { mapPublishFileMessageToFileUpload(result.get(), it) }
     }
 
     private fun mapPublishFileMessageToFileUpload(
         requestDetails: FileUploadRequestDetails,
-        res: PNPublishFileMessageResult
+        res: PNPublishFileMessageResult,
     ) = PNFileUploadResult(
-        res.timetoken, HttpURLConnection.HTTP_OK, PNBaseFile(requestDetails.data.id, requestDetails.data.name)
+        res.timetoken,
+        HttpURLConnection.HTTP_OK,
+        PNBaseFile(requestDetails.data.id, requestDetails.data.name),
     )
 
     override fun retry() {

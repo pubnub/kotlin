@@ -9,7 +9,6 @@ import com.pubnub.internal.endpoints.presence.Heartbeat
 import org.junit.Assert.assertTrue
 
 class HeartbeatTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Heartbeat, Boolean>() {
-
     override fun pnOperation() = PNOperationType.PNHeartbeatOperation
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH
@@ -17,7 +16,7 @@ class HeartbeatTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Heartbeat
     override fun snippet(): Heartbeat {
         return Heartbeat(
             pubnub = pubnub,
-            channels = listOf("ch1")
+            channels = listOf("ch1"),
         )
     }
 
@@ -25,13 +24,14 @@ class HeartbeatTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Heartbeat
         assertTrue(result)
     }
 
-    override fun successfulResponseBody() = """
+    override fun successfulResponseBody() =
+        """
         {  
             "status": 200,
             "message": "OK",  
             "service": "Presence"
         }
-    """.trimIndent()
+        """.trimIndent()
 
     override fun unsuccessfulResponseBodyList() = emptyList<String>()
 

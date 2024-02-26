@@ -8,7 +8,7 @@ data class PNStatus(
     val exception: PubNubException? = null,
     val currentTimetoken: Long? = null,
     val channels: Collection<String> = emptySet(),
-    val channelGroups: Collection<String> = emptySet()
+    val channelGroups: Collection<String> = emptySet(),
 ) {
     @get:JvmName("isError")
     val error: Boolean = exception != null

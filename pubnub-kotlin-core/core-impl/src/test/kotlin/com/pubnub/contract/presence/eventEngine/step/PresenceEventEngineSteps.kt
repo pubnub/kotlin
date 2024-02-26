@@ -20,12 +20,11 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 
 class PresenceEventEngineSteps(private val state: EventEngineState) {
-
     @Given("heartbeatInterval set to {string}, timeout set to {string} and suppressLeaveEvents set to {string}")
     fun heartbeatInterval_set_timeout_and_suppressLeaveEvents_set(
         heartbeatInterval: String,
         timeout: String,
-        suppressLeaveEvents: String
+        suppressLeaveEvents: String,
     ) {
         state.configuration.presenceTimeout = timeout.toInt()
         state.configuration.heartbeatInterval = heartbeatInterval.toInt()
@@ -33,15 +32,23 @@ class PresenceEventEngineSteps(private val state: EventEngineState) {
     }
 
     @When("I join {string}, {string}, {string} channels")
-    fun I_join_channels(firstChannel: String, secondChannel: String, thirdChannel: String) {
+    fun I_join_channels(
+        firstChannel: String,
+        secondChannel: String,
+        thirdChannel: String,
+    ) {
         state.pubnub.internalPubNubClient.subscribe(channels = listOf(firstChannel, secondChannel, thirdChannel))
     }
 
     @When("I join {string}, {string}, {string} channels with presence")
-    fun I_join_channels_with_presence(firstChannel: String, secondChannel: String, thirdChannel: String) {
+    fun I_join_channels_with_presence(
+        firstChannel: String,
+        secondChannel: String,
+        thirdChannel: String,
+    ) {
         state.pubnub.internalPubNubClient.subscribe(
             channels = listOf(firstChannel, secondChannel, thirdChannel),
-            withPresence = true
+            withPresence = true,
         )
     }
 
@@ -58,17 +65,25 @@ class PresenceEventEngineSteps(private val state: EventEngineState) {
     @Then("I wait for getting Presence joined events")
     fun I_wait_for_getting_Presence_joined_events() {
         val atomic = AtomicInteger(0)
-        state.pubnub.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*, *, *, *, *, *, *, *>, pnStatus: PNStatus) {
-                // do nothing
-            }
-
-            override fun presence(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnPresenceEventResult: PNPresenceEventResult) {
-                if (pnPresenceEventResult.event == "join" && (pnPresenceEventResult.channel == "first" || pnPresenceEventResult.channel == "second" || pnPresenceEventResult.channel == "third")) {
-                    atomic.incrementAndGet()
+        state.pubnub.addListener(
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {
+                    // do nothing
                 }
-            }
-        })
+
+                override fun presence(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnPresenceEventResult: PNPresenceEventResult,
+                ) {
+                    if (pnPresenceEventResult.event == "join" && (pnPresenceEventResult.channel == "first" || pnPresenceEventResult.channel == "second" || pnPresenceEventResult.channel == "third")) {
+                        atomic.incrementAndGet()
+                    }
+                }
+            },
+        )
 
         Awaitility.await().atMost(5, TimeUnit.SECONDS)
             .untilAtomic(atomic, IsEqual.equalTo(3))
@@ -83,7 +98,10 @@ class PresenceEventEngineSteps(private val state: EventEngineState) {
     }
 
     @Then("I leave {string} and {string} channels")
-    fun I_leave_channels(firstChannel: String, secondChannel: String) {
+    fun I_leave_channels(
+        firstChannel: String,
+        secondChannel: String,
+    ) {
         state.pubnub.internalPubNubClient.unsubscribe(channels = listOf(firstChannel, secondChannel))
     }
 
@@ -110,7 +128,10 @@ class PresenceEventEngineSteps(private val state: EventEngineState) {
     }
 
     @Then("I leave {string} and {string} channels with presence")
-    fun I_leave_channels_with_presence(firstChannel: String, secondChannel: String) {
+    fun I_leave_channels_with_presence(
+        firstChannel: String,
+        secondChannel: String,
+    ) {
         state.pubnub.internalPubNubClient.unsubscribe(channels = listOf(firstChannel, secondChannel))
     }
 }

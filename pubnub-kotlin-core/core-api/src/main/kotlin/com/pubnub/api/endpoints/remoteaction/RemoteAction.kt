@@ -7,6 +7,7 @@ import java.util.function.Consumer
 
 interface ExtendedRemoteAction<Output> : RemoteAction<Output> {
     fun operationType(): PNOperationType
+
     override fun retry()
 }
 
@@ -15,7 +16,9 @@ interface RemoteAction<Output> : Cancelable {
     fun sync(): Output
 
     fun async(callback: Consumer<Result<Output>>)
+
     fun retry()
+
     override fun silentCancel()
 }
 

@@ -29,44 +29,47 @@ internal class PresenceEffectFactory(
     override fun create(effectInvocation: PresenceEffectInvocation): Effect? {
         return when (effectInvocation) {
             is PresenceEffectInvocation.Heartbeat -> {
-                val heartbeatRemoteAction = heartbeatProvider.getHeartbeatRemoteAction(
-                    effectInvocation.channels,
-                    effectInvocation.channelGroups,
-                    if (sendStateWithHeartbeat) {
-                        presenceData.channelStates.filter { it.key in effectInvocation.channels }
-                    } else {
-                        null
-                    }
-                )
+                val heartbeatRemoteAction =
+                    heartbeatProvider.getHeartbeatRemoteAction(
+                        effectInvocation.channels,
+                        effectInvocation.channelGroups,
+                        if (sendStateWithHeartbeat) {
+                            presenceData.channelStates.filter { it.key in effectInvocation.channels }
+                        } else {
+                            null
+                        },
+                    )
                 HeartbeatEffect(heartbeatRemoteAction, presenceEventSink, heartbeatNotificationOptions, statusConsumer)
             }
 
             is PresenceEffectInvocation.DelayedHeartbeat -> {
-                val heartbeatRemoteAction = heartbeatProvider.getHeartbeatRemoteAction(
-                    effectInvocation.channels,
-                    effectInvocation.channelGroups,
-                    if (sendStateWithHeartbeat) {
-                        presenceData.channelStates.filter { it.key in effectInvocation.channels }
-                    } else {
-                        null
-                    }
-                )
+                val heartbeatRemoteAction =
+                    heartbeatProvider.getHeartbeatRemoteAction(
+                        effectInvocation.channels,
+                        effectInvocation.channelGroups,
+                        if (sendStateWithHeartbeat) {
+                            presenceData.channelStates.filter { it.key in effectInvocation.channels }
+                        } else {
+                            null
+                        },
+                    )
                 DelayedHeartbeatEffect(
                     heartbeatRemoteAction,
                     presenceEventSink,
                     retryConfiguration,
                     executorService,
                     effectInvocation.attempts,
-                    effectInvocation.reason
+                    effectInvocation.reason,
                 )
             }
 
             is PresenceEffectInvocation.Leave -> {
                 if (!suppressLeaveEvents) {
-                    val leaveRemoteAction = leaveProvider.getLeaveRemoteAction(
-                        effectInvocation.channels,
-                        effectInvocation.channelGroups
-                    )
+                    val leaveRemoteAction =
+                        leaveProvider.getLeaveRemoteAction(
+                            effectInvocation.channels,
+                            effectInvocation.channelGroups,
+                        )
                     LeaveEffect(leaveRemoteAction)
                 } else {
                     null
@@ -78,7 +81,7 @@ internal class PresenceEffectFactory(
             }
 
             PresenceEffectInvocation.CancelDelayedHeartbeat,
-            PresenceEffectInvocation.CancelWait
+            PresenceEffectInvocation.CancelWait,
             -> null
         }
     }

@@ -13,33 +13,34 @@ private const val PN_OTHER = "pn_other"
 
 internal fun JsonElement.tryDecryptMessage(
     cryptoModule: CryptoModule?,
-    mapper: MapperManager
+    mapper: MapperManager,
 ): Pair<JsonElement, PubNubError?> {
-
     cryptoModule ?: return this to null
 
-    val inputText = if (mapper.isJsonObject(this)) {
-        // property pn_other is used when we want to send encrypted Push Notification, not whole JSON object is encrypted but only value of pn_other property
-        if (mapper.hasField(this, PN_OTHER)) {
-            // JSON with pn_other property indicates that this is encrypted Push Notification
-            mapper.elementToString(this, PN_OTHER)
+    val inputText =
+        if (mapper.isJsonObject(this)) {
+            // property pn_other is used when we want to send encrypted Push Notification, not whole JSON object is encrypted but only value of pn_other property
+            if (mapper.hasField(this, PN_OTHER)) {
+                // JSON with pn_other property indicates that this is encrypted Push Notification
+                mapper.elementToString(this, PN_OTHER)
+            } else {
+                // plain JSON object indicates that this is not encrypted message
+                return this to logAndReturnDecryptionError()
+            }
+        } else if (isJsonPrimitive && asJsonPrimitive.isString) {
+            // String may represent not encrypted string or encrypted data. We will check this when decrypting.
+            mapper.elementToString(this)
         } else {
-            // plain JSON object indicates that this is not encrypted message
+            // Input represents some other Json structure, such as JsonArray
             return this to logAndReturnDecryptionError()
         }
-    } else if (isJsonPrimitive && asJsonPrimitive.isString) {
-        // String may represent not encrypted string or encrypted data. We will check this when decrypting.
-        mapper.elementToString(this)
-    } else {
-        // Input represents some other Json structure, such as JsonArray
-        return this to logAndReturnDecryptionError()
-    }
 
-    val outputText = try {
-        cryptoModule.decryptString(inputText!!)
-    } catch (e: Exception) {
-        return this to logAndReturnDecryptionError()
-    }
+    val outputText =
+        try {
+            cryptoModule.decryptString(inputText!!)
+        } catch (e: Exception) {
+            return this to logAndReturnDecryptionError()
+        }
 
     var outputObject = mapper.fromJson(outputText, JsonElement::class.java)
 

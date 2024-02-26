@@ -6,7 +6,6 @@ import org.junit.Ignore
 import org.junit.Test
 
 class SpecialCharsIntegrationTest : BaseIntegrationTest() {
-
     @Test
     @Ignore // TODO didn't work on master either
     fun testSpecialCharsPathAndUrl() {
@@ -17,9 +16,10 @@ class SpecialCharsIntegrationTest : BaseIntegrationTest() {
         server.publish(
             channel = expectedChannel,
             message = value,
-            meta = mapOf(
-                keyName to value
-            )
+            meta =
+                mapOf(
+                    keyName to value,
+                ),
         ).apply {
 //            TODO FIX queryParam += mapOf(
 //                "za" to value,
@@ -37,10 +37,11 @@ class SpecialCharsIntegrationTest : BaseIntegrationTest() {
 //            success.set(true)
 //        }
 
-        val messages = server.history(
-            channel = expectedChannel,
-            includeMeta = true
-        ).sync().messages
+        val messages =
+            server.history(
+                channel = expectedChannel,
+                includeMeta = true,
+            ).sync().messages
 
         assertEquals(1, messages.size)
         assertEquals(value, messages[0].meta!!.asJsonObject[keyName].asString)

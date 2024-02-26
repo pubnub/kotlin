@@ -6,11 +6,9 @@ plugins {
     id "org.jlleitschuh.gradle.ktlint"
     id "jacoco"
     id 'org.jetbrains.dokka'
-    id 'org.unbroken-dome.test-sets'
     id "com.github.ben-manes.versions"
     id "com.vanniktech.maven.publish"
 }
-
 
 sourceSets {
     integrationTest {
@@ -34,7 +32,10 @@ test {
 ktlint {
     outputToConsole = true
     verbose = true
-    additionalEditorconfigFile = file("check/.editorconfig")
+    additionalEditorconfig = [
+            "ij_kotlin_imports_layout" : "*,java.**,javax.**,kotlin.**,^",
+            "indent_size" : "4",
+    ]
     kotlinScriptAdditionalPaths {
         include fileTree("src/integrationTest/")
         include fileTree("src/testFixtures/")
@@ -137,6 +138,6 @@ tasks.register("japicmp", me.champeau.gradle.japicmp.JapicmpTask) {
 }
 
 tasks.register("mergeKotlinJars", org.gradle.jvm.tasks.Jar) {
-    from(zipTree("/Users/wojciech.kalicinski/projects/pubnub-kotlin-copy/pubnub-kotlin/build/libs/pubnub-kotlin-7.7.4.jar"), zipTree("/Users/wojciech.kalicinski/projects/pubnub-kotlin-copy/pubnub-kotlin-core/build/libs/pubnub-kotlin-core-7.7.4.jar"))
+    from(zipTree("/Users/wojciech.kalicinski/projects/pubnub-kotlin-copy/pubnub-kotlin/build/libs/pubnub-kotlin-8.0.0.jar"), zipTree("/Users/wojciech.kalicinski/projects/pubnub-kotlin-copy/pubnub-kotlin-core/core-api/build/libs/core-api-8.0.0.jar"))
     setArchiveFileName("combined.jar")
 }

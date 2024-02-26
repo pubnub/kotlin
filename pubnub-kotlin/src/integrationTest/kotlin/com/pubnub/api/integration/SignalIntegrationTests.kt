@@ -13,7 +13,6 @@ import org.junit.Assert.assertNotNull
 import org.junit.Test
 
 class SignalIntegrationTests : BaseIntegrationTest() {
-
     lateinit var expectedChannel: String
     lateinit var expectedPayload: String
 
@@ -26,7 +25,7 @@ class SignalIntegrationTests : BaseIntegrationTest() {
     fun testPublishSignalMessageAsync() {
         pubnub.signal(
             message = expectedPayload,
-            channel = expectedChannel
+            channel = expectedChannel,
         ).await { result ->
             assertFalse(result.isFailure)
 //            assertEquals(PNOperationType.PNSignalOperation, status.operation) // TODO can't check this now
@@ -39,7 +38,7 @@ class SignalIntegrationTests : BaseIntegrationTest() {
     fun testPublishSignalMessageSync() {
         pubnub.signal(
             message = expectedPayload,
-            channel = expectedChannel
+            channel = expectedChannel,
         ).sync()
     }
 
@@ -50,7 +49,7 @@ class SignalIntegrationTests : BaseIntegrationTest() {
             subscribe(expectedChannel)
             observerClient.signal(
                 message = expectedPayload,
-                channel = expectedChannel
+                channel = expectedChannel,
             ).sync()
             val pnSignalResult = nextEvent<PNSignalResult>()
             assertEquals(observerClient.configuration.userId.value, pnSignalResult.publisher)
@@ -65,7 +64,7 @@ class SignalIntegrationTests : BaseIntegrationTest() {
             pubnub.configuration.subscribeKey = ""
             pubnub.signal(
                 channel = randomChannel(),
-                message = randomValue()
+                message = randomValue(),
             ).sync()
         } catch (e: Exception) {
             assertPnException(PubNubError.SUBSCRIBE_KEY_MISSING, e)

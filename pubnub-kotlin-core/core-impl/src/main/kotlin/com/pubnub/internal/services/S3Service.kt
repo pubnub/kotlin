@@ -10,6 +10,6 @@ interface S3Service {
     @POST
     fun upload(
         @Url url: String,
-        @Body form: MultipartBody
+        @Body form: MultipartBody,
     ): Call<Unit>
 }

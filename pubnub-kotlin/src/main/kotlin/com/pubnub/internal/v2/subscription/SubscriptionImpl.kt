@@ -7,13 +7,13 @@ import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.v2.callbacks.EventListener
-import com.pubnub.api.v2.subscriptions.Subscription
-import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.api.v2.subscriptions.BaseSubscription
 import com.pubnub.api.v2.subscriptions.BaseSubscriptionSet
+import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
+import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.callbacks.DelegatingEventListener
+import com.pubnub.internal.v2.callbacks.DelegatingEventListener
 import com.pubnub.internal.v2.entities.ChannelGroupName
 import com.pubnub.internal.v2.entities.ChannelName
 
@@ -21,7 +21,7 @@ class SubscriptionImpl(
     private val pubnub: PubNubImpl,
     channels: Set<ChannelName>,
     channelGroups: Set<ChannelGroupName>,
-    options: SubscriptionOptions
+    options: SubscriptionOptions,
 ) : Subscription, BaseSubscriptionImpl<EventListener>(pubnub.internalPubNubClient, channels, channelGroups, options) {
     /**
      * Add a listener.

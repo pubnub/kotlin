@@ -7,19 +7,17 @@ import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.v2.callbacks.EventListener
-import com.pubnub.api.v2.subscriptions.Subscription
-import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.api.v2.subscriptions.BaseSubscription
 import com.pubnub.api.v2.subscriptions.BaseSubscriptionSet
+import com.pubnub.api.v2.subscriptions.Subscription
+import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.internal.InternalPubNubClient
-import com.pubnub.internal.callbacks.DelegatingEventListener
+import com.pubnub.internal.v2.callbacks.DelegatingEventListener
 
 class SubscriptionSetImpl(
     pubnub: InternalPubNubClient,
-    initialSubscriptions: Set<SubscriptionImpl>
+    initialSubscriptions: Set<SubscriptionImpl>,
 ) : SubscriptionSet, BaseSubscriptionSetImpl<EventListener, Subscription>(pubnub, initialSubscriptions) {
-
-
     /**
      * Adds a [BaseSubscription] to this set. Equivalent to calling [add].
      *

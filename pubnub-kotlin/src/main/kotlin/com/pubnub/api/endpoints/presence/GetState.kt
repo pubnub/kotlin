@@ -11,4 +11,3 @@ interface GetState : Endpoint<PNGetStateResult> {
     val channelGroups: List<String>
     val uuid: String
 }
-

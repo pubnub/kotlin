@@ -8,5 +8,5 @@ import com.pubnub.internal.InternalPubNubClient
  * @property channels List of channels where a UUID is present.
  */
 class PNWhereNowResult internal constructor(
-    val channels: List<String>
+    val channels: List<String>,
 )

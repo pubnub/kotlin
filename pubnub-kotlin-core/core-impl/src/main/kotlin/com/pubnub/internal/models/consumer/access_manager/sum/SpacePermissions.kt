@@ -11,7 +11,6 @@ import com.pubnub.internal.models.consumer.access_manager.v3.PNSpacePatternPermi
 import com.pubnub.internal.models.consumer.access_manager.v3.PNSpacePermissionsGrant
 
 interface SpacePermissions : PNGrant {
-
     companion object {
         fun id(
             spaceId: SpaceId,
@@ -21,17 +20,18 @@ interface SpacePermissions : PNGrant {
             delete: Boolean = false,
             get: Boolean = false,
             join: Boolean = false,
-            update: Boolean = false
-        ): SpacePermissions = PNSpacePermissionsGrant(
-            id = spaceId.value,
-            read = read,
-            write = write,
-            manage = manage,
-            delete = delete,
-            get = get,
-            join = join,
-            update = update
-        )
+            update: Boolean = false,
+        ): SpacePermissions =
+            PNSpacePermissionsGrant(
+                id = spaceId.value,
+                read = read,
+                write = write,
+                manage = manage,
+                delete = delete,
+                get = get,
+                join = join,
+                update = update,
+            )
 
         fun pattern(
             pattern: String,
@@ -41,17 +41,18 @@ interface SpacePermissions : PNGrant {
             delete: Boolean = false,
             get: Boolean = false,
             join: Boolean = false,
-            update: Boolean = false
-        ): SpacePermissions = PNSpacePatternPermissionsGrant(
-            id = pattern,
-            read = read,
-            write = write,
-            manage = manage,
-            delete = delete,
-            get = get,
-            join = join,
-            update = update
-        )
+            update: Boolean = false,
+        ): SpacePermissions =
+            PNSpacePatternPermissionsGrant(
+                id = pattern,
+                read = read,
+                write = write,
+                manage = manage,
+                delete = delete,
+                get = get,
+                join = join,
+                update = update,
+            )
     }
 }
 

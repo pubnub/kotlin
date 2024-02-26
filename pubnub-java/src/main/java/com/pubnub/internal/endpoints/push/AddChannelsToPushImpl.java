@@ -1,10 +1,10 @@
 package com.pubnub.internal.endpoints.push;
 
-import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.api.enums.PNPushEnvironment;
 import com.pubnub.api.enums.PNPushType;
 import com.pubnub.api.models.consumer.push.PNPushAddChannelResult;
 import com.pubnub.internal.InternalPubNubClient;
+import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;

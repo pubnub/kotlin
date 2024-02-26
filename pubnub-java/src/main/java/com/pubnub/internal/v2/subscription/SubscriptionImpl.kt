@@ -1,11 +1,11 @@
 package com.pubnub.internal.v2.subscription
 
 import com.pubnub.api.v2.callbacks.EventListener
-import com.pubnub.api.v2.subscriptions.Subscription
-import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.api.v2.subscriptions.BaseSubscription
 import com.pubnub.api.v2.subscriptions.BaseSubscriptionSet
+import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
+import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.v2.callbacks.DelegatingEventListener
 import com.pubnub.internal.v2.entities.ChannelGroupName
@@ -15,7 +15,7 @@ class SubscriptionImpl(
     pubnub: PubNubImpl,
     channels: Set<ChannelName>,
     channelGroups: Set<ChannelGroupName>,
-    options: SubscriptionOptions
+    options: SubscriptionOptions,
 ) : Subscription, BaseSubscriptionImpl<EventListener>(pubnub.internalPubNubClient, channels, channelGroups, options) {
     /**
      * Add a listener.

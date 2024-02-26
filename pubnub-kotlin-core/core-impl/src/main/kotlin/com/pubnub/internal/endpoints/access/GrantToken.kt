@@ -6,8 +6,8 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.Endpoint
-import com.pubnub.internal.PNConfiguration.Companion.isValid
 import com.pubnub.internal.InternalPubNubClient
+import com.pubnub.internal.PNConfiguration.Companion.isValid
 import com.pubnub.internal.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.internal.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.internal.models.consumer.access_manager.v3.UUIDGrant
@@ -23,9 +23,10 @@ class GrantToken(
     private val authorizedUUID: String?,
     private val channels: List<ChannelGrant>,
     private val channelGroups: List<ChannelGroupGrant>,
-    private val uuids: List<UUIDGrant>
+    private val uuids: List<UUIDGrant>,
 ) : Endpoint<GrantTokenResponse, PNGrantTokenResult>(pubnub), IGrantToken {
     override fun getAffectedChannels(): List<String> = channels.map { it.id }
+
     override fun getAffectedChannelGroups(): List<String> = channelGroups.map { it.id }
 
     override fun validateParams() {
@@ -38,20 +39,21 @@ class GrantToken(
         if ((channels + channelGroups + uuids).isEmpty()) {
             throw PubNubException(
                 pubnubError = PubNubError.RESOURCES_MISSING,
-                errorMessage = "At least one grant required"
+                errorMessage = "At least one grant required",
             )
         }
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<GrantTokenResponse> {
-        val requestBody: GrantTokenRequestBody = GrantTokenRequestBody.of(
-            ttl = ttl,
-            channels = channels,
-            groups = channelGroups,
-            uuids = uuids,
-            meta = meta,
-            uuid = authorizedUUID
-        )
+        val requestBody: GrantTokenRequestBody =
+            GrantTokenRequestBody.of(
+                ttl = ttl,
+                channels = channels,
+                groups = channelGroups,
+                uuids = uuids,
+                meta = meta,
+                uuid = authorizedUUID,
+            )
         return pubnub.retrofitManager
             .accessManagerService
             .grantToken(pubnub.configuration.subscribeKey, requestBody, queryParams)
@@ -62,6 +64,8 @@ class GrantToken(
     }
 
     override fun operationType(): PNOperationType = PNOperationType.PNAccessManagerGrantToken
+
     override fun isAuthRequired(): Boolean = false
+
     override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.ACCESS_MANAGER
 }

@@ -40,8 +40,9 @@ class AesCbcCryptor(val cipherKey: String) : Cryptor {
     override fun decrypt(encryptedData: EncryptedData): ByteArray {
         validateData(encryptedData.data)
         return try {
-            val ivBytes: ByteArray = encryptedData.metadata?.takeIf { it.size == RANDOM_IV_SIZE }
-                ?: throw PubNubException(errorMessage = "Invalid random IV", pubnubError = PubNubError.CRYPTO_ERROR)
+            val ivBytes: ByteArray =
+                encryptedData.metadata?.takeIf { it.size == RANDOM_IV_SIZE }
+                    ?: throw PubNubException(errorMessage = "Invalid random IV", pubnubError = PubNubError.CRYPTO_ERROR)
             val cipher = createInitializedCipher(ivBytes, Cipher.DECRYPT_MODE)
             val decryptedData = cipher.doFinal(encryptedData.data)
             decryptedData
@@ -59,7 +60,7 @@ class AesCbcCryptor(val cipherKey: String) : Cryptor {
 
             return EncryptedStreamData(
                 metadata = ivBytes,
-                stream = cipheredStream
+                stream = cipheredStream,
             )
         } catch (e: Exception) {
             throw PubNubException(e.message, PubNubError.CRYPTO_ERROR)
@@ -69,8 +70,9 @@ class AesCbcCryptor(val cipherKey: String) : Cryptor {
     override fun decryptStream(encryptedData: EncryptedStreamData): InputStream {
         val bufferedInputStream = validateInputStreamAndReturnBuffered(encryptedData.stream)
         try {
-            val ivBytes: ByteArray = encryptedData.metadata?.takeIf { it.size == RANDOM_IV_SIZE }
-                ?: throw PubNubException(errorMessage = "Invalid random IV", pubnubError = PubNubError.CRYPTO_ERROR)
+            val ivBytes: ByteArray =
+                encryptedData.metadata?.takeIf { it.size == RANDOM_IV_SIZE }
+                    ?: throw PubNubException(errorMessage = "Invalid random IV", pubnubError = PubNubError.CRYPTO_ERROR)
             val cipher = createInitializedCipher(ivBytes, Cipher.DECRYPT_MODE)
             return CipherInputStream(bufferedInputStream, cipher)
         } catch (e: Exception) {
@@ -82,12 +84,15 @@ class AesCbcCryptor(val cipherKey: String) : Cryptor {
         if (data.isEmpty()) {
             throw PubNubException(
                 errorMessage = "Encryption/Decryption of empty data not allowed.",
-                pubnubError = PubNubError.ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED
+                pubnubError = PubNubError.ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED,
             )
         }
     }
 
-    private fun createInitializedCipher(iv: ByteArray, mode: Int): Cipher {
+    private fun createInitializedCipher(
+        iv: ByteArray,
+        mode: Int,
+    ): Cipher {
         return Cipher.getInstance(CIPHER_TRANSFORMATION).also {
             it.init(mode, newKey, IvParameterSpec(iv))
         }
@@ -119,7 +124,7 @@ class AesCbcCryptor(val cipherKey: String) : Cryptor {
         bufferedInputStream.checkMinSize(1) {
             throw PubNubException(
                 errorMessage = "Encryption/Decryption of empty data not allowed.",
-                pubnubError = PubNubError.ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED
+                pubnubError = PubNubError.ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED,
             )
         }
         return bufferedInputStream

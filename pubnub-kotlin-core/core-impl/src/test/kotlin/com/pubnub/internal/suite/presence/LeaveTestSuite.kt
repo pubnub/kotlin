@@ -8,7 +8,6 @@ import com.pubnub.internal.endpoints.presence.Leave
 import org.junit.Assert.assertTrue
 
 class LeaveTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Leave, Boolean>() {
-
     override fun pnOperation() = PNOperationType.PNUnsubscribeOperation
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH
@@ -23,18 +22,18 @@ class LeaveTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Leave, Boolea
         assertTrue(result)
     }
 
-    override fun successfulResponseBody() = """
+    override fun successfulResponseBody() =
+        """
         {  
             "status": 200,
             "message": "OK",  
             "service": "Presence"
         }
-    """.trimIndent()
+        """.trimIndent()
 
     override fun unsuccessfulResponseBodyList() = emptyList<String>()
 
-    override fun mappingBuilder(): MappingBuilder =
-        get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/leave"))
+    override fun mappingBuilder(): MappingBuilder = get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/leave"))
 
     override fun affectedChannelsAndGroups() = listOf("ch1") to emptyList<String>()
 

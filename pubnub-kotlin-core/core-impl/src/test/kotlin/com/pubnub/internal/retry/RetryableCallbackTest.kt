@@ -47,21 +47,27 @@ class RetryableCallbackTest {
         retryConfiguration: RetryConfiguration = RetryConfiguration.None,
         onFinalFailureFinished: AtomicBoolean = AtomicBoolean(false),
         onFinalResponseFinished: AtomicBoolean = AtomicBoolean(false),
-        endpointGroupName: RetryableEndpointGroup = RetryableEndpointGroup.MESSAGE_PERSISTENCE
+        endpointGroupName: RetryableEndpointGroup = RetryableEndpointGroup.MESSAGE_PERSISTENCE,
     ): RetryableCallback<Any> {
         return object : RetryableCallback<Any>(
             retryConfiguration = retryConfiguration,
             endpointGroupName = endpointGroupName,
             call = mockCall,
             isEndpointRetryable = true,
-            executorService = executorService
+            executorService = executorService,
         ) {
-            override fun onFinalResponse(call: Call<Any>, response: Response<Any>) {
+            override fun onFinalResponse(
+                call: Call<Any>,
+                response: Response<Any>,
+            ) {
                 onFinalResponseCalled = true
                 onFinalResponseFinished.set(true)
             }
 
-            override fun onFinalFailure(call: Call<Any>, t: Throwable) {
+            override fun onFinalFailure(
+                call: Call<Any>,
+                t: Throwable,
+            ) {
                 onFinalFailureCalled = true
                 onFinalFailureFinished.set(true)
             }
@@ -102,12 +108,13 @@ class RetryableCallbackTest {
         val success = AtomicBoolean()
         val retryableCallback =
             getRetryableCallback(
-                retryConfiguration = RetryConfiguration.Linear(
-                    delayInSec = 10.milliseconds,
-                    maxRetryNumber = 3,
-                    isInternal = true
-                ),
-                onFinalResponseFinished = success
+                retryConfiguration =
+                    RetryConfiguration.Linear(
+                        delayInSec = 10.milliseconds,
+                        maxRetryNumber = 3,
+                        isInternal = true,
+                    ),
+                onFinalResponseFinished = success,
             )
         val errorResponse: Response<Any> = Response.error<Any>(500, ResponseBody.create(null, ""))
         every { mockResponse.isSuccessful } returns false
@@ -138,12 +145,13 @@ class RetryableCallbackTest {
     fun `should retry onResponse when exponential retryConfiguration is set and retryable error 500 occurs`() {
         // given
         @Suppress("INVISIBLE_MEMBER")
-        val retryConfiguration = RetryConfiguration.Exponential(
-            minDelayInSec = 10.milliseconds,
-            maxDelayInSec = 15.milliseconds,
-            maxRetryNumber = 2,
-            isInternal = true
-        )
+        val retryConfiguration =
+            RetryConfiguration.Exponential(
+                minDelayInSec = 10.milliseconds,
+                maxDelayInSec = 15.milliseconds,
+                maxRetryNumber = 2,
+                isInternal = true,
+            )
         val success = AtomicBoolean()
         val retryableCallback =
             getRetryableCallback(retryConfiguration = retryConfiguration, onFinalResponseFinished = success)
@@ -174,12 +182,13 @@ class RetryableCallbackTest {
     fun `should retry onFailure when exponential retryConfiguration is set and SocketTimeoutException`() {
         // given
         @Suppress("INVISIBLE_MEMBER")
-        val retryConfiguration = RetryConfiguration.Exponential(
-            minDelayInSec = 10.milliseconds,
-            maxDelayInSec = 15.milliseconds,
-            maxRetryNumber = 2,
-            isInternal = true
-        )
+        val retryConfiguration =
+            RetryConfiguration.Exponential(
+                minDelayInSec = 10.milliseconds,
+                maxDelayInSec = 15.milliseconds,
+                maxRetryNumber = 2,
+                isInternal = true,
+            )
         val success = AtomicBoolean()
         val retryableCallback =
             getRetryableCallback(retryConfiguration = retryConfiguration, onFinalResponseFinished = success)
@@ -209,12 +218,13 @@ class RetryableCallbackTest {
     fun `should retry onFailure and fail when exponential retryConfiguration is set and UnknownHostException`() {
         // given
         @Suppress("INVISIBLE_MEMBER")
-        val retryConfiguration = RetryConfiguration.Exponential(
-            minDelayInSec = 10.milliseconds,
-            maxDelayInSec = 15.milliseconds,
-            maxRetryNumber = 2,
-            isInternal = true
-        )
+        val retryConfiguration =
+            RetryConfiguration.Exponential(
+                minDelayInSec = 10.milliseconds,
+                maxDelayInSec = 15.milliseconds,
+                maxRetryNumber = 2,
+                isInternal = true,
+            )
         val success = AtomicBoolean()
         val retryableCallback =
             getRetryableCallback(retryConfiguration = retryConfiguration, onFinalFailureFinished = success)

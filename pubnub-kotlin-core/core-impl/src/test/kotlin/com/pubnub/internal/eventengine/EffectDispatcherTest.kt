@@ -30,7 +30,6 @@ class EffectDispatcherTest {
     internal class EffectHandlerFactoryImpl : EffectFactory<TestEffectInvocation> {
         override fun create(effectInvocation: TestEffectInvocation): ManagedEffect {
             return object : ManagedEffect {
-
                 override fun runEffect() {
                     when (effectInvocation) {
                         is ImmediateEndingTestEffect -> {
@@ -51,12 +50,13 @@ class EffectDispatcherTest {
     fun managedEffectIsNotEvictedTillCancelled() {
         // given
         val managedEffects = ConcurrentHashMap<String, ManagedEffect>()
-        val effectDispatcher = EffectDispatcher(
-            effectFactory = EffectHandlerFactoryImpl(),
-            managedEffects = managedEffects,
-            effectSource = QueueSinkSource(),
-            executorService = executorService
-        )
+        val effectDispatcher =
+            EffectDispatcher(
+                effectFactory = EffectHandlerFactoryImpl(),
+                managedEffects = managedEffects,
+                effectSource = QueueSinkSource(),
+                executorService = executorService,
+            )
 
         // when
         effectDispatcher.dispatch(TestEffect)
@@ -69,12 +69,13 @@ class EffectDispatcherTest {
     fun managedEffectIsEvictedAfterCancel() {
         // given
         val managedEffects = ConcurrentHashMap<String, ManagedEffect>()
-        val effectDispatcher = EffectDispatcher(
-            effectFactory = EffectHandlerFactoryImpl(),
-            managedEffects = managedEffects,
-            effectSource = QueueSinkSource(),
-            executorService = executorService
-        )
+        val effectDispatcher =
+            EffectDispatcher(
+                effectFactory = EffectHandlerFactoryImpl(),
+                managedEffects = managedEffects,
+                effectSource = QueueSinkSource(),
+                executorService = executorService,
+            )
 
         // when
         effectDispatcher.dispatch(TestEffect)
@@ -88,12 +89,13 @@ class EffectDispatcherTest {
     fun canCancelEvictedEffect() {
         // given
         val managedEffects = ConcurrentHashMap<String, ManagedEffect>()
-        val effectDispatcher = EffectDispatcher(
-            effectFactory = EffectHandlerFactoryImpl(),
-            managedEffects = managedEffects,
-            effectSource = QueueSinkSource(),
-            executorService = executorService
-        )
+        val effectDispatcher =
+            EffectDispatcher(
+                effectFactory = EffectHandlerFactoryImpl(),
+                managedEffects = managedEffects,
+                effectSource = QueueSinkSource(),
+                executorService = executorService,
+            )
 
         // when
         effectDispatcher.dispatch(TestEffect)
@@ -111,12 +113,13 @@ class EffectDispatcherTest {
         val effectHandlerFactory = EffectHandlerFactoryImpl()
         val managedEffect = spyk(effectHandlerFactory.create(TestEffect))
         managedEffects[TestEffect.id] = managedEffect
-        val effectDispatcher = EffectDispatcher(
-            effectFactory = effectHandlerFactory,
-            managedEffects = managedEffects,
-            effectSource = QueueSinkSource(),
-            executorService = executorService
-        )
+        val effectDispatcher =
+            EffectDispatcher(
+                effectFactory = effectHandlerFactory,
+                managedEffects = managedEffects,
+                effectSource = QueueSinkSource(),
+                executorService = executorService,
+            )
 
         // when
         effectDispatcher.dispatch(TestEffect)
@@ -133,12 +136,13 @@ class EffectDispatcherTest {
         val emitMessagesInvocation: SubscribeEffectInvocation.EmitMessages =
             SubscribeEffectInvocation.EmitMessages(listOf())
         val effectFactory: EffectFactory<SubscribeEffectInvocation> = mockk()
-        val effectDispatcher = EffectDispatcher(
-            effectFactory = effectFactory,
-            managedEffects = managedEffects,
-            effectSource = QueueSinkSource(),
-            executorService = executorService
-        )
+        val effectDispatcher =
+            EffectDispatcher(
+                effectFactory = effectFactory,
+                managedEffects = managedEffects,
+                effectSource = QueueSinkSource(),
+                executorService = executorService,
+            )
         val effect: Effect = mockk()
         every { effect.runEffect() } returns Unit
         every { effectFactory.create(emitMessagesInvocation) } returns effect

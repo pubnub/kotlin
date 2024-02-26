@@ -17,7 +17,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class StateSetEndpointTest : BaseTest() {
-
     @Test
     fun applyStateForChannelSync() {
         stubFor(
@@ -36,15 +35,16 @@ class StateSetEndpointTest : BaseTest() {
                           },
                           "service": "Presence"
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val result = pubnub.setPresenceState(
-            channels = listOf("testChannel"),
-            state = mapOf("age" to 20)
-        ).sync()
+        val result =
+            pubnub.setPresenceState(
+                channels = listOf("testChannel"),
+                state = mapOf("age" to 20),
+            ).sync()
 
         assertEquals(pubnub.mapper.elementToInt(result.state, "age"), 20)
         assertEquals(pubnub.mapper.elementToString(result.state, "status"), "online")
@@ -71,16 +71,17 @@ class StateSetEndpointTest : BaseTest() {
                           },
                           "service": "Presence"
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val result = pubnub.setPresenceState(
-            channels = listOf("testChannel"),
-            state = mapOf("age" to 20),
-            uuid = "someoneElseUUID"
-        ).sync()
+        val result =
+            pubnub.setPresenceState(
+                channels = listOf("testChannel"),
+                state = mapOf("age" to 20),
+                uuid = "someoneElseUUID",
+            ).sync()
 
         assertEquals(pubnub.mapper.elementToInt(result.state, "age"), 20)
         assertEquals(pubnub.mapper.elementToString(result.state, "status"), "online")
@@ -107,15 +108,16 @@ class StateSetEndpointTest : BaseTest() {
                           },
                           "service": "Presence"
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val result = pubnub.setPresenceState(
-            channels = listOf("testChannel", "testChannel2"),
-            state = mapOf("age" to 20)
-        ).sync()
+        val result =
+            pubnub.setPresenceState(
+                channels = listOf("testChannel", "testChannel2"),
+                state = mapOf("age" to 20),
+            ).sync()
 
         assertEquals(pubnub.mapper.elementToInt(result.state, "age"), 20)
         assertEquals(pubnub.mapper.elementToString(result.state, "status"), "online")
@@ -133,24 +135,25 @@ class StateSetEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                              "status": 200,
-                              "message": "OK",
-                              "payload": {
-                                "age": 20,
-                                "status": "online"
-                              },
-                              "service": "Presence"
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                          "status": 200,
+                          "message": "OK",
+                          "payload": {
+                            "age": 20,
+                            "status": "online"
+                          },
+                          "service": "Presence"
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val result = pubnub.setPresenceState(
-            channelGroups = listOf("cg1"),
-            state = mapOf("age" to 20)
-        ).sync()
+        val result =
+            pubnub.setPresenceState(
+                channelGroups = listOf("cg1"),
+                state = mapOf("age" to 20),
+            ).sync()
 
         assertEquals(pubnub.mapper.elementToInt(result.state, "age"), 20)
         assertEquals(pubnub.mapper.elementToString(result.state, "status"), "online")
@@ -168,24 +171,25 @@ class StateSetEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                              "status": 200,
-                              "message": "OK",
-                              "payload": {
-                                "age": 20,
-                                "status": "online"
-                              },
-                              "service": "Presence"
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                          "status": 200,
+                          "message": "OK",
+                          "payload": {
+                            "age": 20,
+                            "status": "online"
+                          },
+                          "service": "Presence"
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val result = pubnub.setPresenceState(
-            channelGroups = listOf("cg1", "cg2"),
-            state = mapOf("age" to 20)
-        ).sync()
+        val result =
+            pubnub.setPresenceState(
+                channelGroups = listOf("cg1", "cg2"),
+                state = mapOf("age" to 20),
+            ).sync()
 
         assertEquals(pubnub.mapper.elementToInt(result.state, "age"), 20)
         assertEquals(pubnub.mapper.elementToString(result.state, "status"), "online")
@@ -204,25 +208,26 @@ class StateSetEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                              "status": 200,
-                              "message": "OK",
-                              "payload": {
-                                "age": 20,
-                                "status": "online"
-                              },
-                              "service": "Presence"
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                          "status": 200,
+                          "message": "OK",
+                          "payload": {
+                            "age": 20,
+                            "status": "online"
+                          },
+                          "service": "Presence"
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val result = pubnub.setPresenceState(
-            channels = listOf("ch1"),
-            channelGroups = listOf("cg1", "cg2"),
-            state = mapOf("age" to 20)
-        ).sync()
+        val result =
+            pubnub.setPresenceState(
+                channels = listOf("ch1"),
+                channelGroups = listOf("cg1", "cg2"),
+                state = mapOf("age" to 20),
+            ).sync()
 
         assertEquals(pubnub.mapper.elementToInt(result.state, "age"), 20)
         assertEquals(pubnub.mapper.elementToString(result.state, "status"), "online")
@@ -240,25 +245,25 @@ class StateSetEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                              "status": 200,
-                              "message": "OK",
-                              "payload": {
-                                "age": 20,
-                                "status": "online"
-                              },
-                              "service": "Presence"
-                            }
-                        """.trimIndent()
-                    ).withStatus(400)
-                )
+                        {
+                          "status": 200,
+                          "message": "OK",
+                          "payload": {
+                            "age": 20,
+                            "status": "online"
+                          },
+                          "service": "Presence"
+                        }
+                        """.trimIndent(),
+                    ).withStatus(400),
+                ),
         )
 
         try {
             pubnub.setPresenceState(
                 channels = listOf("ch1"),
                 channelGroups = listOf("cg1", "cg2"),
-                state = mapOf("age" to 20)
+                state = mapOf("age" to 20),
             ).sync()
             failTest()
         } catch (e: Exception) {
@@ -275,25 +280,25 @@ class StateSetEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                              "status": 200,
-                              "message": "OK",
-                              "payload": {
-                                "age": 20,
-                                "status": "online"
-                              },
-                              "service": "Presence"
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                          "status": 200,
+                          "message": "OK",
+                          "payload": {
+                            "age": 20,
+                            "status": "online"
+                          },
+                          "service": "Presence"
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         pubnub.configuration.authKey = "myKey"
 
         pubnub.setPresenceState(
             channels = listOf("testChannel"),
-            state = mapOf("age" to 20)
+            state = mapOf("age" to 20),
         ).sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
@@ -312,9 +317,9 @@ class StateSetEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         "{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : " +
-                            "20, \"status\" : \"online\" }, \"service\": \"Presence\"}"
-                    )
-                )
+                            "20, \"status\" : \"online\" }, \"service\": \"Presence\"}",
+                    ),
+                ),
         )
 
         pubnub.configuration.subscribeKey = " "
@@ -322,7 +327,7 @@ class StateSetEndpointTest : BaseTest() {
         try {
             pubnub.setPresenceState(
                 channels = listOf("testChannel"),
-                state = mapOf("age" to 20)
+                state = mapOf("age" to 20),
             ).sync()
             failTest()
         } catch (e: Exception) {
@@ -340,9 +345,9 @@ class StateSetEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         "{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : " +
-                            "20, \"status\" : \"online\" }, \"service\": \"Presence\"}"
-                    )
-                )
+                            "20, \"status\" : \"online\" }, \"service\": \"Presence\"}",
+                    ),
+                ),
         )
 
         pubnub.configuration.subscribeKey = ""
@@ -350,7 +355,7 @@ class StateSetEndpointTest : BaseTest() {
         try {
             pubnub.setPresenceState(
                 channels = listOf("testChannel"),
-                state = mapOf("age" to 20)
+                state = mapOf("age" to 20),
             ).sync()
             failTest()
         } catch (e: Exception) {
@@ -376,14 +381,14 @@ class StateSetEndpointTest : BaseTest() {
                           },
                           "service": "Presence"
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         try {
             pubnub.setPresenceState(
-                state = mapOf("age" to 20)
+                state = mapOf("age" to 20),
             ).sync()
             failTest()
         } catch (e: Exception) {
@@ -405,15 +410,15 @@ class StateSetEndpointTest : BaseTest() {
                           "message": "OK",
                           "service": "Presence"
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         try {
             pubnub.setPresenceState(
                 channels = listOf("testChannel"),
-                state = mapOf("age" to 20)
+                state = mapOf("age" to 20),
             ).sync()
             failTest()
         } catch (e: Exception) {

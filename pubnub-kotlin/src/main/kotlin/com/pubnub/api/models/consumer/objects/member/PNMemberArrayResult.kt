@@ -8,7 +8,7 @@ data class PNMemberArrayResult(
     val data: Collection<PNMember>,
     val totalCount: Int?,
     val next: PNPage.PNNext?,
-    val prev: PNPage.PNPrev?
+    val prev: PNPage.PNPrev?,
 ) {
     companion object {
         fun from(data: PNMemberArrayResult): com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult {
@@ -17,7 +17,7 @@ data class PNMemberArrayResult(
                 data.data.map(PNMember::from),
                 data.totalCount,
                 data.next,
-                data.prev
+                data.prev,
             )
         }
     }

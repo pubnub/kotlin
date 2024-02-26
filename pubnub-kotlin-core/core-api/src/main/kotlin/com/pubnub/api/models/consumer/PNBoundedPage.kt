@@ -12,5 +12,5 @@ package com.pubnub.api.models.consumer
 data class PNBoundedPage(
     val start: Long? = null,
     val end: Long? = null,
-    val limit: Int? = null
+    val limit: Int? = null,
 )

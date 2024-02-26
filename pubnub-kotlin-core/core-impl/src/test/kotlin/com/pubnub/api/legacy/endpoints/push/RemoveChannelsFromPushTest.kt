@@ -14,18 +14,17 @@ import org.junit.Test
 import java.util.concurrent.atomic.AtomicBoolean
 
 class RemoveChannelsFromPushTest : BaseTest() {
-
     @Test
     fun testRemoveAppleSuccessSync() {
         WireMock.stubFor(
             WireMock.get(WireMock.urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
-                .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]"))
+                .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]")),
         )
 
         pubnub.removePushNotificationsFromChannels(
             deviceId = "niceDevice",
             pushType = PNPushType.APNS,
-            channels = listOf("chr1", "chr2", "chr3")
+            channels = listOf("chr1", "chr2", "chr3"),
         ).sync()
 
         val requests = WireMock.findAll(WireMock.getRequestedFor(WireMock.urlMatching("/.*")))
@@ -40,13 +39,13 @@ class RemoveChannelsFromPushTest : BaseTest() {
     fun testRemoveFirebaseSuccessSync() {
         WireMock.stubFor(
             WireMock.get(WireMock.urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
-                .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]"))
+                .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]")),
         )
 
         pubnub.removePushNotificationsFromChannels(
             deviceId = "niceDevice",
             pushType = PNPushType.FCM,
-            channels = listOf("chr1", "chr2", "chr3")
+            channels = listOf("chr1", "chr2", "chr3"),
         ).sync()
 
         val requests = WireMock.findAll(WireMock.getRequestedFor(WireMock.urlMatching("/.*")))
@@ -61,13 +60,13 @@ class RemoveChannelsFromPushTest : BaseTest() {
     fun testRemoveMicrosoftSuccessSync() {
         WireMock.stubFor(
             WireMock.get(WireMock.urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
-                .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]"))
+                .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]")),
         )
 
         pubnub.removePushNotificationsFromChannels(
             deviceId = "niceDevice",
             pushType = PNPushType.MPNS,
-            channels = listOf("chr1", "chr2", "chr3")
+            channels = listOf("chr1", "chr2", "chr3"),
         ).sync()
 
         val requests = WireMock.findAll(WireMock.getRequestedFor(WireMock.urlMatching("/.*")))
@@ -82,14 +81,14 @@ class RemoveChannelsFromPushTest : BaseTest() {
     fun testRemoveApns2SuccessSync() {
         WireMock.stubFor(
             WireMock.get(WireMock.urlPathEqualTo("/v2/push/sub-key/mySubscribeKey/devices-apns2/niceDevice"))
-                .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]"))
+                .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]")),
         )
 
         pubnub.removePushNotificationsFromChannels(
             deviceId = "niceDevice",
             pushType = PNPushType.APNS2,
             channels = listOf("chr1", "chr2", "chr3"),
-            topic = "news"
+            topic = "news",
         ).sync()
 
         val requests = WireMock.findAll(WireMock.getRequestedFor(WireMock.urlMatching("/.*")))
@@ -97,7 +96,7 @@ class RemoveChannelsFromPushTest : BaseTest() {
         assertEquals("chr1,chr2,chr3", requests[0].queryParameter("remove").firstValue())
         assertEquals(
             "development",
-            requests[0].queryParameter("environment").firstValue()
+            requests[0].queryParameter("environment").firstValue(),
         )
         assertEquals("news", requests[0].queryParameter("topic").firstValue())
         assertFalse(requests[0].queryParameter("type").isPresent)
@@ -107,7 +106,7 @@ class RemoveChannelsFromPushTest : BaseTest() {
     fun testIsAuthRequiredSuccessRemove() {
         WireMock.stubFor(
             WireMock.get(WireMock.urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
-                .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]"))
+                .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]")),
         )
 
         pubnub.configuration.authKey = "myKey"
@@ -116,7 +115,7 @@ class RemoveChannelsFromPushTest : BaseTest() {
             deviceId = "niceDevice",
             pushType = PNPushType.FCM,
             channels = listOf("chr1", "chr2", "chr3"),
-            topic = "news"
+            topic = "news",
         ).sync()
 
         val requests = WireMock.findAll(WireMock.getRequestedFor(WireMock.urlMatching("/.*")))
@@ -128,7 +127,7 @@ class RemoveChannelsFromPushTest : BaseTest() {
     fun testOperationTypeSuccessRemove() {
         WireMock.stubFor(
             WireMock.get(WireMock.urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
-                .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]"))
+                .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]")),
         )
 
         val success = AtomicBoolean()
@@ -136,7 +135,7 @@ class RemoveChannelsFromPushTest : BaseTest() {
         pubnub.removePushNotificationsFromChannels(
             deviceId = "niceDevice",
             pushType = PNPushType.FCM,
-            channels = listOf("chr1", "chr2", "chr3")
+            channels = listOf("chr1", "chr2", "chr3"),
         ).async { result ->
             assertFalse(result.isFailure)
 //            assertEquals(status.affectedChannels, listOf("chr1", "chr2", "chr3")) //TODO check if we can have this in exception
@@ -155,7 +154,7 @@ class RemoveChannelsFromPushTest : BaseTest() {
             pubnub.removePushNotificationsFromChannels(
                 deviceId = "niceDevice",
                 pushType = PNPushType.FCM,
-                channels = listOf("chr1", "chr2", "chr3")
+                channels = listOf("chr1", "chr2", "chr3"),
             ).sync()
             failTest()
         } catch (e: PubNubException) {
@@ -169,7 +168,7 @@ class RemoveChannelsFromPushTest : BaseTest() {
             pubnub.removePushNotificationsFromChannels(
                 pushType = PNPushType.FCM,
                 deviceId = " ",
-                channels = listOf("chr1", "chr2", "chr3")
+                channels = listOf("chr1", "chr2", "chr3"),
             ).sync()
             failTest()
         } catch (e: PubNubException) {
@@ -183,7 +182,7 @@ class RemoveChannelsFromPushTest : BaseTest() {
             pubnub.removePushNotificationsFromChannels(
                 pushType = PNPushType.FCM,
                 deviceId = "niceDevice",
-                channels = emptyList()
+                channels = emptyList(),
             ).sync()
             failTest()
         } catch (e: PubNubException) {

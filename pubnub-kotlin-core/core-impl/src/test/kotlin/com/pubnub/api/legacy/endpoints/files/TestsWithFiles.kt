@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach
 import java.util.UUID
 
 interface TestsWithFiles {
-
     fun fileName() = _fileName
 
     fun inputStream(content: String = "content") = content.byteInputStream()

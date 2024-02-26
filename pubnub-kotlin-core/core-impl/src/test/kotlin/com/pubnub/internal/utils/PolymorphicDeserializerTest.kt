@@ -47,19 +47,21 @@ class PolymorphicDeserializerTest {
 
 object DeserializerWithoutDefaultClass : JsonDeserializer<I> by PolymorphicDeserializer.dispatchByFieldsValues(
     fields = listOf("type"),
-    mappingFieldValuesToClass = mapOf(
-        listOf("1") to Impl1::class.java,
-        listOf("2") to Impl2::class.java
-    )
+    mappingFieldValuesToClass =
+        mapOf(
+            listOf("1") to Impl1::class.java,
+            listOf("2") to Impl2::class.java,
+        ),
 )
 
 object DeserializerWithDefaultClass : JsonDeserializer<I> by PolymorphicDeserializer.dispatchByFieldsValues(
     fields = listOf("type"),
-    mappingFieldValuesToClass = mapOf(
-        listOf("1") to Impl1::class.java,
-        listOf("2") to Impl2::class.java
-    ),
-    defaultClass = DefaultImpl::class.java
+    mappingFieldValuesToClass =
+        mapOf(
+            listOf("1") to Impl1::class.java,
+            listOf("2") to Impl2::class.java,
+        ),
+    defaultClass = DefaultImpl::class.java,
 )
 
 @JsonAdapter(DeserializerWithoutDefaultClass::class)

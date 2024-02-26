@@ -17,13 +17,14 @@ class PNConfigurationTest {
         val suffix2 = "value2/2.0.0"
         val suffix11 = "value3/2.0.0"
 
-        val pnConfiguration = object :
-            PNConfiguration(userId = UserId(BasePubNubImpl.generateUUID())) {
-            init {
-                addPnsdkSuffix(name1 to suffix1, name2 to suffix2)
-                addPnsdkSuffix(mapOf(name1 to suffix11))
+        val pnConfiguration =
+            object :
+                PNConfiguration(userId = UserId(BasePubNubImpl.generateUUID())) {
+                init {
+                    addPnsdkSuffix(name1 to suffix1, name2 to suffix2)
+                    addPnsdkSuffix(mapOf(name1 to suffix11))
+                }
             }
-        }
         val version = "someVersion"
         val generatedPnsdk = pnConfiguration.generatePnsdk(version)
         assertEquals("PubNub-Kotlin/$version $suffix11 $suffix2", generatedPnsdk)

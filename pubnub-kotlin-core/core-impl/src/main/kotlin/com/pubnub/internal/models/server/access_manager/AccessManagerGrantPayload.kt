@@ -6,7 +6,6 @@ import com.pubnub.internal.models.consumer.access_manager.PNAccessManagerKeyData
 import com.pubnub.internal.models.consumer.access_manager.PNAccessManagerKeysData
 
 class AccessManagerGrantPayload {
-
     internal var level: String? = null
 
     internal var ttl = 0

@@ -6,7 +6,7 @@ import io.cucumber.java.ParameterType
 enum class ResourceType {
     CHANNEL,
     CHANNEL_GROUP,
-    UUID
+    UUID,
 }
 
 @ParameterType(".*")

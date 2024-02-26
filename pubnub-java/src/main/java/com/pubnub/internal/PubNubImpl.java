@@ -51,13 +51,6 @@ import com.pubnub.api.endpoints.presence.HereNow;
 import com.pubnub.api.endpoints.presence.SetState;
 import com.pubnub.api.endpoints.presence.WhereNow;
 import com.pubnub.api.endpoints.pubsub.Publish;
-import com.pubnub.internal.endpoints.DeleteMessagesImpl;
-import com.pubnub.internal.endpoints.FetchMessagesImpl;
-import com.pubnub.internal.endpoints.HistoryImpl;
-import com.pubnub.internal.endpoints.MessageCountsImpl;
-import com.pubnub.internal.endpoints.TimeImpl;
-import com.pubnub.internal.endpoints.push.AddChannelsToPushImpl;
-import com.pubnub.internal.endpoints.pubsub.PublishImpl;
 import com.pubnub.api.endpoints.pubsub.Signal;
 import com.pubnub.api.endpoints.push.AddChannelsToPush;
 import com.pubnub.api.endpoints.push.ListPushProvisions;
@@ -74,7 +67,30 @@ import com.pubnub.api.v2.subscriptions.Subscription;
 import com.pubnub.api.v2.subscriptions.SubscriptionSet;
 import com.pubnub.internal.callbacks.DelegatingStatusListener;
 import com.pubnub.internal.callbacks.DelegatingSubscribeCallback;
+import com.pubnub.internal.endpoints.DeleteMessagesImpl;
+import com.pubnub.internal.endpoints.FetchMessagesImpl;
+import com.pubnub.internal.endpoints.HistoryImpl;
+import com.pubnub.internal.endpoints.MessageCountsImpl;
+import com.pubnub.internal.endpoints.TimeImpl;
+import com.pubnub.internal.endpoints.objects_api.channel.GetAllChannelsMetadataImpl;
+import com.pubnub.internal.endpoints.objects_api.channel.GetChannelMetadataImpl;
+import com.pubnub.internal.endpoints.objects_api.channel.RemoveChannelMetadataImpl;
+import com.pubnub.internal.endpoints.objects_api.channel.SetChannelMetadataImpl;
+import com.pubnub.internal.endpoints.objects_api.members.GetChannelMembersImpl;
+import com.pubnub.internal.endpoints.objects_api.members.ManageChannelMembersImpl;
+import com.pubnub.internal.endpoints.objects_api.members.RemoveChannelMembersImpl;
+import com.pubnub.internal.endpoints.objects_api.members.SetChannelMembersImpl;
+import com.pubnub.internal.endpoints.objects_api.memberships.GetMembershipsImpl;
+import com.pubnub.internal.endpoints.objects_api.memberships.ManageMembershipsImpl;
+import com.pubnub.internal.endpoints.objects_api.memberships.RemoveMembershipsImpl;
+import com.pubnub.internal.endpoints.objects_api.memberships.SetMembershipsImpl;
+import com.pubnub.internal.endpoints.presence.GetStateImpl;
+import com.pubnub.internal.endpoints.presence.HereNowImpl;
+import com.pubnub.internal.endpoints.presence.SetStateImpl;
+import com.pubnub.internal.endpoints.presence.WhereNowImpl;
+import com.pubnub.internal.endpoints.pubsub.PublishImpl;
 import com.pubnub.internal.endpoints.pubsub.SignalImpl;
+import com.pubnub.internal.endpoints.push.AddChannelsToPushImpl;
 import com.pubnub.internal.endpoints.push.ListPushProvisionsImpl;
 import com.pubnub.internal.endpoints.push.RemoveAllPushChannelsForDeviceImpl;
 import com.pubnub.internal.endpoints.push.RemoveChannelsFromPushImpl;
@@ -165,13 +181,13 @@ public class PubNubImpl extends BasePubNubImpl<
     @Override
     @NotNull
     public WhereNow whereNow() {
-        return new WhereNow(getInternalPubNubClient());
+        return new WhereNowImpl(getInternalPubNubClient());
     }
 
     @Override
     @NotNull
     public HereNow hereNow() {
-        return new HereNow(getInternalPubNubClient());
+        return new HereNowImpl(getInternalPubNubClient());
     }
 
     @Override
@@ -235,13 +251,13 @@ public class PubNubImpl extends BasePubNubImpl<
     @Override
     @NotNull
     public GetState getPresenceState() {
-        return new GetState(getInternalPubNubClient());
+        return new GetStateImpl(getInternalPubNubClient());
     }
 
     @Override
     @NotNull
     public SetState setPresenceState() {
-        return new SetState(getInternalPubNubClient());
+        return new SetStateImpl(getInternalPubNubClient());
     }
 
     @Override
@@ -313,66 +329,66 @@ public class PubNubImpl extends BasePubNubImpl<
 
     @Override
     public SetChannelMetadata.Builder setChannelMetadata() {
-        return SetChannelMetadata.builder(getInternalPubNubClient());
+        return new SetChannelMetadataImpl.Builder(getInternalPubNubClient());
     }
 
     @Override
     @NotNull
     public GetAllChannelsMetadata getAllChannelsMetadata() {
-        return new GetAllChannelsMetadata(getInternalPubNubClient());
+        return new GetAllChannelsMetadataImpl(getInternalPubNubClient());
     }
 
     @Override
     @NotNull
     public GetChannelMetadata.Builder getChannelMetadata() {
-        return GetChannelMetadata.builder(getInternalPubNubClient());
+        return new GetChannelMetadataImpl.Builder(getInternalPubNubClient());
     }
 
     @Override
     public RemoveChannelMetadata.Builder removeChannelMetadata() {
-        return RemoveChannelMetadata.builder(getInternalPubNubClient());
+        return new RemoveChannelMetadataImpl.Builder(getInternalPubNubClient());
     }
 
     @Override
     @NotNull
     public GetMemberships getMemberships() {
-        return new GetMemberships(getInternalPubNubClient());
+        return new GetMembershipsImpl(getInternalPubNubClient());
     }
 
     @Override
     @NotNull
     public SetMemberships.Builder setMemberships() {
-        return SetMemberships.builder(getInternalPubNubClient());
+        return new SetMembershipsImpl.Builder(getInternalPubNubClient());
     }
 
     @Override
     public RemoveMemberships.Builder removeMemberships() {
-        return RemoveMemberships.builder(getInternalPubNubClient());
+        return new RemoveMembershipsImpl.Builder(getInternalPubNubClient());
     }
 
     @Override
     public ManageMemberships.Builder manageMemberships() {
-        return ManageMemberships.builder(getInternalPubNubClient());
+        return new ManageMembershipsImpl.Builder(getInternalPubNubClient());
     }
 
     @Override
     public GetChannelMembers.Builder getChannelMembers() {
-        return GetChannelMembers.builder(getInternalPubNubClient());
+        return new GetChannelMembersImpl.Builder(getInternalPubNubClient());
     }
 
     @Override
     public SetChannelMembers.Builder setChannelMembers() {
-        return SetChannelMembers.builder(getInternalPubNubClient());
+        return new SetChannelMembersImpl.Builder(getInternalPubNubClient());
     }
 
     @Override
     public RemoveChannelMembers.Builder removeChannelMembers() {
-        return RemoveChannelMembers.builder(getInternalPubNubClient());
+        return new RemoveChannelMembersImpl.Builder(getInternalPubNubClient());
     }
 
     @Override
     public ManageChannelMembers.Builder manageChannelMembers() {
-        return ManageChannelMembers.builder(getInternalPubNubClient());
+        return new ManageChannelMembersImpl.Builder(getInternalPubNubClient());
     }
 
     // End Objects API
@@ -570,7 +586,8 @@ public class PubNubImpl extends BasePubNubImpl<
     @NotNull
     @Override
     public ChannelGroup channelGroup(@NotNull String name) {
-        return new ChannelGroupImpl(this, name);    }
+        return new ChannelGroupImpl(this, name);
+    }
 
     @NotNull
     @Override

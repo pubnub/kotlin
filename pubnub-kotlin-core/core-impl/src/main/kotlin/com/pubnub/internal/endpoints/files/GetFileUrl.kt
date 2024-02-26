@@ -23,9 +23,8 @@ class GetFileUrl(
     private val channel: String,
     private val fileName: String,
     private val fileId: String,
-    pubNub: InternalPubNubClient
+    pubNub: InternalPubNubClient,
 ) : Endpoint<ResponseBody, PNFileUrlResult>(pubNub), IGetFileUrl {
-
     private lateinit var cachedCallback: Consumer<Result<PNFileUrlResult>>
     private val executorService: ExecutorService = pubNub.retrofitManager.getTransactionClientExecutorService() ?: Executors.newSingleThreadExecutor()
 
@@ -44,19 +43,21 @@ class GetFileUrl(
     override fun sync(): PNFileUrlResult {
         return try {
             val baseParams: Map<String, String> = createBaseParams()
-            val call: Call<ResponseBody> = pubnub.retrofitManager.filesService
-                .downloadFile(
-                    pubnub.configuration.subscribeKey,
-                    channel,
-                    fileId,
-                    fileName,
-                    baseParams
+            val call: Call<ResponseBody> =
+                pubnub.retrofitManager.filesService
+                    .downloadFile(
+                        pubnub.configuration.subscribeKey,
+                        channel,
+                        fileId,
+                        fileName,
+                        baseParams,
+                    )
+            val signedRequest =
+                PubNubUtil.signRequest(
+                    call.request(),
+                    pubnub.configuration,
+                    pubnub.timestamp(),
                 )
-            val signedRequest = PubNubUtil.signRequest(
-                call.request(),
-                pubnub.configuration,
-                pubnub.timestamp()
-            )
             PNFileUrlResult(signedRequest.url.toString())
         } catch (e: Exception) {
             throw PubNubException(errorMessage = e.message)
@@ -73,7 +74,7 @@ class GetFileUrl(
             try {
                 val res: PNFileUrlResult = sync()
                 callback.accept(
-                    Result.success(res)
+                    Result.success(res),
                 )
             } catch (ex: PubNubException) {
                 callback.accept(Result.failure(ex))
@@ -96,10 +97,16 @@ class GetFileUrl(
     }
 
     override fun getAffectedChannels() = listOf(channel)
+
     override fun getAffectedChannelGroups(): List<String> = listOf()
+
     override fun operationType(): PNOperationType = PNOperationType.FileOperation
+
     override fun isAuthRequired(): Boolean = true
+
     override fun isSubKeyRequired(): Boolean = true
+
     override fun isPubKeyRequired(): Boolean = false
+
     override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.FILE_PERSISTENCE
 }

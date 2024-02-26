@@ -15,22 +15,21 @@ import retrofit2.Response
 class ListAllChannelGroup internal constructor(pubnub: InternalPubNubClient) :
     Endpoint<Envelope<Map<String, Any>>, PNChannelGroupsListAllResult>(pubnub),
     IListAllChannelGroup {
+        override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<Map<String, Any>>> {
+            return pubnub.retrofitManager.channelGroupService
+                .listAllChannelGroup(
+                    pubnub.configuration.subscribeKey,
+                    queryParams,
+                )
+        }
 
-    override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<Map<String, Any>>> {
-        return pubnub.retrofitManager.channelGroupService
-            .listAllChannelGroup(
-                pubnub.configuration.subscribeKey,
-                queryParams
+        @Suppress("UNCHECKED_CAST")
+        override fun createResponse(input: Response<Envelope<Map<String, Any>>>): PNChannelGroupsListAllResult =
+            PNChannelGroupsListAllResult(
+                groups = input.body()!!.payload!!["groups"] as List<String>,
             )
+
+        override fun operationType() = PNOperationType.PNChannelGroupsOperation
+
+        override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.CHANNEL_GROUP
     }
-
-    @Suppress("UNCHECKED_CAST")
-    override fun createResponse(input: Response<Envelope<Map<String, Any>>>): PNChannelGroupsListAllResult =
-        PNChannelGroupsListAllResult(
-            groups = input.body()!!.payload!!["groups"] as List<String>
-        )
-
-    override fun operationType() = PNOperationType.PNChannelGroupsOperation
-
-    override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.CHANNEL_GROUP
-}

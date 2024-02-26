@@ -18,22 +18,27 @@ import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
 object SignatureUtils {
-
-    fun decomposeAndVerifySignature(configuration: PNConfiguration, request: LoggedRequest) {
+    fun decomposeAndVerifySignature(
+        configuration: PNConfiguration,
+        request: LoggedRequest,
+    ) {
         decomposeAndVerifySignature(
             configuration = configuration,
             url = request.absoluteUrl,
             method = request.method.name,
-            body = request.bodyAsString
+            body = request.bodyAsString,
         )
     }
 
-    fun decomposeAndVerifySignature(configuration: PNConfiguration, request: Request) {
+    fun decomposeAndVerifySignature(
+        configuration: PNConfiguration,
+        request: Request,
+    ) {
         decomposeAndVerifySignature(
             configuration = configuration,
             url = request.url.toString(),
             method = request.method,
-            body = requestBodyToString(request)
+            body = requestBodyToString(request),
         )
     }
 
@@ -41,22 +46,23 @@ object SignatureUtils {
         configuration: PNConfiguration,
         url: String,
         method: String,
-        body: String = ""
+        body: String = "",
     ) {
         val httpUrl = url.toHttpUrlOrNull()
         println(httpUrl)
 
-        val sortedQueryString = httpUrl!!.run {
-            queryParameterNames
-                .filter { it != "signature" }
-                .mapNotNull { queryParameterName ->
-                    queryParameterValues(queryParameterName).first()?.let { queryParameterName to pamEncode(it) }
-                }
-                .toMap()
-                .toSortedMap()
-                .map { "${it.key}=${it.value}" }
-                .joinToString("&")
-        }
+        val sortedQueryString =
+            httpUrl!!.run {
+                queryParameterNames
+                    .filter { it != "signature" }
+                    .mapNotNull { queryParameterName ->
+                        queryParameterValues(queryParameterName).first()?.let { queryParameterName to pamEncode(it) }
+                    }
+                    .toMap()
+                    .toSortedMap()
+                    .map { "${it.key}=${it.value}" }
+                    .joinToString("&")
+            }
 
         var v2Signature = true
 
@@ -82,10 +88,14 @@ object SignatureUtils {
         val actualSignature = httpUrl.queryParameter("signature")
         val verifiedSignature = verifyViaKotlin(configuration.secretKey, input, v2Signature)
 
-        val rebuiltSignature = signSHA256(configuration.secretKey, input).run {
-            if (v2Signature) "v2.${this.trim('=')}"
-            else this
-        }
+        val rebuiltSignature =
+            signSHA256(configuration.secretKey, input).run {
+                if (v2Signature) {
+                    "v2.${this.trim('=')}"
+                } else {
+                    this
+                }
+            }
 
         println("originalTimestamp:\t${httpUrl.queryParameter("timestamp")}")
         println("signatureInput:\t$input")
@@ -97,14 +107,18 @@ object SignatureUtils {
         assertEquals(actualSignature, verifiedSignature)
     }
 
-    private fun signSHA256(key: String, data: String): String {
+    private fun signSHA256(
+        key: String,
+        data: String,
+    ): String {
         val hmacData: ByteArray
         val secretKey = SecretKeySpec(key.toByteArray(charset("UTF-8")), "HmacSHA256")
-        val sha256HMAC: Mac = try {
-            Mac.getInstance("HmacSHA256")
-        } catch (e: NoSuchAlgorithmException) {
-            throw com.pubnub.internal.vendor.Crypto.newCryptoError(0, e)
-        }
+        val sha256HMAC: Mac =
+            try {
+                Mac.getInstance("HmacSHA256")
+            } catch (e: NoSuchAlgorithmException) {
+                throw com.pubnub.internal.vendor.Crypto.newCryptoError(0, e)
+            }
         try {
             sha256HMAC.init(secretKey)
         } catch (e: InvalidKeyException) {
@@ -117,7 +131,11 @@ object SignatureUtils {
             .replace("\n", "")
     }
 
-    private fun verifyViaKotlin(key: String, input: String, v2Signature: Boolean): String {
+    private fun verifyViaKotlin(
+        key: String,
+        input: String,
+        v2Signature: Boolean,
+    ): String {
         val hmac = HmacUtils(HmacAlgorithms.HMAC_SHA_256, key.toByteArray())
         hmac.hmacHex(input.toByteArray()).lowercase(Locale.getDefault())
         val hmacResult = hmac.hmac(input)
@@ -143,8 +161,11 @@ object SignatureUtils {
         return ""
     }
 
-    private fun pamEncode(stringToEncode: String, alreadyPercentEncoded: Boolean = false): String {
-        /* !'()*~ */
+    private fun pamEncode(
+        stringToEncode: String,
+        alreadyPercentEncoded: Boolean = false,
+    ): String {
+        // !'()*~
 
         return if (alreadyPercentEncoded) {
             stringToEncode

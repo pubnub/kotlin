@@ -11,7 +11,6 @@ import org.junit.Assert.assertTrue
 
 class RemoveChannelChannelGroupTestSuite :
     com.pubnub.internal.suite.EndpointTestSuite<RemoveChannelChannelGroup, PNChannelGroupsRemoveChannelResult>() {
-
     override fun pnOperation() = PNOperationType.PNRemoveChannelsFromGroupOperation
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH
@@ -19,7 +18,7 @@ class RemoveChannelChannelGroupTestSuite :
     override fun snippet(): RemoveChannelChannelGroup {
         return pubnub.removeChannelsFromChannelGroup(
             channelGroup = "cg1",
-            channels = listOf("ch1", "ch2")
+            channels = listOf("ch1", "ch2"),
         )
     }
 
@@ -46,7 +45,7 @@ class RemoveChannelChannelGroupTestSuite :
                 additionalChecks = { result ->
                     assertTrue(result.isFailure)
                 }
-            }
+            },
         )
     }
 }

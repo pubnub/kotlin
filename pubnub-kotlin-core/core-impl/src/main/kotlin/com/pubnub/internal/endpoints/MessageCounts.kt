@@ -18,15 +18,15 @@ import retrofit2.Response
 class MessageCounts internal constructor(
     pubnub: InternalPubNubClient,
     override val channels: List<String>,
-    override val channelsTimetoken: List<Long>
+    override val channelsTimetoken: List<Long>,
 ) : Endpoint<JsonElement, PNMessageCountResult>(pubnub), IMessageCounts {
-
     override fun validateParams() {
         super.validateParams()
         if (channels.isEmpty()) throw PubNubException(PubNubError.CHANNEL_MISSING)
         if (channelsTimetoken.isEmpty()) throw PubNubException(PubNubError.TIMETOKEN_MISSING)
-        if (channelsTimetoken.size != channels.size && channelsTimetoken.size > 1)
+        if (channelsTimetoken.size != channels.size && channelsTimetoken.size > 1) {
             throw PubNubException(PubNubError.CHANNELS_TIMETOKEN_MISMATCH)
+        }
     }
 
     override fun getAffectedChannels() = channels
@@ -37,7 +37,7 @@ class MessageCounts internal constructor(
         return pubnub.retrofitManager.historyService.fetchCount(
             subKey = pubnub.configuration.subscribeKey,
             channels = channels.toCsv(),
-            options = queryParams
+            options = queryParams,
         )
     }
 
@@ -57,7 +57,10 @@ class MessageCounts internal constructor(
     override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.MESSAGE_PERSISTENCE
 
     private fun addQueryParams(queryParams: MutableMap<String, String>) {
-        if (channelsTimetoken.size == 1) queryParams["timetoken"] = channelsTimetoken.toCsv()
-        else queryParams["channelsTimetoken"] = channelsTimetoken.toCsv()
+        if (channelsTimetoken.size == 1) {
+            queryParams["timetoken"] = channelsTimetoken.toCsv()
+        } else {
+            queryParams["channelsTimetoken"] = channelsTimetoken.toCsv()
+        }
     }
 }

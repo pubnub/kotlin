@@ -9,7 +9,6 @@ interface Endpoint<OUTPUT> : ExtendedRemoteAction<OUTPUT>
 
 abstract class DelegatingEndpoint<OUTPUT, DELEGATED>(remoteAction: ExtendedRemoteAction<DELEGATED>) :
     Endpoint<OUTPUT> {
-
     private val remoteAction: ExtendedRemoteAction<OUTPUT> = convertAction(remoteAction)
 
     protected abstract fun convertAction(remoteAction: ExtendedRemoteAction<DELEGATED>): ExtendedRemoteAction<OUTPUT>

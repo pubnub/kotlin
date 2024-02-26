@@ -10,13 +10,14 @@ internal class MapperManagerTest {
     fun toJson_anonymousList() {
         val mapperManager = MapperManager()
         val expected = "[1,2,3]"
-        val anonList: List<Int> = object : ArrayList<Int>() {
-            init {
-                add(1)
-                add(2)
-                add(3)
+        val anonList: List<Int> =
+            object : ArrayList<Int>() {
+                init {
+                    add(1)
+                    add(2)
+                    add(3)
+                }
             }
-        }
         val regularList: MutableList<Int> = ArrayList()
         regularList.add(1)
         regularList.add(2)
@@ -32,11 +33,12 @@ internal class MapperManagerTest {
     fun toJson_anonymousMap() {
         val mapperManager = MapperManager()
         val expected = "{\"city\":\"Toronto\"}"
-        val anonMap: HashMap<String, String> = object : HashMap<String, String>() {
-            init {
-                put("city", "Toronto")
+        val anonMap: HashMap<String, String> =
+            object : HashMap<String, String>() {
+                init {
+                    put("city", "Toronto")
+                }
             }
-        }
         val regularMap = HashMap<String, String>()
         regularMap["city"] = "Toronto"
         val json1 = mapperManager.toJson(anonMap)
@@ -50,13 +52,14 @@ internal class MapperManagerTest {
     fun toJson_anonymousSet() {
         val mapperManager = MapperManager()
         val expected = "[1,2,3]"
-        val anonSet: Set<Int> = object : HashSet<Int>() {
-            init {
-                add(1)
-                add(2)
-                add(3)
+        val anonSet: Set<Int> =
+            object : HashSet<Int>() {
+                init {
+                    add(1)
+                    add(2)
+                    add(3)
+                }
             }
-        }
         val regularSet: MutableSet<Int> = HashSet()
         regularSet.add(1)
         regularSet.add(2)

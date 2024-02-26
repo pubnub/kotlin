@@ -14,14 +14,13 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 
 class FetchMessagesTestSuite : com.pubnub.internal.suite.EndpointTestSuite<FetchMessages, PNFetchMessagesResult>() {
-
     override fun pnOperation() = PNOperationType.PNFetchMessagesOperation
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH
 
     override fun snippet(): FetchMessages =
         pubnub.fetchMessages(
-            channels = listOf("ch1")
+            channels = listOf("ch1"),
         )
 
     override fun verifyResultExpectations(result: PNFetchMessagesResult) {
@@ -32,7 +31,8 @@ class FetchMessagesTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Fetch
         assertNull(result.channels["ch1"]!![0].meta)
     }
 
-    override fun successfulResponseBody() = """
+    override fun successfulResponseBody() =
+        """
         {
          "channels": {
           "ch1": [
@@ -43,10 +43,11 @@ class FetchMessagesTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Fetch
           ]
          }
         }
-    """.trimIndent()
+        """.trimIndent()
 
-    override fun unsuccessfulResponseBodyList() = listOf(
-        """
+    override fun unsuccessfulResponseBodyList() =
+        listOf(
+            """
             {
              "channels": {
               "ch1": [
@@ -56,8 +57,8 @@ class FetchMessagesTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Fetch
               ]
              }
             }
-        """.trimIndent(),
-        """
+            """.trimIndent(),
+            """
             {
              "channels": {
               "ch1": [
@@ -70,8 +71,8 @@ class FetchMessagesTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Fetch
               "ch3": null
              }
             }
-        """.trimIndent()
-    )
+            """.trimIndent(),
+        )
 
     override fun mappingBuilder(): MappingBuilder {
         return get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/channel/ch1"))
@@ -91,7 +92,7 @@ class FetchMessagesTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Fetch
                     assertTrue(result.isFailure)
 //                    assertEquals(PNStatusCategory.PNMalformedResponseCategory, status.category)
                 }
-            }
+            },
         )
     }
 }

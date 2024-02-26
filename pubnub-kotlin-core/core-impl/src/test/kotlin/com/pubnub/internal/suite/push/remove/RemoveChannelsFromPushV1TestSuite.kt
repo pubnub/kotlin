@@ -11,7 +11,6 @@ import com.pubnub.internal.endpoints.push.RemoveChannelsFromPush
 
 class RemoveChannelsFromPushV1TestSuite :
     com.pubnub.internal.suite.EndpointTestSuite<RemoveChannelsFromPush, PNPushRemoveChannelResult>() {
-
     override fun pnOperation() = PNOperationType.PNRemovePushNotificationsFromChannelsOperation
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH
@@ -20,7 +19,7 @@ class RemoveChannelsFromPushV1TestSuite :
         return pubnub.removePushNotificationsFromChannels(
             pushType = PNPushType.FCM,
             channels = listOf("ch1", "ch2"),
-            deviceId = "12345"
+            deviceId = "12345",
         )
     }
 

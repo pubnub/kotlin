@@ -12,7 +12,7 @@ import java.util.function.Consumer
 
 class TestRemoteAction<Output> internal constructor(
     private val output: Output?,
-    private val failingStrategy: FailingStrategy
+    private val failingStrategy: FailingStrategy,
 ) : ExtendedRemoteAction<Output> {
     private val executor: Executor = Executors.newSingleThreadExecutor()
     private val asyncCallmeter = AtomicInteger(0)
@@ -49,35 +49,36 @@ class TestRemoteAction<Output> internal constructor(
     }
 
     override fun silentCancel() {}
+
     fun howManyTimesAsyncCalled(): Int {
         return asyncCallmeter.get()
     }
 
     internal enum class FailingStrategy(var numberOfCalls: Int) {
-        NEVER_FAIL(0), ALWAYS_FAIL(0), FAIL_FIRST_CALLS(1);
+        NEVER_FAIL(0),
+        ALWAYS_FAIL(0),
+        FAIL_FIRST_CALLS(1),
     }
 
     companion object {
         fun <T> failing(): TestRemoteAction<T> {
             return TestRemoteAction(
                 null,
-                FailingStrategy.ALWAYS_FAIL
+                FailingStrategy.ALWAYS_FAIL,
             )
         }
 
         fun <T> failingFirstCall(output: T): TestRemoteAction<T> {
             return TestRemoteAction(
                 output,
-                FailingStrategy.FAIL_FIRST_CALLS
+                FailingStrategy.FAIL_FIRST_CALLS,
             )
         }
 
-        fun <T> successful(
-            output: T
-        ): TestRemoteAction<T> {
+        fun <T> successful(output: T): TestRemoteAction<T> {
             return TestRemoteAction(
                 output,
-                FailingStrategy.NEVER_FAIL
+                FailingStrategy.NEVER_FAIL,
             )
         }
     }

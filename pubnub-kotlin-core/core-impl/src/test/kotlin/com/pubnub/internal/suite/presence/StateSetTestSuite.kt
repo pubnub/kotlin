@@ -14,7 +14,6 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 
 class StateSetTestSuite : com.pubnub.internal.suite.EndpointTestSuite<SetState, PNSetStateResult>() {
-
     override fun pnOperation() = PNOperationType.PNSetStateOperation
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH
@@ -22,14 +21,15 @@ class StateSetTestSuite : com.pubnub.internal.suite.EndpointTestSuite<SetState, 
     override fun snippet(): SetState =
         pubnub.setPresenceState(
             channels = listOf("ch1"),
-            state = mapOf("text" to "hello")
+            state = mapOf("text" to "hello"),
         )
 
     override fun verifyResultExpectations(result: PNSetStateResult) {
         assertEquals(JsonObject().apply { addProperty("text", "hello") }, result.state)
     }
 
-    override fun successfulResponseBody() = """
+    override fun successfulResponseBody() =
+        """
         {
           "status": 200,
           "message": "OK",
@@ -38,11 +38,12 @@ class StateSetTestSuite : com.pubnub.internal.suite.EndpointTestSuite<SetState, 
           },
           "service": "Presence"
         }
-    """.trimIndent()
+        """.trimIndent()
 
-    override fun unsuccessfulResponseBodyList() = listOf(
-        """{"payload":null}"""
-    )
+    override fun unsuccessfulResponseBodyList() =
+        listOf(
+            """{"payload":null}""",
+        )
 
     override fun mappingBuilder(): MappingBuilder =
         get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/uuid/myUUID/data"))
@@ -66,7 +67,7 @@ class StateSetTestSuite : com.pubnub.internal.suite.EndpointTestSuite<SetState, 
                 additionalChecks = { result ->
                     assertTrue(result.isFailure)
                 }
-            }
+            },
         )
     }
 }

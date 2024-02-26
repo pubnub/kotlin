@@ -13,7 +13,6 @@ import org.junit.Assert.assertTrue
 
 class ListAllChannelGroupTestSuite :
     com.pubnub.internal.suite.EndpointTestSuite<ListAllChannelGroup, PNChannelGroupsListAllResult>() {
-
     override fun pnOperation() = PNOperationType.PNChannelGroupsOperation
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH
@@ -28,12 +27,13 @@ class ListAllChannelGroupTestSuite :
 
     override fun successfulResponseBody() = """{"payload":{"groups":["cg1","cg2"]}}"""
 
-    override fun unsuccessfulResponseBodyList() = listOf(
-        """{"payload":{"groups":null}}""",
-        """{"payload":{"groups":{}}}""",
-        """{"payload":{}}""",
-        """{"payload":null}"""
-    )
+    override fun unsuccessfulResponseBodyList() =
+        listOf(
+            """{"payload":{"groups":null}}""",
+            """{"payload":{"groups":{}}}""",
+            """{"payload":{}}""",
+            """{"payload":null}""",
+        )
 
     override fun mappingBuilder(): MappingBuilder {
         return get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group"))
@@ -52,7 +52,7 @@ class ListAllChannelGroupTestSuite :
                     assertTrue(result.getOrThrow().groups.isEmpty())
                 }
                 result = com.pubnub.internal.suite.Result.SUCCESS
-            }
+            },
         )
     }
 }

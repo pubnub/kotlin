@@ -20,8 +20,8 @@ internal class ReceiveMessagesEffect(
             result.onFailure {
                 subscribeEventSink.add(
                     SubscribeEvent.ReceiveFailure(
-                        PubNubException.from(it)
-                    )
+                        PubNubException.from(it),
+                    ),
                 )
             }.onSuccess {
                 subscribeEventSink.add(SubscribeEvent.ReceiveSuccess(it.messages, it.subscriptionCursor))

@@ -18,9 +18,8 @@ class RemoveMessageAction internal constructor(
     pubnub: InternalPubNubClient,
     override val channel: String,
     override val messageTimetoken: Long,
-    override val actionTimetoken: Long
+    override val actionTimetoken: Long,
 ) : Endpoint<Void, PNRemoveMessageActionResult>(pubnub), IRemoveMessageAction {
-
     override fun validateParams() {
         super.validateParams()
         if (channel.isBlank()) throw PubNubException(PubNubError.CHANNEL_MISSING)
@@ -35,7 +34,7 @@ class RemoveMessageAction internal constructor(
                 channel = channel,
                 messageTimetoken = messageTimetoken.toString().lowercase(Locale.getDefault()),
                 actionTimetoken = actionTimetoken.toString().lowercase(Locale.getDefault()),
-                options = queryParams
+                options = queryParams,
             )
     }
 

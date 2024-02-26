@@ -30,36 +30,41 @@ internal interface Presence {
             eventEngineConf: EventEngineConf<PresenceEffectInvocation, PresenceEvent>,
             presenceData: PresenceData = PresenceData(),
             sendStateWithHeartbeat: Boolean,
-            executorService: ScheduledExecutorService
+            executorService: ScheduledExecutorService,
         ): Presence {
             if (heartbeatInterval <= Duration.ZERO) {
                 return PresenceNoOp(suppressLeaveEvents, leaveProvider)
             }
 
-            val effectFactory = PresenceEffectFactory(
-                heartbeatProvider = heartbeatProvider,
-                leaveProvider = leaveProvider,
-                presenceEventSink = eventEngineConf.eventSink,
-                retryConfiguration = retryConfiguration,
-                executorService = executorService,
-                heartbeatInterval = heartbeatInterval,
-                suppressLeaveEvents = suppressLeaveEvents,
-                heartbeatNotificationOptions = heartbeatNotificationOptions,
-                statusConsumer = listenerManager,
-                presenceData = presenceData,
-                sendStateWithHeartbeat = sendStateWithHeartbeat,
-            )
-
-            val eventEngineManager = PresenceEventEngineManager(
-                eventEngine = PresenceEventEngine(
-                    effectSink = eventEngineConf.effectSink,
-                    eventSource = eventEngineConf.eventSource,
-                ),
-                eventSink = eventEngineConf.eventSink,
-                effectDispatcher = EffectDispatcher(
-                    effectFactory = effectFactory, effectSource = eventEngineConf.effectSource
+            val effectFactory =
+                PresenceEffectFactory(
+                    heartbeatProvider = heartbeatProvider,
+                    leaveProvider = leaveProvider,
+                    presenceEventSink = eventEngineConf.eventSink,
+                    retryConfiguration = retryConfiguration,
+                    executorService = executorService,
+                    heartbeatInterval = heartbeatInterval,
+                    suppressLeaveEvents = suppressLeaveEvents,
+                    heartbeatNotificationOptions = heartbeatNotificationOptions,
+                    statusConsumer = listenerManager,
+                    presenceData = presenceData,
+                    sendStateWithHeartbeat = sendStateWithHeartbeat,
                 )
-            ).also { it.start() }
+
+            val eventEngineManager =
+                PresenceEventEngineManager(
+                    eventEngine =
+                        PresenceEventEngine(
+                            effectSink = eventEngineConf.effectSink,
+                            eventSource = eventEngineConf.eventSource,
+                        ),
+                    eventSink = eventEngineConf.eventSink,
+                    effectDispatcher =
+                        EffectDispatcher(
+                            effectFactory = effectFactory,
+                            effectSource = eventEngineConf.effectSource,
+                        ),
+                ).also { it.start() }
 
             return EnabledPresence(eventEngineManager)
         }
@@ -72,7 +77,7 @@ internal interface Presence {
 
     fun left(
         channels: Set<String> = emptySet(),
-        channelGroups: Set<String> = emptySet()
+        channelGroups: Set<String> = emptySet(),
     )
 
     fun leftAll()
@@ -80,7 +85,7 @@ internal interface Presence {
     fun presence(
         channels: Set<String> = emptySet(),
         channelGroups: Set<String> = emptySet(),
-        connected: Boolean = false
+        connected: Boolean = false,
     ) {
         if (connected) {
             joined(channels, channelGroups)
@@ -98,20 +103,26 @@ internal interface Presence {
 
 internal class PresenceNoOp(
     private val suppressLeaveEvents: Boolean = false,
-    private val leaveProvider: LeaveProvider
+    private val leaveProvider: LeaveProvider,
 ) : Presence {
     private val log = LoggerFactory.getLogger(PresenceNoOp::class.java)
     private val channels = mutableSetOf<String>()
     private val channelGroups = mutableSetOf<String>()
 
     @Synchronized
-    override fun joined(channels: Set<String>, channelGroups: Set<String>) {
+    override fun joined(
+        channels: Set<String>,
+        channelGroups: Set<String>,
+    ) {
         this.channels.addAll(channels)
         this.channelGroups.addAll(channelGroups)
     }
 
     @Synchronized
-    override fun left(channels: Set<String>, channelGroups: Set<String>) {
+    override fun left(
+        channels: Set<String>,
+        channelGroups: Set<String>,
+    ) {
         if (!suppressLeaveEvents && (channels.isNotEmpty() || channelGroups.isNotEmpty())) {
             leaveProvider.getLeaveRemoteAction(channels, channelGroups).async { result ->
                 result.onFailure {
@@ -148,9 +159,8 @@ internal class PresenceNoOp(
 }
 
 internal class EnabledPresence(
-    private val presenceEventEngineManager: PresenceEventEngineManager
+    private val presenceEventEngineManager: PresenceEventEngineManager,
 ) : Presence {
-
     override fun joined(
         channels: Set<String>,
         channelGroups: Set<String>,
@@ -160,7 +170,7 @@ internal class EnabledPresence(
 
     override fun left(
         channels: Set<String>,
-        channelGroups: Set<String>
+        channelGroups: Set<String>,
     ) {
         presenceEventEngineManager.addEventToQueue(PresenceEvent.Left(channels, channelGroups))
     }

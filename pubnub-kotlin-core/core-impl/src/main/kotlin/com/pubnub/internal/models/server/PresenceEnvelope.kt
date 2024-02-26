@@ -7,5 +7,5 @@ class PresenceEnvelope(
     internal val uuid: String? = null,
     internal val occupancy: Int? = null,
     internal val timestamp: Long? = null,
-    internal val data: JsonElement? = null
+    internal val data: JsonElement? = null,
 )

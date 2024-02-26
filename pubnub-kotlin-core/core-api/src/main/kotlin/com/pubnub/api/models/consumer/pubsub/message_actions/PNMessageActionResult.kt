@@ -14,7 +14,7 @@ import com.pubnub.api.models.consumer.pubsub.objects.ObjectResult
 data class PNMessageActionResult(
     private val result: BasePubSubResult,
     override val event: String,
-    override val data: PNMessageAction
+    override val data: PNMessageAction,
 ) : ObjectResult<PNMessageAction>, PubSubResult by result {
     val messageAction: PNMessageAction = data
 }

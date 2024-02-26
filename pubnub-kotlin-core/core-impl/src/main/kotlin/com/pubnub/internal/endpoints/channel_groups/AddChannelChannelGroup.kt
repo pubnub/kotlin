@@ -17,10 +17,10 @@ import retrofit2.Response
 class AddChannelChannelGroup internal constructor(
     pubnub: InternalPubNubClient,
     override val channelGroup: String,
-    override val channels: List<String>
+    override val channels: List<String>,
 ) : Endpoint<Void, PNChannelGroupsAddChannelResult>(pubnub), IAddChannelChannelGroup {
-
     override fun getAffectedChannels() = channels
+
     override fun getAffectedChannelGroups() = listOf(channelGroup)
 
     override fun validateParams() {
@@ -30,19 +30,17 @@ class AddChannelChannelGroup internal constructor(
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Void> {
-
         addQueryParams(queryParams)
 
         return pubnub.retrofitManager.channelGroupService
             .addChannelChannelGroup(
                 pubnub.configuration.subscribeKey,
                 channelGroup,
-                queryParams
+                queryParams,
             )
     }
 
-    override fun createResponse(input: Response<Void>): PNChannelGroupsAddChannelResult =
-        PNChannelGroupsAddChannelResult()
+    override fun createResponse(input: Response<Void>): PNChannelGroupsAddChannelResult = PNChannelGroupsAddChannelResult()
 
     override fun operationType() = PNOperationType.PNAddChannelsToGroupOperation
 

@@ -21,18 +21,17 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 
 class AddChannelBaseChannelGroupEndpointTest : BaseTest() {
-
     @Test
     fun testSyncSuccess() {
         stubFor(
             get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group/groupA"))
                 .withQueryParam("add", matching("ch1,ch2"))
-                .willReturn(emptyJson())
+                .willReturn(emptyJson()),
         )
 
         pubnub.addChannelsToChannelGroup(
             channelGroup = "groupA",
-            channels = listOf("ch1", "ch2")
+            channels = listOf("ch1", "ch2"),
         ).sync()
     }
 
@@ -40,13 +39,13 @@ class AddChannelBaseChannelGroupEndpointTest : BaseTest() {
     fun testSyncGroupIsEmpty() {
         stubFor(
             get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group/groupA"))
-                .willReturn(emptyJson())
+                .willReturn(emptyJson()),
         )
 
         try {
             pubnub.addChannelsToChannelGroup(
                 channelGroup = "",
-                channels = listOf("ch1", "ch2")
+                channels = listOf("ch1", "ch2"),
             ).sync()
         } catch (e: Exception) {
             assertPnException(PubNubError.GROUP_MISSING, e)
@@ -58,7 +57,7 @@ class AddChannelBaseChannelGroupEndpointTest : BaseTest() {
         stubFor(
             get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group/groupA"))
                 .withQueryParam("add", matching("ch1,ch2"))
-                .willReturn(emptyJson())
+                .willReturn(emptyJson()),
         )
 
         pubnub.configuration.subscribeKey = " "
@@ -66,7 +65,7 @@ class AddChannelBaseChannelGroupEndpointTest : BaseTest() {
         try {
             pubnub.addChannelsToChannelGroup(
                 channelGroup = "groupA",
-                channels = listOf("ch1", "ch2")
+                channels = listOf("ch1", "ch2"),
             ).sync()
         } catch (e: Exception) {
             assertPnException(PubNubError.SUBSCRIBE_KEY_MISSING, e)
@@ -78,13 +77,13 @@ class AddChannelBaseChannelGroupEndpointTest : BaseTest() {
         stubFor(
             get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group/groupA"))
                 .withQueryParam("add", matching("ch1,ch2"))
-                .willReturn(emptyJson())
+                .willReturn(emptyJson()),
         )
         pubnub.configuration.authKey = "myKey"
 
         pubnub.addChannelsToChannelGroup(
             channelGroup = "groupA",
-            channels = listOf("ch1", "ch2")
+            channels = listOf("ch1", "ch2"),
         ).sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
@@ -97,14 +96,14 @@ class AddChannelBaseChannelGroupEndpointTest : BaseTest() {
         stubFor(
             get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group/groupA"))
                 .withQueryParam("add", matching("ch1,ch2"))
-                .willReturn(emptyJson())
+                .willReturn(emptyJson()),
         )
 
         val atomic = AtomicInteger(0)
 
         pubnub.addChannelsToChannelGroup(
             channelGroup = "groupA",
-            channels = listOf("ch1", "ch2")
+            channels = listOf("ch1", "ch2"),
         ).async { result ->
             assertFalse(result.isFailure)
             result.onSuccess {
@@ -122,14 +121,14 @@ class AddChannelBaseChannelGroupEndpointTest : BaseTest() {
         stubFor(
             get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group/groupA"))
                 .withQueryParam("add", matching("ch1,ch2"))
-                .willReturn(emptyJson().withStatus(403))
+                .willReturn(emptyJson().withStatus(403)),
         )
 
         val atomic = AtomicInteger(0)
 
         pubnub.addChannelsToChannelGroup(
             channelGroup = "groupA",
-            channels = listOf("ch1", "ch2")
+            channels = listOf("ch1", "ch2"),
         ).async { result ->
             assertTrue(result.isFailure)
             result.onFailure {

@@ -15,7 +15,6 @@ import org.junit.Assert.assertTrue
 
 class AddChannelsToPushV1TestSuite :
     com.pubnub.internal.suite.EndpointTestSuite<AddChannelsToPush, PNPushAddChannelResult>() {
-
     override fun pnOperation() = PNOperationType.PNAddPushNotificationsOnChannelsOperation
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH
@@ -24,7 +23,7 @@ class AddChannelsToPushV1TestSuite :
         return pubnub.addPushNotificationsOnChannels(
             pushType = PNPushType.FCM,
             channels = listOf("ch1", "ch2"),
-            deviceId = "12345"
+            deviceId = "12345",
         )
     }
 
@@ -51,10 +50,11 @@ class AddChannelsToPushV1TestSuite :
     override fun optionalScenarioList(): List<com.pubnub.internal.suite.OptionalScenario<PNPushAddChannelResult>> {
         return listOf(
             com.pubnub.internal.suite.OptionalScenario<PNPushAddChannelResult>().apply {
-                val body = "{\"error\":\"Use of the mobile push notifications API requires Push Notifications" +
-                    " which is not enabled for this subscribe key. Login to your PubNub Dashboard Account" +
-                    " and enable Push Notifications. " +
-                    "Contact support@pubnub.com if you require further assistance.\"}"
+                val body =
+                    "{\"error\":\"Use of the mobile push notifications API requires Push Notifications" +
+                        " which is not enabled for this subscribe key. Login to your PubNub Dashboard Account" +
+                        " and enable Push Notifications. " +
+                        "Contact support@pubnub.com if you require further assistance.\"}"
                 result = com.pubnub.internal.suite.Result.FAIL
                 responseBuilder = { withBody(body).withStatus(400) }
                 pnError = PubNubError.HTTP_ERROR
@@ -62,7 +62,7 @@ class AddChannelsToPushV1TestSuite :
                     assertTrue(voidResponse())
                     assertEquals(body, (result.exceptionOrNull() as? PubNubException)?.jso)
                 }
-            }
+            },
         )
     }
 }

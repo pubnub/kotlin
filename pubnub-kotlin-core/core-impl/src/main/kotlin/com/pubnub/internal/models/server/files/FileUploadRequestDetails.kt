@@ -9,5 +9,5 @@ data class FileUploadRequestDetails(
     val method: String,
     val expirationDate: String,
     val keyFormField: FormField,
-    val formFields: List<FormField>
+    val formFields: List<FormField>,
 )

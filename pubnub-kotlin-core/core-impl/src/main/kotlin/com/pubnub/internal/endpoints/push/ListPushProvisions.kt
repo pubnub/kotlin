@@ -21,9 +21,8 @@ class ListPushProvisions internal constructor(
     override val pushType: PNPushType,
     override val deviceId: String,
     override val topic: String? = null,
-    override val environment: PNPushEnvironment = PNPushEnvironment.DEVELOPMENT
+    override val environment: PNPushEnvironment = PNPushEnvironment.DEVELOPMENT,
 ) : Endpoint<List<String>, PNPushListProvisionsResult>(pubnub), IListPushProvisions {
-
     override fun validateParams() {
         super.validateParams()
         if (deviceId.isBlank()) throw PubNubException(PubNubError.DEVICE_ID_MISSING)
@@ -31,27 +30,26 @@ class ListPushProvisions internal constructor(
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<List<String>> {
-
         addQueryParams(queryParams)
 
-        return if (pushType != PNPushType.APNS2)
+        return if (pushType != PNPushType.APNS2) {
             pubnub.retrofitManager.pushService
                 .listChannelsForDevice(
                     subKey = pubnub.configuration.subscribeKey,
                     pushToken = deviceId,
-                    options = queryParams
+                    options = queryParams,
                 )
-        else
+        } else {
             pubnub.retrofitManager.pushService
                 .listChannelsForDeviceApns2(
                     subKey = pubnub.configuration.subscribeKey,
                     deviceApns2 = deviceId,
-                    options = queryParams
+                    options = queryParams,
                 )
+        }
     }
 
-    override fun createResponse(input: Response<List<String>>): PNPushListProvisionsResult =
-        PNPushListProvisionsResult(input.body()!!)
+    override fun createResponse(input: Response<List<String>>): PNPushListProvisionsResult = PNPushListProvisionsResult(input.body()!!)
 
     override fun operationType() = PNOperationType.PNPushNotificationEnabledChannelsOperation
 

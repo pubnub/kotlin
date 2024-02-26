@@ -9,9 +9,8 @@ import io.cucumber.java.en.Given
 
 class GivenSteps(
     private val world: World,
-    private val uuidMetadataState: UUIDMetadataState
+    private val uuidMetadataState: UUIDMetadataState,
 ) {
-
     @Given("the id for {string} persona")
     fun the_uuid_for_persona(personaName: String) {
         val pnUUIDMetadata: PNUUIDMetadata = loadPersonaUUIDMetadata(personaName)

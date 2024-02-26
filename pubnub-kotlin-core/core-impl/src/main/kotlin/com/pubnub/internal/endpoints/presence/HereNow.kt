@@ -21,12 +21,12 @@ class HereNow internal constructor(
     override val channels: List<String> = emptyList(),
     override val channelGroups: List<String> = emptyList(),
     override val includeState: Boolean = false,
-    override val includeUUIDs: Boolean = true
+    override val includeUUIDs: Boolean = true,
 ) : Endpoint<Envelope<JsonElement>, PNHereNowResult>(pubnub), IHereNow {
-
     private fun isGlobalHereNow() = channels.isEmpty() && channelGroups.isEmpty()
 
     override fun getAffectedChannels() = channels
+
     override fun getAffectedChannelGroups() = channelGroups
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<JsonElement>> {
@@ -36,12 +36,12 @@ class HereNow internal constructor(
             pubnub.retrofitManager.presenceService.hereNow(
                 pubnub.configuration.subscribeKey,
                 channels.toCsv(),
-                queryParams
+                queryParams,
             )
         } else {
             pubnub.retrofitManager.presenceService.globalHereNow(
                 pubnub.configuration.subscribeKey,
-                queryParams
+                queryParams,
             )
         }
     }
@@ -59,15 +59,17 @@ class HereNow internal constructor(
     override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.PRESENCE
 
     private fun parseSingleChannelResponse(input: Envelope<JsonElement>): PNHereNowResult {
-        val pnHereNowResult = PNHereNowResult(
-            totalChannels = 1,
-            totalOccupancy = input.occupancy
-        )
+        val pnHereNowResult =
+            PNHereNowResult(
+                totalChannels = 1,
+                totalOccupancy = input.occupancy,
+            )
 
-        val pnHereNowChannelData = PNHereNowChannelData(
-            channelName = channels[0],
-            occupancy = input.occupancy
-        )
+        val pnHereNowChannelData =
+            PNHereNowChannelData(
+                channelName = channels[0],
+                occupancy = input.occupancy,
+            )
 
         if (includeUUIDs) {
             pnHereNowChannelData.occupants = prepareOccupantData(input.uuids!!)
@@ -78,19 +80,21 @@ class HereNow internal constructor(
     }
 
     private fun parseMultipleChannelResponse(input: JsonElement): PNHereNowResult {
-        val pnHereNowResult = PNHereNowResult(
-            totalChannels = pubnub.mapper.elementToInt(input, "total_channels"),
-            totalOccupancy = pubnub.mapper.elementToInt(input, "total_occupancy")
-        )
+        val pnHereNowResult =
+            PNHereNowResult(
+                totalChannels = pubnub.mapper.elementToInt(input, "total_channels"),
+                totalOccupancy = pubnub.mapper.elementToInt(input, "total_occupancy"),
+            )
 
         val it = pubnub.mapper.getObjectIterator(input, "channels")
 
         while (it.hasNext()) {
             val entry = it.next()
-            val pnHereNowChannelData = PNHereNowChannelData(
-                channelName = entry.key,
-                occupancy = pubnub.mapper.elementToInt(entry.value, "occupancy")
-            )
+            val pnHereNowChannelData =
+                PNHereNowChannelData(
+                    channelName = entry.key,
+                    occupancy = pubnub.mapper.elementToInt(entry.value, "occupancy"),
+                )
             if (includeUUIDs) {
                 pnHereNowChannelData.occupants = prepareOccupantData(pubnub.mapper.getField(entry.value, "uuids")!!)
             }
@@ -110,13 +114,13 @@ class HereNow internal constructor(
                 if (includeState) {
                     PNHereNowOccupantData(
                         uuid = pubnub.mapper.elementToString(occupant, "uuid")!!,
-                        state = pubnub.mapper.getField(occupant, "state")
+                        state = pubnub.mapper.getField(occupant, "state"),
                     )
                 } else {
                     PNHereNowOccupantData(
-                        uuid = pubnub.mapper.elementToString(occupant)!!
+                        uuid = pubnub.mapper.elementToString(occupant)!!,
                     )
-                }
+                },
             )
         }
 

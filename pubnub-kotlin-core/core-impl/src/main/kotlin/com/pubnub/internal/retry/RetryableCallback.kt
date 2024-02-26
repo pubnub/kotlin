@@ -16,13 +16,16 @@ internal abstract class RetryableCallback<T>(
     endpointGroupName: RetryableEndpointGroup,
     private val call: Call<T>,
     private val isEndpointRetryable: Boolean,
-    private val executorService: ScheduledExecutorService
+    private val executorService: ScheduledExecutorService,
 ) : Callback<T>, RetryableBase<T>(retryConfiguration, endpointGroupName) {
     private val log = LoggerFactory.getLogger(this.javaClass.simpleName)
     private var retryCount = 0
     private var exponentialMultiplier = 0.0
 
-    override fun onResponse(call: Call<T>, response: Response<T>) {
+    override fun onResponse(
+        call: Call<T>,
+        response: Response<T>,
+    ) {
         if (shouldRetryOnResponse(response)) {
             retryOnResponseWithError(response)
         } else {
@@ -30,7 +33,10 @@ internal abstract class RetryableCallback<T>(
         }
     }
 
-    override fun onFailure(call: Call<T>, t: Throwable) {
+    override fun onFailure(
+        call: Call<T>,
+        t: Throwable,
+    ) {
         if (shouldRetryOnFailure(t)) {
             retryOnFailure()
         } else {
@@ -85,6 +91,13 @@ internal abstract class RetryableCallback<T>(
         return getDelayBasedOnResponse(response)
     }
 
-    abstract fun onFinalResponse(call: Call<T>, response: Response<T>)
-    abstract fun onFinalFailure(call: Call<T>, t: Throwable)
+    abstract fun onFinalResponse(
+        call: Call<T>,
+        response: Response<T>,
+    )
+
+    abstract fun onFinalFailure(
+        call: Call<T>,
+        t: Throwable,
+    )
 }

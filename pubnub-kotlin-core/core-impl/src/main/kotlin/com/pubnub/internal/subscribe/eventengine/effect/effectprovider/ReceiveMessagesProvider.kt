@@ -8,6 +8,6 @@ internal fun interface ReceiveMessagesProvider {
     fun getReceiveMessagesRemoteAction(
         channels: Set<String>,
         channelGroups: Set<String>,
-        subscriptionCursor: SubscriptionCursor
+        subscriptionCursor: SubscriptionCursor,
     ): RemoteAction<ReceiveMessagesResult>
 }

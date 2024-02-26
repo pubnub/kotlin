@@ -7,5 +7,6 @@ sealed class PNPage {
     val hash: String get() = pageHash
 
     data class PNNext(override val pageHash: String) : PNPage()
+
     data class PNPrev(override val pageHash: String) : PNPage()
 }

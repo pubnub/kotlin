@@ -17,20 +17,21 @@ import com.pubnub.internal.managers.ListenerManager
 import com.pubnub.internal.subscribe.eventengine.configuration.EventEnginesConf
 import java.util.UUID
 
-abstract class BasePubNubImpl<EventListener : BaseEventListener,
-        Subscription : BaseSubscription<EventListener>,
-        Channel : BaseChannel<EventListener, Subscription>,
-        ChannelGroup : BaseChannelGroup<EventListener, Subscription>,
-        ChannelMetadata : BaseChannelMetadata<EventListener, Subscription>,
-        UserMetadata : BaseUserMetadata<EventListener, Subscription>,
-        SubscriptionSet : BaseSubscriptionSet<EventListener, Subscription>,
-        StatusListener : BaseStatusListener>
-internal constructor(
-    configuration: PNConfiguration, eventEnginesConf: EventEnginesConf
+abstract class BasePubNubImpl<
+    EventListener : BaseEventListener,
+    Subscription : BaseSubscription<EventListener>,
+    Channel : BaseChannel<EventListener, Subscription>,
+    ChannelGroup : BaseChannelGroup<EventListener, Subscription>,
+    ChannelMetadata : BaseChannelMetadata<EventListener, Subscription>,
+    UserMetadata : BaseUserMetadata<EventListener, Subscription>,
+    SubscriptionSet : BaseSubscriptionSet<EventListener, Subscription>,
+    StatusListener : BaseStatusListener,
+    > internal constructor(
+    configuration: PNConfiguration,
+    eventEnginesConf: EventEnginesConf,
 ) : BasePubNub<EventListener, Subscription, Channel, ChannelGroup, ChannelMetadata, UserMetadata, SubscriptionSet, StatusListener>,
     BaseEventEmitter<EventListener>,
     BaseStatusEmitter<StatusListener> {
-
     constructor(configuration: PNConfiguration) : this(configuration, eventEnginesConf = EventEnginesConf())
 
     val listenerManager: ListenerManager = ListenerManager(this)
@@ -55,7 +56,7 @@ internal constructor(
 
     companion object {
         internal const val TIMESTAMP_DIVIDER = 1000
-        internal const val SDK_VERSION = "7.8.1"
+        internal const val SDK_VERSION = "8.0.0"
         internal const val MAX_SEQUENCE = 65535
 
         /**
@@ -67,7 +68,7 @@ internal constructor(
     override fun subscriptionSetOf(
         channels: Set<String>,
         channelGroups: Set<String>,
-        options: SubscriptionOptions
+        options: SubscriptionOptions,
     ): SubscriptionSet {
         val subscriptionSet = subscriptionSetOf(subscriptions = emptySet())
         channels.forEach {

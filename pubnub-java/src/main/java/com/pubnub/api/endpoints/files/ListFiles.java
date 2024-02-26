@@ -1,11 +1,11 @@
 package com.pubnub.api.endpoints.files;
 
 import com.pubnub.api.endpoints.BuilderSteps;
-import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.files.PNListFilesResult;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.internal.InternalPubNubClient;
+import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 

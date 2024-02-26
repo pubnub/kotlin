@@ -14,10 +14,10 @@ class Heartbeat internal constructor(
     pubnub: InternalPubNubClient,
     val channels: List<String> = listOf(),
     val channelGroups: List<String> = listOf(),
-    val state: Any? = null
+    val state: Any? = null,
 ) : Endpoint<Void, Boolean>(pubnub) {
-
     override fun getAffectedChannels() = channels
+
     override fun getAffectedChannelGroups() = channelGroups
 
     override fun validateParams() {
@@ -30,16 +30,17 @@ class Heartbeat internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<Void> {
         addQueryParams(queryParams)
 
-        val channelsCsv = if (channels.isNotEmpty()) {
-            channels.joinToString(",")
-        } else {
-            ","
-        }
+        val channelsCsv =
+            if (channels.isNotEmpty()) {
+                channels.joinToString(",")
+            } else {
+                ","
+            }
 
         return pubnub.retrofitManager.presenceService.heartbeat(
             pubnub.configuration.subscribeKey,
             channelsCsv,
-            queryParams
+            queryParams,
         )
     }
 

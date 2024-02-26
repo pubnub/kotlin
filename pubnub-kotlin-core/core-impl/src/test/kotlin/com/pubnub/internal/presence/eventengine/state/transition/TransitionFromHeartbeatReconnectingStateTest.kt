@@ -36,39 +36,41 @@ class TransitionFromHeartbeatReconnectingStateTest {
     @Test
     fun `should transit from HEARTBEAT_RECONNECTING to INACTIVE and create LEAVE and CANCEL_DELEYED_HEARTBEAT invocations when there is LEFT_ALL event`() {
         // when
-        val (newState, invocations) = transition(
-            PresenceState.HeartbeatReconnecting(
-                channels,
-                channelGroups,
-                0,
-                reason
-            ),
-            PresenceEvent.LeftAll
-        )
+        val (newState, invocations) =
+            transition(
+                PresenceState.HeartbeatReconnecting(
+                    channels,
+                    channelGroups,
+                    0,
+                    reason,
+                ),
+                PresenceEvent.LeftAll,
+            )
 
         // then
         assertEquals(PresenceState.HeartbeatInactive, newState)
         assertEquals(
             setOf(
                 PresenceEffectInvocation.CancelDelayedHeartbeat,
-                PresenceEffectInvocation.Leave(channels, channelGroups)
+                PresenceEffectInvocation.Leave(channels, channelGroups),
             ),
-            invocations
+            invocations,
         )
     }
 
     @Test
     fun `should transit from HEARTBEAT_RECONNECTING to INACTIVE and create LEAVE and CANCEL_DELEYED_HEARTBEAT invocations when there is LEFT event and no channels remain`() {
         // when
-        val (newState, invocations) = transition(
-            PresenceState.HeartbeatReconnecting(
-                channels,
-                channelGroups,
-                0,
-                reason
-            ),
-            PresenceEvent.Left(channels, channelGroups)
-        )
+        val (newState, invocations) =
+            transition(
+                PresenceState.HeartbeatReconnecting(
+                    channels,
+                    channelGroups,
+                    0,
+                    reason,
+                ),
+                PresenceEvent.Left(channels, channelGroups),
+            )
 
         // then
         assertTrue(newState is PresenceState.HeartbeatInactive)
@@ -77,7 +79,7 @@ class TransitionFromHeartbeatReconnectingStateTest {
                 PresenceEffectInvocation.CancelDelayedHeartbeat,
                 PresenceEffectInvocation.Leave(channels, channelGroups),
             ),
-            invocations
+            invocations,
         )
     }
 
@@ -88,15 +90,16 @@ class TransitionFromHeartbeatReconnectingStateTest {
         val channelGroupToLeave = setOf("ChannelGroup01")
 
         // when
-        val (newState, invocations) = transition(
-            PresenceState.HeartbeatReconnecting(
-                channels,
-                channelGroups,
-                0,
-                reason
-            ),
-            PresenceEvent.Left(channelToLeave, channelGroupToLeave)
-        )
+        val (newState, invocations) =
+            transition(
+                PresenceState.HeartbeatReconnecting(
+                    channels,
+                    channelGroups,
+                    0,
+                    reason,
+                ),
+                PresenceEvent.Left(channelToLeave, channelGroupToLeave),
+            )
 
         // then
         assertTrue(newState is PresenceState.Heartbeating)
@@ -107,24 +110,25 @@ class TransitionFromHeartbeatReconnectingStateTest {
             setOf(
                 PresenceEffectInvocation.CancelDelayedHeartbeat,
                 PresenceEffectInvocation.Leave(channelToLeave, channelGroupToLeave),
-                PresenceEffectInvocation.Heartbeat(channels - channelToLeave, channelGroups - channelGroupToLeave)
+                PresenceEffectInvocation.Heartbeat(channels - channelToLeave, channelGroups - channelGroupToLeave),
             ),
-            invocations
+            invocations,
         )
     }
 
     @Test
     fun `should transit from HEARTBEAT_RECONNECTING to HEARTBEAT_STOPPED and create CANCEL_DELEYED_HEARTBEAT and LEAVE invocations when there is DISCONNECT event`() {
         // when
-        val (newState, invocations) = transition(
-            PresenceState.HeartbeatReconnecting(
-                channels,
-                channelGroups,
-                0,
-                reason
-            ),
-            PresenceEvent.Disconnect
-        )
+        val (newState, invocations) =
+            transition(
+                PresenceState.HeartbeatReconnecting(
+                    channels,
+                    channelGroups,
+                    0,
+                    reason,
+                ),
+                PresenceEvent.Disconnect,
+            )
 
         // then
         assertTrue(newState is PresenceState.HeartbeatStopped)
@@ -136,7 +140,7 @@ class TransitionFromHeartbeatReconnectingStateTest {
                 PresenceEffectInvocation.CancelDelayedHeartbeat,
                 PresenceEffectInvocation.Leave(channels, channelGroups),
             ),
-            invocations
+            invocations,
         )
     }
 
@@ -147,15 +151,16 @@ class TransitionFromHeartbeatReconnectingStateTest {
         val channelGroupToJoin = setOf("NewChannelGroup")
 
         // when
-        val (newState, invocations) = transition(
-            PresenceState.HeartbeatReconnecting(
-                channels,
-                channelGroups,
-                0,
-                reason
-            ),
-            PresenceEvent.Joined(channelToJoin, channelGroupToJoin)
-        )
+        val (newState, invocations) =
+            transition(
+                PresenceState.HeartbeatReconnecting(
+                    channels,
+                    channelGroups,
+                    0,
+                    reason,
+                ),
+                PresenceEvent.Joined(channelToJoin, channelGroupToJoin),
+            )
 
         // then
         assertTrue(newState is PresenceState.Heartbeating)
@@ -166,24 +171,25 @@ class TransitionFromHeartbeatReconnectingStateTest {
         assertEquals(
             setOf(
                 PresenceEffectInvocation.CancelDelayedHeartbeat,
-                PresenceEffectInvocation.Heartbeat(channels + channelToJoin, channelGroups + channelGroupToJoin)
+                PresenceEffectInvocation.Heartbeat(channels + channelToJoin, channelGroups + channelGroupToJoin),
             ),
-            invocations
+            invocations,
         )
     }
 
     @Test
     fun `should transit from HEARTBEAT_RECONNECTING to HEARTBEAT_COOLDOWN and create CANCEL_DELEYED_HEARTBEAT and WAIT invocations when there is HEARTBEAT_SUCCESS event`() {
         // when
-        val (newState, invocations) = transition(
-            PresenceState.HeartbeatReconnecting(
-                channels,
-                channelGroups,
-                0,
-                reason
-            ),
-            PresenceEvent.HeartbeatSuccess
-        )
+        val (newState, invocations) =
+            transition(
+                PresenceState.HeartbeatReconnecting(
+                    channels,
+                    channelGroups,
+                    0,
+                    reason,
+                ),
+                PresenceEvent.HeartbeatSuccess,
+            )
 
         // then
         assertTrue(newState is PresenceState.HeartbeatCooldown)
@@ -198,15 +204,16 @@ class TransitionFromHeartbeatReconnectingStateTest {
     @Test
     fun `should transit from HEARTBEAT_RECONNECTING to HEARTBEAT_RECONNECTING and create CANCEL_DELEYED_HEARTBEAT and DELEYED_HEARTBEAT invocations when there is HEARTBEAT_FAILURE event`() {
         // when
-        val (newState, invocations) = transition(
-            PresenceState.HeartbeatReconnecting(
-                channels,
-                channelGroups,
-                0,
-                reason
-            ),
-            PresenceEvent.HeartbeatFailure(reason)
-        )
+        val (newState, invocations) =
+            transition(
+                PresenceState.HeartbeatReconnecting(
+                    channels,
+                    channelGroups,
+                    0,
+                    reason,
+                ),
+                PresenceEvent.HeartbeatFailure(reason),
+            )
 
         // then
         assertTrue(newState is PresenceState.HeartbeatReconnecting)
@@ -223,15 +230,16 @@ class TransitionFromHeartbeatReconnectingStateTest {
     @Test
     fun `should transit from HEARTBEAT_RECONNECTING to HEARTBEAT_FAILED and create CANCEL_DELEYED_HEARTBEAT invocations when there is HEARTBEAT_GIVUP event`() {
         // when
-        val (newState, invocations) = transition(
-            PresenceState.HeartbeatReconnecting(
-                channels,
-                channelGroups,
-                0,
-                reason
-            ),
-            PresenceEvent.HeartbeatGiveup(reason)
-        )
+        val (newState, invocations) =
+            transition(
+                PresenceState.HeartbeatReconnecting(
+                    channels,
+                    channelGroups,
+                    0,
+                    reason,
+                ),
+                PresenceEvent.HeartbeatGiveup(reason),
+            )
 
         // then
         assertTrue(newState is PresenceState.HeartbeatFailed)
@@ -243,7 +251,7 @@ class TransitionFromHeartbeatReconnectingStateTest {
             setOf(
                 PresenceEffectInvocation.CancelDelayedHeartbeat,
             ),
-            invocations
+            invocations,
         )
     }
 }

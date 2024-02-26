@@ -12,7 +12,10 @@ internal typealias SubscribeEventEngine = EventEngine<SubscribeEffectInvocation,
 internal fun SubscribeEventEngine(
     effectSink: Sink<SubscribeEffectInvocation>,
     eventSource: Source<SubscribeEvent>,
-    currentState: SubscribeState = SubscribeState.Unsubscribed
-): SubscribeEventEngine = EventEngine(
-    effectSink, eventSource, currentState
-)
+    currentState: SubscribeState = SubscribeState.Unsubscribed,
+): SubscribeEventEngine =
+    EventEngine(
+        effectSink,
+        eventSource,
+        currentState,
+    )

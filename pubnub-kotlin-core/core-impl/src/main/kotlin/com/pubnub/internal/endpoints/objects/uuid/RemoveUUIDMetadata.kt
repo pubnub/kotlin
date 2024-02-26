@@ -11,13 +11,12 @@ import retrofit2.Response
 
 class RemoveUUIDMetadata(
     pubnub: InternalPubNubClient,
-    override val uuid: String? = null
+    override val uuid: String? = null,
 ) : Endpoint<EntityEnvelope<Any?>, PNRemoveMetadataResult>(pubnub), IRemoveUUIDMetadata {
-
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<Any?>> {
         return pubnub.retrofitManager.objectsService.deleteUUIDMetadata(
             subKey = pubnub.configuration.subscribeKey,
-            uuid = uuid ?: pubnub.configuration.userId.value
+            uuid = uuid ?: pubnub.configuration.userId.value,
         )
     }
 

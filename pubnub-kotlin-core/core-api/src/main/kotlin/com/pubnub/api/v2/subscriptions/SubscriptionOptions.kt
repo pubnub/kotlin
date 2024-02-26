@@ -10,12 +10,13 @@ import com.pubnub.api.models.consumer.pubsub.PNEvent
  * * [SubscriptionOptions.receivePresenceEvents]
  */
 open class SubscriptionOptions internal constructor(
-    optionsSet: Set<SubscriptionOptions> = emptySet()
+    optionsSet: Set<SubscriptionOptions> = emptySet(),
 ) {
     open val allOptions = optionsSet.toSet()
-        get() = field.ifEmpty {
-            setOf(this)
-        }
+        get() =
+            field.ifEmpty {
+                setOf(this)
+            }
 
     /**
      * Combine multiple options, for example:
@@ -23,10 +24,11 @@ open class SubscriptionOptions internal constructor(
      * val options = `SubscriptionOptions.filter { /* some expression*/ } + SubscriptionOptions.receivePresenceEvents()`
      */
     open operator fun plus(options: SubscriptionOptions): SubscriptionOptions {
-        val newOptions = buildSet {
-            addAll(allOptions)
-            addAll(options.allOptions)
-        }
+        val newOptions =
+            buildSet {
+                addAll(allOptions)
+                addAll(options.allOptions)
+            }
         return SubscriptionOptions(newOptions)
     }
 

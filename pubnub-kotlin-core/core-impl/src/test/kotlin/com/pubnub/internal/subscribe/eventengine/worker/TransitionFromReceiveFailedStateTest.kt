@@ -26,12 +26,13 @@ internal class TransitionFromReceiveFailedStateTest {
         val channelGroupName = "ChannelGroup01"
         val myMutableSetOfChannels = mutableSetOf(channelName)
         val myMutableSetOfChannelGroups = mutableSetOf(channelGroupName)
-        val receiveFailed: SubscribeState.ReceiveFailed = SubscribeState.ReceiveFailed(
-            myMutableSetOfChannels,
-            myMutableSetOfChannelGroups,
-            subscriptionCursor,
-            reason
-        )
+        val receiveFailed: SubscribeState.ReceiveFailed =
+            SubscribeState.ReceiveFailed(
+                myMutableSetOfChannels,
+                myMutableSetOfChannelGroups,
+                subscriptionCursor,
+                reason,
+            )
 
         // when
         myMutableSetOfChannels.remove(channelName)
@@ -49,10 +50,11 @@ internal class TransitionFromReceiveFailedStateTest {
         val newChannelGroup = channelGroups + setOf("NewChannelGroup")
 
         // when
-        val (state, effectInvocations) = transition(
-            SubscribeState.ReceiveFailed(channels, channelGroups, subscriptionCursor, reason),
-            SubscribeEvent.SubscriptionChanged(newChannels, newChannelGroup)
-        )
+        val (state, effectInvocations) =
+            transition(
+                SubscribeState.ReceiveFailed(channels, channelGroups, subscriptionCursor, reason),
+                SubscribeEvent.SubscriptionChanged(newChannels, newChannelGroup),
+            )
 
         // then
         assertTrue(state is SubscribeState.Handshaking)
@@ -63,7 +65,7 @@ internal class TransitionFromReceiveFailedStateTest {
         assertEquals(subscriptionCursor, state.subscriptionCursor)
         assertEquals(
             setOf(SubscribeEffectInvocation.Handshake(newChannels, newChannelGroup)),
-            effectInvocations
+            effectInvocations,
         )
     }
 
@@ -77,10 +79,11 @@ internal class TransitionFromReceiveFailedStateTest {
         val eventSubscriptionCursor = SubscriptionCursor(timetoken, region)
 
         // when
-        val (state, effectInvocations) = transition(
-            SubscribeState.ReceiveFailed(channels, channelGroups, subscriptionCursor, reason),
-            SubscribeEvent.SubscriptionRestored(eventChannels, eventChannelGroups, eventSubscriptionCursor)
-        )
+        val (state, effectInvocations) =
+            transition(
+                SubscribeState.ReceiveFailed(channels, channelGroups, subscriptionCursor, reason),
+                SubscribeEvent.SubscriptionRestored(eventChannels, eventChannelGroups, eventSubscriptionCursor),
+            )
         // then
         assertTrue(state is SubscribeState.Handshaking)
         state as SubscribeState.Handshaking // Safe cast
@@ -90,7 +93,7 @@ internal class TransitionFromReceiveFailedStateTest {
         assertEquals(eventSubscriptionCursor, state.subscriptionCursor)
         assertEquals(
             setOf(SubscribeEffectInvocation.Handshake(eventChannels, eventChannelGroups)),
-            effectInvocations
+            effectInvocations,
         )
     }
 
@@ -101,10 +104,11 @@ internal class TransitionFromReceiveFailedStateTest {
         val subscriptionCursorForReconnect = SubscriptionCursor(timeTokenFromReconnect, null)
 
         // when
-        val (state, effectInvocations) = transition(
-            SubscribeState.ReceiveFailed(channels, channelGroups, subscriptionCursor, reason),
-            SubscribeEvent.Reconnect(subscriptionCursorForReconnect)
-        )
+        val (state, effectInvocations) =
+            transition(
+                SubscribeState.ReceiveFailed(channels, channelGroups, subscriptionCursor, reason),
+                SubscribeEvent.Reconnect(subscriptionCursorForReconnect),
+            )
 
         // then
         assertTrue(state is SubscribeState.Handshaking)
@@ -115,17 +119,18 @@ internal class TransitionFromReceiveFailedStateTest {
         assertEquals(subscriptionCursorForReconnect, state.subscriptionCursor)
         assertEquals(
             setOf(SubscribeEffectInvocation.Handshake(channels, channelGroups)),
-            effectInvocations
+            effectInvocations,
         )
     }
 
     @Test
     fun can_transit_from_RECEIVE_FAILED_to_HANDSHAKING_when_there_is_RECONNECT_event_with_reconnectCursor() {
         // when
-        val (state, effectInvocations) = transition(
-            SubscribeState.ReceiveFailed(channels, channelGroups, subscriptionCursor, reason),
-            SubscribeEvent.Reconnect()
-        )
+        val (state, effectInvocations) =
+            transition(
+                SubscribeState.ReceiveFailed(channels, channelGroups, subscriptionCursor, reason),
+                SubscribeEvent.Reconnect(),
+            )
 
         // then
         assertTrue(state is SubscribeState.Handshaking)
@@ -136,17 +141,18 @@ internal class TransitionFromReceiveFailedStateTest {
         assertEquals(subscriptionCursor, state.subscriptionCursor)
         assertEquals(
             setOf(SubscribeEffectInvocation.Handshake(channels, channelGroups)),
-            effectInvocations
+            effectInvocations,
         )
     }
 
     @Test
     fun can_transit_from_RECEIVE_FAILED_to_UNSUBSRIBED_when_there_is_UNSUBSRIBED_ALL_event() {
         // when
-        val (state, invocations) = transition(
-            SubscribeState.ReceiveFailed(channels, channelGroups, subscriptionCursor, reason),
-            SubscribeEvent.UnsubscribeAll
-        )
+        val (state, invocations) =
+            transition(
+                SubscribeState.ReceiveFailed(channels, channelGroups, subscriptionCursor, reason),
+                SubscribeEvent.UnsubscribeAll,
+            )
 
         // then
         assertEquals(SubscribeState.Unsubscribed, state)

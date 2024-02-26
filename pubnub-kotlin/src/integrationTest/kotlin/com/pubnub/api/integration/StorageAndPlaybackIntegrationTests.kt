@@ -11,7 +11,6 @@ import org.junit.Assert.assertNotNull
 import org.junit.Test
 
 class StorageAndPlaybackIntegrationTests : BaseIntegrationTest() {
-
     @Test
     fun testHistoryMessages() {
         val expectedMessage = randomValue()
@@ -19,11 +18,11 @@ class StorageAndPlaybackIntegrationTests : BaseIntegrationTest() {
 
         pubnub.publish(
             channel = expectedChannel,
-            message = expectedMessage
+            message = expectedMessage,
         ).await { result -> }
 
         pubnub.history(
-            channel = expectedChannel
+            channel = expectedChannel,
         ).asyncRetry { result ->
             assertFalse(result.isFailure)
             assertEquals(expectedMessage, result.getOrThrow().messages[0].entry.asString)
@@ -37,13 +36,13 @@ class StorageAndPlaybackIntegrationTests : BaseIntegrationTest() {
         repeat(3) {
             pubnub.publish(
                 channel = expectedChannel,
-                message = randomValue()
+                message = randomValue(),
             ).sync()
         }
 
         pubnub.history(
             channel = expectedChannel,
-            includeTimetoken = true
+            includeTimetoken = true,
         ).asyncRetry { result ->
             assertFalse(result.isFailure)
             result.getOrThrow().messages.forEach {
@@ -59,13 +58,13 @@ class StorageAndPlaybackIntegrationTests : BaseIntegrationTest() {
         repeat(20) {
             pubnub.publish(
                 channel = expectedChannel,
-                message = randomValue()
+                message = randomValue(),
             ).sync()
         }
 
         pubnub.history(
             channel = expectedChannel,
-            count = 10
+            count = 10,
         ).asyncRetry { result ->
             assertFalse(result.isFailure)
             assertEquals(10, result.getOrThrow().messages.size)
@@ -81,7 +80,7 @@ class StorageAndPlaybackIntegrationTests : BaseIntegrationTest() {
         repeat(3) {
             pubnub.publish(
                 channel = expectedChannel,
-                message = randomValue()
+                message = randomValue(),
             ).sync()
         }
         wait(5)
@@ -92,7 +91,7 @@ class StorageAndPlaybackIntegrationTests : BaseIntegrationTest() {
             includeTimetoken = true,
             start = now,
             end = before,
-            count = 10
+            count = 10,
         ).await { result ->
             assertFalse(result.isFailure)
             assertEquals(3, result.getOrThrow().messages.size)
@@ -107,18 +106,18 @@ class StorageAndPlaybackIntegrationTests : BaseIntegrationTest() {
 
         pubnub.publish(
             channel = expectedChannel,
-            message = message1
+            message = message1,
         ).sync()
 
         pubnub.publish(
             channel = expectedChannel,
-            message = message2
+            message = message2,
         ).sync()
 
         pubnub.history(
             channel = expectedChannel,
             count = 10,
-            reverse = true
+            reverse = true,
         ).asyncRetry { result ->
             assertFalse(result.isFailure)
             assertEquals(message1, result.getOrThrow().messages[0].entry.asString)

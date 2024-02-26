@@ -8,7 +8,6 @@ import org.junit.Test
 import java.util.concurrent.atomic.AtomicBoolean
 
 class TimeImplIntegrationTest : BaseIntegrationTest() {
-
     @Test
     fun testGetPubNubTime() {
         val success = AtomicBoolean()

@@ -25,7 +25,7 @@ class RetryableRestCallerTest {
     private fun getRetryableRestCaller(
         retryConfiguration: RetryConfiguration,
         isEndpointRetryable: Boolean = true,
-        endpointGroupName: RetryableEndpointGroup = RetryableEndpointGroup.MESSAGE_PERSISTENCE
+        endpointGroupName: RetryableEndpointGroup = RetryableEndpointGroup.MESSAGE_PERSISTENCE,
     ): RetryableRestCaller<FetchMessagesEnvelope> {
         return RetryableRestCaller(retryConfiguration, endpointGroupName, isEndpointRetryable)
     }
@@ -102,12 +102,13 @@ class RetryableRestCallerTest {
     @Test
     fun `should calculate delay in exponential manner when exponential retryConfiguration is set`() {
         // given
-        val retryConfiguration = RetryConfiguration.Exponential(
-            minDelayInSec = 2,
-            maxDelayInSec = 7,
-            maxRetryNumber = 2,
-            excludedOperations = emptyList()
-        )
+        val retryConfiguration =
+            RetryConfiguration.Exponential(
+                minDelayInSec = 2,
+                maxDelayInSec = 7,
+                maxRetryNumber = 2,
+                excludedOperations = emptyList(),
+            )
         val retryableRestCaller = getRetryableRestCaller(retryConfiguration)
 
         // when
@@ -140,11 +141,12 @@ class RetryableRestCallerTest {
     @Test
     fun `when retryConfiguration is Linear and endpoint belong to RetryableEndpointGroup that is excluded from retryConfiguration then restCall is excluded from retry`() {
         // given
-        val retryConfiguration = RetryConfiguration.Linear(
-            delayInSec = 2,
-            maxRetryNumber = 2,
-            excludedOperations = listOf(RetryableEndpointGroup.MESSAGE_PERSISTENCE)
-        )
+        val retryConfiguration =
+            RetryConfiguration.Linear(
+                delayInSec = 2,
+                maxRetryNumber = 2,
+                excludedOperations = listOf(RetryableEndpointGroup.MESSAGE_PERSISTENCE),
+            )
         val retryableRestCaller = getRetryableRestCaller(retryConfiguration)
 
         // when
@@ -157,12 +159,13 @@ class RetryableRestCallerTest {
     @Test
     fun `when retryConfiguration is Exponential and endpoint belong to RetryableEndpointGroup that is excluded from retryConfiguration then restCall is excluded from retry`() {
         // given
-        val retryConfiguration = RetryConfiguration.Exponential(
-            minDelayInSec = 2,
-            maxDelayInSec = 7,
-            maxRetryNumber = 2,
-            excludedOperations = listOf(RetryableEndpointGroup.MESSAGE_PERSISTENCE)
-        )
+        val retryConfiguration =
+            RetryConfiguration.Exponential(
+                minDelayInSec = 2,
+                maxDelayInSec = 7,
+                maxRetryNumber = 2,
+                excludedOperations = listOf(RetryableEndpointGroup.MESSAGE_PERSISTENCE),
+            )
         val retryableRestCaller = getRetryableRestCaller(retryConfiguration)
 
         // when
@@ -175,12 +178,13 @@ class RetryableRestCallerTest {
     @Test
     fun `when retryConfiguration is Exponential and endpoint belong to RetryableEndpointGroup that is not excluded from retryConfiguration then restCall is retryable`() {
         // given
-        val retryConfiguration = RetryConfiguration.Exponential(
-            minDelayInSec = 2,
-            maxDelayInSec = 7,
-            maxRetryNumber = 2,
-            excludedOperations = listOf()
-        )
+        val retryConfiguration =
+            RetryConfiguration.Exponential(
+                minDelayInSec = 2,
+                maxDelayInSec = 7,
+                maxRetryNumber = 2,
+                excludedOperations = listOf(),
+            )
         val retryableRestCaller = getRetryableRestCaller(retryConfiguration)
 
         // when
@@ -248,11 +252,12 @@ class RetryableRestCallerTest {
     @Test
     fun `should return unsuccessful response when first attempt failed and endpoint excluded from retryConfiguration`() {
         // given
-        val retryConfiguration = RetryConfiguration.Linear(
-            delayInSec = 2,
-            maxRetryNumber = 2,
-            excludedOperations = listOf(RetryableEndpointGroup.MESSAGE_PERSISTENCE)
-        )
+        val retryConfiguration =
+            RetryConfiguration.Linear(
+                delayInSec = 2,
+                maxRetryNumber = 2,
+                excludedOperations = listOf(RetryableEndpointGroup.MESSAGE_PERSISTENCE),
+            )
         val retryableRestCaller = getRetryableRestCaller(retryConfiguration)
         val errorResponse: Response<FetchMessagesEnvelope> = Response.error(500, ResponseBody.create(null, ""))
         val mockCall = mockk<Call<FetchMessagesEnvelope>>()
@@ -271,11 +276,12 @@ class RetryableRestCallerTest {
     @Test
     fun `should return unsuccessful response when first attempt failed and endpoint is not retryable`() {
         // given
-        val retryConfiguration = RetryConfiguration.Linear(
-            delayInSec = 2,
-            maxRetryNumber = 2,
-            excludedOperations = listOf(RetryableEndpointGroup.MESSAGE_PERSISTENCE)
-        )
+        val retryConfiguration =
+            RetryConfiguration.Linear(
+                delayInSec = 2,
+                maxRetryNumber = 2,
+                excludedOperations = listOf(RetryableEndpointGroup.MESSAGE_PERSISTENCE),
+            )
         val retryableRestCaller =
             getRetryableRestCaller(retryConfiguration = retryConfiguration, isEndpointRetryable = false)
         val errorResponse: Response<FetchMessagesEnvelope> = Response.error(500, ResponseBody.create(null, ""))
@@ -317,13 +323,14 @@ class RetryableRestCallerTest {
     fun `should retry successfully when exponential retryConfiguration is set and response is not successful and http error is 500 and endpoint is not excluded from retryConfiguration`() {
         // given
         @Suppress("INVISIBLE_MEMBER")
-        val retryConfiguration = RetryConfiguration.Exponential(
-            minDelayInSec = 10.milliseconds,
-            maxDelayInSec = 15.milliseconds,
-            maxRetryNumber = 2,
-            excludedOperations = emptyList(),
-            isInternal = true
-        )
+        val retryConfiguration =
+            RetryConfiguration.Exponential(
+                minDelayInSec = 10.milliseconds,
+                maxDelayInSec = 15.milliseconds,
+                maxRetryNumber = 2,
+                excludedOperations = emptyList(),
+                isInternal = true,
+            )
         val retryableRestCaller = getRetryableRestCaller(retryConfiguration = retryConfiguration)
         val mockCall = mockk<Call<FetchMessagesEnvelope>>()
         val errorResponse: Response<FetchMessagesEnvelope> =
@@ -372,9 +379,10 @@ class RetryableRestCallerTest {
         every { mockCall.clone() } returns mockCall
 
         // when
-        val exception = Assertions.assertThrows(PubNubException::class.java) {
-            retryableRestCaller.execute(mockCall)
-        }
+        val exception =
+            Assertions.assertThrows(PubNubException::class.java) {
+                retryableRestCaller.execute(mockCall)
+            }
 
         // then
         verify(exactly = 2) { mockCall.clone() }

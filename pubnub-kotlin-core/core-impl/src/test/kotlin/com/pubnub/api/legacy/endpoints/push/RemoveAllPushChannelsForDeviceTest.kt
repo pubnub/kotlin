@@ -20,17 +20,16 @@ import org.junit.Test
 import java.util.concurrent.atomic.AtomicBoolean
 
 class RemoveAllPushChannelsForDeviceTest : BaseTest() {
-
     @Test
     fun testAppleSuccessSyncRemoveAll() {
         stubFor(
             get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice/remove"))
-                .willReturn(aResponse().withBody("[1, \"Modified Channels\"]"))
+                .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")),
         )
 
         pubnub.removeAllPushNotificationsFromDeviceWithPushToken(
             deviceId = "niceDevice",
-            pushType = PNPushType.APNS
+            pushType = PNPushType.APNS,
         ).sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
@@ -44,12 +43,12 @@ class RemoveAllPushChannelsForDeviceTest : BaseTest() {
     fun testFirebaseSuccessSyncRemoveAll() {
         stubFor(
             get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice/remove"))
-                .willReturn(aResponse().withBody("[1, \"Modified Channels\"]"))
+                .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")),
         )
 
         pubnub.removeAllPushNotificationsFromDeviceWithPushToken(
             deviceId = "niceDevice",
-            pushType = PNPushType.FCM
+            pushType = PNPushType.FCM,
         ).sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
@@ -63,12 +62,12 @@ class RemoveAllPushChannelsForDeviceTest : BaseTest() {
     fun testMicrosoftSuccessSyncRemoveAll() {
         stubFor(
             get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice/remove"))
-                .willReturn(aResponse().withBody("[1, \"Modified Channels\"]"))
+                .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")),
         )
 
         pubnub.removeAllPushNotificationsFromDeviceWithPushToken(
             deviceId = "niceDevice",
-            pushType = PNPushType.MPNS
+            pushType = PNPushType.MPNS,
         ).sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
@@ -82,20 +81,20 @@ class RemoveAllPushChannelsForDeviceTest : BaseTest() {
     fun testApns2SuccessSyncRemoveAll() {
         stubFor(
             get(urlPathEqualTo("/v2/push/sub-key/mySubscribeKey/devices-apns2/niceDevice/remove"))
-                .willReturn(aResponse().withBody("[1, \"Modified Channels\"]"))
+                .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")),
         )
 
         pubnub.removeAllPushNotificationsFromDeviceWithPushToken(
             deviceId = "niceDevice",
             pushType = PNPushType.APNS2,
-            topic = "news"
+            topic = "news",
         ).sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
         assertEquals(
             "development",
-            requests[0].queryParameter("environment").firstValue()
+            requests[0].queryParameter("environment").firstValue(),
         )
         assertEquals("news", requests[0].queryParameter("topic").firstValue())
         assertFalse(requests[0].queryParameter("type").isPresent)
@@ -105,14 +104,14 @@ class RemoveAllPushChannelsForDeviceTest : BaseTest() {
     fun testIsAuthRequiredSuccessRemoveAll() {
         stubFor(
             get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice/remove"))
-                .willReturn(aResponse().withBody("[1, \"Modified Channels\"]"))
+                .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")),
         )
 
         pubnub.configuration.authKey = "myKey"
 
         pubnub.removeAllPushNotificationsFromDeviceWithPushToken(
             deviceId = "niceDevice",
-            pushType = PNPushType.FCM
+            pushType = PNPushType.FCM,
         ).sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
@@ -124,14 +123,14 @@ class RemoveAllPushChannelsForDeviceTest : BaseTest() {
     fun testOperationTypeSuccessRemoveAll() {
         stubFor(
             get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice/remove"))
-                .willReturn(aResponse().withBody("[1, \"Modified Channels\"]"))
+                .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")),
         )
 
         val success = AtomicBoolean()
 
         pubnub.removeAllPushNotificationsFromDeviceWithPushToken(
             deviceId = "niceDevice",
-            pushType = PNPushType.FCM
+            pushType = PNPushType.FCM,
         ).async { result ->
             assertFalse(result.isFailure)
             success.set(true)
@@ -147,7 +146,7 @@ class RemoveAllPushChannelsForDeviceTest : BaseTest() {
         try {
             pubnub.removeAllPushNotificationsFromDeviceWithPushToken(
                 deviceId = "niceDevice",
-                pushType = PNPushType.FCM
+                pushType = PNPushType.FCM,
             ).sync()
             failTest()
         } catch (e: PubNubException) {
@@ -160,7 +159,7 @@ class RemoveAllPushChannelsForDeviceTest : BaseTest() {
         try {
             pubnub.removeAllPushNotificationsFromDeviceWithPushToken(
                 pushType = PNPushType.FCM,
-                deviceId = " "
+                deviceId = " ",
             ).sync()
         } catch (e: PubNubException) {
             assertPnException(PubNubError.DEVICE_ID_MISSING, e)

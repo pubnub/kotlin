@@ -24,16 +24,21 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.stream.Collectors
 
 object CommonUtils {
+    var defaultListenDuration = 5
 
-    var DEFAULT_LISTEN_DURATION = 5
-
-    internal fun observe(success: AtomicBoolean, seconds: Int) {
+    internal fun observe(
+        success: AtomicBoolean,
+        seconds: Int,
+    ) {
         Awaitility.await()
             .atMost(seconds.toLong(), TimeUnit.SECONDS)
             .untilTrue(success)
     }
 
-    fun assertPnException(expectedPubNubError: PubNubError, exception: Throwable?) {
+    fun assertPnException(
+        expectedPubNubError: PubNubError,
+        exception: Throwable?,
+    ) {
         exception as PubNubException
         assertEquals(expectedPubNubError, exception.pubnubError)
     }
@@ -48,7 +53,7 @@ object CommonUtils {
         val resourceFileAsString = getResourceFileAsString("special_chars.json")
         return Gson().fromJson(
             resourceFileAsString,
-            object : TypeToken<List<SpecialChar>>() {}.type
+            object : TypeToken<List<SpecialChar>>() {}.type,
         )
     }
 
@@ -67,7 +72,7 @@ object CommonUtils {
     class SpecialChar(
         val name: String,
         val regular: String,
-        val encoded: String
+        val encoded: String,
     )
 
     fun retry(function: () -> Unit) {
@@ -75,16 +80,17 @@ object CommonUtils {
         val block = {
             try {
                 val executor = Executors.newSingleThreadExecutor()
-                val submit = executor.submit(
-                    Callable {
-                        try {
-                            function.invoke()
-                            true
-                        } catch (t: Throwable) {
-                            false
-                        }
-                    }
-                )
+                val submit =
+                    executor.submit(
+                        Callable {
+                            try {
+                                function.invoke()
+                                true
+                            } catch (t: Throwable) {
+                                false
+                            }
+                        },
+                    )
                 success.set(submit.get())
             } catch (t: Throwable) {
                 success.set(false)
@@ -92,7 +98,7 @@ object CommonUtils {
         }
 
         Awaitility.await()
-            .atMost(DEFAULT_LISTEN_DURATION.toLong(), TimeUnit.SECONDS)
+            .atMost(defaultListenDuration.toLong(), TimeUnit.SECONDS)
             .pollInterval(Durations.FIVE_HUNDRED_MILLISECONDS)
             .until {
                 block.invoke()
@@ -116,18 +122,24 @@ object CommonUtils {
             .joinToString(separator = "")
     }
 
-    fun publishMixed(pubnub: InternalPubNubClient, count: Int, channel: String): List<PNPublishResult> {
+    fun publishMixed(
+        pubnub: InternalPubNubClient,
+        count: Int,
+        channel: String,
+    ): List<PNPublishResult> {
         val list = mutableListOf<PNPublishResult>()
         repeat(count) {
-            val sync = pubnub.publish(
-                channel = channel,
-                message = "${it}_msg",
-                meta = when {
-                    it % 2 == 0 -> generateMap()
-                    it % 3 == 0 -> randomValue(4)
-                    else -> null
-                }
-            ).sync()
+            val sync =
+                pubnub.publish(
+                    channel = channel,
+                    message = "${it}_msg",
+                    meta =
+                        when {
+                            it % 2 == 0 -> generateMap()
+                            it % 3 == 0 -> randomValue(4)
+                            else -> null
+                        },
+                ).sync()
             list.add(sync)
         }
         return list
@@ -271,22 +283,25 @@ object CommonUtils {
             "😽",
             "🙀",
             "😿",
-            "😾"
+            "😾",
         ).shuffled().take(5).joinToString("")
     }
 
-    fun generateMap() = mapOf(
-        "text" to randomValue(8),
-        "uncd" to unicode(),
-        "info" to randomValue(8)
-    )
+    fun generateMap() =
+        mapOf(
+            "text" to randomValue(8),
+            "uncd" to unicode(),
+            "info" to randomValue(8),
+        )
 
     fun createInterceptor(logger: Logger) =
-        HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger {
-            override fun log(message: String) {
-                logger.debug(message)
-            }
-        }).apply {
+        HttpLoggingInterceptor(
+            object : HttpLoggingInterceptor.Logger {
+                override fun log(message: String) {
+                    logger.debug(message)
+                }
+            },
+        ).apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
 }

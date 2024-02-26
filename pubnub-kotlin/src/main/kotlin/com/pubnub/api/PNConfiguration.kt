@@ -15,14 +15,16 @@ import javax.net.ssl.X509ExtendedTrustManager
 
 class PNConfiguration(userId: UserId) {
     internal val configuration = PNConfiguration(userId)
-    
+
     var userId by configuration::userId
+
     @Deprecated(
         "Use UserId instead e.g. config.userId.value",
         replaceWith = ReplaceWith("userId.value"),
-        level = DeprecationLevel.WARNING
+        level = DeprecationLevel.WARNING,
     )
     var uuid by configuration::uuid
+
     /**
      * The subscribe key from the admin panel.
      */
@@ -44,17 +46,15 @@ class PNConfiguration(userId: UserId) {
      * If Access Manager is utilized, client will use this authKey in all restricted requests.
      */
     var authKey by configuration::authKey
-        
 
     /**
      * If set, all communications to and from PubNub will be encrypted.
      */
     @Deprecated(
         "Instead of cipherKey and useRandomInitializationVector use CryptoModule instead \n            e.g. config.cryptoModule = CryptoModule.createLegacyCryptoModule(cipherKey = cipherKey, randomIv = true) \n            or config.cryptoModule = CryptoModule.createAesCbcCryptoModule(cipherKey = cipherKey, randomIv = true)",
-        level = DeprecationLevel.WARNING
+        level = DeprecationLevel.WARNING,
     )
     var cipherKey by configuration::cipherKey
-        
 
     /**
      * Should initialization vector for encrypted messages be random.
@@ -63,17 +63,15 @@ class PNConfiguration(userId: UserId) {
      */
     @Deprecated(
         "Instead of cipherKey and useRandomInitializationVector use CryptoModule instead \n            e.g. config.cryptoModule = CryptoModule.createLegacyCryptoModule(cipherKey = cipherKey, randomIv = true) \n            or config.cryptoModule = CryptoModule.createAesCbcCryptoModule(cipherKey = cipherKey, randomIv = true)",
-        level = DeprecationLevel.WARNING
+        level = DeprecationLevel.WARNING,
     )
     var useRandomInitializationVector by configuration::useRandomInitializationVector
-        
 
     /**
      * CryptoModule is responsible for handling encryption and decryption.
      * If set, all communications to and from PubNub will be encrypted.
      */
     var cryptoModule by configuration::cryptoModule
-        
 
     /**
      * Custom origin if needed.
@@ -81,7 +79,6 @@ class PNConfiguration(userId: UserId) {
      * Defaults to `ps.pndsn.com`
      */
     var origin by configuration::origin
-        
 
     /**
      * If set to `true`,  requests will be made over HTTPS.
@@ -89,13 +86,11 @@ class PNConfiguration(userId: UserId) {
      * Deafults to `true`.
      */
     var secure by configuration::secure
-        
 
     /**
      * Set to [PNLogVerbosity.BODY] to enable logging of network traffic, otherwise se to [PNLogVerbosity.NONE].
      */
     var logVerbosity by configuration::logVerbosity
-        
 
     /**
      * Set Heartbeat notification options.
@@ -103,7 +98,6 @@ class PNConfiguration(userId: UserId) {
      * By default, the SDK alerts on failed heartbeats (equivalent to [PNHeartbeatNotificationOptions.FAILURES]).
      */
     var heartbeatNotificationOptions by configuration::heartbeatNotificationOptions
-        
 
     /**
      * Set to [PNReconnectionPolicy.LINEAR] for automatic reconnects.
@@ -116,10 +110,9 @@ class PNConfiguration(userId: UserId) {
      */
     @Deprecated(
         "Instead of reconnectionPolicy and maximumReconnectionRetries use retryConfiguration \n            e.g. config.retryConfiguration = RetryConfiguration.Linear(delayInSec = 3, maxRetryNumber = 5) \n            or config.retryConfiguration = RetryConfiguration.Exponential(minDelayInSec = 3, maxDelayInSec = 10, maxRetryNumber = 5)",
-        level = DeprecationLevel.WARNING
+        level = DeprecationLevel.WARNING,
     )
     var reconnectionPolicy by configuration::reconnectionPolicy
-        
 
     /**
      * Sets the custom presence server timeout.
@@ -129,7 +122,6 @@ class PNConfiguration(userId: UserId) {
      * Also sets the value of [heartbeatInterval]
      */
     var presenceTimeout by configuration::presenceTimeout
-        
 
     /**
      * How often the client will announce itself to server.
@@ -137,7 +129,6 @@ class PNConfiguration(userId: UserId) {
      * The value is in seconds.
      */
     var heartbeatInterval by configuration::heartbeatInterval
-        
 
     /**
      * The subscribe request timeout.
@@ -147,7 +138,6 @@ class PNConfiguration(userId: UserId) {
      * Defaults to 310.
      */
     var subscribeTimeout by configuration::subscribeTimeout
-        
 
     /**
      * How long before the client gives up trying to connect with a subscribe call.
@@ -157,7 +147,6 @@ class PNConfiguration(userId: UserId) {
      * Defaults to 5.
      */
     var connectTimeout by configuration::connectTimeout
-        
 
     /**
      * For non subscribe operations (publish, herenow, etc),
@@ -168,7 +157,6 @@ class PNConfiguration(userId: UserId) {
      * Defaults to 10.
      */
     var nonSubscribeRequestTimeout by configuration::nonSubscribeRequestTimeout
-        
 
     /**
      * If operating behind a misbehaving proxy, allow the client to shuffle the subdomains.
@@ -176,7 +164,6 @@ class PNConfiguration(userId: UserId) {
      * Defaults to `false`.
      */
     var cacheBusting by configuration::cacheBusting
-        
 
     /**
      * When `true` the SDK doesn't send out the leave requests.
@@ -184,7 +171,6 @@ class PNConfiguration(userId: UserId) {
      * Defaults to `false`.
      */
     var suppressLeaveEvents by configuration::suppressLeaveEvents
-        
 
     /**
      * When `true` the SDK will resend the last channel state that was set using [PubNub.setPresenceState]
@@ -200,13 +186,11 @@ class PNConfiguration(userId: UserId) {
      * otherwise that state may be overwritten by individual channel states.
      */
     var maintainPresenceState by configuration::maintainPresenceState
-        
 
     /**
      * Feature to subscribe with a custom filter expression.
      */
     var filterExpression by configuration::filterExpression
-        
 
     /**
      * Whether to include a [InternalPubNubClient.instanceId] with every request.
@@ -214,7 +198,6 @@ class PNConfiguration(userId: UserId) {
      * Defaults to `false`.
      */
     var includeInstanceIdentifier by configuration::includeInstanceIdentifier
-        
 
     /**
      * Whether to include a [InternalPubNubClient.requestId] with every request.
@@ -222,7 +205,6 @@ class PNConfiguration(userId: UserId) {
      * Defaults to `true`.
      */
     var includeRequestIdentifier by configuration::includeRequestIdentifier
-        
 
     /**
      * Sets how many times to retry to reconnect before giving up.
@@ -232,10 +214,9 @@ class PNConfiguration(userId: UserId) {
      */
     @Deprecated(
         "Instead of reconnectionPolicy and maximumReconnectionRetries use retryConfiguration \n            e.g. config.retryConfiguration = RetryConfiguration.Linear(delayInSec = 3, maxRetryNumber = 5) \n            or config.retryConfiguration = RetryConfiguration.Exponential(minDelayInSec = 3, maxDelayInSec = 10, maxRetryNumber = 5)",
-        level = DeprecationLevel.WARNING
+        level = DeprecationLevel.WARNING,
     )
     var maximumReconnectionRetries by configuration::maximumReconnectionRetries
-        
 
     /**
      * @see [okhttp3.Dispatcher.setMaxRequestsPerHost]
@@ -248,7 +229,6 @@ class PNConfiguration(userId: UserId) {
      * Defaults to `false`.
      */
     var googleAppEngineNetworking by configuration::googleAppEngineNetworking
-        
 
     /**
      * Whether to start a separate subscriber thread when creating the instance.
@@ -256,7 +236,6 @@ class PNConfiguration(userId: UserId) {
      * Defaults to `true`.
      */
     var startSubscriberThread by configuration::startSubscriberThread
-        
 
     /**
      * Instructs the SDK to use a proxy configuration when communicating with PubNub servers.
@@ -264,25 +243,21 @@ class PNConfiguration(userId: UserId) {
      * @see [Proxy]
      */
     var proxy by configuration::proxy
-        
 
     /**
      * @see [ProxySelector]
      */
     var proxySelector by configuration::proxySelector
-        
 
     /**
      * @see [Authenticator]
      */
     var proxyAuthenticator by configuration::proxyAuthenticator
-        
 
     /**
      * @see [CertificatePinner]
      */
     var certificatePinner by configuration::certificatePinner
-        
 
     /**
      * Sets a custom [HttpLoggingInterceptor] for logging network traffic.
@@ -290,31 +265,26 @@ class PNConfiguration(userId: UserId) {
      * @see [HttpLoggingInterceptor]
      */
     var httpLoggingInterceptor by configuration::httpLoggingInterceptor
-        
 
     /**
      * @see [SSLSocketFactory]
      */
     var sslSocketFactory by configuration::sslSocketFactory
-        
 
     /**
      * @see [X509ExtendedTrustManager]
      */
     var x509ExtendedTrustManager by configuration::x509ExtendedTrustManager
-        
 
     /**
      * @see [okhttp3.ConnectionSpec]
      */
     var connectionSpec by configuration::connectionSpec
-        
 
     /**
      * @see [javax.net.ssl.HostnameVerifier]
      */
     var hostnameVerifier by configuration::hostnameVerifier
-        
 
     /**
      * How many times publishing file message should automatically retry before marking the action as failed
@@ -322,11 +292,10 @@ class PNConfiguration(userId: UserId) {
      * Defaults to `5`
      */
     var fileMessagePublishRetryLimit by configuration::fileMessagePublishRetryLimit
-        
+
     var dedupOnSubscribe by configuration::dedupOnSubscribe
-        
+
     var maximumMessagesCacheSize by configuration::maximumMessagesCacheSize
-        
 
     /**
      * Retry configuration for requests.
@@ -337,7 +306,4 @@ class PNConfiguration(userId: UserId) {
      *  Delay will vary from provided value by random value.
      */
     var retryConfiguration by configuration::retryConfiguration
-        
-
-
 }

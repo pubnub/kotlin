@@ -45,8 +45,14 @@ internal class UnwrapSingleFieldTest {
     }
 }
 
-data class ClassWithString(@JsonAdapter(UnwrapSingleField::class) val f: String)
+data class ClassWithString(
+    @JsonAdapter(UnwrapSingleField::class) val f: String,
+)
 
-data class ClassWithNumber(@JsonAdapter(UnwrapSingleField::class) val f: Int)
+data class ClassWithNumber(
+    @JsonAdapter(UnwrapSingleField::class) val f: Int,
+)
 
-data class ClassWithBoolean(@JsonAdapter(UnwrapSingleField::class) val f: Boolean)
+data class ClassWithBoolean(
+    @JsonAdapter(UnwrapSingleField::class) val f: Boolean,
+)

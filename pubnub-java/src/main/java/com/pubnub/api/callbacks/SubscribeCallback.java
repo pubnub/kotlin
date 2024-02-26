@@ -6,9 +6,10 @@ import com.pubnub.api.v2.callbacks.EventListener;
 import com.pubnub.api.v2.callbacks.StatusListener;
 import org.jetbrains.annotations.NotNull;
 
-abstract public class SubscribeCallback implements StatusListener, EventListener {
-    static public class BaseSubscribeCallback extends SubscribeCallback {
+public abstract class SubscribeCallback implements StatusListener, EventListener {
+    public static class BaseSubscribeCallback extends SubscribeCallback {
         @Override
-        public void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus) {}
+        public void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus) {
+        }
     }
 }

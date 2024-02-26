@@ -20,17 +20,17 @@ class GetState internal constructor(
     pubnub: InternalPubNubClient,
     override val channels: List<String>,
     override val channelGroups: List<String>,
-    override val uuid: String = pubnub.configuration.userId.value
+    override val uuid: String = pubnub.configuration.userId.value,
 ) : Endpoint<Envelope<JsonElement>, PNGetStateResult>(pubnub), IGetState {
-
     override fun getAffectedChannels() = channels
 
     override fun getAffectedChannelGroups() = channelGroups
 
     override fun validateParams() {
         super.validateParams()
-        if (channels.isEmpty() && channelGroups.isEmpty())
+        if (channels.isEmpty() && channelGroups.isEmpty()) {
             throw PubNubException(PubNubError.CHANNEL_AND_GROUP_MISSING)
+        }
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<JsonElement>> {
@@ -40,7 +40,7 @@ class GetState internal constructor(
             pubnub.configuration.subscribeKey,
             channels.toCsv(),
             uuid,
-            queryParams
+            queryParams,
         )
     }
 

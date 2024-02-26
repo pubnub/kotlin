@@ -10,7 +10,10 @@ class ThenSteps(
     private val memberState: MemberState,
 ) {
     @Then("the response contains list with {string} and {string} members")
-    fun the_response_contains_list_with_and_members(firstMemberName: String, secondMemberName: String) {
+    fun the_response_contains_list_with_and_members(
+        firstMemberName: String,
+        secondMemberName: String,
+    ) {
         val firstMember = loadMember(firstMemberName)
         val secondMember = loadMember(secondMemberName)
         assertThat(memberState.returnedMembers, Matchers.containsInAnyOrder(firstMember, secondMember))

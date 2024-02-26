@@ -10,5 +10,5 @@ data class PNUUIDMetadata(
     val updated: String?,
     val eTag: String?,
     val type: String?,
-    val status: String?
+    val status: String?,
 )

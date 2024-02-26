@@ -20,7 +20,7 @@ internal class ReceiveReconnectEffect(
     retryConfiguration: RetryConfiguration,
     private val executorService: ScheduledExecutorService,
     private val attempts: Int,
-    private val reason: PubNubException?
+    private val reason: PubNubException?,
 ) : ManagedEffect, RetryableBase<SubscribeEnvelope>(retryConfiguration, RetryableEndpointGroup.SUBSCRIBE) {
     private val log = LoggerFactory.getLogger(ReceiveReconnectEffect::class.java)
 
@@ -43,28 +43,30 @@ internal class ReceiveReconnectEffect(
             return
         }
 
-        val effectiveDelay = getEffectiveDelay(
-            statusCode = reason?.statusCode ?: 0,
-            retryAfterHeaderValue = reason?.retryAfterHeaderValue ?: 0
-        )
-        scheduled = executorService.scheduleWithDelay(effectiveDelay) {
-            receiveMessagesRemoteAction.async { result ->
-                result.onFailure {
-                    subscribeEventSink.add(
-                        SubscribeEvent.ReceiveReconnectFailure(
-                            PubNubException.from(it)
+        val effectiveDelay =
+            getEffectiveDelay(
+                statusCode = reason?.statusCode ?: 0,
+                retryAfterHeaderValue = reason?.retryAfterHeaderValue ?: 0,
+            )
+        scheduled =
+            executorService.scheduleWithDelay(effectiveDelay) {
+                receiveMessagesRemoteAction.async { result ->
+                    result.onFailure {
+                        subscribeEventSink.add(
+                            SubscribeEvent.ReceiveReconnectFailure(
+                                PubNubException.from(it),
+                            ),
                         )
-                    )
-                }.onSuccess {
-                    subscribeEventSink.add(
-                        SubscribeEvent.ReceiveReconnectSuccess(
-                            it.messages,
-                            it.subscriptionCursor
+                    }.onSuccess {
+                        subscribeEventSink.add(
+                            SubscribeEvent.ReceiveReconnectSuccess(
+                                it.messages,
+                                it.subscriptionCursor,
+                            ),
                         )
-                    )
+                    }
                 }
             }
-        }
     }
 
     @Synchronized

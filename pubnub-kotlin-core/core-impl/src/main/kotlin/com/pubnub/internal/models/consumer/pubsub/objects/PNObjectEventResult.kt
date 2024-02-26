@@ -12,20 +12,21 @@ import com.pubnub.internal.utils.UnwrapSingleField
 
 data class PNObjectEventResult(
     private val result: BasePubSubResult,
-    val extractedMessage: PNObjectEventMessage
+    val extractedMessage: PNObjectEventMessage,
 ) : PubSubResult by result
 
 internal object ObjectExtractedMessageDeserializer :
     JsonDeserializer<PNObjectEventMessage> by PolymorphicDeserializer.dispatchByFieldsValues(
         fields = listOf("event", "type"),
-        mappingFieldValuesToClass = mapOf(
-            listOf("set", "channel") to PNSetChannelMetadataEventMessage::class.java,
-            listOf("set", "uuid") to PNSetUUIDMetadataEventMessage::class.java,
-            listOf("set", "membership") to PNSetMembershipEventMessage::class.java,
-            listOf("delete", "channel") to PNDeleteChannelMetadataEventMessage::class.java,
-            listOf("delete", "uuid") to PNDeleteUUIDMetadataEventMessage::class.java,
-            listOf("delete", "membership") to PNDeleteMembershipEventMessage::class.java
-        )
+        mappingFieldValuesToClass =
+            mapOf(
+                listOf("set", "channel") to PNSetChannelMetadataEventMessage::class.java,
+                listOf("set", "uuid") to PNSetUUIDMetadataEventMessage::class.java,
+                listOf("set", "membership") to PNSetMembershipEventMessage::class.java,
+                listOf("delete", "channel") to PNDeleteChannelMetadataEventMessage::class.java,
+                listOf("delete", "uuid") to PNDeleteUUIDMetadataEventMessage::class.java,
+                listOf("delete", "membership") to PNDeleteMembershipEventMessage::class.java,
+            ),
     )
 
 @JsonAdapter(ObjectExtractedMessageDeserializer::class)
@@ -41,7 +42,7 @@ data class PNSetChannelMetadataEventMessage(
     override val version: String,
     override val event: String,
     override val type: String,
-    val data: PNChannelMetadata
+    val data: PNChannelMetadata,
 ) : PNObjectEventMessage()
 
 data class PNSetUUIDMetadataEventMessage(
@@ -49,7 +50,7 @@ data class PNSetUUIDMetadataEventMessage(
     override val version: String,
     override val event: String,
     override val type: String,
-    val data: PNUUIDMetadata
+    val data: PNUUIDMetadata,
 ) : PNObjectEventMessage()
 
 data class PNSetMembershipEventMessage(
@@ -57,7 +58,7 @@ data class PNSetMembershipEventMessage(
     override val version: String,
     override val event: String,
     override val type: String,
-    val data: PNSetMembershipEvent
+    val data: PNSetMembershipEvent,
 ) : PNObjectEventMessage()
 
 data class PNDeleteMembershipEventMessage(
@@ -65,7 +66,7 @@ data class PNDeleteMembershipEventMessage(
     override val version: String,
     override val event: String,
     override val type: String,
-    val data: PNDeleteMembershipEvent
+    val data: PNDeleteMembershipEvent,
 ) : PNObjectEventMessage()
 
 data class PNDeleteChannelMetadataEventMessage(
@@ -75,7 +76,7 @@ data class PNDeleteChannelMetadataEventMessage(
     override val type: String,
     @JsonAdapter(UnwrapSingleField::class)
     @SerializedName("data")
-    val channel: String
+    val channel: String,
 ) : PNObjectEventMessage()
 
 data class PNDeleteUUIDMetadataEventMessage(
@@ -85,7 +86,7 @@ data class PNDeleteUUIDMetadataEventMessage(
     override val type: String,
     @JsonAdapter(UnwrapSingleField::class)
     @SerializedName("data")
-    val uuid: String
+    val uuid: String,
 ) : PNObjectEventMessage()
 
 data class PNSetMembershipEvent(
@@ -97,7 +98,7 @@ data class PNSetMembershipEvent(
     val custom: Any?,
     val eTag: String,
     val updated: String,
-    val status: String?
+    val status: String?,
 )
 
 data class PNDeleteMembershipEvent(
@@ -105,5 +106,5 @@ data class PNDeleteMembershipEvent(
     @SerializedName("channel")
     val channelId: String,
     @JsonAdapter(UnwrapSingleField::class)
-    val uuid: String
+    val uuid: String,
 )

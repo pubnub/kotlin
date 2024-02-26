@@ -10,7 +10,6 @@ import com.pubnub.internal.endpoints.channel_groups.AddChannelChannelGroup
 
 class AddChannelChannelGroupTestSuite :
     com.pubnub.internal.suite.EndpointTestSuite<AddChannelChannelGroup, PNChannelGroupsAddChannelResult>() {
-
     override fun pnOperation() = PNOperationType.PNAddChannelsToGroupOperation
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH
@@ -18,21 +17,22 @@ class AddChannelChannelGroupTestSuite :
     override fun snippet(): AddChannelChannelGroup {
         return pubnub.addChannelsToChannelGroup(
             channelGroup = "cg1",
-            channels = listOf("ch1", "ch2")
+            channels = listOf("ch1", "ch2"),
         )
     }
 
     override fun verifyResultExpectations(result: PNChannelGroupsAddChannelResult) {
     }
 
-    override fun successfulResponseBody() = """
+    override fun successfulResponseBody() =
+        """
         {
          "status": 200,
          "message": "OK",
          "service": "channel-registry",
          "error": false
         }
-    """.trimIndent()
+        """.trimIndent()
 
     override fun unsuccessfulResponseBodyList() = emptyList<String>()
 

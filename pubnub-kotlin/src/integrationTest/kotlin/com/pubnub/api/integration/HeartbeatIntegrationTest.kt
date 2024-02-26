@@ -3,7 +3,6 @@ package com.pubnub.api.integration
 import com.pubnub.api.CommonUtils.generatePayload
 import com.pubnub.api.CommonUtils.randomChannel
 import com.pubnub.api.PubNub
-
 import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
@@ -20,7 +19,6 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
 class HeartbeatIntegrationTest : BaseIntegrationTest() {
-
     lateinit var expectedChannel: String
 
     override fun onBefore() {
@@ -36,76 +34,85 @@ class HeartbeatIntegrationTest : BaseIntegrationTest() {
         val hits = AtomicInteger()
         val expectedStatePayload = generatePayload()
 
-        val observer = createPubNub().apply {
-            configuration.userId = UserId("observer_${System.currentTimeMillis()}")
-        }
-
-        val pubnub = createPubNub(
-            getBasicPnConfiguration().apply {
-                presenceTimeout = 20
-                heartbeatInterval = 4
+        val observer =
+            createPubNub().apply {
+                configuration.userId = UserId("observer_${System.currentTimeMillis()}")
             }
-        )
 
-        observer.addListener(object : com.pubnub.api.callbacks.SubscribeCallback() {
+        val pubnub =
+            createPubNub(
+                getBasicPnConfiguration().apply {
+                    presenceTimeout = 20
+                    heartbeatInterval = 4
+                },
+            )
 
-            override fun status(p: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.category == PNStatusCategory.Connected &&
-                    pnStatus.channels.contains(expectedChannel)
+        observer.addListener(
+            object : com.pubnub.api.callbacks.SubscribeCallback() {
+                override fun status(
+                    p: PubNub,
+                    pnStatus: PNStatus,
                 ) {
-                    pubnub.subscribe(
-                        channels = listOf(expectedChannel),
-                        withPresence = true
-                    )
+                    if (pnStatus.category == PNStatusCategory.Connected &&
+                        pnStatus.channels.contains(expectedChannel)
+                    ) {
+                        pubnub.subscribe(
+                            channels = listOf(expectedChannel),
+                            withPresence = true,
+                        )
+                    }
                 }
-            }
 
-            override fun presence(p: PubNub, event: PNPresenceEventResult) {
-                if (event.uuid.equals(pubnub.configuration.userId.value) &&
-                    event.channel.equals(expectedChannel)
+                override fun presence(
+                    p: PubNub,
+                    event: PNPresenceEventResult,
                 ) {
-                    when (event.event) {
-                        "state-change" -> {
-                            assertEquals(expectedStatePayload, event.state)
-                            hits.incrementAndGet()
-                            pubnub.disconnect()
-                        }
-
-                        "join" -> {
-                            if (event.state == null) {
-                                hits.incrementAndGet()
-                                val stateSet = AtomicBoolean()
-                                pubnub.setPresenceState(
-                                    state = expectedStatePayload,
-                                    channels = listOf(expectedChannel)
-                                ).async { result ->
-                                    assertFalse(result.isFailure)
-                                    result.onSuccess {
-                                        assertEquals(expectedStatePayload, it.state)
-                                        hits.incrementAndGet()
-                                        stateSet.set(true)
-                                    }
-                                }
-
-                                Awaitility.await().atMost(Durations.FIVE_SECONDS)
-                                    .untilTrue(stateSet)
-                            } else {
+                    if (event.uuid.equals(pubnub.configuration.userId.value) &&
+                        event.channel.equals(expectedChannel)
+                    ) {
+                        when (event.event) {
+                            "state-change" -> {
                                 assertEquals(expectedStatePayload, event.state)
                                 hits.incrementAndGet()
+                                pubnub.disconnect()
                             }
-                        }
 
-                        "timeout", "leave" -> {
-                            pubnub.reconnect()
+                            "join" -> {
+                                if (event.state == null) {
+                                    hits.incrementAndGet()
+                                    val stateSet = AtomicBoolean()
+                                    pubnub.setPresenceState(
+                                        state = expectedStatePayload,
+                                        channels = listOf(expectedChannel),
+                                    ).async { result ->
+                                        assertFalse(result.isFailure)
+                                        result.onSuccess {
+                                            assertEquals(expectedStatePayload, it.state)
+                                            hits.incrementAndGet()
+                                            stateSet.set(true)
+                                        }
+                                    }
+
+                                    Awaitility.await().atMost(Durations.FIVE_SECONDS)
+                                        .untilTrue(stateSet)
+                                } else {
+                                    assertEquals(expectedStatePayload, event.state)
+                                    hits.incrementAndGet()
+                                }
+                            }
+
+                            "timeout", "leave" -> {
+                                pubnub.reconnect()
+                            }
                         }
                     }
                 }
-            }
-        })
+            },
+        )
 
         observer.subscribe(
             channels = listOf(expectedChannel),
-            withPresence = true
+            withPresence = true,
         )
 
         Awaitility.await()

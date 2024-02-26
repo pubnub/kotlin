@@ -15,4 +15,4 @@ import com.pubnub.api.v2.callbacks.BaseEventListener
  * This class implements the [AutoCloseable] interface to help you release resources by calling [unsubscribe]
  * and removing all listeners on [close]. Remember to always call [close] when you no longer need this Subscription.
  */
-interface BaseSubscription<EvLis: BaseEventListener> : BaseEventEmitter<EvLis>, SubscribeCapable, AutoCloseable
+interface BaseSubscription<EvLis : BaseEventListener> : BaseEventEmitter<EvLis>, SubscribeCapable, AutoCloseable

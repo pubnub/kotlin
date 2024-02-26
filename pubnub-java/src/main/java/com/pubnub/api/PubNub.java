@@ -82,6 +82,7 @@ public interface PubNub extends BasePubNub<
     static PubNub create(PNConfiguration configuration) {
         return new PubNubImpl(configuration);
     }
+
     @NotNull PNConfiguration getConfiguration();
 
     @NotNull SubscribeBuilder subscribe();

@@ -1,31 +1,11 @@
 package com.pubnub.api.endpoints.presence;
 
-import com.pubnub.internal.endpoints.DelegatingEndpoint;
-import com.pubnub.internal.InternalPubNubClient;
-import lombok.Setter;
-import lombok.experimental.Accessors;
+import com.pubnub.api.endpoints.Endpoint;
 
-import java.util.ArrayList;
-import java.util.List;
+public interface Heartbeat extends Endpoint<Boolean> {
+    Heartbeat channels(java.util.List<String> channels);
 
-@Accessors(chain = true, fluent = true)
-public class Heartbeat extends DelegatingEndpoint<Boolean> {
+    Heartbeat channelGroups(java.util.List<String> channelGroups);
 
-    @Setter
-    private List<String> channels;
-    @Setter
-    private List<String> channelGroups;
-    @Setter
-    private Object state;
-
-    public Heartbeat(InternalPubNubClient pubnub) {
-        super(pubnub);
-        channels = new ArrayList<>();
-        channelGroups = new ArrayList<>();
-    }
-
-    @Override
-    protected com.pubnub.internal.Endpoint<?, Boolean> createAction() {
-        return new com.pubnub.internal.endpoints.presence.Heartbeat(pubnub, channels, channelGroups, state);
-    }
+    Heartbeat state(Object state);
 }

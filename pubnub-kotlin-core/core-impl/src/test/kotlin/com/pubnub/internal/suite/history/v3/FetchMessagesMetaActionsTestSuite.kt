@@ -14,7 +14,6 @@ import org.junit.Assert.assertTrue
 
 class FetchMessagesMetaActionsTestSuite :
     com.pubnub.internal.suite.EndpointTestSuite<FetchMessages, PNFetchMessagesResult>() {
-
     override fun pnOperation() = PNOperationType.PNFetchMessagesOperation
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH
@@ -23,7 +22,7 @@ class FetchMessagesMetaActionsTestSuite :
         pubnub.fetchMessages(
             channels = listOf("ch1"),
             includeMeta = true,
-            includeMessageActions = true
+            includeMessageActions = true,
         )
 
     override fun verifyResultExpectations(result: PNFetchMessagesResult) {
@@ -32,7 +31,7 @@ class FetchMessagesMetaActionsTestSuite :
         assertEquals("bar", result.channels["ch1"]!![0].message.asString)
         assertEquals(
             JsonObject().apply { addProperty("color", "red") },
-            result.channels["ch1"]!![0].meta
+            result.channels["ch1"]!![0].meta,
         )
         assertEquals(100L, result.channels["ch1"]!![0].timetoken)
 
@@ -43,7 +42,8 @@ class FetchMessagesMetaActionsTestSuite :
         assertEquals("200", actions["reaction"]!!["smile"]!![0].actionTimetoken)
     }
 
-    override fun successfulResponseBody() = """
+    override fun successfulResponseBody() =
+        """
         {
          "channels": {
           "ch1": [
@@ -67,10 +67,11 @@ class FetchMessagesMetaActionsTestSuite :
           ]
          }
         }
-    """.trimIndent()
+        """.trimIndent()
 
-    override fun unsuccessfulResponseBodyList() = listOf(
-        """
+    override fun unsuccessfulResponseBodyList() =
+        listOf(
+            """
             {
              "channels": {
               "ch1": [
@@ -80,8 +81,8 @@ class FetchMessagesMetaActionsTestSuite :
               ]
              }
             }
-        """.trimIndent(),
-        """
+            """.trimIndent(),
+            """
             {
              "channels": {
               "ch1": [
@@ -94,8 +95,8 @@ class FetchMessagesMetaActionsTestSuite :
               "ch3": null
              }
             }
-        """.trimIndent()
-    )
+            """.trimIndent(),
+        )
 
     override fun mappingBuilder(): MappingBuilder {
         return get(urlPathEqualTo("/v3/history-with-actions/sub-key/mySubscribeKey/channel/ch1"))
@@ -115,7 +116,7 @@ class FetchMessagesMetaActionsTestSuite :
                     assertTrue(result.isFailure)
 //                    assertEquals(PNStatusCategory.PNMalformedResponseCategory, status.category)
                 }
-            }
+            },
         )
     }
 }

@@ -23,7 +23,6 @@ import java.util.concurrent.TimeUnit.SECONDS
 import java.util.concurrent.atomic.AtomicInteger
 
 class HereNowEndpointTest : BaseTest() {
-
     @Test
     fun testMultipleChannelStateSync() {
         stubFor(
@@ -69,15 +68,16 @@ class HereNowEndpointTest : BaseTest() {
                       },
                       "service": "Presence"
                     }
-                    """.trimIndent()
-                )
-            )
+                    """.trimIndent(),
+                ),
+            ),
         )
 
-        val response = pubnub.hereNow(
-            channels = listOf("ch1", "ch2"),
-            includeState = true
-        ).sync()
+        val response =
+            pubnub.hereNow(
+                channels = listOf("ch1", "ch2"),
+                includeState = true,
+            ).sync()
 
         assertEquals(response.totalChannels, 2)
         assertEquals(response.totalOccupancy, 3)
@@ -108,45 +108,46 @@ class HereNowEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                              "status": 200,
-                              "message": "OK",
-                              "payload": {
-                                "total_occupancy": 3,
-                                "total_channels": 2,
-                                "channels": {
-                                  "ch1": {
-                                    "occupancy": 1,
-                                    "uuids": [
-                                      {
-                                        "uuid": "user1"
-                                      }
-                                    ]
-                                  },
-                                  "ch2": {
-                                    "occupancy": 2,
-                                    "uuids": [
-                                      {
-                                        "uuid": "user1"
-                                      },
-                                      {
-                                        "uuid": "user3"
-                                      }
-                                    ]
+                        {
+                          "status": 200,
+                          "message": "OK",
+                          "payload": {
+                            "total_occupancy": 3,
+                            "total_channels": 2,
+                            "channels": {
+                              "ch1": {
+                                "occupancy": 1,
+                                "uuids": [
+                                  {
+                                    "uuid": "user1"
                                   }
-                                }
+                                ]
                               },
-                              "service": "Presence"
+                              "ch2": {
+                                "occupancy": 2,
+                                "uuids": [
+                                  {
+                                    "uuid": "user1"
+                                  },
+                                  {
+                                    "uuid": "user3"
+                                  }
+                                ]
+                              }
                             }
-                        """.trimIndent()
-                    )
-                )
+                          },
+                          "service": "Presence"
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val response = pubnub.hereNow(
-            channels = listOf("ch1", "ch2"),
-            includeState = true
-        ).sync()
+        val response =
+            pubnub.hereNow(
+                channels = listOf("ch1", "ch2"),
+                includeState = true,
+            ).sync()
 
         assertEquals(response.totalChannels, 2)
         assertEquals(response.totalOccupancy, 3)
@@ -177,32 +178,33 @@ class HereNowEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                              "status": 200,
-                              "message": "OK",
-                              "payload": {
-                                "channels": {
-                                  "game1": {
-                                    "uuids": [
-                                      "a3ffd012-a3b9-478c-8705-64089f24d71e"
-                                    ],
-                                    "occupancy": 1
-                                  }
-                                },
-                                "total_channels": 1,
-                                "total_occupancy": 1
-                              },
-                              "service": "Presence"
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                          "status": 200,
+                          "message": "OK",
+                          "payload": {
+                            "channels": {
+                              "game1": {
+                                "uuids": [
+                                  "a3ffd012-a3b9-478c-8705-64089f24d71e"
+                                ],
+                                "occupancy": 1
+                              }
+                            },
+                            "total_channels": 1,
+                            "total_occupancy": 1
+                          },
+                          "service": "Presence"
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val response = pubnub.hereNow(
-            channels = listOf("game1", "game2"),
-            includeState = false
-        ).sync()
+        val response =
+            pubnub.hereNow(
+                channels = listOf("game1", "game2"),
+                includeState = false,
+            ).sync()
 
         assertEquals(response.totalChannels, 1)
         assertEquals(response.totalOccupancy, 1)
@@ -212,7 +214,7 @@ class HereNowEndpointTest : BaseTest() {
         assertEquals(response.channels["game1"]!!.occupants.size, 1)
         assertEquals(
             response.channels["game1"]!!.occupants[0].uuid,
-            "a3ffd012-a3b9-478c-8705-64089f24d71e"
+            "a3ffd012-a3b9-478c-8705-64089f24d71e",
         )
         assertNull(response.channels["game1"]!!.occupants[0].state)
     }
@@ -238,16 +240,17 @@ class HereNowEndpointTest : BaseTest() {
                           },
                           "service": "Presence"
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val response = pubnub.hereNow(
-            channels = listOf("game1", "game2"),
-            includeState = false,
-            includeUUIDs = false
-        ).sync()
+        val response =
+            pubnub.hereNow(
+                channels = listOf("game1", "game2"),
+                includeState = false,
+                includeUUIDs = false,
+            ).sync()
 
         assertEquals(response.totalChannels, 1)
         assertEquals(response.totalOccupancy, 1)
@@ -268,21 +271,22 @@ class HereNowEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                              "status": 200,
-                              "message": "OK",
-                              "service": "Presence",
-                              "occupancy": 3
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                          "status": 200,
+                          "message": "OK",
+                          "service": "Presence",
+                          "occupancy": 3
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val response = pubnub.hereNow(
-            channels = listOf("game1"),
-            includeUUIDs = false
-        ).sync()
+        val response =
+            pubnub.hereNow(
+                channels = listOf("game1"),
+                includeUUIDs = false,
+            ).sync()
 
         assertEquals(response.totalChannels, 1)
         assertEquals(response.totalOccupancy, 3)
@@ -299,24 +303,25 @@ class HereNowEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                              "status": 200,
-                              "message": "OK",
-                              "service": "Presence",
-                              "uuids": [
-                                "a3ffd012-a3b9-478c-8705-64089f24d71e"
-                              ],
-                              "occupancy": 1
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                          "status": 200,
+                          "message": "OK",
+                          "service": "Presence",
+                          "uuids": [
+                            "a3ffd012-a3b9-478c-8705-64089f24d71e"
+                          ],
+                          "occupancy": 1
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val response = pubnub.hereNow(
-            channels = listOf("game1"),
-            includeState = false
-        ).sync()
+        val response =
+            pubnub.hereNow(
+                channels = listOf("game1"),
+                includeState = false,
+            ).sync()
 
         assertEquals(response.totalChannels, 1)
         assertEquals(response.totalOccupancy, 1)
@@ -325,7 +330,7 @@ class HereNowEndpointTest : BaseTest() {
         assertEquals(response.channels["game1"]!!.occupants.size, 1)
         assertEquals(
             response.channels["game1"]!!.occupants[0].uuid,
-            "a3ffd012-a3b9-478c-8705-64089f24d71e"
+            "a3ffd012-a3b9-478c-8705-64089f24d71e",
         )
         assertEquals(response.channels["game1"]!!.occupants[0].state, null)
     }
@@ -337,28 +342,29 @@ class HereNowEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "status": 200,
+                          "message": "OK",
+                          "service": "Presence",
+                          "uuids": [
                             {
-                              "status": 200,
-                              "message": "OK",
-                              "service": "Presence",
-                              "uuids": [
-                                {
-                                  "uuid": "a3ffd012-a3b9-478c-8705-64089f24d71e",
-                                  "state": {
-                                    "age": 10
-                                  }
-                                }
-                              ],
-                              "occupancy": 1
+                              "uuid": "a3ffd012-a3b9-478c-8705-64089f24d71e",
+                              "state": {
+                                "age": 10
+                              }
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ],
+                          "occupancy": 1
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
-        val response = pubnub.hereNow(
-            channels = listOf("game1"),
-            includeState = true
-        ).sync()
+        val response =
+            pubnub.hereNow(
+                channels = listOf("game1"),
+                includeState = true,
+            ).sync()
 
         assertEquals(response.totalChannels, 1)
         assertEquals(response.totalOccupancy, 1)
@@ -367,7 +373,7 @@ class HereNowEndpointTest : BaseTest() {
         assertEquals(response.channels["game1"]!!.occupants.size, 1)
         assertEquals(
             response.channels["game1"]!!.occupants[0].uuid,
-            "a3ffd012-a3b9-478c-8705-64089f24d71e"
+            "a3ffd012-a3b9-478c-8705-64089f24d71e",
         )
         assertEquals(response.channels["game1"]!!.occupants[0].state.toString(), """{"age":10}""")
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
@@ -382,26 +388,27 @@ class HereNowEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                              "status": 200,
-                              "message": "OK",
-                              "payload": {
-                                "channels": {},
-                                "total_channels": 0,
-                                "total_occupancy": 0
-                              },
-                              "service": "Presence"
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                          "status": 200,
+                          "message": "OK",
+                          "payload": {
+                            "channels": {},
+                            "total_channels": 0,
+                            "total_occupancy": 0
+                          },
+                          "service": "Presence"
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val response = pubnub.hereNow(
-            channels = listOf("game1"),
-            channelGroups = listOf("grp1"),
-            includeState = true
-        ).sync()
+        val response =
+            pubnub.hereNow(
+                channels = listOf("game1"),
+                channelGroups = listOf("grp1"),
+                includeState = true,
+            ).sync()
 
         assertEquals(response.totalOccupancy, 0)
     }
@@ -413,55 +420,55 @@ class HereNowEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                              "status": 200,
-                              "message": "OK",
-                              "payload": {
-                                "total_occupancy": 3,
-                                "total_channels": 2,
-                                "channels": {
-                                  "ch1": {
-                                    "occupancy": 1,
-                                    "uuids": [
-                                      {
-                                        "uuid": "user1",
-                                        "state": {
-                                          "age": 10
-                                        }
-                                      }
-                                    ]
-                                  },
-                                  "ch2": {
-                                    "occupancy": 2,
-                                    "uuids": [
-                                      {
-                                        "uuid": "user1",
-                                        "state": {
-                                          "age": 10
-                                        }
-                                      },
-                                      {
-                                        "uuid": "user3",
-                                        "state": {
-                                          "age": 30
-                                        }
-                                      }
-                                    ]
+                        {
+                          "status": 200,
+                          "message": "OK",
+                          "payload": {
+                            "total_occupancy": 3,
+                            "total_channels": 2,
+                            "channels": {
+                              "ch1": {
+                                "occupancy": 1,
+                                "uuids": [
+                                  {
+                                    "uuid": "user1",
+                                    "state": {
+                                      "age": 10
+                                    }
                                   }
-                                }
+                                ]
                               },
-                              "service": "Presence"
+                              "ch2": {
+                                "occupancy": 2,
+                                "uuids": [
+                                  {
+                                    "uuid": "user1",
+                                    "state": {
+                                      "age": 10
+                                    }
+                                  },
+                                  {
+                                    "uuid": "user3",
+                                    "state": {
+                                      "age": 30
+                                    }
+                                  }
+                                ]
+                              }
                             }
-                        """.trimIndent()
-                    )
-                )
+                          },
+                          "service": "Presence"
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         pubnub.configuration.authKey = "myKey"
 
         pubnub.hereNow(
             channels = listOf("ch1", "ch2"),
-            includeState = true
+            includeState = true,
         ).sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
@@ -493,9 +500,9 @@ class HereNowEndpointTest : BaseTest() {
                           },
                           "service": "Presence"
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         val atomic = AtomicInteger(0)
@@ -517,10 +524,11 @@ class HereNowEndpointTest : BaseTest() {
 
         var response: PNHereNowResult? = null
         try {
-            response = pubnub.hereNow(
-                channels = listOf("ch1", "ch2"),
-                includeState = true
-            ).sync()
+            response =
+                pubnub.hereNow(
+                    channels = listOf("ch1", "ch2"),
+                    includeState = true,
+                ).sync()
         } catch (e: Exception) {
             assertNull(response)
             assertTrue((e as PubNubException).pubnubError == SUBSCRIBE_KEY_MISSING)

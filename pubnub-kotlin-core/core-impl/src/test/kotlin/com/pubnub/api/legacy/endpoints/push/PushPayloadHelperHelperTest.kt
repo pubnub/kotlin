@@ -16,7 +16,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class PushPayloadHelperHelperTest : BaseTest() {
-
     @Test
     fun testPayloads_Missing() {
         val pushPayloadHelper = PushPayloadHelper()
@@ -68,10 +67,11 @@ class PushPayloadHelperHelperTest : BaseTest() {
 
         apnsPayload.aps = aps
         apnsPayload.apns2Configurations = emptyList()
-        apnsPayload.custom = hashMapOf(
-            "key_1" to "1",
-            "key_2" to 2
-        )
+        apnsPayload.custom =
+            hashMapOf(
+                "key_1" to "1",
+                "key_2" to 2,
+            )
         pushPayloadHelper.apnsPayload = apnsPayload
 
         val map = pushPayloadHelper.build()
@@ -93,10 +93,11 @@ class PushPayloadHelperHelperTest : BaseTest() {
         val pushPayloadHelper = PushPayloadHelper()
         val apnsPayload = APNSPayload()
 
-        apnsPayload.aps = APS().apply {
-            alert = "alert"
-            badge = 5
-        }
+        apnsPayload.aps =
+            APS().apply {
+                alert = "alert"
+                badge = 5
+            }
         pushPayloadHelper.apnsPayload = apnsPayload
 
         apnsPayload.custom = mapOf<String, Any>("key_2" to "2")
@@ -119,64 +120,76 @@ class PushPayloadHelperHelperTest : BaseTest() {
     fun testApple_PnPushArray() {
         val pushPayloadHelper = PushPayloadHelper()
 
-        val target1 = APNS2Configuration.Target().apply {
-            environment = PNPushEnvironment.DEVELOPMENT
-            topic = "topic_1"
-        }
-        val target2 = APNS2Configuration.Target().apply {
-            environment = PNPushEnvironment.PRODUCTION
-        }
-        val target3 = APNS2Configuration.Target().apply {
-            environment = PNPushEnvironment.PRODUCTION
-            topic = "topic_3"
-            excludeDevices = listOf("ex_1", "ex_2")
-        }
-        val target4 = APNS2Configuration.Target().apply {
-            environment = null
-            topic = null
-            excludeDevices = null
-        }
-        val target5 = APNS2Configuration.Target().apply {
-            environment = PNPushEnvironment.PRODUCTION
-            topic = "topic_5"
-            excludeDevices = listOf()
-        }
-        val target6 = APNS2Configuration.Target().apply {
-            topic = "topic_6"
-            excludeDevices = null
-        }
+        val target1 =
+            APNS2Configuration.Target().apply {
+                environment = PNPushEnvironment.DEVELOPMENT
+                topic = "topic_1"
+            }
+        val target2 =
+            APNS2Configuration.Target().apply {
+                environment = PNPushEnvironment.PRODUCTION
+            }
+        val target3 =
+            APNS2Configuration.Target().apply {
+                environment = PNPushEnvironment.PRODUCTION
+                topic = "topic_3"
+                excludeDevices = listOf("ex_1", "ex_2")
+            }
+        val target4 =
+            APNS2Configuration.Target().apply {
+                environment = null
+                topic = null
+                excludeDevices = null
+            }
+        val target5 =
+            APNS2Configuration.Target().apply {
+                environment = PNPushEnvironment.PRODUCTION
+                topic = "topic_5"
+                excludeDevices = listOf()
+            }
+        val target6 =
+            APNS2Configuration.Target().apply {
+                topic = "topic_6"
+                excludeDevices = null
+            }
         val target7 = APNS2Configuration.Target()
 
-        val apns2Config1 = APNS2Configuration().apply {
-            collapseId = "collapse_1"
-            expiration = "exp_1"
-            version = "v1"
-            targets = null
-        }
-        val apns2Config2 = APNS2Configuration().apply {
-            collapseId = "collapse_2"
-            expiration = "exp_2"
-            version = "v2"
-            targets = emptyList()
-        }
-        val apns2Config3 = APNS2Configuration().apply {
-            collapseId = null
-            expiration = ""
-            version = "v3"
-            targets = listOf(target1, target2, target3, target4, target5, target6, target7)
-        }
-        val apns2Config4 = APNS2Configuration().apply {
-            collapseId = null
-            expiration = null
-            version = null
-        }
+        val apns2Config1 =
+            APNS2Configuration().apply {
+                collapseId = "collapse_1"
+                expiration = "exp_1"
+                version = "v1"
+                targets = null
+            }
+        val apns2Config2 =
+            APNS2Configuration().apply {
+                collapseId = "collapse_2"
+                expiration = "exp_2"
+                version = "v2"
+                targets = emptyList()
+            }
+        val apns2Config3 =
+            APNS2Configuration().apply {
+                collapseId = null
+                expiration = ""
+                version = "v3"
+                targets = listOf(target1, target2, target3, target4, target5, target6, target7)
+            }
+        val apns2Config4 =
+            APNS2Configuration().apply {
+                collapseId = null
+                expiration = null
+                version = null
+            }
         val apns2Config5 = APNS2Configuration()
 
-        pushPayloadHelper.apnsPayload = APNSPayload().apply {
-            apns2Configurations = listOf(
-                apns2Config1, apns2Config2, apns2Config3, apns2Config4, apns2Config5
-            )
-        }
+        pushPayloadHelper.apnsPayload =
+            APNSPayload().apply {
+                apns2Configurations =
+                    listOf(
+                        apns2Config1, apns2Config2, apns2Config3, apns2Config4, apns2Config5,
+                    )
+            }
 
         val map = pushPayloadHelper.build()
 
@@ -238,14 +251,15 @@ class PushPayloadHelperHelperTest : BaseTest() {
 
     @Test
     fun testCommonPayload_Valid() {
-        val map = PushPayloadHelper().apply {
-            commonPayload =
-                mapOf(
-                    "common_key_1" to 1,
-                    "common_key_2" to "2",
-                    "common_key_3" to true
-                )
-        }.build()
+        val map =
+            PushPayloadHelper().apply {
+                commonPayload =
+                    mapOf(
+                        "common_key_1" to 1,
+                        "common_key_2" to "2",
+                        "common_key_3" to true,
+                    )
+            }.build()
 
         assertEquals(map["common_key_1"], 1)
         assertEquals(map["common_key_2"], "2")
@@ -266,15 +280,17 @@ class PushPayloadHelperHelperTest : BaseTest() {
     fun testGoogle_Valid_1() {
         val pushPayloadHelper = PushPayloadHelper()
 
-        pushPayloadHelper.fcmPayload = FCMPayload().apply {
-            notification = FCMPayload.Notification().apply {
-                body = "Notification body"
-                image = null
-                title = ""
+        pushPayloadHelper.fcmPayload =
+            FCMPayload().apply {
+                notification =
+                    FCMPayload.Notification().apply {
+                        body = "Notification body"
+                        image = null
+                        title = ""
+                    }
+                custom = mapOf("a" to "a", "b" to 1)
+                data = mapOf("data_1" to "a", "data_2" to 1)
             }
-            custom = mapOf("a" to "a", "b" to 1)
-            data = mapOf("data_1" to "a", "data_2" to 1)
-        }
 
         val map = pushPayloadHelper.build()
 
@@ -338,14 +354,16 @@ class PushPayloadHelperHelperTest : BaseTest() {
     @Test
     fun testGoogle_Valid_2() {
         val pushPayloadHelper = PushPayloadHelper()
-        val fcmPayload = FCMPayload().apply {
-            data = mapOf(
-                "key_1" to "value_1",
-                "key_2" to 2,
-                "key_3" to true,
-                "key_4" to ""
-            )
-        }
+        val fcmPayload =
+            FCMPayload().apply {
+                data =
+                    mapOf(
+                        "key_1" to "value_1",
+                        "key_2" to 2,
+                        "key_3" to true,
+                        "key_4" to "",
+                    )
+            }
         pushPayloadHelper.fcmPayload = fcmPayload
         val map = pushPayloadHelper.build()
 
@@ -366,14 +384,16 @@ class PushPayloadHelperHelperTest : BaseTest() {
     @Test
     fun testGoogle_Custom() {
         val pushPayloadHelper = PushPayloadHelper()
-        pushPayloadHelper.fcmPayload = FCMPayload().apply {
-            custom = mapOf(
-                "key_1" to "value_1",
-                "key_2" to 2,
-                "key_3" to true,
-                "key_4" to ""
-            )
-        }
+        pushPayloadHelper.fcmPayload =
+            FCMPayload().apply {
+                custom =
+                    mapOf(
+                        "key_1" to "value_1",
+                        "key_2" to 2,
+                        "key_3" to true,
+                        "key_4" to "",
+                    )
+            }
         val map = pushPayloadHelper.build()
 
         val pnFcmMap = map["pn_gcm"] as Map<*, *>
@@ -393,18 +413,20 @@ class PushPayloadHelperHelperTest : BaseTest() {
     fun testMicrosoft_Missing() {
         val pushPayloadHelper = PushPayloadHelper()
 
-        val mpnsPayload = MPNSPayload().apply {
-            backContent = "Back Content"
-            backTitle = "Back Title"
-            count = 1
-            title = "Title"
-            type = "Type"
-            custom = mapOf(
-                "a" to "a",
-                "b" to 1,
-                "c" to ""
-            )
-        }
+        val mpnsPayload =
+            MPNSPayload().apply {
+                backContent = "Back Content"
+                backTitle = "Back Title"
+                count = 1
+                title = "Title"
+                type = "Type"
+                custom =
+                    mapOf(
+                        "a" to "a",
+                        "b" to 1,
+                        "c" to "",
+                    )
+            }
         pushPayloadHelper.mpnsPayload = mpnsPayload
         val map = pushPayloadHelper.build()
 
@@ -430,11 +452,12 @@ class PushPayloadHelperHelperTest : BaseTest() {
                 count = 1
                 title = "Title"
                 type = "Type"
-                custom = mapOf(
-                    "a" to "a",
-                    "b" to 1,
-                    "c" to ""
-                )
+                custom =
+                    mapOf(
+                        "a" to "a",
+                        "b" to 1,
+                        "c" to "",
+                    )
             }
 
         val map = pushPayloadHelper.build()
@@ -465,18 +488,20 @@ class PushPayloadHelperHelperTest : BaseTest() {
     @Test
     fun testMicrosoft_Custom() {
         val pushPayloadHelper = PushPayloadHelper()
-        pushPayloadHelper.mpnsPayload = MPNSPayload().apply {
-            backContent = ""
-            backTitle = "Back Title"
-            count = 1
-            title = null
-            type = "Type"
-            custom = mapOf(
-                "a" to "a",
-                "b" to 1,
-                "c" to ""
-            )
-        }
+        pushPayloadHelper.mpnsPayload =
+            MPNSPayload().apply {
+                backContent = ""
+                backTitle = "Back Title"
+                count = 1
+                title = null
+                type = "Type"
+                custom =
+                    mapOf(
+                        "a" to "a",
+                        "b" to 1,
+                        "c" to "",
+                    )
+            }
 
         val map = pushPayloadHelper.build()
 

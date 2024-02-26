@@ -21,9 +21,8 @@ internal class SubscribeMessageWorker(
     val listenerManager: ListenerManager,
     private val queue: LinkedBlockingQueue<SubscribeMessage>,
     duplicationManager: DuplicationManager,
-    private val messageProcessor: SubscribeMessageProcessor = SubscribeMessageProcessor(pubnub, duplicationManager)
+    private val messageProcessor: SubscribeMessageProcessor = SubscribeMessageProcessor(pubnub, duplicationManager),
 ) : Runnable {
-
     private val log = LoggerFactory.getLogger("SubscribeMessageWorker")
 
     override fun run() {

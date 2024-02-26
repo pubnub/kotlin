@@ -15,7 +15,7 @@ internal class HeartbeatEffect(
     val heartbeatRemoteAction: RemoteAction<Boolean>,
     val presenceEventSink: Sink<PresenceEvent>,
     val heartbeatNotificationOptions: PNHeartbeatNotificationOptions,
-    val statusConsumer: StatusConsumer
+    val statusConsumer: StatusConsumer,
 ) : Effect {
     private val log = LoggerFactory.getLogger(HeartbeatEffect::class.java)
 
@@ -29,14 +29,14 @@ internal class HeartbeatEffect(
                     statusConsumer.announce(PNStatus(PNStatusCategory.HeartbeatFailed, PubNubException.from(exception)))
                 }
                 presenceEventSink.add(
-                    PresenceEvent.HeartbeatFailure(PubNubException.from(exception))
+                    PresenceEvent.HeartbeatFailure(PubNubException.from(exception)),
                 )
             }.onSuccess {
                 if (heartbeatNotificationOptions == PNHeartbeatNotificationOptions.ALL) {
                     statusConsumer.announce(PNStatus(PNStatusCategory.HeartbeatSuccess))
                 }
                 presenceEventSink.add(
-                    PresenceEvent.HeartbeatSuccess
+                    PresenceEvent.HeartbeatSuccess,
                 )
             }
         }

@@ -30,7 +30,6 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 
 class EndpointTest : BaseTest() {
-
     @Test
     fun testDefaultInstanceParamSetting() {
         assertTrue(pubnub.configuration.includeRequestIdentifier)
@@ -113,10 +112,11 @@ class EndpointTest : BaseTest() {
             assertTrue(it.contains("requestid"))
             assertTrue(it.contains("uuid"))
         }.apply {
-            queryParam += mapOf(
-                "city" to "sf",
-                "uuid" to "overwritten"
-            )
+            queryParam +=
+                mapOf(
+                    "city" to "sf",
+                    "uuid" to "overwritten",
+                )
         }.sync()
     }
 
@@ -154,13 +154,19 @@ class EndpointTest : BaseTest() {
                                 add(
                                     "payload",
                                     JsonObject().apply {
-                                        add("channels", JsonArray().apply { add("ch1"); add("ch2") })
+                                        add(
+                                            "channels",
+                                            JsonArray().apply {
+                                                add("ch1")
+                                                add("ch2")
+                                            },
+                                        )
                                         add("channel-groups", JsonArray().apply { add("cg1") })
-                                    }
+                                    },
                                 )
-                            }.toString()
-                        )
-                )
+                            }.toString(),
+                        ),
+                ),
         )
 
         val success = AtomicBoolean()
@@ -184,8 +190,8 @@ class EndpointTest : BaseTest() {
                 .willReturn(
                     aResponse()
                         .withStatus(400)
-                        .withBody("""{}""")
-                )
+                        .withBody("""{}"""),
+                ),
         )
 
         val success = AtomicBoolean()
@@ -250,8 +256,8 @@ class EndpointTest : BaseTest() {
         stubFor(
             any(UrlPattern.ANY)
                 .willReturn(
-                    forbidden()
-                )
+                    forbidden(),
+                ),
         )
 
         val success = AtomicBoolean()
@@ -304,31 +310,42 @@ class EndpointTest : BaseTest() {
         p.forceDestroy()
     }
 
-    private fun fakeEndpoint(
-        paramsCondition: (map: HashMap<String, String>) -> Unit
-    ) = object : Endpoint<Any, Any>(pubnub) {
+    private fun fakeEndpoint(paramsCondition: (map: HashMap<String, String>) -> Unit) =
+        object : Endpoint<Any, Any>(pubnub) {
+            override fun doWork(queryParams: HashMap<String, String>): Call<Any> {
+                paramsCondition.invoke(queryParams)
+                return fakeCall()
+            }
 
-        override fun doWork(queryParams: HashMap<String, String>): Call<Any> {
-            paramsCondition.invoke(queryParams)
-            return fakeCall()
+            override fun createResponse(input: Response<Any>) = this
+
+            override fun operationType() = PNOperationType.PNSubscribeOperation
+
+            override fun isSubKeyRequired() = false
+
+            override fun isPubKeyRequired() = false
+
+            override fun isAuthRequired() = false
+
+            override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.PUBLISH
         }
 
-        override fun createResponse(input: Response<Any>) = this
-        override fun operationType() = PNOperationType.PNSubscribeOperation
-        override fun isSubKeyRequired() = false
-        override fun isPubKeyRequired() = false
-        override fun isAuthRequired() = false
-        override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.PUBLISH
-    }
+    private fun fakeCall() =
+        object : Call<Any> {
+            override fun enqueue(callback: Callback<Any>) {}
 
-    private fun fakeCall() = object : Call<Any> {
-        override fun enqueue(callback: Callback<Any>) {}
-        override fun isExecuted() = false
-        override fun clone(): Call<Any> = this
-        override fun isCanceled() = false
-        override fun cancel() {}
-        override fun execute(): Response<Any> = Response.success(null)
-        override fun request() = Request.Builder().build()
-        override fun timeout(): Timeout = Timeout.NONE
-    }
+            override fun isExecuted() = false
+
+            override fun clone(): Call<Any> = this
+
+            override fun isCanceled() = false
+
+            override fun cancel() {}
+
+            override fun execute(): Response<Any> = Response.success(null)
+
+            override fun request() = Request.Builder().build()
+
+            override fun timeout(): Timeout = Timeout.NONE
+        }
 }

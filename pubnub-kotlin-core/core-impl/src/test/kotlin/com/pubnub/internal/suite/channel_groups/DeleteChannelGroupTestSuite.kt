@@ -9,28 +9,28 @@ import com.pubnub.internal.endpoints.channel_groups.DeleteChannelGroup
 
 class DeleteChannelGroupTestSuite :
     com.pubnub.internal.suite.EndpointTestSuite<DeleteChannelGroup, PNChannelGroupsDeleteGroupResult>() {
-
     override fun pnOperation() = PNOperationType.PNRemoveGroupOperation
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH
 
     override fun snippet(): DeleteChannelGroup {
         return pubnub.deleteChannelGroup(
-            channelGroup = "cg1"
+            channelGroup = "cg1",
         )
     }
 
     override fun verifyResultExpectations(result: PNChannelGroupsDeleteGroupResult) {
     }
 
-    override fun successfulResponseBody() = """
+    override fun successfulResponseBody() =
+        """
         {
          "status": 200,
          "message": "OK",
          "service": "channel-registry",
          "error": false
         }
-    """.trimIndent()
+        """.trimIndent()
 
     override fun unsuccessfulResponseBodyList() = emptyList<String>()
 

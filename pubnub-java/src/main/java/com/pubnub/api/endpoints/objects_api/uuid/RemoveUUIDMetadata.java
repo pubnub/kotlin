@@ -1,10 +1,10 @@
 package com.pubnub.api.endpoints.objects_api.uuid;
 
-import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects_api.uuid.PNRemoveUUIDMetadataResult;
 import com.pubnub.internal.InternalPubNubClient;
+import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 

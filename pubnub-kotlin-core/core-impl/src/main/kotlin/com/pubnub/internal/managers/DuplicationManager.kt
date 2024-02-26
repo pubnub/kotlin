@@ -4,7 +4,6 @@ import com.pubnub.internal.PNConfiguration
 import com.pubnub.internal.models.server.SubscribeMessage
 
 internal class DuplicationManager(private val config: PNConfiguration) {
-
     private val hashHistory: ArrayList<String> = ArrayList()
 
     private fun getKey(message: SubscribeMessage) =

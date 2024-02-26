@@ -8,7 +8,7 @@ import io.cucumber.java.en.When
 
 class WhenSteps(
     private val world: World,
-    private val membershipState: MembershipState
+    private val membershipState: MembershipState,
 ) {
     @When("I get the memberships")
     fun i_get_the_memberships() {
@@ -31,7 +31,7 @@ class WhenSteps(
         world.pubnub.internalPubNubClient.getMemberships(
             uuid = membershipState.uuid(),
             includeCustom = true,
-            includeChannelDetails = PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM
+            includeChannelDetails = PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM,
         ).sync().let {
             membershipState.returnedMemberships = it.data
             world.responseStatus = it.status
@@ -40,13 +40,14 @@ class WhenSteps(
 
     @When("I set the membership")
     fun i_set_the_membership() {
-        val channels = membershipState.memberships.map {
-            PNChannelMembership.Partial(
-                channelId = it.channel!!.id,
-                custom = it.custom,
-                status = it.status
-            )
-        }
+        val channels =
+            membershipState.memberships.map {
+                PNChannelMembership.Partial(
+                    channelId = it.channel!!.id,
+                    custom = it.custom,
+                    status = it.status,
+                )
+            }
 
         world.pubnub.internalPubNubClient.setMemberships(
             uuid = membershipState.uuid(),
@@ -59,13 +60,14 @@ class WhenSteps(
 
     @When("I set the membership for current user")
     fun i_set_the_membership_for_current_user() {
-        val channels = membershipState.memberships.map {
-            PNChannelMembership.Partial(
-                channelId = it.channel!!.id,
-                custom = it.custom,
-                status = it.status
-            )
-        }
+        val channels =
+            membershipState.memberships.map {
+                PNChannelMembership.Partial(
+                    channelId = it.channel!!.id,
+                    custom = it.custom,
+                    status = it.status,
+                )
+            }
 
         world.pubnub.internalPubNubClient.setMemberships(
             channels = channels,
@@ -91,7 +93,7 @@ class WhenSteps(
     fun i_remove_the_membership_for_current_user() {
         val channels = membershipState.memberships.map { it.channel!!.id }
         world.pubnub.internalPubNubClient.removeMemberships(
-            channels = channels
+            channels = channels,
         ).sync().let {
             world.responseStatus = it.status
             membershipState.returnedMemberships = it.data
@@ -100,18 +102,19 @@ class WhenSteps(
 
     @When("I manage memberships")
     fun i_manage_memberships() {
-        val channelsToSet = membershipState.memberships.map {
-            PNChannelMembership.Partial(
-                channelId = it.channel!!.id,
-                custom = it.custom,
-                status = it.status
-            )
-        }
+        val channelsToSet =
+            membershipState.memberships.map {
+                PNChannelMembership.Partial(
+                    channelId = it.channel!!.id,
+                    custom = it.custom,
+                    status = it.status,
+                )
+            }
         val channelsToRemove = membershipState.membershipsToRemove.map { it.channel!!.id }
         world.pubnub.internalPubNubClient.manageMemberships(
             channelsToSet = channelsToSet,
             channelsToRemove = channelsToRemove,
-            uuid = membershipState.uuid()
+            uuid = membershipState.uuid(),
         ).sync().let {
             world.responseStatus = it.status
             membershipState.returnedMemberships = it.data

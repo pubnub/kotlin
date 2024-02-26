@@ -11,11 +11,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class Hooks {
     private val interceptor = HttpLoggingInterceptor()
-    private val mockPubnubService: MockPubnubService = Retrofit.Builder()
-        .client(OkHttpClient.Builder().addInterceptor(interceptor).build())
-        .baseUrl("http://" + ContractTestConfig.serverHostPort)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build().create(MockPubnubService::class.java)
+    private val mockPubnubService: MockPubnubService =
+        Retrofit.Builder()
+            .client(OkHttpClient.Builder().addInterceptor(interceptor).build())
+            .baseUrl("http://" + ContractTestConfig.serverHostPort)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build().create(MockPubnubService::class.java)
 
     @Before
     fun before(scenario: Scenario) {
@@ -41,10 +42,11 @@ class Hooks {
                     responseBody.expectations.failed.isNotEmpty()
                 ) {
                     fail(
-                        """Scenario ${responseBody.contract} considered failure: 
-                            pending - ${responseBody.expectations.pending.joinToString()},
-                            failed - ${responseBody.expectations.failed.joinToString()}
-                        """.trimIndent()
+                        """
+                        Scenario ${responseBody.contract} considered failure: 
+                        pending - ${responseBody.expectations.pending.joinToString()},
+                        failed - ${responseBody.expectations.failed.joinToString()}
+                        """.trimIndent(),
                     )
                 }
             }

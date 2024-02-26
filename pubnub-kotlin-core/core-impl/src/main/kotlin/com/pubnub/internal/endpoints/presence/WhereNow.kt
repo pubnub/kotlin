@@ -15,15 +15,13 @@ import retrofit2.Response
  */
 class WhereNow internal constructor(
     pubnub: InternalPubNubClient,
-    override val uuid: String = pubnub.configuration.userId.value
+    override val uuid: String = pubnub.configuration.userId.value,
 ) : Endpoint<Envelope<WhereNowPayload>, PNWhereNowResult>(pubnub), IWhereNow {
-
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<WhereNowPayload>> {
-
         return pubnub.retrofitManager.presenceService.whereNow(
             pubnub.configuration.subscribeKey,
             uuid,
-            queryParams
+            queryParams,
         )
     }
 

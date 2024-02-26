@@ -12,9 +12,9 @@ import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.ObjectPayload
+import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.PNConfiguration
 import com.pubnub.internal.PNConfiguration.Companion.isValid
-import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.PubNubUtil
 import com.pubnub.internal.extension.tryDecryptMessage
 import com.pubnub.internal.managers.DuplicationManager
@@ -29,9 +29,8 @@ import org.slf4j.LoggerFactory
 
 internal class SubscribeMessageProcessor(
     private val pubnub: InternalPubNubClient,
-    private val duplicationManager: DuplicationManager
+    private val duplicationManager: DuplicationManager,
 ) {
-
     private val log = LoggerFactory.getLogger("SubscribeMessageProcessor")
 
     companion object {
@@ -66,9 +65,10 @@ internal class SubscribeMessageProcessor(
         if (message.channel.endsWith(PRESENCE_CHANNEL_SUFFIX)) {
             val presencePayload = pubnub.mapper.convertValue(message.payload, PresenceEnvelope::class.java)
             val strippedPresenceChannel = PubNubUtil.replaceLast(channel, PRESENCE_CHANNEL_SUFFIX, "")
-            val strippedPresenceSubscription = subscriptionMatch?.let {
-                PubNubUtil.replaceLast(it, PRESENCE_CHANNEL_SUFFIX, "")
-            }
+            val strippedPresenceSubscription =
+                subscriptionMatch?.let {
+                    PubNubUtil.replaceLast(it, PRESENCE_CHANNEL_SUFFIX, "")
+                }
 
             val isHereNowRefresh = message.payload?.asJsonObject?.get("here_now_refresh")
 
@@ -84,23 +84,25 @@ internal class SubscribeMessageProcessor(
                 join = getDelta(message.payload?.asJsonObject?.get("join")),
                 leave = getDelta(message.payload?.asJsonObject?.get("leave")),
                 timeout = getDelta(message.payload?.asJsonObject?.get("timeout")),
-                hereNowRefresh = isHereNowRefresh != null && isHereNowRefresh.asBoolean
+                hereNowRefresh = isHereNowRefresh != null && isHereNowRefresh.asBoolean,
             )
         } else {
-            val (extractedMessage, error) = message.payload?.tryDecryptMessage(pubnub.cryptoModule, pubnub.mapper)
-                ?: (null to null)
+            val (extractedMessage, error) =
+                message.payload?.tryDecryptMessage(pubnub.cryptoModule, pubnub.mapper)
+                    ?: (null to null)
 
             if (extractedMessage == null) {
                 log.debug("unable to parse payload on #processIncomingMessages")
             }
 
-            val result = BasePubSubResult(
-                channel = channel,
-                subscription = subscriptionMatch,
-                timetoken = publishMetaData?.publishTimetoken,
-                userMetadata = message.userMetadata,
-                publisher = message.issuingClientId
-            )
+            val result =
+                BasePubSubResult(
+                    channel = channel,
+                    subscription = subscriptionMatch,
+                    timetoken = publishMetaData?.publishTimetoken,
+                    userMetadata = message.userMetadata,
+                    publisher = message.issuingClientId,
+                )
 
             return when (message.type) {
                 null -> {
@@ -119,8 +121,9 @@ internal class SubscribeMessageProcessor(
                     PNObjectEventResult(
                         result,
                         pubnub.mapper.convertValue(
-                            extractedMessage, PNObjectEventMessage::class.java
-                        )
+                            extractedMessage,
+                            PNObjectEventMessage::class.java,
+                        ),
                     )
                 }
 
@@ -133,29 +136,36 @@ internal class SubscribeMessageProcessor(
                     PNMessageActionResult(
                         result = result,
                         event = objectPayload.event,
-                        data = pubnub.mapper.convertValue(data, PNMessageAction::class.java)
+                        data = pubnub.mapper.convertValue(data, PNMessageAction::class.java),
                     )
                 }
 
                 TYPE_FILES -> {
-                    val fileUploadNotification = pubnub.mapper.convertValue(
-                        extractedMessage, FileUploadNotification::class.java
-                    )
+                    val fileUploadNotification =
+                        pubnub.mapper.convertValue(
+                            extractedMessage,
+                            FileUploadNotification::class.java,
+                        )
                     PNFileEventResult(
                         channel = message.channel,
                         message = fileUploadNotification.message,
-                        file = PNDownloadableFile(
-                            id = fileUploadNotification.file.id,
-                            name = fileUploadNotification.file.name,
-                            url = buildFileUrl(
-                                message.channel, fileUploadNotification.file.id, fileUploadNotification.file.name
-                            )
-                        ),
+                        file =
+                            PNDownloadableFile(
+                                id = fileUploadNotification.file.id,
+                                name = fileUploadNotification.file.name,
+                                url =
+                                    buildFileUrl(
+                                        message.channel,
+                                        fileUploadNotification.file.id,
+                                        fileUploadNotification.file.name,
+                                    ),
+                            ),
                         publisher = message.issuingClientId,
                         timetoken = result.timetoken,
-                        jsonMessage = fileUploadNotification.message?.let { pubnub.mapper.toJsonTree(it) }
-                            ?: JsonNull.INSTANCE,
-                        error = error
+                        jsonMessage =
+                            fileUploadNotification.message?.let { pubnub.mapper.toJsonTree(it) }
+                                ?: JsonNull.INSTANCE,
+                        error = error,
                     )
                 }
 
@@ -166,10 +176,20 @@ internal class SubscribeMessageProcessor(
 
     private val formatFriendlyGetFileUrl = "%s" + FilesService.GET_FILE_URL.replace("\\{.*?\\}".toRegex(), "%s")
 
-    private fun buildFileUrl(channel: String, fileId: String, fileName: String): String {
-        val basePath: String = java.lang.String.format(
-            formatFriendlyGetFileUrl, pubnub.baseUrl(), pubnub.configuration.subscribeKey, channel, fileId, fileName
-        )
+    private fun buildFileUrl(
+        channel: String,
+        fileId: String,
+        fileName: String,
+    ): String {
+        val basePath: String =
+            java.lang.String.format(
+                formatFriendlyGetFileUrl,
+                pubnub.baseUrl(),
+                pubnub.configuration.subscribeKey,
+                channel,
+                fileId,
+                fileName,
+            )
         val queryParams = ArrayList<String>()
         val authKey = if (pubnub.configuration.authKey.isValid()) pubnub.configuration.authKey else null
 
@@ -200,7 +220,12 @@ internal class SubscribeMessageProcessor(
             queryParams["auth"] = authKey
         }
         return PubNubUtil.generateSignature(
-            configuration, url, queryParams, "get", null, timestamp
+            configuration,
+            url,
+            queryParams,
+            "get",
+            null,
+            timestamp,
         )
     }
 

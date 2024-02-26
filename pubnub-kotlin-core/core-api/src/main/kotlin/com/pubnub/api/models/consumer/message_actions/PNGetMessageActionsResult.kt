@@ -13,5 +13,5 @@ class PNGetMessageActionsResult(
     @SerializedName("data")
     val actions: List<PNMessageAction>,
     @SerializedName("more")
-    val page: PNBoundedPage?
+    val page: PNBoundedPage?,
 )

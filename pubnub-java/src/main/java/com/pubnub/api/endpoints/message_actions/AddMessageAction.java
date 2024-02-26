@@ -1,10 +1,10 @@
 package com.pubnub.api.endpoints.message_actions;
 
 import com.pubnub.api.PubNubException;
-import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult;
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction;
 import com.pubnub.internal.InternalPubNubClient;
+import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 

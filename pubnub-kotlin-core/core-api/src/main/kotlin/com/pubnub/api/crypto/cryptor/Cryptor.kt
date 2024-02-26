@@ -6,8 +6,12 @@ import java.io.InputStream
 
 interface Cryptor {
     fun id(): ByteArray // Should return a ByteArray of exactly 4 bytes.
+
     fun encrypt(data: ByteArray): EncryptedData
+
     fun decrypt(encryptedData: EncryptedData): ByteArray
+
     fun encryptStream(stream: InputStream): EncryptedStreamData
+
     fun decryptStream(encryptedData: EncryptedStreamData): InputStream
 }

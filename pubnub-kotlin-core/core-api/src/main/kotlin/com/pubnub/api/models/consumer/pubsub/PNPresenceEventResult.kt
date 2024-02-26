@@ -36,5 +36,5 @@ data class PNPresenceEventResult(
     val leave: List<String>? = null,
     val timeout: List<String>? = null,
     val hereNowRefresh: Boolean? = null,
-    val userMetadata: Any? = null
+    val userMetadata: Any? = null,
 ) : PNEvent

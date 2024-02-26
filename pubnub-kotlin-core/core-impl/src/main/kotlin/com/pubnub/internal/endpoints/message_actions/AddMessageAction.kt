@@ -20,9 +20,8 @@ import java.util.Locale
 class AddMessageAction internal constructor(
     pubnub: InternalPubNubClient,
     override val channel: String,
-    override val messageAction: PNMessageAction
+    override val messageAction: PNMessageAction,
 ) : Endpoint<EntityEnvelope<PNMessageAction>, PNAddMessageActionResult>(pubnub), IAddMessageAction {
-
     override fun validateParams() {
         super.validateParams()
         if (channel.isBlank()) throw PubNubException(PubNubError.CHANNEL_MISSING)
@@ -33,10 +32,11 @@ class AddMessageAction internal constructor(
     override fun getAffectedChannels() = listOf(channel)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNMessageAction>> {
-        val body = JsonObject().apply {
-            addProperty("type", messageAction.type)
-            addProperty("value", messageAction.value)
-        }
+        val body =
+            JsonObject().apply {
+                addProperty("type", messageAction.type)
+                addProperty("value", messageAction.value)
+            }
 
         return pubnub.retrofitManager.messageActionService
             .addMessageAction(
@@ -44,13 +44,13 @@ class AddMessageAction internal constructor(
                 channel = channel,
                 messageTimetoken = messageAction.messageTimetoken.toString().lowercase(Locale.getDefault()),
                 body = body,
-                options = queryParams
+                options = queryParams,
             )
     }
 
     override fun createResponse(input: Response<EntityEnvelope<PNMessageAction>>): PNAddMessageActionResult =
         PNAddMessageActionResult(
-            action = input.body()!!.data!!
+            action = input.body()!!.data!!,
         )
 
     override fun operationType() = PNOperationType.PNAddMessageAction

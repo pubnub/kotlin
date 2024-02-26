@@ -29,9 +29,8 @@ class FetchMessages internal constructor(
     override val includeUUID: Boolean,
     override val includeMeta: Boolean,
     override val includeMessageActions: Boolean,
-    override val includeMessageType: Boolean
+    override val includeMessageType: Boolean,
 ) : Endpoint<FetchMessagesEnvelope, PNFetchMessagesResult>(pubnub), IFetchMessages {
-
     internal companion object {
         private const val SINGLE_CHANNEL_DEFAULT_MESSAGES = 100
         private const val SINGLE_CHANNEL_MAX_MESSAGES = 100
@@ -44,17 +43,21 @@ class FetchMessages internal constructor(
         internal fun effectiveMax(
             maximumPerChannel: Int?,
             includeMessageActions: Boolean,
-            numberOfChannels: Int
-        ): Int = when {
-            includeMessageActions -> maximumPerChannel?.limit(MAX_MESSAGES_WITH_ACTIONS)?.nonPositiveToNull()
-                ?: DEFAULT_MESSAGES_WITH_ACTIONS
+            numberOfChannels: Int,
+        ): Int =
+            when {
+                includeMessageActions ->
+                    maximumPerChannel?.limit(MAX_MESSAGES_WITH_ACTIONS)?.nonPositiveToNull()
+                        ?: DEFAULT_MESSAGES_WITH_ACTIONS
 
-            numberOfChannels == 1 -> maximumPerChannel?.limit(SINGLE_CHANNEL_MAX_MESSAGES)?.nonPositiveToNull()
-                ?: SINGLE_CHANNEL_DEFAULT_MESSAGES
+                numberOfChannels == 1 ->
+                    maximumPerChannel?.limit(SINGLE_CHANNEL_MAX_MESSAGES)?.nonPositiveToNull()
+                        ?: SINGLE_CHANNEL_DEFAULT_MESSAGES
 
-            else -> maximumPerChannel?.limit(MULTIPLE_CHANNEL_MAX_MESSAGES)?.nonPositiveToNull()
-                ?: MULTIPLE_CHANNEL_DEFAULT_MESSAGES
-        }
+                else ->
+                    maximumPerChannel?.limit(MULTIPLE_CHANNEL_MAX_MESSAGES)?.nonPositiveToNull()
+                        ?: MULTIPLE_CHANNEL_DEFAULT_MESSAGES
+            }
     }
 
     override fun validateParams() {
@@ -70,40 +73,47 @@ class FetchMessages internal constructor(
 
         return if (!includeMessageActions) {
             pubnub.retrofitManager.historyService.fetchMessages(
-                subKey = pubnub.configuration.subscribeKey, channels = channels.toCsv(), options = queryParams
+                subKey = pubnub.configuration.subscribeKey,
+                channels = channels.toCsv(),
+                options = queryParams,
             )
         } else {
             pubnub.retrofitManager.historyService.fetchMessagesWithActions(
-                subKey = pubnub.configuration.subscribeKey, channel = channels.first(), options = queryParams
+                subKey = pubnub.configuration.subscribeKey,
+                channel = channels.first(),
+                options = queryParams,
             )
         }
     }
 
     override fun createResponse(input: Response<FetchMessagesEnvelope>): PNFetchMessagesResult {
         val body = input.body()!!
-        val channelsMap = body.channels.mapValues { (_, value) ->
-            value.map { serverMessageItem ->
-                val (newMessage, error) = serverMessageItem.message.tryDecryptMessage(
-                    pubnub.cryptoModule,
-                    pubnub.mapper
-                )
-                val newActions =
-                    if (includeMessageActions) serverMessageItem.actions ?: mapOf() else serverMessageItem.actions
-                PNFetchMessageItem(
-                    uuid = serverMessageItem.uuid,
-                    message = newMessage,
-                    meta = serverMessageItem.meta,
-                    timetoken = serverMessageItem.timetoken,
-                    actions = newActions,
-                    messageType = if (includeMessageType) HistoryMessageType.of(serverMessageItem.messageType) else null,
-                    error = error
-                )
-            }
-        }.toMap()
+        val channelsMap =
+            body.channels.mapValues { (_, value) ->
+                value.map { serverMessageItem ->
+                    val (newMessage, error) =
+                        serverMessageItem.message.tryDecryptMessage(
+                            pubnub.cryptoModule,
+                            pubnub.mapper,
+                        )
+                    val newActions =
+                        if (includeMessageActions) serverMessageItem.actions ?: mapOf() else serverMessageItem.actions
+                    PNFetchMessageItem(
+                        uuid = serverMessageItem.uuid,
+                        message = newMessage,
+                        meta = serverMessageItem.meta,
+                        timetoken = serverMessageItem.timetoken,
+                        actions = newActions,
+                        messageType = if (includeMessageType) HistoryMessageType.of(serverMessageItem.messageType) else null,
+                        error = error,
+                    )
+                }
+            }.toMap()
 
-        val page = body.more?.let {
-            PNBoundedPage(start = it.start, end = it.end, limit = it.max)
-        }
+        val page =
+            body.more?.let {
+                PNBoundedPage(start = it.start, end = it.end, limit = it.max)
+            }
         return PNFetchMessagesResult(channels = channelsMap, page = page)
     }
 

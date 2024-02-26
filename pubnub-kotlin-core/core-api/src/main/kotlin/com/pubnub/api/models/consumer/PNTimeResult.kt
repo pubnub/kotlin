@@ -6,5 +6,5 @@ package com.pubnub.api.models.consumer
  * @property timetoken Current time token.
  */
 class PNTimeResult(
-    val timetoken: Long
+    val timetoken: Long,
 )

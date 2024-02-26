@@ -28,19 +28,26 @@ import org.junit.Test
 typealias AsyncCheck<T> = (result: com.pubnub.api.v2.callbacks.Result<T>) -> Unit
 
 abstract class EndpointTestSuite<T : Endpoint<*, R>, R> : BaseTest() {
-
     private lateinit var expectedStub: StubMapping
 
     abstract fun pnOperation(): PNOperationType
+
     abstract fun requiredKeys(): Int
+
     abstract fun snippet(): T
+
     abstract fun verifyResultExpectations(result: R)
+
     abstract fun successfulResponseBody(): String
+
     abstract fun unsuccessfulResponseBodyList(): List<String>
+
     abstract fun mappingBuilder(): MappingBuilder
+
     abstract fun affectedChannelsAndGroups(): Pair<List<String>, List<String>>
 
     open fun optionalScenarioList(): List<com.pubnub.internal.suite.OptionalScenario<R>> = emptyList()
+
     open fun voidResponse() = false
 
     override fun onBefore() {
@@ -107,14 +114,16 @@ abstract class EndpointTestSuite<T : Endpoint<*, R>, R> : BaseTest() {
     fun testUsualWrongResponses() {
         wireMockServer.removeStub(expectedStub)
 
-        val map = hashMapOf(
-            "empty_json" to emptyJson(),
-            "no_content" to noContent(),
-            "malformed" to aResponse().withBody("{")
-        )
+        val map =
+            hashMapOf(
+                "empty_json" to emptyJson(),
+                "no_content" to noContent(),
+                "malformed" to aResponse().withBody("{"),
+            )
 
-        if (pnOperation() == PNOperationType.PNSubscribeOperation)
+        if (pnOperation() == PNOperationType.PNSubscribeOperation) {
             map.remove("empty_json")
+        }
 
         map.forEach {
             val stub = stubFor(mappingBuilder().willReturn(it.value))
@@ -295,8 +304,8 @@ abstract class EndpointTestSuite<T : Endpoint<*, R>, R> : BaseTest() {
             get(urlMatching("/time/0.*"))
                 .willReturn(
                     aResponse()
-                        .withBody("[1000]")
-                )
+                        .withBody("[1000]"),
+                ),
         )
     }
 }
@@ -305,16 +314,17 @@ private fun extractKeys(value: Int): List<Int> {
     val keys = mutableListOf<Int>()
     var n = value
     while (n > 0) {
-        val power = {
-            var res = 0
-            for (i in n downTo 1) {
-                if (i and i - 1 == 0) {
-                    res = i
-                    break
+        val power =
+            {
+                var res = 0
+                for (i in n downTo 1) {
+                    if (i and i - 1 == 0) {
+                        res = i
+                        break
+                    }
                 }
-            }
-            res
-        }.invoke()
+                res
+            }.invoke()
         keys.add(power)
         n -= power
     }
@@ -344,5 +354,5 @@ class OptionalScenario<R> {
 
 enum class Result {
     SUCCESS,
-    FAIL
+    FAIL,
 }

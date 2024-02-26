@@ -15,7 +15,6 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 
 class JsonElementTest {
-
     companion object {
         val gson = Gson()
 
@@ -66,7 +65,7 @@ class JsonElementTest {
             return listOf(
                 Arguments.of("unencryptedMessage"),
                 Arguments.of("this is unencrypted message"),
-                Arguments.of("this is not encrypted message")
+                Arguments.of("this is not encrypted message"),
             )
         }
     }
@@ -76,7 +75,7 @@ class JsonElementTest {
     @ParameterizedTest
     @MethodSource("unencryptedMessage")
     fun `when history message is not encrypted string and crypto is configured should log error and return error in response and return unencrypted message `(
-        unencryptedMessage: String
+        unencryptedMessage: String,
     ) {
         // given
         objectUnderTest = JsonPrimitive(unencryptedMessage)
@@ -97,7 +96,7 @@ class JsonElementTest {
     fun `when history message is encrypted string and crypto is configured should return decrypted message`(
         message: JsonElement,
         encryptedMessage: String,
-        cryptoModule: CryptoModule
+        cryptoModule: CryptoModule,
     ) {
         // given
         objectUnderTest = JsonPrimitive(encryptedMessage)
@@ -116,7 +115,7 @@ class JsonElementTest {
     fun `when history message is not encrypted JSON object and crypto is configured should log error and return error in response and return unencrypted message `(
         message: JsonElement,
         encryptedMessage: String,
-        cryptoModule: CryptoModule
+        cryptoModule: CryptoModule,
     ) {
         // given
         objectUnderTest = message
@@ -135,7 +134,7 @@ class JsonElementTest {
     fun `when history message contains JSON object with pn_other property and crypto is configured should decrypt content of pn_other`(
         message: JsonElement,
         encryptedMessage: String,
-        cryptoModule: CryptoModule
+        cryptoModule: CryptoModule,
     ) {
         // given
         val messageWithPNOther = generateMessageWithPNOther(JsonPrimitive(encryptedMessage))

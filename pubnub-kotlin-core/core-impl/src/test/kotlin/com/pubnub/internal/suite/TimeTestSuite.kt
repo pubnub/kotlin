@@ -11,7 +11,6 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 
 class TimeTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Time, PNTimeResult>() {
-
     override fun pnOperation() = PNOperationType.PNTimeOperation
 
     override fun requiredKeys() = 0
@@ -26,10 +25,11 @@ class TimeTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Time, PNTimeRe
 
     override fun successfulResponseBody() = """[1000]"""
 
-    override fun unsuccessfulResponseBodyList() = listOf(
-        """{}""",
-        """[false]"""
-    )
+    override fun unsuccessfulResponseBodyList() =
+        listOf(
+            """{}""",
+            """[false]""",
+        )
 
     override fun optionalScenarioList(): List<com.pubnub.internal.suite.OptionalScenario<PNTimeResult>> {
         return listOf(
@@ -46,7 +46,7 @@ class TimeTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Time, PNTimeRe
                     assertFalse(result.isFailure)
                     assertEquals(123, result.getOrThrow().timetoken)
                 }
-            }
+            },
         )
     }
 

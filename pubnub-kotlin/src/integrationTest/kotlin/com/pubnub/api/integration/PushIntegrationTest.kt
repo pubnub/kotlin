@@ -10,7 +10,6 @@ import java.util.Locale
 import java.util.UUID
 
 class PushIntegrationTest : BaseIntegrationTest() {
-
     lateinit var expectedChannels: List<String>
     lateinit var expectedDeviceId: String
     lateinit var expectedTopic: String
@@ -49,7 +48,7 @@ class PushIntegrationTest : BaseIntegrationTest() {
             channels = expectedChannels,
             pushType = pushType,
             topic = expectedTopic,
-            deviceId = expectedDeviceId
+            deviceId = expectedDeviceId,
         ).sync()
 
         wait()
@@ -58,7 +57,7 @@ class PushIntegrationTest : BaseIntegrationTest() {
             deviceId = expectedDeviceId,
             pushType = pushType,
             topic = expectedTopic,
-            environment = PNPushEnvironment.DEVELOPMENT
+            environment = PNPushEnvironment.DEVELOPMENT,
         ).sync().run {
             assertTrue(channels.containsAll(expectedChannels))
         }
@@ -70,7 +69,7 @@ class PushIntegrationTest : BaseIntegrationTest() {
             environment = PNPushEnvironment.DEVELOPMENT,
             deviceId = expectedDeviceId,
             topic = expectedTopic,
-            channels = listOf(expectedChannels[0])
+            channels = listOf(expectedChannels[0]),
         ).sync()
 
         wait()
@@ -79,7 +78,7 @@ class PushIntegrationTest : BaseIntegrationTest() {
             deviceId = expectedDeviceId,
             pushType = pushType,
             topic = expectedTopic,
-            environment = PNPushEnvironment.DEVELOPMENT
+            environment = PNPushEnvironment.DEVELOPMENT,
         ).sync().apply {
             assertFalse(channels.isEmpty())
             assertFalse(channels.contains(expectedChannels[0]))
@@ -91,7 +90,7 @@ class PushIntegrationTest : BaseIntegrationTest() {
             pushType = pushType,
             environment = PNPushEnvironment.DEVELOPMENT,
             deviceId = expectedDeviceId,
-            topic = expectedTopic
+            topic = expectedTopic,
         ).sync()
 
         wait()
@@ -100,7 +99,7 @@ class PushIntegrationTest : BaseIntegrationTest() {
             deviceId = expectedDeviceId,
             pushType = pushType,
             topic = expectedTopic,
-            environment = PNPushEnvironment.DEVELOPMENT
+            environment = PNPushEnvironment.DEVELOPMENT,
         ).sync().apply {
             assertTrue(channels.isEmpty())
             assertFalse(channels.containsAll(expectedChannels))

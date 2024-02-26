@@ -29,13 +29,15 @@ class UploadFileTest : TestsWithFiles {
     fun keyIsFirstInMultipart() {
         // given
         val captured = mutableListOf<MultipartBody>()
-        val uploadFile = UploadFile(
-            s3Service,
-            fileName(),
-            byteArrayOf(),
-            FormField("key", "keyValue"), listOf(FormField("other", "otherValue")),
-            "https://s3.aws.com/bucket"
-        )
+        val uploadFile =
+            UploadFile(
+                s3Service,
+                fileName(),
+                byteArrayOf(),
+                FormField("key", "keyValue"),
+                listOf(FormField("other", "otherValue")),
+                "https://s3.aws.com/bucket",
+            )
         every { s3Service.upload(any(), any()) } returns mockRetrofitSuccessfulCall {}
 
         // when
@@ -47,7 +49,7 @@ class UploadFileTest : TestsWithFiles {
         val capturedBody: MultipartBody = captured[0]
         Assert.assertEquals(
             "form-data; name=\"key\"",
-            capturedBody.part(0).headers!!["Content-Disposition"]
+            capturedBody.part(0).headers!!["Content-Disposition"],
         )
         assertPartExist("other", capturedBody.parts)
         assertPartExist("file", capturedBody.parts)
@@ -58,13 +60,15 @@ class UploadFileTest : TestsWithFiles {
         // given
         val captured = mutableListOf<MultipartBody>()
         val contentTypeValue = "application/json"
-        val uploadFile = UploadFile(
-            s3Service,
-            fileName(),
-            byteArrayOf(),
-            FormField("key", "keyValue"), listOf(FormField("Content-Type", contentTypeValue)),
-            "https://s3.aws.com/bucket"
-        )
+        val uploadFile =
+            UploadFile(
+                s3Service,
+                fileName(),
+                byteArrayOf(),
+                FormField("key", "keyValue"),
+                listOf(FormField("Content-Type", contentTypeValue)),
+                "https://s3.aws.com/bucket",
+            )
         every { s3Service.upload(any(), any()) } returns mockRetrofitSuccessfulCall { null }
 
         // when
@@ -82,14 +86,15 @@ class UploadFileTest : TestsWithFiles {
     fun defaultContentTypeIsUsedForFileIfNotPresentInFormFields() {
         // given
         val captured = mutableListOf<MultipartBody>()
-        val uploadFile = UploadFile(
-            s3Service,
-            fileName(),
-            byteArrayOf(),
-            FormField("key", "keyValue"),
-            emptyList(),
-            "https://s3.aws.com/bucket"
-        )
+        val uploadFile =
+            UploadFile(
+                s3Service,
+                fileName(),
+                byteArrayOf(),
+                FormField("key", "keyValue"),
+                emptyList(),
+                "https://s3.aws.com/bucket",
+            )
         every { s3Service.upload(any(), any()) } returns mockRetrofitSuccessfulCall { null }
 
         // when
@@ -111,13 +116,15 @@ class UploadFileTest : TestsWithFiles {
         val cipher = "enigma"
         val cryptoModule = CryptoModule.createLegacyCryptoModule(cipher, true)
         val encrypted = cryptoModule.encryptStream(content.byteInputStream())
-        val uploadFile = UploadFile(
-            s3Service,
-            fileName(),
-            encrypted.readBytes(),
-            FormField("key", "keyValue"), emptyList(),
-            "https://s3.aws.com/bucket"
-        )
+        val uploadFile =
+            UploadFile(
+                s3Service,
+                fileName(),
+                encrypted.readBytes(),
+                FormField("key", "keyValue"),
+                emptyList(),
+                "https://s3.aws.com/bucket",
+            )
         every { s3Service.upload(any(), any()) } returns mockRetrofitSuccessfulCall { null }
 
         // when
@@ -139,18 +146,21 @@ class UploadFileTest : TestsWithFiles {
     @Test
     fun errorMessageIsCopiedFromS3XMLResponse() {
         // given
-        val uploadFile = UploadFile(
-            s3Service,
-            fileName(),
-            byteArrayOf(),
-            FormField("key", "keyValue"), emptyList(),
-            "https://s3.aws.com/bucket"
-        )
-        every { s3Service.upload(any(), any()) } returns mockRetrofitErrorCall {
-            readToString(
-                UploadFileTest::class.java.getResourceAsStream("/entityTooLarge.xml")!!
+        val uploadFile =
+            UploadFile(
+                s3Service,
+                fileName(),
+                byteArrayOf(),
+                FormField("key", "keyValue"),
+                emptyList(),
+                "https://s3.aws.com/bucket",
             )
-        }
+        every { s3Service.upload(any(), any()) } returns
+            mockRetrofitErrorCall {
+                readToString(
+                    UploadFileTest::class.java.getResourceAsStream("/entityTooLarge.xml")!!,
+                )
+            }
 
         // when
         try {
@@ -167,7 +177,10 @@ class UploadFileTest : TestsWithFiles {
         return if (s.hasNext()) s.next() else ""
     }
 
-    private fun getPart(partName: String, parts: List<MultipartBody.Part>): MultipartBody.Part? {
+    private fun getPart(
+        partName: String,
+        parts: List<MultipartBody.Part>,
+    ): MultipartBody.Part? {
         var result: MultipartBody.Part? = null
         for (part in parts) {
             if (part.headers!!["Content-Disposition"]!!.contains(partName)) {
@@ -178,7 +191,10 @@ class UploadFileTest : TestsWithFiles {
         return result
     }
 
-    private fun assertPartExist(partName: String, parts: List<MultipartBody.Part>) {
+    private fun assertPartExist(
+        partName: String,
+        parts: List<MultipartBody.Part>,
+    ) {
         val result = getPart(partName, parts)
         if (result == null) {
             Assert.fail("There's no part $partName in parts $parts")
@@ -194,10 +210,11 @@ class UploadFileTest : TestsWithFiles {
 
         protected fun <U> mockRetrofitErrorCall(block: () -> String): Call<U> {
             val mockCall: Call<U> = mockk {}
-            every { mockCall.execute() } returns Response.error<U>(
-                400,
-                block().toResponseBody("application/xml".toMediaType())
-            )
+            every { mockCall.execute() } returns
+                Response.error<U>(
+                    400,
+                    block().toResponseBody("application/xml".toMediaType()),
+                )
             return mockCall
         }
     }

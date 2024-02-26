@@ -31,7 +31,7 @@ internal class UploadFile(
     private val content: ByteArray,
     private val key: FormField,
     private val formParams: List<FormField>,
-    private val baseUrl: String
+    private val baseUrl: String,
 ) : ExtendedRemoteAction<Unit> {
     private var call: Call<Unit>? = null
 
@@ -54,27 +54,30 @@ internal class UploadFile(
     private fun getMediaType(contentType: String?): MediaType {
         return if (contentType == null) {
             APPLICATION_OCTET_STREAM
-        } else try {
-            contentType.toMediaType()
-        } catch (t: Throwable) {
-            log.warn("Content-Type: $contentType was not recognized by MediaType.get", t)
-            APPLICATION_OCTET_STREAM
+        } else {
+            try {
+                contentType.toMediaType()
+            } catch (t: Throwable) {
+                log.warn("Content-Type: $contentType was not recognized by MediaType.get", t)
+                APPLICATION_OCTET_STREAM
+            }
         }
     }
 
     @Throws(PubNubException::class)
     override fun sync() {
         call = prepareCall()
-        val serverResponse = try {
-            call!!.execute()
-        } catch (e: IOException) {
-            throw PubNubException(
-                errorMessage = e.message,
-                affectedCall = call,
-                pubnubError = PubNubError.PARSING_ERROR,
-                cause = e
-            )
-        }
+        val serverResponse =
+            try {
+                call!!.execute()
+            } catch (e: IOException) {
+                throw PubNubException(
+                    errorMessage = e.message,
+                    affectedCall = call,
+                    pubnubError = PubNubError.PARSING_ERROR,
+                    cause = e,
+                )
+            }
         if (!serverResponse.isSuccessful) {
             throw createException(serverResponse)
         }
@@ -83,45 +86,56 @@ internal class UploadFile(
     override fun async(callback: Consumer<Result<Unit>>) {
         try {
             call = prepareCall()
-            call!!.enqueue(object : Callback<Unit> {
-                override fun onResponse(performedCall: Call<Unit>, response: Response<Unit>) {
-                    if (!response.isSuccessful) {
-                        val ex = createException(response)
-                        callback.accept(Result.failure(ex))
-                        return
-                    }
-                    callback.accept(Result.success(Unit))
-                }
-
-                override fun onFailure(performedCall: Call<Unit>, throwable: Throwable) {
-                    if (call!!.isCanceled) {
-                        return
-                    }
-                    val error = when (throwable) {
-                        is UnknownHostException, is SocketException, is SSLException -> PubNubError.CONNECT_EXCEPTION
-                        is SocketTimeoutException -> PubNubError.SUBSCRIBE_TIMEOUT
-                        else -> if (performedCall.isCanceled) {
-                            PubNubError.HTTP_ERROR
-                        } else {
-                            PubNubError.HTTP_ERROR
+            call!!.enqueue(
+                object : Callback<Unit> {
+                    override fun onResponse(
+                        performedCall: Call<Unit>,
+                        response: Response<Unit>,
+                    ) {
+                        if (!response.isSuccessful) {
+                            val ex = createException(response)
+                            callback.accept(Result.failure(ex))
+                            return
                         }
+                        callback.accept(Result.success(Unit))
                     }
-                    callback.accept(
-                        Result.failure(
-                            PubNubException(error).copy(
-                                errorMessage = throwable.message ?: error.message,
-                                cause = throwable
-                            )
+
+                    override fun onFailure(
+                        performedCall: Call<Unit>,
+                        throwable: Throwable,
+                    ) {
+                        if (call!!.isCanceled) {
+                            return
+                        }
+                        val error =
+                            when (throwable) {
+                                is UnknownHostException, is SocketException, is SSLException -> PubNubError.CONNECT_EXCEPTION
+                                is SocketTimeoutException -> PubNubError.SUBSCRIBE_TIMEOUT
+                                else ->
+                                    if (performedCall.isCanceled) {
+                                        PubNubError.HTTP_ERROR
+                                    } else {
+                                        PubNubError.HTTP_ERROR
+                                    }
+                            }
+                        callback.accept(
+                            Result.failure(
+                                PubNubException(error).copy(
+                                    errorMessage = throwable.message ?: error.message,
+                                    cause = throwable,
+                                ),
+                            ),
                         )
-                    )
-                }
-            })
+                    }
+                },
+            )
         } catch (e: Throwable) {
             callback.accept(Result.failure(PubNubException.from(e)))
         }
     }
 
     override fun retry() {}
+
     override fun silentCancel() {
         if (!call!!.isCanceled) {
             call!!.cancel()
@@ -133,13 +147,13 @@ internal class UploadFile(
             PubNubException(
                 errorMessage = response.readErrorMessage(),
                 affectedCall = call,
-                statusCode = response.code()
+                statusCode = response.code(),
             )
         } catch (e: Exception) {
             PubNubException(
                 errorMessage = e.message,
                 affectedCall = call,
-                statusCode = response.code()
+                statusCode = response.code(),
             )
         }
     }
@@ -157,14 +171,15 @@ internal class UploadFile(
         fun create(
             fileName: String,
             content: ByteArray,
-            fileUploadRequestDetails: FileUploadRequestDetails
+            fileUploadRequestDetails: FileUploadRequestDetails,
         ): ExtendedRemoteAction<Unit> {
             return UploadFile(
                 pubNub.retrofitManager.s3Service,
                 fileName,
                 content,
-                fileUploadRequestDetails.keyFormField, fileUploadRequestDetails.formFields,
-                fileUploadRequestDetails.url
+                fileUploadRequestDetails.keyFormField,
+                fileUploadRequestDetails.formFields,
+                fileUploadRequestDetails.url,
             )
         }
     }
@@ -174,10 +189,11 @@ internal class UploadFile(
         private const val CONTENT_TYPE_HEADER = "Content-Type"
         private const val FILE_PART_MULTIPART = "file"
         private val log = LoggerFactory.getLogger(UploadFile::class.java)
+
         private fun addFormParamsWithKeyFirst(
             keyValue: FormField,
             formParams: List<FormField>,
-            builder: MultipartBody.Builder
+            builder: MultipartBody.Builder,
         ) {
             builder.addFormDataPart(keyValue.key, keyValue.value)
             formParams

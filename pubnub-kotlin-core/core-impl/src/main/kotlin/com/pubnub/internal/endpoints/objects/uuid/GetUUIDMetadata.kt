@@ -17,15 +17,14 @@ import retrofit2.Response
 class GetUUIDMetadata internal constructor(
     pubnub: InternalPubNubClient,
     override val uuid: String,
-    private val includeQueryParam: IncludeQueryParam
+    private val includeQueryParam: IncludeQueryParam,
 ) : Endpoint<EntityEnvelope<PNUUIDMetadata>, PNUUIDMetadataResult>(pubnub), IGetUUIDMetadata {
-
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNUUIDMetadata>> {
         val params = queryParams + includeQueryParam.createIncludeQueryParams()
         return pubnub.retrofitManager.objectsService.getUUIDMetadata(
             subKey = pubnub.configuration.subscribeKey,
             uuid = uuid,
-            options = params
+            options = params,
         )
     }
 
@@ -33,7 +32,7 @@ class GetUUIDMetadata internal constructor(
         return input.body()!!.let {
             PNUUIDMetadataResult(
                 status = it.status,
-                data = it.data
+                data = it.data,
             )
         }
     }

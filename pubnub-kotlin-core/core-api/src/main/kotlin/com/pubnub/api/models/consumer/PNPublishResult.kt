@@ -6,7 +6,7 @@ package com.pubnub.api.models.consumer
  * @property timetoken The time token when the message or signal was published.
  */
 class PNPublishResult(
-    val timetoken: Long
+    val timetoken: Long,
 ) {
     override fun toString(): String {
         return "PNPublishResult(timetoken=$timetoken)"

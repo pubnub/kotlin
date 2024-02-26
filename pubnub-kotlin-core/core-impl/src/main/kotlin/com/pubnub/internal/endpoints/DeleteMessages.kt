@@ -19,9 +19,8 @@ class DeleteMessages internal constructor(
     pubnub: InternalPubNubClient,
     override val channels: List<String>,
     override val start: Long? = null,
-    override val end: Long? = null
+    override val end: Long? = null,
 ) : Endpoint<Void, PNDeleteMessagesResult>(pubnub), IDeleteMessages {
-
     override fun validateParams() {
         super.validateParams()
         if (channels.isEmpty()) throw PubNubException(PubNubError.CHANNEL_MISSING)
@@ -33,12 +32,11 @@ class DeleteMessages internal constructor(
         return pubnub.retrofitManager.historyService.deleteMessages(
             pubnub.configuration.subscribeKey,
             channels.toCsv(),
-            queryParams
+            queryParams,
         )
     }
 
-    override fun createResponse(input: Response<Void>): PNDeleteMessagesResult =
-        PNDeleteMessagesResult()
+    override fun createResponse(input: Response<Void>): PNDeleteMessagesResult = PNDeleteMessagesResult()
 
     override fun operationType() = PNOperationType.PNDeleteMessagesOperation
 

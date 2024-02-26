@@ -14,7 +14,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class MessageCountTest : BaseTest() {
-
     @Test
     fun testSingleChannelWithSingleToken() {
         stubFor(
@@ -22,23 +21,24 @@ class MessageCountTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                             "status": 200,
-                             "error": false,
-                             "error_message": "",
-                             "channels": {
-                              "my_channel": 19
-                             }
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                         "status": 200,
+                         "error": false,
+                         "error_message": "",
+                         "channels": {
+                          "my_channel": 19
+                         }
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val response = pubnub.messageCounts(
-            channels = listOf("my_channel"),
-            channelsTimetoken = listOf(10000L)
-        ).sync()
+        val response =
+            pubnub.messageCounts(
+                channels = listOf("my_channel"),
+                channelsTimetoken = listOf(10000L),
+            ).sync()
 
         assertEquals(response.channels.size, 1)
         assertFalse(response.channels.containsKey("channel_does_not_exist"))
@@ -56,23 +56,23 @@ class MessageCountTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                             "status": 200,
-                             "error": false,
-                             "error_message": "",
-                             "channels": {
-                              "my_channel": 19
-                             }
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                         "status": 200,
+                         "error": false,
+                         "error_message": "",
+                         "channels": {
+                          "my_channel": 19
+                         }
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
         var exception: PubNubException? = null
         try {
             pubnub.messageCounts(
                 channels = listOf("my_channel"),
-                channelsTimetoken = listOf(10000L, 20000L)
+                channelsTimetoken = listOf(10000L, 20000L),
             ).sync()
         } catch (e: PubNubException) {
             exception = e
@@ -80,7 +80,7 @@ class MessageCountTest : BaseTest() {
             assertNotNull(exception)
             assertEquals(
                 PubNubError.CHANNELS_TIMETOKEN_MISMATCH.message,
-                exception!!.pubnubError!!.message
+                exception!!.pubnubError!!.message,
             )
         }
     }
@@ -93,24 +93,25 @@ class MessageCountTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                             "status": 200,
-                             "error": false,
-                             "error_message": "",
-                             "channels": {
-                              "my_channel": 19,
-                              "new_channel": 5
-                             }
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                         "status": 200,
+                         "error": false,
+                         "error_message": "",
+                         "channels": {
+                          "my_channel": 19,
+                          "new_channel": 5
+                         }
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val response = pubnub.messageCounts(
-            channels = listOf("my_channel", "new_channel"),
-            channelsTimetoken = listOf(10000L)
-        ).sync()
+        val response =
+            pubnub.messageCounts(
+                channels = listOf("my_channel", "new_channel"),
+                channelsTimetoken = listOf(10000L),
+            ).sync()
 
         assertEquals(response.channels.size, 2)
         assertFalse(response.channels.containsKey("channel_does_not_exist"))
@@ -133,24 +134,25 @@ class MessageCountTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                             "status": 200,
-                             "error": false,
-                             "error_message": "",
-                             "channels": {
-                              "my_channel": 19,
-                              "new_channel": 5
-                             }
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                         "status": 200,
+                         "error": false,
+                         "error_message": "",
+                         "channels": {
+                          "my_channel": 19,
+                          "new_channel": 5
+                         }
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val response = pubnub.messageCounts(
-            channels = listOf("my_channel", "new_channel"),
-            channelsTimetoken = listOf(10000L, 20000L)
-        ).sync()
+        val response =
+            pubnub.messageCounts(
+                channels = listOf("my_channel", "new_channel"),
+                channelsTimetoken = listOf(10000L, 20000L),
+            ).sync()
 
         assertEquals(response.channels.size, 2)
         assertFalse(response.channels.containsKey("channel_does_not_exist"))
@@ -172,24 +174,24 @@ class MessageCountTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                             "status": 200,
-                             "error": false,
-                             "error_message": "",
-                             "channels": {
-                              "my_channel": 19,
-                              "new_channel": 5
-                             }
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                         "status": 200,
+                         "error": false,
+                         "error_message": "",
+                         "channels": {
+                          "my_channel": 19,
+                          "new_channel": 5
+                         }
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
         var exception: PubNubException? = null
         try {
             pubnub.messageCounts(
                 channels = listOf(),
-                channelsTimetoken = listOf(10000L)
+                channelsTimetoken = listOf(10000L),
             ).sync()
         } catch (ex: PubNubException) {
             exception = ex
@@ -197,7 +199,7 @@ class MessageCountTest : BaseTest() {
             assertNotNull(exception)
             assertEquals(
                 PubNubError.CHANNEL_MISSING.message,
-                exception!!.pubnubError!!.message
+                exception!!.pubnubError!!.message,
             )
         }
     }
@@ -209,24 +211,24 @@ class MessageCountTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                             "status": 200,
-                             "error": false,
-                             "error_message": "",
-                             "channels": {
-                              "my_channel": 19,
-                              "new_channel": 5
-                             }
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                         "status": 200,
+                         "error": false,
+                         "error_message": "",
+                         "channels": {
+                          "my_channel": 19,
+                          "new_channel": 5
+                         }
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
         var exception: PubNubException? = null
         try {
             pubnub.messageCounts(
                 channels = listOf(),
-                channelsTimetoken = listOf(10000L, 20000L)
+                channelsTimetoken = listOf(10000L, 20000L),
             ).sync()
         } catch (ex: PubNubException) {
             exception = ex
@@ -234,7 +236,7 @@ class MessageCountTest : BaseTest() {
             assertNotNull(exception)
             assertEquals(
                 PubNubError.CHANNEL_MISSING.message,
-                exception!!.pubnubError!!.message
+                exception!!.pubnubError!!.message,
             )
         }
     }
@@ -254,15 +256,15 @@ class MessageCountTest : BaseTest() {
                           "my_channel": 19
                          }
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
         var exception: PubNubException? = null
         try {
             pubnub.messageCounts(
                 channels = listOf("my_channel"),
-                channelsTimetoken = listOf()
+                channelsTimetoken = listOf(),
             ).sync()
         } catch (ex: PubNubException) {
             exception = ex
@@ -270,7 +272,7 @@ class MessageCountTest : BaseTest() {
             assertNotNull(exception)
             assertEquals(
                 PubNubError.TIMETOKEN_MISSING.message,
-                exception!!.pubnubError!!.message
+                exception!!.pubnubError!!.message,
             )
         }
     }

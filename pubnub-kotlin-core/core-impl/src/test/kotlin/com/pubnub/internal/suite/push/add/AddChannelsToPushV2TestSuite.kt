@@ -11,7 +11,6 @@ import com.pubnub.internal.endpoints.push.AddChannelsToPush
 
 class AddChannelsToPushV2TestSuite :
     com.pubnub.internal.suite.EndpointTestSuite<AddChannelsToPush, PNPushAddChannelResult>() {
-
     override fun pnOperation() = PNOperationType.PNAddPushNotificationsOnChannelsOperation
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH
@@ -21,7 +20,7 @@ class AddChannelsToPushV2TestSuite :
             pushType = PNPushType.APNS2,
             channels = listOf("ch1", "ch2"),
             deviceId = "12345",
-            topic = "news"
+            topic = "news",
         )
     }
 

@@ -40,7 +40,7 @@ internal class HeaderParser {
         if (initiallyRead < MINIMAL_SIZE_OF_DATA_HAVING_CRYPTOR_HEADER) {
             throw PubNubException(
                 errorMessage = "Minimal size of Cryptor Data Header is: $MINIMAL_SIZE_OF_DATA_HAVING_CRYPTOR_HEADER",
-                pubnubError = PubNubError.CRYPTOR_HEADER_PARSE_ERROR
+                pubnubError = PubNubError.CRYPTOR_HEADER_PARSE_ERROR,
             )
         }
 
@@ -48,23 +48,24 @@ internal class HeaderParser {
         val cryptorId = possibleInitialHeader.sliceArray(CRYPTOR_ID_STARTING_INDEX..CRYPTOR_ID_ENDING_INDEX)
         val cryptorDataSizeFirstByte = possibleInitialHeader[CRYPTOR_DATA_SIZE_STARTING_INDEX].toUByte()
 
-        val cryptorData: ByteArray = if (cryptorDataSizeFirstByte == THREE_BYTES_SIZE_CRYPTOR_DATA_INDICATOR) {
-            val cryptorDataSizeBytes = readExactlyNBytez(bufferedInputStream, 2)
-            val cryptorDataSize = convertTwoBytesToIntBigEndian(cryptorDataSizeBytes[0], cryptorDataSizeBytes[1])
-            readExactlyNBytez(bufferedInputStream, cryptorDataSize)
-        } else {
-            if (cryptorDataSizeFirstByte == UByte.MIN_VALUE) {
-                byteArrayOf()
+        val cryptorData: ByteArray =
+            if (cryptorDataSizeFirstByte == THREE_BYTES_SIZE_CRYPTOR_DATA_INDICATOR) {
+                val cryptorDataSizeBytes = readExactlyNBytez(bufferedInputStream, 2)
+                val cryptorDataSize = convertTwoBytesToIntBigEndian(cryptorDataSizeBytes[0], cryptorDataSizeBytes[1])
+                readExactlyNBytez(bufferedInputStream, cryptorDataSize)
             } else {
-                readExactlyNBytez(bufferedInputStream, cryptorDataSizeFirstByte.toInt())
+                if (cryptorDataSizeFirstByte == UByte.MIN_VALUE) {
+                    byteArrayOf()
+                } else {
+                    readExactlyNBytez(bufferedInputStream, cryptorDataSizeFirstByte.toInt())
+                }
             }
-        }
         return ParseResult.Success(cryptorId, cryptorData, bufferedInputStream)
     }
 
     private fun readExactlyNBytez(
         bufferedInputStream: BufferedInputStream,
-        numberOfBytesToRead: Int
+        numberOfBytesToRead: Int,
     ) = bufferedInputStream.readExactlyNBytez(numberOfBytesToRead) { n ->
         throw PubNubException(errorMessage = "Couldn't read $n bytes")
     }
@@ -81,8 +82,8 @@ internal class HeaderParser {
         if (data.size < MINIMAL_SIZE_OF_DATA_HAVING_CRYPTOR_HEADER) {
             throw PubNubException(
                 errorMessage =
-                "Minimal size of encrypted data having Cryptor Data Header is: $MINIMAL_SIZE_OF_DATA_HAVING_CRYPTOR_HEADER",
-                pubnubError = PubNubError.CRYPTOR_DATA_HEADER_SIZE_TO_SMALL
+                    "Minimal size of encrypted data having Cryptor Data Header is: $MINIMAL_SIZE_OF_DATA_HAVING_CRYPTOR_HEADER",
+                pubnubError = PubNubError.CRYPTOR_DATA_HEADER_SIZE_TO_SMALL,
             )
         }
 
@@ -92,15 +93,16 @@ internal class HeaderParser {
         log.trace("CryptoId: ${String(cryptorId, Charsets.UTF_8)}")
 
         val cryptorDataSizeFirstByte: Byte = data[CRYPTOR_DATA_SIZE_STARTING_INDEX]
-        val (startingIndexOfCryptorData, cryptorDataSize) = getCryptorDataSizeAndStartingIndex(
-            data,
-            cryptorDataSizeFirstByte
-        )
+        val (startingIndexOfCryptorData, cryptorDataSize) =
+            getCryptorDataSizeAndStartingIndex(
+                data,
+                cryptorDataSizeFirstByte,
+            )
 
         if (startingIndexOfCryptorData + cryptorDataSize > data.size) {
             throw PubNubException(
                 errorMessage = "Input data size: ${data.size} is to small to fit header of size $startingIndexOfCryptorData and cryptorData of size: $cryptorDataSize",
-                pubnubError = PubNubError.CRYPTOR_HEADER_PARSE_ERROR
+                pubnubError = PubNubError.CRYPTOR_HEADER_PARSE_ERROR,
             )
         }
         val cryptorData =
@@ -111,7 +113,10 @@ internal class HeaderParser {
         return ParseResult.Success(cryptorId, cryptorData, encryptedData)
     }
 
-    fun createCryptorHeader(cryptorId: ByteArray, cryptorData: ByteArray?): ByteArray {
+    fun createCryptorHeader(
+        cryptorId: ByteArray,
+        cryptorData: ByteArray?,
+    ): ByteArray {
         val sentinel: ByteArray = SENTINEL
         val cryptorHeaderVersion: Byte = getCurrentCryptoHeaderVersion()
         val cryptorDataSize: Int = cryptorData?.size ?: 0
@@ -123,7 +128,7 @@ internal class HeaderParser {
             } else {
                 throw PubNubException(
                     errorMessage = "Cryptor Data Size is: $cryptorDataSize whereas max cryptor data size is: $MAX_VALUE_THAT_CAN_BE_STORED_ON_TWO_BYTES",
-                    pubnubError = PubNubError.CRYPTOR_HEADER_PARSE_ERROR
+                    pubnubError = PubNubError.CRYPTOR_HEADER_PARSE_ERROR,
                 )
             }
 
@@ -136,7 +141,10 @@ internal class HeaderParser {
         return CryptorHeaderVersion.One.value.toByte()
     }
 
-    private fun getCryptorDataSizeAndStartingIndex(data: ByteArray, cryptorDataSizeFirstByte: Byte): Pair<Int, Int> {
+    private fun getCryptorDataSizeAndStartingIndex(
+        data: ByteArray,
+        cryptorDataSizeFirstByte: Byte,
+    ): Pair<Int, Int> {
         val startingIndexOfCryptorData: Int
         val cryptorDataSize: Int
         val cryptoDataFirstByteAsUByte: UByte = cryptorDataSizeFirstByte.toUByte()
@@ -163,11 +171,14 @@ internal class HeaderParser {
         CryptorHeaderVersion.fromValue(versionAsInt)
             ?: throw PubNubException(
                 errorMessage = "Cryptor header version unknown. Please, update SDK",
-                pubnubError = PubNubError.CRYPTOR_HEADER_VERSION_UNKNOWN
+                pubnubError = PubNubError.CRYPTOR_HEADER_VERSION_UNKNOWN,
             )
     }
 
-    private fun convertTwoBytesToIntBigEndian(byte1: Byte, byte2: Byte): Int {
+    private fun convertTwoBytesToIntBigEndian(
+        byte1: Byte,
+        byte2: Byte,
+    ): Int {
         return ((byte1.toInt() and 0xFF) shl 8) or (byte2.toInt() and 0xFF)
     }
 

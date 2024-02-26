@@ -25,9 +25,8 @@ class Publish internal constructor(
     override val shouldStore: Boolean? = null,
     override val usePost: Boolean = false,
     override val replicate: Boolean = true,
-    override val ttl: Int? = null
+    override val ttl: Int? = null,
 ) : Endpoint<List<Any>, PNPublishResult>(pubnub), IPublish {
-
     override fun validateParams() {
         super.validateParams()
         if (channel.isBlank()) throw PubNubException(PubNubError.CHANNEL_MISSING)
@@ -36,7 +35,6 @@ class Publish internal constructor(
     override fun getAffectedChannels() = listOf(channel)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<List<Any>> {
-
         addQueryParams(queryParams)
 
         return if (usePost) {
@@ -47,7 +45,7 @@ class Publish internal constructor(
                 pubnub.configuration.subscribeKey,
                 channel,
                 payload,
-                queryParams
+                queryParams,
             )
         } else {
             // HTTP GET request
@@ -58,14 +56,14 @@ class Publish internal constructor(
                 pubnub.configuration.subscribeKey,
                 channel,
                 stringifiedMessage,
-                queryParams
+                queryParams,
             )
         }
     }
 
     override fun createResponse(input: Response<List<Any>>): PNPublishResult =
         PNPublishResult(
-            timetoken = input.body()!![2].toString().toLong()
+            timetoken = input.body()!![2].toString().toLong(),
         )
 
     override fun operationType() = PNOperationType.PNPublishOperation
@@ -75,13 +73,13 @@ class Publish internal constructor(
     override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.PUBLISH
 
     // region Parameters
+
     /**
      * Add query params to passed HashMap
      *
      * @param queryParams hashMap to add parameters
      */
     private fun addQueryParams(queryParams: MutableMap<String, String>) {
-
         meta?.run { queryParams["meta"] = pubnub.mapper.toJson(this) }
 
         shouldStore?.run { queryParams["store"] = this.numericString }
@@ -95,11 +93,9 @@ class Publish internal constructor(
     // endregion
 
     // region Message parsers
-    private fun getBodyMessage(message: Any): Any =
-        pubnub.cryptoModule?.encryptString(toJson(message)) ?: message
+    private fun getBodyMessage(message: Any): Any = pubnub.cryptoModule?.encryptString(toJson(message)) ?: message
 
-    private fun getParamMessage(message: Any): String =
-        pubnub.cryptoModule?.encryptString(toJson(message))?.quoted() ?: toJson(message)
+    private fun getParamMessage(message: Any): String = pubnub.cryptoModule?.encryptString(toJson(message))?.quoted() ?: toJson(message)
 
     private fun toJson(message: Any): String = pubnub.mapper.toJson(message)
     // endregion

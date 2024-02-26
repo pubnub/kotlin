@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory
 
 internal class EmitStatusEffect(
     private val statusConsumer: StatusConsumer,
-    private val status: PNStatus
+    private val status: PNStatus,
 ) : Effect {
     private val log = LoggerFactory.getLogger(EmitStatusEffect::class.java)
 

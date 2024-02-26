@@ -18,7 +18,6 @@ import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
 internal object PubNubUtil {
-
     private val log = LoggerFactory.getLogger("PubNubUtil")
 
     private const val CHARSET = "UTF-8"
@@ -26,13 +25,18 @@ internal object PubNubUtil {
     const val TIMESTAMP_QUERY_PARAM_NAME = "timestamp"
     const val AUTH_QUERY_PARAM_NAME = "auth"
 
-    fun replaceLast(string: String, toReplace: String, replacement: String): String {
+    fun replaceLast(
+        string: String,
+        toReplace: String,
+        replacement: String,
+    ): String {
         val pos = string.lastIndexOf(toReplace)
         return if (pos > -1) {
-            string.substring(0, pos) + replacement + string.substring(
-                pos + toReplace.length,
-                string.length
-            )
+            string.substring(0, pos) + replacement +
+                string.substring(
+                    pos + toReplace.length,
+                    string.length,
+                )
         } else {
             string
         }
@@ -55,17 +59,18 @@ internal object PubNubUtil {
     fun signRequest(
         originalRequest: Request,
         pnConfiguration: PNConfiguration,
-        timestamp: Int
+        timestamp: Int,
     ): Request {
         // only sign if we have a secret key in place.
         if (!pnConfiguration.secretKey.isValid()) {
             return originalRequest
         }
         val signature = generateSignature(pnConfiguration, originalRequest, timestamp)
-        val rebuiltUrl = originalRequest.url.newBuilder()
-            .addQueryParameter("timestamp", timestamp.toString())
-            .addQueryParameter("signature", signature)
-            .build()
+        val rebuiltUrl =
+            originalRequest.url.newBuilder()
+                .addQueryParameter("timestamp", timestamp.toString())
+                .addQueryParameter("signature", signature)
+                .build()
         return originalRequest.newBuilder().url(rebuiltUrl).build()
     }
 
@@ -79,18 +84,18 @@ internal object PubNubUtil {
         queryParams: MutableMap<String, String>,
         method: String,
         requestBody: String?,
-        timestamp: Int
+        timestamp: Int,
     ): String {
-
         val signatureBuilder = StringBuilder()
         queryParams["timestamp"] = timestamp.toString()
 
         val classic = true
-        val encodedQueryString = if (classic) {
-            preparePamArguments(queryParams)
-        } else {
-            preparePamArguments("$requestURL&timestamp=$timestamp")
-        }
+        val encodedQueryString =
+            if (classic) {
+                preparePamArguments(queryParams)
+            } else {
+                preparePamArguments("$requestURL&timestamp=$timestamp")
+            }
 
         val isV2Signature: Boolean = !(requestURL.startsWith("/publish") && method.equals("post", ignoreCase = true))
         if (!isV2Signature) {
@@ -121,15 +126,19 @@ internal object PubNubUtil {
         return signature
     }
 
-    internal fun signSHA256(key: String, data: String): String {
+    internal fun signSHA256(
+        key: String,
+        data: String,
+    ): String {
         val sha256HMAC: Mac
         val hmacData: ByteArray
         val secretKey = SecretKeySpec(key.toByteArray(charset(CHARSET)), "HmacSHA256")
-        sha256HMAC = try {
-            Mac.getInstance("HmacSHA256")
-        } catch (e: NoSuchAlgorithmException) {
-            throw com.pubnub.internal.vendor.Crypto.newCryptoError(0, e)
-        }
+        sha256HMAC =
+            try {
+                Mac.getInstance("HmacSHA256")
+            } catch (e: NoSuchAlgorithmException) {
+                throw com.pubnub.internal.vendor.Crypto.newCryptoError(0, e)
+            }
         try {
             sha256HMAC.init(secretKey)
         } catch (e: InvalidKeyException) {
@@ -137,19 +146,20 @@ internal object PubNubUtil {
         }
         hmacData = sha256HMAC.doFinal(data.toByteArray(charset(CHARSET)))
 
-        val signed = String(
-            com.pubnub.internal.vendor.Base64.encode(hmacData, com.pubnub.internal.vendor.Base64.NO_WRAP),
-            Charset.forName(CHARSET)
-        )
-            .replace('+', '-')
-            .replace('/', '_')
+        val signed =
+            String(
+                com.pubnub.internal.vendor.Base64.encode(hmacData, com.pubnub.internal.vendor.Base64.NO_WRAP),
+                Charset.forName(CHARSET),
+            )
+                .replace('+', '-')
+                .replace('/', '_')
         return signed
     }
 
     private fun generateSignature(
         configuration: PNConfiguration,
         request: Request,
-        timestamp: Int
+        timestamp: Int,
     ): String? {
         val queryParams: MutableMap<String, String> = mutableMapOf()
         for (queryKey: String in request.url.queryParameterNames) {
@@ -164,7 +174,7 @@ internal object PubNubUtil {
             queryParams,
             request.method,
             requestBodyToString(request),
-            timestamp
+            timestamp,
         )
     }
 
@@ -217,8 +227,11 @@ internal object PubNubUtil {
      * @param stringToEncode , input string
      * @return , encoded string
      */
-    internal fun pamEncode(stringToEncode: String, alreadyPercentEncoded: Boolean = false): String {
-        /* !'()*~ */
+    internal fun pamEncode(
+        stringToEncode: String,
+        alreadyPercentEncoded: Boolean = false,
+    ): String {
+        // !'()*~
 
         return if (alreadyPercentEncoded) {
             stringToEncode
@@ -230,13 +243,17 @@ internal object PubNubUtil {
         }
     }
 
-    internal fun maybeAddEeQueryParam(configuration: PNConfiguration, queryParams: MutableMap<String, String>) {
+    internal fun maybeAddEeQueryParam(
+        configuration: PNConfiguration,
+        queryParams: MutableMap<String, String>,
+    ) {
         queryParams["ee"] = ""
     }
 }
 
 internal fun <E> List<E>.toCsv(): String {
-    if (this.isNotEmpty())
+    if (this.isNotEmpty()) {
         return this.joinToString(",")
+    }
     return ","
 }

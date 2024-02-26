@@ -13,7 +13,6 @@ import com.pubnub.api.listen
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.subscribeToBlocking
-
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.logging.HttpLoggingInterceptor
@@ -31,7 +30,6 @@ import java.util.concurrent.atomic.AtomicInteger
 import kotlin.time.Duration.Companion.seconds
 
 class PresenceIntegrationTests : BaseIntegrationTest() {
-
     @Test
     fun testWhereNow() {
         val expectedChannelsCount = 4
@@ -55,16 +53,17 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
 
         val expectedChannels = generateSequence { randomValue() }.take(expectedChannelsCount).toList()
 
-        val clients = mutableListOf(pubnub).apply {
-            addAll(generateSequence { createPubNub() }.take(expectedClientsCount - 1).toList())
-        }
+        val clients =
+            mutableListOf(pubnub).apply {
+                addAll(generateSequence { createPubNub() }.take(expectedClientsCount - 1).toList())
+            }
 
         clients.forEach {
             it.subscribeToBlocking(*expectedChannels.toTypedArray())
         }
 
         pubnub.hereNow(
-            includeUUIDs = true
+            includeUUIDs = true,
         ).asyncRetry { result ->
             assertFalse(result.isFailure)
             result.onSuccess {
@@ -81,7 +80,7 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
 
                         assertEquals(
                             clients.map { it.configuration.userId.value }.toList(),
-                            value.occupants.map { it.uuid }.toList()
+                            value.occupants.map { it.uuid }.toList(),
                         )
                     }
                 }
@@ -96,9 +95,10 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
 
         val expectedChannels = generateSequence { randomValue() }.take(expectedChannelsCount).toList()
 
-        val clients = mutableListOf(pubnub).apply {
-            addAll(generateSequence { createPubNub() }.take(expectedClientsCount - 1).toList())
-        }
+        val clients =
+            mutableListOf(pubnub).apply {
+                addAll(generateSequence { createPubNub() }.take(expectedClientsCount - 1).toList())
+            }
 
         clients.forEach {
             it.subscribeToBlocking(*expectedChannels.toTypedArray())
@@ -109,7 +109,7 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
 
         pubnub.hereNow(
             channels = expectedChannels,
-            includeUUIDs = true
+            includeUUIDs = true,
         ).asyncRetry { result ->
             assertFalse(result.isFailure)
             result.onSuccess {
@@ -149,7 +149,7 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
 
             pubnub.setPresenceState(
                 channels = listOf(expectedChannel),
-                state = expectedStatePayload
+                state = expectedStatePayload,
             ).sync()
 
             val pnPresenceEventResult = nextEvent<PNPresenceEventResult>()
@@ -158,9 +158,10 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
             assertEquals(pubnub.configuration.userId.value, pnPresenceEventResult.uuid)
             assertEquals(expectedStatePayload, pnPresenceEventResult.state)
 
-            val result = pubnub.getPresenceState(
-                channels = listOf(expectedChannel)
-            ).sync()
+            val result =
+                pubnub.getPresenceState(
+                    channels = listOf(expectedChannel),
+                ).sync()
             assertEquals(expectedStatePayload, result!!.stateByUUID[expectedChannel])
         }
     }
@@ -191,12 +192,13 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
     fun testHeartbeatsEnabled2() {
         val expectedChannel: String = randomValue()
 
-        val pubnub = createPubNub(
-            getBasicPnConfiguration().apply {
-                heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
-                presenceTimeout = 20
-            }
-        )
+        val pubnub =
+            createPubNub(
+                getBasicPnConfiguration().apply {
+                    heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
+                    presenceTimeout = 20
+                },
+            )
         assertEquals(PNHeartbeatNotificationOptions.ALL, pubnub.configuration.heartbeatNotificationOptions)
         assertEquals(20, pubnub.configuration.presenceTimeout)
         assertEquals(9, pubnub.configuration.heartbeatInterval)
@@ -214,29 +216,35 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
         val subscribeSuccess = AtomicBoolean()
         val expectedChannel: String = randomValue()
 
-        val pubnub = createPubNub(
-            getBasicPnConfiguration().apply {
-                heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
-                presenceTimeout = 20
-            }
-        )
+        val pubnub =
+            createPubNub(
+                getBasicPnConfiguration().apply {
+                    heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
+                    presenceTimeout = 20
+                },
+            )
         assertEquals(PNHeartbeatNotificationOptions.ALL, pubnub.configuration.heartbeatNotificationOptions)
         assertEquals(20, pubnub.configuration.presenceTimeout)
         assertEquals(9, pubnub.configuration.heartbeatInterval)
 
-        pubnub.addListener(object : SubscribeCallback() {
-            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.category == PNStatusCategory.Connected && pnStatus.channels.contains(expectedChannel)) {
-                    subscribeSuccess.set(true)
-                } else if (pnStatus.category == PNStatusCategory.HeartbeatSuccess) {
-                    heartbeatCallsCount.incrementAndGet()
+        pubnub.addListener(
+            object : SubscribeCallback() {
+                override fun status(
+                    pubnub: PubNub,
+                    pnStatus: PNStatus,
+                ) {
+                    if (pnStatus.category == PNStatusCategory.Connected && pnStatus.channels.contains(expectedChannel)) {
+                        subscribeSuccess.set(true)
+                    } else if (pnStatus.category == PNStatusCategory.HeartbeatSuccess) {
+                        heartbeatCallsCount.incrementAndGet()
+                    }
                 }
-            }
-        })
+            },
+        )
 
         pubnub.subscribe(
             channels = listOf(expectedChannel),
-            withPresence = true
+            withPresence = true,
         )
 
         Awaitility.await()
@@ -253,12 +261,13 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
         val config = getBasicPnConfiguration()
         config.heartbeatInterval = 1
         var interceptedUrl: HttpUrl? = null
-        config.httpLoggingInterceptor = HttpLoggingInterceptor {
-            if (it.startsWith("--> GET https://")) {
-                interceptedUrl = it.substringAfter("--> GET ").toHttpUrlOrNull()
-                success.set(true)
-            }
-        }.apply { level = HttpLoggingInterceptor.Level.BASIC }
+        config.httpLoggingInterceptor =
+            HttpLoggingInterceptor {
+                if (it.startsWith("--> GET https://")) {
+                    interceptedUrl = it.substringAfter("--> GET ").toHttpUrlOrNull()
+                    success.set(true)
+                }
+            }.apply { level = HttpLoggingInterceptor.Level.BASIC }
 
         val pubnub = PubNub.create(config)
 
@@ -266,7 +275,7 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
         try {
             pubnub.presence(
                 channels = listOf("a"),
-                connected = true
+                connected = true,
             )
 
             success.listen()

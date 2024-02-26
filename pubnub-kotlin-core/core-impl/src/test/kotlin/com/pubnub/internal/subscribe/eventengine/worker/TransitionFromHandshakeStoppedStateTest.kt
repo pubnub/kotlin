@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class TransitionFromHandshakeStoppedStateTest {
-
     private val channels = setOf("Channel1")
     private val channelGroups = setOf("ChannelGroup1")
     private val reason = PubNubException("Test")
@@ -45,10 +44,11 @@ class TransitionFromHandshakeStoppedStateTest {
         val subscriptionCursorForReconnect = SubscriptionCursor(timeTokenFromReconnect, null)
 
         // when
-        val (state, invocations) = transition(
-            SubscribeState.HandshakeStopped(channels, channelGroups, reason),
-            SubscribeEvent.Reconnect(subscriptionCursorForReconnect)
-        )
+        val (state, invocations) =
+            transition(
+                SubscribeState.HandshakeStopped(channels, channelGroups, reason),
+                SubscribeEvent.Reconnect(subscriptionCursorForReconnect),
+            )
 
         // then
         assertTrue(state is SubscribeState.Handshaking)
@@ -63,10 +63,11 @@ class TransitionFromHandshakeStoppedStateTest {
     @Test
     fun can_transit_from_HANDSHAKE_STOPPED_to_HANDSHAKING_when_there_is_RECONNECT_event() {
         // when
-        val (state, invocations) = transition(
-            SubscribeState.HandshakeStopped(channels, channelGroups, reason),
-            SubscribeEvent.Reconnect()
-        )
+        val (state, invocations) =
+            transition(
+                SubscribeState.HandshakeStopped(channels, channelGroups, reason),
+                SubscribeEvent.Reconnect(),
+            )
 
         // then
         assertTrue(state is SubscribeState.Handshaking)
@@ -80,10 +81,11 @@ class TransitionFromHandshakeStoppedStateTest {
     @Test
     fun can_transit_from_HANDSHAKE_STOPPED_to_UNSUBSRIBED_when_there_is_UNSUBSRIBED_ALL_event() {
         // when
-        val (state, invocations) = transition(
-            SubscribeState.HandshakeStopped(channels, channelGroups, reason),
-            SubscribeEvent.UnsubscribeAll
-        )
+        val (state, invocations) =
+            transition(
+                SubscribeState.HandshakeStopped(channels, channelGroups, reason),
+                SubscribeEvent.UnsubscribeAll,
+            )
 
         // then
         assertEquals(SubscribeState.Unsubscribed, state)
@@ -93,10 +95,11 @@ class TransitionFromHandshakeStoppedStateTest {
     @Test
     fun can_transit_from_HANDSHAKE_STOPPED_to_HANDSHAKE_STOPPED_when_there_is_SUBSCRIPTION_CHANGED_event() {
         // when
-        val (state, invocations) = transition(
-            SubscribeState.HandshakeStopped(channels, channelGroups, reason),
-            SubscribeEvent.SubscriptionChanged(channels, channelGroups)
-        )
+        val (state, invocations) =
+            transition(
+                SubscribeState.HandshakeStopped(channels, channelGroups, reason),
+                SubscribeEvent.SubscriptionChanged(channels, channelGroups),
+            )
 
         // then
         assertTrue(state is SubscribeState.HandshakeStopped)
@@ -111,10 +114,11 @@ class TransitionFromHandshakeStoppedStateTest {
     @Test
     fun can_transit_from_HANDSHAKE_STOPPED_to_HANDSHAKE_STOPPED_when_there_is_SUBSCRIPTION_RESTORED_event() {
         // when
-        val (state, invocations) = transition(
-            SubscribeState.HandshakeStopped(channels, channelGroups, reason),
-            SubscribeEvent.SubscriptionRestored(channels, channelGroups, subscriptionCursor)
-        )
+        val (state, invocations) =
+            transition(
+                SubscribeState.HandshakeStopped(channels, channelGroups, reason),
+                SubscribeEvent.SubscriptionRestored(channels, channelGroups, subscriptionCursor),
+            )
 
         // then
         assertTrue(state is SubscribeState.HandshakeStopped)

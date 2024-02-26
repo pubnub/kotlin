@@ -8,5 +8,5 @@ import com.google.gson.JsonElement
  * @property state The actual state object.
  */
 class PNSetStateResult(
-    val state: JsonElement
+    val state: JsonElement,
 )

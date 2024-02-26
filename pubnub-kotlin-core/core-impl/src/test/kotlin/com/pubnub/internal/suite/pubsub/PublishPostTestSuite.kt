@@ -12,24 +12,24 @@ import org.json.JSONObject
 import org.junit.Assert.assertEquals
 
 class PublishPostTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Publish, PNPublishResult>() {
-
     override fun pnOperation() = PNOperationType.PNPublishOperation
 
-    override fun requiredKeys() =
-        com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.PUB + com.pubnub.internal.suite.AUTH
+    override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.PUB + com.pubnub.internal.suite.AUTH
 
     override fun snippet(): Publish {
         return pubnub.publish(
             channel = "ch1",
-            message = mapOf(
-                "name" to "john",
-                "age" to 30,
-                "private" to false
-            ),
-            meta = JSONObject().apply {
-                put("city", "sf")
-            }.toMap(),
-            usePost = true
+            message =
+                mapOf(
+                    "name" to "john",
+                    "age" to 30,
+                    "private" to false,
+                ),
+            meta =
+                JSONObject().apply {
+                    put("city", "sf")
+                }.toMap(),
+            usePost = true,
         )
     }
 
@@ -43,10 +43,11 @@ class PublishPostTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Publish
 
     override fun mappingBuilder(): MappingBuilder {
         return post(
-            urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/ch1/0")
+            urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/ch1/0"),
         )
             .withQueryParam(
-                "meta", equalToJson("""{"city":"sf"}""")
+                "meta",
+                equalToJson("""{"city":"sf"}"""),
             )
             .withRequestBody(
                 equalToJson(
@@ -54,10 +55,10 @@ class PublishPostTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Publish
                         mapOf(
                             "name" to "john",
                             "age" to 30,
-                            "private" to false
-                        )
-                    )
-                )
+                            "private" to false,
+                        ),
+                    ),
+                ),
             )!!
     }
 

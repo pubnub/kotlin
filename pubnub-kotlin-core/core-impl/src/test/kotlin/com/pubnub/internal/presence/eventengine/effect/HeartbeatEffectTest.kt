@@ -27,18 +27,20 @@ class HeartbeatEffectTest {
 
     companion object {
         @JvmStatic
-        fun successfulHeartbeatWithNotificationOptions(): List<Arguments> = listOf(
-            Arguments.of(PNHeartbeatNotificationOptions.NONE, false),
-            Arguments.of(PNHeartbeatNotificationOptions.FAILURES, false),
-            Arguments.of(PNHeartbeatNotificationOptions.ALL, true)
-        )
+        fun successfulHeartbeatWithNotificationOptions(): List<Arguments> =
+            listOf(
+                Arguments.of(PNHeartbeatNotificationOptions.NONE, false),
+                Arguments.of(PNHeartbeatNotificationOptions.FAILURES, false),
+                Arguments.of(PNHeartbeatNotificationOptions.ALL, true),
+            )
 
         @JvmStatic
-        fun unsuccessfulHeartbeatWithNotificationOptions(): List<Arguments> = listOf(
-            Arguments.of(PNHeartbeatNotificationOptions.NONE, false),
-            Arguments.of(PNHeartbeatNotificationOptions.FAILURES, true),
-            Arguments.of(PNHeartbeatNotificationOptions.ALL, true)
-        )
+        fun unsuccessfulHeartbeatWithNotificationOptions(): List<Arguments> =
+            listOf(
+                Arguments.of(PNHeartbeatNotificationOptions.NONE, false),
+                Arguments.of(PNHeartbeatNotificationOptions.FAILURES, true),
+                Arguments.of(PNHeartbeatNotificationOptions.ALL, true),
+            )
     }
 
     @Test
@@ -84,7 +86,7 @@ class HeartbeatEffectTest {
     @MethodSource("successfulHeartbeatWithNotificationOptions")
     fun `should announce status when HeartbeatEffect succeeded`(
         pnHeartbeatNotificationOptions: PNHeartbeatNotificationOptions,
-        shouldAnnounce: Boolean
+        shouldAnnounce: Boolean,
     ) {
         // given
         val heartbeatNotificationOptions: PNHeartbeatNotificationOptions = pnHeartbeatNotificationOptions
@@ -112,7 +114,7 @@ class HeartbeatEffectTest {
     @MethodSource("unsuccessfulHeartbeatWithNotificationOptions")
     fun `should announce status when HeartbeatEffect failed`(
         pnHeartbeatNotificationOptions: PNHeartbeatNotificationOptions,
-        shouldAnnounce: Boolean
+        shouldAnnounce: Boolean,
     ) {
         // given
         val heartbeatNotificationOptions: PNHeartbeatNotificationOptions = pnHeartbeatNotificationOptions

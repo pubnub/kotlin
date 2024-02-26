@@ -1,51 +1,22 @@
 package com.pubnub.api.endpoints.objects_api.memberships;
 
-import com.pubnub.internal.endpoints.DelegatingEndpoint;
-import com.pubnub.api.endpoints.objects_api.utils.Include;
-import com.pubnub.api.endpoints.objects_api.utils.PNSortKey;
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
-import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
-import com.pubnub.api.models.consumer.objects.PNPage;
+import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.models.consumer.objects_api.membership.PNGetMembershipsResult;
-import com.pubnub.internal.InternalPubNubClient;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 
-import java.util.Collection;
-import java.util.Collections;
+public interface GetMemberships extends Endpoint<PNGetMembershipsResult> {
+    GetMemberships uuid(String uuid);
 
-@Setter
-@Accessors(chain = true, fluent = true)
-public class GetMemberships extends DelegatingEndpoint<PNGetMembershipsResult> {
+    GetMemberships limit(Integer limit);
 
-    private String uuid;
-    private Integer limit;
-    private PNPage page;
-    private String filter;
-    private Collection<PNSortKey> sort = Collections.emptyList();
-    private boolean includeTotalCount;
-    private boolean includeCustom;
-    private Include.PNChannelDetailsLevel includeChannel;
+    GetMemberships page(com.pubnub.api.models.consumer.objects.PNPage page);
 
-    public GetMemberships(InternalPubNubClient pubnub) {
-        super(pubnub);
-    }
+    GetMemberships filter(String filter);
 
-    @Override
-    protected ExtendedRemoteAction<PNGetMembershipsResult> createAction() {
-        return new MappingRemoteAction<>(
-                pubnub.getMemberships(
-                        uuid,
-                        limit,
-                        page,
-                        filter,
-                        SetMemberships.toInternal(sort),
-                        includeTotalCount,
-                        includeCustom,
-                        SetMemberships.toInternal(includeChannel)
-                ),
-                PNGetMembershipsResult::from);
-    }
+    GetMemberships sort(java.util.Collection<com.pubnub.api.endpoints.objects_api.utils.PNSortKey> sort);
+
+    GetMemberships includeTotalCount(boolean includeTotalCount);
+
+    GetMemberships includeCustom(boolean includeCustom);
+
+    GetMemberships includeChannel(com.pubnub.api.endpoints.objects_api.utils.Include.PNChannelDetailsLevel includeChannel);
 }
-
-

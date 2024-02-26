@@ -11,13 +11,12 @@ import retrofit2.Response
 
 class RemoveChannelMetadata(
     pubnub: InternalPubNubClient,
-    private val channel: String
+    private val channel: String,
 ) : Endpoint<EntityEnvelope<Any?>, PNRemoveMetadataResult>(pubnub), IRemoveChannelMetadata {
-
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<Any?>> {
         return pubnub.retrofitManager.objectsService.deleteChannelMetadata(
             subKey = pubnub.configuration.subscribeKey,
-            channel = channel
+            channel = channel,
         )
     }
 

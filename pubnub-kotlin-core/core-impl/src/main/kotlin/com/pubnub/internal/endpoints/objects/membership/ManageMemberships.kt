@@ -26,27 +26,29 @@ class ManageMemberships internal constructor(
     private val channelsToRemove: Collection<String>,
     private val uuid: String,
     private val collectionQueryParameters: CollectionQueryParameters,
-    private val includeQueryParam: IncludeQueryParam
+    private val includeQueryParam: IncludeQueryParam,
 ) : Endpoint<EntityArrayEnvelope<PNChannelMembership>, PNChannelMembershipArrayResult>(pubnub),
     IManageMemberships {
-
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityArrayEnvelope<PNChannelMembership>> {
-        val params = queryParams + collectionQueryParameters.createCollectionQueryParams() +
-            includeQueryParam.createIncludeQueryParams()
+        val params =
+            queryParams + collectionQueryParameters.createCollectionQueryParams() +
+                includeQueryParam.createIncludeQueryParams()
         return pubnub.retrofitManager.objectsService.patchMemberships(
             uuid = uuid,
             subKey = pubnub.configuration.subscribeKey,
             options = params,
-            body = ChangeMembershipInput(
-                set = channelsToSet.map {
-                    ServerMembershipInput(
-                        channel = ChannelId(id = it.channel),
-                        custom = it.custom,
-                        status = it.status
-                    )
-                },
-                delete = channelsToRemove.map { ServerMembershipInput(channel = ChannelId(id = it)) }
-            )
+            body =
+                ChangeMembershipInput(
+                    set =
+                        channelsToSet.map {
+                            ServerMembershipInput(
+                                channel = ChannelId(id = it.channel),
+                                custom = it.custom,
+                                status = it.status,
+                            )
+                        },
+                    delete = channelsToRemove.map { ServerMembershipInput(channel = ChannelId(id = it)) },
+                ),
         )
     }
 

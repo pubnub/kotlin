@@ -6,9 +6,8 @@ import io.cucumber.java.en.When
 
 class WhenSteps(
     private val world: World,
-    private val uuidMetadataState: UUIDMetadataState
+    private val uuidMetadataState: UUIDMetadataState,
 ) {
-
     @When("I get the UUID metadata")
     fun i_get_uuid_metadata() {
         world.pubnub.internalPubNubClient.getUUIDMetadata(uuid = uuidMetadataState.uuid).sync()?.let {
@@ -36,7 +35,7 @@ class WhenSteps(
             email = uuidMetadata.email,
             name = uuidMetadata.name,
             status = uuidMetadata.status,
-            type = uuidMetadata.type
+            type = uuidMetadata.type,
         ).sync()?.let {
             uuidMetadataState.uuidMetadata = it.data
             world.responseStatus = it.status

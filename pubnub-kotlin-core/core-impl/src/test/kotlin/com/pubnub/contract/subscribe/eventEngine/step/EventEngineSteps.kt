@@ -23,7 +23,6 @@ import java.util.concurrent.TimeUnit
 import kotlin.time.Duration.Companion.milliseconds
 
 class EventEngineSteps(private val state: EventEngineState) {
-
     @Given("a linear reconnection policy with {int} retries")
     fun a_linear_reconnection_policy_with_retries(maxRetries: Int) {
         state.configuration.retryConfiguration =
@@ -32,74 +31,120 @@ class EventEngineSteps(private val state: EventEngineState) {
 
     @When("I subscribe")
     fun i_subscribe() {
-        state.pubnub.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*, *, *, *, *, *, *, *>, pnStatus: PNStatus) {
-                state.statusesList.add(pnStatus)
-            }
+        state.pubnub.addListener(
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {
+                    state.statusesList.add(pnStatus)
+                }
 
-            override fun message(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnMessageResult: PNMessageResult) {
-                state.messagesList.add(pnMessageResult)
-            }
+                override fun message(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnMessageResult: PNMessageResult,
+                ) {
+                    state.messagesList.add(pnMessageResult)
+                }
 
-            override fun presence(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnPresenceEventResult: PNPresenceEventResult) {
-                state.messagesList.add(pnPresenceEventResult)
-            }
+                override fun presence(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnPresenceEventResult: PNPresenceEventResult,
+                ) {
+                    state.messagesList.add(pnPresenceEventResult)
+                }
 
-            override fun signal(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnSignalResult: PNSignalResult) {
-                state.messagesList.add(pnSignalResult)
-            }
+                override fun signal(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnSignalResult: PNSignalResult,
+                ) {
+                    state.messagesList.add(pnSignalResult)
+                }
 
-            override fun messageAction(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnMessageActionResult: PNMessageActionResult) {
-                state.messagesList.add(pnMessageActionResult)
-            }
+                override fun messageAction(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnMessageActionResult: PNMessageActionResult,
+                ) {
+                    state.messagesList.add(pnMessageActionResult)
+                }
 
-            override fun objects(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, objectEvent: PNObjectEventResult) {
-                state.messagesList.add(objectEvent)
-            }
+                override fun objects(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    objectEvent: PNObjectEventResult,
+                ) {
+                    state.messagesList.add(objectEvent)
+                }
 
-            override fun file(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnFileEventResult: PNFileEventResult) {
-                state.messagesList.add(pnFileEventResult)
-            }
-        })
+                override fun file(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnFileEventResult: PNFileEventResult,
+                ) {
+                    state.messagesList.add(pnFileEventResult)
+                }
+            },
+        )
 
         state.pubnub.internalPubNubClient.subscribe(channels = listOf(state.channelName))
     }
 
     @When("I subscribe with timetoken {long}")
     fun i_subscribe_with_timetoken(timetoken: Long) {
-        state.pubnub.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {
-                state.statusesList.add(pnStatus)
-            }
+        state.pubnub.addListener(
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {
+                    state.statusesList.add(pnStatus)
+                }
 
-            override fun message(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnMessageResult: PNMessageResult) {
-                state.messagesList.add(pnMessageResult)
-            }
+                override fun message(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnMessageResult: PNMessageResult,
+                ) {
+                    state.messagesList.add(pnMessageResult)
+                }
 
-            override fun presence(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnPresenceEventResult: PNPresenceEventResult) {
-                state.messagesList.add(pnPresenceEventResult)
-            }
+                override fun presence(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnPresenceEventResult: PNPresenceEventResult,
+                ) {
+                    state.messagesList.add(pnPresenceEventResult)
+                }
 
-            override fun signal(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnSignalResult: PNSignalResult) {
-                state.messagesList.add(pnSignalResult)
-            }
+                override fun signal(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnSignalResult: PNSignalResult,
+                ) {
+                    state.messagesList.add(pnSignalResult)
+                }
 
-            override fun messageAction(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnMessageActionResult: PNMessageActionResult) {
-                state.messagesList.add(pnMessageActionResult)
-            }
+                override fun messageAction(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnMessageActionResult: PNMessageActionResult,
+                ) {
+                    state.messagesList.add(pnMessageActionResult)
+                }
 
-            override fun objects(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, objectEvent: PNObjectEventResult) {
-                state.messagesList.add(objectEvent)
-            }
+                override fun objects(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    objectEvent: PNObjectEventResult,
+                ) {
+                    state.messagesList.add(objectEvent)
+                }
 
-            override fun file(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnFileEventResult: PNFileEventResult) {
-                state.messagesList.add(pnFileEventResult)
-            }
-        })
+                override fun file(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnFileEventResult: PNFileEventResult,
+                ) {
+                    state.messagesList.add(pnFileEventResult)
+                }
+            },
+        )
 
         state.pubnub.internalPubNubClient.subscribe(
             channels = listOf(state.channelName),
-            withTimetoken = timetoken
+            withTimetoken = timetoken,
         )
     }
 
@@ -108,7 +153,7 @@ class EventEngineSteps(private val state: EventEngineState) {
         await.pollInterval(50, TimeUnit.MILLISECONDS).atMost(2, TimeUnit.SECONDS).untilAsserted {
             MatcherAssert.assertThat(
                 state.messagesList.map { it::class.java },
-                CoreMatchers.hasItems(PNMessageResult::class.java)
+                CoreMatchers.hasItems(PNMessageResult::class.java),
             )
         }
     }

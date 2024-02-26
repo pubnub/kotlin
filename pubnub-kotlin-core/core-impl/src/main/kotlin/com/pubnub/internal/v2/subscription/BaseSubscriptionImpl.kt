@@ -15,13 +15,12 @@ import com.pubnub.internal.v2.callbacks.InternalEventListener
 import com.pubnub.internal.v2.entities.ChannelGroupName
 import com.pubnub.internal.v2.entities.ChannelName
 
-open class BaseSubscriptionImpl<T: BaseEventListener>(
+open class BaseSubscriptionImpl<T : BaseEventListener>(
     internal val pubnub: InternalPubNubClient,
     channels: Set<ChannelName> = emptySet(),
     channelGroups: Set<ChannelGroupName> = emptySet(),
     options: SubscriptionOptions? = null,
 ) : BaseSubscription<T> {
-
     @Volatile
     var isActive = false
         @Synchronized
@@ -48,6 +47,7 @@ open class BaseSubscriptionImpl<T: BaseEventListener>(
     private var lastTimetoken: Long = 0L
 
     protected val eventEmitter = EventEmitterImpl(AnnouncementCallback.Phase.SUBSCRIPTION, ::accepts)
+
     private fun accepts(envelope: AnnouncementEnvelope<out PNEvent>): Boolean {
         val event = envelope.event
         val accepted = isActive && filters.all { filter -> filter.predicate(event) } && checkAndUpdateTimetoken(event)

@@ -19,7 +19,7 @@ class GrantTokenState {
 }
 
 class FutureCallGrant(
-    private val initGrant: PNGrant
+    private val initGrant: PNGrant,
 ) {
     private val actions: MutableList<(PNGrant) -> PNGrant> = mutableListOf()
 

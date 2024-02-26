@@ -14,7 +14,7 @@ import java.util.List;
 @Setter
 @Slf4j
 @Accessors(chain = true, fluent = true)
-public class FetchMessagesImpl extends DelegatingEndpoint<PNFetchMessagesResult>implements com.pubnub.api.endpoints.FetchMessages {
+public class FetchMessagesImpl extends DelegatingEndpoint<PNFetchMessagesResult> implements com.pubnub.api.endpoints.FetchMessages {
     private List<String> channels = new ArrayList<>();
     private int maximumPerChannel = 0;
     private Long start;

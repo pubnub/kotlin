@@ -9,14 +9,13 @@ import com.pubnub.internal.endpoints.presence.HereNow
 import org.junit.Assert.assertEquals
 
 class HereNowTestSuite : com.pubnub.internal.suite.EndpointTestSuite<HereNow, PNHereNowResult>() {
-
     override fun pnOperation() = PNOperationType.PNHereNowOperation
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH
 
     override fun snippet(): HereNow =
         pubnub.hereNow(
-            channels = listOf("ch1")
+            channels = listOf("ch1"),
         )
 
     override fun verifyResultExpectations(result: PNHereNowResult) {
@@ -26,7 +25,8 @@ class HereNowTestSuite : com.pubnub.internal.suite.EndpointTestSuite<HereNow, PN
         assertEquals("user_1", result.channels["ch1"]!!.occupants[0].uuid)
     }
 
-    override fun successfulResponseBody() = """
+    override fun successfulResponseBody() =
+        """
         {
          "status": 200,
          "message": "OK",
@@ -36,14 +36,15 @@ class HereNowTestSuite : com.pubnub.internal.suite.EndpointTestSuite<HereNow, PN
          ],
          "service": "Presence"
         }
-    """.trimIndent()
+        """.trimIndent()
 
-    override fun unsuccessfulResponseBodyList() = listOf(
-        """{"occupancy": 0, "uuids": null}""",
-        """{"payload": {"channels": null, "total_channels": 0, "total_occupancy": 0}}""",
-        """{"payload": {}}""",
-        """{"payload": null}"""
-    )
+    override fun unsuccessfulResponseBodyList() =
+        listOf(
+            """{"occupancy": 0, "uuids": null}""",
+            """{"payload": {"channels": null, "total_channels": 0, "total_occupancy": 0}}""",
+            """{"payload": {}}""",
+            """{"payload": null}""",
+        )
 
     override fun mappingBuilder() =
         get(urlPathEqualTo("/v2/presence/sub_key/mySubscribeKey/channel/ch1"))

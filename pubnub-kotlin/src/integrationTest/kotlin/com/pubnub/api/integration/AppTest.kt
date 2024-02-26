@@ -3,7 +3,6 @@ package com.pubnub.api.integration
 import com.pubnub.api.Keys
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
-
 import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.listen
@@ -17,18 +16,18 @@ import java.util.UUID
 import java.util.concurrent.atomic.AtomicBoolean
 
 class AppTest {
-
     lateinit var pubnub: PubNub
 
     @Before
     fun initPubnub() {
-        pubnub = PubNub.create(
-            PNConfiguration(userId = UserId(PubNub.generateUUID())).apply {
-                subscribeKey = Keys.subKey
-                publishKey = Keys.pubKey
-                logVerbosity = PNLogVerbosity.BODY
-            }
-        )
+        pubnub =
+            PubNub.create(
+                PNConfiguration(userId = UserId(PubNub.generateUUID())).apply {
+                    subscribeKey = Keys.subKey
+                    publishKey = Keys.pubKey
+                    logVerbosity = PNLogVerbosity.BODY
+                },
+            )
     }
 
     @After
@@ -40,7 +39,7 @@ class AppTest {
     fun testPublishSync() {
         pubnub.publish(
             channel = UUID.randomUUID().toString(),
-            message = UUID.randomUUID().toString()
+            message = UUID.randomUUID().toString(),
         ).sync().let {
             assertNotNull(it)
         }
@@ -52,7 +51,7 @@ class AppTest {
 
         pubnub.publish(
             channel = UUID.randomUUID().toString(),
-            message = UUID.randomUUID().toString()
+            message = UUID.randomUUID().toString(),
         ).async { result ->
             result.onSuccess {
                 success.set(true)
@@ -67,7 +66,7 @@ class AppTest {
 
         pubnub.publish(
             channel = UUID.randomUUID().toString(),
-            message = UUID.randomUUID().toString()
+            message = UUID.randomUUID().toString(),
         ).async { result ->
             result.onSuccess {
                 success.set(true)
@@ -91,7 +90,7 @@ class AppTest {
 
         pubnub.subscribe(
             channels = expectedChannels,
-            withPresence = true
+            withPresence = true,
         )
 
         Awaitility.await()
@@ -101,7 +100,7 @@ class AppTest {
             .with()
             .until {
                 pubnub.whereNow(
-                    uuid = pubnub.configuration.userId.value
+                    uuid = pubnub.configuration.userId.value,
                 ).sync()
                     .channels
                     .containsAll(expectedChannels)
@@ -110,7 +109,7 @@ class AppTest {
         pubnub.hereNow(
             channels = expectedChannels,
             includeUUIDs = false,
-            includeState = false
+            includeState = false,
         ).sync()
     }
 }

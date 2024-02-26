@@ -54,7 +54,7 @@ open class PublishFileMessage(
             pubnub.configuration.subscribeKey,
             channel,
             messageAsString,
-            queryParams
+            queryParams,
         )
     }
 
@@ -67,10 +67,15 @@ open class PublishFileMessage(
     }
 
     override fun getAffectedChannels() = listOf(channel)
+
     override fun getAffectedChannelGroups(): List<String> = listOf()
+
     override fun operationType(): PNOperationType = PNOperationType.FileOperation
+
     override fun isAuthRequired(): Boolean = true
+
     override fun isSubKeyRequired(): Boolean = true
+
     override fun isPubKeyRequired(): Boolean = true
 
     internal class Factory(private val pubNub: InternalPubNubClient) {
@@ -91,7 +96,7 @@ open class PublishFileMessage(
                 meta = meta,
                 ttl = ttl,
                 shouldStore = shouldStore,
-                pubNub = pubNub
+                pubNub = pubNub,
             )
         }
     }

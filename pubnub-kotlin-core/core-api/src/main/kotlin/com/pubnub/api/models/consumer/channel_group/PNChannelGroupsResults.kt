@@ -21,7 +21,7 @@ class PNChannelGroupsRemoveChannelResult
  * @property channels List of channels belonging to a channel group.
  */
 class PNChannelGroupsAllChannelsResult(
-    val channels: List<String>
+    val channels: List<String>,
 )
 
 /**
@@ -30,5 +30,5 @@ class PNChannelGroupsAllChannelsResult(
  * @property groups List of all channel groups
  */
 class PNChannelGroupsListAllResult(
-    val groups: List<String>
+    val groups: List<String>,
 )

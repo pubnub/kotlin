@@ -45,19 +45,20 @@ class PresenceEffectFactoryTest {
     @BeforeEach
     fun setUp() {
         presenceData.channelStates.clear()
-        presenceEffectFactory = PresenceEffectFactory(
-            heartbeatProvider,
-            leaveProvider,
-            presenceEventSink,
-            retryConfiguration,
-            executorService,
-            heartbeatInterval,
-            suppressLeaveEvents,
-            heartbeatNotificationOptions,
-            statusConsumer,
-            presenceData,
-            true
-        )
+        presenceEffectFactory =
+            PresenceEffectFactory(
+                heartbeatProvider,
+                leaveProvider,
+                presenceEventSink,
+                retryConfiguration,
+                executorService,
+                heartbeatInterval,
+                suppressLeaveEvents,
+                heartbeatNotificationOptions,
+                statusConsumer,
+                presenceData,
+                true,
+            )
     }
 
     @Test
@@ -68,7 +69,7 @@ class PresenceEffectFactoryTest {
             heartbeatProvider.getHeartbeatRemoteAction(
                 effectInvocation.channels,
                 effectInvocation.channelGroups,
-                any()
+                any(),
             )
         } returns heartbeatRemoteAction
 
@@ -94,7 +95,7 @@ class PresenceEffectFactoryTest {
             heartbeatProvider.getHeartbeatRemoteAction(
                 effectInvocation.channels,
                 effectInvocation.channelGroups,
-                any()
+                any(),
             )
         } returns heartbeatRemoteAction
 
@@ -107,10 +108,11 @@ class PresenceEffectFactoryTest {
                 effectInvocation.channels,
                 effectInvocation.channelGroups,
                 mapOf(
-                    channels.first() to mapOf(
-                        "aaa" to "bbb"
-                    )
-                )
+                    channels.first() to
+                        mapOf(
+                            "aaa" to "bbb",
+                        ),
+                ),
             )
         }
     }
@@ -126,7 +128,7 @@ class PresenceEffectFactoryTest {
             heartbeatProvider.getHeartbeatRemoteAction(
                 effectInvocation.channels,
                 effectInvocation.channelGroups,
-                any()
+                any(),
             )
         } returns heartbeatRemoteAction
 
@@ -139,10 +141,11 @@ class PresenceEffectFactoryTest {
                 effectInvocation.channels,
                 effectInvocation.channelGroups,
                 mapOf(
-                    channels.first() to mapOf(
-                        "aaa" to "bbb"
-                    )
-                )
+                    channels.first() to
+                        mapOf(
+                            "aaa" to "bbb",
+                        ),
+                ),
             )
         }
     }
@@ -156,7 +159,7 @@ class PresenceEffectFactoryTest {
             heartbeatProvider.getHeartbeatRemoteAction(
                 effectInvocation.channels,
                 effectInvocation.channelGroups,
-                any()
+                any(),
             )
         } returns heartbeatRemoteAction
 
@@ -172,7 +175,7 @@ class PresenceEffectFactoryTest {
             heartbeatNotificationOptions,
             statusConsumer,
             presenceData,
-            false
+            false,
         ).create(effectInvocation)
 
         // then
@@ -180,7 +183,7 @@ class PresenceEffectFactoryTest {
             heartbeatProvider.getHeartbeatRemoteAction(
                 effectInvocation.channels,
                 effectInvocation.channelGroups,
-                null
+                null,
             )
         }
     }
@@ -195,7 +198,7 @@ class PresenceEffectFactoryTest {
             heartbeatProvider.getHeartbeatRemoteAction(
                 effectInvocation.channels,
                 effectInvocation.channelGroups,
-                any()
+                any(),
             )
         } returns heartbeatRemoteAction
 
@@ -211,7 +214,7 @@ class PresenceEffectFactoryTest {
             heartbeatNotificationOptions,
             statusConsumer,
             presenceData,
-            false
+            false,
         ).create(effectInvocation)
 
         // then
@@ -219,7 +222,7 @@ class PresenceEffectFactoryTest {
             heartbeatProvider.getHeartbeatRemoteAction(
                 effectInvocation.channels,
                 effectInvocation.channelGroups,
-                null
+                null,
             )
         }
     }
@@ -231,7 +234,7 @@ class PresenceEffectFactoryTest {
         every {
             leaveProvider.getLeaveRemoteAction(
                 effectInvocation.channels,
-                effectInvocation.channelGroups
+                effectInvocation.channelGroups,
             )
         } returns leaveRemoteAction
 
@@ -245,24 +248,25 @@ class PresenceEffectFactoryTest {
     @Test
     fun `should return Leave effect when getting Leave invocation while suppressLeaveEvents is false`() {
         // given
-        presenceEffectFactory = PresenceEffectFactory(
-            heartbeatProvider,
-            leaveProvider,
-            presenceEventSink,
-            retryConfiguration,
-            executorService,
-            heartbeatInterval,
-            suppressLeaveEvents = false,
-            heartbeatNotificationOptions,
-            statusConsumer,
-            PresenceData(),
-            true
-        )
+        presenceEffectFactory =
+            PresenceEffectFactory(
+                heartbeatProvider,
+                leaveProvider,
+                presenceEventSink,
+                retryConfiguration,
+                executorService,
+                heartbeatInterval,
+                suppressLeaveEvents = false,
+                heartbeatNotificationOptions,
+                statusConsumer,
+                PresenceData(),
+                true,
+            )
         val effectInvocation = PresenceEffectInvocation.Leave(channels, channelGroups)
         every {
             leaveProvider.getLeaveRemoteAction(
                 effectInvocation.channels,
-                effectInvocation.channelGroups
+                effectInvocation.channelGroups,
             )
         } returns leaveRemoteAction
 
@@ -282,7 +286,7 @@ class PresenceEffectFactoryTest {
             heartbeatProvider.getHeartbeatRemoteAction(
                 effectInvocation.channels,
                 effectInvocation.channelGroups,
-                any()
+                any(),
             )
         } returns heartbeatRemoteAction
 

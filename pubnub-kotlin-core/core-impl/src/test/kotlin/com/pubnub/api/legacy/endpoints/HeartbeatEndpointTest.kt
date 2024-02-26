@@ -16,7 +16,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class HeartbeatEndpointTest : BaseTest() {
-
     @Test
     fun testSuccessOneChannel() {
         pubnub.configuration.presenceTimeout = 123
@@ -31,9 +30,9 @@ class HeartbeatEndpointTest : BaseTest() {
                           "message": "OK",
                           "service": "Presence"
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         Heartbeat(pubnub, listOf("ch1")).sync()
@@ -60,9 +59,9 @@ class HeartbeatEndpointTest : BaseTest() {
                           "message": "OK",
                           "service": "Presence"
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         Heartbeat(pubnub, listOf("ch1", "ch2")).sync()
@@ -88,9 +87,9 @@ class HeartbeatEndpointTest : BaseTest() {
                           "message": "OK",
                           "service": "Presence"
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         Heartbeat(pubnub, channelGroups = listOf("cg1")).sync()
@@ -118,9 +117,9 @@ class HeartbeatEndpointTest : BaseTest() {
                           "message": "OK",
                           "service": "Presence"
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         Heartbeat(pubnub, channelGroups = listOf("cg1", "cg2")).sync()
@@ -148,9 +147,9 @@ class HeartbeatEndpointTest : BaseTest() {
                           "message": "OK",
                           "service": "Presence"
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         try {
@@ -159,7 +158,7 @@ class HeartbeatEndpointTest : BaseTest() {
         } catch (e: Exception) {
             assertPnException(
                 PubNubError.CHANNEL_AND_GROUP_MISSING,
-                e
+                e,
             )
         }
     }
@@ -176,9 +175,9 @@ class HeartbeatEndpointTest : BaseTest() {
                           "message": "OK",
                           "service": "Presence"
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         pubnub.configuration.authKey = "myKey"
@@ -204,9 +203,9 @@ class HeartbeatEndpointTest : BaseTest() {
                           "message": "OK",
                           "service": "Presence"
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
         pubnub.configuration.subscribeKey = " "
 
@@ -216,7 +215,7 @@ class HeartbeatEndpointTest : BaseTest() {
         } catch (e: Exception) {
             assertPnException(
                 PubNubError.SUBSCRIBE_KEY_MISSING,
-                e
+                e,
             )
         }
     }
@@ -235,9 +234,9 @@ class HeartbeatEndpointTest : BaseTest() {
                           "message": "OK",
                           "service": "Presence"
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
         pubnub.configuration.subscribeKey = ""
 
@@ -247,7 +246,7 @@ class HeartbeatEndpointTest : BaseTest() {
         } catch (e: Exception) {
             assertPnException(
                 PubNubError.SUBSCRIBE_KEY_MISSING,
-                e
+                e,
             )
         }
     }

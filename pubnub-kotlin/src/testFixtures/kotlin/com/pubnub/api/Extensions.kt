@@ -2,7 +2,6 @@ package com.pubnub.api
 
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.v2.callbacks.Result
-import com.pubnub.internal.PubNubImpl
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.awaitility.pollinterval.FibonacciPollInterval
@@ -42,9 +41,7 @@ fun AtomicBoolean.listen(function: () -> Boolean): AtomicBoolean {
     return this
 }
 
-fun <Output> RemoteAction<Output>.asyncRetry(
-    function: (result: Result<Output>) -> Unit
-) {
+fun <Output> RemoteAction<Output>.asyncRetry(function: (result: Result<Output>) -> Unit) {
     val hits = AtomicInteger(0)
 
     val block = {
@@ -75,7 +72,7 @@ fun <Output> RemoteAction<Output>.asyncRetry(
 
 fun <Output> RemoteAction<Output>.retryForbidden(
     onFail: (exception: PubNubException) -> Unit,
-    function: (result: Result<Output>) -> Unit
+    function: (result: Result<Output>) -> Unit,
 ) {
     val success = AtomicBoolean()
 
@@ -119,14 +116,14 @@ fun AtomicBoolean.listen(seconds: Int = CommonUtils.DEFAULT_LISTEN_DURATION) {
 fun PubNub.subscribeToBlocking(vararg channels: String) {
     this.subscribe(
         channels = listOf(*channels),
-        withPresence = true
+        withPresence = true,
     )
     Thread.sleep(2000)
 }
 
 fun PubNub.unsubscribeFromBlocking(vararg channels: String) {
     unsubscribe(
-        channels = listOf(*channels)
+        channels = listOf(*channels),
     )
     Thread.sleep(2000)
 }

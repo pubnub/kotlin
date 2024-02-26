@@ -11,20 +11,20 @@ import org.junit.Assert
 
 class WhenSteps(
     private val grantTokenState: GrantTokenState,
-    private val world: World
+    private val world: World,
 ) {
-
     @When("I grant a token specifying those permissions")
     fun grant_token() {
         val definedGrants = grantTokenState.definedGrants.map { it.evaluate() }
         @Suppress("DEPRECATION")
-        grantTokenState.result = world.pubnub.internalPubNubClient.grantToken(
-            ttl = grantTokenState.TTL?.toInt() ?: throw RuntimeException("TTL expected"),
-            authorizedUUID = grantTokenState.authorizedUUID,
-            channels = definedGrants.filterIsInstance(ChannelGrant::class.java),
-            channelGroups = definedGrants.filterIsInstance(ChannelGroupGrant::class.java),
-            uuids = definedGrants.filterIsInstance(UUIDGrant::class.java)
-        ).sync()
+        grantTokenState.result =
+            world.pubnub.internalPubNubClient.grantToken(
+                ttl = grantTokenState.TTL?.toInt() ?: throw RuntimeException("TTL expected"),
+                authorizedUUID = grantTokenState.authorizedUUID,
+                channels = definedGrants.filterIsInstance(ChannelGrant::class.java),
+                channelGroups = definedGrants.filterIsInstance(ChannelGroupGrant::class.java),
+                uuids = definedGrants.filterIsInstance(UUIDGrant::class.java),
+            ).sync()
     }
 
     @When("I attempt to grant a token specifying those permissions")
@@ -60,7 +60,7 @@ class WhenSteps(
         world.pubnub.internalPubNubClient.setToken(world.tokenString)
         world.pubnub.internalPubNubClient.publish(
             channel = channel,
-            message = "Message"
+            message = "Message",
         ).sync()
     }
 
@@ -71,7 +71,7 @@ class WhenSteps(
         try {
             world.pubnub.internalPubNubClient.publish(
                 channel = channel,
-                message = "Message"
+                message = "Message",
             ).sync()
         } catch (e: PubNubException) {
             world.pnException = e

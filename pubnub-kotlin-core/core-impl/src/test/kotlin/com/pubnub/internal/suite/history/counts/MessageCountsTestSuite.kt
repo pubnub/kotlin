@@ -10,7 +10,6 @@ import com.pubnub.internal.endpoints.MessageCounts
 import org.junit.Assert.assertEquals
 
 class MessageCountsTestSuite : com.pubnub.internal.suite.EndpointTestSuite<MessageCounts, PNMessageCountResult>() {
-
     override fun pnOperation() = PNOperationType.PNMessageCountOperation
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH
@@ -18,7 +17,7 @@ class MessageCountsTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Messa
     override fun snippet(): MessageCounts =
         pubnub.messageCounts(
             channels = listOf("ch1"),
-            channelsTimetoken = listOf(1588284000000)
+            channelsTimetoken = listOf(1588284000000),
         )
 
     override fun verifyResultExpectations(result: PNMessageCountResult) {
@@ -26,7 +25,8 @@ class MessageCountsTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Messa
         assertEquals(5L, result.channels["ch1"])
     }
 
-    override fun successfulResponseBody() = """
+    override fun successfulResponseBody() =
+        """
         {
          "status": 200,
          "error": false,
@@ -35,7 +35,7 @@ class MessageCountsTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Messa
           "ch1": 5
          }
         }
-    """.trimIndent()
+        """.trimIndent()
 
     override fun unsuccessfulResponseBodyList() = emptyList<String>()
 

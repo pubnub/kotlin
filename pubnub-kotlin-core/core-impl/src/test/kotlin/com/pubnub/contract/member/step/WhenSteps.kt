@@ -10,7 +10,6 @@ class WhenSteps(
     private val world: World,
     private val memberState: MemberState,
 ) {
-
     @When("I get the channel members")
     fun i_get_the_channel_members() {
         world.pubnub.internalPubNubClient.getChannelMembers(channel = memberState.channelId()).sync()?.let {
@@ -26,7 +25,7 @@ class WhenSteps(
             channel = memberState.channelId(),
             includeCustom = true,
             includeUUIDDetails = PNUUIDDetailsLevel.UUID_WITH_CUSTOM,
-            uuids = uuids
+            uuids = uuids,
         ).sync()?.let {
             memberState.returnedMembers = it.data
             world.responseStatus = it.status
@@ -38,7 +37,7 @@ class WhenSteps(
         world.pubnub.internalPubNubClient.getChannelMembers(
             channel = memberState.channelId(),
             includeCustom = true,
-            includeUUIDDetails = PNUUIDDetailsLevel.UUID_WITH_CUSTOM
+            includeUUIDDetails = PNUUIDDetailsLevel.UUID_WITH_CUSTOM,
         ).sync()?.let {
             memberState.returnedMembers = it.data
             world.responseStatus = it.status
@@ -50,7 +49,7 @@ class WhenSteps(
         val uuids = memberState.members.map { PNMember.Partial(uuidId = it.uuid?.id!!) }
         world.pubnub.internalPubNubClient.setChannelMembers(
             channel = memberState.channelId(),
-            uuids = uuids
+            uuids = uuids,
         ).sync()?.let {
             memberState.returnedMembers = it.data
             world.responseStatus = it.status
@@ -62,7 +61,7 @@ class WhenSteps(
         val uuids = memberState.membersToRemove.map { it.uuid?.id!! }
         world.pubnub.internalPubNubClient.removeChannelMembers(
             channel = memberState.channelId(),
-            uuids = uuids
+            uuids = uuids,
         ).sync()?.let {
             memberState.returnedMembers = it.data
             world.responseStatus = it.status
@@ -76,7 +75,7 @@ class WhenSteps(
         world.pubnub.internalPubNubClient.manageChannelMembers(
             channel = memberState.channelId(),
             uuidsToSet = uuidsToSet,
-            uuidsToRemove = uuidsToRemove
+            uuidsToRemove = uuidsToRemove,
         ).sync()?.let {
             memberState.returnedMembers = it.data
             world.responseStatus = it.status

@@ -26,7 +26,6 @@ import java.util.Base64
 import org.hamcrest.Matchers.`is` as iz
 
 class CryptoModuleTest {
-
     @Test
     fun `can createLegacyCryptoModule`() {
         // given
@@ -43,9 +42,9 @@ class CryptoModuleTest {
             containsInAnyOrder(
                 listOf(
                     iz(CoreMatchers.instanceOf(AesCbcCryptor::class.java)),
-                    iz(CoreMatchers.instanceOf(LegacyCryptor::class.java))
-                )
-            )
+                    iz(CoreMatchers.instanceOf(LegacyCryptor::class.java)),
+                ),
+            ),
         )
     }
 
@@ -65,9 +64,9 @@ class CryptoModuleTest {
             containsInAnyOrder(
                 listOf(
                     iz(CoreMatchers.instanceOf(AesCbcCryptor::class.java)),
-                    iz(CoreMatchers.instanceOf(LegacyCryptor::class.java))
-                )
-            )
+                    iz(CoreMatchers.instanceOf(LegacyCryptor::class.java)),
+                ),
+            ),
         )
     }
 
@@ -84,7 +83,7 @@ class CryptoModuleTest {
         assertThat(newCryptoModule.cryptorsForDecryptionOnly, hasSize(1))
         assertThat(
             newCryptoModule.cryptorsForDecryptionOnly.first(),
-            iz(CoreMatchers.instanceOf(AesCbcCryptor::class.java))
+            iz(CoreMatchers.instanceOf(AesCbcCryptor::class.java)),
         )
     }
 
@@ -188,10 +187,11 @@ class CryptoModuleTest {
         // given
         val cipherKey = "enigma"
         val legacyCryptor = LegacyCryptor(cipherKey)
-        val cryptoModule = CryptoModule.createNewCryptoModule(
-            defaultCryptor = legacyCryptor,
-            cryptorsForDecryptionOnly = listOf(legacyCryptor, AesCbcCryptor(cipherKey))
-        )
+        val cryptoModule =
+            CryptoModule.createNewCryptoModule(
+                defaultCryptor = legacyCryptor,
+                cryptorsForDecryptionOnly = listOf(legacyCryptor, AesCbcCryptor(cipherKey)),
+            )
         val msgToEncrypt = "Hello world".toByteArray()
 
         // when
@@ -238,9 +238,10 @@ class CryptoModuleTest {
         val dataToBeEncrypted = ByteArray(0)
 
         // when
-        val exception = assertThrows(PubNubException::class.java) {
-            cryptoModule.encrypt(dataToBeEncrypted)
-        }
+        val exception =
+            assertThrows(PubNubException::class.java) {
+                cryptoModule.encrypt(dataToBeEncrypted)
+            }
 
         // then
         assertEquals("Encryption/Decryption of empty data not allowed.", exception.errorMessage)
@@ -254,9 +255,10 @@ class CryptoModuleTest {
         val dataToBeDecrypted = ByteArray(0)
 
         // when
-        val exception = assertThrows(PubNubException::class.java) {
-            cryptoModule.decrypt(dataToBeDecrypted)
-        }
+        val exception =
+            assertThrows(PubNubException::class.java) {
+                cryptoModule.decrypt(dataToBeDecrypted)
+            }
 
         // then
         assertEquals("Encryption/Decryption of empty data not allowed.", exception.errorMessage)
@@ -271,9 +273,10 @@ class CryptoModuleTest {
         val streamToBeEncrypted = ByteArrayInputStream(dataToBeEncrypted)
 
         // when
-        val exception = assertThrows(PubNubException::class.java) {
-            cryptoModule.encryptStream(streamToBeEncrypted)
-        }
+        val exception =
+            assertThrows(PubNubException::class.java) {
+                cryptoModule.encryptStream(streamToBeEncrypted)
+            }
 
         // then
         assertEquals("Encryption/Decryption of empty data not allowed.", exception.errorMessage)
@@ -288,41 +291,47 @@ class CryptoModuleTest {
         val streamToBeDecrypted = ByteArrayInputStream(dataToBeDecrypted)
 
         // when
-        val exception = assertThrows(PubNubException::class.java) {
-            cryptoModule.decryptStream(streamToBeDecrypted)
-        }
+        val exception =
+            assertThrows(PubNubException::class.java) {
+                cryptoModule.decryptStream(streamToBeDecrypted)
+            }
 
         // then
         assertEquals("Encryption/Decryption of empty data not allowed.", exception.errorMessage)
         assertEquals(PubNubError.ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED, exception.pubnubError)
     }
 
-    private fun myCustomCryptor() = object : Cryptor {
-        override fun id(): ByteArray {
-            // Should return a ByteArray of exactly 4 bytes.
-            return byteArrayOf('C'.code.toByte(), 'U'.code.toByte(), 'S'.code.toByte(), 'T'.code.toByte())
-        }
+    private fun myCustomCryptor() =
+        object : Cryptor {
+            override fun id(): ByteArray {
+                // Should return a ByteArray of exactly 4 bytes.
+                return byteArrayOf('C'.code.toByte(), 'U'.code.toByte(), 'S'.code.toByte(), 'T'.code.toByte())
+            }
 
-        override fun encrypt(data: ByteArray): EncryptedData {
-            return EncryptedData(metadata = null, data = data)
-        }
+            override fun encrypt(data: ByteArray): EncryptedData {
+                return EncryptedData(metadata = null, data = data)
+            }
 
-        override fun decrypt(encryptedData: EncryptedData): ByteArray {
-            return encryptedData.data
-        }
+            override fun decrypt(encryptedData: EncryptedData): ByteArray {
+                return encryptedData.data
+            }
 
-        override fun encryptStream(stream: InputStream): EncryptedStreamData {
-            return EncryptedStreamData(metadata = null, stream = stream)
-        }
+            override fun encryptStream(stream: InputStream): EncryptedStreamData {
+                return EncryptedStreamData(metadata = null, stream = stream)
+            }
 
-        override fun decryptStream(encryptedData: EncryptedStreamData): InputStream {
-            return encryptedData.stream
+            override fun decryptStream(encryptedData: EncryptedStreamData): InputStream {
+                return encryptedData.stream
+            }
         }
-    }
 
     @ParameterizedTest
     @MethodSource("decryptStreamSource")
-    fun decryptStreamEncryptedByGo(expected: String, encryptedBase64: String, cipherKey: String) {
+    fun decryptStreamEncryptedByGo(
+        expected: String,
+        encryptedBase64: String,
+        cipherKey: String,
+    ) {
         val crypto = CryptoModule.createLegacyCryptoModule(cipherKey, true)
         val decrypted = crypto.decryptStream(Base64.getDecoder().decode(encryptedBase64).inputStream())
         assertEquals(expected, String(decrypted.readBytes()))
@@ -330,7 +339,10 @@ class CryptoModuleTest {
 
     @ParameterizedTest
     @MethodSource("encryptStreamDecryptStreamSource")
-    fun encryptStreamDecryptStream(input: String, cryptoModule: CryptoModule) {
+    fun encryptStreamDecryptStream(
+        input: String,
+        cryptoModule: CryptoModule,
+    ) {
         val encrypted = cryptoModule.encryptStream(input.byteInputStream())
         val decrypted = cryptoModule.decryptStream(encrypted)
         assertEquals(input, String(decrypted.readBytes()))
@@ -338,35 +350,36 @@ class CryptoModuleTest {
 
     companion object {
         @JvmStatic
-        fun decryptStreamSource(): List<Arguments> = listOf(
-            Arguments.of(
-                "Hello world encrypted with legacyModuleRandomIv",
-                "T3J9iXI87PG9YY/lhuwmGRZsJgA5y8sFLtUpdFmNgrU1IAitgAkVok6YP7lacBiVhBJSJw39lXCHOLxl2d98Bg==",
-                "myCipherKey",
-
-            ),
-            Arguments.of(
-                "Hello world encrypted with aesCbcModule",
-                "UE5FRAFBQ1JIEKzlyoyC/jB1hrjCPY7zm+X2f7skPd0LBocV74cRYdrkRQ2BPKeA22gX/98pMqvcZtFB6TCGp3Zf1M8F730nlfk=",
-                "myCipherKey"
-
-            ),
-        )
-
-        @JvmStatic
-        fun encryptStreamDecryptStreamSource(): List<Arguments> = listOf(
-            Arguments.of("Hello world1", CryptoModule.createLegacyCryptoModule("myCipherKey", true)),
-            Arguments.of("Hello world2", CryptoModule.createLegacyCryptoModule("myCipherKey", false)),
-            Arguments.of("Hello world3", CryptoModule.createAesCbcCryptoModule("myCipherKey", true)),
-            Arguments.of("Hello world4", CryptoModule.createAesCbcCryptoModule("myCipherKey", false)),
-        )
+        fun decryptStreamSource(): List<Arguments> =
+            listOf(
+                Arguments.of(
+                    "Hello world encrypted with legacyModuleRandomIv",
+                    "T3J9iXI87PG9YY/lhuwmGRZsJgA5y8sFLtUpdFmNgrU1IAitgAkVok6YP7lacBiVhBJSJw39lXCHOLxl2d98Bg==",
+                    "myCipherKey",
+                ),
+                Arguments.of(
+                    "Hello world encrypted with aesCbcModule",
+                    "UE5FRAFBQ1JIEKzlyoyC/jB1hrjCPY7zm+X2f7skPd0LBocV74cRYdrkRQ2BPKeA22gX/98pMqvcZtFB6TCGp3Zf1M8F730nlfk=",
+                    "myCipherKey",
+                ),
+            )
 
         @JvmStatic
-        fun legacyAndAesCbcCryptors(): List<Arguments> = listOf(
-            Arguments.of(CryptoModule.createLegacyCryptoModule("myCipherKey", true)),
-            Arguments.of(CryptoModule.createLegacyCryptoModule("myCipherKey", false)),
-            Arguments.of(CryptoModule.createAesCbcCryptoModule("myCipherKey", true)),
-            Arguments.of(CryptoModule.createAesCbcCryptoModule("myCipherKey", false)),
-        )
+        fun encryptStreamDecryptStreamSource(): List<Arguments> =
+            listOf(
+                Arguments.of("Hello world1", CryptoModule.createLegacyCryptoModule("myCipherKey", true)),
+                Arguments.of("Hello world2", CryptoModule.createLegacyCryptoModule("myCipherKey", false)),
+                Arguments.of("Hello world3", CryptoModule.createAesCbcCryptoModule("myCipherKey", true)),
+                Arguments.of("Hello world4", CryptoModule.createAesCbcCryptoModule("myCipherKey", false)),
+            )
+
+        @JvmStatic
+        fun legacyAndAesCbcCryptors(): List<Arguments> =
+            listOf(
+                Arguments.of(CryptoModule.createLegacyCryptoModule("myCipherKey", true)),
+                Arguments.of(CryptoModule.createLegacyCryptoModule("myCipherKey", false)),
+                Arguments.of(CryptoModule.createAesCbcCryptoModule("myCipherKey", true)),
+                Arguments.of(CryptoModule.createAesCbcCryptoModule("myCipherKey", false)),
+            )
     }
 }

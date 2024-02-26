@@ -7,7 +7,6 @@ import com.pubnub.internal.endpoints.pubsub.Subscribe
 import com.pubnub.internal.subscribe.eventengine.event.SubscriptionCursor
 
 internal class HandshakeProviderImpl(val pubNub: InternalPubNubClient) : HandshakeProvider {
-
     override fun getHandshakeRemoteAction(
         channels: Set<String>,
         channelGroups: Set<String>,

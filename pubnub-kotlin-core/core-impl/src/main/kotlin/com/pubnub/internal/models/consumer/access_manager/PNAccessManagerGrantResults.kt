@@ -23,7 +23,6 @@ class PNAccessManagerGrantResult(
 )
 
 open class PNAccessManagerKeyData {
-
     /**
      * Is `true` if *read* rights are granted.
      */

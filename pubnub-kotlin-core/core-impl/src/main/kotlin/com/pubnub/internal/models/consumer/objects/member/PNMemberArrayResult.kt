@@ -7,5 +7,5 @@ data class PNMemberArrayResult(
     val data: Collection<PNMember>,
     val totalCount: Int?,
     val next: PNPage.PNNext?,
-    val prev: PNPage.PNPrev?
+    val prev: PNPage.PNPrev?,
 )

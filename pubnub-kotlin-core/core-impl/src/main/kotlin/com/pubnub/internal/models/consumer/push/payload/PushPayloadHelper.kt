@@ -4,7 +4,6 @@ import com.pubnub.api.enums.PNPushEnvironment
 import java.util.Locale
 
 class PushPayloadHelper {
-
     var commonPayload: Map<String, Any>? = null
     var fcmPayload: FCMPayload? = null
     var mpnsPayload: MPNSPayload? = null

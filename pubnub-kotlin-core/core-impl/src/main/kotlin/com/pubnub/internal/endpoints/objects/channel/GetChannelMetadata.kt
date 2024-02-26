@@ -17,16 +17,15 @@ import retrofit2.Response
 class GetChannelMetadata internal constructor(
     pubnub: InternalPubNubClient,
     private val channel: String,
-    private val includeQueryParam: IncludeQueryParam
+    private val includeQueryParam: IncludeQueryParam,
 ) : Endpoint<EntityEnvelope<PNChannelMetadata>, PNChannelMetadataResult>(pubnub),
     IGetChannelMetadata {
-
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNChannelMetadata>> {
         val params = queryParams + includeQueryParam.createIncludeQueryParams()
         return pubnub.retrofitManager.objectsService.getChannelMetadata(
             subKey = pubnub.configuration.subscribeKey,
             channel = channel,
-            options = params
+            options = params,
         )
     }
 
@@ -34,7 +33,7 @@ class GetChannelMetadata internal constructor(
         return input.body()!!.let {
             PNChannelMetadataResult(
                 status = it.status,
-                data = it.data
+                data = it.data,
             )
         }
     }

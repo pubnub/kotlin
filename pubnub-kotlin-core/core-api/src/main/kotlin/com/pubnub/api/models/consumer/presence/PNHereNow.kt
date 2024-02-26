@@ -12,7 +12,7 @@ import com.google.gson.JsonElement
 class PNHereNowResult(
     val totalChannels: Int,
     val totalOccupancy: Int,
-    val channels: HashMap<String, PNHereNowChannelData> = hashMapOf()
+    val channels: HashMap<String, PNHereNowChannelData> = hashMapOf(),
 )
 
 /**
@@ -25,7 +25,7 @@ class PNHereNowResult(
 class PNHereNowChannelData(
     val channelName: String,
     val occupancy: Int,
-    var occupants: List<PNHereNowOccupantData> = emptyList()
+    var occupants: List<PNHereNowOccupantData> = emptyList(),
 )
 
 /**
@@ -36,5 +36,5 @@ class PNHereNowChannelData(
  */
 class PNHereNowOccupantData(
     val uuid: String,
-    val state: JsonElement? = null
+    val state: JsonElement? = null,
 )

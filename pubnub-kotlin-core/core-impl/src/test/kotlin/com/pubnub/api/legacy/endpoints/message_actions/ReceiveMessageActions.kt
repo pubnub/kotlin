@@ -20,7 +20,6 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
 class ReceiveMessageActions : BaseTest() {
-
     @Test
     fun testReceiveMessageAction() {
         stubFor(
@@ -59,42 +58,59 @@ class ReceiveMessageActions : BaseTest() {
                           }
                          ]
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         val success = AtomicBoolean()
 
-        pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*, *, *, *, *, *, *, *>, pnStatus: PNStatus) {
-            }
+        pubnubBase.addListener(
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {
+                }
 
-            override fun message(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnMessageResult: PNMessageResult) {
-                failTest()
-            }
+                override fun message(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnMessageResult: PNMessageResult,
+                ) {
+                    failTest()
+                }
 
-            override fun presence(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnPresenceEventResult: PNPresenceEventResult) {
-                failTest()
-            }
+                override fun presence(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnPresenceEventResult: PNPresenceEventResult,
+                ) {
+                    failTest()
+                }
 
-            override fun signal(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnSignalResult: PNSignalResult) {
-                failTest()
-            }
+                override fun signal(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnSignalResult: PNSignalResult,
+                ) {
+                    failTest()
+                }
 
-            override fun messageAction(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnMessageActionResult: PNMessageActionResult) {
-                assertEquals(pnMessageActionResult.channel, "coolChannel")
-                assertEquals(pnMessageActionResult.messageAction.messageTimetoken, 500L)
-                assertEquals(pnMessageActionResult.messageAction.uuid, "client-1639ed91")
-                assertEquals(pnMessageActionResult.messageAction.actionTimetoken, 600L)
-                assertEquals(pnMessageActionResult.messageAction.type, "reaction")
-                assertEquals(pnMessageActionResult.messageAction.value, "smiley")
-                success.set(true)
-            }
-        })
+                override fun messageAction(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnMessageActionResult: PNMessageActionResult,
+                ) {
+                    assertEquals(pnMessageActionResult.channel, "coolChannel")
+                    assertEquals(pnMessageActionResult.messageAction.messageTimetoken, 500L)
+                    assertEquals(pnMessageActionResult.messageAction.uuid, "client-1639ed91")
+                    assertEquals(pnMessageActionResult.messageAction.actionTimetoken, 600L)
+                    assertEquals(pnMessageActionResult.messageAction.type, "reaction")
+                    assertEquals(pnMessageActionResult.messageAction.value, "smiley")
+                    success.set(true)
+                }
+            },
+        )
 
         pubnub.subscribe(
-            channels = listOf("coolChannel")
+            channels = listOf("coolChannel"),
         )
 
         success.listen()
@@ -161,41 +177,58 @@ class ReceiveMessageActions : BaseTest() {
                           }
                          ]
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         val count = AtomicInteger()
         val success = AtomicBoolean()
 
-        pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {
-            }
-
-            override fun message(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnMessageResult: PNMessageResult) {
-                failTest()
-                pnMessageResult.message
-            }
-
-            override fun presence(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnPresenceEventResult: PNPresenceEventResult) {
-                failTest()
-            }
-
-            override fun signal(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnSignalResult: PNSignalResult) {
-                failTest()
-            }
-
-            override fun messageAction(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnMessageActionResult: PNMessageActionResult) {
-                count.incrementAndGet()
-                if (count.get() == 2) {
-                    success.set(true)
+        pubnubBase.addListener(
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {
                 }
-            }
-        })
+
+                override fun message(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnMessageResult: PNMessageResult,
+                ) {
+                    failTest()
+                    pnMessageResult.message
+                }
+
+                override fun presence(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnPresenceEventResult: PNPresenceEventResult,
+                ) {
+                    failTest()
+                }
+
+                override fun signal(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnSignalResult: PNSignalResult,
+                ) {
+                    failTest()
+                }
+
+                override fun messageAction(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnMessageActionResult: PNMessageActionResult,
+                ) {
+                    count.incrementAndGet()
+                    if (count.get() == 2) {
+                        success.set(true)
+                    }
+                }
+            },
+        )
 
         pubnub.subscribe(
-            channels = listOf("coolChannel")
+            channels = listOf("coolChannel"),
         )
 
         success.listen()

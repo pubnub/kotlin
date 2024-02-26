@@ -11,7 +11,7 @@ import java.util.function.Consumer
 internal class RetryingRemoteAction<T>(
     private val remoteAction: ExtendedRemoteAction<T>,
     private val maxNumberOfAutomaticRetries: Int,
-    private val executorService: ExecutorService
+    private val executorService: ExecutorService,
 ) : ExtendedRemoteAction<T> {
     private lateinit var cachedCallback: Consumer<Result<T>>
 
@@ -20,11 +20,12 @@ internal class RetryingRemoteAction<T>(
         validate()
         var thrownException: PubNubException? = null
         for (i in 0 until maxNumberOfAutomaticRetries) {
-            thrownException = try {
-                return remoteAction.sync()
-            } catch (ex: Throwable) {
-                PubNubException.from(ex)
-            }
+            thrownException =
+                try {
+                    return remoteAction.sync()
+                } catch (ex: Throwable) {
+                    PubNubException.from(ex)
+                }
         }
         throw thrownException!!
     }
@@ -37,7 +38,7 @@ internal class RetryingRemoteAction<T>(
                     validate()
                 } catch (ex: PubNubException) {
                     callback.accept(
-                        Result.failure(ex)
+                        Result.failure(ex),
                     )
                     return@Runnable
                 }
@@ -50,7 +51,7 @@ internal class RetryingRemoteAction<T>(
                     }
                 }
                 callback.accept(Result.failure(PubNubException.from(lastException!!).copy(remoteAction = this)))
-            }
+            },
         )
     }
 
@@ -77,7 +78,7 @@ internal class RetryingRemoteAction<T>(
         fun <T> autoRetry(
             remoteAction: ExtendedRemoteAction<T>,
             maxNumberOfAutomaticRetries: Int,
-            executorService: ExecutorService
+            executorService: ExecutorService,
         ): RetryingRemoteAction<T> {
             return RetryingRemoteAction(remoteAction, maxNumberOfAutomaticRetries, executorService)
         }

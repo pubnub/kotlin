@@ -1,7 +1,6 @@
 package com.pubnub.api.enums
 
 enum class PNHeartbeatNotificationOptions {
-
     /**
      * No heartbeat-related events in [SubscribeCallback.status]
      */
@@ -15,5 +14,5 @@ enum class PNHeartbeatNotificationOptions {
     /**
      * Receive all heartbeat events in [SubscribeCallback.status]
      */
-    ALL
+    ALL,
 }

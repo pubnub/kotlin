@@ -23,19 +23,19 @@ import java.util.UUID
 import java.util.concurrent.atomic.AtomicBoolean
 
 class ListPushProvisionsTest : BaseTest() {
-
     @Test
     fun testAppleSuccessSync() {
         stubFor(
             get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
-                .willReturn(aResponse().withBody("""["ch1", "ch2", "ch3"]"""))
+                .willReturn(aResponse().withBody("""["ch1", "ch2", "ch3"]""")),
         )
 
-        val response = pubnub.auditPushChannelProvisions(
-            deviceId = "niceDevice",
-            pushType = PNPushType.APNS,
-            topic = "irrelevant"
-        ).sync()
+        val response =
+            pubnub.auditPushChannelProvisions(
+                deviceId = "niceDevice",
+                pushType = PNPushType.APNS,
+                topic = "irrelevant",
+            ).sync()
 
         assertEquals(listOf("ch1", "ch2", "ch3"), response.channels)
 
@@ -50,14 +50,15 @@ class ListPushProvisionsTest : BaseTest() {
     fun testFirebaseSuccessSync() {
         stubFor(
             get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
-                .willReturn(aResponse().withBody("""["ch1", "ch2", "ch3"]"""))
+                .willReturn(aResponse().withBody("""["ch1", "ch2", "ch3"]""")),
         )
 
-        val response = pubnub.auditPushChannelProvisions(
-            deviceId = "niceDevice",
-            pushType = PNPushType.FCM,
-            topic = "irrelevant"
-        ).sync()
+        val response =
+            pubnub.auditPushChannelProvisions(
+                deviceId = "niceDevice",
+                pushType = PNPushType.FCM,
+                topic = "irrelevant",
+            ).sync()
 
         assertEquals(listOf("ch1", "ch2", "ch3"), response.channels)
 
@@ -72,14 +73,15 @@ class ListPushProvisionsTest : BaseTest() {
     fun testMicrosoftSuccessSync() {
         stubFor(
             get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
-                .willReturn(aResponse().withBody("""["ch1", "ch2", "ch3"]"""))
+                .willReturn(aResponse().withBody("""["ch1", "ch2", "ch3"]""")),
         )
 
-        val response = pubnub.auditPushChannelProvisions(
-            deviceId = "niceDevice",
-            pushType = PNPushType.MPNS,
-            topic = "irrelevant"
-        ).sync()
+        val response =
+            pubnub.auditPushChannelProvisions(
+                deviceId = "niceDevice",
+                pushType = PNPushType.MPNS,
+                topic = "irrelevant",
+            ).sync()
 
         assertEquals(listOf("ch1", "ch2", "ch3"), response.channels)
 
@@ -94,14 +96,15 @@ class ListPushProvisionsTest : BaseTest() {
     fun testApns2SuccessSync() {
         stubFor(
             get(urlPathEqualTo("/v2/push/sub-key/mySubscribeKey/devices-apns2/niceDevice"))
-                .willReturn(aResponse().withBody("""["ch1", "ch2", "ch3"]"""))
+                .willReturn(aResponse().withBody("""["ch1", "ch2", "ch3"]""")),
         )
 
-        val response = pubnub.auditPushChannelProvisions(
-            deviceId = "niceDevice",
-            pushType = PNPushType.APNS2,
-            topic = "news"
-        ).sync()
+        val response =
+            pubnub.auditPushChannelProvisions(
+                deviceId = "niceDevice",
+                pushType = PNPushType.APNS2,
+                topic = "news",
+            ).sync()
 
         assertEquals(listOf("ch1", "ch2", "ch3"), response.channels)
 
@@ -115,15 +118,16 @@ class ListPushProvisionsTest : BaseTest() {
     fun testApns2SuccessSync_Environment() {
         stubFor(
             get(urlPathEqualTo("/v2/push/sub-key/mySubscribeKey/devices-apns2/niceDevice"))
-                .willReturn(aResponse().withBody("""["ch1", "ch2", "ch3"]"""))
+                .willReturn(aResponse().withBody("""["ch1", "ch2", "ch3"]""")),
         )
 
-        val response = pubnub.auditPushChannelProvisions(
-            deviceId = "niceDevice",
-            pushType = PNPushType.APNS2,
-            topic = "news",
-            environment = PNPushEnvironment.PRODUCTION
-        ).sync()
+        val response =
+            pubnub.auditPushChannelProvisions(
+                deviceId = "niceDevice",
+                pushType = PNPushType.APNS2,
+                topic = "news",
+                environment = PNPushEnvironment.PRODUCTION,
+            ).sync()
 
         assertEquals(listOf("ch1", "ch2", "ch3"), response.channels)
 
@@ -137,13 +141,14 @@ class ListPushProvisionsTest : BaseTest() {
     fun testEmptyArray() {
         stubFor(
             get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
-                .willReturn(aResponse().withBody("[]"))
+                .willReturn(aResponse().withBody("[]")),
         )
 
-        val response = pubnub.auditPushChannelProvisions(
-            deviceId = "niceDevice",
-            pushType = PNPushType.FCM
-        ).sync()
+        val response =
+            pubnub.auditPushChannelProvisions(
+                deviceId = "niceDevice",
+                pushType = PNPushType.FCM,
+            ).sync()
 
         assertEquals(emptyList<String>(), response.channels)
 
@@ -155,13 +160,13 @@ class ListPushProvisionsTest : BaseTest() {
     fun testEmptyBody() {
         stubFor(
             get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
-                .willReturn(aResponse().withBody(""))
+                .willReturn(aResponse().withBody("")),
         )
 
         try {
             pubnub.auditPushChannelProvisions(
                 deviceId = "niceDevice",
-                pushType = PNPushType.FCM
+                pushType = PNPushType.FCM,
             ).sync()
             failTest()
         } catch (e: Exception) {
@@ -173,13 +178,13 @@ class ListPushProvisionsTest : BaseTest() {
     fun testMalformedResponseSync() {
         stubFor(
             get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
-                .willReturn(ok().withBody("{"))
+                .willReturn(ok().withBody("{")),
         )
 
         try {
             pubnub.auditPushChannelProvisions(
                 deviceId = "niceDevice",
-                pushType = PNPushType.FCM
+                pushType = PNPushType.FCM,
             ).sync()
             failTest()
         } catch (e: PubNubException) {
@@ -191,13 +196,13 @@ class ListPushProvisionsTest : BaseTest() {
     fun testMalformedResponseAsync() {
         stubFor(
             get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
-                .willReturn(ok().withBody("{"))
+                .willReturn(ok().withBody("{")),
         )
 
         val success = AtomicBoolean()
         pubnub.auditPushChannelProvisions(
             deviceId = "niceDevice",
-            pushType = PNPushType.FCM
+            pushType = PNPushType.FCM,
         ).async { result ->
             result.onFailure {
                 assertPnException(PubNubError.PARSING_ERROR, it)
@@ -211,14 +216,14 @@ class ListPushProvisionsTest : BaseTest() {
     fun testIsAuthRequiredSuccess() {
         stubFor(
             get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
-                .willReturn(aResponse().withBody("""["ch1", "ch2", "ch3"]"""))
+                .willReturn(aResponse().withBody("""["ch1", "ch2", "ch3"]""")),
         )
 
         pubnub.configuration.authKey = "myKey"
 
         pubnub.auditPushChannelProvisions(
             deviceId = "niceDevice",
-            pushType = PNPushType.APNS
+            pushType = PNPushType.APNS,
         ).sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
@@ -230,14 +235,14 @@ class ListPushProvisionsTest : BaseTest() {
     fun testOperationTypeSuccess() {
         stubFor(
             get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
-                .willReturn(aResponse().withBody("""["ch1", "ch2", "ch3"]"""))
+                .willReturn(aResponse().withBody("""["ch1", "ch2", "ch3"]""")),
         )
 
         val success = AtomicBoolean()
 
         pubnub.auditPushChannelProvisions(
             deviceId = "niceDevice",
-            pushType = PNPushType.APNS
+            pushType = PNPushType.APNS,
         ).async { result ->
             assertFalse(result.isFailure)
             result.onSuccess {
@@ -254,7 +259,7 @@ class ListPushProvisionsTest : BaseTest() {
     fun testNullSubscribeKey() {
         stubFor(
             get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
-                .willReturn(aResponse().withBody("""["ch1", "ch2", "ch3"]"""))
+                .willReturn(aResponse().withBody("""["ch1", "ch2", "ch3"]""")),
         )
 
         pubnub.configuration.subscribeKey = " "
@@ -262,7 +267,7 @@ class ListPushProvisionsTest : BaseTest() {
         try {
             pubnub.auditPushChannelProvisions(
                 deviceId = "niceDevice",
-                pushType = PNPushType.APNS
+                pushType = PNPushType.APNS,
             ).sync()
             failTest("Didn't throw SUBSCRIBE_KEY_MISSING")
         } catch (e: Exception) {
@@ -275,7 +280,7 @@ class ListPushProvisionsTest : BaseTest() {
         try {
             pubnub.auditPushChannelProvisions(
                 deviceId = "niceDevice",
-                pushType = PNPushType.APNS2
+                pushType = PNPushType.APNS2,
             ).sync()
             failTest("Should throw no topic")
         } catch (e: PubNubException) {
@@ -287,13 +292,13 @@ class ListPushProvisionsTest : BaseTest() {
     fun testValidationDefaultEnvironment() {
         stubFor(
             get(urlPathEqualTo("/v2/push/sub-key/mySubscribeKey/devices-apns2/niceDevice"))
-                .willReturn(aResponse().withBody("""["ch1", "ch2", "ch3"]"""))
+                .willReturn(aResponse().withBody("""["ch1", "ch2", "ch3"]""")),
         )
 
         pubnub.auditPushChannelProvisions(
             deviceId = "niceDevice",
             pushType = PNPushType.APNS2,
-            topic = UUID.randomUUID().toString()
+            topic = UUID.randomUUID().toString(),
         ).sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))

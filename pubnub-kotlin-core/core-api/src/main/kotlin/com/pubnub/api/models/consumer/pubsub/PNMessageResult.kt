@@ -9,5 +9,5 @@ import com.pubnub.api.PubNubError
 data class PNMessageResult(
     private val basePubSubResult: PubSubResult,
     override val message: JsonElement,
-    val error: PubNubError? = null
+    val error: PubNubError? = null,
 ) : MessageResult, PubSubResult by basePubSubResult

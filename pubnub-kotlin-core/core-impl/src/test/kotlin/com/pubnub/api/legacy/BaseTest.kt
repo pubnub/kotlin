@@ -3,7 +3,7 @@ package com.pubnub.api.legacy
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
-import com.pubnub.api.CommonUtils.DEFAULT_LISTEN_DURATION
+import com.pubnub.api.CommonUtils.defaultListenDuration
 import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.internal.BasePubNubImpl
@@ -16,7 +16,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 
 abstract class BaseTest {
-
     lateinit var wireMockServer: WireMockServer
     protected lateinit var pubnubBase: TestPubNub private set
     protected lateinit var pubnub: InternalPubNubClient private set
@@ -24,14 +23,15 @@ abstract class BaseTest {
 
     @Before
     open fun beforeEach() {
-        wireMockServer = WireMockServer(
-            wireMockConfig()
-                .bindAddress("localhost")
-                .dynamicPort()
-        )
+        wireMockServer =
+            WireMockServer(
+                wireMockConfig()
+                    .bindAddress("localhost")
+                    .dynamicPort(),
+            )
         wireMockServer.start()
         WireMock.configureFor("http", "localhost", wireMockServer.port())
-        DEFAULT_LISTEN_DURATION = 2
+        defaultListenDuration = 2
 
         onBefore()
     }
@@ -59,13 +59,14 @@ abstract class BaseTest {
         config = createConfiguration()
     }
 
-    fun createConfiguration() = PNConfiguration(userId = UserId("myUUID")).apply {
-        subscribeKey = "mySubscribeKey"
-        publishKey = "myPublishKey"
-        origin = wireMockServer.baseUrl().toHttpUrlOrNull()!!.run { "$host:$port" }
-        secure = false
-        logVerbosity = PNLogVerbosity.BODY
-    }
+    fun createConfiguration() =
+        PNConfiguration(userId = UserId("myUUID")).apply {
+            subscribeKey = "mySubscribeKey"
+            publishKey = "myPublishKey"
+            origin = wireMockServer.baseUrl().toHttpUrlOrNull()!!.run { "$host:$port" }
+            secure = false
+            logVerbosity = PNLogVerbosity.BODY
+        }
 
     fun clearConfiguration() {
         config = PNConfiguration(userId = UserId(BasePubNubImpl.generateUUID()))

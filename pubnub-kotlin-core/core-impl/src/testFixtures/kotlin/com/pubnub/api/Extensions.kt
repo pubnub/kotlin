@@ -37,9 +37,7 @@ fun AtomicBoolean.listen(function: () -> Boolean): AtomicBoolean {
     return this
 }
 
-fun <Input, Output> Endpoint<Input, Output>.asyncRetry(
-    function: (result: Result<Output>) -> Unit
-) {
+fun <Input, Output> Endpoint<Input, Output>.asyncRetry(function: (result: Result<Output>) -> Unit) {
     val hits = AtomicInteger(0)
 
     val block = {
@@ -61,7 +59,7 @@ fun <Input, Output> Endpoint<Input, Output>.asyncRetry(
     }
 
     Awaitility.await()
-        .atMost(CommonUtils.DEFAULT_LISTEN_DURATION.toLong(), TimeUnit.SECONDS)
+        .atMost(CommonUtils.defaultListenDuration.toLong(), TimeUnit.SECONDS)
         .pollInterval(FibonacciPollInterval(TimeUnit.SECONDS))
         .until {
             block.invoke()
@@ -70,7 +68,7 @@ fun <Input, Output> Endpoint<Input, Output>.asyncRetry(
 
 fun <Input, Output> Endpoint<Input, Output>.retryForbidden(
     onFail: (exception: Throwable) -> Unit,
-    function: (result: Result<Output>) -> Unit
+    function: (result: Result<Output>) -> Unit,
 ) {
     val success = AtomicBoolean()
 
@@ -105,11 +103,11 @@ fun <Input, Output> Endpoint<Input, Output>.retryForbidden(
     }
 
     Awaitility.await()
-        .atMost(CommonUtils.DEFAULT_LISTEN_DURATION.toLong(), TimeUnit.SECONDS)
+        .atMost(CommonUtils.defaultListenDuration.toLong(), TimeUnit.SECONDS)
         .pollInterval(FibonacciPollInterval(TimeUnit.SECONDS))
         .untilAtomic(success, IsEqual.equalTo(true))
 }
 
-fun AtomicBoolean.listen(seconds: Int = CommonUtils.DEFAULT_LISTEN_DURATION) {
+fun AtomicBoolean.listen(seconds: Int = CommonUtils.defaultListenDuration) {
     CommonUtils.observe(this, seconds)
 }

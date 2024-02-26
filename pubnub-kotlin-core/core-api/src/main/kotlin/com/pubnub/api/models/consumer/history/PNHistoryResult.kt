@@ -10,10 +10,10 @@ import com.pubnub.api.PubNubError
  * @property startTimetoken Start timetoken of the returned list of messages.
  * @property endTimetoken End timetoken of the returned list of messages.
  */
-class PNHistoryResult (
+class PNHistoryResult(
     val messages: List<PNHistoryItemResult>,
     val startTimetoken: Long,
-    val endTimetoken: Long
+    val endTimetoken: Long,
 )
 
 /**
@@ -31,5 +31,5 @@ data class PNHistoryItemResult(
     val entry: JsonElement,
     val timetoken: Long? = null,
     val meta: JsonElement? = null,
-    val error: PubNubError? = null
+    val error: PubNubError? = null,
 )

@@ -2,7 +2,7 @@ package com.pubnub.api.v2.callbacks
 
 import com.pubnub.api.callbacks.Listener
 
-interface BaseStatusEmitter<T: BaseStatusListener> {
+interface BaseStatusEmitter<T : BaseStatusListener> {
     /**
      * Add a listener.
      *

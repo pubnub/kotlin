@@ -32,13 +32,14 @@ internal class TransitionFromReceivingReconnectingStateTest {
         val channelGroupName = "ChannelGroup01"
         val myMutableSetOfChannels = mutableSetOf(channelName)
         val myMutableSetOfChannelGroups = mutableSetOf(channelGroupName)
-        val receiveReconnecting: SubscribeState.ReceiveReconnecting = SubscribeState.ReceiveReconnecting(
-            myMutableSetOfChannels,
-            myMutableSetOfChannelGroups,
-            subscriptionCursor,
-            0,
-            reason
-        )
+        val receiveReconnecting: SubscribeState.ReceiveReconnecting =
+            SubscribeState.ReceiveReconnecting(
+                myMutableSetOfChannels,
+                myMutableSetOfChannelGroups,
+                subscriptionCursor,
+                0,
+                reason,
+            )
 
         // when
         myMutableSetOfChannels.remove(channelName)
@@ -52,10 +53,11 @@ internal class TransitionFromReceivingReconnectingStateTest {
     @Test
     fun can_transit_from_RECEIVE_RECONNECTING_to_RECEIVE_RECONNECTING_when_there_is_RECEIVE_RECONNECT_FAILURE_event() {
         // when
-        val (state, invocations) = transition(
-            SubscribeState.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason),
-            SubscribeEvent.ReceiveReconnectFailure(reason)
-        )
+        val (state, invocations) =
+            transition(
+                SubscribeState.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason),
+                SubscribeEvent.ReceiveReconnectFailure(reason),
+            )
 
         // then
         assertTrue(state is SubscribeState.ReceiveReconnecting)
@@ -70,17 +72,18 @@ internal class TransitionFromReceivingReconnectingStateTest {
                 SubscribeEffectInvocation.CancelReceiveReconnect,
                 SubscribeEffectInvocation.ReceiveReconnect(channels, channelGroups, subscriptionCursor, 1, reason),
             ),
-            invocations
+            invocations,
         )
     }
 
     @Test
     fun can_transit_from_RECEIVE_RECONNECTING_to_RECEIVING_when_there_is_SUBSCRIPTION_CHANGED_event() {
         // when
-        val (state, invocations) = transition(
-            SubscribeState.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason),
-            SubscribeEvent.SubscriptionChanged(channels, channelGroups)
-        )
+        val (state, invocations) =
+            transition(
+                SubscribeState.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason),
+                SubscribeEvent.SubscriptionChanged(channels, channelGroups),
+            )
 
         // then
         assertTrue(state is SubscribeState.Receiving)
@@ -95,22 +98,23 @@ internal class TransitionFromReceivingReconnectingStateTest {
                     createSubscriptionChangedStatus(
                         state.subscriptionCursor,
                         channels,
-                        channelGroups
-                    )
+                        channelGroups,
+                    ),
                 ),
                 SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
             ),
-            invocations
+            invocations,
         )
     }
 
     @Test
     fun can_transit_from_RECEIVE_RECONNECTING_to_RECEIVE_STOPPED_when_there_is_DISCONNECT_event() {
         // when
-        val (state, invocations) = transition(
-            SubscribeState.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason),
-            SubscribeEvent.Disconnect
-        )
+        val (state, invocations) =
+            transition(
+                SubscribeState.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason),
+                SubscribeEvent.Disconnect,
+            )
 
         // then
         assertTrue(state is SubscribeState.ReceiveStopped)
@@ -122,20 +126,21 @@ internal class TransitionFromReceivingReconnectingStateTest {
             setOf(
                 SubscribeEffectInvocation.CancelReceiveReconnect,
                 SubscribeEffectInvocation.EmitStatus(
-                    PNStatus(PNStatusCategory.Disconnected)
-                )
+                    PNStatus(PNStatusCategory.Disconnected),
+                ),
             ),
-            invocations
+            invocations,
         )
     }
 
     @Test
     fun can_transit_from_RECEIVE_RECONNECTING_to_RECEIVE_FAILED_when_there_is_RECEIVE_RECONNECT_GIVEUP_event() {
         // when
-        val (state, invocations) = transition(
-            SubscribeState.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason),
-            SubscribeEvent.ReceiveReconnectGiveup(reason)
-        )
+        val (state, invocations) =
+            transition(
+                SubscribeState.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason),
+                SubscribeEvent.ReceiveReconnectGiveup(reason),
+            )
 
         // then
         assertTrue(state is SubscribeState.ReceiveFailed)
@@ -148,10 +153,10 @@ internal class TransitionFromReceivingReconnectingStateTest {
             setOf(
                 SubscribeEffectInvocation.CancelReceiveReconnect,
                 SubscribeEffectInvocation.EmitStatus(
-                    PNStatus(PNStatusCategory.UnexpectedDisconnect, reason)
-                )
+                    PNStatus(PNStatusCategory.UnexpectedDisconnect, reason),
+                ),
             ),
-            invocations
+            invocations,
         )
     }
 
@@ -162,10 +167,11 @@ internal class TransitionFromReceivingReconnectingStateTest {
         val messages: List<PNEvent> = listOf(pnMessageResult)
 
         // when
-        val (state, invocations) = transition(
-            SubscribeState.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason),
-            SubscribeEvent.ReceiveReconnectSuccess(messages, subscriptionCursor)
-        )
+        val (state, invocations) =
+            transition(
+                SubscribeState.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason),
+                SubscribeEvent.ReceiveReconnectSuccess(messages, subscriptionCursor),
+            )
 
         // then
         assertTrue(state is SubscribeState.Receiving)
@@ -178,9 +184,9 @@ internal class TransitionFromReceivingReconnectingStateTest {
             setOf(
                 SubscribeEffectInvocation.CancelReceiveReconnect,
                 SubscribeEffectInvocation.EmitMessages(messages),
-                SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)
+                SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
             ),
-            invocations
+            invocations,
         )
     }
 
@@ -194,16 +200,17 @@ internal class TransitionFromReceivingReconnectingStateTest {
         val subscriptionCursorStoredInSubscriptionRestored = SubscriptionCursor(timeTokenFromSubscriptionRestored, null)
 
         // when
-        val (state, invocations) = transition(
-            SubscribeState.ReceiveReconnecting(
-                channels,
-                channelGroups,
-                subscriptionCursorStoredInReceiveReconnecting,
-                0,
-                reason
-            ),
-            SubscribeEvent.SubscriptionRestored(channels, channelGroups, subscriptionCursorStoredInSubscriptionRestored)
-        )
+        val (state, invocations) =
+            transition(
+                SubscribeState.ReceiveReconnecting(
+                    channels,
+                    channelGroups,
+                    subscriptionCursorStoredInReceiveReconnecting,
+                    0,
+                    reason,
+                ),
+                SubscribeEvent.SubscriptionRestored(channels, channelGroups, subscriptionCursorStoredInSubscriptionRestored),
+            )
 
         // then
         val expectedSubscriptionCursor =
@@ -221,22 +228,23 @@ internal class TransitionFromReceivingReconnectingStateTest {
                     createSubscriptionChangedStatus(
                         state.subscriptionCursor,
                         channels,
-                        channelGroups
-                    )
+                        channelGroups,
+                    ),
                 ),
                 SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, expectedSubscriptionCursor),
             ),
-            invocations
+            invocations,
         )
     }
 
     @Test
     fun can_transit_from_RECEIVE_RECONNECTING_to_UNSUBSRIBED_when_there_is_UNSUBSCRIBE_ALL_event() {
         // when
-        val (state, invocations) = transition(
-            SubscribeState.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason),
-            SubscribeEvent.UnsubscribeAll
-        )
+        val (state, invocations) =
+            transition(
+                SubscribeState.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason),
+                SubscribeEvent.UnsubscribeAll,
+            )
 
         // then
         assertEquals(SubscribeState.Unsubscribed, state)
@@ -244,22 +252,22 @@ internal class TransitionFromReceivingReconnectingStateTest {
             setOf(
                 SubscribeEffectInvocation.CancelReceiveReconnect,
                 SubscribeEffectInvocation.EmitStatus(
-                    PNStatus(PNStatusCategory.Disconnected)
-                )
-
+                    PNStatus(PNStatusCategory.Disconnected),
+                ),
             ),
-            invocations
+            invocations,
         )
     }
 
     private fun createPnMessageResult(channel1: String): PNMessageResult {
-        val pubSubResult = BasePubSubResult(
-            channel = channel1,
-            subscription = null,
-            timetoken = 16814672398636798,
-            userMetadata = null,
-            publisher = "client-d4d5bdeb-02b7-4505-bfc0-82bad22057d6"
-        )
+        val pubSubResult =
+            BasePubSubResult(
+                channel = channel1,
+                subscription = null,
+                timetoken = 16814672398636798,
+                userMetadata = null,
+                publisher = "client-d4d5bdeb-02b7-4505-bfc0-82bad22057d6",
+            )
         val message = JsonObject()
         message.addProperty("publisher", "client-6c42e3e2-dd3b-487b-a5bf-c2b6be59a15f")
         message.addProperty("text", "D5631DA5FF")
@@ -272,5 +280,5 @@ internal class TransitionFromReceivingReconnectingStateTest {
 internal fun createSubscriptionChangedStatus(
     cursor: SubscriptionCursor,
     channels: Collection<String>,
-    channelGroups: Collection<String>
+    channelGroups: Collection<String>,
 ) = PNStatus(PNStatusCategory.SubscriptionChanged, currentTimetoken = cursor.timetoken, channels = channels, channelGroups = channelGroups)

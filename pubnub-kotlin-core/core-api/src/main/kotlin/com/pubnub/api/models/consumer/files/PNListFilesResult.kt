@@ -6,5 +6,5 @@ data class PNListFilesResult(
     val count: Int,
     val next: PNPage.PNNext?,
     val status: Int,
-    val data: Collection<PNUploadedFile>
+    val data: Collection<PNUploadedFile>,
 )

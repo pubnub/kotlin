@@ -15,7 +15,11 @@ internal class InputStreamSeparator(private val inputStream: InputStream) : Inpu
         return inputStream.read(b)
     }
 
-    override fun read(b: ByteArray, off: Int, len: Int): Int {
+    override fun read(
+        b: ByteArray,
+        off: Int,
+        len: Int,
+    ): Int {
         return inputStream.read(b, off, len)
     }
 

@@ -23,7 +23,6 @@ import org.junit.Test
 import java.util.concurrent.atomic.AtomicBoolean
 
 class GetMessageActionEndpointTest : BaseTest() {
-
     @Test
     fun testSyncSuccess() {
         stubFor(
@@ -43,14 +42,15 @@ class GetMessageActionEndpointTest : BaseTest() {
                             }
                           ]
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val result = pubnub.getMessageActions(
-            channel = "coolChannel"
-        ).sync()
+        val result =
+            pubnub.getMessageActions(
+                channel = "coolChannel",
+            ).sync()
 
         assertEquals(result.actions.size, 1)
         assertEquals(result.actions[0].messageTimetoken, 123L)
@@ -93,14 +93,15 @@ class GetMessageActionEndpointTest : BaseTest() {
                             }
                           ]
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val result = pubnub.getMessageActions(
-            channel = "coolChannel"
-        ).sync()
+        val result =
+            pubnub.getMessageActions(
+                channel = "coolChannel",
+            ).sync()
 
         assertEquals(result.actions.size, 3)
 
@@ -142,15 +143,15 @@ class GetMessageActionEndpointTest : BaseTest() {
                             }
                           ]
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         val success = AtomicBoolean()
 
         pubnub.getMessageActions(
-            channel = "coolChannel"
+            channel = "coolChannel",
         ).async { result ->
             assertFalse(result.isFailure)
             result.onSuccess {
@@ -186,14 +187,14 @@ class GetMessageActionEndpointTest : BaseTest() {
                             }
                           ]
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         try {
             pubnub.getMessageActions(
-                channel = "coolChannel"
+                channel = "coolChannel",
             ).sync()
             failTest()
         } catch (e: Exception) {
@@ -205,12 +206,12 @@ class GetMessageActionEndpointTest : BaseTest() {
     fun testEmptyBody() {
         stubFor(
             get(urlPathEqualTo("/v1/message-actions/mySubscribeKey/channel/coolChannel"))
-                .willReturn(emptyJson())
+                .willReturn(emptyJson()),
         )
 
         try {
             pubnub.getMessageActions(
-                channel = "coolChannel"
+                channel = "coolChannel",
             ).sync()
             failTest()
         } catch (e: Exception) {
@@ -222,12 +223,12 @@ class GetMessageActionEndpointTest : BaseTest() {
     fun testNoBody() {
         stubFor(
             get(urlPathEqualTo("/v1/message-actions/mySubscribeKey/channel/coolChannel"))
-                .willReturn(noContent())
+                .willReturn(noContent()),
         )
 
         try {
             pubnub.getMessageActions(
-                channel = "coolChannel"
+                channel = "coolChannel",
             ).sync()
             failTest()
         } catch (e: Exception) {
@@ -245,14 +246,14 @@ class GetMessageActionEndpointTest : BaseTest() {
                         {
                           "status": 200
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         try {
             pubnub.getMessageActions(
-                channel = "coolChannel"
+                channel = "coolChannel",
             ).sync()
             failTest()
         } catch (e: Exception) {
@@ -271,14 +272,14 @@ class GetMessageActionEndpointTest : BaseTest() {
                           "status": 200
                           "data": []
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         try {
             pubnub.getMessageActions(
-                channel = "coolChannel"
+                channel = "coolChannel",
             ).sync()
             failTest()
         } catch (e: Exception) {
@@ -290,7 +291,7 @@ class GetMessageActionEndpointTest : BaseTest() {
     fun testBlankChannel() {
         try {
             pubnub.getMessageActions(
-                channel = " "
+                channel = " ",
             ).sync()
             failTest()
         } catch (e: Exception) {
@@ -303,7 +304,7 @@ class GetMessageActionEndpointTest : BaseTest() {
         pubnub.configuration.subscribeKey = " "
         try {
             pubnub.getMessageActions(
-                channel = "coolChannel"
+                channel = "coolChannel",
             ).sync()
             failTest()
         } catch (e: Exception) {
@@ -330,15 +331,15 @@ class GetMessageActionEndpointTest : BaseTest() {
                             }
                           ]
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         pubnub.configuration.authKey = "authKey"
 
         pubnub.getMessageActions(
-            channel = "coolChannel"
+            channel = "coolChannel",
         ).sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
@@ -369,20 +370,21 @@ class GetMessageActionEndpointTest : BaseTest() {
                             }
                           ]
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         pubnub.configuration.authKey = "authKey"
 
         pubnub.getMessageActions(
             channel = "coolChannel",
-            page = PNBoundedPage(
-                start = 15,
-                end = 20,
-                limit = 10
-            )
+            page =
+                PNBoundedPage(
+                    start = 15,
+                    end = 20,
+                    limit = 10,
+                ),
         ).sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
@@ -415,15 +417,15 @@ class GetMessageActionEndpointTest : BaseTest() {
                             }
                           ]
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         pubnub.configuration.authKey = "authKey"
 
         pubnub.getMessageActions(
-            channel = "coolChannel"
+            channel = "coolChannel",
         ).sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))

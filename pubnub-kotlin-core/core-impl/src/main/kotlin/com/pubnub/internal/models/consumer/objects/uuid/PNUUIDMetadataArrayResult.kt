@@ -8,5 +8,5 @@ data class PNUUIDMetadataArrayResult(
     val data: Collection<PNUUIDMetadata>,
     val totalCount: Int?,
     val next: PNPage.PNNext?,
-    val prev: PNPage.PNPrev?
+    val prev: PNPage.PNPrev?,
 )

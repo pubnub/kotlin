@@ -6,8 +6,8 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.Endpoint
-import com.pubnub.internal.PNConfiguration.Companion.isValid
 import com.pubnub.internal.InternalPubNubClient
+import com.pubnub.internal.PNConfiguration.Companion.isValid
 import com.pubnub.internal.models.consumer.access_manager.PNAccessManagerGrantResult
 import com.pubnub.internal.models.consumer.access_manager.PNAccessManagerKeyData
 import com.pubnub.internal.models.server.Envelope
@@ -29,29 +29,27 @@ open class Grant(
     override val update: Boolean = false,
     override val join: Boolean = false,
     override val ttl: Int = -1,
-
     override val authKeys: List<String> = emptyList(),
     override val channels: List<String> = emptyList(),
     override val channelGroups: List<String> = emptyList(),
     override val uuids: List<String> = emptyList(),
 ) : Endpoint<Envelope<AccessManagerGrantPayload>, PNAccessManagerGrantResult>(pubnub), IGrant {
-
     override fun validateParams() {
         super.validateParams()
         if (!pubnub.configuration.secretKey.isValid()) throw PubNubException(PubNubError.SECRET_KEY_MISSING)
     }
 
     override fun getAffectedChannels() = channels
+
     override fun getAffectedChannelGroups() = channelGroups
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<AccessManagerGrantPayload>> {
-
         addQueryParams(queryParams)
 
         return pubnub.retrofitManager.accessManagerService
             .grant(
                 subKey = pubnub.configuration.subscribeKey,
-                options = queryParams
+                options = queryParams,
             )
     }
 
@@ -91,7 +89,7 @@ open class Grant(
             subscribeKey = data.subscribeKey!!,
             channels = constructedChannels,
             channelGroups = constructedGroups,
-            uuids = constructedUuids
+            uuids = constructedUuids,
         )
     }
 

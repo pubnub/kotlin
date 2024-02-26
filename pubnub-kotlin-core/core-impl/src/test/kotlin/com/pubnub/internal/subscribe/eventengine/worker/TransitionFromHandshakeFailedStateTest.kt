@@ -44,10 +44,11 @@ internal class TransitionFromHandshakeFailedStateTest {
         val newChannelGroup = channelGroups + setOf("NewChannelGroup")
 
         // when
-        val (state, invocations) = transition(
-            SubscribeState.HandshakeFailed(channels, channelGroups, exception, subscriptionCursor),
-            SubscribeEvent.SubscriptionChanged(newChannels, newChannelGroup)
-        )
+        val (state, invocations) =
+            transition(
+                SubscribeState.HandshakeFailed(channels, channelGroups, exception, subscriptionCursor),
+                SubscribeEvent.SubscriptionChanged(newChannels, newChannelGroup),
+            )
 
         // then
         assertTrue(state is SubscribeState.Handshaking)
@@ -56,17 +57,19 @@ internal class TransitionFromHandshakeFailedStateTest {
         assertEquals(newChannelGroup, handshaking.channelGroups)
         assertEquals(subscriptionCursor, handshaking.subscriptionCursor)
         assertEquals(
-            setOf(SubscribeEffectInvocation.Handshake(newChannels, newChannelGroup)), invocations
+            setOf(SubscribeEffectInvocation.Handshake(newChannels, newChannelGroup)),
+            invocations,
         )
     }
 
     @Test
     fun can_transit_from_HANDSHAKE_FAILED_to_RECEIVING_when_there_is_SUBSCRIPTION_RESTORED_event() {
         // when
-        val (state, invocations) = transition(
-            SubscribeState.HandshakeFailed(channels, channelGroups, exception),
-            SubscribeEvent.SubscriptionRestored(channels, channelGroups, subscriptionCursor)
-        )
+        val (state, invocations) =
+            transition(
+                SubscribeState.HandshakeFailed(channels, channelGroups, exception),
+                SubscribeEvent.SubscriptionRestored(channels, channelGroups, subscriptionCursor),
+            )
 
         // then
         assertTrue(state is SubscribeState.Handshaking)
@@ -77,16 +80,18 @@ internal class TransitionFromHandshakeFailedStateTest {
         assertEquals(subscriptionCursor, state.subscriptionCursor)
         assertEquals(
             setOf(SubscribeEffectInvocation.Handshake(channels, channelGroups)),
-            invocations
+            invocations,
         )
     }
 
     @Test
     fun can_transit_from_HANDSHAKE_FAILED_to_HANDSHAKING_when_there_is_RECONNECT_event() {
         // when
-        val (state, invocations) = transition(
-            SubscribeState.HandshakeFailed(channels, channelGroups, exception), SubscribeEvent.Reconnect()
-        )
+        val (state, invocations) =
+            transition(
+                SubscribeState.HandshakeFailed(channels, channelGroups, exception),
+                SubscribeEvent.Reconnect(),
+            )
 
         // then
         assertTrue(state is SubscribeState.Handshaking)
@@ -95,7 +100,8 @@ internal class TransitionFromHandshakeFailedStateTest {
         assertEquals(channels, state.channels)
         assertEquals(channelGroups, state.channelGroups)
         assertEquals(
-            setOf(SubscribeEffectInvocation.Handshake(channels, channelGroups)), invocations
+            setOf(SubscribeEffectInvocation.Handshake(channels, channelGroups)),
+            invocations,
         )
     }
 
@@ -106,10 +112,11 @@ internal class TransitionFromHandshakeFailedStateTest {
         val subscriptionCursorForReconnect = SubscriptionCursor(timeTokenFromReconnect, null)
 
         // when
-        val (state, invocations) = transition(
-            SubscribeState.HandshakeFailed(channels, channelGroups, exception),
-            SubscribeEvent.Reconnect(subscriptionCursorForReconnect)
-        )
+        val (state, invocations) =
+            transition(
+                SubscribeState.HandshakeFailed(channels, channelGroups, exception),
+                SubscribeEvent.Reconnect(subscriptionCursorForReconnect),
+            )
 
         // then
         assertTrue(state is SubscribeState.Handshaking)
@@ -118,17 +125,19 @@ internal class TransitionFromHandshakeFailedStateTest {
         assertEquals(channelGroups, handshaking.channelGroups)
         assertEquals(subscriptionCursorForReconnect, handshaking.subscriptionCursor)
         assertEquals(
-            setOf(SubscribeEffectInvocation.Handshake(channels, channelGroups)), invocations
+            setOf(SubscribeEffectInvocation.Handshake(channels, channelGroups)),
+            invocations,
         )
     }
 
     @Test
     fun can_transit_from_HANDSHAKING_FAILED_to_UNSUBSRIBED_when_there_is_UNSUBSCRIBE_ALL_event() {
         // when
-        val (state, invocations) = transition(
-            SubscribeState.HandshakeFailed(channels, channelGroups, exception),
-            SubscribeEvent.UnsubscribeAll
-        )
+        val (state, invocations) =
+            transition(
+                SubscribeState.HandshakeFailed(channels, channelGroups, exception),
+                SubscribeEvent.UnsubscribeAll,
+            )
 
         // then
         assertEquals(SubscribeState.Unsubscribed, state)

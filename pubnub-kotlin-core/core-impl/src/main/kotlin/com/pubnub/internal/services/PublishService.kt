@@ -9,14 +9,13 @@ import retrofit2.http.Path
 import retrofit2.http.QueryMap
 
 internal interface PublishService {
-
     @GET("publish/{pubKey}/{subKey}/0/{channel}/0/{message}")
     fun publish(
         @Path("pubKey") pubKey: String,
         @Path("subKey") subKey: String,
         @Path("channel") channel: String,
         @Path(value = "message", encoded = false) message: String,
-        @QueryMap(encoded = false) options: Map<String, String>
+        @QueryMap(encoded = false) options: Map<String, String>,
     ): Call<List<Any>>
 
     @POST("publish/{pubKey}/{subKey}/0/{channel}/0")
@@ -26,6 +25,6 @@ internal interface PublishService {
         @Path("subKey") subKey: String,
         @Path("channel") channel: String,
         @Body body: Any,
-        @QueryMap(encoded = false) options: Map<String, String>
+        @QueryMap(encoded = false) options: Map<String, String>,
     ): Call<List<Any>>
 }

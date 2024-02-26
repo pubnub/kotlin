@@ -150,30 +150,32 @@ class InternalPubNubClient internal constructor(
     internal val tokenManager: TokenManager = TokenManager()
     private val tokenParser: TokenParser = TokenParser()
     private val presenceData = PresenceData()
-    private val subscribe = Subscribe.create(
-        this,
-        listenerManager,
-        configuration.retryConfiguration,
-        eventEnginesConf,
-        SubscribeMessageProcessor(this, DuplicationManager(configuration)),
-        presenceData,
-        configuration.maintainPresenceState,
-        executorService
-    )
+    private val subscribe =
+        Subscribe.create(
+            this,
+            listenerManager,
+            configuration.retryConfiguration,
+            eventEnginesConf,
+            SubscribeMessageProcessor(this, DuplicationManager(configuration)),
+            presenceData,
+            configuration.maintainPresenceState,
+            executorService,
+        )
 
-    private val presence = Presence.create(
-        heartbeatProvider = HeartbeatProviderImpl(this),
-        leaveProvider = LeaveProviderImpl(this),
-        heartbeatInterval = configuration.heartbeatInterval.seconds,
-        retryConfiguration = configuration.retryConfiguration,
-        suppressLeaveEvents = configuration.suppressLeaveEvents,
-        heartbeatNotificationOptions = configuration.heartbeatNotificationOptions,
-        listenerManager = listenerManager,
-        eventEngineConf = eventEnginesConf.presence,
-        presenceData = presenceData,
-        sendStateWithHeartbeat = configuration.maintainPresenceState,
-        executorService = executorService
-    )
+    private val presence =
+        Presence.create(
+            heartbeatProvider = HeartbeatProviderImpl(this),
+            leaveProvider = LeaveProviderImpl(this),
+            heartbeatInterval = configuration.heartbeatInterval.seconds,
+            retryConfiguration = configuration.retryConfiguration,
+            suppressLeaveEvents = configuration.suppressLeaveEvents,
+            heartbeatNotificationOptions = configuration.heartbeatNotificationOptions,
+            listenerManager = listenerManager,
+            eventEngineConf = eventEnginesConf.presence,
+            presenceData = presenceData,
+            sendStateWithHeartbeat = configuration.maintainPresenceState,
+            executorService = executorService,
+        )
 
     //endregion
 
@@ -191,11 +193,14 @@ class InternalPubNubClient internal constructor(
 
     //region Internal
     internal fun baseUrl() = basePathManager.basePath()
+
     internal fun requestId() = UUID.randomUUID().toString()
+
     internal fun timestamp() = (Date().time / BasePubNubImpl.TIMESTAMP_DIVIDER).toInt()
     //endregion
 
     //region Publish
+
     /**
      * Send a message to all subscribers of a channel.
      *
@@ -247,7 +252,7 @@ class InternalPubNubClient internal constructor(
         shouldStore: Boolean? = null,
         usePost: Boolean = false,
         replicate: Boolean = true,
-        ttl: Int? = null
+        ttl: Int? = null,
     ) = Publish(
         pubnub = this,
         channel = channel,
@@ -256,7 +261,7 @@ class InternalPubNubClient internal constructor(
         shouldStore = shouldStore,
         usePost = usePost,
         replicate = replicate,
-        ttl = ttl
+        ttl = ttl,
     )
 
     /**
@@ -294,7 +299,7 @@ class InternalPubNubClient internal constructor(
         message: Any,
         meta: Any? = null,
         usePost: Boolean = false,
-        ttl: Int? = null
+        ttl: Int? = null,
     ) = publish(
         channel = channel,
         message = message,
@@ -302,7 +307,7 @@ class InternalPubNubClient internal constructor(
         shouldStore = false,
         usePost = usePost,
         replicate = false,
-        ttl = ttl
+        ttl = ttl,
     )
 
     /**
@@ -317,7 +322,7 @@ class InternalPubNubClient internal constructor(
      */
     fun signal(
         channel: String,
-        message: Any
+        message: Any,
     ) = Signal(pubnub = this, channel = channel, message = message)
     //endregion
 
@@ -325,18 +330,18 @@ class InternalPubNubClient internal constructor(
         channels: List<String> = emptyList(),
         channelGroups: List<String> = emptyList(),
         withPresence: Boolean = false,
-        withTimetoken: Long = 0L
+        withTimetoken: Long = 0L,
     ) {
         subscribe.subscribe(channels.toSet(), channelGroups.toSet(), withPresence, withTimetoken)
         presence.joined(
             channels.filterNot { it.endsWith(PRESENCE_CHANNEL_SUFFIX) }.toSet(),
-            channelGroups.filterNot { it.endsWith(PRESENCE_CHANNEL_SUFFIX) }.toSet()
+            channelGroups.filterNot { it.endsWith(PRESENCE_CHANNEL_SUFFIX) }.toSet(),
         )
     }
 
     private fun unsubscribeInternal(
         channels: List<String> = emptyList(),
-        channelGroups: List<String> = emptyList()
+        channelGroups: List<String> = emptyList(),
     ) {
         val channelSetWithoutPresence = channels.filter { !it.endsWith(PRESENCE_CHANNEL_SUFFIX) }.toSet()
         val groupSetWithoutPresence = channelGroups.filter { !it.endsWith(PRESENCE_CHANNEL_SUFFIX) }.toSet()
@@ -374,6 +379,7 @@ class InternalPubNubClient internal constructor(
     //endregion
 
     //region MobilePush
+
     /**
      * Enable push notifications on provided set of channels.
      *
@@ -391,14 +397,14 @@ class InternalPubNubClient internal constructor(
         channels: List<String>,
         deviceId: String,
         topic: String? = null,
-        environment: PNPushEnvironment = PNPushEnvironment.DEVELOPMENT
+        environment: PNPushEnvironment = PNPushEnvironment.DEVELOPMENT,
     ) = AddChannelsToPush(
         pubnub = this,
         pushType = pushType,
         channels = channels,
         deviceId = deviceId,
         topic = topic,
-        environment = environment
+        environment = environment,
     )
 
     /**
@@ -415,13 +421,13 @@ class InternalPubNubClient internal constructor(
         pushType: PNPushType,
         deviceId: String,
         topic: String? = null,
-        environment: PNPushEnvironment = PNPushEnvironment.DEVELOPMENT
+        environment: PNPushEnvironment = PNPushEnvironment.DEVELOPMENT,
     ) = ListPushProvisions(
         pubnub = this,
         pushType = pushType,
         deviceId = deviceId,
         topic = topic,
-        environment = environment
+        environment = environment,
     )
 
     /**
@@ -440,14 +446,14 @@ class InternalPubNubClient internal constructor(
         channels: List<String>,
         deviceId: String,
         topic: String? = null,
-        environment: PNPushEnvironment = PNPushEnvironment.DEVELOPMENT
+        environment: PNPushEnvironment = PNPushEnvironment.DEVELOPMENT,
     ) = RemoveChannelsFromPush(
         pubnub = this,
         pushType = pushType,
         channels = channels,
         deviceId = deviceId,
         topic = topic,
-        environment = environment
+        environment = environment,
     )
 
     /**
@@ -464,17 +470,18 @@ class InternalPubNubClient internal constructor(
         pushType: PNPushType,
         deviceId: String,
         topic: String? = null,
-        environment: PNPushEnvironment = PNPushEnvironment.DEVELOPMENT
+        environment: PNPushEnvironment = PNPushEnvironment.DEVELOPMENT,
     ) = RemoveAllPushChannelsForDevice(
         pubnub = this,
         pushType = pushType,
         deviceId = deviceId,
         topic = topic,
-        environment = environment
+        environment = environment,
     )
     //endregion
 
     //region StoragePlayback
+
     /**
      * Fetch historical messages of a channel.
      *
@@ -516,7 +523,7 @@ class InternalPubNubClient internal constructor(
         count: Int = History.MAX_COUNT,
         reverse: Boolean = false,
         includeTimetoken: Boolean = false,
-        includeMeta: Boolean = false
+        includeMeta: Boolean = false,
     ) = History(
         pubnub = this,
         channel = channel,
@@ -525,7 +532,7 @@ class InternalPubNubClient internal constructor(
         count = count,
         reverse = reverse,
         includeTimetoken = includeTimetoken,
-        includeMeta = includeMeta
+        includeMeta = includeMeta,
     )
 
     /**
@@ -565,12 +572,13 @@ class InternalPubNubClient internal constructor(
      *                              Defaults to `false`.
      */
     @Deprecated(
-        replaceWith = ReplaceWith(
-            "fetchMessages(channels = channels, page = PNBoundedPage(start = start, end = end, limit = maximumPerChannel),includeMeta = includeMeta, includeMessageActions = includeMessageActions, includeMessageType = includeMessageType)",
-            "com.pubnub.api.models.consumer.PNBoundedPage"
-        ),
+        replaceWith =
+            ReplaceWith(
+                "fetchMessages(channels = channels, page = PNBoundedPage(start = start, end = end, limit = maximumPerChannel),includeMeta = includeMeta, includeMessageActions = includeMessageActions, includeMessageType = includeMessageType)",
+                "com.pubnub.api.models.consumer.PNBoundedPage",
+            ),
         level = DeprecationLevel.WARNING,
-        message = "Use fetchMessages(String, PNBoundedPage, Boolean, Boolean, Boolean) instead"
+        message = "Use fetchMessages(String, PNBoundedPage, Boolean, Boolean, Boolean) instead",
     )
     fun fetchMessages(
         channels: List<String>,
@@ -579,13 +587,13 @@ class InternalPubNubClient internal constructor(
         end: Long? = null,
         includeMeta: Boolean = false,
         includeMessageActions: Boolean = false,
-        includeMessageType: Boolean = true
+        includeMessageType: Boolean = true,
     ) = fetchMessages(
         channels = channels,
         page = PNBoundedPage(start = start, end = end, limit = maximumPerChannel),
         includeMeta = includeMeta,
         includeMessageActions = includeMessageActions,
-        includeMessageType = includeMessageType
+        includeMessageType = includeMessageType,
     )
 
     /**
@@ -629,7 +637,7 @@ class InternalPubNubClient internal constructor(
         includeUUID: Boolean = true,
         includeMeta: Boolean = false,
         includeMessageActions: Boolean = false,
-        includeMessageType: Boolean = true
+        includeMessageType: Boolean = true,
     ) = FetchMessages(
         pubnub = this,
         channels = channels,
@@ -637,7 +645,7 @@ class InternalPubNubClient internal constructor(
         includeUUID = includeUUID,
         includeMeta = includeMeta,
         includeMessageActions = includeMessageActions,
-        includeMessageType = includeMessageType
+        includeMessageType = includeMessageType,
     )
 
     /**
@@ -656,7 +664,7 @@ class InternalPubNubClient internal constructor(
     fun deleteMessages(
         channels: List<String>,
         start: Long? = null,
-        end: Long? = null
+        end: Long? = null,
     ) = DeleteMessages(pubnub = this, channels = channels, start = start, end = end)
 
     /**
@@ -669,11 +677,14 @@ class InternalPubNubClient internal constructor(
      *                          Specify a single timetoken to apply it to all channels.
      *                          Otherwise, the list of timetokens must be the same length as the list of channels.
      */
-    fun messageCounts(channels: List<String>, channelsTimetoken: List<Long>) =
-        MessageCounts(pubnub = this, channels = channels, channelsTimetoken = channelsTimetoken)
+    fun messageCounts(
+        channels: List<String>,
+        channelsTimetoken: List<Long>,
+    ) = MessageCounts(pubnub = this, channels = channels, channelsTimetoken = channelsTimetoken)
     //endregion
 
     //region Presence
+
     /**
      * Obtain information about the current state of a channel including a list of unique user IDs
      * currently subscribed to the channel and the total occupancy count of the channel.
@@ -691,13 +702,13 @@ class InternalPubNubClient internal constructor(
         channels: List<String> = emptyList(),
         channelGroups: List<String> = emptyList(),
         includeState: Boolean = false,
-        includeUUIDs: Boolean = true
+        includeUUIDs: Boolean = true,
     ) = HereNow(
         pubnub = this,
         channels = channels,
         channelGroups = channelGroups,
         includeState = includeState,
-        includeUUIDs = includeUUIDs
+        includeUUIDs = includeUUIDs,
     )
 
     /**
@@ -732,15 +743,16 @@ class InternalPubNubClient internal constructor(
         channels: List<String> = listOf(),
         channelGroups: List<String> = listOf(),
         state: Any,
-        uuid: String = configuration.userId.value
-    ): SetState = SetState(
-        pubnub = this,
-        channels = channels,
-        channelGroups = channelGroups,
-        state = state,
-        uuid = uuid,
-        presenceData = presenceData,
-    )
+        uuid: String = configuration.userId.value,
+    ): SetState =
+        SetState(
+            pubnub = this,
+            channels = channels,
+            channelGroups = channelGroups,
+            state = state,
+            uuid = uuid,
+            presenceData = presenceData,
+        )
 
     /**
      * Retrieve state information specific to a subscriber UUID.
@@ -755,7 +767,7 @@ class InternalPubNubClient internal constructor(
     fun getPresenceState(
         channels: List<String> = listOf(),
         channelGroups: List<String> = listOf(),
-        uuid: String = configuration.userId.value
+        uuid: String = configuration.userId.value,
     ) = GetState(pubnub = this, channels = channels, channelGroups = channelGroups, uuid = uuid)
 
     /**
@@ -770,16 +782,17 @@ class InternalPubNubClient internal constructor(
     fun presence(
         channels: List<String> = emptyList(),
         channelGroups: List<String> = emptyList(),
-        connected: Boolean = false
+        connected: Boolean = false,
     ) = presence.presence(
         channels = channels.toSet(),
         channelGroups = channelGroups.toSet(),
-        connected = connected
+        connected = connected,
     )
 
     //endregion
 
     //region MessageActions
+
     /**
      * Add an action on a published message. Returns the added action in the response.
      *
@@ -787,8 +800,10 @@ class InternalPubNubClient internal constructor(
      * @param messageAction The message action object containing the message action's type,
      *                      value and the publish timetoken of the original message.
      */
-    fun addMessageAction(channel: String, messageAction: PNMessageAction) =
-        AddMessageAction(pubnub = this, channel = channel, messageAction = messageAction)
+    fun addMessageAction(
+        channel: String,
+        messageAction: PNMessageAction,
+    ) = AddMessageAction(pubnub = this, channel = channel, messageAction = messageAction)
 
     /**
      * Remove a previously added action on a published message. Returns an empty response.
@@ -797,13 +812,16 @@ class InternalPubNubClient internal constructor(
      * @param messageTimetoken The publish timetoken of the original message.
      * @param actionTimetoken The publish timetoken of the message action to be removed.
      */
-    fun removeMessageAction(channel: String, messageTimetoken: Long, actionTimetoken: Long) =
-        RemoveMessageAction(
-            pubnub = this,
-            channel = channel,
-            messageTimetoken = messageTimetoken,
-            actionTimetoken = actionTimetoken
-        )
+    fun removeMessageAction(
+        channel: String,
+        messageTimetoken: Long,
+        actionTimetoken: Long,
+    ) = RemoveMessageAction(
+        pubnub = this,
+        channel = channel,
+        messageTimetoken = messageTimetoken,
+        actionTimetoken = actionTimetoken,
+    )
 
     /**
      * Get a list of message actions in a channel. Returns a list of actions in the response.
@@ -816,18 +834,19 @@ class InternalPubNubClient internal constructor(
      * @param limit Specifies the number of message actions to return in response.
      */
     @Deprecated(
-        replaceWith = ReplaceWith(
-            "getMessageActions(channel = channel, page = PNBoundedPage(start = start, end = end, limit = limit))",
-            "com.pubnub.api.models.consumer.PNBoundedPage"
-        ),
+        replaceWith =
+            ReplaceWith(
+                "getMessageActions(channel = channel, page = PNBoundedPage(start = start, end = end, limit = limit))",
+                "com.pubnub.api.models.consumer.PNBoundedPage",
+            ),
         level = DeprecationLevel.WARNING,
-        message = "Use getMessageActions(String, PNBoundedPage) instead"
+        message = "Use getMessageActions(String, PNBoundedPage) instead",
     )
     fun getMessageActions(
         channel: String,
         start: Long? = null,
         end: Long? = null,
-        limit: Int? = null
+        limit: Int? = null,
     ) = getMessageActions(channel = channel, page = PNBoundedPage(start = start, end = end, limit = limit))
 
     /**
@@ -838,27 +857,29 @@ class InternalPubNubClient internal constructor(
      */
     fun getMessageActions(
         channel: String,
-        page: PNBoundedPage = PNBoundedPage()
+        page: PNBoundedPage = PNBoundedPage(),
     ) = GetMessageActions(pubnub = this, channel = channel, page = page)
     //endregion
 
     //region ChannelGroups
+
     /**
      * Adds a channel to a channel group.
      *
      * @param channels The channels to add to the channel group.
      * @param channelGroup The channel group to add the channels to.
      */
-    fun addChannelsToChannelGroup(channels: List<String>, channelGroup: String) =
-        AddChannelChannelGroup(pubnub = this, channels = channels, channelGroup = channelGroup)
+    fun addChannelsToChannelGroup(
+        channels: List<String>,
+        channelGroup: String,
+    ) = AddChannelChannelGroup(pubnub = this, channels = channels, channelGroup = channelGroup)
 
     /**
      * Lists all the channels of the channel group.
      *
      * @param channelGroup Channel group to fetch the belonging channels.
      */
-    fun listChannelsForChannelGroup(channelGroup: String) =
-        AllChannelsChannelGroup(pubnub = this, channelGroup = channelGroup)
+    fun listChannelsForChannelGroup(channelGroup: String) = AllChannelsChannelGroup(pubnub = this, channelGroup = channelGroup)
 
     /**
      * Removes channels from a channel group.
@@ -866,8 +887,10 @@ class InternalPubNubClient internal constructor(
      * @param channelGroup The channel group to remove channels from
      * @param channels The channels to remove from the channel group.
      */
-    fun removeChannelsFromChannelGroup(channels: List<String>, channelGroup: String) =
-        RemoveChannelChannelGroup(pubnub = this, channels = channels, channelGroup = channelGroup)
+    fun removeChannelsFromChannelGroup(
+        channels: List<String>,
+        channelGroup: String,
+    ) = RemoveChannelChannelGroup(pubnub = this, channels = channels, channelGroup = channelGroup)
 
     /**
      * Lists all registered channel groups for the subscribe key.
@@ -879,11 +902,11 @@ class InternalPubNubClient internal constructor(
      *
      * @param channelGroup The channel group to remove.
      */
-    fun deleteChannelGroup(channelGroup: String) =
-        DeleteChannelGroup(pubnub = this, channelGroup = channelGroup)
+    fun deleteChannelGroup(channelGroup: String) = DeleteChannelGroup(pubnub = this, channelGroup = channelGroup)
     //endregion
 
     //region PAM
+
     /**
      * This function establishes access permissions for PubNub Access Manager (PAM) by setting the `read` or `write`
      * attribute to `true`.
@@ -1005,7 +1028,7 @@ class InternalPubNubClient internal constructor(
         authorizedUUID: String? = null,
         channels: List<ChannelGrant> = emptyList(),
         channelGroups: List<ChannelGroupGrant> = emptyList(),
-        uuids: List<UUIDGrant> = emptyList()
+        uuids: List<UUIDGrant> = emptyList(),
     ): GrantToken {
         return GrantToken(
             pubnub = this,
@@ -1014,7 +1037,7 @@ class InternalPubNubClient internal constructor(
             authorizedUUID = authorizedUUID,
             channels = channels,
             channelGroups = channelGroups,
-            uuids = uuids
+            uuids = uuids,
         )
     }
 
@@ -1039,7 +1062,7 @@ class InternalPubNubClient internal constructor(
         meta: Any? = null,
         authorizedUserId: UserId? = null,
         spacesPermissions: List<SpacePermissions> = emptyList(),
-        usersPermissions: List<UserPermissions> = emptyList()
+        usersPermissions: List<UserPermissions> = emptyList(),
     ): GrantToken {
         return GrantToken(
             pubnub = this,
@@ -1048,7 +1071,7 @@ class InternalPubNubClient internal constructor(
             authorizedUUID = authorizedUserId?.value,
             channels = spacesPermissions.map { spacePermissions -> spacePermissions.toChannelGrant() },
             channelGroups = emptyList(),
-            uuids = usersPermissions.map { userPermissions -> userPermissions.toUuidGrant() }
+            uuids = usersPermissions.map { userPermissions -> userPermissions.toUuidGrant() },
         )
     }
 
@@ -1060,12 +1083,13 @@ class InternalPubNubClient internal constructor(
     fun revokeToken(token: String): RevokeToken {
         return RevokeToken(
             pubnub = this,
-            token = token
+            token = token,
         )
     }
     //endregion
 
     //region Miscellaneous
+
     /**
      * Returns a 17 digit precision Unix epoch from the server.
      */
@@ -1073,6 +1097,7 @@ class InternalPubNubClient internal constructor(
     //endregion
 
     //region ObjectsAPI
+
     /**
      * Returns a paginated list of Channel Metadata objects, optionally including the custom data object for each.
      *
@@ -1097,17 +1122,18 @@ class InternalPubNubClient internal constructor(
         filter: String? = null,
         sort: Collection<PNSortKey<PNKey>> = listOf(),
         includeCount: Boolean = false,
-        includeCustom: Boolean = false
+        includeCustom: Boolean = false,
     ) = GetAllChannelMetadata(
         pubnub = this,
-        collectionQueryParameters = CollectionQueryParameters(
-            limit = limit,
-            page = page,
-            filter = filter,
-            sort = sort,
-            includeCount = includeCount
-        ),
-        includeQueryParam = IncludeQueryParam(includeCustom = includeCustom)
+        collectionQueryParameters =
+            CollectionQueryParameters(
+                limit = limit,
+                page = page,
+                filter = filter,
+                sort = sort,
+                includeCount = includeCount,
+            ),
+        includeQueryParam = IncludeQueryParam(includeCustom = includeCustom),
     )
 
     /**
@@ -1116,10 +1142,13 @@ class InternalPubNubClient internal constructor(
      * @param channel Channel name.
      * @param includeCustom Include respective additional fields in the response.
      */
-    fun getChannelMetadata(channel: String, includeCustom: Boolean = false) = GetChannelMetadata(
+    fun getChannelMetadata(
+        channel: String,
+        includeCustom: Boolean = false,
+    ) = GetChannelMetadata(
         pubnub = this,
         channel = channel,
-        includeQueryParam = IncludeQueryParam(includeCustom = includeCustom)
+        includeQueryParam = IncludeQueryParam(includeCustom = includeCustom),
     )
 
     /**
@@ -1138,7 +1167,7 @@ class InternalPubNubClient internal constructor(
         custom: Any? = null,
         includeCustom: Boolean = false,
         type: String? = null,
-        status: String? = null
+        status: String? = null,
     ) = SetChannelMetadata(
         pubnub = this,
         channel = channel,
@@ -1147,7 +1176,7 @@ class InternalPubNubClient internal constructor(
         custom = custom,
         includeQueryParam = IncludeQueryParam(includeCustom = includeCustom),
         type = type,
-        status = status
+        status = status,
     )
 
     /**
@@ -1181,17 +1210,18 @@ class InternalPubNubClient internal constructor(
         filter: String? = null,
         sort: Collection<PNSortKey<PNKey>> = listOf(),
         includeCount: Boolean = false,
-        includeCustom: Boolean = false
+        includeCustom: Boolean = false,
     ) = GetAllUUIDMetadata(
         pubnub = this,
-        collectionQueryParameters = CollectionQueryParameters(
-            limit = limit,
-            page = page,
-            filter = filter,
-            sort = sort,
-            includeCount = includeCount
-        ),
-        withInclude = IncludeQueryParam(includeCustom = includeCustom)
+        collectionQueryParameters =
+            CollectionQueryParameters(
+                limit = limit,
+                page = page,
+                filter = filter,
+                sort = sort,
+                includeCount = includeCount,
+            ),
+        withInclude = IncludeQueryParam(includeCustom = includeCustom),
     )
 
     /**
@@ -1202,11 +1232,11 @@ class InternalPubNubClient internal constructor(
      */
     fun getUUIDMetadata(
         uuid: String? = null,
-        includeCustom: Boolean = false
+        includeCustom: Boolean = false,
     ) = GetUUIDMetadata(
         pubnub = this,
         uuid = uuid ?: configuration.userId.value,
-        includeQueryParam = IncludeQueryParam(includeCustom = includeCustom)
+        includeQueryParam = IncludeQueryParam(includeCustom = includeCustom),
     )
 
     /**
@@ -1229,7 +1259,7 @@ class InternalPubNubClient internal constructor(
         custom: Any? = null,
         includeCustom: Boolean = false,
         type: String? = null,
-        status: String? = null
+        status: String? = null,
     ) = SetUUIDMetadata(
         pubnub = this,
         uuid = uuid,
@@ -1240,7 +1270,7 @@ class InternalPubNubClient internal constructor(
         custom = custom,
         withInclude = IncludeQueryParam(includeCustom = includeCustom),
         type = type,
-        status = status
+        status = status,
     )
 
     /**
@@ -1278,35 +1308,38 @@ class InternalPubNubClient internal constructor(
         sort: Collection<PNSortKey<PNMembershipKey>> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
-        includeChannelDetails: PNChannelDetailsLevel? = null
+        includeChannelDetails: PNChannelDetailsLevel? = null,
     ) = GetMemberships(
         pubnub = this,
         uuid = uuid ?: configuration.userId.value,
-        collectionQueryParameters = CollectionQueryParameters(
-            limit = limit,
-            page = page,
-            filter = filter,
-            sort = sort,
-            includeCount = includeCount
-        ),
-        includeQueryParam = IncludeQueryParam(
-            includeCustom = includeCustom,
-            includeChannelDetails = includeChannelDetails,
-            includeType = false
-        )
+        collectionQueryParameters =
+            CollectionQueryParameters(
+                limit = limit,
+                page = page,
+                filter = filter,
+                sort = sort,
+                includeCount = includeCount,
+            ),
+        includeQueryParam =
+            IncludeQueryParam(
+                includeCustom = includeCustom,
+                includeChannelDetails = includeChannelDetails,
+                includeType = false,
+            ),
     )
 
     /**
      * @see [PubNub.setMemberships]
      */
     @Deprecated(
-        replaceWith = ReplaceWith(
-            "setMemberships(channels = channels, uuid = uuid, limit = limit, " +
+        replaceWith =
+            ReplaceWith(
+                "setMemberships(channels = channels, uuid = uuid, limit = limit, " +
                     "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
-                    "includeChannelDetails = includeChannelDetails)"
-        ),
+                    "includeChannelDetails = includeChannelDetails)",
+            ),
         level = DeprecationLevel.WARNING,
-        message = "Use setMemberships instead"
+        message = "Use setMemberships instead",
     )
     fun addMemberships(
         channels: List<ChannelMembershipInput>,
@@ -1317,7 +1350,7 @@ class InternalPubNubClient internal constructor(
         sort: Collection<PNSortKey<PNMembershipKey>> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
-        includeChannelDetails: PNChannelDetailsLevel? = null
+        includeChannelDetails: PNChannelDetailsLevel? = null,
     ) = setMemberships(
         channels = channels,
         uuid = uuid ?: configuration.userId.value,
@@ -1327,7 +1360,7 @@ class InternalPubNubClient internal constructor(
         sort = sort,
         includeCount = includeCount,
         includeCustom = includeCustom,
-        includeChannelDetails = includeChannelDetails
+        includeChannelDetails = includeChannelDetails,
     )
 
     /**
@@ -1405,7 +1438,7 @@ class InternalPubNubClient internal constructor(
         sort: Collection<PNSortKey<PNMembershipKey>> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
-        includeChannelDetails: PNChannelDetailsLevel? = null
+        includeChannelDetails: PNChannelDetailsLevel? = null,
     ) = manageMemberships(
         channelsToSet = listOf(),
         channelsToRemove = channels,
@@ -1416,7 +1449,7 @@ class InternalPubNubClient internal constructor(
         sort = sort,
         includeCount = includeCount,
         includeCustom = includeCustom,
-        includeChannelDetails = includeChannelDetails
+        includeChannelDetails = includeChannelDetails,
     )
 
     /**
@@ -1457,31 +1490,34 @@ class InternalPubNubClient internal constructor(
         channelsToSet = channelsToSet,
         channelsToRemove = channelsToRemove,
         uuid = uuid ?: configuration.userId.value,
-        collectionQueryParameters = CollectionQueryParameters(
-            limit = limit,
-            page = page,
-            filter = filter,
-            sort = sort,
-            includeCount = includeCount
-        ),
-        includeQueryParam = IncludeQueryParam(
-            includeCustom = includeCustom,
-            includeChannelDetails = includeChannelDetails,
-            includeType = false
-        )
+        collectionQueryParameters =
+            CollectionQueryParameters(
+                limit = limit,
+                page = page,
+                filter = filter,
+                sort = sort,
+                includeCount = includeCount,
+            ),
+        includeQueryParam =
+            IncludeQueryParam(
+                includeCustom = includeCustom,
+                includeChannelDetails = includeChannelDetails,
+                includeType = false,
+            ),
     )
 
     /**
      * @see [PubNub.getChannelMembers]
      */
     @Deprecated(
-        replaceWith = ReplaceWith(
-            "getChannelMembers(channel = channel, limit = limit, " +
+        replaceWith =
+            ReplaceWith(
+                "getChannelMembers(channel = channel, limit = limit, " +
                     "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
-                    "includeUUIDDetails = includeUUIDDetails)"
-        ),
+                    "includeUUIDDetails = includeUUIDDetails)",
+            ),
         level = DeprecationLevel.WARNING,
-        message = "Use getChannelMembers instead"
+        message = "Use getChannelMembers instead",
     )
     fun getMembers(
         channel: String,
@@ -1491,7 +1527,7 @@ class InternalPubNubClient internal constructor(
         sort: Collection<PNSortKey<PNMemberKey>> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
-        includeUUIDDetails: PNUUIDDetailsLevel? = null
+        includeUUIDDetails: PNUUIDDetailsLevel? = null,
     ) = getChannelMembers(
         channel = channel,
         limit = limit,
@@ -1500,7 +1536,7 @@ class InternalPubNubClient internal constructor(
         sort = sort,
         includeCount = includeCount,
         includeCustom = includeCustom,
-        includeUUIDDetails = includeUUIDDetails
+        includeUUIDDetails = includeUUIDDetails,
     )
 
     /**
@@ -1532,35 +1568,38 @@ class InternalPubNubClient internal constructor(
         sort: Collection<PNSortKey<PNMemberKey>> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
-        includeUUIDDetails: PNUUIDDetailsLevel? = null
+        includeUUIDDetails: PNUUIDDetailsLevel? = null,
     ) = GetChannelMembers(
         pubnub = this,
         channel = channel,
-        collectionQueryParameters = CollectionQueryParameters(
-            limit = limit,
-            page = page,
-            filter = filter,
-            sort = sort,
-            includeCount = includeCount
-        ),
-        includeQueryParam = IncludeQueryParam(
-            includeCustom = includeCustom,
-            includeUUIDDetails = includeUUIDDetails,
-            includeType = false
-        )
+        collectionQueryParameters =
+            CollectionQueryParameters(
+                limit = limit,
+                page = page,
+                filter = filter,
+                sort = sort,
+                includeCount = includeCount,
+            ),
+        includeQueryParam =
+            IncludeQueryParam(
+                includeCustom = includeCustom,
+                includeUUIDDetails = includeUUIDDetails,
+                includeType = false,
+            ),
     )
 
     /**
      * @see [PubNub.setChannelMembers]
      */
     @Deprecated(
-        replaceWith = ReplaceWith(
-            "setChannelMembers(channel = channel, uuids = uuids, limit = limit, " +
+        replaceWith =
+            ReplaceWith(
+                "setChannelMembers(channel = channel, uuids = uuids, limit = limit, " +
                     "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
-                    "includeUUIDDetails = includeUUIDDetails)"
-        ),
+                    "includeUUIDDetails = includeUUIDDetails)",
+            ),
         level = DeprecationLevel.WARNING,
-        message = "Use setChannelMembers instead"
+        message = "Use setChannelMembers instead",
     )
     fun addMembers(
         channel: String,
@@ -1571,7 +1610,7 @@ class InternalPubNubClient internal constructor(
         sort: Collection<PNSortKey<PNMemberKey>> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
-        includeUUIDDetails: PNUUIDDetailsLevel? = null
+        includeUUIDDetails: PNUUIDDetailsLevel? = null,
     ) = setChannelMembers(
         channel = channel,
         uuids = uuids,
@@ -1581,7 +1620,7 @@ class InternalPubNubClient internal constructor(
         sort = sort,
         includeCount = includeCount,
         includeCustom = includeCustom,
-        includeUUIDDetails = includeUUIDDetails
+        includeUUIDDetails = includeUUIDDetails,
     )
 
     /**
@@ -1633,13 +1672,14 @@ class InternalPubNubClient internal constructor(
      * @see [PubNub.removeChannelMembers]
      */
     @Deprecated(
-        replaceWith = ReplaceWith(
-            "removeChannelMembers(channel = channel, uuids = uuids, limit = limit, " +
+        replaceWith =
+            ReplaceWith(
+                "removeChannelMembers(channel = channel, uuids = uuids, limit = limit, " +
                     "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
-                    "includeUUIDDetails = includeUUIDDetails)"
-        ),
+                    "includeUUIDDetails = includeUUIDDetails)",
+            ),
         level = DeprecationLevel.WARNING,
-        message = "Use removeChannelMembers instead"
+        message = "Use removeChannelMembers instead",
     )
     fun removeMembers(
         channel: String,
@@ -1650,7 +1690,7 @@ class InternalPubNubClient internal constructor(
         sort: Collection<PNSortKey<PNMemberKey>> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
-        includeUUIDDetails: PNUUIDDetailsLevel? = null
+        includeUUIDDetails: PNUUIDDetailsLevel? = null,
     ) = removeChannelMembers(
         channel = channel,
         uuids = uuids,
@@ -1660,7 +1700,7 @@ class InternalPubNubClient internal constructor(
         sort = sort,
         includeCount = includeCount,
         includeCustom = includeCustom,
-        includeUUIDDetails = includeUUIDDetails
+        includeUUIDDetails = includeUUIDDetails,
     )
 
     /**
@@ -1693,7 +1733,7 @@ class InternalPubNubClient internal constructor(
         sort: Collection<PNSortKey<PNMemberKey>> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
-        includeUUIDDetails: PNUUIDDetailsLevel? = null
+        includeUUIDDetails: PNUUIDDetailsLevel? = null,
     ) = manageChannelMembers(
         channel = channel,
         uuidsToSet = listOf(),
@@ -1745,23 +1785,26 @@ class InternalPubNubClient internal constructor(
         channel = channel,
         uuidsToSet = uuidsToSet,
         uuidsToRemove = uuidsToRemove,
-        collectionQueryParameters = CollectionQueryParameters(
-            limit = limit,
-            page = page,
-            filter = filter,
-            sort = sort,
-            includeCount = includeCount
-        ),
-        includeQueryParam = IncludeQueryParam(
-            includeCustom = includeCustom,
-            includeUUIDDetails = includeUUIDDetails,
-            includeType = false
-        )
+        collectionQueryParameters =
+            CollectionQueryParameters(
+                limit = limit,
+                page = page,
+                filter = filter,
+                sort = sort,
+                includeCount = includeCount,
+            ),
+        includeQueryParam =
+            IncludeQueryParam(
+                includeCustom = includeCustom,
+                includeUUIDDetails = includeUUIDDetails,
+                includeType = false,
+            ),
     )
 
     //endregion ObjectsAPI
 
     //region files
+
     /**
      * Upload file / data to specified Channel.
      *
@@ -1796,13 +1839,14 @@ class InternalPubNubClient internal constructor(
         meta: Any? = null,
         ttl: Int? = null,
         shouldStore: Boolean? = null,
-        cipherKey: String? = null
+        cipherKey: String? = null,
     ): SendFile {
-        val cryptoModule = if (cipherKey != null) {
-            CryptoModule.createLegacyCryptoModule(cipherKey)
-        } else {
-            cryptoModule
-        }
+        val cryptoModule =
+            if (cipherKey != null) {
+                CryptoModule.createLegacyCryptoModule(cipherKey)
+            } else {
+                cryptoModule
+            }
 
         return SendFile(
             channel = channel,
@@ -1812,13 +1856,14 @@ class InternalPubNubClient internal constructor(
             meta = meta,
             ttl = ttl,
             shouldStore = shouldStore,
-            executorService = retrofitManager.getTransactionClientExecutorService()
-                ?: Executors.newSingleThreadExecutor(),
+            executorService =
+                retrofitManager.getTransactionClientExecutorService()
+                    ?: Executors.newSingleThreadExecutor(),
             fileMessagePublishRetryLimit = configuration.fileMessagePublishRetryLimit,
             generateUploadUrlFactory = GenerateUploadUrl.Factory(this),
             publishFileMessageFactory = PublishFileMessage.Factory(this),
             sendFileToS3Factory = UploadFile.Factory(this),
-            cryptoModule = cryptoModule
+            cryptoModule = cryptoModule,
         )
     }
 
@@ -1832,13 +1877,13 @@ class InternalPubNubClient internal constructor(
     fun listFiles(
         channel: String,
         limit: Int? = null,
-        next: PNPage.PNNext? = null
+        next: PNPage.PNNext? = null,
     ): ListFiles {
         return ListFiles(
             pubNub = this,
             channel = channel,
             limit = limit,
-            next = next
+            next = next,
         )
     }
 
@@ -1852,13 +1897,13 @@ class InternalPubNubClient internal constructor(
     fun getFileUrl(
         channel: String,
         fileName: String,
-        fileId: String
+        fileId: String,
     ): GetFileUrl {
         return GetFileUrl(
             pubNub = this,
             channel = channel,
             fileName = fileName,
-            fileId = fileId
+            fileId = fileId,
         )
     }
 
@@ -1875,20 +1920,21 @@ class InternalPubNubClient internal constructor(
         channel: String,
         fileName: String,
         fileId: String,
-        cipherKey: String? = null
+        cipherKey: String? = null,
     ): DownloadFile {
-        val cryptoModule = if (cipherKey != null) {
-            CryptoModule.createLegacyCryptoModule(cipherKey)
-        } else {
-            cryptoModule
-        }
+        val cryptoModule =
+            if (cipherKey != null) {
+                CryptoModule.createLegacyCryptoModule(cipherKey)
+            } else {
+                cryptoModule
+            }
 
         return DownloadFile(
             pubNub = this,
             channel = channel,
             fileName = fileName,
             fileId = fileId,
-            cryptoModule = cryptoModule
+            cryptoModule = cryptoModule,
         )
     }
 
@@ -1902,13 +1948,13 @@ class InternalPubNubClient internal constructor(
     fun deleteFile(
         channel: String,
         fileName: String,
-        fileId: String
+        fileId: String,
     ): DeleteFile {
         return DeleteFile(
             pubNub = this,
             channel = channel,
             fileName = fileName,
-            fileId = fileId
+            fileId = fileId,
         )
     }
 
@@ -1943,7 +1989,7 @@ class InternalPubNubClient internal constructor(
         message: Any? = null,
         meta: Any? = null,
         ttl: Int? = null,
-        shouldStore: Boolean? = null
+        shouldStore: Boolean? = null,
     ): PublishFileMessage {
         return PublishFileMessage(
             pubNub = this,
@@ -1953,12 +1999,13 @@ class InternalPubNubClient internal constructor(
             message = message,
             meta = meta,
             ttl = ttl,
-            shouldStore = shouldStore
+            shouldStore = shouldStore,
         )
     }
     //endregion
 
     //region Encryption
+
     /**
      * Perform Cryptographic decryption of an input string using cipher key provided by [PNConfiguration.cipherKey].
      *
@@ -1978,8 +2025,10 @@ class InternalPubNubClient internal constructor(
      * @return String containing the decryption of `inputString` using `cipherKey`.
      * @throws PubNubException throws exception in case of failed decryption.
      */
-    fun decrypt(inputString: String, cipherKey: String? = null): String =
-        getCryptoModuleOrThrow(cipherKey).decryptString(inputString)
+    fun decrypt(
+        inputString: String,
+        cipherKey: String? = null,
+    ): String = getCryptoModuleOrThrow(cipherKey).decryptString(inputString)
 
     /**
      * Perform Cryptographic decryption of an input stream using provided cipher key.
@@ -1992,7 +2041,7 @@ class InternalPubNubClient internal constructor(
      */
     fun decryptInputStream(
         inputStream: InputStream,
-        cipherKey: String? = null
+        cipherKey: String? = null,
     ): InputStream = getCryptoModuleOrThrow(cipherKey).decryptStream(inputStream)
 
     /**
@@ -2004,8 +2053,10 @@ class InternalPubNubClient internal constructor(
      * @return String containing the encryption of `inputString` using `cipherKey`.
      * @throws PubNubException Throws exception in case of failed encryption.
      */
-    fun encrypt(inputString: String, cipherKey: String? = null): String =
-        getCryptoModuleOrThrow(cipherKey).encryptString(inputString)
+    fun encrypt(
+        inputString: String,
+        cipherKey: String? = null,
+    ): String = getCryptoModuleOrThrow(cipherKey).encryptString(inputString)
 
     /**
      * Perform Cryptographic encryption of an input stream using provided cipher key.
@@ -2018,7 +2069,7 @@ class InternalPubNubClient internal constructor(
      */
     fun encryptInputStream(
         inputStream: InputStream,
-        cipherKey: String? = null
+        cipherKey: String? = null,
     ): InputStream = getCryptoModuleOrThrow(cipherKey).encryptStream(inputStream)
 
     private fun getCryptoModuleOrThrow(cipherKey: String? = null): CryptoModule {
@@ -2084,7 +2135,10 @@ class InternalPubNubClient internal constructor(
     private val channelSubscriptions = mutableMapOf<ChannelName, MutableSet<BaseSubscription<*>>>()
     private val channelGroupSubscriptions = mutableMapOf<ChannelGroupName, MutableSet<BaseSubscription<*>>>()
 
-    internal fun subscribe(vararg subscriptions: BaseSubscriptionImpl<*>, cursor: SubscriptionCursor) {
+    internal fun subscribe(
+        vararg subscriptions: BaseSubscriptionImpl<*>,
+        cursor: SubscriptionCursor,
+    ) {
         synchronized(lockChannelsAndGroups) {
             val channelsToSubscribe = mutableSetOf<ChannelName>()
             subscriptions.forEach { subscription ->
@@ -2103,19 +2157,21 @@ class InternalPubNubClient internal constructor(
                 }
             }
 
-            val (channelsWithPresence, channelsNoPresence) = channelsToSubscribe.filter { !it.isPresence }
-                .partition {
-                    channelsToSubscribe.contains(it.withPresence)
+            val (channelsWithPresence, channelsNoPresence) =
+                channelsToSubscribe.filter { !it.isPresence }
+                    .partition {
+                        channelsToSubscribe.contains(it.withPresence)
+                    }
+            val (groupsWithPresence, groupsNoPresence) =
+                groupsToSubscribe.filter { !it.isPresence }.partition {
+                    groupsToSubscribe.contains(it.withPresence)
                 }
-            val (groupsWithPresence, groupsNoPresence) = groupsToSubscribe.filter { !it.isPresence }.partition {
-                groupsToSubscribe.contains(it.withPresence)
-            }
             if (channelsWithPresence.isNotEmpty() || groupsWithPresence.isNotEmpty()) {
                 subscribeInternal(
                     channels = channelsWithPresence.map(ChannelName::id),
                     channelGroups = groupsWithPresence.map(ChannelGroupName::id),
                     withPresence = true,
-                    withTimetoken = cursor.timetoken
+                    withTimetoken = cursor.timetoken,
                 )
             }
             if (channelsNoPresence.isNotEmpty() || groupsNoPresence.isNotEmpty()) {
@@ -2123,7 +2179,7 @@ class InternalPubNubClient internal constructor(
                     channels = channelsNoPresence.map(ChannelName::id),
                     channelGroups = groupsNoPresence.map(ChannelGroupName::id),
                     withPresence = false,
-                    withTimetoken = cursor.timetoken
+                    withTimetoken = cursor.timetoken,
                 )
             }
         }
@@ -2157,7 +2213,7 @@ class InternalPubNubClient internal constructor(
             if (channelsToUnsubscribe.isNotEmpty() || groupsToUnsubscribe.isNotEmpty()) {
                 unsubscribeInternal(
                     channels = channelsToUnsubscribe.map(ChannelName::id),
-                    channelGroups = groupsToUnsubscribe.map(ChannelGroupName::id)
+                    channelGroups = groupsToUnsubscribe.map(ChannelGroupName::id),
                 )
             }
         }
@@ -2167,6 +2223,7 @@ class InternalPubNubClient internal constructor(
     private val channelGroupSubscriptionMap = mutableMapOf<ChannelGroupName, BaseSubscriptionImpl<*>>()
 
     //region Subscribe
+
     /**
      * Causes the client to create an open TCP socket to the PubNub Real-Time Network and begin listening for messages
      * on a specified channel.
@@ -2191,23 +2248,25 @@ class InternalPubNubClient internal constructor(
         channels: List<String> = emptyList(),
         channelGroups: List<String> = emptyList(),
         withPresence: Boolean = false,
-        withTimetoken: Long = 0L
+        withTimetoken: Long = 0L,
     ) {
         val toSubscribe = mutableSetOf<BaseSubscriptionImpl<*>>()
         channels.filter { it.isNotEmpty() }.map { ChannelName(it) }.forEach { channelName ->
             // if we are adding a NEW subscriptions in this step, this var will contain it:
             var subscription: BaseSubscriptionImpl<*>? = null
             channelSubscriptionMap.computeIfAbsent(channelName) { newChannelName ->
-                val channel = BaseChannelImpl<InternalEventListener, BaseSubscriptionImpl<InternalEventListener>>(
-                    this,
-                    newChannelName,
-                    subscriptionFactory
-                )
-                val options = if (withPresence) {
-                    SubscriptionOptions.receivePresenceEvents()
-                } else {
-                    EmptyOptions
-                }
+                val channel =
+                    BaseChannelImpl<InternalEventListener, BaseSubscriptionImpl<InternalEventListener>>(
+                        this,
+                        newChannelName,
+                        subscriptionFactory,
+                    )
+                val options =
+                    if (withPresence) {
+                        SubscriptionOptions.receivePresenceEvents()
+                    } else {
+                        EmptyOptions
+                    }
                 channel.subscription(options).also { sub ->
                     toSubscribe.add(sub)
                     subscription = sub
@@ -2221,7 +2280,7 @@ class InternalPubNubClient internal constructor(
                     subscription ?: BaseChannelImpl(
                         this,
                         presenceChannelName,
-                        subscriptionFactory
+                        subscriptionFactory,
                     ).subscription().also { sub ->
                         toSubscribe.add(sub)
                     }
@@ -2281,7 +2340,7 @@ class InternalPubNubClient internal constructor(
     @Synchronized
     fun unsubscribe(
         channels: List<String> = emptyList(),
-        channelGroups: List<String> = emptyList()
+        channelGroups: List<String> = emptyList(),
     ) {
         val toUnsubscribe: MutableSet<BaseSubscriptionImpl<*>> = mutableSetOf()
         channels.filter { it.isNotEmpty() }.map { ChannelName(it) }.forEach { channelName ->

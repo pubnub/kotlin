@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test
 import java.util.concurrent.ScheduledExecutorService
 
 class EventEngineTest {
-
     internal object TestEffectInvocation : EffectInvocation {
         override val id: String = "id"
         override val type: EffectInvocationType = NonManaged
@@ -27,12 +26,13 @@ class EventEngineTest {
         val queuedElements = mutableListOf<Pair<String, String>>()
         val eventEngineConf =
             QueueEventEngineConf<TestEffectInvocation, Event>(effectSinkSource = TestSinkSource(queuedElements))
-        val eventEngine = EventEngine(
-            effectSink = eventEngineConf.effectSink,
-            eventSource = eventEngineConf.eventSource,
-            currentState = TestState,
-            executorService = executorService
-        )
+        val eventEngine =
+            EventEngine(
+                effectSink = eventEngineConf.effectSink,
+                eventSource = eventEngineConf.eventSource,
+                currentState = TestState,
+                executorService = executorService,
+            )
 
         // when
         eventEngine.performTransitionAndEmitEffects(object : Event {})

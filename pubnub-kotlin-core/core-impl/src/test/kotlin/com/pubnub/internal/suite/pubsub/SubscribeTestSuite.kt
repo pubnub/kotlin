@@ -11,7 +11,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 
 class SubscribeTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Subscribe, SubscribeEnvelope>() {
-
     override fun pnOperation() = PNOperationType.PNSubscribeOperation
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH
@@ -28,7 +27,8 @@ class SubscribeTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Subscribe
         assertTrue(result.messages.isEmpty())
     }
 
-    override fun successfulResponseBody() = """
+    override fun successfulResponseBody() =
+        """
         {
           "t": {
             "t": "100",
@@ -36,7 +36,7 @@ class SubscribeTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Subscribe
           },
           "m": []
         }
-    """.trimIndent()
+        """.trimIndent()
 
     override fun unsuccessfulResponseBodyList() = emptyList<String>()
 

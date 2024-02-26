@@ -7,7 +7,7 @@ import com.pubnub.api.models.consumer.pubsub.PubSubResult
 
 data class PNObjectEventResult(
     private val result: BasePubSubResult,
-    val extractedMessage: PNObjectEventMessage
+    val extractedMessage: PNObjectEventMessage,
 ) : PubSubResult by result
 
 sealed class PNObjectEventMessage {
@@ -22,7 +22,7 @@ data class PNSetChannelMetadataEventMessage(
     override val version: String,
     override val event: String,
     override val type: String,
-    val data: PNChannelMetadata
+    val data: PNChannelMetadata,
 ) : PNObjectEventMessage()
 
 data class PNSetUUIDMetadataEventMessage(
@@ -30,7 +30,7 @@ data class PNSetUUIDMetadataEventMessage(
     override val version: String,
     override val event: String,
     override val type: String,
-    val data: PNUUIDMetadata
+    val data: PNUUIDMetadata,
 ) : PNObjectEventMessage()
 
 data class PNSetMembershipEventMessage(
@@ -38,7 +38,7 @@ data class PNSetMembershipEventMessage(
     override val version: String,
     override val event: String,
     override val type: String,
-    val data: PNSetMembershipEvent
+    val data: PNSetMembershipEvent,
 ) : PNObjectEventMessage()
 
 data class PNDeleteMembershipEventMessage(
@@ -46,7 +46,7 @@ data class PNDeleteMembershipEventMessage(
     override val version: String,
     override val event: String,
     override val type: String,
-    val data: PNDeleteMembershipEvent
+    val data: PNDeleteMembershipEvent,
 ) : PNObjectEventMessage()
 
 data class PNDeleteChannelMetadataEventMessage(
@@ -54,7 +54,7 @@ data class PNDeleteChannelMetadataEventMessage(
     override val version: String,
     override val event: String,
     override val type: String,
-    val channel: String
+    val channel: String,
 ) : PNObjectEventMessage()
 
 data class PNDeleteUUIDMetadataEventMessage(
@@ -62,7 +62,7 @@ data class PNDeleteUUIDMetadataEventMessage(
     override val version: String,
     override val event: String,
     override val type: String,
-    val uuid: String
+    val uuid: String,
 ) : PNObjectEventMessage()
 
 data class PNSetMembershipEvent(
@@ -71,10 +71,10 @@ data class PNSetMembershipEvent(
     val custom: Any?,
     val eTag: String,
     val updated: String,
-    val status: String?
+    val status: String?,
 )
 
 data class PNDeleteMembershipEvent(
     val channelId: String,
-    val uuid: String
+    val uuid: String,
 )

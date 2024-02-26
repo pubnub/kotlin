@@ -9,5 +9,5 @@ import com.pubnub.internal.subscribe.eventengine.event.SubscribeEvent
 
 internal class EventEnginesConf(
     val subscribe: EventEngineConf<SubscribeEffectInvocation, SubscribeEvent> = QueueEventEngineConf(),
-    val presence: EventEngineConf<PresenceEffectInvocation, PresenceEvent> = QueueEventEngineConf()
+    val presence: EventEngineConf<PresenceEffectInvocation, PresenceEvent> = QueueEventEngineConf(),
 )

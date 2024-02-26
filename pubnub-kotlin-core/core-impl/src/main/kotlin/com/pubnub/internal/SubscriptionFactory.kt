@@ -7,5 +7,5 @@ import com.pubnub.internal.v2.entities.ChannelName
 typealias SubscriptionFactory<T> = (
     channels: Set<ChannelName>,
     channelGroups: Set<ChannelGroupName>,
-    options: SubscriptionOptions
+    options: SubscriptionOptions,
 ) -> T

@@ -9,27 +9,27 @@ import com.pubnub.internal.InternalPubNubClient
 import com.pubnub.internal.SubscriptionFactory
 import com.pubnub.internal.subscribe.PRESENCE_CHANNEL_SUFFIX
 
-open class BaseChannelGroupImpl<Lis: BaseEventListener, Sub: BaseSubscription<Lis>>(
+open class BaseChannelGroupImpl<Lis : BaseEventListener, Sub : BaseSubscription<Lis>>(
     internal val pubNub: InternalPubNubClient,
     private val channelGroupName: ChannelGroupName,
-    private val subscriptionFactory: SubscriptionFactory<Sub>
+    private val subscriptionFactory: SubscriptionFactory<Sub>,
 ) : BaseChannelGroup<Lis, Sub> {
-
     override val name: String = channelGroupName.id
 
     override fun subscription(options: SubscriptionOptions): Sub {
-        val channelGroups = buildSet {
-            add(channelGroupName)
-            if (options.allOptions.filterIsInstance<ReceivePresenceEventsImpl>().isNotEmpty()) {
-                add(channelGroupName.withPresence)
+        val channelGroups =
+            buildSet {
+                add(channelGroupName)
+                if (options.allOptions.filterIsInstance<ReceivePresenceEventsImpl>().isNotEmpty()) {
+                    add(channelGroupName.withPresence)
+                }
             }
-        }
         return subscriptionFactory(
             emptySet(),
             channelGroups,
             SubscriptionOptions.filter { result ->
                 channelGroups.any { it.id == result.subscription }
-            } + options
+            } + options,
         )
     }
 

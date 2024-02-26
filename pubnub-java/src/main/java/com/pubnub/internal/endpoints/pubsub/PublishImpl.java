@@ -1,9 +1,9 @@
 package com.pubnub.internal.endpoints.pubsub;
 
-import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.api.endpoints.pubsub.Publish;
 import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.internal.InternalPubNubClient;
+import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 

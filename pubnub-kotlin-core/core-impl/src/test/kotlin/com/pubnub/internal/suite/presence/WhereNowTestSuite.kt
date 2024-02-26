@@ -8,7 +8,6 @@ import com.pubnub.internal.models.consumer.presence.PNWhereNowResult
 import org.junit.Assert.assertEquals
 
 class WhereNowTestSuite : com.pubnub.internal.suite.EndpointTestSuite<WhereNow, PNWhereNowResult>() {
-
     override fun pnOperation() = PNOperationType.PNWhereNowOperation
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH
@@ -23,7 +22,8 @@ class WhereNowTestSuite : com.pubnub.internal.suite.EndpointTestSuite<WhereNow, 
         assertEquals("ch1", result.channels[0])
     }
 
-    override fun successfulResponseBody() = """
+    override fun successfulResponseBody() =
+        """
         {
           "status": 200,
           "message": "OK",
@@ -34,16 +34,16 @@ class WhereNowTestSuite : com.pubnub.internal.suite.EndpointTestSuite<WhereNow, 
           },
           "service": "Presence"
         }
-    """.trimIndent()
+        """.trimIndent()
 
-    override fun unsuccessfulResponseBodyList() = listOf(
-        """{"payload":{"channels":null}}""",
-        """{"payload": {}}""",
-        """{"payload": null}"""
-    )
+    override fun unsuccessfulResponseBodyList() =
+        listOf(
+            """{"payload":{"channels":null}}""",
+            """{"payload": {}}""",
+            """{"payload": null}""",
+        )
 
-    override fun mappingBuilder() =
-        get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/uuid/myUUID"))
+    override fun mappingBuilder() = get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/uuid/myUUID"))
 
     override fun affectedChannelsAndGroups() = emptyList<String>() to emptyList<String>()
 }

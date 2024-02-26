@@ -18,7 +18,7 @@ private const val ERROR_SUBSCRIPTION_WRONG_CLASS =
 private const val ERROR_WRONG_PUBNUB_INSTANCE =
     "Adding Subscriptions from another PubNub instance to a SubscriptionSet is not allowed."
 
-abstract class BaseSubscriptionSetImpl<EvLis: BaseEventListener, Sub: BaseSubscription<EvLis>>(
+abstract class BaseSubscriptionSetImpl<EvLis : BaseEventListener, Sub : BaseSubscription<EvLis>>(
     private val pubnub: InternalPubNubClient,
     initialSubscriptions: Set<BaseSubscriptionImpl<EvLis>> = emptySet(),
 ) : BaseSubscriptionSet<EvLis, Sub> {
@@ -26,8 +26,7 @@ abstract class BaseSubscriptionSetImpl<EvLis: BaseEventListener, Sub: BaseSubscr
     override val subscriptions: Set<Sub> get() = _subscriptions.toSet() as Set<Sub>
     protected val eventEmitter = EventEmitterImpl(AnnouncementCallback.Phase.SET, ::accepts)
 
-    private fun accepts(envelope: AnnouncementEnvelope<*>) =
-        subscriptions.any { subscription -> subscription in envelope.acceptedBy }
+    private fun accepts(envelope: AnnouncementEnvelope<*>) = subscriptions.any { subscription -> subscription in envelope.acceptedBy }
 
     init {
         require(initialSubscriptions.all { it.pubnub == pubnub }) { ERROR_WRONG_PUBNUB_INSTANCE }

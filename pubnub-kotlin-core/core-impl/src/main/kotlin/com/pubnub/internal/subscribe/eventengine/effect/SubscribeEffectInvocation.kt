@@ -11,13 +11,12 @@ import com.pubnub.internal.eventengine.NonManaged
 import com.pubnub.internal.subscribe.eventengine.event.SubscriptionCursor
 
 internal sealed class SubscribeEffectInvocation(override val type: EffectInvocationType) : EffectInvocation {
-
     override val id: String = "any value for NonManged and Cancel effect"
 
     data class ReceiveMessages(
         val channels: Set<String>,
         val channelGroups: Set<String>,
-        val subscriptionCursor: SubscriptionCursor
+        val subscriptionCursor: SubscriptionCursor,
     ) : SubscribeEffectInvocation(Managed) {
         override val id: String = ReceiveMessages::class.java.simpleName
     }
@@ -30,7 +29,7 @@ internal sealed class SubscribeEffectInvocation(override val type: EffectInvocat
         val channelGroups: Set<String>,
         val subscriptionCursor: SubscriptionCursor,
         val attempts: Int,
-        val reason: PubNubException?
+        val reason: PubNubException?,
     ) : SubscribeEffectInvocation(Managed) {
         override val id: String = ReceiveReconnect::class.java.simpleName
     }
@@ -40,7 +39,7 @@ internal sealed class SubscribeEffectInvocation(override val type: EffectInvocat
 
     data class Handshake(
         val channels: Set<String>,
-        val channelGroups: Set<String>
+        val channelGroups: Set<String>,
     ) : SubscribeEffectInvocation(Managed) {
         override val id: String = Handshake::class.java.simpleName
     }
@@ -52,7 +51,7 @@ internal sealed class SubscribeEffectInvocation(override val type: EffectInvocat
         val channels: Set<String>,
         val channelGroups: Set<String>,
         val attempts: Int,
-        val reason: PubNubException?
+        val reason: PubNubException?,
     ) : SubscribeEffectInvocation(Managed) {
         override val id: String = HandshakeReconnect::class.java.simpleName
     }
@@ -61,5 +60,6 @@ internal sealed class SubscribeEffectInvocation(override val type: EffectInvocat
         SubscribeEffectInvocation(Cancel(idToCancel = HandshakeReconnect::class.java.simpleName))
 
     data class EmitStatus(val status: PNStatus) : SubscribeEffectInvocation(NonManaged)
+
     data class EmitMessages(val messages: List<PNEvent>) : SubscribeEffectInvocation(NonManaged)
 }

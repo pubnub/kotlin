@@ -2,8 +2,8 @@ package com.pubnub.api.endpoints.access
 
 import com.pubnub.api.UserId
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult
-import com.pubnub.internal.PNConfiguration
 import com.pubnub.internal.InternalPubNubClient
+import com.pubnub.internal.PNConfiguration
 import com.pubnub.internal.SpaceId
 import com.pubnub.internal.TestPubNub
 import com.pubnub.internal.endpoints.access.GrantToken
@@ -31,10 +31,11 @@ internal class GrantTokenTest {
     @BeforeEach
     internal fun setUp() {
         MockKAnnotations.init(this)
-        val pnConfiguration = PNConfiguration(userId = UserId("myUserId")).apply {
-            subscribeKey = "something"
-            secretKey = "something"
-        }
+        val pnConfiguration =
+            PNConfiguration(userId = UserId("myUserId")).apply {
+                subscribeKey = "something"
+                secretKey = "something"
+            }
         pubnub = spyk(TestPubNub(configuration = pnConfiguration).internalPubNubClient)
     }
 
@@ -52,16 +53,17 @@ internal class GrantTokenTest {
                 ttl = any(),
                 authorizedUserId = any(),
                 spacesPermissions = any(),
-                usersPermissions = any()
+                usersPermissions = any(),
             )
         } returns grantTokenEndpointMock
         every { grantTokenEndpointMock.sync() } returns grantTokenResult
 
-        val grantTokenEndpoint = pubnub.grantToken(
-            ttl = expectedTTL,
-            authorizedUserId = authorizedUserId,
-            spacesPermissions = listOf(SpacePermissions.id(spaceId = SpaceId("mySpaceId"), read = true, delete = true))
-        )
+        val grantTokenEndpoint =
+            pubnub.grantToken(
+                ttl = expectedTTL,
+                authorizedUserId = authorizedUserId,
+                spacesPermissions = listOf(SpacePermissions.id(spaceId = SpaceId("mySpaceId"), read = true, delete = true)),
+            )
         val actualGrantTokenResult: PNGrantTokenResult? = grantTokenEndpoint.sync()
         val token = actualGrantTokenResult!!.token
 
@@ -85,17 +87,19 @@ internal class GrantTokenTest {
         every { accessManagerService.grantToken(any(), capture(capturedBodies), any()) } returns call
         every { call.execute() } returns Response.success(GrantTokenResponse(GrantTokenData(expectedToken)))
 
-        val actualGrantTokenResult: PNGrantTokenResult? = pubnub.grantToken(
-            ttl = expectedTTL,
-            authorizedUserId = authorizedUserId,
-            spacesPermissions = listOf(
-                SpacePermissions.id(
-                    spaceId = SpaceId(spaceIdValue),
-                    read = true,
-                    delete = true
-                )
-            )
-        ).sync()
+        val actualGrantTokenResult: PNGrantTokenResult? =
+            pubnub.grantToken(
+                ttl = expectedTTL,
+                authorizedUserId = authorizedUserId,
+                spacesPermissions =
+                    listOf(
+                        SpacePermissions.id(
+                            spaceId = SpaceId(spaceIdValue),
+                            read = true,
+                            delete = true,
+                        ),
+                    ),
+            ).sync()
 
         val capturedBody = capturedBodies[0]
 

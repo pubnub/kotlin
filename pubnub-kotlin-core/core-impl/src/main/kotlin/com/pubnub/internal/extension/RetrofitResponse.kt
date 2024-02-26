@@ -15,7 +15,7 @@ internal fun Response<EntityArrayEnvelope<PNMember>>.toPNMemberArrayResult(): PN
             data = arrayEnvelope.data,
             totalCount = arrayEnvelope.totalCount,
             next = arrayEnvelope.next?.let { PNPage.PNNext(it) },
-            prev = arrayEnvelope.prev?.let { PNPage.PNPrev(it) }
+            prev = arrayEnvelope.prev?.let { PNPage.PNPrev(it) },
         )
     }
 
@@ -26,6 +26,6 @@ internal fun Response<EntityArrayEnvelope<PNChannelMembership>>.toPNChannelMembe
             data = arrayEnvelope.data,
             totalCount = arrayEnvelope.totalCount,
             next = arrayEnvelope.next?.let { PNPage.PNNext(it) },
-            prev = arrayEnvelope.prev?.let { PNPage.PNPrev(it) }
+            prev = arrayEnvelope.prev?.let { PNPage.PNPrev(it) },
         )
     }

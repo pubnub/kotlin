@@ -1,13 +1,13 @@
 package com.pubnub.api.endpoints.files;
 
 import com.pubnub.api.endpoints.BuilderSteps.ChannelStep;
-import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.api.endpoints.files.requiredparambuilder.ChannelFileNameFileIdBuilder;
 import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps.FileIdStep;
 import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps.FileNameStep;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.files.PNDeleteFileResult;
 import com.pubnub.internal.InternalPubNubClient;
+import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.experimental.Accessors;
 
 @Accessors(chain = true, fluent = true)

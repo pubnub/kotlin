@@ -8,7 +8,7 @@ data class IncludeQueryParam(
     private val includeChannelDetails: PNChannelDetailsLevel? = null,
     private val includeUUIDDetails: PNUUIDDetailsLevel? = null,
     private val includeType: Boolean = true,
-    private val includeStatus: Boolean = true
+    private val includeStatus: Boolean = true,
 ) {
     internal fun createIncludeQueryParams(): Map<String, String> {
         val includeList = mutableListOf<String>()

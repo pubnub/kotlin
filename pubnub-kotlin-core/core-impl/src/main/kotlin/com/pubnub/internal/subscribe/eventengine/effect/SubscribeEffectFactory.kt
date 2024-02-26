@@ -15,7 +15,7 @@ import java.util.concurrent.ScheduledExecutorService
 
 internal data class ReceiveMessagesResult(
     val messages: List<PNEvent>,
-    val subscriptionCursor: SubscriptionCursor
+    val subscriptionCursor: SubscriptionCursor,
 )
 
 internal class SubscribeEffectFactory(
@@ -48,7 +48,7 @@ internal class SubscribeEffectFactory(
                             presenceData.channelStates.filter { it.key in effectInvocation.channels }
                         } else {
                             null
-                        }
+                        },
                     )
                 HandshakeEffect(handshakeRemoteAction, subscribeEventSink)
             }
@@ -62,7 +62,7 @@ internal class SubscribeEffectFactory(
                             presenceData.channelStates.filter { it.key in effectInvocation.channels }
                         } else {
                             null
-                        }
+                        },
                     )
                 HandshakeReconnectEffect(
                     handshakeRemoteAction,
@@ -70,7 +70,7 @@ internal class SubscribeEffectFactory(
                     retryConfiguration,
                     executorService,
                     effectInvocation.attempts,
-                    effectInvocation.reason
+                    effectInvocation.reason,
                 )
             }
 
@@ -79,17 +79,18 @@ internal class SubscribeEffectFactory(
                     receiveMessagesProvider.getReceiveMessagesRemoteAction(
                         effectInvocation.channels,
                         effectInvocation.channelGroups,
-                        effectInvocation.subscriptionCursor
+                        effectInvocation.subscriptionCursor,
                     )
                 ReceiveMessagesEffect(receiveMessagesRemoteAction, subscribeEventSink)
             }
 
             is SubscribeEffectInvocation.ReceiveReconnect -> {
-                val receiveMessagesRemoteAction = receiveMessagesProvider.getReceiveMessagesRemoteAction(
-                    effectInvocation.channels,
-                    effectInvocation.channelGroups,
-                    effectInvocation.subscriptionCursor
-                )
+                val receiveMessagesRemoteAction =
+                    receiveMessagesProvider.getReceiveMessagesRemoteAction(
+                        effectInvocation.channels,
+                        effectInvocation.channelGroups,
+                        effectInvocation.subscriptionCursor,
+                    )
 
                 ReceiveReconnectEffect(
                     receiveMessagesRemoteAction,
@@ -97,7 +98,7 @@ internal class SubscribeEffectFactory(
                     retryConfiguration,
                     executorService,
                     effectInvocation.attempts,
-                    effectInvocation.reason
+                    effectInvocation.reason,
                 )
             }
 

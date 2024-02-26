@@ -16,9 +16,8 @@ import retrofit2.Response
 class Signal internal constructor(
     pubnub: InternalPubNubClient,
     override val channel: String,
-    override val message: Any
+    override val message: Any,
 ) : Endpoint<List<Any>, PNPublishResult>(pubnub), ISignal {
-
     override fun validateParams() {
         super.validateParams()
         if (channel.isBlank()) throw PubNubException(PubNubError.CHANNEL_MISSING)
@@ -32,13 +31,13 @@ class Signal internal constructor(
             subKey = pubnub.configuration.subscribeKey,
             channel = channel,
             message = pubnub.mapper.toJson(message),
-            options = queryParams
+            options = queryParams,
         )
     }
 
     override fun createResponse(input: Response<List<Any>>): PNPublishResult =
         PNPublishResult(
-            timetoken = input.body()!![2].toString().toLong()
+            timetoken = input.body()!![2].toString().toLong(),
         )
 
     override fun operationType() = PNOperationType.PNSignalOperation

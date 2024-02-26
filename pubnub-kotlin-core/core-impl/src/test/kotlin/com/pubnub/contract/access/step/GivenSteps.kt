@@ -39,7 +39,10 @@ class GivenSteps(private val grantTokenState: GrantTokenState, private val world
     }
 
     @Given("the {string} {resourceType} pattern access permissions")
-    fun the_channel_pattern_access_permissions(pattern: String, resourceType: ResourceType) {
+    fun the_channel_pattern_access_permissions(
+        pattern: String,
+        resourceType: ResourceType,
+    ) {
         when (resourceType) {
             ResourceType.CHANNEL -> grantTokenState.currentGrant = FutureCallGrant(ChannelGrant.pattern(pattern))
             ResourceType.CHANNEL_GROUP ->
@@ -51,7 +54,10 @@ class GivenSteps(private val grantTokenState: GrantTokenState, private val world
     }
 
     @Given("the {string} {resourceType} resource access permissions")
-    fun the_channel_resource_access_permissions(name: String, resourceType: ResourceType) {
+    fun the_channel_resource_access_permissions(
+        name: String,
+        resourceType: ResourceType,
+    ) {
         when (resourceType) {
             ResourceType.CHANNEL -> grantTokenState.currentGrant = FutureCallGrant(ChannelGrant.name(name))
             ResourceType.CHANNEL_GROUP -> grantTokenState.currentGrant = FutureCallGrant(ChannelGroupGrant.id(name))
@@ -87,12 +93,16 @@ class GivenSteps(private val grantTokenState: GrantTokenState, private val world
     }
 
     @Given("a valid token with permissions to publish with channel {string}")
-    fun a_valid_token_with_permissions_to_publish_with_channel(@Suppress("UNUSED_PARAMETER") string: String?) {
+    fun a_valid_token_with_permissions_to_publish_with_channel(
+        @Suppress("UNUSED_PARAMETER") string: String?,
+    ) {
         return a_token()
     }
 
     @Given("an expired token with permissions to publish with channel {string}")
-    fun an_expired_token_with_permissions_to_publish_with_channel(@Suppress("UNUSED_PARAMETER") string: String) {
+    fun an_expired_token_with_permissions_to_publish_with_channel(
+        @Suppress("UNUSED_PARAMETER") string: String,
+    ) {
         return a_token()
     }
 
@@ -128,133 +138,139 @@ class GivenSteps(private val grantTokenState: GrantTokenState, private val world
                     }
                 }
 
-            PermissionType.WRITE -> grantTokenState.currentGrant?.let { futureCall ->
-                futureCall.addAction {
-                    when (it) {
-                        is PNChannelResourceGrant -> {
-                            it.copy(write = true)
-                        }
+            PermissionType.WRITE ->
+                grantTokenState.currentGrant?.let { futureCall ->
+                    futureCall.addAction {
+                        when (it) {
+                            is PNChannelResourceGrant -> {
+                                it.copy(write = true)
+                            }
 
-                        is PNChannelPatternGrant -> {
-                            it.copy(write = true)
-                        }
+                            is PNChannelPatternGrant -> {
+                                it.copy(write = true)
+                            }
 
-                        else -> throw RuntimeException()
+                            else -> throw RuntimeException()
+                        }
                     }
                 }
-            }
 
-            PermissionType.GET -> grantTokenState.currentGrant?.let { futureCall ->
-                futureCall.addAction {
-                    when (it) {
-                        is PNChannelResourceGrant -> {
-                            it.copy(get = true)
+            PermissionType.GET ->
+                grantTokenState.currentGrant?.let { futureCall ->
+                    futureCall.addAction {
+                        when (it) {
+                            is PNChannelResourceGrant -> {
+                                it.copy(get = true)
+                            }
+
+                            is PNChannelPatternGrant -> {
+                                it.copy(get = true)
+                            }
+
+                            is PNUUIDResourceGrant -> {
+                                it.copy(get = true)
+                            }
+
+                            is PNUUIDPatternGrant -> {
+                                it.copy(get = true)
+                            }
+
+                            else -> throw RuntimeException()
                         }
-
-                        is PNChannelPatternGrant -> {
-                            it.copy(get = true)
-                        }
-
-                        is PNUUIDResourceGrant -> {
-                            it.copy(get = true)
-                        }
-
-                        is PNUUIDPatternGrant -> {
-                            it.copy(get = true)
-                        }
-
-                        else -> throw RuntimeException()
                     }
                 }
-            }
 
-            PermissionType.MANAGE -> grantTokenState.currentGrant?.let { futureCall ->
-                futureCall.addAction {
-                    when (it) {
-                        is PNChannelPatternGrant -> {
-                            it.copy(manage = true)
+            PermissionType.MANAGE ->
+                grantTokenState.currentGrant?.let { futureCall ->
+                    futureCall.addAction {
+                        when (it) {
+                            is PNChannelPatternGrant -> {
+                                it.copy(manage = true)
+                            }
+
+                            is PNChannelResourceGrant -> {
+                                it.copy(manage = true)
+                            }
+
+                            is PNChannelGroupPatternGrant -> {
+                                it.copy(manage = true)
+                            }
+
+                            is PNChannelGroupResourceGrant -> {
+                                it.copy(manage = true)
+                            }
+
+                            else -> throw RuntimeException()
                         }
-
-                        is PNChannelResourceGrant -> {
-                            it.copy(manage = true)
-                        }
-
-                        is PNChannelGroupPatternGrant -> {
-                            it.copy(manage = true)
-                        }
-
-                        is PNChannelGroupResourceGrant -> {
-                            it.copy(manage = true)
-                        }
-
-                        else -> throw RuntimeException()
                     }
                 }
-            }
 
-            PermissionType.UPDATE -> grantTokenState.currentGrant?.let { futureCall ->
-                futureCall.addAction {
-                    when (it) {
-                        is PNChannelResourceGrant -> {
-                            it.copy(update = true)
+            PermissionType.UPDATE ->
+                grantTokenState.currentGrant?.let { futureCall ->
+                    futureCall.addAction {
+                        when (it) {
+                            is PNChannelResourceGrant -> {
+                                it.copy(update = true)
+                            }
+
+                            is PNChannelPatternGrant -> {
+                                it.copy(update = true)
+                            }
+
+                            is PNUUIDResourceGrant -> {
+                                it.copy(update = true)
+                            }
+
+                            is PNUUIDPatternGrant -> {
+                                it.copy(update = true)
+                            }
+
+                            else -> throw RuntimeException()
                         }
-
-                        is PNChannelPatternGrant -> {
-                            it.copy(update = true)
-                        }
-
-                        is PNUUIDResourceGrant -> {
-                            it.copy(update = true)
-                        }
-
-                        is PNUUIDPatternGrant -> {
-                            it.copy(update = true)
-                        }
-
-                        else -> throw RuntimeException()
                     }
                 }
-            }
 
-            PermissionType.JOIN -> grantTokenState.currentGrant?.let { futureCall ->
-                futureCall.addAction {
-                    when (it) {
-                        is PNChannelResourceGrant -> {
-                            it.copy(join = true)
+            PermissionType.JOIN ->
+                grantTokenState.currentGrant?.let { futureCall ->
+                    futureCall.addAction {
+                        when (it) {
+                            is PNChannelResourceGrant -> {
+                                it.copy(join = true)
+                            }
+
+                            is PNChannelPatternGrant -> {
+                                it.copy(join = true)
+                            }
+
+                            else -> throw RuntimeException()
                         }
-
-                        is PNChannelPatternGrant -> {
-                            it.copy(join = true)
-                        }
-
-                        else -> throw RuntimeException()
                     }
                 }
-            }
 
-            PermissionType.DELETE -> grantTokenState.currentGrant?.let { futureCall ->
-                futureCall.addAction {
-                    when (it) {
-                        is PNChannelResourceGrant -> {
-                            it.copy(delete = true)
+            PermissionType.DELETE ->
+                grantTokenState.currentGrant?.let { futureCall ->
+                    futureCall.addAction {
+                        when (it) {
+                            is PNChannelResourceGrant -> {
+                                it.copy(delete = true)
+                            }
+
+                            is PNChannelPatternGrant -> {
+                                it.copy(delete = true)
+                            }
+
+                            is PNUUIDResourceGrant -> {
+                                it.copy(delete = true)
+                            }
+
+                            is PNUUIDPatternGrant -> {
+                                it.copy(delete = true)
+                            }
+
+                            else -> throw RuntimeException()
                         }
-
-                        is PNChannelPatternGrant -> {
-                            it.copy(delete = true)
-                        }
-
-                        is PNUUIDResourceGrant -> {
-                            it.copy(delete = true)
-                        }
-
-                        is PNUUIDPatternGrant -> {
-                            it.copy(delete = true)
-                        }
-
-                        else -> throw RuntimeException()
                     }
                 }
-            }
         }
     }
 }

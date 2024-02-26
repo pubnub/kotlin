@@ -9,10 +9,10 @@ data class PNUploadedFile(
     override val id: String,
     override val name: String,
     val size: Int,
-    val created: String
+    val created: String,
 ) : PNFile
 
 data class PNBaseFile(
     override val id: String,
-    override val name: String
+    override val name: String,
 ) : PNFile

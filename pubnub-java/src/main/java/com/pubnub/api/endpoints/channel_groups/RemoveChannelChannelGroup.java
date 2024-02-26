@@ -1,8 +1,8 @@
 package com.pubnub.api.endpoints.channel_groups;
 
-import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsRemoveChannelResult;
 import com.pubnub.internal.InternalPubNubClient;
+import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 

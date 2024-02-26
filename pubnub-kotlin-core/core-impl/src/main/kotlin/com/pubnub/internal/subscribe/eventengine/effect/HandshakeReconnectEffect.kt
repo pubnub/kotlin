@@ -21,7 +21,7 @@ internal class HandshakeReconnectEffect(
     retryConfiguration: RetryConfiguration,
     private val executorService: ScheduledExecutorService,
     private val attempts: Int,
-    private val reason: PubNubException?
+    private val reason: PubNubException?,
 ) : ManagedEffect, RetryableBase<SubscribeEnvelope>(retryConfiguration, RetryableEndpointGroup.SUBSCRIBE) {
     private val log = LoggerFactory.getLogger(HandshakeReconnectEffect::class.java)
 
@@ -42,29 +42,31 @@ internal class HandshakeReconnectEffect(
         if (!shouldRetry(attempts)) {
             subscribeEventSink.add(
                 SubscribeEvent.HandshakeReconnectGiveup(
-                    reason ?: PubNubException("Unknown error")
-                )
+                    reason ?: PubNubException("Unknown error"),
+                ),
             )
             return
         }
 
-        val effectiveDelay = getEffectiveDelay(
-            statusCode = reason?.statusCode ?: 0,
-            retryAfterHeaderValue = reason?.retryAfterHeaderValue ?: 0
-        )
-        scheduled = executorService.scheduleWithDelay(effectiveDelay) {
-            handshakeRemoteAction.async { result ->
-                result.onFailure {
-                    subscribeEventSink.add(
-                        SubscribeEvent.HandshakeReconnectFailure(
-                            PubNubException.from(it)
+        val effectiveDelay =
+            getEffectiveDelay(
+                statusCode = reason?.statusCode ?: 0,
+                retryAfterHeaderValue = reason?.retryAfterHeaderValue ?: 0,
+            )
+        scheduled =
+            executorService.scheduleWithDelay(effectiveDelay) {
+                handshakeRemoteAction.async { result ->
+                    result.onFailure {
+                        subscribeEventSink.add(
+                            SubscribeEvent.HandshakeReconnectFailure(
+                                PubNubException.from(it),
+                            ),
                         )
-                    )
-                }.onSuccess { cursor ->
-                    subscribeEventSink.add(SubscribeEvent.HandshakeReconnectSuccess(cursor))
+                    }.onSuccess { cursor ->
+                        subscribeEventSink.add(SubscribeEvent.HandshakeReconnectSuccess(cursor))
+                    }
                 }
             }
-        }
     }
 
     @Synchronized

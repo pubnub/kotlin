@@ -9,36 +9,58 @@ import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResu
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.v2.callbacks.BaseEventEmitter
 import com.pubnub.api.v2.callbacks.EventListener
-import com.pubnub.internal.callbacks.DelegatingEventListener
+import com.pubnub.internal.v2.callbacks.DelegatingEventListener
 import com.pubnub.internal.v2.callbacks.InternalEventListener
 
 class EmitterHelper(eventEmitter: BaseEventEmitter<InternalEventListener>) {
     init {
-        eventEmitter.addListener(DelegatingEventListener(object : EventListener {
-            override fun message(pubnub: PubNub, result: PNMessageResult) {
-                onMessage?.invoke(result)
-            }
+        eventEmitter.addListener(
+            DelegatingEventListener(
+                object : EventListener {
+                    override fun message(
+                        pubnub: PubNub,
+                        result: PNMessageResult,
+                    ) {
+                        onMessage?.invoke(result)
+                    }
 
-            override fun presence(pubnub: PubNub, result: PNPresenceEventResult) {
-                onPresence?.invoke(result)
-            }
+                    override fun presence(
+                        pubnub: PubNub,
+                        result: PNPresenceEventResult,
+                    ) {
+                        onPresence?.invoke(result)
+                    }
 
-            override fun signal(pubnub: PubNub, result: PNSignalResult) {
-                onSignal?.invoke(result)
-            }
+                    override fun signal(
+                        pubnub: PubNub,
+                        result: PNSignalResult,
+                    ) {
+                        onSignal?.invoke(result)
+                    }
 
-            override fun messageAction(pubnub: PubNub, result: PNMessageActionResult) {
-                onMessageAction?.invoke(result)
-            }
+                    override fun messageAction(
+                        pubnub: PubNub,
+                        result: PNMessageActionResult,
+                    ) {
+                        onMessageAction?.invoke(result)
+                    }
 
-            override fun objects(pubnub: PubNub, result: PNObjectEventResult) {
-                onObjects?.invoke(result)
-            }
+                    override fun objects(
+                        pubnub: PubNub,
+                        result: PNObjectEventResult,
+                    ) {
+                        onObjects?.invoke(result)
+                    }
 
-            override fun file(pubnub: PubNub, result: PNFileEventResult) {
-                onFile?.invoke(result)
-            }
-        }))
+                    override fun file(
+                        pubnub: PubNub,
+                        result: PNFileEventResult,
+                    ) {
+                        onFile?.invoke(result)
+                    }
+                },
+            ),
+        )
     }
 
     var onMessage: ((PNMessageResult) -> Unit)? = null

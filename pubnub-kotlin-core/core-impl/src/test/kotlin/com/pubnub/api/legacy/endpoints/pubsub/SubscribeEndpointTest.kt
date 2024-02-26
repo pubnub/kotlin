@@ -19,7 +19,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class SubscribeEndpointTest : BaseTest() {
-
     @Test
     fun subscribeChannelSync() {
         stubFor(
@@ -27,37 +26,38 @@ class SubscribeEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14607577960932487",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14607577960932487",
+                              "a": "4",
+                              "f": 0,
+                              "i": "Client-g5d4g",
+                              "p": {
+                                "t": "14607577960925503",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "k": "someSubKey",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Enter Message Here"
-                                  },
-                                  "b": "coolChan-bnel"
-                                }
-                              ]
+                              "k": "someSubKey",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Enter Message Here"
+                              },
+                              "b": "coolChan-bnel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val subscribeEnvelope = Subscribe(pubnub).apply {
-            channels = listOf("coolChannel")
-        }.sync()
+        val subscribeEnvelope =
+            Subscribe(pubnub).apply {
+                channels = listOf("coolChannel")
+            }.sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -82,37 +82,38 @@ class SubscribeEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14607577960932487",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14607577960932487",
+                              "a": "4",
+                              "f": 0,
+                              "i": "Client-g5d4g",
+                              "p": {
+                                "t": "14607577960925503",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "k": "someSubKey",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Enter Message Here"
-                                  },
-                                  "b": "coolChan-bnel"
-                                }
-                              ]
+                              "k": "someSubKey",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Enter Message Here"
+                              },
+                              "b": "coolChan-bnel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val subscribeEnvelope = Subscribe(pubnub).apply {
-            channels = listOf("coolChannel")
-        }.sync()
+        val subscribeEnvelope =
+            Subscribe(pubnub).apply {
+                channels = listOf("coolChannel")
+            }.sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -139,32 +140,32 @@ class SubscribeEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14607577960932487",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14607577960932487",
+                              "a": "4",
+                              "f": 0,
+                              "i": "Client-g5d4g",
+                              "p": {
+                                "t": "14607577960925503",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Enter Message Here"
-                                  },
-                                  "b": "coolChan-bnel"
-                                }
-                              ]
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Enter Message Here"
+                              },
+                              "b": "coolChan-bnel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         Subscribe(pubnub).apply {
@@ -183,32 +184,32 @@ class SubscribeEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14607577960932487",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14607577960932487",
+                              "a": "4",
+                              "f": 0,
+                              "i": "Client-g5d4g",
+                              "p": {
+                                "t": "14607577960925503",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Enter Message Here"
-                                  },
-                                  "b": "coolChan-bnel"
-                                }
-                              ]
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Enter Message Here"
+                              },
+                              "b": "coolChan-bnel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         Subscribe(pubnub).apply {
@@ -228,32 +229,32 @@ class SubscribeEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14607577960932487",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14607577960932487",
+                              "a": "4",
+                              "f": 0,
+                              "i": "Client-g5d4g",
+                              "p": {
+                                "t": "14607577960925503",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Enter Message Here"
-                                  },
-                                  "b": "coolChan-bnel"
-                                }
-                              ]
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Enter Message Here"
+                              },
+                              "b": "coolChan-bnel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         Subscribe(pubnub).apply {
@@ -273,32 +274,32 @@ class SubscribeEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14607577960932487",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14607577960932487",
+                              "a": "4",
+                              "f": 0,
+                              "i": "Client-g5d4g",
+                              "p": {
+                                "t": "14607577960925503",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Enter Message Here"
-                                  },
-                                  "b": "coolChan-bnel"
-                                }
-                              ]
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Enter Message Here"
+                              },
+                              "b": "coolChan-bnel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         Subscribe(pubnub).apply {
@@ -318,32 +319,32 @@ class SubscribeEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14607577960932487",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14607577960932487",
+                              "a": "4",
+                              "f": 0,
+                              "i": "Client-g5d4g",
+                              "p": {
+                                "t": "14607577960925503",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Enter Message Here"
-                                  },
-                                  "b": "coolChan-bnel"
-                                }
-                              ]
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Enter Message Here"
+                              },
+                              "b": "coolChan-bnel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         Subscribe(pubnub).apply {
@@ -368,32 +369,32 @@ class SubscribeEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14607577960932487",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14607577960932487",
+                              "a": "4",
+                              "f": 0,
+                              "i": "Client-g5d4g",
+                              "p": {
+                                "t": "14607577960925503",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Enter Message Here"
-                                  },
-                                  "b": "coolChan-bnel"
-                                }
-                              ]
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Enter Message Here"
+                              },
+                              "b": "coolChan-bnel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         Subscribe(pubnub).apply {
@@ -412,32 +413,32 @@ class SubscribeEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14607577960932487",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14607577960932487",
+                              "a": "4",
+                              "f": 0,
+                              "i": "Client-g5d4g",
+                              "p": {
+                                "t": "14607577960925503",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Enter Message Here"
-                                  },
-                                  "b": "coolChan-bnel"
-                                }
-                              ]
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Enter Message Here"
+                              },
+                              "b": "coolChan-bnel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         Subscribe(pubnub).apply {
@@ -482,32 +483,32 @@ class SubscribeEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14607577960932487",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14607577960932487",
+                              "a": "4",
+                              "f": 0,
+                              "i": "Client-g5d4g",
+                              "p": {
+                                "t": "14607577960925503",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Enter Message Here"
-                                  },
-                                  "b": "coolChan-bnel"
-                                }
-                              ]
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Enter Message Here"
+                              },
+                              "b": "coolChan-bnel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         Subscribe(pubnub).apply {
@@ -531,16 +532,17 @@ class SubscribeEndpointTest : BaseTest() {
 
         stubFor(
             get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch1,ch2/0"))
-                .willReturn(aResponse().withStatus(200))
+                .willReturn(aResponse().withStatus(200)),
         )
 
         try {
             Subscribe(pubnub).apply {
                 channels = listOf("ch1", "ch2")
-                state = mapOf(
-                    "CH1" to "this-is-channel1",
-                    "CH2" to "this-is-channel2"
-                )
+                state =
+                    mapOf(
+                        "CH1" to "this-is-channel1",
+                        "CH2" to "this-is-channel2",
+                    )
             }.sync()
         } catch (e: Exception) {
             // e.printStackTrace()
@@ -554,7 +556,7 @@ class SubscribeEndpointTest : BaseTest() {
         assertEquals("123", request.queryParameter("heartbeat").firstValue())
         assertEquals(
             """{"CH1":"this-is-channel1","CH2":"this-is-channel2"}""",
-            request.queryParameter("state").firstValue()
+            request.queryParameter("state").firstValue(),
         )
     }
 }

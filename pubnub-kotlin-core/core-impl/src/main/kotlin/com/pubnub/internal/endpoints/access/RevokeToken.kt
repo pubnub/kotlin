@@ -5,8 +5,8 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.Endpoint
-import com.pubnub.internal.PNConfiguration.Companion.isValid
 import com.pubnub.internal.InternalPubNubClient
+import com.pubnub.internal.PNConfiguration.Companion.isValid
 import com.pubnub.internal.models.server.access_manager.v3.RevokeTokenResponse
 import retrofit2.Call
 import retrofit2.Response
@@ -14,7 +14,7 @@ import java.net.URLEncoder
 
 class RevokeToken(
     pubnub: InternalPubNubClient,
-    private val token: String
+    private val token: String,
 ) : Endpoint<RevokeTokenResponse, Unit>(pubnub), IRevokeToken {
     override fun validateParams() {
         super.validateParams()
@@ -35,7 +35,9 @@ class RevokeToken(
     override fun createResponse(input: Response<RevokeTokenResponse>): Unit = Unit
 
     override fun operationType(): PNOperationType = PNOperationType.PNAccessManagerRevokeToken
+
     override fun isAuthRequired(): Boolean = false
+
     override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.ACCESS_MANAGER
 
     private fun repairEncoding(token: String): String {

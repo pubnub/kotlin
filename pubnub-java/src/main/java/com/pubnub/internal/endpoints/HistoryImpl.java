@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 @Setter
 @Slf4j
 @Accessors(chain = true, fluent = true)
-public class HistoryImpl extends DelegatingEndpoint<PNHistoryResult>implements com.pubnub.api.endpoints.History {
+public class HistoryImpl extends DelegatingEndpoint<PNHistoryResult> implements com.pubnub.api.endpoints.History {
     private String channel;
     private Long start;
     private Long end;

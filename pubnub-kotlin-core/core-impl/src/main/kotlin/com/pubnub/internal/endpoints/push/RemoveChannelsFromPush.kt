@@ -23,9 +23,8 @@ class RemoveChannelsFromPush internal constructor(
     override val channels: List<String>,
     override val deviceId: String,
     override val topic: String? = null,
-    override val environment: PNPushEnvironment = PNPushEnvironment.DEVELOPMENT
+    override val environment: PNPushEnvironment = PNPushEnvironment.DEVELOPMENT,
 ) : Endpoint<Void, PNPushRemoveChannelResult>(pubnub), IRemoveChannelsFromPush {
-
     override fun getAffectedChannels() = channels
 
     override fun validateParams() {
@@ -36,27 +35,26 @@ class RemoveChannelsFromPush internal constructor(
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Void> {
-
         addQueryParams(queryParams)
 
-        return if (pushType != PNPushType.APNS2)
+        return if (pushType != PNPushType.APNS2) {
             pubnub.retrofitManager.pushService
                 .modifyChannelsForDevice(
                     subKey = pubnub.configuration.subscribeKey,
                     pushToken = deviceId,
-                    options = queryParams
+                    options = queryParams,
                 )
-        else
+        } else {
             pubnub.retrofitManager.pushService
                 .modifyChannelsForDeviceApns2(
                     subKey = pubnub.configuration.subscribeKey,
                     deviceApns2 = deviceId,
-                    options = queryParams
+                    options = queryParams,
                 )
+        }
     }
 
-    override fun createResponse(input: Response<Void>): PNPushRemoveChannelResult =
-        PNPushRemoveChannelResult()
+    override fun createResponse(input: Response<Void>): PNPushRemoveChannelResult = PNPushRemoveChannelResult()
 
     override fun operationType() = PNOperationType.PNRemovePushNotificationsFromChannelsOperation
 

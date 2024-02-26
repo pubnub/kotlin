@@ -20,7 +20,7 @@ internal class DelayedHeartbeatEffect(
     val retryConfiguration: RetryConfiguration,
     val executorService: ScheduledExecutorService,
     val attempts: Int,
-    val reason: PubNubException?
+    val reason: PubNubException?,
 ) : ManagedEffect, RetryableBase<SubscribeEnvelope>(retryConfiguration, RetryableEndpointGroup.PRESENCE) {
     private val log = LoggerFactory.getLogger(DelayedHeartbeatEffect::class.java)
 
@@ -42,19 +42,21 @@ internal class DelayedHeartbeatEffect(
             return
         }
 
-        val effectiveDelay = getEffectiveDelay(
-            statusCode = reason?.statusCode ?: 0,
-            retryAfterHeaderValue = reason?.retryAfterHeaderValue ?: 0
-        )
-        scheduled = executorService.scheduleWithDelay(effectiveDelay) {
-            heartbeatRemoteAction.async { result ->
-                result.onFailure {
-                    presenceEventSink.add(PresenceEvent.HeartbeatFailure(PubNubException.from(it)))
-                }.onSuccess {
-                    presenceEventSink.add(PresenceEvent.HeartbeatSuccess)
+        val effectiveDelay =
+            getEffectiveDelay(
+                statusCode = reason?.statusCode ?: 0,
+                retryAfterHeaderValue = reason?.retryAfterHeaderValue ?: 0,
+            )
+        scheduled =
+            executorService.scheduleWithDelay(effectiveDelay) {
+                heartbeatRemoteAction.async { result ->
+                    result.onFailure {
+                        presenceEventSink.add(PresenceEvent.HeartbeatFailure(PubNubException.from(it)))
+                    }.onSuccess {
+                        presenceEventSink.add(PresenceEvent.HeartbeatSuccess)
+                    }
                 }
             }
-        }
     }
 
     @Synchronized

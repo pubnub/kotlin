@@ -19,9 +19,11 @@ internal class TransitionFromUnsubscribedStateTest {
     @Test
     fun can_transit_from_UNSUBSRIBED_to_HANDSHAKING_when_there_is_subscriptionChangeEvent() {
         // when
-        val (state, invocations) = transition(
-            SubscribeState.Unsubscribed, SubscribeEvent.SubscriptionChanged(channels, channelGroups)
-        )
+        val (state, invocations) =
+            transition(
+                SubscribeState.Unsubscribed,
+                SubscribeEvent.SubscriptionChanged(channels, channelGroups),
+            )
 
         // then
         Assertions.assertTrue(state is SubscribeState.Handshaking)
@@ -30,19 +32,20 @@ internal class TransitionFromUnsubscribedStateTest {
         assertEquals(channelGroups, handshaking.channelGroups)
         assertEquals(
             setOf(
-                SubscribeEffectInvocation.Handshake(channels, channelGroups)
+                SubscribeEffectInvocation.Handshake(channels, channelGroups),
             ),
-            invocations
+            invocations,
         )
     }
 
     @Test
     fun can_transit_from_UNSUBSRIBED_to_RECEIVING_when_there_is_subscriptionRestoredEvent() {
         // when
-        val (state, invocations) = transition(
-            SubscribeState.Unsubscribed,
-            SubscribeEvent.SubscriptionRestored(channels, channelGroups, subscriptionCursor)
-        )
+        val (state, invocations) =
+            transition(
+                SubscribeState.Unsubscribed,
+                SubscribeEvent.SubscriptionRestored(channels, channelGroups, subscriptionCursor),
+            )
 
         // then
         Assertions.assertTrue(state is SubscribeState.Handshaking)
@@ -54,7 +57,7 @@ internal class TransitionFromUnsubscribedStateTest {
             setOf(
                 SubscribeEffectInvocation.Handshake(channels, channelGroups),
             ),
-            invocations
+            invocations,
         )
     }
 }

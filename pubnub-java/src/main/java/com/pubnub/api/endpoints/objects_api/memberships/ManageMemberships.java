@@ -1,107 +1,40 @@
 package com.pubnub.api.endpoints.objects_api.memberships;
 
-import com.pubnub.internal.endpoints.DelegatingEndpoint;
-import com.pubnub.api.endpoints.objects_api.utils.Include;
+import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.endpoints.objects_api.utils.ObjectsBuilderSteps;
-import com.pubnub.api.endpoints.objects_api.utils.PNSortKey;
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
-import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
-import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects_api.membership.PNChannelMembership;
 import com.pubnub.api.models.consumer.objects_api.membership.PNManageMembershipResult;
-import com.pubnub.internal.InternalPubNubClient;
-import com.pubnub.internal.models.consumer.objects.membership.ChannelMembershipInput;
-import lombok.AllArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
-@Setter
-@Accessors(chain = true, fluent = true)
-public class ManageMemberships extends DelegatingEndpoint<PNManageMembershipResult> {
-    private Collection<PNChannelMembership> set = Collections.emptySet();
-    private Collection<PNChannelMembership> remove = Collections.emptySet();
-    private String uuid;
-    private Integer limit;
-    private PNPage page;
-    private String filter;
-    private Collection<PNSortKey> sort = Collections.emptyList();
-    private boolean includeTotalCount;
-    private boolean includeCustom;
-    private Include.PNChannelDetailsLevel includeChannel;
+public interface ManageMemberships extends Endpoint<PNManageMembershipResult> {
 
-    public ManageMemberships(Collection<PNChannelMembership> channelsToSet, Collection<PNChannelMembership> channelsToRemove, final InternalPubNubClient pubnubInstance) {
-        super(pubnubInstance);
-        set = channelsToSet;
-        remove = channelsToRemove;
-    }
+    ManageMemberships set(java.util.Collection<com.pubnub.api.models.consumer.objects_api.membership.PNChannelMembership> set);
 
-    @Override
-    protected ExtendedRemoteAction<PNManageMembershipResult> createAction() {
-        ArrayList<ChannelMembershipInput> toSet = new ArrayList<>(set.size());
-        for (PNChannelMembership channel : set) {
-            toSet.add(new com.pubnub.internal.models.consumer.objects.membership.PNChannelMembership.Partial(
-                    channel.getChannel().getId(),
-                    (channel instanceof PNChannelMembership.ChannelWithCustom)
-                            ? ((PNChannelMembership.ChannelWithCustom) channel).getCustom()
-                            : null,
-                    null
-            ));
-        }
-        ArrayList<String> toRemove = new ArrayList<>(remove.size());
-        for (PNChannelMembership channel : remove) {
-            toRemove.add(channel.getChannel().getId());
-        }
+    ManageMemberships remove(java.util.Collection<com.pubnub.api.models.consumer.objects_api.membership.PNChannelMembership> remove);
 
-        return new MappingRemoteAction<>(
-                pubnub.manageMemberships(
-                        toSet,
-                        toRemove,
-                        uuid,
-                        limit,
-                        page,
-                        filter,
-                        SetMemberships.toInternal(sort),
-                        includeTotalCount,
-                        includeCustom,
-                        SetMemberships.toInternal(includeChannel)
-                ),
-                PNManageMembershipResult::from);
-    }
+    ManageMemberships uuid(String uuid);
 
-    public static Builder builder(final InternalPubNubClient pubnubInstance) {
-        return new Builder(pubnubInstance);
-    }
+    ManageMemberships limit(Integer limit);
 
-    @AllArgsConstructor
-    public static class Builder implements ObjectsBuilderSteps.RemoveOrSetStep<ManageMemberships, PNChannelMembership> {
-        private final InternalPubNubClient pubnubInstance;
+    ManageMemberships page(com.pubnub.api.models.consumer.objects.PNPage page);
+
+    ManageMemberships filter(String filter);
+
+    ManageMemberships sort(java.util.Collection<com.pubnub.api.endpoints.objects_api.utils.PNSortKey> sort);
+
+    ManageMemberships includeTotalCount(boolean includeTotalCount);
+
+    ManageMemberships includeCustom(boolean includeCustom);
+
+    ManageMemberships includeChannel(com.pubnub.api.endpoints.objects_api.utils.Include.PNChannelDetailsLevel includeChannel);
+
+    interface Builder extends ObjectsBuilderSteps.RemoveOrSetStep<ManageMemberships, PNChannelMembership> {
+        @Override
+        RemoveStep<ManageMemberships, PNChannelMembership> set(Collection<PNChannelMembership> channelsToSet);
 
         @Override
-        public RemoveStep<ManageMemberships, PNChannelMembership> set(final Collection<PNChannelMembership> channelsToSet) {
-            return new RemoveStep<ManageMemberships, PNChannelMembership>() {
-                @Override
-                public ManageMemberships remove(final Collection<PNChannelMembership> channelsToRemove) {
-                    return new ManageMemberships(channelsToSet,
-                            channelsToRemove,
-                            pubnubInstance);
-                }
-            };
-        }
-
-        @Override
-        public SetStep<ManageMemberships, PNChannelMembership> remove(final Collection<PNChannelMembership> channelsToRemove) {
-            return new SetStep<ManageMemberships, PNChannelMembership>() {
-                @Override
-                public ManageMemberships set(final Collection<PNChannelMembership> channelsToSet) {
-                    return new ManageMemberships(channelsToSet,
-                            channelsToRemove,
-                            pubnubInstance);
-                }
-            };
-        }
+        SetStep<ManageMemberships, PNChannelMembership> remove(Collection<PNChannelMembership> channelsToRemove);
     }
+
 }

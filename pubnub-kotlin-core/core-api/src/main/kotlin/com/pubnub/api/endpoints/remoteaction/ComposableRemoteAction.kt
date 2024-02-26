@@ -8,10 +8,11 @@ import java.util.function.Consumer
 class ComposableRemoteAction<T, U>(
     private val remoteAction: ExtendedRemoteAction<T>,
     private val createNextRemoteAction: (T) -> ExtendedRemoteAction<U>,
-    private var checkpoint: Boolean
+    private var checkpoint: Boolean,
 ) : ExtendedRemoteAction<U> {
     private var nextRemoteAction: ExtendedRemoteAction<U>? = null
     private var isCancelled = false
+
     fun <Y> then(factory: (U) -> ExtendedRemoteAction<Y>): ComposableRemoteAction<U, Y> {
         return ComposableRemoteAction(this, factory, false)
     }
@@ -80,6 +81,7 @@ class ComposableRemoteAction<T, U>(
 
     class ComposableBuilder<T>(private val remoteAction: ExtendedRemoteAction<T>) {
         private var checkpoint = false
+
         fun <U> then(factory: (T) -> ExtendedRemoteAction<U>): ComposableRemoteAction<T, U> {
             return ComposableRemoteAction(remoteAction, factory, checkpoint)
         }

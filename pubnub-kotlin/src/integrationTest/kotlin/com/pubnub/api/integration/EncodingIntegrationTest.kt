@@ -18,9 +18,8 @@ import java.util.concurrent.atomic.AtomicBoolean
 class EncodingIntegrationTest(
     val name: String,
     val regular: String,
-    val encoded: String
+    val encoded: String,
 ) : BaseIntegrationTest() {
-
     @Test
     @Ignore // TODO fix or make unit test
     fun testVerifySignature() {
@@ -39,7 +38,7 @@ class EncodingIntegrationTest(
             channel = expectedChannel,
             message = expectedMessage,
             meta = expectedMetadata,
-            usePost = false
+            usePost = false,
         ).apply {
 //            queryParam += mapOf(propertyName to regular) // TODO fix queryParams
         }.sync()
@@ -58,25 +57,25 @@ class EncodingIntegrationTest(
                     val latch = CountDownLatch(1)
                     server.history(
                         channel = expectedChannel,
-                        includeMeta = true
+                        includeMeta = true,
                     ).async { result ->
                         result.onSuccess {
                             assertEquals(1, it.messages.size)
                             assertEquals(
                                 expectedMessage,
-                                it.messages[0].entry.asString
+                                it.messages[0].entry.asString,
                             )
                             assertEquals(
                                 expectedMetadata,
-                                it.messages[0].meta!!.asString
+                                it.messages[0].meta!!.asString,
                             )
                             assertEquals(
                                 regular,
-                                it.messages[0].entry.asString.replace("msg", "")
+                                it.messages[0].entry.asString.replace("msg", ""),
                             )
                             assertEquals(
                                 regular,
-                                it.messages[0].meta!!.asString.replace("meta", "")
+                                it.messages[0].meta!!.asString.replace("meta", ""),
                             )
                             latch.countDown()
                         }
@@ -89,7 +88,6 @@ class EncodingIntegrationTest(
     }
 
     companion object {
-
         @JvmStatic
         @Parameterized.Parameters(name = "testWith \"{0}\" {1}")
         fun data(): List<Array<String>> {

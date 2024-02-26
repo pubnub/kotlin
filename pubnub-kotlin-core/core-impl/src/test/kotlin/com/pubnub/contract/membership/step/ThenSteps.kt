@@ -14,21 +14,19 @@ class ThenSteps(
     @Then("the response contains list with {string} and {string} memberships")
     fun the_response_contains_list_with_and_memberships(
         firstChannelMembershipName: String,
-        secondChannelMembershipName: String
+        secondChannelMembershipName: String,
     ) {
         val firstChannelMembership = loadChannelMembership(firstChannelMembershipName)
         val secondChannelMembership = loadChannelMembership(secondChannelMembershipName)
 
         assertThat(
             membershipState.returnedMemberships,
-            containsInAnyOrder(firstChannelMembership, secondChannelMembership)
+            containsInAnyOrder(firstChannelMembership, secondChannelMembership),
         )
     }
 
     @Then("the response contains list with {string} membership")
-    fun the_response_contains_list_with_and_membership(
-        channelMembershipName: String,
-    ) {
+    fun the_response_contains_list_with_and_membership(channelMembershipName: String) {
         val channelMembership = loadChannelMembership(channelMembershipName)
 
         assertThat(membershipState.returnedMemberships, hasItem(channelMembership))

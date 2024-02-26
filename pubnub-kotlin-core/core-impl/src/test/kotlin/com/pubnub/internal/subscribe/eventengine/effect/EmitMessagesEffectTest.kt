@@ -119,14 +119,15 @@ class EmitMessagesEffectTest {
         val pnMessageActionResult = createPnMessageActionResult(messageActionType)
         val pnObjectEventResult = createPnObjectEventResult(objectEventType)
 
-        val listOfDifferentMessages = createListOfDifferentMessages(
-            pnMessageResult,
-            pnPresenceEventResult,
-            pnFileEventResult,
-            pnSignalResult,
-            pnMessageActionResult,
-            pnObjectEventResult
-        )
+        val listOfDifferentMessages =
+            createListOfDifferentMessages(
+                pnMessageResult,
+                pnPresenceEventResult,
+                pnFileEventResult,
+                pnSignalResult,
+                pnMessageActionResult,
+                pnObjectEventResult,
+            )
         val emitMessagesEffect = EmitMessagesEffect(messagesConsumer, listOfDifferentMessages)
 
         // when
@@ -147,7 +148,7 @@ class EmitMessagesEffectTest {
         pnFileEventResult: PNFileEventResult,
         pnSignalResult: PNSignalResult,
         pnMessageActionResult: PNMessageActionResult,
-        pnObjectEventResult: PNObjectEventResult
+        pnObjectEventResult: PNObjectEventResult,
     ): List<PNEvent> {
         return listOf(
             pnMessageResult,
@@ -155,19 +156,20 @@ class EmitMessagesEffectTest {
             pnFileEventResult,
             pnSignalResult,
             pnMessageActionResult,
-            pnObjectEventResult
+            pnObjectEventResult,
         )
     }
 
     private fun createPnObjectEventResult(objectEventType: String): PNObjectEventResult {
-        val pnSetMembershipEvent = PNSetMembershipEvent(
-            "ThisIsMyChannelBE8DC5FD86",
-            "client-dc55ef8d-2595-4835-9826-53906e9c25fe",
-            null,
-            "AZO/t53al7m8fw",
-            "2023-05-05T14:26:55.824848794Z",
-            null
-        )
+        val pnSetMembershipEvent =
+            PNSetMembershipEvent(
+                "ThisIsMyChannelBE8DC5FD86",
+                "client-dc55ef8d-2595-4835-9826-53906e9c25fe",
+                null,
+                "AZO/t53al7m8fw",
+                "2023-05-05T14:26:55.824848794Z",
+                null,
+            )
         val pnSetMembershipEventMessage =
             PNSetMembershipEventMessage("objects", "2.0", "set", objectEventType, pnSetMembershipEvent)
         val pnObjectEventResult = PNObjectEventResult(createBasePubSubResult(), pnSetMembershipEventMessage)
@@ -175,39 +177,43 @@ class EmitMessagesEffectTest {
     }
 
     private fun createPnMessageActionResult(messageActionType: String): PNMessageActionResult {
-        val pnMessageAction = PNMessageAction(
-            messageActionType,
-            "\uD83D\uDE07\uD83E\uDD16\uD83E\uDD22\uD83D\uDE1E\uD83D\uDE03",
-            16832965735787913
-        )
+        val pnMessageAction =
+            PNMessageAction(
+                messageActionType,
+                "\uD83D\uDE07\uD83E\uDD16\uD83E\uDD22\uD83D\uDE1E\uD83D\uDE03",
+                16832965735787913,
+            )
         val pnMessageActionResult = PNMessageActionResult(createBasePubSubResult(), "added", pnMessageAction)
         return pnMessageActionResult
     }
 
     private fun createPnFileEventResult(message: String): PNFileEventResult {
-        val pnDownloadableFile = PNDownloadableFile(
-            "99c70a2f-cdaf-49a1-813c-33f7e1aa560f",
-            "fileNamech_1683295897374_04C360CB60.txt",
-            "https://ps.pndsn.com/v1/files/sub-c-cb8b98b4-cd27-11ec-b360-1a35c262c233/channels/ch_1683295897374_04C360CB60/files/99c70a2f-cdaf-49a1-813c-33f7e1aa560f/fileNamech_1683295897374_04C360CB60.txt"
-        )
-        val pnFileEventResult = PNFileEventResult(
-            "channelFile",
-            16832958984018219,
-            "client-123",
-            "This is message",
-            pnDownloadableFile,
-            JsonPrimitive(message)
-        )
+        val pnDownloadableFile =
+            PNDownloadableFile(
+                "99c70a2f-cdaf-49a1-813c-33f7e1aa560f",
+                "fileNamech_1683295897374_04C360CB60.txt",
+                "https://ps.pndsn.com/v1/files/sub-c-cb8b98b4-cd27-11ec-b360-1a35c262c233/channels/ch_1683295897374_04C360CB60/files/99c70a2f-cdaf-49a1-813c-33f7e1aa560f/fileNamech_1683295897374_04C360CB60.txt",
+            )
+        val pnFileEventResult =
+            PNFileEventResult(
+                "channelFile",
+                16832958984018219,
+                "client-123",
+                "This is message",
+                pnDownloadableFile,
+                JsonPrimitive(message),
+            )
         return pnFileEventResult
     }
 
-    private fun createBasePubSubResult() = BasePubSubResult(
-        "channel1",
-        "my.*",
-        16832048617009353L,
-        null,
-        "client-c2804687-7d25-4f0b-a442-e3820265b46c"
-    )
+    private fun createBasePubSubResult() =
+        BasePubSubResult(
+            "channel1",
+            "my.*",
+            16832048617009353L,
+            null,
+            "client-c2804687-7d25-4f0b-a442-e3820265b46c",
+        )
 }
 
 class CreateMessagesConsumerImpl : MessagesConsumer {

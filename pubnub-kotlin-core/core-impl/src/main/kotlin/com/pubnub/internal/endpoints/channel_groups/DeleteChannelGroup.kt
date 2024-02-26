@@ -15,9 +15,8 @@ import retrofit2.Response
  */
 class DeleteChannelGroup internal constructor(
     pubnub: InternalPubNubClient,
-    override val channelGroup: String
+    override val channelGroup: String,
 ) : Endpoint<Void, PNChannelGroupsDeleteGroupResult>(pubnub), IDeleteChannelGroup {
-
     override fun validateParams() {
         super.validateParams()
         if (channelGroup.isBlank()) throw PubNubException(PubNubError.GROUP_MISSING)
@@ -30,12 +29,11 @@ class DeleteChannelGroup internal constructor(
             .deleteChannelGroup(
                 pubnub.configuration.subscribeKey,
                 channelGroup,
-                queryParams
+                queryParams,
             )
     }
 
-    override fun createResponse(input: Response<Void>): PNChannelGroupsDeleteGroupResult =
-        PNChannelGroupsDeleteGroupResult()
+    override fun createResponse(input: Response<Void>): PNChannelGroupsDeleteGroupResult = PNChannelGroupsDeleteGroupResult()
 
     override fun operationType() = PNOperationType.PNRemoveGroupOperation
 

@@ -8,7 +8,6 @@ import com.pubnub.internal.endpoints.message_actions.RemoveMessageAction
 
 class RemoveMessageActionsTestSuite :
     com.pubnub.internal.suite.EndpointTestSuite<RemoveMessageAction, PNRemoveMessageActionResult>() {
-
     override fun pnOperation() = PNOperationType.PNDeleteMessageAction
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH
@@ -17,24 +16,24 @@ class RemoveMessageActionsTestSuite :
         return pubnub.removeMessageAction(
             channel = "ch1",
             messageTimetoken = 100,
-            actionTimetoken = 200
+            actionTimetoken = 200,
         )
     }
 
-    override fun successfulResponseBody() = """
+    override fun successfulResponseBody() =
+        """
         {
          "status": 200,
          "data": {}
         }
-    """.trimIndent()
+        """.trimIndent()
 
     override fun unsuccessfulResponseBodyList() = emptyList<String>()
 
     override fun verifyResultExpectations(result: PNRemoveMessageActionResult) {
     }
 
-    override fun mappingBuilder() =
-        delete(urlPathEqualTo("/v1/message-actions/mySubscribeKey/channel/ch1/message/100/action/200"))
+    override fun mappingBuilder() = delete(urlPathEqualTo("/v1/message-actions/mySubscribeKey/channel/ch1/message/100/action/200"))
 
     override fun affectedChannelsAndGroups() = listOf("ch1") to emptyList<String>()
 

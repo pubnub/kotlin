@@ -24,20 +24,19 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 
 class DeleteBaseChannelGroupEndpointTest : BaseTest() {
-
     @Test
     fun testSyncSuccess() {
         stubFor(
             get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group/groupA/remove"))
                 .willReturn(
                     aResponse().withBody(
-                        """{"status":200,"message":"OK","payload":{},"service":"ChannelGroups"}"""
-                    )
-                )
+                        """{"status":200,"message":"OK","payload":{},"service":"ChannelGroups"}""",
+                    ),
+                ),
         )
 
         pubnub.deleteChannelGroup(
-            channelGroup = "groupA"
+            channelGroup = "groupA",
         ).sync()
     }
 
@@ -47,7 +46,7 @@ class DeleteBaseChannelGroupEndpointTest : BaseTest() {
 
         try {
             pubnub.deleteChannelGroup(
-                channelGroup = " "
+                channelGroup = " ",
             ).sync()
             failTest()
         } catch (e: PubNubException) {
@@ -61,15 +60,15 @@ class DeleteBaseChannelGroupEndpointTest : BaseTest() {
             get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group/groupA/remove"))
                 .willReturn(
                     aResponse().withBody(
-                        """{"status": 200, "message": "OK", "payload": {}, "service": "ChannelGroups"}"""
-                    )
-                )
+                        """{"status": 200, "message": "OK", "payload": {}, "service": "ChannelGroups"}""",
+                    ),
+                ),
         )
 
         pubnub.configuration.authKey = "myKey"
 
         pubnub.deleteChannelGroup(
-            channelGroup = "groupA"
+            channelGroup = "groupA",
         ).sync()
 
         val requests =
@@ -82,11 +81,11 @@ class DeleteBaseChannelGroupEndpointTest : BaseTest() {
     fun testMalformedResponse() {
         stubFor(
             get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group/groupA/remove"))
-                .willReturn(noContent())
+                .willReturn(noContent()),
         )
 
         pubnub.deleteChannelGroup(
-            channelGroup = "groupA"
+            channelGroup = "groupA",
         ).sync()
     }
 
@@ -96,15 +95,15 @@ class DeleteBaseChannelGroupEndpointTest : BaseTest() {
             get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group/groupA/remove"))
                 .willReturn(
                     aResponse().withBody(
-                        """{"status": 200, "message": "OK", "payload": {}, "service": "ChannelGroups"}"""
-                    )
-                )
+                        """{"status": 200, "message": "OK", "payload": {}, "service": "ChannelGroups"}""",
+                    ),
+                ),
         )
 
         val atomic = AtomicInteger(0)
 
         pubnub.deleteChannelGroup(
-            channelGroup = "groupA"
+            channelGroup = "groupA",
         ).async { result ->
             assertFalse(result.isFailure)
 //            assertTrue(status.affectedChannels ==  // TODO no longer available

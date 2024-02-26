@@ -46,9 +46,9 @@ internal fun PNObjectEventResult.toApi(): com.pubnub.api.models.consumer.pubsub.
             this.subscription,
             this.timetoken,
             this.userMetadata,
-            this.publisher
+            this.publisher,
         ),
-        this.extractedMessage.toApi()
+        this.extractedMessage.toApi(),
     )
 }
 
@@ -60,7 +60,7 @@ private fun PNObjectEventMessage.toApi(): com.pubnub.api.models.consumer.pubsub.
                 this.version,
                 this.event,
                 this.type,
-                this.data
+                this.data,
             )
         }
 
@@ -70,7 +70,7 @@ private fun PNObjectEventMessage.toApi(): com.pubnub.api.models.consumer.pubsub.
                 this.version,
                 this.event,
                 this.type,
-                this.channel
+                this.channel,
             )
         }
 
@@ -80,7 +80,7 @@ private fun PNObjectEventMessage.toApi(): com.pubnub.api.models.consumer.pubsub.
                 this.version,
                 this.event,
                 this.type,
-                this.data.toApi()
+                this.data.toApi(),
             )
         }
 
@@ -90,7 +90,7 @@ private fun PNObjectEventMessage.toApi(): com.pubnub.api.models.consumer.pubsub.
                 this.version,
                 this.event,
                 this.type,
-                this.uuid
+                this.uuid,
             )
         }
 
@@ -100,7 +100,7 @@ private fun PNObjectEventMessage.toApi(): com.pubnub.api.models.consumer.pubsub.
                 this.version,
                 this.event,
                 this.type,
-                this.data.toApi()
+                this.data.toApi(),
             )
         }
 
@@ -110,7 +110,7 @@ private fun PNObjectEventMessage.toApi(): com.pubnub.api.models.consumer.pubsub.
                 this.version,
                 this.event,
                 this.type,
-                this.data.toApi()
+                this.data.toApi(),
             )
         }
     }
@@ -127,7 +127,7 @@ private fun PNUUIDMetadata.toApi(): PNUUIDMetadata {
         this.updated,
         this.eTag,
         this.type,
-        this.status
+        this.status,
     )
 }
 
@@ -138,7 +138,7 @@ private fun PNSetMembershipEvent.toApi(): com.pubnub.api.models.consumer.pubsub.
         this.custom,
         this.eTag,
         this.updated,
-        this.status
+        this.status,
     )
 }
 
@@ -164,7 +164,7 @@ private fun ChannelGrant.toInternal(): com.pubnub.internal.models.consumer.acces
                 create,
                 get,
                 join,
-                update
+                update,
             )
         }
 
@@ -178,7 +178,7 @@ private fun ChannelGrant.toInternal(): com.pubnub.internal.models.consumer.acces
                 create,
                 get,
                 join,
-                update
+                update,
             )
         }
 
@@ -196,13 +196,17 @@ private fun ChannelGroupGrant.toInternal(): com.pubnub.internal.models.consumer.
     return when (this) {
         is com.pubnub.api.models.consumer.access_manager.v3.PNChannelGroupResourceGrant -> {
             com.pubnub.internal.models.consumer.access_manager.v3.ChannelGroupGrant.id(
-                id, read, manage
+                id,
+                read,
+                manage,
             )
         }
 
         is com.pubnub.api.models.consumer.access_manager.v3.PNChannelGroupPatternGrant -> {
             com.pubnub.internal.models.consumer.access_manager.v3.ChannelGroupGrant.pattern(
-                id, read, manage
+                id,
+                read,
+                manage,
             )
         }
 
@@ -222,13 +226,19 @@ private fun UUIDGrant.toInternal(): com.pubnub.internal.models.consumer.access_m
     return when (this) {
         is PNUUIDResourceGrant -> {
             com.pubnub.internal.models.consumer.access_manager.v3.UUIDGrant.id(
-                id, get, update, delete
+                id,
+                get,
+                update,
+                delete,
             )
         }
 
         is PNUUIDPatternGrant -> {
             com.pubnub.internal.models.consumer.access_manager.v3.UUIDGrant.pattern(
-                id, get, update, delete
+                id,
+                get,
+                update,
+                delete,
             )
         }
 
@@ -248,13 +258,27 @@ private fun SpacePermissions.toInternal(): com.pubnub.internal.models.consumer.a
     return when (this) {
         is PNSpacePermissionsGrant -> {
             com.pubnub.internal.models.consumer.access_manager.sum.SpacePermissions.id(
-                SpaceId(id), read, write, manage, delete, get, join, update
+                SpaceId(id),
+                read,
+                write,
+                manage,
+                delete,
+                get,
+                join,
+                update,
             )
         }
 
         is PNSpacePatternPermissionsGrant -> {
             com.pubnub.internal.models.consumer.access_manager.sum.SpacePermissions.pattern(
-                id, read, write, manage, delete, get, join, update
+                id,
+                read,
+                write,
+                manage,
+                delete,
+                get,
+                join,
+                update,
             )
         }
 
@@ -274,13 +298,19 @@ private fun UserPermissions.toInternal(): com.pubnub.internal.models.consumer.ac
     return when (this) {
         is com.pubnub.api.models.consumer.access_manager.v3.PNUserPermissionsGrant -> {
             com.pubnub.internal.models.consumer.access_manager.sum.UserPermissions.id(
-                UserId(id), get, update, delete
+                UserId(id),
+                get,
+                update,
+                delete,
             )
         }
 
         is com.pubnub.api.models.consumer.access_manager.v3.PNUserPatternPermissionsGrant -> {
             com.pubnub.internal.models.consumer.access_manager.sum.UserPermissions.pattern(
-                id, get, update, delete
+                id,
+                get,
+                update,
+                delete,
             )
         }
 
@@ -298,23 +328,24 @@ internal fun <T : SortField, T2 : com.pubnub.internal.models.consumer.objects.So
 
 private fun <T : SortField, T2 : com.pubnub.internal.models.consumer.objects.SortField> PNSortKey<T>.toInternal(): com.pubnub.internal.models.consumer.objects.PNSortKey<T2> {
     @Suppress("UNCHECKED_CAST")
-    val sortKey: T2 = when (this.key) {
-        is PNKey -> {
-            com.pubnub.internal.models.consumer.objects.PNKey.valueOf(this.key.name) as T2
-        }
+    val sortKey: T2 =
+        when (this.key) {
+            is PNKey -> {
+                com.pubnub.internal.models.consumer.objects.PNKey.valueOf(this.key.name) as T2
+            }
 
-        is PNMembershipKey -> {
-            com.pubnub.internal.models.consumer.objects.PNMembershipKey.valueOf(this.key.name) as T2
-        }
+            is PNMembershipKey -> {
+                com.pubnub.internal.models.consumer.objects.PNMembershipKey.valueOf(this.key.name) as T2
+            }
 
-        is PNMemberKey -> {
-            com.pubnub.internal.models.consumer.objects.PNMemberKey.valueOf(this.key.name) as T2
-        }
+            is PNMemberKey -> {
+                com.pubnub.internal.models.consumer.objects.PNMemberKey.valueOf(this.key.name) as T2
+            }
 
-        else -> {
-            throw IllegalStateException("Should never happen.")
+            else -> {
+                throw IllegalStateException("Should never happen.")
+            }
         }
-    }
     return when (this) {
         is PNSortKey.PNAsc -> com.pubnub.internal.models.consumer.objects.PNSortKey.PNAsc(sortKey)
         is PNSortKey.PNDesc -> com.pubnub.internal.models.consumer.objects.PNSortKey.PNDesc(sortKey)
@@ -343,7 +374,9 @@ internal fun List<ChannelMembershipInput>.toInternalChannelMemberships(): List<c
 
 private fun ChannelMembershipInput.toInternal(): com.pubnub.internal.models.consumer.objects.membership.ChannelMembershipInput {
     return com.pubnub.internal.models.consumer.objects.membership.PNChannelMembership.Partial(
-        channel, custom, status
+        channel,
+        custom,
+        status,
     )
 }
 
@@ -355,10 +388,11 @@ internal fun Collection<MemberInput>.toInternalMemberInputs(): List<com.pubnub.i
 
 private fun MemberInput.toInternal(): com.pubnub.internal.models.consumer.objects.member.MemberInput {
     return PNMember.Partial(
-        this.uuid, custom, status
+        this.uuid,
+        custom,
+        status,
     )
 }
-
 
 fun com.pubnub.internal.models.consumer.objects.membership.PNChannelMembershipArrayResult.toApi(): PNChannelMembershipArrayResult {
     return PNChannelMembershipArrayResult(
@@ -366,7 +400,7 @@ fun com.pubnub.internal.models.consumer.objects.membership.PNChannelMembershipAr
         data.map(PNChannelMembership.Companion::from),
         totalCount,
         next,
-        prev
+        prev,
     )
 }
 

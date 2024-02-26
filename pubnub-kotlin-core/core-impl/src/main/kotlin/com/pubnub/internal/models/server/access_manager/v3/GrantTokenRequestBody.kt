@@ -10,14 +10,13 @@ import com.pubnub.internal.models.consumer.access_manager.v3.UUIDGrant
 
 data class GrantTokenRequestBody(
     val ttl: Int,
-    val permissions: GrantTokenPermissions
+    val permissions: GrantTokenPermissions,
 ) {
-
     data class GrantTokenPermissions(
         val resources: GrantTokenPermission,
         val patterns: GrantTokenPermission,
         val meta: Any? = null,
-        val uuid: String? = null
+        val uuid: String? = null,
     )
 
     data class GrantTokenPermission(
@@ -25,7 +24,7 @@ data class GrantTokenRequestBody(
         val groups: Map<String, Int> = emptyMap(),
         val uuids: Map<String, Int> = emptyMap(),
         val spaces: Map<String, Int> = emptyMap(),
-        val users: Map<String, Int> = emptyMap()
+        val users: Map<String, Int> = emptyMap(),
     )
 
     companion object {
@@ -36,16 +35,20 @@ data class GrantTokenRequestBody(
             groups: List<ChannelGroupGrant>,
             uuids: List<UUIDGrant>,
             meta: Any?,
-            uuid: String?
+            uuid: String?,
         ): GrantTokenRequestBody {
-            val resources = GrantTokenPermission(
-                getResources(channels),
-                getResources(groups), getResources(uuids)
-            )
-            val patterns = GrantTokenPermission(
-                getPatterns(channels),
-                getPatterns(groups), getPatterns(uuids)
-            )
+            val resources =
+                GrantTokenPermission(
+                    getResources(channels),
+                    getResources(groups),
+                    getResources(uuids),
+                )
+            val patterns =
+                GrantTokenPermission(
+                    getPatterns(channels),
+                    getPatterns(groups),
+                    getPatterns(uuids),
+                )
             val permissions = GrantTokenPermissions(resources, patterns, meta ?: emptyMap<Any, Any>(), uuid)
             return GrantTokenRequestBody(ttl, permissions)
         }

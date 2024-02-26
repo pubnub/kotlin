@@ -21,8 +21,8 @@ internal class HandshakeEffect(
             result.onFailure {
                 subscribeEventSink.add(
                     SubscribeEvent.HandshakeFailure(
-                        PubNubException.from(it)
-                    )
+                        PubNubException.from(it),
+                    ),
                 )
             }.onSuccess { cursor ->
                 subscribeEventSink.add(SubscribeEvent.HandshakeSuccess(cursor))

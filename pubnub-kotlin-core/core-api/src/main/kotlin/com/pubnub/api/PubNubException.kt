@@ -24,27 +24,27 @@ data class PubNubException(
     val affectedChannelGroups: List<String> = emptyList(),
     override val cause: Throwable? = null,
     val requestInfo: RequestInfo? = null,
-    val remoteAction: ExtendedRemoteAction<*>? = null
+    val remoteAction: ExtendedRemoteAction<*>? = null,
 ) : Exception(errorMessage, cause) {
     data class RequestInfo(
         val tlsEnabled: Boolean,
         val origin: String,
         val uuid: String?,
         val authKey: String?,
-        val clientRequest: Request
+        val clientRequest: Request,
     )
 
     constructor(pubnubError: PubNubError) : this(
         errorMessage = pubnubError.message,
-        pubnubError = pubnubError
+        pubnubError = pubnubError,
     )
 
     companion object {
-        fun from(e: Throwable): PubNubException = if (e is PubNubException) {
-            e
-        } else {
-            PubNubException(e.message, cause = e)
-        }
+        fun from(e: Throwable): PubNubException =
+            if (e is PubNubException) {
+                e
+            } else {
+                PubNubException(e.message, cause = e)
+            }
     }
 }
-

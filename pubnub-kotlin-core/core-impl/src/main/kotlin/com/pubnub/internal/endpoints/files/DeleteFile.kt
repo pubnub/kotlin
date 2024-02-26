@@ -17,7 +17,7 @@ class DeleteFile(
     private val channel: String,
     private val fileName: String,
     private val fileId: String,
-    pubNub: InternalPubNubClient
+    pubNub: InternalPubNubClient,
 ) : Endpoint<Unit, PNDeleteFileResult?>(pubNub), IDeleteFile {
     @Throws(PubNubException::class)
     override fun validateParams() {
@@ -33,21 +33,28 @@ class DeleteFile(
             channel,
             fileId,
             fileName,
-            queryParams
+            queryParams,
         )
 
     @Throws(PubNubException::class)
-    override fun createResponse(input: Response<Unit>): PNDeleteFileResult = if (input.isSuccessful) {
-        PNDeleteFileResult(input.code())
-    } else {
-        throw PubNubException(PubNubError.HTTP_ERROR)
-    }
+    override fun createResponse(input: Response<Unit>): PNDeleteFileResult =
+        if (input.isSuccessful) {
+            PNDeleteFileResult(input.code())
+        } else {
+            throw PubNubException(PubNubError.HTTP_ERROR)
+        }
 
     override fun getAffectedChannels() = listOf(channel)
+
     override fun getAffectedChannelGroups(): List<String> = listOf()
+
     override fun operationType(): PNOperationType = PNOperationType.FileOperation
+
     override fun isAuthRequired(): Boolean = true
+
     override fun isSubKeyRequired(): Boolean = true
+
     override fun isPubKeyRequired(): Boolean = false
+
     override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.FILE_PERSISTENCE
 }

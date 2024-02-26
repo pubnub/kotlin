@@ -12,7 +12,7 @@ import kotlin.time.Duration
 internal class WaitEffect(
     private val heartbeatInterval: Duration,
     private val presenceEventSink: Sink<PresenceEvent>,
-    private val executorService: ScheduledExecutorService
+    private val executorService: ScheduledExecutorService,
 ) : ManagedEffect {
     private val log = LoggerFactory.getLogger(WaitEffect::class.java)
 
@@ -29,9 +29,10 @@ internal class WaitEffect(
             return
         }
 
-        scheduled = executorService.scheduleWithDelay(heartbeatInterval) {
-            presenceEventSink.add(PresenceEvent.TimesUp)
-        }
+        scheduled =
+            executorService.scheduleWithDelay(heartbeatInterval) {
+                presenceEventSink.add(PresenceEvent.TimesUp)
+            }
     }
 
     @Synchronized

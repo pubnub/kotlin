@@ -20,7 +20,6 @@ import org.junit.Test
 import java.util.concurrent.atomic.AtomicBoolean
 
 class RemoveMessageActionEndpointTest : BaseTest() {
-
     @Test
     fun testSyncSuccess() {
         stubFor(
@@ -32,15 +31,15 @@ class RemoveMessageActionEndpointTest : BaseTest() {
                           "status": 200,
                           "data": {}
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         pubnub.removeMessageAction(
             channel = "coolChannel",
             messageTimetoken = 123L,
-            actionTimetoken = 100L
+            actionTimetoken = 100L,
         ).sync()
     }
 
@@ -55,9 +54,9 @@ class RemoveMessageActionEndpointTest : BaseTest() {
                           "status": 200,
                           "data": {}
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         val success = AtomicBoolean()
@@ -65,7 +64,7 @@ class RemoveMessageActionEndpointTest : BaseTest() {
         pubnub.removeMessageAction(
             channel = "coolChannel",
             messageTimetoken = 123L,
-            actionTimetoken = 100L
+            actionTimetoken = 100L,
         ).async { result ->
             assertFalse(result.isFailure)
             success.set(true)
@@ -85,16 +84,16 @@ class RemoveMessageActionEndpointTest : BaseTest() {
                           "status": 200
                           "data": {
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         try {
             pubnub.removeMessageAction(
                 channel = "coolChannel",
                 messageTimetoken = 123L,
-                actionTimetoken = 100L
+                actionTimetoken = 100L,
             ).sync()
         } catch (e: Exception) {
             failTest()
@@ -105,14 +104,14 @@ class RemoveMessageActionEndpointTest : BaseTest() {
     fun testEmptyBody() {
         stubFor(
             delete(urlPathEqualTo("/v1/message-actions/mySubscribeKey/channel/coolChannel/message/123/action/100"))
-                .willReturn(emptyJson())
+                .willReturn(emptyJson()),
         )
 
         try {
             pubnub.removeMessageAction(
                 channel = "coolChannel",
                 messageTimetoken = 123L,
-                actionTimetoken = 100L
+                actionTimetoken = 100L,
             ).sync()
         } catch (e: Exception) {
             failTest()
@@ -123,14 +122,14 @@ class RemoveMessageActionEndpointTest : BaseTest() {
     fun testNoBody() {
         stubFor(
             delete(urlPathEqualTo("/v1/message-actions/mySubscribeKey/channel/coolChannel/message/123/action/100"))
-                .willReturn(noContent())
+                .willReturn(noContent()),
         )
 
         try {
             pubnub.removeMessageAction(
                 channel = "coolChannel",
                 messageTimetoken = 123L,
-                actionTimetoken = 100L
+                actionTimetoken = 100L,
             ).sync()
         } catch (e: Exception) {
             failTest()
@@ -147,16 +146,16 @@ class RemoveMessageActionEndpointTest : BaseTest() {
                         {
                           "status": 200
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         try {
             pubnub.removeMessageAction(
                 channel = "coolChannel",
                 messageTimetoken = 123L,
-                actionTimetoken = 100L
+                actionTimetoken = 100L,
             ).sync()
         } catch (e: Exception) {
             failTest()
@@ -174,16 +173,16 @@ class RemoveMessageActionEndpointTest : BaseTest() {
                           "status": 200,
                           "data": null
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         try {
             pubnub.removeMessageAction(
                 channel = "coolChannel",
                 messageTimetoken = 123L,
-                actionTimetoken = 100L
+                actionTimetoken = 100L,
             ).sync()
         } catch (e: Exception) {
             failTest()
@@ -196,7 +195,7 @@ class RemoveMessageActionEndpointTest : BaseTest() {
             pubnub.removeMessageAction(
                 channel = " ",
                 messageTimetoken = 123L,
-                actionTimetoken = 100L
+                actionTimetoken = 100L,
             ).sync()
             failTest()
         } catch (e: Exception) {
@@ -211,7 +210,7 @@ class RemoveMessageActionEndpointTest : BaseTest() {
             pubnub.removeMessageAction(
                 channel = "coolChannel",
                 messageTimetoken = 123L,
-                actionTimetoken = 100L
+                actionTimetoken = 100L,
             ).sync()
             failTest()
         } catch (e: Exception) {
@@ -230,9 +229,9 @@ class RemoveMessageActionEndpointTest : BaseTest() {
                           "status": 200,
                           "data": {}
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         pubnub.configuration.authKey = "authKey"
@@ -240,7 +239,7 @@ class RemoveMessageActionEndpointTest : BaseTest() {
         pubnub.removeMessageAction(
             channel = "coolChannel",
             messageTimetoken = 123L,
-            actionTimetoken = 100L
+            actionTimetoken = 100L,
         ).sync()
 
         val requests = findAll(deleteRequestedFor(urlMatching("/.*")))

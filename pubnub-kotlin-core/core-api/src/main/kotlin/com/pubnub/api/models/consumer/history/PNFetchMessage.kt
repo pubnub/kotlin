@@ -12,7 +12,7 @@ import com.pubnub.api.models.consumer.history.PNFetchMessageItem.Action
  */
 data class PNFetchMessagesResult(
     val channels: Map<String, List<PNFetchMessageItem>>,
-    val page: PNBoundedPage?
+    val page: PNBoundedPage?,
 )
 
 /**
@@ -41,7 +41,7 @@ data class PNFetchMessageItem(
     val timetoken: Long?,
     val actions: Map<String, Map<String, List<Action>>>? = null,
     val messageType: HistoryMessageType?,
-    val error: PubNubError? = null
+    val error: PubNubError? = null,
 ) {
     // for compatibility with legacy Java SDK
     class Action(uuid: String, actionTimetoken: String) :
@@ -56,7 +56,7 @@ data class PNFetchMessageItem(
  */
 open class Action(
     val uuid: String,
-    val actionTimetoken: String
+    val actionTimetoken: String,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

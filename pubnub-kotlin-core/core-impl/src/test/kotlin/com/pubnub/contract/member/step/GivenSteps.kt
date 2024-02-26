@@ -7,7 +7,6 @@ import io.cucumber.java.en.Given
 class GivenSteps(
     private val memberState: MemberState,
 ) {
-
     @Given("the data for {string} member")
     fun the_data_for_member(memberName: String) {
         memberState.members.add(loadMember(memberName))

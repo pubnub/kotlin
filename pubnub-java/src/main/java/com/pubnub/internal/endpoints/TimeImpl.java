@@ -4,7 +4,7 @@ import com.pubnub.api.endpoints.Time;
 import com.pubnub.api.models.consumer.PNTimeResult;
 import com.pubnub.internal.InternalPubNubClient;
 
-public class TimeImpl extends DelegatingEndpoint<PNTimeResult>implements Time {
+public class TimeImpl extends DelegatingEndpoint<PNTimeResult> implements Time {
 
     public TimeImpl(InternalPubNubClient pubnub) {
         super(pubnub);

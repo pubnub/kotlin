@@ -26,11 +26,9 @@ import org.hamcrest.core.Is.`is` as iz
 
 @RunWith(Parameterized::class)
 class SubscribeMessageProcessorTest(
-    private val messageJson: JsonElement
+    private val messageJson: JsonElement,
 ) {
-
     companion object {
-
         @JvmStatic
         @Parameterized.Parameters
         fun data(): Collection<Any> {
@@ -55,9 +53,9 @@ class SubscribeMessageProcessorTest(
                                     add(JsonPrimitive("array"))
                                     add(JsonPrimitive("of"))
                                     add(JsonPrimitive("elements"))
-                                }
+                                },
                             )
-                        }
+                        },
                     )
                 },
             )
@@ -71,12 +69,13 @@ class SubscribeMessageProcessorTest(
 
         val messageProcessor = messageProcessor(configuration)
 
-        val result = messageProcessor.processIncomingPayload(
-            gson.fromJson(
-                fileMessage(messageJson.toString()),
-                SubscribeMessage::class.java
+        val result =
+            messageProcessor.processIncomingPayload(
+                gson.fromJson(
+                    fileMessage(messageJson.toString()),
+                    SubscribeMessage::class.java,
+                ),
             )
-        )
 
         assertThat(result, isA(PNFileEventResult::class.java))
         assertThat((result as PNFileEventResult).jsonMessage, iz(messageJson))
@@ -90,18 +89,19 @@ class SubscribeMessageProcessorTest(
 
         val messageProcessor = messageProcessor(configuration)
 
-        val result = messageProcessor.processIncomingPayload(
-            gson.fromJson(
-                fileMessage(messageJson.toString()),
-                SubscribeMessage::class.java
+        val result =
+            messageProcessor.processIncomingPayload(
+                gson.fromJson(
+                    fileMessage(messageJson.toString()),
+                    SubscribeMessage::class.java,
+                ),
             )
-        )
 
         assertThat(result, isA(PNFileEventResult::class.java))
         assertThat((result as PNFileEventResult).jsonMessage, iz(messageJson))
         assertThat(
             (result as PNFileEventResult).error,
-            iz(PubNubError.CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED)
+            iz(PubNubError.CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED),
         )
     }
 
@@ -115,12 +115,13 @@ class SubscribeMessageProcessorTest(
         val messageEncrypted = config.cryptoModule!!.encryptString(messageJson.toString())
 
         // when
-        val result = subscribeMessageProcessor.processIncomingPayload(
-            gson.fromJson(
-                message(JsonPrimitive(messageEncrypted)),
-                SubscribeMessage::class.java
+        val result =
+            subscribeMessageProcessor.processIncomingPayload(
+                gson.fromJson(
+                    message(JsonPrimitive(messageEncrypted)),
+                    SubscribeMessage::class.java,
+                ),
             )
-        )
 
         // then
         assertThat(result, isA(PNMessageResult::class.java))
@@ -137,12 +138,13 @@ class SubscribeMessageProcessorTest(
         val subscribeMessageProcessor = messageProcessor(config)
 
         // when
-        val result = subscribeMessageProcessor.processIncomingPayload(
-            gson.fromJson(
-                message(messageJson),
-                SubscribeMessage::class.java
+        val result =
+            subscribeMessageProcessor.processIncomingPayload(
+                gson.fromJson(
+                    message(messageJson),
+                    SubscribeMessage::class.java,
+                ),
             )
-        )
 
         // then
         assertThat(result, isA(PNMessageResult::class.java))
@@ -166,12 +168,13 @@ class SubscribeMessageProcessorTest(
         expectedObject.addProperty("pn_other", message)
 
         // when
-        val result = subscribeMessageProcessor.processIncomingPayload(
-            gson.fromJson(
-                message(messageObject),
-                SubscribeMessage::class.java
+        val result =
+            subscribeMessageProcessor.processIncomingPayload(
+                gson.fromJson(
+                    message(messageObject),
+                    SubscribeMessage::class.java,
+                ),
             )
-        )
 
         // then
         assertThat(result, isA(PNMessageResult::class.java))
@@ -179,10 +182,12 @@ class SubscribeMessageProcessorTest(
     }
 
     private fun config() = PNConfiguration(userId = UserId("test"))
-    private fun messageProcessor(configuration: PNConfiguration) = SubscribeMessageProcessor(
-        pubnub = TestPubNub(configuration).internalPubNubClient,
-        duplicationManager = DuplicationManager(configuration)
-    )
+
+    private fun messageProcessor(configuration: PNConfiguration) =
+        SubscribeMessageProcessor(
+            pubnub = TestPubNub(configuration).internalPubNubClient,
+            duplicationManager = DuplicationManager(configuration),
+        )
 
     private fun message(messageJson: JsonElement): String {
         return "{\"a\":\"2\",\"f\":0,\"i\":\"client-2bdc6006-1b48-45e4-9c09-9cc4c5ac5e8c\",\"s\":1,\"p\":{\"t\":\"17000393136828867\",\"r\":43},\"k\":\"sub-c-33f55052-190b-11e6-bfbc-02ee2ddab7fe\",\"c\":\"ch_cxnysctxlw\",\"d\":$messageJson,\"b\":\"ch_cxnysctxlw\"}"

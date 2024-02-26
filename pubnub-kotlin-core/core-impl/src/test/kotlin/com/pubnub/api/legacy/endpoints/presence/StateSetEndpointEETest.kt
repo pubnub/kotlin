@@ -39,9 +39,9 @@ class StateSetEndpointEETest : BaseTest() {
                           },
                           "service": "Presence"
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         SetState(
@@ -49,16 +49,17 @@ class StateSetEndpointEETest : BaseTest() {
             channelGroups = listOf(),
             state = mapOf("age" to 20),
             pubnub = pubnub,
-            presenceData = presenceData
+            presenceData = presenceData,
         ).sync()
 
         assertEquals(
             mapOf(
-                "testChannel" to JsonObject().apply {
-                    addProperty("age", 20)
-                }
+                "testChannel" to
+                    JsonObject().apply {
+                        addProperty("age", 20)
+                    },
             ),
-            presenceData.channelStates
+            presenceData.channelStates,
         )
     }
 }

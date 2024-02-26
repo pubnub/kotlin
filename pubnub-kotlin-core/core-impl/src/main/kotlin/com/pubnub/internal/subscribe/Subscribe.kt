@@ -37,18 +37,19 @@ internal class Subscribe(
             messageProcessor: SubscribeMessageProcessor,
             presenceData: PresenceData,
             sendStateWithSubscribe: Boolean,
-            executorService: ScheduledExecutorService
+            executorService: ScheduledExecutorService,
         ): Subscribe {
-            val subscribeEventEngineManager = createAndStartSubscribeEventEngineManager(
-                pubNub,
-                messageProcessor,
-                eventEnginesConf,
-                retryConfiguration,
-                listenerManager,
-                presenceData,
-                sendStateWithSubscribe,
-                executorService
-            )
+            val subscribeEventEngineManager =
+                createAndStartSubscribeEventEngineManager(
+                    pubNub,
+                    messageProcessor,
+                    eventEnginesConf,
+                    retryConfiguration,
+                    listenerManager,
+                    presenceData,
+                    sendStateWithSubscribe,
+                    executorService,
+                )
 
             return Subscribe(subscribeEventEngineManager, presenceData)
         }
@@ -61,36 +62,40 @@ internal class Subscribe(
             listenerManager: ListenerManager,
             presenceData: PresenceData,
             sendStateWithSubscribe: Boolean,
-            executorService: ScheduledExecutorService
+            executorService: ScheduledExecutorService,
         ): SubscribeEventEngineManager {
-            val subscribeEffectFactory = SubscribeEffectFactory(
-                handshakeProvider = HandshakeProviderImpl(pubNub),
-                receiveMessagesProvider = ReceiveMessagesProviderImpl(pubNub, messageProcessor),
-                subscribeEventSink = eventEnginesConf.subscribe.eventSink,
-                retryConfiguration = retryConfiguration,
-                executorService = executorService,
-                messagesConsumer = listenerManager,
-                statusConsumer = listenerManager,
-                presenceData = presenceData,
-                sendStateWithSubscribe = sendStateWithSubscribe,
-            )
+            val subscribeEffectFactory =
+                SubscribeEffectFactory(
+                    handshakeProvider = HandshakeProviderImpl(pubNub),
+                    receiveMessagesProvider = ReceiveMessagesProviderImpl(pubNub, messageProcessor),
+                    subscribeEventSink = eventEnginesConf.subscribe.eventSink,
+                    retryConfiguration = retryConfiguration,
+                    executorService = executorService,
+                    messagesConsumer = listenerManager,
+                    statusConsumer = listenerManager,
+                    presenceData = presenceData,
+                    sendStateWithSubscribe = sendStateWithSubscribe,
+                )
 
-            val subscribeEventEngine = SubscribeEventEngine(
-                effectSink = eventEnginesConf.subscribe.effectSink,
-                eventSource = eventEnginesConf.subscribe.eventSource
-            )
-            val subscribeEffectDispatcher = EffectDispatcher(
-                effectFactory = subscribeEffectFactory,
-                effectSource = eventEnginesConf.subscribe.effectSource
-            )
+            val subscribeEventEngine =
+                SubscribeEventEngine(
+                    effectSink = eventEnginesConf.subscribe.effectSink,
+                    eventSource = eventEnginesConf.subscribe.eventSource,
+                )
+            val subscribeEffectDispatcher =
+                EffectDispatcher(
+                    effectFactory = subscribeEffectFactory,
+                    effectSource = eventEnginesConf.subscribe.effectSource,
+                )
 
-            val subscribeEventEngineManager = SubscribeEventEngineManager(
-                eventEngine = subscribeEventEngine,
-                effectDispatcher = subscribeEffectDispatcher,
-                eventSink = eventEnginesConf.subscribe.eventSink
-            ).apply {
-                start()
-            }
+            val subscribeEventEngineManager =
+                SubscribeEventEngineManager(
+                    eventEngine = subscribeEventEngine,
+                    effectDispatcher = subscribeEffectDispatcher,
+                    eventSink = eventEnginesConf.subscribe.eventSink,
+                ).apply {
+                    start()
+                }
             return subscribeEventEngineManager
         }
     }
@@ -108,21 +113,22 @@ internal class Subscribe(
         val channelsInLocalStorage = subscriptionData.channels
         val channelGroupsInLocalStorage = subscriptionData.channelGroups
         if (withTimetoken != 0L) {
-            val subscriptionRestoredEvent = SubscriptionRestored(
-                channelsInLocalStorage,
-                channelGroupsInLocalStorage,
-                SubscriptionCursor(
-                    withTimetoken,
-                    region = null
-                ) // we don't know region here. Subscribe response will return region.
-            )
+            val subscriptionRestoredEvent =
+                SubscriptionRestored(
+                    channelsInLocalStorage,
+                    channelGroupsInLocalStorage,
+                    SubscriptionCursor(
+                        withTimetoken,
+                        region = null,
+                    ), // we don't know region here. Subscribe response will return region.
+                )
             subscribeEventEngineManager.addEventToQueue(subscriptionRestoredEvent)
         } else {
             subscribeEventEngineManager.addEventToQueue(
                 SubscriptionChanged(
                     channelsInLocalStorage,
-                    channelGroupsInLocalStorage
-                )
+                    channelGroupsInLocalStorage,
+                ),
             )
         }
     }
@@ -130,7 +136,7 @@ internal class Subscribe(
     @Synchronized
     fun unsubscribe(
         channels: Set<String> = emptySet(),
-        channelGroups: Set<String> = emptySet()
+        channelGroups: Set<String> = emptySet(),
     ) {
         throwExceptionIfChannelAndChannelGroupIsMissing(channels, channelGroups)
         removeChannelsFromSubscriptionData(channels)
@@ -144,8 +150,8 @@ internal class Subscribe(
             subscribeEventEngineManager.addEventToQueue(
                 SubscriptionChanged(
                     channelsInLocalStorage,
-                    channelGroupsInLocalStorage
-                )
+                    channelGroupsInLocalStorage,
+                ),
             )
         } else {
             subscribeEventEngineManager.addEventToQueue(SubscribeEvent.UnsubscribeAll)
@@ -175,11 +181,12 @@ internal class Subscribe(
     }
 
     fun reconnect(timetoken: Long = 0L) {
-        val event = if (timetoken != 0L) {
-            SubscribeEvent.Reconnect(SubscriptionCursor(timetoken, region = null))
-        } else {
-            SubscribeEvent.Reconnect()
-        }
+        val event =
+            if (timetoken != 0L) {
+                SubscribeEvent.Reconnect(SubscriptionCursor(timetoken, region = null))
+            } else {
+                SubscribeEvent.Reconnect()
+            }
         subscribeEventEngineManager.addEventToQueue(event)
     }
 
@@ -191,14 +198,17 @@ internal class Subscribe(
 
     private fun throwExceptionIfChannelAndChannelGroupIsMissing(
         channels: Set<String>,
-        channelGroups: Set<String>
+        channelGroups: Set<String>,
     ) {
         if (channels.isEmpty() && channelGroups.isEmpty()) {
             throw PubNubException(PubNubError.CHANNEL_OR_CHANNEL_GROUP_MISSING)
         }
     }
 
-    private fun addChannelsToSubscriptionData(channels: Set<String>, withPresence: Boolean) {
+    private fun addChannelsToSubscriptionData(
+        channels: Set<String>,
+        withPresence: Boolean,
+    ) {
         subscriptionData.channels.addAll(channels)
         if (withPresence) {
             channels.forEach {
@@ -208,7 +218,10 @@ internal class Subscribe(
         }
     }
 
-    private fun addChannelGroupsToSubscriptionData(channelGroups: Set<String>, withPresence: Boolean) {
+    private fun addChannelGroupsToSubscriptionData(
+        channelGroups: Set<String>,
+        withPresence: Boolean,
+    ) {
         subscriptionData.channelGroups.addAll(channelGroups)
         if (withPresence) {
             channelGroups.forEach {

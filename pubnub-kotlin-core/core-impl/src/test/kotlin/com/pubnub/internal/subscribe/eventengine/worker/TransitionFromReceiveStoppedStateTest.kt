@@ -38,10 +38,11 @@ class TransitionFromReceiveStoppedStateTest {
     @Test
     fun can_transit_from_RECEIVE_STOPPED_to_HANDSHAKING_when_there_is_RECONNECT_event() {
         // when
-        val (state, invocations) = transition(
-            SubscribeState.ReceiveStopped(channels, channelGroups, subscriptionCursor),
-            SubscribeEvent.Reconnect()
-        )
+        val (state, invocations) =
+            transition(
+                SubscribeState.ReceiveStopped(channels, channelGroups, subscriptionCursor),
+                SubscribeEvent.Reconnect(),
+            )
 
         // then
         assertTrue(state is SubscribeState.Handshaking)
@@ -52,9 +53,9 @@ class TransitionFromReceiveStoppedStateTest {
         assertEquals(subscriptionCursor, state.subscriptionCursor)
         assertEquals(
             setOf(
-                SubscribeEffectInvocation.Handshake(channels, channelGroups)
+                SubscribeEffectInvocation.Handshake(channels, channelGroups),
             ),
-            invocations
+            invocations,
         )
     }
 
@@ -65,10 +66,11 @@ class TransitionFromReceiveStoppedStateTest {
         val subscriptionCursorForReconnect = SubscriptionCursor(timeTokenFromReconnect, null)
 
         // when
-        val (state, invocations) = transition(
-            SubscribeState.ReceiveStopped(channels, channelGroups, subscriptionCursor),
-            SubscribeEvent.Reconnect(subscriptionCursorForReconnect)
-        )
+        val (state, invocations) =
+            transition(
+                SubscribeState.ReceiveStopped(channels, channelGroups, subscriptionCursor),
+                SubscribeEvent.Reconnect(subscriptionCursorForReconnect),
+            )
 
         // then
         assertTrue(state is SubscribeState.Handshaking)
@@ -79,19 +81,20 @@ class TransitionFromReceiveStoppedStateTest {
         assertEquals(subscriptionCursorForReconnect, state.subscriptionCursor)
         assertEquals(
             setOf(
-                SubscribeEffectInvocation.Handshake(channels, channelGroups)
+                SubscribeEffectInvocation.Handshake(channels, channelGroups),
             ),
-            invocations
+            invocations,
         )
     }
 
     @Test
     fun can_transit_from_RECEIVE_STOPPED_to_UNSUBSRIBED_when_there_is_UNSUBSRIBED_ALL_event() {
         // when
-        val (state, invocations) = transition(
-            SubscribeState.ReceiveStopped(channels, channelGroups, subscriptionCursor),
-            SubscribeEvent.UnsubscribeAll
-        )
+        val (state, invocations) =
+            transition(
+                SubscribeState.ReceiveStopped(channels, channelGroups, subscriptionCursor),
+                SubscribeEvent.UnsubscribeAll,
+            )
 
         // then
         assertEquals(SubscribeState.Unsubscribed, state)
@@ -101,10 +104,11 @@ class TransitionFromReceiveStoppedStateTest {
     @Test
     fun can_transit_from_RECEIVE_STOPPED_to_RECEIVE_STOPPED_when_there_is_SUBSCRIPTION_CHANGED_event() {
         // when
-        val (state, invocations) = transition(
-            SubscribeState.ReceiveStopped(channels, channelGroups, subscriptionCursor),
-            SubscribeEvent.SubscriptionChanged(channels, channelGroups)
-        )
+        val (state, invocations) =
+            transition(
+                SubscribeState.ReceiveStopped(channels, channelGroups, subscriptionCursor),
+                SubscribeEvent.SubscriptionChanged(channels, channelGroups),
+            )
 
         // then
         assertTrue(state is SubscribeState.ReceiveStopped)
@@ -119,10 +123,11 @@ class TransitionFromReceiveStoppedStateTest {
     @Test
     fun can_transit_from_RECEIVE_STOPPED_to_RECEIVE_STOPPED_when_there_is_SUBSCRIPTION_RESTORED_event() {
         // when
-        val (state, invocations) = transition(
-            SubscribeState.ReceiveStopped(channels, channelGroups, subscriptionCursor),
-            SubscribeEvent.SubscriptionRestored(channels, channelGroups, subscriptionCursor)
-        )
+        val (state, invocations) =
+            transition(
+                SubscribeState.ReceiveStopped(channels, channelGroups, subscriptionCursor),
+                SubscribeEvent.SubscriptionRestored(channels, channelGroups, subscriptionCursor),
+            )
 
         // then
         assertTrue(state is SubscribeState.ReceiveStopped)

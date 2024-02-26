@@ -22,7 +22,6 @@ import org.junit.Test
 import java.util.concurrent.atomic.AtomicBoolean
 
 class AddMessageActionEndpointTest : BaseTest() {
-
     @Test
     fun testSyncSuccess() {
         stubFor(
@@ -41,19 +40,21 @@ class AddMessageActionEndpointTest : BaseTest() {
                             "actionTimetoken": "1000"
                           }
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val result = pubnub.addMessageAction(
-            channel = "coolChannel",
-            messageAction = PNMessageAction(
-                type = "emoji",
-                value = "smiley",
-                messageTimetoken = 123
-            )
-        ).sync()
+        val result =
+            pubnub.addMessageAction(
+                channel = "coolChannel",
+                messageAction =
+                    PNMessageAction(
+                        type = "emoji",
+                        value = "smiley",
+                        messageTimetoken = 123,
+                    ),
+            ).sync()
 
         assertEquals(result.messageTimetoken, 123L)
         assertEquals(result.type, "emoji")
@@ -80,20 +81,21 @@ class AddMessageActionEndpointTest : BaseTest() {
                             "actionTimetoken": "1000"
                           }
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         val success = AtomicBoolean()
 
         pubnub.addMessageAction(
             channel = "coolChannel",
-            messageAction = PNMessageAction(
-                type = "emoji",
-                value = "smiley",
-                messageTimetoken = 123
-            )
+            messageAction =
+                PNMessageAction(
+                    type = "emoji",
+                    value = "smiley",
+                    messageTimetoken = 123,
+                ),
         ).async { result ->
             assertFalse(result.isFailure)
             result.onSuccess {
@@ -126,19 +128,20 @@ class AddMessageActionEndpointTest : BaseTest() {
                             "value": "smiley",
                             "actionTimetoken": "1000"
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         try {
             pubnub.addMessageAction(
                 channel = "coolChannel",
-                messageAction = PNMessageAction(
-                    type = "emoji",
-                    value = "smiley",
-                    messageTimetoken = 123
-                )
+                messageAction =
+                    PNMessageAction(
+                        type = "emoji",
+                        value = "smiley",
+                        messageTimetoken = 123,
+                    ),
             ).sync()
             failTest()
         } catch (e: Exception) {
@@ -151,17 +154,18 @@ class AddMessageActionEndpointTest : BaseTest() {
         stubFor(
             post(urlPathEqualTo("/v1/message-actions/mySubscribeKey/channel/coolChannel/message/123"))
                 .withRequestBody(equalToJson("""{"type":"emoji","value":"smiley"}"""))
-                .willReturn(emptyJson())
+                .willReturn(emptyJson()),
         )
 
         try {
             pubnub.addMessageAction(
                 channel = "coolChannel",
-                messageAction = PNMessageAction(
-                    type = "emoji",
-                    value = "smiley",
-                    messageTimetoken = 123
-                )
+                messageAction =
+                    PNMessageAction(
+                        type = "emoji",
+                        value = "smiley",
+                        messageTimetoken = 123,
+                    ),
             ).sync()
             failTest()
         } catch (e: Exception) {
@@ -174,17 +178,18 @@ class AddMessageActionEndpointTest : BaseTest() {
         stubFor(
             post(urlPathEqualTo("/v1/message-actions/mySubscribeKey/channel/coolChannel/message/123"))
                 .withRequestBody(equalToJson("""{"type":"emoji","value":"smiley"}"""))
-                .willReturn(noContent())
+                .willReturn(noContent()),
         )
 
         try {
             pubnub.addMessageAction(
                 channel = "coolChannel",
-                messageAction = PNMessageAction(
-                    type = "emoji",
-                    value = "smiley",
-                    messageTimetoken = 123
-                )
+                messageAction =
+                    PNMessageAction(
+                        type = "emoji",
+                        value = "smiley",
+                        messageTimetoken = 123,
+                    ),
             ).sync()
             failTest()
         } catch (e: Exception) {
@@ -203,19 +208,20 @@ class AddMessageActionEndpointTest : BaseTest() {
                         {
                           "status": 200
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         try {
             pubnub.addMessageAction(
                 channel = "coolChannel",
-                messageAction = PNMessageAction(
-                    type = "emoji",
-                    value = "smiley",
-                    messageTimetoken = 123
-                )
+                messageAction =
+                    PNMessageAction(
+                        type = "emoji",
+                        value = "smiley",
+                        messageTimetoken = 123,
+                    ),
             ).sync()
             failTest()
         } catch (e: Exception) {
@@ -235,19 +241,20 @@ class AddMessageActionEndpointTest : BaseTest() {
                           "status": 200,
                           "data": null
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         try {
             pubnub.addMessageAction(
                 channel = "coolChannel",
-                messageAction = PNMessageAction(
-                    type = "emoji",
-                    value = "smiley",
-                    messageTimetoken = 123
-                )
+                messageAction =
+                    PNMessageAction(
+                        type = "emoji",
+                        value = "smiley",
+                        messageTimetoken = 123,
+                    ),
             ).sync()
             failTest()
         } catch (e: Exception) {
@@ -260,11 +267,12 @@ class AddMessageActionEndpointTest : BaseTest() {
         try {
             pubnub.addMessageAction(
                 channel = " ",
-                messageAction = PNMessageAction(
-                    type = "emoji",
-                    value = "smiley",
-                    messageTimetoken = 123
-                )
+                messageAction =
+                    PNMessageAction(
+                        type = "emoji",
+                        value = "smiley",
+                        messageTimetoken = 123,
+                    ),
             ).sync()
             failTest()
         } catch (e: Exception) {
@@ -277,11 +285,12 @@ class AddMessageActionEndpointTest : BaseTest() {
         try {
             pubnub.addMessageAction(
                 channel = "coolChannel",
-                messageAction = PNMessageAction(
-                    type = " ",
-                    value = "smiley",
-                    messageTimetoken = 123
-                )
+                messageAction =
+                    PNMessageAction(
+                        type = " ",
+                        value = "smiley",
+                        messageTimetoken = 123,
+                    ),
             ).sync()
             failTest()
         } catch (e: Exception) {
@@ -294,11 +303,12 @@ class AddMessageActionEndpointTest : BaseTest() {
         try {
             pubnub.addMessageAction(
                 channel = "coolChannel",
-                messageAction = PNMessageAction(
-                    type = "emoji",
-                    value = " ",
-                    messageTimetoken = 123
-                )
+                messageAction =
+                    PNMessageAction(
+                        type = "emoji",
+                        value = " ",
+                        messageTimetoken = 123,
+                    ),
             ).sync()
             failTest()
         } catch (e: Exception) {
@@ -312,11 +322,12 @@ class AddMessageActionEndpointTest : BaseTest() {
         try {
             pubnub.addMessageAction(
                 channel = "coolChannel",
-                messageAction = PNMessageAction(
-                    type = "emoji",
-                    value = " ",
-                    messageTimetoken = 123
-                )
+                messageAction =
+                    PNMessageAction(
+                        type = "emoji",
+                        value = " ",
+                        messageTimetoken = 123,
+                    ),
             ).sync()
             failTest()
         } catch (e: Exception) {
@@ -342,20 +353,21 @@ class AddMessageActionEndpointTest : BaseTest() {
                             "actionTimetoken": "1000"
                           }
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         pubnub.configuration.authKey = "authKey"
 
         pubnub.addMessageAction(
             channel = "coolChannel",
-            messageAction = PNMessageAction(
-                type = "emoji",
-                value = "smiley",
-                messageTimetoken = 123
-            )
+            messageAction =
+                PNMessageAction(
+                    type = "emoji",
+                    value = "smiley",
+                    messageTimetoken = 123,
+                ),
         ).sync()
 
         val requests = findAll(postRequestedFor(urlMatching("/.*")))

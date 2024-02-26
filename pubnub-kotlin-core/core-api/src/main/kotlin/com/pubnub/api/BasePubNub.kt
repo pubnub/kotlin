@@ -14,26 +14,30 @@ import com.pubnub.api.v2.subscriptions.EmptyOptions
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 
 interface BasePubNub<
-        EventListener : BaseEventListener,
-        Subscription : BaseSubscription<EventListener>,
-        Channel : BaseChannel<EventListener, Subscription>,
-        ChannelGroup : BaseChannelGroup<EventListener, Subscription>,
-        ChannelMetadata: BaseChannelMetadata<EventListener, Subscription>,
-        UserMetadata: BaseUserMetadata<EventListener, Subscription>,
-        SubscriptionSet: BaseSubscriptionSet<EventListener, Subscription>,
-        StatusListener: BaseStatusListener,
-        > : BaseEventEmitter<EventListener>, BaseStatusEmitter<StatusListener> {
-
+    EventListener : BaseEventListener,
+    Subscription : BaseSubscription<EventListener>,
+    Channel : BaseChannel<EventListener, Subscription>,
+    ChannelGroup : BaseChannelGroup<EventListener, Subscription>,
+    ChannelMetadata : BaseChannelMetadata<EventListener, Subscription>,
+    UserMetadata : BaseUserMetadata<EventListener, Subscription>,
+    SubscriptionSet : BaseSubscriptionSet<EventListener, Subscription>,
+    StatusListener : BaseStatusListener,
+    > : BaseEventEmitter<EventListener>, BaseStatusEmitter<StatusListener> {
     fun channel(name: String): Channel
-    fun channelGroup(name: String): ChannelGroup
-    fun channelMetadata(id: String): ChannelMetadata
-    fun userMetadata(id: String): UserMetadata
-    fun subscriptionSetOf(subscriptions: Set<Subscription>): SubscriptionSet
-    fun subscriptionSetOf(channels: Set<String> = emptySet(),
-                          channelGroups: Set<String> = emptySet(),
-                          options: SubscriptionOptions = EmptyOptions
-    ): SubscriptionSet
 
+    fun channelGroup(name: String): ChannelGroup
+
+    fun channelMetadata(id: String): ChannelMetadata
+
+    fun userMetadata(id: String): UserMetadata
+
+    fun subscriptionSetOf(subscriptions: Set<Subscription>): SubscriptionSet
+
+    fun subscriptionSetOf(
+        channels: Set<String> = emptySet(),
+        channelGroups: Set<String> = emptySet(),
+        options: SubscriptionOptions = EmptyOptions,
+    ): SubscriptionSet
 
     /**
      * Force the SDK to try and reach out PubNub. Monitor the results in [SubscribeCallback.status]

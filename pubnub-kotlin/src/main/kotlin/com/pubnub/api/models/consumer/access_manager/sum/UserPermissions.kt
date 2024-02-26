@@ -16,25 +16,27 @@ interface UserPermissions : PNGrant {
             userId: UserId,
             get: Boolean = false,
             update: Boolean = false,
-            delete: Boolean = false
-        ): UserPermissions = PNUserPermissionsGrant(
-            id = userId.value,
-            delete = delete,
-            get = get,
-            update = update
-        )
+            delete: Boolean = false,
+        ): UserPermissions =
+            PNUserPermissionsGrant(
+                id = userId.value,
+                delete = delete,
+                get = get,
+                update = update,
+            )
 
         fun pattern(
             pattern: String,
             get: Boolean = false,
             update: Boolean = false,
-            delete: Boolean = false
-        ): UserPermissions = PNUserPatternPermissionsGrant(
-            id = pattern,
-            delete = delete,
-            get = get,
-            update = update
-        )
+            delete: Boolean = false,
+        ): UserPermissions =
+            PNUserPatternPermissionsGrant(
+                id = pattern,
+                delete = delete,
+                get = get,
+                update = update,
+            )
     }
 }
 

@@ -1,9 +1,11 @@
 package com.pubnub.internal.extension
 
-fun Int.nonPositiveToNull() = if (this < 1)
-    null
-else
-    this
+fun Int.nonPositiveToNull() =
+    if (this < 1) {
+        null
+    } else {
+        this
+    }
 
 fun Int.limit(limit: Int): Int {
     return when {

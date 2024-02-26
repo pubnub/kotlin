@@ -13,5 +13,8 @@ interface InternalStatusListener : BaseStatusListener {
      * @param pubnub The client instance which has this listener attached.
      * @param status Wrapper around the actual message content.
      */
-    fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, status: PNStatus)
+    fun status(
+        pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+        status: PNStatus,
+    )
 }

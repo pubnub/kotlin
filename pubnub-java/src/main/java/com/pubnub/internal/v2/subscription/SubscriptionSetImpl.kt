@@ -8,7 +8,7 @@ import com.pubnub.internal.v2.callbacks.DelegatingEventListener
 
 class SubscriptionSetImpl(
     pubnub: InternalPubNubClient,
-    initialSubscriptions: Set<SubscriptionImpl>
+    initialSubscriptions: Set<SubscriptionImpl>,
 ) : SubscriptionSet, BaseSubscriptionSetImpl<EventListener, Subscription>(pubnub, initialSubscriptions) {
     override fun plus(subscription: Subscription): SubscriptionSet {
         TODO("Not yet implemented")
@@ -22,5 +22,4 @@ class SubscriptionSetImpl(
     override fun addListener(listener: EventListener) {
         addListener(DelegatingEventListener(listener))
     }
-
 }

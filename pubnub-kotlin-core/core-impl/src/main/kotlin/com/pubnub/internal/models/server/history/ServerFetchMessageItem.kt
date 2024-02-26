@@ -11,5 +11,5 @@ data class ServerFetchMessageItem(
     val timetoken: Long,
     val actions: Map<String, Map<String, List<PNFetchMessageItem.Action>>>? = null,
     @SerializedName("message_type")
-    val messageType: Int?
+    val messageType: Int?,
 )

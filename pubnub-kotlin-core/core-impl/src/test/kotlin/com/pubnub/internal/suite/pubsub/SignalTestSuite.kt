@@ -12,16 +12,14 @@ import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 class SignalTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Signal, PNPublishResult>() {
-
     override fun pnOperation() = PNOperationType.PNSignalOperation
 
-    override fun requiredKeys() =
-        com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.PUB + com.pubnub.internal.suite.AUTH
+    override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.PUB + com.pubnub.internal.suite.AUTH
 
     override fun snippet(): Signal {
         return pubnub.signal(
             channel = "ch1",
-            message = "ch2"
+            message = "ch2",
         )
     }
 
@@ -37,9 +35,9 @@ class SignalTestSuite : com.pubnub.internal.suite.EndpointTestSuite<Signal, PNPu
         return get(
             urlPathEqualTo(
                 "/signal/myPublishKey/mySubscribeKey/0/ch1/0/%s".format(
-                    URLEncoder.encode(Gson().toJson("ch2"), StandardCharsets.UTF_8.name())
-                )
-            )
+                    URLEncoder.encode(Gson().toJson("ch2"), StandardCharsets.UTF_8.name()),
+                ),
+            ),
         )!!
     }
 

@@ -5,5 +5,5 @@ data class EntityArrayEnvelope<T>(
     val data: Collection<T> = listOf(),
     val totalCount: Int? = null,
     val next: String? = null,
-    val prev: String? = null
+    val prev: String? = null,
 )

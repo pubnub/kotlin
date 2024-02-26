@@ -9,26 +9,26 @@ import com.pubnub.api.models.consumer.history.PNDeleteMessagesResult
 import com.pubnub.internal.endpoints.DeleteMessages
 
 class DeleteMessagesTestSuite : com.pubnub.internal.suite.EndpointTestSuite<DeleteMessages, PNDeleteMessagesResult>() {
-
     override fun pnOperation() = PNOperationType.PNDeleteMessagesOperation
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH
 
     override fun snippet(): DeleteMessages =
         pubnub.deleteMessages(
-            channels = listOf("ch1")
+            channels = listOf("ch1"),
         )
 
     override fun verifyResultExpectations(result: PNDeleteMessagesResult) {
     }
 
-    override fun successfulResponseBody() = """
+    override fun successfulResponseBody() =
+        """
         {
          "status": 200,
          "error": false,
          "error_message": ""
         }
-    """.trimIndent()
+        """.trimIndent()
 
     override fun unsuccessfulResponseBodyList() = emptyList<String>()
 

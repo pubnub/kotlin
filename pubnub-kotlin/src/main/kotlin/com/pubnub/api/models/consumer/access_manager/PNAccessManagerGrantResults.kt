@@ -17,13 +17,17 @@ class PNAccessManagerGrantResult(
     val ttl: Int,
     val subscribeKey: String,
     val channels: Map<String, Map<String, PNAccessManagerKeyData>?>,
-    val channelGroups: Map<String, Map<String, PNAccessManagerKeyData>?>
+    val channelGroups: Map<String, Map<String, PNAccessManagerKeyData>?>,
 ) {
     companion object {
         fun from(result: com.pubnub.internal.models.consumer.access_manager.PNAccessManagerGrantResult): PNAccessManagerGrantResult {
             with(result) {
                 return PNAccessManagerGrantResult(
-                    level, ttl, subscribeKey, channels.toApi(), channelGroups.toApi()
+                    level,
+                    ttl,
+                    subscribeKey,
+                    channels.toApi(),
+                    channelGroups.toApi(),
                 )
             }
         }
@@ -37,7 +41,6 @@ private fun Map<String, Map<String, com.pubnub.internal.models.consumer.access_m
 }
 
 open class PNAccessManagerKeyData {
-
     /**
      * Is `true` if *read* rights are granted.
      */
@@ -62,7 +65,6 @@ open class PNAccessManagerKeyData {
     var joinEnabled: Boolean = false
 
     companion object {
-
         fun from(value: com.pubnub.internal.models.consumer.access_manager.PNAccessManagerKeyData): PNAccessManagerKeyData {
             return PNAccessManagerKeyData().apply {
                 this.readEnabled = value.readEnabled

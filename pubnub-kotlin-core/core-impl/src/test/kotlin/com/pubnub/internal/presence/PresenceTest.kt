@@ -42,27 +42,34 @@ internal class PresenceTest {
             return listOf(
                 arguments(
                     "JOINED",
-                    { presence: Presence -> presence.joined(setOf(CHANNEL_01), setOf(CHANNEL_GROUPS_01)) }
+                    { presence: Presence -> presence.joined(setOf(CHANNEL_01), setOf(CHANNEL_GROUPS_01)) },
                 ),
                 arguments("LEFT", { presence: Presence -> presence.left(setOf(CHANNEL_01), setOf(CHANNEL_GROUPS_01)) }),
                 arguments("LEFT_ALL", { presence: Presence -> presence.leftAll() }),
                 arguments("JOINED", { presence: Presence ->
                     presence.presence(
-                        setOf(CHANNEL_01), setOf(CHANNEL_GROUPS_01), connected = true
+                        setOf(CHANNEL_01),
+                        setOf(CHANNEL_GROUPS_01),
+                        connected = true,
                     )
                 }),
                 arguments("LEFT", { presence: Presence ->
                     presence.presence(
-                        setOf(CHANNEL_01), setOf(CHANNEL_GROUPS_01), connected = false
+                        setOf(CHANNEL_01),
+                        setOf(CHANNEL_GROUPS_01),
+                        connected = false,
                     )
-                })
+                }),
             )
         }
     }
 
     @ParameterizedTest
     @MethodSource("eventAndMethodProvider")
-    fun `should pass correct event for each method call`(eventName: String, method: Presence.() -> Unit) {
+    fun `should pass correct event for each method call`(
+        eventName: String,
+        method: Presence.() -> Unit,
+    ) {
         // given
         val queuedElements = mutableListOf<Pair<String, String>>()
         val presenceData = PresenceData()
@@ -70,7 +77,7 @@ internal class PresenceTest {
             Presence.create(
                 listenerManager = listenerManager,
                 eventEngineConf = QueueEventEngineConf(eventSinkSource = TestSinkSource(queuedElements)),
-                presenceData = presenceData
+                presenceData = presenceData,
             )
 
         // when
@@ -93,12 +100,13 @@ internal class PresenceTest {
     fun `Leave events not created when suppressLeaveEvents is true and heartbeat interval is 0`() {
         // given
         val leaveProviderMock: LeaveProvider = mockk()
-        val presence = Presence.create(
-            listenerManager = listenerManager,
-            heartbeatInterval = 0.seconds,
-            suppressLeaveEvents = true,
-            leaveProvider = leaveProviderMock,
-        )
+        val presence =
+            Presence.create(
+                listenerManager = listenerManager,
+                heartbeatInterval = 0.seconds,
+                suppressLeaveEvents = true,
+                leaveProvider = leaveProviderMock,
+            )
 
         // when
         presence.joined(setOf("abc"))
@@ -114,12 +122,13 @@ internal class PresenceTest {
         val leaveProviderMock: LeaveProvider = mockk()
         every { leaveProviderMock.getLeaveRemoteAction(any(), any()) } returns successfulRemoteAction(true)
 
-        val presence = Presence.create(
-            listenerManager = listenerManager,
-            heartbeatInterval = 0.seconds,
-            suppressLeaveEvents = false,
-            leaveProvider = leaveProviderMock,
-        )
+        val presence =
+            Presence.create(
+                listenerManager = listenerManager,
+                heartbeatInterval = 0.seconds,
+                suppressLeaveEvents = false,
+                leaveProvider = leaveProviderMock,
+            )
 
         // when
         presence.joined(setOf("abc"))
@@ -135,12 +144,13 @@ internal class PresenceTest {
         val leaveProviderMock: LeaveProvider = mockk()
         every { leaveProviderMock.getLeaveRemoteAction(any(), any()) } returns successfulRemoteAction(true)
 
-        val presence = Presence.create(
-            listenerManager = listenerManager,
-            heartbeatInterval = 0.seconds,
-            suppressLeaveEvents = false,
-            leaveProvider = leaveProviderMock,
-        )
+        val presence =
+            Presence.create(
+                listenerManager = listenerManager,
+                heartbeatInterval = 0.seconds,
+                suppressLeaveEvents = false,
+                leaveProvider = leaveProviderMock,
+            )
 
         // when
         presence.presence(channels = setOf("abc"), connected = false)
@@ -169,6 +179,6 @@ internal class PresenceTest {
         eventEngineConf = eventEngineConf,
         presenceData = presenceData,
         sendStateWithHeartbeat = true,
-        executorService = executorService
+        executorService = executorService,
     )
 }

@@ -5,9 +5,8 @@ internal class CryptorHeader(
     val version: Byte, // 1 byte
     val cryptorId: ByteArray, // 4 bytes
     val cryptorDataSize: ByteArray, // 1 or 3 bytes
-    val cryptorData: ByteArray // 0-65535 bytes
+    val cryptorData: ByteArray, // 0-65535 bytes
 ) {
-
     fun toByteArray(): ByteArray {
         return sentinel + version + cryptorId + cryptorDataSize + cryptorData
     }

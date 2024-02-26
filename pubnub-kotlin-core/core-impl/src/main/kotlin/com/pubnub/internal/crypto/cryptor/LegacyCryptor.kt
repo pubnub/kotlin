@@ -45,11 +45,11 @@ internal class LegacyCryptor(val cipherKey: String, val useRandomIv: Boolean = t
             val encrypted: ByteArray = cipher.doFinal(data)
             if (useRandomIv) {
                 EncryptedData(
-                    data = ivBytes + encrypted
+                    data = ivBytes + encrypted,
                 )
             } else {
                 EncryptedData(
-                    data = encrypted
+                    data = encrypted,
                 )
             }
         } catch (e: Exception) {
@@ -90,7 +90,7 @@ internal class LegacyCryptor(val cipherKey: String, val useRandomIv: Boolean = t
             if (numberOfReadBytes != IV_SIZE) {
                 throw PubNubException(
                     errorMessage = "Could not read IV from encrypted stream",
-                    pubnubError = PubNubError.CRYPTO_ERROR
+                    pubnubError = PubNubError.CRYPTO_ERROR,
                 )
             }
             val cipher = createInitializedCipher(ivBytes, Cipher.DECRYPT_MODE)
@@ -105,7 +105,7 @@ internal class LegacyCryptor(val cipherKey: String, val useRandomIv: Boolean = t
         bufferedInputStream.checkMinSize(IV_SIZE + SIZE_OF_ONE_BLOCK_OF_ENCRYPTED_DATA) {
             throw PubNubException(
                 errorMessage = "Encryption/Decryption of empty data not allowed.",
-                pubnubError = PubNubError.ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED
+                pubnubError = PubNubError.ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED,
             )
         }
         return bufferedInputStream
@@ -116,16 +116,17 @@ internal class LegacyCryptor(val cipherKey: String, val useRandomIv: Boolean = t
         bufferedInputStream.checkMinSize(1) {
             throw PubNubException(
                 errorMessage = "Encryption/Decryption of empty data not allowed.",
-                pubnubError = PubNubError.ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED
+                pubnubError = PubNubError.ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED,
             )
         }
         return bufferedInputStream
     }
 
     private fun createNewKey(): SecretKeySpec {
-        val keyBytes = String(hexEncode(sha256(cipherKey.toByteArray())), Charsets.UTF_8)
-            .substring(0, 32)
-            .lowercase(Locale.getDefault()).toByteArray()
+        val keyBytes =
+            String(hexEncode(sha256(cipherKey.toByteArray())), Charsets.UTF_8)
+                .substring(0, 32)
+                .lowercase(Locale.getDefault()).toByteArray()
         return SecretKeySpec(keyBytes, "AES")
     }
 
@@ -155,7 +156,7 @@ internal class LegacyCryptor(val cipherKey: String, val useRandomIv: Boolean = t
         if (data.isEmpty()) {
             throw PubNubException(
                 errorMessage = "Encryption/Decryption of empty data not allowed.",
-                pubnubError = PubNubError.ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED
+                pubnubError = PubNubError.ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED,
             )
         }
     }
@@ -180,14 +181,14 @@ internal class LegacyCryptor(val cipherKey: String, val useRandomIv: Boolean = t
             if (encryptedDatSize <= IV_SIZE) {
                 throw PubNubException(
                     errorMessage = "Encryption/Decryption of empty data not allowed.",
-                    pubnubError = PubNubError.ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED
+                    pubnubError = PubNubError.ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED,
                 )
             }
         } else {
             if (encryptedDatSize == 0) {
                 throw PubNubException(
                     errorMessage = "Encryption/Decryption of empty data not allowed.",
-                    pubnubError = PubNubError.ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED
+                    pubnubError = PubNubError.ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED,
                 )
             }
         }
@@ -201,19 +202,23 @@ internal class LegacyCryptor(val cipherKey: String, val useRandomIv: Boolean = t
         }
     }
 
-    private fun createInitializedCipher(iv: ByteArray, mode: Int): Cipher {
+    private fun createInitializedCipher(
+        iv: ByteArray,
+        mode: Int,
+    ): Cipher {
         return Cipher.getInstance(CIPHER_TRANSFORMATION).also {
             it.init(mode, newKey, IvParameterSpec(iv))
         }
     }
 
     private fun getEncryptedDataForProcessing(encryptedData: EncryptedData): ByteArray {
-        val encryptedDataForProcessing: ByteArray = if (useRandomIv) {
-            encryptedData.data.sliceArray(ENCRYPTED_DATA_STARTING_INDEX until encryptedData.data.size)
-        } else {
-            // when there is useRandomIv = false then there is no IV in message
-            encryptedData.data
-        }
+        val encryptedDataForProcessing: ByteArray =
+            if (useRandomIv) {
+                encryptedData.data.sliceArray(ENCRYPTED_DATA_STARTING_INDEX until encryptedData.data.size)
+            } else {
+                // when there is useRandomIv = false then there is no IV in message
+                encryptedData.data
+            }
         return encryptedDataForProcessing
     }
 }

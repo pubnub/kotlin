@@ -7,13 +7,13 @@ import java.lang.reflect.Type
 
 internal class PolymorphicDeserializer<T>(
     private val defaultClass: Class<out T>? = null,
-    private val findTargetClass: (JsonElement, Type) -> Class<out T>?
+    private val findTargetClass: (JsonElement, Type) -> Class<out T>?,
 ) : JsonDeserializer<T> {
     companion object {
         inline fun <reified T> dispatchByFieldsValues(
             fields: List<String>,
             mappingFieldValuesToClass: Map<List<String>, Class<out T>>,
-            defaultClass: Class<out T>? = null
+            defaultClass: Class<out T>? = null,
         ): JsonDeserializer<T> {
             val mappingWithList: Map<List<String>, Class<out T>> = mappingFieldValuesToClass.mapKeys { it.key.toList() }
             return PolymorphicDeserializer(defaultClass = defaultClass) { jsonElement, _ ->
@@ -25,9 +25,14 @@ internal class PolymorphicDeserializer<T>(
         }
     }
 
-    override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): T {
-        val targetClass = findTargetClass(json, typeOfT) ?: defaultClass
-            ?: error("When deserializing to $typeOfT no target class have been found and default class was not provided")
+    override fun deserialize(
+        json: JsonElement,
+        typeOfT: Type,
+        context: JsonDeserializationContext,
+    ): T {
+        val targetClass =
+            findTargetClass(json, typeOfT) ?: defaultClass
+                ?: error("When deserializing to $typeOfT no target class have been found and default class was not provided")
         return context.deserialize(json, targetClass)
     }
 }

@@ -7,5 +7,5 @@ data class ObjectPayload(
     val version: String,
     val event: String,
     val type: String,
-    val data: JsonElement
+    val data: JsonElement,
 )

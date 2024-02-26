@@ -11,7 +11,6 @@ import org.junit.Assert.assertEquals
 
 class AddMessageActionTestSuite :
     com.pubnub.internal.suite.EndpointTestSuite<AddMessageAction, PNAddMessageActionResult>() {
-
     override fun pnOperation() = PNOperationType.PNAddMessageAction
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH
@@ -19,30 +18,33 @@ class AddMessageActionTestSuite :
     override fun snippet(): AddMessageAction =
         pubnub.addMessageAction(
             channel = "ch1",
-            messageAction = PNMessageAction(
-                type = "reaction",
-                value = "smiley",
-                messageTimetoken = 1000
-            )
+            messageAction =
+                PNMessageAction(
+                    type = "reaction",
+                    value = "smiley",
+                    messageTimetoken = 1000,
+                ),
         )
 
-    override fun successfulResponseBody() = """
-            {
-             "status": 200,
-             "data": {
-              "messageTimetoken": "123",
-              "type": "reaction",
-              "uuid": "someUuid",
-              "value": "smiley",
-              "actionTimetoken": "1000"
-             }
-            }
-    """.trimIndent()
+    override fun successfulResponseBody() =
+        """
+        {
+         "status": 200,
+         "data": {
+          "messageTimetoken": "123",
+          "type": "reaction",
+          "uuid": "someUuid",
+          "value": "smiley",
+          "actionTimetoken": "1000"
+         }
+        }
+        """.trimIndent()
 
-    override fun unsuccessfulResponseBodyList() = listOf(
-        """{"status":200,"data":null}""",
-        """{"status":200}"""
-    )
+    override fun unsuccessfulResponseBodyList() =
+        listOf(
+            """{"status":200,"data":null}""",
+            """{"status":200}""",
+        )
 
     override fun verifyResultExpectations(result: PNAddMessageActionResult) {
         assertEquals(123L, result.messageTimetoken)
@@ -55,7 +57,7 @@ class AddMessageActionTestSuite :
     override fun mappingBuilder() =
         post(urlMatching("/v1/message-actions/mySubscribeKey/channel/ch1/message/1000.*"))
             .withRequestBody(
-                equalToJson("""{"type":"reaction","value":"smiley"}""")
+                equalToJson("""{"type":"reaction","value":"smiley"}"""),
             )
 
     override fun affectedChannelsAndGroups() = listOf("ch1") to emptyList<String>()

@@ -9,7 +9,6 @@ import io.mockk.verify
 import org.junit.jupiter.api.Test
 
 class LeaveEffectTest {
-
     private val leaveRemoteAction: RemoteAction<Boolean> = mockk()
 
     @Test

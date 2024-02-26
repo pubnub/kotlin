@@ -9,13 +9,12 @@ data class PNToken(
     val authorizedUUID: String? = null,
     val resources: PNTokenResources,
     val patterns: PNTokenResources,
-    val meta: Any? = null
+    val meta: Any? = null,
 ) {
-
     data class PNTokenResources(
         val channels: Map<String, PNResourcePermissions> = emptyMap(),
         val channelGroups: Map<String, PNResourcePermissions> = emptyMap(),
-        val uuids: Map<String, PNResourcePermissions> = emptyMap()
+        val uuids: Map<String, PNResourcePermissions> = emptyMap(),
     )
 
     data class PNResourcePermissions(
@@ -25,9 +24,8 @@ data class PNToken(
         val delete: Boolean = false,
         val get: Boolean = false,
         val update: Boolean = false,
-        val join: Boolean = false
+        val join: Boolean = false,
     ) {
-
         constructor(grant: Int) : this(
             grant and TokenBitmask.READ != 0,
             grant and TokenBitmask.WRITE != 0,
@@ -35,7 +33,7 @@ data class PNToken(
             grant and TokenBitmask.DELETE != 0,
             grant and TokenBitmask.GET != 0,
             grant and TokenBitmask.UPDATE != 0,
-            grant and TokenBitmask.JOIN != 0
+            grant and TokenBitmask.JOIN != 0,
         )
     }
 }

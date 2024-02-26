@@ -1,22 +1,22 @@
-//package com.pubnub.internal.v2.subscriptions
+// package com.pubnub.internal.v2.subscriptions
 //
-//import com.google.gson.JsonNull
-//import com.pubnub.api.UserId
-//import com.pubnub.api.callbacks.Listener
-//import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
-//import com.pubnub.api.models.consumer.pubsub.PNMessageResult
-//import com.pubnub.api.v2.subscriptions.BaseSubscription
-//import com.pubnub.api.v2.subscriptions.SubscriptionOptions
-//import com.pubnub.internal.BasePubNubImpl
-//import com.pubnub.internal.PNConfiguration
-//import com.pubnub.internal.TestPubNub
-//import com.pubnub.internal.v2.callbacks.InternalEventListener
-//import org.junit.jupiter.api.AfterEach
-//import org.junit.jupiter.api.Assertions.assertEquals
-//import org.junit.jupiter.api.BeforeEach
-//import org.junit.jupiter.api.Test
+// import com.google.gson.JsonNull
+// import com.pubnub.api.UserId
+// import com.pubnub.api.callbacks.Listener
+// import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
+// import com.pubnub.api.models.consumer.pubsub.PNMessageResult
+// import com.pubnub.api.v2.subscriptions.BaseSubscription
+// import com.pubnub.api.v2.subscriptions.SubscriptionOptions
+// import com.pubnub.internal.BasePubNubImpl
+// import com.pubnub.internal.PNConfiguration
+// import com.pubnub.internal.TestPubNub
+// import com.pubnub.internal.v2.callbacks.InternalEventListener
+// import org.junit.jupiter.api.AfterEach
+// import org.junit.jupiter.api.Assertions.assertEquals
+// import org.junit.jupiter.api.BeforeEach
+// import org.junit.jupiter.api.Test
 //
-//class SubscriptionImplTest {
+// class SubscriptionImplTest {
 //
 //    private lateinit var pubnub: TestPubNub
 //    private lateinit var subscriptions: BaseSubscription
@@ -139,4 +139,4 @@
 //        // then
 //        // no exception
 //    }
-//}
+// }

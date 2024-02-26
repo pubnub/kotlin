@@ -67,7 +67,7 @@ internal class SubscribeTest {
             setOf(channelToSubscribe),
             setOf(channelGroupsToSubscribe),
             withPresence,
-            withTimetoken
+            withTimetoken,
         )
 
         verify { subscribeEventEngineManager.addEventToQueue(any()) }
@@ -85,7 +85,7 @@ internal class SubscribeTest {
             setOf(CHANNEL_01, CHANNEL_02),
             setOf(CHANNEL_GROUPS_01, CHANNEL_GROUPS_02),
             withPresence = true,
-            withTimetoken
+            withTimetoken,
         )
         val channelsToUnsubscribe: Set<String> = setOf(CHANNEL_01)
         val channelGroupsToUnsubscribe: Set<String> = setOf(CHANNEL_GROUPS_01)
@@ -117,7 +117,6 @@ internal class SubscribeTest {
 
     @Test
     fun `should remove all channels and channelGroups from local storage when unsubscribeAll`() {
-
         objectUnderTest.unsubscribeAll()
 
         verify { subscribeEventEngineManager.addEventToQueue(any()) }
@@ -128,7 +127,6 @@ internal class SubscribeTest {
 
     @Test
     fun `should return subscribed channels from local storage when getSubscribedChannels`() {
-
         val subscribedChannels = objectUnderTest.getSubscribedChannels()
 
         assertEquals(channelsInSubscriptionData.toList(), subscribedChannels)
@@ -136,7 +134,6 @@ internal class SubscribeTest {
 
     @Test
     fun `should return subscribed channelGroups from local storage when getSubscribedChannelGroups`() {
-
         val subscribedChannelGroups = objectUnderTest.getSubscribedChannelGroups()
 
         assertEquals(channelGroupsInSubscriptionData.toList(), subscribedChannelGroups)
@@ -144,7 +141,6 @@ internal class SubscribeTest {
 
     @Test
     fun `should pass disconnect event for handling when disconnect`() {
-
         objectUnderTest.disconnect()
 
         assertEquals(SubscribeEvent.Disconnect, subscribeEvent.captured)

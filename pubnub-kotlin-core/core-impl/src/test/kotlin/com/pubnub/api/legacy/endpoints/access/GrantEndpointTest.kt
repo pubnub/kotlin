@@ -23,7 +23,6 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 
 class GrantEndpointTest : BaseTest() {
-
     override fun onBefore() {
         super.onBefore()
         pubnub.configuration.secretKey = "secretKey"
@@ -44,40 +43,41 @@ class GrantEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                              "message": "Success",
-                              "payload": {
-                                "level": "user",
-                                "subscribe_key": "sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f",
-                                "ttl": 1,
-                                "channel": "ch1",
-                                "auths": {
-                                  "key1": {
-                                    "r": 0,
-                                    "w": 0,
-                                    "m": 0
-                                  }
-                                }
-                              },
-                              "service": "Access Manager",
-                              "status": 200
+                        {
+                          "message": "Success",
+                          "payload": {
+                            "level": "user",
+                            "subscribe_key": "sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f",
+                            "ttl": 1,
+                            "channel": "ch1",
+                            "auths": {
+                              "key1": {
+                                "r": 0,
+                                "w": 0,
+                                "m": 0
+                              }
                             }
-                        """.trimIndent()
-                    )
-                )
+                          },
+                          "service": "Access Manager",
+                          "status": 200
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val result = pubnub.grant(
-            authKeys = listOf("key1"),
-            channels = listOf("ch1")
-        ).sync()
+        val result =
+            pubnub.grant(
+                authKeys = listOf("key1"),
+                channels = listOf("ch1"),
+            ).sync()
 
         assertEquals(1, result.channels.size)
         assertEquals(0, result.channelGroups.size)
         assertEquals(1, result.channels["ch1"]!!.size) // todo replace with error
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channels["ch1"]!!["key1"]!!.javaClass
+            result.channels["ch1"]!!["key1"]!!.javaClass,
         )
 
         val requests =
@@ -100,49 +100,50 @@ class GrantEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                              "message": "Success",
-                              "payload": {
-                                "level": "user",
-                                "subscribe_key": "sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f",
-                                "ttl": 1,
-                                "channel": "ch1",
-                                "auths": {
-                                  "key1": {
-                                    "r": 0,
-                                    "w": 0,
-                                    "m": 0
-                                  },
-                                  "key2": {
-                                    "r": 0,
-                                    "w": 0,
-                                    "m": 0
-                                  }
-                                }
+                        {
+                          "message": "Success",
+                          "payload": {
+                            "level": "user",
+                            "subscribe_key": "sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f",
+                            "ttl": 1,
+                            "channel": "ch1",
+                            "auths": {
+                              "key1": {
+                                "r": 0,
+                                "w": 0,
+                                "m": 0
                               },
-                              "service": "Access Manager",
-                              "status": 200
+                              "key2": {
+                                "r": 0,
+                                "w": 0,
+                                "m": 0
+                              }
                             }
-                        """.trimIndent()
-                    )
-                )
+                          },
+                          "service": "Access Manager",
+                          "status": 200
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val result = pubnub.grant(
-            authKeys = listOf("key1", "key2"),
-            channels = listOf("ch1")
-        ).sync()
+        val result =
+            pubnub.grant(
+                authKeys = listOf("key1", "key2"),
+                channels = listOf("ch1"),
+            ).sync()
 
         assertEquals(1, result.channels.size)
         assertEquals(0, result.channelGroups.size)
         assertEquals(2, result.channels["ch1"]!!.size)
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channels["ch1"]!!["key1"]!!.javaClass
+            result.channels["ch1"]!!["key1"]!!.javaClass,
         )
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channels["ch1"]!!["key2"]!!.javaClass
+            result.channels["ch1"]!!["key2"]!!.javaClass,
         )
         val requests =
             findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")))
@@ -164,45 +165,46 @@ class GrantEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                              "message": "Success",
-                              "payload": {
-                                "level": "user",
-                                "subscribe_key": "sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f",
-                                "ttl": 1,
-                                "channels": {
-                                  "ch1": {
-                                    "auths": {
-                                      "key1": {
-                                        "r": 0,
-                                        "w": 0,
-                                        "m": 0
-                                      }
-                                    }
-                                  },
-                                  "ch2": {
-                                    "auths": {
-                                      "key1": {
-                                        "r": 0,
-                                        "w": 0,
-                                        "m": 0
-                                      }
-                                    }
+                        {
+                          "message": "Success",
+                          "payload": {
+                            "level": "user",
+                            "subscribe_key": "sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f",
+                            "ttl": 1,
+                            "channels": {
+                              "ch1": {
+                                "auths": {
+                                  "key1": {
+                                    "r": 0,
+                                    "w": 0,
+                                    "m": 0
                                   }
                                 }
                               },
-                              "service": "Access Manager",
-                              "status": 200
+                              "ch2": {
+                                "auths": {
+                                  "key1": {
+                                    "r": 0,
+                                    "w": 0,
+                                    "m": 0
+                                  }
+                                }
+                              }
                             }
-                        """.trimIndent()
-                    )
-                )
+                          },
+                          "service": "Access Manager",
+                          "status": 200
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val result = pubnub.grant(
-            authKeys = listOf("key1"),
-            channels = listOf("ch1", "ch2")
-        ).sync()
+        val result =
+            pubnub.grant(
+                authKeys = listOf("key1"),
+                channels = listOf("ch1", "ch2"),
+            ).sync()
 
         assertEquals(2, result.channels.size)
         assertEquals(0, result.channelGroups.size)
@@ -210,11 +212,11 @@ class GrantEndpointTest : BaseTest() {
         assertEquals(1, result.channels["ch2"]!!.size)
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channels["ch1"]!!["key1"]!!.javaClass
+            result.channels["ch1"]!!["key1"]!!.javaClass,
         )
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channels["ch2"]!!["key1"]!!.javaClass
+            result.channels["ch2"]!!["key1"]!!.javaClass,
         )
         val requests =
             findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")))
@@ -235,55 +237,56 @@ class GrantEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                              "message": "Success",
-                              "payload": {
-                                "level": "user",
-                                "subscribe_key": "sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f",
-                                "ttl": 1,
-                                "channels": {
-                                  "ch1": {
-                                    "auths": {
-                                      "key1": {
-                                        "r": 0,
-                                        "w": 0,
-                                        "m": 0
-                                      },
-                                      "key2": {
-                                        "r": 0,
-                                        "w": 0,
-                                        "m": 0
-                                      }
-                                    }
+                        {
+                          "message": "Success",
+                          "payload": {
+                            "level": "user",
+                            "subscribe_key": "sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f",
+                            "ttl": 1,
+                            "channels": {
+                              "ch1": {
+                                "auths": {
+                                  "key1": {
+                                    "r": 0,
+                                    "w": 0,
+                                    "m": 0
                                   },
-                                  "ch2": {
-                                    "auths": {
-                                      "key1": {
-                                        "r": 0,
-                                        "w": 0,
-                                        "m": 0
-                                      },
-                                      "key2": {
-                                        "r": 0,
-                                        "w": 0,
-                                        "m": 0
-                                      }
-                                    }
+                                  "key2": {
+                                    "r": 0,
+                                    "w": 0,
+                                    "m": 0
                                   }
                                 }
                               },
-                              "service": "Access Manager",
-                              "status": 200
+                              "ch2": {
+                                "auths": {
+                                  "key1": {
+                                    "r": 0,
+                                    "w": 0,
+                                    "m": 0
+                                  },
+                                  "key2": {
+                                    "r": 0,
+                                    "w": 0,
+                                    "m": 0
+                                  }
+                                }
+                              }
                             }
-                        """.trimIndent()
-                    )
-                )
+                          },
+                          "service": "Access Manager",
+                          "status": 200
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val result = pubnub.grant(
-            authKeys = (listOf("key1", "key2")),
-            channels = (listOf("ch1", "ch2"))
-        ).sync()
+        val result =
+            pubnub.grant(
+                authKeys = (listOf("key1", "key2")),
+                channels = (listOf("ch1", "ch2")),
+            ).sync()
 
         assertEquals(2, result.channels.size)
         assertEquals(0, result.channelGroups.size)
@@ -291,15 +294,15 @@ class GrantEndpointTest : BaseTest() {
         assertEquals(2, result.channels["ch2"]!!.size)
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channels["ch1"]!!["key1"]!!.javaClass
+            result.channels["ch1"]!!["key1"]!!.javaClass,
         )
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channels["ch2"]!!["key1"]!!.javaClass
+            result.channels["ch2"]!!["key1"]!!.javaClass,
         )
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channels["ch1"]!!["key2"]!!.javaClass
+            result.channels["ch1"]!!["key2"]!!.javaClass,
         )
         assertEquals(PNAccessManagerKeyData::class.java, result.channels["ch2"]!!["key2"]!!.javaClass)
         val requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")))
@@ -321,40 +324,41 @@ class GrantEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                              "message": "Success",
-                              "payload": {
-                                "level": "channel-group+auth",
-                                "subscribe_key": "sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f",
-                                "ttl": 1,
-                                "channel-groups": "cg1",
-                                "auths": {
-                                  "key1": {
-                                    "r": 0,
-                                    "w": 0,
-                                    "m": 0
-                                  }
-                                }
-                              },
-                              "service": "Access Manager",
-                              "status": 200
+                        {
+                          "message": "Success",
+                          "payload": {
+                            "level": "channel-group+auth",
+                            "subscribe_key": "sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f",
+                            "ttl": 1,
+                            "channel-groups": "cg1",
+                            "auths": {
+                              "key1": {
+                                "r": 0,
+                                "w": 0,
+                                "m": 0
+                              }
                             }
-                        """.trimIndent()
-                    )
-                )
+                          },
+                          "service": "Access Manager",
+                          "status": 200
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val result = pubnub.grant(
-            authKeys = listOf("key1"),
-            channelGroups = listOf("cg1")
-        ).sync()
+        val result =
+            pubnub.grant(
+                authKeys = listOf("key1"),
+                channelGroups = listOf("cg1"),
+            ).sync()
 
         assertEquals(0, result.channels.size)
         assertEquals(1, result.channelGroups.size)
         assertEquals(1, result.channelGroups["cg1"]!!.size)
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channelGroups["cg1"]!!["key1"]!!.javaClass
+            result.channelGroups["cg1"]!!["key1"]!!.javaClass,
         )
         val requests =
             findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")))
@@ -399,26 +403,27 @@ class GrantEndpointTest : BaseTest() {
                          "service": "Access Manager",
                          "status": 200
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val result = pubnub.grant(
-            authKeys = listOf("key1", "key2"),
-            channelGroups = listOf("cg1")
-        ).sync()
+        val result =
+            pubnub.grant(
+                authKeys = listOf("key1", "key2"),
+                channelGroups = listOf("cg1"),
+            ).sync()
 
         assertEquals(0, result.channels.size)
         assertEquals(1, result.channelGroups.size)
         assertEquals(2, result.channelGroups["cg1"]!!.size)
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channelGroups["cg1"]!!["key1"]!!.javaClass
+            result.channelGroups["cg1"]!!["key1"]!!.javaClass,
         )
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channelGroups["cg1"]!!["key2"]!!.javaClass
+            result.channelGroups["cg1"]!!["key2"]!!.javaClass,
         )
 
         val requests =
@@ -442,47 +447,48 @@ class GrantEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                             "message": "Success",
-                             "payload": {
-                              "level": "channel-group+auth",
-                              "subscribe_key": "sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f",
-                              "ttl": 1,
-                              "channel": "ch1",
-                              "auths": {
-                               "key1": {
-                                "r": 0,
-                                "w": 0,
-                                "m": 0
-                               }
-                              },
-                              "channel-groups": "cg1"
-                             },
-                             "service": "Access Manager",
-                             "status": 200
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                         "message": "Success",
+                         "payload": {
+                          "level": "channel-group+auth",
+                          "subscribe_key": "sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f",
+                          "ttl": 1,
+                          "channel": "ch1",
+                          "auths": {
+                           "key1": {
+                            "r": 0,
+                            "w": 0,
+                            "m": 0
+                           }
+                          },
+                          "channel-groups": "cg1"
+                         },
+                         "service": "Access Manager",
+                         "status": 200
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val result = pubnub.grant(
-            authKeys = listOf("key1"),
-            channels = listOf("ch1"),
-            channelGroups = listOf("cg1")
-        ).sync()
+        val result =
+            pubnub.grant(
+                authKeys = listOf("key1"),
+                channels = listOf("ch1"),
+                channelGroups = listOf("cg1"),
+            ).sync()
 
         assertEquals(1, result.channels.size)
         assertEquals(1, result.channelGroups.size)
         assertEquals(1, result.channelGroups["cg1"]!!.size)
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channelGroups["cg1"]!!["key1"]!!.javaClass
+            result.channelGroups["cg1"]!!["key1"]!!.javaClass,
         )
         assertEquals(1, result.channels["ch1"]!!.size)
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channels["ch1"]!!["key1"]!!.javaClass
+            result.channels["ch1"]!!["key1"]!!.javaClass,
         )
         val requests =
             findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")))
@@ -505,56 +511,57 @@ class GrantEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                              "message": "Success",
-                              "payload": {
-                                "level": "channel-group+auth",
-                                "subscribe_key": "sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f",
-                                "ttl": 1,
-                                "channel": "ch1",
-                                "auths": {
-                                  "key1": {
-                                    "r": 0,
-                                    "w": 0,
-                                    "m": 0
-                                  },
-                                  "key2": {
-                                    "r": 0,
-                                    "w": 0,
-                                    "m": 0
-                                  }
-                                },
-                                "channel-groups": "cg1"
+                        {
+                          "message": "Success",
+                          "payload": {
+                            "level": "channel-group+auth",
+                            "subscribe_key": "sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f",
+                            "ttl": 1,
+                            "channel": "ch1",
+                            "auths": {
+                              "key1": {
+                                "r": 0,
+                                "w": 0,
+                                "m": 0
                               },
-                              "service": "Access Manager",
-                              "status": 200
-                            }
-                        """.trimIndent()
-                    )
-                )
+                              "key2": {
+                                "r": 0,
+                                "w": 0,
+                                "m": 0
+                              }
+                            },
+                            "channel-groups": "cg1"
+                          },
+                          "service": "Access Manager",
+                          "status": 200
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val result = pubnub.grant(
-            authKeys = listOf("key1", "key2"),
-            channels = listOf("ch1"),
-            channelGroups = listOf("cg1")
-        ).sync()
+        val result =
+            pubnub.grant(
+                authKeys = listOf("key1", "key2"),
+                channels = listOf("ch1"),
+                channelGroups = listOf("cg1"),
+            ).sync()
 
         assertEquals(1, result.channels.size)
         assertEquals(1, result.channelGroups.size)
         assertEquals(2, result.channelGroups["cg1"]!!.size)
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channelGroups["cg1"]!!["key1"]!!.javaClass
+            result.channelGroups["cg1"]!!["key1"]!!.javaClass,
         )
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channelGroups["cg1"]!!["key2"]!!.javaClass
+            result.channelGroups["cg1"]!!["key2"]!!.javaClass,
         )
         assertEquals(2, result.channels["ch1"]!!.size)
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channels["ch1"]!!["key1"]!!.javaClass
+            result.channels["ch1"]!!["key1"]!!.javaClass,
         )
         assertEquals(PNAccessManagerKeyData::class.java, result.channels["ch1"]!!["key2"]!!.javaClass)
         val requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")))
@@ -615,32 +622,33 @@ class GrantEndpointTest : BaseTest() {
                           "service": "Access Manager",
                           "status": 200
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val result = pubnub.grant(
-            authKeys = listOf("key1"),
-            channels = listOf("ch1", "ch2"),
-            channelGroups = listOf("cg1")
-        ).sync()
+        val result =
+            pubnub.grant(
+                authKeys = listOf("key1"),
+                channels = listOf("ch1", "ch2"),
+                channelGroups = listOf("cg1"),
+            ).sync()
 
         assertEquals(2, result.channels.size)
         assertEquals(1, result.channelGroups.size)
         assertEquals(1, result.channelGroups["cg1"]!!.size)
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channelGroups["cg1"]!!["key1"]!!.javaClass
+            result.channelGroups["cg1"]!!["key1"]!!.javaClass,
         )
         assertEquals(1, result.channels["ch1"]!!.size)
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channels["ch1"]!!["key1"]!!.javaClass
+            result.channels["ch1"]!!["key1"]!!.javaClass,
         )
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channels["ch2"]!!["key1"]!!.javaClass
+            result.channels["ch2"]!!["key1"]!!.javaClass,
         )
         val requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")))
         assertEquals(1, requests.size)
@@ -715,32 +723,33 @@ class GrantEndpointTest : BaseTest() {
                           "service": "Access Manager",
                           "status": 200
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val result = pubnub.grant(
-            authKeys = listOf("key1", "key2"),
-            channels = listOf("ch1", "ch2"),
-            channelGroups = listOf("cg1")
-        ).sync()
+        val result =
+            pubnub.grant(
+                authKeys = listOf("key1", "key2"),
+                channels = listOf("ch1", "ch2"),
+                channelGroups = listOf("cg1"),
+            ).sync()
 
         assertEquals(2, result.channels.size)
         assertEquals(1, result.channelGroups.size)
         assertEquals(2, result.channelGroups["cg1"]!!.size)
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channelGroups["cg1"]!!["key1"]!!.javaClass
+            result.channelGroups["cg1"]!!["key1"]!!.javaClass,
         )
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channelGroups["cg1"]!!["key2"]!!.javaClass
+            result.channelGroups["cg1"]!!["key2"]!!.javaClass,
         )
         assertEquals(2, result.channels["ch1"]!!.size)
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channels["ch1"]!!["key1"]!!.javaClass
+            result.channels["ch1"]!!["key1"]!!.javaClass,
         )
         assertEquals(PNAccessManagerKeyData::class.java, result.channels["ch1"]!!["key2"]!!.javaClass)
         assertEquals(PNAccessManagerKeyData::class.java, result.channels["ch2"]!!["key1"]!!.javaClass)
@@ -795,15 +804,16 @@ class GrantEndpointTest : BaseTest() {
                           "service": "Access Manager",
                           "status": 200
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val result = pubnub.grant(
-            authKeys = listOf("key1"),
-            channelGroups = listOf("cg1", "cg2")
-        ).sync()
+        val result =
+            pubnub.grant(
+                authKeys = listOf("key1"),
+                channelGroups = listOf("cg1", "cg2"),
+            ).sync()
 
         assertEquals(0, result.channels.size)
         assertEquals(2, result.channelGroups.size)
@@ -811,11 +821,11 @@ class GrantEndpointTest : BaseTest() {
         assertEquals(1, result.channelGroups["cg2"]!!.size)
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channelGroups["cg1"]!!["key1"]!!.javaClass
+            result.channelGroups["cg1"]!!["key1"]!!.javaClass,
         )
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channelGroups["cg2"]!!["key1"]!!.javaClass
+            result.channelGroups["cg2"]!!["key1"]!!.javaClass,
         )
         val requests =
             findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")))
@@ -837,74 +847,75 @@ class GrantEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                         {
-                           "message": "Success",
-                           "payload": {
-                             "level": "channel-group+auth",
-                             "subscribe_key": "sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f",
-                             "ttl": 1,
-                             "channel-groups": {
-                               "cg1": {
-                                 "auths": {
-                                   "key1": {
-                                     "r": 0,
-                                     "w": 0,
-                                     "m": 0
-                                   },
-                                   "key2": {
-                                     "r": 0,
-                                     "w": 0,
-                                     "m": 0
-                                   }
-                                 }
-                               },
-                               "cg2": {
-                                 "auths": {
-                                   "key1": {
-                                     "r": 0,
-                                     "w": 0,
-                                     "m": 0
-                                   },
-                                   "key2": {
-                                     "r": 0,
-                                     "w": 0,
-                                     "m": 0
-                                   }
-                                 }
-                               }
-                             }
-                           },
-                           "service": "Access Manager",
-                           "status": 200
-                         }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                          "message": "Success",
+                          "payload": {
+                            "level": "channel-group+auth",
+                            "subscribe_key": "sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f",
+                            "ttl": 1,
+                            "channel-groups": {
+                              "cg1": {
+                                "auths": {
+                                  "key1": {
+                                    "r": 0,
+                                    "w": 0,
+                                    "m": 0
+                                  },
+                                  "key2": {
+                                    "r": 0,
+                                    "w": 0,
+                                    "m": 0
+                                  }
+                                }
+                              },
+                              "cg2": {
+                                "auths": {
+                                  "key1": {
+                                    "r": 0,
+                                    "w": 0,
+                                    "m": 0
+                                  },
+                                  "key2": {
+                                    "r": 0,
+                                    "w": 0,
+                                    "m": 0
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "service": "Access Manager",
+                          "status": 200
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val result = pubnub.grant(
-            authKeys = listOf("key1", "key2"),
-            channelGroups = listOf("cg1", "cg2")
-        ).sync()
+        val result =
+            pubnub.grant(
+                authKeys = listOf("key1", "key2"),
+                channelGroups = listOf("cg1", "cg2"),
+            ).sync()
 
         assertEquals(0, result.channels.size)
         assertEquals(2, result.channelGroups.size)
         assertEquals(2, result.channelGroups["cg1"]!!.size)
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channelGroups["cg1"]!!["key1"]!!.javaClass
+            result.channelGroups["cg1"]!!["key1"]!!.javaClass,
         )
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channelGroups["cg1"]!!["key2"]!!.javaClass
+            result.channelGroups["cg1"]!!["key2"]!!.javaClass,
         )
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channelGroups["cg2"]!!["key1"]!!.javaClass
+            result.channelGroups["cg2"]!!["key1"]!!.javaClass,
         )
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channelGroups["cg2"]!!["key2"]!!.javaClass
+            result.channelGroups["cg2"]!!["key2"]!!.javaClass,
         )
 
         val requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")))
@@ -965,16 +976,17 @@ class GrantEndpointTest : BaseTest() {
                           "service": "Access Manager",
                           "status": 200
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val result = pubnub.grant(
-            authKeys = listOf("key1"),
-            channels = listOf("ch1"),
-            channelGroups = listOf("cg1", "cg2")
-        ).sync()
+        val result =
+            pubnub.grant(
+                authKeys = listOf("key1"),
+                channels = listOf("ch1"),
+                channelGroups = listOf("cg1", "cg2"),
+            ).sync()
 
         assertEquals(1, result.channels.size)
         assertEquals(2, result.channelGroups.size)
@@ -982,11 +994,11 @@ class GrantEndpointTest : BaseTest() {
         assertEquals(1, result.channelGroups["cg2"]!!.size)
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channelGroups["cg1"]!!["key1"]!!.javaClass
+            result.channelGroups["cg1"]!!["key1"]!!.javaClass,
         )
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channelGroups["cg2"]!!["key1"]!!.javaClass
+            result.channelGroups["cg2"]!!["key1"]!!.javaClass,
         )
         assertEquals(1, result.channels["ch1"]!!.size)
         assertEquals(PNAccessManagerKeyData::class.java, result.channels["ch1"]!!["key1"]!!.javaClass)
@@ -1064,16 +1076,17 @@ class GrantEndpointTest : BaseTest() {
                           "service": "Access Manager",
                           "status": 200
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val result = pubnub.grant(
-            authKeys = listOf("key1", "key2"),
-            channels = listOf("ch1"),
-            channelGroups = listOf("cg1", "cg2")
-        ).sync()
+        val result =
+            pubnub.grant(
+                authKeys = listOf("key1", "key2"),
+                channels = listOf("ch1"),
+                channelGroups = listOf("cg1", "cg2"),
+            ).sync()
 
         assertEquals(1, result.channels.size)
         assertEquals(2, result.channelGroups.size)
@@ -1081,15 +1094,15 @@ class GrantEndpointTest : BaseTest() {
         assertEquals(2, result.channelGroups["cg2"]!!.size)
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channelGroups["cg1"]!!["key1"]!!.javaClass
+            result.channelGroups["cg1"]!!["key1"]!!.javaClass,
         )
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channelGroups["cg1"]!!["key2"]!!.javaClass
+            result.channelGroups["cg1"]!!["key2"]!!.javaClass,
         )
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channelGroups["cg2"]!!["key1"]!!.javaClass
+            result.channelGroups["cg2"]!!["key1"]!!.javaClass,
         )
         assertEquals(PNAccessManagerKeyData::class.java, result.channelGroups["cg2"]!!["key2"]!!.javaClass)
         assertEquals(2, result.channels["ch1"]!!.size)
@@ -1165,16 +1178,17 @@ class GrantEndpointTest : BaseTest() {
                           "service": "Access Manager",
                           "status": 200
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val result = pubnub.grant(
-            authKeys = listOf("key1"),
-            channels = listOf("ch1", "ch2"),
-            channelGroups = listOf("cg1", "cg2")
-        ).sync()
+        val result =
+            pubnub.grant(
+                authKeys = listOf("key1"),
+                channels = listOf("ch1", "ch2"),
+                channelGroups = listOf("cg1", "cg2"),
+            ).sync()
 
         assertEquals(2, result.channels.size)
         assertEquals(2, result.channelGroups.size)
@@ -1182,11 +1196,11 @@ class GrantEndpointTest : BaseTest() {
         assertEquals(1, result.channelGroups["cg2"]!!.size)
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channelGroups["cg1"]!!["key1"]!!.javaClass
+            result.channelGroups["cg1"]!!["key1"]!!.javaClass,
         )
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channelGroups["cg2"]!!["key1"]!!.javaClass
+            result.channelGroups["cg2"]!!["key1"]!!.javaClass,
         )
         assertEquals(1, result.channels["ch1"]!!.size)
         assertEquals(1, result.channels["ch2"]!!.size)
@@ -1283,16 +1297,17 @@ class GrantEndpointTest : BaseTest() {
                           "service": "Access Manager",
                           "status": 200
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val result = pubnub.grant(
-            authKeys = listOf("key1", "key2"),
-            channels = listOf("ch1", "ch2"),
-            channelGroups = listOf("cg1", "cg2")
-        ).sync()
+        val result =
+            pubnub.grant(
+                authKeys = listOf("key1", "key2"),
+                channels = listOf("ch1", "ch2"),
+                channelGroups = listOf("cg1", "cg2"),
+            ).sync()
 
         assertEquals(2, result.channels.size)
         assertEquals(2, result.channelGroups.size)
@@ -1300,15 +1315,15 @@ class GrantEndpointTest : BaseTest() {
         assertEquals(2, result.channelGroups["cg2"]!!.size)
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channelGroups["cg1"]!!["key1"]!!.javaClass
+            result.channelGroups["cg1"]!!["key1"]!!.javaClass,
         )
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channelGroups["cg1"]!!["key2"]!!.javaClass
+            result.channelGroups["cg1"]!!["key2"]!!.javaClass,
         )
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channelGroups["cg2"]!!["key1"]!!.javaClass
+            result.channelGroups["cg2"]!!["key1"]!!.javaClass,
         )
         assertEquals(PNAccessManagerKeyData::class.java, result.channelGroups["cg2"]!!["key2"]!!.javaClass)
         assertEquals(2, result.channels["ch1"]!!.size)
@@ -1338,41 +1353,42 @@ class GrantEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                              "message": "Success",
-                              "payload": {
-                                "level": "user",
-                                "subscribe_key": "sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f",
-                                "ttl": 1,
-                                "channel": "ch1",
-                                "auths": {
-                                  "key1": {
-                                    "r": 0,
-                                    "w": 0,
-                                    "m": 0
-                                  }
-                                }
-                              },
-                              "service": "Access Manager",
-                              "status": 200
+                        {
+                          "message": "Success",
+                          "payload": {
+                            "level": "user",
+                            "subscribe_key": "sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f",
+                            "ttl": 1,
+                            "channel": "ch1",
+                            "auths": {
+                              "key1": {
+                                "r": 0,
+                                "w": 0,
+                                "m": 0
+                              }
                             }
-                        """.trimIndent()
-                    )
-                )
+                          },
+                          "service": "Access Manager",
+                          "status": 200
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val result = pubnub.grant(
-            authKeys = listOf("key1"),
-            channels = listOf("ch1"),
-            ttl = 1334
-        ).sync()
+        val result =
+            pubnub.grant(
+                authKeys = listOf("key1"),
+                channels = listOf("ch1"),
+                ttl = 1334,
+            ).sync()
 
         assertEquals(1, result.channels.size)
         assertEquals(0, result.channelGroups.size)
         assertEquals(1, result.channels["ch1"]!!.size)
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channels["ch1"]!!["key1"]!!.javaClass
+            result.channels["ch1"]!!["key1"]!!.javaClass,
         )
 
         val requests =
@@ -1413,23 +1429,24 @@ class GrantEndpointTest : BaseTest() {
                           "service": "Access Manager",
                           "status": 200
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val result = pubnub.grant(
-            authKeys = listOf("key1"),
-            channels = listOf("ch1"),
-            read = true
-        ).sync()
+        val result =
+            pubnub.grant(
+                authKeys = listOf("key1"),
+                channels = listOf("ch1"),
+                read = true,
+            ).sync()
 
         assertEquals(1, result.channels.size)
         assertEquals(0, result.channelGroups.size)
         assertEquals(1, result.channels["ch1"]!!.size)
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channels["ch1"]!!["key1"]!!.javaClass
+            result.channels["ch1"]!!["key1"]!!.javaClass,
         )
 
         val requests =
@@ -1470,23 +1487,24 @@ class GrantEndpointTest : BaseTest() {
                           "service": "Access Manager",
                           "status": 200
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val result = pubnub.grant(
-            authKeys = listOf("key1"),
-            channels = listOf("ch1"),
-            write = true
-        ).sync()
+        val result =
+            pubnub.grant(
+                authKeys = listOf("key1"),
+                channels = listOf("ch1"),
+                write = true,
+            ).sync()
 
         assertEquals(1, result.channels.size)
         assertEquals(0, result.channelGroups.size)
         assertEquals(1, result.channels["ch1"]!!.size)
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channels["ch1"]!!["key1"]!!.javaClass
+            result.channels["ch1"]!!["key1"]!!.javaClass,
         )
 
         val requests =
@@ -1528,23 +1546,24 @@ class GrantEndpointTest : BaseTest() {
                           "service": "Access Manager",
                           "status": 200
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val result = pubnub.grant(
-            authKeys = listOf("key1"),
-            channels = listOf("ch1"),
-            delete = true
-        ).sync()
+        val result =
+            pubnub.grant(
+                authKeys = listOf("key1"),
+                channels = listOf("ch1"),
+                delete = true,
+            ).sync()
 
         assertEquals(1, result.channels.size)
         assertEquals(0, result.channelGroups.size)
         assertEquals(1, result.channels["ch1"]!!.size)
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channels["ch1"]!!["key1"]!!.javaClass
+            result.channels["ch1"]!!["key1"]!!.javaClass,
         )
 
         val requests =
@@ -1585,23 +1604,24 @@ class GrantEndpointTest : BaseTest() {
                           "service": "Access Manager",
                           "status": 200
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val result = pubnub.grant(
-            authKeys = listOf("key1"),
-            channels = listOf("ch1"),
-            manage = true
-        ).sync()
+        val result =
+            pubnub.grant(
+                authKeys = listOf("key1"),
+                channels = listOf("ch1"),
+                manage = true,
+            ).sync()
 
         assertEquals(1, result.channels.size)
         assertEquals(0, result.channelGroups.size)
         assertEquals(1, result.channels["ch1"]!!.size)
         assertEquals(
             PNAccessManagerKeyData::class.java,
-            result.channels["ch1"]!!["key1"]!!.javaClass
+            result.channels["ch1"]!!["key1"]!!.javaClass,
         )
 
         val requests =
@@ -1642,15 +1662,15 @@ class GrantEndpointTest : BaseTest() {
                           "service": "Access Manager",
                           "status": 200
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
         pubnub.configuration.authKey = "myKey"
 
         pubnub.grant(
             authKeys = listOf("key1"),
-            channels = listOf("ch1")
+            channels = listOf("ch1"),
         ).sync()
 
         val requests =
@@ -1692,14 +1712,14 @@ class GrantEndpointTest : BaseTest() {
                           "service": "Access Manager",
                           "status": 200
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         pubnub.grant(
             authKeys = listOf("key1"),
-            channels = listOf("ch1")
+            channels = listOf("ch1"),
         ).async { result ->
             assertFalse(result.isFailure)
             atomic.set(true)
@@ -1714,7 +1734,7 @@ class GrantEndpointTest : BaseTest() {
         try {
             pubnub.grant(
                 authKeys = listOf("key1"),
-                channels = listOf("ch1")
+                channels = listOf("ch1"),
             ).sync()
             failTest()
         } catch (e: Exception) {
@@ -1728,7 +1748,7 @@ class GrantEndpointTest : BaseTest() {
         try {
             pubnub.grant(
                 authKeys = listOf("key1"),
-                channels = listOf("ch1")
+                channels = listOf("ch1"),
             ).sync()
             failTest()
         } catch (e: Exception) {
@@ -1742,7 +1762,7 @@ class GrantEndpointTest : BaseTest() {
         try {
             pubnub.grant(
                 authKeys = listOf("key1"),
-                channels = listOf("ch1")
+                channels = listOf("ch1"),
             ).sync()
             failTest()
         } catch (e: Exception) {
@@ -1756,7 +1776,7 @@ class GrantEndpointTest : BaseTest() {
         try {
             pubnub.grant(
                 authKeys = listOf("key1"),
-                channels = listOf("ch1")
+                channels = listOf("ch1"),
             ).sync()
             failTest()
         } catch (e: Exception) {
@@ -1775,23 +1795,23 @@ class GrantEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withStatus(200).withBody(
                         """
-                            {
-                              "message": "Success",
-                              "payload": {
-                                "level": "subkey",
-                                "subscribe_key": "mySubscribeKey",
-                                "ttl": 1440,
-                                "r": 0,
-                                "w": 1,
-                                "m": 0,
-                                "d": 0
-                              },
-                              "service": "Access Manager",
-                              "status": 200
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                          "message": "Success",
+                          "payload": {
+                            "level": "subkey",
+                            "subscribe_key": "mySubscribeKey",
+                            "ttl": 1440,
+                            "r": 0,
+                            "w": 1,
+                            "m": 0,
+                            "d": 0
+                          },
+                          "service": "Access Manager",
+                          "status": 200
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         try {
@@ -1817,15 +1837,15 @@ class GrantEndpointTest : BaseTest() {
                 .withQueryParam("m", matching("0"))
                 .willReturn(
                     aResponse().withBody(
-                        """{"message":"Success","service":"Access Manager","status":200}"""
-                    )
-                )
+                        """{"message":"Success","service":"Access Manager","status":200}""",
+                    ),
+                ),
         )
 
         try {
             pubnub.grant(
                 authKeys = listOf("key1"),
-                channels = listOf("ch1")
+                channels = listOf("ch1"),
             ).sync()
             failTest()
         } catch (e: Exception) {
@@ -1864,13 +1884,13 @@ class GrantEndpointTest : BaseTest() {
                           "service": "Access Manager",
                           "status": 200
                         }
-                        """.trimIndent()
-                    )
-                )
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         pubnub.grant(
-            channels = listOf("ch1")
+            channels = listOf("ch1"),
         ).async { result ->
             result.onSuccess {
                 atomic.set(true)

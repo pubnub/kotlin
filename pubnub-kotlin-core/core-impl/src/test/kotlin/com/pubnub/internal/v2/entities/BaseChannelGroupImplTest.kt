@@ -1,16 +1,16 @@
-//package com.pubnub.internal.v2.entities
+// package com.pubnub.internal.v2.entities
 //
-//import com.pubnub.api.UserId
-//import com.pubnub.api.v2.subscriptions.SubscriptionOptions
-//import com.pubnub.internal.PNConfiguration
-//import com.pubnub.internal.TestPubNub
-//import com.pubnub.internal.v2.subscriptions.BaseSubscriptionImpl
-//import org.junit.jupiter.api.AfterEach
-//import org.junit.jupiter.api.Assertions
-//import org.junit.jupiter.api.BeforeEach
-//import org.junit.jupiter.api.Test
+// import com.pubnub.api.UserId
+// import com.pubnub.api.v2.subscriptions.SubscriptionOptions
+// import com.pubnub.internal.PNConfiguration
+// import com.pubnub.internal.TestPubNub
+// import com.pubnub.internal.v2.subscriptions.BaseSubscriptionImpl
+// import org.junit.jupiter.api.AfterEach
+// import org.junit.jupiter.api.Assertions
+// import org.junit.jupiter.api.BeforeEach
+// import org.junit.jupiter.api.Test
 //
-//class BaseChannelGroupImplTest {
+// class BaseChannelGroupImplTest {
 //
 //    private lateinit var pn: TestPubNub
 //    private val CHANNEL_GROUP_NAME = "myChannelGroup"
@@ -61,4 +61,4 @@
 //
 //        Assertions.assertEquals(ChannelGroupName("$CHANNEL_GROUP_NAME-pnpres"), nameWithPresence)
 //    }
-//}
+// }

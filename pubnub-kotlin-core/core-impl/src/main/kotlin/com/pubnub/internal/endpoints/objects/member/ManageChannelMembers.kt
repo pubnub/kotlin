@@ -26,7 +26,7 @@ class ManageChannelMembers(
     private val uuidsToRemove: Collection<String>,
     private val channel: String,
     private val collectionQueryParameters: CollectionQueryParameters,
-    private val includeQueryParam: IncludeQueryParam
+    private val includeQueryParam: IncludeQueryParam,
 ) : Endpoint<EntityArrayEnvelope<PNMember>, PNMemberArrayResult>(pubnub), IManageChannelMembers {
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityArrayEnvelope<PNMember>> {
         val params =
@@ -36,21 +36,22 @@ class ManageChannelMembers(
             channel = channel,
             subKey = pubnub.configuration.subscribeKey,
             options = params,
-            body = ChangeMemberInput(
-                delete = uuidsToRemove.map { ServerMemberInput(UUIDId(id = it)) },
-                set = uuidsToSet.map {
-                    ServerMemberInput(
-                        uuid = UUIDId(id = it.uuid),
-                        custom = it.custom,
-                        status = it.status
-                    )
-                }
-            )
+            body =
+                ChangeMemberInput(
+                    delete = uuidsToRemove.map { ServerMemberInput(UUIDId(id = it)) },
+                    set =
+                        uuidsToSet.map {
+                            ServerMemberInput(
+                                uuid = UUIDId(id = it.uuid),
+                                custom = it.custom,
+                                status = it.status,
+                            )
+                        },
+                ),
         )
     }
 
-    override fun createResponse(input: Response<EntityArrayEnvelope<PNMember>>): PNMemberArrayResult =
-        input.toPNMemberArrayResult()
+    override fun createResponse(input: Response<EntityArrayEnvelope<PNMember>>): PNMemberArrayResult = input.toPNMemberArrayResult()
 
     override fun operationType(): PNOperationType = PNOperationType.ObjectsOperation()
 

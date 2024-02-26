@@ -6,9 +6,8 @@ import io.cucumber.java.en.When
 
 class WhenSteps(
     private val world: World,
-    private val channelMetadataState: ChannelMetadataState
+    private val channelMetadataState: ChannelMetadataState,
 ) {
-
     @When("I get the channel metadata")
     fun i_get_the_channel_metadata() {
         world.pubnub.internalPubNubClient.getChannelMetadata(channel = channelMetadataState.channelId).sync()?.let {
@@ -26,7 +25,7 @@ class WhenSteps(
             description = channelMetadata.description,
             custom = channelMetadata.custom,
             type = channelMetadata.type,
-            status = channelMetadata.status
+            status = channelMetadata.status,
         ).sync().let {
             channelMetadataState.channelMetadata = it.data
             world.responseStatus = it.status
@@ -36,7 +35,8 @@ class WhenSteps(
     @When("I get the channel metadata with custom")
     fun i_get_the_channel_metadata_with_custom() {
         world.pubnub.internalPubNubClient.getChannelMetadata(
-            channel = channelMetadataState.channelId, includeCustom = true
+            channel = channelMetadataState.channelId,
+            includeCustom = true,
         ).sync().let {
             channelMetadataState.channelMetadata = it.data
             world.responseStatus = it.status
@@ -45,9 +45,10 @@ class WhenSteps(
 
     @When("I remove the channel metadata")
     fun i_remove_the_channel_metadata() {
-        world.responseStatus = world.pubnub.internalPubNubClient.removeChannelMetadata(
-            channel = channelMetadataState.channelId
-        ).sync().status
+        world.responseStatus =
+            world.pubnub.internalPubNubClient.removeChannelMetadata(
+                channel = channelMetadataState.channelId,
+            ).sync().status
     }
 
     @When("I get all channel metadata")
@@ -61,7 +62,7 @@ class WhenSteps(
     @When("I get all channel metadata with custom")
     fun i_get_all_channel_metadata_with_custom() {
         world.pubnub.internalPubNubClient.getAllChannelMetadata(
-            includeCustom = true
+            includeCustom = true,
         ).sync().let {
             channelMetadataState.channelMetadatas = it.data
             world.responseStatus = it.status

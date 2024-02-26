@@ -10,13 +10,14 @@ data class CollectionQueryParameters(
     private val sort: Collection<PNSortKey<*>> = listOf(),
     private val includeCount: Boolean = false,
 ) {
-
     internal fun createCollectionQueryParams(): Map<String, String> {
         val additionalParams = mutableMapOf<String, String>()
         val f = filter
         if (f != null) additionalParams["filter"] = f
-        if (sort.isNotEmpty()) additionalParams["sort"] =
-            sort.joinToString(",") { it.toSortParameter() }
+        if (sort.isNotEmpty()) {
+            additionalParams["sort"] =
+                sort.joinToString(",") { it.toSortParameter() }
+        }
         if (limit != null) additionalParams["limit"] = limit.toString()
         if (includeCount) additionalParams["count"] = includeCount.toString()
         val p = page

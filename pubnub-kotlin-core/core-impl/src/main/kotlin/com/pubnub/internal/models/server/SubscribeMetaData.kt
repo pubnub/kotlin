@@ -5,7 +5,6 @@ import com.google.gson.annotations.SerializedName
 class SubscribeMetaData(
     @SerializedName("t")
     internal val timetoken: Long,
-
     @SerializedName("r")
-    internal val region: String
+    internal val region: String,
 )

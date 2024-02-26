@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory
 
 internal class EmitMessagesEffect(
     private val messagesConsumer: MessagesConsumer,
-    private val messages: List<PNEvent>
+    private val messages: List<PNEvent>,
 ) : Effect {
     private val log = LoggerFactory.getLogger(EmitMessagesEffect::class.java)
 

@@ -14,14 +14,13 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 
 class HistoryTestSuite : com.pubnub.internal.suite.EndpointTestSuite<History, PNHistoryResult>() {
-
     override fun pnOperation() = PNOperationType.PNHistoryOperation
 
     override fun requiredKeys() = com.pubnub.internal.suite.SUB + com.pubnub.internal.suite.AUTH
 
     override fun snippet(): History =
         pubnub.history(
-            channel = "ch1"
+            channel = "ch1",
         )
 
     override fun verifyResultExpectations(result: PNHistoryResult) {
@@ -38,14 +37,15 @@ class HistoryTestSuite : com.pubnub.internal.suite.EndpointTestSuite<History, PN
 
     override fun successfulResponseBody() = """[["msg1","msg2"],100,200]"""
 
-    override fun unsuccessfulResponseBodyList() = listOf(
-        "[]",
-        "[{}]"
-    )
+    override fun unsuccessfulResponseBodyList() =
+        listOf(
+            "[]",
+            "[{}]",
+        )
 
     override fun mappingBuilder(): MappingBuilder {
         return get(
-            urlPathEqualTo("/v2/history/sub-key/mySubscribeKey/channel/ch1")
+            urlPathEqualTo("/v2/history/sub-key/mySubscribeKey/channel/ch1"),
         )
             .withQueryParam("include_token", equalTo("false"))
             .withQueryParam("count", equalTo("100"))
@@ -55,17 +55,18 @@ class HistoryTestSuite : com.pubnub.internal.suite.EndpointTestSuite<History, PN
 
     override fun affectedChannelsAndGroups() = listOf("ch1") to emptyList<String>()
 
-    override fun optionalScenarioList() = listOf(
-        com.pubnub.internal.suite.OptionalScenario<PNHistoryResult>().apply {
-            responseBuilder = {
-                withBody("""["First Element Not An Array",0,0]""")
-            }
-            additionalChecks = { result ->
-                assertTrue(result.isFailure)
-                assertEquals((result.exceptionOrNull() as? PubNubException)?.errorMessage, "History is disabled")
-            }
-            result = com.pubnub.internal.suite.Result.FAIL
-            pnError = PubNubError.HTTP_ERROR
-        }
-    )
+    override fun optionalScenarioList() =
+        listOf(
+            com.pubnub.internal.suite.OptionalScenario<PNHistoryResult>().apply {
+                responseBuilder = {
+                    withBody("""["First Element Not An Array",0,0]""")
+                }
+                additionalChecks = { result ->
+                    assertTrue(result.isFailure)
+                    assertEquals((result.exceptionOrNull() as? PubNubException)?.errorMessage, "History is disabled")
+                }
+                result = com.pubnub.internal.suite.Result.FAIL
+                pnError = PubNubError.HTTP_ERROR
+            },
+        )
 }

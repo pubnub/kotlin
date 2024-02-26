@@ -32,22 +32,21 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Ignore
-import org.junit.Assume.assumeFalse
 import org.junit.Test
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
 class SubscriptionManagerTest : BaseTest() {
-
     private val subscribeUrlMatcher = Regex("(/v2/subscribe/[^/]+/)(.+)?(/.+)")
     private val presenceUrlMatcher = Regex("(/v2/presence/sub-key/[^/]+/channel/)(.+)(/.+)")
 
     // gets UrlPathPattern that matches the URL with channels in any order (order doesn't matter)
     private fun getMatchingUrlWithChannels(url: String): UrlPathPattern {
         // /v2/subscribe/mySubscribeKey/((ch2-pnpres|ch1-pnpres|ch2|ch1),?){4}/0
-        val matches = subscribeUrlMatcher.matchEntire(url) ?: presenceUrlMatcher.matchEntire(url)
-            ?: throw IllegalArgumentException("Unable to match $url, only /v2/subscribe/... or /v2/presence/... supported")
+        val matches =
+            subscribeUrlMatcher.matchEntire(url) ?: presenceUrlMatcher.matchEntire(url)
+                ?: throw IllegalArgumentException("Unable to match $url, only /v2/subscribe/... or /v2/presence/... supported")
         val channels = matches.groupValues[2].split(",")
         return urlPathMatching("${matches.groupValues[1]}((${channels.joinToString("|")}),?){${channels.size}}${matches.groupValues[3]}")
     }
@@ -59,36 +58,36 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14607577960932487",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14607577960932487",
+                              "a": "4",
+                              "f": 0,
+                              "i": "Client-g5d4g",
+                              "p": {
+                                "t": "14607577960925503",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Message"
-                                  },
-                                  "b": "coolChan-bnel"
-                                }
-                              ]
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Message"
+                              },
+                              "b": "coolChan-bnel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         pubnub.subscribe(
-            channels = listOf("ch1", "ch2")
+            channels = listOf("ch1", "ch2"),
         )
 
         val channels = pubnub.getSubscribedChannels()
@@ -103,8 +102,8 @@ class SubscriptionManagerTest : BaseTest() {
             TestPubNub(
                 createConfiguration().apply {
                     retryConfiguration = RetryConfiguration.None
-                }
-            )
+                },
+            ),
         )
 
         stubFor(
@@ -112,51 +111,62 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14607577960932487",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14607577960932487",
+                              "a": "4",
+                              "f": 0,
+                              "i": "Client-g5d4g",
+                              "p": {
+                                "t": "14607577960925503",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Message"
-                                  },
-                                  "b": "coolChan-bnel"
-                                }
-                              ]
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Message"
+                              },
+                              "b": "coolChan-bnel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         pubnub.subscribe(
-            channels = listOf("")
+            channels = listOf(""),
         )
 
-        pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {
-                gotMessages.addAndGet(1)
-            }
+        pubnubBase.addListener(
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {
+                    gotMessages.addAndGet(1)
+                }
 
-            override fun message(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnMessageResult: PNMessageResult) {
-                gotMessages.addAndGet(1)
-            }
+                override fun message(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnMessageResult: PNMessageResult,
+                ) {
+                    gotMessages.addAndGet(1)
+                }
 
-            override fun presence(pubnub: BasePubNub<*, *, *, *, *, *, *, *>, pnPresenceEventResult: PNPresenceEventResult) {
-                gotMessages.addAndGet(1)
-            }
-        })
+                override fun presence(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnPresenceEventResult: PNPresenceEventResult,
+                ) {
+                    gotMessages.addAndGet(1)
+                }
+            },
+        )
 
         Awaitility.await()
             .atMost(3, TimeUnit.SECONDS)
@@ -172,51 +182,62 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14607577960932487",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14607577960932487",
+                              "a": "4",
+                              "f": 0,
+                              "i": "Client-g5d4g",
+                              "p": {
+                                "t": "14607577960925503",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Message"
-                                  },
-                                  "b": "coolChan-bnel"
-                                }
-                              ]
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Message"
+                              },
+                              "b": "coolChan-bnel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         pubnub.subscribe(
-            channelGroups = listOf("")
+            channelGroups = listOf(""),
         )
 
-        pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {
-                gotMessages.addAndGet(1)
-            }
+        pubnubBase.addListener(
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {
+                    gotMessages.addAndGet(1)
+                }
 
-            override fun message(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnMessageResult: PNMessageResult) {
-                gotMessages.addAndGet(1)
-            }
+                override fun message(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnMessageResult: PNMessageResult,
+                ) {
+                    gotMessages.addAndGet(1)
+                }
 
-            override fun presence(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnPresenceEventResult: PNPresenceEventResult) {
-                gotMessages.addAndGet(1)
-            }
-        })
+                override fun presence(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnPresenceEventResult: PNPresenceEventResult,
+                ) {
+                    gotMessages.addAndGet(1)
+                }
+            },
+        )
 
         Awaitility.await()
             .atMost(3, TimeUnit.SECONDS)
@@ -230,36 +251,36 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14607577960932487",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14607577960932487",
+                              "a": "4",
+                              "f": 0,
+                              "i": "Client-g5d4g",
+                              "p": {
+                                "t": "14607577960925503",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Enter Message Here"
-                                  },
-                                  "b": "coolChan-bnel"
-                                }
-                              ]
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Enter Message Here"
+                              },
+                              "b": "coolChan-bnel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         pubnub.subscribe(
-            channelGroups = listOf("cg1", "cg2")
+            channelGroups = listOf("cg1", "cg2"),
         )
 
         val groups: List<String> = pubnub.getSubscribedChannelGroups()
@@ -271,13 +292,13 @@ class SubscriptionManagerTest : BaseTest() {
     fun testPubNubUnsubscribeAll() {
         stubFor(
             get(urlPathMatching("/v2/subscribe/mySubscribeKey/.*"))
-                .willReturn(emptyJson())
+                .willReturn(emptyJson()),
         )
 
         pubnub.subscribe(
             channels = listOf("ch1", "ch2"),
             channelGroups = listOf("cg1", "cg2"),
-            withPresence = true
+            withPresence = true,
         )
 
         var channels = pubnub.getSubscribedChannels()
@@ -307,58 +328,65 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14607577960932487",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14607577960932487",
+                              "a": "4",
+                              "f": 0,
+                              "i": "Publisher-A",
+                              "p": {
+                                "t": "14607577960925503",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Publisher-A",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "o": {
-                                    "t": "14737141991877032",
-                                    "r": 2
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Message"
-                                  },
-                                  "b": "coolChannel"
-                                }
-                              ]
+                              "o": {
+                                "t": "14737141991877032",
+                                "r": 2
+                              },
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Message"
+                              },
+                              "b": "coolChannel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
-        pubnubBase.addListener(object : SubscribeCallback {
-
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {
-                if (pnStatus.category == PNStatusCategory.Connected) {
-                    gotStatus.addAndGet(1)
+        pubnubBase.addListener(
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {
+                    if (pnStatus.category == PNStatusCategory.Connected) {
+                        gotStatus.addAndGet(1)
+                    }
                 }
-            }
 
-            override fun message(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnMessageResult: PNMessageResult) {
-                val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
-                assertTrue(requests.size > 0)
-                assertEquals("Message", pubnubBase.internalPubNubClient.mapper.elementToString(pnMessageResult.message, "text"))
-                assertEquals("coolChannel", pnMessageResult.channel)
-                assertEquals(null, pnMessageResult.subscription)
-                assertEquals("Publisher-A", pnMessageResult.publisher)
-                gotMessage.set(true)
-            }
-        })
+                override fun message(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnMessageResult: PNMessageResult,
+                ) {
+                    val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
+                    assertTrue(requests.size > 0)
+                    assertEquals("Message", pubnubBase.internalPubNubClient.mapper.elementToString(pnMessageResult.message, "text"))
+                    assertEquals("coolChannel", pnMessageResult.channel)
+                    assertEquals(null, pnMessageResult.subscription)
+                    assertEquals("Publisher-A", pnMessageResult.publisher)
+                    gotMessage.set(true)
+                }
+            },
+        )
 
         pubnub.subscribe(
-            channels = listOf("ch1", "ch2")
+            channels = listOf("ch1", "ch2"),
         )
 
         Awaitility.await()
@@ -382,73 +410,81 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "5",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "5",
+                              "a": "4",
+                              "f": 0,
+                              "i": "Publisher-A",
+                              "p": {
+                                "t": "14607577960925503",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Publisher-A",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "o": {
-                                    "t": "14737141991877032",
-                                    "r": 2
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Message"
-                                  },
-                                  "b": "coolChannel"
-                                },
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Publisher-A",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "o": {
-                                    "t": "14737141991877032",
-                                    "r": 2
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Message"
-                                  },
-                                  "b": "coolChannel"
-                                }
-                              ]
+                              "o": {
+                                "t": "14737141991877032",
+                                "r": 2
+                              },
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Message"
+                              },
+                              "b": "coolChannel"
+                            },
+                            {
+                              "a": "4",
+                              "f": 0,
+                              "i": "Publisher-A",
+                              "p": {
+                                "t": "14607577960925503",
+                                "r": 1
+                              },
+                              "o": {
+                                "t": "14737141991877032",
+                                "r": 2
+                              },
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Message"
+                              },
+                              "b": "coolChannel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         stubFor(
             get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .withQueryParam("tt", matching("5"))
-                .willReturn(emptyJson())
+                .willReturn(emptyJson()),
         )
 
-        pubnubBase.addListener(object : SubscribeCallback {
-            override fun message(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnMessageResult: PNMessageResult) {
-                gotMessages.addAndGet(1)
-            }
+        pubnubBase.addListener(
+            object : SubscribeCallback {
+                override fun message(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnMessageResult: PNMessageResult,
+                ) {
+                    gotMessages.addAndGet(1)
+                }
 
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {}
-        })
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {}
+            },
+        )
 
         pubnub.subscribe(
-            channels = listOf("ch1", "ch2")
+            channels = listOf("ch1", "ch2"),
         )
 
         Awaitility.await()
@@ -469,72 +505,81 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "10",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "10",
+                              "a": "4",
+                              "f": 0,
+                              "i": "Publisher-A",
+                              "p": {
+                                "t": "14607577960925503",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Publisher-A",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "o": {
-                                    "t": "14737141991877032",
-                                    "r": 2
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Message"
-                                  },
-                                  "b": "coolChannel"
-                                },
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Publisher-A",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "o": {
-                                    "t": "14737141991877032",
-                                    "r": 2
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Message"
-                                  },
-                                  "b": "coolChannel"
-                                }
-                              ]
+                              "o": {
+                                "t": "14737141991877032",
+                                "r": 2
+                              },
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Message"
+                              },
+                              "b": "coolChannel"
+                            },
+                            {
+                              "a": "4",
+                              "f": 0,
+                              "i": "Publisher-A",
+                              "p": {
+                                "t": "14607577960925503",
+                                "r": 1
+                              },
+                              "o": {
+                                "t": "14737141991877032",
+                                "r": 2
+                              },
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Message"
+                              },
+                              "b": "coolChannel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         stubFor(
             get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .withQueryParam("tt", matching("10"))
-                .willReturn(emptyJson())
+                .willReturn(emptyJson()),
         )
 
-        pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {}
-            override fun message(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnMessageResult: PNMessageResult) {
-                gotMessages.addAndGet(1)
-            }
-        })
+        pubnubBase.addListener(
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {}
+
+                override fun message(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnMessageResult: PNMessageResult,
+                ) {
+                    gotMessages.addAndGet(1)
+                }
+            },
+        )
 
         pubnub.subscribe(
-            channels = listOf("ch1", "ch2")
+            channels = listOf("ch1", "ch2"),
         )
 
         Awaitility.await()
@@ -557,91 +602,100 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "5",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "5",
+                              "a": "4",
+                              "f": 0,
+                              "i": "Publisher-A",
+                              "p": {
+                                "t": "14607577960925503",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Publisher-A",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "o": {
-                                    "t": "14737141991877032",
-                                    "r": 2
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Message1"
-                                  },
-                                  "b": "coolChannel"
-                                },
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Publisher-A",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "o": {
-                                    "t": "14737141991877032",
-                                    "r": 2
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Message2"
-                                  },
-                                  "b": "coolChannel"
-                                },
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Publisher-A",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "o": {
-                                    "t": "14737141991877032",
-                                    "r": 2
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Message1"
-                                  },
-                                  "b": "coolChannel"
-                                }
-                              ]
+                              "o": {
+                                "t": "14737141991877032",
+                                "r": 2
+                              },
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Message1"
+                              },
+                              "b": "coolChannel"
+                            },
+                            {
+                              "a": "4",
+                              "f": 0,
+                              "i": "Publisher-A",
+                              "p": {
+                                "t": "14607577960925503",
+                                "r": 1
+                              },
+                              "o": {
+                                "t": "14737141991877032",
+                                "r": 2
+                              },
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Message2"
+                              },
+                              "b": "coolChannel"
+                            },
+                            {
+                              "a": "4",
+                              "f": 0,
+                              "i": "Publisher-A",
+                              "p": {
+                                "t": "14607577960925503",
+                                "r": 1
+                              },
+                              "o": {
+                                "t": "14737141991877032",
+                                "r": 2
+                              },
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Message1"
+                              },
+                              "b": "coolChannel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         stubFor(
             get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .withQueryParam("tt", matching("5"))
-                .willReturn(notFound())
+                .willReturn(notFound()),
         )
 
-        pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {}
-            override fun message(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnMessageResult: PNMessageResult) {
-                gotMessages.addAndGet(1)
-            }
-        })
+        pubnubBase.addListener(
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {}
+
+                override fun message(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnMessageResult: PNMessageResult,
+                ) {
+                    gotMessages.addAndGet(1)
+                }
+            },
+        )
 
         pubnub.subscribe(
-            channels = listOf("ch1", "ch2")
+            channels = listOf("ch1", "ch2"),
         )
 
         Awaitility.await()
@@ -918,39 +972,44 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withStatus(403).withBody(
                         """
-                            {
-                              "message": "Forbidden",
-                              "payload": {
-                                "channels": [
-                                  "ch1",
-                                  "ch2"
-                                ],
-                                "channel-groups": [
-                                  ":cg1",
-                                  ":cg2"
-                                ]
-                              },
-                              "error": true,
-                              "service": "Access Manager",
-                              "status": 403
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                          "message": "Forbidden",
+                          "payload": {
+                            "channels": [
+                              "ch1",
+                              "ch2"
+                            ],
+                            "channel-groups": [
+                              ":cg1",
+                              ":cg2"
+                            ]
+                          },
+                          "error": true,
+                          "service": "Access Manager",
+                          "status": 403
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {
-                if (pnStatus.category == PNStatusCategory.ConnectionError && pnStatus.exception?.statusCode == 403) {
-                    assertEquals(listOf("ch1", "ch2"), pnStatus.exception?.affectedChannels)
-                    assertEquals(listOf("cg1", "cg2"), pnStatus.exception?.affectedChannelGroups)
-                    gotStatus.addAndGet(1)
+        pubnubBase.addListener(
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {
+                    if (pnStatus.category == PNStatusCategory.ConnectionError && pnStatus.exception?.statusCode == 403) {
+                        assertEquals(listOf("ch1", "ch2"), pnStatus.exception?.affectedChannels)
+                        assertEquals(listOf("cg1", "cg2"), pnStatus.exception?.affectedChannelGroups)
+                        gotStatus.addAndGet(1)
+                    }
                 }
-            }
-        })
+            },
+        )
 
         pubnub.subscribe(
-            channels = listOf("ch1", "ch2")
+            channels = listOf("ch1", "ch2"),
         )
 
         Awaitility.await()
@@ -968,54 +1027,62 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14607577960932487",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14607577960932487",
+                              "a": "4",
+                              "f": 0,
+                              "i": "Client-g5d4g",
+                              "p": {
+                                "t": "14607577960925503",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Message"
-                                  },
-                                  "b": "coolChannelGroup"
-                                }
-                              ]
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Message"
+                              },
+                              "b": "coolChannelGroup"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {
-                if (pnStatus.category == PNStatusCategory.Connected) {
-                    assertEquals(2, pnStatus.channels.size)
-                    gotStatus.set(true)
+        pubnubBase.addListener(
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {
+                    if (pnStatus.category == PNStatusCategory.Connected) {
+                        assertEquals(2, pnStatus.channels.size)
+                        gotStatus.set(true)
+                    }
                 }
-            }
 
-            override fun message(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnMessageResult: PNMessageResult) {
-                val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
-                assertTrue(requests.size > 0)
-                assertEquals("Message", pubnubBase.internalPubNubClient.mapper.elementToString(pnMessageResult.message, "text"))
-                assertEquals("coolChannel", pnMessageResult.channel)
-                assertEquals("coolChannelGroup", pnMessageResult.subscription)
-                gotMessage.set(true)
-            }
-        })
+                override fun message(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnMessageResult: PNMessageResult,
+                ) {
+                    val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
+                    assertTrue(requests.size > 0)
+                    assertEquals("Message", pubnubBase.internalPubNubClient.mapper.elementToString(pnMessageResult.message, "text"))
+                    assertEquals("coolChannel", pnMessageResult.channel)
+                    assertEquals("coolChannelGroup", pnMessageResult.subscription)
+                    gotMessage.set(true)
+                }
+            },
+        )
 
         pubnub.subscribe(
-            channels = listOf("ch1", "ch2")
+            channels = listOf("ch1", "ch2"),
         )
 
         Awaitility.await().atMost(4, TimeUnit.SECONDS).untilTrue(gotMessage)
@@ -1032,53 +1099,61 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14614512228786519",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14614512228786519",
-                                "r": 1
+                              "a": "4",
+                              "f": 0,
+                              "p": {
+                                "t": "14614512228418349",
+                                "r": 2
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "p": {
-                                    "t": "14614512228418349",
-                                    "r": 2
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel-pnpres",
-                                  "d": {
-                                    "action": "join",
-                                    "timestamp": 1461451222,
-                                    "uuid": "4a6d5df7-e301-4e73-a7b7-6af9ab484eb0",
-                                    "occupancy": 1
-                                  },
-                                  "b": "coolChannel-pnpres"
-                                }
-                              ]
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel-pnpres",
+                              "d": {
+                                "action": "join",
+                                "timestamp": 1461451222,
+                                "uuid": "4a6d5df7-e301-4e73-a7b7-6af9ab484eb0",
+                                "occupancy": 1
+                              },
+                              "b": "coolChannel-pnpres"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
-        pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {
-                if (pnStatus.category == PNStatusCategory.Connected) {
-                    gotStatus.addAndGet(1)
+        pubnubBase.addListener(
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {
+                    if (pnStatus.category == PNStatusCategory.Connected) {
+                        gotStatus.addAndGet(1)
+                    }
                 }
-            }
 
-            override fun presence(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnPresenceEventResult: PNPresenceEventResult) {
-                val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
-                assertTrue(requests.size >= 1)
-                assertEquals("coolChannel", pnPresenceEventResult.channel)
-                assertEquals(null, pnPresenceEventResult.subscription)
-                gotMessage.set(true)
-            }
-        })
+                override fun presence(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnPresenceEventResult: PNPresenceEventResult,
+                ) {
+                    val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
+                    assertTrue(requests.size >= 1)
+                    assertEquals("coolChannel", pnPresenceEventResult.channel)
+                    assertEquals(null, pnPresenceEventResult.subscription)
+                    gotMessage.set(true)
+                }
+            },
+        )
 
         pubnub.subscribe(
-            channels = listOf("ch1", "ch2")
+            channels = listOf("ch1", "ch2"),
         )
 
         Awaitility.await()
@@ -1100,54 +1175,62 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14614512228786519",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14614512228786519",
-                                "r": 1
+                              "a": "4",
+                              "f": 0,
+                              "p": {
+                                "t": "14614512228418349",
+                                "r": 2
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "p": {
-                                    "t": "14614512228418349",
-                                    "r": 2
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel-pnpres",
-                                  "d": {
-                                    "action": "join",
-                                    "timestamp": 1461451222,
-                                    "uuid": "4a6d5df7-e301-4e73-a7b7-6af9ab484eb0",
-                                    "occupancy": 1
-                                  },
-                                  "b": "coolChannelGroup-pnpres"
-                                }
-                              ]
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel-pnpres",
+                              "d": {
+                                "action": "join",
+                                "timestamp": 1461451222,
+                                "uuid": "4a6d5df7-e301-4e73-a7b7-6af9ab484eb0",
+                                "occupancy": 1
+                              },
+                              "b": "coolChannelGroup-pnpres"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {
-                if (pnStatus.category == PNStatusCategory.Connected) {
-                    gotStatus.addAndGet(1)
+        pubnubBase.addListener(
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {
+                    if (pnStatus.category == PNStatusCategory.Connected) {
+                        gotStatus.addAndGet(1)
+                    }
                 }
-            }
 
-            override fun presence(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnPresenceEventResult: PNPresenceEventResult) {
-                val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
-                assertTrue(requests.size >= 1)
-                assertEquals("coolChannel", pnPresenceEventResult.channel)
-                assertEquals("coolChannelGroup", pnPresenceEventResult.subscription)
-                gotMessage.set(true)
-            }
-        })
+                override fun presence(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnPresenceEventResult: PNPresenceEventResult,
+                ) {
+                    val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
+                    assertTrue(requests.size >= 1)
+                    assertEquals("coolChannel", pnPresenceEventResult.channel)
+                    assertEquals("coolChannelGroup", pnPresenceEventResult.subscription)
+                    gotMessage.set(true)
+                }
+            },
+        )
 
         pubnub.subscribe(
-            channels = listOf("ch1", "ch2")
+            channels = listOf("ch1", "ch2"),
         )
 
         Awaitility.await()
@@ -1172,32 +1255,32 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "3",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "3",
+                              "a": "4",
+                              "f": 0,
+                              "i": "Client-g5d4g",
+                              "p": {
+                                "t": "14607577960925503",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Message"
-                                  },
-                                  "b": "coolChan-bnel"
-                                }
-                              ]
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Message"
+                              },
+                              "b": "coolChan-bnel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
         stubFor(
             get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
@@ -1205,32 +1288,32 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "10",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "10",
+                              "a": "4",
+                              "f": 0,
+                              "i": "Client-g5d4g",
+                              "p": {
+                                "t": "14607577960925503",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Message3"
-                                  },
-                                  "b": "coolChan-bnel"
-                                }
-                              ]
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Message3"
+                              },
+                              "b": "coolChan-bnel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
         stubFor(
             get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
@@ -1238,64 +1321,72 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "20",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "20",
+                              "a": "4",
+                              "f": 0,
+                              "i": "Client-g5d4g",
+                              "p": {
+                                "t": "14607577960925503",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Message10"
-                                  },
-                                  "b": "coolChan-bnel"
-                                }
-                              ]
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Message10"
+                              },
+                              "b": "coolChan-bnel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         stubFor(
             get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .withQueryParam("tt", matching("20"))
-                .willReturn(emptyJson())
+                .willReturn(emptyJson()),
         )
 
-        pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {
-            }
+        pubnubBase.addListener(
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {
+                }
 
-            override fun message(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnMessageResult: PNMessageResult) {
-                println("--==" + pnMessageResult.message)
-                when (pnMessageResult.message.asJsonObject["text"].asString) {
+                override fun message(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnMessageResult: PNMessageResult,
+                ) {
+                    println("--==" + pnMessageResult.message)
+                    when (pnMessageResult.message.asJsonObject["text"].asString) {
 //                    "Message" -> { // TODO is it ever the case that we get messages on TT=0?
 //                        gotMessage1.set(true)
 //                    }
 
-                    "Message3" -> {
-                        gotMessage2.set(true)
-                    }
+                        "Message3" -> {
+                            gotMessage2.set(true)
+                        }
 
-                    "Message10" -> {
-                        gotMessage3.set(true)
+                        "Message10" -> {
+                            gotMessage3.set(true)
+                        }
                     }
                 }
-            }
-        })
+            },
+        )
 
         pubnub.subscribe(
-            channels = listOf("ch1", "ch2")
+            channels = listOf("ch1", "ch2"),
         )
 
 //        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(
@@ -1305,12 +1396,12 @@ class SubscriptionManagerTest : BaseTest() {
 
         Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(
             gotMessage2,
-            IsEqual.equalTo(true)
+            IsEqual.equalTo(true),
         )
 
         Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(
             gotMessage3,
-            IsEqual.equalTo(true)
+            IsEqual.equalTo(true),
         )
     }
 
@@ -1322,43 +1413,52 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14607577960932487",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14607577960932487",
+                              "a": "4",
+                              "f": 0,
+                              "i": "Client-g5d4g",
+                              "p": {
+                                "t": "14607577960925503",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": 10,
-                                  "b": "coolChan-bnel"
-                                }
-                              ]
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": 10,
+                              "b": "coolChan-bnel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
-        pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {}
-            override fun message(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnMessageResult: PNMessageResult) {
-                val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
-                assertTrue(requests.size >= 1)
-                assertEquals(10, pnMessageResult.message.asInt)
-                atomic.addAndGet(1)
-            }
-        })
+        pubnubBase.addListener(
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {}
+
+                override fun message(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnMessageResult: PNMessageResult,
+                ) {
+                    val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
+                    assertTrue(requests.size >= 1)
+                    assertEquals(10, pnMessageResult.message.asInt)
+                    atomic.addAndGet(1)
+                }
+            },
+        )
 
         pubnub.subscribe(
-            channels = listOf("ch1", "ch2")
+            channels = listOf("ch1", "ch2"),
         )
 
         Awaitility.await()
@@ -1374,56 +1474,65 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14858178301085322",
+                            "r": 7
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14858178301085322",
+                              "a": "4",
+                              "f": 512,
+                              "i": "02a7b822-220c-49b0-90c4-d9cbecc0fd85",
+                              "s": 1,
+                              "p": {
+                                "t": "14858178301075219",
                                 "r": 7
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 512,
-                                  "i": "02a7b822-220c-49b0-90c4-d9cbecc0fd85",
-                                  "s": 1,
-                                  "p": {
-                                    "t": "14858178301075219",
-                                    "r": 7
-                                  },
-                                  "k": "demo-36",
-                                  "c": "chTest",
-                                  "u": {
-                                    "status_update": {
-                                      "lat": 55.752023906250656,
-                                      "lon": 37.61749036080494,
-                                      "driver_id": 4722
-                                    }
-                                  },
-                                  "d": {
-                                    "City": "Goiania",
-                                    "Name": "Marcelo"
-                                  }
+                              "k": "demo-36",
+                              "c": "chTest",
+                              "u": {
+                                "status_update": {
+                                  "lat": 55.752023906250656,
+                                  "lon": 37.61749036080494,
+                                  "driver_id": 4722
                                 }
-                              ]
+                              },
+                              "d": {
+                                "City": "Goiania",
+                                "Name": "Marcelo"
+                              }
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
-        pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {}
-            override fun message(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnMessageResult: PNMessageResult) {
-                val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
-                assertTrue(requests.size >= 1)
-                assertEquals(
-                    """{"status_update":{"lat":55.752023906250656,"lon":37.61749036080494,"driver_id":4722}}""",
-                    pnMessageResult.userMetadata.toString()
-                )
-                atomic.addAndGet(1)
-            }
-        })
+        pubnubBase.addListener(
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {}
+
+                override fun message(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnMessageResult: PNMessageResult,
+                ) {
+                    val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
+                    assertTrue(requests.size >= 1)
+                    assertEquals(
+                        """{"status_update":{"lat":55.752023906250656,"lon":37.61749036080494,"driver_id":4722}}""",
+                        pnMessageResult.userMetadata.toString(),
+                    )
+                    atomic.addAndGet(1)
+                }
+            },
+        )
 
         pubnub.subscribe(
-            channels = listOf("ch1", "ch2")
+            channels = listOf("ch1", "ch2"),
         )
 
         Awaitility.await()
@@ -1433,56 +1542,59 @@ class SubscriptionManagerTest : BaseTest() {
 
     @Test
     fun testSubscribeBuilderWithState() {
-        val expectedPayload = PubNubUtil.urlDecode(
-            """%7B%22ch1%22%3A%5B%22p1%22%2C%22p2%22%5D%7D"""
-        )
+        val expectedPayload =
+            PubNubUtil.urlDecode(
+                """%7B%22ch1%22%3A%5B%22p1%22%2C%22p2%22%5D%7D""",
+            )
 
-        val expectedMap = pubnub.mapper.fromJson<HashMap<String, Any>>(
-            expectedPayload, object : TypeToken<HashMap<String, Any>?>() {}.type
-        )
+        val expectedMap =
+            pubnub.mapper.fromJson<HashMap<String, Any>>(
+                expectedPayload,
+                object : TypeToken<HashMap<String, Any>?>() {}.type,
+            )
 
         stubFor(
             get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0")).willReturn(
                 aResponse().withBody(
                     """
-                            {
-                              "t": {
-                                "t": "14607577960932487",
-                                "r": 1
-                              },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Enter Message Here"
-                                  },
-                                  "b": "coolChan-bnel"
-                                }
-                              ]
-                            }
-                    """.trimIndent()
-                )
-            )
+                    {
+                      "t": {
+                        "t": "14607577960932487",
+                        "r": 1
+                      },
+                      "m": [
+                        {
+                          "a": "4",
+                          "f": 0,
+                          "i": "Client-g5d4g",
+                          "p": {
+                            "t": "14607577960925503",
+                            "r": 1
+                          },
+                          "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                          "c": "coolChannel",
+                          "d": {
+                            "text": "Enter Message Here"
+                          },
+                          "b": "coolChan-bnel"
+                        }
+                      ]
+                    }
+                    """.trimIndent(),
+                ),
+            ),
         )
 
         stubFor(
             get(getMatchingUrlWithChannels("/v2/presence/sub-key/mySubscribeKey/channel/ch2,ch1/heartbeat")).willReturn(
-                emptyJson()
-            )
+                emptyJson(),
+            ),
         )
 
         stubFor(
             get(getMatchingUrlWithChannels("/v2/presence/sub-key/mySubscribeKey/channel/ch1/uuid/myUUID/data")).willReturn(
-                emptyJson()
-            )
+                emptyJson(),
+            ),
         )
 
         initPubNub(
@@ -1491,60 +1603,74 @@ class SubscriptionManagerTest : BaseTest() {
                     presenceTimeout = 20
                     heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
                     maintainPresenceState = true
-                }
-            )
+                },
+            ),
         )
 
-        pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {
-                // do nothing
-            }
-        })
+        pubnubBase.addListener(
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {
+                    // do nothing
+                }
+            },
+        )
 
         try {
             pubnub.setPresenceState(
-                channels = listOf("ch1"), channelGroups = listOf("cg2"), state = listOf("p1", "p2")
+                channels = listOf("ch1"),
+                channelGroups = listOf("cg2"),
+                state = listOf("p1", "p2"),
             ).sync()
         } catch (e: Exception) {
             // ignore
         }
 
         pubnub.subscribe(
-            channels = listOf("ch1", "ch2"), channelGroups = listOf("cg1", "cg2")
+            channels = listOf("ch1", "ch2"),
+            channelGroups = listOf("cg1", "cg2"),
         )
 
         Awaitility.await().atMost(2, TimeUnit.SECONDS).until { verifyCalls(expectedMap) }
     }
 
     private fun verifyCalls(expectedMap: Map<String, Any>): Boolean {
-        val subscribeRequests = findAll(
-            getRequestedFor(
-                getMatchingUrlWithChannels(
-                    """/v2/subscribe/${pubnub.configuration.subscribeKey}/ch2,ch1/.*"""
-                )
+        val subscribeRequests =
+            findAll(
+                getRequestedFor(
+                    getMatchingUrlWithChannels(
+                        """/v2/subscribe/${pubnub.configuration.subscribeKey}/ch2,ch1/.*""",
+                    ),
+                ),
             )
-        )
-        val subCond = subscribeRequests.any {
-            try {
-                val stateString = PubNubUtil.urlDecode(it.queryParameter("state").firstValue())
-                val actualMap: HashMap<String, Any> = pubnub.mapper.fromJson(
-                    stateString, object : TypeToken<HashMap<String, Any>>() {}.type
-                )
-                actualMap == expectedMap
-            } catch (e: Exception) {
-                false
+        val subCond =
+            subscribeRequests.any {
+                try {
+                    val stateString = PubNubUtil.urlDecode(it.queryParameter("state").firstValue())
+                    val actualMap: HashMap<String, Any> =
+                        pubnub.mapper.fromJson(
+                            stateString,
+                            object : TypeToken<HashMap<String, Any>>() {}.type,
+                        )
+                    actualMap == expectedMap
+                } catch (e: Exception) {
+                    false
+                }
             }
-        }
-        val heartbeatRequests = findAll(
-            getRequestedFor(
-                getMatchingUrlWithChannels(
-                    """/v2/presence/sub-key/${pubnub.configuration.subscribeKey}/channel/ch2,ch1/heartbeat.*"""
-                )
+        val heartbeatRequests =
+            findAll(
+                getRequestedFor(
+                    getMatchingUrlWithChannels(
+                        """/v2/presence/sub-key/${pubnub.configuration.subscribeKey}/channel/ch2,ch1/heartbeat.*""",
+                    ),
+                ),
             )
-        )
-        val heartbeatCond = heartbeatRequests.all {
-            it.queryParams.containsKey("state")
-        }
+        val heartbeatCond =
+            heartbeatRequests.all {
+                it.queryParams.containsKey("state")
+            }
 
         return subCond && heartbeatCond
     }
@@ -1557,48 +1683,57 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14607577960932487",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14607577960932487",
+                              "a": "4",
+                              "f": 0,
+                              "i": "Client-g5d4g",
+                              "p": {
+                                "t": "14607577960925503",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Enter Message Here"
-                                  },
-                                  "b": "coolChan-bnel"
-                                }
-                              ]
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Enter Message Here"
+                              },
+                              "b": "coolChan-bnel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
-        pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {}
-            override fun message(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnMessageResult: PNMessageResult) {
-                val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
-                for (request in requests) {
-                    val channelGroupQuery = request.queryParameter("channel-group")
-                    if (channelGroupQuery != null && channelGroupQuery.firstValue() == "cg1,cg2") {
-                        atomic.set(true)
+        pubnubBase.addListener(
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {}
+
+                override fun message(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnMessageResult: PNMessageResult,
+                ) {
+                    val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
+                    for (request in requests) {
+                        val channelGroupQuery = request.queryParameter("channel-group")
+                        if (channelGroupQuery != null && channelGroupQuery.firstValue() == "cg1,cg2") {
+                            atomic.set(true)
+                        }
                     }
                 }
-            }
-        })
+            },
+        )
 
         pubnub.subscribe(
-            channelGroups = listOf("cg1", "cg2")
+            channelGroups = listOf("cg1", "cg2"),
         )
 
         Awaitility.await()
@@ -1614,53 +1749,63 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14607577960932487",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14607577960932487",
+                              "a": "4",
+                              "f": 0,
+                              "i": "Client-g5d4g",
+                              "p": {
+                                "t": "14607577960925503",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Enter Message Here"
-                                  },
-                                  "b": "coolChan-bnel"
-                                }
-                              ]
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Enter Message Here"
+                              },
+                              "b": "coolChan-bnel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
-        pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {}
-            override fun message(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnMessageResult: PNMessageResult) {
-                val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
-                for (request in requests) {
-                    val channelGroups = request.queryParameter("channel-group")
-                        .firstValue()
-                        .split(",")
-                        .toMutableList()
-                        .sorted()
-                    if ("cg1,cg1-pnpres,cg2,cg2-pnpres" == channelGroups.toCsv()) {
-                        atomic.addAndGet(1)
+        pubnubBase.addListener(
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {}
+
+                override fun message(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnMessageResult: PNMessageResult,
+                ) {
+                    val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
+                    for (request in requests) {
+                        val channelGroups =
+                            request.queryParameter("channel-group")
+                                .firstValue()
+                                .split(",")
+                                .toMutableList()
+                                .sorted()
+                        if ("cg1,cg1-pnpres,cg2,cg2-pnpres" == channelGroups.toCsv()) {
+                            atomic.addAndGet(1)
+                        }
                     }
                 }
-            }
-        })
+            },
+        )
 
         pubnub.subscribe(
             channelGroups = listOf("cg1", "cg2"),
-            withPresence = true
+            withPresence = true,
         )
 
         Awaitility.await()
@@ -1685,52 +1830,61 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "5",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "5",
+                              "a": "4",
+                              "f": 0,
+                              "i": "Client-g5d4g",
+                              "p": {
+                                "t": "14607577960925503",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Enter Message Here"
-                                  },
-                                  "b": "coolChan-bnel"
-                                }
-                              ]
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Enter Message Here"
+                              },
+                              "b": "coolChan-bnel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         stubFor(
             get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .withQueryParam("tt", matching("5"))
-                .willReturn(notFound())
+                .willReturn(notFound()),
         )
 
-        pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {}
-            override fun message(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnMessageResult: PNMessageResult) {
-                val requests =
-                    findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
-                assertTrue(requests.size > 0)
-                atomic.set(true)
-            }
-        })
+        pubnubBase.addListener(
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {}
+
+                override fun message(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnMessageResult: PNMessageResult,
+                ) {
+                    val requests =
+                        findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
+                    assertTrue(requests.size > 0)
+                    atomic.set(true)
+                }
+            },
+        )
 
         pubnub.subscribe(
-            channels = listOf("ch1", "ch2")
+            channels = listOf("ch1", "ch2"),
         )
 
         Awaitility.await().atMost(5, TimeUnit.SECONDS).untilTrue(atomic)
@@ -1744,44 +1898,53 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14718972508742569",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14718972508742569",
+                              "a": "4",
+                              "f": 512,
+                              "i": "ff374d0b-b866-40db-9ced-42d205bb808b",
+                              "p": {
+                                "t": "14718972508739738",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 512,
-                                  "i": "ff374d0b-b866-40db-9ced-42d205bb808b",
-                                  "p": {
-                                    "t": "14718972508739738",
-                                    "r": 1
-                                  },
-                                  "k": "demo-36",
-                                  "c": "max_ch1",
-                                  "d": "6QoqmS9CnB3W9+I4mhmL7w=="
-                                }
-                              ]
+                              "k": "demo-36",
+                              "c": "max_ch1",
+                              "d": "6QoqmS9CnB3W9+I4mhmL7w=="
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
         pubnub.configuration.cipherKey = "hello"
         pubnub.configuration.useRandomInitializationVector = false
-        pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {}
-            override fun message(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnMessageResult: PNMessageResult) {
-                val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
-                assertTrue(requests.size > 0)
-                assertEquals("hey", pubnubBase.internalPubNubClient.mapper.elementToString(pnMessageResult.message, "text"))
-                atomic.addAndGet(1)
-            }
-        })
+        pubnubBase.addListener(
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {}
+
+                override fun message(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnMessageResult: PNMessageResult,
+                ) {
+                    val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
+                    assertTrue(requests.size > 0)
+                    assertEquals("hey", pubnubBase.internalPubNubClient.mapper.elementToString(pnMessageResult.message, "text"))
+                    atomic.addAndGet(1)
+                }
+            },
+        )
 
         pubnub.subscribe(
-            channels = listOf("ch1", "ch2")
+            channels = listOf("ch1", "ch2"),
         )
 
         Awaitility.await()
@@ -1797,51 +1960,60 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14718972508742569",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14718972508742569",
+                              "a": "4",
+                              "f": 512,
+                              "i": "ff374d0b-b866-40db-9ced-42d205bb808b",
+                              "p": {
+                                "t": "14718972508739738",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 512,
-                                  "i": "ff374d0b-b866-40db-9ced-42d205bb808b",
-                                  "p": {
-                                    "t": "14718972508739738",
-                                    "r": 1
-                                  },
-                                  "k": "demo-36",
-                                  "c": "max_ch1",
-                                  "d": {
-                                    "pn_other": "6QoqmS9CnB3W9+I4mhmL7w=="
-                                  }
-                                }
-                              ]
+                              "k": "demo-36",
+                              "c": "max_ch1",
+                              "d": {
+                                "pn_other": "6QoqmS9CnB3W9+I4mhmL7w=="
+                              }
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         pubnub.configuration.useRandomInitializationVector = false
         pubnub.configuration.cipherKey = "hello"
 
-        pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {}
-            override fun message(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnMessageResult: PNMessageResult) {
-                val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
-                assertTrue(requests.size > 0)
-                assertEquals(
-                    "hey",
-                    pnMessageResult.message.asJsonObject["pn_other"].asJsonObject["text"].asString
-                )
-                atomic.addAndGet(1)
-            }
-        })
+        pubnubBase.addListener(
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {}
+
+                override fun message(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnMessageResult: PNMessageResult,
+                ) {
+                    val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
+                    assertTrue(requests.size > 0)
+                    assertEquals(
+                        "hey",
+                        pnMessageResult.message.asJsonObject["pn_other"].asJsonObject["text"].asString,
+                    )
+                    atomic.addAndGet(1)
+                }
+            },
+        )
 
         pubnub.subscribe(
-            channels = listOf("ch1", "ch2")
+            channels = listOf("ch1", "ch2"),
         )
 
         Awaitility.await()
@@ -1857,47 +2029,56 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14607577960932487",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14607577960932487",
+                              "a": "4",
+                              "f": 0,
+                              "i": "Client-g5d4g",
+                              "p": {
+                                "t": "14607577960925503",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Enter Message Here"
-                                  },
-                                  "b": "coolChan-bnel"
-                                }
-                              ]
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Enter Message Here"
+                              },
+                              "b": "coolChan-bnel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
-        pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {}
-            override fun message(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnMessageResult: PNMessageResult) {
-                val requests =
-                    findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
-                assertTrue(requests.size >= 1)
-                assertEquals("""{"text":"Enter Message Here"}""", pnMessageResult.message.toString())
-                atomic.addAndGet(1)
-            }
-        })
+        pubnubBase.addListener(
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {}
+
+                override fun message(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnMessageResult: PNMessageResult,
+                ) {
+                    val requests =
+                        findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
+                    assertTrue(requests.size >= 1)
+                    assertEquals("""{"text":"Enter Message Here"}""", pnMessageResult.message.toString())
+                    atomic.addAndGet(1)
+                }
+            },
+        )
 
         pubnub.subscribe(
             channels = listOf("ch1", "ch2"),
-            withPresence = true
+            withPresence = true,
         )
 
         Awaitility.await()
@@ -1913,53 +2094,62 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14901247588021627",
+                            "r": 2
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14901247588021627",
-                                "r": 2
+                              "a": "4",
+                              "f": 0,
+                              "p": {
+                                "t": "14901247587675704",
+                                "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "p": {
-                                    "t": "14901247587675704",
-                                    "r": 1
-                                  },
-                                  "k": "demo-36",
-                                  "c": "moon-interval-deltas-pnpres",
-                                  "d": {
-                                    "action": "interval",
-                                    "timestamp": 1490124758,
-                                    "occupancy": 2,
-                                    "here_now_refresh": true,
-                                    "join": [
-                                      "2220E216-5A30-49AD-A89C-1E0B5AE26AD7",
-                                      "4262AE3F-3202-4487-BEE0-1A0D91307DEB"
-                                    ]
-                                  },
-                                  "b": "moon-interval-deltas-pnpres"
-                                }
-                              ]
+                              "k": "demo-36",
+                              "c": "moon-interval-deltas-pnpres",
+                              "d": {
+                                "action": "interval",
+                                "timestamp": 1490124758,
+                                "occupancy": 2,
+                                "here_now_refresh": true,
+                                "join": [
+                                  "2220E216-5A30-49AD-A89C-1E0B5AE26AD7",
+                                  "4262AE3F-3202-4487-BEE0-1A0D91307DEB"
+                                ]
+                              },
+                              "b": "moon-interval-deltas-pnpres"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
-        pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {}
-            override fun presence(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnPresenceEventResult: PNPresenceEventResult) {
-                if (atomic.get() == 0) {
-                    assertEquals(true, pnPresenceEventResult.hereNowRefresh)
-                    assertTrue(pnPresenceEventResult.occupancy!! == 2)
-                    atomic.incrementAndGet()
+        pubnubBase.addListener(
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {}
+
+                override fun presence(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnPresenceEventResult: PNPresenceEventResult,
+                ) {
+                    if (atomic.get() == 0) {
+                        assertEquals(true, pnPresenceEventResult.hereNowRefresh)
+                        assertTrue(pnPresenceEventResult.occupancy!! == 2)
+                        atomic.incrementAndGet()
+                    }
                 }
-            }
-        })
+            },
+        )
 
         pubnub.subscribe(
             channels = listOf("ch1", "ch2"),
-            withPresence = true
+            withPresence = true,
         )
 
         Awaitility.await()
@@ -1975,56 +2165,65 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14901247588021627",
+                            "r": 2
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14901247588021627",
-                                "r": 2
+                              "a": "4",
+                              "f": 0,
+                              "p": {
+                                "t": "14901247587675704",
+                                "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "p": {
-                                    "t": "14901247587675704",
-                                    "r": 1
-                                  },
-                                  "k": "demo-36",
-                                  "c": "moon-interval-deltas-pnpres",
-                                  "d": {
-                                    "action": "interval",
-                                    "timestamp": 1490124758,
-                                    "occupancy": 2,
-                                    "join": [
-                                      "2220E216-5A30-49AD-A89C-1E0B5AE26AD7",
-                                      "4262AE3F-3202-4487-BEE0-1A0D91307DEB"
-                                    ]
-                                  },
-                                  "b": "moon-interval-deltas-pnpres"
-                                }
-                              ]
+                              "k": "demo-36",
+                              "c": "moon-interval-deltas-pnpres",
+                              "d": {
+                                "action": "interval",
+                                "timestamp": 1490124758,
+                                "occupancy": 2,
+                                "join": [
+                                  "2220E216-5A30-49AD-A89C-1E0B5AE26AD7",
+                                  "4262AE3F-3202-4487-BEE0-1A0D91307DEB"
+                                ]
+                              },
+                              "b": "moon-interval-deltas-pnpres"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
-        pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {}
-            override fun presence(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnPresenceEventResult: PNPresenceEventResult) {
-                if (atomic.get() == 0) {
-                    val joinList: MutableList<String> = ArrayList()
-                    joinList.add("2220E216-5A30-49AD-A89C-1E0B5AE26AD7")
-                    joinList.add("4262AE3F-3202-4487-BEE0-1A0D91307DEB")
-                    assertEquals("interval", pnPresenceEventResult.event)
-                    assertEquals(joinList, pnPresenceEventResult.join)
-                    assertTrue(pnPresenceEventResult.occupancy!! == 2)
-                    atomic.incrementAndGet()
+        pubnubBase.addListener(
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {}
+
+                override fun presence(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnPresenceEventResult: PNPresenceEventResult,
+                ) {
+                    if (atomic.get() == 0) {
+                        val joinList: MutableList<String> = ArrayList()
+                        joinList.add("2220E216-5A30-49AD-A89C-1E0B5AE26AD7")
+                        joinList.add("4262AE3F-3202-4487-BEE0-1A0D91307DEB")
+                        assertEquals("interval", pnPresenceEventResult.event)
+                        assertEquals(joinList, pnPresenceEventResult.join)
+                        assertTrue(pnPresenceEventResult.occupancy!! == 2)
+                        atomic.incrementAndGet()
+                    }
                 }
-            }
-        })
+            },
+        )
 
         pubnub.subscribe(
             channels = listOf("ch1", "ch2"),
-            withPresence = true
+            withPresence = true,
         )
 
         Awaitility.await()
@@ -2040,56 +2239,65 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14901247588021627",
+                            "r": 2
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14901247588021627",
-                                "r": 2
+                              "a": "4",
+                              "f": 0,
+                              "p": {
+                                "t": "14901247587675704",
+                                "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "p": {
-                                    "t": "14901247587675704",
-                                    "r": 1
-                                  },
-                                  "k": "demo-36",
-                                  "c": "moon-interval-deltas-pnpres",
-                                  "d": {
-                                    "action": "interval",
-                                    "timestamp": 1490124758,
-                                    "occupancy": 2,
-                                    "leave": [
-                                      "2220E216-5A30-49AD-A89C-1E0B5AE26AD7",
-                                      "4262AE3F-3202-4487-BEE0-1A0D91307DEB"
-                                    ]
-                                  },
-                                  "b": "moon-interval-deltas-pnpres"
-                                }
-                              ]
+                              "k": "demo-36",
+                              "c": "moon-interval-deltas-pnpres",
+                              "d": {
+                                "action": "interval",
+                                "timestamp": 1490124758,
+                                "occupancy": 2,
+                                "leave": [
+                                  "2220E216-5A30-49AD-A89C-1E0B5AE26AD7",
+                                  "4262AE3F-3202-4487-BEE0-1A0D91307DEB"
+                                ]
+                              },
+                              "b": "moon-interval-deltas-pnpres"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
-        pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {}
-            override fun presence(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnPresenceEventResult: PNPresenceEventResult) {
-                if (atomic.get() == 0) {
-                    val leaveList: MutableList<String> = ArrayList()
-                    leaveList.add("2220E216-5A30-49AD-A89C-1E0B5AE26AD7")
-                    leaveList.add("4262AE3F-3202-4487-BEE0-1A0D91307DEB")
-                    assertEquals("interval", pnPresenceEventResult.event)
-                    assertEquals(leaveList, pnPresenceEventResult.leave)
-                    assertTrue(pnPresenceEventResult.occupancy!! == 2)
-                    atomic.incrementAndGet()
+        pubnubBase.addListener(
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {}
+
+                override fun presence(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnPresenceEventResult: PNPresenceEventResult,
+                ) {
+                    if (atomic.get() == 0) {
+                        val leaveList: MutableList<String> = ArrayList()
+                        leaveList.add("2220E216-5A30-49AD-A89C-1E0B5AE26AD7")
+                        leaveList.add("4262AE3F-3202-4487-BEE0-1A0D91307DEB")
+                        assertEquals("interval", pnPresenceEventResult.event)
+                        assertEquals(leaveList, pnPresenceEventResult.leave)
+                        assertTrue(pnPresenceEventResult.occupancy!! == 2)
+                        atomic.incrementAndGet()
+                    }
                 }
-            }
-        })
+            },
+        )
 
         pubnub.subscribe(
             channels = listOf("ch1", "ch2"),
-            withPresence = true
+            withPresence = true,
         )
 
         Awaitility.await()
@@ -2105,57 +2313,67 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14901247588021627",
+                            "r": 2
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14901247588021627",
-                                "r": 2
+                              "a": "4",
+                              "f": 0,
+                              "p": {
+                                "t": "14901247587675704",
+                                "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "p": {
-                                    "t": "14901247587675704",
-                                    "r": 1
-                                  },
-                                  "k": "demo-36",
-                                  "c": "moon-interval-deltas-pnpres",
-                                  "d": {
-                                    "action": "interval",
-                                    "timestamp": 1490124758,
-                                    "occupancy": 2,
-                                    "timeout": [
-                                      "2220E216-5A30-49AD-A89C-1E0B5AE26AD7",
-                                      "4262AE3F-3202-4487-BEE0-1A0D91307DEB"
-                                    ]
-                                  },
-                                  "b": "moon-interval-deltas-pnpres"
-                                }
-                              ]
+                              "k": "demo-36",
+                              "c": "moon-interval-deltas-pnpres",
+                              "d": {
+                                "action": "interval",
+                                "timestamp": 1490124758,
+                                "occupancy": 2,
+                                "timeout": [
+                                  "2220E216-5A30-49AD-A89C-1E0B5AE26AD7",
+                                  "4262AE3F-3202-4487-BEE0-1A0D91307DEB"
+                                ]
+                              },
+                              "b": "moon-interval-deltas-pnpres"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
-        pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {}
-            override fun presence(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnPresenceEventResult: PNPresenceEventResult) {
-                if (atomic.get() == 0) {
-                    val timeoutList = listOf(
-                        "2220E216-5A30-49AD-A89C-1E0B5AE26AD7",
-                        "4262AE3F-3202-4487-BEE0-1A0D91307DEB"
-                    )
-                    assertEquals("interval", pnPresenceEventResult.event)
-                    assertEquals(timeoutList, pnPresenceEventResult.timeout)
-                    assertTrue(pnPresenceEventResult.occupancy!! == 2)
-                    atomic.incrementAndGet()
+        pubnubBase.addListener(
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {}
+
+                override fun presence(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnPresenceEventResult: PNPresenceEventResult,
+                ) {
+                    if (atomic.get() == 0) {
+                        val timeoutList =
+                            listOf(
+                                "2220E216-5A30-49AD-A89C-1E0B5AE26AD7",
+                                "4262AE3F-3202-4487-BEE0-1A0D91307DEB",
+                            )
+                        assertEquals("interval", pnPresenceEventResult.event)
+                        assertEquals(timeoutList, pnPresenceEventResult.timeout)
+                        assertTrue(pnPresenceEventResult.occupancy!! == 2)
+                        atomic.incrementAndGet()
+                    }
                 }
-            }
-        })
+            },
+        )
 
         pubnub.subscribe(
             channels = listOf("ch1", "ch2"),
-            withPresence = true
+            withPresence = true,
         )
 
         Awaitility.await()
@@ -2171,52 +2389,61 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14614512228786519",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14614512228786519",
-                                "r": 1
+                              "a": "4",
+                              "f": 0,
+                              "p": {
+                                "t": "14614512228418349",
+                                "r": 2
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "p": {
-                                    "t": "14614512228418349",
-                                    "r": 2
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel-pnpres",
-                                  "d": {
-                                    "action": "join",
-                                    "timestamp": 1461451222,
-                                    "uuid": "4a6d5df7-e301-4e73-a7b7-6af9ab484eb0",
-                                    "occupancy": 1
-                                  },
-                                  "b": "coolChannel-pnpres"
-                                }
-                              ]
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel-pnpres",
+                              "d": {
+                                "action": "join",
+                                "timestamp": 1461451222,
+                                "uuid": "4a6d5df7-e301-4e73-a7b7-6af9ab484eb0",
+                                "occupancy": 1
+                              },
+                              "b": "coolChannel-pnpres"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {}
-            override fun presence(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnPresenceEventResult: PNPresenceEventResult) {
-                if (atomic.get() == 0) {
-                    assertEquals("join", pnPresenceEventResult.event)
-                    assertEquals("4a6d5df7-e301-4e73-a7b7-6af9ab484eb0", pnPresenceEventResult.uuid)
-                    assertTrue(pnPresenceEventResult.occupancy!! == 1)
-                    assertTrue(pnPresenceEventResult.timestamp!! == 1461451222L)
-                    atomic.incrementAndGet()
+        pubnubBase.addListener(
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {}
+
+                override fun presence(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnPresenceEventResult: PNPresenceEventResult,
+                ) {
+                    if (atomic.get() == 0) {
+                        assertEquals("join", pnPresenceEventResult.event)
+                        assertEquals("4a6d5df7-e301-4e73-a7b7-6af9ab484eb0", pnPresenceEventResult.uuid)
+                        assertTrue(pnPresenceEventResult.occupancy!! == 1)
+                        assertTrue(pnPresenceEventResult.timestamp!! == 1461451222L)
+                        atomic.incrementAndGet()
+                    }
                 }
-            }
-        })
+            },
+        )
 
         pubnub.subscribe(
             channels = listOf("ch1", "ch2"),
-            withPresence = true
+            withPresence = true,
         )
 
         Awaitility.await()
@@ -2232,77 +2459,87 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14637536741734954",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14637536741734954",
+                              "a": "4",
+                              "f": 512,
+                              "p": {
+                                "t": "14637536740940378",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 512,
-                                  "p": {
-                                    "t": "14637536740940378",
-                                    "r": 1
-                                  },
-                                  "k": "demo-36",
-                                  "c": "ch10-pnpres",
-                                  "d": {
-                                    "action": "join",
-                                    "timestamp": 1463753674,
-                                    "uuid": "24c9bb19-1fcd-4c40-a6f1-522a8a1329ef",
-                                    "occupancy": 3
-                                  },
-                                  "b": "ch10-pnpres"
+                              "k": "demo-36",
+                              "c": "ch10-pnpres",
+                              "d": {
+                                "action": "join",
+                                "timestamp": 1463753674,
+                                "uuid": "24c9bb19-1fcd-4c40-a6f1-522a8a1329ef",
+                                "occupancy": 3
+                              },
+                              "b": "ch10-pnpres"
+                            },
+                            {
+                              "a": "4",
+                              "f": 512,
+                              "p": {
+                                "t": "14637536741726901",
+                                "r": 1
+                              },
+                              "k": "demo-36",
+                              "c": "ch10-pnpres",
+                              "d": {
+                                "action": "state-change",
+                                "timestamp": 1463753674,
+                                "data": {
+                                  "state": "cool"
                                 },
-                                {
-                                  "a": "4",
-                                  "f": 512,
-                                  "p": {
-                                    "t": "14637536741726901",
-                                    "r": 1
-                                  },
-                                  "k": "demo-36",
-                                  "c": "ch10-pnpres",
-                                  "d": {
-                                    "action": "state-change",
-                                    "timestamp": 1463753674,
-                                    "data": {
-                                      "state": "cool"
-                                    },
-                                    "uuid": "24c9bb19-1fcd-4c40-a6f1-522a8a1329ef",
-                                    "occupancy": 3
-                                  },
-                                  "b": "ch10-pnpres"
-                                }
-                              ]
+                                "uuid": "24c9bb19-1fcd-4c40-a6f1-522a8a1329ef",
+                                "occupancy": 3
+                              },
+                              "b": "ch10-pnpres"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
-        pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {}
-            override fun presence(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnPresenceEventResult: PNPresenceEventResult) {
-                if (pnPresenceEventResult.event == "state-change") {
-                    if (pnPresenceEventResult.state!!.asJsonObject.has("state") &&
-                        pnPresenceEventResult.state!!.asJsonObject.get("state").asString == "cool"
-                    ) {
-                        atomic.set(true)
+        pubnubBase.addListener(
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {}
+
+                override fun presence(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnPresenceEventResult: PNPresenceEventResult,
+                ) {
+                    if (pnPresenceEventResult.event == "state-change") {
+                        if (pnPresenceEventResult.state!!.asJsonObject.has("state") &&
+                            pnPresenceEventResult.state!!.asJsonObject.get("state").asString == "cool"
+                        ) {
+                            atomic.set(true)
+                        }
                     }
                 }
-            }
-        })
+            },
+        )
 
         pubnub.subscribe(
             channels = listOf("ch10"),
-            withPresence = true
+            withPresence = true,
         )
 
         Awaitility.await()
             .atMost(2, TimeUnit.SECONDS)
             .untilAtomic(
-                atomic, IsEqual.equalTo(true)
+                atomic,
+                IsEqual.equalTo(true),
             )
     }
 
@@ -2314,47 +2551,56 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14607577960932487",
+                            "r": 8
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14607577960932487",
-                                "r": 8
+                              "a": "4",
+                              "f": 0,
+                              "i": "Client-g5d4g",
+                              "p": {
+                                "t": "14607577960925503",
+                                "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Enter Message Here"
-                                  },
-                                  "b": "coolChan-bnel"
-                                }
-                              ]
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Enter Message Here"
+                              },
+                              "b": "coolChan-bnel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
-        pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {}
-            override fun message(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnMessageResult: PNMessageResult) {
-                val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
-                if (requests.size > 1) {
-                    assertEquals("8", requests[1].queryParameter("tr").firstValue())
-                    atomic.set(true)
+        pubnubBase.addListener(
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {}
+
+                override fun message(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnMessageResult: PNMessageResult,
+                ) {
+                    val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
+                    if (requests.size > 1) {
+                        assertEquals("8", requests[1].queryParameter("tr").firstValue())
+                        atomic.set(true)
+                    }
                 }
-            }
-        })
+            },
+        )
 
         pubnub.subscribe(
             channels = listOf("ch1", "ch2"),
-            withPresence = true
+            withPresence = true,
         )
 
         Awaitility.await()
@@ -2366,30 +2612,40 @@ class SubscriptionManagerTest : BaseTest() {
     fun testRemoveListener() {
         stubFor(
             get(urlPathMatching("/v2/subscribe/mySubscribeKey/.*"))
-                .willReturn(emptyJson())
+                .willReturn(emptyJson()),
         )
 
         val atomic = AtomicInteger(0)
-        val sub1: SubscribeCallback = object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {
-                atomic.addAndGet(1)
-            }
+        val sub1: SubscribeCallback =
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {
+                    atomic.addAndGet(1)
+                }
 
-            override fun message(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnMessageResult: PNMessageResult) {
-                atomic.addAndGet(1)
-            }
+                override fun message(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnMessageResult: PNMessageResult,
+                ) {
+                    atomic.addAndGet(1)
+                }
 
-            override fun presence(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnPresenceEventResult: PNPresenceEventResult) {
-                atomic.addAndGet(1)
+                override fun presence(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnPresenceEventResult: PNPresenceEventResult,
+                ) {
+                    atomic.addAndGet(1)
+                }
             }
-        }
 
         pubnubBase.addListener(sub1)
         pubnubBase.removeListener(sub1)
 
         pubnub.subscribe(
             channels = listOf("ch1", "ch2"),
-            withPresence = true
+            withPresence = true,
         )
 
         Awaitility.await()
@@ -2406,122 +2662,132 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14607577960932487",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14607577960932487",
+                              "a": "4",
+                              "f": 0,
+                              "i": "Client-g5d4g",
+                              "p": {
+                                "t": "14607577960925503",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Enter Message Here"
-                                  },
-                                  "b": "coolChan-bnel"
-                                }
-                              ]
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Enter Message Here"
+                              },
+                              "b": "coolChan-bnel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
         stubFor(
             get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14607577960932487",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14607577960932487",
+                              "a": "4",
+                              "f": 0,
+                              "i": "Client-g5d4g",
+                              "p": {
+                                "t": "14607577960925503",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Enter Message Here"
-                                  },
-                                  "b": "coolChan-bnel"
-                                }
-                              ]
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Enter Message Here"
+                              },
+                              "b": "coolChan-bnel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
         stubFor(
             get(getMatchingUrlWithChannels("/v2/presence/sub-key/mySubscribeKey/channel/ch1/leave"))
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                              "status": 200,
-                              "message": "OK",
-                              "service": "Presence",
-                              "action": "leave"
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                          "status": 200,
+                          "message": "OK",
+                          "service": "Presence",
+                          "action": "leave"
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
-        val sub1: SubscribeCallback = object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {
-                if (pnStatus.category == PNStatusCategory.Connected) {
-                    pubnubBase.internalPubNubClient.unsubscribe(
-                        channels = listOf("ch1")
-                    )
-                } else if (pnStatus.category == PNStatusCategory.Disconnected ||
-                    pnStatus.category == PNStatusCategory.SubscriptionChanged &&
-                    !pnStatus.channels.contains("ch1")
+        val sub1: SubscribeCallback =
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
                 ) {
-                    statusReceived.set(true)
+                    if (pnStatus.category == PNStatusCategory.Connected) {
+                        pubnubBase.internalPubNubClient.unsubscribe(
+                            channels = listOf("ch1"),
+                        )
+                    } else if (pnStatus.category == PNStatusCategory.Disconnected ||
+                        pnStatus.category == PNStatusCategory.SubscriptionChanged &&
+                        !pnStatus.channels.contains("ch1")
+                    ) {
+                        statusReceived.set(true)
+                    }
                 }
-            }
 
-            override fun message(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnMessageResult: PNMessageResult) {
-                val requests = findAll(
-                    getRequestedFor(
-                        getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres/0")
-                    )
-                )
-                if (requests.isNotEmpty()) {
-                    messageReceived.set(true)
+                override fun message(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnMessageResult: PNMessageResult,
+                ) {
+                    val requests =
+                        findAll(
+                            getRequestedFor(
+                                getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres/0"),
+                            ),
+                        )
+                    if (requests.isNotEmpty()) {
+                        messageReceived.set(true)
+                    }
                 }
             }
-        }
         pubnubBase.addListener(sub1)
 
         pubnub.subscribe(
             channels = listOf("ch1", "ch2"),
-            withPresence = true
+            withPresence = true,
         )
 
         Awaitility.await()
             .atMost(1, TimeUnit.SECONDS)
             .untilAtomic(
-                messageReceived, IsEqual.equalTo(true)
+                messageReceived,
+                IsEqual.equalTo(true),
             )
 
         Awaitility.await()
             .atMost(1, TimeUnit.SECONDS)
             .untilAtomic(
-                statusReceived, IsEqual.equalTo(true)
+                statusReceived,
+                IsEqual.equalTo(true),
             )
     }
 
@@ -2534,8 +2800,8 @@ class SubscriptionManagerTest : BaseTest() {
                 createConfiguration().apply {
                     presenceTimeout = 20
                     heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
-                }
-            )
+                },
+            ),
         )
 
         stubFor(
@@ -2543,60 +2809,64 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14607577960932487",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14607577960932487",
+                              "a": "4",
+                              "f": 0,
+                              "i": "Client-g5d4g",
+                              "p": {
+                                "t": "14607577960925503",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Enter Message Here"
-                                  },
-                                  "b": "coolChan-bnel"
-                                }
-                              ]
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Enter Message Here"
+                              },
+                              "b": "coolChan-bnel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
         stubFor(
             get(getMatchingUrlWithChannels("/v2/presence/sub-key/mySubscribeKey/channel/ch2,ch1/heartbeat"))
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                              "status": 200,
-                              "message": "OK",
-                              "service": "Presence",
-                              "action": "leave"
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                          "status": 200,
+                          "message": "OK",
+                          "service": "Presence",
+                          "action": "leave"
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
-        val sub1: SubscribeCallback = object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {
-                if (pnStatus.category == PNStatusCategory.HeartbeatSuccess) {
-                    statusRecieved.set(true)
+        val sub1: SubscribeCallback =
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {
+                    if (pnStatus.category == PNStatusCategory.HeartbeatSuccess) {
+                        statusRecieved.set(true)
+                    }
                 }
             }
-        }
         pubnubBase.addListener(sub1)
 
         pubnub.subscribe(
             channels = listOf("ch1", "ch2"),
-            withPresence = true
+            withPresence = true,
         )
 
         Awaitility.await()
@@ -2612,8 +2882,8 @@ class SubscriptionManagerTest : BaseTest() {
                 createConfiguration().apply {
                     presenceTimeout = 20
                     heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
-                }
-            )
+                },
+            ),
         )
 
         stubFor(
@@ -2621,35 +2891,40 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                              "status": 200,
-                              "message": "OK",
-                              "service": "Presence",
-                              "action": "leave"
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                          "status": 200,
+                          "message": "OK",
+                          "service": "Presence",
+                          "action": "leave"
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
-        val sub1: SubscribeCallback = object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {
-                if (pnStatus.category == PNStatusCategory.HeartbeatSuccess) {
-                    statusReceived.set(true)
+        val sub1: SubscribeCallback =
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {
+                    if (pnStatus.category == PNStatusCategory.HeartbeatSuccess) {
+                        statusReceived.set(true)
+                    }
                 }
             }
-        }
         assertNotNull(sub1)
         pubnubBase.addListener(sub1)
 
         pubnub.presence(
             channels = listOf("ch1", "ch2"),
-            connected = true
+            connected = true,
         )
 
         Awaitility.await()
             .atMost(2, TimeUnit.SECONDS)
             .untilAtomic(
-                statusReceived, IsEqual.equalTo(true)
+                statusReceived,
+                IsEqual.equalTo(true),
             )
     }
 
@@ -2661,8 +2936,8 @@ class SubscriptionManagerTest : BaseTest() {
             TestPubNub(
                 createConfiguration().apply {
                     heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
-                }
-            )
+                },
+            ),
         )
 
         stubFor(
@@ -2670,31 +2945,35 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                              "status": 200,
-                              "message": "OK",
-                              "service": "Presence",
-                              "action": "leave"
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                          "status": 200,
+                          "message": "OK",
+                          "service": "Presence",
+                          "action": "leave"
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
-        val sub1: SubscribeCallback = object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {
-                println(pnStatus)
+        val sub1: SubscribeCallback =
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {
+                    println(pnStatus)
 //                if (pnStatus.operation == PNOperationType.PNUnsubscribeOperation && !pnStatus.error) {
-                if (pnStatus.category == PNStatusCategory.Disconnected) { // TODO what is this trying to test really?
-                    statusReceived.set(true)
+                    if (pnStatus.category == PNStatusCategory.Disconnected) { // TODO what is this trying to test really?
+                        statusReceived.set(true)
+                    }
                 }
             }
-        }
 
         pubnubBase.addListener(sub1)
 
         pubnub.presence(
             channels = listOf("ch1", "ch2"),
-            connected = false
+            connected = false,
         )
 
         Awaitility.await()
@@ -2711,8 +2990,8 @@ class SubscriptionManagerTest : BaseTest() {
                 createConfiguration().apply {
                     presenceTimeout = 20
                     heartbeatNotificationOptions = PNHeartbeatNotificationOptions.FAILURES
-                }
-            )
+                },
+            ),
         )
 
         stubFor(
@@ -2720,58 +2999,62 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "5",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "5",
+                              "a": "4",
+                              "f": 0,
+                              "i": "Client-g5d4g",
+                              "p": {
+                                "t": "14607577960925503",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Enter Message Here"
-                                  },
-                                  "b": "coolChan-bnel"
-                                }
-                              ]
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Enter Message Here"
+                              },
+                              "b": "coolChan-bnel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         stubFor(
             get(getMatchingUrlWithChannels("/v2/presence/sub-key/mySubscribeKey/channel/ch2,ch1/heartbeat"))
-                .willReturn(aResponse().withStatus(404).withBody("{}"))
+                .willReturn(aResponse().withStatus(404).withBody("{}")),
         )
 
         stubFor(
             get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
                 .withQueryParam("tt", matching("5"))
-                .willReturn(notFound())
+                .willReturn(notFound()),
         )
 
-        val sub1: SubscribeCallback = object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {
-                if (pnStatus.category == PNStatusCategory.HeartbeatFailed) {
-                    statusReceived.set(true)
+        val sub1: SubscribeCallback =
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {
+                    if (pnStatus.category == PNStatusCategory.HeartbeatFailed) {
+                        statusReceived.set(true)
+                    }
                 }
             }
-        }
 
         pubnubBase.addListener(sub1)
 
         pubnub.subscribe(
             channels = listOf("ch1", "ch2"),
-            withPresence = true
+            withPresence = true,
         )
 
         Awaitility.await()
@@ -2788,8 +3071,8 @@ class SubscriptionManagerTest : BaseTest() {
                 createConfiguration().apply {
                     presenceTimeout = 20
                     heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
-                }
-            )
+                },
+            ),
         )
 
         stubHandshaking(2, "ch2,ch1,ch2-pnpres,ch1-pnpres")
@@ -2800,57 +3083,61 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "5",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "5",
+                              "a": "4",
+                              "f": 0,
+                              "i": "Client-g5d4g",
+                              "p": {
+                                "t": "14607577960925503",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Enter Message Here"
-                                  },
-                                  "b": "coolChan-bnel"
-                                }
-                              ]
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Enter Message Here"
+                              },
+                              "b": "coolChan-bnel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         stubFor(
             get(getMatchingUrlWithChannels("/v2/presence/sub-key/mySubscribeKey/channel/ch2,ch1/heartbeat"))
-                .willReturn(emptyJson().withStatus(403))
+                .willReturn(emptyJson().withStatus(403)),
         )
 
         stubFor(
             get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
                 .withQueryParam("tt", matching("5"))
-                .willReturn(notFound())
+                .willReturn(notFound()),
         )
 
-        val sub1: SubscribeCallback = object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {
-                if (pnStatus.category == PNStatusCategory.HeartbeatFailed) {
-                    statusReceived.set(true)
+        val sub1: SubscribeCallback =
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {
+                    if (pnStatus.category == PNStatusCategory.HeartbeatFailed) {
+                        statusReceived.set(true)
+                    }
                 }
             }
-        }
         pubnubBase.addListener(sub1)
 
         pubnub.subscribe(
             channels = listOf("ch1", "ch2"),
-            withPresence = true
+            withPresence = true,
         )
 
         Awaitility.await()
@@ -2866,8 +3153,8 @@ class SubscriptionManagerTest : BaseTest() {
             TestPubNub(
                 createConfiguration().apply {
                     heartbeatNotificationOptions = PNHeartbeatNotificationOptions.NONE
-                }
-            )
+                },
+            ),
         )
 
         stubFor(
@@ -2875,45 +3162,49 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                            	"t": {
-                            		"t": "14607577960932487",
-                            		"r": 1
-                            	},
-                            	"m": [{
-                            		"a": "4",
-                            		"f": 0,
-                            		"i": "Client-g5d4g",
-                            		"p": {
-                            			"t": "14607577960925503",
-                            			"r": 1
-                            		}
-                            		"k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                            		"c": "coolChannel",
-                            		"d": {
-                            			"text": "Enter Message Here"
-                            		},
-                            		"b": "coolChan-bnel"
-                            	}]
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                        	"t": {
+                        		"t": "14607577960932487",
+                        		"r": 1
+                        	},
+                        	"m": [{
+                        		"a": "4",
+                        		"f": 0,
+                        		"i": "Client-g5d4g",
+                        		"p": {
+                        			"t": "14607577960925503",
+                        			"r": 1
+                        		}
+                        		"k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                        		"c": "coolChannel",
+                        		"d": {
+                        			"text": "Enter Message Here"
+                        		},
+                        		"b": "coolChan-bnel"
+                        	}]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val sub1: SubscribeCallback = object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {
-                if (pnStatus.category == PNStatusCategory.HeartbeatSuccess) {
-                    statusReceived.set(true)
+        val sub1: SubscribeCallback =
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {
+                    if (pnStatus.category == PNStatusCategory.HeartbeatSuccess) {
+                        statusReceived.set(true)
+                    }
                 }
             }
-        }
 
         pubnubBase.addListener(sub1)
 
         pubnub.subscribe(
             channels = listOf("ch1", "ch2"),
-            withPresence = true
+            withPresence = true,
         )
 
         Awaitility.await()
@@ -2930,40 +3221,40 @@ class SubscriptionManagerTest : BaseTest() {
                 createConfiguration().apply {
                     presenceTimeout = 20
                     heartbeatNotificationOptions = PNHeartbeatNotificationOptions.NONE
-                }
-            )
+                },
+            ),
         )
         stubFor(
             get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14607577960932487",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14607577960932487",
+                              "a": "4",
+                              "f": 0,
+                              "i": "Client-g5d4g",
+                              "p": {
+                                "t": "14607577960925503",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Enter Message Here"
-                                  },
-                                  "b": "coolChan-bnel"
-                                }
-                              ]
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Enter Message Here"
+                              },
+                              "b": "coolChan-bnel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         stubFor(
@@ -2971,29 +3262,33 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                              "status": 200,
-                              "message": "OK",
-                              "service": "Presence",
-                              "action": "leave"
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                          "status": 200,
+                          "message": "OK",
+                          "service": "Presence",
+                          "action": "leave"
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val sub1: SubscribeCallback = object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {
-                if (pnStatus.category != PNStatusCategory.HeartbeatSuccess) {
-                    statusReceived.set(true)
+        val sub1: SubscribeCallback =
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {
+                    if (pnStatus.category != PNStatusCategory.HeartbeatSuccess) {
+                        statusReceived.set(true)
+                    }
                 }
             }
-        }
         pubnubBase.addListener(sub1)
 
         pubnub.subscribe(
             channels = listOf("ch1", "ch2"),
-            withPresence = true
+            withPresence = true,
         )
 
         Awaitility.await()
@@ -3010,8 +3305,8 @@ class SubscriptionManagerTest : BaseTest() {
             TestPubNub(
                 createConfiguration().apply {
                     heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
-                }
-            )
+                },
+            ),
         )
 
         assertEquals(PNHeartbeatNotificationOptions.ALL, pubnub.configuration.heartbeatNotificationOptions)
@@ -3031,10 +3326,10 @@ class SubscriptionManagerTest : BaseTest() {
                               },
                               "m": []
                             }
-                            """.trimIndent()
+                            """.trimIndent(),
                         )
-                        .withStatus(200)
-                )
+                        .withStatus(200),
+                ),
         )
         stubFor(
             get(getMatchingUrlWithChannels("/v2/presence/sub-key/mySubscribeKey/channel/ch1/heartbeat"))
@@ -3048,24 +3343,29 @@ class SubscriptionManagerTest : BaseTest() {
                               "message": "OK",
                               "service": "Presence"
                             }
-                            """.trimIndent()
-                        )
-                )
+                            """.trimIndent(),
+                        ),
+                ),
         )
-        pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {
-                if (pnStatus.category == PNStatusCategory.Connected) {
-                    subscribeSuccess.set(true)
+        pubnubBase.addListener(
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {
+                    if (pnStatus.category == PNStatusCategory.Connected) {
+                        subscribeSuccess.set(true)
+                    }
+                    if (pnStatus.category == PNStatusCategory.HeartbeatSuccess) {
+                        heartbeatFail.set(true)
+                    }
                 }
-                if (pnStatus.category == PNStatusCategory.HeartbeatSuccess) {
-                    heartbeatFail.set(true)
-                }
-            }
-        })
+            },
+        )
 
         pubnub.subscribe(
             channels = listOf("ch1"),
-            withPresence = true
+            withPresence = true,
         )
 
         Awaitility.await()
@@ -3084,8 +3384,8 @@ class SubscriptionManagerTest : BaseTest() {
                     heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
                     presenceTimeout = 20
                     assertEquals(9, heartbeatInterval)
-                }
-            )
+                },
+            ),
         )
 
         stubFor(
@@ -3101,10 +3401,10 @@ class SubscriptionManagerTest : BaseTest() {
                               },
                               "m": []
                             }
-                            """.trimIndent()
+                            """.trimIndent(),
                         )
-                        .withStatus(200)
-                )
+                        .withStatus(200),
+                ),
         )
 
         stubFor(
@@ -3119,25 +3419,30 @@ class SubscriptionManagerTest : BaseTest() {
                               "message": "OK",
                               "service": "Presence"
                             }
-                            """.trimIndent()
-                        )
-                )
+                            """.trimIndent(),
+                        ),
+                ),
         )
 
-        pubnubBase.addListener(object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {
-                if (pnStatus.category == PNStatusCategory.Connected) {
-                    subscribeSuccess.set(true)
+        pubnubBase.addListener(
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {
+                    if (pnStatus.category == PNStatusCategory.Connected) {
+                        subscribeSuccess.set(true)
+                    }
+                    if (pnStatus.category == PNStatusCategory.HeartbeatSuccess) {
+                        heartbeatSuccess.set(true)
+                    }
                 }
-                if (pnStatus.category == PNStatusCategory.HeartbeatSuccess) {
-                    heartbeatSuccess.set(true)
-                }
-            }
-        })
+            },
+        )
 
         pubnub.subscribe(
             channels = listOf("ch1"),
-            withPresence = true
+            withPresence = true,
         )
 
         Awaitility.await()
@@ -3169,32 +3474,32 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14607577960932487",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14607577960932487",
+                              "a": "4",
+                              "f": 0,
+                              "i": "Client-g5d4g",
+                              "p": {
+                                "t": "14607577960925503",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Enter Message Here"
-                                  },
-                                  "b": "coolChan-bnel"
-                                }
-                              ]
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Enter Message Here"
+                              },
+                              "b": "coolChan-bnel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         stubFor(
@@ -3202,32 +3507,32 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
+                        {
+                          "t": {
+                            "t": "14607577960932487",
+                            "r": 1
+                          },
+                          "m": [
                             {
-                              "t": {
-                                "t": "14607577960932487",
+                              "a": "4",
+                              "f": 0,
+                              "i": "Client-g5d4g",
+                              "p": {
+                                "t": "14607577960925503",
                                 "r": 1
                               },
-                              "m": [
-                                {
-                                  "a": "4",
-                                  "f": 0,
-                                  "i": "Client-g5d4g",
-                                  "p": {
-                                    "t": "14607577960925503",
-                                    "r": 1
-                                  },
-                                  "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
-                                  "c": "coolChannel",
-                                  "d": {
-                                    "text": "Enter Message Here"
-                                  },
-                                  "b": "coolChan-bnel"
-                                }
-                              ]
+                              "k": "sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f",
+                              "c": "coolChannel",
+                              "d": {
+                                "text": "Enter Message Here"
+                              },
+                              "b": "coolChan-bnel"
                             }
-                        """.trimIndent()
-                    )
-                )
+                          ]
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         stubFor(
@@ -3235,15 +3540,15 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                              "status": 200,
-                              "message": "OK",
-                              "service": "Presence",
-                              "action": "leave"
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                          "status": 200,
+                          "message": "OK",
+                          "service": "Presence",
+                          "action": "leave"
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         stubFor(
@@ -3251,44 +3556,48 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                              "status": 200,
-                              "message": "OK",
-                              "service": "Presence",
-                              "action": "leave"
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                          "status": 200,
+                          "message": "OK",
+                          "service": "Presence",
+                          "action": "leave"
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
-        val sub1: SubscribeCallback = object : SubscribeCallback {
-            override fun status(pubnub: BasePubNub<*,*,*,*,*,*,*,*>, pnStatus: PNStatus) {
-                if (pnStatus.category == PNStatusCategory.Connected) {
-                    pubnubBase.internalPubNubClient.unsubscribe(
-                        channels = listOf("ch1")
-                    )
-                }
-
-                if (pnStatus.category == PNStatusCategory.SubscriptionChanged) {
-                    if ("ch1" !in pnStatus.channels) {
+        val sub1: SubscribeCallback =
+            object : SubscribeCallback {
+                override fun status(
+                    pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                    pnStatus: PNStatus,
+                ) {
+                    if (pnStatus.category == PNStatusCategory.Connected) {
                         pubnubBase.internalPubNubClient.unsubscribe(
-                            channels = listOf("ch2")
+                            channels = listOf("ch1"),
                         )
                     }
-                }
 
-                if (pnStatus.category == PNStatusCategory.Disconnected) {
-                    statusReceived.set(true)
+                    if (pnStatus.category == PNStatusCategory.SubscriptionChanged) {
+                        if ("ch1" !in pnStatus.channels) {
+                            pubnubBase.internalPubNubClient.unsubscribe(
+                                channels = listOf("ch2"),
+                            )
+                        }
+                    }
+
+                    if (pnStatus.category == PNStatusCategory.Disconnected) {
+                        statusReceived.set(true)
+                    }
                 }
             }
-        }
 
         pubnubBase.addListener(sub1)
 
         pubnub.subscribe(
             channels = listOf("ch1", "ch2"),
-            withPresence = true
+            withPresence = true,
         )
 
         Awaitility.await()
@@ -3304,43 +3613,47 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         """
-                            {
-                              "t": {
-                                "t": "999",
-                                "r": 1
-                              },
-                              "m": []
-                            }
-                        """.trimIndent()
-                    )
-                )
+                        {
+                          "t": {
+                            "t": "999",
+                            "r": 1
+                          },
+                          "m": []
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
         )
 
         stubFor(
             get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .withQueryParam("tt", equalTo("555"))
-                .willReturn(emptyJson())
+                .willReturn(emptyJson()),
         )
 
         pubnub.subscribe(
             channels = listOf("ch1", "ch2"),
-            withTimetoken = 555L
+            withTimetoken = 555L,
         )
 
         Awaitility.await()
             .atMost(5, TimeUnit.SECONDS)
             .pollDelay(2, TimeUnit.SECONDS)
             .until {
-                val requests = findAll(
-                    getRequestedFor(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
-                        .withQueryParam("tt", equalTo("555"))
-                )
+                val requests =
+                    findAll(
+                        getRequestedFor(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+                            .withQueryParam("tt", equalTo("555")),
+                    )
                 assertEquals(1, requests.size)
                 true
             }
     }
 
-    private fun stubHandshaking(withNextTimetoken: Int = 5, withChannels: String = "ch2,ch1") {
+    private fun stubHandshaking(
+        withNextTimetoken: Int = 5,
+        withChannels: String = "ch2,ch1",
+    ) {
         stubFor(
             get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$withChannels/0"))
                 .withQueryParam("tt", matching("0"))
@@ -3353,9 +3666,9 @@ class SubscriptionManagerTest : BaseTest() {
                                 "r": 1
                               }
                             }
-                        """
-                    )
-                )
+                        """,
+                    ),
+                ),
         )
     }
 }

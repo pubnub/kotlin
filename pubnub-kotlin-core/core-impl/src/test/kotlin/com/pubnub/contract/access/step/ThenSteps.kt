@@ -13,7 +13,7 @@ import org.hamcrest.Matchers
 
 class ThenSteps(
     private val grantTokenState: GrantTokenState,
-    private val world: World
+    private val world: World,
 ) {
     @Then("the authorized UUID {string}")
     fun authorized_uuid(uuid: String) {
@@ -48,25 +48,31 @@ class ThenSteps(
     }
 
     @Then("the token has {string} {resourceType} resource access permissions")
-    fun the_token_has_channel_resource_access_permissions(name: String, resourceType: ResourceType) {
+    fun the_token_has_channel_resource_access_permissions(
+        name: String,
+        resourceType: ResourceType,
+    ) {
         val token = parsedToken()!!
         val permissions = token.resourcePermissionsMap(resourceType)[name]
         MatcherAssert.assertThat(
             "Token doesn't contain required permissions $token",
             permissions,
-            Matchers.notNullValue()
+            Matchers.notNullValue(),
         )
         grantTokenState.currentResourcePermissions = permissions
     }
 
     @Then("the token has {string} {resourceType} pattern access permissions")
-    fun the_token_has_channel_pattern_access_permissions(name: String, resourceType: ResourceType) {
+    fun the_token_has_channel_pattern_access_permissions(
+        name: String,
+        resourceType: ResourceType,
+    ) {
         val token = parsedToken()!!
         val permissions = token.patternPermissionsMap(resourceType)[name]
         MatcherAssert.assertThat(
             "Token doesn't contain required permissions $token",
             permissions,
-            Matchers.notNullValue()
+            Matchers.notNullValue(),
         )
         grantTokenState.currentResourcePermissions = permissions
     }

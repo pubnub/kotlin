@@ -17,15 +17,14 @@ package com.pubnub.api.models.consumer.message_actions
 open class PNMessageAction(
     @JvmField var type: String,
     @JvmField var value: String,
-    @JvmField var messageTimetoken: Long
+    @JvmField var messageTimetoken: Long,
 ) {
-
     constructor() : this("", "", 0L)
 
     internal constructor(pnMessageAction: PNMessageAction) : this(
         pnMessageAction.type,
         pnMessageAction.value,
-        pnMessageAction.messageTimetoken
+        pnMessageAction.messageTimetoken,
     ) {
         this.uuid = pnMessageAction.uuid
         this.actionTimetoken = pnMessageAction.actionTimetoken

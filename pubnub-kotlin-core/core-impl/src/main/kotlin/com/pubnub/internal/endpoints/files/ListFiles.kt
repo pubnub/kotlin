@@ -19,9 +19,8 @@ class ListFiles(
     private val channel: String,
     private val limit: Int? = null,
     private val next: PNPage.PNNext? = null,
-    pubNub: InternalPubNubClient
+    pubNub: InternalPubNubClient,
 ) : Endpoint<ListFilesResult, PNListFilesResult>(pubNub), IListFiles {
-
     @Throws(PubNubException::class)
     override fun validateParams() {
         if (channel.isEmpty()) {
@@ -29,12 +28,12 @@ class ListFiles(
         }
         if (limit != null && limit !in MIN_LIMIT..MAX_LIMIT) {
             throw PubNubException(PubNubError.INVALID_ARGUMENTS).copy(
-                errorMessage = "Limit should be in range from 1 to 100 (both inclusive)"
+                errorMessage = "Limit should be in range from 1 to 100 (both inclusive)",
             )
         }
         if (next != null && (next.pageHash.isBlank())) {
             throw PubNubException(PubNubError.INVALID_ARGUMENTS).copy(
-                errorMessage = "Next should not be an empty string"
+                errorMessage = "Next should not be an empty string",
             )
         }
     }
@@ -48,7 +47,7 @@ class ListFiles(
         return pubnub.retrofitManager.filesService.listFiles(
             pubnub.configuration.subscribeKey,
             channel,
-            queryParams
+            queryParams,
         )
     }
 
@@ -59,17 +58,23 @@ class ListFiles(
                 body.count,
                 body.next,
                 body.status,
-                body.data
+                body.data,
             )
         } ?: throw PubNubException(PubNubError.INTERNAL_ERROR)
     }
 
     override fun getAffectedChannels() = listOf(channel)
+
     override fun getAffectedChannelGroups(): List<String> = listOf()
+
     override fun operationType(): PNOperationType = PNOperationType.FileOperation
+
     override fun isAuthRequired(): Boolean = true
+
     override fun isSubKeyRequired(): Boolean = true
+
     override fun isPubKeyRequired(): Boolean = false
+
     override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.FILE_PERSISTENCE
 
     companion object {

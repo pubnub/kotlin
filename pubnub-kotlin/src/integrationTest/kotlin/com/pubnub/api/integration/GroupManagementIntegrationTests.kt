@@ -9,7 +9,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class GroupManagementIntegrationTests : BaseIntegrationTest() {
-
     lateinit var expectedChannel1: String
     lateinit var expectedChannel2: String
     lateinit var expectedChannel3: String
@@ -29,7 +28,7 @@ class GroupManagementIntegrationTests : BaseIntegrationTest() {
 
         pubnub.removeChannelsFromChannelGroup(
             channelGroup = expectedGroup,
-            channels = listOf(expectedChannel1, expectedChannel2, expectedChannel3)
+            channels = listOf(expectedChannel1, expectedChannel2, expectedChannel3),
         ).await { result ->
             assertFalse(result.isFailure)
 //            assertEquals(3, status.affectedChannels.size) // TODO is this part of the result? if not then there's nothing to assert on
@@ -45,7 +44,7 @@ class GroupManagementIntegrationTests : BaseIntegrationTest() {
 
         pubnub.removeChannelsFromChannelGroup(
             channelGroup = expectedGroup,
-            channels = listOf(expectedChannel1)
+            channels = listOf(expectedChannel1),
         ).await { result ->
             assertFalse(result.isFailure)
         }
@@ -57,7 +56,7 @@ class GroupManagementIntegrationTests : BaseIntegrationTest() {
 
         pubnub.subscribe(
             channelGroups = listOf(expectedGroup),
-            withPresence = true
+            withPresence = true,
         )
 
         retry {
@@ -71,13 +70,13 @@ class GroupManagementIntegrationTests : BaseIntegrationTest() {
 
         pubnub.subscribe(
             channelGroups = listOf(expectedGroup),
-            withPresence = true
+            withPresence = true,
         )
 
         wait()
 
         pubnub.unsubscribe(
-            channelGroups = listOf(expectedGroup)
+            channelGroups = listOf(expectedGroup),
         )
 
         wait()
@@ -90,7 +89,7 @@ class GroupManagementIntegrationTests : BaseIntegrationTest() {
         addChannelsToGroup()
 
         pubnub.listChannelsForChannelGroup(
-            channelGroup = expectedGroup
+            channelGroup = expectedGroup,
         ).await { result ->
             assertFalse(result.isFailure)
             result.onSuccess {
@@ -103,7 +102,7 @@ class GroupManagementIntegrationTests : BaseIntegrationTest() {
     fun testAddChannelsToGroup() {
         pubnub.addChannelsToChannelGroup(
             channelGroup = expectedGroup,
-            channels = listOf(expectedChannel1, expectedChannel2, expectedChannel3)
+            channels = listOf(expectedChannel1, expectedChannel2, expectedChannel3),
         ).await { result ->
             assertFalse(result.isFailure) // TODO is this part of the result? if not then there's nothing to assert on
 //            assertEquals(1, status.affectedChannelGroups.size)
@@ -114,7 +113,7 @@ class GroupManagementIntegrationTests : BaseIntegrationTest() {
     private fun addChannelsToGroup() {
         pubnub.addChannelsToChannelGroup(
             channelGroup = expectedGroup,
-            channels = listOf(expectedChannel1, expectedChannel2, expectedChannel3)
+            channels = listOf(expectedChannel1, expectedChannel2, expectedChannel3),
         ).await { result ->
             assertFalse(result.isFailure)
         }

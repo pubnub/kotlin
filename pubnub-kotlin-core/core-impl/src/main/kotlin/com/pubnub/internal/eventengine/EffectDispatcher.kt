@@ -9,7 +9,7 @@ internal class EffectDispatcher<T : EffectInvocation>(
     private val effectFactory: EffectFactory<T>,
     private val effectSource: Source<T>,
     private val managedEffects: ConcurrentHashMap<String, ManagedEffect> = ConcurrentHashMap(),
-    private val executorService: ExecutorService = Executors.newSingleThreadExecutor()
+    private val executorService: ExecutorService = Executors.newSingleThreadExecutor(),
 ) {
     private val log = LoggerFactory.getLogger(EffectDispatcher::class.java)
 

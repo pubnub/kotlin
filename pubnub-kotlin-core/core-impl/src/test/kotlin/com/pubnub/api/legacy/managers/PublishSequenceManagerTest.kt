@@ -6,7 +6,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class PublishSequenceManagerTest : BaseTest() {
-
     @Test
     fun testSequenceManager() {
         val publishSequenceManager = PublishSequenceManager(2)

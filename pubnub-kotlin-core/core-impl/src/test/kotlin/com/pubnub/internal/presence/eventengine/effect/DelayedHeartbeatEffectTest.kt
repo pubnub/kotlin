@@ -33,14 +33,15 @@ class DelayedHeartbeatEffectTest {
     @Test
     fun `should deliver HeartbeatSuccess event when DelayedHeartbeatEffect succeeded`() {
         // given
-        val delayedHeartbeatEffect = DelayedHeartbeatEffect(
-            successfulRemoteAction(resultFromHeartbeat),
-            presenceEventSink,
-            retryConfiguration,
-            executorService,
-            delayedHeartbeatInvocation.attempts,
-            delayedHeartbeatInvocation.reason
-        )
+        val delayedHeartbeatEffect =
+            DelayedHeartbeatEffect(
+                successfulRemoteAction(resultFromHeartbeat),
+                presenceEventSink,
+                retryConfiguration,
+                executorService,
+                delayedHeartbeatInvocation.attempts,
+                delayedHeartbeatInvocation.reason,
+            )
 
         // when
         delayedHeartbeatEffect.runEffect()
@@ -58,14 +59,15 @@ class DelayedHeartbeatEffectTest {
     @Test
     fun `should deliver HeartbeatFailure event when DelayedHeartbeatEffect failed`() {
         // given
-        val delayedHeartbeatEffect = DelayedHeartbeatEffect(
-            failingRemoteAction(reason),
-            presenceEventSink,
-            retryConfiguration,
-            executorService,
-            delayedHeartbeatInvocation.attempts,
-            delayedHeartbeatInvocation.reason
-        )
+        val delayedHeartbeatEffect =
+            DelayedHeartbeatEffect(
+                failingRemoteAction(reason),
+                presenceEventSink,
+                retryConfiguration,
+                executorService,
+                delayedHeartbeatInvocation.attempts,
+                delayedHeartbeatInvocation.reason,
+            )
 
         // when
         delayedHeartbeatEffect.runEffect()
@@ -84,14 +86,15 @@ class DelayedHeartbeatEffectTest {
     fun `should deliver HeartbeatGiveup event when delay is null`() {
         // given
         val policy = RetryConfiguration.None
-        val delayedHeartbeatEffect = DelayedHeartbeatEffect(
-            failingRemoteAction(reason),
-            presenceEventSink,
-            policy,
-            executorService,
-            delayedHeartbeatInvocation.attempts,
-            delayedHeartbeatInvocation.reason
-        )
+        val delayedHeartbeatEffect =
+            DelayedHeartbeatEffect(
+                failingRemoteAction(reason),
+                presenceEventSink,
+                policy,
+                executorService,
+                delayedHeartbeatInvocation.attempts,
+                delayedHeartbeatInvocation.reason,
+            )
 
         // when
         delayedHeartbeatEffect.runEffect()
@@ -110,14 +113,15 @@ class DelayedHeartbeatEffectTest {
     fun `should cancel remoteAction when cancel DelayedHeartbeatEffect`() {
         // given
         val heartbeatRemoteAction: RemoteAction<Boolean> = mockk()
-        val delayedHeartbeatEffect = DelayedHeartbeatEffect(
-            heartbeatRemoteAction,
-            presenceEventSink,
-            retryConfiguration,
-            executorService,
-            delayedHeartbeatInvocation.attempts,
-            delayedHeartbeatInvocation.reason
-        )
+        val delayedHeartbeatEffect =
+            DelayedHeartbeatEffect(
+                heartbeatRemoteAction,
+                presenceEventSink,
+                retryConfiguration,
+                executorService,
+                delayedHeartbeatInvocation.attempts,
+                delayedHeartbeatInvocation.reason,
+            )
         every { heartbeatRemoteAction.silentCancel() } returns Unit
 
         // when
