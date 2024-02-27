@@ -1,6 +1,5 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm'
-    id 'com.github.johnrengelman.shadow'
     id 'java-library'
     id 'java-test-fixtures'
     id "org.jlleitschuh.gradle.ktlint"
@@ -18,9 +17,7 @@ sourceSets {
 }
 
 configurations {
-//    testImplementation
     integrationTestImplementation.extendsFrom(testImplementation)
-//    testImplementation { extendsFrom testImplementation }
 }
 
 test {
@@ -46,62 +43,23 @@ kotlin {
     jvmToolchain(8)
 }
 
-//compileKotlin.finalizedBy(task("compileIntegrationTest"))
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
 dependencies {
     api(project(":pubnub-kotlin-core:core-api"))
     implementation(project(":pubnub-kotlin-core:core-impl"))
 
-    implementation "com.squareup.retrofit2:retrofit:2.9.0"
-    implementation "com.squareup.retrofit2:converter-gson:2.9.0"
+    testImplementation libs.wiremock
 
-    api 'org.json:json:20230227'
+    testImplementation libs.logback.classic
+    testImplementation libs.logback.core
+    testImplementation libs.json
 
-    implementation "org.slf4j:slf4j-api:1.7.30"
-
-    api 'com.squareup.okhttp3:logging-interceptor:4.9.3'
-    api 'com.google.code.gson:gson:2.9.0'
-    implementation 'co.nstant.in:cbor:0.9'
-
-    testImplementation "com.github.tomakehurst:wiremock:2.27.2"
-    testFixturesImplementation "com.github.tomakehurst:wiremock:2.27.2"
-
-    testImplementation "ch.qos.logback:logback-classic:1.2.11"
-    testImplementation "ch.qos.logback:logback-core:1.2.11"
-    testImplementation "org.json:json:20230227"
-
-    testImplementation group: 'io.cucumber', name: 'cucumber-java', version: '6.10.4'
-    testImplementation group: 'io.cucumber', name: 'cucumber-junit', version: '6.10.4'
-    testImplementation group: 'io.cucumber', name: 'cucumber-picocontainer', version: '6.10.4'
-    testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
-
-    testImplementation "org.awaitility:awaitility-kotlin:4.0.3"
-    testFixturesImplementation "org.awaitility:awaitility-kotlin:4.0.3"
-    testImplementation "junit:junit:4.13.2"
-    testFixturesImplementation "junit:junit:4.13.2"
-    testImplementation "org.junit.jupiter:junit-jupiter-engine:5.8.2"
-    testImplementation "org.junit.vintage:junit-vintage-engine:5.8.2"
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
-    testImplementation "io.mockk:mockk:1.11.0"
-    testImplementation "org.aeonbits.owner:owner:1.0.12"
-    testFixturesImplementation "org.aeonbits.owner:owner:1.0.12"
-    testFixturesImplementation(project(":pubnub-kotlin-core:core-impl"))
-
-
-//    integrationTestImplementation testFixtures(project(":pubnub-kotlin"))
-}
-
-shadowJar {
-//    classifier = "all"
-    dependencies {
-        exclude(dependency('org.jetbrains.kotlin:.*'))
-    }
-    dependencies {
-        exclude(dependency('org.jetbrains:annotations:.*'))
-    }
+    testImplementation libs.junit4
+    testImplementation libs.awaitility
+    testImplementation libs.junit.vintage.engine
+    testImplementation libs.junit.jupiter
+    testImplementation libs.junit.jupiter.engine
+    testImplementation libs.mockk
+    testImplementation libs.owner
 }
 
 
@@ -113,31 +71,4 @@ dokkaGfm {
     }
 }
 
-sourceSets {
-    test {
-        resources {
-            srcDir 'src/testFixtures/resources'
-        }
-    }
-    integrationTest {
-        resources {
-            srcDir 'src/testFixtures/resources'
-        }
-    }
-}
-
-build.finalizedBy(dokkaGfm, shadowJar)
-tasks.register("japicmp", me.champeau.gradle.japicmp.JapicmpTask) {
-    oldClasspath.from(files('/Users/wojciech.kalicinski/projects/pubnub-kotlin/build/libs/pubnub-kotlin-7.7.5.jar'))
-    newClasspath.from(tasks.named('jar'), "../pubnub-kotlin-core/build/libs/pubnub-kotlin-core-7.7.4.jar")
-    onlyModified = false
-    failOnModification = false
-    htmlOutputFile = layout.buildDirectory.file("reports/japi.html")
-    ignoreMissingClasses = true
-    classExcludes = ["com.pubnub.internal.*"]
-}
-
-tasks.register("mergeKotlinJars", org.gradle.jvm.tasks.Jar) {
-    from(zipTree("/Users/wojciech.kalicinski/projects/pubnub-kotlin-copy/pubnub-kotlin/build/libs/pubnub-kotlin-8.0.0.jar"), zipTree("/Users/wojciech.kalicinski/projects/pubnub-kotlin-copy/pubnub-kotlin-core/core-api/build/libs/core-api-8.0.0.jar"))
-    setArchiveFileName("combined.jar")
-}
+build.finalizedBy(dokkaGfm)

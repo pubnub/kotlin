@@ -1,8 +1,8 @@
 package com.pubnub.api.integration
 
-import com.pubnub.api.CommonUtils.randomValue
-import com.pubnub.api.CommonUtils.retry
-import com.pubnub.api.await
+import com.pubnub.test.CommonUtils.randomValue
+import com.pubnub.test.CommonUtils.retry
+import com.pubnub.test.await
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue

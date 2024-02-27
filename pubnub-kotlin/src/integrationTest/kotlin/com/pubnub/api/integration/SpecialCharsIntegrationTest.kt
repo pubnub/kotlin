@@ -1,6 +1,6 @@
 package com.pubnub.api.integration
 
-import com.pubnub.api.CommonUtils
+import com.pubnub.test.CommonUtils
 import org.junit.Assert.assertEquals
 import org.junit.Ignore
 import org.junit.Test

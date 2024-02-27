@@ -1,7 +1,7 @@
 package com.pubnub.api.integration
 
-import com.pubnub.api.CommonUtils.createInterceptor
-import com.pubnub.api.Keys
+import com.pubnub.test.CommonUtils.createInterceptor
+import com.pubnub.test.Keys
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId

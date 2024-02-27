@@ -1,11 +1,13 @@
-package com.pubnub.api
+package com.pubnub.test
 
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
+import com.pubnub.api.PubNub
+import com.pubnub.api.PubNubError
+import com.pubnub.api.PubNubException
 import com.pubnub.api.models.consumer.PNPublishResult
-import com.pubnub.internal.InternalPubNubClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.awaitility.Awaitility
 import org.awaitility.Durations
@@ -24,7 +26,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.stream.Collectors
 
 object CommonUtils {
-    var defaultListenDuration = 5
+    const val DEFAULT_LISTEN_DURATION = 5
 
     internal fun observe(
         success: AtomicBoolean,
@@ -37,7 +39,14 @@ object CommonUtils {
 
     fun assertPnException(
         expectedPubNubError: PubNubError,
-        exception: Throwable?,
+        exception: PubNubException,
+    ) {
+        assertEquals(expectedPubNubError, exception.pubnubError)
+    }
+
+    fun assertPnException(
+        expectedPubNubError: PubNubError,
+        exception: Exception,
     ) {
         exception as PubNubException
         assertEquals(expectedPubNubError, exception.pubnubError)
@@ -98,7 +107,7 @@ object CommonUtils {
         }
 
         Awaitility.await()
-            .atMost(defaultListenDuration.toLong(), TimeUnit.SECONDS)
+            .atMost(DEFAULT_LISTEN_DURATION.toLong(), TimeUnit.SECONDS)
             .pollInterval(Durations.FIVE_HUNDRED_MILLISECONDS)
             .until {
                 block.invoke()
@@ -123,7 +132,7 @@ object CommonUtils {
     }
 
     fun publishMixed(
-        pubnub: InternalPubNubClient,
+        pubnub: PubNub,
         count: Int,
         channel: String,
     ): List<PNPublishResult> {
@@ -153,7 +162,7 @@ object CommonUtils {
         }
     }
 
-    fun generateMessage(pubnub: InternalPubNubClient): JsonObject {
+    fun generateMessage(pubnub: PubNub): JsonObject {
         return JsonObject().apply {
             addProperty("publisher", pubnub.configuration.userId.value)
             addProperty("text", randomValue())

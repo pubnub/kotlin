@@ -7,13 +7,13 @@ import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
-import com.pubnub.api.CommonUtils.assertPnException
-import com.pubnub.api.CommonUtils.failTest
+import com.pubnub.test.CommonUtils.assertPnException
+import com.pubnub.test.CommonUtils.failTest
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.legacy.BaseTest
-import com.pubnub.api.listen
+import com.pubnub.test.listen
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Test

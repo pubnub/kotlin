@@ -10,11 +10,11 @@ import com.github.tomakehurst.wiremock.client.WireMock.noContent
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import com.pubnub.api.CommonUtils.assertPnException
-import com.pubnub.api.CommonUtils.emptyJson
-import com.pubnub.api.CommonUtils.failTest
+import com.pubnub.test.CommonUtils.assertPnException
+import com.pubnub.test.CommonUtils.emptyJson
+import com.pubnub.test.CommonUtils.failTest
 import com.pubnub.api.PubNubError
-import com.pubnub.api.await
+import com.pubnub.test.await
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.v2.callbacks.getOrThrow

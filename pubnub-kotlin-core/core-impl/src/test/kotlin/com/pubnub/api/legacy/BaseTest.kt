@@ -3,7 +3,7 @@ package com.pubnub.api.legacy
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
-import com.pubnub.api.CommonUtils.defaultListenDuration
+import com.pubnub.test.CommonUtils.defaultListenDuration
 import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.internal.BasePubNubImpl

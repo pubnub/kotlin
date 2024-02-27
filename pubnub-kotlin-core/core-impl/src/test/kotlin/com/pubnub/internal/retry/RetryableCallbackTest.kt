@@ -1,6 +1,6 @@
 package com.pubnub.internal.retry
 
-import com.pubnub.api.listen
+import com.pubnub.test.listen
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.retry.RetryableEndpointGroup
 import io.mockk.every

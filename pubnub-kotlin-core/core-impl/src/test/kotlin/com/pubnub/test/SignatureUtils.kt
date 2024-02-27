@@ -1,4 +1,4 @@
-package com.pubnub.api
+package com.pubnub.test
 
 import com.github.tomakehurst.wiremock.verification.LoggedRequest
 import com.pubnub.internal.PNConfiguration

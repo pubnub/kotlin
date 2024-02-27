@@ -2,6 +2,7 @@ pluginManagement {
     repositories {
         gradlePluginPortal()
         mavenCentral()
+        google()
     }
 }
 
@@ -10,7 +11,6 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-
 
 rootProject.name = "pubnub-kotlin-root"
 include("pubnub-kotlin-core")

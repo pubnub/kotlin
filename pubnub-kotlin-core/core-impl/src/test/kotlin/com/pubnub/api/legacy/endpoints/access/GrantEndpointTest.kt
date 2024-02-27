@@ -8,11 +8,11 @@ import com.github.tomakehurst.wiremock.client.WireMock.matching
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
-import com.pubnub.api.CommonUtils.assertPnException
-import com.pubnub.api.CommonUtils.failTest
+import com.pubnub.test.CommonUtils.assertPnException
+import com.pubnub.test.CommonUtils.failTest
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
-import com.pubnub.api.SignatureUtils.decomposeAndVerifySignature
+import com.pubnub.test.SignatureUtils.decomposeAndVerifySignature
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.internal.models.consumer.access_manager.PNAccessManagerKeyData
 import org.awaitility.Awaitility

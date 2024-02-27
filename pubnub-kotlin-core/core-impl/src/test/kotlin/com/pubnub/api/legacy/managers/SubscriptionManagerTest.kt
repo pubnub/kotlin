@@ -13,7 +13,7 @@ import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.github.tomakehurst.wiremock.matching.UrlPathPattern
 import com.google.gson.reflect.TypeToken
 import com.pubnub.api.BasePubNub
-import com.pubnub.api.CommonUtils.emptyJson
+import com.pubnub.test.CommonUtils.emptyJson
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.legacy.BaseTest

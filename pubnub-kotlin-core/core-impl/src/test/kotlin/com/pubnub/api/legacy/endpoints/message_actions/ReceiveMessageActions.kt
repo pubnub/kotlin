@@ -5,9 +5,9 @@ import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.BasePubNub
-import com.pubnub.api.CommonUtils.failTest
+import com.pubnub.test.CommonUtils.failTest
 import com.pubnub.api.legacy.BaseTest
-import com.pubnub.api.listen
+import com.pubnub.test.listen
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult

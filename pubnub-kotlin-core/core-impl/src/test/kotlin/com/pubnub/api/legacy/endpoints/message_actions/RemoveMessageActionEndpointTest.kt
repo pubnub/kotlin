@@ -8,12 +8,12 @@ import com.github.tomakehurst.wiremock.client.WireMock.noContent
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
-import com.pubnub.api.CommonUtils.assertPnException
-import com.pubnub.api.CommonUtils.emptyJson
-import com.pubnub.api.CommonUtils.failTest
+import com.pubnub.test.CommonUtils.assertPnException
+import com.pubnub.test.CommonUtils.emptyJson
+import com.pubnub.test.CommonUtils.failTest
 import com.pubnub.api.PubNubError
 import com.pubnub.api.legacy.BaseTest
-import com.pubnub.api.listen
+import com.pubnub.test.listen
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Test

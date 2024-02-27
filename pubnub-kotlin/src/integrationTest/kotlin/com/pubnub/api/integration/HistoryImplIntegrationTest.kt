@@ -2,9 +2,9 @@ package com.pubnub.api.integration
 
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
-import com.pubnub.api.CommonUtils
-import com.pubnub.api.CommonUtils.emoji
-import com.pubnub.api.CommonUtils.randomChannel
+import com.pubnub.test.CommonUtils
+import com.pubnub.test.CommonUtils.emoji
+import com.pubnub.test.CommonUtils.randomChannel
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.crypto.CryptoModule

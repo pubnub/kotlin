@@ -1,6 +1,7 @@
-package com.pubnub.api
+package com.pubnub.test
 
 import com.github.tomakehurst.wiremock.verification.LoggedRequest
+import com.pubnub.api.PNConfiguration
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.Request
 import okio.Buffer

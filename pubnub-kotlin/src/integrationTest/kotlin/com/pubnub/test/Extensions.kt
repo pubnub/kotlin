@@ -1,5 +1,7 @@
-package com.pubnub.api
+package com.pubnub.test
 
+import com.pubnub.api.PubNub
+import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.v2.callbacks.Result
 import org.awaitility.Awaitility

@@ -1,8 +1,8 @@
 package com.pubnub.api.integration
 
-import com.pubnub.api.CommonUtils.getSpecialCharsMap
-import com.pubnub.api.CommonUtils.randomChannel
-import com.pubnub.api.listen
+import com.pubnub.test.CommonUtils.getSpecialCharsMap
+import com.pubnub.test.CommonUtils.randomChannel
+import com.pubnub.test.listen
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.junit.Ignore

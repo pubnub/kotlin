@@ -1,7 +1,7 @@
 package com.pubnub.api.integration
 
-import com.pubnub.api.CommonUtils.generatePayload
-import com.pubnub.api.CommonUtils.randomChannel
+import com.pubnub.test.CommonUtils.generatePayload
+import com.pubnub.test.CommonUtils.randomChannel
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNStatusCategory

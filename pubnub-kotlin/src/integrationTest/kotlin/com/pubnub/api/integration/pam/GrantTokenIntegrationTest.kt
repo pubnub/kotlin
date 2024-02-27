@@ -1,7 +1,7 @@
 package com.pubnub.api.integration.pam
 
-import com.pubnub.api.CommonUtils
-import com.pubnub.api.Keys
+import com.pubnub.test.CommonUtils
+import com.pubnub.test.Keys
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.SpaceId

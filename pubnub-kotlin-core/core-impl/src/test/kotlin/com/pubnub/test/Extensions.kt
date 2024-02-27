@@ -1,4 +1,4 @@
-package com.pubnub.api
+package com.pubnub.test
 
 import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.internal.Endpoint

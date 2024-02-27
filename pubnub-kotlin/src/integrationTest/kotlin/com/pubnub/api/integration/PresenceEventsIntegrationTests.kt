@@ -1,16 +1,16 @@
 package com.pubnub.api.integration
 
-import com.pubnub.api.CommonUtils
-import com.pubnub.api.CommonUtils.generatePayload
-import com.pubnub.api.CommonUtils.randomChannel
+import com.pubnub.test.CommonUtils
+import com.pubnub.test.CommonUtils.generatePayload
+import com.pubnub.test.CommonUtils.randomChannel
 import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNStatusCategory
-import com.pubnub.api.listen
+import com.pubnub.test.listen
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
-import com.pubnub.api.subscribeToBlocking
-import com.pubnub.api.unsubscribeFromBlocking
+import com.pubnub.test.subscribeToBlocking
+import com.pubnub.test.unsubscribeFromBlocking
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import org.awaitility.Awaitility
 import org.awaitility.Durations

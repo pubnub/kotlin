@@ -1,6 +1,6 @@
 package com.pubnub.api.integration
 
-import com.pubnub.api.CommonUtils.randomChannel
+import com.pubnub.test.CommonUtils.randomChannel
 import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNStatusCategory
