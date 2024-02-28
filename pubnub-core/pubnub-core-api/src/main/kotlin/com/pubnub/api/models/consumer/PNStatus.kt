@@ -12,6 +12,7 @@ class PNStatus(
 ) {
     @get:JvmName("isError")
     val error: Boolean = exception != null
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is PNStatus) return false
@@ -33,6 +34,4 @@ class PNStatus(
         result = 31 * result + channelGroups.hashCode()
         return result
     }
-
-
 }
