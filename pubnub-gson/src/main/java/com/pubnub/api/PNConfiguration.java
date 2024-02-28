@@ -362,15 +362,6 @@ public class PNConfiguration {
         return this;
     }
 
-    public boolean getStartSubscriberThread() {
-        return corePnConfiguration.getStartSubscriberThread();
-    }
-
-    public PNConfiguration setStartSubscriberThread(boolean b) {
-        corePnConfiguration.setStartSubscriberThread(b);
-        return this;
-    }
-
     public Proxy getProxy() {
         return corePnConfiguration.getProxy();
     }

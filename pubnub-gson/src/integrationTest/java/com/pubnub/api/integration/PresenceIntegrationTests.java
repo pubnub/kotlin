@@ -11,6 +11,7 @@ import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.presence.PNHereNowChannelData;
 import com.pubnub.api.models.consumer.presence.PNHereNowOccupantData;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
+import com.pubnub.api.v2.callbacks.EventListener;
 import org.awaitility.Awaitility;
 import org.awaitility.Durations;
 import org.hamcrest.core.IsEqual;
@@ -266,7 +267,7 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
         final JsonObject expectedStatePayload = generatePayload();
         final String expectedChannel = RandomGenerator.get();
 
-        pubNub.addListener(new SubscribeCallback.BaseSubscribeCallback() {
+        pubNub.addListener(new EventListener() {
             @Override
             public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult presence) {
                 if (presence.getEvent().equals(STATE_CHANGE_EVENT)

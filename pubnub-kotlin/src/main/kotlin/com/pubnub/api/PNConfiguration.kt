@@ -231,13 +231,6 @@ class PNConfiguration(userId: UserId) {
     var googleAppEngineNetworking by configuration::googleAppEngineNetworking
 
     /**
-     * Whether to start a separate subscriber thread when creating the instance.
-     *
-     * Defaults to `true`.
-     */
-    var startSubscriberThread by configuration::startSubscriberThread
-
-    /**
      * Instructs the SDK to use a proxy configuration when communicating with PubNub servers.
      *
      * @see [Proxy]

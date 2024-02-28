@@ -8,10 +8,3 @@ import org.jetbrains.annotations.NotNull;
 public interface StatusListener extends BaseStatusListener {
     void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus);
 }
-
-//
-//    @Override
-//    public void status(@NotNull BasePubNubImpl pubnub, @NotNull PNStatus status) {
-//        status((PubNub) pubnub, status);
-//    }
-

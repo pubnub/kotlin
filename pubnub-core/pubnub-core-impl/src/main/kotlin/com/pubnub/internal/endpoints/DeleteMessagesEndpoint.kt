@@ -23,7 +23,9 @@ class DeleteMessagesEndpoint internal constructor(
 ) : CoreEndpoint<Void, PNDeleteMessagesResult>(pubnub), DeleteMessagesInterface {
     override fun validateParams() {
         super.validateParams()
-        if (channels.isEmpty()) throw PubNubException(PubNubError.CHANNEL_MISSING)
+        if (channels.isEmpty()) {
+            throw PubNubException(PubNubError.CHANNEL_MISSING)
+        }
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Void> {

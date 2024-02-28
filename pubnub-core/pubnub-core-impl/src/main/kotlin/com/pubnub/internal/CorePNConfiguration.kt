@@ -300,13 +300,6 @@ class CorePNConfiguration
         var googleAppEngineNetworking = false
 
         /**
-         * Whether to start a separate subscriber thread when creating the instance.
-         *
-         * Defaults to `true`.
-         */
-        var startSubscriberThread = true
-
-        /**
          * Instructs the SDK to use a proxy configuration when communicating with PubNub servers.
          *
          * @see [Proxy]
@@ -391,33 +384,4 @@ class CorePNConfiguration
          *  Delay will vary from provided value by random value.
          */
         var retryConfiguration: RetryConfiguration = RetryConfiguration.None
-
-        internal val retryConfForOldSubscribeLoop: RetryConfiguration by lazy {
-            if (retryConfiguration != RetryConfiguration.None) {
-                retryConfiguration
-            } else {
-                val defaultRetryNumberForLinear = 10
-                val defaultRetryNumberForExponential = 6
-                when (reconnectionPolicy) {
-                    PNReconnectionPolicy.NONE -> RetryConfiguration.None
-                    PNReconnectionPolicy.LINEAR ->
-                        RetryConfiguration.Linear(
-                            maxRetryNumber = calculateMaximumReconnectionRetries(defaultRetryNumberForLinear),
-                        )
-
-                    PNReconnectionPolicy.EXPONENTIAL ->
-                        RetryConfiguration.Exponential(
-                            maxRetryNumber = calculateMaximumReconnectionRetries(defaultRetryNumberForExponential),
-                        )
-                }
-            }
-        }
-
-        private fun calculateMaximumReconnectionRetries(maxRetryNumber: Int): Int {
-            return when {
-                maximumReconnectionRetries <= -1 -> maxRetryNumber
-                maximumReconnectionRetries > maxRetryNumber -> maxRetryNumber
-                else -> maximumReconnectionRetries
-            }
-        }
     }
