@@ -1,12 +1,12 @@
 package com.pubnub.api.integration
 
 import com.google.gson.Gson
+import com.pubnub.api.PubNubError
+import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.test.CommonUtils.assertPnException
 import com.pubnub.test.CommonUtils.randomChannel
 import com.pubnub.test.CommonUtils.randomValue
-import com.pubnub.api.PubNubError
 import com.pubnub.test.await
-import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull

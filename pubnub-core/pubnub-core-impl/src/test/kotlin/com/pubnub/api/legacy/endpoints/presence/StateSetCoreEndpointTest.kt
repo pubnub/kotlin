@@ -9,10 +9,10 @@ import com.github.tomakehurst.wiremock.client.WireMock.matching
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
-import com.pubnub.test.CommonUtils.assertPnException
-import com.pubnub.test.CommonUtils.failTest
 import com.pubnub.api.PubNubError
 import com.pubnub.api.legacy.BaseTest
+import com.pubnub.test.CommonUtils.assertPnException
+import com.pubnub.test.CommonUtils.failTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

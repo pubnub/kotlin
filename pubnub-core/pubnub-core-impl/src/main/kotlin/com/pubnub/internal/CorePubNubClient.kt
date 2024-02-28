@@ -570,7 +570,9 @@ class CorePubNubClient internal constructor(
     @Deprecated(
         replaceWith =
             ReplaceWith(
-                "fetchMessages(channels = channels, page = PNBoundedPage(start = start, end = end, limit = maximumPerChannel),includeMeta = includeMeta, includeMessageActions = includeMessageActions, includeMessageType = includeMessageType)",
+                "fetchMessages(channels = channels, page = PNBoundedPage(start = start, end = end, " +
+                    "limit = maximumPerChannel),includeMeta = includeMeta, " +
+                    "includeMessageActions = includeMessageActions, includeMessageType = includeMessageType)",
                 "com.pubnub.api.models.consumer.PNBoundedPage",
             ),
         level = DeprecationLevel.WARNING,
@@ -584,13 +586,14 @@ class CorePubNubClient internal constructor(
         includeMeta: Boolean = false,
         includeMessageActions: Boolean = false,
         includeMessageType: Boolean = true,
-    ): FetchMessagesEndpoint = fetchMessages(
-        channels = channels,
-        page = PNBoundedPage(start = start, end = end, limit = maximumPerChannel),
-        includeMeta = includeMeta,
-        includeMessageActions = includeMessageActions,
-        includeMessageType = includeMessageType,
-    )
+    ): FetchMessagesEndpoint =
+        fetchMessages(
+            channels = channels,
+            page = PNBoundedPage(start = start, end = end, limit = maximumPerChannel),
+            includeMeta = includeMeta,
+            includeMessageActions = includeMessageActions,
+            includeMessageType = includeMessageType,
+        )
 
     /**
      * Fetch historical messages from multiple channels.

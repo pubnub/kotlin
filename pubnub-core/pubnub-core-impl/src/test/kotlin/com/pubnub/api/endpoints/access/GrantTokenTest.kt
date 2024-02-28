@@ -2,8 +2,8 @@ package com.pubnub.api.endpoints.access
 
 import com.pubnub.api.UserId
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult
-import com.pubnub.internal.CorePubNubClient
 import com.pubnub.internal.CorePNConfiguration
+import com.pubnub.internal.CorePubNubClient
 import com.pubnub.internal.SpaceId
 import com.pubnub.internal.TestPubNub
 import com.pubnub.internal.endpoints.access.GrantTokenEndpoint

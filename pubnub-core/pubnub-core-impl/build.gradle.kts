@@ -11,16 +11,16 @@ plugins {
 group = "com.pubnub"
 version = "9.0.0-beta01"
 
-//sourceSets {
+// sourceSets {
 //    create("integrationTest") {
 //        compileClasspath += sourceSets.main.get().output
 //        runtimeClasspath += sourceSets.main.get().output
 //    }
-//}
+// }
 //
-//val integrationTestImplementation by configurations.getting {
+// val integrationTestImplementation by configurations.getting {
 //    extendsFrom(configurations.implementation.get())
-//}
+// }
 
 tasks.named<Test>("test").configure {
     failFast = true
@@ -35,10 +35,11 @@ kotlin {
 ktlint {
     outputToConsole = true
     verbose = true
-    additionalEditorconfig = mapOf(
+    additionalEditorconfig =
+        mapOf(
             "ij_kotlin_imports_layout" to "*,java.**,javax.**,kotlin.**,^",
             "indent_size" to "4",
-    )
+        )
 }
 
 dependencies {
@@ -77,7 +78,6 @@ task<Test>("cucumber") {
     systemProperty("cucumber.features", System.getProperty("cucumber.features"))
     systemProperty("cucumber.plugins", System.getProperty("cucumber.plugins"))
 }
-
 
 tasks.dokkaGfm {
     dokkaSourceSets {

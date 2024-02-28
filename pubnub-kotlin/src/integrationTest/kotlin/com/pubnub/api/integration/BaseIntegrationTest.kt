@@ -1,11 +1,11 @@
 package com.pubnub.api.integration
 
-import com.pubnub.test.CommonUtils.createInterceptor
-import com.pubnub.test.Keys
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNLogVerbosity
+import com.pubnub.test.CommonUtils.createInterceptor
+import com.pubnub.test.Keys
 import org.junit.After
 import org.junit.Before
 import org.junit.jupiter.api.AfterEach

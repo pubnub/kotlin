@@ -7,10 +7,10 @@ import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
-import com.pubnub.test.CommonUtils.assertPnException
 import com.pubnub.api.PubNubError
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.internal.endpoints.presence.LeaveEndpoint
+import com.pubnub.test.CommonUtils.assertPnException
 import org.awaitility.Awaitility
 import org.hamcrest.core.IsEqual
 import org.junit.Assert.assertEquals

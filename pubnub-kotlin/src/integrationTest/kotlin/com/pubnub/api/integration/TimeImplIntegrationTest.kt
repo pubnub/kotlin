@@ -1,7 +1,7 @@
 package com.pubnub.api.integration
 
-import com.pubnub.test.listen
 import com.pubnub.api.v2.callbacks.getOrThrow
+import com.pubnub.test.listen
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Test

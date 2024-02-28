@@ -396,7 +396,9 @@ interface PubNub :
     @Deprecated(
         replaceWith =
             ReplaceWith(
-                "fetchMessages(channels = channels, page = PNBoundedPage(start = start, end = end, limit = maximumPerChannel),includeMeta = includeMeta, includeMessageActions = includeMessageActions, includeMessageType = includeMessageType)",
+                "fetchMessages(channels = channels, page = PNBoundedPage(start = start, end = end, " +
+                    "limit = maximumPerChannel),includeMeta = includeMeta, " +
+                    "includeMessageActions = includeMessageActions, includeMessageType = includeMessageType)",
                 "com.pubnub.api.models.consumer.PNBoundedPage",
             ),
         level = DeprecationLevel.WARNING,

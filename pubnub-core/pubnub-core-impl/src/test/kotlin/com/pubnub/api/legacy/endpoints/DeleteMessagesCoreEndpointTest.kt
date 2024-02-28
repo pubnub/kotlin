@@ -7,8 +7,8 @@ import com.github.tomakehurst.wiremock.client.WireMock.findAll
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
-import com.pubnub.test.CommonUtils.failTest
 import com.pubnub.api.legacy.BaseTest
+import com.pubnub.test.CommonUtils.failTest
 import org.awaitility.Awaitility
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse

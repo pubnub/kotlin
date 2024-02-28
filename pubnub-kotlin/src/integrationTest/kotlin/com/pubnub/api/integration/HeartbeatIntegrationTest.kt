@@ -1,12 +1,12 @@
 package com.pubnub.api.integration
 
-import com.pubnub.test.CommonUtils.generatePayload
-import com.pubnub.test.CommonUtils.randomChannel
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
+import com.pubnub.test.CommonUtils.generatePayload
+import com.pubnub.test.CommonUtils.randomChannel
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.hamcrest.core.IsEqual

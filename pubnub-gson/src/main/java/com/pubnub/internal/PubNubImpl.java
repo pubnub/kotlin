@@ -111,7 +111,6 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 public class PubNubImpl extends BasePubNubImpl<
         EventListener,

@@ -9,13 +9,13 @@ import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
+import com.pubnub.api.PubNubError
+import com.pubnub.api.legacy.BaseTest
+import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.test.CommonUtils.assertPnException
 import com.pubnub.test.CommonUtils.emptyJson
 import com.pubnub.test.CommonUtils.failTest
-import com.pubnub.api.PubNubError
-import com.pubnub.api.legacy.BaseTest
 import com.pubnub.test.listen
-import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Test

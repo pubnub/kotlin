@@ -1,10 +1,10 @@
 package com.pubnub.api.integration
 
+import com.pubnub.api.v2.callbacks.getOrThrow
 import com.pubnub.test.CommonUtils.randomChannel
 import com.pubnub.test.CommonUtils.randomValue
 import com.pubnub.test.asyncRetry
 import com.pubnub.test.await
-import com.pubnub.api.v2.callbacks.getOrThrow
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull

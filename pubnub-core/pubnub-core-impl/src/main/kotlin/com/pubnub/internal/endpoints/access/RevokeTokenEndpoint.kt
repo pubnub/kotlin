@@ -5,8 +5,8 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.CoreEndpoint
-import com.pubnub.internal.CorePubNubClient
 import com.pubnub.internal.CorePNConfiguration.Companion.isValid
+import com.pubnub.internal.CorePubNubClient
 import com.pubnub.internal.models.server.access_manager.v3.RevokeTokenResponse
 import retrofit2.Call
 import retrofit2.Response

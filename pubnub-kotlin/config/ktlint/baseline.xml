@@ -9,9 +9,6 @@
         <error line="112" column="1" source="standard:max-line-length" />
         <error line="216" column="1" source="standard:max-line-length" />
     </file>
-    <file name="src/main/kotlin/com/pubnub/api/PubNub.kt">
-        <error line="386" column="1" source="standard:max-line-length" />
-    </file>
     <file name="src/main/kotlin/com/pubnub/api/endpoints/channel_groups/AddChannelChannelGroup.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
@@ -57,12 +54,6 @@
     </file>
     <file name="src/main/kotlin/com/pubnub/api/models/consumer/access_manager/v3/UUIDGrant.kt">
         <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/PubNubImpl.kt">
-        <error line="1021" column="1" source="standard:max-line-length" />
-        <error line="1109" column="1" source="standard:max-line-length" />
-        <error line="1141" column="1" source="standard:max-line-length" />
-        <error line="1201" column="1" source="standard:max-line-length" />
     </file>
     <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/AddChannelChannelGroupImpl.kt">
         <error line="1" column="9" source="standard:package-name" />

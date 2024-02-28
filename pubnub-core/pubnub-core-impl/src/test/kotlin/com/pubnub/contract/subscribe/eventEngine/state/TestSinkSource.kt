@@ -10,7 +10,6 @@ internal class TestSinkSource<T>(
     private val testSink: MutableList<Pair<String, String>>,
     private val sinkSource: QueueSinkSource<T> = QueueSinkSource(),
 ) : SinkSource<T>, Source<T> by sinkSource {
-
     private fun String.toSnakeCase(): String {
         val pattern = "(?<=.)[A-Z]".toRegex()
         return this.replace(pattern, "_$0").lowercase()

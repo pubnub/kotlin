@@ -1,12 +1,12 @@
 package com.pubnub.api.legacy.endpoints.push
 
 import com.github.tomakehurst.wiremock.client.WireMock
-import com.pubnub.test.CommonUtils.assertPnException
-import com.pubnub.test.CommonUtils.failTest
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.legacy.BaseTest
+import com.pubnub.test.CommonUtils.assertPnException
+import com.pubnub.test.CommonUtils.failTest
 import com.pubnub.test.listen
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse

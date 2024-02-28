@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <baseline version="1.0">
-    <file name="src/main/kotlin/com/pubnub/internal/InternalPubNubClient.kt">
-        <error line="577" column="1" source="standard:max-line-length" />
-    </file>
     <file name="src/main/kotlin/com/pubnub/internal/crypto/cryptor/CryptorHeader.kt">
         <error line="4" column="30" source="standard:discouraged-comment-location" />
         <error line="5" column="24" source="standard:discouraged-comment-location" />
@@ -14,55 +11,55 @@
         <error line="104" column="1" source="standard:max-line-length" />
         <error line="130" column="1" source="standard:max-line-length" />
     </file>
-    <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/AddChannelChannelGroup.kt">
+    <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/AddChannelChannelGroupEndpoint.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
-    <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/AllChannelsChannelGroup.kt">
+    <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/AddChannelChannelGroupInterface.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
-    <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/DeleteChannelGroup.kt">
+    <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/AllChannelsChannelGroupEndpoint.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
-    <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/IAddChannelChannelGroup.kt">
+    <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/AllChannelsChannelGroupInterface.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
-    <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/IAllChannelsChannelGroup.kt">
+    <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/DeleteChannelGroupEndpoint.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
-    <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/IDeleteChannelGroup.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/IListAllChannelGroup.kt">
+    <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/DeleteChannelGroupInterface.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
     <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/IRemoveChannelChannelGroup.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
-    <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/ListAllChannelGroup.kt">
+    <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/ListAllChannelGroupEndpoint.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
-    <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/RemoveChannelChannelGroup.kt">
+    <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/ListAllChannelGroupInterface.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
-    <file name="src/main/kotlin/com/pubnub/internal/endpoints/files/GetFileUrl.kt">
+    <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/RemoveChannelChannelGroupEndpoint.kt">
+        <error line="1" column="9" source="standard:package-name" />
+    </file>
+    <file name="src/main/kotlin/com/pubnub/internal/endpoints/files/GetFileUrlEndpoint.kt">
         <error line="29" column="1" source="standard:max-line-length" />
     </file>
-    <file name="src/main/kotlin/com/pubnub/internal/endpoints/message_actions/AddMessageAction.kt">
+    <file name="src/main/kotlin/com/pubnub/internal/endpoints/message_actions/AddMessageActionEndpoint.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
-    <file name="src/main/kotlin/com/pubnub/internal/endpoints/message_actions/GetMessageActions.kt">
+    <file name="src/main/kotlin/com/pubnub/internal/endpoints/message_actions/AddMessageActionInterface.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
-    <file name="src/main/kotlin/com/pubnub/internal/endpoints/message_actions/IAddMessageAction.kt">
+    <file name="src/main/kotlin/com/pubnub/internal/endpoints/message_actions/GetMessageActionsEndpoint.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
-    <file name="src/main/kotlin/com/pubnub/internal/endpoints/message_actions/IGetMessageActions.kt">
+    <file name="src/main/kotlin/com/pubnub/internal/endpoints/message_actions/GetMessageActionsInterface.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
-    <file name="src/main/kotlin/com/pubnub/internal/endpoints/message_actions/IRemoveMessageAction.kt">
+    <file name="src/main/kotlin/com/pubnub/internal/endpoints/message_actions/RemoveMessageActionEndpoint.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
-    <file name="src/main/kotlin/com/pubnub/internal/endpoints/message_actions/RemoveMessageAction.kt">
+    <file name="src/main/kotlin/com/pubnub/internal/endpoints/message_actions/RemoveMessageActionInterface.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
     <file name="src/main/kotlin/com/pubnub/internal/managers/BasePathManager.kt">
@@ -163,34 +160,34 @@
         <error line="26" column="42" source="standard:discouraged-comment-location" />
         <error line="27" column="39" source="standard:discouraged-comment-location" />
     </file>
-    <file name="src/test/kotlin/com/pubnub/api/legacy/endpoints/channel_groups/AddChannelBaseChannelGroupEndpointTest.kt">
+    <file name="src/test/kotlin/com/pubnub/api/legacy/endpoints/channel_groups/AddChannelBaseChannelGroupCoreEndpointTest.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
-    <file name="src/test/kotlin/com/pubnub/api/legacy/endpoints/channel_groups/AllChannelsBaseChannelGroupEndpointTest.kt">
+    <file name="src/test/kotlin/com/pubnub/api/legacy/endpoints/channel_groups/AllChannelsBaseChannelGroupCoreEndpointTest.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
-    <file name="src/test/kotlin/com/pubnub/api/legacy/endpoints/channel_groups/DeleteBaseChannelGroupEndpointTest.kt">
+    <file name="src/test/kotlin/com/pubnub/api/legacy/endpoints/channel_groups/DeleteBaseChannelGroupCoreEndpointTest.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
-    <file name="src/test/kotlin/com/pubnub/api/legacy/endpoints/channel_groups/ListAllBaseChannelGroupEndpointTest.kt">
+    <file name="src/test/kotlin/com/pubnub/api/legacy/endpoints/channel_groups/ListAllBaseChannelGroupCoreEndpointTest.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
-    <file name="src/test/kotlin/com/pubnub/api/legacy/endpoints/channel_groups/RemoveChannelBaseChannelGroupEndpointTest.kt">
+    <file name="src/test/kotlin/com/pubnub/api/legacy/endpoints/channel_groups/RemoveChannelBaseChannelGroupCoreEndpointTest.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
     <file name="src/test/kotlin/com/pubnub/api/legacy/endpoints/files/TestsWithFiles.kt">
         <error line="17" column="30" source="standard:property-naming" />
     </file>
-    <file name="src/test/kotlin/com/pubnub/api/legacy/endpoints/message_actions/AddMessageActionEndpointTest.kt">
+    <file name="src/test/kotlin/com/pubnub/api/legacy/endpoints/message_actions/AddMessageActionCoreEndpointTest.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
-    <file name="src/test/kotlin/com/pubnub/api/legacy/endpoints/message_actions/GetMessageActionEndpointTest.kt">
+    <file name="src/test/kotlin/com/pubnub/api/legacy/endpoints/message_actions/GetMessageActionCoreEndpointTest.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
     <file name="src/test/kotlin/com/pubnub/api/legacy/endpoints/message_actions/ReceiveMessageActions.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
-    <file name="src/test/kotlin/com/pubnub/api/legacy/endpoints/message_actions/RemoveMessageActionEndpointTest.kt">
+    <file name="src/test/kotlin/com/pubnub/api/legacy/endpoints/message_actions/RemoveMessageActionCoreEndpointTest.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
     <file name="src/test/kotlin/com/pubnub/contract/access/state/GrantTokenState.kt">

@@ -6,8 +6,8 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.CoreEndpoint
-import com.pubnub.internal.CorePubNubClient
 import com.pubnub.internal.CorePNConfiguration.Companion.isValid
+import com.pubnub.internal.CorePubNubClient
 import com.pubnub.internal.models.consumer.access_manager.PNAccessManagerGrantResult
 import com.pubnub.internal.models.consumer.access_manager.PNAccessManagerKeyData
 import com.pubnub.internal.models.server.Envelope

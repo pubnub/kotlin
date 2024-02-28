@@ -18,10 +18,10 @@ class CorePNConfigurationTest {
         val suffix11 = "value3/2.0.0"
 
         val pnConfiguration =
-                CorePNConfiguration(userId = UserId(BasePubNubImpl.generateUUID())).apply{
-                    addPnsdkSuffix(name1 to suffix1, name2 to suffix2)
-                    addPnsdkSuffix(mapOf(name1 to suffix11))
-                }
+            CorePNConfiguration(userId = UserId(BasePubNubImpl.generateUUID())).apply {
+                addPnsdkSuffix(name1 to suffix1, name2 to suffix2)
+                addPnsdkSuffix(mapOf(name1 to suffix11))
+            }
 
         val version = "someVersion"
         val generatedPnsdk = pnConfiguration.generatePnsdk(version)

@@ -1,12 +1,12 @@
 package com.pubnub.api.integration
 
-import com.pubnub.test.CommonUtils.randomChannel
 import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.files.PNFileUploadResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
+import com.pubnub.test.CommonUtils.randomChannel
 import org.junit.Assert
 import org.junit.Test
 import java.io.ByteArrayInputStream

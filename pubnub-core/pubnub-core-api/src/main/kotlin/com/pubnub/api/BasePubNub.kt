@@ -25,7 +25,6 @@ interface BasePubNub<
     SubscriptionSet : BaseSubscriptionSet<EventListener, Subscription>,
     StatusListener : BaseStatusListener,
     > : BaseEventEmitter<EventListener>, BaseStatusEmitter<StatusListener> {
-
     val timestamp: Int
     val baseUrl: String
 
