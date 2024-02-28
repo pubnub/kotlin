@@ -365,7 +365,7 @@ class SubscriptionManagerTest : BaseTest() {
                     pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
                     pnStatus: PNStatus,
                 ) {
-                    if (pnStatus.category == PNStatusCategory.Connected) {
+                    if (pnStatus.category == PNStatusCategory.PNConnectedCategory) {
                         gotStatus.addAndGet(1)
                     }
                 }
@@ -999,7 +999,7 @@ class SubscriptionManagerTest : BaseTest() {
                     pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
                     pnStatus: PNStatus,
                 ) {
-                    if (pnStatus.category == PNStatusCategory.ConnectionError && pnStatus.exception?.statusCode == 403) {
+                    if (pnStatus.category == PNStatusCategory.PNConnectionError && pnStatus.exception?.statusCode == 403) {
                         assertEquals(listOf("ch1", "ch2"), pnStatus.exception?.affectedChannels)
                         assertEquals(listOf("cg1", "cg2"), pnStatus.exception?.affectedChannelGroups)
                         gotStatus.addAndGet(1)
@@ -1061,7 +1061,7 @@ class SubscriptionManagerTest : BaseTest() {
                     pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
                     pnStatus: PNStatus,
                 ) {
-                    if (pnStatus.category == PNStatusCategory.Connected) {
+                    if (pnStatus.category == PNStatusCategory.PNConnectedCategory) {
                         assertEquals(2, pnStatus.channels.size)
                         gotStatus.set(true)
                     }
@@ -1134,7 +1134,7 @@ class SubscriptionManagerTest : BaseTest() {
                     pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
                     pnStatus: PNStatus,
                 ) {
-                    if (pnStatus.category == PNStatusCategory.Connected) {
+                    if (pnStatus.category == PNStatusCategory.PNConnectedCategory) {
                         gotStatus.addAndGet(1)
                     }
                 }
@@ -1211,7 +1211,7 @@ class SubscriptionManagerTest : BaseTest() {
                     pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
                     pnStatus: PNStatus,
                 ) {
-                    if (pnStatus.category == PNStatusCategory.Connected) {
+                    if (pnStatus.category == PNStatusCategory.PNConnectedCategory) {
                         gotStatus.addAndGet(1)
                     }
                 }
@@ -2742,12 +2742,12 @@ class SubscriptionManagerTest : BaseTest() {
                     pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
                     pnStatus: PNStatus,
                 ) {
-                    if (pnStatus.category == PNStatusCategory.Connected) {
+                    if (pnStatus.category == PNStatusCategory.PNConnectedCategory) {
                         pubnubBase.corePubNubClient.unsubscribe(
                             channels = listOf("ch1"),
                         )
-                    } else if (pnStatus.category == PNStatusCategory.Disconnected ||
-                        pnStatus.category == PNStatusCategory.SubscriptionChanged &&
+                    } else if (pnStatus.category == PNStatusCategory.PNDisconnectedCategory ||
+                        pnStatus.category == PNStatusCategory.PNSubscriptionChanged &&
                         !pnStatus.channels.contains("ch1")
                     ) {
                         statusReceived.set(true)
@@ -2857,7 +2857,7 @@ class SubscriptionManagerTest : BaseTest() {
                     pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
                     pnStatus: PNStatus,
                 ) {
-                    if (pnStatus.category == PNStatusCategory.HeartbeatSuccess) {
+                    if (pnStatus.category == PNStatusCategory.PNHeartbeatSuccess) {
                         statusRecieved.set(true)
                     }
                 }
@@ -2907,7 +2907,7 @@ class SubscriptionManagerTest : BaseTest() {
                     pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
                     pnStatus: PNStatus,
                 ) {
-                    if (pnStatus.category == PNStatusCategory.HeartbeatSuccess) {
+                    if (pnStatus.category == PNStatusCategory.PNHeartbeatSuccess) {
                         statusReceived.set(true)
                     }
                 }
@@ -2963,7 +2963,7 @@ class SubscriptionManagerTest : BaseTest() {
                 ) {
                     println(pnStatus)
 //                if (pnStatus.operation == PNOperationType.PNUnsubscribeOperation && !pnStatus.error) {
-                    if (pnStatus.category == PNStatusCategory.Disconnected) { // TODO what is this trying to test really?
+                    if (pnStatus.category == PNStatusCategory.PNDisconnectedCategory) { // TODO what is this trying to test really?
                         statusReceived.set(true)
                     }
                 }
@@ -3044,7 +3044,7 @@ class SubscriptionManagerTest : BaseTest() {
                     pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
                     pnStatus: PNStatus,
                 ) {
-                    if (pnStatus.category == PNStatusCategory.HeartbeatFailed) {
+                    if (pnStatus.category == PNStatusCategory.PNHeartbeatFailed) {
                         statusReceived.set(true)
                     }
                 }
@@ -3128,7 +3128,7 @@ class SubscriptionManagerTest : BaseTest() {
                     pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
                     pnStatus: PNStatus,
                 ) {
-                    if (pnStatus.category == PNStatusCategory.HeartbeatFailed) {
+                    if (pnStatus.category == PNStatusCategory.PNHeartbeatFailed) {
                         statusReceived.set(true)
                     }
                 }
@@ -3194,7 +3194,7 @@ class SubscriptionManagerTest : BaseTest() {
                     pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
                     pnStatus: PNStatus,
                 ) {
-                    if (pnStatus.category == PNStatusCategory.HeartbeatSuccess) {
+                    if (pnStatus.category == PNStatusCategory.PNHeartbeatSuccess) {
                         statusReceived.set(true)
                     }
                 }
@@ -3279,7 +3279,7 @@ class SubscriptionManagerTest : BaseTest() {
                     pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
                     pnStatus: PNStatus,
                 ) {
-                    if (pnStatus.category != PNStatusCategory.HeartbeatSuccess) {
+                    if (pnStatus.category != PNStatusCategory.PNHeartbeatSuccess) {
                         statusReceived.set(true)
                     }
                 }
@@ -3353,10 +3353,10 @@ class SubscriptionManagerTest : BaseTest() {
                     pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
                     pnStatus: PNStatus,
                 ) {
-                    if (pnStatus.category == PNStatusCategory.Connected) {
+                    if (pnStatus.category == PNStatusCategory.PNConnectedCategory) {
                         subscribeSuccess.set(true)
                     }
-                    if (pnStatus.category == PNStatusCategory.HeartbeatSuccess) {
+                    if (pnStatus.category == PNStatusCategory.PNHeartbeatSuccess) {
                         heartbeatFail.set(true)
                     }
                 }
@@ -3430,10 +3430,10 @@ class SubscriptionManagerTest : BaseTest() {
                     pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
                     pnStatus: PNStatus,
                 ) {
-                    if (pnStatus.category == PNStatusCategory.Connected) {
+                    if (pnStatus.category == PNStatusCategory.PNConnectedCategory) {
                         subscribeSuccess.set(true)
                     }
-                    if (pnStatus.category == PNStatusCategory.HeartbeatSuccess) {
+                    if (pnStatus.category == PNStatusCategory.PNHeartbeatSuccess) {
                         heartbeatSuccess.set(true)
                     }
                 }
@@ -3573,13 +3573,13 @@ class SubscriptionManagerTest : BaseTest() {
                     pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
                     pnStatus: PNStatus,
                 ) {
-                    if (pnStatus.category == PNStatusCategory.Connected) {
+                    if (pnStatus.category == PNStatusCategory.PNConnectedCategory) {
                         pubnubBase.corePubNubClient.unsubscribe(
                             channels = listOf("ch1"),
                         )
                     }
 
-                    if (pnStatus.category == PNStatusCategory.SubscriptionChanged) {
+                    if (pnStatus.category == PNStatusCategory.PNSubscriptionChanged) {
                         if ("ch1" !in pnStatus.channels) {
                             pubnubBase.corePubNubClient.unsubscribe(
                                 channels = listOf("ch2"),
@@ -3587,7 +3587,7 @@ class SubscriptionManagerTest : BaseTest() {
                         }
                     }
 
-                    if (pnStatus.category == PNStatusCategory.Disconnected) {
+                    if (pnStatus.category == PNStatusCategory.PNDisconnectedCategory) {
                         statusReceived.set(true)
                     }
                 }

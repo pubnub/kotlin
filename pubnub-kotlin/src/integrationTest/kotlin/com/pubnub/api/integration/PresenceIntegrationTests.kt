@@ -205,7 +205,7 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
 
         pubnub.test(withPresence = true) {
             subscribe(expectedChannel)
-            assertEquals(PNStatusCategory.HeartbeatSuccess, nextStatus().category)
+            assertEquals(PNStatusCategory.PNHeartbeatSuccess, nextStatus().category)
             skip(1)
         }
     }
@@ -233,9 +233,9 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
                     pubnub: PubNub,
                     pnStatus: PNStatus,
                 ) {
-                    if (pnStatus.category == PNStatusCategory.Connected && pnStatus.channels.contains(expectedChannel)) {
+                    if (pnStatus.category == PNStatusCategory.PNConnectedCategory && pnStatus.channels.contains(expectedChannel)) {
                         subscribeSuccess.set(true)
-                    } else if (pnStatus.category == PNStatusCategory.HeartbeatSuccess) {
+                    } else if (pnStatus.category == PNStatusCategory.PNHeartbeatSuccess) {
                         heartbeatCallsCount.incrementAndGet()
                     }
                 }

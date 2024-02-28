@@ -275,7 +275,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
                     pubnub: PubNub,
                     pnStatus: PNStatus,
                 ) {
-                    assertTrue(pnStatus.category == PNStatusCategory.ConnectionError)
+                    assertTrue(pnStatus.category == PNStatusCategory.PNConnectionError)
                     success.set(true)
                 }
             },
@@ -657,7 +657,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
                     pubnub: PubNub,
                     status: PNStatus,
                 ) {
-                    if (status.category == PNStatusCategory.Disconnected || status.category == PNStatusCategory.SubscriptionChanged
+                    if (status.category == PNStatusCategory.PNDisconnectedCategory || status.category == PNStatusCategory.PNSubscriptionChanged
                     ) {
                         unsubscribed.countDown()
                     }

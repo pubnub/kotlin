@@ -26,14 +26,14 @@ internal class HeartbeatEffect(
                 if (heartbeatNotificationOptions == PNHeartbeatNotificationOptions.ALL ||
                     heartbeatNotificationOptions == PNHeartbeatNotificationOptions.FAILURES
                 ) {
-                    statusConsumer.announce(PNStatus(PNStatusCategory.HeartbeatFailed, PubNubException.from(exception)))
+                    statusConsumer.announce(PNStatus(PNStatusCategory.PNHeartbeatFailed, PubNubException.from(exception)))
                 }
                 presenceEventSink.add(
                     PresenceEvent.HeartbeatFailure(PubNubException.from(exception)),
                 )
             }.onSuccess {
                 if (heartbeatNotificationOptions == PNHeartbeatNotificationOptions.ALL) {
-                    statusConsumer.announce(PNStatus(PNStatusCategory.HeartbeatSuccess))
+                    statusConsumer.announce(PNStatus(PNStatusCategory.PNHeartbeatSuccess))
                 }
                 presenceEventSink.add(
                     PresenceEvent.HeartbeatSuccess,

@@ -41,7 +41,7 @@ internal class SubscribeMessageWorker(
                     is PNFileEventResult -> listenerManager.announce(event)
                 }
             } catch (e: PubNubException) {
-                listenerManager.announce(PNStatus(PNStatusCategory.MalformedMessage, e))
+                listenerManager.announce(PNStatus(PNStatusCategory.PNMalformedResponseCategory, e))
             } catch (e: InterruptedException) {
                 Thread.currentThread().interrupt()
                 log.trace("take message interrupted!", e)

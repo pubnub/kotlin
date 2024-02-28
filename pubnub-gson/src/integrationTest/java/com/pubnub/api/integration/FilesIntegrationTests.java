@@ -62,7 +62,7 @@ public class FilesIntegrationTests extends BaseIntegrationTest {
         pubNub.addListener(new LimitedListener() {
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus) {
-                if (pnStatus.getCategory() == PNStatusCategory.Connected) {
+                if (pnStatus.getCategory() == PNStatusCategory.PNConnectedCategory) {
                     connectedLatch.countDown();
                 }
             }

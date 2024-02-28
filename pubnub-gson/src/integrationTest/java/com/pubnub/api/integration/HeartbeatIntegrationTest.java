@@ -46,7 +46,7 @@ public class HeartbeatIntegrationTest extends BaseIntegrationTest {
         observer.addListener(new SubscribeCallback.BaseSubscribeCallback() {
             @Override
             public void status(@NotNull PubNub pn, @NotNull PNStatus status) {
-                if (status.getCategory() == PNStatusCategory.Connected) {
+                if (status.getCategory() == PNStatusCategory.PNConnectedCategory) {
                     if (status.getChannels().contains(expectedChannel)) {
                         pubNub.subscribe()
                                 .channels(Collections.singletonList(expectedChannel))

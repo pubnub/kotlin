@@ -92,11 +92,11 @@ class PubNubTest(private val pubNub: PubNub, private val withPresenceOverride: B
     ) {
         pubNub.subscribe(channels.toList(), channelGroups.toList(), withPresence = withPresence || withPresenceOverride)
         val status = statusQueue.take()
-        Assert.assertTrue(status.category == PNStatusCategory.Connected || status.category == PNStatusCategory.SubscriptionChanged)
-        if (status.category == PNStatusCategory.Connected) {
+        Assert.assertTrue(status.category == PNStatusCategory.PNConnectedCategory || status.category == PNStatusCategory.PNSubscriptionChanged)
+        if (status.category == PNStatusCategory.PNConnectedCategory) {
             Assert.assertTrue(status.channels.containsAll(channels))
             Assert.assertTrue(status.channelGroups.containsAll(channelGroups))
-        } else if (status.category == PNStatusCategory.SubscriptionChanged) {
+        } else if (status.category == PNStatusCategory.PNSubscriptionChanged) {
             Assert.assertTrue(status.channels.containsAll(channels))
             Assert.assertTrue(status.channelGroups.containsAll(channelGroups))
         }
@@ -108,8 +108,8 @@ class PubNubTest(private val pubNub: PubNub, private val withPresenceOverride: B
     ) {
         pubNub.unsubscribe(channels.toList(), channelGroups.toList())
         val status = statusQueue.take()
-        Assert.assertTrue(status.category == PNStatusCategory.Disconnected || status.category == PNStatusCategory.SubscriptionChanged)
-        if (status.category == PNStatusCategory.SubscriptionChanged) {
+        Assert.assertTrue(status.category == PNStatusCategory.PNDisconnectedCategory || status.category == PNStatusCategory.PNSubscriptionChanged)
+        if (status.category == PNStatusCategory.PNSubscriptionChanged) {
             Assert.assertTrue(
                 "Unsubscribe list: ${status.channels} doesn't contain all requested channels: $channels",
                 status.channels.containsAll(channels),
@@ -124,7 +124,7 @@ class PubNubTest(private val pubNub: PubNub, private val withPresenceOverride: B
     fun unsubscribeAll() {
         pubNub.unsubscribeAll()
         val status = statusQueue.take()
-        Assert.assertTrue(status.category == PNStatusCategory.Disconnected)
+        Assert.assertTrue(status.category == PNStatusCategory.PNDisconnectedCategory)
     }
 
     fun nextStatus(): PNStatus = statusQueue.take()

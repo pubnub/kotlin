@@ -462,7 +462,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
                     pubnub: PubNub,
                     pnStatus: PNStatus,
                 ) {
-                    if (pnStatus.category == PNStatusCategory.Connected) {
+                    if (pnStatus.category == PNStatusCategory.PNConnectedCategory) {
                         publishResultList.forEach {
                             pubnub.addMessageAction(
                                 channel = expectedChannelName,

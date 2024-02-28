@@ -323,11 +323,11 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
                 if (!status.isError()) {
-                    if (status.getCategory() == PNStatusCategory.Connected) {
+                    if (status.getCategory() == PNStatusCategory.PNConnectedCategory) {
                         if (status.getChannels().contains(expectedChannel)) {
                             subscribeSuccess.set(true);
                         }
-                    } else if (status.getCategory() == PNStatusCategory.HeartbeatSuccess) {
+                    } else if (status.getCategory() == PNStatusCategory.PNHeartbeatSuccess) {
                         heartbeatCallsCount.incrementAndGet();
                     }
                 }
@@ -362,11 +362,11 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
                 if (!status.isError()) {
-                    if (status.getCategory() == PNStatusCategory.Connected) {
+                    if (status.getCategory() == PNStatusCategory.PNConnectedCategory) {
                         if (status.getChannels().contains(expectedChannel)) {
                             subscribeSuccess.set(true);
                         }
-                    } else if (status.getCategory() == PNStatusCategory.HeartbeatSuccess) {
+                    } else if (status.getCategory() == PNStatusCategory.PNHeartbeatSuccess) {
                         heartbeatCallsCount.incrementAndGet();
                     }
                 }

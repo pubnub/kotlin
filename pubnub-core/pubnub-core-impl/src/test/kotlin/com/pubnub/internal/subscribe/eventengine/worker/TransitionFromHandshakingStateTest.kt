@@ -65,7 +65,7 @@ class TransitionFromHandshakingStateTest {
                 CancelHandshake,
                 EmitStatus(
                     PNStatus(
-                        PNStatusCategory.Connected,
+                        PNStatusCategory.PNConnectedCategory,
                         currentTimetoken = timeToken,
                         channels = channels.toList(),
                         channelGroups = channelGroups.toList(),
@@ -103,7 +103,7 @@ class TransitionFromHandshakingStateTest {
                 CancelHandshake,
                 EmitStatus(
                     PNStatus(
-                        PNStatusCategory.Connected,
+                        PNStatusCategory.PNConnectedCategory,
                         currentTimetoken = timeTokenForHandshake,
                         channels = channels.toList(),
                         channelGroups = channelGroups.toList(),

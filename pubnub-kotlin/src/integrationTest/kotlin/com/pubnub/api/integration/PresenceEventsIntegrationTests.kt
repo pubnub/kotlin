@@ -174,7 +174,7 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
                     pubnub: PubNub,
                     pnStatus: PNStatus,
                 ) {
-                    if (pnStatus.category == PNStatusCategory.Connected) {
+                    if (pnStatus.category == PNStatusCategory.PNConnectedCategory) {
                         subscribed.set(true)
                     }
                 }

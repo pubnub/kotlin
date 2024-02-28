@@ -73,7 +73,7 @@ class SubscribeEffectFactoryTest {
             subscribeEffectFactory.create(
                 SubscribeEffectInvocation.EmitStatus(
                     PNStatus(
-                        PNStatusCategory.Connected,
+                        PNStatusCategory.PNConnectedCategory,
                         currentTimetoken = 0L,
                         channels = channels.toList(),
                         channelGroups = channelGroups.toList(),

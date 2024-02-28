@@ -492,7 +492,7 @@ public class MessageActionsTest extends BaseIntegrationTest {
 
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus) {
-                if (pnStatus.getCategory() == PNStatusCategory.Connected) {
+                if (pnStatus.getCategory() == PNStatusCategory.PNConnectedCategory) {
                     for (PNPublishResult pnPublishResult : publishResultList) {
                         try {
                             pubNub.addMessageAction()

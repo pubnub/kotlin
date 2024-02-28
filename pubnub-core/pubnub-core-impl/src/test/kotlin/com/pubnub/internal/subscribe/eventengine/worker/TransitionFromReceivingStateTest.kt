@@ -72,7 +72,7 @@ class TransitionFromReceivingStateTest {
             setOf(
                 SubscribeEffectInvocation.CancelReceiveMessages,
                 SubscribeEffectInvocation.EmitStatus(
-                    PNStatus(PNStatusCategory.Disconnected),
+                    PNStatus(PNStatusCategory.PNDisconnectedCategory),
                 ),
             ),
             invocations,
@@ -197,7 +197,7 @@ class TransitionFromReceivingStateTest {
             setOf(
                 SubscribeEffectInvocation.CancelReceiveMessages,
                 SubscribeEffectInvocation.EmitStatus(
-                    PNStatus(PNStatusCategory.Disconnected),
+                    PNStatus(PNStatusCategory.PNDisconnectedCategory),
                 ),
             ),
             invocations,

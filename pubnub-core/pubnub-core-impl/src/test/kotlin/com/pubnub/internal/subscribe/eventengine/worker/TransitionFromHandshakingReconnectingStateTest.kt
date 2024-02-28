@@ -130,7 +130,7 @@ class TransitionFromHandshakingReconnectingStateTest {
         assertEquals(
             setOf(
                 SubscribeEffectInvocation.CancelHandshakeReconnect,
-                SubscribeEffectInvocation.EmitStatus(PNStatus(PNStatusCategory.ConnectionError, reason)),
+                SubscribeEffectInvocation.EmitStatus(PNStatus(PNStatusCategory.PNConnectionError, reason)),
             ),
             invocations,
         )
@@ -171,7 +171,7 @@ class TransitionFromHandshakingReconnectingStateTest {
                 SubscribeEffectInvocation.CancelHandshakeReconnect,
                 SubscribeEffectInvocation.EmitStatus(
                     PNStatus(
-                        PNStatusCategory.Connected,
+                        PNStatusCategory.PNConnectedCategory,
                         currentTimetoken = timeToken,
                         channels = channels.toList(),
                         channelGroups = channelGroups.toList(),

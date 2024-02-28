@@ -48,7 +48,7 @@ class SubscribeEventConsumerWorkerTransitionFunctionTest {
                 SubscribeEffectInvocation.CancelHandshake,
                 SubscribeEffectInvocation.EmitStatus(
                     PNStatus(
-                        PNStatusCategory.Connected,
+                        PNStatusCategory.PNConnectedCategory,
                         currentTimetoken = timeToken,
                         channels = channels.toList(),
                         channelGroups = channelGroups.toList(),
@@ -59,7 +59,7 @@ class SubscribeEventConsumerWorkerTransitionFunctionTest {
                 SubscribeEffectInvocation.EmitMessages(listOf()),
                 SubscribeEffectInvocation.EmitStatus(
                     PNStatus(
-                        PNStatusCategory.Connected,
+                        PNStatusCategory.PNConnectedCategory,
                         currentTimetoken = timeToken,
                         channels = channels.toList(),
                         channelGroups = channelGroups.toList(),

@@ -126,7 +126,7 @@ internal class TransitionFromReceivingReconnectingStateTest {
             setOf(
                 SubscribeEffectInvocation.CancelReceiveReconnect,
                 SubscribeEffectInvocation.EmitStatus(
-                    PNStatus(PNStatusCategory.Disconnected),
+                    PNStatus(PNStatusCategory.PNDisconnectedCategory),
                 ),
             ),
             invocations,
@@ -153,7 +153,7 @@ internal class TransitionFromReceivingReconnectingStateTest {
             setOf(
                 SubscribeEffectInvocation.CancelReceiveReconnect,
                 SubscribeEffectInvocation.EmitStatus(
-                    PNStatus(PNStatusCategory.UnexpectedDisconnect, reason),
+                    PNStatus(PNStatusCategory.PNUnexpectedDisconnectCategory, reason),
                 ),
             ),
             invocations,
@@ -252,7 +252,7 @@ internal class TransitionFromReceivingReconnectingStateTest {
             setOf(
                 SubscribeEffectInvocation.CancelReceiveReconnect,
                 SubscribeEffectInvocation.EmitStatus(
-                    PNStatus(PNStatusCategory.Disconnected),
+                    PNStatus(PNStatusCategory.PNDisconnectedCategory),
                 ),
             ),
             invocations,
@@ -281,4 +281,4 @@ internal fun createSubscriptionChangedStatus(
     cursor: SubscriptionCursor,
     channels: Collection<String>,
     channelGroups: Collection<String>,
-) = PNStatus(PNStatusCategory.SubscriptionChanged, currentTimetoken = cursor.timetoken, channels = channels, channelGroups = channelGroups)
+) = PNStatus(PNStatusCategory.PNSubscriptionChanged, currentTimetoken = cursor.timetoken, channels = channels, channelGroups = channelGroups)

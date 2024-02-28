@@ -58,7 +58,7 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                             ),
                         SubscribeEffectInvocation.EmitStatus(
                             PNStatus(
-                                PNStatusCategory.Connected,
+                                PNStatusCategory.PNConnectedCategory,
                                 currentTimetoken = cursor.timetoken,
                                 channels = channels.toList(),
                                 channelGroups = channelGroups.toList(),
@@ -134,7 +134,7 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                     transitionTo(
                         HandshakeFailed(channels, channelGroups, event.reason),
                         SubscribeEffectInvocation.EmitStatus(
-                            PNStatus(PNStatusCategory.ConnectionError, reason),
+                            PNStatus(PNStatusCategory.PNConnectionError, reason),
                         ),
                     )
                 }
@@ -152,7 +152,7 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                             ),
                         SubscribeEffectInvocation.EmitStatus(
                             PNStatus(
-                                PNStatusCategory.Connected,
+                                PNStatusCategory.PNConnectedCategory,
                                 currentTimetoken = cursor.timetoken,
                                 channels = channels.toList(),
                                 channelGroups = channelGroups.toList(),
@@ -298,7 +298,7 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                     transitionTo(
                         state = ReceiveStopped(channels, channelGroups, subscriptionCursor),
                         SubscribeEffectInvocation.EmitStatus(
-                            PNStatus(PNStatusCategory.Disconnected),
+                            PNStatus(PNStatusCategory.PNDisconnectedCategory),
                         ),
                     )
                 }
@@ -308,7 +308,7 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                         Receiving(event.channels, event.channelGroups, subscriptionCursor),
                         SubscribeEffectInvocation.EmitStatus(
                             PNStatus(
-                                PNStatusCategory.SubscriptionChanged,
+                                PNStatusCategory.PNSubscriptionChanged,
                                 currentTimetoken = subscriptionCursor.timetoken,
                                 channels = event.channels,
                                 channelGroups = event.channelGroups,
@@ -326,7 +326,7 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                         ),
                         SubscribeEffectInvocation.EmitStatus(
                             PNStatus(
-                                PNStatusCategory.SubscriptionChanged,
+                                PNStatusCategory.PNSubscriptionChanged,
                                 currentTimetoken = event.subscriptionCursor.timetoken,
                                 channels = event.channels,
                                 channelGroups = event.channelGroups,
@@ -346,7 +346,7 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                     transitionTo(
                         state = Unsubscribed,
                         SubscribeEffectInvocation.EmitStatus(
-                            PNStatus(PNStatusCategory.Disconnected),
+                            PNStatus(PNStatusCategory.PNDisconnectedCategory),
                         ),
                     )
                 }
@@ -400,7 +400,7 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                         Receiving(event.channels, event.channelGroups, subscriptionCursor),
                         SubscribeEffectInvocation.EmitStatus(
                             PNStatus(
-                                PNStatusCategory.SubscriptionChanged,
+                                PNStatusCategory.PNSubscriptionChanged,
                                 currentTimetoken = subscriptionCursor.timetoken,
                                 channels = event.channels,
                                 channelGroups = event.channelGroups,
@@ -413,7 +413,7 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                     transitionTo(
                         ReceiveStopped(channels, channelGroups, subscriptionCursor),
                         SubscribeEffectInvocation.EmitStatus(
-                            PNStatus(PNStatusCategory.Disconnected),
+                            PNStatus(PNStatusCategory.PNDisconnectedCategory),
                         ),
                     )
                 }
@@ -423,7 +423,7 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                         state = ReceiveFailed(channels, channelGroups, subscriptionCursor, event.reason),
                         SubscribeEffectInvocation.EmitStatus(
                             PNStatus(
-                                PNStatusCategory.UnexpectedDisconnect,
+                                PNStatusCategory.PNUnexpectedDisconnectCategory,
                                 event.reason,
                             ),
                         ),
@@ -446,7 +446,7 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                         ),
                         SubscribeEffectInvocation.EmitStatus(
                             PNStatus(
-                                PNStatusCategory.SubscriptionChanged,
+                                PNStatusCategory.PNSubscriptionChanged,
                                 currentTimetoken = event.subscriptionCursor.timetoken,
                                 channels = event.channels,
                                 channelGroups = event.channelGroups,
@@ -459,7 +459,7 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                     transitionTo(
                         state = Unsubscribed,
                         SubscribeEffectInvocation.EmitStatus(
-                            PNStatus(PNStatusCategory.Disconnected),
+                            PNStatus(PNStatusCategory.PNDisconnectedCategory),
                         ),
                     )
                 }

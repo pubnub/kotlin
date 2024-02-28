@@ -152,7 +152,7 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
 
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
-                if (status.getCategory() == PNStatusCategory.Connected) {
+                if (status.getCategory() == PNStatusCategory.PNConnectedCategory) {
                     if (status.getChannels().contains(expectedChannel)) {
                         observer.publish()
                                 .message(messagePayload)
@@ -225,7 +225,7 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
 
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
-                if (status.getCategory() == PNStatusCategory.Connected) {
+                if (status.getCategory() == PNStatusCategory.PNConnectedCategory) {
                     if (status.getChannels().contains(expectedChannel)) {
                         // send an unencrypted message first to try to crash the SubscribeMessageProcessor
                         sender.publish()

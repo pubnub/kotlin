@@ -149,7 +149,7 @@ class PublishImplIntegrationTests : BaseIntegrationTest() {
                     pubnub: PubNub,
                     pnStatus: PNStatus,
                 ) {
-                    if (pnStatus.category == PNStatusCategory.Connected &&
+                    if (pnStatus.category == PNStatusCategory.PNConnectedCategory &&
                         pnStatus.channels.contains(expectedChannel)
                     ) {
                         observer.publish(
@@ -206,7 +206,7 @@ class PublishImplIntegrationTests : BaseIntegrationTest() {
                     pubnub: PubNub,
                     pnStatus: PNStatus,
                 ) {
-                    if (pnStatus.category == PNStatusCategory.Connected &&
+                    if (pnStatus.category == PNStatusCategory.PNConnectedCategory &&
                         pnStatus.channels.contains(expectedChannel)
                     ) {
                         sender.publish(
