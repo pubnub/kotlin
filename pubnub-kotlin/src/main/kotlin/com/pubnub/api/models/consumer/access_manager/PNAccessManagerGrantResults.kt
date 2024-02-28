@@ -1,9 +1,9 @@
 package com.pubnub.api.models.consumer.access_manager
 
-import com.pubnub.internal.InternalPubNubClient
+import com.pubnub.internal.CorePubNubClient
 
 /**
- * Result of the [InternalPubNubClient.grant] operation
+ * Result of the [CorePubNubClient.grant] operation
  *
  * @property level Permissions level, one of `subkey`, `subkey+auth`, `channel`, `channel-group`,
  * `channel-group+auth` level.

@@ -7,5 +7,5 @@ import com.pubnub.internal.PubNubImpl
  * @see [PubNubImpl.removePushNotificationsFromChannels]
  */
 class RemoveChannelsFromPushImpl internal constructor(
-    removeChannelsFromPush: IRemoveChannelsFromPush,
-) : IRemoveChannelsFromPush by removeChannelsFromPush, RemoveChannelsFromPush
+    removeChannelsFromPush: RemoveChannelsFromPushInterface,
+) : RemoveChannelsFromPushInterface by removeChannelsFromPush, RemoveChannelsFromPush

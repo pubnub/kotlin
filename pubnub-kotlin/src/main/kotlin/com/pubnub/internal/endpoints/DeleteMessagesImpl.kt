@@ -6,6 +6,6 @@ import com.pubnub.internal.PubNubImpl
 /**
  * @see [PubNubImpl.deleteMessages]
  */
-class DeleteMessagesImpl internal constructor(deleteMessages: IDeleteMessages) :
-    IDeleteMessages by deleteMessages,
+class DeleteMessagesImpl internal constructor(deleteMessages: DeleteMessagesInterface) :
+    DeleteMessagesInterface by deleteMessages,
     DeleteMessages

@@ -6,4 +6,4 @@ import com.pubnub.internal.PubNubImpl
 /**
  * @see [PubNubImpl.listFiles]
  */
-class ListFilesImpl internal constructor(listFiles: IListFiles) : IListFiles by listFiles, ListFiles
+class ListFilesImpl internal constructor(listFiles: ListFilesInterface) : ListFilesInterface by listFiles, ListFiles

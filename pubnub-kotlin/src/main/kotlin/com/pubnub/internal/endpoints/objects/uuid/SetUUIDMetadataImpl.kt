@@ -9,11 +9,11 @@ import com.pubnub.internal.models.consumer.objects.uuid.PNUUIDMetadataResult
 /**
  * @see [PubNubImpl.setUUIDMetadata]
  */
-class SetUUIDMetadataImpl internal constructor(setUUIDMetadata: SetUUIDMetadata) :
+class SetUUIDMetadataImpl internal constructor(setUUIDMetadata: SetUUIDMetadataEndpoint) :
     DelegatingEndpoint<com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult, PNUUIDMetadataResult>(
         setUUIDMetadata,
     ),
-    ISetUUIDMetadata by setUUIDMetadata,
+    SetUUIDMetadataInterface by setUUIDMetadata,
     com.pubnub.api.endpoints.objects.uuid.SetUUIDMetadata {
         override fun convertAction(
             remoteAction: ExtendedRemoteAction<PNUUIDMetadataResult>,

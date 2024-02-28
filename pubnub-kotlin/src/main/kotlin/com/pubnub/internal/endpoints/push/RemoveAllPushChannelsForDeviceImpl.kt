@@ -7,5 +7,5 @@ import com.pubnub.internal.PubNubImpl
  * @see [PubNubImpl.removeAllPushNotificationsFromDeviceWithPushToken]
  */
 class RemoveAllPushChannelsForDeviceImpl internal constructor(
-    removeAllPushChannelsForDevice: IRemoveAllPushChannelsForDevice,
-) : IRemoveAllPushChannelsForDevice by removeAllPushChannelsForDevice, RemoveAllPushChannelsForDevice
+    removeAllPushChannelsForDevice: RemoveAllPushChannelsForDeviceInterface,
+) : RemoveAllPushChannelsForDeviceInterface by removeAllPushChannelsForDevice, RemoveAllPushChannelsForDevice

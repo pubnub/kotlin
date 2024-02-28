@@ -1,0 +1,115 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm'
+    id 'java-library'
+    id 'io.franzbecker.gradle-lombok' version '5.0.0'
+    id 'com.github.johnrengelman.shadow'
+    id "org.jlleitschuh.gradle.ktlint"
+    id "jacoco"
+    id 'checkstyle'
+    id 'org.jetbrains.dokka'
+    id "com.github.ben-manes.versions"
+    id "com.vanniktech.maven.publish"
+}
+
+group = "com.pubnub"
+version = "9.0.0-beta01"
+
+description = """"""
+
+kotlin {
+    jvmToolchain(8)
+}
+
+lombok {
+    version = "1.18.30"
+}
+
+sourceSets {
+    integrationTest {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+
+configurations {
+//    allTest
+    integrationTestImplementation.extendsFrom(testImplementation)
+//    testImplementation { extendsFrom allTest }
+}
+
+dependencies {
+    api(project(":pubnub-core:pubnub-core-api"))
+    implementation(project(":pubnub-core:pubnub-core-impl"))
+
+    implementation(libs.slf4j)
+    implementation libs.jetbrains.annotations
+
+    testImplementation libs.logback.classic
+    testImplementation libs.logback.core
+    testImplementation libs.hamcrest
+    testImplementation libs.junit4
+    testImplementation libs.wiremock
+    testImplementation libs.awaitility
+    testImplementation libs.mockito
+    testImplementation libs.owner
+    testImplementation libs.junit.jupiter
+    testImplementation libs.junit.vintage.engine
+    testImplementation libs.awaitility
+
+    integrationTestImplementation libs.owner
+}
+
+jacoco {
+    toolVersion = "0.8.2"
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
+
+checkstyle {
+    toolVersion = "8.14"
+    configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+    sourceSets = [sourceSets.main]
+}
+
+tasks.withType(Checkstyle) {
+    exclude '**/vendor/**', '**/*Test*'
+
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
+
+check.dependsOn jacocoTestReport
+//task delombok(type: DelombokTask, dependsOn: compileJava) {
+//    ext.outputDir = file("$buildDir/delombok")
+//    outputs.dir(outputDir)
+//    sourceSets.main.java.srcDirs.each {
+//        inputs.dir(it)
+//        args(it, "-d", outputDir)
+//    }
+//}
+
+
+//javadoc {
+//    dependsOn delombok
+//    source = delombok.outputDir
+//    destinationDir = file("docs")
+//
+//    options.noTimestamp = true
+//}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+//    classifier = 'sources'
+    from "$buildDir/delombok"
+}
+
+test {
+    useJUnitPlatform()
+    exclude '**/contract/*.class'
+}

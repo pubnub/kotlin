@@ -52,7 +52,6 @@ import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions
 import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
-import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.objects.PNKey
@@ -73,7 +72,7 @@ import com.pubnub.api.v2.entities.ChannelMetadata
 import com.pubnub.api.v2.entities.UserMetadata
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
-import com.pubnub.internal.InternalPubNubClient
+import com.pubnub.internal.BasePubNubImpl
 import com.pubnub.internal.PubNubImpl
 import java.io.InputStream
 
@@ -81,17 +80,36 @@ interface PubNub :
     BasePubNub<EventListener, Subscription, Channel, ChannelGroup, ChannelMetadata, UserMetadata, SubscriptionSet, StatusListener>,
     EventEmitter {
     companion object {
+        /**
+         * Initialize and return an instance of the PubNub client.
+         * @param configuration the configuration to use
+         * @return the PubNub client
+         */
         @JvmStatic
         fun create(configuration: PNConfiguration): PubNub {
             return PubNubImpl(configuration)
         }
 
+        /**
+         * Generates random UUID to use. You should set a unique UUID to identify the user or the device that connects to PubNub.
+         */
         @JvmStatic
-        fun generateUUID(): String = InternalPubNubClient.generateUUID()
+        fun generateUUID(): String = BasePubNubImpl.generateUUID()
     }
 
+    /**
+     * The configuration that was used to initialize this PubNub instance.
+     * Modifying the values in this configuration is not advised, as it may lead
+     * to undefined behavior.
+     */
     val configuration: PNConfiguration
 
+    /**
+     * Add a legacy listener for both client status and events.
+     * Use fun addListener(listener: EventListener) and fun addListener(listener: StatusListener) instead if possible.
+     *
+     * @param listener The listener to be added.
+     */
     fun addListener(listener: SubscribeCallback)
 
     //region api
@@ -207,11 +225,6 @@ interface PubNub :
         channel: String,
         message: Any,
     ): Signal
-
-    /**
-     * Unsubscribe from all channels and all channel groups
-     */
-    fun unsubscribeAll()
 
     /**
      * Queries the local subscribe loop for channels currently in the mix.
@@ -338,7 +351,7 @@ interface PubNub :
         channel: String,
         start: Long? = null,
         end: Long? = null,
-        count: Int = com.pubnub.internal.endpoints.History.MAX_COUNT,
+        count: Int = com.pubnub.internal.endpoints.HistoryEndpoint.MAX_COUNT,
         reverse: Boolean = false,
         includeTimetoken: Boolean = false,
         includeMeta: Boolean = false,
@@ -1424,76 +1437,6 @@ interface PubNub :
         ttl: Int? = null,
         shouldStore: Boolean? = null,
     ): PublishFileMessage
-
-    /**
-     * Perform Cryptographic decryption of an input string using cipher key provided by [PNConfiguration.cipherKey].
-     *
-     * @param inputString String to be decrypted.
-     *
-     * @return String containing the decryption of `inputString` using `cipherKey`.
-     * @throws PubNubException throws exception in case of failed decryption.
-     */
-    fun decrypt(inputString: String): String
-
-    /**
-     * Perform Cryptographic decryption of an input string using a cipher key.
-     *
-     * @param inputString String to be decrypted.
-     * @param cipherKey cipher key to be used for decryption. Default is [PNConfiguration.cipherKey]
-     *
-     * @return String containing the decryption of `inputString` using `cipherKey`.
-     * @throws PubNubException throws exception in case of failed decryption.
-     */
-    fun decrypt(
-        inputString: String,
-        cipherKey: String? = null,
-    ): String
-
-    /**
-     * Perform Cryptographic decryption of an input stream using provided cipher key.
-     *
-     * @param inputStream InputStream to be encrypted.
-     * @param cipherKey Cipher key to be used for decryption. If not provided [PNConfiguration.cipherKey] is used.
-     *
-     * @return InputStream containing the encryption of `inputStream` using `cipherKey`.
-     * @throws PubNubException Throws exception in case of failed decryption.
-     */
-    fun decryptInputStream(
-        inputStream: InputStream,
-        cipherKey: String? = null,
-    ): InputStream
-
-    /**
-     * Perform Cryptographic encryption of an input string and a cipher key.
-     *
-     * @param inputString String to be encrypted.
-     * @param cipherKey Cipher key to be used for encryption. Default is [PNConfiguration.cipherKey]
-     *
-     * @return String containing the encryption of `inputString` using `cipherKey`.
-     * @throws PubNubException Throws exception in case of failed encryption.
-     */
-    fun encrypt(
-        inputString: String,
-        cipherKey: String? = null,
-    ): String
-
-    /**
-     * Perform Cryptographic encryption of an input stream using provided cipher key.
-     *
-     * @param inputStream InputStream to be encrypted.
-     * @param cipherKey Cipher key to be used for encryption. If not provided [PNConfiguration.cipherKey] is used.
-     *
-     * @return InputStream containing the encryption of `inputStream` using `cipherKey`.
-     * @throws PubNubException Throws exception in case of failed encryption.
-     */
-    fun encryptInputStream(
-        inputStream: InputStream,
-        cipherKey: String? = null,
-    ): InputStream
-
-    fun parseToken(token: String): PNToken
-
-    fun setToken(token: String?)
 
     /**
      * Causes the client to create an open TCP socket to the PubNub Real-Time Network and begin listening for messages

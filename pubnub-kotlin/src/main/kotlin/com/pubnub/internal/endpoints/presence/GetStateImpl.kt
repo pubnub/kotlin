@@ -6,4 +6,4 @@ import com.pubnub.internal.PubNubImpl
 /**
  * @see [PubNubImpl.getPresenceState]
  */
-class GetStateImpl internal constructor(getState: IGetState) : IGetState by getState, GetState
+class GetStateImpl internal constructor(getState: GetStateInterface) : GetStateInterface by getState, GetState

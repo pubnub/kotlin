@@ -4,7 +4,7 @@ import com.pubnub.api.Endpoint
 import com.pubnub.api.endpoints.access.GrantToken
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult
 
-class GrantTokenImpl internal constructor(grantToken: IGrantToken) :
+class GrantTokenImpl internal constructor(grantToken: GrantTokenInterface) :
     Endpoint<PNGrantTokenResult>,
-    IGrantToken by grantToken,
+    GrantTokenInterface by grantToken,
     GrantToken

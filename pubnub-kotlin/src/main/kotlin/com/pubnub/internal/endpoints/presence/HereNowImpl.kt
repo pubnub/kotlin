@@ -6,4 +6,4 @@ import com.pubnub.internal.PubNubImpl
 /**
  * @see [PubNubImpl.hereNow]
  */
-class HereNowImpl internal constructor(hereNow: IHereNow) : IHereNow by hereNow, HereNow
+class HereNowImpl internal constructor(hereNow: HereNowInterface) : HereNowInterface by hereNow, HereNow

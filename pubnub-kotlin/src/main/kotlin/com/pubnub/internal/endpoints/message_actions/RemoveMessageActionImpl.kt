@@ -6,6 +6,6 @@ import com.pubnub.internal.PubNubImpl
 /**
  * @see [PubNubImpl.removeMessageAction]
  */
-class RemoveMessageActionImpl internal constructor(removeMessageAction: IRemoveMessageAction) :
-    IRemoveMessageAction by removeMessageAction,
+class RemoveMessageActionImpl internal constructor(removeMessageAction: RemoveMessageActionInterface) :
+    RemoveMessageActionInterface by removeMessageAction,
     RemoveMessageAction

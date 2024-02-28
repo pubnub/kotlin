@@ -9,11 +9,11 @@ import com.pubnub.internal.models.consumer.objects.member.PNMemberArrayResult
 /**
  * @see [PubNubImpl.manageChannelMembers]
  */
-class ManageChannelMembersImpl internal constructor(manageChannelMembers: ManageChannelMembers) :
+class ManageChannelMembersImpl internal constructor(manageChannelMembers: ManageChannelMembersEndpoint) :
     DelegatingEndpoint<com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult, PNMemberArrayResult>(
         manageChannelMembers,
     ),
-    IManageChannelMembers by manageChannelMembers,
+    ManageChannelMembersInterface by manageChannelMembers,
     com.pubnub.api.endpoints.objects.member.ManageChannelMembers {
         override fun convertAction(
             remoteAction: ExtendedRemoteAction<PNMemberArrayResult>,

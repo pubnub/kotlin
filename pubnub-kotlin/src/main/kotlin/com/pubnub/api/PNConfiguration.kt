@@ -4,7 +4,7 @@ import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.enums.PNReconnectionPolicy
 import com.pubnub.api.retry.RetryConfiguration
-import com.pubnub.internal.PNConfiguration
+import com.pubnub.internal.CorePNConfiguration
 import okhttp3.Authenticator
 import okhttp3.CertificatePinner
 import okhttp3.logging.HttpLoggingInterceptor
@@ -14,7 +14,7 @@ import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.X509ExtendedTrustManager
 
 class PNConfiguration(userId: UserId) {
-    internal val configuration = PNConfiguration(userId)
+    internal val configuration = CorePNConfiguration(userId)
 
     var userId by configuration::userId
 

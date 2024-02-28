@@ -9,11 +9,11 @@ import com.pubnub.internal.models.consumer.objects.uuid.PNUUIDMetadataArrayResul
 /**
  * @see [PubNubImpl.getAllUUIDMetadata]
  */
-class GetAllUUIDMetadataImpl internal constructor(getAllUUIDMetadata: GetAllUUIDMetadata) :
+class GetAllUUIDMetadataImpl internal constructor(getAllUUIDMetadata: GetAllUUIDMetadataEndpoint) :
     DelegatingEndpoint<com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult, PNUUIDMetadataArrayResult>(
         getAllUUIDMetadata,
     ),
-    IGetAllUUIDMetadata by getAllUUIDMetadata,
+    GetAllUUIDMetadataInterface by getAllUUIDMetadata,
     com.pubnub.api.endpoints.objects.uuid.GetAllUUIDMetadata {
         override fun convertAction(
             remoteAction: ExtendedRemoteAction<PNUUIDMetadataArrayResult>,

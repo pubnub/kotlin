@@ -6,6 +6,6 @@ import com.pubnub.internal.PubNubImpl
 /**
  * @see [PubNubImpl.deleteFile]
  */
-class DeleteFileImpl internal constructor(deleteFile: IDeleteFile) :
-    IDeleteFile by deleteFile,
+class DeleteFileImpl internal constructor(deleteFile: DeleteFileInterface) :
+    DeleteFileInterface by deleteFile,
     DeleteFile

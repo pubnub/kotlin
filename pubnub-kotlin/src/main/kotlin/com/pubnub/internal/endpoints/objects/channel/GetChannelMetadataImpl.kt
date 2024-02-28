@@ -6,5 +6,5 @@ import com.pubnub.internal.PubNubImpl
 /**
  * @see [PubNubImpl.getChannelMetadata]
  */
-class GetChannelMetadataImpl internal constructor(getChannelMetadata: IGetChannelMetadata) :
-    GetChannelMetadata, IGetChannelMetadata by getChannelMetadata
+class GetChannelMetadataImpl internal constructor(getChannelMetadata: GetChannelMetadataInterface) :
+    GetChannelMetadata, GetChannelMetadataInterface by getChannelMetadata

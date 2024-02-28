@@ -10,11 +10,11 @@ import com.pubnub.internal.models.toApi
 /**
  * @see [PubNubImpl.getMemberships]
  */
-class GetMembershipsImpl internal constructor(getMemberships: GetMemberships) :
+class GetMembershipsImpl internal constructor(getMemberships: GetMembershipsEndpoint) :
     DelegatingEndpoint<PNChannelMembershipArrayResult, com.pubnub.internal.models.consumer.objects.membership.PNChannelMembershipArrayResult>(
         getMemberships,
     ),
-    IGetMemberships by getMemberships,
+    GetMembershipsInterface by getMemberships,
     com.pubnub.api.endpoints.objects.membership.GetMemberships {
         override fun convertAction(
             remoteAction: ExtendedRemoteAction<com.pubnub.internal.models.consumer.objects.membership.PNChannelMembershipArrayResult>,

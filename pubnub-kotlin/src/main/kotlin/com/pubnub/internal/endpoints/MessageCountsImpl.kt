@@ -6,6 +6,6 @@ import com.pubnub.internal.PubNubImpl
 /**
  * @see [PubNubImpl.messageCounts]
  */
-class MessageCountsImpl internal constructor(messageCounts: IMessageCounts) :
-    IMessageCounts by messageCounts,
+class MessageCountsImpl internal constructor(messageCounts: MessageCountsInterface) :
+    MessageCountsInterface by messageCounts,
     MessageCounts

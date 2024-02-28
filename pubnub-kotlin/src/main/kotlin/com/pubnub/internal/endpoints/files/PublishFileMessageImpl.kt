@@ -6,6 +6,6 @@ import com.pubnub.internal.PubNubImpl
 /**
  * @see [PubNubImpl.publishFileMessage]
  */
-class PublishFileMessageImpl internal constructor(publishFileMessage: IPublishFileMessage) :
-    IPublishFileMessage by publishFileMessage,
+class PublishFileMessageImpl internal constructor(publishFileMessage: PublishFileMessageInterface) :
+    PublishFileMessageInterface by publishFileMessage,
     PublishFileMessage

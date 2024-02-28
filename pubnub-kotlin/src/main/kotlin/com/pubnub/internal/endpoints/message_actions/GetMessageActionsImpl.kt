@@ -6,6 +6,6 @@ import com.pubnub.internal.PubNubImpl
 /**
  * @see [PubNubImpl.getMessageActions]
  */
-class GetMessageActionsImpl internal constructor(getMessageActions: IGetMessageActions) :
-    IGetMessageActions by getMessageActions,
+class GetMessageActionsImpl internal constructor(getMessageActions: GetMessageActionsInterface) :
+    GetMessageActionsInterface by getMessageActions,
     GetMessageActions

@@ -9,11 +9,11 @@ import com.pubnub.internal.models.consumer.objects.channel.PNChannelMetadataArra
 /**
  * @see [PubNubImpl.getAllChannelMetadata]
  */
-class GetAllChannelMetadataImpl internal constructor(getAllChannelMetadata: GetAllChannelMetadata) :
+class GetAllChannelMetadataImpl internal constructor(getAllChannelMetadata: GetAllChannelMetadataEndpoint) :
     DelegatingEndpoint<com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataArrayResult, PNChannelMetadataArrayResult>(
         getAllChannelMetadata,
     ),
-    IGetAllChannelMetadata by getAllChannelMetadata,
+    GetAllChannelMetadataInterface by getAllChannelMetadata,
     com.pubnub.api.endpoints.objects.channel.GetAllChannelMetadata {
         override fun convertAction(
             remoteAction: ExtendedRemoteAction<PNChannelMetadataArrayResult>,

@@ -6,5 +6,5 @@ import com.pubnub.internal.PubNubImpl
 /**
  * @see [PubNubImpl.addPushNotificationsOnChannels]
  */
-class AddChannelsToPushImpl internal constructor(addChannelsToPush: IAddChannelsToPush) :
-    IAddChannelsToPush by addChannelsToPush, AddChannelsToPush
+class AddChannelsToPushImpl internal constructor(addChannelsToPush: AddChannelsToPushInterface) :
+    AddChannelsToPushInterface by addChannelsToPush, AddChannelsToPush

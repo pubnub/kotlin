@@ -6,6 +6,6 @@ import com.pubnub.internal.PubNubImpl
 /**
  * @see [PubNubImpl.listAllChannelGroups]
  */
-class ListAllChannelGroupImpl internal constructor(listAllChannelGroup: IListAllChannelGroup) :
-    IListAllChannelGroup by listAllChannelGroup,
+class ListAllChannelGroupImpl internal constructor(listAllChannelGroup: ListAllChannelGroupInterface) :
+    ListAllChannelGroupInterface by listAllChannelGroup,
     ListAllChannelGroup

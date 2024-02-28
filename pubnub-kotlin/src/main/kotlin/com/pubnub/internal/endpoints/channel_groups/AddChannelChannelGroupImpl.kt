@@ -6,6 +6,6 @@ import com.pubnub.internal.PubNubImpl
 /**
  * @see [PubNubImpl.addChannelsToChannelGroup]
  */
-class AddChannelChannelGroupImpl internal constructor(addChannelChannelGroup: IAddChannelChannelGroup) :
-    IAddChannelChannelGroup by addChannelChannelGroup,
+class AddChannelChannelGroupImpl internal constructor(addChannelChannelGroup: AddChannelChannelGroupInterface) :
+    AddChannelChannelGroupInterface by addChannelChannelGroup,
     AddChannelChannelGroup

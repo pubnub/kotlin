@@ -6,4 +6,4 @@ import com.pubnub.internal.PubNubImpl
 /**
  * @see [PubNubImpl.signal]
  */
-class SignalImpl internal constructor(signal: ISignal) : Signal, ISignal by signal
+class SignalImpl internal constructor(signal: SignalInterface) : Signal, SignalInterface by signal

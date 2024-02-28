@@ -5,11 +5,11 @@ import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction
 import com.pubnub.api.models.consumer.objects.PNRemoveMetadataResult
 
-class RemoveUUIDMetadataImpl internal constructor(removeUUIDMetadata: RemoveUUIDMetadata) :
+class RemoveUUIDMetadataImpl internal constructor(removeUUIDMetadata: RemoveUUIDMetadataEndpoint) :
     DelegatingEndpoint<PNRemoveMetadataResult, com.pubnub.internal.models.consumer.objects.PNRemoveMetadataResult>(
         removeUUIDMetadata,
     ),
-    IRemoveUUIDMetadata by removeUUIDMetadata,
+    RemoveUUIDMetadataInterface by removeUUIDMetadata,
     com.pubnub.api.endpoints.objects.uuid.RemoveUUIDMetadata {
         override fun convertAction(
             remoteAction: ExtendedRemoteAction<com.pubnub.internal.models.consumer.objects.PNRemoveMetadataResult>,

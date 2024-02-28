@@ -6,4 +6,4 @@ import com.pubnub.internal.PubNubImpl
 /**
  * @see [PubNubImpl.getFileUrl]
  */
-class GetFileUrlImpl internal constructor(getFileUrl: IGetFileUrl) : IGetFileUrl by getFileUrl, GetFileUrl
+class GetFileUrlImpl internal constructor(getFileUrl: GetFileUrlInterface) : GetFileUrlInterface by getFileUrl, GetFileUrl

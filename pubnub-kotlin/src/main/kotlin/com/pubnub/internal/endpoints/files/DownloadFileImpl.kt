@@ -6,6 +6,6 @@ import com.pubnub.internal.PubNubImpl
 /**
  * @see [PubNubImpl.downloadFile]
  */
-class DownloadFileImpl internal constructor(downloadFile: IDownloadFile) :
-    IDownloadFile by downloadFile,
+class DownloadFileImpl internal constructor(downloadFile: DownloadFileInterface) :
+    DownloadFileInterface by downloadFile,
     DownloadFile

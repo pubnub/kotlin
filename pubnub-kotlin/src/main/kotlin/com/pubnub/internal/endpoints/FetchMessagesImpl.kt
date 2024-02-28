@@ -6,6 +6,6 @@ import com.pubnub.internal.PubNubImpl
 /**
  * @see [PubNubImpl.fetchMessages]
  */
-class FetchMessagesImpl internal constructor(fetchMessages: IFetchMessages) :
-    IFetchMessages by fetchMessages,
+class FetchMessagesImpl internal constructor(fetchMessages: FetchMessagesInterface) :
+    FetchMessagesInterface by fetchMessages,
     FetchMessages

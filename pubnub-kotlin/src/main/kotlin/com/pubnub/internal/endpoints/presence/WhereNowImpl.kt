@@ -10,9 +10,9 @@ import com.pubnub.internal.models.toApi
 /**
  * @see [PubNubImpl.whereNow]
  */
-class WhereNowImpl internal constructor(whereNow: WhereNow) :
+class WhereNowImpl internal constructor(whereNow: WhereNowEndpoint) :
     DelegatingEndpoint<com.pubnub.api.models.consumer.presence.PNWhereNowResult, PNWhereNowResult>(whereNow),
-    IWhereNow by whereNow,
+    WhereNowInterface by whereNow,
     com.pubnub.api.endpoints.presence.WhereNow {
         override fun convertAction(
             remoteAction: ExtendedRemoteAction<PNWhereNowResult>,

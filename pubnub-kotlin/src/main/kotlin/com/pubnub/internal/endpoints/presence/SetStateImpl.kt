@@ -6,4 +6,4 @@ import com.pubnub.internal.PubNubImpl
 /**
  * @see [PubNubImpl.setPresenceState]
  */
-class SetStateImpl internal constructor(setState: ISetState) : ISetState by setState, SetState
+class SetStateImpl internal constructor(setState: SetStateInterface) : SetStateInterface by setState, SetState

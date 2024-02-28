@@ -6,5 +6,5 @@ import com.pubnub.internal.PubNubImpl
 /**
  * @see [PubNubImpl.setChannelMetadata]
  */
-class SetChannelMetadataImpl internal constructor(setChannelMetadata: ISetChannelMetadata) :
-    SetChannelMetadata, ISetChannelMetadata by setChannelMetadata
+class SetChannelMetadataImpl internal constructor(setChannelMetadata: SetChannelMetadataInterface) :
+    SetChannelMetadata, SetChannelMetadataInterface by setChannelMetadata

@@ -6,6 +6,6 @@ import com.pubnub.internal.PubNubImpl
 /**
  * @see [PubNubImpl.deleteChannelGroup]
  */
-class DeleteChannelGroupImpl internal constructor(deleteChannelGroup: IDeleteChannelGroup) :
-    IDeleteChannelGroup by deleteChannelGroup,
+class DeleteChannelGroupImpl internal constructor(deleteChannelGroup: DeleteChannelGroupInterface) :
+    DeleteChannelGroupInterface by deleteChannelGroup,
     DeleteChannelGroup

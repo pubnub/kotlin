@@ -9,6 +9,10 @@ plugins {
     id "com.vanniktech.maven.publish"
 }
 
+group = "com.pubnub"
+version = "9.0.0-beta01"
+
+
 sourceSets {
     integrationTest {
         compileClasspath += sourceSets.main.output
@@ -44,8 +48,8 @@ kotlin {
 }
 
 dependencies {
-    api(project(":pubnub-kotlin-core:core-api"))
-    implementation(project(":pubnub-kotlin-core:core-impl"))
+    api(project(":pubnub-core:pubnub-core-api"))
+    implementation(project(":pubnub-core:pubnub-core-impl"))
 
     testImplementation libs.wiremock
 

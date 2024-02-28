@@ -6,4 +6,4 @@ import com.pubnub.internal.PubNubImpl
 /**
  * @see [PubNubImpl.time]
  */
-class TimeImpl internal constructor(time: ITime) : ITime by time, Time
+class TimeImpl internal constructor(time: TimeInterface) : TimeInterface by time, Time
