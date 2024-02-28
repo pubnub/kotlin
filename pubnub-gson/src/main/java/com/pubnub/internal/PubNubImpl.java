@@ -56,7 +56,6 @@ import com.pubnub.api.endpoints.push.AddChannelsToPush;
 import com.pubnub.api.endpoints.push.ListPushProvisions;
 import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice;
 import com.pubnub.api.endpoints.push.RemoveChannelsFromPush;
-import com.pubnub.api.models.consumer.access_manager.v3.PNToken;
 import com.pubnub.api.v2.callbacks.EventListener;
 import com.pubnub.api.v2.callbacks.StatusListener;
 import com.pubnub.api.v2.entities.Channel;
@@ -448,6 +447,11 @@ public class PubNubImpl extends BasePubNubImpl<
         return PublishFileMessage.builder(getCorePubNubClient());
     }
 
+    @Override
+    public void reconnect() {
+        super.reconnect(0);
+    }
+
     // public methods
 
     /**
@@ -522,22 +526,6 @@ public class PubNubImpl extends BasePubNubImpl<
         return getCorePubNubClient().encryptInputStream(inputStream, cipherKey);
     }
 
-    /**
-     * Perform a Reconnect to the network
-     */
-    @Override
-    public void reconnect() {
-        getCorePubNubClient().reconnect(0L);
-    }
-
-    /**
-     * Perform a disconnect from the listeners
-     */
-    @Override
-    public void disconnect() {
-        getCorePubNubClient().disconnect();
-    }
-
     @Override
     @NotNull
     public Publish fire() {
@@ -554,21 +542,6 @@ public class PubNubImpl extends BasePubNubImpl<
     @NotNull
     public List<String> getSubscribedChannelGroups() {
         return getCorePubNubClient().getSubscribedChannelGroups();
-    }
-
-    @Override
-    public void unsubscribeAll() {
-        getCorePubNubClient().unsubscribeAll();
-    }
-
-    @Override
-    public PNToken parseToken(String token) throws PubNubException {
-        return getCorePubNubClient().parseToken(token);
-    }
-
-    @Override
-    public void setToken(String token) {
-        getCorePubNubClient().setToken(token);
     }
 
     @NotNull

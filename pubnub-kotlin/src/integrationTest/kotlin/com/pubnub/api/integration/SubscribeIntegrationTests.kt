@@ -657,7 +657,8 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
                     pubnub: PubNub,
                     status: PNStatus,
                 ) {
-                    if (status.category == PNStatusCategory.PNDisconnectedCategory || status.category == PNStatusCategory.PNSubscriptionChanged
+                    if (status.category == PNStatusCategory.PNDisconnectedCategory ||
+                        status.category == PNStatusCategory.PNSubscriptionChanged
                     ) {
                         unsubscribed.countDown()
                     }

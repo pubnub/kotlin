@@ -8,8 +8,8 @@ plugins {
     id("com.vanniktech.maven.publish")
 }
 
-group = "com.pubnub"
-version = "9.0.0-beta01"
+group = providers.gradleProperty("GROUP").get()
+version = providers.gradleProperty("VERSION_NAME").get()
 
 // sourceSets {
 //    create("integrationTest") {

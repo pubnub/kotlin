@@ -2,6 +2,7 @@ package com.pubnub.internal
 
 import com.pubnub.api.BasePubNub
 import com.pubnub.api.callbacks.Listener
+import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import com.pubnub.api.v2.callbacks.BaseEventEmitter
 import com.pubnub.api.v2.callbacks.BaseEventListener
 import com.pubnub.api.v2.callbacks.BaseStatusEmitter
@@ -112,5 +113,29 @@ abstract class BasePubNubImpl<
 
     override fun reconnect(timetoken: Long) {
         corePubNubClient.reconnect(timetoken)
+    }
+
+    override fun parseToken(token: String): PNToken {
+        return corePubNubClient.parseToken(token)
+    }
+
+    override fun setToken(token: String?) {
+        corePubNubClient.setToken(token)
+    }
+
+    /**
+     * Cancel any subscribe and heartbeat loops or ongoing re-connections.
+     *
+     * Monitor the results in [SubscribeCallback.status]
+     */
+    override fun disconnect() {
+        corePubNubClient.disconnect()
+    }
+
+    /**
+     * Unsubscribe from all channels and all channel groups
+     */
+    override fun unsubscribeAll() {
+        corePubNubClient.unsubscribeAll()
     }
 }

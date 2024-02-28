@@ -56,7 +56,6 @@ import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions
 import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
-import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.objects.PNKey
@@ -1419,24 +1418,4 @@ class PubNubImpl(
         inputStream: InputStream,
         cipherKey: String?,
     ): InputStream = corePubNubClient.encryptInputStream(inputStream, cipherKey)
-
-    /**
-     * Force the SDK to try and reach out PubNub. Monitor the results in [SubscribeCallback.status]
-     */
-    override fun reconnect(timetoken: Long) = corePubNubClient.reconnect(timetoken)
-
-    /**
-     * Cancel any subscribe and heartbeat loops or ongoing re-connections.
-     *
-     * Monitor the results in [SubscribeCallback.status]
-     */
-    override fun disconnect() = corePubNubClient.disconnect()
-
-    override fun parseToken(token: String): PNToken {
-        return corePubNubClient.parseToken(token)
-    }
-
-    override fun setToken(token: String?) {
-        return corePubNubClient.setToken(token)
-    }
 }

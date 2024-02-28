@@ -11,9 +11,8 @@ plugins {
     id "com.vanniktech.maven.publish"
 }
 
-group = "com.pubnub"
-version = "9.0.0-beta01"
-
+group = GROUP
+version = VERSION_NAME
 description = """"""
 
 kotlin {

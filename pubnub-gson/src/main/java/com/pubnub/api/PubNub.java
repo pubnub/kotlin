@@ -220,10 +220,9 @@ public interface PubNub extends BasePubNub<
 
     void addListener(@NotNull SubscribeCallback listener);
 
-    public InputStream decryptInputStream(InputStream inputStream) throws PubNubException;
+    InputStream decryptInputStream(InputStream inputStream) throws PubNubException;
 
-    @Nullable
-    public String encrypt(String inputString) throws PubNubException;
+    @Nullable String encrypt(String inputString) throws PubNubException;
 
-    public InputStream encryptInputStream(InputStream inputStream) throws PubNubException;
+    InputStream encryptInputStream(InputStream inputStream) throws PubNubException;
 }

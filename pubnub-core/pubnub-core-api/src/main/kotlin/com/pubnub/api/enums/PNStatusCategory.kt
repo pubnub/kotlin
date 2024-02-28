@@ -14,25 +14,30 @@ enum class PNStatusCategory {
      * SDK successfully connected the Subscribe loop.
      */
     PNConnectedCategory,
+
     /**
      * SDK subscribed with a new mix of channels (fired every time the channel / channel group mix changed) since the
      * initial connection.
      */
     PNSubscriptionChanged,
+
     /**
      * Previously started subscribe loop did fail and at this moment client disconnected from real-time data channels.
      */
     PNUnexpectedDisconnectCategory,
+
     /**
      * The subscription has been stopped.
      */
     PNDisconnectedCategory,
+
     /**
      * Previously started subscribe loop failed, and at this moment client disconnected from real-time data channels.
      */
     PNConnectionError,
     PNHeartbeatFailed,
     PNHeartbeatSuccess,
+
     /**
      * PubNub sent a malformed response.
      * This may happen when you connect to a public WiFi Hotspot that requires you to auth via your web browser first,

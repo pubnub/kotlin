@@ -281,4 +281,9 @@ internal fun createSubscriptionChangedStatus(
     cursor: SubscriptionCursor,
     channels: Collection<String>,
     channelGroups: Collection<String>,
-) = PNStatus(PNStatusCategory.PNSubscriptionChanged, currentTimetoken = cursor.timetoken, channels = channels, channelGroups = channelGroups)
+) = PNStatus(
+    PNStatusCategory.PNSubscriptionChanged,
+    currentTimetoken = cursor.timetoken,
+    channels = channels,
+    channelGroups = channelGroups,
+)

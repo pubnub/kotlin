@@ -92,7 +92,9 @@ class PubNubTest(private val pubNub: PubNub, private val withPresenceOverride: B
     ) {
         pubNub.subscribe(channels.toList(), channelGroups.toList(), withPresence = withPresence || withPresenceOverride)
         val status = statusQueue.take()
-        Assert.assertTrue(status.category == PNStatusCategory.PNConnectedCategory || status.category == PNStatusCategory.PNSubscriptionChanged)
+        Assert.assertTrue(
+            status.category == PNStatusCategory.PNConnectedCategory || status.category == PNStatusCategory.PNSubscriptionChanged,
+        )
         if (status.category == PNStatusCategory.PNConnectedCategory) {
             Assert.assertTrue(status.channels.containsAll(channels))
             Assert.assertTrue(status.channelGroups.containsAll(channelGroups))
@@ -108,7 +110,9 @@ class PubNubTest(private val pubNub: PubNub, private val withPresenceOverride: B
     ) {
         pubNub.unsubscribe(channels.toList(), channelGroups.toList())
         val status = statusQueue.take()
-        Assert.assertTrue(status.category == PNStatusCategory.PNDisconnectedCategory || status.category == PNStatusCategory.PNSubscriptionChanged)
+        Assert.assertTrue(
+            status.category == PNStatusCategory.PNDisconnectedCategory || status.category == PNStatusCategory.PNSubscriptionChanged,
+        )
         if (status.category == PNStatusCategory.PNSubscriptionChanged) {
             Assert.assertTrue(
                 "Unsubscribe list: ${status.channels} doesn't contain all requested channels: $channels",
