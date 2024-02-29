@@ -74,7 +74,7 @@ class TestPubNub internal constructor(configuration: CorePNConfiguration, eventE
          * Perform Cryptographic decryption of an input stream using provided cipher key.
          *
          * @param inputStream InputStream to be encrypted.
-         * @param cipherKey Cipher key to be used for decryption. If not provided [PNConfiguration.cipherKey] is used.
+         * @param cipherKey Cipher key to be used for decryption.
          *
          * @return InputStream containing the encryption of `inputStream` using `cipherKey`.
          * @throws PubNubException Throws exception in case of failed decryption.
@@ -106,7 +106,7 @@ class TestPubNub internal constructor(configuration: CorePNConfiguration, eventE
          * Perform Cryptographic encryption of an input stream using provided cipher key.
          *
          * @param inputStream InputStream to be encrypted.
-         * @param cipherKey Cipher key to be used for encryption. If not provided [PNConfiguration.cipherKey] is used.
+         * @param cipherKey Cipher key to be used for encryption.
          *
          * @return InputStream containing the encryption of `inputStream` using `cipherKey`.
          * @throws PubNubException Throws exception in case of failed encryption.
