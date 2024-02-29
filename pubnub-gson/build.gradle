@@ -1,7 +1,10 @@
+import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.dokka.gradle.DokkaTaskPartial
+
 plugins {
     id 'org.jetbrains.kotlin.jvm'
     id 'java-library'
-    id 'io.franzbecker.gradle-lombok' version '5.0.0'
+    id("io.freefair.lombok") version "8.6"
     id 'com.github.johnrengelman.shadow'
     id "org.jlleitschuh.gradle.ktlint"
     id "jacoco"
@@ -17,10 +20,6 @@ description = """"""
 
 kotlin {
     jvmToolchain(8)
-}
-
-lombok {
-    version = "1.18.30"
 }
 
 sourceSets {
@@ -84,6 +83,26 @@ tasks.withType(Checkstyle) {
     }
 }
 
+tasks.withType(DokkaTask.class).configureEach {
+    dokkaSourceSets.configureEach {
+        perPackageOption {
+            matchingRegex.set(".*internal.*")
+            suppress.set(true)
+        }
+        skipEmptyPackages.set(true)
+    }
+}
+
+tasks.withType(DokkaTaskPartial.class).configureEach {
+    dokkaSourceSets.configureEach {
+        perPackageOption {
+            matchingRegex.set(".*internal.*")
+            suppress.set(true)
+        }
+        skipEmptyPackages.set(true)
+    }
+}
+
 check.dependsOn jacocoTestReport
 //task delombok(type: DelombokTask, dependsOn: compileJava) {
 //    ext.outputDir = file("$buildDir/delombok")
@@ -95,20 +114,22 @@ check.dependsOn jacocoTestReport
 //}
 
 
-//javadoc {
-//    dependsOn delombok
-//    source = delombok.outputDir
-//    destinationDir = file("docs")
-//
-//    options.noTimestamp = true
-//}
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-//    classifier = 'sources'
-    from "$buildDir/delombok"
+javadoc {
+    destinationDir = file("docs")
+    options.noTimestamp = true
 }
+
+//task sourcesJar(type: Jar, dependsOn: classes) {
+////    classifier = 'sources'
+//    from "$buildDir/delombok"
+//}
 
 test {
     useJUnitPlatform()
     exclude '**/contract/*.class'
+}
+
+tasks.register("mergeKotlinJars", org.gradle.jvm.tasks.Jar) {
+    from(zipTree("/Users/wojciech.kalicinski/projects/pubnub-kotlin-copy/pubnub-gson/build/libs/pubnub-gson-9.0.0.jar"), zipTree("/Users/wojciech.kalicinski/projects/pubnub-kotlin-copy/pubnub-core/pubnub-core-api/build/libs/pubnub-core-api-9.0.0.jar"))
+    setArchiveFileName("combined.jar")
 }

@@ -1,6 +1,5 @@
 plugins {
     id("org.jetbrains.kotlin.jvm")
-    id("org.jetbrains.dokka")
     id("java-library")
     id("jacoco")
     id("org.jlleitschuh.gradle.ktlint")
@@ -78,13 +77,3 @@ task<Test>("cucumber") {
     systemProperty("cucumber.features", System.getProperty("cucumber.features"))
     systemProperty("cucumber.plugins", System.getProperty("cucumber.plugins"))
 }
-
-tasks.dokkaGfm {
-    dokkaSourceSets {
-        configureEach {
-            skipEmptyPackages.set(true)
-        }
-    }
-}
-
-tasks.named("build") { finalizedBy(tasks.dokkaGfm) }

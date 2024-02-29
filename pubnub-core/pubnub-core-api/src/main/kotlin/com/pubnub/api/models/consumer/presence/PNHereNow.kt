@@ -12,7 +12,7 @@ import com.google.gson.JsonElement
 class PNHereNowResult(
     val totalChannels: Int,
     val totalOccupancy: Int,
-    val channels: HashMap<String, PNHereNowChannelData> = hashMapOf(),
+    val channels: MutableMap<String, PNHereNowChannelData> = mutableMapOf(), //TODO this should be immutable
 )
 
 /**
