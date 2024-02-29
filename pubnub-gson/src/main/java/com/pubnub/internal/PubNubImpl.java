@@ -2,6 +2,7 @@ package com.pubnub.internal;
 
 import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
+import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PresenceBuilder;
 import com.pubnub.api.builder.SubscribeBuilder;
@@ -461,9 +462,8 @@ public class PubNubImpl extends BasePubNubImpl<
      * @return String containing the encryption of inputString using cipherKey
      */
     @Override
-    @Nullable
-    public String decrypt(String inputString) throws PubNubException {
-        return decrypt(inputString, getCorePubNubClient().getConfiguration().getCipherKey());
+    public @NotNull String decrypt(@NotNull String inputString) throws PubNubException {
+        return decrypt(inputString, null);
     }
 
     /**
@@ -475,18 +475,20 @@ public class PubNubImpl extends BasePubNubImpl<
      * @throws PubNubException throws exception in case of failed encryption
      */
     @Override
-    @Nullable
-    public String decrypt(String inputString, String cipherKey) throws PubNubException {
+    public @NotNull String decrypt(@NotNull String inputString, String cipherKey) throws PubNubException {
+        if (inputString == null) {
+            throw new PubNubException(PubNubError.INVALID_ARGUMENTS);
+        }
         return getCorePubNubClient().decrypt(inputString, cipherKey);
     }
 
     @Override
-    public InputStream decryptInputStream(@NotNull InputStream inputStream) throws PubNubException {
-        return decryptInputStream(inputStream, getCorePubNubClient().getConfiguration().getCipherKey());
+    public @NotNull InputStream decryptInputStream(@NotNull InputStream inputStream) throws PubNubException {
+        return decryptInputStream(inputStream, null);
     }
 
     @Override
-    public InputStream decryptInputStream(InputStream inputStream, String cipherKey) throws PubNubException {
+    public @NotNull InputStream decryptInputStream(@NotNull InputStream inputStream, @Nullable String cipherKey) throws PubNubException {
         return getCorePubNubClient().decryptInputStream(inputStream, cipherKey);
     }
 
@@ -497,9 +499,8 @@ public class PubNubImpl extends BasePubNubImpl<
      * @return String containing the encryption of inputString using cipherKey
      */
     @Override
-    @Nullable
-    public String encrypt(@NotNull String inputString) throws PubNubException {
-        return encrypt(inputString, getCorePubNubClient().getConfiguration().getCipherKey());
+    public @NotNull String encrypt(@NotNull String inputString) throws PubNubException {
+        return encrypt(inputString, null);
     }
 
     /**
@@ -511,18 +512,17 @@ public class PubNubImpl extends BasePubNubImpl<
      * @throws PubNubException throws exception in case of failed encryption
      */
     @Override
-    @Nullable
-    public String encrypt(String inputString, String cipherKey) throws PubNubException {
+    public @NotNull String encrypt(@NotNull String inputString, String cipherKey) throws PubNubException {
         return getCorePubNubClient().encrypt(inputString, cipherKey);
     }
 
     @Override
-    public InputStream encryptInputStream(@NotNull InputStream inputStream) throws PubNubException {
-        return encryptInputStream(inputStream, getCorePubNubClient().getConfiguration().getCipherKey());
+    public @NotNull InputStream encryptInputStream(@NotNull InputStream inputStream) throws PubNubException {
+        return encryptInputStream(inputStream, null);
     }
 
     @Override
-    public InputStream encryptInputStream(InputStream inputStream, String cipherKey) throws PubNubException {
+    public @NotNull InputStream encryptInputStream(@NotNull InputStream inputStream, String cipherKey) throws PubNubException {
         return getCorePubNubClient().encryptInputStream(inputStream, cipherKey);
     }
 

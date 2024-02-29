@@ -2013,6 +2013,7 @@ class CorePubNubClient internal constructor(
      * @return String containing the decryption of `inputString` using `cipherKey`.
      * @throws PubNubException throws exception in case of failed decryption.
      */
+    @Throws(PubNubException::class)
     fun decrypt(inputString: String): String = decrypt(inputString, null)
 
     /**
@@ -2024,6 +2025,7 @@ class CorePubNubClient internal constructor(
      * @return String containing the decryption of `inputString` using `cipherKey`.
      * @throws PubNubException throws exception in case of failed decryption.
      */
+    @Throws(PubNubException::class)
     fun decrypt(
         inputString: String,
         cipherKey: String? = null,
@@ -2038,6 +2040,7 @@ class CorePubNubClient internal constructor(
      * @return InputStream containing the encryption of `inputStream` using `cipherKey`.
      * @throws PubNubException Throws exception in case of failed decryption.
      */
+    @Throws(PubNubException::class)
     fun decryptInputStream(
         inputStream: InputStream,
         cipherKey: String? = null,
@@ -2052,6 +2055,7 @@ class CorePubNubClient internal constructor(
      * @return String containing the encryption of `inputString` using `cipherKey`.
      * @throws PubNubException Throws exception in case of failed encryption.
      */
+    @Throws(PubNubException::class)
     fun encrypt(
         inputString: String,
         cipherKey: String? = null,
@@ -2066,11 +2070,13 @@ class CorePubNubClient internal constructor(
      * @return InputStream containing the encryption of `inputStream` using `cipherKey`.
      * @throws PubNubException Throws exception in case of failed encryption.
      */
+    @Throws(PubNubException::class)
     fun encryptInputStream(
         inputStream: InputStream,
         cipherKey: String? = null,
     ): InputStream = getCryptoModuleOrThrow(cipherKey).encryptStream(inputStream)
 
+    @Throws(PubNubException::class)
     private fun getCryptoModuleOrThrow(cipherKey: String? = null): CryptoModule {
         return cipherKey?.let {
             CryptoModule.createLegacyCryptoModule(it, configuration.useRandomInitializationVector)

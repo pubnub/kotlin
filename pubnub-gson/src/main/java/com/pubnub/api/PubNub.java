@@ -62,7 +62,6 @@ import com.pubnub.api.v2.subscriptions.Subscription;
 import com.pubnub.api.v2.subscriptions.SubscriptionSet;
 import com.pubnub.internal.PubNubImpl;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.InputStream;
 import java.util.List;
@@ -220,9 +219,9 @@ public interface PubNub extends BasePubNub<
 
     void addListener(@NotNull SubscribeCallback listener);
 
-    InputStream decryptInputStream(@NotNull InputStream inputStream) throws PubNubException;
+    @NotNull InputStream decryptInputStream(@NotNull InputStream inputStream) throws PubNubException;
 
-    @Nullable String encrypt(@NotNull String inputString) throws PubNubException;
+    @NotNull String encrypt(@NotNull String inputString) throws PubNubException;
 
-    InputStream encryptInputStream(@NotNull InputStream inputStream) throws PubNubException;
+    @NotNull InputStream encryptInputStream(@NotNull InputStream inputStream) throws PubNubException;
 }
