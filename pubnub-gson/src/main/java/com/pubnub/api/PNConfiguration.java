@@ -179,12 +179,6 @@ public class PNConfiguration {
         return corePnConfiguration.getUuid();
     }
 
-
-    /**
-     * if set, the SDK will alert once the number of messages arrived in one call equal to the threshold
-     */
-    private Integer requestMessageCountThreshold; // TODO not supported in EE
-
     /**
      * Enables explicit presence control.
      * When set to true heartbeat calls will contain only channels and groups added explicitly

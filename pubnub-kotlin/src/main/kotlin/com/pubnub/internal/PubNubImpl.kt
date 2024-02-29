@@ -117,9 +117,6 @@ class PubNubImpl(
         configuration.configuration,
     ),
     PubNub {
-    companion object {
-        fun generateUUID() = BasePubNubImpl.generateUUID()
-    }
 
     private val emitterHelper = EmitterHelper(listenerManager)
     override var onMessage: ((PNMessageResult) -> Unit)? by emitterHelper::onMessage

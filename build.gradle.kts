@@ -6,5 +6,3 @@ plugins {
     alias(libs.plugins.benmanes.versions) apply false
     alias(libs.plugins.maven.publish) apply false
 }
-
-

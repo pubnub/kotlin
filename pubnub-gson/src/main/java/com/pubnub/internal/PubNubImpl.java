@@ -481,7 +481,7 @@ public class PubNubImpl extends BasePubNubImpl<
     }
 
     @Override
-    public InputStream decryptInputStream(InputStream inputStream) throws PubNubException {
+    public InputStream decryptInputStream(@NotNull InputStream inputStream) throws PubNubException {
         return decryptInputStream(inputStream, getCorePubNubClient().getConfiguration().getCipherKey());
     }
 
@@ -498,7 +498,7 @@ public class PubNubImpl extends BasePubNubImpl<
      */
     @Override
     @Nullable
-    public String encrypt(String inputString) throws PubNubException {
+    public String encrypt(@NotNull String inputString) throws PubNubException {
         return encrypt(inputString, getCorePubNubClient().getConfiguration().getCipherKey());
     }
 
@@ -517,7 +517,7 @@ public class PubNubImpl extends BasePubNubImpl<
     }
 
     @Override
-    public InputStream encryptInputStream(InputStream inputStream) throws PubNubException {
+    public InputStream encryptInputStream(@NotNull InputStream inputStream) throws PubNubException {
         return encryptInputStream(inputStream, getCorePubNubClient().getConfiguration().getCipherKey());
     }
 
