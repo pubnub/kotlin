@@ -3,7 +3,7 @@ package com.pubnub.api.endpoints.message_actions;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult;
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction;
-import com.pubnub.internal.CorePubNubClient;
+import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -21,12 +21,12 @@ public class AddMessageAction extends DelegatingEndpoint<PNAddMessageActionResul
     private String channel;
     private PNMessageAction messageAction;
 
-    public AddMessageAction(CorePubNubClient pubnub) {
+    public AddMessageAction(PubNubCore pubnub) {
         super(pubnub);
     }
 
     @Override
-    protected com.pubnub.internal.CoreEndpoint<?, PNAddMessageActionResult> createAction() {
+    protected com.pubnub.internal.EndpointCore<?, PNAddMessageActionResult> createAction() {
         return pubnub.addMessageAction(channel, messageAction);
     }
 

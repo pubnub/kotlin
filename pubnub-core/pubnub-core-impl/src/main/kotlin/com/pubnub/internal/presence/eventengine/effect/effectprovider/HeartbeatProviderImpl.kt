@@ -1,10 +1,10 @@
 package com.pubnub.internal.presence.eventengine.effect.effectprovider
 
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.endpoints.presence.HeartbeatEndpoint
 
-internal class HeartbeatProviderImpl(val pubNub: CorePubNubClient) : HeartbeatProvider {
+internal class HeartbeatProviderImpl(val pubNub: PubNubCore) : HeartbeatProvider {
     override fun getHeartbeatRemoteAction(
         channels: Set<String>,
         channelGroups: Set<String>,

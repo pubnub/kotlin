@@ -26,7 +26,7 @@ import java.util.function.Consumer
  * @param Output Parsed and encapsulated response for endusers.
  * @property pubnub The client instance.
  */
-abstract class CoreEndpoint<Input, Output> protected constructor(protected val pubnub: CorePubNubClient) :
+abstract class EndpointCore<Input, Output> protected constructor(protected val pubnub: PubNubCore) :
     ExtendedRemoteAction<Output> {
         private val log = LoggerFactory.getLogger(this.javaClass.simpleName)
 
@@ -171,7 +171,7 @@ abstract class CoreEndpoint<Input, Output> protected constructor(protected val p
                                 errorMessage = t.toString(),
                                 pubnubError = error,
                                 cause = t,
-                                remoteAction = this@CoreEndpoint,
+                                remoteAction = this@EndpointCore,
                             )
                         callback.accept(Result.failure(pubnubException))
                     }
@@ -184,7 +184,7 @@ abstract class CoreEndpoint<Input, Output> protected constructor(protected val p
 
             map += queryParam
 
-            map["pnsdk"] = pubnub.configuration.generatePnsdk(CorePubNubClient.SDK_VERSION)
+            map["pnsdk"] = pubnub.configuration.generatePnsdk(PubNubCore.SDK_VERSION)
             map["uuid"] = pubnub.configuration.userId.value
 
             if (pubnub.configuration.includeInstanceIdentifier) {

@@ -3,17 +3,17 @@ package com.pubnub.internal.endpoints.channel_groups
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsListAllResult
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.CoreEndpoint
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.EndpointCore
+import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.models.server.Envelope
 import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [CorePubNubClient.listAllChannelGroups]
+ * @see [PubNubCore.listAllChannelGroups]
  */
-class ListAllChannelGroupEndpoint internal constructor(pubnub: CorePubNubClient) :
-    CoreEndpoint<Envelope<Map<String, Any>>, PNChannelGroupsListAllResult>(pubnub),
+class ListAllChannelGroupEndpoint internal constructor(pubnub: PubNubCore) :
+    EndpointCore<Envelope<Map<String, Any>>, PNChannelGroupsListAllResult>(pubnub),
     ListAllChannelGroupInterface {
         override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<Map<String, Any>>> {
             return pubnub.retrofitManager.channelGroupService

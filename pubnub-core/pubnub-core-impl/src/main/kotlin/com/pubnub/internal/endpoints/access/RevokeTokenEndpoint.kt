@@ -4,18 +4,18 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.CoreEndpoint
 import com.pubnub.internal.CorePNConfiguration.Companion.isValid
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.EndpointCore
+import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.models.server.access_manager.v3.RevokeTokenResponse
 import retrofit2.Call
 import retrofit2.Response
 import java.net.URLEncoder
 
 class RevokeTokenEndpoint(
-    pubnub: CorePubNubClient,
+    pubnub: PubNubCore,
     private val token: String,
-) : CoreEndpoint<RevokeTokenResponse, Unit>(pubnub), RevokeTokenInterface {
+) : EndpointCore<RevokeTokenResponse, Unit>(pubnub), RevokeTokenInterface {
     override fun validateParams() {
         super.validateParams()
         if (!pubnub.configuration.secretKey.isValid()) {

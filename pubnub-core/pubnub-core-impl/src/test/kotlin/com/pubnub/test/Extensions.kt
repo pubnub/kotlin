@@ -1,7 +1,7 @@
 package com.pubnub.test
 
 import com.pubnub.api.v2.callbacks.Result
-import com.pubnub.internal.CoreEndpoint
+import com.pubnub.internal.EndpointCore
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.awaitility.pollinterval.FibonacciPollInterval
@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
-fun <Input, Output> CoreEndpoint<Input, Output>.await(function: (result: Result<Output>) -> Unit) {
+fun <Input, Output> EndpointCore<Input, Output>.await(function: (result: Result<Output>) -> Unit) {
     val success = AtomicBoolean()
     async { result ->
         function.invoke(result)
@@ -37,7 +37,7 @@ fun AtomicBoolean.listen(function: () -> Boolean): AtomicBoolean {
     return this
 }
 
-fun <Input, Output> CoreEndpoint<Input, Output>.asyncRetry(function: (result: Result<Output>) -> Unit) {
+fun <Input, Output> EndpointCore<Input, Output>.asyncRetry(function: (result: Result<Output>) -> Unit) {
     val hits = AtomicInteger(0)
 
     val block = {
@@ -66,7 +66,7 @@ fun <Input, Output> CoreEndpoint<Input, Output>.asyncRetry(function: (result: Re
         }
 }
 
-fun <Input, Output> CoreEndpoint<Input, Output>.retryForbidden(
+fun <Input, Output> EndpointCore<Input, Output>.retryForbidden(
     onFail: (exception: Throwable) -> Unit,
     function: (result: Result<Output>) -> Unit,
 ) {

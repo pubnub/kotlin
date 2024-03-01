@@ -3,7 +3,7 @@ package com.pubnub.internal.endpoints.push;
 import com.pubnub.api.enums.PNPushEnvironment;
 import com.pubnub.api.enums.PNPushType;
 import com.pubnub.api.models.consumer.push.PNPushRemoveChannelResult;
-import com.pubnub.internal.CorePubNubClient;
+import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -20,7 +20,7 @@ public class RemoveChannelsFromPushImpl extends DelegatingEndpoint<PNPushRemoveC
     private PNPushEnvironment environment;
     private String topic;
 
-    public RemoveChannelsFromPushImpl(CorePubNubClient pubnub) {
+    public RemoveChannelsFromPushImpl(PubNubCore pubnub) {
         super(pubnub);
     }
 

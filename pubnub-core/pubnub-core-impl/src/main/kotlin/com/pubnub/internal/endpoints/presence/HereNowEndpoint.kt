@@ -6,23 +6,23 @@ import com.pubnub.api.models.consumer.presence.PNHereNowChannelData
 import com.pubnub.api.models.consumer.presence.PNHereNowOccupantData
 import com.pubnub.api.models.consumer.presence.PNHereNowResult
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.CoreEndpoint
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.EndpointCore
+import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.models.server.Envelope
 import com.pubnub.internal.toCsv
 import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [CorePubNubClient.hereNow]
+ * @see [PubNubCore.hereNow]
  */
 class HereNowEndpoint internal constructor(
-    pubnub: CorePubNubClient,
+    pubnub: PubNubCore,
     override val channels: List<String> = emptyList(),
     override val channelGroups: List<String> = emptyList(),
     override val includeState: Boolean = false,
     override val includeUUIDs: Boolean = true,
-) : CoreEndpoint<Envelope<JsonElement>, PNHereNowResult>(pubnub), HereNowInterface {
+) : EndpointCore<Envelope<JsonElement>, PNHereNowResult>(pubnub), HereNowInterface {
     private fun isGlobalHereNow() = channels.isEmpty() && channelGroups.isEmpty()
 
     override fun getAffectedChannels() = channels

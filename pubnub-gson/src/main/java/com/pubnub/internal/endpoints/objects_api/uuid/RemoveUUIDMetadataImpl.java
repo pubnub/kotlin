@@ -4,7 +4,7 @@ import com.pubnub.api.endpoints.objects_api.uuid.RemoveUUIDMetadata;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects_api.uuid.PNRemoveUUIDMetadataResult;
-import com.pubnub.internal.CorePubNubClient;
+import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -15,7 +15,7 @@ public class RemoveUUIDMetadataImpl extends DelegatingEndpoint<PNRemoveUUIDMetad
 
     private String uuid;
 
-    public RemoveUUIDMetadataImpl(final CorePubNubClient pubnub) {
+    public RemoveUUIDMetadataImpl(final PubNubCore pubnub) {
         super(pubnub);
     }
 

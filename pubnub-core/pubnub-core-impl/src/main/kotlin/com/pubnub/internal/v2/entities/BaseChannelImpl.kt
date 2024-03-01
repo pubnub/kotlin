@@ -5,12 +5,12 @@ import com.pubnub.api.v2.entities.BaseChannel
 import com.pubnub.api.v2.subscriptions.BaseSubscription
 import com.pubnub.api.v2.subscriptions.ReceivePresenceEventsImpl
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.SubscriptionFactory
 import com.pubnub.internal.subscribe.PRESENCE_CHANNEL_SUFFIX
 
 open class BaseChannelImpl<Lis : BaseEventListener, Sub : BaseSubscription<Lis>>(
-    internal val pubnub: CorePubNubClient,
+    internal val pubnub: PubNubCore,
     private val channelName: ChannelName,
     private val subscriptionFactory: SubscriptionFactory<Sub>,
 ) : BaseChannel<Lis, Sub> {

@@ -8,8 +8,8 @@ import com.pubnub.api.models.consumer.history.HistoryMessageType
 import com.pubnub.api.models.consumer.history.PNFetchMessageItem
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.CoreEndpoint
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.EndpointCore
+import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.extension.limit
 import com.pubnub.internal.extension.nonPositiveToNull
 import com.pubnub.internal.extension.tryDecryptMessage
@@ -20,17 +20,17 @@ import retrofit2.Response
 import java.util.Locale
 
 /**
- * @see [CorePubNubClient.fetchMessages]
+ * @see [PubNubCore.fetchMessages]
  */
 class FetchMessagesEndpoint internal constructor(
-    pubnub: CorePubNubClient,
+    pubnub: PubNubCore,
     override val channels: List<String>,
     override val page: PNBoundedPage,
     override val includeUUID: Boolean,
     override val includeMeta: Boolean,
     override val includeMessageActions: Boolean,
     override val includeMessageType: Boolean,
-) : CoreEndpoint<FetchMessagesEnvelope, PNFetchMessagesResult>(pubnub), FetchMessagesInterface {
+) : EndpointCore<FetchMessagesEnvelope, PNFetchMessagesResult>(pubnub), FetchMessagesInterface {
     internal companion object {
         private const val SINGLE_CHANNEL_DEFAULT_MESSAGES = 100
         private const val SINGLE_CHANNEL_MAX_MESSAGES = 100

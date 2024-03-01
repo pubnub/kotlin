@@ -3,7 +3,7 @@ package com.pubnub.internal.endpoints.push;
 import com.pubnub.api.enums.PNPushEnvironment;
 import com.pubnub.api.enums.PNPushType;
 import com.pubnub.api.models.consumer.push.PNPushRemoveAllChannelsResult;
-import com.pubnub.internal.CorePubNubClient;
+import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -16,7 +16,7 @@ public class RemoveAllPushChannelsForDeviceImpl extends DelegatingEndpoint<PNPus
     private PNPushEnvironment environment;
     private String topic;
 
-    public RemoveAllPushChannelsForDeviceImpl(CorePubNubClient pubnub) {
+    public RemoveAllPushChannelsForDeviceImpl(PubNubCore pubnub) {
         super(pubnub);
     }
 

@@ -1,7 +1,7 @@
 package com.pubnub.internal.endpoints;
 
 import com.pubnub.api.models.consumer.history.PNHistoryResult;
-import com.pubnub.internal.CorePubNubClient;
+import com.pubnub.internal.PubNubCore;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
@@ -18,12 +18,12 @@ public class HistoryImpl extends DelegatingEndpoint<PNHistoryResult> implements 
     private boolean includeTimetoken;
     private boolean includeMeta;
 
-    public HistoryImpl(CorePubNubClient pubnub) {
+    public HistoryImpl(PubNubCore pubnub) {
         super(pubnub);
     }
 
     @Override
-    protected com.pubnub.internal.CoreEndpoint<?, PNHistoryResult> createAction() {
+    protected com.pubnub.internal.EndpointCore<?, PNHistoryResult> createAction() {
         return pubnub.history(
                 channel,
                 start,

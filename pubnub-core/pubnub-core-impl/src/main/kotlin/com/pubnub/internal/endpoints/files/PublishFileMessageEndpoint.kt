@@ -7,8 +7,8 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.files.PNBaseFile
 import com.pubnub.api.models.consumer.files.PNPublishFileMessageResult
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.CoreEndpoint
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.EndpointCore
+import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.crypto.encryptString
 import com.pubnub.internal.extension.numericString
 import com.pubnub.internal.extension.quoted
@@ -17,7 +17,7 @@ import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [CorePubNubClient.publishFileMessage]
+ * @see [PubNubCore.publishFileMessage]
  */
 open class PublishFileMessageEndpoint(
     private val channel: String,
@@ -27,8 +27,8 @@ open class PublishFileMessageEndpoint(
     private val meta: Any? = null,
     private val ttl: Int? = null,
     private val shouldStore: Boolean? = null,
-    pubNub: CorePubNubClient,
-) : CoreEndpoint<List<Any>, PNPublishFileMessageResult>(pubNub), PublishFileMessageInterface {
+    pubNub: PubNubCore,
+) : EndpointCore<List<Any>, PNPublishFileMessageResult>(pubNub), PublishFileMessageInterface {
     private val pnFile = PNBaseFile(fileId, fileName)
 
     @Throws(PubNubException::class)
@@ -78,7 +78,7 @@ open class PublishFileMessageEndpoint(
 
     override fun isPubKeyRequired(): Boolean = true
 
-    internal class Factory(private val pubNub: CorePubNubClient) {
+    internal class Factory(private val pubNub: PubNubCore) {
         fun create(
             channel: String,
             fileName: String,

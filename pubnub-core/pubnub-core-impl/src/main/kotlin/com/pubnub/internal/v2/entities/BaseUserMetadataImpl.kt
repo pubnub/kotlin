@@ -4,11 +4,11 @@ import com.pubnub.api.v2.callbacks.BaseEventListener
 import com.pubnub.api.v2.entities.BaseUserMetadata
 import com.pubnub.api.v2.subscriptions.BaseSubscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.SubscriptionFactory
 
 open class BaseUserMetadataImpl<Lis : BaseEventListener, Sub : BaseSubscription<Lis>>(
-    internal val pubnub: CorePubNubClient,
+    internal val pubnub: PubNubCore,
     val channelName: ChannelName,
     private val subscriptionFactory: SubscriptionFactory<Sub>,
 ) : BaseUserMetadata<Lis, Sub> {

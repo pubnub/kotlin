@@ -117,7 +117,6 @@ class PubNubImpl(
         configuration.configuration,
     ),
     PubNub {
-
     private val emitterHelper = EmitterHelper(listenerManager)
     override var onMessage: ((PNMessageResult) -> Unit)? by emitterHelper::onMessage
     override var onPresence: ((PNPresenceEventResult) -> Unit)? by emitterHelper::onPresence

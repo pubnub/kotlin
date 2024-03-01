@@ -13,8 +13,8 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.BasePubNubImpl
-import com.pubnub.internal.CoreEndpoint
 import com.pubnub.internal.CorePNConfiguration
+import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.TestPubNub
 import com.pubnub.test.listen
 import okhttp3.Request
@@ -311,7 +311,7 @@ class CoreEndpointTest : BaseTest() {
     }
 
     private fun fakeEndpoint(paramsCondition: (map: HashMap<String, String>) -> Unit) =
-        object : CoreEndpoint<Any, Any>(pubnub) {
+        object : EndpointCore<Any, Any>(pubnub) {
             override fun doWork(queryParams: HashMap<String, String>): Call<Any> {
                 paramsCondition.invoke(queryParams)
                 return fakeCall()

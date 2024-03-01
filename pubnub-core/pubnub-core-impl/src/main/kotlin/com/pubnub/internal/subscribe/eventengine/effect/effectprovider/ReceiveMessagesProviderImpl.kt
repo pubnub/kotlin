@@ -3,13 +3,13 @@ package com.pubnub.internal.subscribe.eventengine.effect.effectprovider
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.endpoints.remoteaction.map
 import com.pubnub.api.models.consumer.pubsub.PNEvent
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.endpoints.pubsub.SubscribeEndpoint
 import com.pubnub.internal.subscribe.eventengine.effect.ReceiveMessagesResult
 import com.pubnub.internal.subscribe.eventengine.event.SubscriptionCursor
 import com.pubnub.internal.workers.SubscribeMessageProcessor
 
-internal class ReceiveMessagesProviderImpl(val pubNub: CorePubNubClient, val messageProcessor: SubscribeMessageProcessor) :
+internal class ReceiveMessagesProviderImpl(val pubNub: PubNubCore, val messageProcessor: SubscribeMessageProcessor) :
     ReceiveMessagesProvider {
     override fun getReceiveMessagesRemoteAction(
         channels: Set<String>,

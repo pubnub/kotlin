@@ -1,6 +1,6 @@
 package com.pubnub.internal.vendor;
 
-import com.pubnub.internal.CorePubNubClient;
+import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.PubNubUtil;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -22,9 +22,9 @@ import java.net.URL;
 
 public class AppEngineFactory implements Call {
     private Request request;
-    private CorePubNubClient pubNub;
+    private PubNubCore pubNub;
 
-    AppEngineFactory(Request request, CorePubNubClient pubNub) {
+    AppEngineFactory(Request request, PubNubCore pubNub) {
         this.request = request;
         this.pubNub = pubNub;
     }
@@ -136,9 +136,9 @@ public class AppEngineFactory implements Call {
     }
 
     public static class Factory implements Call.Factory {
-        private final CorePubNubClient pubNub;
+        private final PubNubCore pubNub;
 
-        public Factory(CorePubNubClient pubNub) {
+        public Factory(PubNubCore pubNub) {
             this.pubNub = pubNub;
         }
 

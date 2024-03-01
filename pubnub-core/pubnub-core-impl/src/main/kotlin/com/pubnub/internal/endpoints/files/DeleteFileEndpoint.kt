@@ -5,20 +5,20 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.files.PNDeleteFileResult
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.CoreEndpoint
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.EndpointCore
+import com.pubnub.internal.PubNubCore
 import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [CorePubNubClient.deleteFile]
+ * @see [PubNubCore.deleteFile]
  */
 class DeleteFileEndpoint(
     private val channel: String,
     private val fileName: String,
     private val fileId: String,
-    pubNub: CorePubNubClient,
-) : CoreEndpoint<Unit, PNDeleteFileResult?>(pubNub), DeleteFileInterface {
+    pubNub: PubNubCore,
+) : EndpointCore<Unit, PNDeleteFileResult?>(pubNub), DeleteFileInterface {
     @Throws(PubNubException::class)
     override fun validateParams() {
         if (channel.isEmpty()) {

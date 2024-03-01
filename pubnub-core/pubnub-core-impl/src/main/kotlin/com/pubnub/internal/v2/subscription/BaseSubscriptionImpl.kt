@@ -7,7 +7,7 @@ import com.pubnub.api.v2.subscriptions.BaseSubscription
 import com.pubnub.api.v2.subscriptions.FilterImpl
 import com.pubnub.api.v2.subscriptions.SubscriptionCursor
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.managers.AnnouncementCallback
 import com.pubnub.internal.managers.AnnouncementEnvelope
 import com.pubnub.internal.v2.callbacks.EventEmitterImpl
@@ -16,7 +16,7 @@ import com.pubnub.internal.v2.entities.ChannelGroupName
 import com.pubnub.internal.v2.entities.ChannelName
 
 open class BaseSubscriptionImpl<T : BaseEventListener>(
-    internal val pubnub: CorePubNubClient,
+    internal val pubnub: PubNubCore,
     channels: Set<ChannelName> = emptySet(),
     channelGroups: Set<ChannelGroupName> = emptySet(),
     options: SubscriptionOptions? = null,

@@ -5,22 +5,22 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.history.PNDeleteMessagesResult
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.CoreEndpoint
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.EndpointCore
+import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.toCsv
 import retrofit2.Call
 import retrofit2.Response
 import java.util.Locale
 
 /**
- * @see [CorePubNubClient.deleteMessages]
+ * @see [PubNubCore.deleteMessages]
  */
 class DeleteMessagesEndpoint internal constructor(
-    pubnub: CorePubNubClient,
+    pubnub: PubNubCore,
     override val channels: List<String>,
     override val start: Long? = null,
     override val end: Long? = null,
-) : CoreEndpoint<Void, PNDeleteMessagesResult>(pubnub), DeleteMessagesInterface {
+) : EndpointCore<Void, PNDeleteMessagesResult>(pubnub), DeleteMessagesInterface {
     override fun validateParams() {
         super.validateParams()
         if (channels.isEmpty()) {

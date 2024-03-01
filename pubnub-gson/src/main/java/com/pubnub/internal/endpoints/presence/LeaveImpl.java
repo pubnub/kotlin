@@ -1,6 +1,6 @@
 package com.pubnub.internal.endpoints.presence;
 
-import com.pubnub.internal.CorePubNubClient;
+import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -14,12 +14,12 @@ public class LeaveImpl extends DelegatingEndpoint<Boolean> implements com.pubnub
     private List<String> channels = new ArrayList<>();
     private List<String> channelGroups = new ArrayList<>();
 
-    public LeaveImpl(CorePubNubClient pubnub) {
+    public LeaveImpl(PubNubCore pubnub) {
         super(pubnub);
     }
 
     @Override
-    protected com.pubnub.internal.CoreEndpoint<?, Boolean> createAction() {
+    protected com.pubnub.internal.EndpointCore<?, Boolean> createAction() {
         LeaveEndpoint leave = new LeaveEndpoint(pubnub);
         leave.setChannels(channels);
         leave.setChannelGroups(channelGroups);

@@ -1,6 +1,6 @@
 package com.pubnub.api.builder;
 
-import com.pubnub.internal.CorePubNubClient;
+import com.pubnub.internal.PubNubCore;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -14,7 +14,7 @@ public class PresenceBuilder extends PubSubBuilder {
     @Setter(AccessLevel.PUBLIC)
     private boolean connected;
 
-    public PresenceBuilder(CorePubNubClient pubnub) {
+    public PresenceBuilder(PubNubCore pubnub) {
         super(pubnub);
     }
 

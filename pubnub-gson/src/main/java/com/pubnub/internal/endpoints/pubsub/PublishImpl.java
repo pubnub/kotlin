@@ -2,7 +2,7 @@ package com.pubnub.internal.endpoints.pubsub;
 
 import com.pubnub.api.endpoints.pubsub.Publish;
 import com.pubnub.api.models.consumer.PNPublishResult;
-import com.pubnub.internal.CorePubNubClient;
+import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -19,13 +19,13 @@ public class PublishImpl extends DelegatingEndpoint<PNPublishResult> implements 
     private boolean replicate;
     private Integer ttl;
 
-    public PublishImpl(CorePubNubClient pubnub) {
+    public PublishImpl(PubNubCore pubnub) {
         super(pubnub);
         this.replicate = true;
     }
 
     @Override
-    protected com.pubnub.internal.CoreEndpoint<?, PNPublishResult> createAction() {
+    protected com.pubnub.internal.EndpointCore<?, PNPublishResult> createAction() {
         return pubnub.publish(
                 channel,
                 message,

@@ -6,8 +6,8 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.files.PNFileUrlResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.api.v2.callbacks.Result
-import com.pubnub.internal.CoreEndpoint
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.EndpointCore
+import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.PubNubUtil
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -17,14 +17,14 @@ import java.util.concurrent.Executors
 import java.util.function.Consumer
 
 /**
- * @see [CorePubNubClient.getFileUrl]
+ * @see [PubNubCore.getFileUrl]
  */
 class GetFileUrlEndpoint(
     private val channel: String,
     private val fileName: String,
     private val fileId: String,
-    pubNub: CorePubNubClient,
-) : CoreEndpoint<ResponseBody, PNFileUrlResult>(pubNub), GetFileUrlInterface {
+    pubNub: PubNubCore,
+) : EndpointCore<ResponseBody, PNFileUrlResult>(pubNub), GetFileUrlInterface {
     private lateinit var cachedCallback: Consumer<Result<PNFileUrlResult>>
     private val executorService: ExecutorService = pubNub.retrofitManager.getTransactionClientExecutorService() ?: Executors.newSingleThreadExecutor()
 

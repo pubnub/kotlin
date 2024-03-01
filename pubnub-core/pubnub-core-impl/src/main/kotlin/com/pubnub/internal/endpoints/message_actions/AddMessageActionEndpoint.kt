@@ -7,21 +7,21 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.CoreEndpoint
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.EndpointCore
+import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.models.server.objects_api.EntityEnvelope
 import retrofit2.Call
 import retrofit2.Response
 import java.util.Locale
 
 /**
- * @see [CorePubNubClient.addMessageAction]
+ * @see [PubNubCore.addMessageAction]
  */
 class AddMessageActionEndpoint internal constructor(
-    pubnub: CorePubNubClient,
+    pubnub: PubNubCore,
     override val channel: String,
     override val messageAction: PNMessageAction,
-) : CoreEndpoint<EntityEnvelope<PNMessageAction>, PNAddMessageActionResult>(pubnub), AddMessageActionInterface {
+) : EndpointCore<EntityEnvelope<PNMessageAction>, PNAddMessageActionResult>(pubnub), AddMessageActionInterface {
     override fun validateParams() {
         super.validateParams()
         if (channel.isBlank()) throw PubNubException(PubNubError.CHANNEL_MISSING)

@@ -9,7 +9,7 @@ import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects_api.member.PNSetChannelMembersResult;
 import com.pubnub.api.models.consumer.objects_api.member.PNUUID;
-import com.pubnub.internal.CorePubNubClient;
+import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.internal.models.consumer.objects.PNMemberKey;
 import com.pubnub.internal.models.consumer.objects.member.MemberInput;
@@ -40,7 +40,7 @@ public class SetChannelMembersImpl extends DelegatingEndpoint<PNSetChannelMember
     private final String channel;
     private final Collection<PNUUID> uuids;
 
-    public SetChannelMembersImpl(final CorePubNubClient pubnubInstance, String channel, Collection<PNUUID> uuids) {
+    public SetChannelMembersImpl(final PubNubCore pubnubInstance, String channel, Collection<PNUUID> uuids) {
         super(pubnubInstance);
         this.channel = channel;
         this.uuids = uuids;
@@ -115,7 +115,7 @@ public class SetChannelMembersImpl extends DelegatingEndpoint<PNSetChannelMember
 
     @AllArgsConstructor
     public static class Builder implements SetChannelMembers.Builder {
-        private final CorePubNubClient pubnubInstance;
+        private final PubNubCore pubnubInstance;
 
         @Override
         public ObjectsBuilderSteps.UUIDsStep<SetChannelMembers> channel(final String channel) {

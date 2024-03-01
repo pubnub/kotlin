@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints.channel_groups;
 
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsAddChannelResult;
-import com.pubnub.internal.CorePubNubClient;
+import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -16,13 +16,13 @@ public class AddChannelChannelGroup extends DelegatingEndpoint<PNChannelGroupsAd
     @Setter
     private List<String> channels;
 
-    public AddChannelChannelGroup(CorePubNubClient pubnub) {
+    public AddChannelChannelGroup(PubNubCore pubnub) {
         super(pubnub);
         channels = new ArrayList<>();
     }
 
     @Override
-    protected com.pubnub.internal.CoreEndpoint<?, PNChannelGroupsAddChannelResult> createAction() {
+    protected com.pubnub.internal.EndpointCore<?, PNChannelGroupsAddChannelResult> createAction() {
         return pubnub.addChannelsToChannelGroup(channels, channelGroup);
     }
 }

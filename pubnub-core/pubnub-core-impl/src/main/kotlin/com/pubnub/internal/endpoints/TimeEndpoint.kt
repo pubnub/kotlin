@@ -3,15 +3,15 @@ package com.pubnub.internal.endpoints
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNTimeResult
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.CoreEndpoint
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.EndpointCore
+import com.pubnub.internal.PubNubCore
 import retrofit2.Response
 
 /**
- * @see [CorePubNubClient.time]
+ * @see [PubNubCore.time]
  */
-class TimeEndpoint(pubnub: CorePubNubClient, private val excludeFromRetry: Boolean = false) :
-    CoreEndpoint<List<Long>, PNTimeResult>(pubnub),
+class TimeEndpoint(pubnub: PubNubCore, private val excludeFromRetry: Boolean = false) :
+    EndpointCore<List<Long>, PNTimeResult>(pubnub),
     TimeInterface {
     override fun getAffectedChannels() = emptyList<String>()
 

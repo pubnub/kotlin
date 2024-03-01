@@ -5,20 +5,20 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsRemoveChannelResult
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.CoreEndpoint
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.EndpointCore
+import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.toCsv
 import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [CorePubNubClient.removeChannelsFromChannelGroup]
+ * @see [PubNubCore.removeChannelsFromChannelGroup]
  */
 class RemoveChannelChannelGroupEndpoint internal constructor(
-    pubnub: CorePubNubClient,
+    pubnub: PubNubCore,
     override val channelGroup: String,
     override val channels: List<String>,
-) : CoreEndpoint<Void, PNChannelGroupsRemoveChannelResult>(pubnub), IRemoveChannelChannelGroup {
+) : EndpointCore<Void, PNChannelGroupsRemoveChannelResult>(pubnub), IRemoveChannelChannelGroup {
     override fun getAffectedChannels() = channels
 
     override fun getAffectedChannelGroups() = listOf(channelGroup)

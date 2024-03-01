@@ -4,7 +4,7 @@ import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult;
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant;
-import com.pubnub.internal.CorePubNubClient;
+import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -29,12 +29,12 @@ public class GrantToken extends DelegatingEndpoint<PNGrantTokenResult> {
     @Setter
     private List<UUIDGrant> uuids = Collections.emptyList();
 
-    public GrantToken(CorePubNubClient pubnub) {
+    public GrantToken(PubNubCore pubnub) {
         super(pubnub);
     }
 
     @Override
-    protected com.pubnub.internal.CoreEndpoint<?, PNGrantTokenResult> createAction() {
+    protected com.pubnub.internal.EndpointCore<?, PNGrantTokenResult> createAction() {
         return pubnub.grantToken(
                 ttl,
                 meta,

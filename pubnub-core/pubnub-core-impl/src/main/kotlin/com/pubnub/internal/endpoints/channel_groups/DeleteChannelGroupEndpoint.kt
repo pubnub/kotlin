@@ -5,18 +5,18 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsDeleteGroupResult
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.CoreEndpoint
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.EndpointCore
+import com.pubnub.internal.PubNubCore
 import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [CorePubNubClient.deleteChannelGroup]
+ * @see [PubNubCore.deleteChannelGroup]
  */
 class DeleteChannelGroupEndpoint internal constructor(
-    pubnub: CorePubNubClient,
+    pubnub: PubNubCore,
     override val channelGroup: String,
-) : CoreEndpoint<Void, PNChannelGroupsDeleteGroupResult>(pubnub), DeleteChannelGroupInterface {
+) : EndpointCore<Void, PNChannelGroupsDeleteGroupResult>(pubnub), DeleteChannelGroupInterface {
     override fun validateParams() {
         super.validateParams()
         if (channelGroup.isBlank()) throw PubNubException(PubNubError.GROUP_MISSING)

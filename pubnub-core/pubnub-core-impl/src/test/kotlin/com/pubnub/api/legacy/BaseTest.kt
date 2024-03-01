@@ -7,7 +7,7 @@ import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.internal.BasePubNubImpl
 import com.pubnub.internal.CorePNConfiguration
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.TestPubNub
 import com.pubnub.test.CommonUtils.defaultListenDuration
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
@@ -18,7 +18,7 @@ import org.junit.Before
 abstract class BaseTest {
     lateinit var wireMockServer: WireMockServer
     protected lateinit var pubnubBase: TestPubNub private set
-    protected lateinit var pubnub: CorePubNubClient private set
+    protected lateinit var pubnub: PubNubCore private set
     protected lateinit var config: CorePNConfiguration private set
 
     @Before

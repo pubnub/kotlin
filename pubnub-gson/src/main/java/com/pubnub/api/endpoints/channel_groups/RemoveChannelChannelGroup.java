@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints.channel_groups;
 
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsRemoveChannelResult;
-import com.pubnub.internal.CorePubNubClient;
+import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -17,13 +17,13 @@ public class RemoveChannelChannelGroup extends DelegatingEndpoint<PNChannelGroup
     private List<String> channels;
 
 
-    public RemoveChannelChannelGroup(CorePubNubClient pubnub) {
+    public RemoveChannelChannelGroup(PubNubCore pubnub) {
         super(pubnub);
         channels = new ArrayList<>();
     }
 
     @Override
-    protected com.pubnub.internal.CoreEndpoint<?, PNChannelGroupsRemoveChannelResult> createAction() {
+    protected com.pubnub.internal.EndpointCore<?, PNChannelGroupsRemoveChannelResult> createAction() {
         return pubnub.removeChannelsFromChannelGroup(channels, channelGroup);
     }
 }

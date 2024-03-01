@@ -4,8 +4,8 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.CoreEndpoint
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.EndpointCore
+import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.endpoints.objects.internal.CollectionQueryParameters
 import com.pubnub.internal.endpoints.objects.internal.IncludeQueryParam
 import com.pubnub.internal.models.consumer.objects.channel.PNChannelMetadataArrayResult
@@ -14,13 +14,13 @@ import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [CorePubNubClient.getAllChannelMetadata]
+ * @see [PubNubCore.getAllChannelMetadata]
  */
 class GetAllChannelMetadataEndpoint internal constructor(
-    pubnub: CorePubNubClient,
+    pubnub: PubNubCore,
     private val collectionQueryParameters: CollectionQueryParameters,
     private val includeQueryParam: IncludeQueryParam,
-) : CoreEndpoint<EntityArrayEnvelope<PNChannelMetadata>, PNChannelMetadataArrayResult>(pubnub),
+) : EndpointCore<EntityArrayEnvelope<PNChannelMetadata>, PNChannelMetadataArrayResult>(pubnub),
     GetAllChannelMetadataInterface {
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityArrayEnvelope<PNChannelMetadata>> {
         val params =

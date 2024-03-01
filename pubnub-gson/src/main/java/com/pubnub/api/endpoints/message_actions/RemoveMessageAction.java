@@ -3,7 +3,7 @@ package com.pubnub.api.endpoints.message_actions;
 import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.models.consumer.message_actions.PNRemoveMessageActionResult;
-import com.pubnub.internal.CorePubNubClient;
+import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -16,12 +16,12 @@ public class RemoveMessageAction extends DelegatingEndpoint<PNRemoveMessageActio
     private Long messageTimetoken;
     private Long actionTimetoken;
 
-    public RemoveMessageAction(CorePubNubClient pubnub) {
+    public RemoveMessageAction(PubNubCore pubnub) {
         super(pubnub);
     }
 
     @Override
-    protected com.pubnub.internal.CoreEndpoint<?, PNRemoveMessageActionResult> createAction() {
+    protected com.pubnub.internal.EndpointCore<?, PNRemoveMessageActionResult> createAction() {
         return pubnub.removeMessageAction(channel, messageTimetoken, actionTimetoken);
     }
 

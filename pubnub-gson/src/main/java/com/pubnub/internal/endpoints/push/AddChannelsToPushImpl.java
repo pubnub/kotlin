@@ -3,7 +3,7 @@ package com.pubnub.internal.endpoints.push;
 import com.pubnub.api.enums.PNPushEnvironment;
 import com.pubnub.api.enums.PNPushType;
 import com.pubnub.api.models.consumer.push.PNPushAddChannelResult;
-import com.pubnub.internal.CorePubNubClient;
+import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -21,7 +21,7 @@ public class AddChannelsToPushImpl extends DelegatingEndpoint<PNPushAddChannelRe
     private PNPushEnvironment environment = PNPushEnvironment.DEVELOPMENT;
     private String topic;
 
-    public AddChannelsToPushImpl(CorePubNubClient pubnub) {
+    public AddChannelsToPushImpl(PubNubCore pubnub) {
         super(pubnub);
     }
 

@@ -6,22 +6,22 @@ import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.files.PNDownloadFileResult
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.CoreEndpoint
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.EndpointCore
+import com.pubnub.internal.PubNubCore
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [CorePubNubClient.downloadFile]
+ * @see [PubNubCore.downloadFile]
  */
 class DownloadFileEndpoint(
     private val channel: String,
     private val fileName: String,
     private val fileId: String,
     private val cryptoModule: CryptoModule? = null,
-    pubNub: CorePubNubClient,
-) : CoreEndpoint<ResponseBody, PNDownloadFileResult>(pubNub), DownloadFileInterface {
+    pubNub: PubNubCore,
+) : EndpointCore<ResponseBody, PNDownloadFileResult>(pubNub), DownloadFileInterface {
     @Throws(PubNubException::class)
     override fun validateParams() {
         if (channel.isEmpty()) {

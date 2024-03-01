@@ -7,24 +7,24 @@ import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.push.PNPushAddChannelResult
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.CoreEndpoint
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.EndpointCore
+import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.toCsv
 import retrofit2.Call
 import retrofit2.Response
 import java.util.Locale
 
 /**
- * @see [CorePubNubClient.addPushNotificationsOnChannels]
+ * @see [PubNubCore.addPushNotificationsOnChannels]
  */
 class AddChannelsToPushEndpoint internal constructor(
-    pubnub: CorePubNubClient,
+    pubnub: PubNubCore,
     override val pushType: PNPushType,
     override val channels: List<String>,
     override val deviceId: String,
     override val topic: String? = null,
     override val environment: PNPushEnvironment = PNPushEnvironment.DEVELOPMENT,
-) : CoreEndpoint<Void, PNPushAddChannelResult>(pubnub), AddChannelsToPushInterface {
+) : EndpointCore<Void, PNPushAddChannelResult>(pubnub), AddChannelsToPushInterface {
     override fun getAffectedChannels() = channels
 
     override fun validateParams() {

@@ -1,6 +1,6 @@
 package com.pubnub.internal.endpoints.presence;
 
-import com.pubnub.internal.CorePubNubClient;
+import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.internal.models.consumer.presence.PNWhereNowResult;
 import lombok.Setter;
@@ -12,7 +12,7 @@ public class WhereNowImpl extends DelegatingEndpoint<PNWhereNowResult> implement
 
     private String uuid;
 
-    public WhereNowImpl(CorePubNubClient pubnub) {
+    public WhereNowImpl(PubNubCore pubnub) {
         super(pubnub);
         uuid = pubnub.getConfiguration().getUuid();
     }

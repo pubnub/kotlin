@@ -4,18 +4,18 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.CoreEndpoint
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.EndpointCore
+import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.PubNubUtil
 import retrofit2.Call
 import retrofit2.Response
 
 class HeartbeatEndpoint internal constructor(
-    pubnub: CorePubNubClient,
+    pubnub: PubNubCore,
     val channels: List<String> = listOf(),
     val channelGroups: List<String> = listOf(),
     val state: Any? = null,
-) : CoreEndpoint<Void, Boolean>(pubnub) {
+) : EndpointCore<Void, Boolean>(pubnub) {
     override fun getAffectedChannels() = channels
 
     override fun getAffectedChannelGroups() = channelGroups

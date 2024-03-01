@@ -5,16 +5,16 @@ import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.v2.callbacks.Result;
-import com.pubnub.internal.CorePubNubClient;
+import com.pubnub.internal.PubNubCore;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
 public abstract class DelegatingEndpoint<T> implements Endpoint<T> {
-    protected final CorePubNubClient pubnub;
+    protected final PubNubCore pubnub;
     private volatile ExtendedRemoteAction<T> remoteAction = null;
 
-    public DelegatingEndpoint(CorePubNubClient pubnub) {
+    public DelegatingEndpoint(PubNubCore pubnub) {
         this.pubnub = pubnub;
     }
 

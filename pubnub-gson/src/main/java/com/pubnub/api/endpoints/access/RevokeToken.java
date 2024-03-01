@@ -1,6 +1,6 @@
 package com.pubnub.api.endpoints.access;
 
-import com.pubnub.internal.CorePubNubClient;
+import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import kotlin.Unit;
 import lombok.Setter;
@@ -12,12 +12,12 @@ public class RevokeToken extends DelegatingEndpoint<Unit> {
 
     private String token;
 
-    public RevokeToken(CorePubNubClient pubnub) {
+    public RevokeToken(PubNubCore pubnub) {
         super(pubnub);
     }
 
     @Override
-    protected com.pubnub.internal.CoreEndpoint<?, Unit> createAction() {
+    protected com.pubnub.internal.EndpointCore<?, Unit> createAction() {
         return pubnub.revokeToken(token);
     }
 }

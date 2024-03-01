@@ -3,7 +3,7 @@ package com.pubnub.internal.endpoints;
 import com.pubnub.api.endpoints.DeleteMessages;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.history.PNDeleteMessagesResult;
-import com.pubnub.internal.CorePubNubClient;
+import com.pubnub.internal.PubNubCore;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -17,7 +17,7 @@ public class DeleteMessagesImpl extends DelegatingEndpoint<PNDeleteMessagesResul
     private Long start;
     private Long end;
 
-    public DeleteMessagesImpl(CorePubNubClient pubnub) {
+    public DeleteMessagesImpl(PubNubCore pubnub) {
         super(pubnub);
         channels = new ArrayList<>();
     }

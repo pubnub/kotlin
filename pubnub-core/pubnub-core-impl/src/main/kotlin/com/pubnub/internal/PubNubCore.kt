@@ -107,7 +107,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import kotlin.time.Duration.Companion.seconds
 
-class CorePubNubClient internal constructor(
+class PubNubCore internal constructor(
     val configuration: CorePNConfiguration,
     val listenerManager: ListenerManager,
     eventEnginesConf: EventEnginesConf = EventEnginesConf(),

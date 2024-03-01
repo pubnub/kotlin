@@ -2,7 +2,7 @@ package com.pubnub.internal.endpoints;
 
 import com.pubnub.api.models.consumer.PNBoundedPage;
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult;
-import com.pubnub.internal.CorePubNubClient;
+import com.pubnub.internal.PubNubCore;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ public class FetchMessagesImpl extends DelegatingEndpoint<PNFetchMessagesResult>
     private boolean includeMessageType = true;
     private boolean includeUUID = true;
 
-    public FetchMessagesImpl(CorePubNubClient pubnub) {
+    public FetchMessagesImpl(PubNubCore pubnub) {
         super(pubnub);
     }
 

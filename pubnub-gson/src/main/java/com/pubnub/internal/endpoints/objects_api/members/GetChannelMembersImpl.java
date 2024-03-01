@@ -7,7 +7,7 @@ import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects_api.member.PNGetChannelMembersResult;
-import com.pubnub.internal.CorePubNubClient;
+import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
@@ -29,7 +29,7 @@ public class GetChannelMembersImpl extends DelegatingEndpoint<PNGetChannelMember
     private boolean includeCustom;
     private Include.PNUUIDDetailsLevel includeUUID;
 
-    public GetChannelMembersImpl(String channel, final CorePubNubClient pubnubInstance) {
+    public GetChannelMembersImpl(String channel, final PubNubCore pubnubInstance) {
         super(pubnubInstance);
         this.channel = channel;
     }
@@ -50,7 +50,7 @@ public class GetChannelMembersImpl extends DelegatingEndpoint<PNGetChannelMember
 
     @AllArgsConstructor
     public static class Builder implements GetChannelMembers.Builder {
-        private final CorePubNubClient pubnubInstance;
+        private final PubNubCore pubnubInstance;
 
         @Override
         public GetChannelMembers channel(final String channel) {

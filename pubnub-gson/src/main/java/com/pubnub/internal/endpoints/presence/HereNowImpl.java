@@ -3,7 +3,7 @@ package com.pubnub.internal.endpoints.presence;
 
 import com.pubnub.api.endpoints.presence.HereNow;
 import com.pubnub.api.models.consumer.presence.PNHereNowResult;
-import com.pubnub.internal.CorePubNubClient;
+import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -19,12 +19,12 @@ public class HereNowImpl extends DelegatingEndpoint<PNHereNowResult> implements 
     private boolean includeState = false;
     private boolean includeUUIDs = true;
 
-    public HereNowImpl(CorePubNubClient pubnub) {
+    public HereNowImpl(PubNubCore pubnub) {
         super(pubnub);
     }
 
     @Override
-    protected com.pubnub.internal.CoreEndpoint<?, PNHereNowResult> createAction() {
+    protected com.pubnub.internal.EndpointCore<?, PNHereNowResult> createAction() {
         return pubnub.hereNow(
                 channels,
                 channelGroups,

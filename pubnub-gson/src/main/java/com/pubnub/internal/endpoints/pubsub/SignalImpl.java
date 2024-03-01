@@ -4,7 +4,7 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.pubsub.Signal;
 import com.pubnub.api.models.consumer.PNPublishResult;
-import com.pubnub.internal.CorePubNubClient;
+import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -16,12 +16,12 @@ public class SignalImpl extends DelegatingEndpoint<PNPublishResult> implements S
     private Object message;
     private String channel;
 
-    public SignalImpl(CorePubNubClient pubnub) {
+    public SignalImpl(PubNubCore pubnub) {
         super(pubnub);
     }
 
     @Override
-    protected com.pubnub.internal.CoreEndpoint<?, PNPublishResult> createAction() {
+    protected com.pubnub.internal.EndpointCore<?, PNPublishResult> createAction() {
         return pubnub.signal(channel, message);
     }
 

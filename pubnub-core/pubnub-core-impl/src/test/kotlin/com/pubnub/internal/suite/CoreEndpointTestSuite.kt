@@ -14,7 +14,7 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.v2.callbacks.getOrThrow
-import com.pubnub.internal.CoreEndpoint
+import com.pubnub.internal.EndpointCore
 import com.pubnub.test.CommonUtils.assertPnException
 import com.pubnub.test.CommonUtils.emptyJson
 import com.pubnub.test.CommonUtils.failTest
@@ -27,7 +27,7 @@ import org.junit.Test
 
 typealias AsyncCheck<T> = (result: com.pubnub.api.v2.callbacks.Result<T>) -> Unit
 
-abstract class CoreEndpointTestSuite<T : CoreEndpoint<*, R>, R> : BaseTest() {
+abstract class CoreEndpointTestSuite<T : EndpointCore<*, R>, R> : BaseTest() {
     private lateinit var expectedStub: StubMapping
 
     abstract fun pnOperation(): PNOperationType

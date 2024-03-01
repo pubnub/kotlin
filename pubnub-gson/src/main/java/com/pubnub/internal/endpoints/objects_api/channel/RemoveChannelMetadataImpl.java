@@ -4,12 +4,12 @@ import com.pubnub.api.endpoints.objects_api.channel.RemoveChannelMetadata;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects_api.channel.PNRemoveChannelMetadataResult;
-import com.pubnub.internal.CorePubNubClient;
+import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.AllArgsConstructor;
 
 public class RemoveChannelMetadataImpl extends DelegatingEndpoint<PNRemoveChannelMetadataResult> implements RemoveChannelMetadata {
-    public RemoveChannelMetadataImpl(String channel, final CorePubNubClient pubnubInstance) {
+    public RemoveChannelMetadataImpl(String channel, final PubNubCore pubnubInstance) {
         super(pubnubInstance);
         this.channel = channel;
     }
@@ -29,7 +29,7 @@ public class RemoveChannelMetadataImpl extends DelegatingEndpoint<PNRemoveChanne
 
     @AllArgsConstructor
     public static class Builder implements RemoveChannelMetadata.Builder {
-        private final CorePubNubClient pubnubInstance;
+        private final PubNubCore pubnubInstance;
 
         @Override
         public RemoveChannelMetadata channel(String channel) {

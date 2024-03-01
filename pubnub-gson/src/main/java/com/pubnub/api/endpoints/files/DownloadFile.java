@@ -5,7 +5,7 @@ import com.pubnub.api.endpoints.files.requiredparambuilder.ChannelFileNameFileId
 import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.files.PNDownloadFileResult;
-import com.pubnub.internal.CorePubNubClient;
+import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -20,7 +20,7 @@ public class DownloadFile extends DelegatingEndpoint<PNDownloadFileResult> {
     @Setter
     private String cipherKey;
 
-    public DownloadFile(String channel, String fileId, String fileName, CorePubNubClient pubnub) {
+    public DownloadFile(String channel, String fileId, String fileName, PubNubCore pubnub) {
         super(pubnub);
         this.channel = channel;
         this.fileId = fileId;
@@ -43,7 +43,7 @@ public class DownloadFile extends DelegatingEndpoint<PNDownloadFileResult> {
         }
     }
 
-    public static Builder builder(CorePubNubClient pubnub) {
+    public static Builder builder(PubNubCore pubnub) {
         return new Builder(ChannelFileNameFileIdBuilder.create((channel, fileName, fileId) ->
                 new DownloadFile(channel, fileId, fileName, pubnub)));
     }

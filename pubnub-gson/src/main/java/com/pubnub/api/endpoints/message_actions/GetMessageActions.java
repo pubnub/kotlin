@@ -3,7 +3,7 @@ package com.pubnub.api.endpoints.message_actions;
 import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.models.consumer.message_actions.PNGetMessageActionsResult;
-import com.pubnub.internal.CorePubNubClient;
+import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -17,7 +17,7 @@ public class GetMessageActions extends DelegatingEndpoint<PNGetMessageActionsRes
     private Long end;
     private Integer limit;
 
-    public GetMessageActions(CorePubNubClient pubnub) {
+    public GetMessageActions(PubNubCore pubnub) {
         super(pubnub);
     }
 
@@ -29,7 +29,7 @@ public class GetMessageActions extends DelegatingEndpoint<PNGetMessageActionsRes
     }
 
     @Override
-    protected com.pubnub.internal.CoreEndpoint<?, PNGetMessageActionsResult> createAction() {
+    protected com.pubnub.internal.EndpointCore<?, PNGetMessageActionsResult> createAction() {
         return pubnub.getMessageActions(channel, start, end, limit);
     }
 }

@@ -1,9 +1,9 @@
 package com.pubnub.internal.models.consumer.presence
 
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.PubNubCore
 
 /**
- * Result of the [CorePubNubClient.whereNow] operation.
+ * Result of the [PubNubCore.whereNow] operation.
  *
  * @property channels List of channels where a UUID is present.
  */

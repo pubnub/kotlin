@@ -5,7 +5,7 @@ import com.pubnub.api.v2.callbacks.BaseEventListener
 import com.pubnub.api.v2.subscriptions.BaseSubscription
 import com.pubnub.api.v2.subscriptions.BaseSubscriptionSet
 import com.pubnub.api.v2.subscriptions.SubscriptionCursor
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.managers.AnnouncementCallback
 import com.pubnub.internal.managers.AnnouncementEnvelope
 import com.pubnub.internal.v2.callbacks.EventEmitterImpl
@@ -19,7 +19,7 @@ private const val ERROR_WRONG_PUBNUB_INSTANCE =
     "Adding Subscriptions from another PubNub instance to a SubscriptionSet is not allowed."
 
 abstract class BaseSubscriptionSetImpl<EvLis : BaseEventListener, Sub : BaseSubscription<EvLis>>(
-    private val pubnub: CorePubNubClient,
+    private val pubnub: PubNubCore,
     initialSubscriptions: Set<BaseSubscriptionImpl<EvLis>> = emptySet(),
 ) : BaseSubscriptionSet<EvLis, Sub> {
     private val _subscriptions: CopyOnWriteArraySet<BaseSubscriptionImpl<EvLis>> = CopyOnWriteArraySet()

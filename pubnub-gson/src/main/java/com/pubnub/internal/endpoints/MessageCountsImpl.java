@@ -2,7 +2,7 @@ package com.pubnub.internal.endpoints;
 
 import com.pubnub.api.endpoints.MessageCounts;
 import com.pubnub.api.models.consumer.history.PNMessageCountResult;
-import com.pubnub.internal.CorePubNubClient;
+import com.pubnub.internal.PubNubCore;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -24,12 +24,12 @@ public class MessageCountsImpl extends DelegatingEndpoint<PNMessageCountResult> 
      */
     private List<Long> channelsTimetoken;
 
-    public MessageCountsImpl(CorePubNubClient pubnub) {
+    public MessageCountsImpl(PubNubCore pubnub) {
         super(pubnub);
     }
 
     @Override
-    protected com.pubnub.internal.CoreEndpoint<?, PNMessageCountResult> createAction() {
+    protected com.pubnub.internal.EndpointCore<?, PNMessageCountResult> createAction() {
         return pubnub.messageCounts(channels, channelsTimetoken);
     }
 }

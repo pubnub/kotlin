@@ -6,20 +6,20 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.message_actions.PNGetMessageActionsResult
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.CoreEndpoint
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.EndpointCore
+import com.pubnub.internal.PubNubCore
 import retrofit2.Call
 import retrofit2.Response
 import java.util.Locale
 
 /**
- * @see [CorePubNubClient.getMessageActions]
+ * @see [PubNubCore.getMessageActions]
  */
 class GetMessageActionsEndpoint internal constructor(
-    pubnub: CorePubNubClient,
+    pubnub: PubNubCore,
     override val channel: String,
     override val page: PNBoundedPage,
-) : CoreEndpoint<PNGetMessageActionsResult, PNGetMessageActionsResult>(pubnub), GetMessageActionsInterface {
+) : EndpointCore<PNGetMessageActionsResult, PNGetMessageActionsResult>(pubnub), GetMessageActionsInterface {
     override fun validateParams() {
         super.validateParams()
         if (channel.isBlank()) throw PubNubException(PubNubError.CHANNEL_MISSING)

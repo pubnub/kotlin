@@ -11,7 +11,7 @@ import com.pubnub.api.models.consumer.files.PNBaseFile
 import com.pubnub.api.models.consumer.files.PNFileUploadResult
 import com.pubnub.api.models.consumer.files.PNPublishFileMessageResult
 import com.pubnub.api.v2.callbacks.Result
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.crypto.cryptor.InputStreamSeparator
 import com.pubnub.internal.endpoints.remoteaction.RetryingRemoteAction
 import com.pubnub.internal.models.server.files.FileUploadRequestDetails
@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicReference
 import java.util.function.Consumer
 
 /**
- * @see [CorePubNubClient.sendFile]
+ * @see [PubNubCore.sendFile]
  */
 class SendFileEndpoint internal constructor(
     private val channel: String,

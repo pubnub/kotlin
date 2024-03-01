@@ -5,8 +5,8 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.CoreEndpoint
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.EndpointCore
+import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.models.server.files.FileUploadRequestDetails
 import com.pubnub.internal.models.server.files.FormField
 import com.pubnub.internal.models.server.files.GenerateUploadUrlPayload
@@ -17,8 +17,8 @@ import retrofit2.Response
 internal class GenerateUploadUrlEndpoint(
     private val channel: String,
     private val fileName: String,
-    pubNub: CorePubNubClient,
-) : CoreEndpoint<GeneratedUploadUrlResponse, FileUploadRequestDetails>(pubNub) {
+    pubNub: PubNubCore,
+) : EndpointCore<GeneratedUploadUrlResponse, FileUploadRequestDetails>(pubNub) {
     @Throws(PubNubException::class)
     override fun validateParams() {
         if (channel.isEmpty()) {
@@ -73,7 +73,7 @@ internal class GenerateUploadUrlEndpoint(
 
     override fun isPubKeyRequired(): Boolean = false
 
-    internal class Factory(private val pubNub: CorePubNubClient) {
+    internal class Factory(private val pubNub: PubNubCore) {
         fun create(
             channel: String,
             fileName: String,

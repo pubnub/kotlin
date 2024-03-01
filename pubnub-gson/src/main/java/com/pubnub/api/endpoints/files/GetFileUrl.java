@@ -5,7 +5,7 @@ import com.pubnub.api.endpoints.files.requiredparambuilder.ChannelFileNameFileId
 import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.files.PNFileUrlResult;
-import com.pubnub.internal.CorePubNubClient;
+import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 
 public class GetFileUrl extends DelegatingEndpoint<PNFileUrlResult> {
@@ -14,7 +14,7 @@ public class GetFileUrl extends DelegatingEndpoint<PNFileUrlResult> {
     private final String fileId;
     private final String fileName;
 
-    public GetFileUrl(String channel, String fileId, String fileName, CorePubNubClient pubnub) {
+    public GetFileUrl(String channel, String fileId, String fileName, PubNubCore pubnub) {
         super(pubnub);
         this.channel = channel;
         this.fileId = fileId;
@@ -36,7 +36,7 @@ public class GetFileUrl extends DelegatingEndpoint<PNFileUrlResult> {
         }
     }
 
-    public static Builder builder(CorePubNubClient pubNub) {
+    public static Builder builder(PubNubCore pubNub) {
         return new Builder(ChannelFileNameFileIdBuilder.create((channel, fileName, fileId) ->
                 new GetFileUrl(channel, fileName, fileId, pubNub)));
     }

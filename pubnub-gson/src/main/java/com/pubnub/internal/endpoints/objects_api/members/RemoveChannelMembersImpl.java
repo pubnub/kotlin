@@ -9,7 +9,7 @@ import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects_api.member.PNRemoveChannelMembersResult;
 import com.pubnub.api.models.consumer.objects_api.member.PNUUID;
-import com.pubnub.internal.CorePubNubClient;
+import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
@@ -35,7 +35,7 @@ public class RemoveChannelMembersImpl extends DelegatingEndpoint<PNRemoveChannel
     private final List<String> uuids;
     private Include.PNUUIDDetailsLevel includeUUID;
 
-    public RemoveChannelMembersImpl(String channel, Collection<PNUUID> uuids, final CorePubNubClient pubnubInstance) {
+    public RemoveChannelMembersImpl(String channel, Collection<PNUUID> uuids, final PubNubCore pubnubInstance) {
         super(pubnubInstance);
         this.channel = channel;
         this.uuids = new ArrayList<>(uuids.size());
@@ -61,7 +61,7 @@ public class RemoveChannelMembersImpl extends DelegatingEndpoint<PNRemoveChannel
 
     @AllArgsConstructor
     public static class Builder implements RemoveChannelMembers.Builder {
-        private final CorePubNubClient pubnubInstance;
+        private final PubNubCore pubnubInstance;
 
         @Override
         public ObjectsBuilderSteps.UUIDsStep<RemoveChannelMembers> channel(final String channel) {

@@ -2,7 +2,7 @@ package com.pubnub.api.legacy
 
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNReconnectionPolicy
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.PubNubCore
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -69,7 +69,7 @@ class PubNubTest : BaseTest() {
 
     @Test
     fun getVersionAndTimeStamp() {
-        val version = CorePubNubClient.SDK_VERSION
+        val version = PubNubCore.SDK_VERSION
         val timeStamp = pubnub.timestamp()
         assertEquals("9.0.0", version)
         assertTrue(timeStamp > 0)

@@ -6,7 +6,7 @@ import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps.Fil
 import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps.FileNameStep;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.files.PNDeleteFileResult;
-import com.pubnub.internal.CorePubNubClient;
+import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.experimental.Accessors;
 
@@ -17,7 +17,7 @@ public class DeleteFile extends DelegatingEndpoint<PNDeleteFileResult> {
     private final String fileId;
     private final String fileName;
 
-    public DeleteFile(String channel, String fileName, String fileId, CorePubNubClient pubnub) {
+    public DeleteFile(String channel, String fileName, String fileId, PubNubCore pubnub) {
         super(pubnub);
         this.channel = channel;
         this.fileName = fileName;
@@ -39,7 +39,7 @@ public class DeleteFile extends DelegatingEndpoint<PNDeleteFileResult> {
         }
     }
 
-    public static Builder builder(CorePubNubClient pubnub) {
+    public static Builder builder(PubNubCore pubnub) {
         return new Builder(ChannelFileNameFileIdBuilder.create((channel, fileName, fileId) ->
                 new DeleteFile(channel, fileName, fileId, pubnub)));
     }

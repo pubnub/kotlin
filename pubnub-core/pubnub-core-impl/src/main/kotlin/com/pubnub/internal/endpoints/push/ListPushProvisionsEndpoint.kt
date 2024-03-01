@@ -7,22 +7,22 @@ import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.push.PNPushListProvisionsResult
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.CoreEndpoint
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.EndpointCore
+import com.pubnub.internal.PubNubCore
 import retrofit2.Call
 import retrofit2.Response
 import java.util.Locale
 
 /**
- * @see [CorePubNubClient.auditPushChannelProvisions]
+ * @see [PubNubCore.auditPushChannelProvisions]
  */
 class ListPushProvisionsEndpoint internal constructor(
-    pubnub: CorePubNubClient,
+    pubnub: PubNubCore,
     override val pushType: PNPushType,
     override val deviceId: String,
     override val topic: String? = null,
     override val environment: PNPushEnvironment = PNPushEnvironment.DEVELOPMENT,
-) : CoreEndpoint<List<String>, PNPushListProvisionsResult>(pubnub), ListPushProvisionsInterface {
+) : EndpointCore<List<String>, PNPushListProvisionsResult>(pubnub), ListPushProvisionsInterface {
     override fun validateParams() {
         super.validateParams()
         if (deviceId.isBlank()) throw PubNubException(PubNubError.DEVICE_ID_MISSING)

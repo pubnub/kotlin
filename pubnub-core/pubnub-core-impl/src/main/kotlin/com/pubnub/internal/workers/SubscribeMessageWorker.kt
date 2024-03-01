@@ -8,7 +8,7 @@ import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.managers.DuplicationManager
 import com.pubnub.internal.managers.ListenerManager
 import com.pubnub.internal.models.consumer.pubsub.objects.PNObjectEventResult
@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory
 import java.util.concurrent.LinkedBlockingQueue
 
 internal class SubscribeMessageWorker(
-    pubnub: CorePubNubClient,
+    pubnub: PubNubCore,
     val listenerManager: ListenerManager,
     private val queue: LinkedBlockingQueue<SubscribeMessage>,
     duplicationManager: DuplicationManager,

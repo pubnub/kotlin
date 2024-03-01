@@ -6,22 +6,22 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.presence.PNGetStateResult
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.CoreEndpoint
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.EndpointCore
+import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.models.server.Envelope
 import com.pubnub.internal.toCsv
 import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [CorePubNubClient.getPresenceState]
+ * @see [PubNubCore.getPresenceState]
  */
 class GetStateEndpoint internal constructor(
-    pubnub: CorePubNubClient,
+    pubnub: PubNubCore,
     override val channels: List<String>,
     override val channelGroups: List<String>,
     override val uuid: String = pubnub.configuration.userId.value,
-) : CoreEndpoint<Envelope<JsonElement>, PNGetStateResult>(pubnub), GetStateInterface {
+) : EndpointCore<Envelope<JsonElement>, PNGetStateResult>(pubnub), GetStateInterface {
     override fun getAffectedChannels() = channels
 
     override fun getAffectedChannelGroups() = channelGroups

@@ -5,9 +5,9 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.CoreEndpoint
 import com.pubnub.internal.CorePNConfiguration.Companion.isValid
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.EndpointCore
+import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.internal.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.internal.models.consumer.access_manager.v3.UUIDGrant
@@ -17,14 +17,14 @@ import retrofit2.Call
 import retrofit2.Response
 
 class GrantTokenEndpoint(
-    pubnub: CorePubNubClient,
+    pubnub: PubNubCore,
     override val ttl: Int,
     private val meta: Any?,
     private val authorizedUUID: String?,
     private val channels: List<ChannelGrant>,
     private val channelGroups: List<ChannelGroupGrant>,
     private val uuids: List<UUIDGrant>,
-) : CoreEndpoint<GrantTokenResponse, PNGrantTokenResult>(pubnub), GrantTokenInterface {
+) : EndpointCore<GrantTokenResponse, PNGrantTokenResult>(pubnub), GrantTokenInterface {
     override fun getAffectedChannels(): List<String> = channels.map { it.id }
 
     override fun getAffectedChannelGroups(): List<String> = channelGroups.map { it.id }

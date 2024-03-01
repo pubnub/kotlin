@@ -7,18 +7,18 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.history.PNHistoryItemResult
 import com.pubnub.api.models.consumer.history.PNHistoryResult
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.CoreEndpoint
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.EndpointCore
+import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.extension.tryDecryptMessage
 import retrofit2.Call
 import retrofit2.Response
 import java.util.Locale
 
 /**
- * @see [CorePubNubClient.history]
+ * @see [PubNubCore.history]
  */
 class HistoryEndpoint internal constructor(
-    pubnub: CorePubNubClient,
+    pubnub: PubNubCore,
     override val channel: String,
     override val start: Long? = null,
     override val end: Long? = null,
@@ -26,7 +26,7 @@ class HistoryEndpoint internal constructor(
     override val reverse: Boolean,
     override val includeTimetoken: Boolean,
     override val includeMeta: Boolean,
-) : CoreEndpoint<JsonElement, PNHistoryResult>(pubnub), HistoryInterface {
+) : EndpointCore<JsonElement, PNHistoryResult>(pubnub), HistoryInterface {
     companion object {
         const val MAX_COUNT = 100
     }

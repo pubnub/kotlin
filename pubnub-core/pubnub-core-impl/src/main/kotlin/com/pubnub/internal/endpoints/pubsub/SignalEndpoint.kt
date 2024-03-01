@@ -5,19 +5,19 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNPublishResult
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.CoreEndpoint
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.EndpointCore
+import com.pubnub.internal.PubNubCore
 import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [CorePubNubClient.signal]
+ * @see [PubNubCore.signal]
  */
 class SignalEndpoint internal constructor(
-    pubnub: CorePubNubClient,
+    pubnub: PubNubCore,
     override val channel: String,
     override val message: Any,
-) : CoreEndpoint<List<Any>, PNPublishResult>(pubnub), SignalInterface {
+) : EndpointCore<List<Any>, PNPublishResult>(pubnub), SignalInterface {
     override fun validateParams() {
         super.validateParams()
         if (channel.isBlank()) throw PubNubException(PubNubError.CHANNEL_MISSING)

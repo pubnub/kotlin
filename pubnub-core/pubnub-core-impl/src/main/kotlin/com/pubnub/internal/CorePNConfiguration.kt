@@ -260,14 +260,14 @@ class CorePNConfiguration
         var filterExpression: String = ""
 
         /**
-         * Whether to include a [CorePubNubClient.instanceId] with every request.
+         * Whether to include a [PubNubCore.instanceId] with every request.
          *
          * Defaults to `false`.
          */
         var includeInstanceIdentifier = false
 
         /**
-         * Whether to include a [CorePubNubClient.requestId] with every request.
+         * Whether to include a [PubNubCore.requestId] with every request.
          *
          * Defaults to `true`.
          */

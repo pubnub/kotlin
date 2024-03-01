@@ -7,7 +7,7 @@ import com.google.gson.reflect.TypeToken
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.models.consumer.PNPublishResult
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.PubNubCore
 import okhttp3.logging.HttpLoggingInterceptor
 import org.awaitility.Awaitility
 import org.awaitility.Durations
@@ -125,7 +125,7 @@ object CommonUtils {
     }
 
     fun publishMixed(
-        pubnub: CorePubNubClient,
+        pubnub: PubNubCore,
         count: Int,
         channel: String,
     ): List<PNPublishResult> {
@@ -155,7 +155,7 @@ object CommonUtils {
         }
     }
 
-    fun generateMessage(pubnub: CorePubNubClient): JsonObject {
+    fun generateMessage(pubnub: PubNubCore): JsonObject {
         return JsonObject().apply {
             addProperty("publisher", pubnub.configuration.userId.value)
             addProperty("text", randomValue())

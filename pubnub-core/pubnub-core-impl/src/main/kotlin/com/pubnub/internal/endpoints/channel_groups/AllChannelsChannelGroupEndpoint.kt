@@ -5,19 +5,19 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsAllChannelsResult
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.CoreEndpoint
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.EndpointCore
+import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.models.server.Envelope
 import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [CorePubNubClient.listChannelsForChannelGroup]
+ * @see [PubNubCore.listChannelsForChannelGroup]
  */
 class AllChannelsChannelGroupEndpoint internal constructor(
-    pubnub: CorePubNubClient,
+    pubnub: PubNubCore,
     override val channelGroup: String,
-) : CoreEndpoint<Envelope<Map<String, Any>>, PNChannelGroupsAllChannelsResult>(pubnub),
+) : EndpointCore<Envelope<Map<String, Any>>, PNChannelGroupsAllChannelsResult>(pubnub),
     AllChannelsChannelGroupInterface {
     override fun getAffectedChannelGroups() = listOf(channelGroup)
 

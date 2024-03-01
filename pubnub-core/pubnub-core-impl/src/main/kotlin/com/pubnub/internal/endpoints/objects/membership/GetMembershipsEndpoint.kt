@@ -2,8 +2,8 @@ package com.pubnub.internal.endpoints.objects.membership
 
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.CoreEndpoint
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.EndpointCore
+import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.endpoints.objects.internal.CollectionQueryParameters
 import com.pubnub.internal.endpoints.objects.internal.IncludeQueryParam
 import com.pubnub.internal.extension.toPNChannelMembershipArrayResult
@@ -14,14 +14,14 @@ import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [CorePubNubClient.getMemberships]
+ * @see [PubNubCore.getMemberships]
  */
 class GetMembershipsEndpoint internal constructor(
-    pubnub: CorePubNubClient,
+    pubnub: PubNubCore,
     private val uuid: String,
     private val collectionQueryParameters: CollectionQueryParameters,
     private val includeQueryParam: IncludeQueryParam,
-) : CoreEndpoint<EntityArrayEnvelope<PNChannelMembership>, PNChannelMembershipArrayResult>(pubnub),
+) : EndpointCore<EntityArrayEnvelope<PNChannelMembership>, PNChannelMembershipArrayResult>(pubnub),
     GetMembershipsInterface {
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityArrayEnvelope<PNChannelMembership>> {
         val params =

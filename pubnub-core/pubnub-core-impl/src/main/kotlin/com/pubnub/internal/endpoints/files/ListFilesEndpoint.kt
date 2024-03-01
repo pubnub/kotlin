@@ -6,21 +6,21 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.files.PNListFilesResult
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.CoreEndpoint
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.EndpointCore
+import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.models.server.files.ListFilesResult
 import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [CorePubNubClient.listFiles]
+ * @see [PubNubCore.listFiles]
  */
 class ListFilesEndpoint(
     private val channel: String,
     private val limit: Int? = null,
     private val next: PNPage.PNNext? = null,
-    pubNub: CorePubNubClient,
-) : CoreEndpoint<ListFilesResult, PNListFilesResult>(pubNub), ListFilesInterface {
+    pubNub: PubNubCore,
+) : EndpointCore<ListFilesResult, PNListFilesResult>(pubNub), ListFilesInterface {
     @Throws(PubNubException::class)
     override fun validateParams() {
         if (channel.isEmpty()) {

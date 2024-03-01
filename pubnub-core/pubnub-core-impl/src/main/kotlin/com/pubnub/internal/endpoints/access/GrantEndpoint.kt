@@ -5,9 +5,9 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.CoreEndpoint
 import com.pubnub.internal.CorePNConfiguration.Companion.isValid
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.EndpointCore
+import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.models.consumer.access_manager.PNAccessManagerGrantResult
 import com.pubnub.internal.models.consumer.access_manager.PNAccessManagerKeyData
 import com.pubnub.internal.models.server.Envelope
@@ -17,10 +17,10 @@ import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [CorePubNubClient.grant]
+ * @see [PubNubCore.grant]
  */
 open class GrantEndpoint(
-    pubnub: CorePubNubClient,
+    pubnub: PubNubCore,
     override val read: Boolean = false,
     override val write: Boolean = false,
     override val manage: Boolean = false,
@@ -33,7 +33,7 @@ open class GrantEndpoint(
     override val channels: List<String> = emptyList(),
     override val channelGroups: List<String> = emptyList(),
     override val uuids: List<String> = emptyList(),
-) : CoreEndpoint<Envelope<AccessManagerGrantPayload>, PNAccessManagerGrantResult>(pubnub), GrantInterface {
+) : EndpointCore<Envelope<AccessManagerGrantPayload>, PNAccessManagerGrantResult>(pubnub), GrantInterface {
     override fun validateParams() {
         super.validateParams()
         if (!pubnub.configuration.secretKey.isValid()) throw PubNubException(PubNubError.SECRET_KEY_MISSING)

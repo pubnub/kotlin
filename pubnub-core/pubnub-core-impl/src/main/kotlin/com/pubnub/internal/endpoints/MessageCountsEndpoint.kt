@@ -6,20 +6,20 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.history.PNMessageCountResult
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.CoreEndpoint
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.EndpointCore
+import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.toCsv
 import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [CorePubNubClient.messageCounts]
+ * @see [PubNubCore.messageCounts]
  */
 class MessageCountsEndpoint internal constructor(
-    pubnub: CorePubNubClient,
+    pubnub: PubNubCore,
     override val channels: List<String>,
     override val channelsTimetoken: List<Long>,
-) : CoreEndpoint<JsonElement, PNMessageCountResult>(pubnub), MessageCountsInterface {
+) : EndpointCore<JsonElement, PNMessageCountResult>(pubnub), MessageCountsInterface {
     override fun validateParams() {
         super.validateParams()
         if (channels.isEmpty()) throw PubNubException(PubNubError.CHANNEL_MISSING)

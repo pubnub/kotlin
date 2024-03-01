@@ -8,7 +8,7 @@ import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects_api.membership.PNChannelMembership;
 import com.pubnub.api.models.consumer.objects_api.membership.PNRemoveMembershipResult;
-import com.pubnub.internal.CorePubNubClient;
+import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
@@ -32,7 +32,7 @@ public class RemoveMembershipsImpl extends DelegatingEndpoint<PNRemoveMembership
     private boolean includeCustom;
     private Include.PNChannelDetailsLevel includeChannel;
 
-    public RemoveMembershipsImpl(@NotNull Collection<PNChannelMembership> channelMemberships, final CorePubNubClient pubnubInstance) {
+    public RemoveMembershipsImpl(@NotNull Collection<PNChannelMembership> channelMemberships, final PubNubCore pubnubInstance) {
         super(pubnubInstance);
         this.channelMemberships = channelMemberships;
     }
@@ -60,7 +60,7 @@ public class RemoveMembershipsImpl extends DelegatingEndpoint<PNRemoveMembership
 
     @AllArgsConstructor
     public static class Builder implements RemoveMemberships.Builder {
-        private final CorePubNubClient pubnubInstance;
+        private final PubNubCore pubnubInstance;
 
         @Override
         public RemoveMemberships channelMemberships(@NotNull final Collection<PNChannelMembership> channelMemberships) {

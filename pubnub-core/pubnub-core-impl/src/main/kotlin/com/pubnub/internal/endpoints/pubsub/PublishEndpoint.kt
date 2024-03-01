@@ -5,8 +5,8 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNPublishResult
 import com.pubnub.api.retry.RetryableEndpointGroup
-import com.pubnub.internal.CoreEndpoint
-import com.pubnub.internal.CorePubNubClient
+import com.pubnub.internal.EndpointCore
+import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.crypto.encryptString
 import com.pubnub.internal.extension.numericString
 import com.pubnub.internal.extension.quoted
@@ -15,10 +15,10 @@ import retrofit2.Call
 import retrofit2.Response
 
 /**
- * @see [CorePubNubClient.publish]
+ * @see [PubNubCore.publish]
  */
 class PublishEndpoint internal constructor(
-    pubnub: CorePubNubClient,
+    pubnub: PubNubCore,
     override val message: Any,
     override val channel: String,
     override val meta: Any? = null,
@@ -26,7 +26,7 @@ class PublishEndpoint internal constructor(
     override val usePost: Boolean = false,
     override val replicate: Boolean = true,
     override val ttl: Int? = null,
-) : CoreEndpoint<List<Any>, PNPublishResult>(pubnub), PublishInterface {
+) : EndpointCore<List<Any>, PNPublishResult>(pubnub), PublishInterface {
     override fun validateParams() {
         super.validateParams()
         if (channel.isBlank()) throw PubNubException(PubNubError.CHANNEL_MISSING)

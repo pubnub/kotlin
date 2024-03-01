@@ -8,7 +8,7 @@ import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects_api.membership.PNChannelMembership;
 import com.pubnub.api.models.consumer.objects_api.membership.PNSetMembershipResult;
-import com.pubnub.internal.CorePubNubClient;
+import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.internal.models.consumer.objects.PNMembershipKey;
 import com.pubnub.internal.models.consumer.objects.membership.ChannelMembershipInput;
@@ -37,7 +37,7 @@ public class SetMembershipsImpl extends DelegatingEndpoint<PNSetMembershipResult
     private boolean includeCustom;
     private Include.PNChannelDetailsLevel includeChannel;
 
-    public SetMembershipsImpl(@NotNull Collection<PNChannelMembership> channelMemberships, final CorePubNubClient pubnubInstance) {
+    public SetMembershipsImpl(@NotNull Collection<PNChannelMembership> channelMemberships, final PubNubCore pubnubInstance) {
         super(pubnubInstance);
         this.channels = channelMemberships;
     }
@@ -72,7 +72,7 @@ public class SetMembershipsImpl extends DelegatingEndpoint<PNSetMembershipResult
 
     @AllArgsConstructor
     public static class Builder implements SetMemberships.Builder {
-        private final CorePubNubClient pubnubInstance;
+        private final PubNubCore pubnubInstance;
 
         public SetMemberships channelMemberships(@NotNull final Collection<PNChannelMembership> channelMemberships) {
             return new SetMembershipsImpl(channelMemberships, pubnubInstance);

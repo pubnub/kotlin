@@ -36,13 +36,13 @@ abstract class BasePubNubImpl<
     constructor(configuration: CorePNConfiguration) : this(configuration, eventEnginesConf = EventEnginesConf())
 
     val listenerManager: ListenerManager = ListenerManager(this)
-    val corePubNubClient = CorePubNubClient(configuration, listenerManager, eventEnginesConf)
+    val corePubNubClient = PubNubCore(configuration, listenerManager, eventEnginesConf)
 
     /**
      * The current version of the Kotlin SDK.
      */
     override val version: String
-        get() = CorePubNubClient.SDK_VERSION
+        get() = PubNubCore.SDK_VERSION
 
     override val timestamp: Int
         get() = corePubNubClient.timestamp()

@@ -1,6 +1,6 @@
 package com.pubnub.internal.endpoints.presence;
 
-import com.pubnub.internal.CorePubNubClient;
+import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -18,14 +18,14 @@ public class HeartbeatImpl extends DelegatingEndpoint<Boolean> implements com.pu
     @Setter
     private Object state;
 
-    public HeartbeatImpl(CorePubNubClient pubnub) {
+    public HeartbeatImpl(PubNubCore pubnub) {
         super(pubnub);
         channels = new ArrayList<>();
         channelGroups = new ArrayList<>();
     }
 
     @Override
-    protected com.pubnub.internal.CoreEndpoint<?, Boolean> createAction() {
+    protected com.pubnub.internal.EndpointCore<?, Boolean> createAction() {
         return new HeartbeatEndpoint(pubnub, channels, channelGroups, state);
     }
 }
