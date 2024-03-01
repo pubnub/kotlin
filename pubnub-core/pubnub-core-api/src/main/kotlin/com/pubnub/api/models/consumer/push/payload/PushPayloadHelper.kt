@@ -1,4 +1,4 @@
-package com.pubnub.internal.models.consumer.push.payload
+package com.pubnub.api.models.consumer.push.payload
 
 import com.pubnub.api.enums.PNPushEnvironment
 import java.util.Locale

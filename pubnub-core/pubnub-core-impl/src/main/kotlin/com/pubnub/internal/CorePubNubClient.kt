@@ -123,7 +123,7 @@ class CorePubNubClient internal constructor(
 
     companion object {
         internal const val TIMESTAMP_DIVIDER = 1000
-        internal const val SDK_VERSION = "8.0.0"
+        internal const val SDK_VERSION = "9.0.0"
         internal const val MAX_SEQUENCE = 65535
     }
 

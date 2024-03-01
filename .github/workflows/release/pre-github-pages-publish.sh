@@ -1,1 +1,1 @@
-./gradlew dokkaGfm
+./gradlew :dokkaGfmMultiModule

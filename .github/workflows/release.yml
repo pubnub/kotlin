@@ -63,7 +63,7 @@ jobs:
         uses: ./.github/.release/actions/actions/services/github-pages
         with:
           token: ${{ secrets.GH_TOKEN }}
-          source-folder: build/dokka/gfm
+          source-folder: build/dokka/gfmMultiModule
           jira-api-key: ${{ secrets.JIRA_API_KEY }}
           last-service: true
       - name: Upload test reports
