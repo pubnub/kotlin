@@ -2,7 +2,7 @@ package com.pubnub.api.endpoints.access
 
 import com.pubnub.api.UserId
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult
-import com.pubnub.internal.CorePNConfiguration
+import com.pubnub.internal.PNConfigurationCore
 import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.SpaceId
 import com.pubnub.internal.TestPubNub
@@ -32,7 +32,7 @@ internal class GrantTokenTest {
     internal fun setUp() {
         MockKAnnotations.init(this)
         val pnConfiguration =
-            CorePNConfiguration(userId = UserId("myUserId")).apply {
+            PNConfigurationCore(userId = UserId("myUserId")).apply {
                 subscribeKey = "something"
                 secretKey = "something"
             }

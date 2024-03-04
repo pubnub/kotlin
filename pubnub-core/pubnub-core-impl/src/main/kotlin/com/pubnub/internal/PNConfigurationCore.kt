@@ -26,7 +26,7 @@ import javax.net.ssl.X509ExtendedTrustManager
  * allow performing precise PubNub client configuration.
  *
  */
-class CorePNConfiguration
+class PNConfigurationCore
     @Throws(PubNubException::class)
     constructor(
         var userId: UserId,

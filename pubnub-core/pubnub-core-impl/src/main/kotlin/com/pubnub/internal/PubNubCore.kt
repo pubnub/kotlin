@@ -108,12 +108,12 @@ import java.util.concurrent.ScheduledExecutorService
 import kotlin.time.Duration.Companion.seconds
 
 class PubNubCore internal constructor(
-    val configuration: CorePNConfiguration,
+    val configuration: PNConfigurationCore,
     val listenerManager: ListenerManager,
     eventEnginesConf: EventEnginesConf = EventEnginesConf(),
 ) {
     constructor(
-        configuration: CorePNConfiguration,
+        configuration: PNConfigurationCore,
         listenerManager: ListenerManager,
     ) : this(
         configuration,
@@ -183,7 +183,7 @@ class PubNubCore internal constructor(
     /**
      * Unique id of this PubNub instance.
      *
-     * @see [CorePNConfiguration.includeInstanceIdentifier]
+     * @see [PNConfigurationCore.includeInstanceIdentifier]
      */
     val instanceId = UUID.randomUUID().toString()
 
@@ -200,12 +200,12 @@ class PubNubCore internal constructor(
     /**
      * Send a message to all subscribers of a channel.
      *
-     * To publish a message you must first specify a valid [CorePNConfiguration.publishKey].
+     * To publish a message you must first specify a valid [PNConfigurationCore.publishKey].
      * A successfully published message is replicated across the PubNub Real-Time Network and sent
      * simultaneously to all subscribed clients on a channel.
      *
      * Messages in transit can be secured from potential eavesdroppers with SSL/TLS by setting
-     * [CorePNConfiguration.secure] to `true` during initialization.
+     * [PNConfigurationCore.secure] to `true` during initialization.
      *
      * **Publish Anytime**
      *
@@ -714,7 +714,7 @@ class PubNubCore internal constructor(
      * Obtain information about the current list of channels to which a UUID is subscribed to.
      *
      * @param uuid UUID of the user to get its current channel subscriptions. Defaults to the UUID of the client.
-     * @see [CorePNConfiguration.uuid]
+     * @see [PNConfigurationCore.uuid]
      */
     fun whereNow(uuid: String = configuration.userId.value) = WhereNowEndpoint(pubnub = this, uuid = uuid)
 
@@ -723,7 +723,7 @@ class PubNubCore internal constructor(
      *
      * State information is supplied as a JSON object of key/value pairs.
      *
-     * If [CorePNConfiguration.maintainPresenceState] is `true`, and the `uuid` matches [CorePNConfiguration.uuid], the state
+     * If [PNConfigurationCore.maintainPresenceState] is `true`, and the `uuid` matches [PNConfigurationCore.uuid], the state
      * for channels will be saved in the PubNub client and resent with every heartbeat and initial subscribe request.
      * In that case, it's not recommended to mix setting state through channels *and* channel groups, as state set
      * through the channel group will be overwritten after the next heartbeat or subscribe reconnection (e.g. after loss
@@ -2005,7 +2005,7 @@ class PubNubCore internal constructor(
     //region Encryption
 
     /**
-     * Perform Cryptographic decryption of an input string using cipher key provided by [CorePNConfiguration.cipherKey].
+     * Perform Cryptographic decryption of an input string using cipher key provided by [PNConfigurationCore.cipherKey].
      *
      * @param inputString String to be decrypted.
      *
@@ -2019,7 +2019,7 @@ class PubNubCore internal constructor(
      * Perform Cryptographic decryption of an input string using a cipher key.
      *
      * @param inputString String to be decrypted.
-     * @param cipherKey cipher key to be used for decryption. Default is [CorePNConfiguration.cipherKey]
+     * @param cipherKey cipher key to be used for decryption. Default is [PNConfigurationCore.cipherKey]
      *
      * @return String containing the decryption of `inputString` using `cipherKey`.
      * @throws PubNubException throws exception in case of failed decryption.
@@ -2049,7 +2049,7 @@ class PubNubCore internal constructor(
      * Perform Cryptographic encryption of an input string and a cipher key.
      *
      * @param inputString String to be encrypted.
-     * @param cipherKey Cipher key to be used for encryption. Default is [CorePNConfiguration.cipherKey]
+     * @param cipherKey Cipher key to be used for encryption. Default is [PNConfigurationCore.cipherKey]
      *
      * @return String containing the encryption of `inputString` using `cipherKey`.
      * @throws PubNubException Throws exception in case of failed encryption.
@@ -2087,7 +2087,7 @@ class PubNubCore internal constructor(
      * Force the SDK to try and reach out PubNub. Monitor the results in [SubscribeCallback.status]
      *
      * @param timetoken optional timetoken to use for the subscriptions on reconnection.
-     * Only applicable when [CorePNConfiguration.enableEventEngine] is true, otherwise ignored
+     * Only applicable when [PNConfigurationCore.enableEventEngine] is true, otherwise ignored
      */
     fun reconnect(timetoken: Long = 0L) {
         subscribe.reconnect(timetoken)
@@ -2232,14 +2232,14 @@ class PubNubCore internal constructor(
      * Causes the client to create an open TCP socket to the PubNub Real-Time Network and begin listening for messages
      * on a specified channel.
      *
-     * To subscribe to a channel the client must send the appropriate [CorePNConfiguration.subscribeKey] at initialization.
+     * To subscribe to a channel the client must send the appropriate [PNConfigurationCore.subscribeKey] at initialization.
      *
      * By default, a newly subscribed client will only receive messages published to the channel
      * after the `subscribe()` call completes.
      *
      * If a client gets disconnected from a channel, it can automatically attempt to reconnect to that channel
      * and retrieve any available messages that were missed during that period.
-     * This can be achieved by setting [CorePNConfiguration.reconnectionPolicy] to [PNReconnectionPolicy.LINEAR], when
+     * This can be achieved by setting [PNConfigurationCore.reconnectionPolicy] to [PNReconnectionPolicy.LINEAR], when
      * initializing the client.
      *
      * @param channels Channels to subscribe/unsubscribe. Either `channel` or [channelGroups] are required.

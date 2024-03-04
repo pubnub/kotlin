@@ -125,7 +125,7 @@ public class PubNubImpl extends BasePubNubImpl<
     private final com.pubnub.api.PNConfiguration configuration;
 
     public PubNubImpl(@NotNull com.pubnub.api.PNConfiguration configuration) {
-        super(configuration.getCorePnConfiguration());
+        super(configuration.getPnConfigurationCore());
         this.configuration = configuration;
     }
 

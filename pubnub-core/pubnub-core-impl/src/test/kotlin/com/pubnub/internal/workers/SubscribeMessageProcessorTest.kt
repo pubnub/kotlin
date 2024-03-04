@@ -12,7 +12,7 @@ import com.pubnub.api.UserId
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
-import com.pubnub.internal.CorePNConfiguration
+import com.pubnub.internal.PNConfigurationCore
 import com.pubnub.internal.TestPubNub
 import com.pubnub.internal.crypto.encryptString
 import com.pubnub.internal.managers.DuplicationManager
@@ -109,7 +109,7 @@ class SubscribeMessageProcessorTest(
     fun testProcessMessageEncryptedWithCrypto() {
         // given
         val gson = Gson()
-        val config: CorePNConfiguration = config()
+        val config: PNConfigurationCore = config()
         config.cryptoModule = CryptoModule.createAesCbcCryptoModule("enigma", false)
         val subscribeMessageProcessor = messageProcessor(config)
         val messageEncrypted = config.cryptoModule!!.encryptString(messageJson.toString())
@@ -133,7 +133,7 @@ class SubscribeMessageProcessorTest(
     fun testProcessMessageUnencryptedWithCrypto() {
         // given
         val gson = Gson()
-        val config: CorePNConfiguration = config()
+        val config: PNConfigurationCore = config()
         config.cryptoModule = CryptoModule.createAesCbcCryptoModule("enigma", false)
         val subscribeMessageProcessor = messageProcessor(config)
 
@@ -155,7 +155,7 @@ class SubscribeMessageProcessorTest(
     fun testProcessMessageWithPnOtherEncryptedWithCrypto() {
         // given
         val gson = Gson()
-        val config: CorePNConfiguration = config()
+        val config: PNConfigurationCore = config()
         config.cryptoModule = CryptoModule.createAesCbcCryptoModule("enigma", false)
         val subscribeMessageProcessor = messageProcessor(config)
         val message = "Hello world."
@@ -181,9 +181,9 @@ class SubscribeMessageProcessorTest(
         assertThat((result as PNMessageResult).message, iz(expectedObject))
     }
 
-    private fun config() = CorePNConfiguration(userId = UserId("test"))
+    private fun config() = PNConfigurationCore(userId = UserId("test"))
 
-    private fun messageProcessor(configuration: CorePNConfiguration) =
+    private fun messageProcessor(configuration: PNConfigurationCore) =
         SubscribeMessageProcessor(
             pubnub = TestPubNub(configuration).corePubNubClient,
             duplicationManager = DuplicationManager(configuration),

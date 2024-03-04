@@ -3,7 +3,7 @@ package com.pubnub.api.endpoints.pubsub
 import com.pubnub.api.UserId
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.internal.BasePubNubImpl
-import com.pubnub.internal.CorePNConfiguration
+import com.pubnub.internal.PNConfigurationCore
 import com.pubnub.internal.TestPubNub
 import com.pubnub.internal.endpoints.pubsub.PublishEndpoint
 import com.pubnub.internal.managers.RetrofitManager
@@ -30,13 +30,13 @@ private const val CIPHER_KEY = "enigma"
 
 class PublishTest {
     private val pnConfigurationHardcodedIV =
-        CorePNConfiguration(userId = UserId(BasePubNubImpl.generateUUID())).apply {
+        PNConfigurationCore(userId = UserId(BasePubNubImpl.generateUUID())).apply {
             subscribeKey = TEST_SUBKEY
             publishKey = TEST_PUBKEY
             cipherKey = CIPHER_KEY
         }
     private val pnConfigurationRandomIV =
-        CorePNConfiguration(userId = UserId(BasePubNubImpl.generateUUID())).apply {
+        PNConfigurationCore(userId = UserId(BasePubNubImpl.generateUUID())).apply {
             subscribeKey = TEST_SUBKEY
             publishKey = TEST_PUBKEY
             cipherKey = CIPHER_KEY

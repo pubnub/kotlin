@@ -4,7 +4,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.internal.BasePubNubImpl
-import com.pubnub.internal.CorePNConfiguration
+import com.pubnub.internal.PNConfigurationCore
 import com.pubnub.internal.TestPubNub
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.hamcrest.MatcherAssert.assertThat
@@ -103,20 +103,20 @@ class GetFileUrlTest {
         )
     }
 
-    private fun config(): CorePNConfiguration {
-        val config = CorePNConfiguration(userId = UserId(BasePubNubImpl.generateUUID()))
+    private fun config(): PNConfigurationCore {
+        val config = PNConfigurationCore(userId = UserId(BasePubNubImpl.generateUUID()))
         config.publishKey = "pk"
         config.subscribeKey = "sk"
         config.retryConfiguration = RetryConfiguration.Linear(delayInSec = 4, maxRetryNumber = 3)
         return config
     }
 
-    private fun withSecret(config: CorePNConfiguration): CorePNConfiguration {
+    private fun withSecret(config: PNConfigurationCore): PNConfigurationCore {
         config.secretKey = "secK"
         return config
     }
 
-    private fun withAuth(config: CorePNConfiguration): CorePNConfiguration {
+    private fun withAuth(config: PNConfigurationCore): PNConfigurationCore {
         config.authKey = "ak"
         return config
     }

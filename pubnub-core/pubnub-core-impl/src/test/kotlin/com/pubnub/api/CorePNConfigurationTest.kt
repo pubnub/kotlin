@@ -3,7 +3,7 @@ package com.pubnub.api
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.internal.BasePubNubImpl
-import com.pubnub.internal.CorePNConfiguration
+import com.pubnub.internal.PNConfigurationCore
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -18,7 +18,7 @@ class CorePNConfigurationTest {
         val suffix11 = "value3/2.0.0"
 
         val pnConfiguration =
-            CorePNConfiguration(userId = UserId(BasePubNubImpl.generateUUID())).apply {
+            PNConfigurationCore(userId = UserId(BasePubNubImpl.generateUUID())).apply {
                 addPnsdkSuffix(name1 to suffix1, name2 to suffix2)
                 addPnsdkSuffix(mapOf(name1 to suffix11))
             }
@@ -30,18 +30,18 @@ class CorePNConfigurationTest {
 
     @Test(expected = PubNubException::class)
     fun setUserIdToEmptyString() {
-        CorePNConfiguration(userId = UserId(""))
+        PNConfigurationCore(userId = UserId(""))
     }
 
     @Test(expected = PubNubException::class)
     fun resetUserIdToEmptyString() {
-        val config = CorePNConfiguration(userId = UserId(BasePubNubImpl.generateUUID()))
+        val config = PNConfigurationCore(userId = UserId(BasePubNubImpl.generateUUID()))
         config.userId = UserId("")
     }
 
     @Test
     fun resetUserIdToNonEmptyString() {
-        val config = CorePNConfiguration(userId = UserId(BasePubNubImpl.generateUUID()))
+        val config = PNConfigurationCore(userId = UserId(BasePubNubImpl.generateUUID()))
         val newUserId = UserId(BasePubNubImpl.generateUUID())
         config.userId = newUserId
 
@@ -51,20 +51,20 @@ class CorePNConfigurationTest {
     @Suppress("DEPRECATION")
     @Test(expected = PubNubException::class)
     fun setUUIDToEmptyString() {
-        CorePNConfiguration("")
+        PNConfigurationCore("")
     }
 
     @Suppress("DEPRECATION")
     @Test(expected = PubNubException::class)
     fun resetUUIDToEmptyString() {
-        val config = CorePNConfiguration(BasePubNubImpl.generateUUID())
+        val config = PNConfigurationCore(BasePubNubImpl.generateUUID())
         config.uuid = ""
     }
 
     @Suppress("DEPRECATION")
     @Test
     fun resetUUIDToNonEmptyString() {
-        val config = CorePNConfiguration(BasePubNubImpl.generateUUID())
+        val config = PNConfigurationCore(BasePubNubImpl.generateUUID())
         val newUUID = BasePubNubImpl.generateUUID()
         config.uuid = newUUID
 
@@ -73,14 +73,14 @@ class CorePNConfigurationTest {
 
     @Test
     fun `unfortunately should allow to set CryptoModule more twice`() {
-        val config = CorePNConfiguration(userId = UserId(BasePubNubImpl.generateUUID()))
+        val config = PNConfigurationCore(userId = UserId(BasePubNubImpl.generateUUID()))
         config.cryptoModule = CryptoModule.createLegacyCryptoModule("myCipherKey", true)
         config.cryptoModule = CryptoModule.createAesCbcCryptoModule("myCipherKey")
     }
 
     @Test
     fun `should set delay to 3 in RetryConfiguration Linear when user set it lower than 3`() {
-        val config = CorePNConfiguration(userId = UserId(BasePubNubImpl.generateUUID()))
+        val config = PNConfigurationCore(userId = UserId(BasePubNubImpl.generateUUID()))
         config.retryConfiguration = RetryConfiguration.Linear(delayInSec = 1, maxRetryNumber = 10)
 
         assertEquals(2, (config.retryConfiguration as RetryConfiguration.Linear).delayInSec.inWholeSeconds)
@@ -88,7 +88,7 @@ class CorePNConfigurationTest {
 
     @Test
     fun `should set maxRetry to 10 in RetryConfiguration Linear when user set it above 10`() {
-        val config = CorePNConfiguration(userId = UserId(BasePubNubImpl.generateUUID()))
+        val config = PNConfigurationCore(userId = UserId(BasePubNubImpl.generateUUID()))
         config.retryConfiguration = RetryConfiguration.Linear(delayInSec = 3, maxRetryNumber = 11)
 
         assertEquals(10, (config.retryConfiguration as RetryConfiguration.Linear).maxRetryNumber)
@@ -96,7 +96,7 @@ class CorePNConfigurationTest {
 
     @Test
     fun `should set minDelayInSec to 2 in RetryConfiguration Exponential when user set it lower than 2`() {
-        val config = CorePNConfiguration(userId = UserId(BasePubNubImpl.generateUUID()))
+        val config = PNConfigurationCore(userId = UserId(BasePubNubImpl.generateUUID()))
         config.retryConfiguration =
             RetryConfiguration.Exponential(minDelayInSec = 1, maxDelayInSec = 10, maxRetryNumber = 10)
 
@@ -105,7 +105,7 @@ class CorePNConfigurationTest {
 
     @Test
     fun `should set maxRetry to 6 in RetryConfiguration Exponential when user set it above 6`() {
-        val config = CorePNConfiguration(userId = UserId(BasePubNubImpl.generateUUID()))
+        val config = PNConfigurationCore(userId = UserId(BasePubNubImpl.generateUUID()))
         config.retryConfiguration =
             RetryConfiguration.Exponential(minDelayInSec = 5, maxDelayInSec = 10, maxRetryNumber = 10)
 
@@ -114,7 +114,7 @@ class CorePNConfigurationTest {
 
     @Test
     fun `should set maxDelayInSec to 150 in RetryConfiguration Exponential when user set it above 150`() {
-        val config = CorePNConfiguration(userId = UserId(BasePubNubImpl.generateUUID()))
+        val config = PNConfigurationCore(userId = UserId(BasePubNubImpl.generateUUID()))
         config.retryConfiguration =
             RetryConfiguration.Exponential(minDelayInSec = 5, maxDelayInSec = 10, maxRetryNumber = 10)
 

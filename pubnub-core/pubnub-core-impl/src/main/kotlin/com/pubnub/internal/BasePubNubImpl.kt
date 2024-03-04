@@ -28,12 +28,12 @@ abstract class BasePubNubImpl<
     SubscriptionSet : BaseSubscriptionSet<EventListener, Subscription>,
     StatusListener : BaseStatusListener,
     > internal constructor(
-    configuration: CorePNConfiguration,
+    configuration: PNConfigurationCore,
     eventEnginesConf: EventEnginesConf,
 ) : BasePubNub<EventListener, Subscription, Channel, ChannelGroup, ChannelMetadata, UserMetadata, SubscriptionSet, StatusListener>,
     BaseEventEmitter<EventListener>,
     BaseStatusEmitter<StatusListener> {
-    constructor(configuration: CorePNConfiguration) : this(configuration, eventEnginesConf = EventEnginesConf())
+    constructor(configuration: PNConfigurationCore) : this(configuration, eventEnginesConf = EventEnginesConf())
 
     val listenerManager: ListenerManager = ListenerManager(this)
     val corePubNubClient = PubNubCore(configuration, listenerManager, eventEnginesConf)
@@ -53,7 +53,7 @@ abstract class BasePubNubImpl<
     /**
      * Unique id of this PubNub instance.
      *
-     * @see [CorePNConfiguration.includeInstanceIdentifier]
+     * @see [PNConfigurationCore.includeInstanceIdentifier]
      */
     val instanceId: String
         get() = corePubNubClient.instanceId

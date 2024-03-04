@@ -55,8 +55,6 @@ dependencies {
     implementation(libs.slf4j)
     implementation(libs.cbor)
 
-//    testImplementation(libs.retrofit2)
-//    testImplementation(libs.okhttp)
     testImplementation(libs.wiremock)
     testImplementation(libs.logback.classic)
     testImplementation(libs.logback.core)

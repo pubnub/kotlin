@@ -5,19 +5,19 @@ import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.contract.ContractTestConfig
 import com.pubnub.internal.BasePubNubImpl
-import com.pubnub.internal.CorePNConfiguration
+import com.pubnub.internal.PNConfigurationCore
 import com.pubnub.internal.TestPubNub
 
 interface WorldState {
-    val configuration: CorePNConfiguration
+    val configuration: PNConfigurationCore
     var pnException: PubNubException?
     var tokenString: String?
     var responseStatus: Int?
 }
 
 class World : WorldState {
-    override val configuration: CorePNConfiguration by lazy {
-        CorePNConfiguration(userId = UserId(BasePubNubImpl.generateUUID())).apply {
+    override val configuration: PNConfigurationCore by lazy {
+        PNConfigurationCore(userId = UserId(BasePubNubImpl.generateUUID())).apply {
             origin = ContractTestConfig.serverHostPort
             secure = false
             logVerbosity = PNLogVerbosity.BODY

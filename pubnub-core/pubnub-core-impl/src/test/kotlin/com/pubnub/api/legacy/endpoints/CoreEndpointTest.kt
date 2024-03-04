@@ -13,7 +13,7 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.BasePubNubImpl
-import com.pubnub.internal.CorePNConfiguration
+import com.pubnub.internal.PNConfigurationCore
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.TestPubNub
 import com.pubnub.test.listen
@@ -276,7 +276,7 @@ class CoreEndpointTest : BaseTest() {
 
     @Test
     fun testDefaultTimeoutValues() {
-        val p = TestPubNub(CorePNConfiguration(userId = UserId(BasePubNubImpl.generateUUID())))
+        val p = TestPubNub(PNConfigurationCore(userId = UserId(BasePubNubImpl.generateUUID())))
         assertEquals(300, p.corePubNubClient.configuration.presenceTimeout)
         assertEquals(0, p.corePubNubClient.configuration.heartbeatInterval)
         p.forceDestroy()
@@ -284,7 +284,7 @@ class CoreEndpointTest : BaseTest() {
 
     @Test
     fun testCustomTimeoutValues1() {
-        val p = TestPubNub(CorePNConfiguration(userId = UserId(BasePubNubImpl.generateUUID())))
+        val p = TestPubNub(PNConfigurationCore(userId = UserId(BasePubNubImpl.generateUUID())))
         p.corePubNubClient.configuration.presenceTimeout = 100
         assertEquals(100, p.corePubNubClient.configuration.presenceTimeout)
         assertEquals(49, p.corePubNubClient.configuration.heartbeatInterval)
@@ -293,7 +293,7 @@ class CoreEndpointTest : BaseTest() {
 
     @Test
     fun testCustomTimeoutValues2() {
-        val p = TestPubNub(CorePNConfiguration(userId = UserId(BasePubNubImpl.generateUUID())))
+        val p = TestPubNub(PNConfigurationCore(userId = UserId(BasePubNubImpl.generateUUID())))
         p.corePubNubClient.configuration.heartbeatInterval = 100
         assertEquals(300, p.corePubNubClient.configuration.presenceTimeout)
         assertEquals(100, p.corePubNubClient.configuration.heartbeatInterval)
@@ -302,7 +302,7 @@ class CoreEndpointTest : BaseTest() {
 
     @Test
     fun testCustomTimeoutValues3() {
-        val p = TestPubNub(CorePNConfiguration(userId = UserId(BasePubNubImpl.generateUUID())))
+        val p = TestPubNub(PNConfigurationCore(userId = UserId(BasePubNubImpl.generateUUID())))
         p.corePubNubClient.configuration.heartbeatInterval = 40
         p.corePubNubClient.configuration.presenceTimeout = 50
         assertEquals(50, p.corePubNubClient.configuration.presenceTimeout)

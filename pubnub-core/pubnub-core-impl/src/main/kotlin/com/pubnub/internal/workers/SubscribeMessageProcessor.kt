@@ -12,8 +12,8 @@ import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.ObjectPayload
-import com.pubnub.internal.CorePNConfiguration
-import com.pubnub.internal.CorePNConfiguration.Companion.isValid
+import com.pubnub.internal.PNConfigurationCore
+import com.pubnub.internal.PNConfigurationCore.Companion.isValid
 import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.PubNubUtil
 import com.pubnub.internal.extension.tryDecryptMessage
@@ -210,7 +210,7 @@ internal class SubscribeMessageProcessor(
     }
 
     private fun generateSignature(
-        configuration: CorePNConfiguration,
+        configuration: PNConfigurationCore,
         url: String,
         authKey: String?,
         timestamp: Int,

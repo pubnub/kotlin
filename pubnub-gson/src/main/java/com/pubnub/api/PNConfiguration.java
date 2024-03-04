@@ -26,10 +26,10 @@ import java.util.concurrent.ConcurrentMap;
 @Log
 @SuppressWarnings("UnusedReturnValue")
 public class PNConfiguration {
-    private final com.pubnub.internal.CorePNConfiguration corePnConfiguration;
+    private final com.pubnub.internal.PNConfigurationCore pnConfigurationCore;
 
-    public com.pubnub.internal.CorePNConfiguration getCorePnConfiguration() {
-        return corePnConfiguration;
+    public com.pubnub.internal.PNConfigurationCore getPnConfigurationCore() {
+        return pnConfigurationCore;
     }
 
     private static final int DEFAULT_DEDUPE_SIZE = 100;
@@ -41,52 +41,52 @@ public class PNConfiguration {
     private static final int FILE_MESSAGE_PUBLISH_RETRY_LIMIT = 5;
 
     public String getOrigin() {
-        return corePnConfiguration.getOrigin();
+        return pnConfigurationCore.getOrigin();
     }
 
     public PNConfiguration setOrigin(@NotNull String s) {
-        corePnConfiguration.setOrigin(s);
+        pnConfigurationCore.setOrigin(s);
         return this;
     }
 
     public boolean getSecure() {
-        return corePnConfiguration.getSecure();
+        return pnConfigurationCore.getSecure();
     }
 
     public PNConfiguration setSecure(boolean b) {
-        corePnConfiguration.setSecure(b);
+        pnConfigurationCore.setSecure(b);
         return this;
     }
 
     public PNLogVerbosity getLogVerbosity() {
-        return corePnConfiguration.getLogVerbosity();
+        return pnConfigurationCore.getLogVerbosity();
     }
 
     public PNConfiguration setLogVerbosity(@NotNull PNLogVerbosity pnLogVerbosity) {
-        corePnConfiguration.setLogVerbosity(pnLogVerbosity);
+        pnConfigurationCore.setLogVerbosity(pnLogVerbosity);
         return this;
     }
 
     public PNHeartbeatNotificationOptions getHeartbeatNotificationOptions() {
-        return corePnConfiguration.getHeartbeatNotificationOptions();
+        return pnConfigurationCore.getHeartbeatNotificationOptions();
     }
 
     public PNConfiguration setHeartbeatNotificationOptions(@NotNull PNHeartbeatNotificationOptions pnHeartbeatNotificationOptions) {
-        corePnConfiguration.setHeartbeatNotificationOptions(pnHeartbeatNotificationOptions);
+        pnConfigurationCore.setHeartbeatNotificationOptions(pnHeartbeatNotificationOptions);
         return this;
     }
 
     public PNReconnectionPolicy getReconnectionPolicy() {
-        return corePnConfiguration.getReconnectionPolicy();
+        return pnConfigurationCore.getReconnectionPolicy();
     }
 
     public PNConfiguration setReconnectionPolicy(@NotNull PNReconnectionPolicy pnReconnectionPolicy) {
-        corePnConfiguration.setReconnectionPolicy(pnReconnectionPolicy);
+        pnConfigurationCore.setReconnectionPolicy(pnReconnectionPolicy);
         return this;
     }
 
     public int getPresenceTimeout() {
-        return corePnConfiguration.getPresenceTimeout();
+        return pnConfigurationCore.getPresenceTimeout();
     }
 
     /**
@@ -95,88 +95,88 @@ public class PNConfiguration {
      */
     @Deprecated
     public PNConfiguration setUuid(@NotNull String uuid) {
-        corePnConfiguration.setUuid(uuid);
+        pnConfigurationCore.setUuid(uuid);
         return this;
     }
 
     public String getSubscribeKey() {
-        return corePnConfiguration.getSubscribeKey();
+        return pnConfigurationCore.getSubscribeKey();
     }
 
     public PNConfiguration setSubscribeKey(@NotNull String s) {
-        corePnConfiguration.setSubscribeKey(s);
+        pnConfigurationCore.setSubscribeKey(s);
         return this;
     }
 
     public String getPublishKey() {
-        return corePnConfiguration.getPublishKey();
+        return pnConfigurationCore.getPublishKey();
     }
 
     public PNConfiguration setPublishKey(@NotNull String s) {
-        corePnConfiguration.setPublishKey(s);
+        pnConfigurationCore.setPublishKey(s);
         return this;
     }
 
     public String getSecretKey() {
-        return corePnConfiguration.getSecretKey();
+        return pnConfigurationCore.getSecretKey();
     }
 
     public PNConfiguration setSecretKey(@NotNull String s) {
-        corePnConfiguration.setSecretKey(s);
+        pnConfigurationCore.setSecretKey(s);
         return this;
     }
 
     public String getAuthKey() {
-        return corePnConfiguration.getAuthKey();
+        return pnConfigurationCore.getAuthKey();
     }
 
     public PNConfiguration setAuthKey(@NotNull String s) {
-        corePnConfiguration.setAuthKey(s);
+        pnConfigurationCore.setAuthKey(s);
         return this;
     }
 
     @Deprecated
     public String getCipherKey() {
-        return corePnConfiguration.getCipherKey();
+        return pnConfigurationCore.getCipherKey();
     }
 
     @Deprecated
     public PNConfiguration setCipherKey(String s) {
-        corePnConfiguration.setCipherKey(s != null ? s : "");
+        pnConfigurationCore.setCipherKey(s != null ? s : "");
         return this;
     }
 
     @Deprecated
     public boolean getUseRandomInitializationVector() {
-        return corePnConfiguration.getUseRandomInitializationVector();
+        return pnConfigurationCore.getUseRandomInitializationVector();
     }
 
     @Deprecated
     public PNConfiguration setUseRandomInitializationVector(boolean b) {
-        corePnConfiguration.setUseRandomInitializationVector(b);
+        pnConfigurationCore.setUseRandomInitializationVector(b);
         return this;
     }
 
     public CryptoModule getCryptoModule() {
-        return corePnConfiguration.getCryptoModule();
+        return pnConfigurationCore.getCryptoModule();
     }
 
     public PNConfiguration setCryptoModule(@Nullable CryptoModule cryptoModule) {
-        corePnConfiguration.setCryptoModule(cryptoModule);
+        pnConfigurationCore.setCryptoModule(cryptoModule);
         return this;
     }
 
     public UserId getUserId() {
-        return corePnConfiguration.getUserId();
+        return pnConfigurationCore.getUserId();
     }
 
     public PNConfiguration setUserId(@NotNull UserId userId) {
-        corePnConfiguration.setUserId(userId);
+        pnConfigurationCore.setUserId(userId);
         return this;
     }
 
     public String getUuid() {
-        return corePnConfiguration.getUuid();
+        return pnConfigurationCore.getUuid();
     }
 
     /**
@@ -198,7 +198,7 @@ public class PNConfiguration {
      * @param userId
      */
     public PNConfiguration(@NotNull UserId userId) throws PubNubException {
-        corePnConfiguration = new com.pubnub.internal.CorePNConfiguration(userId);
+        pnConfigurationCore = new com.pubnub.internal.PNConfigurationCore(userId);
         managePresenceListManually = false;
     }
 
@@ -206,7 +206,7 @@ public class PNConfiguration {
      * Initialize the PNConfiguration with default values
      *
      * @param uuid
-     * @deprecated Use {@link com.pubnub.internal.CorePNConfiguration (UserId)} instead.
+     * @deprecated Use {@link com.pubnub.internal.PNConfigurationCore (UserId)} instead.
      */
     @Deprecated
     public PNConfiguration(@NotNull String uuid) throws PubNubException {
@@ -222,8 +222,8 @@ public class PNConfiguration {
      */
     public PNConfiguration setPresenceTimeoutWithCustomInterval(int timeout, int interval) {
         timeout = validatePresenceTimeout(timeout);
-        corePnConfiguration.setPresenceTimeout(timeout);
-        corePnConfiguration.setHeartbeatInterval(interval);
+        pnConfigurationCore.setPresenceTimeout(timeout);
+        pnConfigurationCore.setHeartbeatInterval(interval);
 
         return this;
     }
@@ -236,251 +236,251 @@ public class PNConfiguration {
      */
     public PNConfiguration setPresenceTimeout(int timeout) {
         timeout = validatePresenceTimeout(timeout);
-        corePnConfiguration.setPresenceTimeout(timeout);
+        pnConfigurationCore.setPresenceTimeout(timeout);
         return this;
     }
 
     public int getHeartbeatInterval() {
-        return corePnConfiguration.getHeartbeatInterval();
+        return pnConfigurationCore.getHeartbeatInterval();
     }
 
     public void setHeartbeatInterval(int i) {
-        corePnConfiguration.setHeartbeatInterval(i);
+        pnConfigurationCore.setHeartbeatInterval(i);
     }
 
     public int getSubscribeTimeout() {
-        return corePnConfiguration.getSubscribeTimeout();
+        return pnConfigurationCore.getSubscribeTimeout();
     }
 
     public PNConfiguration setSubscribeTimeout(int i) {
-        corePnConfiguration.setSubscribeTimeout(i);
+        pnConfigurationCore.setSubscribeTimeout(i);
         return this;
     }
 
     public int getConnectTimeout() {
-        return corePnConfiguration.getConnectTimeout();
+        return pnConfigurationCore.getConnectTimeout();
     }
 
     public PNConfiguration setConnectTimeout(int i) {
-        corePnConfiguration.setConnectTimeout(i);
+        pnConfigurationCore.setConnectTimeout(i);
         return this;
     }
 
     public int getNonSubscribeRequestTimeout() {
-        return corePnConfiguration.getNonSubscribeRequestTimeout();
+        return pnConfigurationCore.getNonSubscribeRequestTimeout();
     }
 
     public PNConfiguration setNonSubscribeRequestTimeout(int i) {
-        corePnConfiguration.setNonSubscribeRequestTimeout(i);
+        pnConfigurationCore.setNonSubscribeRequestTimeout(i);
         return this;
     }
 
     public boolean getCacheBusting() {
-        return corePnConfiguration.getCacheBusting();
+        return pnConfigurationCore.getCacheBusting();
     }
 
     public PNConfiguration setCacheBusting(boolean b) {
-        corePnConfiguration.setCacheBusting(b);
+        pnConfigurationCore.setCacheBusting(b);
         return this;
     }
 
     public boolean getSuppressLeaveEvents() {
-        return corePnConfiguration.getSuppressLeaveEvents();
+        return pnConfigurationCore.getSuppressLeaveEvents();
     }
 
     public PNConfiguration setSuppressLeaveEvents(boolean b) {
-        corePnConfiguration.setSuppressLeaveEvents(b);
+        pnConfigurationCore.setSuppressLeaveEvents(b);
         return this;
     }
 
     public boolean getMaintainPresenceState() {
-        return corePnConfiguration.getMaintainPresenceState();
+        return pnConfigurationCore.getMaintainPresenceState();
     }
 
     public PNConfiguration setMaintainPresenceState(boolean b) {
-        corePnConfiguration.setMaintainPresenceState(b);
+        pnConfigurationCore.setMaintainPresenceState(b);
         return this;
     }
 
     public String getFilterExpression() {
-        return corePnConfiguration.getFilterExpression();
+        return pnConfigurationCore.getFilterExpression();
     }
 
     public PNConfiguration setFilterExpression(@NotNull String s) {
-        corePnConfiguration.setFilterExpression(s);
+        pnConfigurationCore.setFilterExpression(s);
         return this;
     }
 
     public boolean getIncludeInstanceIdentifier() {
-        return corePnConfiguration.getIncludeInstanceIdentifier();
+        return pnConfigurationCore.getIncludeInstanceIdentifier();
     }
 
     public PNConfiguration setIncludeInstanceIdentifier(boolean b) {
-        corePnConfiguration.setIncludeInstanceIdentifier(b);
+        pnConfigurationCore.setIncludeInstanceIdentifier(b);
         return this;
     }
 
     public boolean getIncludeRequestIdentifier() {
-        return corePnConfiguration.getIncludeRequestIdentifier();
+        return pnConfigurationCore.getIncludeRequestIdentifier();
     }
 
     public PNConfiguration setIncludeRequestIdentifier(boolean b) {
-        corePnConfiguration.setIncludeRequestIdentifier(b);
+        pnConfigurationCore.setIncludeRequestIdentifier(b);
         return this;
     }
 
     public int getMaximumReconnectionRetries() {
-        return corePnConfiguration.getMaximumReconnectionRetries();
+        return pnConfigurationCore.getMaximumReconnectionRetries();
     }
 
     public PNConfiguration setMaximumReconnectionRetries(int i) {
-        corePnConfiguration.setMaximumReconnectionRetries(i);
+        pnConfigurationCore.setMaximumReconnectionRetries(i);
         return this;
     }
 
     public Integer getMaximumConnections() {
-        return corePnConfiguration.getMaximumConnections();
+        return pnConfigurationCore.getMaximumConnections();
     }
 
     public PNConfiguration setMaximumConnections(@Nullable Integer integer) {
-        corePnConfiguration.setMaximumConnections(integer);
+        pnConfigurationCore.setMaximumConnections(integer);
         return this;
     }
 
     public boolean getGoogleAppEngineNetworking() {
-        return corePnConfiguration.getGoogleAppEngineNetworking();
+        return pnConfigurationCore.getGoogleAppEngineNetworking();
     }
 
     public PNConfiguration setGoogleAppEngineNetworking(boolean b) {
-        corePnConfiguration.setGoogleAppEngineNetworking(b);
+        pnConfigurationCore.setGoogleAppEngineNetworking(b);
         return this;
     }
 
     public Proxy getProxy() {
-        return corePnConfiguration.getProxy();
+        return pnConfigurationCore.getProxy();
     }
 
     public PNConfiguration setProxy(@Nullable Proxy proxy) {
-        corePnConfiguration.setProxy(proxy);
+        pnConfigurationCore.setProxy(proxy);
         return this;
     }
 
     public ProxySelector getProxySelector() {
-        return corePnConfiguration.getProxySelector();
+        return pnConfigurationCore.getProxySelector();
     }
 
     public PNConfiguration setProxySelector(@Nullable ProxySelector proxySelector) {
-        corePnConfiguration.setProxySelector(proxySelector);
+        pnConfigurationCore.setProxySelector(proxySelector);
         return this;
     }
 
     public Authenticator getProxyAuthenticator() {
-        return corePnConfiguration.getProxyAuthenticator();
+        return pnConfigurationCore.getProxyAuthenticator();
     }
 
     public PNConfiguration setProxyAuthenticator(@Nullable Authenticator authenticator) {
-        corePnConfiguration.setProxyAuthenticator(authenticator);
+        pnConfigurationCore.setProxyAuthenticator(authenticator);
         return this;
     }
 
     public CertificatePinner getCertificatePinner() {
-        return corePnConfiguration.getCertificatePinner();
+        return pnConfigurationCore.getCertificatePinner();
     }
 
     public PNConfiguration setCertificatePinner(@Nullable CertificatePinner certificatePinner) {
-        corePnConfiguration.setCertificatePinner(certificatePinner);
+        pnConfigurationCore.setCertificatePinner(certificatePinner);
         return this;
     }
 
     public HttpLoggingInterceptor getHttpLoggingInterceptor() {
-        return corePnConfiguration.getHttpLoggingInterceptor();
+        return pnConfigurationCore.getHttpLoggingInterceptor();
     }
 
     public PNConfiguration setHttpLoggingInterceptor(@Nullable HttpLoggingInterceptor httpLoggingInterceptor) {
-        corePnConfiguration.setHttpLoggingInterceptor(httpLoggingInterceptor);
+        pnConfigurationCore.setHttpLoggingInterceptor(httpLoggingInterceptor);
         return this;
     }
 
     public SSLSocketFactory getSslSocketFactory() {
-        return corePnConfiguration.getSslSocketFactory();
+        return pnConfigurationCore.getSslSocketFactory();
     }
 
     public PNConfiguration setSslSocketFactory(@Nullable SSLSocketFactory sslSocketFactory) {
-        corePnConfiguration.setSslSocketFactory(sslSocketFactory);
+        pnConfigurationCore.setSslSocketFactory(sslSocketFactory);
         return this;
     }
 
     public X509ExtendedTrustManager getX509ExtendedTrustManager() {
-        return corePnConfiguration.getX509ExtendedTrustManager();
+        return pnConfigurationCore.getX509ExtendedTrustManager();
     }
 
     public PNConfiguration setX509ExtendedTrustManager(@Nullable X509ExtendedTrustManager x509ExtendedTrustManager) {
-        corePnConfiguration.setX509ExtendedTrustManager(x509ExtendedTrustManager);
+        pnConfigurationCore.setX509ExtendedTrustManager(x509ExtendedTrustManager);
         return this;
     }
 
     public ConnectionSpec getConnectionSpec() {
-        return corePnConfiguration.getConnectionSpec();
+        return pnConfigurationCore.getConnectionSpec();
     }
 
     public PNConfiguration setConnectionSpec(@Nullable ConnectionSpec connectionSpec) {
-        corePnConfiguration.setConnectionSpec(connectionSpec);
+        pnConfigurationCore.setConnectionSpec(connectionSpec);
         return this;
     }
 
     public HostnameVerifier getHostnameVerifier() {
-        return corePnConfiguration.getHostnameVerifier();
+        return pnConfigurationCore.getHostnameVerifier();
     }
 
     public PNConfiguration setHostnameVerifier(@Nullable HostnameVerifier hostnameVerifier) {
-        corePnConfiguration.setHostnameVerifier(hostnameVerifier);
+        pnConfigurationCore.setHostnameVerifier(hostnameVerifier);
         return this;
     }
 
     public int getFileMessagePublishRetryLimit() {
-        return corePnConfiguration.getFileMessagePublishRetryLimit();
+        return pnConfigurationCore.getFileMessagePublishRetryLimit();
     }
 
     public PNConfiguration setFileMessagePublishRetryLimit(int i) {
-        corePnConfiguration.setFileMessagePublishRetryLimit(i);
+        pnConfigurationCore.setFileMessagePublishRetryLimit(i);
         return this;
     }
 
     public boolean getDedupOnSubscribe() {
-        return corePnConfiguration.getDedupOnSubscribe();
+        return pnConfigurationCore.getDedupOnSubscribe();
     }
 
     public PNConfiguration setDedupOnSubscribe(boolean b) {
-        corePnConfiguration.setDedupOnSubscribe(b);
+        pnConfigurationCore.setDedupOnSubscribe(b);
         return this;
     }
 
     public int getMaximumMessagesCacheSize() {
-        return corePnConfiguration.getMaximumMessagesCacheSize();
+        return pnConfigurationCore.getMaximumMessagesCacheSize();
     }
 
     public PNConfiguration setMaximumMessagesCacheSize(int i) {
-        corePnConfiguration.setMaximumMessagesCacheSize(i);
+        pnConfigurationCore.setMaximumMessagesCacheSize(i);
         return this;
     }
 
     public ConcurrentMap<String, String> getPnsdkSuffixes() {
-        return corePnConfiguration.getPnsdkSuffixes();
+        return pnConfigurationCore.getPnsdkSuffixes();
     }
 
     public String generatePnsdk(@NotNull String version) {
-        return corePnConfiguration.generatePnsdk(version);
+        return pnConfigurationCore.generatePnsdk(version);
     }
 
     @Deprecated
     public PNConfiguration addPnsdkSuffix(@NotNull Pair<String, String>... nameToSuffixes) {
-        corePnConfiguration.addPnsdkSuffix(nameToSuffixes);
+        pnConfigurationCore.addPnsdkSuffix(nameToSuffixes);
         return this;
     }
 
     @Deprecated
     public PNConfiguration addPnsdkSuffix(@NotNull Map<String, String> nameToSuffixes) {
-        corePnConfiguration.addPnsdkSuffix(nameToSuffixes);
+        pnConfigurationCore.addPnsdkSuffix(nameToSuffixes);
         return this;
     }
 

@@ -1,7 +1,7 @@
 package com.pubnub.test
 
 import com.github.tomakehurst.wiremock.verification.LoggedRequest
-import com.pubnub.internal.CorePNConfiguration
+import com.pubnub.internal.PNConfigurationCore
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.Request
 import okio.Buffer
@@ -19,7 +19,7 @@ import javax.crypto.spec.SecretKeySpec
 
 object SignatureUtils {
     fun decomposeAndVerifySignature(
-        configuration: CorePNConfiguration,
+        configuration: PNConfigurationCore,
         request: LoggedRequest,
     ) {
         decomposeAndVerifySignature(
@@ -31,7 +31,7 @@ object SignatureUtils {
     }
 
     fun decomposeAndVerifySignature(
-        configuration: CorePNConfiguration,
+        configuration: PNConfigurationCore,
         request: Request,
     ) {
         decomposeAndVerifySignature(
@@ -43,7 +43,7 @@ object SignatureUtils {
     }
 
     private fun decomposeAndVerifySignature(
-        configuration: CorePNConfiguration,
+        configuration: PNConfigurationCore,
         url: String,
         method: String,
         body: String = "",

@@ -13,7 +13,7 @@ import com.pubnub.internal.v2.subscription.BaseSubscriptionImpl
 import com.pubnub.internal.v2.subscription.BaseSubscriptionSetImpl
 import java.io.InputStream
 
-class TestPubNub internal constructor(configuration: CorePNConfiguration, eventEnginesConf: EventEnginesConf = EventEnginesConf()) :
+class TestPubNub internal constructor(configuration: PNConfigurationCore, eventEnginesConf: EventEnginesConf = EventEnginesConf()) :
     BasePubNubImpl<
         InternalEventListener,
         BaseSubscriptionImpl<InternalEventListener>,

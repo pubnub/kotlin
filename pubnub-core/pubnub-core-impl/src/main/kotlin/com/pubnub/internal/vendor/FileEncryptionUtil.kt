@@ -1,7 +1,7 @@
 package com.pubnub.internal.vendor
 
 import com.pubnub.api.PubNubException
-import com.pubnub.internal.CorePNConfiguration.Companion.isValid
+import com.pubnub.internal.PNConfigurationCore.Companion.isValid
 import com.pubnub.internal.PubNubCore
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream

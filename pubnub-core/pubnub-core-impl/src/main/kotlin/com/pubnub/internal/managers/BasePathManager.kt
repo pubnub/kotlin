@@ -1,9 +1,9 @@
 package com.pubnub.internal.managers
 
-import com.pubnub.internal.CorePNConfiguration
-import com.pubnub.internal.CorePNConfiguration.Companion.isValid
+import com.pubnub.internal.PNConfigurationCore
+import com.pubnub.internal.PNConfigurationCore.Companion.isValid
 
-internal class BasePathManager(private val config: CorePNConfiguration) {
+internal class BasePathManager(private val config: PNConfigurationCore) {
     /**
      * for cache busting, the current subdomain number used.
      */
