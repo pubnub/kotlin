@@ -32,18 +32,18 @@ public class PNUUIDMetadata extends PNObject {
         this.name = name;
     }
 
+    @Override
+    public PNUUIDMetadata setCustom(Object custom) {
+        super.setCustom(custom);
+        return this;
+    }
+
     public static List<PNUUIDMetadata> from(Collection<com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata> data) {
         ArrayList<PNUUIDMetadata> list = new ArrayList<>(data.size());
         for (com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata datum : data) {
             list.add(from(datum));
         }
         return list;
-    }
-
-    @Override
-    public PNUUIDMetadata setCustom(Object custom) {
-        super.setCustom(custom);
-        return this;
     }
 
     @Nullable
@@ -60,7 +60,7 @@ public class PNUUIDMetadata extends PNObject {
                 .setCustom(data.getCustom());
 
         newData.setETag(data.getETag());
-        newData.setUpdated(data.getETag());
+        newData.setUpdated(data.getUpdated());
         return newData;
     }
 }

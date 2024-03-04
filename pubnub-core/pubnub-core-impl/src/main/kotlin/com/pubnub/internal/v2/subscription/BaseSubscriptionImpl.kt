@@ -15,7 +15,7 @@ import com.pubnub.internal.v2.callbacks.InternalEventListener
 import com.pubnub.internal.v2.entities.ChannelGroupName
 import com.pubnub.internal.v2.entities.ChannelName
 
-open class BaseSubscriptionImpl<T : BaseEventListener>(
+abstract class BaseSubscriptionImpl<T : BaseEventListener>(
     internal val pubnub: PubNubCore,
     channels: Set<ChannelName> = emptySet(),
     channelGroups: Set<ChannelGroupName> = emptySet(),
@@ -94,15 +94,6 @@ open class BaseSubscriptionImpl<T : BaseEventListener>(
 
     protected fun addListener(listener: InternalEventListener) {
         eventEmitter.addListener(listener)
-    }
-
-    /**
-     * Add a listener.
-     *
-     * @param listener The listener to be added.
-     */
-    override fun addListener(listener: T) {
-        TODO("not implemented here")
     }
 
     override fun removeListener(listener: Listener) {

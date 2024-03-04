@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class PublishFileMessageImpl extends DelegatingEndpoint<PNPublishFileMessageResult>implements PublishFileMessage {
+public class PublishFileMessageImpl extends DelegatingEndpoint<PNPublishFileMessageResult> implements PublishFileMessage {
 
     @Setter
     private Object message;

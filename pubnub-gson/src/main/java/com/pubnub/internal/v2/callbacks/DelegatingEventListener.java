@@ -78,19 +78,10 @@ public class DelegatingEventListener implements InternalEventListener {
     }
 
     @NotNull
-    private static PNUUIDMetadataResult getSetUuidMetadataResult(PNObjectEventResult objectEvent, PNSetUUIDMetadataEventMessage message) {
+    static PNUUIDMetadataResult getSetUuidMetadataResult(PNObjectEventResult objectEvent, PNSetUUIDMetadataEventMessage message) {
         com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata data = message.getData();
-        PNUUIDMetadata newData = new PNUUIDMetadata(
-                data.getId(), data.getName()
-        );
-        newData.setType(data.getType());
-        newData.setStatus(data.getStatus());
-        newData.setCustom(data.getCustom());
-        newData.setUpdated(data.getUpdated());
-        newData.setETag(data.getETag());
-        newData.setEmail(data.getEmail());
-        newData.setExternalId(data.getExternalId());
-        newData.setProfileUrl(data.getProfileUrl());
+        PNUUIDMetadata newData = PNUUIDMetadata.from(data);
+
         return new PNUUIDMetadataResult(
                 message.getEvent(),
                 newData,
@@ -103,7 +94,7 @@ public class DelegatingEventListener implements InternalEventListener {
     }
 
     @NotNull
-    private static PNUUIDMetadataResult getDeleteUuidMetadataResult(PNObjectEventResult objectEvent, PNDeleteUUIDMetadataEventMessage message) {
+    static PNUUIDMetadataResult getDeleteUuidMetadataResult(PNObjectEventResult objectEvent, PNDeleteUUIDMetadataEventMessage message) {
         return new PNUUIDMetadataResult(
                 message.getEvent(),
                 new PNUUIDMetadata(
@@ -118,16 +109,9 @@ public class DelegatingEventListener implements InternalEventListener {
     }
 
     @NotNull
-    private static PNChannelMetadataResult getSetChannelMetadataResult(PNObjectEventResult objectEvent, PNSetChannelMetadataEventMessage message) {
+    static PNChannelMetadataResult getSetChannelMetadataResult(PNObjectEventResult objectEvent, PNSetChannelMetadataEventMessage message) {
         com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata data = message.getData();
-        PNChannelMetadata newData = new PNChannelMetadata(
-                data.getId(), data.getName(), data.getDescription()
-        );
-        newData.setType(data.getType());
-        newData.setStatus(data.getStatus());
-        newData.setCustom(data.getCustom());
-        newData.setUpdated(data.getUpdated());
-        newData.setETag(data.getETag());
+        PNChannelMetadata newData = PNChannelMetadata.from(data);
         return new PNChannelMetadataResult(
                 message.getEvent(),
                 objectEvent.getChannel(),
@@ -140,7 +124,7 @@ public class DelegatingEventListener implements InternalEventListener {
     }
 
     @NotNull
-    private static PNChannelMetadataResult getDeleteChannelMetadataResult(PNObjectEventResult objectEvent, PNDeleteChannelMetadataEventMessage message) {
+    static PNChannelMetadataResult getDeleteChannelMetadataResult(PNObjectEventResult objectEvent, PNDeleteChannelMetadataEventMessage message) {
         return new PNChannelMetadataResult(
                 message.getEvent(),
                 objectEvent.getChannel(),
@@ -155,7 +139,7 @@ public class DelegatingEventListener implements InternalEventListener {
     }
 
     @NotNull
-    private static PNMembershipResult getDeleteMembershipResult(@NotNull PNObjectEventResult objectEvent, PNDeleteMembershipEventMessage message) {
+    static PNMembershipResult getDeleteMembershipResult(@NotNull PNObjectEventResult objectEvent, PNDeleteMembershipEventMessage message) {
         PNMembership membership = new PNMembership(
                 new PNChannelMetadata(message.getData().getChannelId(), null)
         );
@@ -172,7 +156,7 @@ public class DelegatingEventListener implements InternalEventListener {
     }
 
     @NotNull
-    private static PNMembershipResult getSetMembershipResult(@NotNull PNObjectEventResult objectEvent, PNSetMembershipEventMessage message) {
+    static PNMembershipResult getSetMembershipResult(@NotNull PNObjectEventResult objectEvent, PNSetMembershipEventMessage message) {
         PNSetMembershipEvent data = message.getData();
         PNMembership membership = new PNMembership(
                 new PNChannelMetadata(data.getChannel(), null)

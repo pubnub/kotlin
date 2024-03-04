@@ -9,22 +9,28 @@ import org.junit.jupiter.api.Test
 internal class DelegatingSubscribeCallbackTest {
     @Test
     fun testEquals() {
-        val statusListener = object : com.pubnub.api.callbacks.SubscribeCallback() {
-            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                TODO("Not yet implemented")
+        val statusListener =
+            object : com.pubnub.api.callbacks.SubscribeCallback() {
+                override fun status(
+                    pubnub: PubNub,
+                    pnStatus: PNStatus,
+                ) {
+                    TODO("Not yet implemented")
+                }
             }
-
-        }
-        val otherStatusListener = object : com.pubnub.api.callbacks.SubscribeCallback() {
-            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                TODO("Not yet implemented")
+        val otherStatusListener =
+            object : com.pubnub.api.callbacks.SubscribeCallback() {
+                override fun status(
+                    pubnub: PubNub,
+                    pnStatus: PNStatus,
+                ) {
+                    TODO("Not yet implemented")
+                }
             }
-        }
 
         val delegating1 = DelegatingSubscribeCallback(statusListener)
         val delegating2 = DelegatingSubscribeCallback(statusListener)
         val otherDelegating = DelegatingSubscribeCallback(otherStatusListener)
-
 
         Assertions.assertEquals(delegating1, delegating2)
         Assertions.assertEquals(delegating2, delegating1)
@@ -33,5 +39,4 @@ internal class DelegatingSubscribeCallbackTest {
         Assertions.assertNotEquals(otherDelegating, delegating1)
         Assertions.assertNotEquals(otherDelegating, delegating2)
     }
-
 }

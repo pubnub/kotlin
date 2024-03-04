@@ -7,7 +7,7 @@ import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.experimental.Accessors;
 
 @Accessors(chain = true, fluent = true)
-public class ListAllChannelGroupImpl extends DelegatingEndpoint<PNChannelGroupsListAllResult>implements ListAllChannelGroup {
+public class ListAllChannelGroupImpl extends DelegatingEndpoint<PNChannelGroupsListAllResult> implements ListAllChannelGroup {
 
     public ListAllChannelGroupImpl(PubNubCore pubnub) {
         super(pubnub);

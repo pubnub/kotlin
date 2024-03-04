@@ -24,5 +24,4 @@ public class PNUUIDMetadataResult implements ObjectResult<PNUUIDMetadata>, PubSu
         this.userMetadata = userMetadata;
         this.publisher = publisher;
     }
-
 }

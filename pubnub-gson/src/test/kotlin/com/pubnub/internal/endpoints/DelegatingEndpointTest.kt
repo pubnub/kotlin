@@ -11,46 +11,47 @@ import org.junit.jupiter.api.Test
 import java.util.function.Consumer
 
 internal class DelegatingEndpointTest {
-
     private lateinit var delegatingEndpoint: DelegatingEndpoint<Boolean>
 
     var validateParamsCalled = false
     var silentCancelCalled = false
     var retryCalled = false
 
-    val action = object : ExtendedRemoteAction<Boolean> {
-        override fun operationType(): PNOperationType {
-            return PNOperationType.FileOperation
-        }
+    val action =
+        object : ExtendedRemoteAction<Boolean> {
+            override fun operationType(): PNOperationType {
+                return PNOperationType.FileOperation
+            }
 
-        override fun retry() {
-            retryCalled = true
-        }
+            override fun retry() {
+                retryCalled = true
+            }
 
-        override fun sync(): Boolean {
-            return true;
-        }
+            override fun sync(): Boolean {
+                return true
+            }
 
-        override fun silentCancel() {
-            silentCancelCalled = true
-        }
+            override fun silentCancel() {
+                silentCancelCalled = true
+            }
 
-        override fun async(callback: Consumer<Result<Boolean>>) {
-            callback.accept(Result.success(true))
+            override fun async(callback: Consumer<Result<Boolean>>) {
+                callback.accept(Result.success(true))
+            }
         }
-    }
 
     @BeforeEach
     fun setUp() {
-        delegatingEndpoint = object : DelegatingEndpoint<Boolean>(null) {
-            override fun createAction(): ExtendedRemoteAction<Boolean> {
-                return action
-            }
+        delegatingEndpoint =
+            object : DelegatingEndpoint<Boolean>(null) {
+                override fun createAction(): ExtendedRemoteAction<Boolean> {
+                    return action
+                }
 
-            override fun validateParams() {
-                validateParamsCalled = true
+                override fun validateParams() {
+                    validateParamsCalled = true
+                }
             }
-        }
     }
 
     @Test

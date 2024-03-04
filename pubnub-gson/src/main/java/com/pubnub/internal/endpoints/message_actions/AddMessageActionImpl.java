@@ -17,7 +17,7 @@ import static com.pubnub.api.builder.PubNubErrorBuilder.PNERROBJ_MESSAGE_TIMETOK
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class AddMessageActionImpl extends DelegatingEndpoint<PNAddMessageActionResult>implements AddMessageAction {
+public class AddMessageActionImpl extends DelegatingEndpoint<PNAddMessageActionResult> implements AddMessageAction {
 
     private String channel;
     private PNMessageAction messageAction;

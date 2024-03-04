@@ -9,7 +9,7 @@ import lombok.experimental.Accessors;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class DeleteChannelGroupImpl extends DelegatingEndpoint<PNChannelGroupsDeleteGroupResult>implements DeleteChannelGroup {
+public class DeleteChannelGroupImpl extends DelegatingEndpoint<PNChannelGroupsDeleteGroupResult> implements DeleteChannelGroup {
     private String channelGroup;
 
     public DeleteChannelGroupImpl(PubNubCore pubnub) {

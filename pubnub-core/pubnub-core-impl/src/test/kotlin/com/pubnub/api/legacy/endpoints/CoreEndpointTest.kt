@@ -13,8 +13,8 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.BasePubNubImpl
-import com.pubnub.internal.PNConfigurationCore
 import com.pubnub.internal.EndpointCore
+import com.pubnub.internal.PNConfigurationCore
 import com.pubnub.internal.TestPubNub
 import com.pubnub.test.listen
 import okhttp3.Request

@@ -9,6 +9,7 @@ import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.objects.PNPage
+import com.pubnub.api.v2.callbacks.BaseEventListener
 import com.pubnub.api.v2.subscriptions.BaseSubscription
 import com.pubnub.api.v2.subscriptions.EmptyOptions
 import com.pubnub.api.v2.subscriptions.SubscriptionCursor
@@ -93,7 +94,6 @@ import com.pubnub.internal.presence.eventengine.effect.effectprovider.LeaveProvi
 import com.pubnub.internal.subscribe.PRESENCE_CHANNEL_SUFFIX
 import com.pubnub.internal.subscribe.Subscribe
 import com.pubnub.internal.subscribe.eventengine.configuration.EventEnginesConf
-import com.pubnub.internal.v2.callbacks.InternalEventListener
 import com.pubnub.internal.v2.entities.BaseChannelGroupImpl
 import com.pubnub.internal.v2.entities.BaseChannelImpl
 import com.pubnub.internal.v2.entities.ChannelGroupName
@@ -130,9 +130,13 @@ class PubNubCore internal constructor(
     internal val cryptoModule: CryptoModule?
         get() = configuration.cryptoModule
 
-    private val subscriptionFactory: SubscriptionFactory<BaseSubscriptionImpl<InternalEventListener>> =
+    private val subscriptionFactory: SubscriptionFactory<BaseSubscriptionImpl<BaseEventListener>> =
         { channels, channelGroups, options ->
-            BaseSubscriptionImpl(this, channels, channelGroups, options)
+            object : BaseSubscriptionImpl<BaseEventListener>(this, channels, channelGroups, options) {
+                override fun addListener(listener: BaseEventListener) {
+                    // not used
+                }
+            }
         }
 
     //region Managers
@@ -2260,7 +2264,7 @@ class PubNubCore internal constructor(
             var subscription: BaseSubscriptionImpl<*>? = null
             channelSubscriptionMap.computeIfAbsent(channelName) { newChannelName ->
                 val channel =
-                    BaseChannelImpl<InternalEventListener, BaseSubscriptionImpl<InternalEventListener>>(
+                    BaseChannelImpl(
                         this,
                         newChannelName,
                         subscriptionFactory,

@@ -8,7 +8,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Accessors(chain = true, fluent = true)
-public class AllChannelsChannelGroupImpl extends DelegatingEndpoint<PNChannelGroupsAllChannelsResult>implements AllChannelsChannelGroup {
+public class AllChannelsChannelGroupImpl extends DelegatingEndpoint<PNChannelGroupsAllChannelsResult> implements AllChannelsChannelGroup {
     @Setter
     private String channelGroup;
 

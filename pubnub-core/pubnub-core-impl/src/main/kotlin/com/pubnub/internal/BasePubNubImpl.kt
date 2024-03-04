@@ -100,7 +100,7 @@ abstract class BasePubNubImpl<
     /**
      * Force destroy the SDK to evict the connection pools and close executors.
      */
-    override fun forceDestroy() { // TODO open for mockito for integration tests, should not be open
+    override fun forceDestroy() {
         corePubNubClient.forceDestroy()
     }
 

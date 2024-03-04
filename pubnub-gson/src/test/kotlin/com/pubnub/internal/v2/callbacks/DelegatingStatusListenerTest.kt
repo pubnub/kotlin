@@ -14,7 +14,6 @@ internal class DelegatingStatusListenerTest {
         val delegating2 = DelegatingStatusListener(statusListener)
         val otherDelegating = DelegatingStatusListener(otherStatusListener)
 
-
         Assertions.assertEquals(delegating1, delegating2)
         Assertions.assertEquals(delegating2, delegating1)
         Assertions.assertNotEquals(delegating1, otherDelegating)
@@ -22,5 +21,4 @@ internal class DelegatingStatusListenerTest {
         Assertions.assertNotEquals(otherDelegating, delegating1)
         Assertions.assertNotEquals(otherDelegating, delegating2)
     }
-
 }
