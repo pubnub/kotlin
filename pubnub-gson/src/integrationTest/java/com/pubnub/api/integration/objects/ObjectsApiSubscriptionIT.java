@@ -170,6 +170,8 @@ public class ObjectsApiSubscriptionIT extends ObjectsApiBaseIT {
         pubNubUnderTest.subscribe()
                 .channels(Collections.singletonList(TEST_CHANNEL))
                 .execute();
+        Thread.sleep(2000);
+
         //when
         pubNubUnderTest.removeUUIDMetadata().sync();
 

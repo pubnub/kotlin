@@ -273,5 +273,4 @@ internal class DelegatingEventListenerTest {
         Assertions.assertEquals(userMetadata, result.userMetadata)
         Assertions.assertEquals(publisher, result.publisher)
     }
-
 }
