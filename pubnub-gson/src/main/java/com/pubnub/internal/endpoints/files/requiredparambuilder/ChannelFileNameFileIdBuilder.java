@@ -1,4 +1,4 @@
-package com.pubnub.api.endpoints.files.requiredparambuilder;
+package com.pubnub.internal.endpoints.files.requiredparambuilder;
 
 import com.pubnub.api.endpoints.BuilderSteps.ChannelStep;
 import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps.FileIdStep;

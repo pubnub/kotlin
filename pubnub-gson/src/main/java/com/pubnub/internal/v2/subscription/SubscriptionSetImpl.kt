@@ -10,10 +10,6 @@ class SubscriptionSetImpl(
     pubnub: PubNubCore,
     initialSubscriptions: Set<SubscriptionImpl>,
 ) : SubscriptionSet, BaseSubscriptionSetImpl<EventListener, Subscription>(pubnub, initialSubscriptions) {
-    override fun plus(subscription: Subscription): SubscriptionSet {
-        TODO("Not yet implemented")
-    }
-
     /**
      * Add a listener.
      *

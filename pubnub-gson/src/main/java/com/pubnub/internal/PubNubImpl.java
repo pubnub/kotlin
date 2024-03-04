@@ -14,7 +14,6 @@ import com.pubnub.api.endpoints.History;
 import com.pubnub.api.endpoints.MessageCounts;
 import com.pubnub.api.endpoints.Time;
 import com.pubnub.api.endpoints.access.Grant;
-import com.pubnub.api.endpoints.access.GrantToken;
 import com.pubnub.api.endpoints.access.RevokeToken;
 import com.pubnub.api.endpoints.access.builder.GrantTokenBuilder;
 import com.pubnub.api.endpoints.channel_groups.AddChannelChannelGroup;
@@ -72,6 +71,23 @@ import com.pubnub.internal.endpoints.FetchMessagesImpl;
 import com.pubnub.internal.endpoints.HistoryImpl;
 import com.pubnub.internal.endpoints.MessageCountsImpl;
 import com.pubnub.internal.endpoints.TimeImpl;
+import com.pubnub.internal.endpoints.access.GrantImpl;
+import com.pubnub.internal.endpoints.access.GrantTokenImpl;
+import com.pubnub.internal.endpoints.access.RevokeTokenImpl;
+import com.pubnub.internal.endpoints.channel_groups.AddChannelChannelGroupImpl;
+import com.pubnub.internal.endpoints.channel_groups.AllChannelsChannelGroupImpl;
+import com.pubnub.internal.endpoints.channel_groups.DeleteChannelGroupImpl;
+import com.pubnub.internal.endpoints.channel_groups.ListAllChannelGroupImpl;
+import com.pubnub.internal.endpoints.channel_groups.RemoveChannelChannelGroupImpl;
+import com.pubnub.internal.endpoints.files.DeleteFileImpl;
+import com.pubnub.internal.endpoints.files.DownloadFileImpl;
+import com.pubnub.internal.endpoints.files.GetFileUrlImpl;
+import com.pubnub.internal.endpoints.files.ListFilesImpl;
+import com.pubnub.internal.endpoints.files.PublishFileMessageImpl;
+import com.pubnub.internal.endpoints.files.SendFileImpl;
+import com.pubnub.internal.endpoints.message_actions.AddMessageActionImpl;
+import com.pubnub.internal.endpoints.message_actions.GetMessageActionsImpl;
+import com.pubnub.internal.endpoints.message_actions.RemoveMessageActionImpl;
 import com.pubnub.internal.endpoints.objects_api.channel.GetAllChannelsMetadataImpl;
 import com.pubnub.internal.endpoints.objects_api.channel.GetChannelMetadataImpl;
 import com.pubnub.internal.endpoints.objects_api.channel.RemoveChannelMetadataImpl;
@@ -226,7 +242,7 @@ public class PubNubImpl extends BasePubNubImpl<
     @Override
     @NotNull
     public Grant grant() {
-        return new Grant(getCorePubNubClient());
+        return new GrantImpl(getCorePubNubClient());
     }
 
     /**
@@ -235,20 +251,20 @@ public class PubNubImpl extends BasePubNubImpl<
     @Override
     @NotNull
     public GrantTokenBuilder grantToken() {
-        return new GrantTokenBuilder(getCorePubNubClient(), new GrantToken(getCorePubNubClient()));
+        return new GrantTokenBuilder(getCorePubNubClient(), new GrantTokenImpl(getCorePubNubClient()));
     }
 
     @Override
     @NotNull
     @SuppressWarnings("deprecation")
     public GrantTokenBuilder grantToken(Integer ttl) {
-        return new GrantTokenBuilder(getCorePubNubClient(), new GrantToken(getCorePubNubClient()).ttl(ttl));
+        return new GrantTokenBuilder(getCorePubNubClient(), new GrantTokenImpl(getCorePubNubClient()).ttl(ttl));
     }
 
     @Override
     @NotNull
     public RevokeToken revokeToken() {
-        return new RevokeToken(getCorePubNubClient());
+        return new RevokeTokenImpl(getCorePubNubClient());
     }
 
     @Override
@@ -278,31 +294,31 @@ public class PubNubImpl extends BasePubNubImpl<
     @Override
     @NotNull
     public ListAllChannelGroup listAllChannelGroups() {
-        return new ListAllChannelGroup(getCorePubNubClient());
+        return new ListAllChannelGroupImpl(getCorePubNubClient());
     }
 
     @Override
     @NotNull
     public AllChannelsChannelGroup listChannelsForChannelGroup() {
-        return new AllChannelsChannelGroup(getCorePubNubClient());
+        return new AllChannelsChannelGroupImpl(getCorePubNubClient());
     }
 
     @Override
     @NotNull
     public AddChannelChannelGroup addChannelsToChannelGroup() {
-        return new AddChannelChannelGroup(getCorePubNubClient());
+        return new AddChannelChannelGroupImpl(getCorePubNubClient());
     }
 
     @Override
     @NotNull
     public RemoveChannelChannelGroup removeChannelsFromChannelGroup() {
-        return new RemoveChannelChannelGroup(getCorePubNubClient());
+        return new RemoveChannelChannelGroupImpl(getCorePubNubClient());
     }
 
     @Override
     @NotNull
     public DeleteChannelGroup deleteChannelGroup() {
-        return new DeleteChannelGroup(getCorePubNubClient());
+        return new DeleteChannelGroupImpl(getCorePubNubClient());
     }
 
     // Start Objects API
@@ -401,51 +417,51 @@ public class PubNubImpl extends BasePubNubImpl<
     @Override
     @NotNull
     public AddMessageAction addMessageAction() {
-        return new AddMessageAction(getCorePubNubClient());
+        return new AddMessageActionImpl(getCorePubNubClient());
     }
 
     @Override
     @NotNull
     public GetMessageActions getMessageActions() {
-        return new GetMessageActions(getCorePubNubClient());
+        return new GetMessageActionsImpl(getCorePubNubClient());
     }
 
     @Override
     @NotNull
     public RemoveMessageAction removeMessageAction() {
-        return new RemoveMessageAction(getCorePubNubClient());
+        return new RemoveMessageActionImpl(getCorePubNubClient());
     }
 
     // End Message Actions API
 
     @Override
     public SendFile.Builder sendFile() {
-        return SendFile.builder(getCorePubNubClient());
+        return new SendFileImpl.Builder(getCorePubNubClient());
     }
 
     @Override
     public ListFiles.Builder listFiles() {
-        return new ListFiles.Builder(getCorePubNubClient());
+        return new ListFilesImpl.Builder(getCorePubNubClient());
     }
 
     @Override
     public GetFileUrl.Builder getFileUrl() {
-        return GetFileUrl.builder(getCorePubNubClient());
+        return GetFileUrlImpl.builder(getCorePubNubClient());
     }
 
     @Override
     public DownloadFile.Builder downloadFile() {
-        return DownloadFile.builder(getCorePubNubClient());
+        return DownloadFileImpl.builder(getCorePubNubClient());
     }
 
     @Override
     public DeleteFile.Builder deleteFile() {
-        return DeleteFile.builder(getCorePubNubClient());
+        return DeleteFileImpl.builder(getCorePubNubClient());
     }
 
     @Override
     public PublishFileMessage.Builder publishFileMessage() {
-        return PublishFileMessage.builder(getCorePubNubClient());
+        return PublishFileMessageImpl.builder(getCorePubNubClient());
     }
 
     @Override

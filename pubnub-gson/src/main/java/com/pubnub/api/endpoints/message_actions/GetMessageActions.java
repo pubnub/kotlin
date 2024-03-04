@@ -1,35 +1,14 @@
 package com.pubnub.api.endpoints.message_actions;
 
-import com.pubnub.api.PubNubError;
-import com.pubnub.api.PubNubException;
+import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.models.consumer.message_actions.PNGetMessageActionsResult;
-import com.pubnub.internal.PubNubCore;
-import com.pubnub.internal.endpoints.DelegatingEndpoint;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 
-@Setter
-@Accessors(chain = true, fluent = true)
-public class GetMessageActions extends DelegatingEndpoint<PNGetMessageActionsResult> {
+public interface GetMessageActions extends Endpoint<PNGetMessageActionsResult> {
+    GetMessageActions channel(String channel);
 
-    private String channel;
-    private Long start;
-    private Long end;
-    private Integer limit;
+    GetMessageActions start(Long start);
 
-    public GetMessageActions(PubNubCore pubnub) {
-        super(pubnub);
-    }
+    GetMessageActions end(Long end);
 
-    @Override
-    protected void validateParams() throws PubNubException {
-        if (channel == null || channel.isEmpty()) {
-            throw new PubNubException(PubNubError.CHANNEL_MISSING);
-        }
-    }
-
-    @Override
-    protected com.pubnub.internal.EndpointCore<?, PNGetMessageActionsResult> createAction() {
-        return pubnub.getMessageActions(channel, start, end, limit);
-    }
+    GetMessageActions limit(Integer limit);
 }

@@ -160,7 +160,6 @@ public class DelegatingEventListener implements InternalEventListener {
                 new PNChannelMetadata(message.getData().getChannelId(), null)
         );
         membership.setUuid(message.getData().getUuid());
-        membership.setCustom(message);
         return new PNMembershipResult(
                 message.getEvent(),
                 membership,

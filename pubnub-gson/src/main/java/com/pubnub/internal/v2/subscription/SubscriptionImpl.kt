@@ -1,8 +1,6 @@
 package com.pubnub.internal.v2.subscription
 
 import com.pubnub.api.v2.callbacks.EventListener
-import com.pubnub.api.v2.subscriptions.BaseSubscription
-import com.pubnub.api.v2.subscriptions.BaseSubscriptionSet
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
@@ -12,7 +10,7 @@ import com.pubnub.internal.v2.entities.ChannelGroupName
 import com.pubnub.internal.v2.entities.ChannelName
 
 class SubscriptionImpl(
-    pubnub: PubNubImpl,
+    val pubnub: PubNubImpl,
     channels: Set<ChannelName>,
     channelGroups: Set<ChannelGroupName>,
     options: SubscriptionOptions,
@@ -27,11 +25,11 @@ class SubscriptionImpl(
     }
 
     /**
-     * Create a [BaseSubscriptionSet] that contains both subscriptions.
+     * Create a [SubscriptionSet] that contains both subscriptions.
      *
-     * @param subscription the other [BaseSubscription] to add to the [BaseSubscriptionSet]
+     * @param subscription the other [Subscription] to add to the [SubscriptionSet]
      */
     override fun plus(subscription: Subscription): SubscriptionSet {
-        TODO("Not yet implemented")
+        return pubnub.subscriptionSetOf(setOf(this, subscription))
     }
 }
