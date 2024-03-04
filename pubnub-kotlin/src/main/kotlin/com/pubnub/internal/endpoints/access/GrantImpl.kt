@@ -1,9 +1,9 @@
 package com.pubnub.internal.endpoints.access
 
-import com.pubnub.api.DelegatingEndpoint
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction
 import com.pubnub.api.models.consumer.access_manager.PNAccessManagerGrantResult
+import com.pubnub.internal.DelegatingEndpoint
 import com.pubnub.internal.PubNubImpl
 
 /**

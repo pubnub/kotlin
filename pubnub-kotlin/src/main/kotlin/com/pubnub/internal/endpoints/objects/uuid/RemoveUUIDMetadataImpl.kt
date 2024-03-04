@@ -1,9 +1,9 @@
 package com.pubnub.internal.endpoints.objects.uuid
 
-import com.pubnub.api.DelegatingEndpoint
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction
 import com.pubnub.api.models.consumer.objects.PNRemoveMetadataResult
+import com.pubnub.internal.DelegatingEndpoint
 
 class RemoveUUIDMetadataImpl internal constructor(removeUUIDMetadata: RemoveUUIDMetadataEndpoint) :
     DelegatingEndpoint<PNRemoveMetadataResult, com.pubnub.internal.models.consumer.objects.PNRemoveMetadataResult>(

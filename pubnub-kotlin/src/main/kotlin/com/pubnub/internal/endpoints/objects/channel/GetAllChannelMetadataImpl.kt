@@ -1,8 +1,8 @@
 package com.pubnub.internal.endpoints.objects.channel
 
-import com.pubnub.api.DelegatingEndpoint
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction
+import com.pubnub.internal.DelegatingEndpoint
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.models.consumer.objects.channel.PNChannelMetadataArrayResult
 

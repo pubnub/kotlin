@@ -1,9 +1,9 @@
 package com.pubnub.internal.endpoints.objects.uuid
 
-import com.pubnub.api.DelegatingEndpoint
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult
+import com.pubnub.internal.DelegatingEndpoint
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.models.consumer.objects.uuid.PNUUIDMetadataResult as PNUUIDMetadataResultInternal
 

@@ -4,6 +4,7 @@ import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.api.v2.callbacks.getOrThrow
+import com.pubnub.internal.DelegatingEndpoint
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -11,9 +12,8 @@ import org.junit.jupiter.api.Test
 import java.util.function.Consumer
 
 internal class DelegatingEndpointTest {
-    private lateinit var delegatingEndpoint: DelegatingEndpoint<Boolean>
+    private lateinit var delegatingEndpoint: DelegatingEndpoint<Boolean, Boolean>
 
-    var validateParamsCalled = false
     var silentCancelCalled = false
     var retryCalled = false
 
@@ -42,18 +42,12 @@ internal class DelegatingEndpointTest {
 
     @BeforeEach
     fun setUp() {
-        validateParamsCalled = false
         silentCancelCalled = false
         retryCalled = false
-
         delegatingEndpoint =
-            object : DelegatingEndpoint<Boolean>(null) {
-                override fun createAction(): ExtendedRemoteAction<Boolean> {
-                    return action
-                }
-
-                override fun validateParams() {
-                    validateParamsCalled = true
+            object : DelegatingEndpoint<Boolean, Boolean>(action) {
+                override fun convertAction(remoteAction: ExtendedRemoteAction<Boolean>): ExtendedRemoteAction<Boolean> {
+                    return remoteAction
                 }
             }
     }
@@ -62,12 +56,6 @@ internal class DelegatingEndpointTest {
     fun sync() {
         val result = delegatingEndpoint.sync()
         assertTrue(result)
-        assertTrue(validateParamsCalled)
-    }
-
-    @Test
-    fun getRemoteAction() {
-        assertEquals(action, delegatingEndpoint.remoteAction)
     }
 
     @Test
@@ -75,7 +63,6 @@ internal class DelegatingEndpointTest {
         delegatingEndpoint.async { result ->
             assertTrue(result.isSuccess)
             assertTrue(result.getOrThrow())
-            assertTrue(validateParamsCalled)
         }
     }
 
@@ -93,7 +80,6 @@ internal class DelegatingEndpointTest {
 
     @Test
     fun operationType() {
-        assertEquals(PNOperationType.FileOperation, delegatingEndpoint.operationType)
         assertEquals(PNOperationType.FileOperation, delegatingEndpoint.operationType())
     }
 }
