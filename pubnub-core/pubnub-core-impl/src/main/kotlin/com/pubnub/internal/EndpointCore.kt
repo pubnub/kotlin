@@ -30,12 +30,6 @@ abstract class EndpointCore<Input, Output> protected constructor(protected val p
     ExtendedRemoteAction<Output> {
         private val log = LoggerFactory.getLogger(this.javaClass.simpleName)
 
-        internal companion object {
-            private const val SERVER_RESPONSE_BAD_REQUEST = 400
-            private const val SERVER_RESPONSE_FORBIDDEN = 403
-            private const val SERVER_RESPONSE_NOT_FOUND = 404
-        }
-
         private lateinit var cachedCallback: Consumer<Result<Output>>
         private lateinit var call: Call<Input>
         private var silenceFailures = false

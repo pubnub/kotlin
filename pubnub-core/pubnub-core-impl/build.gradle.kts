@@ -1,25 +1,14 @@
 plugins {
-    id("org.jetbrains.kotlin.jvm")
-    id("java-library")
-    id("jacoco")
-    id("org.jlleitschuh.gradle.ktlint")
-    id("com.github.ben-manes.versions")
-    id("com.vanniktech.maven.publish")
+    `java-library`
+    jacoco
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.ktlint)
+    alias(libs.plugins.benmanes.versions)
+    alias(libs.plugins.maven.publish)
 }
 
 group = providers.gradleProperty("GROUP").get()
 version = providers.gradleProperty("VERSION_NAME").get()
-
-// sourceSets {
-//    create("integrationTest") {
-//        compileClasspath += sourceSets.main.get().output
-//        runtimeClasspath += sourceSets.main.get().output
-//    }
-// }
-//
-// val integrationTestImplementation by configurations.getting {
-//    extendsFrom(configurations.implementation.get())
-// }
 
 tasks.named<Test>("test").configure {
     failFast = true

@@ -16,7 +16,7 @@ public class HistoryImpl extends DelegatingEndpoint<PNHistoryResult> implements 
     private Long start;
     private Long end;
     private boolean reverse;
-    private int count = 100;
+    private int count = HistoryEndpoint.MAX_COUNT;
     private boolean includeTimetoken;
     private boolean includeMeta;
 

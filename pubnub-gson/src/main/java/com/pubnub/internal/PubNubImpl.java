@@ -120,12 +120,12 @@ import com.pubnub.internal.v2.entities.ChannelGroupImpl;
 import com.pubnub.internal.v2.entities.ChannelImpl;
 import com.pubnub.internal.v2.entities.ChannelMetadataImpl;
 import com.pubnub.internal.v2.entities.UserMetadataImpl;
+import com.pubnub.internal.v2.subscription.SubscriptionImpl;
 import com.pubnub.internal.v2.subscription.SubscriptionSetImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.InputStream;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -588,7 +588,7 @@ public class PubNubImpl extends BasePubNubImpl<
     @NotNull
     @Override
     public SubscriptionSet subscriptionSetOf(@NotNull Set<? extends Subscription> subscriptions) {
-        return new SubscriptionSetImpl(getPubNubCore(), Collections.emptySet());
+        return new SubscriptionSetImpl(getPubNubCore(), (Set<SubscriptionImpl>) subscriptions);
     }
 
     @Override
