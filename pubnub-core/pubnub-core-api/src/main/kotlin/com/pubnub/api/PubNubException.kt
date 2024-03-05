@@ -39,6 +39,11 @@ data class PubNubException(
         pubnubError = pubnubError,
     )
 
+    constructor(pubnubError: PubNubError, message: String) : this(
+        errorMessage = message,
+        pubnubError = pubnubError,
+    )
+
     companion object {
         fun from(e: Throwable): PubNubException =
             if (e is PubNubException) {

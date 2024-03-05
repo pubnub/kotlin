@@ -36,14 +36,8 @@ public class DelegatingEventListener implements InternalEventListener {
 
     @Override
     public boolean equals(Object o) {
-        // WARNING: this was modified from the generated one to add "listener == o"
-        // it is crucial that this remains untouched for ListenerManager to work properly
-        if (this == o || listener == o) {
-            return true;
-        }
-        if (!(o instanceof DelegatingEventListener)) {
-            return false;
-        }
+        if (this == o) return true;
+        if (!(o instanceof DelegatingEventListener)) return false;
         DelegatingEventListener that = (DelegatingEventListener) o;
         return Objects.equals(listener, that.listener);
     }

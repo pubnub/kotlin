@@ -1,5 +1,7 @@
 package com.pubnub.internal.endpoints.channel_groups;
 
+import com.pubnub.api.PubNubException;
+import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.channel_groups.AddChannelChannelGroup;
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsAddChannelResult;
 import com.pubnub.internal.PubNubCore;
@@ -14,15 +16,21 @@ import java.util.List;
 @Accessors(chain = true, fluent = true)
 public class AddChannelChannelGroupImpl extends DelegatingEndpoint<PNChannelGroupsAddChannelResult> implements AddChannelChannelGroup {
     private String channelGroup;
-    private List<String> channels;
+    private List<String> channels = new ArrayList<>();
 
     public AddChannelChannelGroupImpl(PubNubCore pubnub) {
         super(pubnub);
-        channels = new ArrayList<>();
     }
 
     @Override
     protected com.pubnub.internal.EndpointCore<?, PNChannelGroupsAddChannelResult> createAction() {
         return pubnub.addChannelsToChannelGroup(channels, channelGroup);
+    }
+
+    @Override
+    protected void validateParams() throws PubNubException {
+        if (channelGroup == null) {
+            throw new PubNubException(PubNubErrorBuilder.PNERROBJ_GROUP_MISSING);
+        }
     }
 }

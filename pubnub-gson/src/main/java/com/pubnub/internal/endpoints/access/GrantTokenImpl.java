@@ -1,5 +1,7 @@
 package com.pubnub.internal.endpoints.access;
 
+import com.pubnub.api.PubNubException;
+import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.access.GrantToken;
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant;
@@ -27,6 +29,14 @@ public class GrantTokenImpl extends DelegatingEndpoint<PNGrantTokenResult> imple
 
     public GrantTokenImpl(PubNubCore pubnub) {
         super(pubnub);
+    }
+
+    @Override
+    protected void validateParams() throws PubNubException {
+        super.validateParams();
+        if (this.ttl == null) {
+            throw new PubNubException(PubNubErrorBuilder.PNERROBJ_TTL_MISSING);
+        }
     }
 
     @Override

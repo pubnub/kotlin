@@ -12,7 +12,7 @@ internal class DelegatingSubscribeCallbackTest {
             object : com.pubnub.api.callbacks.SubscribeCallback() {
                 override fun status(
                     pubnub: PubNub,
-                    pnStatus: PNStatus,
+                    status: PNStatus,
                 ) {
                     TODO("Not yet implemented")
                 }
@@ -21,7 +21,7 @@ internal class DelegatingSubscribeCallbackTest {
             object : com.pubnub.api.callbacks.SubscribeCallback() {
                 override fun status(
                     pubnub: PubNub,
-                    pnStatus: PNStatus,
+                    status: PNStatus,
                 ) {
                     TODO("Not yet implemented")
                 }

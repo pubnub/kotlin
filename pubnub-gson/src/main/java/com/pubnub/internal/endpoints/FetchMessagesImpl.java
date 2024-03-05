@@ -1,5 +1,7 @@
 package com.pubnub.internal.endpoints;
 
+import com.pubnub.api.PubNubException;
+import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.models.consumer.PNBoundedPage;
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult;
 import com.pubnub.internal.PubNubCore;
@@ -15,8 +17,15 @@ import java.util.List;
 @Slf4j
 @Accessors(chain = true, fluent = true)
 public class FetchMessagesImpl extends DelegatingEndpoint<PNFetchMessagesResult> implements com.pubnub.api.endpoints.FetchMessages {
+    private static final int SINGLE_CHANNEL_DEFAULT_MESSAGES = 100;
+    private static final int SINGLE_CHANNEL_MAX_MESSAGES = 100;
+    private static final int MULTIPLE_CHANNEL_DEFAULT_MESSAGES = 25;
+    private static final int MULTIPLE_CHANNEL_MAX_MESSAGES = 25;
+    private static final int DEFAULT_MESSAGES_WITH_ACTIONS = 25;
+    private static final int MAX_MESSAGES_WITH_ACTIONS = 25;
+
     private List<String> channels = new ArrayList<>();
-    private int maximumPerChannel = 0;
+    private Integer maximumPerChannel;
     private Long start;
     private Long end;
 
@@ -42,4 +51,34 @@ public class FetchMessagesImpl extends DelegatingEndpoint<PNFetchMessagesResult>
         );
     }
 
+    @Override
+    protected void validateParams() throws PubNubException {
+        if (channels == null || channels.size() == 0) {
+            throw new PubNubException(PubNubErrorBuilder.PNERROBJ_CHANNEL_MISSING);
+        }
+        if (!includeMessageActions) {
+            if (channels.size() == 1) {
+                if (maximumPerChannel == null || maximumPerChannel < 1) {
+                    maximumPerChannel = SINGLE_CHANNEL_DEFAULT_MESSAGES;
+                    log.info("maximumPerChannel param defaulting to " + maximumPerChannel);
+                } else if (maximumPerChannel > SINGLE_CHANNEL_MAX_MESSAGES) {
+                    maximumPerChannel = SINGLE_CHANNEL_MAX_MESSAGES;
+                    log.info("maximumPerChannel param defaulting to " + maximumPerChannel);
+                }
+            } else {
+                if (maximumPerChannel == null || maximumPerChannel < 1) {
+                    maximumPerChannel = MULTIPLE_CHANNEL_DEFAULT_MESSAGES;
+                    log.info("maximumPerChannel param defaulting to " + maximumPerChannel);
+                } else if (maximumPerChannel > MULTIPLE_CHANNEL_MAX_MESSAGES) {
+                    maximumPerChannel = MULTIPLE_CHANNEL_MAX_MESSAGES;
+                    log.info("maximumPerChannel param defaulting to " + maximumPerChannel);
+                }
+            }
+        } else {
+            if (maximumPerChannel == null || maximumPerChannel < 1 || maximumPerChannel > MAX_MESSAGES_WITH_ACTIONS) {
+                maximumPerChannel = DEFAULT_MESSAGES_WITH_ACTIONS;
+                log.info("maximumPerChannel param defaulting to " + maximumPerChannel);
+            }
+        }
+    }
 }

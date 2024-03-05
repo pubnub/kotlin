@@ -1,5 +1,7 @@
 package com.pubnub.internal.v2.subscription
 
+import com.pubnub.api.callbacks.Listener
+import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
@@ -14,6 +16,7 @@ import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.v2.callbacks.DelegatingEventListener
+import com.pubnub.internal.v2.callbacks.DelegatingSubscribeCallback
 import com.pubnub.internal.v2.entities.ChannelGroupName
 import com.pubnub.internal.v2.entities.ChannelName
 
@@ -23,13 +26,24 @@ class SubscriptionImpl(
     channelGroups: Set<ChannelGroupName>,
     options: SubscriptionOptions,
 ) : Subscription, BaseSubscriptionImpl<EventListener>(pubnub.pubNubCore, channels, channelGroups, options) {
-    /**
-     * Add a listener.
-     *
-     * @param listener The listener to be added.
-     */
     override fun addListener(listener: EventListener) {
         addListener(DelegatingEventListener(listener))
+    }
+
+    override fun removeListener(listener: Listener) {
+        when (listener) {
+            is SubscribeCallback -> {
+                super.removeListener(DelegatingSubscribeCallback(listener))
+            }
+
+            is EventListener -> {
+                super.removeListener(DelegatingEventListener(listener))
+            }
+
+            else -> {
+                super.removeListener(listener)
+            }
+        }
     }
 
     private val emitterHelper = EmitterHelper(eventEmitter)

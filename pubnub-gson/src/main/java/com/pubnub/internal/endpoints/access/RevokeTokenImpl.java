@@ -1,5 +1,7 @@
 package com.pubnub.internal.endpoints.access;
 
+import com.pubnub.api.PubNubException;
+import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.access.RevokeToken;
 import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
@@ -20,5 +22,13 @@ public class RevokeTokenImpl extends DelegatingEndpoint<Unit> implements RevokeT
     @Override
     protected com.pubnub.internal.EndpointCore<?, Unit> createAction() {
         return pubnub.revokeToken(token);
+    }
+
+
+    @Override
+    protected void validateParams() throws PubNubException {
+        if (this.token == null) {
+            throw new PubNubException(PubNubErrorBuilder.PNERROBJ_TOKEN_MISSING);
+        }
     }
 }

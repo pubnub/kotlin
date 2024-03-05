@@ -1,5 +1,7 @@
 package com.pubnub.internal.endpoints;
 
+import com.pubnub.api.PubNubException;
+import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.models.consumer.history.PNHistoryResult;
 import com.pubnub.internal.PubNubCore;
 import lombok.Setter;
@@ -14,7 +16,7 @@ public class HistoryImpl extends DelegatingEndpoint<PNHistoryResult> implements 
     private Long start;
     private Long end;
     private boolean reverse;
-    private int count = HistoryEndpoint.MAX_COUNT;
+    private int count = 100;
     private boolean includeTimetoken;
     private boolean includeMeta;
 
@@ -33,5 +35,12 @@ public class HistoryImpl extends DelegatingEndpoint<PNHistoryResult> implements 
                 includeTimetoken,
                 includeMeta
         );
+    }
+
+    @Override
+    protected void validateParams() throws PubNubException {
+        if (channel == null || channel.isEmpty()) {
+            throw new PubNubException(PubNubErrorBuilder.PNERROBJ_CHANNEL_MISSING);
+        }
     }
 }

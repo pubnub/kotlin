@@ -7,6 +7,7 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PresenceBuilder;
 import com.pubnub.api.builder.SubscribeBuilder;
 import com.pubnub.api.builder.UnsubscribeBuilder;
+import com.pubnub.api.callbacks.Listener;
 import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.endpoints.DeleteMessages;
 import com.pubnub.api.endpoints.FetchMessages;
@@ -603,5 +604,18 @@ public class PubNubImpl extends BasePubNubImpl<
     @Override
     public void addListener(@NotNull SubscribeCallback listener) {
         getListenerManager().addListener(new DelegatingSubscribeCallback(listener));
+    }
+
+    @Override
+    public void removeListener(@NotNull Listener listener) {
+        if (listener instanceof SubscribeCallback) {
+            super.removeListener(new DelegatingSubscribeCallback((SubscribeCallback) listener));
+        } else if (listener instanceof EventListener) {
+            super.removeListener(new DelegatingEventListener((EventListener) listener));
+        } else if (listener instanceof StatusListener) {
+            super.removeListener(new DelegatingStatusListener((StatusListener) listener));
+        } else {
+            super.removeListener(listener);
+        }
     }
 }

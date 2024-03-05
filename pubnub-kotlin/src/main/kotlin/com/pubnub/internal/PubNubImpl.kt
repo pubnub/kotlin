@@ -129,50 +129,28 @@ class PubNubImpl(
         listenerManager.addListener(DelegatingSubscribeCallback(listener))
     }
 
-    /**
-     * Add a listener.
-     *
-     * @param listener The listener to be added.
-     */
     override fun addListener(listener: StatusListener) {
         listenerManager.addListener(DelegatingStatusListener(listener))
     }
 
-    override fun baseUrl(): String {
-        TODO("Not yet implemented")
-    }
-
-    override fun requestId(): String {
-        TODO("Not yet implemented")
-    }
-
-    override fun timestamp(): Int {
-        TODO("Not yet implemented")
-    }
-
-    /**
-     * Add a listener.
-     *
-     * @param listener The listener to be added.
-     */
     override fun addListener(listener: EventListener) {
         listenerManager.addListener(DelegatingEventListener(listener))
     }
 
-    /**
-     * Remove a listener.
-     *
-     * @param listener The listener to be removed, previously added with [addListener].
-     */
     override fun removeListener(listener: Listener) {
-        listenerManager.removeListener(listener)
-    }
+        when (listener) {
+            is SubscribeCallback -> {
+                super.removeListener(DelegatingSubscribeCallback(listener))
+            }
 
-    /**
-     * Removes all listeners.
-     */
-    override fun removeAllListeners() {
-        listenerManager.removeAllListeners()
+            is EventListener -> {
+                super.removeListener(DelegatingEventListener(listener))
+            }
+
+            else -> {
+                super.removeListener(listener)
+            }
+        }
     }
 
     /**

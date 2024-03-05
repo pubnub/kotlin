@@ -1,5 +1,7 @@
 package com.pubnub.internal.endpoints.push;
 
+import com.pubnub.api.PubNubException;
+import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.enums.PNPushEnvironment;
 import com.pubnub.api.enums.PNPushType;
 import com.pubnub.api.models.consumer.push.PNPushRemoveAllChannelsResult;
@@ -13,7 +15,7 @@ import lombok.experimental.Accessors;
 public class RemoveAllPushChannelsForDeviceImpl extends DelegatingEndpoint<PNPushRemoveAllChannelsResult> implements com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice {
     private PNPushType pushType;
     private String deviceId;
-    private PNPushEnvironment environment;
+    private PNPushEnvironment environment = PNPushEnvironment.DEVELOPMENT;
     private String topic;
 
     public RemoveAllPushChannelsForDeviceImpl(PubNubCore pubnub) {
@@ -28,5 +30,15 @@ public class RemoveAllPushChannelsForDeviceImpl extends DelegatingEndpoint<PNPus
                 topic,
                 environment
         );
+    }
+
+    @Override
+    protected void validateParams() throws PubNubException {
+        if (pushType == null) {
+            throw new PubNubException(PubNubErrorBuilder.PNERROBJ_PUSH_TYPE_MISSING);
+        }
+        if (deviceId == null || deviceId.isEmpty()) {
+            throw new PubNubException(PubNubErrorBuilder.PNERROBJ_DEVICE_ID_MISSING);
+        }
     }
 }

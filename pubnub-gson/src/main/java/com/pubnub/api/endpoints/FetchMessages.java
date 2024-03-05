@@ -5,7 +5,7 @@ import com.pubnub.api.models.consumer.history.PNFetchMessagesResult;
 public interface FetchMessages extends Endpoint<PNFetchMessagesResult> {
     FetchMessages channels(java.util.List<String> channels);
 
-    FetchMessages maximumPerChannel(int maximumPerChannel);
+    FetchMessages maximumPerChannel(Integer maximumPerChannel);
 
     FetchMessages start(Long start);
 

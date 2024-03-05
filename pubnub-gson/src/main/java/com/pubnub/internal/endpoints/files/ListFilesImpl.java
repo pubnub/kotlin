@@ -1,5 +1,7 @@
 package com.pubnub.internal.endpoints.files;
 
+import com.pubnub.api.PubNubException;
+import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.files.ListFiles;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.files.PNListFilesResult;
@@ -44,6 +46,23 @@ public class ListFilesImpl extends DelegatingEndpoint<PNListFilesResult> impleme
         @Override
         public ListFiles channel(String channel) {
             return new ListFilesImpl(channel, pubnubInstance);
+        }
+    }
+
+    @Override
+    protected void validateParams() throws PubNubException {
+        if (channel == null) {
+            throw new PubNubException(PubNubErrorBuilder.PNERROBJ_CHANNEL_MISSING);
+        }
+
+        if (limit != null) {
+            throw new PubNubException(PubNubErrorBuilder.PNERROBJ_INVALID_ARGUMENTS,
+                    "Limit should be in range from 1 to 100 (both inclusive)");
+        }
+
+        if (next != null) {
+            throw new PubNubException(PubNubErrorBuilder.PNERROBJ_INVALID_ARGUMENTS,
+                    "Next should not be an empty string");
         }
     }
 }

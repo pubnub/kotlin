@@ -11,7 +11,6 @@ import lombok.experimental.Accessors;
 
 import static com.pubnub.api.builder.PubNubErrorBuilder.PNERROBJ_CHANNEL_MISSING;
 import static com.pubnub.api.builder.PubNubErrorBuilder.PNERROBJ_MESSAGE_ACTION_MISSING;
-import static com.pubnub.api.builder.PubNubErrorBuilder.PNERROBJ_MESSAGE_ACTION_TYPE_MISSING;
 import static com.pubnub.api.builder.PubNubErrorBuilder.PNERROBJ_MESSAGE_ACTION_VALUE_MISSING;
 import static com.pubnub.api.builder.PubNubErrorBuilder.PNERROBJ_MESSAGE_TIMETOKEN_MISSING;
 
@@ -39,13 +38,10 @@ public class AddMessageActionImpl extends DelegatingEndpoint<PNAddMessageActionR
         if (messageAction == null) {
             throw new PubNubException(PNERROBJ_MESSAGE_ACTION_MISSING);
         }
-        if (messageAction.getMessageTimetoken() == 0) {
+        if (messageAction.getMessageTimetoken() == null || messageAction.getMessageTimetoken() == 0) {
             throw new PubNubException(PNERROBJ_MESSAGE_TIMETOKEN_MISSING);
         }
-        if (messageAction.getType().isEmpty()) {
-            throw new PubNubException(PNERROBJ_MESSAGE_ACTION_TYPE_MISSING);
-        }
-        if (messageAction.getValue() == null || messageAction.getValue().isEmpty()) {
+        if (messageAction.getValue().isEmpty()) {
             throw new PubNubException(PNERROBJ_MESSAGE_ACTION_VALUE_MISSING);
         }
     }

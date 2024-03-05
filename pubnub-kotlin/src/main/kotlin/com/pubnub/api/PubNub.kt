@@ -113,11 +113,6 @@ interface PubNub :
     fun addListener(listener: SubscribeCallback)
 
     //region api
-    fun baseUrl(): String
-
-    fun requestId(): String
-
-    fun timestamp(): Int
 
     /**
      * Send a message to all subscribers of a channel.

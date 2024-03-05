@@ -1,5 +1,7 @@
 package com.pubnub.internal.endpoints.channel_groups;
 
+import com.pubnub.api.PubNubException;
+import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.channel_groups.AllChannelsChannelGroup;
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsAllChannelsResult;
 import com.pubnub.internal.PubNubCore;
@@ -19,5 +21,12 @@ public class AllChannelsChannelGroupImpl extends DelegatingEndpoint<PNChannelGro
     @Override
     protected com.pubnub.internal.EndpointCore<?, PNChannelGroupsAllChannelsResult> createAction() {
         return pubnub.listChannelsForChannelGroup(channelGroup);
+    }
+
+    @Override
+    protected void validateParams() throws PubNubException {
+        if (channelGroup == null) {
+            throw new PubNubException(PubNubErrorBuilder.PNERROBJ_GROUP_MISSING);
+        }
     }
 }

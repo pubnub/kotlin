@@ -1,5 +1,7 @@
 package com.pubnub.internal.endpoints.push;
 
+import com.pubnub.api.PubNubException;
+import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.enums.PNPushEnvironment;
 import com.pubnub.api.enums.PNPushType;
 import com.pubnub.api.models.consumer.push.PNPushAddChannelResult;
@@ -35,5 +37,18 @@ public class AddChannelsToPushImpl extends DelegatingEndpoint<PNPushAddChannelRe
                 topic,
                 environment
         );
+    }
+
+    @Override
+    protected void validateParams() throws PubNubException {
+        if (pushType == null) {
+            throw new PubNubException(PubNubErrorBuilder.PNERROBJ_PUSH_TYPE_MISSING);
+        }
+        if (deviceId == null || deviceId.isEmpty()) {
+            throw new PubNubException(PubNubErrorBuilder.PNERROBJ_DEVICE_ID_MISSING);
+        }
+        if (channels == null || channels.isEmpty()) {
+            throw new PubNubException(PubNubErrorBuilder.PNERROBJ_CHANNEL_MISSING);
+        }
     }
 }

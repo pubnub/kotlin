@@ -1,5 +1,7 @@
 package com.pubnub.internal.endpoints.files;
 
+import com.pubnub.api.PubNubException;
+import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.BuilderSteps;
 import com.pubnub.api.endpoints.files.PublishFileMessage;
 import com.pubnub.internal.endpoints.files.requiredparambuilder.ChannelFileNameFileIdBuilder;
@@ -57,6 +59,13 @@ public class PublishFileMessageImpl extends DelegatingEndpoint<PNPublishFileMess
             implements PublishFileMessage.Builder {
         private Builder(BuilderSteps.ChannelStep<FilesBuilderSteps.FileNameStep<FilesBuilderSteps.FileIdStep<PublishFileMessage>>> builder) {
             super(builder);
+        }
+    }
+
+    @Override
+    protected void validateParams() throws PubNubException {
+        if (channel == null) {
+            throw new PubNubException(PubNubErrorBuilder.PNERROBJ_CHANNEL_MISSING);
         }
     }
  }

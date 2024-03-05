@@ -1,5 +1,7 @@
 package com.pubnub.internal.endpoints.files;
 
+import com.pubnub.api.PubNubException;
+import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.BuilderSteps.ChannelStep;
 import com.pubnub.api.endpoints.files.DeleteFile;
 import com.pubnub.internal.endpoints.files.requiredparambuilder.ChannelFileNameFileIdBuilder;
@@ -42,6 +44,13 @@ public class DeleteFileImpl extends DelegatingEndpoint<PNDeleteFileResult> imple
     public static class Builder extends ChannelFileNameFileIdBuilder<DeleteFile> implements DeleteFile.Builder {
         public Builder(ChannelStep<FileNameStep<FileIdStep<DeleteFile>>> builder) {
             super(builder);
+        }
+    }
+
+    @Override
+    protected void validateParams() throws PubNubException {
+        if (channel == null) {
+            throw new PubNubException(PubNubErrorBuilder.PNERROBJ_CHANNEL_MISSING);
         }
     }
 }

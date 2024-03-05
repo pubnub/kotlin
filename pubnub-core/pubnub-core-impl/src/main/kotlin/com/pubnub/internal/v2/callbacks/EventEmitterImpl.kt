@@ -19,7 +19,6 @@ class EventEmitterImpl(
     override val phase: AnnouncementCallback.Phase,
     private val accepts: (AnnouncementEnvelope<out PNEvent>) -> Boolean = { true },
 ) : BaseEventEmitter<InternalEventListener>, AnnouncementCallback {
-
     @get:TestOnly
     val listeners = CopyOnWriteArraySet<InternalEventListener>()
 

@@ -1,10 +1,13 @@
 package com.pubnub.internal.v2.subscription
 
+import com.pubnub.api.callbacks.Listener
+import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.callbacks.DelegatingSubscribeCallback
 import com.pubnub.internal.v2.callbacks.DelegatingEventListener
 import com.pubnub.internal.v2.entities.ChannelGroupName
 import com.pubnub.internal.v2.entities.ChannelName
@@ -31,5 +34,21 @@ class SubscriptionImpl(
      */
     override fun plus(subscription: Subscription): SubscriptionSet {
         return pubnub.subscriptionSetOf(setOf(this, subscription))
+    }
+
+    override fun removeListener(listener: Listener) {
+        when (listener) {
+            is SubscribeCallback -> {
+                super.removeListener(DelegatingSubscribeCallback(listener))
+            }
+
+            is EventListener -> {
+                super.removeListener(DelegatingEventListener(listener))
+            }
+
+            else -> {
+                super.removeListener(listener)
+            }
+        }
     }
 }

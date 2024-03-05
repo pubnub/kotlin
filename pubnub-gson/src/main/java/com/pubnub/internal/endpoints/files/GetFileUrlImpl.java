@@ -1,5 +1,7 @@
 package com.pubnub.internal.endpoints.files;
 
+import com.pubnub.api.PubNubException;
+import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.BuilderSteps;
 import com.pubnub.api.endpoints.files.GetFileUrl;
 import com.pubnub.internal.endpoints.files.requiredparambuilder.ChannelFileNameFileIdBuilder;
@@ -40,5 +42,12 @@ public class GetFileUrlImpl extends DelegatingEndpoint<PNFileUrlResult> implemen
     public static GetFileUrlImpl.Builder builder(PubNubCore pubNub) {
         return new GetFileUrlImpl.Builder(ChannelFileNameFileIdBuilder.create((channel, fileName, fileId) ->
                 new GetFileUrlImpl(channel, fileName, fileId, pubNub)));
+    }
+
+    @Override
+    protected void validateParams() throws PubNubException {
+        if (channel == null) {
+            throw new PubNubException(PubNubErrorBuilder.PNERROBJ_CHANNEL_MISSING);
+        }
     }
 }

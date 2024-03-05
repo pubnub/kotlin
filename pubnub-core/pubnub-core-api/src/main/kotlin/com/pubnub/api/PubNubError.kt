@@ -224,7 +224,18 @@ enum class PubNubError(private val code: Int, val message: String) {
         177,
         "Message decryption failed using the current crypto configuration.",
     ),
-
+    TTL_MISSING(
+        178,
+        "TTL missing",
+    ),
+    STATE_MUST_BE_JSON_OBJECT(
+        179,
+        "State must be a JSON object.",
+    ),
+    USERID_CAN_NOT_BE_DIFFERENT_FROM_IN_CONFIGURATION_WHEN_WITHHEARTBEAT_TRUE(
+        180,
+        "UserId can't be different from UserId in configuration when flag withHeartbeat is set to true",
+    ),
     ;
 
     override fun toString(): String {

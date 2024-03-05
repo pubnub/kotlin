@@ -26,7 +26,7 @@ interface BaseSubscriptionSet<EvLis : BaseEventListener, Sub : BaseSubscription<
      * @param subscription the [BaseSubscription] to add.
      * @see [plus]
      */
-    abstract fun add(subscription: Sub)
+    fun add(subscription: Sub)
 
     /**
      * Remove a [BaseSubscription] from this set.
@@ -35,7 +35,7 @@ interface BaseSubscriptionSet<EvLis : BaseEventListener, Sub : BaseSubscription<
      *
      * @param subscription the [BaseSubscription] to remove.
      */
-    abstract fun remove(subscription: Sub)
+    fun remove(subscription: Sub)
 
     /**
      * Remove a [BaseSubscription] from this set. Equivalent to calling [remove].
@@ -49,5 +49,5 @@ interface BaseSubscriptionSet<EvLis : BaseEventListener, Sub : BaseSubscription<
     /**
      * Returns an immutable copy of the set of subscriptions contained in this [BaseSubscriptionSet].
      */
-    abstract val subscriptions: Set<Sub>
+    val subscriptions: Set<Sub>
 }

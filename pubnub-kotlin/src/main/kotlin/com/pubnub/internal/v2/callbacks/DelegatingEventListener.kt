@@ -54,9 +54,7 @@ open class DelegatingEventListener(private val listener: EventListener) : Intern
     }
 
     override fun equals(other: Any?): Boolean {
-        // WARNING: this was modified from the generated one to add "this.listener === other"
-        // it is crucial that this remains untouched for ListenerManager to work properly
-        if (this === other || this.listener === other) return true
+        if (this === other) return true
         if (other !is DelegatingEventListener) return false
 
         if (listener != other.listener) return false

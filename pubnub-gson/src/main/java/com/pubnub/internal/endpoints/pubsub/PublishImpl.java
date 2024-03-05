@@ -1,5 +1,7 @@
 package com.pubnub.internal.endpoints.pubsub;
 
+import com.pubnub.api.PubNubException;
+import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.pubsub.Publish;
 import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.internal.PubNubCore;
@@ -35,5 +37,15 @@ public class PublishImpl extends DelegatingEndpoint<PNPublishResult> implements 
                 replicate,
                 ttl
         );
+    }
+
+    @Override
+    protected void validateParams() throws PubNubException {
+        if (message == null) {
+            throw new PubNubException(PubNubErrorBuilder.PNERROBJ_MESSAGE_MISSING);
+        }
+        if (channel == null || channel.isEmpty()) {
+            throw new PubNubException(PubNubErrorBuilder.PNERROBJ_CHANNEL_MISSING);
+        }
     }
 }

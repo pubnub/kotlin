@@ -1,5 +1,7 @@
 package com.pubnub.internal.endpoints;
 
+import com.pubnub.api.PubNubException;
+import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.MessageCounts;
 import com.pubnub.api.models.consumer.history.PNMessageCountResult;
 import com.pubnub.internal.PubNubCore;
@@ -16,7 +18,7 @@ public class MessageCountsImpl extends DelegatingEndpoint<PNMessageCountResult> 
      * The channel name you wish to pull history from. May be a single channel, or multiple channels, separated by
      * comma.
      */
-    private List<String> channels; // TODO merge with timetokens into a map?
+    private List<String> channels;
 
     /**
      * Comma-delimited list of timetokens, in order of the channels list, in the request path. If list of timetokens
@@ -31,5 +33,15 @@ public class MessageCountsImpl extends DelegatingEndpoint<PNMessageCountResult> 
     @Override
     protected com.pubnub.internal.EndpointCore<?, PNMessageCountResult> createAction() {
         return pubnub.messageCounts(channels, channelsTimetoken);
+    }
+
+    @Override
+    protected void validateParams() throws PubNubException {
+        if (channels == null || channels.isEmpty()) {
+            throw new PubNubException(PubNubErrorBuilder.PNERROBJ_CHANNEL_MISSING);
+        }
+        if ((channelsTimetoken == null || channelsTimetoken.isEmpty()) || channelsTimetoken.contains(null)) {
+            throw new PubNubException(PubNubErrorBuilder.PNERROBJ_TIMETOKEN_MISSING);
+        }
     }
 }

@@ -5,7 +5,7 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.models.consumer.PNStatus
 
-class DelegatingSubscribeCallback(private val listener: SubscribeCallback) :
+data class DelegatingSubscribeCallback(private val listener: SubscribeCallback) :
     DelegatingEventListener(listener),
     com.pubnub.internal.callbacks.SubscribeCallback {
     override fun status(
@@ -13,20 +13,5 @@ class DelegatingSubscribeCallback(private val listener: SubscribeCallback) :
         status: PNStatus,
     ) {
         listener.status(pubnub as PubNub, status)
-    }
-
-    override fun equals(other: Any?): Boolean {
-        // WARNING: this was modified from the generated one to add "this.listener === other"
-        // it is crucial that this remains untouched for ListenerManager to work properly
-        if (this === other || this.listener === other) return true
-        if (other !is DelegatingSubscribeCallback) return false
-
-        if (listener != other.listener) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        return listener.hashCode()
     }
 }

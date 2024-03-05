@@ -1,5 +1,7 @@
 package com.pubnub.internal.endpoints;
 
+import com.pubnub.api.PubNubException;
+import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.DeleteMessages;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.history.PNDeleteMessagesResult;
@@ -29,5 +31,12 @@ public class DeleteMessagesImpl extends DelegatingEndpoint<PNDeleteMessagesResul
                 start,
                 end
         );
+    }
+
+    @Override
+    protected void validateParams() throws PubNubException {
+        if (channels == null || channels.size() == 0) {
+            throw new PubNubException(PubNubErrorBuilder.PNERROBJ_CHANNEL_MISSING);
+        }
     }
 }
