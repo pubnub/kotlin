@@ -8,7 +8,7 @@ import com.pubnub.internal.v2.subscription.SubscriptionImpl
 
 class ChannelMetadataImpl(pubnub: PubNubImpl, id: String) :
     BaseChannelMetadataImpl<EventListener, Subscription>(
-        pubnub.corePubNubClient,
+        pubnub.pubNubCore,
         ChannelName(id),
         { channels, channelGroups, options -> SubscriptionImpl(pubnub, channels, channelGroups, options) },
     ),

@@ -84,7 +84,7 @@ class EventEngineSteps(private val state: EventEngineState) {
             },
         )
 
-        state.pubnub.corePubNubClient.subscribe(channels = listOf(state.channelName))
+        state.pubnub.pubNubCore.subscribe(channels = listOf(state.channelName))
     }
 
     @When("I subscribe with timetoken {long}")
@@ -142,7 +142,7 @@ class EventEngineSteps(private val state: EventEngineState) {
             },
         )
 
-        state.pubnub.corePubNubClient.subscribe(
+        state.pubnub.pubNubCore.subscribe(
             channels = listOf(state.channelName),
             withTimetoken = timetoken,
         )

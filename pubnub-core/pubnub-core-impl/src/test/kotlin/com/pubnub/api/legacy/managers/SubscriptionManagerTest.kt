@@ -376,7 +376,7 @@ class SubscriptionManagerTest : BaseTest() {
                 ) {
                     val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
                     assertTrue(requests.size > 0)
-                    assertEquals("Message", pubnubBase.corePubNubClient.mapper.elementToString(pnMessageResult.message, "text"))
+                    assertEquals("Message", pubnubBase.pubNubCore.mapper.elementToString(pnMessageResult.message, "text"))
                     assertEquals("coolChannel", pnMessageResult.channel)
                     assertEquals(null, pnMessageResult.subscription)
                     assertEquals("Publisher-A", pnMessageResult.publisher)
@@ -813,7 +813,7 @@ class SubscriptionManagerTest : BaseTest() {
                 ) {
                     val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
                     assertTrue(requests.size > 0)
-                    assertEquals("Message", pubnubBase.corePubNubClient.mapper.elementToString(pnMessageResult.message, "text"))
+                    assertEquals("Message", pubnubBase.pubNubCore.mapper.elementToString(pnMessageResult.message, "text"))
                     assertEquals("coolChannel", pnMessageResult.channel)
                     assertEquals("coolChannelGroup", pnMessageResult.subscription)
                     gotMessage.set(true)
@@ -1677,7 +1677,7 @@ class SubscriptionManagerTest : BaseTest() {
                 ) {
                     val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
                     assertTrue(requests.size > 0)
-                    assertEquals("hey", pubnubBase.corePubNubClient.mapper.elementToString(pnMessageResult.message, "text"))
+                    assertEquals("hey", pubnubBase.pubNubCore.mapper.elementToString(pnMessageResult.message, "text"))
                     atomic.addAndGet(1)
                 }
             },
@@ -2483,7 +2483,7 @@ class SubscriptionManagerTest : BaseTest() {
                     pnStatus: PNStatus,
                 ) {
                     if (pnStatus.category == PNStatusCategory.PNConnectedCategory) {
-                        pubnubBase.corePubNubClient.unsubscribe(
+                        pubnubBase.pubNubCore.unsubscribe(
                             channels = listOf("ch1"),
                         )
                     } else if (pnStatus.category == PNStatusCategory.PNDisconnectedCategory ||
@@ -3314,14 +3314,14 @@ class SubscriptionManagerTest : BaseTest() {
                     pnStatus: PNStatus,
                 ) {
                     if (pnStatus.category == PNStatusCategory.PNConnectedCategory) {
-                        pubnubBase.corePubNubClient.unsubscribe(
+                        pubnubBase.pubNubCore.unsubscribe(
                             channels = listOf("ch1"),
                         )
                     }
 
                     if (pnStatus.category == PNStatusCategory.PNSubscriptionChanged) {
                         if ("ch1" !in pnStatus.channels) {
-                            pubnubBase.corePubNubClient.unsubscribe(
+                            pubnubBase.pubNubCore.unsubscribe(
                                 channels = listOf("ch2"),
                             )
                         }

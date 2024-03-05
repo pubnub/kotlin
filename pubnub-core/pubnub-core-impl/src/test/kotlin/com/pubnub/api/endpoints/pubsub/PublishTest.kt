@@ -43,8 +43,8 @@ class PublishTest {
             useRandomInitializationVector = true
         }
 
-    private val pubNubHardcodedIVMock = spyk(TestPubNub(pnConfigurationHardcodedIV).corePubNubClient)
-    private val pubNubRandomIVMock = spyk(TestPubNub(pnConfigurationRandomIV).corePubNubClient)
+    private val pubNubHardcodedIVMock = spyk(TestPubNub(pnConfigurationHardcodedIV).pubNubCore)
+    private val pubNubRandomIVMock = spyk(TestPubNub(pnConfigurationRandomIV).pubNubCore)
 
     private val retrofitManagerMock = mockk<RetrofitManager>()
     private val publishServiceMock = mockk<PublishService>()

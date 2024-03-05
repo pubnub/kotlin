@@ -12,13 +12,16 @@ import com.pubnub.api.v2.callbacks.BaseEventEmitter
 import com.pubnub.internal.managers.AnnouncementCallback
 import com.pubnub.internal.managers.AnnouncementEnvelope
 import com.pubnub.internal.models.consumer.pubsub.objects.PNObjectEventResult
+import org.jetbrains.annotations.TestOnly
 import java.util.concurrent.CopyOnWriteArraySet
 
-class EventEmitterImpl internal constructor(
+class EventEmitterImpl(
     override val phase: AnnouncementCallback.Phase,
-    val accepts: (AnnouncementEnvelope<out PNEvent>) -> Boolean = { true },
+    private val accepts: (AnnouncementEnvelope<out PNEvent>) -> Boolean = { true },
 ) : BaseEventEmitter<InternalEventListener>, AnnouncementCallback {
-    private val listeners = CopyOnWriteArraySet<InternalEventListener>()
+
+    @get:TestOnly
+    val listeners = CopyOnWriteArraySet<InternalEventListener>()
 
     override fun addListener(listener: InternalEventListener) {
         listeners.add(listener)

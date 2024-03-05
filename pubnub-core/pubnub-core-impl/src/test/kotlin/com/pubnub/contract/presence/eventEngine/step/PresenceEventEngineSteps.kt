@@ -37,7 +37,7 @@ class PresenceEventEngineSteps(private val state: EventEngineState) {
         secondChannel: String,
         thirdChannel: String,
     ) {
-        state.pubnub.corePubNubClient.subscribe(channels = listOf(firstChannel, secondChannel, thirdChannel))
+        state.pubnub.pubNubCore.subscribe(channels = listOf(firstChannel, secondChannel, thirdChannel))
     }
 
     @When("I join {string}, {string}, {string} channels with presence")
@@ -46,7 +46,7 @@ class PresenceEventEngineSteps(private val state: EventEngineState) {
         secondChannel: String,
         thirdChannel: String,
     ) {
-        state.pubnub.corePubNubClient.subscribe(
+        state.pubnub.pubNubCore.subscribe(
             channels = listOf(firstChannel, secondChannel, thirdChannel),
             withPresence = true,
         )
@@ -102,7 +102,7 @@ class PresenceEventEngineSteps(private val state: EventEngineState) {
         firstChannel: String,
         secondChannel: String,
     ) {
-        state.pubnub.corePubNubClient.unsubscribe(channels = listOf(firstChannel, secondChannel))
+        state.pubnub.pubNubCore.unsubscribe(channels = listOf(firstChannel, secondChannel))
     }
 
     @Then("I observe the following Events and Invocations of the Presence EE:")
@@ -132,6 +132,6 @@ class PresenceEventEngineSteps(private val state: EventEngineState) {
         firstChannel: String,
         secondChannel: String,
     ) {
-        state.pubnub.corePubNubClient.unsubscribe(channels = listOf(firstChannel, secondChannel))
+        state.pubnub.pubNubCore.unsubscribe(channels = listOf(firstChannel, secondChannel))
     }
 }

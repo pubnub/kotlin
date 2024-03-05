@@ -185,7 +185,7 @@ class SubscribeMessageProcessorTest(
 
     private fun messageProcessor(configuration: PNConfigurationCore) =
         SubscribeMessageProcessor(
-            pubnub = TestPubNub(configuration).corePubNubClient,
+            pubnub = TestPubNub(configuration).pubNubCore,
             duplicationManager = DuplicationManager(configuration),
         )
 

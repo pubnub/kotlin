@@ -154,19 +154,19 @@ public class PubNubImpl extends BasePubNubImpl<
     @Override
     @NotNull
     public SubscribeBuilder subscribe() {
-        return new SubscribeBuilder(getCorePubNubClient());
+        return new SubscribeBuilder(getPubNubCore());
     }
 
     @Override
     @NotNull
     public UnsubscribeBuilder unsubscribe() {
-        return new UnsubscribeBuilder(getCorePubNubClient());
+        return new UnsubscribeBuilder(getPubNubCore());
     }
 
     @Override
     @NotNull
     public PresenceBuilder presence() {
-        return new PresenceBuilder(getCorePubNubClient());
+        return new PresenceBuilder(getPubNubCore());
     }
 
     // start push
@@ -174,25 +174,25 @@ public class PubNubImpl extends BasePubNubImpl<
     @Override
     @NotNull
     public AddChannelsToPush addPushNotificationsOnChannels() {
-        return new AddChannelsToPushImpl(getCorePubNubClient());
+        return new AddChannelsToPushImpl(getPubNubCore());
     }
 
     @Override
     @NotNull
     public RemoveChannelsFromPush removePushNotificationsFromChannels() {
-        return new RemoveChannelsFromPushImpl(getCorePubNubClient());
+        return new RemoveChannelsFromPushImpl(getPubNubCore());
     }
 
     @Override
     @NotNull
     public RemoveAllPushChannelsForDevice removeAllPushNotificationsFromDeviceWithPushToken() {
-        return new RemoveAllPushChannelsForDeviceImpl(getCorePubNubClient());
+        return new RemoveAllPushChannelsForDeviceImpl(getPubNubCore());
     }
 
     @Override
     @NotNull
     public ListPushProvisions auditPushChannelProvisions() {
-        return new ListPushProvisionsImpl(getCorePubNubClient());
+        return new ListPushProvisionsImpl(getPubNubCore());
     }
 
     // end push
@@ -200,49 +200,49 @@ public class PubNubImpl extends BasePubNubImpl<
     @Override
     @NotNull
     public WhereNow whereNow() {
-        return new WhereNowImpl(getCorePubNubClient());
+        return new WhereNowImpl(getPubNubCore());
     }
 
     @Override
     @NotNull
     public HereNow hereNow() {
-        return new HereNowImpl(getCorePubNubClient());
+        return new HereNowImpl(getPubNubCore());
     }
 
     @Override
     @NotNull
     public Time time() {
-        return new TimeImpl(getCorePubNubClient());
+        return new TimeImpl(getPubNubCore());
     }
 
     @Override
     @NotNull
     public History history() {
-        return new HistoryImpl(getCorePubNubClient());
+        return new HistoryImpl(getPubNubCore());
     }
 
     @Override
     @NotNull
     public FetchMessages fetchMessages() {
-        return new FetchMessagesImpl(getCorePubNubClient());
+        return new FetchMessagesImpl(getPubNubCore());
     }
 
     @Override
     @NotNull
     public DeleteMessages deleteMessages() {
-        return new DeleteMessagesImpl(getCorePubNubClient());
+        return new DeleteMessagesImpl(getPubNubCore());
     }
 
     @Override
     @NotNull
     public MessageCounts messageCounts() {
-        return new MessageCountsImpl(getCorePubNubClient());
+        return new MessageCountsImpl(getPubNubCore());
     }
 
     @Override
     @NotNull
     public Grant grant() {
-        return new GrantImpl(getCorePubNubClient());
+        return new GrantImpl(getPubNubCore());
     }
 
     /**
@@ -251,163 +251,163 @@ public class PubNubImpl extends BasePubNubImpl<
     @Override
     @NotNull
     public GrantTokenBuilder grantToken() {
-        return new GrantTokenBuilder(getCorePubNubClient(), new GrantTokenImpl(getCorePubNubClient()));
+        return new GrantTokenBuilder(getPubNubCore(), new GrantTokenImpl(getPubNubCore()));
     }
 
     @Override
     @NotNull
     @SuppressWarnings("deprecation")
     public GrantTokenBuilder grantToken(Integer ttl) {
-        return new GrantTokenBuilder(getCorePubNubClient(), new GrantTokenImpl(getCorePubNubClient()).ttl(ttl));
+        return new GrantTokenBuilder(getPubNubCore(), new GrantTokenImpl(getPubNubCore()).ttl(ttl));
     }
 
     @Override
     @NotNull
     public RevokeToken revokeToken() {
-        return new RevokeTokenImpl(getCorePubNubClient());
+        return new RevokeTokenImpl(getPubNubCore());
     }
 
     @Override
     @NotNull
     public GetState getPresenceState() {
-        return new GetStateImpl(getCorePubNubClient());
+        return new GetStateImpl(getPubNubCore());
     }
 
     @Override
     @NotNull
     public SetState setPresenceState() {
-        return new SetStateImpl(getCorePubNubClient());
+        return new SetStateImpl(getPubNubCore());
     }
 
     @Override
     @NotNull
     public Publish publish() {
-        return new PublishImpl(getCorePubNubClient());
+        return new PublishImpl(getPubNubCore());
     }
 
     @Override
     @NotNull
     public Signal signal() {
-        return new SignalImpl(getCorePubNubClient());
+        return new SignalImpl(getPubNubCore());
     }
 
     @Override
     @NotNull
     public ListAllChannelGroup listAllChannelGroups() {
-        return new ListAllChannelGroupImpl(getCorePubNubClient());
+        return new ListAllChannelGroupImpl(getPubNubCore());
     }
 
     @Override
     @NotNull
     public AllChannelsChannelGroup listChannelsForChannelGroup() {
-        return new AllChannelsChannelGroupImpl(getCorePubNubClient());
+        return new AllChannelsChannelGroupImpl(getPubNubCore());
     }
 
     @Override
     @NotNull
     public AddChannelChannelGroup addChannelsToChannelGroup() {
-        return new AddChannelChannelGroupImpl(getCorePubNubClient());
+        return new AddChannelChannelGroupImpl(getPubNubCore());
     }
 
     @Override
     @NotNull
     public RemoveChannelChannelGroup removeChannelsFromChannelGroup() {
-        return new RemoveChannelChannelGroupImpl(getCorePubNubClient());
+        return new RemoveChannelChannelGroupImpl(getPubNubCore());
     }
 
     @Override
     @NotNull
     public DeleteChannelGroup deleteChannelGroup() {
-        return new DeleteChannelGroupImpl(getCorePubNubClient());
+        return new DeleteChannelGroupImpl(getPubNubCore());
     }
 
     // Start Objects API
 
     @Override
     public SetUUIDMetadata setUUIDMetadata() {
-        return new SetUUIDMetadataImpl(getCorePubNubClient());
+        return new SetUUIDMetadataImpl(getPubNubCore());
     }
 
     @Override
     @NotNull
     public GetAllUUIDMetadata getAllUUIDMetadata() {
-        return new GetAllUUIDMetadataImpl(getCorePubNubClient());
+        return new GetAllUUIDMetadataImpl(getPubNubCore());
     }
 
     @Override
     @NotNull
     public GetUUIDMetadata getUUIDMetadata() {
-        return new GetUUIDMetadataImpl(getCorePubNubClient());
+        return new GetUUIDMetadataImpl(getPubNubCore());
     }
 
     @Override
     @NotNull
     public RemoveUUIDMetadata removeUUIDMetadata() {
-        return new RemoveUUIDMetadataImpl(getCorePubNubClient());
+        return new RemoveUUIDMetadataImpl(getPubNubCore());
     }
 
     @Override
     public SetChannelMetadata.Builder setChannelMetadata() {
-        return new SetChannelMetadataImpl.Builder(getCorePubNubClient());
+        return new SetChannelMetadataImpl.Builder(getPubNubCore());
     }
 
     @Override
     @NotNull
     public GetAllChannelsMetadata getAllChannelsMetadata() {
-        return new GetAllChannelsMetadataImpl(getCorePubNubClient());
+        return new GetAllChannelsMetadataImpl(getPubNubCore());
     }
 
     @Override
     @NotNull
     public GetChannelMetadata.Builder getChannelMetadata() {
-        return new GetChannelMetadataImpl.Builder(getCorePubNubClient());
+        return new GetChannelMetadataImpl.Builder(getPubNubCore());
     }
 
     @Override
     public RemoveChannelMetadata.Builder removeChannelMetadata() {
-        return new RemoveChannelMetadataImpl.Builder(getCorePubNubClient());
+        return new RemoveChannelMetadataImpl.Builder(getPubNubCore());
     }
 
     @Override
     @NotNull
     public GetMemberships getMemberships() {
-        return new GetMembershipsImpl(getCorePubNubClient());
+        return new GetMembershipsImpl(getPubNubCore());
     }
 
     @Override
     @NotNull
     public SetMemberships.Builder setMemberships() {
-        return new SetMembershipsImpl.Builder(getCorePubNubClient());
+        return new SetMembershipsImpl.Builder(getPubNubCore());
     }
 
     @Override
     public RemoveMemberships.Builder removeMemberships() {
-        return new RemoveMembershipsImpl.Builder(getCorePubNubClient());
+        return new RemoveMembershipsImpl.Builder(getPubNubCore());
     }
 
     @Override
     public ManageMemberships.Builder manageMemberships() {
-        return new ManageMembershipsImpl.Builder(getCorePubNubClient());
+        return new ManageMembershipsImpl.Builder(getPubNubCore());
     }
 
     @Override
     public GetChannelMembers.Builder getChannelMembers() {
-        return new GetChannelMembersImpl.Builder(getCorePubNubClient());
+        return new GetChannelMembersImpl.Builder(getPubNubCore());
     }
 
     @Override
     public SetChannelMembers.Builder setChannelMembers() {
-        return new SetChannelMembersImpl.Builder(getCorePubNubClient());
+        return new SetChannelMembersImpl.Builder(getPubNubCore());
     }
 
     @Override
     public RemoveChannelMembers.Builder removeChannelMembers() {
-        return new RemoveChannelMembersImpl.Builder(getCorePubNubClient());
+        return new RemoveChannelMembersImpl.Builder(getPubNubCore());
     }
 
     @Override
     public ManageChannelMembers.Builder manageChannelMembers() {
-        return new ManageChannelMembersImpl.Builder(getCorePubNubClient());
+        return new ManageChannelMembersImpl.Builder(getPubNubCore());
     }
 
     // End Objects API
@@ -417,51 +417,51 @@ public class PubNubImpl extends BasePubNubImpl<
     @Override
     @NotNull
     public AddMessageAction addMessageAction() {
-        return new AddMessageActionImpl(getCorePubNubClient());
+        return new AddMessageActionImpl(getPubNubCore());
     }
 
     @Override
     @NotNull
     public GetMessageActions getMessageActions() {
-        return new GetMessageActionsImpl(getCorePubNubClient());
+        return new GetMessageActionsImpl(getPubNubCore());
     }
 
     @Override
     @NotNull
     public RemoveMessageAction removeMessageAction() {
-        return new RemoveMessageActionImpl(getCorePubNubClient());
+        return new RemoveMessageActionImpl(getPubNubCore());
     }
 
     // End Message Actions API
 
     @Override
     public SendFile.Builder sendFile() {
-        return new SendFileImpl.Builder(getCorePubNubClient());
+        return new SendFileImpl.Builder(getPubNubCore());
     }
 
     @Override
     public ListFiles.Builder listFiles() {
-        return new ListFilesImpl.Builder(getCorePubNubClient());
+        return new ListFilesImpl.Builder(getPubNubCore());
     }
 
     @Override
     public GetFileUrl.Builder getFileUrl() {
-        return GetFileUrlImpl.builder(getCorePubNubClient());
+        return GetFileUrlImpl.builder(getPubNubCore());
     }
 
     @Override
     public DownloadFile.Builder downloadFile() {
-        return DownloadFileImpl.builder(getCorePubNubClient());
+        return DownloadFileImpl.builder(getPubNubCore());
     }
 
     @Override
     public DeleteFile.Builder deleteFile() {
-        return DeleteFileImpl.builder(getCorePubNubClient());
+        return DeleteFileImpl.builder(getPubNubCore());
     }
 
     @Override
     public PublishFileMessage.Builder publishFileMessage() {
-        return PublishFileMessageImpl.builder(getCorePubNubClient());
+        return PublishFileMessageImpl.builder(getPubNubCore());
     }
 
     @Override
@@ -495,7 +495,7 @@ public class PubNubImpl extends BasePubNubImpl<
         if (inputString == null) {
             throw new PubNubException(PubNubError.INVALID_ARGUMENTS);
         }
-        return getCorePubNubClient().decrypt(inputString, cipherKey);
+        return getPubNubCore().decrypt(inputString, cipherKey);
     }
 
     @Override
@@ -505,7 +505,7 @@ public class PubNubImpl extends BasePubNubImpl<
 
     @Override
     public @NotNull InputStream decryptInputStream(@NotNull InputStream inputStream, @Nullable String cipherKey) throws PubNubException {
-        return getCorePubNubClient().decryptInputStream(inputStream, cipherKey);
+        return getPubNubCore().decryptInputStream(inputStream, cipherKey);
     }
 
     /**
@@ -529,7 +529,7 @@ public class PubNubImpl extends BasePubNubImpl<
      */
     @Override
     public @NotNull String encrypt(@NotNull String inputString, String cipherKey) throws PubNubException {
-        return getCorePubNubClient().encrypt(inputString, cipherKey);
+        return getPubNubCore().encrypt(inputString, cipherKey);
     }
 
     @Override
@@ -539,7 +539,7 @@ public class PubNubImpl extends BasePubNubImpl<
 
     @Override
     public @NotNull InputStream encryptInputStream(@NotNull InputStream inputStream, String cipherKey) throws PubNubException {
-        return getCorePubNubClient().encryptInputStream(inputStream, cipherKey);
+        return getPubNubCore().encryptInputStream(inputStream, cipherKey);
     }
 
     @Override
@@ -551,13 +551,13 @@ public class PubNubImpl extends BasePubNubImpl<
     @Override
     @NotNull
     public List<String> getSubscribedChannels() {
-        return getCorePubNubClient().getSubscribedChannels();
+        return getPubNubCore().getSubscribedChannels();
     }
 
     @Override
     @NotNull
     public List<String> getSubscribedChannelGroups() {
-        return getCorePubNubClient().getSubscribedChannelGroups();
+        return getPubNubCore().getSubscribedChannelGroups();
     }
 
     @NotNull
@@ -587,7 +587,7 @@ public class PubNubImpl extends BasePubNubImpl<
     @NotNull
     @Override
     public SubscriptionSet subscriptionSetOf(@NotNull Set<? extends Subscription> subscriptions) {
-        return new SubscriptionSetImpl(getCorePubNubClient(), Collections.emptySet());
+        return new SubscriptionSetImpl(getPubNubCore(), Collections.emptySet());
     }
 
     @Override

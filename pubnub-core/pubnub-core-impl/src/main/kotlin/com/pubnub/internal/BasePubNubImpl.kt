@@ -36,7 +36,7 @@ abstract class BasePubNubImpl<
     constructor(configuration: PNConfigurationCore) : this(configuration, eventEnginesConf = EventEnginesConf())
 
     val listenerManager: ListenerManager = ListenerManager(this)
-    val corePubNubClient = PubNubCore(configuration, listenerManager, eventEnginesConf)
+    val pubNubCore = PubNubCore(configuration, listenerManager, eventEnginesConf)
 
     /**
      * The current version of the Kotlin SDK.
@@ -45,10 +45,10 @@ abstract class BasePubNubImpl<
         get() = PubNubCore.SDK_VERSION
 
     override val timestamp: Int
-        get() = corePubNubClient.timestamp()
+        get() = pubNubCore.timestamp()
 
     override val baseUrl: String
-        get() = corePubNubClient.baseUrl()
+        get() = pubNubCore.baseUrl()
 
     /**
      * Unique id of this PubNub instance.
@@ -56,7 +56,7 @@ abstract class BasePubNubImpl<
      * @see [PNConfigurationCore.includeInstanceIdentifier]
      */
     val instanceId: String
-        get() = corePubNubClient.instanceId
+        get() = pubNubCore.instanceId
 
     companion object {
         /**
@@ -101,26 +101,26 @@ abstract class BasePubNubImpl<
      * Force destroy the SDK to evict the connection pools and close executors.
      */
     override fun forceDestroy() {
-        corePubNubClient.forceDestroy()
+        pubNubCore.forceDestroy()
     }
 
     /**
      * Destroy the SDK to cancel all ongoing requests and stop heartbeat timer.
      */
     override fun destroy() {
-        corePubNubClient.destroy()
+        pubNubCore.destroy()
     }
 
     override fun reconnect(timetoken: Long) {
-        corePubNubClient.reconnect(timetoken)
+        pubNubCore.reconnect(timetoken)
     }
 
     override fun parseToken(token: String): PNToken {
-        return corePubNubClient.parseToken(token)
+        return pubNubCore.parseToken(token)
     }
 
     override fun setToken(token: String?) {
-        corePubNubClient.setToken(token)
+        pubNubCore.setToken(token)
     }
 
     /**
@@ -129,13 +129,13 @@ abstract class BasePubNubImpl<
      * Monitor the results in [SubscribeCallback.status]
      */
     override fun disconnect() {
-        corePubNubClient.disconnect()
+        pubNubCore.disconnect()
     }
 
     /**
      * Unsubscribe from all channels and all channel groups
      */
     override fun unsubscribeAll() {
-        corePubNubClient.unsubscribeAll()
+        pubNubCore.unsubscribeAll()
     }
 }

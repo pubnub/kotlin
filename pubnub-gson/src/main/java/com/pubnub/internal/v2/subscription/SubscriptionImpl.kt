@@ -14,7 +14,7 @@ class SubscriptionImpl(
     channels: Set<ChannelName>,
     channelGroups: Set<ChannelGroupName>,
     options: SubscriptionOptions,
-) : Subscription, BaseSubscriptionImpl<EventListener>(pubnub.corePubNubClient, channels, channelGroups, options) {
+) : Subscription, BaseSubscriptionImpl<EventListener>(pubnub.pubNubCore, channels, channelGroups, options) {
     /**
      * Add a listener.
      *

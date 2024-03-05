@@ -209,7 +209,7 @@ class SendFileTest : TestsWithFiles {
         val mockPubNubImpl = mockk<PubNubCore>()
         val retryConfiguration = RetryConfiguration.None
         every { mockConfig.retryConfiguration } returns retryConfiguration
-        every { mockPubNub.corePubNubClient } returns mockPubNubImpl
+        every { mockPubNub.pubNubCore } returns mockPubNubImpl
         every { mockPubNubImpl.configuration } returns mockConfig
         return mockPubNub
     }
@@ -223,7 +223,7 @@ class SendFileTest : TestsWithFiles {
                 channel = "channel",
                 fileName = "fileName",
                 fileId = "fileId",
-                pubNub = pubNub.corePubNubClient,
+                pubNub = pubNub.pubNubCore,
             ) {
         private val numberOfFails = AtomicInteger(0)
 
@@ -266,7 +266,7 @@ class SendFileTest : TestsWithFiles {
                 channel = "channel",
                 fileName = "fileName",
                 fileId = "fileId",
-                pubNub = pubNub.corePubNubClient,
+                pubNub = pubNub.pubNubCore,
             ) {
         @Throws(PubNubException::class)
         override fun sync(): PNPublishFileMessageResult {

@@ -5,6 +5,7 @@ import com.pubnub.api.crypto.CryptoModule;
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions;
 import com.pubnub.api.enums.PNLogVerbosity;
 import com.pubnub.api.enums.PNReconnectionPolicy;
+import com.pubnub.api.retry.RetryConfiguration;
 import kotlin.Pair;
 import lombok.Setter;
 import lombok.extern.java.Log;
@@ -497,6 +498,15 @@ public class PNConfiguration {
         if (!value) {
             throw PubNubRuntimeException.builder().pubnubError(error).build();
         }
+    }
+
+    public PNConfiguration setRetryConfiguration(RetryConfiguration configuration) {
+        pnConfigurationCore.setRetryConfiguration(configuration);
+        return this;
+    }
+
+    public RetryConfiguration getRetryConfiguration() {
+        return pnConfigurationCore.getRetryConfiguration();
     }
 
 }

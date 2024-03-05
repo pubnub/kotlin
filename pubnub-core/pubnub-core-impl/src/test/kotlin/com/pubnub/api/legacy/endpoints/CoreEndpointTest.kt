@@ -277,36 +277,36 @@ class CoreEndpointTest : BaseTest() {
     @Test
     fun testDefaultTimeoutValues() {
         val p = TestPubNub(PNConfigurationCore(userId = UserId(BasePubNubImpl.generateUUID())))
-        assertEquals(300, p.corePubNubClient.configuration.presenceTimeout)
-        assertEquals(0, p.corePubNubClient.configuration.heartbeatInterval)
+        assertEquals(300, p.pubNubCore.configuration.presenceTimeout)
+        assertEquals(0, p.pubNubCore.configuration.heartbeatInterval)
         p.forceDestroy()
     }
 
     @Test
     fun testCustomTimeoutValues1() {
         val p = TestPubNub(PNConfigurationCore(userId = UserId(BasePubNubImpl.generateUUID())))
-        p.corePubNubClient.configuration.presenceTimeout = 100
-        assertEquals(100, p.corePubNubClient.configuration.presenceTimeout)
-        assertEquals(49, p.corePubNubClient.configuration.heartbeatInterval)
+        p.pubNubCore.configuration.presenceTimeout = 100
+        assertEquals(100, p.pubNubCore.configuration.presenceTimeout)
+        assertEquals(49, p.pubNubCore.configuration.heartbeatInterval)
         p.forceDestroy()
     }
 
     @Test
     fun testCustomTimeoutValues2() {
         val p = TestPubNub(PNConfigurationCore(userId = UserId(BasePubNubImpl.generateUUID())))
-        p.corePubNubClient.configuration.heartbeatInterval = 100
-        assertEquals(300, p.corePubNubClient.configuration.presenceTimeout)
-        assertEquals(100, p.corePubNubClient.configuration.heartbeatInterval)
+        p.pubNubCore.configuration.heartbeatInterval = 100
+        assertEquals(300, p.pubNubCore.configuration.presenceTimeout)
+        assertEquals(100, p.pubNubCore.configuration.heartbeatInterval)
         p.forceDestroy()
     }
 
     @Test
     fun testCustomTimeoutValues3() {
         val p = TestPubNub(PNConfigurationCore(userId = UserId(BasePubNubImpl.generateUUID())))
-        p.corePubNubClient.configuration.heartbeatInterval = 40
-        p.corePubNubClient.configuration.presenceTimeout = 50
-        assertEquals(50, p.corePubNubClient.configuration.presenceTimeout)
-        assertEquals(24, p.corePubNubClient.configuration.heartbeatInterval)
+        p.pubNubCore.configuration.heartbeatInterval = 40
+        p.pubNubCore.configuration.presenceTimeout = 50
+        assertEquals(50, p.pubNubCore.configuration.presenceTimeout)
+        assertEquals(24, p.pubNubCore.configuration.heartbeatInterval)
         p.forceDestroy()
     }
 

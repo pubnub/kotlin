@@ -77,6 +77,6 @@ abstract class BaseTest {
             pubnub.destroy()
         }
         pubnubBase = customPubNub ?: TestPubNub(config)
-        pubnub = pubnubBase.corePubNubClient
+        pubnub = pubnubBase.pubNubCore
     }
 }
