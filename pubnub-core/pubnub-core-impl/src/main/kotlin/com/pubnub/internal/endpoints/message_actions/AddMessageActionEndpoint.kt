@@ -24,9 +24,15 @@ class AddMessageActionEndpoint internal constructor(
 ) : EndpointCore<EntityEnvelope<PNMessageAction>, PNAddMessageActionResult>(pubnub), AddMessageActionInterface {
     override fun validateParams() {
         super.validateParams()
-        if (channel.isBlank()) throw PubNubException(PubNubError.CHANNEL_MISSING)
-        if (messageAction.type.isBlank()) throw PubNubException(PubNubError.MESSAGE_ACTION_TYPE_MISSING)
-        if (messageAction.value.isBlank()) throw PubNubException(PubNubError.MESSAGE_ACTION_VALUE_MISSING)
+        if (channel.isBlank()) {
+            throw PubNubException(PubNubError.CHANNEL_MISSING)
+        }
+        if (messageAction.type.isBlank()) {
+            throw PubNubException(PubNubError.MESSAGE_ACTION_TYPE_MISSING)
+        }
+        if (messageAction.value.isBlank()) {
+            throw PubNubException(PubNubError.MESSAGE_ACTION_VALUE_MISSING)
+        }
     }
 
     override fun getAffectedChannels() = listOf(channel)

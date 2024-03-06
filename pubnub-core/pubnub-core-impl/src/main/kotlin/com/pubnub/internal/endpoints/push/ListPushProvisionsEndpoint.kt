@@ -25,8 +25,12 @@ class ListPushProvisionsEndpoint internal constructor(
 ) : EndpointCore<List<String>, PNPushListProvisionsResult>(pubnub), ListPushProvisionsInterface {
     override fun validateParams() {
         super.validateParams()
-        if (deviceId.isBlank()) throw PubNubException(PubNubError.DEVICE_ID_MISSING)
-        if (pushType == PNPushType.APNS2 && topic.isNullOrBlank()) throw PubNubException(PubNubError.PUSH_TOPIC_MISSING)
+        if (deviceId.isBlank()) {
+            throw PubNubException(PubNubError.DEVICE_ID_MISSING)
+        }
+        if (pushType == PNPushType.APNS2 && topic.isNullOrBlank()) {
+            throw PubNubException(PubNubError.PUSH_TOPIC_MISSING)
+        }
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<List<String>> {

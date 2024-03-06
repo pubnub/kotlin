@@ -62,7 +62,9 @@ internal class TokenParser {
                 meta = firstLevelMap[META_KEY],
             )
         } catch (e: Exception) {
-            if (e is PubNubException) throw e
+            if (e is PubNubException) {
+                throw e
+            }
             throw PubNubException(
                 pubnubError = PubNubError.INVALID_ACCESS_TOKEN,
                 errorMessage = "Couldn't parse token: ${e.message}",

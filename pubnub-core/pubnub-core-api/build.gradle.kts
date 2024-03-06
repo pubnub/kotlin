@@ -35,6 +35,7 @@ dependencies {
     api(libs.json)
     api(libs.gson)
     implementation(libs.slf4j)
+    ktlintRuleset(project(":build-logic:ktlint-custom-rules"))
 }
 
 tasks.withType<DokkaTask>().configureEach {

@@ -143,6 +143,12 @@ class FilesIntegrationTest : BaseIntegrationTest() {
     }
 
     private fun readToString(inputStream: InputStream): String {
-        Scanner(inputStream).useDelimiter("\\A").use { s -> return if (s.hasNext()) s.next() else "" }
+        Scanner(inputStream).useDelimiter("\\A").use { s ->
+            return if (s.hasNext()) {
+                s.next()
+            } else {
+                ""
+            }
+        }
     }
 }

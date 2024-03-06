@@ -133,6 +133,7 @@ public class MultiLineIfElseRule :
             if (node.firstChildNode.elementType == IF) {
                 // Don't allow single line for:
                 // else if (...)
+                return
             }
             if (!node.treeParent.textContains('\n')) {
                 // Allow single line if statements as long as they are really simple (e.g. do not contain newlines)

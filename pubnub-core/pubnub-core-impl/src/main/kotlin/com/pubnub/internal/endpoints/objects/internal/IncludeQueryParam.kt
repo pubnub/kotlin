@@ -12,7 +12,9 @@ data class IncludeQueryParam(
 ) {
     internal fun createIncludeQueryParams(): Map<String, String> {
         val includeList = mutableListOf<String>()
-        if (includeCustom) includeList.add("custom")
+        if (includeCustom) {
+            includeList.add("custom")
+        }
         when (includeChannelDetails) {
             PNChannelDetailsLevel.CHANNEL -> includeList.add("channel")
             PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM -> includeList.add("channel.custom")
@@ -23,8 +25,12 @@ data class IncludeQueryParam(
             PNUUIDDetailsLevel.UUID_WITH_CUSTOM -> includeList.add("uuid.custom")
             null -> {}
         }
-        if (includeType) includeList.add("type")
-        if (includeStatus) includeList.add("status")
+        if (includeType) {
+            includeList.add("type")
+        }
+        if (includeStatus) {
+            includeList.add("status")
+        }
         return if (includeList.isNotEmpty()) {
             mapOf("include" to includeList.joinToString(","))
         } else {

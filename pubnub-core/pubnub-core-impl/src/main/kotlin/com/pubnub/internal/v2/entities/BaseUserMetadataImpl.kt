@@ -27,11 +27,19 @@ open class BaseUserMetadataImpl<Lis : BaseEventListener, Sub : BaseSubscription<
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is BaseUserMetadataImpl<*, *>) return false
+        if (this === other) {
+            return true
+        }
+        if (other !is BaseUserMetadataImpl<*, *>) {
+            return false
+        }
 
-        if (pubnub != other.pubnub) return false
-        if (id != other.id) return false
+        if (pubnub != other.pubnub) {
+            return false
+        }
+        if (id != other.id) {
+            return false
+        }
 
         return true
     }

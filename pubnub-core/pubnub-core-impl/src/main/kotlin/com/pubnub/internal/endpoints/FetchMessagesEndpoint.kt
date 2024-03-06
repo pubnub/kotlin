@@ -62,8 +62,12 @@ class FetchMessagesEndpoint internal constructor(
 
     override fun validateParams() {
         super.validateParams()
-        if (channels.isEmpty()) throw PubNubException(PubNubError.CHANNEL_MISSING)
-        if (includeMessageActions && channels.size > 1) throw PubNubException(PubNubError.HISTORY_MESSAGE_ACTIONS_MULTIPLE_CHANNELS)
+        if (channels.isEmpty()) {
+            throw PubNubException(PubNubError.CHANNEL_MISSING)
+        }
+        if (includeMessageActions && channels.size > 1) {
+            throw PubNubException(PubNubError.HISTORY_MESSAGE_ACTIONS_MULTIPLE_CHANNELS)
+        }
     }
 
     override fun getAffectedChannels() = channels
@@ -97,14 +101,23 @@ class FetchMessagesEndpoint internal constructor(
                             pubnub.mapper,
                         )
                     val newActions =
-                        if (includeMessageActions) serverMessageItem.actions ?: mapOf() else serverMessageItem.actions
+                        if (includeMessageActions) {
+                            serverMessageItem.actions ?: mapOf()
+                        } else {
+                            serverMessageItem.actions
+                        }
                     PNFetchMessageItem(
                         uuid = serverMessageItem.uuid,
                         message = newMessage,
                         meta = serverMessageItem.meta,
                         timetoken = serverMessageItem.timetoken,
                         actions = newActions,
-                        messageType = if (includeMessageType) HistoryMessageType.of(serverMessageItem.messageType) else null,
+                        messageType =
+                            if (includeMessageType) {
+                                HistoryMessageType.of(serverMessageItem.messageType)
+                            } else {
+                                null
+                            },
                         error = error,
                     )
                 }
@@ -130,6 +143,8 @@ class FetchMessagesEndpoint internal constructor(
 
         queryParams[INCLUDE_MESSAGE_TYPE_QUERY_PARAM] = includeMessageType.toString()
 
-        if (includeMeta) queryParams["include_meta"] = "true"
+        if (includeMeta) {
+            queryParams["include_meta"] = "true"
+        }
     }
 }

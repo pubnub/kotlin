@@ -36,7 +36,9 @@ open class GrantEndpoint(
 ) : EndpointCore<Envelope<AccessManagerGrantPayload>, PNAccessManagerGrantResult>(pubnub), GrantInterface {
     override fun validateParams() {
         super.validateParams()
-        if (!pubnub.configuration.secretKey.isValid()) throw PubNubException(PubNubError.SECRET_KEY_MISSING)
+        if (!pubnub.configuration.secretKey.isValid()) {
+            throw PubNubException(PubNubError.SECRET_KEY_MISSING)
+        }
     }
 
     override fun getAffectedChannels() = channels
@@ -120,21 +122,72 @@ open class GrantEndpoint(
     }
 
     private fun addQueryParams(queryParams: MutableMap<String, String>) {
-        channels.run { if (isNotEmpty()) queryParams["channel"] = toCsv() }
-        channelGroups.run { if (isNotEmpty()) queryParams["channel-group"] = toCsv() }
-        authKeys.run { if (isNotEmpty()) queryParams["auth"] = toCsv() }
-        uuids.run { if (isNotEmpty()) queryParams["target-uuid"] = toCsv() }
+        channels.run {
+            if (isNotEmpty()) {
+                queryParams["channel"] = toCsv()
+            }
+        }
+        channelGroups.run {
+            if (isNotEmpty()) {
+                queryParams["channel-group"] = toCsv()
+            }
+        }
+        authKeys.run {
+            if (isNotEmpty()) {
+                queryParams["auth"] = toCsv()
+            }
+        }
+        uuids.run {
+            if (isNotEmpty()) {
+                queryParams["target-uuid"] = toCsv()
+            }
+        }
 
         if (ttl >= -1) {
             queryParams["ttl"] = ttl.toString()
         }
 
-        queryParams["r"] = if (read) "1" else "0"
-        queryParams["w"] = if (write) "1" else "0"
-        queryParams["m"] = if (manage) "1" else "0"
-        queryParams["d"] = if (delete) "1" else "0"
-        queryParams["g"] = if (get) "1" else "0"
-        queryParams["u"] = if (update) "1" else "0"
-        queryParams["j"] = if (join) "1" else "0"
+        queryParams["r"] =
+            if (read) {
+                "1"
+            } else {
+                "0"
+            }
+        queryParams["w"] =
+            if (write) {
+                "1"
+            } else {
+                "0"
+            }
+        queryParams["m"] =
+            if (manage) {
+                "1"
+            } else {
+                "0"
+            }
+        queryParams["d"] =
+            if (delete) {
+                "1"
+            } else {
+                "0"
+            }
+        queryParams["g"] =
+            if (get) {
+                "1"
+            } else {
+                "0"
+            }
+        queryParams["u"] =
+            if (update) {
+                "1"
+            } else {
+                "0"
+            }
+        queryParams["j"] =
+            if (join) {
+                "1"
+            } else {
+                "0"
+            }
     }
 }

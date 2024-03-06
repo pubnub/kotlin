@@ -29,7 +29,9 @@ class PublishEndpoint internal constructor(
 ) : EndpointCore<List<Any>, PNPublishResult>(pubnub), PublishInterface {
     override fun validateParams() {
         super.validateParams()
-        if (channel.isBlank()) throw PubNubException(PubNubError.CHANNEL_MISSING)
+        if (channel.isBlank()) {
+            throw PubNubException(PubNubError.CHANNEL_MISSING)
+        }
     }
 
     override fun getAffectedChannels() = listOf(channel)
@@ -86,7 +88,9 @@ class PublishEndpoint internal constructor(
 
         ttl?.run { queryParams["ttl"] = this.toString() }
 
-        if (!replicate) queryParams["norep"] = true.valueString
+        if (!replicate) {
+            queryParams["norep"] = true.valueString
+        }
 
         queryParams["seqn"] = pubnub.publishSequenceManager.nextSequence().toString()
     }

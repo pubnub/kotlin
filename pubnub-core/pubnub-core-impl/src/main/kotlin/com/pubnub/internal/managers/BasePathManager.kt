@@ -29,7 +29,13 @@ internal class BasePathManager(private val config: PNConfigurationCore) {
     fun basePath(): String {
         val basePathBuilder =
             StringBuilder("http")
-                .append(if (config.secure) "s" else "")
+                .append(
+                    if (config.secure) {
+                        "s"
+                    } else {
+                        ""
+                    },
+                )
                 .append("://")
 
         when {

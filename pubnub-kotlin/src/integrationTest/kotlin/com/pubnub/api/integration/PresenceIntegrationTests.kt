@@ -235,8 +235,10 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
                 ) {
                     if (pnStatus.category == PNStatusCategory.PNConnectedCategory && pnStatus.channels.contains(expectedChannel)) {
                         subscribeSuccess.set(true)
-                    } else if (pnStatus.category == PNStatusCategory.PNHeartbeatSuccess) {
-                        heartbeatCallsCount.incrementAndGet()
+                    } else {
+                        if (pnStatus.category == PNStatusCategory.PNHeartbeatSuccess) {
+                            heartbeatCallsCount.incrementAndGet()
+                        }
                     }
                 }
             },

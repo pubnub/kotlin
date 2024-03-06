@@ -124,10 +124,13 @@ internal class HeaderParser {
             if (cryptorDataSize < THREE_BYTES_SIZE_CRYPTOR_DATA_INDICATOR.toInt()) {
                 byteArrayOf(cryptorDataSize.toByte()) // cryptorDataSize will be stored on 1 byte
             } else if (cryptorDataSize < MAX_VALUE_THAT_CAN_BE_STORED_ON_TWO_BYTES) {
-                byteArrayOf(cryptorDataSize.toByte()) + writeNumberOnTwoBytes(cryptorDataSize) // cryptorDataSize will be stored on 3 byte
+                // cryptorDataSize will be stored on 3 byte
+                byteArrayOf(cryptorDataSize.toByte()) + writeNumberOnTwoBytes(cryptorDataSize)
             } else {
                 throw PubNubException(
-                    errorMessage = "Cryptor Data Size is: $cryptorDataSize whereas max cryptor data size is: $MAX_VALUE_THAT_CAN_BE_STORED_ON_TWO_BYTES",
+                    errorMessage =
+                        "Cryptor Data Size is: $cryptorDataSize whereas " +
+                            "max cryptor data size is: $MAX_VALUE_THAT_CAN_BE_STORED_ON_TWO_BYTES",
                     pubnubError = PubNubError.CRYPTOR_HEADER_PARSE_ERROR,
                 )
             }

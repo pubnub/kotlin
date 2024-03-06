@@ -69,7 +69,9 @@ object CommonUtils {
     fun getResourceFileAsString(fileName: String?): String? {
         val classLoader = ClassLoader.getSystemClassLoader()
         classLoader.getResourceAsStream(fileName).use { inputStream ->
-            if (inputStream == null) return null
+            if (inputStream == null) {
+                return null
+            }
             InputStreamReader(inputStream).use { isr ->
                 BufferedReader(isr).use { reader ->
                     return reader.lines().collect(Collectors.joining(System.lineSeparator()))

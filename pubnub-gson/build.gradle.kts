@@ -62,6 +62,8 @@ dependencies {
     testImplementation(libs.awaitility)
 
     integrationTestImplementation(libs.owner)
+
+    ktlintRuleset(project(":build-logic:ktlint-custom-rules"))
 }
 
 jacoco {

@@ -64,6 +64,8 @@ dependencies {
     testImplementation(libs.junit.jupiter.engine)
     testImplementation(libs.mockk)
     testImplementation(libs.owner)
+
+    ktlintRuleset(project(":build-logic:ktlint-custom-rules"))
 }
 
 tasks.withType<DokkaTask>().configureEach {

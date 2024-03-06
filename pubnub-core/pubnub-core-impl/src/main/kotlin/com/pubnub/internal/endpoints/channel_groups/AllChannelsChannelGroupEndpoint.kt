@@ -23,7 +23,9 @@ class AllChannelsChannelGroupEndpoint internal constructor(
 
     override fun validateParams() {
         super.validateParams()
-        if (channelGroup.isBlank()) throw PubNubException(PubNubError.GROUP_MISSING)
+        if (channelGroup.isBlank()) {
+            throw PubNubException(PubNubError.GROUP_MISSING)
+        }
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<Map<String, Any>>> {

@@ -22,8 +22,12 @@ class MessageCountsEndpoint internal constructor(
 ) : EndpointCore<JsonElement, PNMessageCountResult>(pubnub), MessageCountsInterface {
     override fun validateParams() {
         super.validateParams()
-        if (channels.isEmpty()) throw PubNubException(PubNubError.CHANNEL_MISSING)
-        if (channelsTimetoken.isEmpty()) throw PubNubException(PubNubError.TIMETOKEN_MISSING)
+        if (channels.isEmpty()) {
+            throw PubNubException(PubNubError.CHANNEL_MISSING)
+        }
+        if (channelsTimetoken.isEmpty()) {
+            throw PubNubException(PubNubError.TIMETOKEN_MISSING)
+        }
         if (channelsTimetoken.size != channels.size && channelsTimetoken.size > 1) {
             throw PubNubException(PubNubError.CHANNELS_TIMETOKEN_MISMATCH)
         }

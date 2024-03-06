@@ -59,11 +59,19 @@ open class Action(
     val actionTimetoken: String,
 ) {
     override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is Action) return false
+        if (this === other) {
+            return true
+        }
+        if (other !is Action) {
+            return false
+        }
 
-        if (uuid != other.uuid) return false
-        if (actionTimetoken != other.actionTimetoken) return false
+        if (uuid != other.uuid) {
+            return false
+        }
+        if (actionTimetoken != other.actionTimetoken) {
+            return false
+        }
 
         return true
     }

@@ -31,11 +31,18 @@ class HistoryEndpoint internal constructor(
         const val MAX_COUNT = 100
     }
 
-    private val countParam: Int = if (count in 1..MAX_COUNT) count else MAX_COUNT
+    private val countParam: Int =
+        if (count in 1..MAX_COUNT) {
+            count
+        } else {
+            MAX_COUNT
+        }
 
     override fun validateParams() {
         super.validateParams()
-        if (channel.isBlank()) throw PubNubException(PubNubError.CHANNEL_MISSING)
+        if (channel.isBlank()) {
+            throw PubNubException(PubNubError.CHANNEL_MISSING)
+        }
     }
 
     override fun getAffectedChannels() = listOf(channel)

@@ -174,7 +174,11 @@ class UploadFileTest : TestsWithFiles {
 
     private fun readToString(inputStream: InputStream): String {
         val s = Scanner(inputStream).useDelimiter("\\A")
-        return if (s.hasNext()) s.next() else ""
+        return if (s.hasNext()) {
+            s.next()
+        } else {
+            ""
+        }
     }
 
     private fun getPart(

@@ -19,7 +19,9 @@ class DeleteChannelGroupEndpoint internal constructor(
 ) : EndpointCore<Void, PNChannelGroupsDeleteGroupResult>(pubnub), DeleteChannelGroupInterface {
     override fun validateParams() {
         super.validateParams()
-        if (channelGroup.isBlank()) throw PubNubException(PubNubError.GROUP_MISSING)
+        if (channelGroup.isBlank()) {
+            throw PubNubException(PubNubError.GROUP_MISSING)
+        }
     }
 
     override fun getAffectedChannelGroups() = listOf(channelGroup)

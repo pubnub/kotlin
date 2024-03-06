@@ -34,11 +34,19 @@ open class BaseChannelGroupImpl<Lis : BaseEventListener, Sub : BaseSubscription<
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is BaseChannelGroupImpl<*, *>) return false
+        if (this === other) {
+            return true
+        }
+        if (other !is BaseChannelGroupImpl<*, *>) {
+            return false
+        }
 
-        if (pubNub != other.pubNub) return false
-        if (name != other.name) return false
+        if (pubNub != other.pubNub) {
+            return false
+        }
+        if (name != other.name) {
+            return false
+        }
 
         return true
     }

@@ -191,7 +191,12 @@ internal class SubscribeMessageProcessor(
                 fileName,
             )
         val queryParams = ArrayList<String>()
-        val authKey = if (pubnub.configuration.authKey.isValid()) pubnub.configuration.authKey else null
+        val authKey =
+            if (pubnub.configuration.authKey.isValid()) {
+                pubnub.configuration.authKey
+            } else {
+                null
+            }
 
         if (PubNubUtil.shouldSignRequest(pubnub.configuration)) {
             val timestamp: Int = pubnub.timestamp()

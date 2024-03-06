@@ -446,7 +446,12 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
             pubnub.publish(
                 channel = expectedChannelName,
                 message = "${it}_msg",
-                meta = if (it % 2 == 0) generateMap() else null,
+                meta =
+                    if (it % 2 == 0) {
+                        generateMap()
+                    } else {
+                        null
+                    },
             ).sync().run {
                 publishResultList.add(this)
             }

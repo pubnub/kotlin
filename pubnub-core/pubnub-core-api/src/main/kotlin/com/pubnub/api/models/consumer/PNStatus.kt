@@ -14,14 +14,28 @@ class PNStatus(
     val error: Boolean = exception != null
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is PNStatus) return false
+        if (this === other) {
+            return true
+        }
+        if (other !is PNStatus) {
+            return false
+        }
 
-        if (category != other.category) return false
-        if (exception != other.exception) return false
-        if (currentTimetoken != other.currentTimetoken) return false
-        if (channels != other.channels) return false
-        if (channelGroups != other.channelGroups) return false
+        if (category != other.category) {
+            return false
+        }
+        if (exception != other.exception) {
+            return false
+        }
+        if (currentTimetoken != other.currentTimetoken) {
+            return false
+        }
+        if (channels != other.channels) {
+            return false
+        }
+        if (channelGroups != other.channelGroups) {
+            return false
+        }
 
         return true
     }

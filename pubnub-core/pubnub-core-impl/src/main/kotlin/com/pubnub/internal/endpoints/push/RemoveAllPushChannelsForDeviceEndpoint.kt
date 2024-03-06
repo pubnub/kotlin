@@ -25,8 +25,12 @@ class RemoveAllPushChannelsForDeviceEndpoint internal constructor(
 ) : EndpointCore<Void, PNPushRemoveAllChannelsResult>(pubnub), RemoveAllPushChannelsForDeviceInterface {
     override fun validateParams() {
         super.validateParams()
-        if (deviceId.isBlank()) throw PubNubException(PubNubError.DEVICE_ID_MISSING)
-        if (pushType == PNPushType.APNS2 && topic.isNullOrBlank()) throw PubNubException(PubNubError.PUSH_TOPIC_MISSING)
+        if (deviceId.isBlank()) {
+            throw PubNubException(PubNubError.DEVICE_ID_MISSING)
+        }
+        if (pushType == PNPushType.APNS2 && topic.isNullOrBlank()) {
+            throw PubNubException(PubNubError.PUSH_TOPIC_MISSING)
+        }
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Void> {

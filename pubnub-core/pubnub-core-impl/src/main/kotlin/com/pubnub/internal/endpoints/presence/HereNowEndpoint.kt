@@ -128,8 +128,14 @@ class HereNowEndpoint internal constructor(
     }
 
     private fun addQueryParams(queryParams: MutableMap<String, String>) {
-        if (includeState) queryParams["state"] = "1"
-        if (!includeUUIDs) queryParams["disable_uuids"] = "1"
-        if (channelGroups.isNotEmpty()) queryParams["channel-group"] = channelGroups.toCsv()
+        if (includeState) {
+            queryParams["state"] = "1"
+        }
+        if (!includeUUIDs) {
+            queryParams["disable_uuids"] = "1"
+        }
+        if (channelGroups.isNotEmpty()) {
+            queryParams["channel-group"] = channelGroups.toCsv()
+        }
     }
 }

@@ -362,7 +362,12 @@ class PNConfigurationCore
 
         fun generatePnsdk(version: String): String {
             val joinedSuffixes = pnsdkSuffixes.toSortedMap().values.joinToString(" ")
-            return "PubNub-Kotlin/$version" + if (joinedSuffixes.isNotBlank()) " $joinedSuffixes" else ""
+            return "PubNub-Kotlin/$version" +
+                if (joinedSuffixes.isNotBlank()) {
+                    " $joinedSuffixes"
+                } else {
+                    ""
+                }
         }
 
         @Suppress("DeprecatedCallableAddReplaceWith")

@@ -247,8 +247,8 @@ class MapperManager {
             }
             val jsonArray = JsonArray()
             for (i in 0 until src.length()) {
-                val `object`: Any = src.opt(i)
-                val jsonElement = context.serialize(`object`, `object`.javaClass)
+                val obj: Any = src.opt(i)
+                val jsonElement = context.serialize(obj, obj.javaClass)
                 jsonArray.add(jsonElement)
             }
             return jsonArray

@@ -54,10 +54,16 @@ open class DelegatingEventListener(private val listener: EventListener) : EventL
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is DelegatingEventListener) return false
+        if (this === other) {
+            return true
+        }
+        if (other !is DelegatingEventListener) {
+            return false
+        }
 
-        if (listener != other.listener) return false
+        if (listener != other.listener) {
+            return false
+        }
 
         return true
     }

@@ -12,7 +12,9 @@ class GrantTokenState {
     val definedGrants: MutableList<FutureCallGrant> = mutableListOf()
     var currentGrant: FutureCallGrant? = null
         set(value) {
-            if (value != null) definedGrants.add(value)
+            if (value != null) {
+                definedGrants.add(value)
+            }
             field = value
         }
     var currentResourcePermissions: PNToken.PNResourcePermissions? = null

@@ -86,7 +86,9 @@ class Result<out T>
 
         @Suppress("UNCHECKED_CAST")
         inline fun onSuccess(action: Consumer<in T>): Result<T> {
-            if (isSuccess) action.accept(value as T)
+            if (isSuccess) {
+                action.accept(value as T)
+            }
             return this
         }
 
@@ -136,7 +138,9 @@ internal fun createFailure(exception: PubNubException): Any = Result.Failure(exc
  */
 @PublishedApi
 internal fun Result<*>.throwOnFailure() {
-    if (value is Result.Failure) throw value.exception
+    if (value is Result.Failure) {
+        throw value.exception
+    }
 }
 
 /**
@@ -202,7 +206,9 @@ public inline fun <R, T : R> Result<T>.getOrElse(onFailure: (exception: PubNubEx
  * This function is a shorthand for `getOrElse { defaultValue }` (see [getOrElse]).
  */
 public inline fun <R, T : R> Result<T>.getOrDefault(defaultValue: R): R {
-    if (isFailure) return defaultValue
+    if (isFailure) {
+        return defaultValue
+    }
     return value as T
 }
 

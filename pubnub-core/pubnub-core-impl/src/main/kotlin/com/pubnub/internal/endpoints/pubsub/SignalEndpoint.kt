@@ -20,7 +20,9 @@ class SignalEndpoint internal constructor(
 ) : EndpointCore<List<Any>, PNPublishResult>(pubnub), SignalInterface {
     override fun validateParams() {
         super.validateParams()
-        if (channel.isBlank()) throw PubNubException(PubNubError.CHANNEL_MISSING)
+        if (channel.isBlank()) {
+            throw PubNubException(PubNubError.CHANNEL_MISSING)
+        }
     }
 
     override fun getAffectedChannels() = listOf(channel)

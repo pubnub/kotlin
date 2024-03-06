@@ -22,7 +22,9 @@ class GetMessageActionsEndpoint internal constructor(
 ) : EndpointCore<PNGetMessageActionsResult, PNGetMessageActionsResult>(pubnub), GetMessageActionsInterface {
     override fun validateParams() {
         super.validateParams()
-        if (channel.isBlank()) throw PubNubException(PubNubError.CHANNEL_MISSING)
+        if (channel.isBlank()) {
+            throw PubNubException(PubNubError.CHANNEL_MISSING)
+        }
     }
 
     override fun getAffectedChannels() = listOf(channel)

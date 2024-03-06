@@ -65,7 +65,9 @@ class SetStateEndpoint internal constructor(
     override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.PRESENCE
 
     private fun addQueryParams(queryParams: MutableMap<String, String>) {
-        if (channelGroups.isNotEmpty()) queryParams["channel-group"] = channelGroups.toCsv()
+        if (channelGroups.isNotEmpty()) {
+            queryParams["channel-group"] = channelGroups.toCsv()
+        }
         queryParams["state"] = pubnub.mapper.toJson(state)
     }
 }

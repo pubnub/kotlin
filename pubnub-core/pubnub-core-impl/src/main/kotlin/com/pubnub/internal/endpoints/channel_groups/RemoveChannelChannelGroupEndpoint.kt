@@ -25,8 +25,12 @@ class RemoveChannelChannelGroupEndpoint internal constructor(
 
     override fun validateParams() {
         super.validateParams()
-        if (channelGroup.isBlank()) throw PubNubException(PubNubError.GROUP_MISSING)
-        if (channels.isEmpty()) throw PubNubException(PubNubError.CHANNEL_MISSING)
+        if (channelGroup.isBlank()) {
+            throw PubNubException(PubNubError.GROUP_MISSING)
+        }
+        if (channels.isEmpty()) {
+            throw PubNubException(PubNubError.CHANNEL_MISSING)
+        }
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Void> {

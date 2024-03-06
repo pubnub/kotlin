@@ -12,16 +12,30 @@ internal class CryptorHeader(
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
+        if (this === other) {
+            return true
+        }
+        if (javaClass != other?.javaClass) {
+            return false
+        }
 
         other as CryptorHeader
 
-        if (!sentinel.contentEquals(other.sentinel)) return false
-        if (version != other.version) return false
-        if (!cryptorId.contentEquals(other.cryptorId)) return false
-        if (!cryptorDataSize.contentEquals(other.cryptorDataSize)) return false
-        if (!cryptorData.contentEquals(other.cryptorData)) return false
+        if (!sentinel.contentEquals(other.sentinel)) {
+            return false
+        }
+        if (version != other.version) {
+            return false
+        }
+        if (!cryptorId.contentEquals(other.cryptorId)) {
+            return false
+        }
+        if (!cryptorDataSize.contentEquals(other.cryptorDataSize)) {
+            return false
+        }
+        if (!cryptorData.contentEquals(other.cryptorData)) {
+            return false
+        }
 
         return true
     }
