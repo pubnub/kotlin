@@ -57,6 +57,8 @@ dependencies {
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.mockk)
     testImplementation(libs.owner)
+
+    ktlintRuleset(project(":build-logic:ktlint-custom-rules"))
 }
 
 task<Test>("cucumber") {

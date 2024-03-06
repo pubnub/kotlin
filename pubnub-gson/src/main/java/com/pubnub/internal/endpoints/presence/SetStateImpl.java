@@ -10,6 +10,7 @@ import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,9 +21,12 @@ import java.util.List;
 @Setter
 @Accessors(chain = true, fluent = true)
 public class SetStateImpl extends DelegatingEndpoint<PNSetStateResult> implements SetState {
+    @NotNull
     private List<String> channels = new ArrayList<>();
+    @NotNull
     private List<String> channelGroups = new ArrayList<>();
     private Object state;
+    @NotNull
     private String uuid = pubnub.getConfiguration().getUuid();
     private boolean withHeartbeat;
 

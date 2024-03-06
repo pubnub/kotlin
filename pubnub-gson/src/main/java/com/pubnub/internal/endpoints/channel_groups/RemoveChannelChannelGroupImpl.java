@@ -8,6 +8,7 @@ import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
 @Accessors(chain = true, fluent = true)
 public class RemoveChannelChannelGroupImpl extends DelegatingEndpoint<PNChannelGroupsRemoveChannelResult> implements RemoveChannelChannelGroup {
     private String channelGroup;
+    @NotNull
     private List<String> channels = new ArrayList<>();
 
 
