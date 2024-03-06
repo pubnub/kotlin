@@ -8,5 +8,8 @@ class SubscribeEnvelope(
     internal val messages: List<SubscribeMessage>,
 
     @SerializedName("t")
-    internal val metadata: SubscribeMetaData
+    internal val metadata: SubscribeMetaData,
+
+    @SerializedName("rg")
+    internal val missedMessages: List<MissedMessages>
 )

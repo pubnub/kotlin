@@ -43,6 +43,7 @@ internal class SubscribeMessageProcessor(
     }
 
     fun processIncomingPayload(message: SubscribeMessage): PNEvent? {
+        println("-=processIncomingPayload")
         if (message.channel == null) {
             return null
         }

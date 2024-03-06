@@ -105,4 +105,9 @@ enum class PNStatusCategory {
      * Previously started subscribe loop failed, and at this moment client disconnected from real-time data channels.
      */
     PNConnectionError,
+
+    /**
+     * Subscribe call finished successfully but there might be more relevant data to be retrieved from history
+     */
+    PNPossiblyMissedMessagesCategory,
 }

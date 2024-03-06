@@ -97,7 +97,7 @@ class ReceiveMessageActions : BaseTest() {
             channels = listOf("coolChannel")
         )
 
-        success.listen()
+        success.listen(5)
     }
 
     @Test

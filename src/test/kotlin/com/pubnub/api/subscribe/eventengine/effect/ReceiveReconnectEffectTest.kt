@@ -3,6 +3,7 @@ package com.pubnub.api.subscribe.eventengine.effect
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.models.consumer.pubsub.PNEvent
+import com.pubnub.api.models.server.MissedMessages
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
@@ -25,7 +26,8 @@ class ReceiveReconnectEffectTest {
     private val retryConfiguration = RetryConfiguration.Linear(delayInSec = 10.milliseconds, isInternal = true)
     private val executorService = Executors.newSingleThreadScheduledExecutor()
     private val messages: List<PNEvent> = createPNMessageResultList()
-    private val receiveMessageResult = ReceiveMessagesResult(messages, subscriptionCursor)
+    private val missedMessages: List<MissedMessages> = emptyList()
+    private val receiveMessageResult = ReceiveMessagesResult(messages, subscriptionCursor, missedMessages)
 
     @Test
     fun `should deliver ReceiveReconnectSuccess event when ReceiveReconnectEffect succeeded`() {
@@ -53,6 +55,11 @@ class ReceiveReconnectEffectTest {
                     eventSink.events
                 )
             }
+    }
+
+    @Test
+    fun `should deliver ReceiveReconnectSuccessWithMissedMessages event when ReceiveReconnectEffect succeeded and there are missedMessages`() {
+        // todo
     }
 
     @Test

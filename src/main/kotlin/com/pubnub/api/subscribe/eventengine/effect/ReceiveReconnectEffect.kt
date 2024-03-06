@@ -4,6 +4,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.eventengine.ManagedEffect
 import com.pubnub.api.eventengine.Sink
+import com.pubnub.api.models.TimeRange
 import com.pubnub.api.models.server.SubscribeEnvelope
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.retry.RetryableBase
@@ -53,12 +54,19 @@ internal class ReceiveReconnectEffect(
                         )
                     )
                 } else {
-                    subscribeEventSink.add(
-                        SubscribeEvent.ReceiveReconnectSuccess(
-                            result!!.messages,
-                            result.subscriptionCursor
+                    if (result!!.missedMessages != null && result!!.missedMessages?.isEmpty() == true) {
+                        subscribeEventSink.add(
+                            SubscribeEvent.ReceiveReconnectSuccess(
+                                result.messages, result.subscriptionCursor
+                            )
                         )
-                    )
+                    } else {
+                        // todo MissedMessages contains start/end Cursor that contains Region that is not needed for customers. That's why we create map.
+                        val missedMessagesMap: Map<String, TimeRange> = createMissedMessagesMap(result)
+                        subscribeEventSink.add(
+                            SubscribeEvent.ReceiveReconnectSuccessWithMissedMessages(result.messages, result.subscriptionCursor, missedMessagesMap)
+                        )
+                    }
                 }
             }
         }
@@ -74,4 +82,15 @@ internal class ReceiveReconnectEffect(
         receiveMessagesRemoteAction.silentCancel()
         scheduled?.cancel(true)
     }
+
+    private fun createMissedMessagesMap(result: ReceiveMessagesResult): Map<String, TimeRange> =
+        result.missedMessages!!.associateBy( // todo maybe !! can be replaced
+            { missedMessages -> missedMessages.channel },
+            { missedMessages ->
+                TimeRange(
+                    missedMessages.startingCursor.timeToken,
+                    missedMessages.endingCursor.timeToken
+                )
+            }
+        )
 }

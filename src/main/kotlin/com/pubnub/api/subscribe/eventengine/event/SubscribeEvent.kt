@@ -2,6 +2,7 @@ package com.pubnub.api.subscribe.eventengine.event
 
 import com.pubnub.api.PubNubException
 import com.pubnub.api.eventengine.Event
+import com.pubnub.api.models.TimeRange
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 
 internal sealed class SubscribeEvent : Event {
@@ -31,9 +32,21 @@ internal sealed class SubscribeEvent : Event {
     data class ReceiveSuccess(val messages: List<PNEvent>, val subscriptionCursor: SubscriptionCursor) :
         SubscribeEvent()
 
+    data class ReceiveSuccessWithMissedMessages(
+        val messages: List<PNEvent>,
+        val subscriptionCursor: SubscriptionCursor,
+        val missedMessagesMap: Map<String, TimeRange>
+    ) : SubscribeEvent()
+
     data class ReceiveFailure(val reason: PubNubException) : SubscribeEvent()
     data class ReceiveReconnectSuccess(val messages: List<PNEvent>, val subscriptionCursor: SubscriptionCursor) :
         SubscribeEvent()
+
+    data class ReceiveReconnectSuccessWithMissedMessages(
+        val messages: List<PNEvent>,
+        val subscriptionCursor: SubscriptionCursor,
+        val missedMessagesMap: Map<String, TimeRange>
+    ) : SubscribeEvent()
 
     data class ReceiveReconnectFailure(val reason: PubNubException) : SubscribeEvent()
     data class ReceiveReconnectGiveup(val reason: PubNubException) : SubscribeEvent()

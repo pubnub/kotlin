@@ -125,8 +125,7 @@ import com.pubnub.internal.v2.subscription.SubscriptionImpl
 import com.pubnub.internal.v2.subscription.SubscriptionSetImpl
 import java.io.InputStream
 import java.lang.Integer.min
-import java.util.Date
-import java.util.UUID
+import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import kotlin.time.Duration.Companion.seconds
@@ -217,7 +216,7 @@ class PubNub internal constructor(
     val instanceId = UUID.randomUUID().toString()
 
     //region Internal
-    internal fun baseUrl() = basePathManager.basePath()
+    fun baseUrl() = basePathManager.basePath()
     internal fun requestId() = UUID.randomUUID().toString()
     internal fun timestamp() = (Date().time / TIMESTAMP_DIVIDER).toInt()
     //endregion

@@ -1,6 +1,7 @@
 package com.pubnub.api.integration
 
 import com.google.gson.JsonObject
+import com.pubnub.api.CommonUtils
 import com.pubnub.api.CommonUtils.DEFAULT_LISTEN_DURATION
 import com.pubnub.api.CommonUtils.generateMessage
 import com.pubnub.api.CommonUtils.generatePayload
@@ -8,19 +9,27 @@ import com.pubnub.api.CommonUtils.generatePayloadJSON
 import com.pubnub.api.CommonUtils.randomChannel
 import com.pubnub.api.CommonUtils.randomValue
 import com.pubnub.api.CommonUtils.retry
+import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
+import com.pubnub.api.UserId
 import com.pubnub.api.asyncRetry
 import com.pubnub.api.await
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.crypto.CryptoModule
+import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.listen
+import com.pubnub.api.models.TimeRange
 import com.pubnub.api.models.consumer.PNBoundedPage
+import com.pubnub.api.models.consumer.PNPublishResult
 import com.pubnub.api.models.consumer.PNStatus
+import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.subscribeToBlocking
 import com.pubnub.api.v2.callbacks.EventListener
+import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.api.v2.entities.Channel
 import com.pubnub.api.v2.subscriptions.SubscriptionCursor
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
@@ -36,6 +45,8 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Test
 import org.junit.jupiter.api.Timeout
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -49,6 +60,96 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         guestClient = createPubNub()
     }
 
+    private fun getCurrentDataAndTime(): String {
+        val current = LocalDateTime.now()
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+        val formatted = current.format(formatter)
+        return formatted
+    }
+
+    private fun getStagingPubNub(): PubNub {
+        val pnConfiguration = PNConfiguration(userId = UserId(PubNub.generateUUID())).apply {
+//            publishKey = "demo"
+//            subscribeKey = "demo"
+            publishKey = "pub-c-19717402-29ea-44e6-8a81-9bf812aaeebc"
+            subscribeKey = "sub-c-7e769d5e-78fa-4ef7-9026-b36bb303ea31"
+            origin = "ingress-tcp-pub.az1.pdx1.aws.int.ps.pn"
+            secure = false
+            logVerbosity = PNLogVerbosity.NONE
+            httpLoggingInterceptor = CommonUtils.createInterceptor(logger)
+        }
+
+        return PubNub(pnConfiguration)
+    }
+
+    @Test
+    fun sendMessageRepeatedly() {
+        val pubNub1 = getStagingPubNub()
+
+        assertEquals(false, pubNub1.configuration.secure)
+        assertEquals("http://ingress-tcp-pub.az1.pdx1.aws.int.ps.pn", pubNub1.baseUrl()) // todo this is temporary, can be removed
+
+        val channel = "myChannel01"
+        val randomMessage = randomValue()
+        var message = ""
+        var pnPublishResult: PNPublishResult?
+
+        repeat(110) {
+            message = getCurrentDataAndTime() + " message: ${it + 1} " + randomMessage
+            pnPublishResult = pubNub1.publish(channel = channel, message = message).sync()
+            println("-=TT$it ${pnPublishResult?.timetoken}  message: $message")
+//            Thread.sleep(30000)
+        }
+    }
+
+    @Test
+    fun getMessageCatchupData() {
+//        17091926037341016
+        val timeTokenForSubscribe = 17096221879816869
+
+        val pubNub1 = getStagingPubNub()
+
+        assertEquals(false, pubNub1.configuration.secure)
+        assertEquals("http://ingress-tcp-pub.az1.pdx1.aws.int.ps.pn", pubNub1.baseUrl())
+
+        pubNub1.addListener(object : StatusListener {
+            override fun status(pubnub: PubNub, status: PNStatus) {
+                println("-=status: ${status.category}")
+                if (status.category == PNStatusCategory.PNPossiblyMissedMessagesCategory) {
+                    val meta: Map<String, TimeRange> = status.meta as Map<String, TimeRange>
+                    val (firstChannel, timeRange) = meta.entries.first()
+                    // jakie dane są patrzebne do fetch Messages? A. kanały i timetoken
+                    // what if there are 100 channels each having different start/end timeToken. Do we need to call history 100 times?
+                    val historyResult: PNFetchMessagesResult? = pubNub1.fetchMessages(
+                        channels = listOf(firstChannel),
+                        page = PNBoundedPage(start = timeRange.startTimeToken, end = timeRange.endTimeToken)
+                    ).sync()
+
+                    historyResult?.channels?.forEach { channel, messageItemList ->
+                        messageItemList.forEach { messageItem ->
+                            println("-=historyMessage:  channel: $channel message: ${messageItem.message} ")
+                        }
+                    }
+                    // todo 11th message is duplicate i.e. it is present in response and in messagesCatchup
+                    println()
+                }
+            }
+        })
+
+        val channel = "myChannel01"
+        val randomMessage = randomValue()
+        val subscription = pubNub1.channel(channel).subscription()
+        subscription.onMessage = { pnMessageResult ->
+            println("-=message ${pnMessageResult.message}")
+        }
+        subscription.subscribe(cursor = SubscriptionCursor(timetoken = timeTokenForSubscribe))
+
+        Thread.sleep(2000)
+//        pubnub.publish(channel = channel, message = randomMessage).sync()
+
+        Thread.sleep(20000)
+    }
+
     @Test
     fun testPublishMessage() {
         val expectedChannel = randomChannel()
@@ -60,6 +161,58 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             assertFalse(status.error)
             assertEquals(status.uuid, pubnub.configuration.userId.value)
         }
+    }
+
+//    -----two channels-----
+
+    @Test
+    fun sendMessageRepeatedlyToTwoChannels() {
+        val pubNub1 = getStagingPubNub()
+
+        assertEquals(false, pubNub1.configuration.secure)
+        assertEquals("http://ingress-tcp-pub.az1.pdx1.aws.int.ps.pn", pubNub1.baseUrl())
+
+        val channel01 = "myChannel01"
+        val channel02 = "myChannel02"
+        val randomMessage = randomValue()
+        var message = ""
+        var pnPublishResult: PNPublishResult?
+
+        repeat(55) {
+            message = getCurrentDataAndTime() + " message: ${it + 1} " + randomMessage
+            pnPublishResult = pubNub1.publish(channel = channel01, message = message).sync()
+            pnPublishResult = pubNub1.publish(channel = channel02, message = message).sync()
+            println("-=TT$it ${pnPublishResult?.timetoken}  message: $message")
+//            Thread.sleep(30000)
+        }
+    }
+
+    @Test
+    fun messagesCatchupForTwoChannels() {
+        val timeTokenForSubscribe = 17096209321184230
+
+        val channel01 = "myChannel01"
+        val channel02 = "myChannel02"
+        val pubNub1 = getStagingPubNub()
+
+        assertEquals(false, pubNub1.configuration.secure)
+        assertEquals("http://ingress-tcp-pub.az1.pdx1.aws.int.ps.pn", pubNub1.baseUrl())
+
+        pubNub1.addListener(object : StatusListener {
+            override fun status(pubnub: PubNub, status: PNStatus) {
+                println("-=status: ${status.category}")
+            }
+        })
+
+        val subscriptionChannel01 = pubNub1.channel(channel01).subscription()
+        subscriptionChannel01.onMessage = { pnMessageResult -> println("-=subscriptionChannel01 message: ${pnMessageResult.message}") }
+        subscriptionChannel01.subscribe(cursor = SubscriptionCursor(timetoken = timeTokenForSubscribe))
+
+        val subscriptionChannel02 = pubNub1.channel(channel02).subscription()
+        subscriptionChannel02.onMessage = { pnMessageResult -> println("-=subscriptionChannel02 message: ${pnMessageResult.message}") }
+        subscriptionChannel02.subscribe(cursor = SubscriptionCursor(timetoken = timeTokenForSubscribe))
+
+        Thread.sleep(20000)
     }
 
     @Test

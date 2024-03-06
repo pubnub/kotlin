@@ -36,7 +36,8 @@ data class PNStatus(
     var authKey: String? = null,
 
     var affectedChannels: List<String?> = emptyList(),
-    var affectedChannelGroups: List<String?> = emptyList()
+    var affectedChannelGroups: List<String?> = emptyList(),
+    var meta: Any? = null
 
 ) {
     internal var executedEndpoint: ExtendedRemoteAction<*>? = null

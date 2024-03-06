@@ -6,6 +6,7 @@ import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
+import com.pubnub.api.models.server.MissedMessages
 import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import io.mockk.spyk
@@ -20,11 +21,12 @@ class ReceiveMessagesEffectTest {
     private val subscriptionCursor = SubscriptionCursor(1337L, "1337")
     private val subscribeEventSink = TestEventSink<SubscribeEvent>()
     private val messages: List<PNEvent> = createPNMessageResultList()
-    private val receiveMessageResult = ReceiveMessagesResult(messages, subscriptionCursor)
+    private val missedMessages: List<MissedMessages> = emptyList()
+    private val receiveMessageResult = ReceiveMessagesResult(messages, subscriptionCursor, missedMessages)
     private val reason = PubNubException("Test")
 
     @Test
-    fun `should deliver ReceiveSuccess event when ReceiveMessagesEffect succeeded `() {
+    fun `should deliver ReceiveSuccess event when ReceiveMessagesEffect succeeded and no missedMessages`() {
         // given
         val receiveMessagesEffect = ReceiveMessagesEffect(successfulRemoteAction(receiveMessageResult), subscribeEventSink)
 
@@ -40,7 +42,12 @@ class ReceiveMessagesEffectTest {
     }
 
     @Test
-    fun `should deliver ReceiveFailure event when ReceiveMessagesEffect failed `() {
+    fun `should deliver ReceiveSuccessWithMissedMessages event when ReceiveMessagesEffect succeeded and there are missedMessages`() {
+        // todo
+    }
+
+    @Test
+    fun `should deliver ReceiveFailure event when ReceiveMessagesEffect failed`() {
         // given
         val receiveMessagesEffect = ReceiveMessagesEffect(failingRemoteAction(reason), subscribeEventSink)
 

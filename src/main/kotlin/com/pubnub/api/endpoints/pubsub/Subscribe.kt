@@ -65,6 +65,8 @@ class Subscribe internal constructor(pubnub: PubNub) : Endpoint<SubscribeEnvelop
             queryParams["state"] = pubnub.mapper.toJson(it)
         }
 
+        queryParams["rg"] = "1"
+
         PubNubUtil.maybeAddEeQueryParam(pubnub.configuration, queryParams)
     }
 

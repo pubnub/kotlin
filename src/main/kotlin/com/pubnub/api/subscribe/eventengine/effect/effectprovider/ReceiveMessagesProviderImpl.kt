@@ -27,7 +27,7 @@ internal class ReceiveMessagesProviderImpl(val pubNub: PubNub, val messageProces
                 messageProcessor.processIncomingPayload(it)
             }
             ReceiveMessagesResult(
-                sdkMessages, SubscriptionCursor(it.metadata.timetoken, it.metadata.region)
+                sdkMessages, SubscriptionCursor(it.metadata.timetoken, it.metadata.region), it.missedMessages
             )
         }
     }

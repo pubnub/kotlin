@@ -5,6 +5,7 @@ import com.pubnub.api.eventengine.Effect
 import com.pubnub.api.eventengine.EffectFactory
 import com.pubnub.api.eventengine.Sink
 import com.pubnub.api.models.consumer.pubsub.PNEvent
+import com.pubnub.api.models.server.MissedMessages
 import com.pubnub.api.presence.eventengine.data.PresenceData
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.subscribe.eventengine.effect.effectprovider.HandshakeProvider
@@ -15,7 +16,10 @@ import java.util.concurrent.ScheduledExecutorService
 
 internal data class ReceiveMessagesResult(
     val messages: List<PNEvent>,
-    val subscriptionCursor: SubscriptionCursor
+    val subscriptionCursor: SubscriptionCursor,
+    // todo I don't know how the server behaves when there is no MissedMessages "rg" is empty or not exist.
+    // if empty then it is ok ot have "List<MissedMessages>" if not exist then "List<MissedMessages>?"
+    val missedMessages: List<MissedMessages>? // todo zamienić na MissedEvents bo to raczej mogą być messages, signals, objects, presenceEvents ?
 )
 
 internal class SubscribeEffectFactory(

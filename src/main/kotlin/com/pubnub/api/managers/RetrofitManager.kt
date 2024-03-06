@@ -17,7 +17,9 @@ import com.pubnub.api.services.SignalService
 import com.pubnub.api.services.SubscribeService
 import com.pubnub.api.services.TimeService
 import okhttp3.Call
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import java.util.concurrent.ExecutorService
@@ -82,6 +84,19 @@ class RetrofitManager(val pubnub: PubNub) {
         return transactionClientInstance.dispatcher.executorService
     }
 
+    private fun myInterceptor(): Interceptor {
+        return Interceptor { chain ->
+            val response = chain.proceed(chain.request())
+            val rawJson = response.body?.string() // Get the raw JSON string
+
+            println("-=myInterceptor")
+            // Now, you can set a breakpoint here and inspect `rawJson`
+            // Remember, you have to recreate the response body because it can be read only once
+            val newResponseBody = ResponseBody.create(response.body?.contentType(), rawJson ?: "")
+            response.newBuilder().body(newResponseBody).build()
+        }
+    }
+
     private fun createOkHttpClient(readTimeout: Int, withSignature: Boolean = true): OkHttpClient {
         val okHttpBuilder = OkHttpClient.Builder()
             .retryOnConnectionFailure(false)
@@ -100,6 +115,8 @@ class RetrofitManager(val pubnub: PubNub) {
             if (httpLoggingInterceptor != null) {
                 okHttpBuilder.addInterceptor(httpLoggingInterceptor!!)
             }
+
+            okHttpBuilder.addInterceptor(myInterceptor())
 
             if (sslSocketFactory != null && x509ExtendedTrustManager != null) {
                 okHttpBuilder.sslSocketFactory(

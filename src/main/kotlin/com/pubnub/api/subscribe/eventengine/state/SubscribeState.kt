@@ -343,6 +343,23 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                     )
                 }
 
+                is SubscribeEvent.ReceiveSuccessWithMissedMessages -> {
+                    transitionTo(
+                        state = Receiving(channels, channelGroups, event.subscriptionCursor),
+                        SubscribeEffectInvocation.EmitMessages(event.messages), // todo jaka kolejność
+                        SubscribeEffectInvocation.EmitStatus(
+                            PNStatus(
+                                category = PNStatusCategory.PNPossiblyMissedMessagesCategory,
+                                operation = PNOperationType.PNSubscribeOperation,
+                                error = false,
+                                meta = event.missedMessagesMap,
+//                                affectedChannels = event.channels.toList(), //todo do we want to put data here?
+//                                affectedChannelGroups = event.channelGroups.toList() // todo do we want to put data here?
+                            )
+                        )
+                    )
+                }
+
                 is SubscribeEvent.UnsubscribeAll -> {
                     transitionTo(
                         state = Unsubscribed,
@@ -447,6 +464,23 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                     transitionTo(
                         state = Receiving(channels, channelGroups, event.subscriptionCursor),
                         SubscribeEffectInvocation.EmitMessages(event.messages),
+                    )
+                }
+
+                is SubscribeEvent.ReceiveReconnectSuccessWithMissedMessages -> {
+                    transitionTo(
+                        state = Receiving(channels, channelGroups, event.subscriptionCursor),
+                        SubscribeEffectInvocation.EmitMessages(event.messages), // todo jaka kolejność czy pierwsze EmitMessages czy EmitStatus?
+                        SubscribeEffectInvocation.EmitStatus(
+                            PNStatus(
+                                category = PNStatusCategory.PNPossiblyMissedMessagesCategory,
+                                operation = PNOperationType.PNSubscribeOperation,
+                                error = false,
+                                meta = event.missedMessagesMap,
+//                                affectedChannels = event.channels.toList(), // todo do we want to put data here?
+//                                affectedChannelGroups = event.channelGroups.toList() // todo do we want to put data here?
+                            )
+                        )
                     )
                 }
 
