@@ -19,9 +19,8 @@ class SubscriptionSetImpl(
     pubnub: PubNubCore,
     initialSubscriptions: Set<SubscriptionImpl>,
 ) : SubscriptionSet, BaseSubscriptionSetImpl<EventListener, Subscription>(pubnub, initialSubscriptions) {
-    override operator fun plus(subscription: Subscription): SubscriptionSet {
+    override operator fun plusAssign(subscription: Subscription) {
         add(subscription)
-        return this
     }
 
     override fun addListener(listener: EventListener) {

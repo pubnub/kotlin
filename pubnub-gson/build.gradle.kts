@@ -78,7 +78,7 @@ tasks.jacocoTestReport {
 checkstyle {
     toolVersion = "8.14"
     configFile = rootProject.file("config/checkstyle/checkstyle.xml")
-//    sourceSets = listOf(sourceSets.getByName("main"))
+    sourceSets = listOf(project.sourceSets.getByName("main"))
 }
 
 tasks.withType<Checkstyle>().configureEach {

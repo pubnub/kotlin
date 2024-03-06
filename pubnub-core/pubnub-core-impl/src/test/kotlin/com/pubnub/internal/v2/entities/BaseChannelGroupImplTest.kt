@@ -14,13 +14,13 @@ import org.junit.jupiter.api.Test
 class BaseChannelGroupImplTest {
     private lateinit var pn: TestPubNub
     private lateinit var channelGrp: BaseChannelGroupImpl<BaseEventListener, BaseSubscriptionImpl<BaseEventListener>>
-    private val CHANNEL_GROUP_NAME = "myChannelGroup"
+    private val channelGroupname = "myChannelGroup"
 
     @BeforeEach
     fun setUp() {
         pn = TestPubNub(PNConfigurationCore(UserId("uuid")))
         channelGrp =
-            BaseChannelGroupImpl(pn.pubNubCore, ChannelGroupName(CHANNEL_GROUP_NAME)) { channels, channelGroups, options ->
+            BaseChannelGroupImpl(pn.pubNubCore, ChannelGroupName(channelGroupname)) { channels, channelGroups, options ->
                 object : BaseSubscriptionImpl<BaseEventListener>(pn.pubNubCore, channels, channelGroups, options) {
                     override fun addListener(listener: BaseEventListener) { }
                 }
@@ -36,7 +36,7 @@ class BaseChannelGroupImplTest {
     fun `create subscription`() {
         val subscription = channelGrp.subscription()
 
-        Assertions.assertEquals(setOf(ChannelGroupName(CHANNEL_GROUP_NAME)), subscription.channelGroups)
+        Assertions.assertEquals(setOf(ChannelGroupName(channelGroupname)), subscription.channelGroups)
         Assertions.assertTrue(subscription.channels.isEmpty())
     }
 
@@ -46,8 +46,8 @@ class BaseChannelGroupImplTest {
 
         Assertions.assertEquals(
             setOf(
-                ChannelGroupName(CHANNEL_GROUP_NAME),
-                ChannelGroupName(CHANNEL_GROUP_NAME).withPresence,
+                ChannelGroupName(channelGroupname),
+                ChannelGroupName(channelGroupname).withPresence,
             ),
             subscriptions.channelGroups,
         )
@@ -56,10 +56,10 @@ class BaseChannelGroupImplTest {
 
     @Test
     fun `create ChannelGroupName-pnpres from ChannelGroupName`() {
-        val name = ChannelGroupName(CHANNEL_GROUP_NAME)
+        val name = ChannelGroupName(channelGroupname)
 
         val nameWithPresence = name.withPresence
 
-        Assertions.assertEquals(ChannelGroupName("$CHANNEL_GROUP_NAME-pnpres"), nameWithPresence)
+        Assertions.assertEquals(ChannelGroupName("$channelGroupname-pnpres"), nameWithPresence)
     }
 }

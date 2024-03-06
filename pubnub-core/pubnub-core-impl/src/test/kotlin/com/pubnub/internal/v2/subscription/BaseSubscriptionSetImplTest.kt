@@ -13,7 +13,9 @@ import com.pubnub.internal.v2.entities.ChannelName
 import com.pubnub.internal.v2.subscription.BaseSubscriptionImpl
 import com.pubnub.internal.v2.subscription.BaseSubscriptionSetImpl
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -26,22 +28,30 @@ class BaseSubscriptionSetImplTest {
     @BeforeEach
     fun setUp() {
         pubnub = TestPubNub(PNConfigurationCore(UserId("uuid")))
-        subscriptionSet = object :
-            BaseSubscriptionSetImpl<TestEventListener, BaseSubscriptionImpl<TestEventListener>>(pubnub.pubNubCore) {
-            override fun addListener(listener: TestEventListener) {
-                addListener(object : EventListenerCore {
-                    override fun message(pubnub: BasePubNub<*, *, *, *, *, *, *, *>, event: PNMessageResult) {
-                        listener.message(event)
-                    }
-                })
+        subscriptionSet =
+            object :
+                BaseSubscriptionSetImpl<TestEventListener, BaseSubscriptionImpl<TestEventListener>>(pubnub.pubNubCore) {
+                override fun addListener(listener: TestEventListener) {
+                    addListener(
+                        object : EventListenerCore {
+                            override fun message(
+                                pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
+                                event: PNMessageResult,
+                            ) {
+                                listener.message(event)
+                            }
+                        },
+                    )
+                }
             }
-        }
 
-        subscriptionSet.add(object : BaseSubscriptionImpl<TestEventListener>(pubnub.pubNubCore, setOf(ChannelName(channelName))) {
-            override fun addListener(listener: TestEventListener) {
-                TODO("Not yet implemented")
-            }
-        })
+        subscriptionSet.add(
+            object : BaseSubscriptionImpl<TestEventListener>(pubnub.pubNubCore, setOf(ChannelName(channelName))) {
+                override fun addListener(listener: TestEventListener) {
+                    TODO("Not yet implemented")
+                }
+            },
+        )
 
         anotherSubscription =
             object : BaseSubscriptionImpl<TestEventListener>(pubnub.pubNubCore, setOf(ChannelName("anotherChannel"))) {
@@ -110,11 +120,13 @@ class BaseSubscriptionSetImplTest {
     fun close() {
         // given
         subscriptionSet.subscribe()
-        subscriptionSet.addListener(object : TestEventListener {
-            override fun message(message: PNMessageResult) {
-                throw IllegalStateException("We should not get a message after close!")
-            }
-        })
+        subscriptionSet.addListener(
+            object : TestEventListener {
+                override fun message(message: PNMessageResult) {
+                    throw IllegalStateException("We should not get a message after close!")
+                }
+            },
+        )
 
         // when
         subscriptionSet.close()
@@ -122,8 +134,8 @@ class BaseSubscriptionSetImplTest {
         pubnub.listenerManager.announce(
             PNMessageResult(
                 BasePubSubResult(channelName, null, null, null, null),
-                JsonNull.INSTANCE
-            )
+                JsonNull.INSTANCE,
+            ),
         )
 
         // then

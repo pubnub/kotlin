@@ -12,19 +12,19 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class BaseChannelImplTest {
-
     private lateinit var pn: TestPubNub
     private lateinit var channel: BaseChannelImpl<BaseEventListener, BaseSubscriptionImpl<BaseEventListener>>
-    private val CHANNEL_NAME = "myChannel"
+    private val channelName = "myChannel"
 
     @BeforeEach
     fun setUp() {
         pn = TestPubNub(PNConfigurationCore(UserId("uuid")))
-        channel = BaseChannelImpl(pn.pubNubCore, ChannelName(CHANNEL_NAME)) { channels, channelGroups, options ->
-            object : BaseSubscriptionImpl<BaseEventListener>(pn.pubNubCore, channels, channelGroups, options) {
-                override fun addListener(listener: BaseEventListener) { }
+        channel =
+            BaseChannelImpl(pn.pubNubCore, ChannelName(channelName)) { channels, channelGroups, options ->
+                object : BaseSubscriptionImpl<BaseEventListener>(pn.pubNubCore, channels, channelGroups, options) {
+                    override fun addListener(listener: BaseEventListener) { }
+                }
             }
-        }
     }
 
     @AfterEach
@@ -36,7 +36,7 @@ class BaseChannelImplTest {
     fun `create subscription`() {
         val subscription = channel.subscription()
 
-        Assertions.assertEquals(setOf(ChannelName(CHANNEL_NAME)), subscription.channels)
+        Assertions.assertEquals(setOf(ChannelName(channelName)), subscription.channels)
         Assertions.assertTrue(subscription.channelGroups.isEmpty())
     }
 
@@ -46,20 +46,20 @@ class BaseChannelImplTest {
 
         Assertions.assertEquals(
             setOf(
-                ChannelName(CHANNEL_NAME),
-                ChannelName(CHANNEL_NAME).withPresence
+                ChannelName(channelName),
+                ChannelName(channelName).withPresence,
             ),
-            subscriptions.channels
+            subscriptions.channels,
         )
         Assertions.assertTrue(subscriptions.channelGroups.isEmpty())
     }
 
     @Test
     fun `create ChannelName-pnpres from ChannelName`() {
-        val name = ChannelName(CHANNEL_NAME)
+        val name = ChannelName(channelName)
 
         val nameWithPresence = name.withPresence
 
-        Assertions.assertEquals(ChannelName("$CHANNEL_NAME-pnpres"), nameWithPresence)
+        Assertions.assertEquals(ChannelName("$channelName-pnpres"), nameWithPresence)
     }
 }

@@ -4,5 +4,5 @@ import com.pubnub.api.v2.callbacks.EventEmitter
 import com.pubnub.api.v2.callbacks.EventListener
 
 interface SubscriptionSet : BaseSubscriptionSet<EventListener, Subscription>, EventEmitter {
-    operator fun plus(subscription: Subscription): SubscriptionSet
+    operator fun plusAssign(subscription: Subscription)
 }

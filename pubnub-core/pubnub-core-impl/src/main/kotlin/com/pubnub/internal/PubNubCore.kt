@@ -2243,7 +2243,7 @@ class PubNubCore internal constructor(
      *
      * If a client gets disconnected from a channel, it can automatically attempt to reconnect to that channel
      * and retrieve any available messages that were missed during that period.
-     * This can be achieved by setting [PNConfigurationCore.reconnectionPolicy] to [PNReconnectionPolicy.LINEAR], when
+     * This can be achieved by setting [PNConfigurationCore.retryConfiguration] when
      * initializing the client.
      *
      * @param channels Channels to subscribe/unsubscribe. Either `channel` or [channelGroups] are required.
