@@ -69,10 +69,8 @@ class PublishIntegrationTests : BaseIntegrationTest() {
 
     private fun getStagingPubNub(): PubNub {
         val pnConfiguration = PNConfiguration(userId = UserId(PubNub.generateUUID())).apply {
-//            publishKey = "demo"
-//            subscribeKey = "demo"
-            publishKey = "pub-c-19717402-29ea-44e6-8a81-9bf812aaeebc"
-            subscribeKey = "sub-c-7e769d5e-78fa-4ef7-9026-b36bb303ea31"
+            publishKey = "demo"
+            subscribeKey = "demo"
             origin = "ingress-tcp-pub.az1.pdx1.aws.int.ps.pn"
             secure = false
             logVerbosity = PNLogVerbosity.NONE
