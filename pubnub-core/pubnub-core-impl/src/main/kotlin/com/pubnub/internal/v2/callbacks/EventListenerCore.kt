@@ -9,7 +9,7 @@ import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResu
 import com.pubnub.api.v2.callbacks.BaseEventListener
 import com.pubnub.internal.models.consumer.pubsub.objects.PNObjectEventResult
 
-interface InternalEventListener : BaseEventListener {
+interface EventListenerCore : BaseEventListener {
     /**
      * Receive messages at subscribed channels.
      *

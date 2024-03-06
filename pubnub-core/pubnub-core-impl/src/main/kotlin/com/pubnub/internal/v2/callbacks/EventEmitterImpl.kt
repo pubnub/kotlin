@@ -18,11 +18,11 @@ import java.util.concurrent.CopyOnWriteArraySet
 class EventEmitterImpl(
     override val phase: AnnouncementCallback.Phase,
     private val accepts: (AnnouncementEnvelope<out PNEvent>) -> Boolean = { true },
-) : BaseEventEmitter<InternalEventListener>, AnnouncementCallback {
+) : BaseEventEmitter<EventListenerCore>, AnnouncementCallback {
     @get:TestOnly
-    val listeners = CopyOnWriteArraySet<InternalEventListener>()
+    val listeners = CopyOnWriteArraySet<EventListenerCore>()
 
-    override fun addListener(listener: InternalEventListener) {
+    override fun addListener(listener: EventListenerCore) {
         listeners.add(listener)
     }
 

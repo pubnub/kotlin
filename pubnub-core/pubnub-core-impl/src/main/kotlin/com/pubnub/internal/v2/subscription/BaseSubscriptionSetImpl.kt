@@ -9,7 +9,7 @@ import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.managers.AnnouncementCallback
 import com.pubnub.internal.managers.AnnouncementEnvelope
 import com.pubnub.internal.v2.callbacks.EventEmitterImpl
-import com.pubnub.internal.v2.callbacks.InternalEventListener
+import com.pubnub.internal.v2.callbacks.EventListenerCore
 import java.util.concurrent.CopyOnWriteArraySet
 
 private const val ERROR_SUBSCRIPTION_WRONG_CLASS =
@@ -59,7 +59,7 @@ abstract class BaseSubscriptionSetImpl<EvLis : BaseEventListener, Sub : BaseSubs
         pubnub.listenerManager.removeAnnouncementCallback(eventEmitter)
     }
 
-    protected fun addListener(listener: InternalEventListener) {
+    protected fun addListener(listener: EventListenerCore) {
         eventEmitter.addListener(listener)
     }
 

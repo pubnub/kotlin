@@ -10,7 +10,7 @@ import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.models.toApi
 
-open class DelegatingEventListener(private val listener: EventListener) : InternalEventListener {
+open class DelegatingEventListener(private val listener: EventListener) : EventListenerCore {
     override fun message(
         pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
         event: PNMessageResult,

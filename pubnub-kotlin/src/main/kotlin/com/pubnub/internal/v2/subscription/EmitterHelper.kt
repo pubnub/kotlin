@@ -10,9 +10,9 @@ import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.v2.callbacks.BaseEventEmitter
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.internal.v2.callbacks.DelegatingEventListener
-import com.pubnub.internal.v2.callbacks.InternalEventListener
+import com.pubnub.internal.v2.callbacks.EventListenerCore
 
-class EmitterHelper(eventEmitter: BaseEventEmitter<InternalEventListener>) {
+class EmitterHelper(eventEmitter: BaseEventEmitter<EventListenerCore>) {
     init {
         eventEmitter.addListener(
             DelegatingEventListener(

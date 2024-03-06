@@ -3,8 +3,8 @@ package com.pubnub.internal
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import com.pubnub.internal.callbacks.SubscribeCallback
 import com.pubnub.internal.subscribe.eventengine.configuration.EventEnginesConf
-import com.pubnub.internal.v2.callbacks.InternalEventListener
-import com.pubnub.internal.v2.callbacks.InternalStatusListener
+import com.pubnub.internal.v2.callbacks.EventListenerCore
+import com.pubnub.internal.v2.callbacks.StatusListenerCore
 import com.pubnub.internal.v2.entities.BaseChannelGroupImpl
 import com.pubnub.internal.v2.entities.BaseChannelImpl
 import com.pubnub.internal.v2.entities.BaseChannelMetadataImpl
@@ -15,30 +15,30 @@ import java.io.InputStream
 
 class TestPubNub internal constructor(configuration: PNConfigurationCore, eventEnginesConf: EventEnginesConf = EventEnginesConf()) :
     BasePubNubImpl<
-        InternalEventListener,
-        BaseSubscriptionImpl<InternalEventListener>,
-        BaseChannelImpl<InternalEventListener, BaseSubscriptionImpl<InternalEventListener>>,
-        BaseChannelGroupImpl<InternalEventListener, BaseSubscriptionImpl<InternalEventListener>>,
-        BaseChannelMetadataImpl<InternalEventListener, BaseSubscriptionImpl<InternalEventListener>>,
-        BaseUserMetadataImpl<InternalEventListener, BaseSubscriptionImpl<InternalEventListener>>,
-        BaseSubscriptionSetImpl<InternalEventListener, BaseSubscriptionImpl<InternalEventListener>>,
-        InternalStatusListener,
+        EventListenerCore,
+        BaseSubscriptionImpl<EventListenerCore>,
+        BaseChannelImpl<EventListenerCore, BaseSubscriptionImpl<EventListenerCore>>,
+        BaseChannelGroupImpl<EventListenerCore, BaseSubscriptionImpl<EventListenerCore>>,
+        BaseChannelMetadataImpl<EventListenerCore, BaseSubscriptionImpl<EventListenerCore>>,
+        BaseUserMetadataImpl<EventListenerCore, BaseSubscriptionImpl<EventListenerCore>>,
+        BaseSubscriptionSetImpl<EventListenerCore, BaseSubscriptionImpl<EventListenerCore>>,
+        StatusListenerCore,
         >(configuration, eventEnginesConf) {
-        override fun channel(name: String): BaseChannelImpl<InternalEventListener, BaseSubscriptionImpl<InternalEventListener>> {
+        override fun channel(name: String): BaseChannelImpl<EventListenerCore, BaseSubscriptionImpl<EventListenerCore>> {
             TODO("Not yet implemented")
         }
 
-        override fun channelGroup(name: String): BaseChannelGroupImpl<InternalEventListener, BaseSubscriptionImpl<InternalEventListener>> {
+        override fun channelGroup(name: String): BaseChannelGroupImpl<EventListenerCore, BaseSubscriptionImpl<EventListenerCore>> {
             TODO("Not yet implemented")
         }
 
         override fun channelMetadata(
             id: String,
-        ): BaseChannelMetadataImpl<InternalEventListener, BaseSubscriptionImpl<InternalEventListener>> {
+        ): BaseChannelMetadataImpl<EventListenerCore, BaseSubscriptionImpl<EventListenerCore>> {
             TODO("Not yet implemented")
         }
 
-        override fun userMetadata(id: String): BaseUserMetadataImpl<InternalEventListener, BaseSubscriptionImpl<InternalEventListener>> {
+        override fun userMetadata(id: String): BaseUserMetadataImpl<EventListenerCore, BaseSubscriptionImpl<EventListenerCore>> {
             TODO("Not yet implemented")
         }
 
@@ -143,8 +143,8 @@ class TestPubNub internal constructor(configuration: PNConfigurationCore, eventE
         }
 
         override fun subscriptionSetOf(
-            subscriptions: Set<BaseSubscriptionImpl<InternalEventListener>>,
-        ): BaseSubscriptionSetImpl<InternalEventListener, BaseSubscriptionImpl<InternalEventListener>> {
+            subscriptions: Set<BaseSubscriptionImpl<EventListenerCore>>,
+        ): BaseSubscriptionSetImpl<EventListenerCore, BaseSubscriptionImpl<EventListenerCore>> {
             TODO("Not yet implemented")
         }
 
@@ -157,7 +157,7 @@ class TestPubNub internal constructor(configuration: PNConfigurationCore, eventE
          *
          * @param listener The listener to be added.
          */
-        override fun addListener(listener: InternalEventListener) {
+        override fun addListener(listener: EventListenerCore) {
             listenerManager.addListener(listener)
         }
 
@@ -166,7 +166,7 @@ class TestPubNub internal constructor(configuration: PNConfigurationCore, eventE
          *
          * @param listener The listener to be added.
          */
-        override fun addListener(listener: InternalStatusListener) {
+        override fun addListener(listener: StatusListenerCore) {
             listenerManager.addListener(listener)
         }
     }

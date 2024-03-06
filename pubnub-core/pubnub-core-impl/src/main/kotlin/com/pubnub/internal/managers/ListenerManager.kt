@@ -15,15 +15,15 @@ import com.pubnub.internal.callbacks.SubscribeCallback
 import com.pubnub.internal.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.internal.subscribe.eventengine.effect.MessagesConsumer
 import com.pubnub.internal.subscribe.eventengine.effect.StatusConsumer
-import com.pubnub.internal.v2.callbacks.InternalEventListener
-import com.pubnub.internal.v2.callbacks.InternalStatusListener
+import com.pubnub.internal.v2.callbacks.EventListenerCore
+import com.pubnub.internal.v2.callbacks.StatusListenerCore
 import java.util.concurrent.CopyOnWriteArrayList
 
-class ListenerManager(val pubnub: BasePubNub<*, *, *, *, *, *, *, *>) : MessagesConsumer, StatusConsumer, BaseEventEmitter<InternalEventListener> {
+class ListenerManager(val pubnub: BasePubNub<*, *, *, *, *, *, *, *>) : MessagesConsumer, StatusConsumer, BaseEventEmitter<EventListenerCore> {
     private val listeners = CopyOnWriteArrayList<Listener>()
 
-    private val statusListeners get() = listeners.filterIsInstance<InternalStatusListener>()
-    private val eventListeners get() = listeners.filterIsInstance<InternalEventListener>()
+    private val statusListeners get() = listeners.filterIsInstance<StatusListenerCore>()
+    private val eventListeners get() = listeners.filterIsInstance<EventListenerCore>()
 
     override fun removeListener(listener: Listener) {
         listeners.remove(listener)
@@ -42,11 +42,11 @@ class ListenerManager(val pubnub: BasePubNub<*, *, *, *, *, *, *, *>) : Messages
         listeners.add(listener)
     }
 
-    fun addListener(listener: InternalStatusListener) {
+    fun addListener(listener: StatusListenerCore) {
         listeners.add(listener)
     }
 
-    override fun addListener(listener: InternalEventListener) {
+    override fun addListener(listener: EventListenerCore) {
         listeners.add(listener)
     }
 

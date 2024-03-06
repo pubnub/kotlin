@@ -4,7 +4,7 @@ import com.pubnub.api.BasePubNub
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.v2.callbacks.BaseStatusListener
 
-interface InternalStatusListener : BaseStatusListener {
+interface StatusListenerCore : BaseStatusListener {
     /**
      * Receive status updates from the PubNub client.
      *

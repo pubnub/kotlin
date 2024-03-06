@@ -1,6 +1,6 @@
 package com.pubnub.internal.callbacks
 
-import com.pubnub.internal.v2.callbacks.InternalEventListener
-import com.pubnub.internal.v2.callbacks.InternalStatusListener
+import com.pubnub.internal.v2.callbacks.EventListenerCore
+import com.pubnub.internal.v2.callbacks.StatusListenerCore
 
-interface SubscribeCallback : InternalStatusListener, InternalEventListener
+interface SubscribeCallback : StatusListenerCore, EventListenerCore

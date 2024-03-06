@@ -11,7 +11,7 @@ import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.managers.AnnouncementCallback
 import com.pubnub.internal.managers.AnnouncementEnvelope
 import com.pubnub.internal.v2.callbacks.EventEmitterImpl
-import com.pubnub.internal.v2.callbacks.InternalEventListener
+import com.pubnub.internal.v2.callbacks.EventListenerCore
 import com.pubnub.internal.v2.entities.ChannelGroupName
 import com.pubnub.internal.v2.entities.ChannelName
 
@@ -92,7 +92,7 @@ abstract class BaseSubscriptionImpl<T : BaseEventListener>(
         unsubscribe()
     }
 
-    protected fun addListener(listener: InternalEventListener) {
+    protected open fun addListener(listener: EventListenerCore) {
         eventEmitter.addListener(listener)
     }
 

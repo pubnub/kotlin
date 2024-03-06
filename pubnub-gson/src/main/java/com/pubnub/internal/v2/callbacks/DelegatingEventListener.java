@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public class DelegatingEventListener implements InternalEventListener {
+public class DelegatingEventListener implements EventListenerCore {
     private final EventListener listener;
 
     public DelegatingEventListener(EventListener listener) {

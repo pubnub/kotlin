@@ -33,8 +33,8 @@ class EventEmitterImplTest {
     }
 
     @Test
-    fun addListener() {
-        val listener = object : InternalEventListener { }
+    fun `can add listener`() {
+        val listener = object : EventListenerCore { }
 
         emitterImpl.addListener(listener)
 
@@ -42,8 +42,8 @@ class EventEmitterImplTest {
     }
 
     @Test
-    fun removeListener() {
-        val listener = object : InternalEventListener { }
+    fun `can remove listener`() {
+        val listener = object : EventListenerCore { }
         emitterImpl.addListener(listener)
         assertTrue(emitterImpl.listeners.contains(listener))
 
@@ -53,10 +53,10 @@ class EventEmitterImplTest {
     }
 
     @Test
-    fun removeAllListeners() {
-        emitterImpl.addListener(object : InternalEventListener { })
-        emitterImpl.addListener(object : InternalEventListener { })
-        emitterImpl.addListener(object : InternalEventListener { })
+    fun `can remove all listeners`() {
+        emitterImpl.addListener(object : EventListenerCore { })
+        emitterImpl.addListener(object : EventListenerCore { })
+        emitterImpl.addListener(object : EventListenerCore { })
         assertTrue(emitterImpl.listeners.size == 3)
 
         emitterImpl.removeAllListeners()
@@ -65,10 +65,10 @@ class EventEmitterImplTest {
     }
 
     @Test
-    fun message() {
+    fun `message is delivered`() {
         var success = false
         emitterImpl.addListener(
-            object : InternalEventListener {
+            object : EventListenerCore {
                 override fun message(
                     pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
                     event: PNMessageResult,
@@ -82,10 +82,10 @@ class EventEmitterImplTest {
     }
 
     @Test
-    fun messageAnnounce() {
+    fun `message announcement is delivered`() {
         var success = false
         emitterImpl.addListener(
-            object : InternalEventListener {
+            object : EventListenerCore {
                 override fun message(
                     pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
                     event: PNMessageResult,
@@ -99,10 +99,10 @@ class EventEmitterImplTest {
     }
 
     @Test
-    fun presence() {
+    fun `presence event is delivered`() {
         var success = false
         emitterImpl.addListener(
-            object : InternalEventListener {
+            object : EventListenerCore {
                 override fun presence(
                     pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
                     event: PNPresenceEventResult,
@@ -118,10 +118,10 @@ class EventEmitterImplTest {
     }
 
     @Test
-    fun presenceAnnounce() {
+    fun `presence announcement is delivered`() {
         var success = false
         emitterImpl.addListener(
-            object : InternalEventListener {
+            object : EventListenerCore {
                 override fun presence(
                     pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
                     event: PNPresenceEventResult,
@@ -137,10 +137,10 @@ class EventEmitterImplTest {
     }
 
     @Test
-    fun signal() {
+    fun `signal is delivered`() {
         var success = false
         emitterImpl.addListener(
-            object : InternalEventListener {
+            object : EventListenerCore {
                 override fun signal(
                     pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
                     event: PNSignalResult,
@@ -156,10 +156,10 @@ class EventEmitterImplTest {
     }
 
     @Test
-    fun signalAnnounce() {
+    fun `signal announcement is delivered`() {
         var success = false
         emitterImpl.addListener(
-            object : InternalEventListener {
+            object : EventListenerCore {
                 override fun signal(
                     pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
                     event: PNSignalResult,
@@ -175,10 +175,10 @@ class EventEmitterImplTest {
     }
 
     @Test
-    fun messageAction() {
+    fun `messageAction is delivered`() {
         var success = false
         emitterImpl.addListener(
-            object : InternalEventListener {
+            object : EventListenerCore {
                 override fun messageAction(
                     pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
                     event: PNMessageActionResult,
@@ -194,10 +194,10 @@ class EventEmitterImplTest {
     }
 
     @Test
-    fun messageActionAnnounce() {
+    fun `messageAction announcement is delivered`() {
         var success = false
         emitterImpl.addListener(
-            object : InternalEventListener {
+            object : EventListenerCore {
                 override fun messageAction(
                     pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
                     event: PNMessageActionResult,
@@ -213,10 +213,10 @@ class EventEmitterImplTest {
     }
 
     @Test
-    fun objects() {
+    fun `object is delivered`() {
         var success = false
         emitterImpl.addListener(
-            object : InternalEventListener {
+            object : EventListenerCore {
                 override fun objects(
                     pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
                     event: PNObjectEventResult,
@@ -232,10 +232,10 @@ class EventEmitterImplTest {
     }
 
     @Test
-    fun objectsAnnounce() {
+    fun `objects announcement is delivered`() {
         var success = false
         emitterImpl.addListener(
-            object : InternalEventListener {
+            object : EventListenerCore {
                 override fun objects(
                     pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
                     event: PNObjectEventResult,
@@ -254,10 +254,10 @@ class EventEmitterImplTest {
     }
 
     @Test
-    fun file() {
+    fun `file is delivered`() {
         var success = false
         emitterImpl.addListener(
-            object : InternalEventListener {
+            object : EventListenerCore {
                 override fun file(
                     pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
                     event: PNFileEventResult,
@@ -273,10 +273,10 @@ class EventEmitterImplTest {
     }
 
     @Test
-    fun fileAnnounce() {
+    fun `file announcement is delivered`() {
         var success = false
         emitterImpl.addListener(
-            object : InternalEventListener {
+            object : EventListenerCore {
                 override fun file(
                     pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
                     event: PNFileEventResult,
@@ -302,7 +302,7 @@ class EventEmitterImplTest {
                 envelope.event.channel == "acceptedChannel"
             }
         emitterImpl.addListener(
-            object : InternalEventListener {
+            object : EventListenerCore {
                 override fun message(
                     pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
                     event: PNMessageResult,
@@ -326,7 +326,7 @@ class EventEmitterImplTest {
                 envelope.event.channel == "acceptedChannel"
             }
         emitterImpl.addListener(
-            object : InternalEventListener {
+            object : EventListenerCore {
                 override fun message(
                     pubnub: BasePubNub<*, *, *, *, *, *, *, *>,
                     event: PNMessageResult,
