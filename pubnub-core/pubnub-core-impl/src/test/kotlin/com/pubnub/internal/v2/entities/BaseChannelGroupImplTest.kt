@@ -1,30 +1,30 @@
- package com.pubnub.internal.v2.entities
+package com.pubnub.internal.v2.entities
 
- import com.pubnub.api.UserId
+import com.pubnub.api.UserId
+import com.pubnub.api.v2.callbacks.BaseEventListener
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.internal.PNConfigurationCore
 import com.pubnub.internal.TestPubNub
- import com.pubnub.internal.v2.callbacks.EventListenerCore
- import com.pubnub.internal.v2.subscription.BaseSubscriptionImpl
- import org.junit.jupiter.api.AfterEach
+import com.pubnub.internal.v2.subscription.BaseSubscriptionImpl
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
- class BaseChannelGroupImplTest {
-
+class BaseChannelGroupImplTest {
     private lateinit var pn: TestPubNub
-    private lateinit var channelGrp: BaseChannelGroupImpl<EventListenerCore, BaseSubscriptionImpl<EventListenerCore>>
+    private lateinit var channelGrp: BaseChannelGroupImpl<BaseEventListener, BaseSubscriptionImpl<BaseEventListener>>
     private val CHANNEL_GROUP_NAME = "myChannelGroup"
 
     @BeforeEach
     fun setUp() {
         pn = TestPubNub(PNConfigurationCore(UserId("uuid")))
-        channelGrp = BaseChannelGroupImpl(pn.pubNubCore, ChannelGroupName(CHANNEL_GROUP_NAME)) { channels, channelGroups, options ->
-            object : BaseSubscriptionImpl<EventListenerCore>(pn.pubNubCore, channels, channelGroups, options) {
-                override fun addListener(listener: EventListenerCore) { }
+        channelGrp =
+            BaseChannelGroupImpl(pn.pubNubCore, ChannelGroupName(CHANNEL_GROUP_NAME)) { channels, channelGroups, options ->
+                object : BaseSubscriptionImpl<BaseEventListener>(pn.pubNubCore, channels, channelGroups, options) {
+                    override fun addListener(listener: BaseEventListener) { }
+                }
             }
-        }
     }
 
     @AfterEach
@@ -47,9 +47,9 @@ import org.junit.jupiter.api.Test
         Assertions.assertEquals(
             setOf(
                 ChannelGroupName(CHANNEL_GROUP_NAME),
-                ChannelGroupName(CHANNEL_GROUP_NAME).withPresence
+                ChannelGroupName(CHANNEL_GROUP_NAME).withPresence,
             ),
-            subscriptions.channelGroups
+            subscriptions.channelGroups,
         )
         Assertions.assertTrue(subscriptions.channels.isEmpty())
     }
@@ -62,4 +62,4 @@ import org.junit.jupiter.api.Test
 
         Assertions.assertEquals(ChannelGroupName("$CHANNEL_GROUP_NAME-pnpres"), nameWithPresence)
     }
- }
+}

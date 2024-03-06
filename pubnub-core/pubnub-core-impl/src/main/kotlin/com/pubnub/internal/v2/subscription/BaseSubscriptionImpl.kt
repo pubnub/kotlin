@@ -92,7 +92,7 @@ abstract class BaseSubscriptionImpl<T : BaseEventListener>(
         unsubscribe()
     }
 
-    protected open fun addListener(listener: EventListenerCore) {
+    protected fun addListener(listener: EventListenerCore) {
         eventEmitter.addListener(listener)
     }
 

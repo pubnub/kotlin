@@ -39,6 +39,7 @@ sourceSets {
 
 val integrationTestImplementation by configurations.getting {
     extendsFrom(configurations.implementation.get())
+    extendsFrom(configurations.testImplementation.get())
 }
 
 dependencies {

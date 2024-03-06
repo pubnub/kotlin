@@ -2,7 +2,7 @@ package com.pubnub.api.v2.callbacks
 
 import com.pubnub.api.callbacks.Listener
 
-interface BaseEventEmitter<T : BaseEventListener> {
+interface BaseEventEmitter<T : Listener> {
     /**
      * Add a listener.
      *
