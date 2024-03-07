@@ -44,7 +44,7 @@ public class PublishImpl extends DelegatingEndpoint<PNPublishResult> implements 
         if (message == null) {
             throw new PubNubException(PubNubErrorBuilder.PNERROBJ_MESSAGE_MISSING);
         }
-        if (channel == null || channel.isEmpty()) {
+        if (channel == null) {
             throw new PubNubException(PubNubErrorBuilder.PNERROBJ_CHANNEL_MISSING);
         }
     }

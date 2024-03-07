@@ -28,7 +28,7 @@ public class RemoveMessageActionImpl extends DelegatingEndpoint<PNRemoveMessageA
 
     @Override
     protected void validateParams() throws PubNubException {
-        if (channel == null || channel.isEmpty()) {
+        if (channel == null) {
             throw new PubNubException(PubNubError.CHANNEL_MISSING);
         }
         if (messageTimetoken == null) {

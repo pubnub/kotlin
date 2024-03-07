@@ -31,7 +31,7 @@ public class HistoryImpl extends DelegatingEndpoint<PNHistoryResult> implements 
 
     @Override
     protected void validateParams() throws PubNubException {
-        if (channel == null || channel.isEmpty()) {
+        if (channel == null) {
             throw new PubNubException(PubNubErrorBuilder.PNERROBJ_CHANNEL_MISSING);
         }
     }

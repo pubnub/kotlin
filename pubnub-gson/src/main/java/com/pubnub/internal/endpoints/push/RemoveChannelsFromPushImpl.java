@@ -45,7 +45,7 @@ public class RemoveChannelsFromPushImpl extends DelegatingEndpoint<PNPushRemoveC
         if (deviceId == null || deviceId.isEmpty()) {
             throw new PubNubException(PubNubErrorBuilder.PNERROBJ_DEVICE_ID_MISSING);
         }
-        if (channels == null || channels.isEmpty()) {
+        if (channels == null) {
             throw new PubNubException(PubNubErrorBuilder.PNERROBJ_CHANNEL_MISSING);
         }
     }

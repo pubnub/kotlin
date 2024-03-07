@@ -30,7 +30,7 @@ public class SignalImpl extends DelegatingEndpoint<PNPublishResult> implements S
         if (message == null) {
             throw new PubNubException(PubNubErrorBuilder.PNERROBJ_MESSAGE_MISSING);
         }
-        if (channel == null || channel.isEmpty()) {
+        if (channel == null) {
             throw new PubNubException(PubNubErrorBuilder.PNERROBJ_CHANNEL_MISSING);
         }
     }

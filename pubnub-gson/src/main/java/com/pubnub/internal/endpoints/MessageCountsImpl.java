@@ -40,7 +40,7 @@ public class MessageCountsImpl extends DelegatingEndpoint<PNMessageCountResult> 
         if (channels == null || channels.isEmpty()) {
             throw new PubNubException(PubNubErrorBuilder.PNERROBJ_CHANNEL_MISSING);
         }
-        if ((channelsTimetoken == null || channelsTimetoken.isEmpty()) || channelsTimetoken.contains(null)) {
+        if (channelsTimetoken == null || channelsTimetoken.contains(null)) {
             throw new PubNubException(PubNubErrorBuilder.PNERROBJ_TIMETOKEN_MISSING);
         }
     }

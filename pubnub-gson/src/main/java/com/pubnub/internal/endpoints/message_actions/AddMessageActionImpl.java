@@ -32,7 +32,7 @@ public class AddMessageActionImpl extends DelegatingEndpoint<PNAddMessageActionR
 
     @Override
     protected void validateParams() throws PubNubException {
-        if (channel == null || channel.isEmpty()) {
+        if (channel == null) {
             throw new PubNubException(PNERROBJ_CHANNEL_MISSING);
         }
         if (messageAction == null) {

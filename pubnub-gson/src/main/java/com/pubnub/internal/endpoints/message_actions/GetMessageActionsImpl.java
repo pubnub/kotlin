@@ -24,7 +24,7 @@ public class GetMessageActionsImpl extends DelegatingEndpoint<PNGetMessageAction
 
     @Override
     protected void validateParams() throws PubNubException {
-        if (channel == null || channel.isEmpty()) {
+        if (channel == null) {
             throw new PubNubException(PubNubError.CHANNEL_MISSING);
         }
     }
