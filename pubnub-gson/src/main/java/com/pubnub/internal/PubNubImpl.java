@@ -506,6 +506,9 @@ public class PubNubImpl extends BasePubNubImpl<
 
     @Override
     public @NotNull InputStream decryptInputStream(@NotNull InputStream inputStream, @Nullable String cipherKey) throws PubNubException {
+        if (inputStream == null) {
+            throw new PubNubException(PubNubError.INVALID_ARGUMENTS);
+        }
         return getPubNubCore().decryptInputStream(inputStream, cipherKey);
     }
 
@@ -530,6 +533,9 @@ public class PubNubImpl extends BasePubNubImpl<
      */
     @Override
     public @NotNull String encrypt(@NotNull String inputString, String cipherKey) throws PubNubException {
+        if (inputString == null) {
+            throw new PubNubException(PubNubError.INVALID_ARGUMENTS);
+        }
         return getPubNubCore().encrypt(inputString, cipherKey);
     }
 

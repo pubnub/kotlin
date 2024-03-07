@@ -64,6 +64,7 @@ public class SetStateImpl extends DelegatingEndpoint<PNSetStateResult> implement
     @Override
     protected ExtendedRemoteAction<PNSetStateResult> createAction() {
         if (!withHeartbeat) {
+            // Regular way of setting presence explicitly is through SetPresenceState:
             return pubnub.setPresenceState(
                     channels,
                     channelGroups,
@@ -71,6 +72,8 @@ public class SetStateImpl extends DelegatingEndpoint<PNSetStateResult> implement
                     uuid
             );
         } else {
+            // Some clients require alternative way of setting it through Heartbeat
+            // Which is a feature brought over from the legacy Java SDK, and we need to be compatible:
             return new MappingRemoteAction<>(
                     new HeartbeatEndpoint(pubnub, channels, channelGroups, state), aBoolean -> new PNSetStateResult(pubnub.getMapper().toJsonTree(state)));
         }

@@ -26,15 +26,7 @@ public class HistoryImpl extends DelegatingEndpoint<PNHistoryResult> implements 
 
     @Override
     protected com.pubnub.internal.EndpointCore<?, PNHistoryResult> createAction() {
-        return pubnub.history(
-                channel,
-                start,
-                end,
-                count,
-                reverse,
-                includeTimetoken,
-                includeMeta
-        );
+        return pubnub.history(channel, start, end, count, reverse, includeTimetoken, includeMeta);
     }
 
     @Override

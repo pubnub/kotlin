@@ -33,7 +33,6 @@ public class GrantTokenImpl extends DelegatingEndpoint<PNGrantTokenResult> imple
 
     @Override
     protected void validateParams() throws PubNubException {
-        super.validateParams();
         if (this.ttl == null) {
             throw new PubNubException(PubNubErrorBuilder.PNERROBJ_TTL_MISSING);
         }

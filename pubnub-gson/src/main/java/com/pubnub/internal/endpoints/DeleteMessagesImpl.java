@@ -15,22 +15,17 @@ import java.util.List;
 @Setter
 @Accessors(chain = true, fluent = true)
 public class DeleteMessagesImpl extends DelegatingEndpoint<PNDeleteMessagesResult> implements DeleteMessages {
-    private List<String> channels;
+    private List<String> channels = new ArrayList<>();
     private Long start;
     private Long end;
 
     public DeleteMessagesImpl(PubNubCore pubnub) {
         super(pubnub);
-        channels = new ArrayList<>();
     }
 
     @Override
     protected ExtendedRemoteAction<PNDeleteMessagesResult> createAction() {
-        return pubnub.deleteMessages(
-                channels,
-                start,
-                end
-        );
+        return pubnub.deleteMessages(channels, start, end);
     }
 
     @Override
