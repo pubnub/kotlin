@@ -131,16 +131,16 @@ public class MultiLineIfElseRule :
 
         if (!node.treePrev.textContains('\n')) {
             if (node.firstChildNode.elementType == IF) {
-                // Don't allow single line for:
+                // Allow single line for:
                 // else if (...)
                 return
             }
             if (!node.treeParent.textContains('\n')) {
-                // Allow single line if statements as long as they are really simple (e.g. do not contain newlines)
+                // Don't allow single line if statements as long as they are really simple (e.g. do not contain newlines)
                 //    if (...) <statement> // no else statement
                 //    if (...) <statement> else <statement>
                 if (node.treeParent.treeParent.elementType == ELSE) {
-                    // Except in case nested if-else-if on single line
+                    // Not even in case nested if-else-if on single line
                     //    if (...) <statement> else if (..) <statement>
                 } else {
                     // don't allow any of the above

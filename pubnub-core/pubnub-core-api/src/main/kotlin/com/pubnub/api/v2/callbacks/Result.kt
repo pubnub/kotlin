@@ -49,6 +49,7 @@ class Result<out T>
          * This function is a shorthand for `getOrElse { null }` (see [getOrElse]) or
          * `fold(onSuccess = { it }, onFailure = { null })` (see [fold]).
          */
+        @Suppress("UNCHECKED_CAST")
         public inline fun getOrNull(): T? =
             when {
                 isFailure -> null
@@ -63,7 +64,7 @@ class Result<out T>
          */
         public fun exceptionOrNull(): PubNubException? =
             when (value) {
-                is Failure -> value.exception as PubNubException
+                is Failure -> value.exception
                 else -> null
             }
 
@@ -78,14 +79,13 @@ class Result<out T>
                 else -> "Success($value)"
             }
 
-        @OptIn(ExperimentalContracts::class)
         public inline fun onFailure(action: Consumer<PubNubException>): Result<T> {
             exceptionOrNull()?.let { action.accept(it) }
             return this
         }
 
         @Suppress("UNCHECKED_CAST")
-        inline fun onSuccess(action: Consumer<in T>): Result<T> {
+        public inline fun onSuccess(action: Consumer<in T>): Result<T> {
             if (isSuccess) {
                 action.accept(value as T)
             }
@@ -128,42 +128,16 @@ class Result<out T>
  * Creates an instance of internal marker [Result.Failure] class to
  * make sure that this class is not exposed in ABI.
  */
-@PublishedApi
-internal fun createFailure(exception: PubNubException): Any = Result.Failure(exception)
+private fun createFailure(exception: PubNubException): Any = Result.Failure(exception)
 
 /**
  * Throws exception if the result is failure. This internal function minimizes
  * inlined bytecode for [getOrThrow] and makes sure that in the future we can
  * add some exception-augmenting logic here (if needed).
  */
-@PublishedApi
-internal fun Result<*>.throwOnFailure() {
+private fun Result<*>.throwOnFailure() {
     if (value is Result.Failure) {
         throw value.exception
-    }
-}
-
-/**
- * Calls the specified function [block] and returns its encapsulated result if invocation was successful,
- * catching any [Throwable] exception that was thrown from the [block] function execution and encapsulating it as a failure.
- */
-public inline fun <R> runCatching(block: () -> R): Result<R> {
-    return try {
-        Result.success(block())
-    } catch (e: Throwable) {
-        Result.failure(PubNubException.from(e))
-    }
-}
-
-/**
- * Calls the specified function [block] with `this` value as its receiver and returns its encapsulated result if invocation was successful,
- * catching any [Throwable] exception that was thrown from the [block] function execution and encapsulating it as a failure.
- */
-public inline fun <T, R> T.runCatching(block: T.() -> R): Result<R> {
-    return try {
-        Result.success(block())
-    } catch (e: Throwable) {
-        Result.failure(PubNubException.from(e))
     }
 }
 
@@ -175,7 +149,7 @@ public inline fun <T, R> T.runCatching(block: T.() -> R): Result<R> {
  *
  * This function is a shorthand for `getOrElse { throw it }` (see [getOrElse]).
  */
-public inline fun <T> Result<T>.getOrThrow(): T {
+public fun <T> Result<T>.getOrThrow(): T {
     throwOnFailure()
     return value as T
 }
@@ -211,126 +185,3 @@ public inline fun <R, T : R> Result<T>.getOrDefault(defaultValue: R): R {
     }
     return value as T
 }
-
-/**
- * Returns the result of [onSuccess] for the encapsulated value if this instance represents [success][Result.isSuccess]
- * or the result of [onFailure] function for the encapsulated [Throwable] exception if it is [failure][Result.isFailure].
- *
- * Note, that this function rethrows any [Throwable] exception thrown by [onSuccess] or by [onFailure] function.
- */
-@OptIn(ExperimentalContracts::class)
-public inline fun <R, T> Result<T>.fold(
-    onSuccess: (value: T) -> R,
-    onFailure: (exception: PubNubException) -> R,
-): R {
-    contract {
-        callsInPlace(onSuccess, InvocationKind.AT_MOST_ONCE)
-        callsInPlace(onFailure, InvocationKind.AT_MOST_ONCE)
-    }
-    return when (val exception = exceptionOrNull()) {
-        null -> onSuccess(value as T)
-        else -> onFailure(exception)
-    }
-}
-
-// transformation
-
-/**
- * Returns the encapsulated result of the given [transform] function applied to the encapsulated value
- * if this instance represents [success][Result.isSuccess] or the
- * original encapsulated [Throwable] exception if it is [failure][Result.isFailure].
- *
- * Note, that this function rethrows any [Throwable] exception thrown by [transform] function.
- * See [mapCatching] for an alternative that encapsulates exceptions.
- */
-@OptIn(ExperimentalContracts::class)
-public inline fun <R, T> Result<T>.map(transform: (value: T) -> R): Result<R> {
-    contract {
-        callsInPlace(transform, InvocationKind.AT_MOST_ONCE)
-    }
-    return when {
-        isSuccess -> Result.success(transform(value as T))
-        else -> Result(value)
-    }
-}
-
-/**
- * Returns the encapsulated result of the given [transform] function applied to the encapsulated value
- * if this instance represents [success][Result.isSuccess] or the
- * original encapsulated [Throwable] exception if it is [failure][Result.isFailure].
- *
- * This function catches any [Throwable] exception thrown by [transform] function and encapsulates it as a failure.
- * See [map] for an alternative that rethrows exceptions from `transform` function.
- */
-public inline fun <R, T> Result<T>.mapCatching(transform: (value: T) -> R): Result<R> {
-    return when {
-        isSuccess -> runCatching { transform(value as T) }
-        else -> Result(value)
-    }
-}
-//
-// /**
-// * Returns the encapsulated result of the given [transform] function applied to the encapsulated [Throwable] exception
-// * if this instance represents [failure][Result.isFailure] or the
-// * original encapsulated value if it is [success][Result.isSuccess].
-// *
-// * Note, that this function rethrows any [Throwable] exception thrown by [transform] function.
-// * See [recoverCatching] for an alternative that encapsulates exceptions.
-// */
-// @OptIn(ExperimentalContracts::class)
-// public inline fun <R, T : R> Result<T>.recover(transform: (exception: Throwable) -> R): Result<R> {
-//    contract {
-//        callsInPlace(transform, InvocationKind.AT_MOST_ONCE)
-//    }
-//    return when (val exception = exceptionOrNull()) {
-//        null -> this
-//        else -> Result.success(transform(exception))
-//    }
-// }
-//
-// /**
-// * Returns the encapsulated result of the given [transform] function applied to the encapsulated [Throwable] exception
-// * if this instance represents [failure][Result.isFailure] or the
-// * original encapsulated value if it is [success][Result.isSuccess].
-// *
-// * This function catches any [Throwable] exception thrown by [transform] function and encapsulates it as a failure.
-// * See [recover] for an alternative that rethrows exceptions.
-// */
-// public inline fun <R, T : R> Result<T>.recoverCatching(transform: (exception: Throwable) -> R): Result<R> {
-//    return when (val exception = exceptionOrNull()) {
-//        null -> this
-//        else -> runCatching { transform(exception) }
-//    }
-// }
-
-// "peek" onto value/exception and pipe
-//
-// /**
-// * Performs the given [action] on the encapsulated [Throwable] exception if this instance represents [failure][Result.isFailure].
-// * Returns the original `Result` unchanged.
-// */
-// @OptIn(ExperimentalContracts::class)
-// @JvmSynthetic
-// public inline fun <T> Result<T>.onFailure(action: (exception: PubNubException) -> Unit): Result<T> {
-//    contract {
-//        callsInPlace(action, InvocationKind.AT_MOST_ONCE)
-//    }
-//    exceptionOrNull()?.let { action(it) }
-//    return this
-// }
-//
-// /**
-// * Performs the given [action] on the encapsulated value if this instance represents [success][Result.isSuccess].
-// * Returns the original `Result` unchanged.
-// */
-// @OptIn(ExperimentalContracts::class)
-// @JvmSynthetic
-// public inline fun <T> Result<T>.onSuccess(action: (value: T) -> Unit): Result<T> {
-//    contract {
-//        callsInPlace(action, InvocationKind.AT_MOST_ONCE)
-//    }
-//    if (isSuccess) action(value as T)
-//    return this
-// }
-
-// -------------------
