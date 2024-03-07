@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.ktlint)
     alias(libs.plugins.benmanes.versions)
     alias(libs.plugins.maven.publish)
+    id("pubnub.shared")
 }
 
 group = providers.gradleProperty("GROUP").get()

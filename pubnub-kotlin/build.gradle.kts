@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.benmanes.versions)
     alias(libs.plugins.maven.publish)
     alias(libs.plugins.lombok)
+    id("pubnub.shared")
 }
 
 group = providers.gradleProperty("GROUP").get()
