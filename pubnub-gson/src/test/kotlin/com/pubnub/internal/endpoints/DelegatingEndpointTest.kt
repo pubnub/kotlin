@@ -59,19 +59,19 @@ internal class DelegatingEndpointTest {
     }
 
     @Test
-    fun sync() {
+    fun `when sync is called it calls sync on delegate`() {
         val result = delegatingEndpoint.sync()
         assertTrue(result)
         assertTrue(validateParamsCalled)
     }
 
     @Test
-    fun getRemoteAction() {
+    fun `when remoteAction is called it returns action from createAction `() {
         assertEquals(action, delegatingEndpoint.remoteAction)
     }
 
     @Test
-    fun async() {
+    fun `when async is called it calls async on delegate`() {
         delegatingEndpoint.async { result ->
             assertTrue(result.isSuccess)
             assertTrue(result.getOrThrow())
@@ -80,19 +80,19 @@ internal class DelegatingEndpointTest {
     }
 
     @Test
-    fun retry() {
+    fun `when retry is called calls retry on delegate`() {
         delegatingEndpoint.retry()
         assertTrue(retryCalled)
     }
 
     @Test
-    fun silentCancel() {
+    fun `when silentCancel is called calls silentCancel on delegate`() {
         delegatingEndpoint.silentCancel()
         assertTrue(silentCancelCalled)
     }
 
     @Test
-    fun operationType() {
+    fun `when operationType is called calls operationType on delegate`() {
         assertEquals(PNOperationType.FileOperation, delegatingEndpoint.operationType)
         assertEquals(PNOperationType.FileOperation, delegatingEndpoint.operationType())
     }
