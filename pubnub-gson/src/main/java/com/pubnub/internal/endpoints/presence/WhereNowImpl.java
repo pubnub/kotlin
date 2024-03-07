@@ -1,5 +1,6 @@
 package com.pubnub.internal.endpoints.presence;
 
+import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.internal.models.consumer.presence.PNWhereNowResult;
@@ -18,7 +19,7 @@ public class WhereNowImpl extends DelegatingEndpoint<PNWhereNowResult> implement
     }
 
     @Override
-    protected WhereNowEndpoint createAction() {
+    protected ExtendedRemoteAction<PNWhereNowResult> createAction() {
         return pubnub.whereNow(uuid);
     }
 }

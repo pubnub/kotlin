@@ -3,6 +3,7 @@ package com.pubnub.internal.endpoints.pubsub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.pubsub.Signal;
+import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
@@ -21,7 +22,7 @@ public class SignalImpl extends DelegatingEndpoint<PNPublishResult> implements S
     }
 
     @Override
-    protected com.pubnub.internal.EndpointCore<?, PNPublishResult> createAction() {
+    protected ExtendedRemoteAction<PNPublishResult> createAction() {
         return pubnub.signal(channel, message);
     }
 

@@ -1,6 +1,7 @@
 package com.pubnub.internal.endpoints.channel_groups;
 
 import com.pubnub.api.endpoints.channel_groups.ListAllChannelGroup;
+import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsListAllResult;
 import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
@@ -14,7 +15,7 @@ public class ListAllChannelGroupImpl extends DelegatingEndpoint<PNChannelGroupsL
     }
 
     @Override
-    protected com.pubnub.internal.EndpointCore<?, PNChannelGroupsListAllResult> createAction() {
+    protected ExtendedRemoteAction<PNChannelGroupsListAllResult> createAction() {
         return pubnub.listAllChannelGroups();
     }
 }

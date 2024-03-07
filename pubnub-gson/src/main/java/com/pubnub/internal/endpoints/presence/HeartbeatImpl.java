@@ -1,5 +1,6 @@
 package com.pubnub.internal.endpoints.presence;
 
+import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.Setter;
@@ -25,7 +26,7 @@ public class HeartbeatImpl extends DelegatingEndpoint<Boolean> implements com.pu
     }
 
     @Override
-    protected com.pubnub.internal.EndpointCore<?, Boolean> createAction() {
+    protected ExtendedRemoteAction<Boolean> createAction() {
         return new HeartbeatEndpoint(pubnub, channels, channelGroups, state);
     }
 }

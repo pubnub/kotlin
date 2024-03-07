@@ -3,6 +3,7 @@ package com.pubnub.internal.endpoints;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.MessageCounts;
+import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.history.PNMessageCountResult;
 import com.pubnub.internal.PubNubCore;
 import lombok.Setter;
@@ -31,7 +32,7 @@ public class MessageCountsImpl extends DelegatingEndpoint<PNMessageCountResult> 
     }
 
     @Override
-    protected com.pubnub.internal.EndpointCore<?, PNMessageCountResult> createAction() {
+    protected ExtendedRemoteAction<PNMessageCountResult> createAction() {
         return pubnub.messageCounts(channels, channelsTimetoken);
     }
 

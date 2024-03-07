@@ -2,6 +2,7 @@ package com.pubnub.internal.endpoints;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
+import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.history.PNHistoryResult;
 import com.pubnub.internal.PubNubCore;
 import lombok.Setter;
@@ -25,7 +26,7 @@ public class HistoryImpl extends DelegatingEndpoint<PNHistoryResult> implements 
     }
 
     @Override
-    protected com.pubnub.internal.EndpointCore<?, PNHistoryResult> createAction() {
+    protected ExtendedRemoteAction<PNHistoryResult> createAction() {
         return pubnub.history(channel, start, end, count, reverse, includeTimetoken, includeMeta);
     }
 

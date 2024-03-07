@@ -3,6 +3,7 @@ package com.pubnub.internal.endpoints.channel_groups;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.channel_groups.AddChannelChannelGroup;
+import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsAddChannelResult;
 import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
@@ -23,7 +24,7 @@ public class AddChannelChannelGroupImpl extends DelegatingEndpoint<PNChannelGrou
     }
 
     @Override
-    protected com.pubnub.internal.EndpointCore<?, PNChannelGroupsAddChannelResult> createAction() {
+    protected ExtendedRemoteAction<PNChannelGroupsAddChannelResult> createAction() {
         return pubnub.addChannelsToChannelGroup(channels, channelGroup);
     }
 

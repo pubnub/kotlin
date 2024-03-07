@@ -1,5 +1,6 @@
 package com.pubnub.internal.endpoints.presence;
 
+import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.Setter;
@@ -19,7 +20,7 @@ public class LeaveImpl extends DelegatingEndpoint<Boolean> implements com.pubnub
     }
 
     @Override
-    protected com.pubnub.internal.EndpointCore<?, Boolean> createAction() {
+    protected ExtendedRemoteAction<Boolean> createAction() {
         LeaveEndpoint leave = new LeaveEndpoint(pubnub);
         leave.setChannels(channels);
         leave.setChannelGroups(channelGroups);

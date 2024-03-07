@@ -3,6 +3,7 @@ package com.pubnub.internal.endpoints.access;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.access.RevokeToken;
+import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import kotlin.Unit;
@@ -20,7 +21,7 @@ public class RevokeTokenImpl extends DelegatingEndpoint<Unit> implements RevokeT
     }
 
     @Override
-    protected com.pubnub.internal.EndpointCore<?, Unit> createAction() {
+    protected ExtendedRemoteAction<Unit> createAction() {
         return pubnub.revokeToken(token);
     }
 

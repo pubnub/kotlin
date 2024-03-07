@@ -3,6 +3,7 @@ package com.pubnub.internal.endpoints.channel_groups;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.channel_groups.DeleteChannelGroup;
+import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsDeleteGroupResult;
 import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
@@ -19,7 +20,7 @@ public class DeleteChannelGroupImpl extends DelegatingEndpoint<PNChannelGroupsDe
     }
 
     @Override
-    protected com.pubnub.internal.EndpointCore<?, PNChannelGroupsDeleteGroupResult> createAction() {
+    protected ExtendedRemoteAction<PNChannelGroupsDeleteGroupResult> createAction() {
         return pubnub.deleteChannelGroup(channelGroup);
     }
 

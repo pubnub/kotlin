@@ -3,6 +3,7 @@ package com.pubnub.internal.endpoints.access;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.access.GrantToken;
+import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult;
@@ -39,7 +40,7 @@ public class GrantTokenImpl extends DelegatingEndpoint<PNGrantTokenResult> imple
     }
 
     @Override
-    protected com.pubnub.internal.EndpointCore<?, PNGrantTokenResult> createAction() {
+    protected ExtendedRemoteAction<PNGrantTokenResult> createAction() {
         return pubnub.grantToken(
                 ttl,
                 meta,

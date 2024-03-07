@@ -2,6 +2,7 @@ package com.pubnub.internal.endpoints.push;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
+import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.enums.PNPushEnvironment;
 import com.pubnub.api.enums.PNPushType;
 import com.pubnub.api.models.consumer.push.PNPushAddChannelResult;
@@ -29,7 +30,7 @@ public class AddChannelsToPushImpl extends DelegatingEndpoint<PNPushAddChannelRe
 
     @NotNull
     @Override
-    protected com.pubnub.internal.endpoints.push.AddChannelsToPushEndpoint createAction() {
+    protected ExtendedRemoteAction<PNPushAddChannelResult> createAction() {
         return pubnub.addPushNotificationsOnChannels(
                 pushType,
                 channels,

@@ -1,6 +1,7 @@
 package com.pubnub.internal.endpoints.presence;
 
 import com.pubnub.api.endpoints.presence.GetState;
+import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.presence.PNGetStateResult;
 import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
@@ -24,7 +25,7 @@ public class GetStateImpl extends DelegatingEndpoint<PNGetStateResult> implement
     }
 
     @Override
-    protected com.pubnub.internal.EndpointCore<?, PNGetStateResult> createAction() {
+    protected ExtendedRemoteAction<PNGetStateResult> createAction() {
         return pubnub.getPresenceState(
                 channels,
                 channelGroups,

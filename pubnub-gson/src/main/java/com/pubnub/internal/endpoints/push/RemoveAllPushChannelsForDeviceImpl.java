@@ -2,6 +2,7 @@ package com.pubnub.internal.endpoints.push;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
+import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.enums.PNPushEnvironment;
 import com.pubnub.api.enums.PNPushType;
 import com.pubnub.api.models.consumer.push.PNPushRemoveAllChannelsResult;
@@ -23,7 +24,7 @@ public class RemoveAllPushChannelsForDeviceImpl extends DelegatingEndpoint<PNPus
     }
 
     @Override
-    protected RemoveAllPushChannelsForDeviceEndpoint createAction() {
+    protected ExtendedRemoteAction<PNPushRemoveAllChannelsResult> createAction() {
         return pubnub.removeAllPushNotificationsFromDeviceWithPushToken(
                 pushType,
                 deviceId,

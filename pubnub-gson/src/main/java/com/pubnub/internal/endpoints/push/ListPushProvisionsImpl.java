@@ -2,6 +2,7 @@ package com.pubnub.internal.endpoints.push;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
+import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.enums.PNPushEnvironment;
 import com.pubnub.api.enums.PNPushType;
 import com.pubnub.api.models.consumer.push.PNPushListProvisionsResult;
@@ -24,7 +25,7 @@ public class ListPushProvisionsImpl extends DelegatingEndpoint<PNPushListProvisi
     }
 
     @Override
-    protected ListPushProvisionsEndpoint createAction() {
+    protected ExtendedRemoteAction<PNPushListProvisionsResult> createAction() {
         return pubnub.auditPushChannelProvisions(
                 pushType,
                 deviceId,

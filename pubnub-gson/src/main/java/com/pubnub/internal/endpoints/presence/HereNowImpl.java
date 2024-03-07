@@ -2,6 +2,7 @@ package com.pubnub.internal.endpoints.presence;
 
 
 import com.pubnub.api.endpoints.presence.HereNow;
+import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.presence.PNHereNowResult;
 import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
@@ -24,7 +25,7 @@ public class HereNowImpl extends DelegatingEndpoint<PNHereNowResult> implements 
     }
 
     @Override
-    protected com.pubnub.internal.EndpointCore<?, PNHereNowResult> createAction() {
+    protected ExtendedRemoteAction<PNHereNowResult> createAction() {
         return pubnub.hereNow(
                 channels,
                 channelGroups,

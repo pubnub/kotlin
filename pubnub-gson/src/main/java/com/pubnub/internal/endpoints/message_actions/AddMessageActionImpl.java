@@ -2,6 +2,7 @@ package com.pubnub.internal.endpoints.message_actions;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.endpoints.message_actions.AddMessageAction;
+import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult;
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction;
 import com.pubnub.internal.PubNubCore;
@@ -26,7 +27,7 @@ public class AddMessageActionImpl extends DelegatingEndpoint<PNAddMessageActionR
     }
 
     @Override
-    protected com.pubnub.internal.EndpointCore<?, PNAddMessageActionResult> createAction() {
+    protected ExtendedRemoteAction<PNAddMessageActionResult> createAction() {
         return pubnub.addMessageAction(channel, messageAction);
     }
 

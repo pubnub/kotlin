@@ -60,6 +60,7 @@ dependencies {
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.junit.vintage.engine)
     testImplementation(libs.awaitility)
+    testImplementation(libs.mockk)
 
     integrationTestImplementation(libs.owner)
 

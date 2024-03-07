@@ -2,6 +2,7 @@ package com.pubnub.internal.endpoints;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
+import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.PNBoundedPage;
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult;
 import com.pubnub.internal.PubNubCore;
@@ -40,7 +41,7 @@ public class FetchMessagesImpl extends DelegatingEndpoint<PNFetchMessagesResult>
 
     @NotNull
     @Override
-    protected FetchMessagesEndpoint createAction() {
+    protected ExtendedRemoteAction<PNFetchMessagesResult> createAction() {
         return pubnub.fetchMessages(
                 channels,
                 new PNBoundedPage(start, end, maximumPerChannel),
