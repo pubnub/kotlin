@@ -18,7 +18,7 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
 import org.jlleitschuh.gradle.ktlint.KtlintPlugin
 
-class SharedPlugin : Plugin<Project> {
+class PubNubSharedPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             apply<MavenPublishPlugin>()
@@ -29,7 +29,6 @@ class SharedPlugin : Plugin<Project> {
 
             group = providers.gradleProperty("GROUP").get()
             version = providers.gradleProperty("VERSION_NAME").get()
-
 
             // Kotlin
             extensions.configure<KotlinJvmProjectExtension> {

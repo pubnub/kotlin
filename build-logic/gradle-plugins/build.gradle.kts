@@ -20,11 +20,11 @@ gradlePlugin {
     plugins {
         register("pubnubShared") {
             id = "pubnub.shared"
-            implementationClass = "com.pubnub.gradle.SharedPlugin"
+            implementationClass = "com.pubnub.gradle.PubNubSharedPlugin"
         }
         register("pubnubDokka") {
             id = "pubnub.dokka"
-            implementationClass = "com.pubnub.gradle.DokkaPlugin"
+            implementationClass = "com.pubnub.gradle.PubNubDokkaPlugin"
         }
     }
 }

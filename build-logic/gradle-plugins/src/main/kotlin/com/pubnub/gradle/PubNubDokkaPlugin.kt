@@ -8,7 +8,7 @@ import org.jetbrains.dokka.gradle.DokkaPlugin
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.dokka.gradle.DokkaTaskPartial
 
-class DokkaPlugin : Plugin<Project> {
+class PubNubDokkaPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             apply<DokkaPlugin>()
