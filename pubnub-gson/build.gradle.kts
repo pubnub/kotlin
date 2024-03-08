@@ -1,33 +1,9 @@
-import org.jetbrains.dokka.gradle.DokkaTask
-import org.jetbrains.dokka.gradle.DokkaTaskPartial
-
 plugins {
-    `java-library`
     checkstyle
-    jacoco
-    alias(libs.plugins.kotlin.jvm)
-    alias(libs.plugins.dokka)
-    alias(libs.plugins.ktlint)
     alias(libs.plugins.benmanes.versions)
-    alias(libs.plugins.maven.publish)
     alias(libs.plugins.lombok)
-}
-
-group = providers.gradleProperty("GROUP").get()
-version = providers.gradleProperty("VERSION_NAME").get()
-
-kotlin {
-    jvmToolchain(8)
-}
-
-ktlint {
-    outputToConsole = true
-    verbose = true
-    additionalEditorconfig =
-        mapOf(
-            "ij_kotlin_imports_layout" to "*,java.**,javax.**,kotlin.**,^",
-            "indent_size" to "4",
-        )
+    id("pubnub.shared")
+    id("pubnub.dokka")
 }
 
 sourceSets {
@@ -63,19 +39,6 @@ dependencies {
     testImplementation(libs.mockk)
 
     integrationTestImplementation(libs.owner)
-
-    ktlintRuleset(project(":build-logic:ktlint-custom-rules"))
-}
-
-jacoco {
-    toolVersion = "0.8.2"
-}
-
-tasks.jacocoTestReport {
-    reports {
-        xml.required = true
-        html.required = true
-    }
 }
 
 checkstyle {
@@ -91,43 +54,6 @@ tasks.withType<Checkstyle>().configureEach {
         xml.required = true
         html.required = true
     }
-}
-
-tasks.withType<DokkaTask>().configureEach {
-    dokkaSourceSets.configureEach {
-        perPackageOption {
-            matchingRegex.set(".*internal.*")
-            suppress.set(true)
-        }
-        skipEmptyPackages.set(true)
-    }
-}
-
-tasks.withType<DokkaTaskPartial>().configureEach {
-    dokkaSourceSets.configureEach {
-        perPackageOption {
-            matchingRegex.set(".*internal.*")
-            suppress.set(true)
-        }
-        skipEmptyPackages.set(true)
-    }
-}
-
-// check.dependsOn jacocoTestReport
-//
-// javadoc {
-//    destinationDir = file("docs")
-//    options.noTimestamp = true
-// }
-
-// task sourcesJar(type: Jar, dependsOn: classes) {
-// //    classifier = 'sources'
-//    from "$buildDir/delombok"
-// }
-
-tasks.named<Test>("test") {
-    useJUnitPlatform()
-    exclude("**/contract/*.class")
 }
 
 //

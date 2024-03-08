@@ -54,13 +54,6 @@
       "clearedSuffix": false
     }
   ],
-  "pubnub-core/pubnub-core-impl/src/main/kotlin/com/pubnub/internal/CorePubNubClient.kt": [
-    {
-      "pattern": "internal const val SDK_VERSION.*\"(v?(\\d+\\.?){2,}([a-zA-Z0-9-]+(\\.?\\d+)?)?)\"$",
-      "clearedPrefix": true,
-      "clearedSuffix": false
-    }
-  ],
   "pubnub-core/pubnub-core-impl/src/test/kotlin/com/pubnub/api/legacy/PubNubTest.kt": [
     {
       "pattern": "assertEquals\\(\"(v?(\\d+\\.?){2,}([a-zA-Z0-9-]+(\\.?\\d+)?)?)\", version\\)$",

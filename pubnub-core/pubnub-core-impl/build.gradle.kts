@@ -1,34 +1,21 @@
+import com.pubnub.gradle.tasks.GenerateVersionTask
+
 plugins {
-    `java-library`
-    jacoco
-    alias(libs.plugins.kotlin.jvm)
-    alias(libs.plugins.ktlint)
     alias(libs.plugins.benmanes.versions)
-    alias(libs.plugins.maven.publish)
+    id("pubnub.shared")
 }
 
-group = providers.gradleProperty("GROUP").get()
-version = providers.gradleProperty("VERSION_NAME").get()
-
-tasks.named<Test>("test").configure {
-    failFast = true
-    exclude("**/contract/*.class")
-    useJUnitPlatform()
-}
-
-kotlin {
-    jvmToolchain(8)
-}
-
-ktlint {
-    outputToConsole = true
-    verbose = true
-    additionalEditorconfig =
-        mapOf(
-            "ij_kotlin_imports_layout" to "*,java.**,javax.**,kotlin.**,^",
-            "indent_size" to "4",
+val generateVersion =
+    tasks.register<GenerateVersionTask>("generateVersion") {
+        version.set(providers.gradleProperty("VERSION_NAME"))
+        outputDirectory.set(
+            layout.buildDirectory.map {
+                it.dir("generated/sources/generateVersion")
+            },
         )
-}
+    }
+
+kotlin.sourceSets.getByName("main").kotlin.srcDir(generateVersion)
 
 dependencies {
     api(project(":pubnub-core:pubnub-core-api"))
@@ -57,8 +44,6 @@ dependencies {
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.mockk)
     testImplementation(libs.owner)
-
-    ktlintRuleset(project(":build-logic:ktlint-custom-rules"))
 }
 
 task<Test>("cucumber") {
