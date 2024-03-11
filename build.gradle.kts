@@ -12,3 +12,6 @@ nexusPublishing {
         sonatype()
     }
 }
+
+group = providers.gradleProperty("GROUP").get()
+version = providers.gradleProperty("VERSION_NAME").get()
