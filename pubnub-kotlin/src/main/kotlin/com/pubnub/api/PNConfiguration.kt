@@ -51,7 +51,9 @@ class PNConfiguration(userId: UserId) {
      * If set, all communications to and from PubNub will be encrypted.
      */
     @Deprecated(
-        "Instead of cipherKey and useRandomInitializationVector use CryptoModule instead \n            e.g. config.cryptoModule = CryptoModule.createLegacyCryptoModule(cipherKey = cipherKey, randomIv = true) \n            or config.cryptoModule = CryptoModule.createAesCbcCryptoModule(cipherKey = cipherKey, randomIv = true)",
+        """Instead of cipherKey and useRandomInitializationVector use CryptoModule instead 
+            e.g. config.cryptoModule = CryptoModule.createLegacyCryptoModule(cipherKey = cipherKey, randomIv = true) 
+            or config.cryptoModule = CryptoModule.createAesCbcCryptoModule(cipherKey = cipherKey, randomIv = true)""",
         level = DeprecationLevel.WARNING,
     )
     var cipherKey by configuration::cipherKey
@@ -62,7 +64,9 @@ class PNConfiguration(userId: UserId) {
      * Defaults to `false`.
      */
     @Deprecated(
-        "Instead of cipherKey and useRandomInitializationVector use CryptoModule instead \n            e.g. config.cryptoModule = CryptoModule.createLegacyCryptoModule(cipherKey = cipherKey, randomIv = true) \n            or config.cryptoModule = CryptoModule.createAesCbcCryptoModule(cipherKey = cipherKey, randomIv = true)",
+        """Instead of cipherKey and useRandomInitializationVector use CryptoModule instead 
+            e.g. config.cryptoModule = CryptoModule.createLegacyCryptoModule(cipherKey = cipherKey, randomIv = true) 
+            or config.cryptoModule = CryptoModule.createAesCbcCryptoModule(cipherKey = cipherKey, randomIv = true)""",
         level = DeprecationLevel.WARNING,
     )
     var useRandomInitializationVector by configuration::useRandomInitializationVector
@@ -109,7 +113,9 @@ class PNConfiguration(userId: UserId) {
      * Defaults to [PNReconnectionPolicy.NONE].
      */
     @Deprecated(
-        "Instead of reconnectionPolicy and maximumReconnectionRetries use retryConfiguration \n            e.g. config.retryConfiguration = RetryConfiguration.Linear(delayInSec = 3, maxRetryNumber = 5) \n            or config.retryConfiguration = RetryConfiguration.Exponential(minDelayInSec = 3, maxDelayInSec = 10, maxRetryNumber = 5)",
+        """Instead of reconnectionPolicy and maximumReconnectionRetries use retryConfiguration 
+            e.g. config.retryConfiguration = RetryConfiguration.Linear(delayInSec = 3, maxRetryNumber = 5) 
+            or config.retryConfiguration = RetryConfiguration.Exponential(minDelayInSec = 3, maxDelayInSec = 10, maxRetryNumber = 5)""",
         level = DeprecationLevel.WARNING,
     )
     var reconnectionPolicy by configuration::reconnectionPolicy
@@ -177,8 +183,6 @@ class PNConfiguration(userId: UserId) {
      * for the current [userId] with every automatic heartbeat (if [heartbeatInterval] is greater than 0)
      * and initial subscribe connection (also after e.g. loss of network).
      *
-     * Applies only when [enableEventEngine] is true.
-     *
      * Defaults to `true`.
      *
      * Please note that `maintainPresenceState` doesn't apply to state that was set on channel groups.
@@ -193,14 +197,14 @@ class PNConfiguration(userId: UserId) {
     var filterExpression by configuration::filterExpression
 
     /**
-     * Whether to include a [InternalPubNubClient.instanceId] with every request.
+     * Whether to include a instanceId with every request.
      *
      * Defaults to `false`.
      */
     var includeInstanceIdentifier by configuration::includeInstanceIdentifier
 
     /**
-     * Whether to include a [InternalPubNubClient.requestId] with every request.
+     * Whether to include a requestId with every request.
      *
      * Defaults to `true`.
      */
@@ -213,7 +217,9 @@ class PNConfiguration(userId: UserId) {
      * The default value is `-1` which means unlimited retries.
      */
     @Deprecated(
-        "Instead of reconnectionPolicy and maximumReconnectionRetries use retryConfiguration \n            e.g. config.retryConfiguration = RetryConfiguration.Linear(delayInSec = 3, maxRetryNumber = 5) \n            or config.retryConfiguration = RetryConfiguration.Exponential(minDelayInSec = 3, maxDelayInSec = 10, maxRetryNumber = 5)",
+        """Instead of reconnectionPolicy and maximumReconnectionRetries use retryConfiguration 
+            e.g. config.retryConfiguration = RetryConfiguration.Linear(delayInSec = 3, maxRetryNumber = 5) 
+            or config.retryConfiguration = RetryConfiguration.Exponential(minDelayInSec = 3, maxDelayInSec = 10, maxRetryNumber = 5)""",
         level = DeprecationLevel.WARNING,
     )
     var maximumReconnectionRetries by configuration::maximumReconnectionRetries
