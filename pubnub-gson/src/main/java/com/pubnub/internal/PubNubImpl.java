@@ -247,7 +247,7 @@ public class PubNubImpl extends BasePubNubImpl<
     }
 
     /**
-     * @deprecated Use {@link #grantToken(Integer)} instead.
+     * @deprecated Use {@link #grantToken(int)} instead.
      */
     @Override
     @NotNull
@@ -258,7 +258,7 @@ public class PubNubImpl extends BasePubNubImpl<
     @Override
     @NotNull
     @SuppressWarnings("deprecation")
-    public GrantTokenBuilder grantToken(Integer ttl) {
+    public GrantTokenBuilder grantToken(int ttl) {
         return new GrantTokenBuilder(getPubNubCore(), new GrantTokenImpl(getPubNubCore()).ttl(ttl));
     }
 

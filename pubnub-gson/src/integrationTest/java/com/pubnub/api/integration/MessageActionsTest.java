@@ -102,7 +102,7 @@ public class MessageActionsTest extends BaseIntegrationTest {
                         .setMessageTimetoken(publishResult.getTimetoken()))
                 .sync();
 
-        pubNub.getMessageActions()
+        pubNub.messageActions
                 .channel(expectedChannel)
                 .async((result) -> {
                     assertFalse(result.isFailure());
@@ -153,7 +153,7 @@ public class MessageActionsTest extends BaseIntegrationTest {
                         .setMessageTimetoken(publishResult.getTimetoken()))
                 .sync();
 
-        pubNub.getMessageActions()
+        pubNub.messageActions
                 .channel(expectedChannel)
                 .async((result) -> {
                     assertFalse(result.isFailure());
@@ -190,7 +190,7 @@ public class MessageActionsTest extends BaseIntegrationTest {
             }
         });
 
-        pubNub.getMessageActions()
+        pubNub.messageActions
                 .channel(expectedChannel)
                 .async((result) -> {
                     assertFalse(result.isFailure());
@@ -244,7 +244,7 @@ public class MessageActionsTest extends BaseIntegrationTest {
     }
 
     void page(String channel, Long start, Callback callback) {
-        pubNub.getMessageActions()
+        pubNub.messageActions
                 .channel(channel)
                 .start(start)
                 .limit(5)
@@ -346,7 +346,7 @@ public class MessageActionsTest extends BaseIntegrationTest {
     }
 
     public void pageActions(int chunk, String channel, Long start, Callback callback) throws PubNubException {
-        final GetMessageActions builder = pubNub.getMessageActions()
+        final GetMessageActions builder = pubNub.messageActions
                 .limit(chunk)
                 .channel(channel);
 
@@ -626,7 +626,7 @@ public class MessageActionsTest extends BaseIntegrationTest {
     @Test
     public void testGetActions_NoChannel() {
         try {
-            pubNub.getMessageActions()
+            pubNub.messageActions
                     .sync();
         } catch (PubNubException e) {
             assertException(PNERROBJ_CHANNEL_MISSING, e);

@@ -47,9 +47,9 @@ public class FilesIntegrationTests extends BaseIntegrationTest {
 
     public void doItAllFilesTest(boolean withCipher) throws PubNubException, InterruptedException, IOException {
         if (withCipher) {
-            pubNub.getConfiguration().setCipherKey("enigma");
+            pubNub.configuration.setCipherKey("enigma");
         } else {
-            pubNub.getConfiguration().setCipherKey(null);
+            pubNub.configuration.setCipherKey(null);
         }
         String channel = randomChannel();
         String content = "This is content";

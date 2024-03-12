@@ -95,7 +95,7 @@ public class MembershipIT extends ObjectsApiBaseIT {
         createdMembershipsList.add(setMembershipResult);
 
         //when
-        final PNGetMembershipsResult getMembershipsResult = pubNubUnderTest.getMemberships()
+        final PNGetMembershipsResult getMembershipsResult = pubNubUnderTest.memberships
                 .includeTotalCount(true)
                 .includeCustom(true)
                 .includeChannel(CHANNEL_WITH_CUSTOM)

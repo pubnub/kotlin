@@ -68,7 +68,7 @@ public class CustomMetadataInMembersPropagationIT extends ObjectsApiBaseIT {
                 .includeUUID(PNUUIDDetailsLevel.UUID_WITH_CUSTOM)
                 .sync();
 
-        final PNGetChannelMembersResult getChannelMembersResult = pubNubUnderTest.getChannelMembers()
+        final PNGetChannelMembersResult getChannelMembersResult = pubNubUnderTest.channelMembers
                 .channel(testChannelMetadataId)
                 .includeCustom(false)
                 .includeUUID(PNUUIDDetailsLevel.UUID)

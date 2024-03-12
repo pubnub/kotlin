@@ -85,7 +85,7 @@ public class CustomMetadataInMembershipPropagationIT extends ObjectsApiBaseIT {
                 .includeChannel(CHANNEL_WITH_CUSTOM)
                 .sync();
 
-        final PNGetMembershipsResult getMembershipsResult = pubNubUnderTest.getMemberships()
+        final PNGetMembershipsResult getMembershipsResult = pubNubUnderTest.memberships
                 .includeCustom(false)
                 .includeChannel(CHANNEL)
                 .sync();
@@ -113,7 +113,7 @@ public class CustomMetadataInMembershipPropagationIT extends ObjectsApiBaseIT {
                                                 hasProperty("description", is(testDescription)),
                                                 hasProperty("custom", nullValue()))))))));
 
-        String userIdValue = pubNubUnderTest.getConfiguration().getUserId().getValue();
+        String userIdValue = pubNubUnderTest.configuration.getUserId().getValue();
         await().atMost(1, TimeUnit.SECONDS).untilAsserted(new ThrowingRunnable() {
             @Override
             public void run() throws Throwable {

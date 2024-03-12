@@ -90,7 +90,7 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
         assertEquals(expectedClientsCount, clients.size());
 
         for (PubNub client : clients) {
-            assertEquals(expectedChannelsCount, client.getSubscribedChannels().size());
+            assertEquals(expectedChannelsCount, client.subscribedChannels.size());
         }
 
         pause(TIMEOUT_MEDIUM);
@@ -123,7 +123,7 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
 
                                         final List<String> expectedUuidList = new ArrayList<>();
                                         for (PubNub client : clients) {
-                                            expectedUuidList.add(client.getConfiguration().getUserId().getValue());
+                                            expectedUuidList.add(client.configuration.getUserId().getValue());
                                         }
 
                                         Collections.sort(expectedUuidList);
@@ -189,7 +189,7 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
                                 final String uuid = occupant.getUuid();
                                 boolean contains = false;
                                 for (PubNub client : clients) {
-                                    if (client.getConfiguration().getUserId().getValue().equals(uuid)) {
+                                    if (client.configuration.getUserId().getValue().equals(uuid)) {
                                         contains = true;
                                         break;
                                     }
@@ -224,7 +224,7 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
                 System.out.println("---" + presence.getEvent());
                 if (presence.getEvent().equals(STATE_CHANGE_EVENT)
                         && presence.getChannel().equals(expectedChannel)
-                        && presence.getUuid().equals(pubNub.getConfiguration().getUserId().getValue())) {
+                        && presence.getUuid().equals(pubNub.configuration.getUserId().getValue())) {
                     assertEquals(expectedStatePayload, presence.getState());
                     hits.incrementAndGet();
                 }
@@ -245,7 +245,7 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
 //        Awaitility.await().atMost(Durations.FIVE_SECONDS).untilAtomic(hits, IsEqual.equalTo(1));
         Thread.sleep(1000);
 
-        pubNub.getPresenceState()
+        pubNub.presenceState
                 .channels(Collections.singletonList(expectedChannel))
                 .async((result) -> {
                     assertFalse(result.isFailure());
@@ -272,7 +272,7 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
             public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult presence) {
                 if (presence.getEvent().equals(STATE_CHANGE_EVENT)
                         && presence.getChannel().equals(expectedChannel)
-                        && presence.getUuid().equals(pubNub.getConfiguration().getUserId().getValue())) {
+                        && presence.getUuid().equals(pubNub.configuration.getUserId().getValue())) {
                     assertEquals(expectedStatePayload, presence.getState());
                     hits.incrementAndGet();
                 }
@@ -291,7 +291,7 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
 
         Awaitility.await().atMost(Durations.FIVE_SECONDS).untilAtomic(hits, IsEqual.equalTo(1));
 
-        pubNub.getPresenceState()
+        pubNub.presenceState
                 .channels(Collections.singletonList(expectedChannel))
                 .async((result) -> {
                     assertFalse(result.isFailure());
@@ -309,15 +309,15 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
         final AtomicBoolean subscribeSuccess = new AtomicBoolean();
         final String expectedChannel = RandomGenerator.get();
 
-        pubNub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.ALL);
+        pubNub.configuration.setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.ALL);
 
-        assertEquals(PNHeartbeatNotificationOptions.ALL, pubNub.getConfiguration().getHeartbeatNotificationOptions());
-        assertEquals(300, pubNub.getConfiguration().getPresenceTimeout());
-        assertEquals(0, pubNub.getConfiguration().getHeartbeatInterval());
+        assertEquals(PNHeartbeatNotificationOptions.ALL, pubNub.configuration.getHeartbeatNotificationOptions());
+        assertEquals(300, pubNub.configuration.getPresenceTimeout());
+        assertEquals(0, pubNub.configuration.getHeartbeatInterval());
 
-        pubNub.getConfiguration().setPresenceTimeoutWithCustomInterval(20, 0);
-        assertEquals(20, pubNub.getConfiguration().getPresenceTimeout());
-        assertEquals(0, pubNub.getConfiguration().getHeartbeatInterval());
+        pubNub.configuration.setPresenceTimeoutWithCustomInterval(20, 0);
+        assertEquals(20, pubNub.configuration.getPresenceTimeout());
+        assertEquals(0, pubNub.configuration.getHeartbeatInterval());
 
         pubNub.addListener(new SubscribeCallback.BaseSubscribeCallback() {
             @Override
@@ -356,7 +356,7 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
                         .setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.ALL)
         );
         registerGuestClient(pubNub);
-        assertEquals(9, pubNub.getConfiguration().getHeartbeatInterval());
+        assertEquals(9, pubNub.configuration.getHeartbeatInterval());
 
         pubNub.addListener(new SubscribeCallback.BaseSubscribeCallback() {
             @Override
@@ -384,6 +384,6 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
     }
 
     private void enableHeartbeatLoop(int interval) {
-        pubNub.getConfiguration().setPresenceTimeoutWithCustomInterval(20, interval);
+        pubNub.configuration.setPresenceTimeoutWithCustomInterval(20, interval);
     }
 }

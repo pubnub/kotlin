@@ -165,7 +165,7 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
             @Override
             public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult message) {
                 assertEquals(expectedChannel, message.getChannel());
-                assertEquals(observer.getConfiguration().getUserId().getValue(), message.getPublisher());
+                assertEquals(observer.configuration.getUserId().getValue(), message.getPublisher());
                 assertEquals(messagePayload, message.getMessage());
                 success.set(true);
             }
@@ -248,13 +248,13 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
             public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult message) {
                 if (success.get() == 0) {
                     assertEquals(expectedChannel, message.getChannel());
-                    assertEquals(sender.getConfiguration().getUserId().getValue(), message.getPublisher());
+                    assertEquals(sender.configuration.getUserId().getValue(), message.getPublisher());
                     assertEquals(PubNubErrorBuilder.PNERROBJ_PNERR_CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED, message.getError());
                     assertEquals(messagePayload, message.getMessage());
                     success.incrementAndGet();
                 } else if (success.get() == 1) {
                     assertEquals(expectedChannel, message.getChannel());
-                    assertEquals(observer.getConfiguration().getUserId().getValue(), message.getPublisher());
+                    assertEquals(observer.configuration.getUserId().getValue(), message.getPublisher());
                     assertEquals(messagePayload, message.getMessage());
                     assertNull(message.getError());
                     success.incrementAndGet();

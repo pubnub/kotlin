@@ -314,10 +314,10 @@ public class HistoryIntegrationTest extends BaseIntegrationTest {
     @Test
     public void testHistorySingleChannel_IncludeAll_Crypto() throws PubNubException {
         final String expectedCipherKey = random();
-        pubNub.getConfiguration().setCryptoModule(CryptoModule.createLegacyCryptoModule(expectedCipherKey, true));
+        pubNub.configuration.setCryptoModule(CryptoModule.createLegacyCryptoModule(expectedCipherKey, true));
 
         final PubNub observer = getPubNub();
-        observer.getConfiguration().setCryptoModule(CryptoModule.createLegacyCryptoModule(expectedCipherKey, true));
+        observer.configuration.setCryptoModule(CryptoModule.createLegacyCryptoModule(expectedCipherKey, true));
 
         final String expectedChannelName = random();
         final int expectedMessageCount = 10;
@@ -376,7 +376,7 @@ public class HistoryIntegrationTest extends BaseIntegrationTest {
         final String expectedCipherKey = random();
 
         final PubNub observer = getPubNub();
-        observer.getConfiguration().setCryptoModule(CryptoModule.createLegacyCryptoModule(expectedCipherKey, true));
+        observer.configuration.setCryptoModule(CryptoModule.createLegacyCryptoModule(expectedCipherKey, true));
 
         final String expectedChannelName = random();
         final int expectedMessageCount = 10;
@@ -403,10 +403,10 @@ public class HistoryIntegrationTest extends BaseIntegrationTest {
     @Test
     public void testFetchSingleChannel_IncludeAll_Crypto() throws PubNubException {
         final String expectedCipherKey = random();
-        pubNub.getConfiguration().setCryptoModule(CryptoModule.createLegacyCryptoModule(expectedCipherKey, false));
+        pubNub.configuration.setCryptoModule(CryptoModule.createLegacyCryptoModule(expectedCipherKey, false));
 
         final PubNub observer = getPubNub();
-        observer.getConfiguration().setCryptoModule(CryptoModule.createLegacyCryptoModule(expectedCipherKey, false));
+        observer.configuration.setCryptoModule(CryptoModule.createLegacyCryptoModule(expectedCipherKey, false));
 
 
         final String expectedChannelName = random();
@@ -433,12 +433,12 @@ public class HistoryIntegrationTest extends BaseIntegrationTest {
     @Test
     public void testFetchSingleChannel_WithActions_IncludeAll_Crypto() throws PubNubException {
         final String expectedCipherKey = random();
-        pubNub.getConfiguration().setCipherKey(expectedCipherKey);
+        pubNub.configuration.setCipherKey(expectedCipherKey);
 
         final PubNub observer = getPubNub();
-        observer.getConfiguration().setCipherKey(expectedCipherKey);
+        observer.configuration.setCipherKey(expectedCipherKey);
 
-        assertEquals(pubNub.getConfiguration().getCipherKey(), observer.getConfiguration().getCipherKey()); //todo
+        assertEquals(pubNub.configuration.getCipherKey(), observer.configuration.getCipherKey()); //todo
 
         final String expectedChannelName = random();
         final int expectedMessageCount = 10;

@@ -23,7 +23,7 @@ public class GrantIT extends BaseIntegrationTest {
                 .channels(Collections.emptyMap())
                 .level("uuid")
                 .ttl(ttl)
-                .subscribeKey(getServer().getConfiguration().getSubscribeKey())
+                .subscribeKey(getServer().configuration.getSubscribeKey())
                 .uuids(Collections.singletonMap(uuid, Collections.singletonMap(authKey, PNAccessManagerKeyData.builder()
                         .getEnabled(true)
                         .deleteEnabled(true)

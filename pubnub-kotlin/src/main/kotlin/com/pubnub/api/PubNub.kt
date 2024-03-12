@@ -91,7 +91,8 @@ interface PubNub :
         }
 
         /**
-         * Generates random UUID to use. You should set a unique UUID to identify the user or the device that connects to PubNub.
+         * Generates random UUID to use. You should set a unique UUID to identify the user or the device
+         * that connects to PubNub.
          */
         @JvmStatic
         fun generateUUID(): String = BasePubNubImpl.generateUUID()
@@ -1467,7 +1468,7 @@ interface PubNub :
      * For multiplexed channels, the specified channel(s) will be removed and the socket remains open
      * until there are no more channels remaining in the list.
      *
-     * * **WARNING**
+     * **WARNING**
      * Unsubscribing from all the channel(s) and then subscribing to a new channel Y isn't the same as
      * Subscribing to channel Y and then unsubscribing from the previously subscribed channel(s).
      *
