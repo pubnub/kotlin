@@ -12,6 +12,7 @@ import com.pubnub.api.v2.callbacks.handlers.OnPresenceHandler
 import com.pubnub.api.v2.callbacks.handlers.OnSignalHandler
 import com.pubnub.api.v2.callbacks.handlers.OnUuidMetadataHandler
 import com.pubnub.api.v2.subscriptions.Subscription
+import com.pubnub.api.v2.subscriptions.SubscriptionCursor
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.callbacks.DelegatingSubscribeCallback
@@ -21,6 +22,13 @@ class SubscriptionSetImpl(
     pubnub: PubNubCore,
     initialSubscriptions: Set<SubscriptionImpl>,
 ) : SubscriptionSet, BaseSubscriptionSetImpl<EventListener, Subscription>(pubnub, initialSubscriptions) {
+    // todo maybe we can add it to constructor so we can mock it?
+    private val emitterHelper = EmitterHelper(eventEmitter)
+
+    override fun subscribe() {
+        super.subscribe(SubscriptionCursor(0))
+    }
+
     /**
      * Add a listener.
      *
@@ -46,35 +54,83 @@ class SubscriptionSetImpl(
         }
     }
 
-    override fun setOnMessage(onMessage: OnMessageHandler?) {
-        TODO("Not yet implemented")
+    override fun setOnMessage(onMessageHandler: OnMessageHandler?) {
+        setOnMessageHandler(onMessageHandler)
     }
 
     override fun setOnSignal(onSignalHandler: OnSignalHandler?) {
-        TODO("Not yet implemented")
+        setOnSignalHandler(onSignalHandler)
     }
 
     override fun setOnPresence(onPresenceHandler: OnPresenceHandler?) {
-        TODO("Not yet implemented")
+        setOnPresenceHandler(onPresenceHandler)
     }
 
     override fun setOnMessageAction(onMessageActionHandler: OnMessageActionHandler?) {
-        TODO("Not yet implemented")
+        setOnMessageActionHandler(onMessageActionHandler)
     }
 
     override fun setOnUuidMetadata(onUuidHandler: OnUuidMetadataHandler?) {
-        TODO("Not yet implemented")
+        setOnUuidHandler(onUuidHandler)
     }
 
     override fun setOnChannelMetadata(onChannelMetadataHandler: OnChannelMetadataHandler?) {
-        TODO("Not yet implemented")
+        setOnChannelMetadataHandler(onChannelMetadataHandler)
     }
 
     override fun setOnMembership(onMembershipHandler: OnMembershipHandler?) {
-        TODO("Not yet implemented")
+        setOnMembershipHandler(onMembershipHandler)
     }
 
     override fun setOnFile(onFileHandler: OnFileHandler?) {
-        TODO("Not yet implemented")
+        setOnFileHandler(onFileHandler)
+    }
+
+    private fun setOnMessageHandler(onMessageHandler: OnMessageHandler?) {
+        emitterHelper.onMessage = onMessageHandler?.let { handler ->
+            { pnMessageResult -> handler.handle(pnMessageResult) }
+        }
+    }
+
+    private fun setOnSignalHandler(onSignalHandler: OnSignalHandler?) {
+        emitterHelper.onSignal = onSignalHandler?.let { handler ->
+            { pnSignalResult -> handler.handle(pnSignalResult) }
+        }
+    }
+
+    private fun setOnPresenceHandler(onPresenceHandler: OnPresenceHandler?) {
+        emitterHelper.onPresence = onPresenceHandler?.let { handler ->
+            { pnPresenceEventResult -> handler.handle(pnPresenceEventResult) }
+        }
+    }
+
+    private fun setOnMessageActionHandler(onMessageActionHandler: OnMessageActionHandler?) {
+        emitterHelper.onMessageAction = onMessageActionHandler?.let { handler ->
+            { pnMessageActionResult -> handler.handle(pnMessageActionResult) }
+        }
+    }
+
+    private fun setOnUuidHandler(onUuidHandler: OnUuidMetadataHandler?) {
+        emitterHelper.onUuid = onUuidHandler?.let { handler ->
+            { pnUUIDMetadataResult -> handler.handle(pnUUIDMetadataResult) }
+        }
+    }
+
+    private fun setOnChannelMetadataHandler(onChannelMetadataHandler: OnChannelMetadataHandler?) {
+        emitterHelper.onChannel = onChannelMetadataHandler?.let { handler ->
+            { pnChannelMetadataResult -> handler.handle(pnChannelMetadataResult) }
+        }
+    }
+
+    private fun setOnMembershipHandler(onMembershipHandler: OnMembershipHandler?) {
+        emitterHelper.onMembership = onMembershipHandler?.let { handler ->
+            { pnMembershipResult -> handler.handle(pnMembershipResult) }
+        }
+    }
+
+    private fun setOnFileHandler(onFileHandler: OnFileHandler?) {
+        emitterHelper.onFile = onFileHandler?.let { handler ->
+            { pnFileEventResult -> handler.handle(pnFileEventResult) }
+        }
     }
 }

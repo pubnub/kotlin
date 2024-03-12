@@ -24,6 +24,7 @@ import com.pubnub.api.v2.entities.ChannelMetadata;
 import com.pubnub.api.v2.entities.UserMetadata;
 import com.pubnub.api.v2.subscriptions.Subscription;
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions;
+import com.pubnub.api.v2.subscriptions.SubscriptionSet;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
@@ -424,5 +425,66 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
         assertEquals(1, numberOfReceivedChannelMetadataEvents.get());
         assertEquals(1, numberOfReceivedMembershipEvent.get());
         assertEquals(1, numberOfReceivedFileMessages.get());
+    }
+
+    @Test
+    public void testAssigningEventBehaviourToSubscriptionSet() throws InterruptedException, PubNubException {
+        AtomicInteger numberOfMessagesReceived = new AtomicInteger(0);
+        AtomicInteger numberOfSignalsReceived = new AtomicInteger(0);
+        AtomicInteger numberOfPresenceEventsReceived = new AtomicInteger(0);
+        AtomicInteger numberOfMessageActionsReceived = new AtomicInteger(0);
+        final JsonObject expectedStatePayload = generatePayload();
+        Channel channel01 = pubNub.channel("ch1_" + randomChannel());
+        Channel channel02 = pubNub.channel("ch2_" + randomChannel());
+        // we want to get only presence events for channel01
+        Subscription subscription01 = channel01.subscription(SubscriptionOptions.receivePresenceEvents());
+        Subscription subscription02 = channel02.subscription();
+
+        SubscriptionSet subscriptionSet = subscription01.plus(subscription02);
+        subscriptionSet.setOnMessage(pnMessageResult -> numberOfMessagesReceived.incrementAndGet());
+        subscriptionSet.setOnSignal(pnSignalResult -> numberOfSignalsReceived.incrementAndGet());
+        subscriptionSet.setOnPresence(pnPresenceEventResult -> numberOfPresenceEventsReceived.incrementAndGet());
+        subscriptionSet.setOnMessageAction(pnMessageActionResult -> numberOfMessageActionsReceived.incrementAndGet());
+
+        subscriptionSet.subscribe();
+        Thread.sleep(2000);
+
+        PNPublishResult pnPublishResult01 = pubNub.publish().channel(channel01.getName()).message("anything").sync();
+        PNPublishResult pnPublishResult02 = pubNub.publish().channel(channel02.getName()).message("anything").sync();
+        pubNub.signal().channel(channel01.getName()).message("anything").sync();
+        pubNub.signal().channel(channel02.getName()).message("anything").sync();
+        PNMessageAction pnMessageAction01 = new PNMessageAction().setType("reaction").setValue(RandomGenerator.emoji()).setMessageTimetoken(pnPublishResult01.getTimetoken());
+        PNMessageAction pnMessageAction02 = new PNMessageAction().setType("reaction").setValue(RandomGenerator.emoji()).setMessageTimetoken(pnPublishResult02.getTimetoken());
+        pubNub.addMessageAction().messageAction(pnMessageAction01).channel(channel01.getName()).sync();
+        pubNub.addMessageAction().messageAction(pnMessageAction02).channel(channel02.getName()).sync();
+        Thread.sleep(1000);
+
+        assertEquals(2, numberOfMessagesReceived.get());
+        assertEquals(2, numberOfSignalsReceived.get());
+        assertEquals(1, numberOfPresenceEventsReceived.get()); // first presence event is join generated automatically
+        assertEquals(2, numberOfMessageActionsReceived.get());
+
+        subscriptionSet.setOnMessage(null);
+        subscriptionSet.setOnSignal(null);
+        subscriptionSet.setOnPresence(null);
+        subscriptionSet.setOnMessageAction(null);
+
+        pubNub.publish().channel(channel01.getName()).message("anything").sync();
+        pubNub.publish().channel(channel02.getName()).message("anything").sync();
+        pubNub.signal().channel(channel01.getName()).message("anything").sync();
+        pubNub.signal().channel(channel02.getName()).message("anything").sync();
+        pubNub.setPresenceState().state(expectedStatePayload).channels(Collections.singletonList(channel01.getName())).sync();
+        pubNub.setPresenceState().state(expectedStatePayload).channels(Collections.singletonList(channel02.getName())).sync();
+        pnMessageAction01 = new PNMessageAction().setType("reaction02").setValue(RandomGenerator.emoji()).setMessageTimetoken(pnPublishResult01.getTimetoken());
+        pnMessageAction02 = new PNMessageAction().setType("reaction02").setValue(RandomGenerator.emoji()).setMessageTimetoken(pnPublishResult02.getTimetoken());
+        pubNub.addMessageAction().messageAction(pnMessageAction01).channel(channel01.getName()).sync();
+        pubNub.addMessageAction().messageAction(pnMessageAction02).channel(channel02.getName()).sync();
+
+        Thread.sleep(1000);
+
+        assertEquals(2, numberOfMessagesReceived.get());
+        assertEquals(2, numberOfSignalsReceived.get());
+        assertEquals(1, numberOfPresenceEventsReceived.get());
+        assertEquals(2, numberOfMessageActionsReceived.get());
     }
 }

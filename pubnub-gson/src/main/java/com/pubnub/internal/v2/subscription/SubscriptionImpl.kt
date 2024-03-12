@@ -32,62 +32,6 @@ class SubscriptionImpl(
     // todo maybe we can add it to constructor so we can mock it?
     private val emitterHelper = EmitterHelper(eventEmitter)
 
-    private fun onMessageHandler(onMessageHandler: OnMessageHandler?) {
-        emitterHelper.onMessage =
-            onMessageHandler?.let { handler ->
-                { pnMessageResult: PNMessageResult -> handler.handle(pnMessageResult) }
-            }
-    }
-
-    private fun onPresenceHandler(onPresenceHandler: OnPresenceHandler?) {
-        emitterHelper.onPresence =
-            onPresenceHandler?.let { handler ->
-                { pnPresenceEventResult -> handler.handle(pnPresenceEventResult) }
-            }
-    }
-
-    private fun onSignalHandler(onSignalHandler: OnSignalHandler?) {
-        emitterHelper.onSignal =
-            onSignalHandler?.let { handler ->
-                { pnSignalResult: PNSignalResult -> handler.handle(pnSignalResult) }
-            }
-    }
-
-    private fun onMessageActionHandler(onMessageActionHandler: OnMessageActionHandler?) {
-        emitterHelper.onMessageAction =
-            onMessageActionHandler?.let { handler ->
-                { pnMessageActionResult -> handler.handle(pnMessageActionResult) }
-            }
-    }
-
-    private fun onUuidMetadataHandler(onUuidHandler: OnUuidMetadataHandler?) {
-        emitterHelper.onUuid =
-            onUuidHandler?.let { handler ->
-                { pnUUIDMetadataResult -> handler.handle(pnUUIDMetadataResult) }
-            }
-    }
-
-    private fun onChannelMetadataHandler(onChannelMetadataHandler: OnChannelMetadataHandler?) {
-        emitterHelper.onChannel =
-            onChannelMetadataHandler?.let { handler ->
-                { pnChannelMetadataResult -> handler.handle(pnChannelMetadataResult) }
-            }
-    }
-
-    private fun onMembershipHandler(onMembershipHandler: OnMembershipHandler?) {
-        emitterHelper.onMembership =
-            onMembershipHandler?.let { handler ->
-                { pnMembershipResult -> handler.handle(pnMembershipResult) }
-            }
-    }
-
-    private fun onFileHandler(onFileHandler: OnFileHandler?) {
-        emitterHelper.onFile =
-            onFileHandler?.let { handler ->
-                { pnFileEventResult -> handler.handle(pnFileEventResult) }
-            }
-    }
-
     /**
      * Add a listener.
      *
@@ -127,34 +71,83 @@ class SubscriptionImpl(
     }
 
     override fun setOnMessage(onMessageHandler: OnMessageHandler?) {
-        onMessageHandler(onMessageHandler)
+        setOnMessageHandler(onMessageHandler)
     }
 
     override fun setOnSignal(onSignalHandler: OnSignalHandler?) {
-        onSignalHandler(onSignalHandler)
+        setOnSignalHandler(onSignalHandler)
     }
 
     override fun setOnPresence(onPresenceHandler: OnPresenceHandler?) {
-        onPresenceHandler(onPresenceHandler)
+        setOnPresenceHandler(onPresenceHandler)
     }
 
     override fun setOnMessageAction(onMessageActionHandler: OnMessageActionHandler?) {
-        onMessageActionHandler(onMessageActionHandler)
+        setOnMessageActionHandler(onMessageActionHandler)
     }
 
     override fun setOnUuidMetadata(onUuidMetadataHandler: OnUuidMetadataHandler?) {
-        onUuidMetadataHandler(onUuidMetadataHandler)
+        setOnUuidMetadataHandler(onUuidMetadataHandler)
     }
 
     override fun setOnChannelMetadata(onChannelMetadataHandler: OnChannelMetadataHandler?) {
-        onChannelMetadataHandler(onChannelMetadataHandler)
+        setOnChannelMetadataHandler(onChannelMetadataHandler)
     }
 
     override fun setOnMembership(onMembershipHandler: OnMembershipHandler?) {
-        onMembershipHandler(onMembershipHandler)
+        setOnMembershipHandler(onMembershipHandler)
     }
 
     override fun setOnFile(onFileHandler: OnFileHandler?) {
-        onFileHandler(onFileHandler)
+        setOnFileHandler(onFileHandler)
+    }
+
+    private fun setOnMessageHandler(onMessageHandler: OnMessageHandler?) {
+        emitterHelper.onMessage = onMessageHandler?.let { handler ->
+            { pnMessageResult: PNMessageResult -> handler.handle(pnMessageResult) }
+        }
+    }
+
+    private fun setOnPresenceHandler(onPresenceHandler: OnPresenceHandler?) {
+        emitterHelper.onPresence = onPresenceHandler?.let { handler ->
+            { pnPresenceEventResult -> handler.handle(pnPresenceEventResult) }
+        }
+    }
+
+    private fun setOnSignalHandler(onSignalHandler: OnSignalHandler?) {
+        emitterHelper.onSignal = onSignalHandler?.let { handler ->
+            { pnSignalResult: PNSignalResult -> handler.handle(pnSignalResult) }
+        }
+    }
+
+    private fun setOnMessageActionHandler(onMessageActionHandler: OnMessageActionHandler?) {
+        emitterHelper.onMessageAction =
+            onMessageActionHandler?.let { handler ->
+                { pnMessageActionResult -> handler.handle(pnMessageActionResult) }
+            }
+    }
+
+    private fun setOnUuidMetadataHandler(onUuidHandler: OnUuidMetadataHandler?) {
+        emitterHelper.onUuid = onUuidHandler?.let { handler ->
+            { pnUUIDMetadataResult -> handler.handle(pnUUIDMetadataResult) }
+        }
+    }
+
+    private fun setOnChannelMetadataHandler(onChannelMetadataHandler: OnChannelMetadataHandler?) {
+        emitterHelper.onChannel = onChannelMetadataHandler?.let { handler ->
+            { pnChannelMetadataResult -> handler.handle(pnChannelMetadataResult) }
+        }
+    }
+
+    private fun setOnMembershipHandler(onMembershipHandler: OnMembershipHandler?) {
+        emitterHelper.onMembership = onMembershipHandler?.let { handler ->
+            { pnMembershipResult -> handler.handle(pnMembershipResult) }
+        }
+    }
+
+    private fun setOnFileHandler(onFileHandler: OnFileHandler?) {
+        emitterHelper.onFile = onFileHandler?.let { handler ->
+            { pnFileEventResult -> handler.handle(pnFileEventResult) }
+        }
     }
 }
