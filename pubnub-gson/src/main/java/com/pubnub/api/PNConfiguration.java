@@ -33,65 +33,123 @@ public class PNConfiguration {
         return pnConfigurationCore;
     }
 
-    private static final int DEFAULT_DEDUPE_SIZE = 100;
-    private static final int PRESENCE_TIMEOUT = 300;
     private static final int MINIMUM_PRESENCE_TIMEOUT = 20;
-    private static final int NON_SUBSCRIBE_REQUEST_TIMEOUT = 10;
-    private static final int SUBSCRIBE_TIMEOUT = 310;
-    private static final int CONNECT_TIMEOUT = 5;
-    private static final int FILE_MESSAGE_PUBLISH_RETRY_LIMIT = 5;
 
+    /**
+     * Custom origin if needed.
+     * <p>
+     * Defaults to `ps.pndsn.com`
+     */
     public String getOrigin() {
         return pnConfigurationCore.getOrigin();
     }
 
+    /**
+     * Custom origin if needed.
+     * <p>
+     * Defaults to `ps.pndsn.com`
+     */
     public PNConfiguration setOrigin(@NotNull String s) {
         pnConfigurationCore.setOrigin(s);
         return this;
     }
 
+    /**
+     * If set to `true`,  requests will be made over HTTPS.
+     *
+     * Deafults to `true`.
+     */
     public boolean getSecure() {
         return pnConfigurationCore.getSecure();
     }
 
+    /**
+     * If set to `true`,  requests will be made over HTTPS.
+     *
+     * Deafults to `true`.
+     */
     public PNConfiguration setSecure(boolean b) {
         pnConfigurationCore.setSecure(b);
         return this;
     }
 
+    /**
+     * Set to {@link PNLogVerbosity#BODY} to enable logging of network traffic, otherwise se to {@link PNLogVerbosity#NONE}.
+     */
     public PNLogVerbosity getLogVerbosity() {
         return pnConfigurationCore.getLogVerbosity();
     }
 
+    /**
+     * Set to {@link PNLogVerbosity#BODY} to enable logging of network traffic, otherwise se to {@link PNLogVerbosity#NONE}.
+     */
     public PNConfiguration setLogVerbosity(@NotNull PNLogVerbosity pnLogVerbosity) {
         pnConfigurationCore.setLogVerbosity(pnLogVerbosity);
         return this;
     }
 
+    /**
+     * Set Heartbeat notification options.
+     * <p>
+     * By default, the SDK alerts on failed heartbeats (equivalent to {@link PNHeartbeatNotificationOptions#FAILURES}).
+     */
     public PNHeartbeatNotificationOptions getHeartbeatNotificationOptions() {
         return pnConfigurationCore.getHeartbeatNotificationOptions();
     }
 
+    /**
+     * Set Heartbeat notification options.
+     * <p>
+     * By default, the SDK alerts on failed heartbeats (equivalent to {@link PNHeartbeatNotificationOptions#FAILURES}).
+     */
     public PNConfiguration setHeartbeatNotificationOptions(@NotNull PNHeartbeatNotificationOptions pnHeartbeatNotificationOptions) {
         pnConfigurationCore.setHeartbeatNotificationOptions(pnHeartbeatNotificationOptions);
         return this;
     }
 
+    /**
+     * Set to [PNReconnectionPolicy.LINEAR] for automatic reconnects.
+     * <p>
+     * Use [PNReconnectionPolicy.NONE] to disable automatic reconnects.
+     * <p>
+     * Use [PNReconnectionPolicy.EXPONENTIAL] to set exponential retry interval.
+     * <p>
+     * Defaults to [PNReconnectionPolicy.NONE].
+     *
+     * @deprecated use {@link #setRetryConfiguration(RetryConfiguration)} instead
+     */
+    @Deprecated
     public PNReconnectionPolicy getReconnectionPolicy() {
         return pnConfigurationCore.getReconnectionPolicy();
     }
 
+    /**
+     * Set to [PNReconnectionPolicy.LINEAR] for automatic reconnects.
+     * <p>
+     * Use [PNReconnectionPolicy.NONE] to disable automatic reconnects.
+     * <p>
+     * Use [PNReconnectionPolicy.EXPONENTIAL] to set exponential retry interval.
+     * <p>
+     * Defaults to [PNReconnectionPolicy.NONE].
+     *
+     * @deprecated use {@link #setRetryConfiguration(RetryConfiguration)} instead
+     */
+    @Deprecated
     public PNConfiguration setReconnectionPolicy(@NotNull PNReconnectionPolicy pnReconnectionPolicy) {
         pnConfigurationCore.setReconnectionPolicy(pnReconnectionPolicy);
         return this;
     }
 
+    /**
+     * Sets the custom presence server timeout.
+     * <p>
+     * The value is in seconds, and the minimum value is 20 seconds.
+     */
     public int getPresenceTimeout() {
         return pnConfigurationCore.getPresenceTimeout();
     }
 
     /**
-     * @return
      * @deprecated Use {@link #setUserId(UserId)} instead.
      */
     @Deprecated
@@ -100,68 +158,128 @@ public class PNConfiguration {
         return this;
     }
 
+    /**
+     * The subscribe key from the admin panel.
+     */
     public String getSubscribeKey() {
         return pnConfigurationCore.getSubscribeKey();
     }
 
+    /**
+     * The subscribe key from the admin panel.
+     */
     public PNConfiguration setSubscribeKey(@NotNull String s) {
         pnConfigurationCore.setSubscribeKey(s);
         return this;
     }
 
+    /**
+     * The publish key from the admin panel (only required if publishing).
+     */
     public String getPublishKey() {
         return pnConfigurationCore.getPublishKey();
     }
 
+    /**
+     * The publish key from the admin panel (only required if publishing).
+     */
     public PNConfiguration setPublishKey(@NotNull String s) {
         pnConfigurationCore.setPublishKey(s);
         return this;
     }
 
+    /**
+     * The secret key from the admin panel (only required for modifying/revealing access permissions).
+     * <p>
+     * Keep away from Android.
+     */
     public String getSecretKey() {
         return pnConfigurationCore.getSecretKey();
     }
 
+    /**
+     * The secret key from the admin panel (only required for modifying/revealing access permissions).
+     * <p>
+     * Keep away from Android.
+     */
     public PNConfiguration setSecretKey(@NotNull String s) {
         pnConfigurationCore.setSecretKey(s);
         return this;
     }
 
+    /**
+     * If Access Manager is utilized, client will use this authKey in all restricted requests.
+     */
     public String getAuthKey() {
         return pnConfigurationCore.getAuthKey();
     }
 
+    /**
+     * If Access Manager is utilized, client will use this authKey in all restricted requests.
+     */
     public PNConfiguration setAuthKey(@NotNull String s) {
         pnConfigurationCore.setAuthKey(s);
         return this;
     }
 
+    /**
+     * If set, all communications to and from PubNub will be encrypted.
+     *
+     * @deprecated Instead of `cipherKey` and `useRandomInitializationVector` use {@link #setCryptoModule(CryptoModule)} instead
+     */
     @Deprecated
     public String getCipherKey() {
         return pnConfigurationCore.getCipherKey();
     }
 
+    /**
+     * If set, all communications to and from PubNub will be encrypted.
+     *
+     * @deprecated Instead of `cipherKey` and `useRandomInitializationVector` use {@link #setCryptoModule(CryptoModule)} instead
+     */
     @Deprecated
     public PNConfiguration setCipherKey(String s) {
         pnConfigurationCore.setCipherKey(s != null ? s : "");
         return this;
     }
 
+    /**
+     * Should initialization vector for encrypted messages be random.
+     * <p>
+     * Defaults to `false`.
+     *
+     * @deprecated Instead of `cipherKey` and `useRandomInitializationVector` use {@link #setCryptoModule(CryptoModule)} instead
+     */
     @Deprecated
     public boolean getUseRandomInitializationVector() {
         return pnConfigurationCore.getUseRandomInitializationVector();
     }
 
+    /**
+     * Should initialization vector for encrypted messages be random.
+     * <p>
+     * Defaults to `false`.
+     *
+     * @deprecated Instead of `cipherKey` and `useRandomInitializationVector` use {@link #setCryptoModule(CryptoModule)} instead
+     */
     @Deprecated
     public PNConfiguration setUseRandomInitializationVector(boolean b) {
         pnConfigurationCore.setUseRandomInitializationVector(b);
         return this;
     }
 
+    /**
+     * CryptoModule is responsible for handling encryption and decryption.
+     * If set, all communications to and from PubNub will be encrypted.
+     */
     public CryptoModule getCryptoModule() {
         return pnConfigurationCore.getCryptoModule();
     }
 
+    /**
+     * CryptoModule is responsible for handling encryption and decryption.
+     * If set, all communications to and from PubNub will be encrypted.
+     */
     public PNConfiguration setCryptoModule(@Nullable CryptoModule cryptoModule) {
         pnConfigurationCore.setCryptoModule(cryptoModule);
         return this;
@@ -230,7 +348,7 @@ public class PNConfiguration {
     }
 
     /**
-     * set presence configurations for timeout and allow the client to pick the best interval
+     * Set presence configurations for timeout and allow the client to pick the best presence interval
      *
      * @param timeout presence timeout; how long before the server considers this client to be gone.
      * @return returns itself.
@@ -241,45 +359,109 @@ public class PNConfiguration {
         return this;
     }
 
+    /**
+     * How often the client will announce itself to server.
+     * <p>
+     * The value is in seconds.
+     */
     public int getHeartbeatInterval() {
         return pnConfigurationCore.getHeartbeatInterval();
     }
 
+    /**
+     * How often the client will announce itself to server.
+     * <p>
+     * The value is in seconds.
+     */
     public void setHeartbeatInterval(int i) {
         pnConfigurationCore.setHeartbeatInterval(i);
     }
 
+    /**
+     * The subscribe request timeout.
+     * <p>
+     * The value is in seconds.
+     * <p>
+     * Defaults to 310.
+     */
     public int getSubscribeTimeout() {
         return pnConfigurationCore.getSubscribeTimeout();
     }
 
+    /**
+     * The subscribe request timeout.
+     * <p>
+     * The value is in seconds.
+     * <p>
+     * Defaults to 310.
+     */
     public PNConfiguration setSubscribeTimeout(int i) {
         pnConfigurationCore.setSubscribeTimeout(i);
         return this;
     }
 
+    /**
+     * How long before the client gives up trying to connect with a subscribe call.
+     * <p>
+     * The value is in seconds.
+     * <p>
+     * Defaults to 5.
+     */
     public int getConnectTimeout() {
         return pnConfigurationCore.getConnectTimeout();
     }
 
+    /**
+     * How long before the client gives up trying to connect with a subscribe call.
+     * <p>
+     * The value is in seconds.
+     * <p>
+     * Defaults to 5.
+     */
     public PNConfiguration setConnectTimeout(int i) {
         pnConfigurationCore.setConnectTimeout(i);
         return this;
     }
 
+    /**
+     * For non subscribe operations (publish, herenow, etc),
+     * how long to wait to connect to PubNub before giving up with a connection timeout error.
+     * <p>
+     * The value is in seconds.
+     * <p>
+     * Defaults to 10.
+     */
     public int getNonSubscribeRequestTimeout() {
         return pnConfigurationCore.getNonSubscribeRequestTimeout();
     }
 
+    /**
+     * For non subscribe operations (publish, herenow, etc),
+     * how long to wait to connect to PubNub before giving up with a connection timeout error.
+     * <p>
+     * The value is in seconds.
+     * <p>
+     * Defaults to 10.
+     */
     public PNConfiguration setNonSubscribeRequestTimeout(int i) {
         pnConfigurationCore.setNonSubscribeRequestTimeout(i);
         return this;
     }
 
+    /**
+     * If operating behind a misbehaving proxy, allow the client to shuffle the subdomains.
+     * <p>
+     * Defaults to `false`.
+     */
     public boolean getCacheBusting() {
         return pnConfigurationCore.getCacheBusting();
     }
 
+    /**
+     * If operating behind a misbehaving proxy, allow the client to shuffle the subdomains.
+     * <p>
+     * Defaults to `false`.
+     */
     public PNConfiguration setCacheBusting(boolean b) {
         pnConfigurationCore.setCacheBusting(b);
         return this;
@@ -492,12 +674,6 @@ public class PNConfiguration {
             log.warning("Presence timeout is too low. Defaulting to: " + MINIMUM_PRESENCE_TIMEOUT);
         }
         return validTimeout;
-    }
-
-    private static void require(boolean value, PubNubError error) {
-        if (!value) {
-            throw PubNubRuntimeException.builder().pubnubError(error).build();
-        }
     }
 
     public PNConfiguration setRetryConfiguration(RetryConfiguration configuration) {

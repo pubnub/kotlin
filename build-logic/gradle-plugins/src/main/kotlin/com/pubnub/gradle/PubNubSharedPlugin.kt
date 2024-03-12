@@ -43,6 +43,8 @@ class PubNubSharedPlugin : Plugin<Project> {
                     mapOf(
                         "ij_kotlin_imports_layout" to "*,java.**,javax.**,kotlin.**,^",
                         "indent_size" to "4",
+                        "ktlint_standard_multiline-expression-wrapping" to "disabled",
+                        "ktlint_standard_string-template-indent" to "disabled",
                     )
                 )
             }

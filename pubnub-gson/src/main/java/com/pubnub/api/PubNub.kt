@@ -300,12 +300,12 @@ interface PubNub :
     /**
      * Send a message to all subscribers of a channel.
      *
-     * To publish a message you must first specify a valid [PNConfiguration.publishKey].
+     * To publish a message you must first specify a valid [PNConfiguration.setPublishKey].
      * A successfully published message is replicated across the PubNub Real-Time Network and sent
      * simultaneously to all subscribed clients on a channel.
      *
      * Messages in transit can be secured from potential eavesdroppers with SSL/TLS by setting
-     * [PNConfiguration.secure] to `true` during initialization.
+     * [PNConfiguration.setSecure] to `true` during initialization.
      *
      * **Publish Anytime**
      *
