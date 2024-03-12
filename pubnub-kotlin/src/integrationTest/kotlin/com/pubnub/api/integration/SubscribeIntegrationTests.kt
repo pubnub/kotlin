@@ -700,7 +700,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         }
 
     @Test
-    fun testAssigningEventBehaviourToSubscriptionAnd() {
+    fun testAssigningEventBehaviourToSubscription() {
         val successMessage = AtomicInteger(0)
         val successSignal = AtomicInteger(0)
         val expectedMessage = randomValue()
@@ -731,6 +731,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         pubnub.publish(chan01.name, expectedMessage).sync()
 
         Thread.sleep(1000)
+        // successMessage/successSignal remains 1
         assertEquals(1, successMessage.get())
         assertEquals(1, successSignal.get())
     }

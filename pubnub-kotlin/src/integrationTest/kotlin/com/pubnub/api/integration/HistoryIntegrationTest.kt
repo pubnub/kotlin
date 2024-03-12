@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 import java.time.Duration
 
-class HistoryImplIntegrationTest : BaseIntegrationTest() {
+class HistoryIntegrationTest : BaseIntegrationTest() {
     @Test
     fun historySingleScenario() {
         val channel = randomChannel()

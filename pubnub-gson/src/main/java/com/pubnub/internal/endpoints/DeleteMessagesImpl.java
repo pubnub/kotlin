@@ -30,7 +30,7 @@ public class DeleteMessagesImpl extends DelegatingEndpoint<PNDeleteMessagesResul
 
     @Override
     protected void validateParams() throws PubNubException {
-        if (channels == null || channels.size() == 0) {
+        if (channels == null || channels.isEmpty()) {
             throw new PubNubException(PubNubErrorBuilder.PNERROBJ_CHANNEL_MISSING);
         }
     }
