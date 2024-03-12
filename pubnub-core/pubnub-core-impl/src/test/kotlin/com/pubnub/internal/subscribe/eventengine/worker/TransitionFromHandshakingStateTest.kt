@@ -67,8 +67,8 @@ class TransitionFromHandshakingStateTest {
                     PNStatus(
                         PNStatusCategory.PNConnectedCategory,
                         currentTimetoken = timeToken,
-                        channels = channels.toList(),
-                        channelGroups = channelGroups.toList(),
+                        affectedChannels = channels.toList(),
+                        affectedChannelGroups = channelGroups.toList(),
                     ),
                 ),
                 ReceiveMessages(channels, channelGroups, subscriptionCursor),
@@ -105,8 +105,8 @@ class TransitionFromHandshakingStateTest {
                     PNStatus(
                         PNStatusCategory.PNConnectedCategory,
                         currentTimetoken = timeTokenForHandshake,
-                        channels = channels.toList(),
-                        channelGroups = channelGroups.toList(),
+                        affectedChannels = channels.toList(),
+                        affectedChannelGroups = channelGroups.toList(),
                     ),
                 ),
                 ReceiveMessages(

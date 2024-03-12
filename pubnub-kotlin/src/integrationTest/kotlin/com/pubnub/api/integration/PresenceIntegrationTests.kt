@@ -233,7 +233,7 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
                     pubnub: PubNub,
                     pnStatus: PNStatus,
                 ) {
-                    if (pnStatus.category == PNStatusCategory.PNConnectedCategory && pnStatus.channels.contains(expectedChannel)) {
+                    if (pnStatus.category == PNStatusCategory.PNConnectedCategory && pnStatus.affectedChannels.contains(expectedChannel)) {
                         subscribeSuccess.set(true)
                     } else {
                         if (pnStatus.category == PNStatusCategory.PNHeartbeatSuccess) {

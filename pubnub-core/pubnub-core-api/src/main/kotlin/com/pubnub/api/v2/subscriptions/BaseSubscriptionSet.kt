@@ -3,18 +3,6 @@ package com.pubnub.api.v2.subscriptions
 import com.pubnub.api.v2.callbacks.BaseEventEmitter
 import com.pubnub.api.v2.callbacks.BaseEventListener
 
-/**
- * A helper class that manages multiple [BaseSubscription]s that can be added to it.
- *
- * Use the [com.pubnub.api.PubNub.subscriptionSetOf] factory methods to create instances of this class.
- *
- * Adding multiple `Subscription`s to the set, then calling [subscribe] or [unsubscribe] on the set is more efficient
- * than calling `subscribe` on all `Subscription` objects separately, as the PubNub client can minimize the number of
- * required reconnections internally.
- *
- * Remember to always [close] the set when you're done with it to avoid memory leaks.
- * Closing the set also closes all `Subscription`s that are part of this set.
- */
 interface BaseSubscriptionSet<EvLis : BaseEventListener, Sub : BaseSubscription<EvLis>> : BaseEventEmitter<EvLis>, SubscribeCapable, AutoCloseable {
     /**
      * Add a [BaseSubscription] to this set.

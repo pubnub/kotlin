@@ -8,6 +8,10 @@ import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 
+/**
+ * Implement this interface and pass it into [EventEmitter.addListener] to listen for events from the PubNub real-time
+ * network.
+ */
 interface EventListener : BaseEventListener {
     /**
      * Receive messages at subscribed channels.
@@ -25,7 +29,7 @@ interface EventListener : BaseEventListener {
     /**
      * Receive presence events for channels subscribed with presence enabled via
      * passing [com.pubnub.api.v2.subscriptions.SubscriptionOptions.receivePresenceEvents]
-     * in [com.pubnub.api.v2.entities.BaseChannel.subscription].
+     * in [com.pubnub.api.v2.entities.Subscribable.subscription].
      *
      * @param pubnub The client instance which has this listener attached.
      * @param result Wrapper around a presence event.

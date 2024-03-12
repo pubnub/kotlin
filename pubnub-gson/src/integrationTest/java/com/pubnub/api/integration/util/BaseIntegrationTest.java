@@ -193,11 +193,11 @@ public abstract class BaseIntegrationTest {
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
                 if (status.getCategory() == PNStatusCategory.PNConnectedCategory) {
-                    if (status.getChannels().containsAll(channels)) {
+                    if (status.getAffectedChannels().containsAll(channels)) {
                         subscribeSuccess.set(true);
                     }
                 } else if (status.getCategory() == PNStatusCategory.PNSubscriptionChanged) {
-                    if (status.getChannels().containsAll(channels)) {
+                    if (status.getAffectedChannels().containsAll(channels)) {
                         subscribeSuccess.set(true);
                     }
                 }

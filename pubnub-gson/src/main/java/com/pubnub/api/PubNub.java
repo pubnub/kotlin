@@ -60,6 +60,7 @@ import com.pubnub.api.v2.entities.ChannelMetadata;
 import com.pubnub.api.v2.entities.UserMetadata;
 import com.pubnub.api.v2.subscriptions.Subscription;
 import com.pubnub.api.v2.subscriptions.SubscriptionSet;
+import com.pubnub.internal.BasePubNubImpl;
 import com.pubnub.internal.PubNubImpl;
 import org.jetbrains.annotations.NotNull;
 
@@ -86,8 +87,31 @@ public interface PubNub extends BasePubNub<
         return new PubNubImpl(configuration);
     }
 
+    static String generateUUID() {
+        return BasePubNubImpl.generateUUID();
+    }
+
+    /**
+     * Get the configuration that was used to initialize this PubNub instance.
+     * Modifying the values in this configuration is not advised, as it may lead
+     * to undefined behavior.
+     */
     @NotNull PNConfiguration getConfiguration();
 
+    /**
+     * Causes the client to create an open TCP socket to the PubNub Real-Time Network and begin listening for messages
+     * on a specified channel.
+     * <p>
+     * To subscribe to a channel the client must send the appropriate {@link PNConfiguration#setSubscribeKey(String)} at initialization.
+     * <p>
+     * By default, a newly subscribed client will only receive messages published to the channel
+     * after the `subscribe()` call completes.
+     * <p>
+     * If a client gets disconnected from a channel, it can automatically attempt to reconnect to that channel
+     * and retrieve any available messages that were missed during that period.
+     * This can be achieved by setting [PNConfiguration.retryConfiguration] when initializing the client.
+     *
+     */
     @NotNull SubscribeBuilder subscribe();
 
     @NotNull UnsubscribeBuilder unsubscribe();
@@ -195,8 +219,6 @@ public interface PubNub extends BasePubNub<
 
     void reconnect();
 
-    void disconnect();
-
     @NotNull Publish fire();
 
     @NotNull List<String> getSubscribedChannels();
@@ -217,6 +239,12 @@ public interface PubNub extends BasePubNub<
 
     void addListener(@NotNull StatusListener listener);
 
+    /**
+     * Add a legacy listener for both client status and events.
+     * Prefer `addListener(EventListener)` and `addListener(StatusListener)` if possible.
+     *
+     * @param listener The listener to be added.
+     */
     void addListener(@NotNull SubscribeCallback listener);
 
     @NotNull InputStream decryptInputStream(@NotNull InputStream inputStream) throws PubNubException;

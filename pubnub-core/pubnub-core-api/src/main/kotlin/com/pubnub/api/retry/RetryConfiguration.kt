@@ -26,7 +26,7 @@ sealed class RetryConfiguration {
      * @property maxRetryNumber The maximum number of retries allowed. Maximum value is 10.
      * @property excludedOperations List of [RetryableEndpointGroup] to be excluded from retry.
      */
-    class Linear(
+    class Linear internal constructor(
         var delayInSec: Duration = MIN_DELAY.seconds,
         var maxRetryNumber: Int = MAX_RETRIES_IN_LINEAR,
         val excludedOperations: List<RetryableEndpointGroup> = emptyList(),

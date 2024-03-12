@@ -1,12 +1,8 @@
 /*
  * Copyright 2010-2018 JetBrains s.r.o. and Kotlin Programming Language contributors.
- * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
+ * Use of this source code is governed by the Apache 2.0 license.
  */
-
 @file:JvmName("Results")
-
-// @file:Suppress("UNCHECKED_CAST", "RedundantVisibilityModifier")
-
 package com.pubnub.api.v2.callbacks
 
 import com.pubnub.api.PubNubException
@@ -17,7 +13,7 @@ import kotlin.contracts.contract
 
 /**
  * A discriminated union that encapsulates a successful outcome with a value of type [T]
- * or a failure with an arbitrary [Throwable] exception.
+ * or a failure with a [PubNubException].
  */
 class Result<out T>
     @PublishedApi
@@ -57,7 +53,7 @@ class Result<out T>
             }
 
         /**
-         * Returns the encapsulated [Throwable] exception if this instance represents [failure][isFailure] or `null`
+         * Returns the encapsulated [PubNubException] exception if this instance represents [failure][isFailure] or `null`
          * if it is [success][isSuccess].
          *
          * This function is a shorthand for `fold(onSuccess = { null }, onFailure = { it })` (see [fold]).
@@ -106,7 +102,7 @@ class Result<out T>
             public fun <T> success(value: T): Result<T> = Result(value)
 
             /**
-             * Returns an instance that encapsulates the given [Throwable] [exception] as failure.
+             * Returns an instance that encapsulates the given [PubNubException] [exception] as failure.
              */
             @JvmStatic
             public fun <T> failure(exception: PubNubException): Result<T> = Result(createFailure(exception))
@@ -144,7 +140,7 @@ private fun Result<*>.throwOnFailure() {
 // -- extensions ---
 
 /**
- * Returns the encapsulated value if this instance represents [success][Result.isSuccess] or throws the encapsulated [Throwable] exception
+ * Returns the encapsulated value if this instance represents [success][Result.isSuccess] or throws the encapsulated [PubNubException]
  * if it is [failure][Result.isFailure].
  *
  * This function is a shorthand for `getOrElse { throw it }` (see [getOrElse]).
@@ -156,7 +152,7 @@ public fun <T> Result<T>.getOrThrow(): T {
 
 /**
  * Returns the encapsulated value if this instance represents [success][Result.isSuccess] or the
- * result of [onFailure] function for the encapsulated [Throwable] exception if it is [failure][Result.isFailure].
+ * result of [onFailure] function for the encapsulated [PubNubException] exception if it is [failure][Result.isFailure].
  *
  * Note, that this function rethrows any [Throwable] exception thrown by [onFailure] function.
  *

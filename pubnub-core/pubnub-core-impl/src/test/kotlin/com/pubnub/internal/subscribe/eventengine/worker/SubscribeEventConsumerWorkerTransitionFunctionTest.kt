@@ -50,8 +50,8 @@ class SubscribeEventConsumerWorkerTransitionFunctionTest {
                     PNStatus(
                         PNStatusCategory.PNConnectedCategory,
                         currentTimetoken = timeToken,
-                        channels = channels.toList(),
-                        channelGroups = channelGroups.toList(),
+                        affectedChannels = channels.toList(),
+                        affectedChannelGroups = channelGroups.toList(),
                     ),
                 ),
                 SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
@@ -61,8 +61,8 @@ class SubscribeEventConsumerWorkerTransitionFunctionTest {
                     PNStatus(
                         PNStatusCategory.PNConnectedCategory,
                         currentTimetoken = timeToken,
-                        channels = channels.toList(),
-                        channelGroups = channelGroups.toList(),
+                        affectedChannels = channels.toList(),
+                        affectedChannelGroups = channelGroups.toList(),
                     ),
                 ),
                 SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),

@@ -7,11 +7,11 @@ import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 /**
  * A representation of a PubNub channel group identified by its [name].
  *
- * You can get a [BaseSubscription] to this channel group through [subscription].
+ * You can get a [BaseSubscription] to this channel group through [Subscribable.subscription].
  *
  * Use the [com.pubnub.api.PubNub.channelGroup] factory method to create instances of this interface.
  */
-interface BaseChannelGroup<Lis : BaseEventListener, Sub : BaseSubscription<Lis>> : Subscribable<Lis> {
+interface BaseChannelGroup<Lis : BaseEventListener, Subscription : BaseSubscription<Lis>> : Subscribable<Lis> {
     /**
      * The name of this channel group.
      *
@@ -20,7 +20,7 @@ interface BaseChannelGroup<Lis : BaseEventListener, Sub : BaseSubscription<Lis>>
     val name: String
 
     /**
-     * Returns a [BaseSubscription] that can be used to subscribe to this channel group.
+     * Returns a [Subscription] that can be used to subscribe to this channel group.
      *
      * Channel group subscriptions support passing [com.pubnub.api.v2.subscriptions.SubscriptionOptions.receivePresenceEvents]
      * in [options] to enable receiving presence events.
@@ -44,7 +44,7 @@ interface BaseChannelGroup<Lis : BaseEventListener, Sub : BaseSubscription<Lis>>
      * This limitation is due to how the server manages channels and channel groups.
      *
      * @param options optional [SubscriptionOptions].
-     * @return an inactive [BaseSubscription] to this channel group. You must call [BaseSubscription.subscribe] to start receiving events.
+     * @return an inactive [Subscription] to this channel group. You must call [Subscription.subscribe] to start receiving events.
      */
-    override fun subscription(options: SubscriptionOptions): Sub
+    override fun subscription(options: SubscriptionOptions): Subscription
 }

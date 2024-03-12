@@ -93,7 +93,7 @@ public class SignalIntegrationTests extends BaseIntegrationTest {
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
                 if (status.getCategory() == PNStatusCategory.PNConnectedCategory) {
-                    if (status.getChannels().contains(expectedChannel)) {
+                    if (status.getAffectedChannels().contains(expectedChannel)) {
                         pubNub.signal()
                                 .message(expectedPayload)
                                 .channel(expectedChannel)

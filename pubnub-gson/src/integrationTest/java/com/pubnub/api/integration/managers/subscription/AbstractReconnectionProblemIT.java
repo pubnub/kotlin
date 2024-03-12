@@ -120,7 +120,7 @@ public abstract class AbstractReconnectionProblemIT {
                 }
                 System.out.println("status: " + pnStatus);
                 if (pnStatus.getCategory() == PNStatusCategory.PNConnectedCategory) {
-                    System.out.println("affected channels: " + pnStatus.getChannels());
+                    System.out.println("affected channels: " + pnStatus.getAffectedChannels());
                 }
                 if (reportCallStack) {
                     exception.printStackTrace(System.out);
@@ -156,8 +156,8 @@ public abstract class AbstractReconnectionProblemIT {
                 }
                 System.out.println("status: " + pnStatus);
                 if (pnStatus.getCategory() == PNStatusCategory.PNConnectedCategory) {
-                    System.out.println("affected channels: " + pnStatus.getChannels());
-                    System.out.println("affected channel groups: " + pnStatus.getChannelGroups());
+                    System.out.println("affected channels: " + pnStatus.getAffectedChannels());
+                    System.out.println("affected channel groups: " + pnStatus.getAffectedChannelGroups());
                 }
                 if (reportCallStack) {
                     exception.printStackTrace(System.out);
@@ -273,7 +273,7 @@ public abstract class AbstractReconnectionProblemIT {
         long countConnected = collectedStatuses.stream()
                 .filter(collectedStatus ->
                         collectedStatus.getPnStatus().getCategory() == PNStatusCategory.PNConnectedCategory
-                                && collectedStatus.getPnStatus().getChannels().contains(channel1))
+                                && collectedStatus.getPnStatus().getAffectedChannels().contains(channel1))
                 .count();
 
         assertThat(countAccessDenied, equalTo(1L));
@@ -319,7 +319,7 @@ public abstract class AbstractReconnectionProblemIT {
         long countConnected = collectedStatuses.stream()
                 .filter(collectedStatus ->
                         collectedStatus.getPnStatus().getCategory() == PNStatusCategory.PNConnectedCategory
-                                && collectedStatus.getPnStatus().getChannelGroups().contains(channelGroup1))
+                                && collectedStatus.getPnStatus().getAffectedChannelGroups().contains(channelGroup1))
                 .count();
 
         assertThat(countAccessDenied, equalTo(1L));

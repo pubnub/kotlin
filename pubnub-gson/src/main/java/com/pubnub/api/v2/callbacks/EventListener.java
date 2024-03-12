@@ -11,6 +11,10 @@ import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult;
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Implement this interface and pass it into [EventEmitter.addListener] to listen for events from the PubNub real-time
+ * network.
+ */
 public interface EventListener extends BaseEventListener {
 
     default void message(@NotNull PubNub pubnub, @NotNull PNMessageResult pnMessageResult) {

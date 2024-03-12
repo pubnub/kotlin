@@ -4,7 +4,7 @@ import com.pubnub.api.v2.callbacks.BaseEventEmitter
 import com.pubnub.api.v2.callbacks.BaseEventListener
 
 /**
- * Represents a potential subscriptions to [com.pubnub.api.PubNub].
+ * Represents a potential subscription to the PubNub real-time network.
  *
  * Create objects of this class through the [com.pubnub.api.v2.entities.Subscribable.subscription] method of the
  * respective entities, such as [com.pubnub.api.v2.entities.BaseChannel], [com.pubnub.api.v2.entities.BaseChannelGroup],

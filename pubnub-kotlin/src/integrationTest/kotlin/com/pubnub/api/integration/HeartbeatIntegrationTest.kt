@@ -54,7 +54,7 @@ class HeartbeatIntegrationTest : BaseIntegrationTest() {
                     pnStatus: PNStatus,
                 ) {
                     if (pnStatus.category == PNStatusCategory.PNConnectedCategory &&
-                        pnStatus.channels.contains(expectedChannel)
+                        pnStatus.affectedChannels.contains(expectedChannel)
                     ) {
                         pubnub.subscribe(
                             channels = listOf(expectedChannel),

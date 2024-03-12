@@ -106,6 +106,7 @@ class RetryableCallbackTest {
     fun `should retry when linear retryConfiguration is set and SocketTimeoutException`() {
         // given
         val success = AtomicBoolean()
+        @Suppress("INVISIBLE_MEMBER")
         val retryableCallback =
             getRetryableCallback(
                 retryConfiguration =

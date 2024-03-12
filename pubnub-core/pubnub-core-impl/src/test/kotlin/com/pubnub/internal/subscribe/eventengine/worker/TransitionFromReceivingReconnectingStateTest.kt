@@ -284,6 +284,6 @@ internal fun createSubscriptionChangedStatus(
 ) = PNStatus(
     PNStatusCategory.PNSubscriptionChanged,
     currentTimetoken = cursor.timetoken,
-    channels = channels,
-    channelGroups = channelGroups,
+    affectedChannels = channels,
+    affectedChannelGroups = channelGroups,
 )

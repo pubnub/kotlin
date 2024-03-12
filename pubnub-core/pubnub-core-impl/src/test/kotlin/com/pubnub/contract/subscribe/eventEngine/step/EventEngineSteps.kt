@@ -26,6 +26,7 @@ class EventEngineSteps(private val state: EventEngineState) {
     @Given("a linear reconnection policy with {int} retries")
     fun a_linear_reconnection_policy_with_retries(maxRetries: Int) {
         state.configuration.retryConfiguration =
+            @Suppress("INVISIBLE_MEMBER")
             RetryConfiguration.Linear(delayInSec = 1.milliseconds, maxRetryNumber = maxRetries, isInternal = true)
     }
 

@@ -47,7 +47,7 @@ public class HeartbeatIntegrationTest extends BaseIntegrationTest {
             @Override
             public void status(@NotNull PubNub pn, @NotNull PNStatus status) {
                 if (status.getCategory() == PNStatusCategory.PNConnectedCategory) {
-                    if (status.getChannels().contains(expectedChannel)) {
+                    if (status.getAffectedChannels().contains(expectedChannel)) {
                         pubNub.subscribe()
                                 .channels(Collections.singletonList(expectedChannel))
                                 .withPresence()

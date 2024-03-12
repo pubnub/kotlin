@@ -2,17 +2,17 @@ package com.pubnub.api.enums
 
 enum class PNHeartbeatNotificationOptions {
     /**
-     * No heartbeat-related events in [SubscribeCallback.status]
+     * Do not report heartbeat events through [com.pubnub.api.v2.callbacks.StatusListener]
      */
     NONE,
 
     /**
-     * Receive failed heartbeat events in [SubscribeCallback.status]
+     * Receive failed heartbeat events in [com.pubnub.api.v2.callbacks.StatusListener]
      */
     FAILURES,
 
     /**
-     * Receive all heartbeat events in [SubscribeCallback.status]
+     * Receive all heartbeat events in [com.pubnub.api.v2.callbacks.StatusListener]
      */
     ALL,
 }

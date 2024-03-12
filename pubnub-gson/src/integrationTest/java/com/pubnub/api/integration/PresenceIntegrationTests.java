@@ -324,7 +324,7 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
                 if (!status.isError()) {
                     if (status.getCategory() == PNStatusCategory.PNConnectedCategory) {
-                        if (status.getChannels().contains(expectedChannel)) {
+                        if (status.getAffectedChannels().contains(expectedChannel)) {
                             subscribeSuccess.set(true);
                         }
                     } else if (status.getCategory() == PNStatusCategory.PNHeartbeatSuccess) {
@@ -363,7 +363,7 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
                 if (!status.isError()) {
                     if (status.getCategory() == PNStatusCategory.PNConnectedCategory) {
-                        if (status.getChannels().contains(expectedChannel)) {
+                        if (status.getAffectedChannels().contains(expectedChannel)) {
                             subscribeSuccess.set(true);
                         }
                     } else if (status.getCategory() == PNStatusCategory.PNHeartbeatSuccess) {

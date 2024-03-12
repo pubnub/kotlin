@@ -60,8 +60,8 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                             PNStatus(
                                 PNStatusCategory.PNConnectedCategory,
                                 currentTimetoken = cursor.timetoken,
-                                channels = channels.toList(),
-                                channelGroups = channelGroups.toList(),
+                                affectedChannels = channels.toList(),
+                                affectedChannelGroups = channelGroups.toList(),
                             ),
                         ),
                     )
@@ -154,8 +154,8 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                             PNStatus(
                                 PNStatusCategory.PNConnectedCategory,
                                 currentTimetoken = cursor.timetoken,
-                                channels = channels.toList(),
-                                channelGroups = channelGroups.toList(),
+                                affectedChannels = channels.toList(),
+                                affectedChannelGroups = channelGroups.toList(),
                             ),
                         ),
                     )
@@ -310,8 +310,8 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                             PNStatus(
                                 PNStatusCategory.PNSubscriptionChanged,
                                 currentTimetoken = subscriptionCursor.timetoken,
-                                channels = event.channels,
-                                channelGroups = event.channelGroups,
+                                affectedChannels = event.channels,
+                                affectedChannelGroups = event.channelGroups,
                             ),
                         ),
                     )
@@ -328,8 +328,8 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                             PNStatus(
                                 PNStatusCategory.PNSubscriptionChanged,
                                 currentTimetoken = event.subscriptionCursor.timetoken,
-                                channels = event.channels,
-                                channelGroups = event.channelGroups,
+                                affectedChannels = event.channels,
+                                affectedChannelGroups = event.channelGroups,
                             ),
                         ),
                     )
@@ -402,8 +402,8 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                             PNStatus(
                                 PNStatusCategory.PNSubscriptionChanged,
                                 currentTimetoken = subscriptionCursor.timetoken,
-                                channels = event.channels,
-                                channelGroups = event.channelGroups,
+                                affectedChannels = event.channels,
+                                affectedChannelGroups = event.channelGroups,
                             ),
                         ),
                     )
@@ -448,8 +448,8 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                             PNStatus(
                                 PNStatusCategory.PNSubscriptionChanged,
                                 currentTimetoken = event.subscriptionCursor.timetoken,
-                                channels = event.channels,
-                                channelGroups = event.channelGroups,
+                                affectedChannels = event.channels,
+                                affectedChannelGroups = event.channelGroups,
                             ),
                         ),
                     )

@@ -1,5 +1,6 @@
 package com.pubnub.api.enums
 
+@Deprecated(message = "Use [com.pubnub.api.retry.RetryConfiguration] instead.")
 enum class PNReconnectionPolicy {
     /**
      * No reconnection policy. If the subscribe loop gets cancelled due to network or other issues,

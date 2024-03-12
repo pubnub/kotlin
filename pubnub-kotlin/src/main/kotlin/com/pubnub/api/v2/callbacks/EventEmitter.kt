@@ -7,6 +7,9 @@ import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 
+/**
+ * Interface implemented by objects that are the source of real time events from the PubNub network.
+ */
 interface EventEmitter : BaseEventEmitter<EventListener> {
     /**
      * A nullable property that can be set to a function (or lambda expression) to handle incoming message events.

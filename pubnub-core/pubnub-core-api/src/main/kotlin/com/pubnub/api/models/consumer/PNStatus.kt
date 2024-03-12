@@ -7,8 +7,8 @@ class PNStatus(
     val category: PNStatusCategory,
     val exception: PubNubException? = null,
     val currentTimetoken: Long? = null,
-    val channels: Collection<String> = emptySet(),
-    val channelGroups: Collection<String> = emptySet(),
+    val affectedChannels: Collection<String> = emptySet(),
+    val affectedChannelGroups: Collection<String> = emptySet(),
 ) {
     @get:JvmName("isError")
     val error: Boolean = exception != null
@@ -30,10 +30,10 @@ class PNStatus(
         if (currentTimetoken != other.currentTimetoken) {
             return false
         }
-        if (channels != other.channels) {
+        if (affectedChannels != other.affectedChannels) {
             return false
         }
-        if (channelGroups != other.channelGroups) {
+        if (affectedChannelGroups != other.affectedChannelGroups) {
             return false
         }
 
@@ -44,8 +44,8 @@ class PNStatus(
         var result = category.hashCode()
         result = 31 * result + (exception?.hashCode() ?: 0)
         result = 31 * result + (currentTimetoken?.hashCode() ?: 0)
-        result = 31 * result + channels.hashCode()
-        result = 31 * result + channelGroups.hashCode()
+        result = 31 * result + affectedChannels.hashCode()
+        result = 31 * result + affectedChannelGroups.hashCode()
         return result
     }
 }

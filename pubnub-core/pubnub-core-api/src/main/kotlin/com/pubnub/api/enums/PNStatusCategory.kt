@@ -3,11 +3,8 @@ package com.pubnub.api.enums
 import com.pubnub.api.models.consumer.PNStatus
 
 /**
- * Check the status category via [PNStatus.category] in the `async` callback
- * when executing API methods like [PubNub.publish] or [PubNub.history].
- *
- * Or in the [SubscribeCallback.status] for API methods like [PubNub.subscribe] or [PubNub.unsubscribeAll] i.e.
- * methods able to manage the channel mix.
+ * Check the status category via [PNStatus.category] in the [com.pubnub.api.v2.callbacks.StatusListener] added to a
+ * [com.pubnub.api.PubNub] object.
  */
 enum class PNStatusCategory {
     /**
@@ -22,20 +19,29 @@ enum class PNStatusCategory {
     PNSubscriptionChanged,
 
     /**
-     * Previously started subscribe loop did fail and at this moment client disconnected from real-time data channels.
+     * Previously started subscribe loop failed and at this moment client is disconnected from real-time data channels.
      */
     PNUnexpectedDisconnectCategory,
 
     /**
-     * The subscription has been stopped.
+     * The subscription has been stopped as requested (when all channels and channel groups have been unsubscribed).
      */
     PNDisconnectedCategory,
 
     /**
-     * Previously started subscribe loop failed, and at this moment client disconnected from real-time data channels.
+     * The subscription loop was not able to connect, and at this moment the client is disconnected from real-time
+     * data channels.
      */
     PNConnectionError,
+
+    /**
+     * A background implicit Heartbeat request attempt failed.
+     */
     PNHeartbeatFailed,
+
+    /**
+     * A background implicit Heartbeat request was successful.
+     */
     PNHeartbeatSuccess,
 
     /**

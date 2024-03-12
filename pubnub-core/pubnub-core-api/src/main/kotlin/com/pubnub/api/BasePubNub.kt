@@ -29,7 +29,7 @@ interface BasePubNub<
     val baseUrl: String
 
     /**
-     * The current version of the Kotlin SDK.
+     * The current version of the PubNub SDK.
      */
     val version: String
 

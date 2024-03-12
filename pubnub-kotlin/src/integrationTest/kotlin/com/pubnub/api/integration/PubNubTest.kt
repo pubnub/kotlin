@@ -96,11 +96,11 @@ class PubNubTest(private val pubNub: PubNub, private val withPresenceOverride: B
             status.category == PNStatusCategory.PNConnectedCategory || status.category == PNStatusCategory.PNSubscriptionChanged,
         )
         if (status.category == PNStatusCategory.PNConnectedCategory) {
-            Assert.assertTrue(status.channels.containsAll(channels))
-            Assert.assertTrue(status.channelGroups.containsAll(channelGroups))
+            Assert.assertTrue(status.affectedChannels.containsAll(channels))
+            Assert.assertTrue(status.affectedChannelGroups.containsAll(channelGroups))
         } else if (status.category == PNStatusCategory.PNSubscriptionChanged) {
-            Assert.assertTrue(status.channels.containsAll(channels))
-            Assert.assertTrue(status.channelGroups.containsAll(channelGroups))
+            Assert.assertTrue(status.affectedChannels.containsAll(channels))
+            Assert.assertTrue(status.affectedChannelGroups.containsAll(channelGroups))
         }
     }
 
@@ -115,12 +115,12 @@ class PubNubTest(private val pubNub: PubNub, private val withPresenceOverride: B
         )
         if (status.category == PNStatusCategory.PNSubscriptionChanged) {
             Assert.assertTrue(
-                "Unsubscribe list: ${status.channels} doesn't contain all requested channels: $channels",
-                status.channels.containsAll(channels),
+                "Unsubscribe list: ${status.affectedChannels} doesn't contain all requested channels: $channels",
+                status.affectedChannels.containsAll(channels),
             )
             Assert.assertTrue(
-                "Unsubscribe list: ${status.channelGroups} doesn't contain all requested channelGroups: $channelGroups",
-                status.channelGroups.containsAll(channelGroups),
+                "Unsubscribe list: ${status.affectedChannelGroups} doesn't contain all requested channelGroups: $channelGroups",
+                status.affectedChannelGroups.containsAll(channelGroups),
             )
         }
     }

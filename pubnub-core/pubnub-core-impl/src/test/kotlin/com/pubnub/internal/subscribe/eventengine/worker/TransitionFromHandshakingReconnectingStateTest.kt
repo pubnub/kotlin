@@ -173,8 +173,8 @@ class TransitionFromHandshakingReconnectingStateTest {
                     PNStatus(
                         PNStatusCategory.PNConnectedCategory,
                         currentTimetoken = timeToken,
-                        channels = channels.toList(),
-                        channelGroups = channelGroups.toList(),
+                        affectedChannels = channels.toList(),
+                        affectedChannelGroups = channelGroups.toList(),
                     ),
                 ),
                 SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, expectedSubscriptionCursor),

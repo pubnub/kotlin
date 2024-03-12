@@ -75,8 +75,8 @@ class SubscribeEffectFactoryTest {
                     PNStatus(
                         PNStatusCategory.PNConnectedCategory,
                         currentTimetoken = 0L,
-                        channels = channels.toList(),
-                        channelGroups = channelGroups.toList(),
+                        affectedChannels = channels.toList(),
+                        affectedChannelGroups = channelGroups.toList(),
                     ),
                 ),
             )

@@ -802,7 +802,7 @@ class SubscriptionManagerTest : BaseTest() {
                     pnStatus: PNStatus,
                 ) {
                     if (pnStatus.category == PNStatusCategory.PNConnectedCategory) {
-                        assertEquals(2, pnStatus.channels.size)
+                        assertEquals(2, pnStatus.affectedChannels.size)
                         gotStatus.set(true)
                     }
                 }
@@ -2488,7 +2488,7 @@ class SubscriptionManagerTest : BaseTest() {
                         )
                     } else if (pnStatus.category == PNStatusCategory.PNDisconnectedCategory ||
                         pnStatus.category == PNStatusCategory.PNSubscriptionChanged &&
-                        !pnStatus.channels.contains("ch1")
+                        !pnStatus.affectedChannels.contains("ch1")
                     ) {
                         statusReceived.set(true)
                     }
@@ -3320,7 +3320,7 @@ class SubscriptionManagerTest : BaseTest() {
                     }
 
                     if (pnStatus.category == PNStatusCategory.PNSubscriptionChanged) {
-                        if ("ch1" !in pnStatus.channels) {
+                        if ("ch1" !in pnStatus.affectedChannels) {
                             pubnubBase.pubNubCore.unsubscribe(
                                 channels = listOf("ch2"),
                             )

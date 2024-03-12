@@ -106,7 +106,7 @@ interface PubNub :
 
     /**
      * Add a legacy listener for both client status and events.
-     * Use fun addListener(listener: EventListener) and fun addListener(listener: StatusListener) instead if possible.
+     * Prefer `addListener(EventListener)` and `addListener(StatusListener)` if possible.
      *
      * @param listener The listener to be added.
      */
@@ -1446,8 +1446,7 @@ interface PubNub :
      *
      * If a client gets disconnected from a channel, it can automatically attempt to reconnect to that channel
      * and retrieve any available messages that were missed during that period.
-     * This can be achieved by setting [PNConfiguration.reconnectionPolicy] to [PNReconnectionPolicy.LINEAR], when
-     * initializing the client.
+     * This can be achieved by setting [PNConfiguration.retryConfiguration] when initializing the client.
      *
      * @param channels Channels to subscribe/unsubscribe. Either `channel` or [channelGroups] are required.
      * @param channelGroups Channel groups to subscribe/unsubscribe. Either `channelGroups` or [channels] are required.

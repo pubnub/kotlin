@@ -48,6 +48,9 @@ open class SubscriptionOptions internal constructor(
     }
 }
 
+/**
+ * A no-op options object. It doesn't modify subscription behavior in any way.
+ */
 object EmptyOptions : SubscriptionOptions() {
     override val allOptions = emptySet<SubscriptionOptions>()
 }

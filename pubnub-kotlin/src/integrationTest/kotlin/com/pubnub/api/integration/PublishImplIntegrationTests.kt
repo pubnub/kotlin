@@ -150,7 +150,7 @@ class PublishImplIntegrationTests : BaseIntegrationTest() {
                     pnStatus: PNStatus,
                 ) {
                     if (pnStatus.category == PNStatusCategory.PNConnectedCategory &&
-                        pnStatus.channels.contains(expectedChannel)
+                        pnStatus.affectedChannels.contains(expectedChannel)
                     ) {
                         observer.publish(
                             message = messagePayload,
@@ -207,7 +207,7 @@ class PublishImplIntegrationTests : BaseIntegrationTest() {
                     pnStatus: PNStatus,
                 ) {
                     if (pnStatus.category == PNStatusCategory.PNConnectedCategory &&
-                        pnStatus.channels.contains(expectedChannel)
+                        pnStatus.affectedChannels.contains(expectedChannel)
                     ) {
                         sender.publish(
                             message = messagePayload,
