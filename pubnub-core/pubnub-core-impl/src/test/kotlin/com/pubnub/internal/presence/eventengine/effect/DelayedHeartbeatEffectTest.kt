@@ -25,6 +25,7 @@ class DelayedHeartbeatEffectTest {
     private val attempts = 1
     private val presenceEventSink = TestEventSink<PresenceEvent>()
     private val resultFromHeartbeat = true
+
     @Suppress("INVISIBLE_MEMBER")
     private val retryConfiguration = RetryConfiguration.Linear(delayInSec = 10.milliseconds, isInternal = true)
     private val executorService = Executors.newSingleThreadScheduledExecutor()

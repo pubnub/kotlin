@@ -3,7 +3,10 @@ package com.pubnub.api.v2.subscriptions
 import com.pubnub.api.v2.callbacks.BaseEventEmitter
 import com.pubnub.api.v2.callbacks.BaseEventListener
 
-interface BaseSubscriptionSet<EvLis : BaseEventListener, Sub : BaseSubscription<EvLis>> : BaseEventEmitter<EvLis>, SubscribeCapable, AutoCloseable {
+interface BaseSubscriptionSet<
+    EvLis : BaseEventListener,
+    Sub : BaseSubscription<EvLis>,
+    > : BaseEventEmitter<EvLis>, SubscribeCapable, AutoCloseable {
     /**
      * Add a [BaseSubscription] to this set.
      *

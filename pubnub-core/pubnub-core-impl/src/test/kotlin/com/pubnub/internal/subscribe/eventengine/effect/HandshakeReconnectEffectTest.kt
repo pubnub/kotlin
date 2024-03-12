@@ -25,6 +25,7 @@ class HandshakeReconnectEffectTest {
     private val handshakeReconnectInvocation =
         SubscribeEffectInvocation.HandshakeReconnect(channels, channelGroups, attempts, reason)
     private val executorService = Executors.newSingleThreadScheduledExecutor()
+
     @Suppress("INVISIBLE_MEMBER")
     private val retryConfiguration = RetryConfiguration.Linear(delayInSec = 10.milliseconds, isInternal = true)
     private val subscriptionCursor = SubscriptionCursor(1337L, "1337")

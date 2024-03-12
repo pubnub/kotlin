@@ -9,7 +9,6 @@
     </file>
     <file name="src/main/kotlin/com/pubnub/internal/crypto/cryptor/HeaderParser.kt">
         <error line="104" column="1" source="standard:max-line-length" />
-        <error line="130" column="1" source="standard:max-line-length" />
     </file>
     <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/AddChannelChannelGroupEndpoint.kt">
         <error line="1" column="9" source="standard:package-name" />
@@ -69,9 +68,6 @@
     </file>
     <file name="src/main/kotlin/com/pubnub/internal/managers/ListenerManager.kt">
         <error line="22" column="1" source="standard:max-line-length" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/managers/MapperManager.kt">
-        <error line="250" column="21" source="standard:property-naming" />
     </file>
     <file name="src/main/kotlin/com/pubnub/internal/managers/PresenceEventEngineManager.kt">
         <error line="9" column="1" source="standard:max-line-length" />
@@ -305,11 +301,11 @@
     </file>
     <file name="src/test/kotlin/com/pubnub/contract/subscribe/eventEngine/step/EventEngineSteps.kt">
         <error line="27" column="9" source="standard:function-naming" />
-        <error line="33" column="9" source="standard:function-naming" />
-        <error line="91" column="9" source="standard:function-naming" />
-        <error line="152" column="9" source="standard:function-naming" />
-        <error line="162" column="9" source="standard:function-naming" />
-        <error line="170" column="9" source="standard:function-naming" />
+        <error line="34" column="9" source="standard:function-naming" />
+        <error line="92" column="9" source="standard:function-naming" />
+        <error line="153" column="9" source="standard:function-naming" />
+        <error line="163" column="9" source="standard:function-naming" />
+        <error line="171" column="9" source="standard:function-naming" />
     </file>
     <file name="src/test/kotlin/com/pubnub/contract/uuidmetadata/step/GivenSteps.kt">
         <error line="15" column="9" source="standard:function-naming" />
@@ -366,7 +362,7 @@
         <error line="160" column="1" source="standard:max-line-length" />
         <error line="179" column="1" source="standard:max-line-length" />
         <error line="301" column="1" source="standard:max-line-length" />
-        <error line="323" column="1" source="standard:max-line-length" />
+        <error line="324" column="1" source="standard:max-line-length" />
     </file>
     <file name="src/test/kotlin/com/pubnub/internal/subscribe/SubscribeTest.kt">
         <error line="62" column="1" source="standard:max-line-length" />
@@ -405,18 +401,6 @@
     </file>
     <file name="src/test/kotlin/com/pubnub/internal/suite/message_actions/RemoveMessageActionsTestSuite.kt">
         <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/test/kotlin/com/pubnub/internal/v2/entities/BaseChannelGroupImplTest.kt">
-        <error line="1" column="1" source="standard:no-empty-file" />
-    </file>
-    <file name="src/test/kotlin/com/pubnub/internal/v2/entities/ChannelImplTest.kt">
-        <error line="1" column="1" source="standard:no-empty-file" />
-    </file>
-    <file name="src/test/kotlin/com/pubnub/internal/v2/subscription/BaseSubscriptionSetImplTest.kt">
-        <error line="1" column="1" source="standard:no-empty-file" />
-    </file>
-    <file name="src/test/kotlin/com/pubnub/internal/v2/subscription/SubscriptionImplTest.kt">
-        <error line="1" column="1" source="standard:no-empty-file" />
     </file>
     <file name="src/test/kotlin/com/pubnub/internal/workers/SubscribeMessageProcessorTest.kt">
         <error line="193" column="1" source="standard:max-line-length" />

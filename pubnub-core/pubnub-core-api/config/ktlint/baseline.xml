@@ -38,7 +38,4 @@
         <error line="79" column="63" source="standard:discouraged-comment-location" />
         <error line="93" column="1" source="standard:max-line-length" />
     </file>
-    <file name="src/main/kotlin/com/pubnub/api/v2/subscriptions/BaseSubscriptionSet.kt">
-        <error line="18" column="1" source="standard:max-line-length" />
-    </file>
 </baseline>
