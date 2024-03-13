@@ -16,5 +16,17 @@ import com.pubnub.api.v2.callbacks.EventListener
  * Closing the set also closes all `Subscription`s that are part of this set.
  */
 interface SubscriptionSet : BaseSubscriptionSet<EventListener, Subscription>, EventEmitter {
+    /**
+     * Add the [subscription] to this SubscriptionSet. Equivalent to calling [add].
+     *
+     * @see [add]
+     */
     operator fun plusAssign(subscription: Subscription)
+
+    /**
+     * Remove the [subscription] from this set. Equivalent to calling [remove].
+     *
+     * @see [remove]
+     */
+    operator fun minusAssign(subscription: Subscription)
 }

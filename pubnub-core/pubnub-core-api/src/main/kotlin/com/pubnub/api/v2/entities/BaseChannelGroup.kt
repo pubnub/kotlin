@@ -25,16 +25,16 @@ interface BaseChannelGroup<Lis : BaseEventListener, Subscription : BaseSubscript
      * Channel group subscriptions support passing [com.pubnub.api.v2.subscriptions.SubscriptionOptions.receivePresenceEvents]
      * in [options] to enable receiving presence events.
      *
-     * [com.pubnub.api.v2.subscriptions.SubscriptionOptions.filter] can be used to filter events delivered to the subscriptions.
+     * [com.pubnub.api.v2.subscriptions.SubscriptionOptions.filter] can be used to filter events delivered to the subscription.
      *
-     * For example, to create a subscriptions that only listens to presence events:
+     * For example, to create a subscription that only listens to presence events:
      * ```
-     * channelGroup.subscriptions(SubscriptionOptions.receivePresenceEvents() + SubscriptionOptions.filter { it is PNPresenceEventResult } )
+     * channelGroup.subscription(SubscriptionOptions.receivePresenceEvents() + SubscriptionOptions.filter { it is PNPresenceEventResult } )
      * ```
      *
-     * *Warning:* if a channel is part of more than one channel group, and you create subscriptions to both (or more)
+     * *Warning:* if a channel is part of more than one channel group, and you create subscription to both (or more)
      * those groups using a single [com.pubnub.api.PubNub] instance, you will only receive events for that channel in
-     * one channel group subscriptions.
+     * one channel group subscription.
      *
      * For example, let's say "channel_1" is part of groups "cg_1" and "cg_2". If you only subscribe to "cg_1",
      * or you only subscribe to "cg_2", you will get all events for "channel_1". However, if in your app you subscribe

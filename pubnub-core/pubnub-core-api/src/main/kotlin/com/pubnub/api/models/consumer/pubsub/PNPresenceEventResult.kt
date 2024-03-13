@@ -23,7 +23,7 @@ import com.google.gson.JsonElement
  * the complete list of users present in the channel.
  * @property userMetadata User metadata if any.
  */
-data class PNPresenceEventResult(
+class PNPresenceEventResult(
     val event: String? = null,
     val uuid: String? = null,
     val timestamp: Long? = null,
@@ -37,4 +37,74 @@ data class PNPresenceEventResult(
     val timeout: List<String>? = null,
     val hereNowRefresh: Boolean? = null,
     val userMetadata: Any? = null,
-) : PNEvent
+) : PNEvent {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
+        }
+        if (javaClass != other?.javaClass) {
+            return false
+        }
+
+        other as PNPresenceEventResult
+
+        if (event != other.event) {
+            return false
+        }
+        if (uuid != other.uuid) {
+            return false
+        }
+        if (timestamp != other.timestamp) {
+            return false
+        }
+        if (occupancy != other.occupancy) {
+            return false
+        }
+        if (state != other.state) {
+            return false
+        }
+        if (channel != other.channel) {
+            return false
+        }
+        if (subscription != other.subscription) {
+            return false
+        }
+        if (timetoken != other.timetoken) {
+            return false
+        }
+        if (join != other.join) {
+            return false
+        }
+        if (leave != other.leave) {
+            return false
+        }
+        if (timeout != other.timeout) {
+            return false
+        }
+        if (hereNowRefresh != other.hereNowRefresh) {
+            return false
+        }
+        if (userMetadata != other.userMetadata) {
+            return false
+        }
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = event?.hashCode() ?: 0
+        result = 31 * result + (uuid?.hashCode() ?: 0)
+        result = 31 * result + (timestamp?.hashCode() ?: 0)
+        result = 31 * result + (occupancy ?: 0)
+        result = 31 * result + (state?.hashCode() ?: 0)
+        result = 31 * result + channel.hashCode()
+        result = 31 * result + (subscription?.hashCode() ?: 0)
+        result = 31 * result + (timetoken?.hashCode() ?: 0)
+        result = 31 * result + (join?.hashCode() ?: 0)
+        result = 31 * result + (leave?.hashCode() ?: 0)
+        result = 31 * result + (timeout?.hashCode() ?: 0)
+        result = 31 * result + (hereNowRefresh?.hashCode() ?: 0)
+        result = 31 * result + (userMetadata?.hashCode() ?: 0)
+        return result
+    }
+}

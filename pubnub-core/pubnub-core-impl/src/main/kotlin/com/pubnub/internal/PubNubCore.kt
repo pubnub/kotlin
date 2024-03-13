@@ -1332,7 +1332,7 @@ class PubNubCore internal constructor(
     )
 
     /**
-     * @see [PubNub.setMemberships]
+     * @see [PubNubCore.setMemberships]
      */
     @Deprecated(
         replaceWith =

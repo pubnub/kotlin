@@ -16,5 +16,8 @@ import com.pubnub.api.v2.callbacks.EventListener
  * and removing all listeners on [close]. Remember to always call [close] when you no longer need this Subscription.
  */
 interface Subscription : BaseSubscription<EventListener>, EventEmitter {
+    /**
+     * Create a [SubscriptionSet] containing this [Subscription] and the added [subscription].
+     */
     fun plus(subscription: Subscription): SubscriptionSet
 }

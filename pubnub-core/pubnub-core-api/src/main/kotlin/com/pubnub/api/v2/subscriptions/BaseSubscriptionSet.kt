@@ -5,40 +5,30 @@ import com.pubnub.api.v2.callbacks.BaseEventListener
 
 interface BaseSubscriptionSet<
     EvLis : BaseEventListener,
-    Sub : BaseSubscription<EvLis>,
+    Subscription : BaseSubscription<EvLis>,
     > : BaseEventEmitter<EvLis>, SubscribeCapable, AutoCloseable {
     /**
-     * Add a [BaseSubscription] to this set.
+     * Add a [Subscription] to this set.
      *
-     * Please note that this [BaseSubscriptionSet] will *not* attempt to ensure all subscriptions match their
+     * Please note that this SubscriptionSet will *not* attempt to ensure all subscriptions match their
      * active/inactive state. That is, if you previously called [subscribe] or [unsubscribe] on this set, it will not be
      * called on the newly added [subscription] automatically.
      *
-     * @param subscription the [BaseSubscription] to add.
-     * @see [plus]
+     * @param subscription the [Subscription] to add.
      */
-    fun add(subscription: Sub)
+    fun add(subscription: Subscription)
 
     /**
-     * Remove a [BaseSubscription] from this set.
+     * Remove the [subscription] from this set.
      *
-     * Please note that removing a subscriptions from the set does not automatically [unsubscribe] or [close] it.
+     * Please note that removing a subscription from the set does not automatically [unsubscribe] or [close] it.
      *
-     * @param subscription the [BaseSubscription] to remove.
+     * @param subscription the [Subscription] to remove.
      */
-    fun remove(subscription: Sub)
-
-    /**
-     * Remove a [BaseSubscription] from this set. Equivalent to calling [remove].
-     *
-     * Please note that removing a subscriptions from the set does not automatically [unsubscribe] or [close] it.
-     *
-     * @see [remove]
-     */
-    operator fun minus(subscription: Sub) = remove(subscription)
+    fun remove(subscription: Subscription)
 
     /**
      * Returns an immutable copy of the set of subscriptions contained in this [BaseSubscriptionSet].
      */
-    val subscriptions: Set<Sub>
+    val subscriptions: Set<Subscription>
 }

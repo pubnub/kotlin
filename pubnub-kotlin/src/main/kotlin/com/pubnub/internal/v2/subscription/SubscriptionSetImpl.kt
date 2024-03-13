@@ -23,6 +23,10 @@ class SubscriptionSetImpl(
         add(subscription)
     }
 
+    override fun minusAssign(subscription: Subscription) {
+        remove(subscription)
+    }
+
     override fun addListener(listener: EventListener) {
         addListener(DelegatingEventListener(listener))
     }

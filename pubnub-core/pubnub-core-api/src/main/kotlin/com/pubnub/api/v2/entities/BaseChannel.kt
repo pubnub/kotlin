@@ -25,11 +25,11 @@ interface BaseChannel<EventListener : BaseEventListener, Subscription : BaseSubs
      * Channel subscriptions support passing [com.pubnub.api.v2.subscriptions.SubscriptionOptions.receivePresenceEvents] in
      * [options] to enable receiving presence events.
      *
-     * [com.pubnub.api.v2.subscriptions.SubscriptionOptions.filter] can be used to filter events delivered to the subscriptions.
+     * [com.pubnub.api.v2.subscriptions.SubscriptionOptions.filter] can be used to filter events delivered to the subscription.
      *
-     * For example, to create a subscriptions that only listens to presence events:
+     * For example, to create a subscription that only listens to presence events:
      * ```
-     * channel.subscriptions(SubscriptionOptions.receivePresenceEvents() + SubscriptionOptions.filter { it is PNPresenceEventResult } )
+     * channel.subscription(SubscriptionOptions.receivePresenceEvents() + SubscriptionOptions.filter { it is PNPresenceEventResult } )
      * ```
      *
      * @param options optional [SubscriptionOptions].
