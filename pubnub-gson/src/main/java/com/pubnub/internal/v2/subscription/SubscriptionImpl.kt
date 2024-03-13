@@ -3,7 +3,16 @@ package com.pubnub.internal.v2.subscription
 import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.v2.callbacks.EventListener
+import com.pubnub.api.v2.callbacks.handlers.OnChannelMetadataHandler
+import com.pubnub.api.v2.callbacks.handlers.OnFileHandler
+import com.pubnub.api.v2.callbacks.handlers.OnMembershipHandler
+import com.pubnub.api.v2.callbacks.handlers.OnMessageActionHandler
+import com.pubnub.api.v2.callbacks.handlers.OnMessageHandler
+import com.pubnub.api.v2.callbacks.handlers.OnPresenceHandler
+import com.pubnub.api.v2.callbacks.handlers.OnSignalHandler
+import com.pubnub.api.v2.callbacks.handlers.OnUuidMetadataHandler
 import com.pubnub.api.v2.subscriptions.Subscription
+import com.pubnub.api.v2.subscriptions.SubscriptionCursor
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.internal.PubNubImpl
@@ -18,6 +27,9 @@ class SubscriptionImpl(
     channelGroups: Set<ChannelGroupName>,
     options: SubscriptionOptions,
 ) : Subscription, BaseSubscriptionImpl<EventListener>(pubnub.pubNubCore, channels, channelGroups, options) {
+    // todo maybe we can add it to constructor so we can mock it?
+    private val emitterHelper = EmitterHelper(eventEmitter)
+
     /**
      * Add a listener.
      *
@@ -36,6 +48,10 @@ class SubscriptionImpl(
         return pubnub.subscriptionSetOf(setOf(this, subscription))
     }
 
+    override fun subscribe() {
+        subscribe(SubscriptionCursor(0))
+    }
+
     override fun removeListener(listener: Listener) {
         when (listener) {
             is SubscribeCallback -> {
@@ -50,5 +66,37 @@ class SubscriptionImpl(
                 super.removeListener(listener)
             }
         }
+    }
+
+    override fun setOnMessage(onMessageHandler: OnMessageHandler?) {
+        emitterHelper.onMessage = onMessageHandler
+    }
+
+    override fun setOnSignal(onSignalHandler: OnSignalHandler?) {
+        emitterHelper.onSignal = onSignalHandler
+    }
+
+    override fun setOnPresence(onPresenceHandler: OnPresenceHandler?) {
+        emitterHelper.onPresence = onPresenceHandler
+    }
+
+    override fun setOnMessageAction(onMessageActionHandler: OnMessageActionHandler?) {
+        emitterHelper.onMessageAction = onMessageActionHandler
+    }
+
+    override fun setOnUuidMetadata(onUuidMetadataHandler: OnUuidMetadataHandler?) {
+        emitterHelper.onUuid = onUuidMetadataHandler
+    }
+
+    override fun setOnChannelMetadata(onChannelMetadataHandler: OnChannelMetadataHandler?) {
+        emitterHelper.onChannel = onChannelMetadataHandler
+    }
+
+    override fun setOnMembership(onMembershipHandler: OnMembershipHandler?) {
+        emitterHelper.onMembership = onMembershipHandler
+    }
+
+    override fun setOnFile(onFileHandler: OnFileHandler?) {
+        emitterHelper.onFile = onFileHandler
     }
 }

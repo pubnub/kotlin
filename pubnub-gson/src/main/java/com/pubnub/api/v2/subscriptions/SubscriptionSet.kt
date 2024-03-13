@@ -15,4 +15,12 @@ import com.pubnub.api.v2.callbacks.EventListener
  * Remember to always [close] the set when you're done using it to avoid memory leaks.
  * Closing the set also closes all `Subscription`s that are part of this set.
  */
-interface SubscriptionSet : BaseSubscriptionSet<EventListener, Subscription>, EventEmitter
+interface SubscriptionSet : BaseSubscriptionSet<EventListener, Subscription>, EventEmitter {
+    /**
+     * Start receiving events from the subscriptions (or subscriptions) represented by this object.
+     *
+     * The PubNub client will start a network connection to the server if it doesn't have one already,
+     * or will alter the existing connection to add channels and groups requested by this subscriptions if needed.
+     */
+    fun subscribe()
+}

@@ -17,7 +17,7 @@ class DeleteMessagesImplTest {
     private val end: Long = 987654321L
 
     @Test
-    fun createDeleteMessageActionShouldGetAllNecessaryParams() {
+    fun createDeleteMessageImplActionShouldGetAllNecessaryParams() {
         // given
         objectUnderTest = DeleteMessagesImpl(pubNubCore)
         objectUnderTest.channels(channels)

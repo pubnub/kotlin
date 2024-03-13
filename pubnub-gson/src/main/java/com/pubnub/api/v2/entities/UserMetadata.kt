@@ -10,4 +10,14 @@ import com.pubnub.api.v2.subscriptions.Subscription
  *
  * Use the [com.pubnub.api.PubNub.userMetadata] factory method to create instances of this interface.
  */
-interface UserMetadata : BaseUserMetadata<EventListener, Subscription>
+interface UserMetadata : BaseUserMetadata<EventListener, Subscription> {
+    /**
+     * Returns a [Subscription] that can be used to subscribe to this channel.
+     *
+     * The returned [Subscription] is initially inactive. You must call [Subscription.subscribe] on it
+     * to start receiving events.
+     *
+     * @return An inactive [Subscription] to this channel.
+     */
+    fun subscription(): Subscription
+}

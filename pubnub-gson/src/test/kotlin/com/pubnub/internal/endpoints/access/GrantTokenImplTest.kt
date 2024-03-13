@@ -31,7 +31,7 @@ class GrantTokenImplTest {
         slot()
 
     @Test
-    fun createGrantTokenActionShouldGetAllNecessaryParams() {
+    fun createGrantTokenImplActionShouldGetAllNecessaryParams() {
         // given
         objectUnderTest = GrantTokenImpl(pubNubCore)
         objectUnderTest.ttl(ttl)
