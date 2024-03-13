@@ -17,7 +17,9 @@ import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.callbacks.DelegatingSubscribeCallback
+import com.pubnub.internal.managers.AnnouncementCallback
 import com.pubnub.internal.v2.callbacks.DelegatingEventListener
+import com.pubnub.internal.v2.callbacks.EventEmitterImpl
 import com.pubnub.internal.v2.entities.ChannelGroupName
 import com.pubnub.internal.v2.entities.ChannelName
 
@@ -26,7 +28,11 @@ class SubscriptionImpl(
     channels: Set<ChannelName>,
     channelGroups: Set<ChannelGroupName>,
     options: SubscriptionOptions,
-) : Subscription, BaseSubscriptionImpl<EventListener>(pubnub.pubNubCore, channels, channelGroups, options) {
+    eventEmitterFactory: (BaseSubscriptionImpl<EventListener>) -> EventEmitterImpl = { baseSubscriptionImpl ->
+        EventEmitterImpl(AnnouncementCallback.Phase.SUBSCRIPTION, baseSubscriptionImpl::accepts)
+    },
+) : Subscription,
+    BaseSubscriptionImpl<EventListener>(pubnub.pubNubCore, channels, channelGroups, options, eventEmitterFactory) {
     // todo maybe we can add it to constructor so we can mock it?
     private val emitterHelper = EmitterHelper(eventEmitter)
 
