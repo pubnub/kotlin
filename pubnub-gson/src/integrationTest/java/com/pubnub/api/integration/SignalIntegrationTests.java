@@ -117,7 +117,7 @@ public class SignalIntegrationTests extends BaseIntegrationTest {
 
             @Override
             public void signal(@NotNull PubNub pubnub, @NotNull PNSignalResult signal) {
-                assertEquals(pubNub.configuration.getUserId().getValue(), signal.getPublisher());
+                assertEquals(pubNub.getConfiguration().getUserId().getValue(), signal.getPublisher());
                 assertEquals(expectedChannel, signal.getChannel());
                 assertEquals(expectedPayload, new Gson().fromJson(signal.getMessage(), String.class));
                 success.set(true);

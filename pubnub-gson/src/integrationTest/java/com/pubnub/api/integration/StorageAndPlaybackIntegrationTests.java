@@ -40,7 +40,7 @@ public class StorageAndPlaybackIntegrationTests extends BaseIntegrationTest {
                 .async((result) -> {
                     assertFalse(result.isFailure());
                     final String message = result.getOrNull().getMessages().get(0).getEntry().toString();
-                    assertTrue(message.contains(pubNub.configuration.getUserId().getValue()));
+                    assertTrue(message.contains(pubNub.getConfiguration().getUserId().getValue()));
                     assertTrue(message.contains(messageText));
                     success.set(true);
                 });

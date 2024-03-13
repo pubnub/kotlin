@@ -33,7 +33,7 @@ public class PAMFilesIntegrationTests extends BaseIntegrationTest {
 
     @Test
     public void canSendAndDownloadFileWithPAM() throws PubNubException, IOException {
-        assumeNotNull(getServer().configuration.getSecretKey());
+        assumeNotNull(getServer().getConfiguration().getSecretKey());
 
         final PubNub adminPubnub = getServer();
         final PubNub pubnub = getPubNub();

@@ -88,7 +88,7 @@ public class ChannelMetadataIT extends ObjectsApiBaseIT {
         createdChannelMetadataList.add(setChannelMetadataResult);
 
         //when
-        final PNGetChannelMetadataResult getChannelMetadataResult = pubNubUnderTest.channelMetadata
+        final PNGetChannelMetadataResult getChannelMetadataResult = pubNubUnderTest.getChannelMetadata()
                 .channel(randomChannelMetadataId)
                 .includeCustom(true)
                 .sync();
@@ -123,7 +123,7 @@ public class ChannelMetadataIT extends ObjectsApiBaseIT {
         }
 
         //when
-        final PNGetAllChannelsMetadataResult getAllChannelsMetadataResult = pubNubUnderTest.allChannelsMetadata
+        final PNGetAllChannelsMetadataResult getAllChannelsMetadataResult = pubNubUnderTest.getAllChannelsMetadata()
                 .includeCustom(true)
                 .includeTotalCount(true)
                 .limit(FETCH_LIMIT)
@@ -156,21 +156,21 @@ public class ChannelMetadataIT extends ObjectsApiBaseIT {
         }
 
         //when
-        final PNGetAllChannelsMetadataResult firstGetAllChannelsMetadataResult = pubNubUnderTest.allChannelsMetadata
+        final PNGetAllChannelsMetadataResult firstGetAllChannelsMetadataResult = pubNubUnderTest.getAllChannelsMetadata()
                 .includeCustom(true)
                 .includeTotalCount(true)
                 .limit(FETCH_LIMIT)
                 .sync();
 
 
-        final PNGetAllChannelsMetadataResult secondGetAllChannelsMetadataResult = pubNubUnderTest.allChannelsMetadata
+        final PNGetAllChannelsMetadataResult secondGetAllChannelsMetadataResult = pubNubUnderTest.getAllChannelsMetadata()
                 .includeCustom(true)
                 .includeTotalCount(true)
                 .limit(FETCH_LIMIT)
                 .page(firstGetAllChannelsMetadataResult.nextPage())
                 .sync();
 
-        final PNGetAllChannelsMetadataResult firstAgainGetAllChannelsMetadataResult = pubNubUnderTest.allChannelsMetadata
+        final PNGetAllChannelsMetadataResult firstAgainGetAllChannelsMetadataResult = pubNubUnderTest.getAllChannelsMetadata()
                 .includeCustom(true)
                 .includeTotalCount(true)
                 .limit(FETCH_LIMIT)

@@ -51,10 +51,10 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
 
         pause(2);
 
-        assertEquals(3, pubNub.subscribedChannels.size());
-        assertTrue(pubNub.subscribedChannels.contains(channel1));
-        assertTrue(pubNub.subscribedChannels.contains(channel2));
-        assertTrue(pubNub.subscribedChannels.contains(channel3));
+        assertEquals(3, pubNub.getSubscribedChannels().size());
+        assertTrue(pubNub.getSubscribedChannels().contains(channel1));
+        assertTrue(pubNub.getSubscribedChannels().contains(channel2));
+        assertTrue(pubNub.getSubscribedChannels().contains(channel3));
     }
 
     @Test
@@ -68,8 +68,8 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
 
         pause(2);
 
-        assertEquals(1, pubNub.subscribedChannels.size());
-        assertTrue(pubNub.subscribedChannels.contains(channel));
+        assertEquals(1, pubNub.getSubscribedChannels().size());
+        assertTrue(pubNub.getSubscribedChannels().contains(channel));
     }
 
     // If test does not work make sure you've enabled wildcard
@@ -150,8 +150,8 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
                 boolean channelSubscribed = false;
-                for (int i = 0; i < pubnub.subscribedChannels.size(); i++) {
-                    if (pubnub.subscribedChannels.get(i).contains(expectedChannel)) {
+                for (int i = 0; i < pubnub.getSubscribedChannels().size(); i++) {
+                    if (pubnub.getSubscribedChannels().get(i).contains(expectedChannel)) {
                         channelSubscribed = true;
                     }
                 }
@@ -210,7 +210,7 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
         pubNub.addListener(new SubscribeCallback.BaseSubscribeCallback() {
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
-                assertEquals(0, pubNub.subscribedChannels.size());
+                assertEquals(0, pubNub.getSubscribedChannels().size());
                 success.set(true);
             }
         });

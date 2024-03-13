@@ -58,7 +58,7 @@ public class HeartbeatIntegrationTest extends BaseIntegrationTest {
 
             @Override
             public void presence(@NotNull PubNub p, @NotNull PNPresenceEventResult presence) {
-                if (presence.getUuid().equals(pubNub.configuration.getUserId().getValue())
+                if (presence.getUuid().equals(pubNub.getConfiguration().getUserId().getValue())
                         && presence.getChannel().equals(expectedChannel)) {
                     switch (presence.getEvent()) {
                         case "state-change":

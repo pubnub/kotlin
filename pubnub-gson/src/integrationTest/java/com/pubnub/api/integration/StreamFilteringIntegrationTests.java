@@ -59,7 +59,7 @@ public class StreamFilteringIntegrationTests extends BaseIntegrationTest {
     public void testSubscribeWithLanguageFiltering() {
         final AtomicBoolean success = new AtomicBoolean();
 
-        pubNub.configuration.setFilterExpression("language == 'en'");
+        pubNub.getConfiguration().setFilterExpression("language == 'en'");
 
         final String channel = randomChannel();
 
@@ -123,7 +123,7 @@ public class StreamFilteringIntegrationTests extends BaseIntegrationTest {
     @Test
     public void testSubscribeWithMultipleLanguageFiltering() {
         final AtomicInteger success = new AtomicInteger(0);
-        pubNub.configuration.setFilterExpression("('fr', 'en', 'de') contains language");
+        pubNub.getConfiguration().setFilterExpression("('fr', 'en', 'de') contains language");
 
         final String channel = randomChannel();
         subscribeToChannel(pubNub, channel);
@@ -190,7 +190,7 @@ public class StreamFilteringIntegrationTests extends BaseIntegrationTest {
     public void testSubscribeWithLanguageNegationFiltering() {
         final AtomicInteger success = new AtomicInteger(0);
 
-        pubNub.configuration.setFilterExpression("language != 'en'");
+        pubNub.getConfiguration().setFilterExpression("language != 'en'");
 
         final String channel = randomChannel();
         subscribeToChannel(pubNub, channel);
@@ -256,7 +256,7 @@ public class StreamFilteringIntegrationTests extends BaseIntegrationTest {
     public void testSubscribeWithGreaterThanFiltering() {
         final AtomicInteger success = new AtomicInteger(0);
 
-        pubNub.configuration.setFilterExpression("temperature > 50");
+        pubNub.getConfiguration().setFilterExpression("temperature > 50");
 
         final String channel = randomChannel();
         subscribeToChannel(pubNub, channel);
@@ -324,7 +324,7 @@ public class StreamFilteringIntegrationTests extends BaseIntegrationTest {
     public void testSubscribeWithLikeFiltering() {
         final AtomicBoolean success = new AtomicBoolean();
 
-        pubNub.configuration.setFilterExpression("message_part LIKE '*success*'");
+        pubNub.getConfiguration().setFilterExpression("message_part LIKE '*success*'");
 
         final String channel = randomChannel();
         subscribeToChannel(pubNub, channel);

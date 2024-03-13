@@ -96,7 +96,7 @@ public class UUIDMetadataIT extends ObjectsApiBaseIT {
         createdUUIDMetadataList.add(setUUIDMetadataResult);
 
         //when
-        final PNGetUUIDMetadataResult getUUIDMetadataResult = pubNubUnderTest.uUIDMetadata
+        final PNGetUUIDMetadataResult getUUIDMetadataResult = pubNubUnderTest.getUUIDMetadata()
                 .uuid(randomTestUUID)
                 .includeCustom(true)
                 .sync();
@@ -132,7 +132,7 @@ public class UUIDMetadataIT extends ObjectsApiBaseIT {
         }
 
         //when
-        final PNGetAllUUIDMetadataResult getAllUUIDMetadataResult = pubNubUnderTest.allUUIDMetadata
+        final PNGetAllUUIDMetadataResult getAllUUIDMetadataResult = pubNubUnderTest.getAllUUIDMetadata()
                 .includeCustom(true)
                 .includeTotalCount(true)
                 .limit(FETCH_LIMIT)

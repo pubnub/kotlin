@@ -45,8 +45,8 @@ public class GroupManagementIntegrationTests extends BaseIntegrationTest {
                 .channels(Arrays.asList(mChannel1, mChannel2, mChannel3))
                 .async((result) -> {
                     assertFalse(result.isFailure());
-                    assertEquals(0, pubNub.subscribedChannels.size());
-                    assertEquals(0, pubNub.subscribedChannelGroups.size());
+                    assertEquals(0, pubNub.getSubscribedChannels().size());
+                    assertEquals(0, pubNub.getSubscribedChannelGroups().size());
                     signal.countDown();
                 });
 
@@ -76,8 +76,8 @@ public class GroupManagementIntegrationTests extends BaseIntegrationTest {
         subscribeToChannelGroup(pubNub, mGroup);
 
         boolean isGroupSubscribed = false;
-        for (int i = 0; i < pubNub.subscribedChannelGroups.size(); i++) {
-            if (pubNub.subscribedChannelGroups.get(i).equals(mGroup)) {
+        for (int i = 0; i < pubNub.getSubscribedChannelGroups().size(); i++) {
+            if (pubNub.getSubscribedChannelGroups().get(i).equals(mGroup)) {
                 isGroupSubscribed = true;
             }
         }
@@ -96,7 +96,7 @@ public class GroupManagementIntegrationTests extends BaseIntegrationTest {
 
         pause(1);
 
-        assertEquals(0, pubNub.subscribedChannelGroups.size());
+        assertEquals(0, pubNub.getSubscribedChannelGroups().size());
     }
 
     @Test

@@ -121,7 +121,7 @@ public class ChannelMembersIT extends ObjectsApiBaseIT {
         createdMembersList.add(setChannelMembersResult);
 
         //when
-        final PNGetChannelMembersResult getMembersResult = pubNubUnderTest.channelMembers
+        final PNGetChannelMembersResult getMembersResult = pubNubUnderTest.getChannelMembers()
                 .channel(testChannelId)
                 .includeTotalCount(true)
                 .includeCustom(true)

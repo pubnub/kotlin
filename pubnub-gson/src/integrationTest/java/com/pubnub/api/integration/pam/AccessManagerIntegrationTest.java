@@ -71,8 +71,8 @@ abstract class AccessManagerIntegrationTest extends BaseIntegrationTest {
 
     @Override
     protected void onBefore() {
-        pubNub.configuration.setIncludeInstanceIdentifier(false);
-        pubNub.configuration.setIncludeRequestIdentifier(false);
+        pubNub.getConfiguration().setIncludeInstanceIdentifier(false);
+        pubNub.getConfiguration().setIncludeRequestIdentifier(false);
         if (performOnServer()) {
             pubNub = server;
         }
@@ -397,7 +397,7 @@ abstract class AccessManagerIntegrationTest extends BaseIntegrationTest {
 
         pubNub.setPresenceState()
                 .channels(Collections.singletonList(expectedChannel))
-                .uuid(pubNub.configuration.getUserId().getValue())
+                .uuid(pubNub.getConfiguration().getUserId().getValue())
                 .state(expectedStatePayload)
                 .async((result) -> {
                     try {
@@ -425,7 +425,7 @@ abstract class AccessManagerIntegrationTest extends BaseIntegrationTest {
 
         pubNub.setPresenceState()
                 .channels(Collections.singletonList(expectedChannel))
-                .uuid(pubNub.configuration.getUserId().getValue())
+                .uuid(pubNub.getConfiguration().getUserId().getValue())
                 .state(expectedStatePayload)
                 .async((result) -> {
                     try {
@@ -450,9 +450,9 @@ abstract class AccessManagerIntegrationTest extends BaseIntegrationTest {
     public void testGetSetStateWithoutPermission() {
         final AtomicBoolean success = new AtomicBoolean();
 
-        pubNub.presenceState
+        pubNub.getPresenceState()
                 .channels(Collections.singletonList(expectedChannel))
-                .uuid(pubNub.configuration.getUserId().getValue())
+                .uuid(pubNub.getConfiguration().getUserId().getValue())
                 .async((result) -> {
                     try {
                         assertFalse(result.isFailure());
@@ -475,9 +475,9 @@ abstract class AccessManagerIntegrationTest extends BaseIntegrationTest {
         final AtomicBoolean success = new AtomicBoolean();
 
         requestAccess(READ);
-        pubNub.presenceState
+        pubNub.getPresenceState()
                 .channels(Collections.singletonList(expectedChannel))
-                .uuid(pubNub.configuration.getUserId().getValue())
+                .uuid(pubNub.getConfiguration().getUserId().getValue())
                 .async((result) -> {
                     try {
                         assertFalse(result.isFailure());
@@ -503,7 +503,7 @@ abstract class AccessManagerIntegrationTest extends BaseIntegrationTest {
         requestAccess(READ);
         pubNub.setPresenceState()
                 .channels(Collections.singletonList(expectedChannel))
-                .uuid(pubNub.configuration.getUserId().getValue())
+                .uuid(pubNub.getConfiguration().getUserId().getValue())
                 .state(expectedStatePayload)
                 .async((result) -> {
                     try {
@@ -522,9 +522,9 @@ abstract class AccessManagerIntegrationTest extends BaseIntegrationTest {
 
         pause(2);
 
-        pubNub.presenceState
+        pubNub.getPresenceState()
                 .channels(Collections.singletonList(expectedChannel))
-                .uuid(pubNub.configuration.getUserId().getValue())
+                .uuid(pubNub.getConfiguration().getUserId().getValue())
                 .async((result) -> {
                     try {
                         assertFalse(result.isFailure());
@@ -569,7 +569,7 @@ abstract class AccessManagerIntegrationTest extends BaseIntegrationTest {
             public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult pnPresenceEventResult) {
                 if ((pnPresenceEventResult.getEvent().equals("join"))
                         && (pnPresenceEventResult.getChannel().equals(expectedChannel))) {
-                    if (pnPresenceEventResult.getUuid().equals(server.configuration.getUserId().getValue())) {
+                    if (pnPresenceEventResult.getUuid().equals(server.getConfiguration().getUserId().getValue())) {
                         success.set(true);
                     }
                 }
@@ -862,7 +862,7 @@ abstract class AccessManagerIntegrationTest extends BaseIntegrationTest {
         final AtomicBoolean success = new AtomicBoolean();
 
         requestAccess(READ);
-        pubNub.messageActions
+        pubNub.getMessageActions()
                 .channel(expectedChannel)
                 .async((result) -> {
                     try {
@@ -885,7 +885,7 @@ abstract class AccessManagerIntegrationTest extends BaseIntegrationTest {
     public void testGetMessageActionsWithoutPermission() {
         final AtomicBoolean success = new AtomicBoolean();
 
-        pubNub.messageActions
+        pubNub.getMessageActions()
                 .channel(expectedChannel)
                 .async((result) -> {
                     try {

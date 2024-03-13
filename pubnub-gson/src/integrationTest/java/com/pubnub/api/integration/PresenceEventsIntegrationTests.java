@@ -156,10 +156,10 @@ public class PresenceEventsIntegrationTests extends BaseIntegrationTest {
     @Test
     public void testTimeoutFromChannel() {
         final AtomicBoolean success = new AtomicBoolean(false);
-        pubNub.configuration.setPresenceTimeoutWithCustomInterval(20, 0);
+        pubNub.getConfiguration().setPresenceTimeoutWithCustomInterval(20, 0);
 
-        assertEquals(20, pubNub.configuration.getPresenceTimeout());
-        assertEquals(0, pubNub.configuration.getHeartbeatInterval());
+        assertEquals(20, pubNub.getConfiguration().getPresenceTimeout());
+        assertEquals(0, pubNub.getConfiguration().getHeartbeatInterval());
 
         final String channel = random();
         final int waitTime = 21;
@@ -251,7 +251,7 @@ public class PresenceEventsIntegrationTests extends BaseIntegrationTest {
             @Override
             public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult presence) {
                 if (presence.getEvent().equals("state-change") && presence.getUuid()
-                        .equals(pubNub.configuration.getUserId().getValue())) {
+                        .equals(pubNub.getConfiguration().getUserId().getValue())) {
                     assertEquals("state-change", presence.getEvent());
                     pubNub.removeListener(this);
                     success.set(true);
