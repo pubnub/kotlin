@@ -15,6 +15,6 @@ class UserMetadataImpl(pubnub: PubNubImpl, id: String) :
     ),
     UserMetadata {
     override fun subscription(): Subscription {
-        return super.subscription(EmptyOptions)
+        return subscription(EmptyOptions)
     }
 }

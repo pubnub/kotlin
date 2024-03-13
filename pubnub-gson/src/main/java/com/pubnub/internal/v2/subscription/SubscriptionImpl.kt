@@ -49,7 +49,7 @@ class SubscriptionImpl(
     }
 
     override fun subscribe() {
-        super.subscribe(SubscriptionCursor(0))
+        subscribe(SubscriptionCursor(0))
     }
 
     override fun removeListener(listener: Listener) {

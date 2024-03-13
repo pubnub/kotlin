@@ -15,6 +15,6 @@ class ChannelGroupImpl(pubnub: PubNubImpl, channelGroupName: String) :
     ),
     ChannelGroup {
     override fun subscription(): Subscription {
-        return super.subscription(EmptyOptions)
+        return subscription(EmptyOptions)
     }
 }

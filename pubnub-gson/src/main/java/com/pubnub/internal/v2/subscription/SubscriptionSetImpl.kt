@@ -26,7 +26,7 @@ class SubscriptionSetImpl(
     private val emitterHelper = EmitterHelper(eventEmitter)
 
     override fun subscribe() {
-        super.subscribe(SubscriptionCursor(0))
+        subscribe(SubscriptionCursor(0))
     }
 
     /**

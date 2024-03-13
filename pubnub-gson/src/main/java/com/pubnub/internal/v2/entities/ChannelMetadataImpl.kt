@@ -15,6 +15,6 @@ class ChannelMetadataImpl(pubnub: PubNubImpl, id: String) :
     ),
     ChannelMetadata {
     override fun subscription(): Subscription {
-        return super.subscription(EmptyOptions)
+        return subscription(EmptyOptions)
     }
 }
