@@ -11,6 +11,14 @@ import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.v2.callbacks.BaseEventEmitter
 import com.pubnub.api.v2.callbacks.EventListener
+import com.pubnub.api.v2.callbacks.handlers.OnChannelMetadataHandler
+import com.pubnub.api.v2.callbacks.handlers.OnFileHandler
+import com.pubnub.api.v2.callbacks.handlers.OnMembershipHandler
+import com.pubnub.api.v2.callbacks.handlers.OnMessageActionHandler
+import com.pubnub.api.v2.callbacks.handlers.OnMessageHandler
+import com.pubnub.api.v2.callbacks.handlers.OnPresenceHandler
+import com.pubnub.api.v2.callbacks.handlers.OnSignalHandler
+import com.pubnub.api.v2.callbacks.handlers.OnUuidMetadataHandler
 import com.pubnub.internal.v2.callbacks.DelegatingEventListener
 import com.pubnub.internal.v2.callbacks.EventListenerCore
 
@@ -23,68 +31,68 @@ class EmitterHelper(eventEmitter: BaseEventEmitter<EventListenerCore>) {
                         pubnub: PubNub,
                         result: PNMessageResult,
                     ) {
-                        onMessage?.invoke(result)
+                        onMessage?.handle(result)
                     }
 
                     override fun presence(
                         pubnub: PubNub,
                         result: PNPresenceEventResult,
                     ) {
-                        onPresence?.invoke(result)
+                        onPresence?.handle(result)
                     }
 
                     override fun signal(
                         pubnub: PubNub,
                         result: PNSignalResult,
                     ) {
-                        onSignal?.invoke(result)
+                        onSignal?.handle(result)
                     }
 
                     override fun messageAction(
                         pubnub: PubNub,
                         result: PNMessageActionResult,
                     ) {
-                        onMessageAction?.invoke(result)
+                        onMessageAction?.handle(result)
                     }
 
                     override fun uuid(
                         pubnub: PubNub,
                         result: PNUUIDMetadataResult,
                     ) {
-                        onUuid?.invoke(result)
+                        onUuid?.handle(result)
                     }
 
                     override fun channel(
                         pubnub: PubNub,
                         result: PNChannelMetadataResult,
                     ) {
-                        onChannel?.invoke(result)
+                        onChannel?.handle(result)
                     }
 
                     override fun membership(
                         pubnub: PubNub,
                         result: PNMembershipResult,
                     ) {
-                        onMembership?.invoke(result)
+                        onMembership?.handle(result)
                     }
 
                     override fun file(
                         pubnub: PubNub,
                         result: PNFileEventResult,
                     ) {
-                        onFile?.invoke(result)
+                        onFile?.handle(result)
                     }
                 },
             ),
         )
     }
 
-    var onMessage: ((PNMessageResult) -> Unit)? = null
-    var onPresence: ((PNPresenceEventResult) -> Unit)? = null
-    var onSignal: ((PNSignalResult) -> Unit)? = null
-    var onMessageAction: ((PNMessageActionResult) -> Unit)? = null
-    var onUuid: ((PNUUIDMetadataResult) -> Unit)? = null
-    var onChannel: ((PNChannelMetadataResult) -> Unit)? = null
-    var onMembership: ((PNMembershipResult) -> Unit)? = null
-    var onFile: ((PNFileEventResult) -> Unit)? = null
+    var onMessage: OnMessageHandler? = null
+    var onPresence: OnPresenceHandler? = null
+    var onSignal: OnSignalHandler? = null
+    var onMessageAction: OnMessageActionHandler? = null
+    var onUuid: OnUuidMetadataHandler? = null
+    var onChannel: OnChannelMetadataHandler? = null
+    var onMembership: OnMembershipHandler? = null
+    var onFile: OnFileHandler? = null
 }

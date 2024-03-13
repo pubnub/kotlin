@@ -2,8 +2,6 @@ package com.pubnub.internal.v2.subscription
 
 import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.callbacks.SubscribeCallback
-import com.pubnub.api.models.consumer.pubsub.PNMessageResult
-import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.handlers.OnChannelMetadataHandler
 import com.pubnub.api.v2.callbacks.handlers.OnFileHandler
@@ -71,83 +69,34 @@ class SubscriptionImpl(
     }
 
     override fun setOnMessage(onMessageHandler: OnMessageHandler?) {
-        setOnMessageHandler(onMessageHandler)
+        emitterHelper.onMessage = onMessageHandler
     }
 
     override fun setOnSignal(onSignalHandler: OnSignalHandler?) {
-        setOnSignalHandler(onSignalHandler)
+        emitterHelper.onSignal = onSignalHandler
     }
 
     override fun setOnPresence(onPresenceHandler: OnPresenceHandler?) {
-        setOnPresenceHandler(onPresenceHandler)
+        emitterHelper.onPresence = onPresenceHandler
     }
 
     override fun setOnMessageAction(onMessageActionHandler: OnMessageActionHandler?) {
-        setOnMessageActionHandler(onMessageActionHandler)
+        emitterHelper.onMessageAction = onMessageActionHandler
     }
 
     override fun setOnUuidMetadata(onUuidMetadataHandler: OnUuidMetadataHandler?) {
-        setOnUuidMetadataHandler(onUuidMetadataHandler)
+        emitterHelper.onUuid = onUuidMetadataHandler
     }
 
     override fun setOnChannelMetadata(onChannelMetadataHandler: OnChannelMetadataHandler?) {
-        setOnChannelMetadataHandler(onChannelMetadataHandler)
+        emitterHelper.onChannel = onChannelMetadataHandler
     }
 
     override fun setOnMembership(onMembershipHandler: OnMembershipHandler?) {
-        setOnMembershipHandler(onMembershipHandler)
+        emitterHelper.onMembership = onMembershipHandler
     }
 
     override fun setOnFile(onFileHandler: OnFileHandler?) {
-        setOnFileHandler(onFileHandler)
-    }
-
-    private fun setOnMessageHandler(onMessageHandler: OnMessageHandler?) {
-        emitterHelper.onMessage = onMessageHandler?.let { handler ->
-            { pnMessageResult: PNMessageResult -> handler.handle(pnMessageResult) }
-        }
-    }
-
-    private fun setOnPresenceHandler(onPresenceHandler: OnPresenceHandler?) {
-        emitterHelper.onPresence = onPresenceHandler?.let { handler ->
-            { pnPresenceEventResult -> handler.handle(pnPresenceEventResult) }
-        }
-    }
-
-    private fun setOnSignalHandler(onSignalHandler: OnSignalHandler?) {
-        emitterHelper.onSignal = onSignalHandler?.let { handler ->
-            { pnSignalResult: PNSignalResult -> handler.handle(pnSignalResult) }
-        }
-    }
-
-    private fun setOnMessageActionHandler(onMessageActionHandler: OnMessageActionHandler?) {
-        emitterHelper.onMessageAction =
-            onMessageActionHandler?.let { handler ->
-                { pnMessageActionResult -> handler.handle(pnMessageActionResult) }
-            }
-    }
-
-    private fun setOnUuidMetadataHandler(onUuidHandler: OnUuidMetadataHandler?) {
-        emitterHelper.onUuid = onUuidHandler?.let { handler ->
-            { pnUUIDMetadataResult -> handler.handle(pnUUIDMetadataResult) }
-        }
-    }
-
-    private fun setOnChannelMetadataHandler(onChannelMetadataHandler: OnChannelMetadataHandler?) {
-        emitterHelper.onChannel = onChannelMetadataHandler?.let { handler ->
-            { pnChannelMetadataResult -> handler.handle(pnChannelMetadataResult) }
-        }
-    }
-
-    private fun setOnMembershipHandler(onMembershipHandler: OnMembershipHandler?) {
-        emitterHelper.onMembership = onMembershipHandler?.let { handler ->
-            { pnMembershipResult -> handler.handle(pnMembershipResult) }
-        }
-    }
-
-    private fun setOnFileHandler(onFileHandler: OnFileHandler?) {
-        emitterHelper.onFile = onFileHandler?.let { handler ->
-            { pnFileEventResult -> handler.handle(pnFileEventResult) }
-        }
+        emitterHelper.onFile = onFileHandler
     }
 }
