@@ -35,8 +35,3 @@ dependencies {
     testImplementation(libs.mockk)
     testImplementation(libs.owner)
 }
-
-// tasks.register("mergeKotlinJars", org.gradle.jvm.tasks.Jar) {
-//    from(zipTree("/Users/wojciech.kalicinski/projects/pubnub-kotlin-copy/pubnub-kotlin/build/libs/pubnub-kotlin-9.0.0.jar"), zipTree("/Users/wojciech.kalicinski/projects/pubnub-kotlin-copy/pubnub-core/pubnub-core-api/build/libs/pubnub-core-api-9.0.0.jar"))
-//    setArchiveFileName("combined.jar")
-// }

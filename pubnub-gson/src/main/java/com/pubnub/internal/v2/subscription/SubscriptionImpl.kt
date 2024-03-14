@@ -23,88 +23,90 @@ import com.pubnub.internal.v2.callbacks.EventEmitterImpl
 import com.pubnub.internal.v2.entities.ChannelGroupName
 import com.pubnub.internal.v2.entities.ChannelName
 
-class SubscriptionImpl(
-    val pubnub: PubNubImpl,
-    channels: Set<ChannelName>,
-    channelGroups: Set<ChannelGroupName>,
-    options: SubscriptionOptions,
-    eventEmitterFactory: (BaseSubscriptionImpl<EventListener>) -> EventEmitterImpl = { baseSubscriptionImpl ->
-        EventEmitterImpl(AnnouncementCallback.Phase.SUBSCRIPTION, baseSubscriptionImpl::accepts)
-    },
-    private val emitterHelper: EmitterHelper = EmitterHelper(),
-) : Subscription,
-    BaseSubscriptionImpl<EventListener>(pubnub.pubNubCore, channels, channelGroups, options, eventEmitterFactory) {
-    init {
-        emitterHelper.initialize(eventEmitter)
-    }
+class SubscriptionImpl
+    @JvmOverloads
+    constructor(
+        val pubnub: PubNubImpl,
+        channels: Set<ChannelName>,
+        channelGroups: Set<ChannelGroupName>,
+        options: SubscriptionOptions,
+        private val emitterHelper: EmitterHelper = EmitterHelper(),
+        eventEmitterFactory: (BaseSubscriptionImpl<EventListener>) -> EventEmitterImpl = { baseSubscriptionImpl ->
+            EventEmitterImpl(AnnouncementCallback.Phase.SUBSCRIPTION, baseSubscriptionImpl::accepts)
+        },
+    ) : Subscription,
+        BaseSubscriptionImpl<EventListener>(pubnub.pubNubCore, channels, channelGroups, options, eventEmitterFactory) {
+        init {
+            emitterHelper.initialize(eventEmitter)
+        }
 
-    /**
-     * Add a listener.
-     *
-     * @param listener The listener to be added.
-     */
-    override fun addListener(listener: EventListener) {
-        addListener(DelegatingEventListener(listener))
-    }
+        /**
+         * Add a listener.
+         *
+         * @param listener The listener to be added.
+         */
+        override fun addListener(listener: EventListener) {
+            addListener(DelegatingEventListener(listener))
+        }
 
-    /**
-     * Create a [SubscriptionSet] that contains both subscriptions.
-     *
-     * @param subscription the other [Subscription] to add to the [SubscriptionSet]
-     */
-    override fun plus(subscription: Subscription): SubscriptionSet {
-        return pubnub.subscriptionSetOf(setOf(this, subscription))
-    }
+        /**
+         * Create a [SubscriptionSet] that contains both subscriptions.
+         *
+         * @param subscription the other [Subscription] to add to the [SubscriptionSet]
+         */
+        override fun plus(subscription: Subscription): SubscriptionSet {
+            return pubnub.subscriptionSetOf(setOf(this, subscription))
+        }
 
-    override fun subscribe() {
-        subscribe(SubscriptionCursor(0))
-    }
+        override fun subscribe() {
+            subscribe(SubscriptionCursor(0))
+        }
 
-    override fun removeListener(listener: Listener) {
-        when (listener) {
-            is SubscribeCallback -> {
-                super.removeListener(DelegatingSubscribeCallback(listener))
-            }
+        override fun removeListener(listener: Listener) {
+            when (listener) {
+                is SubscribeCallback -> {
+                    super.removeListener(DelegatingSubscribeCallback(listener))
+                }
 
-            is EventListener -> {
-                super.removeListener(DelegatingEventListener(listener))
-            }
+                is EventListener -> {
+                    super.removeListener(DelegatingEventListener(listener))
+                }
 
-            else -> {
-                super.removeListener(listener)
+                else -> {
+                    super.removeListener(listener)
+                }
             }
         }
-    }
 
-    override fun setOnMessage(onMessageHandler: OnMessageHandler?) {
-        emitterHelper.onMessage = onMessageHandler
-    }
+        override fun setOnMessage(onMessageHandler: OnMessageHandler?) {
+            emitterHelper.onMessage = onMessageHandler
+        }
 
-    override fun setOnSignal(onSignalHandler: OnSignalHandler?) {
-        emitterHelper.onSignal = onSignalHandler
-    }
+        override fun setOnSignal(onSignalHandler: OnSignalHandler?) {
+            emitterHelper.onSignal = onSignalHandler
+        }
 
-    override fun setOnPresence(onPresenceHandler: OnPresenceHandler?) {
-        emitterHelper.onPresence = onPresenceHandler
-    }
+        override fun setOnPresence(onPresenceHandler: OnPresenceHandler?) {
+            emitterHelper.onPresence = onPresenceHandler
+        }
 
-    override fun setOnMessageAction(onMessageActionHandler: OnMessageActionHandler?) {
-        emitterHelper.onMessageAction = onMessageActionHandler
-    }
+        override fun setOnMessageAction(onMessageActionHandler: OnMessageActionHandler?) {
+            emitterHelper.onMessageAction = onMessageActionHandler
+        }
 
-    override fun setOnUuidMetadata(onUuidMetadataHandler: OnUuidMetadataHandler?) {
-        emitterHelper.onUuid = onUuidMetadataHandler
-    }
+        override fun setOnUuidMetadata(onUuidMetadataHandler: OnUuidMetadataHandler?) {
+            emitterHelper.onUuid = onUuidMetadataHandler
+        }
 
-    override fun setOnChannelMetadata(onChannelMetadataHandler: OnChannelMetadataHandler?) {
-        emitterHelper.onChannel = onChannelMetadataHandler
-    }
+        override fun setOnChannelMetadata(onChannelMetadataHandler: OnChannelMetadataHandler?) {
+            emitterHelper.onChannel = onChannelMetadataHandler
+        }
 
-    override fun setOnMembership(onMembershipHandler: OnMembershipHandler?) {
-        emitterHelper.onMembership = onMembershipHandler
-    }
+        override fun setOnMembership(onMembershipHandler: OnMembershipHandler?) {
+            emitterHelper.onMembership = onMembershipHandler
+        }
 
-    override fun setOnFile(onFileHandler: OnFileHandler?) {
-        emitterHelper.onFile = onFileHandler
+        override fun setOnFile(onFileHandler: OnFileHandler?) {
+            emitterHelper.onFile = onFileHandler
+        }
     }
-}
