@@ -31,10 +31,12 @@ class SubscriptionImpl(
     eventEmitterFactory: (BaseSubscriptionImpl<EventListener>) -> EventEmitterImpl = { baseSubscriptionImpl ->
         EventEmitterImpl(AnnouncementCallback.Phase.SUBSCRIPTION, baseSubscriptionImpl::accepts)
     },
+    private val emitterHelper: EmitterHelper = EmitterHelper(),
 ) : Subscription,
     BaseSubscriptionImpl<EventListener>(pubnub.pubNubCore, channels, channelGroups, options, eventEmitterFactory) {
-    // todo maybe we can add it to constructor so we can mock it?
-    private val emitterHelper = EmitterHelper(eventEmitter)
+    init {
+        emitterHelper.initialize(eventEmitter)
+    }
 
     /**
      * Add a listener.
