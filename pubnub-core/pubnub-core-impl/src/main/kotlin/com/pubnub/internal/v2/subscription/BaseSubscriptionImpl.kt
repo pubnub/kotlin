@@ -51,7 +51,6 @@ abstract class BaseSubscriptionImpl<T : BaseEventListener>(
 
     protected val eventEmitter = eventEmitterFactory(this)
 
-    // todo changing to public probably is not a big problem since BaseSubscriptionImpl and derived classes are not expose to the user
     fun accepts(envelope: AnnouncementEnvelope<out PNEvent>): Boolean {
         val event = envelope.event
         val accepted = isActive && filters.all { filter -> filter.predicate(event) } && checkAndUpdateTimetoken(event)

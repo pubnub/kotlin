@@ -880,4 +880,20 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         assertEquals(1, successMessagesCount.get())
         assertEquals(1, successSignalCont.get())
     }
+
+    @Test
+    fun canAddAndRemoveSubscriptionFromSubscriptionSet() {
+        val subscription01 = pubnub.channel(randomChannel()).subscription()
+        val subscription02 = pubnub.channel(randomChannel()).subscription()
+        val subscription03 = pubnub.channel(randomChannel()).subscription()
+
+        val subscriptionSet = pubnub.subscriptionSetOf(subscriptions = setOf(subscription01, subscription02))
+        assertEquals(2, subscriptionSet.subscriptions.size)
+
+        subscriptionSet += subscription03
+        assertEquals(3, subscriptionSet.subscriptions.size)
+
+        subscriptionSet -= subscription01
+        assertEquals(2, subscriptionSet.subscriptions.size)
+    }
 }

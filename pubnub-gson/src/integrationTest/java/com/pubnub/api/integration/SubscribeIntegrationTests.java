@@ -487,4 +487,20 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
         assertEquals(1, numberOfPresenceEventsReceived.get());
         assertEquals(2, numberOfMessageActionsReceived.get());
     }
+
+    @Test
+    public void canAddAndRemoveSubscriptionFromSubscriptionSet() {
+        Subscription subscription01 = pubNub.channel(randomChannel()).subscription();
+        Subscription subscription02 = pubNub.channel(randomChannel()).subscription();
+        Subscription subscription03 = pubNub.channel(randomChannel()).subscription();
+
+        SubscriptionSet subscriptionSet = subscription01.plus(subscription02);
+        assertEquals(2, subscriptionSet.getSubscriptions().size());
+
+        subscriptionSet.add(subscription03);
+        assertEquals(3, subscriptionSet.getSubscriptions().size());
+
+        subscriptionSet.remove(subscription01);
+        assertEquals(2, subscriptionSet.getSubscriptions().size());
+    }
 }

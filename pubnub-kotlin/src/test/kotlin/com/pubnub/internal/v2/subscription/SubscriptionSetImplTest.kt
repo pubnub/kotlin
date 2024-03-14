@@ -1,5 +1,6 @@
 package com.pubnub.internal.v2.subscription
 
+import com.pubnub.api.v2.subscriptions.EmptyOptions
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.PubNubImpl
@@ -42,5 +43,19 @@ class SubscriptionSetImplTest {
         // then
         assertEquals(1, objectUnderTest.subscriptions.size)
         assertTrue(objectUnderTest.subscriptions.contains(subscriptionToBeAdded))
+    }
+
+    @Test
+    fun `should remove subscription from subscription set when using minusAssign method`() {
+        // given
+        val subscriptionToBeRemoved = SubscriptionImpl(pubNubImpl, channel, channelGroup, EmptyOptions)
+        objectUnderTest += subscriptionToBeRemoved
+        assertTrue(objectUnderTest.subscriptions.contains(subscriptionToBeRemoved))
+
+        // when
+        objectUnderTest -= subscriptionToBeRemoved
+
+        // then
+        assertEquals(0, objectUnderTest.subscriptions.size)
     }
 }
