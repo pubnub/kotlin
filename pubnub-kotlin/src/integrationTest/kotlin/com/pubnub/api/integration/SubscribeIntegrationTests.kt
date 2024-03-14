@@ -10,6 +10,7 @@ import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
+import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionCursor
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.test.CommonUtils.DEFAULT_LISTEN_DURATION
@@ -290,7 +291,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         val expectedMessage = randomValue()
         val chan01 = pubnub.channel(randomChannel() + "01")
         val chan02 = pubnub.channel(randomChannel() + "02")
-        val sub01 = chan01.subscription()
+        val sub01: Subscription = chan01.subscription()
         val sub02 = chan02.subscription()
 
         sub01.addListener(
@@ -878,5 +879,21 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         Thread.sleep(1000)
         assertEquals(1, successMessagesCount.get())
         assertEquals(1, successSignalCont.get())
+    }
+
+    @Test
+    fun canAddAndRemoveSubscriptionFromSubscriptionSet() {
+        val subscription01 = pubnub.channel(randomChannel()).subscription()
+        val subscription02 = pubnub.channel(randomChannel()).subscription()
+        val subscription03 = pubnub.channel(randomChannel()).subscription()
+
+        val subscriptionSet = pubnub.subscriptionSetOf(subscriptions = setOf(subscription01, subscription02))
+        assertEquals(2, subscriptionSet.subscriptions.size)
+
+        subscriptionSet += subscription03
+        assertEquals(3, subscriptionSet.subscriptions.size)
+
+        subscriptionSet -= subscription01
+        assertEquals(2, subscriptionSet.subscriptions.size)
     }
 }

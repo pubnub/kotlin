@@ -22,69 +22,67 @@ import com.pubnub.api.v2.callbacks.handlers.OnUuidMetadataHandler
 import com.pubnub.internal.v2.callbacks.DelegatingEventListener
 import com.pubnub.internal.v2.callbacks.EventListenerCore
 
-class EmitterHelper(eventEmitter: BaseEventEmitter<EventListenerCore>) {
-    init {
-        eventEmitter.addListener(
-            DelegatingEventListener(
-                object : EventListener {
-                    override fun message(
-                        pubnub: PubNub,
-                        result: PNMessageResult,
-                    ) {
-                        onMessage?.handle(result)
-                    }
+class EmitterHelper {
+    private val listener = object : EventListener {
+        override fun message(
+            pubnub: PubNub,
+            result: PNMessageResult,
+        ) {
+            onMessage?.handle(result)
+        }
 
-                    override fun presence(
-                        pubnub: PubNub,
-                        result: PNPresenceEventResult,
-                    ) {
-                        onPresence?.handle(result)
-                    }
+        override fun presence(
+            pubnub: PubNub,
+            result: PNPresenceEventResult,
+        ) {
+            onPresence?.handle(result)
+        }
 
-                    override fun signal(
-                        pubnub: PubNub,
-                        result: PNSignalResult,
-                    ) {
-                        onSignal?.handle(result)
-                    }
+        override fun signal(
+            pubnub: PubNub,
+            result: PNSignalResult,
+        ) {
+            onSignal?.handle(result)
+        }
 
-                    override fun messageAction(
-                        pubnub: PubNub,
-                        result: PNMessageActionResult,
-                    ) {
-                        onMessageAction?.handle(result)
-                    }
+        override fun messageAction(
+            pubnub: PubNub,
+            result: PNMessageActionResult,
+        ) {
+            onMessageAction?.handle(result)
+        }
 
-                    override fun uuid(
-                        pubnub: PubNub,
-                        result: PNUUIDMetadataResult,
-                    ) {
-                        onUuid?.handle(result)
-                    }
+        override fun uuid(
+            pubnub: PubNub,
+            result: PNUUIDMetadataResult,
+        ) {
+            onUuid?.handle(result)
+        }
 
-                    override fun channel(
-                        pubnub: PubNub,
-                        result: PNChannelMetadataResult,
-                    ) {
-                        onChannel?.handle(result)
-                    }
+        override fun channel(
+            pubnub: PubNub,
+            result: PNChannelMetadataResult,
+        ) {
+            onChannel?.handle(result)
+        }
 
-                    override fun membership(
-                        pubnub: PubNub,
-                        result: PNMembershipResult,
-                    ) {
-                        onMembership?.handle(result)
-                    }
+        override fun membership(
+            pubnub: PubNub,
+            result: PNMembershipResult,
+        ) {
+            onMembership?.handle(result)
+        }
 
-                    override fun file(
-                        pubnub: PubNub,
-                        result: PNFileEventResult,
-                    ) {
-                        onFile?.handle(result)
-                    }
-                },
-            ),
-        )
+        override fun file(
+            pubnub: PubNub,
+            result: PNFileEventResult,
+        ) {
+            onFile?.handle(result)
+        }
+    }
+
+    fun initialize(eventEmitter: BaseEventEmitter<EventListenerCore>) {
+        eventEmitter.addListener(DelegatingEventListener(listener))
     }
 
     var onMessage: OnMessageHandler? = null

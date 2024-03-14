@@ -34,6 +34,10 @@ public class DelegatingEventListener implements EventListenerCore {
         this.listener = listener;
     }
 
+    public EventListener getListener() {
+        return listener;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

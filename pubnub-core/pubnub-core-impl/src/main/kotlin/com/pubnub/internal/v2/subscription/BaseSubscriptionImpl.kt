@@ -20,6 +20,9 @@ abstract class BaseSubscriptionImpl<T : BaseEventListener>(
     channels: Set<ChannelName> = emptySet(),
     channelGroups: Set<ChannelGroupName> = emptySet(),
     options: SubscriptionOptions? = null,
+    eventEmitterFactory: (BaseSubscriptionImpl<T>) -> EventEmitterImpl = { baseSubscriptionImpl ->
+        EventEmitterImpl(AnnouncementCallback.Phase.SUBSCRIPTION, baseSubscriptionImpl::accepts)
+    },
 ) : BaseSubscription<T> {
     @Volatile
     var isActive = false
@@ -46,9 +49,9 @@ abstract class BaseSubscriptionImpl<T : BaseEventListener>(
      */
     private var lastTimetoken: Long = 0L
 
-    protected val eventEmitter = EventEmitterImpl(AnnouncementCallback.Phase.SUBSCRIPTION, ::accepts)
+    protected val eventEmitter = eventEmitterFactory(this)
 
-    private fun accepts(envelope: AnnouncementEnvelope<out PNEvent>): Boolean {
+    fun accepts(envelope: AnnouncementEnvelope<out PNEvent>): Boolean {
         val event = envelope.event
         val accepted = isActive && filters.all { filter -> filter.predicate(event) } && checkAndUpdateTimetoken(event)
         if (accepted) {
