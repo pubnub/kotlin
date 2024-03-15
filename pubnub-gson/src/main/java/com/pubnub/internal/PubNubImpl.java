@@ -467,7 +467,7 @@ public class PubNubImpl extends BasePubNubImpl<
 
     @Override
     public void reconnect() {
-        super.reconnect(0);
+        reconnect(0);
     }
 
     // public methods
