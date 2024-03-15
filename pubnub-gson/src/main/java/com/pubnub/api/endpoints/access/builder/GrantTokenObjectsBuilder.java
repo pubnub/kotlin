@@ -17,7 +17,7 @@ public class GrantTokenObjectsBuilder extends AbstractGrantTokenBuilder<GrantTok
     /**
      * @param ttl
      * @return instance of this builder
-     * @deprecated Use {@link com.pubnub.api.PubNub#grantToken(Integer)} instead.
+     * @deprecated Use {@link com.pubnub.api.PubNub#grantToken(int)}} instead.
      */
     public GrantTokenObjectsBuilder ttl(Integer ttl) {
         grantToken.ttl(ttl);
