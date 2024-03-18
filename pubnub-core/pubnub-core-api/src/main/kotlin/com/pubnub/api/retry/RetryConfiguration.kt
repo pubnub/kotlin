@@ -40,6 +40,11 @@ sealed class RetryConfiguration {
             excludedOperations: List<RetryableEndpointGroup> = emptyList(),
         ) : this(delayInSec.seconds, maxRetryNumber, excludedOperations, false)
 
+        // additional constructors for java
+        constructor() : this(MIN_DELAY, MAX_RETRIES_IN_LINEAR, emptyList())
+        constructor(delayInSec: Int) : this(delayInSec, MAX_RETRIES_IN_LINEAR, emptyList())
+        constructor(delayInSec: Int, maxRetryNumber: Int) : this(delayInSec, maxRetryNumber, emptyList())
+
         init {
             if (!isInternal) {
                 if (delayInSec < MIN_DELAY.seconds) {
@@ -65,20 +70,36 @@ sealed class RetryConfiguration {
      * @property excludedOperations List of [RetryableEndpointGroup] to be excluded from retry.
      */
     class Exponential internal constructor(
-        var minDelayInSec: Duration = MIN_DELAY.seconds, // min value is 2
-        var maxDelayInSec: Duration = MAX_DELAY.seconds, // max value is 150
-        var maxRetryNumber: Int = MAX_RETRIES_IN_EXPONENTIAL, // max value is 6
+        var minDelayInSec: Duration = MIN_DELAY.seconds,
+        var maxDelayInSec: Duration = MAX_DELAY.seconds,
+        var maxRetryNumber: Int = MAX_RETRIES_IN_EXPONENTIAL,
         val excludedOperations: List<RetryableEndpointGroup> = emptyList(),
         isInternal: Boolean = false,
     ) : RetryConfiguration() {
         private val log = LoggerFactory.getLogger(this.javaClass.simpleName + "-" + "RetryConfiguration")
 
         constructor(
-            minDelayInSec: Int = MIN_DELAY, // min value is 2
-            maxDelayInSec: Int = MAX_DELAY, // max value is 150
-            maxRetryNumber: Int = MAX_RETRIES_IN_EXPONENTIAL, // max value is 6
+            minDelayInSec: Int = MIN_DELAY,
+            maxDelayInSec: Int = MAX_DELAY,
+            maxRetryNumber: Int = MAX_RETRIES_IN_EXPONENTIAL,
             excludedOperations: List<RetryableEndpointGroup> = emptyList(),
         ) : this(minDelayInSec.seconds, maxDelayInSec.seconds, maxRetryNumber, excludedOperations, false)
+
+        // additional constructors for java
+        constructor() : this(MIN_DELAY, MAX_DELAY, MAX_RETRIES_IN_EXPONENTIAL, emptyList())
+        constructor(minDelayInSec: Int, maxDelayInSec: Int) : this(
+            minDelayInSec,
+            maxDelayInSec,
+            MAX_RETRIES_IN_EXPONENTIAL,
+            emptyList(),
+        )
+
+        constructor(minDelayInSec: Int, maxDelayInSec: Int, maxRetryNumber: Int) : this(
+            minDelayInSec,
+            maxDelayInSec,
+            maxRetryNumber,
+            emptyList(),
+        )
 
         init {
             if (!isInternal) {
