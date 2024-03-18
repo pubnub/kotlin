@@ -31,9 +31,7 @@ class GroupManagementIntegrationTests : BaseIntegrationTest() {
             channels = listOf(expectedChannel1, expectedChannel2, expectedChannel3),
         ).await { result ->
             assertFalse(result.isFailure)
-//            assertEquals(3, status.affectedChannels.size) // TODO is this part of the result? if not then there's nothing to assert on
             assertEquals(0, pubnub.getSubscribedChannels().size)
-//            assertEquals(1, status.affectedChannelGroups.size)
             assertEquals(0, pubnub.getSubscribedChannelGroups().size)
         }
     }

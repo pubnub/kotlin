@@ -13,18 +13,14 @@ internal class DelegatingSubscribeCallbackTest {
                 override fun status(
                     pubnub: PubNub,
                     status: PNStatus,
-                ) {
-                    TODO("Not yet implemented")
-                }
+                ) {}
             }
         val otherStatusListener =
             object : com.pubnub.api.callbacks.SubscribeCallback() {
                 override fun status(
                     pubnub: PubNub,
                     status: PNStatus,
-                ) {
-                    TODO("Not yet implemented")
-                }
+                ) {}
             }
 
         val delegating1 = DelegatingSubscribeCallback(statusListener)

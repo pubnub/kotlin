@@ -29,7 +29,7 @@ import retrofit2.Response
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 
-class CoreEndpointTest : BaseTest() {
+class EndpointCoreTest : BaseTest() {
     @Test
     fun testDefaultInstanceParamSetting() {
         assertTrue(pubnub.configuration.includeRequestIdentifier)

@@ -106,8 +106,6 @@ class DeleteBaseChannelGroupCoreEndpointTest : BaseTest() {
             channelGroup = "groupA",
         ).async { result ->
             assertFalse(result.isFailure)
-//            assertTrue(status.affectedChannels ==  // TODO no longer available
-//            assertTrue(status.affectedChannelGroups == listOf("groupA"))
             atomic.incrementAndGet()
         }
 

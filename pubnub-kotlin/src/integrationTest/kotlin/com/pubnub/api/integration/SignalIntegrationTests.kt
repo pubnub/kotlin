@@ -3,13 +3,14 @@ package com.pubnub.api.integration
 import com.google.gson.Gson
 import com.pubnub.api.PubNubError
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
+import com.pubnub.api.v2.callbacks.getOrThrow
 import com.pubnub.test.CommonUtils.assertPnException
 import com.pubnub.test.CommonUtils.randomChannel
 import com.pubnub.test.CommonUtils.randomValue
 import com.pubnub.test.await
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class SignalIntegrationTests : BaseIntegrationTest() {
@@ -28,9 +29,7 @@ class SignalIntegrationTests : BaseIntegrationTest() {
             channel = expectedChannel,
         ).await { result ->
             assertFalse(result.isFailure)
-//            assertEquals(PNOperationType.PNSignalOperation, status.operation) // TODO can't check this now
-//            assertEquals(status.uuid, pubnub.configuration.userId.value)
-            assertNotNull(result)
+            assertTrue(result.getOrThrow().timetoken > 0)
         }
     }
 

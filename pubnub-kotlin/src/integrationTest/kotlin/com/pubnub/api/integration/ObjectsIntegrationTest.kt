@@ -263,15 +263,13 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
             profileUrl = expectedProfileUrl,
             custom = expectedCustom,
             includeCustom = true,
-        ).apply {
-// TODO FIX            queryParam += "mydata" to "myval"
-        }.sync().apply {
-            assertEquals(this?.data?.id, expectedUUID)
-            assertEquals(this?.data?.name, expectedName)
-            assertEquals(this?.data?.email, expectedEmail)
-            assertEquals(this?.data?.externalId, expectedExternalId)
-            assertEquals(this?.data?.profileUrl, expectedProfileUrl)
-            assertEquals(this?.data?.custom, expectedCustom)
+        ).sync().apply {
+            assertEquals(this.data?.id, expectedUUID)
+            assertEquals(this.data?.name, expectedName)
+            assertEquals(this.data?.email, expectedEmail)
+            assertEquals(this.data?.externalId, expectedExternalId)
+            assertEquals(this.data?.profileUrl, expectedProfileUrl)
+            assertEquals(this.data?.custom, expectedCustom)
         }
     }
 

@@ -6,7 +6,6 @@ import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.enums.PNReconnectionPolicy
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.internal.PNConfigurationCore
-import lombok.Setter
 import okhttp3.Authenticator
 import okhttp3.CertificatePinner
 import okhttp3.ConnectionSpec
@@ -283,9 +282,15 @@ class PNConfiguration(userId: UserId) {
      * @see PubNub.presence
      * @see PNConfiguration.heartbeatInterval
      */
-    @Deprecated("")
-    @Setter
-    private val managePresenceListManually = false // TODO what to do with this?
+    @Deprecated("Not recommended for use.")
+    private val managePresenceListManually
+        get() = pnConfigurationCore.managePresenceListManually
+
+    @Deprecated("Not recommended for use.")
+    fun setManagePresenceListManually(managePresenceListManually: Boolean): PNConfiguration {
+        pnConfigurationCore.managePresenceListManually = managePresenceListManually
+        return this
+    }
 
     /**
      * Initialize the PNConfiguration with default values

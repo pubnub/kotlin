@@ -389,4 +389,14 @@ class PNConfigurationCore(
      *  Delay will vary from provided value by random value.
      */
     var retryConfiguration: RetryConfiguration = RetryConfiguration.None
+
+    /**
+     * Enables explicit presence control.
+     * When set to true heartbeat calls will contain only channels and groups added explicitly
+     * using [PubNubCore.presence]. Should be used only with ACL set on the server side.
+     * For more information please contact PubNub support
+     * @see PubNubCore.presence
+     * @see PNConfigurationCore.heartbeatInterval
+     */
+    var managePresenceListManually = false
 }

@@ -479,7 +479,8 @@ public class PubNubImpl extends BasePubNubImpl<
      * @return String containing the encryption of inputString using cipherKey
      */
     @Override
-    public @NotNull String decrypt(@NotNull String inputString) throws PubNubException {
+    @NotNull
+    public String decrypt(@NotNull String inputString) throws PubNubException {
         return decrypt(inputString, null);
     }
 
@@ -492,7 +493,8 @@ public class PubNubImpl extends BasePubNubImpl<
      * @throws PubNubException throws exception in case of failed encryption
      */
     @Override
-    public @NotNull String decrypt(@NotNull String inputString, String cipherKey) throws PubNubException {
+    @NotNull
+    public String decrypt(@NotNull String inputString, String cipherKey) throws PubNubException {
         if (inputString == null) {
             throw new PubNubException(PubNubError.INVALID_ARGUMENTS);
         }
@@ -500,12 +502,14 @@ public class PubNubImpl extends BasePubNubImpl<
     }
 
     @Override
-    public @NotNull InputStream decryptInputStream(@NotNull InputStream inputStream) throws PubNubException {
+    @NotNull
+    public InputStream decryptInputStream(@NotNull InputStream inputStream) throws PubNubException {
         return decryptInputStream(inputStream, null);
     }
 
     @Override
-    public @NotNull InputStream decryptInputStream(@NotNull InputStream inputStream, @Nullable String cipherKey) throws PubNubException {
+    @NotNull
+    public InputStream decryptInputStream(@NotNull InputStream inputStream, @Nullable String cipherKey) throws PubNubException {
         if (inputStream == null) {
             throw new PubNubException(PubNubError.INVALID_ARGUMENTS);
         }
@@ -519,7 +523,8 @@ public class PubNubImpl extends BasePubNubImpl<
      * @return String containing the encryption of inputString using cipherKey
      */
     @Override
-    public @NotNull String encrypt(@NotNull String inputString) throws PubNubException {
+    @NotNull
+    public String encrypt(@NotNull String inputString) throws PubNubException {
         return encrypt(inputString, null);
     }
 
@@ -532,7 +537,8 @@ public class PubNubImpl extends BasePubNubImpl<
      * @throws PubNubException throws exception in case of failed encryption
      */
     @Override
-    public @NotNull String encrypt(@NotNull String inputString, String cipherKey) throws PubNubException {
+    @NotNull
+    public String encrypt(@NotNull String inputString, String cipherKey) throws PubNubException {
         if (inputString == null) {
             throw new PubNubException(PubNubError.INVALID_ARGUMENTS);
         }
@@ -540,12 +546,14 @@ public class PubNubImpl extends BasePubNubImpl<
     }
 
     @Override
-    public @NotNull InputStream encryptInputStream(@NotNull InputStream inputStream) throws PubNubException {
+    @NotNull
+    public InputStream encryptInputStream(@NotNull InputStream inputStream) throws PubNubException {
         return encryptInputStream(inputStream, null);
     }
 
     @Override
-    public @NotNull InputStream encryptInputStream(@NotNull InputStream inputStream, String cipherKey) throws PubNubException {
+    @NotNull
+    public InputStream encryptInputStream(@NotNull InputStream inputStream, String cipherKey) throws PubNubException {
         return getPubNubCore().encryptInputStream(inputStream, cipherKey);
     }
 

@@ -14,18 +14,14 @@ internal class DelegatingStatusListenerTest {
                 override fun status(
                     pubnub: PubNub,
                     status: PNStatus,
-                ) {
-                    TODO("Not yet implemented")
-                }
+                ) {}
             }
         val otherStatusListener =
             object : StatusListener {
                 override fun status(
                     pubnub: PubNub,
                     status: PNStatus,
-                ) {
-                    TODO("Not yet implemented")
-                }
+                ) {}
             }
         val delegating1 = DelegatingStatusListener(statusListener)
         val delegating2 = DelegatingStatusListener(statusListener)

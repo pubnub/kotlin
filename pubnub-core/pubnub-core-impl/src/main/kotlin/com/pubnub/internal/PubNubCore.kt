@@ -333,10 +333,12 @@ class PubNubCore internal constructor(
         withTimetoken: Long = 0L,
     ) {
         subscribe.subscribe(channels.toSet(), channelGroups.toSet(), withPresence, withTimetoken)
-        presence.joined(
-            channels.filterNot { it.endsWith(PRESENCE_CHANNEL_SUFFIX) }.toSet(),
-            channelGroups.filterNot { it.endsWith(PRESENCE_CHANNEL_SUFFIX) }.toSet(),
-        )
+        if (!configuration.managePresenceListManually) {
+            presence.joined(
+                channels.filterNot { it.endsWith(PRESENCE_CHANNEL_SUFFIX) }.toSet(),
+                channelGroups.filterNot { it.endsWith(PRESENCE_CHANNEL_SUFFIX) }.toSet(),
+            )
+        }
     }
 
     private fun unsubscribeInternal(
@@ -346,7 +348,9 @@ class PubNubCore internal constructor(
         val channelSetWithoutPresence = channels.filter { !it.endsWith(PRESENCE_CHANNEL_SUFFIX) }.toSet()
         val groupSetWithoutPresence = channelGroups.filter { !it.endsWith(PRESENCE_CHANNEL_SUFFIX) }.toSet()
         subscribe.unsubscribe(channelSetWithoutPresence, groupSetWithoutPresence)
-        presence.left(channelSetWithoutPresence, groupSetWithoutPresence)
+        if (!configuration.managePresenceListManually) {
+            presence.left(channelSetWithoutPresence, groupSetWithoutPresence)
+        }
     }
 
     /**

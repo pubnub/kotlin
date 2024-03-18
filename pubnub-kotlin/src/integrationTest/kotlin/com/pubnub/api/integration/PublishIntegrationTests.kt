@@ -34,6 +34,7 @@ import org.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
@@ -56,7 +57,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             message = generatePayload(),
         ).await { result ->
             assertFalse(result.isFailure)
-//            assertEquals(result.getOrThrow().uuid, pubnub.configuration.userId.value) // TODO Can't verify this now
+            assertTrue(result.getOrThrow().timetoken > 0)
         }
     }
 
@@ -104,7 +105,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             shouldStore = false,
         ).await { result ->
             assertFalse(result.isFailure)
-//            assertEquals(status.uuid, pubnub.configuration.userId.value) // TODO Can't verify this now
+            assertTrue(result.getOrThrow().timetoken > 0)
         }
 
         pubnub.history(
