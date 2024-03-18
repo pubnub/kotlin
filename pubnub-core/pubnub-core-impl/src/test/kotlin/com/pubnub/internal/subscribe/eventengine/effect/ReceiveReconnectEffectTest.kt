@@ -24,7 +24,7 @@ class ReceiveReconnectEffectTest {
     private val eventSink = TestEventSink<SubscribeEvent>()
 
     @Suppress("INVISIBLE_MEMBER")
-    private val retryConfiguration = RetryConfiguration.Linear(delayInSec = 10.milliseconds, isInternal = true)
+    private val retryConfiguration = RetryConfiguration.Linear.createForTest(delayInSec = 10.milliseconds, isInternal = true)
     private val executorService = Executors.newSingleThreadScheduledExecutor()
     private val messages: List<PNEvent> = createPNMessageResultList()
     private val receiveMessageResult = ReceiveMessagesResult(messages, subscriptionCursor)

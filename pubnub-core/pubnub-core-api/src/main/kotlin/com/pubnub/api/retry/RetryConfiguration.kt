@@ -1,5 +1,6 @@
 package com.pubnub.api.retry
 
+import org.jetbrains.annotations.TestOnly
 import org.slf4j.LoggerFactory
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -26,7 +27,7 @@ sealed class RetryConfiguration {
      * @property maxRetryNumber The maximum number of retries allowed. Maximum value is 10.
      * @property excludedOperations List of [RetryableEndpointGroup] to be excluded from retry.
      */
-    class Linear internal constructor(
+    class Linear private constructor(
         var delayInSec: Duration = MIN_DELAY.seconds,
         var maxRetryNumber: Int = MAX_RETRIES_IN_LINEAR,
         val excludedOperations: List<RetryableEndpointGroup> = emptyList(),
@@ -35,8 +36,8 @@ sealed class RetryConfiguration {
         private val log = LoggerFactory.getLogger(this.javaClass.simpleName + "-" + "RetryConfiguration")
 
         constructor(
-            delayInSec: Int = MIN_DELAY, // min value is 2
-            maxRetryNumber: Int = MAX_RETRIES_IN_LINEAR, // max value is 10
+            delayInSec: Int = MIN_DELAY,
+            maxRetryNumber: Int = MAX_RETRIES_IN_LINEAR,
             excludedOperations: List<RetryableEndpointGroup> = emptyList(),
         ) : this(delayInSec.seconds, maxRetryNumber, excludedOperations, false)
 
@@ -57,6 +58,17 @@ sealed class RetryConfiguration {
                 }
             }
         }
+
+        companion object {
+            @JvmSynthetic
+            @TestOnly
+            internal fun createForTest(
+                delayInSec: Duration = MIN_DELAY.seconds,
+                maxRetryNumber: Int = MAX_RETRIES_IN_LINEAR,
+                excludedOperations: List<RetryableEndpointGroup> = emptyList(),
+                isInternal: Boolean = false,
+            ): Linear = Linear(delayInSec, maxRetryNumber, excludedOperations, isInternal)
+        }
     }
 
     /**
@@ -69,7 +81,7 @@ sealed class RetryConfiguration {
      * @property maxRetryNumber The maximum number of retries allowed. Maximum value is 10.
      * @property excludedOperations List of [RetryableEndpointGroup] to be excluded from retry.
      */
-    class Exponential internal constructor(
+    class Exponential private constructor(
         var minDelayInSec: Duration = MIN_DELAY.seconds,
         var maxDelayInSec: Duration = MAX_DELAY.seconds,
         var maxRetryNumber: Int = MAX_RETRIES_IN_EXPONENTIAL,
@@ -115,6 +127,18 @@ sealed class RetryConfiguration {
                     log.trace("Adjusted values: minDelayInSec=$minDelayInSec, maxDelayInSec=$maxDelayInSec, maxRetryNumber=$maxRetryNumber")
                 }
             }
+        }
+
+        companion object {
+            @JvmSynthetic
+            @TestOnly
+            internal fun createForTest(
+                minDelayInSec: Duration = MIN_DELAY.seconds,
+                maxDelayInSec: Duration = MAX_DELAY.seconds,
+                maxRetryNumber: Int = MAX_RETRIES_IN_EXPONENTIAL,
+                excludedOperations: List<RetryableEndpointGroup> = emptyList(),
+                isInternal: Boolean = false,
+            ): Exponential = Exponential(minDelayInSec, maxDelayInSec, maxRetryNumber, excludedOperations, isInternal)
         }
     }
 }

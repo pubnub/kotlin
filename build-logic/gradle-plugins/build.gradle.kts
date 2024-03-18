@@ -26,5 +26,9 @@ gradlePlugin {
             id = "pubnub.dokka"
             implementationClass = "com.pubnub.gradle.PubNubDokkaPlugin"
         }
+        register("pubnubInteg") {
+            id = "pubnub.integration-test"
+            implementationClass = "com.pubnub.gradle.PubNubIntegrationTestPlugin"
+        }
     }
 }

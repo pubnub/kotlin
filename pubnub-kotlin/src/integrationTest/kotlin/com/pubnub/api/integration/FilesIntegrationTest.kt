@@ -86,18 +86,18 @@ class FilesIntegrationTest : BaseIntegrationTest() {
             object : SubscribeCallback() {
                 override fun status(
                     pubnub: PubNub,
-                    pnStatus: PNStatus,
+                    status: PNStatus,
                 ) {
-                    if (pnStatus.category == PNStatusCategory.PNConnectedCategory) {
+                    if (status.category == PNStatusCategory.PNConnectedCategory) {
                         connectedLatch.countDown()
                     }
                 }
 
                 override fun file(
                     pubnub: PubNub,
-                    event: PNFileEventResult,
+                    result: PNFileEventResult,
                 ) {
-                    if (event.file.name == fileName) {
+                    if (result.file.name == fileName) {
                         fileEventReceived.countDown()
                     }
                 }

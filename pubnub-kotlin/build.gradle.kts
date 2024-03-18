@@ -3,18 +3,7 @@ plugins {
     alias(libs.plugins.lombok)
     id("pubnub.shared")
     id("pubnub.dokka")
-}
-
-sourceSets {
-    create("integrationTest") {
-        compileClasspath += sourceSets.main.get().output
-        runtimeClasspath += sourceSets.main.get().output
-    }
-}
-
-val integrationTestImplementation by configurations.getting {
-    extendsFrom(configurations.implementation.get())
-    extendsFrom(configurations.testImplementation.get())
+    id("pubnub.integration-test")
 }
 
 dependencies {

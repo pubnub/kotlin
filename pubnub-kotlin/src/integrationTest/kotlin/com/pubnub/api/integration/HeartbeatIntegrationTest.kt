@@ -12,8 +12,6 @@ import org.awaitility.Durations
 import org.hamcrest.core.IsEqual
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.ValueSource
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -28,9 +26,7 @@ class HeartbeatIntegrationTest : BaseIntegrationTest() {
     /**
      * Please note this test doesn't actually test sending state with the Heartbeat REST call
      */
-    @ParameterizedTest
-    @ValueSource(booleans = [true, false])
-    fun testStateWithHeartbeat(enableEE: Boolean) {
+    fun testStateWithHeartbeat() {
         val hits = AtomicInteger()
         val expectedStatePayload = generatePayload()
 
@@ -50,11 +46,11 @@ class HeartbeatIntegrationTest : BaseIntegrationTest() {
         observer.addListener(
             object : com.pubnub.api.callbacks.SubscribeCallback() {
                 override fun status(
-                    p: PubNub,
-                    pnStatus: PNStatus,
+                    pubnub: PubNub,
+                    status: PNStatus,
                 ) {
-                    if (pnStatus.category == PNStatusCategory.PNConnectedCategory &&
-                        pnStatus.affectedChannels.contains(expectedChannel)
+                    if (status.category == PNStatusCategory.PNConnectedCategory &&
+                        status.affectedChannels.contains(expectedChannel)
                     ) {
                         pubnub.subscribe(
                             channels = listOf(expectedChannel),
@@ -64,21 +60,21 @@ class HeartbeatIntegrationTest : BaseIntegrationTest() {
                 }
 
                 override fun presence(
-                    p: PubNub,
-                    event: PNPresenceEventResult,
+                    pubnub: PubNub,
+                    result: PNPresenceEventResult,
                 ) {
-                    if (event.uuid.equals(pubnub.configuration.userId.value) &&
-                        event.channel.equals(expectedChannel)
+                    if (result.uuid.equals(pubnub.configuration.userId.value) &&
+                        result.channel.equals(expectedChannel)
                     ) {
-                        when (event.event) {
+                        when (result.event) {
                             "state-change" -> {
-                                assertEquals(expectedStatePayload, event.state)
+                                assertEquals(expectedStatePayload, result.state)
                                 hits.incrementAndGet()
                                 pubnub.disconnect()
                             }
 
                             "join" -> {
-                                if (event.state == null) {
+                                if (result.state == null) {
                                     hits.incrementAndGet()
                                     val stateSet = AtomicBoolean()
                                     pubnub.setPresenceState(
@@ -96,7 +92,7 @@ class HeartbeatIntegrationTest : BaseIntegrationTest() {
                                     Awaitility.await().atMost(Durations.FIVE_SECONDS)
                                         .untilTrue(stateSet)
                                 } else {
-                                    assertEquals(expectedStatePayload, event.state)
+                                    assertEquals(expectedStatePayload, result.state)
                                     hits.incrementAndGet()
                                 }
                             }

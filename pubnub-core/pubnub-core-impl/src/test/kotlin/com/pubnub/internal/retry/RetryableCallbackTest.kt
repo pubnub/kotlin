@@ -111,7 +111,7 @@ class RetryableCallbackTest {
         val retryableCallback =
             getRetryableCallback(
                 retryConfiguration =
-                    RetryConfiguration.Linear(
+                    RetryConfiguration.Linear.createForTest(
                         delayInSec = 10.milliseconds,
                         maxRetryNumber = 3,
                         isInternal = true,
@@ -148,7 +148,7 @@ class RetryableCallbackTest {
         // given
         @Suppress("INVISIBLE_MEMBER")
         val retryConfiguration =
-            RetryConfiguration.Exponential(
+            RetryConfiguration.Exponential.createForTest(
                 minDelayInSec = 10.milliseconds,
                 maxDelayInSec = 15.milliseconds,
                 maxRetryNumber = 2,
@@ -185,7 +185,7 @@ class RetryableCallbackTest {
         // given
         @Suppress("INVISIBLE_MEMBER")
         val retryConfiguration =
-            RetryConfiguration.Exponential(
+            RetryConfiguration.Exponential.createForTest(
                 minDelayInSec = 10.milliseconds,
                 maxDelayInSec = 15.milliseconds,
                 maxRetryNumber = 2,
@@ -221,7 +221,7 @@ class RetryableCallbackTest {
         // given
         @Suppress("INVISIBLE_MEMBER")
         val retryConfiguration =
-            RetryConfiguration.Exponential(
+            RetryConfiguration.Exponential.createForTest(
                 minDelayInSec = 10.milliseconds,
                 maxDelayInSec = 15.milliseconds,
                 maxRetryNumber = 2,

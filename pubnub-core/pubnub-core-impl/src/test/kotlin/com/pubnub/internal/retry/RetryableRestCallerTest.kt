@@ -302,7 +302,7 @@ class RetryableRestCallerTest {
         // given
         @Suppress("INVISIBLE_MEMBER")
         val retryConfiguration =
-            RetryConfiguration.Linear(delayInSec = 10.milliseconds, maxRetryNumber = 3, isInternal = true)
+            RetryConfiguration.Linear.createForTest(delayInSec = 10.milliseconds, maxRetryNumber = 3, isInternal = true)
         val retryableRestCaller = getRetryableRestCaller(retryConfiguration = retryConfiguration)
         val mockCall = mockk<Call<FetchMessagesEnvelope>>()
         val errorResponse: Response<FetchMessagesEnvelope> =
@@ -325,7 +325,7 @@ class RetryableRestCallerTest {
         // given
         @Suppress("INVISIBLE_MEMBER")
         val retryConfiguration =
-            RetryConfiguration.Exponential(
+            RetryConfiguration.Exponential.createForTest(
                 minDelayInSec = 10.milliseconds,
                 maxDelayInSec = 15.milliseconds,
                 maxRetryNumber = 2,
@@ -354,7 +354,7 @@ class RetryableRestCallerTest {
         // given
         @Suppress("INVISIBLE_MEMBER")
         val retryConfiguration =
-            RetryConfiguration.Linear(delayInSec = 10.milliseconds, maxRetryNumber = 2, isInternal = true)
+            RetryConfiguration.Linear.createForTest(delayInSec = 10.milliseconds, maxRetryNumber = 2, isInternal = true)
         val retryableRestCaller = getRetryableRestCaller(retryConfiguration = retryConfiguration)
         val mockCall = mockk<Call<FetchMessagesEnvelope>>()
         val successfulResponse: Response<FetchMessagesEnvelope> = Response.success(null)
@@ -375,7 +375,7 @@ class RetryableRestCallerTest {
         // given
         @Suppress("INVISIBLE_MEMBER")
         val retryConfiguration =
-            RetryConfiguration.Linear(delayInSec = 10.milliseconds, maxRetryNumber = 2, isInternal = true)
+            RetryConfiguration.Linear.createForTest(delayInSec = 10.milliseconds, maxRetryNumber = 2, isInternal = true)
         val retryableRestCaller = getRetryableRestCaller(retryConfiguration = retryConfiguration)
         val mockCall = mockk<Call<FetchMessagesEnvelope>>()
         every { mockCall.execute() } throws UnknownHostException() andThenThrows UnknownHostException() andThenThrows UnknownHostException()

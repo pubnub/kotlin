@@ -4,6 +4,7 @@ import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.endpoints.message_actions.GetMessageActions;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
+import com.pubnub.api.models.consumer.PNBoundedPage;
 import com.pubnub.api.models.consumer.message_actions.PNGetMessageActionsResult;
 import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
@@ -32,6 +33,6 @@ public class GetMessageActionsImpl extends DelegatingEndpoint<PNGetMessageAction
 
     @Override
     protected ExtendedRemoteAction<PNGetMessageActionsResult> createAction() {
-        return pubnub.getMessageActions(channel, start, end, limit);
+        return pubnub.getMessageActions(channel, new PNBoundedPage(start, end, limit));
     }
 }
