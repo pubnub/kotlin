@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.benmanes.versions)
-    alias(libs.plugins.lombok)
     id("pubnub.shared")
     id("pubnub.dokka")
     id("pubnub.integration-test")
