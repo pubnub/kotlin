@@ -16,7 +16,7 @@ import org.junit.Test
 class StateSetCoreEndpointEETest : BaseTest() {
     override fun onBefore() {
         initConfiguration()
-        initPubNub()
+        // initPubNub()
     }
 
     @Test

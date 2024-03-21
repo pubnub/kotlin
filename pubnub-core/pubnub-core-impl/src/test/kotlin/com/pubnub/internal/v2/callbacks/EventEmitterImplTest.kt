@@ -2,6 +2,7 @@ package com.pubnub.internal.v2.callbacks
 
 import com.google.gson.JsonPrimitive
 import com.pubnub.api.BasePubNub
+import com.pubnub.api.UserId
 import com.pubnub.api.models.consumer.files.PNDownloadableFile
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
@@ -10,12 +11,12 @@ import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
-import com.pubnub.internal.PNConfigurationCore
 import com.pubnub.internal.TestPubNub
 import com.pubnub.internal.managers.AnnouncementCallback
 import com.pubnub.internal.managers.AnnouncementEnvelope
 import com.pubnub.internal.models.consumer.pubsub.objects.PNDeleteUUIDMetadataEventMessage
 import com.pubnub.internal.models.consumer.pubsub.objects.PNObjectEventResult
+import com.pubnub.internal.v2.BasePNConfigurationImpl
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -23,7 +24,7 @@ import org.junit.jupiter.api.Test
 
 class EventEmitterImplTest {
     lateinit var emitterImpl: EventEmitterImpl
-    val testPubNub = TestPubNub(PNConfigurationCore("aa"))
+    val testPubNub = TestPubNub(BasePNConfigurationImpl(UserId("aa")))
     val basePubSubResult = BasePubSubResult("a", null, null, null, null)
     val message = JsonPrimitive(1)
 

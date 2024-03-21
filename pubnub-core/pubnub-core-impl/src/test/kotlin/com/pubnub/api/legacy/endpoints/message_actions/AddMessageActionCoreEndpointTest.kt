@@ -318,7 +318,7 @@ class AddMessageActionCoreEndpointTest : BaseTest() {
 
     @Test
     fun testInvalidSubKey() {
-        pubnub.configuration.subscribeKey = " "
+        config.subscribeKey = " "
         try {
             pubnub.addMessageAction(
                 channel = "coolChannel",
@@ -358,7 +358,7 @@ class AddMessageActionCoreEndpointTest : BaseTest() {
                 ),
         )
 
-        pubnub.configuration.authKey = "authKey"
+        config.authKey = "authKey"
 
         pubnub.addMessageAction(
             channel = "coolChannel",

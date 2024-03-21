@@ -53,8 +53,8 @@ abstract class CoreEndpointTestSuite<T : EndpointCore<*, R>, R> : BaseTest() {
     override fun onBefore() {
         super.onBefore()
         expectedStub = stubFor(mappingBuilder().willReturn(aResponse().withBody(successfulResponseBody())))
-        pubnub.configuration.includeInstanceIdentifier = false
-        pubnub.configuration.includeRequestIdentifier = false
+        config.includeInstanceIdentifier = false
+        config.includeRequestIdentifier = false
     }
 
     @Test
@@ -68,15 +68,6 @@ abstract class CoreEndpointTestSuite<T : EndpointCore<*, R>, R> : BaseTest() {
     @Test
     fun testSuccessSync() {
         runSync()
-    }
-
-    @Test
-    fun testKeys() {
-        testSubscribeKey()
-        testPublishKey()
-        testAuthKeySync()
-//        testAuthKeyAsync() // TODO
-        testSecretKey()
     }
 
     @Test
@@ -220,8 +211,9 @@ abstract class CoreEndpointTestSuite<T : EndpointCore<*, R>, R> : BaseTest() {
 //        }
 //    }
 
-    private fun testSubscribeKey() {
-        pubnub.configuration.subscribeKey = " "
+    @Test
+    fun testSubscribeKey() {
+        config.subscribeKey = " "
         try {
             testSuccessSync()
             if (requiredKeys().contains(com.pubnub.internal.suite.SUB)) {
@@ -232,11 +224,11 @@ abstract class CoreEndpointTestSuite<T : EndpointCore<*, R>, R> : BaseTest() {
                 assertPnException(PubNubError.SUBSCRIBE_KEY_MISSING, e)
             }
         }
-        pubnub.configuration.subscribeKey = "mySubscribeKey"
     }
 
-    private fun testPublishKey() {
-        pubnub.configuration.publishKey = " "
+    @Test
+    fun testPublishKey() {
+        config.publishKey = " "
         try {
             testSuccessSync()
             if (requiredKeys().contains(com.pubnub.internal.suite.PUB)) {
@@ -247,11 +239,11 @@ abstract class CoreEndpointTestSuite<T : EndpointCore<*, R>, R> : BaseTest() {
                 assertPnException(PubNubError.PUBLISH_KEY_MISSING, e)
             }
         }
-        pubnub.configuration.publishKey = "myPublishKey"
     }
 
-    private fun testAuthKeySync() {
-        pubnub.configuration.authKey = "someAuthKey"
+    @Test
+    fun testAuthKeySync() {
+        config.authKey = "someAuthKey"
         testSuccessSync()
 
         val requests = findAll(anyRequestedFor(mappingBuilder().build().request.urlMatcher))
@@ -279,8 +271,9 @@ abstract class CoreEndpointTestSuite<T : EndpointCore<*, R>, R> : BaseTest() {
 //        }
 //    }
 
-    private fun testSecretKey() {
-        pubnub.configuration.secretKey = " "
+    @Test
+    fun testSecretKey() {
+        config.secretKey = " "
         try {
             testSuccessSync()
             if (requiredKeys().contains(com.pubnub.internal.suite.SEC)) {
@@ -291,7 +284,6 @@ abstract class CoreEndpointTestSuite<T : EndpointCore<*, R>, R> : BaseTest() {
                 assertPnException(PubNubError.SECRET_KEY_MISSING, e)
             }
         }
-        pubnub.configuration.secretKey = "mySecretKey"
     }
 
     private fun runSync() {

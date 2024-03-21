@@ -20,10 +20,10 @@ import static org.junit.Assert.assertEquals;
 
 
 public class GrantTokenIT extends BaseIntegrationTest {
-    private final PubNub pubNubUnderTest = getServer();
 
     @Test
     public void happyPath_SUM() throws PubNubException {
+        PubNub pubNubUnderTest = getServer();
         final int expectedTTL = 1337;
         String expectedSpaceIdValue = "space01";
         String expectedUser01Value = "user01";
@@ -54,7 +54,7 @@ public class GrantTokenIT extends BaseIntegrationTest {
     @Test
     public void happyPath() throws PubNubException {
         //given
-        pubNubUnderTest.getConfiguration().setLogVerbosity(PNLogVerbosity.BODY);
+        PubNub pubNubUnderTest = getServer(builder -> builder.setLogVerbosity(PNLogVerbosity.BODY));
         final int expectedTTL = 1337;
         final String expectedChannelResourceName = "channelResource";
         final String expectedChannelPattern = "channel.*";

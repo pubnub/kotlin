@@ -1,9 +1,9 @@
 package com.pubnub.internal.managers
 
-import com.pubnub.internal.PNConfigurationCore
+import com.pubnub.api.v2.BasePNConfiguration
 import com.pubnub.internal.models.server.SubscribeMessage
 
-internal class DuplicationManager(private val config: PNConfigurationCore) {
+internal class DuplicationManager(private val config: BasePNConfiguration) {
     private val hashHistory: ArrayList<String> = ArrayList()
 
     private fun getKey(message: SubscribeMessage) =

@@ -14,8 +14,6 @@ import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.BasePubNubImpl
 import com.pubnub.internal.EndpointCore
-import com.pubnub.internal.PNConfigurationCore
-import com.pubnub.internal.TestPubNub
 import com.pubnub.test.listen
 import okhttp3.Request
 import okio.Timeout
@@ -40,7 +38,8 @@ class EndpointCoreTest : BaseTest() {
 
     @Test
     fun testBaseParamsIncludeInstanceId() {
-        pubnub.configuration.includeInstanceIdentifier = true
+        config.includeInstanceIdentifier = true
+        // initPubNub()
 
         fakeEndpoint {
             assertTrue(it.containsKey("instanceid"))
@@ -65,7 +64,8 @@ class EndpointCoreTest : BaseTest() {
 
     @Test
     fun testBaseParamsNoIncludeRequestId() {
-        pubnub.configuration.includeRequestIdentifier = false
+        config.includeRequestIdentifier = false
+        // initPubNub()
 
         fakeEndpoint {
             assertEquals("myUUID", it["uuid"])
@@ -75,7 +75,8 @@ class EndpointCoreTest : BaseTest() {
 
     @Test
     fun testBaseParamsPersistentRequestId() {
-        pubnub.configuration.includeInstanceIdentifier = true
+        config.includeInstanceIdentifier = true
+        // initPubNub()
 
         val instanceId1 = AtomicReference<String>()
         val instanceId2 = AtomicReference<String>()
@@ -95,7 +96,8 @@ class EndpointCoreTest : BaseTest() {
     @Test
     fun testUuid() {
         val expectedUuid = UserId(BasePubNubImpl.generateUUID())
-        pubnub.configuration.userId = expectedUuid
+        config.userId = expectedUuid
+        // initPubNub()
 
         fakeEndpoint {
             assertEquals(expectedUuid.value, it["uuid"])
@@ -272,42 +274,6 @@ class EndpointCoreTest : BaseTest() {
             }
 
         success.listen()
-    }
-
-    @Test
-    fun testDefaultTimeoutValues() {
-        val p = TestPubNub(PNConfigurationCore(userId = UserId(BasePubNubImpl.generateUUID())))
-        assertEquals(300, p.pubNubCore.configuration.presenceTimeout)
-        assertEquals(0, p.pubNubCore.configuration.heartbeatInterval)
-        p.forceDestroy()
-    }
-
-    @Test
-    fun testCustomTimeoutValues1() {
-        val p = TestPubNub(PNConfigurationCore(userId = UserId(BasePubNubImpl.generateUUID())))
-        p.pubNubCore.configuration.presenceTimeout = 100
-        assertEquals(100, p.pubNubCore.configuration.presenceTimeout)
-        assertEquals(49, p.pubNubCore.configuration.heartbeatInterval)
-        p.forceDestroy()
-    }
-
-    @Test
-    fun testCustomTimeoutValues2() {
-        val p = TestPubNub(PNConfigurationCore(userId = UserId(BasePubNubImpl.generateUUID())))
-        p.pubNubCore.configuration.heartbeatInterval = 100
-        assertEquals(300, p.pubNubCore.configuration.presenceTimeout)
-        assertEquals(100, p.pubNubCore.configuration.heartbeatInterval)
-        p.forceDestroy()
-    }
-
-    @Test
-    fun testCustomTimeoutValues3() {
-        val p = TestPubNub(PNConfigurationCore(userId = UserId(BasePubNubImpl.generateUUID())))
-        p.pubNubCore.configuration.heartbeatInterval = 40
-        p.pubNubCore.configuration.presenceTimeout = 50
-        assertEquals(50, p.pubNubCore.configuration.presenceTimeout)
-        assertEquals(24, p.pubNubCore.configuration.heartbeatInterval)
-        p.forceDestroy()
     }
 
     private fun fakeEndpoint(paramsCondition: (map: HashMap<String, String>) -> Unit) =

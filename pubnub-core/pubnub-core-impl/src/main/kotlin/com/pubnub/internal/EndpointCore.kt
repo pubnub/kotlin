@@ -5,8 +5,8 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.retry.RetryableEndpointGroup
+import com.pubnub.api.v2.BasePNConfiguration.Companion.isValid
 import com.pubnub.api.v2.callbacks.Result
-import com.pubnub.internal.PNConfigurationCore.Companion.isValid
 import com.pubnub.internal.retry.RetryableBase
 import com.pubnub.internal.retry.RetryableCallback
 import com.pubnub.internal.retry.RetryableRestCaller

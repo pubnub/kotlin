@@ -2,9 +2,11 @@ package com.pubnub.internal
 
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
+import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
 import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.callbacks.SubscribeCallback
+import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.endpoints.DeleteMessages
 import com.pubnub.api.endpoints.FetchMessages
 import com.pubnub.api.endpoints.History
@@ -73,6 +75,7 @@ import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
+import com.pubnub.api.v2.BasePNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.api.v2.entities.BaseChannel
@@ -112,9 +115,9 @@ import com.pubnub.internal.v2.subscription.SubscriptionSetImpl
 import java.io.InputStream
 
 class PubNubImpl(
-    override val configuration: PNConfiguration,
+    override val configuration: BasePNConfiguration,
 ) : BasePubNubImpl<EventListener, Subscription, Channel, ChannelGroup, ChannelMetadata, UserMetadata, SubscriptionSet, StatusListener>(
-        configuration.configuration,
+        configuration,
     ),
     PubNub {
     private val emitterHelper = EmitterHelper(listenerManager)
@@ -1327,6 +1330,14 @@ class PubNubImpl(
         connected: Boolean,
     ) = pubNubCore.presence(channels, channelGroups, connected)
 
+    private fun getCryptoModuleOrThrow(cipherKey: String? = null): CryptoModule {
+        return cipherKey?.let { cipherKeyNotNull ->
+            (configuration as? PNConfiguration)?.let {
+                CryptoModule.createLegacyCryptoModule(cipherKeyNotNull, it.useRandomInitializationVector)
+            } ?: CryptoModule.createLegacyCryptoModule(cipherKeyNotNull)
+        } ?: configuration.cryptoModule ?: throw PubNubException("Crypto module is not initialized")
+    }
+
     /**
      * Perform Cryptographic decryption of an input string using cipher key provided by [PNConfiguration.cipherKey].
      *
@@ -1349,7 +1360,7 @@ class PubNubImpl(
     override fun decrypt(
         inputString: String,
         cipherKey: String?,
-    ): String = pubNubCore.decrypt(inputString, cipherKey)
+    ): String = pubNubCore.decrypt(inputString, getCryptoModuleOrThrow(cipherKey))
 
     /**
      * Perform Cryptographic decryption of an input stream using provided cipher key.
@@ -1363,7 +1374,7 @@ class PubNubImpl(
     override fun decryptInputStream(
         inputStream: InputStream,
         cipherKey: String?,
-    ): InputStream = pubNubCore.decryptInputStream(inputStream, cipherKey)
+    ): InputStream = pubNubCore.decryptInputStream(inputStream, getCryptoModuleOrThrow(cipherKey))
 
     /**
      * Perform Cryptographic encryption of an input string and a cipher key.
@@ -1377,7 +1388,7 @@ class PubNubImpl(
     override fun encrypt(
         inputString: String,
         cipherKey: String?,
-    ): String = pubNubCore.encrypt(inputString, cipherKey)
+    ): String = pubNubCore.encrypt(inputString, getCryptoModuleOrThrow(cipherKey))
 
     /**
      * Perform Cryptographic encryption of an input stream using provided cipher key.
@@ -1391,5 +1402,5 @@ class PubNubImpl(
     override fun encryptInputStream(
         inputStream: InputStream,
         cipherKey: String?,
-    ): InputStream = pubNubCore.encryptInputStream(inputStream, cipherKey)
+    ): InputStream = pubNubCore.encryptInputStream(inputStream, getCryptoModuleOrThrow(cipherKey))
 }

@@ -1,7 +1,8 @@
 package com.pubnub.internal
 
 import com.pubnub.api.PubNubException
-import com.pubnub.internal.PNConfigurationCore.Companion.isValid
+import com.pubnub.api.v2.BasePNConfiguration
+import com.pubnub.api.v2.BasePNConfiguration.Companion.isValid
 import okhttp3.Request
 import okio.Buffer
 import org.slf4j.LoggerFactory
@@ -58,7 +59,7 @@ internal object PubNubUtil {
 
     fun signRequest(
         originalRequest: Request,
-        pnConfiguration: PNConfigurationCore,
+        pnConfiguration: BasePNConfiguration,
         timestamp: Int,
     ): Request {
         // only sign if we have a secret key in place.
@@ -74,12 +75,12 @@ internal object PubNubUtil {
         return originalRequest.newBuilder().url(rebuiltUrl).build()
     }
 
-    fun shouldSignRequest(configuration: PNConfigurationCore): Boolean {
+    fun shouldSignRequest(configuration: BasePNConfiguration): Boolean {
         return configuration.secretKey.isValid()
     }
 
     fun generateSignature(
-        configuration: PNConfigurationCore,
+        configuration: BasePNConfiguration,
         requestURL: String,
         queryParams: MutableMap<String, String>,
         method: String,
@@ -157,7 +158,7 @@ internal object PubNubUtil {
     }
 
     private fun generateSignature(
-        configuration: PNConfigurationCore,
+        configuration: BasePNConfiguration,
         request: Request,
         timestamp: Int,
     ): String? {
@@ -244,7 +245,7 @@ internal object PubNubUtil {
     }
 
     internal fun maybeAddEeQueryParam(
-        configuration: PNConfigurationCore,
+        configuration: BasePNConfiguration,
         queryParams: MutableMap<String, String>,
     ) {
         queryParams["ee"] = ""

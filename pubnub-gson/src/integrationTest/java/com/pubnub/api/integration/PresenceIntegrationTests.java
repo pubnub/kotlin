@@ -309,13 +309,13 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
         final AtomicBoolean subscribeSuccess = new AtomicBoolean();
         final String expectedChannel = RandomGenerator.get();
 
-        pubNub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.ALL);
+        pubNub = getPubNub(builder -> {
+                    builder.setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.ALL);
+                    builder.setPresenceTimeout(20);
+                    builder.setHeartbeatInterval(0);
+                });
 
         assertEquals(PNHeartbeatNotificationOptions.ALL, pubNub.getConfiguration().getHeartbeatNotificationOptions());
-        assertEquals(300, pubNub.getConfiguration().getPresenceTimeout());
-        assertEquals(0, pubNub.getConfiguration().getHeartbeatInterval());
-
-        pubNub.getConfiguration().setPresenceTimeoutWithCustomInterval(20, 0);
         assertEquals(20, pubNub.getConfiguration().getPresenceTimeout());
         assertEquals(0, pubNub.getConfiguration().getHeartbeatInterval());
 
@@ -350,11 +350,10 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
         final AtomicInteger heartbeatCallsCount = new AtomicInteger(0);
         final AtomicBoolean subscribeSuccess = new AtomicBoolean();
         final String expectedChannel = RandomGenerator.get();
-        pubNub = getPubNub(
-                getBasicPnConfiguration()
-                        .setPresenceTimeout(20)
-                        .setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.ALL)
-        );
+        pubNub = getPubNub(builder -> {
+            builder.setPresenceTimeout(20);
+            builder.setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.ALL);
+        });
         registerGuestClient(pubNub);
         assertEquals(9, pubNub.getConfiguration().getHeartbeatInterval());
 
@@ -383,7 +382,4 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
                 .until(() -> subscribeSuccess.get() && heartbeatCallsCount.get() > 2);
     }
 
-    private void enableHeartbeatLoop(int interval) {
-        pubNub.getConfiguration().setPresenceTimeoutWithCustomInterval(20, interval);
-    }
 }

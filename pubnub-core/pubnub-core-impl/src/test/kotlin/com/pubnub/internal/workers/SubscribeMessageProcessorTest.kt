@@ -12,11 +12,12 @@ import com.pubnub.api.UserId
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
-import com.pubnub.internal.PNConfigurationCore
+import com.pubnub.api.v2.BasePNConfiguration
 import com.pubnub.internal.TestPubNub
 import com.pubnub.internal.crypto.encryptString
 import com.pubnub.internal.managers.DuplicationManager
 import com.pubnub.internal.models.server.SubscribeMessage
+import com.pubnub.test.TestPNConfigurationImpl
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.isA
 import org.junit.Test
@@ -84,8 +85,7 @@ class SubscribeMessageProcessorTest(
     @Test
     fun testProcessFileUnencryptedWithCrypto() {
         val gson = Gson()
-        val configuration = config()
-        configuration.cryptoModule = CryptoModule.createAesCbcCryptoModule("enigma", false)
+        val configuration = config { cryptoModule = CryptoModule.createAesCbcCryptoModule("enigma", false) }
 
         val messageProcessor = messageProcessor(configuration)
 
@@ -109,8 +109,7 @@ class SubscribeMessageProcessorTest(
     fun testProcessMessageEncryptedWithCrypto() {
         // given
         val gson = Gson()
-        val config: PNConfigurationCore = config()
-        config.cryptoModule = CryptoModule.createAesCbcCryptoModule("enigma", false)
+        val config: BasePNConfiguration = config { cryptoModule = CryptoModule.createAesCbcCryptoModule("enigma", false) }
         val subscribeMessageProcessor = messageProcessor(config)
         val messageEncrypted = config.cryptoModule!!.encryptString(messageJson.toString())
 
@@ -133,8 +132,8 @@ class SubscribeMessageProcessorTest(
     fun testProcessMessageUnencryptedWithCrypto() {
         // given
         val gson = Gson()
-        val config: PNConfigurationCore = config()
-        config.cryptoModule = CryptoModule.createAesCbcCryptoModule("enigma", false)
+        val config: BasePNConfiguration = config { cryptoModule = CryptoModule.createAesCbcCryptoModule("enigma", false) }
+
         val subscribeMessageProcessor = messageProcessor(config)
 
         // when
@@ -155,8 +154,8 @@ class SubscribeMessageProcessorTest(
     fun testProcessMessageWithPnOtherEncryptedWithCrypto() {
         // given
         val gson = Gson()
-        val config: PNConfigurationCore = config()
-        config.cryptoModule = CryptoModule.createAesCbcCryptoModule("enigma", false)
+        val config: BasePNConfiguration = config { cryptoModule = CryptoModule.createAesCbcCryptoModule("enigma", false) }
+
         val subscribeMessageProcessor = messageProcessor(config)
         val message = "Hello world."
         val messageEncrypted = "bk8x+ZEg+Roq8ngUo7lfFg=="
@@ -181,9 +180,12 @@ class SubscribeMessageProcessorTest(
         assertThat((result as PNMessageResult).message, iz(expectedObject))
     }
 
-    private fun config() = PNConfigurationCore(userId = UserId("test"))
+    private fun config(
+        action: TestPNConfigurationImpl.Builder.() -> Unit = {
+        },
+    ) = TestPNConfigurationImpl.Builder(userId = UserId("test")).apply(action).build()
 
-    private fun messageProcessor(configuration: PNConfigurationCore) =
+    private fun messageProcessor(configuration: BasePNConfiguration) =
         SubscribeMessageProcessor(
             pubnub = TestPubNub(configuration).pubNubCore,
             duplicationManager = DuplicationManager(configuration),

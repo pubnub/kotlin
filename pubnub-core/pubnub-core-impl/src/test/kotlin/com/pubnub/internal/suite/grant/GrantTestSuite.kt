@@ -13,7 +13,7 @@ import org.junit.Assert.assertEquals
 class GrantTestSuite : com.pubnub.internal.suite.CoreEndpointTestSuite<GrantEndpoint, PNAccessManagerGrantResult>() {
     override fun onBefore() {
         super.onBefore()
-        pubnub.configuration.secretKey = "mySecretKey"
+        config.secretKey = "mySecretKey"
     }
 
     override fun pnOperation() = PNOperationType.PNAccessManagerGrant

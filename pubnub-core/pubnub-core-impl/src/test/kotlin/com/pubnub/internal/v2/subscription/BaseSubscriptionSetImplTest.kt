@@ -5,9 +5,9 @@ import com.pubnub.api.BasePubNub
 import com.pubnub.api.UserId
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
-import com.pubnub.internal.PNConfigurationCore
 import com.pubnub.internal.TestEventListener
 import com.pubnub.internal.TestPubNub
+import com.pubnub.internal.v2.BasePNConfigurationImpl
 import com.pubnub.internal.v2.callbacks.EventListenerCore
 import com.pubnub.internal.v2.entities.ChannelName
 import com.pubnub.internal.v2.subscription.BaseSubscriptionImpl
@@ -27,7 +27,7 @@ class BaseSubscriptionSetImplTest {
 
     @BeforeEach
     fun setUp() {
-        pubnub = TestPubNub(PNConfigurationCore(UserId("uuid")))
+        pubnub = TestPubNub(BasePNConfigurationImpl(UserId("uuid")))
         subscriptionSet =
             object :
                 BaseSubscriptionSetImpl<TestEventListener, BaseSubscriptionImpl<TestEventListener>>(pubnub.pubNubCore) {

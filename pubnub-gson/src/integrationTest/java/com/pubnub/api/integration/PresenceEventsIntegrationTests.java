@@ -156,7 +156,10 @@ public class PresenceEventsIntegrationTests extends BaseIntegrationTest {
     @Test
     public void testTimeoutFromChannel() {
         final AtomicBoolean success = new AtomicBoolean(false);
-        pubNub.getConfiguration().setPresenceTimeoutWithCustomInterval(20, 0);
+        pubNub = getPubNub(builder -> {
+            builder.setPresenceTimeout(20);
+            builder.setHeartbeatInterval(0);
+        });
 
         assertEquals(20, pubNub.getConfiguration().getPresenceTimeout());
         assertEquals(0, pubNub.getConfiguration().getHeartbeatInterval());

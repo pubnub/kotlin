@@ -205,7 +205,7 @@ class RemoveMessageActionCoreEndpointTest : BaseTest() {
 
     @Test
     fun testInvalidSubKey() {
-        pubnub.configuration.subscribeKey = " "
+        config.subscribeKey = " "
         try {
             pubnub.removeMessageAction(
                 channel = "coolChannel",
@@ -234,7 +234,7 @@ class RemoveMessageActionCoreEndpointTest : BaseTest() {
                 ),
         )
 
-        pubnub.configuration.authKey = "authKey"
+        config.authKey = "authKey"
 
         pubnub.removeMessageAction(
             channel = "coolChannel",

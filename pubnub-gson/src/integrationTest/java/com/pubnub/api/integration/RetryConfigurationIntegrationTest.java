@@ -1,6 +1,5 @@
 package com.pubnub.api.integration;
 
-import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.enums.PNStatusCategory;
@@ -24,11 +23,12 @@ public class RetryConfigurationIntegrationTest extends BaseIntegrationTest {
     @Test
     public void whenRetryConfigurationIsDefinedShouldGetProperStatus() throws InterruptedException, PubNubException {
         AtomicBoolean success = new AtomicBoolean();
-        PNConfiguration pnConfiguration = getBasicPnConfiguration();
-        pnConfiguration.setOrigin("ps.pndsn_notExisting_URI.com"); // we want to trigger UnknownHostException to initiate retry
-        pnConfiguration.setRetryConfiguration(new RetryConfiguration.Linear(1,2 ));
-        pnConfiguration.setHeartbeatInterval(1);
-        pubNub = getPubNub(pnConfiguration);
+
+        pubNub = getPubNub(builder -> {
+            builder.setOrigin("ps.pndsn_notExisting_URI.com"); // we want to trigger UnknownHostException to initiate retry
+            builder.setRetryConfiguration(new RetryConfiguration.Linear(1,2 ));
+            builder.setHeartbeatInterval(1);
+        });
 
         pubNub.addListener(new StatusListener() {
             @Override

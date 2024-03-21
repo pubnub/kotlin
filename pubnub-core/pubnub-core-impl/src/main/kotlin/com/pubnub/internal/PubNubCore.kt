@@ -9,6 +9,7 @@ import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.objects.PNPage
+import com.pubnub.api.v2.BasePNConfiguration
 import com.pubnub.api.v2.callbacks.BaseEventListener
 import com.pubnub.api.v2.subscriptions.BaseSubscription
 import com.pubnub.api.v2.subscriptions.EmptyOptions
@@ -108,12 +109,12 @@ import java.util.concurrent.ScheduledExecutorService
 import kotlin.time.Duration.Companion.seconds
 
 class PubNubCore internal constructor(
-    val configuration: PNConfigurationCore,
+    val configuration: BasePNConfiguration,
     val listenerManager: ListenerManager,
     eventEnginesConf: EventEnginesConf = EventEnginesConf(),
 ) {
     constructor(
-        configuration: PNConfigurationCore,
+        configuration: BasePNConfiguration,
         listenerManager: ListenerManager,
     ) : this(
         configuration,
@@ -187,7 +188,7 @@ class PubNubCore internal constructor(
     /**
      * Unique id of this PubNub instance.
      *
-     * @see [PNConfigurationCore.includeInstanceIdentifier]
+     * @see [BasePNConfiguration.includeInstanceIdentifier]
      */
     val instanceId = UUID.randomUUID().toString()
 
@@ -204,12 +205,12 @@ class PubNubCore internal constructor(
     /**
      * Send a message to all subscribers of a channel.
      *
-     * To publish a message you must first specify a valid [PNConfigurationCore.publishKey].
+     * To publish a message you must first specify a valid [BasePNConfiguration.publishKey].
      * A successfully published message is replicated across the PubNub Real-Time Network and sent
      * simultaneously to all subscribed clients on a channel.
      *
      * Messages in transit can be secured from potential eavesdroppers with SSL/TLS by setting
-     * [PNConfigurationCore.secure] to `true` during initialization.
+     * [BasePNConfiguration.secure] to `true` during initialization.
      *
      * **Publish Anytime**
      *
@@ -722,7 +723,7 @@ class PubNubCore internal constructor(
      * Obtain information about the current list of channels to which a UUID is subscribed to.
      *
      * @param uuid UUID of the user to get its current channel subscriptions. Defaults to the UUID of the client.
-     * @see [PNConfigurationCore.uuid]
+     * @see [BasePNConfiguration.uuid]
      */
     fun whereNow(uuid: String = configuration.userId.value) = WhereNowEndpoint(pubnub = this, uuid = uuid)
 
@@ -731,7 +732,7 @@ class PubNubCore internal constructor(
      *
      * State information is supplied as a JSON object of key/value pairs.
      *
-     * If [PNConfigurationCore.maintainPresenceState] is `true`, and the `uuid` matches [PNConfigurationCore.uuid], the state
+     * If [BasePNConfiguration.maintainPresenceState] is `true`, and the `uuid` matches [BasePNConfiguration.uuid], the state
      * for channels will be saved in the PubNub client and resent with every heartbeat and initial subscribe request.
      * In that case, it's not recommended to mix setting state through channels *and* channel groups, as state set
      * through the channel group will be overwritten after the next heartbeat or subscribe reconnection (e.g. after loss
@@ -1851,7 +1852,7 @@ class PubNubCore internal constructor(
             if (cipherKey != null) {
                 CryptoModule.createLegacyCryptoModule(cipherKey)
             } else {
-                cryptoModule
+                configuration.cryptoModule
             }
 
         return SendFileEndpoint(
@@ -1932,7 +1933,7 @@ class PubNubCore internal constructor(
             if (cipherKey != null) {
                 CryptoModule.createLegacyCryptoModule(cipherKey)
             } else {
-                cryptoModule
+                configuration.cryptoModule
             }
 
         return DownloadFileEndpoint(
@@ -2013,7 +2014,7 @@ class PubNubCore internal constructor(
     //region Encryption
 
     /**
-     * Perform Cryptographic decryption of an input string using cipher key provided by [PNConfigurationCore.cipherKey].
+     * Perform Cryptographic decryption of an input string using cipher key provided by [BasePNConfiguration.cipherKey].
      *
      * @param inputString String to be decrypted.
      *
@@ -2027,7 +2028,7 @@ class PubNubCore internal constructor(
      * Perform Cryptographic decryption of an input string using a cipher key.
      *
      * @param inputString String to be decrypted.
-     * @param cipherKey cipher key to be used for decryption. Default is [PNConfigurationCore.cipherKey]
+     * @param cipherKey cipher key to be used for decryption. Default is [BasePNConfiguration.cipherKey]
      *
      * @return String containing the decryption of `inputString` using `cipherKey`.
      * @throws PubNubException throws exception in case of failed decryption.
@@ -2035,8 +2036,8 @@ class PubNubCore internal constructor(
     @Throws(PubNubException::class)
     fun decrypt(
         inputString: String,
-        cipherKey: String? = null,
-    ): String = getCryptoModuleOrThrow(cipherKey).decryptString(inputString)
+        cryptoModule: CryptoModule? = null,
+    ): String = getCryptoModuleOrThrow(cryptoModule).decryptString(inputString)
 
     /**
      * Perform Cryptographic decryption of an input stream using provided cipher key.
@@ -2050,14 +2051,14 @@ class PubNubCore internal constructor(
     @Throws(PubNubException::class)
     fun decryptInputStream(
         inputStream: InputStream,
-        cipherKey: String? = null,
-    ): InputStream = getCryptoModuleOrThrow(cipherKey).decryptStream(inputStream)
+        cryptoModule: CryptoModule? = null,
+    ): InputStream = getCryptoModuleOrThrow(cryptoModule).decryptStream(inputStream)
 
     /**
      * Perform Cryptographic encryption of an input string and a cipher key.
      *
      * @param inputString String to be encrypted.
-     * @param cipherKey Cipher key to be used for encryption. Default is [PNConfigurationCore.cipherKey]
+     * @param cipherKey Cipher key to be used for encryption. Default is [BasePNConfiguration.cipherKey]
      *
      * @return String containing the encryption of `inputString` using `cipherKey`.
      * @throws PubNubException Throws exception in case of failed encryption.
@@ -2065,8 +2066,8 @@ class PubNubCore internal constructor(
     @Throws(PubNubException::class)
     fun encrypt(
         inputString: String,
-        cipherKey: String? = null,
-    ): String = getCryptoModuleOrThrow(cipherKey).encryptString(inputString)
+        cryptoModule: CryptoModule? = null,
+    ): String = getCryptoModuleOrThrow(cryptoModule).encryptString(inputString)
 
     /**
      * Perform Cryptographic encryption of an input stream using provided cipher key.
@@ -2080,14 +2081,12 @@ class PubNubCore internal constructor(
     @Throws(PubNubException::class)
     fun encryptInputStream(
         inputStream: InputStream,
-        cipherKey: String? = null,
-    ): InputStream = getCryptoModuleOrThrow(cipherKey).encryptStream(inputStream)
+        cryptoModule: CryptoModule? = null,
+    ): InputStream = getCryptoModuleOrThrow(cryptoModule).encryptStream(inputStream)
 
     @Throws(PubNubException::class)
-    private fun getCryptoModuleOrThrow(cipherKey: String? = null): CryptoModule {
-        return cipherKey?.let {
-            CryptoModule.createLegacyCryptoModule(it, configuration.useRandomInitializationVector)
-        } ?: cryptoModule ?: throw PubNubException("Crypto module is not initialized")
+    private fun getCryptoModuleOrThrow(cryptoModule: CryptoModule? = null): CryptoModule {
+        return cryptoModule ?: configuration.cryptoModule ?: throw PubNubException("Crypto module is not initialized")
     }
     //endregion
 
@@ -2095,7 +2094,7 @@ class PubNubCore internal constructor(
      * Force the SDK to try and reach out PubNub. Monitor the results in [SubscribeCallback.status]
      *
      * @param timetoken optional timetoken to use for the subscriptions on reconnection.
-     * Only applicable when [PNConfigurationCore.enableEventEngine] is true, otherwise ignored
+     * Only applicable when [BasePNConfiguration.enableEventEngine] is true, otherwise ignored
      */
     fun reconnect(timetoken: Long = 0L) {
         subscribe.reconnect(timetoken)
@@ -2240,14 +2239,14 @@ class PubNubCore internal constructor(
      * Causes the client to create an open TCP socket to the PubNub Real-Time Network and begin listening for messages
      * on a specified channel.
      *
-     * To subscribe to a channel the client must send the appropriate [PNConfigurationCore.subscribeKey] at initialization.
+     * To subscribe to a channel the client must send the appropriate [BasePNConfiguration.subscribeKey] at initialization.
      *
      * By default, a newly subscribed client will only receive messages published to the channel
      * after the `subscribe()` call completes.
      *
      * If a client gets disconnected from a channel, it can automatically attempt to reconnect to that channel
      * and retrieve any available messages that were missed during that period.
-     * This can be achieved by setting [PNConfigurationCore.retryConfiguration] when
+     * This can be achieved by setting [BasePNConfiguration.retryConfiguration] when
      * initializing the client.
      *
      * @param channels Channels to subscribe/unsubscribe. Either `channel` or [channelGroups] are required.

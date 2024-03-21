@@ -7,6 +7,7 @@ import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
+import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.history.HistoryMessageType
@@ -182,7 +183,7 @@ class FetchMessagesCoreEndpointTest : BaseTest() {
             ),
         )
 
-        pubnub.configuration.authKey = "authKey"
+        config.authKey = "authKey"
 
         val response =
             pubnub.fetchMessages(
@@ -205,8 +206,7 @@ class FetchMessagesCoreEndpointTest : BaseTest() {
 
     @Test
     fun testSyncEncryptedSuccess() {
-        pubnub.configuration.cipherKey = "testCipher"
-        pubnub.configuration.useRandomInitializationVector = false
+        config.cryptoModule = CryptoModule.createLegacyCryptoModule("testCipher", false)
 
         stubFor(
             get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/channel/mychannel,my_channel")).willReturn(

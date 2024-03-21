@@ -13,16 +13,16 @@ class BasePathManagerTest : BaseTest() {
     @Test
     fun stdOriginNotSecure() {
         config.secure = false
-        initPubNub()
-        val basePathManager = BasePathManager(config)
+        // initPubNub()
+        val basePathManager = BasePathManager(config.build())
         assertEquals("http://ps.pndsn.com", basePathManager.basePath())
     }
 
     @Test
     fun stdOriginSecure() {
         config.secure = true
-        initPubNub()
-        val basePathManager = BasePathManager(config)
+        // initPubNub()
+        val basePathManager = BasePathManager(config.build())
         assertEquals("https://ps.pndsn.com", basePathManager.basePath())
     }
 
@@ -30,8 +30,8 @@ class BasePathManagerTest : BaseTest() {
     fun customOriginNotSecure() {
         config.origin = "custom.origin.com"
         config.secure = false
-        initPubNub()
-        val basePathManager = BasePathManager(config)
+        // initPubNub()
+        val basePathManager = BasePathManager(config.build())
         assertEquals("http://custom.origin.com", basePathManager.basePath())
     }
 
@@ -39,8 +39,8 @@ class BasePathManagerTest : BaseTest() {
     fun customOriginSecure() {
         config.origin = "custom.origin.com"
         config.secure = true
-        initPubNub()
-        val basePathManager = BasePathManager(config)
+        // initPubNub()
+        val basePathManager = BasePathManager(config.build())
         assertEquals("https://custom.origin.com", basePathManager.basePath())
     }
 
@@ -49,8 +49,8 @@ class BasePathManagerTest : BaseTest() {
         config.origin = "custom.origin.com"
         config.cacheBusting = true
         config.secure = false
-        initPubNub()
-        val basePathManager = BasePathManager(config)
+        // initPubNub()
+        val basePathManager = BasePathManager(config.build())
         assertEquals("http://custom.origin.com", basePathManager.basePath())
     }
 
@@ -59,8 +59,8 @@ class BasePathManagerTest : BaseTest() {
         config.origin = "custom.origin.com"
         config.secure = true
         config.cacheBusting = true
-        initPubNub()
-        val basePathManager = BasePathManager(config)
+        // initPubNub()
+        val basePathManager = BasePathManager(config.build())
         assertEquals("https://custom.origin.com", basePathManager.basePath())
     }
 
@@ -68,8 +68,8 @@ class BasePathManagerTest : BaseTest() {
     fun cacheBustingNotSecure() {
         config.cacheBusting = true
         config.secure = false
-        initPubNub()
-        val basePathManager = BasePathManager(config)
+        // initPubNub()
+        val basePathManager = BasePathManager(config.build())
         assertEquals("http://ps1.pndsn.com", basePathManager.basePath())
         assertEquals("http://ps2.pndsn.com", basePathManager.basePath())
         assertEquals("http://ps3.pndsn.com", basePathManager.basePath())
@@ -96,8 +96,8 @@ class BasePathManagerTest : BaseTest() {
     @Test
     fun cacheBustingSecure() {
         config.cacheBusting = true
-        initPubNub()
-        val basePathManager = BasePathManager(config)
+        // initPubNub()
+        val basePathManager = BasePathManager(config.build())
         assertEquals("https://ps1.pndsn.com", basePathManager.basePath())
         assertEquals("https://ps2.pndsn.com", basePathManager.basePath())
         assertEquals("https://ps3.pndsn.com", basePathManager.basePath())

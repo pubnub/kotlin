@@ -71,8 +71,10 @@ abstract class AccessManagerIntegrationTest extends BaseIntegrationTest {
 
     @Override
     protected void onBefore() {
-        pubNub.getConfiguration().setIncludeInstanceIdentifier(false);
-        pubNub.getConfiguration().setIncludeRequestIdentifier(false);
+        pubNub = getPubNub(builder -> {
+            builder.setIncludeInstanceIdentifier(false);
+            builder.setIncludeRequestIdentifier(false);
+        });
         if (performOnServer()) {
             pubNub = server;
         }
@@ -177,6 +179,9 @@ abstract class AccessManagerIntegrationTest extends BaseIntegrationTest {
                 .message(generateMap())
                 .usePOST(true)
                 .async((result) -> {
+                    result.onFailure(exception -> {
+                        exception.printStackTrace();
+                    });
                     try {
                         assertFalse(result.isFailure());
 //                        assertAuthKey(status);

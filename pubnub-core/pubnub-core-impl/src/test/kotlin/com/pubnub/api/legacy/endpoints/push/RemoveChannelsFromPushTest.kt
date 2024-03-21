@@ -109,7 +109,7 @@ class RemoveChannelsFromPushTest : BaseTest() {
                 .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]")),
         )
 
-        pubnub.configuration.authKey = "myKey"
+        config.authKey = "myKey"
 
         pubnub.removePushNotificationsFromChannels(
             deviceId = "niceDevice",
@@ -148,7 +148,7 @@ class RemoveChannelsFromPushTest : BaseTest() {
 
     @Test
     fun testEmptySubscribeKeyRemove() {
-        pubnub.configuration.subscribeKey = " "
+        config.subscribeKey = " "
 
         try {
             pubnub.removePushNotificationsFromChannels(

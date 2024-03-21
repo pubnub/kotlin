@@ -113,7 +113,7 @@ class ListAllBaseChannelGroupCoreEndpointTest : BaseTest() {
                 ),
         )
 
-        pubnub.configuration.authKey = "myKey"
+        config.authKey = "myKey"
 
         pubnub.listAllChannelGroups().sync()
 

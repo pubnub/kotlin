@@ -13,6 +13,7 @@ import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.test.CommonUtils.assertPnException
 import com.pubnub.test.CommonUtils.failTest
@@ -216,7 +217,7 @@ class PublishTest : BaseTest() {
             get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
                 .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]""")),
         )
-        pubnub.configuration.authKey = "authKey"
+        config.authKey = "authKey"
 
         pubnub.publish(
             channel = "coolChannel",
@@ -278,8 +279,7 @@ class PublishTest : BaseTest() {
             )
                 .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]""")),
         )
-        pubnub.configuration.cipherKey = "testCipher"
-        pubnub.configuration.useRandomInitializationVector = false
+        config.cryptoModule = CryptoModule.createLegacyCryptoModule("testCipher", false)
 
         pubnub.publish(
             channel = "coolChannel",
@@ -297,8 +297,7 @@ class PublishTest : BaseTest() {
             post(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0"))
                 .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]""")),
         )
-        pubnub.configuration.cipherKey = "testCipher"
-        pubnub.configuration.useRandomInitializationVector = false
+        config.cryptoModule = CryptoModule.createLegacyCryptoModule("testCipher", false)
 
         pubnub.publish(
             channel = "coolChannel",
@@ -474,7 +473,7 @@ class PublishTest : BaseTest() {
                 .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]""")),
         )
 
-        pubnub.configuration.subscribeKey = ""
+        config.subscribeKey = ""
 
         try {
             pubnub.publish(
@@ -493,7 +492,7 @@ class PublishTest : BaseTest() {
             get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hirep%22"))
                 .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]""")),
         )
-        pubnub.configuration.publishKey = ""
+        config.publishKey = ""
 
         try {
             pubnub.publish(

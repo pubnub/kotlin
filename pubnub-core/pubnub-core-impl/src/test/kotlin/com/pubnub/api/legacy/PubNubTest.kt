@@ -1,7 +1,7 @@
 package com.pubnub.api.legacy
 
-import com.pubnub.api.PubNubException
-import com.pubnub.api.enums.PNReconnectionPolicy
+import com.pubnub.api.crypto.CryptoModule
+import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.internal.PubNubCore
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -10,9 +10,7 @@ import org.junit.Test
 class PubNubTest : BaseTest() {
     override fun onBefore() {
         clearConfiguration()
-        initPubNub()
-        config.subscribeKey = "demo"
-        config.publishKey = "demo"
+        // initPubNub()
     }
 
     @Test
@@ -22,34 +20,30 @@ class PubNubTest : BaseTest() {
     }
 
     @Test
-    @Throws(PubNubException::class)
     fun testEncryptCustomKey() {
-        config.useRandomInitializationVector = false
-        assertEquals("iALQtn3PfIXe74CT/wrS7g==", pubnub.encrypt("test1", "cipherKey").trim())
+        assertEquals(
+            "iALQtn3PfIXe74CT/wrS7g==",
+            pubnub.encrypt("test1", CryptoModule.createLegacyCryptoModule("cipherKey", false)).trim(),
+        )
     }
 
     @Test
-    @Throws(PubNubException::class)
     fun testEncryptConfigurationKey() {
-        config.cipherKey = "cipherKey"
-        config.useRandomInitializationVector = false
-        initPubNub()
+        config.cryptoModule = CryptoModule.createLegacyCryptoModule("cipherKey", false)
+        // initPubNub()
         assertEquals("iALQtn3PfIXe74CT/wrS7g==", pubnub.encrypt("test1").trim())
     }
 
     @Test
-    @Throws(PubNubException::class)
     fun testDecryptCustomKey() {
-        config.useRandomInitializationVector = false
-        assertEquals("test1", pubnub.decrypt("iALQtn3PfIXe74CT/wrS7g==", "cipherKey").trim())
+        val cryptoModule = CryptoModule.createLegacyCryptoModule("cipherKey", false)
+        assertEquals("test1", pubnub.decrypt("iALQtn3PfIXe74CT/wrS7g==", cryptoModule).trim())
     }
 
     @Test
-    @Throws(PubNubException::class)
     fun testDecryptConfigurationKey() {
-        config.cipherKey = "cipherKey"
-        config.useRandomInitializationVector = false
-        initPubNub()
+        config.cryptoModule = CryptoModule.createLegacyCryptoModule("cipherKey", false)
+        // initPubNub()
         assertEquals("test1", pubnub.decrypt("iALQtn3PfIXe74CT/wrS7g==").trim())
     }
 
@@ -58,8 +52,8 @@ class PubNubTest : BaseTest() {
         config.subscribeTimeout = 3000
         config.connectTimeout = 4000
         config.nonSubscribeRequestTimeout = 5000
-        config.reconnectionPolicy = PNReconnectionPolicy.NONE
-        initPubNub()
+        config.retryConfiguration = RetryConfiguration.None
+        // initPubNub()
 
         assertEquals("https://ps.pndsn.com", pubnub.baseUrl())
         assertEquals(3000, config.subscribeTimeout)

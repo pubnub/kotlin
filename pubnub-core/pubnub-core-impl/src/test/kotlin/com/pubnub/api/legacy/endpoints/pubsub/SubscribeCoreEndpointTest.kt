@@ -133,7 +133,7 @@ class SubscribeCoreEndpointTest : BaseTest() {
 
     @Test
     fun subscribeChannelsAuthSync() {
-        pubnub.configuration.authKey = "authKey"
+        config.authKey = "authKey"
 
         stubFor(
             get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/coolChannel,coolChannel2/0"))
@@ -465,7 +465,7 @@ class SubscribeCoreEndpointTest : BaseTest() {
 
     @Test
     fun testMissingSubKeySync() {
-        pubnub.configuration.subscribeKey = " "
+        config.subscribeKey = " "
 
         try {
             SubscribeEndpoint(pubnub).apply {
@@ -528,7 +528,7 @@ class SubscribeCoreEndpointTest : BaseTest() {
 
     @Test
     fun testSuccessIncludeState() {
-        pubnub.configuration.presenceTimeout = 123
+        config.presenceTimeout = 123
 
         stubFor(
             get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch1,ch2/0"))

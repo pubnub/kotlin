@@ -55,7 +55,7 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
 
         val clients =
             mutableListOf(pubnub).apply {
-                addAll(generateSequence { createPubNub() }.take(expectedClientsCount - 1).toList())
+                addAll(generateSequence { createPubNub {} }.take(expectedClientsCount - 1).toList())
             }
 
         clients.forEach {
@@ -97,7 +97,7 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
 
         val clients =
             mutableListOf(pubnub).apply {
-                addAll(generateSequence { createPubNub() }.take(expectedClientsCount - 1).toList())
+                addAll(generateSequence { createPubNub {} }.take(expectedClientsCount - 1).toList())
             }
 
         clients.forEach {
@@ -171,12 +171,13 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
     fun testHeartbeatsDisabled2() {
         val expectedChannel = randomChannel()
 
-        pubnub.configuration.heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
+        clientConfig = {
+            heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
+            presenceTimeout = 20
+            heartbeatInterval = 0
+        }
+
         assertEquals(PNHeartbeatNotificationOptions.ALL, pubnub.configuration.heartbeatNotificationOptions)
-
-        pubnub.configuration.presenceTimeout = 20
-        pubnub.configuration.heartbeatInterval = 0
-
         assertEquals(20, pubnub.configuration.presenceTimeout)
         assertEquals(0, pubnub.configuration.heartbeatInterval)
 
@@ -193,12 +194,10 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
         val expectedChannel: String = randomValue()
 
         val pubnub =
-            createPubNub(
-                getBasicPnConfiguration().apply {
-                    heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
-                    presenceTimeout = 20
-                },
-            )
+            createPubNub {
+                heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
+                presenceTimeout = 20
+            }
         assertEquals(PNHeartbeatNotificationOptions.ALL, pubnub.configuration.heartbeatNotificationOptions)
         assertEquals(20, pubnub.configuration.presenceTimeout)
         assertEquals(9, pubnub.configuration.heartbeatInterval)
@@ -217,12 +216,10 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
         val expectedChannel: String = randomValue()
 
         val pubnub =
-            createPubNub(
-                getBasicPnConfiguration().apply {
-                    heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
-                    presenceTimeout = 20
-                },
-            )
+            createPubNub {
+                heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
+                presenceTimeout = 20
+            }
         assertEquals(PNHeartbeatNotificationOptions.ALL, pubnub.configuration.heartbeatNotificationOptions)
         assertEquals(20, pubnub.configuration.presenceTimeout)
         assertEquals(9, pubnub.configuration.heartbeatInterval)
@@ -260,19 +257,17 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
     fun `when hearbeatInterval greater than 0 and eventEngine enabled then REST call contains "ee" query parameter`() {
         // given
         val success = AtomicBoolean()
-        val config = getBasicPnConfiguration()
-        config.heartbeatInterval = 1
         var interceptedUrl: HttpUrl? = null
-        config.httpLoggingInterceptor =
-            HttpLoggingInterceptor {
-                if (it.startsWith("--> GET https://")) {
-                    interceptedUrl = it.substringAfter("--> GET ").toHttpUrlOrNull()
-                    success.set(true)
-                }
-            }.apply { level = HttpLoggingInterceptor.Level.BASIC }
-
-        val pubnub = PubNub.create(config)
-
+        clientConfig = {
+            heartbeatInterval = 1
+            httpLoggingInterceptor =
+                HttpLoggingInterceptor {
+                    if (it.startsWith("--> GET https://")) {
+                        interceptedUrl = it.substringAfter("--> GET ").toHttpUrlOrNull()
+                        success.set(true)
+                    }
+                }.apply { level = HttpLoggingInterceptor.Level.BASIC }
+        }
         // when
         try {
             pubnub.presence(

@@ -2,7 +2,6 @@ package com.pubnub.api.endpoints.access
 
 import com.pubnub.api.UserId
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult
-import com.pubnub.internal.PNConfigurationCore
 import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.SpaceId
 import com.pubnub.internal.TestPubNub
@@ -13,6 +12,7 @@ import com.pubnub.internal.models.server.access_manager.v3.GrantTokenData
 import com.pubnub.internal.models.server.access_manager.v3.GrantTokenRequestBody
 import com.pubnub.internal.models.server.access_manager.v3.GrantTokenResponse
 import com.pubnub.internal.services.AccessManagerService
+import com.pubnub.internal.v2.BasePNConfigurationImpl
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
@@ -32,10 +32,11 @@ internal class GrantTokenTest {
     internal fun setUp() {
         MockKAnnotations.init(this)
         val pnConfiguration =
-            PNConfigurationCore(userId = UserId("myUserId")).apply {
-                subscribeKey = "something"
-                secretKey = "something"
-            }
+            BasePNConfigurationImpl(
+                userId = UserId("myUserId"),
+                subscribeKey = "something",
+                secretKey = "something",
+            )
         pubnub = spyk(TestPubNub(configuration = pnConfiguration).pubNubCore)
     }
 

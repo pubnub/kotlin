@@ -45,7 +45,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
     lateinit var guestClient: PubNub
 
     override fun onBefore() {
-        guestClient = createPubNub()
+        guestClient = createPubNub {}
     }
 
     @Test
@@ -122,7 +122,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         val expectedChannel = randomChannel()
         val messagePayload = generateMessage(pubnub)
 
-        val observer = createPubNub()
+        val observer = createPubNub {}
         pubnub.test {
             subscribe(expectedChannel)
             observer.publish(
@@ -142,7 +142,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         val expectedChannel = randomChannel()
         val messagePayload = generateMessage(pubnub)
 
-        val observer = createPubNub()
+        val observer = createPubNub {}
 
         pubnub.addListener(
             object : SubscribeCallback() {
@@ -195,11 +195,9 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         val sender = pubnub
 
         val observer =
-            createPubNub(
-                getBasicPnConfiguration().apply {
-                    cryptoModule = CryptoModule.createAesCbcCryptoModule("test", false)
-                },
-            )
+            createPubNub {
+                cryptoModule = CryptoModule.createAesCbcCryptoModule("test", false)
+            }
 
         observer.addListener(
             object : SubscribeCallback() {

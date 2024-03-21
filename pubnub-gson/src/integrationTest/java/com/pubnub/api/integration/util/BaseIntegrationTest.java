@@ -1,7 +1,6 @@
 package com.pubnub.api.integration.util;
 
 import com.google.gson.JsonObject;
-import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
@@ -18,12 +17,14 @@ import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult;
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
+import com.pubnub.api.v2.PNConfiguration;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.aeonbits.owner.ConfigFactory;
 import org.awaitility.Awaitility;
 import org.awaitility.Durations;
 import org.awaitility.pollinterval.FibonacciPollInterval;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.After;
@@ -42,6 +43,7 @@ import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 import static org.junit.Assert.assertEquals;
 
@@ -95,27 +97,35 @@ public abstract class BaseIntegrationTest {
         // properties.clear();
     }
 
-    public PubNub getPubNub() {
-        PNConfiguration pnConfiguration = provideStagingConfiguration();
+    public PubNub getPubNub(@Nullable Consumer<PNConfiguration.Builder> action) {
+        PNConfiguration pnConfiguration = provideStagingConfiguration(action);
         if (pnConfiguration == null) {
-            pnConfiguration = getBasicPnConfiguration();
+            pnConfiguration = getBasicPnConfiguration(action);
         }
         final PubNub pubNub = PubNub.create(pnConfiguration);
         registerGuestClient(pubNub);
         return pubNub;
     }
 
-    protected PubNub getServer() {
-        final PubNub pubNub = PubNub.create(getServerPnConfiguration());
+    public PubNub getPubNub() {
+        return getPubNub(null);
+    }
+
+    protected PubNub getServer(@Nullable Consumer<PNConfiguration.Builder> action) {
+        final PubNub pubNub = PubNub.create(getServerPnConfiguration(action));
         registerGuestClient(pubNub);
         return pubNub;
     }
 
-    public PubNub getPubNub(PNConfiguration pnConfiguration) {
-        final PubNub pubNub = PubNub.create(pnConfiguration);
-        registerGuestClient(pubNub);
-        return pubNub;
+    public PubNub getServer() {
+        return getServer(null);
     }
+
+//    public PubNub getPubNub(PNConfiguration pnConfiguration) {
+//        final PubNub pubNub = PubNub.create(pnConfiguration);
+//        registerGuestClient(pubNub);
+//        return pubNub;
+//    }
 
     protected void registerGuestClient(PubNub guestClient) {
         if (mGuestClients == null) {
@@ -129,41 +139,43 @@ public abstract class BaseIntegrationTest {
         client.forceDestroy();
     }
 
-    protected PNConfiguration getBasicPnConfiguration() {
-        final PNConfiguration pnConfiguration;
+    private PNConfiguration getBasicPnConfiguration(@Nullable Consumer<PNConfiguration.Builder> action) {
+        final com.pubnub.api.v2.PNConfiguration.Builder pnConfiguration;
         try {
-            pnConfiguration = new PNConfiguration(new UserId("pn-" + UUID.randomUUID()));
-            pnConfiguration.setUserId(new UserId("client-".concat(UUID.randomUUID().toString())));
-        } catch (PubNubException e) {
-            throw new RuntimeException(e);
-        }
         if (!needsServer()) {
-            pnConfiguration.setSubscribeKey(SUB_KEY);
+            pnConfiguration = com.pubnub.api.v2.PNConfiguration.builder(new UserId("client-".concat(UUID.randomUUID().toString())), SUB_KEY);
             pnConfiguration.setPublishKey(PUB_KEY);
         } else {
-            pnConfiguration.setSubscribeKey(PAM_SUB_KEY);
+            pnConfiguration = com.pubnub.api.v2.PNConfiguration.builder(new UserId("client-".concat(UUID.randomUUID().toString())), PAM_SUB_KEY);
             pnConfiguration.setPublishKey(PAM_PUB_KEY);
             pnConfiguration.setAuthKey(provideAuthKey());
         }
-        pnConfiguration.setLogVerbosity(PNLogVerbosity.NONE);
-        pnConfiguration.setHttpLoggingInterceptor(createInterceptor());
-        return pnConfiguration;
-    }
-
-    private PNConfiguration getServerPnConfiguration() {
-        final PNConfiguration pnConfiguration;
-        try {
-            pnConfiguration = new PNConfiguration(new UserId("pn-" + UUID.randomUUID()));
-            pnConfiguration.setUserId(new UserId("server-".concat(UUID.randomUUID().toString())));
         } catch (PubNubException e) {
             throw new RuntimeException(e);
         }
-        pnConfiguration.setSubscribeKey(PAM_SUB_KEY);
+        pnConfiguration.setLogVerbosity(PNLogVerbosity.NONE);
+        pnConfiguration.setHttpLoggingInterceptor(createInterceptor());
+        if (action != null) {
+            action.accept(pnConfiguration);
+        }
+        return pnConfiguration.build();
+    }
+
+    private PNConfiguration getServerPnConfiguration(@Nullable Consumer<PNConfiguration.Builder> action) {
+        final PNConfiguration.Builder pnConfiguration;
+        try {
+            pnConfiguration = PNConfiguration.builder(new UserId("server-".concat(UUID.randomUUID().toString())), PAM_SUB_KEY);
+        } catch (PubNubException e) {
+            throw new RuntimeException(e);
+        }
         pnConfiguration.setPublishKey(PAM_PUB_KEY);
         pnConfiguration.setSecretKey(PAM_SEC_KEY);
         pnConfiguration.setLogVerbosity(PNLogVerbosity.NONE);
         pnConfiguration.setHttpLoggingInterceptor(createInterceptor());
-        return pnConfiguration;
+        if (action != null) {
+            action.accept(pnConfiguration);
+        }
+        return pnConfiguration.build();
     }
 
     private HttpLoggingInterceptor createInterceptor() {
@@ -381,7 +393,7 @@ public abstract class BaseIntegrationTest {
         return null;
     }
 
-    protected PNConfiguration provideStagingConfiguration() {
+    protected PNConfiguration provideStagingConfiguration(@Nullable Consumer<PNConfiguration.Builder> action) {
         return null;
     }
 

@@ -3,8 +3,8 @@ package com.pubnub.internal.v2.entities
 import com.pubnub.api.UserId
 import com.pubnub.api.v2.callbacks.BaseEventListener
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
-import com.pubnub.internal.PNConfigurationCore
 import com.pubnub.internal.TestPubNub
+import com.pubnub.internal.v2.BasePNConfigurationImpl
 import com.pubnub.internal.v2.subscription.BaseSubscriptionImpl
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
@@ -18,7 +18,7 @@ class BaseChannelGroupImplTest {
 
     @BeforeEach
     fun setUp() {
-        pn = TestPubNub(PNConfigurationCore(UserId("uuid")))
+        pn = TestPubNub(BasePNConfigurationImpl(UserId("uuid")))
         channelGrp =
             BaseChannelGroupImpl(pn.pubNubCore, ChannelGroupName(channelGroupname)) { channels, channelGroups, options ->
                 object : BaseSubscriptionImpl<BaseEventListener>(pn.pubNubCore, channels, channelGroups, options) {

@@ -43,7 +43,7 @@ class SignalIntegrationTests : BaseIntegrationTest() {
 
     @Test
     fun testReceiveSignalMessage() {
-        val observerClient = createPubNub()
+        val observerClient = createPubNub {}
         pubnub.test {
             subscribe(expectedChannel)
             observerClient.signal(
@@ -60,7 +60,7 @@ class SignalIntegrationTests : BaseIntegrationTest() {
     @Test
     fun testPublishSignalMessageSyncWithoutSubKey() {
         try {
-            pubnub.configuration.subscribeKey = ""
+            clientConfig = { subscribeKey = "" }
             pubnub.signal(
                 channel = randomChannel(),
                 message = randomValue(),

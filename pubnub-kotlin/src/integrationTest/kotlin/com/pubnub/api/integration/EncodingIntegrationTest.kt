@@ -25,8 +25,8 @@ class EncodingIntegrationTest(
     fun testVerifySignature() {
         val success = AtomicBoolean()
 
-        server.configuration.includeRequestIdentifier = false
-        server.configuration.includeInstanceIdentifier = false
+        serverConfig.includeRequestIdentifier = false
+        serverConfig.includeInstanceIdentifier = false
 
         val expectedChannel = randomChannel()
         val expectedMessage = "msg${regular}msg"
