@@ -207,7 +207,7 @@ class PNConfigurationCore(
     var subscribeTimeout = SUBSCRIBE_TIMEOUT
 
     /**
-     * How long before the client gives up trying to connect with a subscribe call.
+     * How long before the client gives up trying to connect with the server.
      *
      * The value is in seconds.
      *
@@ -217,7 +217,9 @@ class PNConfigurationCore(
 
     /**
      * For non subscribe operations (publish, herenow, etc),
-     * how long to wait to connect to PubNub before giving up with a connection timeout error.
+     * This property relates to a read timeout that is applied from the moment the connection between a client
+     * and the server has been successfully established. It defines a maximum time of inactivity between two
+     * data packets when waiting for the server’s response.
      *
      * The value is in seconds.
      *
