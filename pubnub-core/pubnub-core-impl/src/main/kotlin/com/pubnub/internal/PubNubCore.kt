@@ -159,12 +159,10 @@ class PubNubCore internal constructor(
         Subscribe.create(
             this,
             listenerManager,
-            configuration.retryConfiguration,
             eventEnginesConf,
             SubscribeMessageProcessor(this, DuplicationManager(configuration)),
             presenceData,
             configuration.maintainPresenceState,
-            executorService,
         )
 
     private val presence =
@@ -172,7 +170,6 @@ class PubNubCore internal constructor(
             heartbeatProvider = HeartbeatProviderImpl(this),
             leaveProvider = LeaveProviderImpl(this),
             heartbeatInterval = configuration.heartbeatInterval.seconds,
-            retryConfiguration = configuration.retryConfiguration,
             suppressLeaveEvents = configuration.suppressLeaveEvents,
             heartbeatNotificationOptions = configuration.heartbeatNotificationOptions,
             listenerManager = listenerManager,

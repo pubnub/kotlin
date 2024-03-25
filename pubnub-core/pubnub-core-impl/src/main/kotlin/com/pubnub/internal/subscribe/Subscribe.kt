@@ -2,7 +2,6 @@ package com.pubnub.internal.subscribe
 
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
-import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.eventengine.EffectDispatcher
 import com.pubnub.internal.managers.ListenerManager
@@ -19,7 +18,6 @@ import com.pubnub.internal.subscribe.eventengine.event.SubscribeEvent.Subscripti
 import com.pubnub.internal.subscribe.eventengine.event.SubscribeEvent.SubscriptionRestored
 import com.pubnub.internal.subscribe.eventengine.event.SubscriptionCursor
 import com.pubnub.internal.workers.SubscribeMessageProcessor
-import java.util.concurrent.ScheduledExecutorService
 
 internal const val PRESENCE_CHANNEL_SUFFIX = "-pnpres"
 
@@ -32,23 +30,19 @@ internal class Subscribe(
         internal fun create(
             pubNub: PubNubCore,
             listenerManager: ListenerManager,
-            retryConfiguration: RetryConfiguration,
             eventEnginesConf: EventEnginesConf,
             messageProcessor: SubscribeMessageProcessor,
             presenceData: PresenceData,
             sendStateWithSubscribe: Boolean,
-            executorService: ScheduledExecutorService,
         ): Subscribe {
             val subscribeEventEngineManager =
                 createAndStartSubscribeEventEngineManager(
                     pubNub,
                     messageProcessor,
                     eventEnginesConf,
-                    retryConfiguration,
                     listenerManager,
                     presenceData,
                     sendStateWithSubscribe,
-                    executorService,
                 )
 
             return Subscribe(subscribeEventEngineManager, presenceData)
@@ -58,19 +52,15 @@ internal class Subscribe(
             pubNub: PubNubCore,
             messageProcessor: SubscribeMessageProcessor,
             eventEnginesConf: EventEnginesConf,
-            retryConfiguration: RetryConfiguration,
             listenerManager: ListenerManager,
             presenceData: PresenceData,
             sendStateWithSubscribe: Boolean,
-            executorService: ScheduledExecutorService,
         ): SubscribeEventEngineManager {
             val subscribeEffectFactory =
                 SubscribeEffectFactory(
                     handshakeProvider = HandshakeProviderImpl(pubNub),
                     receiveMessagesProvider = ReceiveMessagesProviderImpl(pubNub, messageProcessor),
                     subscribeEventSink = eventEnginesConf.subscribe.eventSink,
-                    retryConfiguration = retryConfiguration,
-                    executorService = executorService,
                     messagesConsumer = listenerManager,
                     statusConsumer = listenerManager,
                     presenceData = presenceData,
