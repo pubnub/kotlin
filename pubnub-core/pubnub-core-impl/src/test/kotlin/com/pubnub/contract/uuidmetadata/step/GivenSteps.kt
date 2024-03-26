@@ -20,7 +20,7 @@ class GivenSteps(
     @Given("current user is {string} persona")
     fun given_current_user_is_persona(personaName: String) {
         val pnUUIDMetadata: PNUUIDMetadata = loadPersonaUUIDMetadata(personaName)
-        world.pubnub.pubNubCore.configuration.userId = UserId(pnUUIDMetadata.id)
+        world.configuration.userId = UserId(pnUUIDMetadata.id)
     }
 
     @Given("the data for {string} persona")

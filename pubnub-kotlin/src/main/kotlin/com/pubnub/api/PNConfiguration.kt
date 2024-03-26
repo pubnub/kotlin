@@ -26,6 +26,17 @@ class PNConfiguration(override var userId: UserId) : BasePNConfiguration {
     private val log = LoggerFactory.getLogger("PNConfiguration")
 
     @Deprecated(
+        replaceWith = ReplaceWith(
+            "PNConfiguration(userId = UserId(uuid))",
+            "com.pubnub.api.PNConfiguration",
+        ),
+        level = DeprecationLevel.WARNING,
+        message = "Use PNConfiguration(UserId) instead.",
+    )
+    @Throws(PubNubException::class)
+    constructor(uuid: String) : this(UserId(uuid))
+
+    @Deprecated(
         "Use UserId instead e.g. config.userId.value",
         replaceWith = ReplaceWith("userId.value"),
         level = DeprecationLevel.WARNING,

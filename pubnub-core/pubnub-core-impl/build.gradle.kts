@@ -47,6 +47,10 @@ dependencies {
 }
 
 task<Test>("cucumber") {
+    filter {
+        // include all tests from package
+        includeTestsMatching("com.pubnub.contract.*")
+    }
     systemProperty("cucumber.filter.tags", System.getProperty("cucumber.filter.tags"))
     systemProperty("cucumber.features", System.getProperty("cucumber.features"))
     systemProperty("cucumber.plugins", System.getProperty("cucumber.plugins"))

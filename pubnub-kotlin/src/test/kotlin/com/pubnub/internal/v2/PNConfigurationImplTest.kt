@@ -55,7 +55,7 @@ class PNConfigurationImplTest {
     }
 
     @Test
-    fun buildUsesAllValues() {
+    fun `build uses all values from Builder`() {
         val expectedUserId = UserId(BasePubNubImpl.generateUUID())
         val expectedCryptoModule = CryptoModule.createAesCbcCryptoModule("cipher")
         val expectedProxy = Proxy(Proxy.Type.HTTP, InetSocketAddress(80))
@@ -109,6 +109,8 @@ class PNConfigurationImplTest {
         }
 
         val configuration = config.build()
+        assertEquals(expectedUserId, configuration.userId)
+        assertEquals("subKey", configuration.subscribeKey)
         assertEquals("publishKey", configuration.publishKey)
         assertEquals("secretKey", configuration.secretKey)
         assertEquals("authKey", configuration.authKey)
@@ -145,5 +147,66 @@ class PNConfigurationImplTest {
         assertEquals(expectedSuffixes, configuration.pnsdkSuffixes)
         assertEquals(expectedConfiguration, configuration.retryConfiguration)
         assertEquals(true, configuration.managePresenceListManually)
+    }
+
+    @Test
+    fun `builder has all default values from BasePNConfiguration`() {
+        val expectedUserId = UserId(BasePubNubImpl.generateUUID())
+        val builder = PNConfiguration.builder(expectedUserId, "subKey")
+        val expectedDefaults = BasePNConfigurationImpl(expectedUserId)
+
+        assertEquals(expectedUserId, builder.userId)
+        assertEquals("subKey", builder.subscribeKey)
+        assertEquals(expectedDefaults.publishKey, builder.publishKey)
+        assertEquals(expectedDefaults.secretKey, builder.secretKey)
+        assertEquals(expectedDefaults.authKey, builder.authKey)
+        assertEquals(expectedDefaults.cryptoModule, builder.cryptoModule)
+        assertEquals(expectedDefaults.origin, builder.origin)
+        assertEquals(expectedDefaults.secure, builder.secure)
+        assertEquals(expectedDefaults.logVerbosity, builder.logVerbosity)
+        assertEquals(expectedDefaults.heartbeatNotificationOptions, builder.heartbeatNotificationOptions)
+        assertEquals(expectedDefaults.presenceTimeout, builder.presenceTimeout)
+        assertEquals(expectedDefaults.heartbeatInterval, builder.heartbeatInterval)
+        assertEquals(expectedDefaults.subscribeTimeout, builder.subscribeTimeout)
+        assertEquals(expectedDefaults.connectTimeout, builder.connectTimeout)
+        assertEquals(expectedDefaults.nonSubscribeRequestTimeout, builder.nonSubscribeRequestTimeout)
+        assertEquals(expectedDefaults.cacheBusting, builder.cacheBusting)
+        assertEquals(expectedDefaults.suppressLeaveEvents, builder.suppressLeaveEvents)
+        assertEquals(expectedDefaults.maintainPresenceState, builder.maintainPresenceState)
+        assertEquals(expectedDefaults.filterExpression, builder.filterExpression)
+        assertEquals(expectedDefaults.includeInstanceIdentifier, builder.includeInstanceIdentifier)
+        assertEquals(expectedDefaults.includeRequestIdentifier, builder.includeRequestIdentifier)
+        assertEquals(expectedDefaults.maximumConnections, builder.maximumConnections)
+        assertEquals(expectedDefaults.googleAppEngineNetworking, builder.googleAppEngineNetworking)
+        assertEquals(expectedDefaults.proxy, builder.proxy)
+        assertEquals(expectedDefaults.proxySelector, builder.proxySelector)
+        assertEquals(expectedDefaults.proxyAuthenticator, builder.proxyAuthenticator)
+        assertEquals(expectedDefaults.certificatePinner, builder.certificatePinner)
+        assertEquals(expectedDefaults.httpLoggingInterceptor, builder.httpLoggingInterceptor)
+        assertEquals(expectedDefaults.sslSocketFactory, builder.sslSocketFactory)
+        assertEquals(expectedDefaults.x509ExtendedTrustManager, builder.x509ExtendedTrustManager)
+        assertEquals(expectedDefaults.connectionSpec, builder.connectionSpec)
+        assertEquals(expectedDefaults.hostnameVerifier, builder.hostnameVerifier)
+        assertEquals(expectedDefaults.fileMessagePublishRetryLimit, builder.fileMessagePublishRetryLimit)
+        assertEquals(expectedDefaults.dedupOnSubscribe, builder.dedupOnSubscribe)
+        assertEquals(expectedDefaults.maximumMessagesCacheSize, builder.maximumMessagesCacheSize)
+        assertEquals(expectedDefaults.pnsdkSuffixes, builder.pnsdkSuffixes)
+        assertEquals(expectedDefaults.retryConfiguration, builder.retryConfiguration)
+        assertEquals(expectedDefaults.managePresenceListManually, builder.managePresenceListManually)
+    }
+
+    @Test
+    fun `can reset userId and subscribeKey`() {
+        val expectedUserId = UserId(BasePubNubImpl.generateUUID())
+        val expectedSubKey = "expectedSubKey"
+
+        val config = PNConfiguration.builder(UserId("aaa"), "subKey") {
+            userId = expectedUserId
+            subscribeKey = expectedSubKey
+        }
+
+        val configuration = config.build()
+        assertEquals(expectedUserId, configuration.userId)
+        assertEquals(expectedSubKey, configuration.subscribeKey)
     }
 }

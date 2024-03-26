@@ -555,7 +555,7 @@ class PNConfiguration(userId: UserId) : BasePNConfiguration {
     override var maximumMessagesCacheSize: Int = defaultConfiguration.maximumMessagesCacheSize
         private set
 
-    fun setPnSdkSuffixes(pnSdkSuffixes: Map<String, String>): PNConfiguration {
+    fun setPnsdkSuffixes(pnSdkSuffixes: Map<String, String>): PNConfiguration {
         this.pnsdkSuffixes = pnSdkSuffixes
         return this
     }

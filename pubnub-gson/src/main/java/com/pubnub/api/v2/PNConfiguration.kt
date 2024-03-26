@@ -33,6 +33,10 @@ interface PNConfiguration : BasePNConfiguration {
     interface Builder : BasePNConfiguration.Builder {
         fun build(): PNConfiguration
 
+        fun setUserId(userId: UserId): Builder
+
+        fun setSubscribeKey(subscribeKey: String): Builder
+
         /**
          * The publish key from the admin panel (only required if publishing).
          */
@@ -61,7 +65,7 @@ interface PNConfiguration : BasePNConfiguration {
          *
          * Defaults to `ps.pndsn.com`
          */
-        fun setOrigin(s: String): Builder
+        fun setOrigin(origin: String): Builder
 
         /**
          * If set to `true`,  requests will be made over HTTPS.
@@ -246,7 +250,7 @@ interface PNConfiguration : BasePNConfiguration {
 
         fun setMaximumMessagesCacheSize(maximumMessagesCacheSize: Int): Builder
 
-        fun setPnSdkSuffixes(pnSdkSuffixes: Map<String, String>): Builder
+        fun setPnsdkSuffixes(pnsdkSuffixes: Map<String, String>): Builder
 
         /**
          * Retry configuration for requests.

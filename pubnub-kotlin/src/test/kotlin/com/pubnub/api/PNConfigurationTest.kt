@@ -18,7 +18,7 @@ class PNConfigurationTest {
     @Test(expected = PubNubException::class)
     fun resetUUIDToEmptyString() {
         val config = PNConfiguration(BasePubNubImpl.generateUUID())
-        config.setUuid("")
+        config.uuid = ""
     }
 
     @Suppress("DEPRECATION")
@@ -26,7 +26,7 @@ class PNConfigurationTest {
     fun resetUUIDToNonEmptyString() {
         val config = PNConfiguration(BasePubNubImpl.generateUUID())
         val newUUID = BasePubNubImpl.generateUUID()
-        config.setUuid(newUUID)
+        config.uuid = newUUID
 
         Assert.assertEquals(newUUID, config.userId.value)
     }
@@ -41,7 +41,7 @@ class PNConfigurationTest {
     @Test
     fun testCustomTimeoutValues1() {
         val config = PNConfiguration(UserId(BasePubNubImpl.generateUUID()))
-        config.setPresenceTimeout(100)
+        config.presenceTimeout = 100
         Assert.assertEquals(100, config.presenceTimeout)
         Assert.assertEquals(49, config.heartbeatInterval)
     }
@@ -49,7 +49,7 @@ class PNConfigurationTest {
     @Test
     fun testCustomTimeoutValues2() {
         val config = PNConfiguration(UserId(BasePubNubImpl.generateUUID()))
-        config.setHeartbeatInterval(100)
+        config.heartbeatInterval = 100
         Assert.assertEquals(300, config.presenceTimeout)
         Assert.assertEquals(100, config.heartbeatInterval)
     }
@@ -57,8 +57,8 @@ class PNConfigurationTest {
     @Test
     fun testCustomTimeoutValues3() {
         val config = PNConfiguration(UserId(BasePubNubImpl.generateUUID()))
-        config.setHeartbeatInterval(40)
-        config.setPresenceTimeout(50)
+        config.heartbeatInterval = 40
+        config.presenceTimeout = 50
         Assert.assertEquals(50, config.presenceTimeout)
         Assert.assertEquals(24, config.heartbeatInterval)
     }
@@ -66,13 +66,13 @@ class PNConfigurationTest {
     @Test
     fun `reconnection policy should set retry configuration`() {
         val config = PNConfiguration(UserId(BasePubNubImpl.generateUUID()))
-        config.setReconnectionPolicy(PNReconnectionPolicy.NONE)
+        config.reconnectionPolicy = PNReconnectionPolicy.NONE
         Assert.assertTrue(config.retryConfiguration is RetryConfiguration.None)
 
-        config.setReconnectionPolicy(PNReconnectionPolicy.LINEAR)
+        config.reconnectionPolicy = PNReconnectionPolicy.LINEAR
         Assert.assertTrue(config.retryConfiguration is RetryConfiguration.Linear)
 
-        config.setReconnectionPolicy(PNReconnectionPolicy.EXPONENTIAL)
+        config.reconnectionPolicy = PNReconnectionPolicy.EXPONENTIAL
         Assert.assertTrue(config.retryConfiguration is RetryConfiguration.Exponential)
     }
 
@@ -80,12 +80,12 @@ class PNConfigurationTest {
     fun `maximumReconnectionRetries policy should reset retry configuration`() {
         val config = PNConfiguration(UserId(BasePubNubImpl.generateUUID()))
 
-        config.setReconnectionPolicy(PNReconnectionPolicy.LINEAR)
-        config.setMaximumReconnectionRetries(5)
+        config.reconnectionPolicy = PNReconnectionPolicy.LINEAR
+        config.maximumReconnectionRetries = 5
         Assert.assertTrue(config.retryConfiguration is RetryConfiguration.Linear)
         Assert.assertEquals(5, (config.retryConfiguration as RetryConfiguration.Linear).maxRetryNumber)
 
-        config.setMaximumReconnectionRetries(10)
+        config.maximumReconnectionRetries = 10
         Assert.assertTrue(config.retryConfiguration is RetryConfiguration.Linear)
         Assert.assertEquals(10, (config.retryConfiguration as RetryConfiguration.Linear).maxRetryNumber)
     }
@@ -94,8 +94,8 @@ class PNConfigurationTest {
     fun `cryptomodule uses cipherKey when cryptomodule is not set`() {
         val config = PNConfiguration(UserId(BasePubNubImpl.generateUUID()))
 
-        config.setCryptoModule(null)
-        config.setCipherKey("enigma")
+        config.cryptoModule = null
+        config.cipherKey = "enigma"
         Assert.assertNotNull(config.cryptoModule)
     }
 
@@ -103,8 +103,8 @@ class PNConfigurationTest {
     fun `cryptomodule uses cryptomodule when cryptomodule is set`() {
         val config = PNConfiguration(UserId(BasePubNubImpl.generateUUID()))
         val expectedCryptoModule = CryptoModule.createAesCbcCryptoModule("cipher")
-        config.setCryptoModule(expectedCryptoModule)
-        config.setCipherKey("enigma")
+        config.cryptoModule = expectedCryptoModule
+        config.cipherKey = "enigma"
 
         Assert.assertEquals(expectedCryptoModule, config.cryptoModule)
     }
