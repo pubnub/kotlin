@@ -85,7 +85,7 @@ pubnub.addListener(object : SubscribeCallback() {
             println("Message action messageTimetoken: $messageTimetoken")
         }
 
-        println("Message action subscription: ${pnMessageActionResult.subscription}")
+        println("Message action subscriptions: ${pnMessageActionResult.subscription}")
         println("Message action channel: ${pnMessageActionResult.channel}")
         println("Message action timetoken: ${pnMessageActionResult.timetoken}")
     }
@@ -96,7 +96,7 @@ pubnub.addListener(object : SubscribeCallback() {
 
 ```kotlin
 pubnub.publish(channel = "my_channel", message = "hello")
-    .async { result, status -> 
+    .async { result -> 
     // the result is always of a nullable type
     // it's null if there were errors (status.error)
     // otherwise it's usable
