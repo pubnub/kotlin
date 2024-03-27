@@ -52,6 +52,7 @@ import com.pubnub.api.endpoints.push.AddChannelsToPush
 import com.pubnub.api.endpoints.push.ListPushProvisions
 import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice
 import com.pubnub.api.endpoints.push.RemoveChannelsFromPush
+import com.pubnub.api.v2.BasePNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.api.v2.entities.Channel
@@ -80,7 +81,7 @@ interface PubNub :
      * Modifying the values in this configuration is not advised, as it may lead
      * to undefined behavior.
      */
-    val configuration: PNConfiguration
+    val configuration: BasePNConfiguration
 
     /**
      * Causes the client to create an open TCP socket to the PubNub Real-Time Network and begin listening for messages
@@ -569,7 +570,7 @@ interface PubNub :
          * @return the PubNub client
          */
         @JvmStatic
-        fun create(configuration: PNConfiguration): PubNub {
+        fun create(configuration: BasePNConfiguration): PubNub {
             return PubNubImpl(configuration)
         }
 

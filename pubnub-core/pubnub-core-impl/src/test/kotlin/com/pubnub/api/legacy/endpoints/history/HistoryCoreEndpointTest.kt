@@ -10,6 +10,7 @@ import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.test.CommonUtils.assertPnException
 import com.pubnub.test.CommonUtils.failTest
@@ -140,7 +141,7 @@ class HistoryCoreEndpointTest : BaseTest() {
 
     @Test
     fun testSyncAuthSuccess() {
-        pubnub.configuration.authKey = "authKey"
+        config.authKey = "authKey"
 
         val historyItem1 =
             mapOf(
@@ -193,8 +194,7 @@ class HistoryCoreEndpointTest : BaseTest() {
 
     @Test
     fun testSyncEncryptedSuccess() {
-        pubnub.configuration.cipherKey = "testCipher"
-        pubnub.configuration.useRandomInitializationVector = false
+        config.cryptoModule = CryptoModule.createLegacyCryptoModule("testCipher", false)
 
         stubFor(
             get(urlPathEqualTo("/v2/history/sub-key/mySubscribeKey/channel/niceChannel"))
@@ -245,8 +245,7 @@ class HistoryCoreEndpointTest : BaseTest() {
 
     @Test
     fun testSyncEncryptedWithPNOtherSuccess() {
-        pubnub.configuration.cipherKey = "hello"
-        pubnub.configuration.useRandomInitializationVector = false
+        config.cryptoModule = CryptoModule.createLegacyCryptoModule("hello", false)
 
         stubFor(
             get(urlPathEqualTo("/v2/history/sub-key/mySubscribeKey/channel/niceChannel"))

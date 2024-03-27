@@ -219,7 +219,7 @@ class ListPushProvisionsTest : BaseTest() {
                 .willReturn(aResponse().withBody("""["ch1", "ch2", "ch3"]""")),
         )
 
-        pubnub.configuration.authKey = "myKey"
+        config.authKey = "myKey"
 
         pubnub.auditPushChannelProvisions(
             deviceId = "niceDevice",
@@ -262,7 +262,7 @@ class ListPushProvisionsTest : BaseTest() {
                 .willReturn(aResponse().withBody("""["ch1", "ch2", "ch3"]""")),
         )
 
-        pubnub.configuration.subscribeKey = " "
+        config.subscribeKey = " "
 
         try {
             pubnub.auditPushChannelProvisions(

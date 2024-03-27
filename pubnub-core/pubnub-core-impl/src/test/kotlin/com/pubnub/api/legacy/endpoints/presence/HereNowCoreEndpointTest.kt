@@ -464,7 +464,7 @@ class HereNowCoreEndpointTest : BaseTest() {
                 ),
         )
 
-        pubnub.configuration.authKey = "myKey"
+        config.authKey = "myKey"
 
         pubnub.hereNow(
             channels = listOf("ch1", "ch2"),
@@ -520,7 +520,7 @@ class HereNowCoreEndpointTest : BaseTest() {
 
     @Test
     fun testEmptySubKeySync() {
-        pubnub.configuration.subscribeKey = ""
+        config.subscribeKey = ""
 
         var response: PNHereNowResult? = null
         try {

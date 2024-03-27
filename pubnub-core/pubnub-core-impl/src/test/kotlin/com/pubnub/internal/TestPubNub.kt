@@ -2,6 +2,7 @@ package com.pubnub.internal
 
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
+import com.pubnub.api.v2.BasePNConfiguration
 import com.pubnub.api.v2.callbacks.BaseEventListener
 import com.pubnub.api.v2.callbacks.BaseStatusListener
 import com.pubnub.internal.callbacks.SubscribeCallback
@@ -15,7 +16,7 @@ import com.pubnub.internal.v2.subscription.BaseSubscriptionSetImpl
 import java.io.InputStream
 
 class TestPubNub internal constructor(
-    configuration: PNConfigurationCore,
+    configuration: BasePNConfiguration,
     eventEnginesConf: EventEnginesConf = EventEnginesConf(),
 ) :
     BasePubNubImpl<

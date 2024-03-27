@@ -107,7 +107,7 @@ class RemoveAllPushChannelsForDeviceTest : BaseTest() {
                 .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")),
         )
 
-        pubnub.configuration.authKey = "myKey"
+        config.authKey = "myKey"
 
         pubnub.removeAllPushNotificationsFromDeviceWithPushToken(
             deviceId = "niceDevice",
@@ -141,7 +141,7 @@ class RemoveAllPushChannelsForDeviceTest : BaseTest() {
 
     @Test
     fun testEmptySubscribeKeyRemoveAll() {
-        pubnub.configuration.subscribeKey = " "
+        config.subscribeKey = " "
 
         try {
             pubnub.removeAllPushNotificationsFromDeviceWithPushToken(

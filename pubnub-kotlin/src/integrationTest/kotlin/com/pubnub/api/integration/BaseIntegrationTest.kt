@@ -1,9 +1,9 @@
 package com.pubnub.api.integration
 
-import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNLogVerbosity
+import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.test.CommonUtils.createInterceptor
 import com.pubnub.test.Keys
 import org.junit.After
@@ -18,6 +18,9 @@ abstract class BaseIntegrationTest {
 
     val pubnub: PubNub by lazy { createPubNub() }
     val server: PubNub by lazy { createServer() }
+    var clientConfig: PNConfiguration.Builder.() -> Unit = {}
+
+    val serverConfig = PNConfiguration.builder(UserId("server-${UUID.randomUUID()}"), Keys.pamSubKey)
 
     private var mGuestClients = mutableListOf<PubNub>()
 
@@ -38,24 +41,34 @@ abstract class BaseIntegrationTest {
         mGuestClients.clear()
     }
 
-    protected fun createPubNub(): PubNub {
-        var pnConfiguration = provideStagingConfiguration()
+    protected fun createPubNub(action: PNConfiguration.Builder.() -> Unit): PubNub {
+        var pnConfiguration = provideStagingConfiguration(action)
         if (pnConfiguration == null) {
-            pnConfiguration = getBasicPnConfiguration()
+            pnConfiguration = getBasicPnConfiguration().apply(action).build()
         }
         val pubNub = PubNub.create(pnConfiguration)
         registerGuestClient(pubNub)
         return pubNub
     }
 
-    protected fun createPubNub(config: PNConfiguration): PubNub {
-        val pubNub = PubNub.create(config)
+    private fun createPubNub(): PubNub {
+        var pnConfiguration = provideStagingConfiguration()
+        if (pnConfiguration == null) {
+            pnConfiguration = getBasicPnConfiguration().apply(clientConfig).build()
+        }
+        val pubNub = PubNub.create(pnConfiguration)
         registerGuestClient(pubNub)
         return pubNub
     }
 
-    private fun createServer(): PubNub {
-        val pubNub = PubNub.create(getServerPnConfiguration())
+//    protected fun createPubNub(config: PNConfiguration): PubNub {
+//        val pubNub = PubNub.create(config)
+//        registerGuestClient(pubNub)
+//        return pubNub
+//    }
+
+    private fun createServer(action: PNConfiguration.Builder.() -> Unit = {}): PubNub {
+        val pubNub = PubNub.create(getServerPnConfiguration(action))
         registerGuestClient(pubNub)
         return pubNub
     }
@@ -64,33 +77,36 @@ abstract class BaseIntegrationTest {
         mGuestClients.add(guestClient)
     }
 
-    protected open fun getBasicPnConfiguration(): PNConfiguration {
-        val pnConfiguration = PNConfiguration(userId = UserId(PubNub.generateUUID()))
+    protected open fun getBasicPnConfiguration(): PNConfiguration.Builder {
+        val clientConfig = PNConfiguration.builder(
+            UserId("client-${UUID.randomUUID()}"),
+            if (!needsServer()) {
+                Keys.subKey
+            } else {
+                Keys.pamSubKey
+            },
+        )
         if (!needsServer()) {
-            pnConfiguration.subscribeKey = Keys.subKey
-            pnConfiguration.publishKey = Keys.pubKey
+            clientConfig.publishKey = Keys.pubKey
         } else {
-            pnConfiguration.subscribeKey = Keys.pamSubKey
-            pnConfiguration.publishKey = Keys.pamPubKey
-            pnConfiguration.authKey = provideAuthKey()!!
+            clientConfig.publishKey = Keys.pamPubKey
+            clientConfig.authKey = provideAuthKey()!!
         }
-        pnConfiguration.logVerbosity = PNLogVerbosity.NONE
-        pnConfiguration.httpLoggingInterceptor = createInterceptor(logger)
+        clientConfig.logVerbosity = PNLogVerbosity.NONE
+        clientConfig.httpLoggingInterceptor = createInterceptor(logger)
 
-        pnConfiguration.userId = UserId("client-${UUID.randomUUID()}")
-        return pnConfiguration
+        return clientConfig
     }
 
-    private fun getServerPnConfiguration(): PNConfiguration {
-        val pnConfiguration = PNConfiguration(userId = UserId(PubNub.generateUUID()))
-        pnConfiguration.subscribeKey = Keys.pamSubKey
-        pnConfiguration.publishKey = Keys.pamPubKey
-        pnConfiguration.secretKey = Keys.pamSecKey
-        pnConfiguration.logVerbosity = PNLogVerbosity.NONE
-        pnConfiguration.httpLoggingInterceptor = createInterceptor(logger)
+    private fun getServerPnConfiguration(action: PNConfiguration.Builder.() -> Unit = {}): PNConfiguration {
+        serverConfig.subscribeKey = Keys.pamSubKey
+        serverConfig.publishKey = Keys.pamPubKey
+        serverConfig.secretKey = Keys.pamSecKey
+        serverConfig.logVerbosity = PNLogVerbosity.NONE
+        serverConfig.httpLoggingInterceptor = createInterceptor(logger)
+        serverConfig.action()
 
-        pnConfiguration.userId = UserId("server-${UUID.randomUUID()}")
-        return pnConfiguration
+        return serverConfig.build()
     }
 
     private fun destroyClient(client: PubNub) {
@@ -108,7 +124,7 @@ abstract class BaseIntegrationTest {
 
     protected open fun provideAuthKey(): String? = null
 
-    protected open fun provideStagingConfiguration(): PNConfiguration? = null
+    protected open fun provideStagingConfiguration(action: PNConfiguration.Builder.() -> Unit = {}): PNConfiguration? = null
 
     fun wait(seconds: Int = 3) {
         Thread.sleep((seconds * 1_000).toLong())

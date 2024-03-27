@@ -290,7 +290,7 @@ class WhereNowCoreEndpointTest : BaseTest() {
                 ),
         )
 
-        pubnub.configuration.authKey = "myKey"
+        config.authKey = "myKey"
 
         pubnub.whereNow().sync()
 
@@ -322,7 +322,7 @@ class WhereNowCoreEndpointTest : BaseTest() {
                 ),
         )
 
-        pubnub.configuration.subscribeKey = " "
+        config.subscribeKey = " "
 
         try {
             pubnub.whereNow().sync()
@@ -354,7 +354,7 @@ class WhereNowCoreEndpointTest : BaseTest() {
                 ),
         )
 
-        pubnub.configuration.subscribeKey = ""
+        config.subscribeKey = ""
 
         try {
             pubnub.whereNow().sync()

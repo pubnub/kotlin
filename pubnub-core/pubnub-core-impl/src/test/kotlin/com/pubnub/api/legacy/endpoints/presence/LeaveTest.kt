@@ -230,7 +230,7 @@ class LeaveTest : BaseTest() {
                 ),
         )
 
-        pubnub.configuration.subscribeKey = " "
+        config.subscribeKey = " "
 
         try {
             LeaveEndpoint(pubnub).apply {}.sync()
@@ -257,7 +257,7 @@ class LeaveTest : BaseTest() {
                 ),
         )
 
-        pubnub.configuration.subscribeKey = ""
+        config.subscribeKey = ""
 
         try {
             LeaveEndpoint(pubnub).apply {}.sync()
@@ -284,7 +284,7 @@ class LeaveTest : BaseTest() {
                 ),
         )
 
-        pubnub.configuration.authKey = "myKey"
+        config.authKey = "myKey"
 
         LeaveEndpoint(pubnub).apply {
             channels = listOf("coolChannel")

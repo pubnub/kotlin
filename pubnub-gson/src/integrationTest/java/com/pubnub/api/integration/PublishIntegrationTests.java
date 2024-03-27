@@ -2,7 +2,6 @@ package com.pubnub.api.integration;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
@@ -213,9 +212,7 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
         final JsonObject messagePayload = generateMessage(pubNub);
 
         final PubNub sender = getPubNub();
-        PNConfiguration config = getBasicPnConfiguration();
-        config.setCryptoModule(CryptoModule.createAesCbcCryptoModule("test", false));
-        final PubNub observer = getPubNub(config);
+        final PubNub observer = getPubNub(builder -> builder.cryptoModule(CryptoModule.createAesCbcCryptoModule("test", false)));
 
         observer.addListener(new SubscribeCallback() {
             @Override

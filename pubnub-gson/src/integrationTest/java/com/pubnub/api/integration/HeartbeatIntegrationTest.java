@@ -42,7 +42,10 @@ public class HeartbeatIntegrationTest extends BaseIntegrationTest {
         final JsonObject expectedStatePayload = generatePayload();
         final PubNub observer = getPubNub();
 
-        pubNub = getPubNub(getBasicPnConfiguration().setPresenceTimeoutWithCustomInterval(20, 4));
+        pubNub = getPubNub(builder -> {
+            builder.presenceTimeout(20);
+            builder.heartbeatInterval(4);
+        });
         observer.addListener(new SubscribeCallback.BaseSubscribeCallback() {
             @Override
             public void status(@NotNull PubNub pn, @NotNull PNStatus status) {

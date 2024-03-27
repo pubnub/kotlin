@@ -6,10 +6,10 @@ import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.internal.BasePubNubImpl
-import com.pubnub.internal.PNConfigurationCore
 import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.TestPubNub
 import com.pubnub.test.CommonUtils.defaultListenDuration
+import com.pubnub.test.TestPNConfigurationImpl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.junit.After
 import org.junit.Assert.assertTrue
@@ -17,9 +17,13 @@ import org.junit.Before
 
 abstract class BaseTest {
     lateinit var wireMockServer: WireMockServer
-    protected lateinit var pubnubBase: TestPubNub private set
-    protected lateinit var pubnub: PubNubCore private set
-    protected lateinit var config: PNConfigurationCore private set
+    protected val pubnubBase: TestPubNub by lazy {
+        TestPubNub(config.build())
+    }
+    protected val pubnub: PubNubCore by lazy {
+        pubnubBase.pubNubCore
+    }
+    protected lateinit var config: TestPNConfigurationImpl.Builder private set
 
     @Before
     open fun beforeEach() {
@@ -48,7 +52,6 @@ abstract class BaseTest {
 
     open fun onBefore() {
         initConfiguration()
-        initPubNub()
     }
 
     open fun onAfter() {
@@ -60,7 +63,7 @@ abstract class BaseTest {
     }
 
     fun createConfiguration() =
-        PNConfigurationCore(userId = UserId("myUUID")).apply {
+        TestPNConfigurationImpl.Builder(userId = UserId("myUUID")).apply {
             subscribeKey = "mySubscribeKey"
             publishKey = "myPublishKey"
             origin = wireMockServer.baseUrl().toHttpUrlOrNull()!!.run { "$host:$port" }
@@ -69,14 +72,6 @@ abstract class BaseTest {
         }
 
     fun clearConfiguration() {
-        config = PNConfigurationCore(userId = UserId(BasePubNubImpl.generateUUID()))
-    }
-
-    fun initPubNub(customPubNub: TestPubNub? = null) {
-        if (::pubnub.isInitialized) {
-            pubnub.destroy()
-        }
-        pubnubBase = customPubNub ?: TestPubNub(config)
-        pubnub = pubnubBase.pubNubCore
+        config = TestPNConfigurationImpl.Builder(userId = UserId(BasePubNubImpl.generateUUID()))
     }
 }

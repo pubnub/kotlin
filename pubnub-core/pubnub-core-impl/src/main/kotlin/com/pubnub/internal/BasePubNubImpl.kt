@@ -3,6 +3,7 @@ package com.pubnub.internal
 import com.pubnub.api.BasePubNub
 import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
+import com.pubnub.api.v2.BasePNConfiguration
 import com.pubnub.api.v2.callbacks.BaseEventEmitter
 import com.pubnub.api.v2.callbacks.BaseEventListener
 import com.pubnub.api.v2.callbacks.BaseStatusEmitter
@@ -28,12 +29,12 @@ abstract class BasePubNubImpl<
     SubscriptionSet : BaseSubscriptionSet<EventListener, Subscription>,
     StatusListener : BaseStatusListener,
     > internal constructor(
-    configuration: PNConfigurationCore,
+    configuration: BasePNConfiguration,
     eventEnginesConf: EventEnginesConf,
 ) : BasePubNub<EventListener, Subscription, Channel, ChannelGroup, ChannelMetadata, UserMetadata, SubscriptionSet, StatusListener>,
     BaseEventEmitter<EventListener>,
     BaseStatusEmitter<StatusListener> {
-    constructor(configuration: PNConfigurationCore) : this(configuration, eventEnginesConf = EventEnginesConf())
+    constructor(configuration: BasePNConfiguration) : this(configuration, eventEnginesConf = EventEnginesConf())
 
     val listenerManager: ListenerManager = ListenerManager(this)
     val pubNubCore = PubNubCore(configuration, listenerManager, eventEnginesConf)
@@ -53,7 +54,7 @@ abstract class BasePubNubImpl<
     /**
      * Unique id of this PubNub instance.
      *
-     * @see [PNConfigurationCore.includeInstanceIdentifier]
+     * @see [BasePNConfiguration.includeInstanceIdentifier]
      */
     val instanceId: String
         get() = pubNubCore.instanceId

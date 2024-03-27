@@ -294,7 +294,7 @@ class StateSetCoreEndpointTest : BaseTest() {
                 ),
         )
 
-        pubnub.configuration.authKey = "myKey"
+        config.authKey = "myKey"
 
         pubnub.setPresenceState(
             channels = listOf("testChannel"),
@@ -322,7 +322,7 @@ class StateSetCoreEndpointTest : BaseTest() {
                 ),
         )
 
-        pubnub.configuration.subscribeKey = " "
+        config.subscribeKey = " "
 
         try {
             pubnub.setPresenceState(
@@ -350,7 +350,7 @@ class StateSetCoreEndpointTest : BaseTest() {
                 ),
         )
 
-        pubnub.configuration.subscribeKey = ""
+        config.subscribeKey = ""
 
         try {
             pubnub.setPresenceState(

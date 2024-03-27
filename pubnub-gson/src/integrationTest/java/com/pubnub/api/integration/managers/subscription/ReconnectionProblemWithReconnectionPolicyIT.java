@@ -16,6 +16,7 @@ public class ReconnectionProblemWithReconnectionPolicyIT extends AbstractReconne
         pnConfiguration.setSubscribeTimeout(5);
         pnConfiguration.setLogVerbosity(PNLogVerbosity.BODY);
         pnConfiguration.setReconnectionPolicy(LINEAR);
+        pnConfiguration.setMaximumReconnectionRetries(1);
         pnConfiguration.setAuthKey(authKey);
         return PubNub.create(pnConfiguration);
     }

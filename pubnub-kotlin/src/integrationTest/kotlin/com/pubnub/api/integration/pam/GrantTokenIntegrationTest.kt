@@ -1,6 +1,5 @@
 package com.pubnub.api.integration.pam
 
-import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.SpaceId
 import com.pubnub.api.UserId
@@ -18,12 +17,11 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class GrantTokenIntegrationTest : BaseIntegrationTest() {
-    private val pubNubUnderTest: PubNub = server
-
     @Test
     fun happyPath_SUM() {
         // given
-        pubNubUnderTest.configuration.logVerbosity = PNLogVerbosity.BODY
+        serverConfig.logVerbosity = PNLogVerbosity.BODY
+        val pubNubUnderTest = server
         val expectedTTL = 1337
         val expectedAuthorizedUserId = UserId("authorizedUser01")
         val expectedSpaceIdValue = "mySpace01"
@@ -76,7 +74,8 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
     @Test
     fun happyPath() {
         // given
-        pubNubUnderTest.configuration.logVerbosity = PNLogVerbosity.BODY
+        serverConfig.logVerbosity = PNLogVerbosity.BODY
+        val pubNubUnderTest = server
         val expectedTTL = 1337
         val expectedChannelResourceName = "channelResource"
         val expectedChannelPattern = "channel.*"
@@ -151,14 +150,13 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
             ).sync().token
 
         // create pubnub instance with PAM enabled but not server(secretKey is not configured)
-        val pnConfiguration =
-            PNConfiguration(userId = UserId(PubNub.generateUUID())).apply {
-                subscribeKey = Keys.pamSubKey
-                publishKey = Keys.pamPubKey
-                logVerbosity = PNLogVerbosity.NONE
-                httpLoggingInterceptor = CommonUtils.createInterceptor(logger)
-            }
-        val pubNubTest = createPubNub(pnConfiguration)
+        val pubNubTest = createPubNub {
+            userId = UserId(PubNub.generateUUID())
+            subscribeKey = Keys.pamSubKey
+            publishKey = Keys.pamPubKey
+            logVerbosity = PNLogVerbosity.NONE
+            httpLoggingInterceptor = CommonUtils.createInterceptor(logger)
+        }
 
         // setToken
         pubNubTest.setToken(token)

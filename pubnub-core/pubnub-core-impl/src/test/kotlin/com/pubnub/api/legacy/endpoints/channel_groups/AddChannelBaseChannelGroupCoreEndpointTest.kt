@@ -60,7 +60,8 @@ class AddChannelBaseChannelGroupCoreEndpointTest : BaseTest() {
                 .willReturn(emptyJson()),
         )
 
-        pubnub.configuration.subscribeKey = " "
+        config.subscribeKey = " "
+        // initPubNub()
 
         try {
             pubnub.addChannelsToChannelGroup(
@@ -79,7 +80,8 @@ class AddChannelBaseChannelGroupCoreEndpointTest : BaseTest() {
                 .withQueryParam("add", matching("ch1,ch2"))
                 .willReturn(emptyJson()),
         )
-        pubnub.configuration.authKey = "myKey"
+        config.authKey = "myKey"
+        // initPubNub()
 
         pubnub.addChannelsToChannelGroup(
             channelGroup = "groupA",

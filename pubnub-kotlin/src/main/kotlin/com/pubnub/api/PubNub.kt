@@ -63,6 +63,7 @@ import com.pubnub.api.models.consumer.objects.member.MemberInput
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
+import com.pubnub.api.v2.BasePNConfiguration
 import com.pubnub.api.v2.callbacks.EventEmitter
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
@@ -85,16 +86,21 @@ interface PubNub :
          * @param configuration the configuration to use
          * @return the PubNub client
          */
-        @JvmStatic
-        fun create(configuration: PNConfiguration): PubNub {
+        fun create(configuration: BasePNConfiguration): PubNub {
             return PubNubImpl(configuration)
+        }
+
+        fun create(
+            userId: UserId,
+            builder: PNConfiguration.() -> Unit,
+        ): PubNub {
+            return PubNubImpl(PNConfiguration(userId).apply(builder))
         }
 
         /**
          * Generates random UUID to use. You should set a unique UUID to identify the user or the device
          * that connects to PubNub.
          */
-        @JvmStatic
         fun generateUUID(): String = BasePubNubImpl.generateUUID()
     }
 
@@ -103,7 +109,7 @@ interface PubNub :
      * Modifying the values in this configuration is not advised, as it may lead
      * to undefined behavior.
      */
-    val configuration: PNConfiguration
+    val configuration: BasePNConfiguration
 
     /**
      * Add a legacy listener for both client status and events.

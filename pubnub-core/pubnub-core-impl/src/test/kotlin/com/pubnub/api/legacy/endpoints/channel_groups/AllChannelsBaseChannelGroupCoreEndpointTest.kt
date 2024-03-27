@@ -86,7 +86,7 @@ class AllChannelsBaseChannelGroupCoreEndpointTest : BaseTest() {
                     ),
                 ),
         )
-        pubnub.configuration.authKey = "myKey"
+        config.authKey = "myKey"
 
         pubnub.listChannelsForChannelGroup(
             channelGroup = "groupA",
@@ -139,7 +139,7 @@ class AllChannelsBaseChannelGroupCoreEndpointTest : BaseTest() {
 
     @Test
     fun testIsSubRequiredSuccessSync() {
-        pubnub.configuration.subscribeKey = " "
+        config.subscribeKey = " "
         try {
             pubnub.listChannelsForChannelGroup(
                 channelGroup = "groupA",

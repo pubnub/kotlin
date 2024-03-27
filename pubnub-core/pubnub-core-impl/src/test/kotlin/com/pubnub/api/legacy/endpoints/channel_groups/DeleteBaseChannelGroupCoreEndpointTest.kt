@@ -65,7 +65,7 @@ class DeleteBaseChannelGroupCoreEndpointTest : BaseTest() {
                 ),
         )
 
-        pubnub.configuration.authKey = "myKey"
+        config.authKey = "myKey"
 
         pubnub.deleteChannelGroup(
             channelGroup = "groupA",

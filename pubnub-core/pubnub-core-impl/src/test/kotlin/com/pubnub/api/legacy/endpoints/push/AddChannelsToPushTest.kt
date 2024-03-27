@@ -106,7 +106,7 @@ class AddChannelsToPushTest : BaseTest() {
                 .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]")),
         )
 
-        pubnub.configuration.authKey = "myKey"
+        config.authKey = "myKey"
 
         pubnub.addPushNotificationsOnChannels(
             deviceId = "niceDevice",
@@ -142,7 +142,7 @@ class AddChannelsToPushTest : BaseTest() {
 
     @Test
     fun testEmptySubscribeKeyAdd() {
-        pubnub.configuration.subscribeKey = ""
+        config.subscribeKey = ""
 
         try {
             pubnub.addPushNotificationsOnChannels(

@@ -35,7 +35,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
     lateinit var guestClient: PubNub
 
     override fun onBefore() {
-        guestClient = createPubNub()
+        guestClient = createPubNub {}
     }
 
     @Test
@@ -109,7 +109,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         val expectedMessage = randomValue()
 
         val metaParameter = "color"
-        pubnub.configuration.filterExpression = "$metaParameter LIKE 'blue*'"
+        clientConfig = { filterExpression = "$metaParameter LIKE 'blue*'" }
         pubnub.subscribeToBlocking("my.*")
 
         pubnub.addListener(
@@ -143,8 +143,8 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         val countDownLatch = CountDownLatch(3)
 
         // make two pubnub instances
-        val pubnub1 = PubNub.create(getBasicPnConfiguration())
-        val pubnub2 = PubNub.create(getBasicPnConfiguration())
+        val pubnub1 = createPubNub {}
+        val pubnub2 = createPubNub {}
 
         // create a channel
         val channel01 = randomChannel()
@@ -224,19 +224,17 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
     fun `when eventEngine enabled then subscribe REST call contains "ee" query parameter`() {
         // given
         val success = AtomicBoolean()
-        val config = getBasicPnConfiguration()
-        config.heartbeatInterval = 1
         var interceptedUrl: HttpUrl? = null
-        config.httpLoggingInterceptor =
-            HttpLoggingInterceptor {
-                if (it.startsWith("--> GET https://")) {
-                    interceptedUrl = it.substringAfter("--> GET ").toHttpUrlOrNull()
-                    success.set(true)
-                }
-            }.apply { level = HttpLoggingInterceptor.Level.BASIC }
-
-        val pubnub = PubNub.create(config)
-
+        clientConfig = {
+            heartbeatInterval = 1
+            httpLoggingInterceptor =
+                HttpLoggingInterceptor {
+                    if (it.startsWith("--> GET https://")) {
+                        interceptedUrl = it.substringAfter("--> GET ").toHttpUrlOrNull()
+                        success.set(true)
+                    }
+                }.apply { level = HttpLoggingInterceptor.Level.BASIC }
+        }
         // when
         try {
             pubnub.subscribe(
@@ -258,15 +256,13 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         val success = AtomicBoolean()
 
         guestClient =
-            createPubNub(
-                getBasicPnConfiguration().apply {
-                    val notExistingUri =
-                        "ps.pndsn_notExisting_URI.com" // we want to trigger UnknownHostException to initiate retry
-                    origin = notExistingUri
-                    retryConfiguration = RetryConfiguration.Linear(delayInSec = 1, maxRetryNumber = 2)
-                    heartbeatInterval = 1
-                },
-            )
+            createPubNub {
+                val notExistingUri =
+                    "ps.pndsn_notExisting_URI.com" // we want to trigger UnknownHostException to initiate retry
+                origin = notExistingUri
+                retryConfiguration = RetryConfiguration.Linear(delayInSec = 1, maxRetryNumber = 2)
+                heartbeatInterval = 1
+            }
 
         guestClient.subscribeToBlocking("my.*")
 

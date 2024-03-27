@@ -4,8 +4,8 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.internal.BasePubNubImpl
-import com.pubnub.internal.PNConfigurationCore
 import com.pubnub.internal.TestPubNub
+import com.pubnub.test.TestPNConfigurationImpl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
@@ -23,7 +23,7 @@ class GetFileUrlTest {
     @Throws(PubNubException::class)
     fun noAdditionalQueryParamsWhenNotSecretNorAuth() {
         // given
-        val pubnub = TestPubNub(config()).pubNubCore
+        val pubnub = TestPubNub(config().build()).pubNubCore
 
         // when
         val url =
@@ -43,7 +43,7 @@ class GetFileUrlTest {
     @Throws(PubNubException::class)
     fun signatureAndTimestampQueryParamsAreSetWhenSecret() {
         // given
-        val pubnub = TestPubNub(withSecret(config())).pubNubCore
+        val pubnub = TestPubNub(withSecret(config()).build()).pubNubCore
 
         // when
         val url =
@@ -63,7 +63,7 @@ class GetFileUrlTest {
     @Throws(PubNubException::class)
     fun authQueryParamIsSetWhenAuth() {
         // given
-        val pubnub = TestPubNub(withAuth(config())).pubNubCore
+        val pubnub = TestPubNub(withAuth(config()).build()).pubNubCore
 
         // when
         val url =
@@ -83,7 +83,7 @@ class GetFileUrlTest {
     @Throws(PubNubException::class)
     fun signatureAndTimestampAndAuthQueryParamsAreSetWhenSecretAndAuth() {
         // given
-        val pubnub = TestPubNub(withSecret(withAuth(config()))).pubNubCore
+        val pubnub = TestPubNub(withSecret(withAuth(config())).build()).pubNubCore
 
         // when
         val url =
@@ -103,20 +103,20 @@ class GetFileUrlTest {
         )
     }
 
-    private fun config(): PNConfigurationCore {
-        val config = PNConfigurationCore(userId = UserId(BasePubNubImpl.generateUUID()))
+    private fun config(): TestPNConfigurationImpl.Builder {
+        val config = TestPNConfigurationImpl.Builder(userId = UserId(BasePubNubImpl.generateUUID()))
         config.publishKey = "pk"
         config.subscribeKey = "sk"
         config.retryConfiguration = RetryConfiguration.Linear(delayInSec = 4, maxRetryNumber = 3)
         return config
     }
 
-    private fun withSecret(config: PNConfigurationCore): PNConfigurationCore {
+    private fun withSecret(config: TestPNConfigurationImpl.Builder): TestPNConfigurationImpl.Builder {
         config.secretKey = "secK"
         return config
     }
 
-    private fun withAuth(config: PNConfigurationCore): PNConfigurationCore {
+    private fun withAuth(config: TestPNConfigurationImpl.Builder): TestPNConfigurationImpl.Builder {
         config.authKey = "ak"
         return config
     }

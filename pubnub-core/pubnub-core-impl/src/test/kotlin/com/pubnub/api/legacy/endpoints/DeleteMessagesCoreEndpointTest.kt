@@ -56,7 +56,8 @@ class DeleteMessagesCoreEndpointTest : BaseTest() {
                 ),
         )
 
-        pubnub.configuration.authKey = "authKey"
+        config.authKey = "authKey"
+        // initPubNub()
 
         pubnub.deleteMessages(
             channels = listOf("mychannel,my_channel"),

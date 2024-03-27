@@ -2,6 +2,7 @@ package com.pubnub.api.integration
 
 import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.SubscribeCallback
+import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.files.PNFileUploadResult
@@ -73,7 +74,7 @@ class FilesIntegrationTest : BaseIntegrationTest() {
 
     private fun uploadListDownloadDelete(withCipher: Boolean) {
         if (withCipher) {
-            pubnub.configuration.cipherKey = "enigma"
+            clientConfig = { cryptoModule = CryptoModule.createLegacyCryptoModule("enigma") }
         }
         val channel: String = randomChannel()
         val content = "This is content"

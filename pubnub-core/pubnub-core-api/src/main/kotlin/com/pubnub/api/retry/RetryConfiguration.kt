@@ -7,8 +7,6 @@ import kotlin.time.Duration.Companion.seconds
 
 private const val MIN_DELAY = 2
 private const val MAX_DELAY = 150
-private const val MAX_RETRIES_IN_LINEAR = 10
-private const val MAX_RETRIES_IN_EXPONENTIAL = 6
 
 /**
  * This sealed class represents the various retry policies for a request.
@@ -29,7 +27,7 @@ sealed class RetryConfiguration {
      */
     class Linear private constructor(
         var delayInSec: Duration = MIN_DELAY.seconds,
-        var maxRetryNumber: Int = MAX_RETRIES_IN_LINEAR,
+        var maxRetryNumber: Int = MAX_RETRIES,
         val excludedOperations: List<RetryableEndpointGroup> = emptyList(),
         isInternal: Boolean = false,
     ) : RetryConfiguration() {
@@ -37,13 +35,13 @@ sealed class RetryConfiguration {
 
         constructor(
             delayInSec: Int = MIN_DELAY,
-            maxRetryNumber: Int = MAX_RETRIES_IN_LINEAR,
+            maxRetryNumber: Int = MAX_RETRIES,
             excludedOperations: List<RetryableEndpointGroup> = emptyList(),
         ) : this(delayInSec.seconds, maxRetryNumber, excludedOperations, false)
 
         // additional constructors for java
-        constructor() : this(MIN_DELAY, MAX_RETRIES_IN_LINEAR, emptyList())
-        constructor(delayInSec: Int) : this(delayInSec, MAX_RETRIES_IN_LINEAR, emptyList())
+        constructor() : this(MIN_DELAY, MAX_RETRIES, emptyList())
+        constructor(delayInSec: Int) : this(delayInSec, MAX_RETRIES, emptyList())
         constructor(delayInSec: Int, maxRetryNumber: Int) : this(delayInSec, maxRetryNumber, emptyList())
 
         init {
@@ -52,9 +50,9 @@ sealed class RetryConfiguration {
                     log.trace("Provided delay is less than $MIN_DELAY, setting it to $MIN_DELAY")
                     delayInSec = MIN_DELAY.seconds
                 }
-                if (maxRetryNumber > MAX_RETRIES_IN_LINEAR) {
-                    log.trace("Provided maxRetryNumber is greater than $MAX_RETRIES_IN_LINEAR, setting it to $MAX_RETRIES_IN_LINEAR")
-                    maxRetryNumber = MAX_RETRIES_IN_LINEAR
+                if (maxRetryNumber > MAX_RETRIES) {
+                    log.trace("Provided maxRetryNumber is greater than $MAX_RETRIES, setting it to $MAX_RETRIES")
+                    maxRetryNumber = MAX_RETRIES
                 }
             }
         }
@@ -64,10 +62,12 @@ sealed class RetryConfiguration {
             @TestOnly
             internal fun createForTest(
                 delayInSec: Duration = MIN_DELAY.seconds,
-                maxRetryNumber: Int = MAX_RETRIES_IN_LINEAR,
+                maxRetryNumber: Int = MAX_RETRIES,
                 excludedOperations: List<RetryableEndpointGroup> = emptyList(),
                 isInternal: Boolean = false,
             ): Linear = Linear(delayInSec, maxRetryNumber, excludedOperations, isInternal)
+
+            const val MAX_RETRIES = 10
         }
     }
 
@@ -84,7 +84,7 @@ sealed class RetryConfiguration {
     class Exponential private constructor(
         var minDelayInSec: Duration = MIN_DELAY.seconds,
         var maxDelayInSec: Duration = MAX_DELAY.seconds,
-        var maxRetryNumber: Int = MAX_RETRIES_IN_EXPONENTIAL,
+        var maxRetryNumber: Int = MAX_RETRIES,
         val excludedOperations: List<RetryableEndpointGroup> = emptyList(),
         isInternal: Boolean = false,
     ) : RetryConfiguration() {
@@ -93,16 +93,16 @@ sealed class RetryConfiguration {
         constructor(
             minDelayInSec: Int = MIN_DELAY,
             maxDelayInSec: Int = MAX_DELAY,
-            maxRetryNumber: Int = MAX_RETRIES_IN_EXPONENTIAL,
+            maxRetryNumber: Int = MAX_RETRIES,
             excludedOperations: List<RetryableEndpointGroup> = emptyList(),
         ) : this(minDelayInSec.seconds, maxDelayInSec.seconds, maxRetryNumber, excludedOperations, false)
 
         // additional constructors for java
-        constructor() : this(MIN_DELAY, MAX_DELAY, MAX_RETRIES_IN_EXPONENTIAL, emptyList())
+        constructor() : this(MIN_DELAY, MAX_DELAY, MAX_RETRIES, emptyList())
         constructor(minDelayInSec: Int, maxDelayInSec: Int) : this(
             minDelayInSec,
             maxDelayInSec,
-            MAX_RETRIES_IN_EXPONENTIAL,
+            MAX_RETRIES,
             emptyList(),
         )
 
@@ -121,7 +121,7 @@ sealed class RetryConfiguration {
 
                 minDelayInSec = minDelayInSec.coerceIn(MIN_DELAY.seconds, MAX_DELAY.seconds)
                 maxDelayInSec = maxDelayInSec.coerceAtLeast(minDelayInSec).coerceAtMost(MAX_DELAY.seconds)
-                maxRetryNumber = maxRetryNumber.coerceAtMost(MAX_RETRIES_IN_EXPONENTIAL)
+                maxRetryNumber = maxRetryNumber.coerceAtMost(MAX_RETRIES)
 
                 if (minDelayInSec != originalMinDelayInSec || maxDelayInSec != originalMaxDelayInSec || maxRetryNumber != originalMaxRetryNumber) {
                     log.trace("Adjusted values: minDelayInSec=$minDelayInSec, maxDelayInSec=$maxDelayInSec, maxRetryNumber=$maxRetryNumber")
@@ -135,10 +135,12 @@ sealed class RetryConfiguration {
             internal fun createForTest(
                 minDelayInSec: Duration = MIN_DELAY.seconds,
                 maxDelayInSec: Duration = MAX_DELAY.seconds,
-                maxRetryNumber: Int = MAX_RETRIES_IN_EXPONENTIAL,
+                maxRetryNumber: Int = MAX_RETRIES,
                 excludedOperations: List<RetryableEndpointGroup> = emptyList(),
                 isInternal: Boolean = false,
             ): Exponential = Exponential(minDelayInSec, maxDelayInSec, maxRetryNumber, excludedOperations, isInternal)
+
+            const val MAX_RETRIES = 6
         }
     }
 }

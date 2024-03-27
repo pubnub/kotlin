@@ -37,7 +37,7 @@ class HeartbeatTestSuite : com.pubnub.internal.suite.CoreEndpointTestSuite<Heart
 
     override fun mappingBuilder(): MappingBuilder =
         get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/heartbeat"))
-            .withQueryParam("heartbeat", equalTo(pubnub.configuration.presenceTimeout.toString()))
+            .withQueryParam("heartbeat", equalTo(config.presenceTimeout.toString()))
 
     override fun affectedChannelsAndGroups() = listOf("ch1") to emptyList<String>()
 

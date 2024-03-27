@@ -26,7 +26,7 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
     lateinit var guest: PubNub
 
     override fun onBefore() {
-        guest = createPubNub()
+        guest = createPubNub {}
     }
 
     @Test
@@ -165,8 +165,10 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
         val timeoutReceived = AtomicBoolean()
         //
 
-        pubnub.configuration.presenceTimeout = expectedTimeout
-        pubnub.configuration.heartbeatInterval = 0
+        clientConfig = {
+            presenceTimeout = expectedTimeout
+            heartbeatInterval = 0
+        }
 
         pubnub.addListener(
             object : SubscribeCallback() {

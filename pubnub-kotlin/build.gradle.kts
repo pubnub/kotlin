@@ -8,6 +8,7 @@ plugins {
 dependencies {
     api(project(":pubnub-core:pubnub-core-api"))
     implementation(project(":pubnub-core:pubnub-core-impl"))
+    implementation(libs.slf4j)
 
     testImplementation(libs.wiremock)
 

@@ -31,17 +31,15 @@ class HeartbeatIntegrationTest : BaseIntegrationTest() {
         val expectedStatePayload = generatePayload()
 
         val observer =
-            createPubNub().apply {
-                configuration.userId = UserId("observer_${System.currentTimeMillis()}")
+            createPubNub {
+                userId = UserId("observer_${System.currentTimeMillis()}")
             }
 
         val pubnub =
-            createPubNub(
-                getBasicPnConfiguration().apply {
-                    presenceTimeout = 20
-                    heartbeatInterval = 4
-                },
-            )
+            createPubNub {
+                presenceTimeout = 20
+                heartbeatInterval = 4
+            }
 
         observer.addListener(
             object : com.pubnub.api.callbacks.SubscribeCallback() {

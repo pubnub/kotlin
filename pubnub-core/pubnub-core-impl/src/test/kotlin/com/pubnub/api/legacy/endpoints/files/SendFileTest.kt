@@ -6,8 +6,8 @@ import com.pubnub.api.models.consumer.files.PNBaseFile
 import com.pubnub.api.models.consumer.files.PNFileUploadResult
 import com.pubnub.api.models.consumer.files.PNPublishFileMessageResult
 import com.pubnub.api.retry.RetryConfiguration
+import com.pubnub.api.v2.BasePNConfiguration
 import com.pubnub.api.v2.callbacks.Result
-import com.pubnub.internal.PNConfigurationCore
 import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.TestPubNub
 import com.pubnub.internal.endpoints.files.GenerateUploadUrlEndpoint
@@ -204,7 +204,7 @@ class SendFileTest : TestsWithFiles {
     }
 
     private fun getPubNubMock(): TestPubNub {
-        val mockConfig = mockk<PNConfigurationCore>()
+        val mockConfig = mockk<BasePNConfiguration>()
         val mockPubNub = mockk<TestPubNub>()
         val mockPubNubImpl = mockk<PubNubCore>()
         val retryConfiguration = RetryConfiguration.None

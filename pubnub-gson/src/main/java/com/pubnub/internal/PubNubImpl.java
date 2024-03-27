@@ -9,6 +9,7 @@ import com.pubnub.api.builder.SubscribeBuilder;
 import com.pubnub.api.builder.UnsubscribeBuilder;
 import com.pubnub.api.callbacks.Listener;
 import com.pubnub.api.callbacks.SubscribeCallback;
+import com.pubnub.api.crypto.CryptoModule;
 import com.pubnub.api.endpoints.DeleteMessages;
 import com.pubnub.api.endpoints.FetchMessages;
 import com.pubnub.api.endpoints.History;
@@ -57,6 +58,7 @@ import com.pubnub.api.endpoints.push.AddChannelsToPush;
 import com.pubnub.api.endpoints.push.ListPushProvisions;
 import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice;
 import com.pubnub.api.endpoints.push.RemoveChannelsFromPush;
+import com.pubnub.api.v2.BasePNConfiguration;
 import com.pubnub.api.v2.callbacks.EventListener;
 import com.pubnub.api.v2.callbacks.StatusListener;
 import com.pubnub.api.v2.entities.Channel;
@@ -139,16 +141,16 @@ public class PubNubImpl extends BasePubNubImpl<
         SubscriptionSet,
         StatusListener> implements PubNub {
 
-    private final com.pubnub.api.PNConfiguration configuration;
+    private final @NotNull BasePNConfiguration configuration;
 
-    public PubNubImpl(@NotNull com.pubnub.api.PNConfiguration configuration) {
-        super(configuration.getPnConfigurationCore$pubnub_gson());
+    public PubNubImpl(@NotNull BasePNConfiguration configuration) {
+        super(configuration);
         this.configuration = configuration;
     }
 
     @Override
     @NotNull
-    public PNConfiguration getConfiguration() {
+    public BasePNConfiguration getConfiguration() {
         return configuration;
     }
 
@@ -471,6 +473,21 @@ public class PubNubImpl extends BasePubNubImpl<
     }
 
     // public methods
+    @SuppressWarnings("deprecation")
+    @NotNull
+    private CryptoModule getCryptoModuleOrThrow(@Nullable String cipherKey) throws PubNubException {
+        if (cipherKey != null) {
+            if (configuration instanceof PNConfiguration) {
+                return CryptoModule.createLegacyCryptoModule(cipherKey, ((PNConfiguration) configuration).getUseRandomInitializationVector());
+            } else {
+                return CryptoModule.createLegacyCryptoModule(cipherKey, true);
+            }
+        } else if (configuration.getCryptoModule() != null) {
+            return configuration.getCryptoModule();
+        } else {
+            throw new PubNubException(PubNubError.CRYPTO_ERROR, "Crypto module is not initialized");
+        }
+    }
 
     /**
      * Perform Cryptographic decryption of an input string using cipher key provided by PNConfiguration
@@ -498,7 +515,7 @@ public class PubNubImpl extends BasePubNubImpl<
         if (inputString == null) {
             throw new PubNubException(PubNubError.INVALID_ARGUMENTS);
         }
-        return getPubNubCore().decrypt(inputString, cipherKey);
+        return getPubNubCore().decrypt(inputString, getCryptoModuleOrThrow(cipherKey));
     }
 
     @Override
@@ -513,7 +530,7 @@ public class PubNubImpl extends BasePubNubImpl<
         if (inputStream == null) {
             throw new PubNubException(PubNubError.INVALID_ARGUMENTS);
         }
-        return getPubNubCore().decryptInputStream(inputStream, cipherKey);
+        return getPubNubCore().decryptInputStream(inputStream, getCryptoModuleOrThrow(cipherKey));
     }
 
     /**
@@ -542,7 +559,7 @@ public class PubNubImpl extends BasePubNubImpl<
         if (inputString == null) {
             throw new PubNubException(PubNubError.INVALID_ARGUMENTS);
         }
-        return getPubNubCore().encrypt(inputString, cipherKey);
+        return getPubNubCore().encrypt(inputString, getCryptoModuleOrThrow(cipherKey));
     }
 
     @Override
@@ -554,7 +571,7 @@ public class PubNubImpl extends BasePubNubImpl<
     @Override
     @NotNull
     public InputStream encryptInputStream(@NotNull InputStream inputStream, String cipherKey) throws PubNubException {
-        return getPubNubCore().encryptInputStream(inputStream, cipherKey);
+        return getPubNubCore().encryptInputStream(inputStream, getCryptoModuleOrThrow(cipherKey));
     }
 
     @Override

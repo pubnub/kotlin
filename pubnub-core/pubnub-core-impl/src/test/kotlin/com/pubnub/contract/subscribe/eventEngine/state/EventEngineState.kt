@@ -25,7 +25,7 @@ class EventEngineState(world: World) : WorldState by world {
     val statusesList: MutableList<PNStatus> = CopyOnWriteArrayList()
     val pubnub: TestPubNub by lazy {
         TestPubNub(
-            configuration,
+            configuration.build(),
             eventEnginesConf = testEventEnginesConf(subscribeQueuedElements, presenceQueuedElements),
         )
     }

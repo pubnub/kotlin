@@ -59,7 +59,7 @@ class RemoveChannelBaseChannelGroupCoreEndpointTest : BaseTest() {
                 ),
         )
 
-        pubnub.configuration.authKey = "myKey"
+        config.authKey = "myKey"
 
         pubnub.removeChannelsFromChannelGroup(
             channelGroup = "groupA",

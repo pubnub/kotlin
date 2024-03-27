@@ -2,7 +2,6 @@ package com.pubnub.api.integration
 
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
-import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.models.consumer.history.HistoryMessageType
@@ -66,11 +65,11 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun `when reading unencrypted message from history using pubNub with configured encryption should log error and return error in response and return unencrypted message`() {
-        val pnConfigurationWithCrypto = getBasicPnConfiguration()
-        val cipherKey = "enigma"
-        pnConfigurationWithCrypto.cryptoModule =
-            CryptoModule.createAesCbcCryptoModule(cipherKey = cipherKey, randomIv = false)
-        val pubNubWithCrypto = PubNub.create(pnConfigurationWithCrypto)
+        val pubNubWithCrypto = createPubNub {
+            val cipherKey = "enigma"
+            cryptoModule =
+                CryptoModule.createAesCbcCryptoModule(cipherKey = cipherKey, randomIv = false)
+        }
 
         val channel = randomChannel()
         val expectedMeta = JsonObject().also { it.add("thisIsMeta", JsonPrimitive("thisIsMetaValue")) }
@@ -218,11 +217,11 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun `when fetching unencrypted message with configured encryption should log and return unencrypted message`() {
-        val pnConfigurationWithCrypto = getBasicPnConfiguration()
-        val cipherKey = "enigma"
-        pnConfigurationWithCrypto.cryptoModule =
-            CryptoModule.createLegacyCryptoModule(cipherKey = cipherKey, randomIv = true)
-        val pubNubWithCrypto = PubNub.create(pnConfigurationWithCrypto)
+        val pubNubWithCrypto = createPubNub {
+            val cipherKey = "enigma"
+            cryptoModule =
+                CryptoModule.createLegacyCryptoModule(cipherKey = cipherKey, randomIv = true)
+        }
 
         val channel = randomChannel()
         val expectedMeta = JsonObject().also { it.add("thisIsMeta", JsonPrimitive("thisIsMetaValue")) }

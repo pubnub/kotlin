@@ -25,9 +25,10 @@ import java.util.concurrent.atomic.AtomicBoolean
 class GrantEndpointTest : BaseTest() {
     override fun onBefore() {
         super.onBefore()
-        pubnub.configuration.secretKey = "secretKey"
-        pubnub.configuration.includeInstanceIdentifier = true
-        pubnub.configuration.includeRequestIdentifier = true
+        config.secretKey = "secretKey"
+        config.includeInstanceIdentifier = true
+        config.includeRequestIdentifier = true
+        // initPubNub()
     }
 
     @Test
@@ -1666,7 +1667,8 @@ class GrantEndpointTest : BaseTest() {
                     ),
                 ),
         )
-        pubnub.configuration.authKey = "myKey"
+        config.authKey = "myKey"
+        // initPubNub()
 
         pubnub.grant(
             authKeys = listOf("key1"),
@@ -1730,7 +1732,9 @@ class GrantEndpointTest : BaseTest() {
 
     @Test
     fun testBlankSecretKey() {
-        pubnub.configuration.secretKey = " "
+        config.secretKey = " "
+        // initPubNub()
+
         try {
             pubnub.grant(
                 authKeys = listOf("key1"),
@@ -1744,7 +1748,8 @@ class GrantEndpointTest : BaseTest() {
 
     @Test
     fun testEmptySecretKey() {
-        pubnub.configuration.secretKey = ""
+        config.secretKey = ""
+        // initPubNub()
         try {
             pubnub.grant(
                 authKeys = listOf("key1"),
@@ -1758,7 +1763,8 @@ class GrantEndpointTest : BaseTest() {
 
     @Test
     fun testBlankSubscribeKey() {
-        pubnub.configuration.subscribeKey = " "
+        config.subscribeKey = " "
+        // initPubNub()
         try {
             pubnub.grant(
                 authKeys = listOf("key1"),
@@ -1772,7 +1778,8 @@ class GrantEndpointTest : BaseTest() {
 
     @Test
     fun testEmptySubscribeKey() {
-        pubnub.configuration.subscribeKey = ""
+        config.subscribeKey = ""
+        // initPubNub()
         try {
             pubnub.grant(
                 authKeys = listOf("key1"),

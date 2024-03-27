@@ -18,7 +18,8 @@ import org.junit.Test
 class HeartbeatCoreEndpointTest : BaseTest() {
     @Test
     fun testSuccessOneChannel() {
-        pubnub.configuration.presenceTimeout = 123
+        config.presenceTimeout = 123
+        // initPubNub()
 
         stubFor(
             get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/heartbeat"))
@@ -47,7 +48,8 @@ class HeartbeatCoreEndpointTest : BaseTest() {
 
     @Test
     fun testSuccessManyChannels() {
-        pubnub.configuration.presenceTimeout = 123
+        config.presenceTimeout = 123
+        // initPubNub()
 
         stubFor(
             get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1,ch2/heartbeat"))
@@ -76,7 +78,8 @@ class HeartbeatCoreEndpointTest : BaseTest() {
 
     @Test
     fun testSuccessOneChannelGroup() {
-        pubnub.configuration.presenceTimeout = 123
+        config.presenceTimeout = 123
+        // initPubNub()
         stubFor(
             get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/,/heartbeat"))
                 .willReturn(
@@ -105,7 +108,8 @@ class HeartbeatCoreEndpointTest : BaseTest() {
 
     @Test
     fun testSuccessManyChannelGroups() {
-        pubnub.configuration.presenceTimeout = 123
+        config.presenceTimeout = 123
+        // initPubNub()
 
         stubFor(
             get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/,/heartbeat"))
@@ -135,7 +139,8 @@ class HeartbeatCoreEndpointTest : BaseTest() {
 
     @Test
     fun testMissingChannelAndGroupSync() {
-        pubnub.configuration.presenceTimeout = 123
+        config.presenceTimeout = 123
+        // initPubNub()
 
         stubFor(
             get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/heartbeat"))
@@ -180,7 +185,8 @@ class HeartbeatCoreEndpointTest : BaseTest() {
                 ),
         )
 
-        pubnub.configuration.authKey = "myKey"
+        config.authKey = "myKey"
+        // initPubNub()
 
         HeartbeatEndpoint(pubnub, listOf("ch1")).sync()
 
@@ -191,7 +197,7 @@ class HeartbeatCoreEndpointTest : BaseTest() {
 
     @Test
     fun testBlankSubKeySync() {
-        pubnub.configuration.presenceTimeout = 123
+        config.presenceTimeout = 123
 
         stubFor(
             get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/heartbeat"))
@@ -207,7 +213,8 @@ class HeartbeatCoreEndpointTest : BaseTest() {
                     ),
                 ),
         )
-        pubnub.configuration.subscribeKey = " "
+        config.subscribeKey = " "
+        // initPubNub()
 
         try {
             HeartbeatEndpoint(pubnub, listOf("ch1")).sync()
@@ -222,7 +229,7 @@ class HeartbeatCoreEndpointTest : BaseTest() {
 
     @Test
     fun testEmptySubKeySync() {
-        pubnub.configuration.presenceTimeout = 123
+        config.presenceTimeout = 123
 
         stubFor(
             get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/heartbeat"))
@@ -238,7 +245,8 @@ class HeartbeatCoreEndpointTest : BaseTest() {
                     ),
                 ),
         )
-        pubnub.configuration.subscribeKey = ""
+        config.subscribeKey = ""
+        // initPubNub()
 
         try {
             HeartbeatEndpoint(pubnub, listOf("ch1")).sync()
