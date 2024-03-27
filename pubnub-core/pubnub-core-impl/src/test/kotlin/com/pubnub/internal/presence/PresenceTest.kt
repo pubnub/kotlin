@@ -1,7 +1,6 @@
 package com.pubnub.internal.presence
 
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
-import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.contract.subscribe.eventEngine.state.TestSinkSource
 import com.pubnub.internal.eventengine.EventEngineConf
 import com.pubnub.internal.eventengine.QueueEventEngineConf
@@ -28,8 +27,6 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 private const val CHANNEL_01 = "channel01"
-private const val CHANNEL_02 = "channel02"
-
 private const val CHANNEL_GROUPS_01 = "channelGroups01"
 
 internal class PresenceTest {
@@ -172,7 +169,6 @@ internal class PresenceTest {
         heartbeatProvider = { _, _, _ -> successfulRemoteAction(true) },
         leaveProvider = leaveProvider,
         heartbeatInterval = heartbeatInterval,
-        retryConfiguration = RetryConfiguration.None,
         suppressLeaveEvents = suppressLeaveEvents,
         heartbeatNotificationOptions = heartbeatNotificationOptions,
         listenerManager = listenerManager,

@@ -105,10 +105,6 @@ internal abstract class RetryableBase<T>(
 
     protected fun isErrorCodeRetryable(errorCode: Int) = retryableStatusCodes.containsKey(errorCode)
 
-    protected fun shouldRetry(attempts: Int): Boolean {
-        return attempts < maxRetryNumberFromConfiguration
-    }
-
     protected fun getEffectiveDelay(
         statusCode: Int,
         retryAfterHeaderValue: Int,

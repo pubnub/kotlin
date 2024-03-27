@@ -1,9 +1,7 @@
 package com.pubnub.internal.presence.eventengine.effect
 
-import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
-import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.internal.eventengine.Sink
 import com.pubnub.internal.presence.eventengine.data.PresenceData
 import com.pubnub.internal.presence.eventengine.effect.effectprovider.HeartbeatProvider
@@ -28,7 +26,6 @@ class PresenceEffectFactoryTest {
     private val heartbeatProvider = mockk<HeartbeatProvider>()
     private val leaveProvider = mockk<LeaveProvider>()
     private val presenceEventSink = mockk<Sink<PresenceEvent>>()
-    private val retryConfiguration = RetryConfiguration.None
     private val executorService = mockk<ScheduledExecutorService>()
     private val heartbeatInterval = 10.seconds
     private val channels = setOf("channel1")
@@ -36,8 +33,6 @@ class PresenceEffectFactoryTest {
     private val heartbeatRemoteAction: RemoteAction<Boolean> = mockk()
     private val leaveRemoteAction: RemoteAction<Boolean> = mockk()
     private val suppressLeaveEvents = true
-    private val attempts: Int = 1
-    private val reason: PubNubException = mockk()
     private val heartbeatNotificationOptions: PNHeartbeatNotificationOptions = mockk()
     private val statusConsumer: StatusConsumer = mockk()
     private val presenceData = PresenceData()
@@ -50,7 +45,6 @@ class PresenceEffectFactoryTest {
                 heartbeatProvider,
                 leaveProvider,
                 presenceEventSink,
-                retryConfiguration,
                 executorService,
                 heartbeatInterval,
                 suppressLeaveEvents,
@@ -118,39 +112,6 @@ class PresenceEffectFactoryTest {
     }
 
     @Test
-    fun `should include State from PresenceData into delayed Heartbeat effect when getting delayed Heartbeat invocation`() {
-        // given
-        presenceData.channelStates[channels.first()] = mapOf("aaa" to "bbb")
-        presenceData.channelStates["nonSubscribedChannel"] = mapOf("aaa" to "bbb")
-
-        val effectInvocation = PresenceEffectInvocation.DelayedHeartbeat(channels, channelGroups, attempts, reason)
-        every {
-            heartbeatProvider.getHeartbeatRemoteAction(
-                effectInvocation.channels,
-                effectInvocation.channelGroups,
-                any(),
-            )
-        } returns heartbeatRemoteAction
-
-        // when
-        presenceEffectFactory.create(effectInvocation)
-
-        // then
-        verify {
-            heartbeatProvider.getHeartbeatRemoteAction(
-                effectInvocation.channels,
-                effectInvocation.channelGroups,
-                mapOf(
-                    channels.first() to
-                        mapOf(
-                            "aaa" to "bbb",
-                        ),
-                ),
-            )
-        }
-    }
-
-    @Test
     fun `should not include State from PresenceData into Heartbeat when sending state is disabled`() {
         // given
         presenceData.channelStates[channels.first()] = mapOf("aaa" to "bbb")
@@ -168,46 +129,6 @@ class PresenceEffectFactoryTest {
             heartbeatProvider,
             leaveProvider,
             presenceEventSink,
-            retryConfiguration,
-            executorService,
-            heartbeatInterval,
-            suppressLeaveEvents,
-            heartbeatNotificationOptions,
-            statusConsumer,
-            presenceData,
-            false,
-        ).create(effectInvocation)
-
-        // then
-        verify {
-            heartbeatProvider.getHeartbeatRemoteAction(
-                effectInvocation.channels,
-                effectInvocation.channelGroups,
-                null,
-            )
-        }
-    }
-
-    @Test
-    fun `should not include State from PresenceData into delayed Heartbeat effect when sending state is disabled`() {
-        // given
-        presenceData.channelStates[channels.first()] = mapOf("aaa" to "bbb")
-
-        val effectInvocation = PresenceEffectInvocation.DelayedHeartbeat(channels, channelGroups, attempts, reason)
-        every {
-            heartbeatProvider.getHeartbeatRemoteAction(
-                effectInvocation.channels,
-                effectInvocation.channelGroups,
-                any(),
-            )
-        } returns heartbeatRemoteAction
-
-        // when
-        PresenceEffectFactory(
-            heartbeatProvider,
-            leaveProvider,
-            presenceEventSink,
-            retryConfiguration,
             executorService,
             heartbeatInterval,
             suppressLeaveEvents,
@@ -253,7 +174,6 @@ class PresenceEffectFactoryTest {
                 heartbeatProvider,
                 leaveProvider,
                 presenceEventSink,
-                retryConfiguration,
                 executorService,
                 heartbeatInterval,
                 suppressLeaveEvents = false,
@@ -276,29 +196,5 @@ class PresenceEffectFactoryTest {
         // then
         assertThat(effect, IsInstanceOf.instanceOf(LeaveEffect::class.java))
         assertEquals(leaveRemoteAction, effect.leaveRemoteAction)
-    }
-
-    @Test
-    fun `should return DelayedHeartbeat effect when getting DelayedHeartbeat invocation`() {
-        // given
-        val effectInvocation = PresenceEffectInvocation.DelayedHeartbeat(channels, channelGroups, attempts, reason)
-        every {
-            heartbeatProvider.getHeartbeatRemoteAction(
-                effectInvocation.channels,
-                effectInvocation.channelGroups,
-                any(),
-            )
-        } returns heartbeatRemoteAction
-
-        // when
-        val effect: DelayedHeartbeatEffect = presenceEffectFactory.create(effectInvocation) as DelayedHeartbeatEffect
-
-        // then
-        assertThat(effect, IsInstanceOf.instanceOf(DelayedHeartbeatEffect::class.java))
-        assertEquals(heartbeatRemoteAction, effect.heartbeatRemoteAction)
-        assertEquals(presenceEventSink, effect.presenceEventSink)
-        assertEquals(retryConfiguration, effect.retryConfiguration)
-        assertEquals(attempts, effect.attempts)
-        assertEquals(reason, effect.reason)
     }
 }

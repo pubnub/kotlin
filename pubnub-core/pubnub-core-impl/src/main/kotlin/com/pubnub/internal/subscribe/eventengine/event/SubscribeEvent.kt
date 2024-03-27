@@ -29,21 +29,8 @@ internal sealed class SubscribeEvent : Event {
 
     data class HandshakeFailure(val reason: PubNubException) : SubscribeEvent()
 
-    data class HandshakeReconnectSuccess(val subscriptionCursor: SubscriptionCursor) : SubscribeEvent()
-
-    data class HandshakeReconnectFailure(val reason: PubNubException) : SubscribeEvent()
-
-    data class HandshakeReconnectGiveup(val reason: PubNubException) : SubscribeEvent()
-
     data class ReceiveSuccess(val messages: List<PNEvent>, val subscriptionCursor: SubscriptionCursor) :
         SubscribeEvent()
 
     data class ReceiveFailure(val reason: PubNubException) : SubscribeEvent()
-
-    data class ReceiveReconnectSuccess(val messages: List<PNEvent>, val subscriptionCursor: SubscriptionCursor) :
-        SubscribeEvent()
-
-    data class ReceiveReconnectFailure(val reason: PubNubException) : SubscribeEvent()
-
-    data class ReceiveReconnectGiveup(val reason: PubNubException) : SubscribeEvent()
 }

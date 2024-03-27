@@ -1,6 +1,5 @@
 package com.pubnub.internal.subscribe.eventengine.effect
 
-import com.pubnub.api.PubNubException
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.internal.eventengine.Cancel
@@ -24,19 +23,6 @@ internal sealed class SubscribeEffectInvocation(override val type: EffectInvocat
     object CancelReceiveMessages :
         SubscribeEffectInvocation(Cancel(idToCancel = ReceiveMessages::class.java.simpleName))
 
-    data class ReceiveReconnect(
-        val channels: Set<String>,
-        val channelGroups: Set<String>,
-        val subscriptionCursor: SubscriptionCursor,
-        val attempts: Int,
-        val reason: PubNubException?,
-    ) : SubscribeEffectInvocation(Managed) {
-        override val id: String = ReceiveReconnect::class.java.simpleName
-    }
-
-    object CancelReceiveReconnect :
-        SubscribeEffectInvocation(Cancel(ReceiveReconnect::class.java.simpleName))
-
     data class Handshake(
         val channels: Set<String>,
         val channelGroups: Set<String>,
@@ -46,18 +32,6 @@ internal sealed class SubscribeEffectInvocation(override val type: EffectInvocat
 
     object CancelHandshake :
         SubscribeEffectInvocation(Cancel(idToCancel = Handshake::class.java.simpleName))
-
-    data class HandshakeReconnect(
-        val channels: Set<String>,
-        val channelGroups: Set<String>,
-        val attempts: Int,
-        val reason: PubNubException?,
-    ) : SubscribeEffectInvocation(Managed) {
-        override val id: String = HandshakeReconnect::class.java.simpleName
-    }
-
-    object CancelHandshakeReconnect :
-        SubscribeEffectInvocation(Cancel(idToCancel = HandshakeReconnect::class.java.simpleName))
 
     data class EmitStatus(val status: PNStatus) : SubscribeEffectInvocation(NonManaged)
 

@@ -1,7 +1,6 @@
 package com.pubnub.internal.presence
 
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
-import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.internal.eventengine.EffectDispatcher
 import com.pubnub.internal.eventengine.EventEngineConf
 import com.pubnub.internal.managers.ListenerManager
@@ -23,7 +22,6 @@ internal interface Presence {
             heartbeatProvider: HeartbeatProvider,
             leaveProvider: LeaveProvider,
             heartbeatInterval: Duration,
-            retryConfiguration: RetryConfiguration,
             suppressLeaveEvents: Boolean,
             heartbeatNotificationOptions: PNHeartbeatNotificationOptions,
             listenerManager: ListenerManager,
@@ -41,7 +39,6 @@ internal interface Presence {
                     heartbeatProvider = heartbeatProvider,
                     leaveProvider = leaveProvider,
                     presenceEventSink = eventEngineConf.eventSink,
-                    retryConfiguration = retryConfiguration,
                     executorService = executorService,
                     heartbeatInterval = heartbeatInterval,
                     suppressLeaveEvents = suppressLeaveEvents,
