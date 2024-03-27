@@ -72,8 +72,8 @@ abstract class AccessManagerIntegrationTest extends BaseIntegrationTest {
     @Override
     protected void onBefore() {
         pubNub = getPubNub(builder -> {
-            builder.setIncludeInstanceIdentifier(false);
-            builder.setIncludeRequestIdentifier(false);
+            builder.includeInstanceIdentifier(false);
+            builder.includeRequestIdentifier(false);
         });
         if (performOnServer()) {
             pubNub = server;

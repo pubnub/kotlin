@@ -74,12 +74,12 @@ class PNConfigurationImpl(
             override var subscribeKey: String = super.subscribeKey
                 private set
 
-            override fun setSubscribeKey(subscribeKey: String): PNConfiguration.Builder {
+            override fun subscribeKey(subscribeKey: String): PNConfiguration.Builder {
                 this.subscribeKey = subscribeKey
                 return this
             }
 
-            override fun setPublishKey(publishKey: String): Builder {
+            override fun publishKey(publishKey: String): Builder {
                 this.publishKey = publishKey
                 return this
             }
@@ -87,7 +87,7 @@ class PNConfigurationImpl(
             override var publishKey: String = super.publishKey
                 private set
 
-            override fun setSecretKey(secretKey: String): Builder {
+            override fun secretKey(secretKey: String): Builder {
                 this.secretKey = secretKey
                 return this
             }
@@ -95,7 +95,7 @@ class PNConfigurationImpl(
             override var secretKey: String = super.secretKey
                 private set
 
-            override fun setAuthKey(authKey: String): Builder {
+            override fun authKey(authKey: String): Builder {
                 this.authKey = authKey
                 return this
             }
@@ -103,7 +103,7 @@ class PNConfigurationImpl(
             override var authKey: String = super.authKey
                 private set
 
-            override fun setCryptoModule(cryptoModule: CryptoModule?): Builder {
+            override fun cryptoModule(cryptoModule: CryptoModule?): Builder {
                 this.cryptoModule = cryptoModule
                 return this
             }
@@ -111,7 +111,7 @@ class PNConfigurationImpl(
             override var cryptoModule: CryptoModule? = super.cryptoModule
                 private set
 
-            override fun setOrigin(origin: String): Builder {
+            override fun origin(origin: String): Builder {
                 this.origin = origin
                 return this
             }
@@ -119,7 +119,7 @@ class PNConfigurationImpl(
             override var origin: String = super.origin
                 private set
 
-            override fun setSecure(secure: Boolean): Builder {
+            override fun secure(secure: Boolean): Builder {
                 this.secure = secure
                 return this
             }
@@ -127,7 +127,7 @@ class PNConfigurationImpl(
             override var secure: Boolean = super.secure
                 private set
 
-            override fun setLogVerbosity(logVerbosity: PNLogVerbosity): Builder {
+            override fun logVerbosity(logVerbosity: PNLogVerbosity): Builder {
                 this.logVerbosity = logVerbosity
                 return this
             }
@@ -135,7 +135,7 @@ class PNConfigurationImpl(
             override var logVerbosity: PNLogVerbosity = super.logVerbosity
                 private set
 
-            override fun setHeartbeatNotificationOptions(heartbeatNotificationOptions: PNHeartbeatNotificationOptions): Builder {
+            override fun heartbeatNotificationOptions(heartbeatNotificationOptions: PNHeartbeatNotificationOptions): Builder {
                 this.heartbeatNotificationOptions = heartbeatNotificationOptions
                 return this
             }
@@ -143,7 +143,7 @@ class PNConfigurationImpl(
             override var heartbeatNotificationOptions: PNHeartbeatNotificationOptions = super.heartbeatNotificationOptions
                 private set
 
-            override fun setPresenceTimeout(presenceTimeout: Int): Builder {
+            override fun presenceTimeout(presenceTimeout: Int): Builder {
                 this.presenceTimeout = if (presenceTimeout < MINIMUM_PRESENCE_TIMEOUT) {
                     log.warn("Presence timeout is too low. Defaulting to: $MINIMUM_PRESENCE_TIMEOUT")
                     MINIMUM_PRESENCE_TIMEOUT
@@ -157,7 +157,7 @@ class PNConfigurationImpl(
             override var presenceTimeout: Int = super.presenceTimeout
                 private set
 
-            override fun setHeartbeatInterval(heartbeatInterval: Int): Builder {
+            override fun heartbeatInterval(heartbeatInterval: Int): Builder {
                 this.heartbeatInterval = heartbeatInterval
                 return this
             }
@@ -165,7 +165,7 @@ class PNConfigurationImpl(
             override var heartbeatInterval: Int = super.heartbeatInterval
                 private set
 
-            override fun setSubscribeTimeout(subscribeTimeout: Int): Builder {
+            override fun subscribeTimeout(subscribeTimeout: Int): Builder {
                 this.subscribeTimeout = subscribeTimeout
                 return this
             }
@@ -173,7 +173,7 @@ class PNConfigurationImpl(
             override var subscribeTimeout: Int = super.subscribeTimeout
                 private set
 
-            override fun setConnectTimeout(connectTimeout: Int): Builder {
+            override fun connectTimeout(connectTimeout: Int): Builder {
                 this.connectTimeout = connectTimeout
                 return this
             }
@@ -181,7 +181,7 @@ class PNConfigurationImpl(
             override var connectTimeout: Int = super.connectTimeout
                 private set
 
-            override fun setNonSubscribeRequestTimeout(nonSubscribeRequestTimeout: Int): Builder {
+            override fun nonSubscribeRequestTimeout(nonSubscribeRequestTimeout: Int): Builder {
                 this.nonSubscribeRequestTimeout = nonSubscribeRequestTimeout
                 return this
             }
@@ -189,7 +189,7 @@ class PNConfigurationImpl(
             override var nonSubscribeRequestTimeout: Int = super.nonSubscribeRequestTimeout
                 private set
 
-            override fun setCacheBusting(cacheBusting: Boolean): Builder {
+            override fun cacheBusting(cacheBusting: Boolean): Builder {
                 this.cacheBusting = cacheBusting
                 return this
             }
@@ -197,7 +197,7 @@ class PNConfigurationImpl(
             override var cacheBusting: Boolean = super.cacheBusting
                 private set
 
-            override fun setSuppressLeaveEvents(suppressLeaveEvents: Boolean): Builder {
+            override fun suppressLeaveEvents(suppressLeaveEvents: Boolean): Builder {
                 this.suppressLeaveEvents = suppressLeaveEvents
                 return this
             }
@@ -205,7 +205,7 @@ class PNConfigurationImpl(
             override var suppressLeaveEvents: Boolean = super.suppressLeaveEvents
                 private set
 
-            override fun setMaintainPresenceState(maintainPresenceState: Boolean): Builder {
+            override fun maintainPresenceState(maintainPresenceState: Boolean): Builder {
                 this.maintainPresenceState = maintainPresenceState
                 return this
             }
@@ -213,7 +213,7 @@ class PNConfigurationImpl(
             override var maintainPresenceState: Boolean = super.maintainPresenceState
                 private set
 
-            override fun setFilterExpression(filterExpression: String): Builder {
+            override fun filterExpression(filterExpression: String): Builder {
                 this.filterExpression = filterExpression
                 return this
             }
@@ -221,7 +221,7 @@ class PNConfigurationImpl(
             override var filterExpression: String = super.filterExpression
                 private set
 
-            override fun setIncludeInstanceIdentifier(includeInstanceIdentifier: Boolean): Builder {
+            override fun includeInstanceIdentifier(includeInstanceIdentifier: Boolean): Builder {
                 this.includeInstanceIdentifier = includeInstanceIdentifier
                 return this
             }
@@ -229,7 +229,7 @@ class PNConfigurationImpl(
             override var includeInstanceIdentifier: Boolean = super.includeInstanceIdentifier
                 private set
 
-            override fun setIncludeRequestIdentifier(includeRequestIdentifier: Boolean): Builder {
+            override fun includeRequestIdentifier(includeRequestIdentifier: Boolean): Builder {
                 this.includeRequestIdentifier = includeRequestIdentifier
                 return this
             }
@@ -237,7 +237,7 @@ class PNConfigurationImpl(
             override var includeRequestIdentifier: Boolean = super.includeRequestIdentifier
                 private set
 
-            override fun setMaximumConnections(maximumConnections: Int?): Builder {
+            override fun maximumConnections(maximumConnections: Int?): Builder {
                 this.maximumConnections = maximumConnections
                 return this
             }
@@ -245,7 +245,7 @@ class PNConfigurationImpl(
             override var maximumConnections: Int? = super.maximumConnections
                 private set
 
-            override fun setGoogleAppEngineNetworking(googleAppEngineNetworking: Boolean): Builder {
+            override fun googleAppEngineNetworking(googleAppEngineNetworking: Boolean): Builder {
                 this.googleAppEngineNetworking = googleAppEngineNetworking
                 return this
             }
@@ -253,7 +253,7 @@ class PNConfigurationImpl(
             override var googleAppEngineNetworking: Boolean = super.googleAppEngineNetworking
                 private set
 
-            override fun setProxy(proxy: Proxy?): Builder {
+            override fun proxy(proxy: Proxy?): Builder {
                 this.proxy = proxy
                 return this
             }
@@ -261,7 +261,7 @@ class PNConfigurationImpl(
             override var proxy: Proxy? = super.proxy
                 private set
 
-            override fun setProxySelector(proxySelector: ProxySelector?): Builder {
+            override fun proxySelector(proxySelector: ProxySelector?): Builder {
                 this.proxySelector = proxySelector
                 return this
             }
@@ -269,7 +269,7 @@ class PNConfigurationImpl(
             override var proxySelector: ProxySelector? = super.proxySelector
                 private set
 
-            override fun setProxyAuthenticator(proxyAuthenticator: Authenticator?): Builder {
+            override fun proxyAuthenticator(proxyAuthenticator: Authenticator?): Builder {
                 this.proxyAuthenticator = proxyAuthenticator
                 return this
             }
@@ -277,7 +277,7 @@ class PNConfigurationImpl(
             override var proxyAuthenticator: Authenticator? = super.proxyAuthenticator
                 private set
 
-            override fun setCertificatePinner(certificatePinner: CertificatePinner?): Builder {
+            override fun certificatePinner(certificatePinner: CertificatePinner?): Builder {
                 this.certificatePinner = certificatePinner
                 return this
             }
@@ -285,7 +285,7 @@ class PNConfigurationImpl(
             override var certificatePinner: CertificatePinner? = super.certificatePinner
                 private set
 
-            override fun setHttpLoggingInterceptor(httpLoggingInterceptor: HttpLoggingInterceptor?): Builder {
+            override fun httpLoggingInterceptor(httpLoggingInterceptor: HttpLoggingInterceptor?): Builder {
                 this.httpLoggingInterceptor = httpLoggingInterceptor
                 return this
             }
@@ -293,7 +293,7 @@ class PNConfigurationImpl(
             override var httpLoggingInterceptor: HttpLoggingInterceptor? = super.httpLoggingInterceptor
                 private set
 
-            override fun setSslSocketFactory(sslSocketFactory: SSLSocketFactory?): Builder {
+            override fun sslSocketFactory(sslSocketFactory: SSLSocketFactory?): Builder {
                 this.sslSocketFactory = sslSocketFactory
                 return this
             }
@@ -301,7 +301,7 @@ class PNConfigurationImpl(
             override var sslSocketFactory: SSLSocketFactory? = super.sslSocketFactory
                 private set
 
-            override fun setX509ExtendedTrustManager(x509ExtendedTrustManager: X509ExtendedTrustManager?): Builder {
+            override fun x509ExtendedTrustManager(x509ExtendedTrustManager: X509ExtendedTrustManager?): Builder {
                 this.x509ExtendedTrustManager = x509ExtendedTrustManager
                 return this
             }
@@ -309,7 +309,7 @@ class PNConfigurationImpl(
             override var x509ExtendedTrustManager: X509ExtendedTrustManager? = super.x509ExtendedTrustManager
                 private set
 
-            override fun setConnectionSpec(connectionSpec: ConnectionSpec?): Builder {
+            override fun connectionSpec(connectionSpec: ConnectionSpec?): Builder {
                 this.connectionSpec = connectionSpec
                 return this
             }
@@ -317,7 +317,7 @@ class PNConfigurationImpl(
             override var connectionSpec: ConnectionSpec? = super.connectionSpec
                 private set
 
-            override fun setHostnameVerifier(hostnameVerifier: HostnameVerifier?): Builder {
+            override fun hostnameVerifier(hostnameVerifier: HostnameVerifier?): Builder {
                 this.hostnameVerifier = hostnameVerifier
                 return this
             }
@@ -325,7 +325,7 @@ class PNConfigurationImpl(
             override var hostnameVerifier: HostnameVerifier? = super.hostnameVerifier
                 private set
 
-            override fun setFileMessagePublishRetryLimit(fileMessagePublishRetryLimit: Int): Builder {
+            override fun fileMessagePublishRetryLimit(fileMessagePublishRetryLimit: Int): Builder {
                 this.fileMessagePublishRetryLimit = fileMessagePublishRetryLimit
                 return this
             }
@@ -333,7 +333,7 @@ class PNConfigurationImpl(
             override var fileMessagePublishRetryLimit: Int = super.fileMessagePublishRetryLimit
                 private set
 
-            override fun setDedupOnSubscribe(dedupOnSubscribe: Boolean): Builder {
+            override fun dedupOnSubscribe(dedupOnSubscribe: Boolean): Builder {
                 this.dedupOnSubscribe = dedupOnSubscribe
                 return this
             }
@@ -341,7 +341,7 @@ class PNConfigurationImpl(
             override var dedupOnSubscribe: Boolean = super.dedupOnSubscribe
                 private set
 
-            override fun setMaximumMessagesCacheSize(maximumMessagesCacheSize: Int): Builder {
+            override fun maximumMessagesCacheSize(maximumMessagesCacheSize: Int): Builder {
                 this.maximumMessagesCacheSize = maximumMessagesCacheSize
                 return this
             }
@@ -349,7 +349,7 @@ class PNConfigurationImpl(
             override var maximumMessagesCacheSize: Int = super.maximumMessagesCacheSize
                 private set
 
-            override fun setPnsdkSuffixes(pnsdkSuffixes: Map<String, String>): Builder {
+            override fun pnsdkSuffixes(pnsdkSuffixes: Map<String, String>): Builder {
                 this.pnsdkSuffixes = pnsdkSuffixes
                 return this
             }
@@ -357,7 +357,7 @@ class PNConfigurationImpl(
             override var pnsdkSuffixes: Map<String, String> = super.pnsdkSuffixes
                 private set
 
-            override fun setRetryConfiguration(retryConfiguration: RetryConfiguration): Builder {
+            override fun retryConfiguration(retryConfiguration: RetryConfiguration): Builder {
                 this.retryConfiguration = retryConfiguration
                 return this
             }
@@ -365,7 +365,7 @@ class PNConfigurationImpl(
             override var retryConfiguration: RetryConfiguration = super.retryConfiguration
                 private set
 
-            override fun setManagePresenceListManually(managePresenceListManually: Boolean): Builder {
+            override fun managePresenceListManually(managePresenceListManually: Boolean): Builder {
                 this.managePresenceListManually = managePresenceListManually
                 return this
             }

@@ -35,56 +35,56 @@ interface PNConfiguration : BasePNConfiguration {
 
         fun setUserId(userId: UserId): Builder
 
-        fun setSubscribeKey(subscribeKey: String): Builder
+        fun subscribeKey(subscribeKey: String): Builder
 
         /**
          * The publish key from the admin panel (only required if publishing).
          */
-        fun setPublishKey(publishKey: String): Builder
+        fun publishKey(publishKey: String): Builder
 
         /**
          * The secret key from the admin panel (only required for modifying/revealing access permissions).
          *
          * Keep away from Android.
          */
-        fun setSecretKey(secretKey: String): Builder
+        fun secretKey(secretKey: String): Builder
 
         /**
          * If Access Manager is utilized, client will use this authKey in all restricted requests.
          */
-        fun setAuthKey(authKey: String): Builder
+        fun authKey(authKey: String): Builder
 
         /**
          * CryptoModule is responsible for handling encryption and decryption.
          * If set, all communications to and from PubNub will be encrypted.
          */
-        fun setCryptoModule(cryptoModule: CryptoModule?): Builder
+        fun cryptoModule(cryptoModule: CryptoModule?): Builder
 
         /**
          * Custom origin if needed.
          *
          * Defaults to `ps.pndsn.com`
          */
-        fun setOrigin(origin: String): Builder
+        fun origin(origin: String): Builder
 
         /**
          * If set to `true`,  requests will be made over HTTPS.
          *
          * Deafults to `true`.
          */
-        fun setSecure(secure: Boolean): Builder
+        fun secure(secure: Boolean): Builder
 
         /**
          * Set to [PNLogVerbosity.BODY] to enable logging of network traffic, otherwise se to [PNLogVerbosity.NONE].
          */
-        fun setLogVerbosity(logVerbosity: PNLogVerbosity): Builder
+        fun logVerbosity(logVerbosity: PNLogVerbosity): Builder
 
         /**
          * Set Heartbeat notification options.
          *
          * By default, the SDK alerts on failed heartbeats (equivalent to [PNHeartbeatNotificationOptions.FAILURES]).
          */
-        fun setHeartbeatNotificationOptions(heartbeatNotificationOptions: PNHeartbeatNotificationOptions): Builder
+        fun heartbeatNotificationOptions(heartbeatNotificationOptions: PNHeartbeatNotificationOptions): Builder
 
         /**
          * Sets the custom presence server timeout.
@@ -93,14 +93,14 @@ interface PNConfiguration : BasePNConfiguration {
          *
          * Also sets the value of [heartbeatInterval]
          */
-        fun setPresenceTimeout(presenceTimeout: Int): Builder
+        fun presenceTimeout(presenceTimeout: Int): Builder
 
         /**
          * How often the client will announce itself to server.
          *
          * The value is in seconds.
          */
-        fun setHeartbeatInterval(heartbeatInterval: Int): Builder
+        fun heartbeatInterval(heartbeatInterval: Int): Builder
 
         /**
          * The subscribe request timeout.
@@ -109,7 +109,7 @@ interface PNConfiguration : BasePNConfiguration {
          *
          * Defaults to 310.
          */
-        fun setSubscribeTimeout(subscribeTimeout: Int): Builder
+        fun subscribeTimeout(subscribeTimeout: Int): Builder
 
         /**
          * How long before the client gives up trying to connect with the server.
@@ -118,7 +118,7 @@ interface PNConfiguration : BasePNConfiguration {
          *
          * Defaults to 5.
          */
-        fun setConnectTimeout(connectTimeout: Int): Builder
+        fun connectTimeout(connectTimeout: Int): Builder
 
         /**
          * For non subscribe operations (publish, herenow, etc),
@@ -130,21 +130,21 @@ interface PNConfiguration : BasePNConfiguration {
          *
          * Defaults to 10.
          */
-        fun setNonSubscribeRequestTimeout(nonSubscribeRequestTimeout: Int): Builder
+        fun nonSubscribeRequestTimeout(nonSubscribeRequestTimeout: Int): Builder
 
         /**
          * If operating behind a misbehaving proxy, allow the client to shuffle the subdomains.
          *
          * Defaults to `false`.
          */
-        fun setCacheBusting(cacheBusting: Boolean): Builder
+        fun cacheBusting(cacheBusting: Boolean): Builder
 
         /**
          * When `true` the SDK doesn't send out the leave requests.
          *
          * Defaults to `false`.
          */
-        fun setSuppressLeaveEvents(suppressLeaveEvents: Boolean): Builder
+        fun suppressLeaveEvents(suppressLeaveEvents: Boolean): Builder
 
         /**
          * When `true` the SDK will resend the last channel state that was set using [PubNub.setPresenceState]
@@ -159,100 +159,100 @@ interface PNConfiguration : BasePNConfiguration {
          * It is recommended to disable this option if you set state for channel groups using [PubNub.setPresenceState]
          * otherwise that state may be overwritten by individual channel states.
          */
-        fun setMaintainPresenceState(maintainPresenceState: Boolean): Builder
+        fun maintainPresenceState(maintainPresenceState: Boolean): Builder
 
         /**
          * Feature to subscribe with a custom filter expression.
          */
-        fun setFilterExpression(filterExpression: String): Builder
+        fun filterExpression(filterExpression: String): Builder
 
         /**
          * Whether to include a [PubNubCore.instanceId] with every request.
          *
          * Defaults to `false`.
          */
-        fun setIncludeInstanceIdentifier(includeInstanceIdentifier: Boolean): Builder
+        fun includeInstanceIdentifier(includeInstanceIdentifier: Boolean): Builder
 
         /**
          * Whether to include a [PubNubCore.requestId] with every request.
          *
          * Defaults to `true`.
          */
-        fun setIncludeRequestIdentifier(includeRequestIdentifier: Boolean): Builder
+        fun includeRequestIdentifier(includeRequestIdentifier: Boolean): Builder
 
         /**
          * @see [okhttp3.Dispatcher.setMaxRequestsPerHost]
          */
-        fun setMaximumConnections(maximumConnections: Int?): Builder
+        fun maximumConnections(maximumConnections: Int?): Builder
 
         /**
          * Enable Google App Engine networking.
          *
          * Defaults to `false`.
          */
-        fun setGoogleAppEngineNetworking(googleAppEngineNetworking: Boolean): Builder
+        fun googleAppEngineNetworking(googleAppEngineNetworking: Boolean): Builder
 
         /**
          * Instructs the SDK to use a proxy configuration when communicating with PubNub servers.
          *
          * @see [Proxy]
          */
-        fun setProxy(proxy: Proxy?): Builder
+        fun proxy(proxy: Proxy?): Builder
 
         /**
          * @see [ProxySelector]
          */
-        fun setProxySelector(proxySelector: ProxySelector?): Builder
+        fun proxySelector(proxySelector: ProxySelector?): Builder
 
         /**
          * @see [Authenticator]
          */
-        fun setProxyAuthenticator(proxyAuthenticator: Authenticator?): Builder
+        fun proxyAuthenticator(proxyAuthenticator: Authenticator?): Builder
 
         /**
          * @see [CertificatePinner]
          */
-        fun setCertificatePinner(certificatePinner: CertificatePinner?): Builder
+        fun certificatePinner(certificatePinner: CertificatePinner?): Builder
 
         /**
          * Sets a custom [HttpLoggingInterceptor] for logging network traffic.
          *
          * @see [HttpLoggingInterceptor]
          */
-        fun setHttpLoggingInterceptor(httpLoggingInterceptor: HttpLoggingInterceptor?): Builder
+        fun httpLoggingInterceptor(httpLoggingInterceptor: HttpLoggingInterceptor?): Builder
 
         /**
          * @see [SSLSocketFactory]
          */
-        fun setSslSocketFactory(sslSocketFactory: SSLSocketFactory?): Builder
+        fun sslSocketFactory(sslSocketFactory: SSLSocketFactory?): Builder
 
         /**
          * @see [X509ExtendedTrustManager]
          */
-        fun setX509ExtendedTrustManager(x509ExtendedTrustManager: X509ExtendedTrustManager?): Builder
+        fun x509ExtendedTrustManager(x509ExtendedTrustManager: X509ExtendedTrustManager?): Builder
 
         /**
          * @see [okhttp3.ConnectionSpec]
          */
-        fun setConnectionSpec(connectionSpec: ConnectionSpec?): Builder
+        fun connectionSpec(connectionSpec: ConnectionSpec?): Builder
 
         /**
          * @see [javax.net.ssl.HostnameVerifier]
          */
-        fun setHostnameVerifier(hostnameVerifier: HostnameVerifier?): Builder
+        fun hostnameVerifier(hostnameVerifier: HostnameVerifier?): Builder
 
         /**
          * How many times publishing file message should automatically retry before marking the action as failed
          *
          * Defaults to `5`
          */
-        fun setFileMessagePublishRetryLimit(fileMessagePublishRetryLimit: Int): Builder
+        fun fileMessagePublishRetryLimit(fileMessagePublishRetryLimit: Int): Builder
 
-        fun setDedupOnSubscribe(dedupOnSubscribe: Boolean): Builder
+        fun dedupOnSubscribe(dedupOnSubscribe: Boolean): Builder
 
-        fun setMaximumMessagesCacheSize(maximumMessagesCacheSize: Int): Builder
+        fun maximumMessagesCacheSize(maximumMessagesCacheSize: Int): Builder
 
-        fun setPnsdkSuffixes(pnsdkSuffixes: Map<String, String>): Builder
+        fun pnsdkSuffixes(pnsdkSuffixes: Map<String, String>): Builder
 
         /**
          * Retry configuration for requests.
@@ -262,7 +262,7 @@ interface PNConfiguration : BasePNConfiguration {
          *  Use [RetryConfiguration.Exponential] to set retry with exponential delay interval
          *  Delay will valy from provided value by random value.
          */
-        fun setRetryConfiguration(retryConfiguration: RetryConfiguration): Builder
+        fun retryConfiguration(retryConfiguration: RetryConfiguration): Builder
 
         /**
          * Enables explicit presence control.
@@ -272,6 +272,6 @@ interface PNConfiguration : BasePNConfiguration {
          * @see PubNubCore.presence
          * @see BasePNConfigurationImpl.heartbeatInterval
          */
-        fun setManagePresenceListManually(managePresenceListManually: Boolean): Builder
+        fun managePresenceListManually(managePresenceListManually: Boolean): Builder
     }
 }

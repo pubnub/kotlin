@@ -25,9 +25,9 @@ public class RetryConfigurationIntegrationTest extends BaseIntegrationTest {
         AtomicBoolean success = new AtomicBoolean();
 
         pubNub = getPubNub(builder -> {
-            builder.setOrigin("ps.pndsn_notExisting_URI.com"); // we want to trigger UnknownHostException to initiate retry
-            builder.setRetryConfiguration(new RetryConfiguration.Linear(1,2 ));
-            builder.setHeartbeatInterval(1);
+            builder.origin("ps.pndsn_notExisting_URI.com"); // we want to trigger UnknownHostException to initiate retry
+            builder.retryConfiguration(new RetryConfiguration.Linear(1,2 ));
+            builder.heartbeatInterval(1);
         });
 
         pubNub.addListener(new StatusListener() {

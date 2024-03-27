@@ -144,17 +144,17 @@ public abstract class BaseIntegrationTest {
         try {
         if (!needsServer()) {
             pnConfiguration = com.pubnub.api.v2.PNConfiguration.builder(new UserId("client-".concat(UUID.randomUUID().toString())), SUB_KEY);
-            pnConfiguration.setPublishKey(PUB_KEY);
+            pnConfiguration.publishKey(PUB_KEY);
         } else {
             pnConfiguration = com.pubnub.api.v2.PNConfiguration.builder(new UserId("client-".concat(UUID.randomUUID().toString())), PAM_SUB_KEY);
-            pnConfiguration.setPublishKey(PAM_PUB_KEY);
-            pnConfiguration.setAuthKey(provideAuthKey());
+            pnConfiguration.publishKey(PAM_PUB_KEY);
+            pnConfiguration.authKey(provideAuthKey());
         }
         } catch (PubNubException e) {
             throw new RuntimeException(e);
         }
-        pnConfiguration.setLogVerbosity(PNLogVerbosity.NONE);
-        pnConfiguration.setHttpLoggingInterceptor(createInterceptor());
+        pnConfiguration.logVerbosity(PNLogVerbosity.NONE);
+        pnConfiguration.httpLoggingInterceptor(createInterceptor());
         if (action != null) {
             action.accept(pnConfiguration);
         }
@@ -168,10 +168,10 @@ public abstract class BaseIntegrationTest {
         } catch (PubNubException e) {
             throw new RuntimeException(e);
         }
-        pnConfiguration.setPublishKey(PAM_PUB_KEY);
-        pnConfiguration.setSecretKey(PAM_SEC_KEY);
-        pnConfiguration.setLogVerbosity(PNLogVerbosity.NONE);
-        pnConfiguration.setHttpLoggingInterceptor(createInterceptor());
+        pnConfiguration.publishKey(PAM_PUB_KEY);
+        pnConfiguration.secretKey(PAM_SEC_KEY);
+        pnConfiguration.logVerbosity(PNLogVerbosity.NONE);
+        pnConfiguration.httpLoggingInterceptor(createInterceptor());
         if (action != null) {
             action.accept(pnConfiguration);
         }

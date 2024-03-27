@@ -41,7 +41,7 @@ public class FilesIntegrationTests extends BaseIntegrationTest {
 
     public void doItAllFilesTest(boolean withCipher) throws PubNubException, InterruptedException, IOException {
         if (withCipher) {
-            pubNub = getPubNub(builder -> builder.setCryptoModule(CryptoModule.createLegacyCryptoModule("enigma", true)));
+            pubNub = getPubNub(builder -> builder.cryptoModule(CryptoModule.createLegacyCryptoModule("enigma", true)));
         }
         String channel = randomChannel();
         String content = "This is content";

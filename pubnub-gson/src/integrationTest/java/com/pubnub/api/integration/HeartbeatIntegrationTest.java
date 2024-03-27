@@ -43,8 +43,8 @@ public class HeartbeatIntegrationTest extends BaseIntegrationTest {
         final PubNub observer = getPubNub();
 
         pubNub = getPubNub(builder -> {
-            builder.setPresenceTimeout(20);
-            builder.setHeartbeatInterval(4);
+            builder.presenceTimeout(20);
+            builder.heartbeatInterval(4);
         });
         observer.addListener(new SubscribeCallback.BaseSubscribeCallback() {
             @Override

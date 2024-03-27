@@ -310,9 +310,9 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
         final String expectedChannel = RandomGenerator.get();
 
         pubNub = getPubNub(builder -> {
-                    builder.setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.ALL);
-                    builder.setPresenceTimeout(20);
-                    builder.setHeartbeatInterval(0);
+                    builder.heartbeatNotificationOptions(PNHeartbeatNotificationOptions.ALL);
+                    builder.presenceTimeout(20);
+                    builder.heartbeatInterval(0);
                 });
 
         assertEquals(PNHeartbeatNotificationOptions.ALL, pubNub.getConfiguration().getHeartbeatNotificationOptions());
@@ -351,8 +351,8 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
         final AtomicBoolean subscribeSuccess = new AtomicBoolean();
         final String expectedChannel = RandomGenerator.get();
         pubNub = getPubNub(builder -> {
-            builder.setPresenceTimeout(20);
-            builder.setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.ALL);
+            builder.presenceTimeout(20);
+            builder.heartbeatNotificationOptions(PNHeartbeatNotificationOptions.ALL);
         });
         registerGuestClient(pubNub);
         assertEquals(9, pubNub.getConfiguration().getHeartbeatInterval());

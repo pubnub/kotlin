@@ -212,7 +212,7 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
         final JsonObject messagePayload = generateMessage(pubNub);
 
         final PubNub sender = getPubNub();
-        final PubNub observer = getPubNub(builder -> builder.setCryptoModule(CryptoModule.createAesCbcCryptoModule("test", false)));
+        final PubNub observer = getPubNub(builder -> builder.cryptoModule(CryptoModule.createAesCbcCryptoModule("test", false)));
 
         observer.addListener(new SubscribeCallback() {
             @Override
