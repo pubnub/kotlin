@@ -69,11 +69,11 @@ jobs:
             ${{ runner.os }}-gradle-
       - name: Run acceptance tests (optional)
         run: |
-          ln -s /home/runner/work/kotlin/kotlin/sdk-specifications src/test/resources/sdk-specifications
-          ./gradlew cucumber --tests RunBetaCucumberTest -Dcucumber.features="sdk-specifications/features/" -i
+          ln -s /home/runner/work/kotlin/kotlin/sdk-specifications pubnub-kotlin-core/core-impl/src/test/resources/sdk-specifications
+          ./gradlew cucumber --tests RunBetaCucumberTest -Dcucumber.features="../../sdk-specifications/features/" -i
         continue-on-error: true
       - name: Run acceptance tests (required)
-        run: ./gradlew cucumber --tests RunMainCucumberTest -Dcucumber.features="sdk-specifications/features/" -i
+        run: ./gradlew cucumber --tests RunMainCucumberTest -Dcucumber.features="../../sdk-specifications/features/" -i
       - name: Expose acceptance tests reports
         uses: actions/upload-artifact@v3
         if: always()

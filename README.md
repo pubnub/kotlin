@@ -1,4 +1,4 @@
-### PubNub Kotlin-based SDKs for Android
+### PubNub Java and Kotlin-based SDKs for Android
 
 [![Tests](https://github.com/pubnub/kotlin/actions/workflows/run-tests.yml/badge.svg)](https://github.com/pubnub/kotlin/actions/workflows/run-tests.yml)
 [![Maven Central](https://img.shields.io/maven-central/v/com.pubnub/pubnub-kotlin.svg)](https://maven-badges.herokuapp.com/maven-central/com.pubnub/pubnub-kotlin)
@@ -20,22 +20,22 @@ You will need the publish and subscribe keys to authenticate your app. Get your 
      <dependency>
         <groupId>com.pubnub</groupId>
         <artifactId>pubnub-kotlin</artifactId>
-        <version>8.0.0</version>
+        <version>9.0.0</version>
      </dependency>
      ```
 
    * for Gradle, add the following dependency in your `gradle.build`:
      ```groovy
-     implementation 'com.pubnub:pubnub-kotlin:8.0.0'
+     implementation 'com.pubnub:pubnub-kotlin:9.0.0'
      ```
 
-2. Configure your keys:
+2. Configure your keys and create PubNub instance:
 
     ```kotlin
-    val config = PNConfiguration(UserId("myUserId")).apply {
-        subscribeKey = "mySubKey"
+    val config = PNConfiguration.builder(UserId("myUserId"), "mySubKey") {
         publishKey = "myPubKey"
     }
+    val pubnub = PubNub.create(config.build())
     ```
 
 ## Add event listeners
@@ -85,7 +85,7 @@ pubnub.addListener(object : SubscribeCallback() {
             println("Message action messageTimetoken: $messageTimetoken")
         }
 
-        println("Message action subscription: ${pnMessageActionResult.subscription}")
+        println("Message action subscriptions: ${pnMessageActionResult.subscription}")
         println("Message action channel: ${pnMessageActionResult.channel}")
         println("Message action timetoken: ${pnMessageActionResult.timetoken}")
     }
@@ -96,17 +96,17 @@ pubnub.addListener(object : SubscribeCallback() {
 
 ```kotlin
 pubnub.publish(channel = "my_channel", message = "hello")
-    .async { result, status -> 
+    .async { result -> 
     // the result is always of a nullable type
     // it's null if there were errors (status.error)
     // otherwise it's usable
 
     // handle publish result
-    if (!status.error) {
-        println("Message timetoken: ${result!!.timetoken}")
-    } else {
+    result.onSuccess { res ->
+        println("Message timetoken: ${res!!.timetoken}")
+    }.onFailure { exception ->
         // handle error
-        status.exception.printStackTrace()
+        exception.printStackTrace()
     }
 }
 
@@ -115,7 +115,8 @@ pubnub.subscribe(channels = listOf("my_channel"))
 
 ## Documentation
 
-* [API reference for Kotlin ](https://www.pubnub.com/docs/kotlin-java/pubnub-java-sdk)
+* [API reference for Kotlin ](https://www.pubnub.com/docs/sdks/kotlin)
+* [API reference for Java ](https://www.pubnub.com/docs/sdks/java)
 
 ## Support
 

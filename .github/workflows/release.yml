@@ -52,7 +52,7 @@ jobs:
           gpg-key-id: ${{ secrets.GPG_KEY_ID }}
           gpg-key-name: ${{ secrets.GPG_KEY_NAME }}
           gpg-key-passphrase: ${{ secrets.GPG_KEY_PASSPHRASE }}
-          maven-plugin: "gradle-maven-publish-plugin"
+          maven-plugin: "new-gradle-nexus-publish"
           prepend-product-to-tag: true
       - name: Create Release
         uses: ./.github/.release/actions/actions/services/github-release
@@ -63,7 +63,7 @@ jobs:
         uses: ./.github/.release/actions/actions/services/github-pages
         with:
           token: ${{ secrets.GH_TOKEN }}
-          source-folder: build/dokka/gfm
+          source-folder: build/dokka/gfmMultiModule
           jira-api-key: ${{ secrets.JIRA_API_KEY }}
           last-service: true
       - name: Upload test reports

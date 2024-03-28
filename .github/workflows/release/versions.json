@@ -42,13 +42,6 @@
       "clearedSuffix": false
     }
   ],
-  "build.gradle": [
-    {
-      "pattern": "^version\\s=\\s'(v?(\\d+\\.?){2,}([a-zA-Z0-9-]+(\\.?\\d+)?)?)'$",
-      "clearedPrefix": true,
-      "clearedSuffix": false
-    }
-  ],
   "README.md": [
     {
       "pattern": "^\\s{2,}<version>(v?(\\d+\\.?){2,}([a-zA-Z0-9-]+(\\.?\\d+)?)?)<\\/version>$",
@@ -61,14 +54,7 @@
       "clearedSuffix": false
     }
   ],
-  "src/main/kotlin/com/pubnub/api/PubNub.kt": [
-    {
-      "pattern": "private const val SDK_VERSION.*\"(v?(\\d+\\.?){2,}([a-zA-Z0-9-]+(\\.?\\d+)?)?)\"$",
-      "clearedPrefix": true,
-      "clearedSuffix": false
-    }
-  ],
-  "src/test/kotlin/com/pubnub/api/legacy/PubNubTest.kt": [
+  "pubnub-core/pubnub-core-impl/src/test/kotlin/com/pubnub/api/legacy/PubNubTest.kt": [
     {
       "pattern": "assertEquals\\(\"(v?(\\d+\\.?){2,}([a-zA-Z0-9-]+(\\.?\\d+)?)?)\", version\\)$",
       "clearedPrefix": true,
