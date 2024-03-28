@@ -1,0 +1,10 @@
+//[pubnub-gson](../../../index.md)/[com.pubnub.api](../index.md)/[PNConfiguration](index.md)/[setHeartbeatNotificationOptions](set-heartbeat-notification-options.md)
+
+# setHeartbeatNotificationOptions
+
+[jvm]\
+fun [setHeartbeatNotificationOptions](set-heartbeat-notification-options.md)(heartbeatNotificationOptions: [PNHeartbeatNotificationOptions](../../../../pubnub-core/pubnub-core-api/pubnub-core-api/com.pubnub.api.enums/-p-n-heartbeat-notification-options/index.md)): [PNConfiguration](index.md)
+
+Set Heartbeat notification options.
+
+By default, the SDK alerts on failed heartbeats (equivalent to [PNHeartbeatNotificationOptions.FAILURES](../../../../pubnub-core/pubnub-core-api/pubnub-core-api/com.pubnub.api.enums/-p-n-heartbeat-notification-options/-f-a-i-l-u-r-e-s/index.md)).

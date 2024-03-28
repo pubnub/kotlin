@@ -1,0 +1,11 @@
+//[pubnub-kotlin](../../index.md)/[com.pubnub.api.models.consumer.access_manager](index.md)
+
+# Package-level declarations
+
+## Types
+
+| Name | Summary |
+|---|---|
+| [PNAccessManagerGrantResult](-p-n-access-manager-grant-result/index.md) | [jvm]<br>class [PNAccessManagerGrantResult](-p-n-access-manager-grant-result/index.md)(val level: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), val ttl: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), val subscribeKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), val channels: [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), [PNAccessManagerKeyData](-p-n-access-manager-key-data/index.md)&gt;?&gt;, val channelGroups: [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), [PNAccessManagerKeyData](-p-n-access-manager-key-data/index.md)&gt;?&gt;)<br>Result of the PubNubCore.grant operation |
+| [PNAccessManagerKeyData](-p-n-access-manager-key-data/index.md) | [jvm]<br>open class [PNAccessManagerKeyData](-p-n-access-manager-key-data/index.md) |
+| [PNAccessManagerKeysData](-p-n-access-manager-keys-data/index.md) | [jvm]<br>class [PNAccessManagerKeysData](-p-n-access-manager-keys-data/index.md) |

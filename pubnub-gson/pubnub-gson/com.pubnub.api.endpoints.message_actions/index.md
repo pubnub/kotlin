@@ -1,0 +1,11 @@
+//[pubnub-gson](../../index.md)/[com.pubnub.api.endpoints.message_actions](index.md)
+
+# Package-level declarations
+
+## Types
+
+| Name | Summary |
+|---|---|
+| [AddMessageAction](-add-message-action/index.md) | [jvm]<br>interface [AddMessageAction](-add-message-action/index.md) : [Endpoint](../com.pubnub.api.endpoints/-endpoint/index.md)&lt;[T](../com.pubnub.api.endpoints/-endpoint/index.md)&gt; |
+| [GetMessageActions](-get-message-actions/index.md) | [jvm]<br>interface [GetMessageActions](-get-message-actions/index.md) : [Endpoint](../com.pubnub.api.endpoints/-endpoint/index.md)&lt;[T](../com.pubnub.api.endpoints/-endpoint/index.md)&gt; |
+| [RemoveMessageAction](-remove-message-action/index.md) | [jvm]<br>interface [RemoveMessageAction](-remove-message-action/index.md) : [Endpoint](../com.pubnub.api.endpoints/-endpoint/index.md)&lt;[T](../com.pubnub.api.endpoints/-endpoint/index.md)&gt; |

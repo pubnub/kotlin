@@ -1,8 +1,0 @@
-//[pubnub-kotlin](../../../index.md)/[com.pubnub.api](../index.md)/[PNConfiguration](index.md)/[PNConfiguration](-p-n-configuration.md)
-
-# PNConfiguration
-
-[jvm]\
-~~fun~~ [~~PNConfiguration~~](-p-n-configuration.md)~~(~~uuid: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), enableEventEngine: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = true~~)~~
-
-fun [PNConfiguration](-p-n-configuration.md)(userId: [UserId](../-user-id/index.md))

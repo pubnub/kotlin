@@ -1,6 +1,0 @@
-//[pubnub-kotlin](../../../index.md)/[com.pubnub.api.endpoints.push](../index.md)/[ListPushProvisions](index.md)/[deviceId](device-id.md)
-
-# deviceId
-
-[jvm]\
-val [deviceId](device-id.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)

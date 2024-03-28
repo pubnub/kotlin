@@ -1,0 +1,12 @@
+//[pubnub-core-api](../../../../index.md)/[com.pubnub.api.v2](../../index.md)/[BasePNConfiguration](../index.md)/[Builder](index.md)/[proxyAuthenticator](proxy-authenticator.md)
+
+# proxyAuthenticator
+
+[jvm]\
+abstract val [proxyAuthenticator](proxy-authenticator.md): Authenticator?
+
+#### See also
+
+| |
+|---|
+| Authenticator |

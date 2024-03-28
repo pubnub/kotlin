@@ -1,6 +1,0 @@
-//[pubnub-kotlin](../../../index.md)/[com.pubnub.api.models.server.history](../index.md)/[ServerFetchMessagesResult](index.md)/[channels](channels.md)
-
-# channels
-
-[jvm]\
-val [channels](channels.md): [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[ServerFetchMessageItem](../-server-fetch-message-item/index.md)&gt;&gt;

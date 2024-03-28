@@ -1,0 +1,8 @@
+//[pubnub-gson](../../../index.md)/[com.pubnub.api](../index.md)/[PubNub](index.md)/[listChannelsForChannelGroup](list-channels-for-channel-group.md)
+
+# listChannelsForChannelGroup
+
+[jvm]\
+abstract fun [listChannelsForChannelGroup](list-channels-for-channel-group.md)(): [AllChannelsChannelGroup](../../com.pubnub.api.endpoints.channel_groups/-all-channels-channel-group/index.md)
+
+Lists all the channels of the channel group.

@@ -1,6 +1,0 @@
-//[pubnub-kotlin](../../../../index.md)/[com.pubnub.api.retry](../../index.md)/[RetryConfiguration](../index.md)/[Linear](index.md)/[delayInSec](delay-in-sec.md)
-
-# delayInSec
-
-[jvm]\
-var [delayInSec](delay-in-sec.md): [Duration](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/index.html)
