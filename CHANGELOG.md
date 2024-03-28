@@ -1,3 +1,13 @@
+## v9.0.0
+March 28 2024
+
+#### Modified
+- From now on, Java and Kotlin SDKs will be versioned and released together, and clients using both SDKs will get new features and bug fixes at the same time.
+- RemoteAction.async() now provides a single `Result<Output>` parameter to the callback. Please see documentation for details.
+- PubNub initialization must be done through `PubNub.create()`. Constructor initialization is disallowed.
+- There is a new immutable PNConfiguration class with builder. The old PNConfiguration class is marked deprecated, but functional for the time being.
+- Internal classes and interfaces have been moved to the `com.pubnub.internal` classes or removed from the compile classpath. You should not use them in your app. All user facing classes are in `com.pubnub.api` package.
+
 ## v8.0.0
 February 22 2024
 
