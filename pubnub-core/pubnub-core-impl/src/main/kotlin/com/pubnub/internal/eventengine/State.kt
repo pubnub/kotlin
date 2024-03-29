@@ -3,6 +3,10 @@ package com.pubnub.internal.eventengine
 import org.slf4j.LoggerFactory
 
 internal interface State<Ei : EffectInvocation, Ev : Event, S : State<Ei, Ev, S>> {
+    companion object {
+        internal val logger = LoggerFactory.getLogger(this::class.java)
+    }
+
     fun onEntry(): Set<Ei> = setOf()
 
     fun onExit(): Set<Ei> = setOf()
@@ -16,8 +20,7 @@ internal fun <Ei : EffectInvocation, Ev : Event, S : State<Ei, Ev, S>> S.transit
     state: S,
     vararg invocations: Ei,
 ): Pair<S, Set<Ei>> {
-    val logger = LoggerFactory.getLogger(this::class.java)
-    logger.trace(
+    State.logger.trace(
         "Transitioning from ${this::class.simpleName} to ${state::class.simpleName} with ${invocations.size} " +
             "invocations: ${invocations.joinToString(", ")}",
     )
