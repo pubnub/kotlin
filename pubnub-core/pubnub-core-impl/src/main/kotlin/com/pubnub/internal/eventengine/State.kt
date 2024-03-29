@@ -17,8 +17,10 @@ internal fun <Ei : EffectInvocation, Ev : Event, S : State<Ei, Ev, S>> S.transit
     vararg invocations: Ei,
 ): Pair<S, Set<Ei>> {
     val logger = LoggerFactory.getLogger(this::class.java)
-    logger.trace("Transitioning from ${this::class.simpleName} to ${state::class.simpleName} with ${invocations.size} " +
-            "invocations: ${invocations.joinToString(", ")}")
+    logger.trace(
+        "Transitioning from ${this::class.simpleName} to ${state::class.simpleName} with ${invocations.size} " +
+            "invocations: ${invocations.joinToString(", ")}",
+    )
 
     val effectInvocations = this.onExit() + invocations + state.onEntry()
     return Pair(state, effectInvocations)
