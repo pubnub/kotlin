@@ -25,6 +25,4 @@ internal sealed class PresenceEvent : Event {
     object HeartbeatSuccess : PresenceEvent()
 
     data class HeartbeatFailure(val reason: PubNubException) : PresenceEvent()
-
-    data class HeartbeatGiveup(val reason: PubNubException) : PresenceEvent()
 }

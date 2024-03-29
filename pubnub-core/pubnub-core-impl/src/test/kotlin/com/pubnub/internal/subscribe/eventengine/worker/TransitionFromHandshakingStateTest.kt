@@ -7,7 +7,6 @@ import com.pubnub.internal.eventengine.transition
 import com.pubnub.internal.subscribe.eventengine.effect.SubscribeEffectInvocation.CancelHandshake
 import com.pubnub.internal.subscribe.eventengine.effect.SubscribeEffectInvocation.EmitStatus
 import com.pubnub.internal.subscribe.eventengine.effect.SubscribeEffectInvocation.Handshake
-import com.pubnub.internal.subscribe.eventengine.effect.SubscribeEffectInvocation.HandshakeReconnect
 import com.pubnub.internal.subscribe.eventengine.effect.SubscribeEffectInvocation.ReceiveMessages
 import com.pubnub.internal.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.internal.subscribe.eventengine.event.SubscriptionCursor
@@ -88,7 +87,11 @@ class TransitionFromHandshakingStateTest {
         // when
         val (state, invocations) =
             transition(
-                SubscribeState.Handshaking(channels, channelGroups, subscriptionCursor = subscriptionCursorForHandshaking),
+                SubscribeState.Handshaking(
+                    channels,
+                    channelGroups,
+                    subscriptionCursor = subscriptionCursorForHandshaking,
+                ),
                 SubscribeEvent.HandshakeSuccess(subscriptionCursorReturnedByHandshake),
             )
 
@@ -172,7 +175,7 @@ class TransitionFromHandshakingStateTest {
     }
 
     @Test
-    fun can_transit_from_HANDSHAKING_to_HANDSHAKING_RECONNECTING_when_there_is_HANDSHAKING_FAILURE_event() {
+    fun can_transit_from_HANDSHAKING_to_HANDSHAKING_FAILED_when_there_is_HANDSHAKING_FAILURE_event() {
         // when
         val (state, invocations) =
             transition(
@@ -181,17 +184,21 @@ class TransitionFromHandshakingStateTest {
             )
 
         // then
-        assertTrue(state is SubscribeState.HandshakeReconnecting)
-        val handshakeReconnecting = state as SubscribeState.HandshakeReconnecting
-        assertEquals(channels, handshakeReconnecting.channels)
-        assertEquals(channelGroups, handshakeReconnecting.channelGroups)
-        assertEquals(0, handshakeReconnecting.attempts)
-        assertEquals(reason, handshakeReconnecting.reason)
-        assertEquals(subscriptionCursor, handshakeReconnecting.subscriptionCursor)
+        assertTrue(state is SubscribeState.HandshakeFailed)
+        val handshakeFailed = state as SubscribeState.HandshakeFailed
+        assertEquals(channels, handshakeFailed.channels)
+        assertEquals(channelGroups, handshakeFailed.channelGroups)
+        assertEquals(reason, handshakeFailed.reason)
+        assertEquals(subscriptionCursor, handshakeFailed.subscriptionCursor)
         assertEquals(
             setOf(
                 CancelHandshake,
-                HandshakeReconnect(channels, channelGroups, 0, reason),
+                EmitStatus(
+                    PNStatus(
+                        category = PNStatusCategory.PNConnectionError,
+                        exception = reason,
+                    ),
+                ),
             ),
             invocations,
         )

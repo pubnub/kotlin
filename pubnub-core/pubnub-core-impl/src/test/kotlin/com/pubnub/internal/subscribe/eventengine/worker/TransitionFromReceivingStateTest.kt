@@ -26,7 +26,7 @@ class TransitionFromReceivingStateTest {
     private val reason = PubNubException(PubNubError.PARSING_ERROR)
 
     @Test
-    fun can_transit_from_RECEIVING_to_RECEIVING_RECONNECTING_when_there_is_RECEIVE_FAILURE_event() {
+    fun can_transit_from_RECEIVING_to_RECEIVE_FAILED_when_there_is_RECEIVE_FAILURE_event() {
         // when
         val (state, invocations) =
             transition(
@@ -35,18 +35,22 @@ class TransitionFromReceivingStateTest {
             )
 
         // then
-        Assertions.assertTrue(state is SubscribeState.ReceiveReconnecting)
-        state as SubscribeState.ReceiveReconnecting
+        Assertions.assertTrue(state is SubscribeState.ReceiveFailed)
+        state as SubscribeState.ReceiveFailed
 
         assertEquals(channels, state.channels)
         assertEquals(channelGroups, state.channelGroups)
         assertEquals(subscriptionCursor, state.subscriptionCursor)
-        assertEquals(0, state.attempts)
         assertEquals(reason, state.reason)
         assertEquals(
             setOf(
                 SubscribeEffectInvocation.CancelReceiveMessages,
-                SubscribeEffectInvocation.ReceiveReconnect(channels, channelGroups, subscriptionCursor, 0, reason),
+                SubscribeEffectInvocation.EmitStatus(
+                    PNStatus(
+                        category = PNStatusCategory.PNUnexpectedDisconnectCategory,
+                        exception = reason,
+                    ),
+                ),
             ),
             invocations,
         )
@@ -223,3 +227,14 @@ class TransitionFromReceivingStateTest {
         return PNMessageResult(pubSubResult, message)
     }
 }
+
+internal fun createSubscriptionChangedStatus(
+    cursor: SubscriptionCursor,
+    channels: Collection<String>,
+    channelGroups: Collection<String>,
+) = PNStatus(
+    PNStatusCategory.PNSubscriptionChanged,
+    currentTimetoken = cursor.timetoken,
+    affectedChannels = channels,
+    affectedChannelGroups = channelGroups,
+)

@@ -164,7 +164,7 @@ class TransitionFromHeartbeatingStateTest {
     }
 
     @Test
-    fun `should transit from HEARTBEATING to HEARTBEAT_RECONNECTING and create DELEYED_HEARTBEAT invocations when there is HEARTBEAT_FAILURE event`() {
+    fun `should transit from HEARTBEATING to HEARTBEAT_FAILED when there is HEARTBEAT_FAILURE event`() {
         // when
         val (newState, invocations) =
             transition(
@@ -173,13 +173,11 @@ class TransitionFromHeartbeatingStateTest {
             )
 
         // then
-        Assertions.assertTrue(newState is PresenceState.HeartbeatReconnecting)
-        val heartbeatReconnecting = newState as PresenceState.HeartbeatReconnecting
-        Assertions.assertEquals(channels, heartbeatReconnecting.channels)
-        Assertions.assertEquals(channelGroups, heartbeatReconnecting.channelGroups)
-        Assertions.assertEquals(0, heartbeatReconnecting.attempts)
-        Assertions.assertEquals(reason, heartbeatReconnecting.reason)
-        Assertions.assertTrue(invocations.any { it is PresenceEffectInvocation.DelayedHeartbeat })
-        Assertions.assertEquals(1, invocations.size)
+        Assertions.assertTrue(newState is PresenceState.HeartbeatFailed)
+        val heartbeatFailed = newState as PresenceState.HeartbeatFailed
+        Assertions.assertEquals(channels, heartbeatFailed.channels)
+        Assertions.assertEquals(channelGroups, heartbeatFailed.channelGroups)
+        Assertions.assertEquals(reason, heartbeatFailed.reason)
+        Assertions.assertEquals(0, invocations.size)
     }
 }
