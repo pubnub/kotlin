@@ -28,7 +28,7 @@ class TestPubNub internal constructor(
             BaseUserMetadataImpl<BaseEventListener, BaseSubscriptionImpl<BaseEventListener>>,
             BaseSubscriptionSetImpl<BaseEventListener, BaseSubscriptionImpl<BaseEventListener>>,
             BaseStatusListener,
-            >(configuration, eventEnginesConf) {
+            >(configuration, "PubNub-Test", eventEnginesConf) {
         override fun channel(name: String): BaseChannelImpl<BaseEventListener, BaseSubscriptionImpl<BaseEventListener>> {
             TODO("Not yet implemented")
         }

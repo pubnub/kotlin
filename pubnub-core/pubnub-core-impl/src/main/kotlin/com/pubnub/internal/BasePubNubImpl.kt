@@ -30,14 +30,15 @@ abstract class BasePubNubImpl<
     StatusListener : BaseStatusListener,
     > internal constructor(
     configuration: BasePNConfiguration,
-    eventEnginesConf: EventEnginesConf,
+    pnsdkName: String,
+    eventEnginesConf: EventEnginesConf = EventEnginesConf(),
 ) : BasePubNub<EventListener, Subscription, Channel, ChannelGroup, ChannelMetadata, UserMetadata, SubscriptionSet, StatusListener>,
     BaseEventEmitter<EventListener>,
     BaseStatusEmitter<StatusListener> {
-    constructor(configuration: BasePNConfiguration) : this(configuration, eventEnginesConf = EventEnginesConf())
+    constructor(configuration: BasePNConfiguration, pnsdkName: String) : this(configuration, pnsdkName, EventEnginesConf())
 
     val listenerManager: ListenerManager = ListenerManager(this)
-    val pubNubCore = PubNubCore(configuration, listenerManager, eventEnginesConf)
+    val pubNubCore = PubNubCore(configuration, listenerManager, eventEnginesConf, pnsdkName)
 
     /**
      * The current version of the Kotlin SDK.

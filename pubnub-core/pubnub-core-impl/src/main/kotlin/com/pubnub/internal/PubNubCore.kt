@@ -112,16 +112,8 @@ class PubNubCore internal constructor(
     val configuration: BasePNConfiguration,
     val listenerManager: ListenerManager,
     eventEnginesConf: EventEnginesConf = EventEnginesConf(),
+    private val pnsdkName: String = "PubNub-JVM",
 ) {
-    constructor(
-        configuration: BasePNConfiguration,
-        listenerManager: ListenerManager,
-    ) : this(
-        configuration,
-        listenerManager,
-        EventEnginesConf(),
-    )
-
     companion object {
         internal const val TIMESTAMP_DIVIDER = 1000
         internal const val SDK_VERSION = PUBNUB_VERSION
@@ -196,6 +188,16 @@ class PubNubCore internal constructor(
 
     internal fun timestamp() = (Date().time / TIMESTAMP_DIVIDER).toInt()
     //endregion
+
+    fun generatePnsdk(): String {
+        val joinedSuffixes = configuration.pnsdkSuffixes.toSortedMap().values.joinToString(" ")
+        return "$pnsdkName/$SDK_VERSION" +
+            if (joinedSuffixes.isNotBlank()) {
+                " $joinedSuffixes"
+            } else {
+                ""
+            }
+    }
 
     //region Publish
 

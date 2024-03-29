@@ -144,7 +144,7 @@ public class PubNubImpl extends BasePubNubImpl<
     private final @NotNull BasePNConfiguration configuration;
 
     public PubNubImpl(@NotNull BasePNConfiguration configuration) {
-        super(configuration);
+        super(configuration, "PubNub-Java");
         this.configuration = configuration;
     }
 

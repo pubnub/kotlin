@@ -3,14 +3,15 @@ package com.pubnub.api.legacy
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.internal.PubNubCore
+import com.pubnub.internal.TestPubNub
+import com.pubnub.internal.managers.ListenerManager
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-class PubNubTest : BaseTest() {
+class PubNubCoreTest : BaseTest() {
     override fun onBefore() {
         clearConfiguration()
-        // initPubNub()
     }
 
     @Test
@@ -67,5 +68,33 @@ class PubNubTest : BaseTest() {
         val timeStamp = pubnub.timestamp()
         assertEquals("9.0.0", version)
         assertTrue(timeStamp > 0)
+    }
+
+    @Test
+    fun pnGeneratesPnsdkWithSuffixes() {
+        val name1 = "key1"
+        val suffix1 = "value1/1.0.0"
+        val name2 = "key2"
+        val suffix2 = "value2/2.0.0"
+        val suffix11 = "value3/2.0.0"
+
+        config.pnsdkSuffixes = buildMap {
+            put(name1, suffix1)
+            put(name2, suffix2)
+            put(name1, suffix11)
+        }
+
+        val generatedPnsdk = pubnub.generatePnsdk()
+        assertEquals("PubNub-Test/${PubNubCore.SDK_VERSION} $suffix11 $suffix2", generatedPnsdk)
+    }
+
+    @Test
+    fun pnGeneratesPnsdkWithPnsdkName() {
+        val pubNubCore = PubNubCore(
+            config.build(),
+            ListenerManager(TestPubNub(config.build())),
+            pnsdkName = "PubNub-ABC",
+        )
+        assertEquals(pubNubCore.generatePnsdk(), "PubNub-ABC/${PubNubCore.SDK_VERSION}")
     }
 }

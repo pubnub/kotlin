@@ -118,6 +118,7 @@ class PubNubImpl(
     override val configuration: BasePNConfiguration,
 ) : BasePubNubImpl<EventListener, Subscription, Channel, ChannelGroup, ChannelMetadata, UserMetadata, SubscriptionSet, StatusListener>(
         configuration,
+        "PubNub-Kotlin",
     ),
     PubNub {
     private val emitterHelper = EmitterHelper(listenerManager)

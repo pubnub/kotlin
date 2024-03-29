@@ -1552,7 +1552,6 @@ class SubscriptionManagerTest : BaseTest() {
         stubFor(
             get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .withQueryParam("uuid", matching("myUUID"))
-                .withQueryParam("pnsdk", matching("PubNub-Kotlin/.*"))
                 .withQueryParam("filter-expr", matching("much=filtering"))
                 .withQueryParam("tt", matching("2"))
                 .willReturn(

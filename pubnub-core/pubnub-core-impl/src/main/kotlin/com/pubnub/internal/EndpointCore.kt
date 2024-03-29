@@ -178,7 +178,7 @@ abstract class EndpointCore<Input, Output> protected constructor(protected val p
 
             map += queryParam
 
-            map["pnsdk"] = pubnub.configuration.generatePnsdk(PubNubCore.SDK_VERSION)
+            map["pnsdk"] = pubnub.generatePnsdk()
             map["uuid"] = pubnub.configuration.userId.value
 
             if (pubnub.configuration.includeInstanceIdentifier) {
