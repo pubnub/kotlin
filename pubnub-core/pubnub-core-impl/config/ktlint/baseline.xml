@@ -1,15 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <baseline version="1.0">
-    <file name="src/main/kotlin/com/pubnub/internal/crypto/cryptor/CryptorHeader.kt">
-        <error line="4" column="30" source="standard:discouraged-comment-location" />
-        <error line="5" column="24" source="standard:discouraged-comment-location" />
-        <error line="6" column="31" source="standard:discouraged-comment-location" />
-        <error line="7" column="37" source="standard:discouraged-comment-location" />
-        <error line="8" column="33" source="standard:discouraged-comment-location" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/crypto/cryptor/HeaderParser.kt">
-        <error line="104" column="1" source="standard:max-line-length" />
-    </file>
     <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/AddChannelChannelGroupEndpoint.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
@@ -40,9 +30,6 @@
     <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/RemoveChannelChannelGroupEndpoint.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
-    <file name="src/main/kotlin/com/pubnub/internal/endpoints/files/GetFileUrlEndpoint.kt">
-        <error line="29" column="1" source="standard:max-line-length" />
-    </file>
     <file name="src/main/kotlin/com/pubnub/internal/endpoints/message_actions/AddMessageActionEndpoint.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
@@ -65,15 +52,6 @@
         <error line="15" column="17" source="standard:property-naming" />
         <error line="21" column="17" source="standard:property-naming" />
         <error line="27" column="17" source="standard:property-naming" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/managers/ListenerManager.kt">
-        <error line="22" column="1" source="standard:max-line-length" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/managers/PresenceEventEngineManager.kt">
-        <error line="9" column="1" source="standard:max-line-length" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/managers/SubscribeEventEngineManager.kt">
-        <error line="9" column="1" source="standard:max-line-length" />
     </file>
     <file name="src/main/kotlin/com/pubnub/internal/models/consumer/access_manager/PNAccessManagerGrantResults.kt">
         <error line="1" column="9" source="standard:package-name" />
@@ -135,26 +113,8 @@
     <file name="src/main/kotlin/com/pubnub/internal/models/server/objects_api/UUIDMetadataInput.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
-    <file name="src/main/kotlin/com/pubnub/internal/retry/RetryableRestCaller.kt">
-        <error line="62" column="59" source="standard:discouraged-comment-location" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/subscribe/Subscribe.kt">
-        <error line="123" column="24" source="standard:discouraged-comment-location" />
-    </file>
     <file name="src/main/kotlin/com/pubnub/internal/subscribe/eventengine/effect/ReconnectionPolicy.kt">
         <error line="1" column="1" source="standard:no-empty-file" />
-    </file>
-    <file name="src/test/kotlin/com/pubnub/api/crypto/algorithm/AesCBCCryptorTest.kt">
-        <error line="25" column="52" source="standard:discouraged-comment-location" />
-        <error line="26" column="46" source="standard:discouraged-comment-location" />
-        <error line="27" column="42" source="standard:discouraged-comment-location" />
-        <error line="28" column="39" source="standard:discouraged-comment-location" />
-    </file>
-    <file name="src/test/kotlin/com/pubnub/api/crypto/algorithm/LegacyCryptorTest.kt">
-        <error line="24" column="52" source="standard:discouraged-comment-location" />
-        <error line="25" column="46" source="standard:discouraged-comment-location" />
-        <error line="26" column="42" source="standard:discouraged-comment-location" />
-        <error line="27" column="39" source="standard:discouraged-comment-location" />
     </file>
     <file name="src/test/kotlin/com/pubnub/api/legacy/endpoints/channel_groups/AddChannelBaseChannelGroupCoreEndpointTest.kt">
         <error line="1" column="9" source="standard:package-name" />
@@ -190,7 +150,6 @@
         <error line="9" column="9" source="standard:property-naming" />
     </file>
     <file name="src/test/kotlin/com/pubnub/contract/access/step/GivenSteps.kt">
-        <error line="24" column="1" source="standard:max-line-length" />
         <error line="27" column="9" source="standard:function-naming" />
         <error line="32" column="9" source="standard:function-naming" />
         <error line="37" column="9" source="standard:function-naming" />
@@ -240,7 +199,6 @@
         <error line="80" column="9" source="standard:function-naming" />
         <error line="112" column="9" source="standard:function-naming" />
         <error line="181" column="9" source="standard:function-naming" />
-        <error line="185" column="1" source="standard:max-line-length" />
     </file>
     <file name="src/test/kotlin/com/pubnub/contract/member/step/GivenSteps.kt">
         <error line="11" column="9" source="standard:function-naming" />
@@ -284,7 +242,6 @@
         <error line="56" column="9" source="standard:function-naming" />
         <error line="61" column="9" source="standard:function-naming" />
         <error line="66" column="9" source="standard:function-naming" />
-        <error line="81" column="1" source="standard:max-line-length" />
         <error line="93" column="9" source="standard:function-naming" />
         <error line="101" column="9" source="standard:function-naming" />
         <error line="131" column="9" source="standard:function-naming" />
@@ -326,55 +283,6 @@
         <error line="56" column="9" source="standard:function-naming" />
         <error line="64" column="9" source="standard:function-naming" />
     </file>
-    <file name="src/test/kotlin/com/pubnub/internal/extension/JsonElementTest.kt">
-        <error line="77" column="1" source="standard:max-line-length" />
-        <error line="115" column="1" source="standard:max-line-length" />
-    </file>
-    <file name="src/test/kotlin/com/pubnub/internal/managers/TokenParserTest.kt">
-        <error line="65" column="1" source="standard:max-line-length" />
-    </file>
-    <file name="src/test/kotlin/com/pubnub/internal/presence/eventengine/state/transition/TransitionFromHeartbeatCooldownStateTest.kt">
-        <error line="56" column="1" source="standard:max-line-length" />
-        <error line="76" column="1" source="standard:max-line-length" />
-        <error line="104" column="1" source="standard:max-line-length" />
-        <error line="127" column="1" source="standard:max-line-length" />
-        <error line="154" column="1" source="standard:max-line-length" />
-        <error line="181" column="1" source="standard:max-line-length" />
-    </file>
-    <file name="src/test/kotlin/com/pubnub/internal/presence/eventengine/state/transition/TransitionFromHeartbeatReconnectingStateTest.kt">
-        <error line="37" column="1" source="standard:max-line-length" />
-        <error line="62" column="1" source="standard:max-line-length" />
-        <error line="87" column="1" source="standard:max-line-length" />
-        <error line="120" column="1" source="standard:max-line-length" />
-        <error line="148" column="1" source="standard:max-line-length" />
-        <error line="181" column="1" source="standard:max-line-length" />
-        <error line="205" column="1" source="standard:max-line-length" />
-        <error line="231" column="1" source="standard:max-line-length" />
-    </file>
-    <file name="src/test/kotlin/com/pubnub/internal/presence/eventengine/state/transition/TransitionFromHeartbeatingStateTest.kt">
-        <error line="99" column="1" source="standard:max-line-length" />
-        <error line="167" column="1" source="standard:max-line-length" />
-    </file>
-    <file name="src/test/kotlin/com/pubnub/internal/retry/RetryableRestCallerTest.kt">
-        <error line="51" column="1" source="standard:max-line-length" />
-        <error line="85" column="1" source="standard:max-line-length" />
-        <error line="142" column="1" source="standard:max-line-length" />
-        <error line="160" column="1" source="standard:max-line-length" />
-        <error line="179" column="1" source="standard:max-line-length" />
-        <error line="301" column="1" source="standard:max-line-length" />
-        <error line="324" column="1" source="standard:max-line-length" />
-    </file>
-    <file name="src/test/kotlin/com/pubnub/internal/subscribe/SubscribeTest.kt">
-        <error line="62" column="1" source="standard:max-line-length" />
-        <error line="83" column="1" source="standard:max-line-length" />
-        <error line="106" column="1" source="standard:max-line-length" />
-    </file>
-    <file name="src/test/kotlin/com/pubnub/internal/subscribe/eventengine/effect/EmitMessagesEffectTest.kt">
-        <error line="195" column="1" source="standard:max-line-length" />
-    </file>
-    <file name="src/test/kotlin/com/pubnub/internal/subscribe/eventengine/worker/SubscribeEventConsumerWorkerTransitionFunctionTest.kt">
-        <error line="16" column="1" source="standard:max-line-length" />
-    </file>
     <file name="src/test/kotlin/com/pubnub/internal/suite/channel_groups/AddChannelChannelGroupTestSuite.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
@@ -401,9 +309,5 @@
     </file>
     <file name="src/test/kotlin/com/pubnub/internal/suite/message_actions/RemoveMessageActionsTestSuite.kt">
         <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/test/kotlin/com/pubnub/internal/workers/SubscribeMessageProcessorTest.kt">
-        <error line="193" column="1" source="standard:max-line-length" />
-        <error line="197" column="1" source="standard:max-line-length" />
     </file>
 </baseline>
