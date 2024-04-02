@@ -312,7 +312,6 @@ class StateSetCoreEndpointTest : BaseTest() {
         stubFor(
             get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/myUUID/data"))
                 .withQueryParam("uuid", matching("myUUID"))
-                .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("state", equalToJson("""{"age":20}"""))
                 .willReturn(
                     aResponse().withBody(
@@ -340,7 +339,6 @@ class StateSetCoreEndpointTest : BaseTest() {
         stubFor(
             get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/myUUID/data"))
                 .withQueryParam("uuid", matching("myUUID"))
-                .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("state", equalToJson("""{"age":20}"""))
                 .willReturn(
                     aResponse().withBody(

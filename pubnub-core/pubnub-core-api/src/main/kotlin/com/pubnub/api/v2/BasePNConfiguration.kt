@@ -279,16 +279,6 @@ interface BasePNConfiguration {
         fun String.isValid() = isNotBlank()
     }
 
-    fun generatePnsdk(version: String): String {
-        val joinedSuffixes = pnsdkSuffixes.toSortedMap().values.joinToString(" ")
-        return "PubNub-Kotlin/$version" +
-            if (joinedSuffixes.isNotBlank()) {
-                " $joinedSuffixes"
-            } else {
-                ""
-            }
-    }
-
     interface Builder {
         /**
          * The user ID that the PubNub client will use.

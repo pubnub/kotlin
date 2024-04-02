@@ -114,10 +114,13 @@ import com.pubnub.internal.v2.subscription.SubscriptionImpl
 import com.pubnub.internal.v2.subscription.SubscriptionSetImpl
 import java.io.InputStream
 
+private const val PNSDK_PUBNUB_KOTLIN = "PubNub-Kotlin"
+
 class PubNubImpl(
     override val configuration: BasePNConfiguration,
 ) : BasePubNubImpl<EventListener, Subscription, Channel, ChannelGroup, ChannelMetadata, UserMetadata, SubscriptionSet, StatusListener>(
         configuration,
+        PNSDK_PUBNUB_KOTLIN,
     ),
     PubNub {
     private val emitterHelper = EmitterHelper(listenerManager)

@@ -363,7 +363,6 @@ class SubscribeCoreEndpointTest : BaseTest() {
         stubFor(
             get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/,/0"))
                 .withQueryParam("uuid", matching("myUUID"))
-                .withQueryParam("pnsdk", matching("PubNub-Kotlin.*"))
                 .withQueryParam("filter-expr", matching("this=1&that=cool"))
                 .withQueryParam("channel-group", matching("cg1"))
                 .willReturn(
