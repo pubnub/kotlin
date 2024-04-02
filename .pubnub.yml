@@ -120,7 +120,7 @@ changelog:
       - type: improvement
         text: "From now on, Java and Kotlin SDKs will be versioned and released together, and clients using both SDKs will get new features and bug fixes simultaneously."
       - type: improvement
-        text: "`RemoteAction.async()` now provides a single `Result<Output>` parameter to the callback. Please see the documentation for details."
+        text: "`RemoteAction.async()` now provides a single `Result` parameter to the callback. Please see the documentation for details."
       - type: improvement
         text: "PubNub initialization must be done through `PubNub.create()`. Constructor initialization is disallowed."
       - type: improvement
