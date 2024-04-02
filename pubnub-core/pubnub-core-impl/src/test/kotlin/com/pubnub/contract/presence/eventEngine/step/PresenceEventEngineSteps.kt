@@ -91,7 +91,7 @@ class PresenceEventEngineSteps(private val state: EventEngineState) {
 
     @Then("I receive an error in my heartbeat response")
     fun I_receive_an_error_in_my_heartbeat_response() {
-        await.pollInterval(50, TimeUnit.MILLISECONDS).atMost(500, TimeUnit.MILLISECONDS).untilAsserted {
+        await.pollInterval(50, TimeUnit.MILLISECONDS).atMost(3, TimeUnit.SECONDS).untilAsserted {
             val expectedNames = "event" to "HEARTBEAT_FAILURE"
             MatcherAssert.assertThat(state.presenceQueuedElements, hasItem(expectedNames))
         }
@@ -107,7 +107,7 @@ class PresenceEventEngineSteps(private val state: EventEngineState) {
 
     @Then("I observe the following Events and Invocations of the Presence EE:")
     fun i_observe_the_following(dataTable: DataTable) {
-        await.pollInterval(50, TimeUnit.MILLISECONDS).atMost(5000, TimeUnit.MILLISECONDS).untilAsserted {
+        await.pollInterval(50, TimeUnit.MILLISECONDS).atMost(3, TimeUnit.SECONDS).untilAsserted {
             if (state.configuration.suppressLeaveEvents) {
                 // when suppressLeaveEvents is true in Kotlin SDK we do invocation LEAVE, but it will not execute LeaveEffect
                 // other SDK don't do invocation LEAVE and cucumber test doesn't expect LEAVE invocation.

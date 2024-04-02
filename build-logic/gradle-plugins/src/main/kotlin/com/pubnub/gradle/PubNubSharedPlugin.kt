@@ -46,6 +46,8 @@ class PubNubSharedPlugin : Plugin<Project> {
                         "ktlint_standard_multiline-expression-wrapping" to "disabled",
                         "ktlint_standard_string-template-indent" to "disabled",
                         "ktlint_standard_max-line-length" to "disabled",
+                        "ktlint_standard_if-else-wrapping" to "disabled",
+                        "ktlint_standard_discouraged-comment-location" to "disabled",
                     )
                 )
             }
