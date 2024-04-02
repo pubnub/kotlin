@@ -141,10 +141,11 @@ public class PubNubImpl extends BasePubNubImpl<
         SubscriptionSet,
         StatusListener> implements PubNub {
 
+    private static final String PNSDK_PUBNUB_JAVA = "PubNub-Java";
     private final @NotNull BasePNConfiguration configuration;
 
     public PubNubImpl(@NotNull BasePNConfiguration configuration) {
-        super(configuration, "PubNub-Java");
+        super(configuration, PNSDK_PUBNUB_JAVA);
         this.configuration = configuration;
     }
 

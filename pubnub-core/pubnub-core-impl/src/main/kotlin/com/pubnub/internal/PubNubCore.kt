@@ -112,7 +112,7 @@ class PubNubCore internal constructor(
     val configuration: BasePNConfiguration,
     val listenerManager: ListenerManager,
     eventEnginesConf: EventEnginesConf = EventEnginesConf(),
-    private val pnsdkName: String = "PubNub-JVM",
+    private val pnsdkName: String,
 ) {
     companion object {
         internal const val TIMESTAMP_DIVIDER = 1000
