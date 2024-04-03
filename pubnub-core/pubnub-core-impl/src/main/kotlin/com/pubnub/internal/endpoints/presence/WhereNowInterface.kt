@@ -1,5 +1,7 @@
 package com.pubnub.internal.endpoints.presence
 
-interface WhereNowInterface {
+import com.pubnub.api.endpoints.HasOverridableConfig
+
+interface WhereNowInterface : HasOverridableConfig {
     val uuid: String
 }

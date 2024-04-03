@@ -1,6 +1,6 @@
 package com.pubnub.internal.endpoints.files
 
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.models.consumer.files.PNListFilesResult
+import com.pubnub.internal.EndpointInterface
 
-interface ListFilesInterface : ExtendedRemoteAction<PNListFilesResult>
+interface ListFilesInterface : EndpointInterface<PNListFilesResult>

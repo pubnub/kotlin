@@ -1,5 +1,5 @@
 package com.pubnub.internal.endpoints.access
 
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
+import com.pubnub.internal.EndpointInterface
 
-interface RevokeTokenInterface : ExtendedRemoteAction<Unit>
+interface RevokeTokenInterface : EndpointInterface<Unit>

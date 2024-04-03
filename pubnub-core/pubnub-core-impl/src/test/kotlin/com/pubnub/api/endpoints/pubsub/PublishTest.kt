@@ -85,9 +85,7 @@ class PublishTest {
         every { retrofitManagerMock.publishService } returns publishServiceMock
 
         every { pubNubHardcodedIVMock.configuration } returns pnConfigurationHardcodedIV
-        every { pubNubHardcodedIVMock.cryptoModule } returns CryptoModule.createLegacyCryptoModule(CIPHER_KEY)
         every { pubNubRandomIVMock.configuration } returns pnConfigurationRandomIV
-        every { pubNubRandomIVMock.cryptoModule } returns CryptoModule.createLegacyCryptoModule(CIPHER_KEY, false)
 
         every { pubNubHardcodedIVMock.retrofitManager } returns retrofitManagerMock
         every { pubNubRandomIVMock.retrofitManager } returns retrofitManagerMock

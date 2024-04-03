@@ -6,6 +6,6 @@ import com.pubnub.internal.PubNubImpl
 /**
  * @see [PubNubImpl.removeChannelsFromChannelGroup]
  */
-class RemoveChannelChannelGroupImpl internal constructor(removeChannelChannelGroup: IRemoveChannelChannelGroup) :
-    IRemoveChannelChannelGroup by removeChannelChannelGroup,
+class RemoveChannelChannelGroupImpl internal constructor(removeChannelChannelGroup: RemoveChannelChannelGroupInterface) :
+    RemoveChannelChannelGroupInterface by removeChannelChannelGroup,
     RemoveChannelChannelGroup

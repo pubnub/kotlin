@@ -120,9 +120,6 @@ class PubNubCore internal constructor(
         internal const val MAX_SEQUENCE = 65535
     }
 
-    internal val cryptoModule: CryptoModule?
-        get() = configuration.cryptoModule
-
     private val subscriptionFactory: SubscriptionFactory<BaseSubscriptionImpl<BaseEventListener>> =
         { channels, channelGroups, options ->
             object : BaseSubscriptionImpl<BaseEventListener>(this, channels, channelGroups, options) {

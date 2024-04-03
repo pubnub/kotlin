@@ -2,6 +2,7 @@ package com.pubnub.internal.endpoints
 
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.v2.BasePNConfigurationOverride
 import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.api.v2.callbacks.getOrThrow
 import com.pubnub.internal.DelegatingEndpoint
@@ -48,6 +49,10 @@ internal class DelegatingEndpointTest {
             object : DelegatingEndpoint<Boolean, Boolean>(action) {
                 override fun convertAction(remoteAction: ExtendedRemoteAction<Boolean>): ExtendedRemoteAction<Boolean> {
                     return remoteAction
+                }
+
+                override fun overrideConfiguration(configuration: BasePNConfigurationOverride) {
+                    TODO("Not yet implemented")
                 }
             }
     }

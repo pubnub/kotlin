@@ -1,3 +1,5 @@
 package com.pubnub.internal.endpoints.objects.channel
 
-interface RemoveChannelMetadataInterface
+import com.pubnub.api.endpoints.HasOverridableConfig
+
+interface RemoveChannelMetadataInterface : HasOverridableConfig

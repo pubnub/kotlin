@@ -18,9 +18,6 @@
     <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/DeleteChannelGroupInterface.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
-    <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/IRemoveChannelChannelGroup.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
     <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/ListAllChannelGroupEndpoint.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
@@ -28,6 +25,9 @@
         <error line="1" column="9" source="standard:package-name" />
     </file>
     <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/RemoveChannelChannelGroupEndpoint.kt">
+        <error line="1" column="9" source="standard:package-name" />
+    </file>
+    <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/RemoveChannelChannelGroupInterface.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
     <file name="src/main/kotlin/com/pubnub/internal/endpoints/message_actions/AddMessageActionEndpoint.kt">

@@ -1,3 +1,5 @@
 package com.pubnub.internal.endpoints.objects.channel
 
-interface GetAllChannelMetadataInterface
+import com.pubnub.api.endpoints.HasOverridableConfig
+
+interface GetAllChannelMetadataInterface : HasOverridableConfig

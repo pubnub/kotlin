@@ -3,9 +3,11 @@ package com.pubnub.internal
 import com.google.gson.JsonElement
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.endpoints.HasOverridableConfig
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.api.v2.BasePNConfiguration.Companion.isValid
+import com.pubnub.api.v2.BasePNConfigurationOverride
 import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.internal.retry.RetryableBase
 import com.pubnub.internal.retry.RetryableCallback
@@ -19,6 +21,8 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import java.util.function.Consumer
 
+interface EndpointInterface<Output> : ExtendedRemoteAction<Output>, HasOverridableConfig
+
 /**
  * Base class for all PubNub API operation implementations.
  *
@@ -27,7 +31,11 @@ import java.util.function.Consumer
  * @property pubnub The client instance.
  */
 abstract class EndpointCore<Input, Output> protected constructor(protected val pubnub: PubNubCore) :
-    ExtendedRemoteAction<Output> {
+    EndpointInterface<Output> {
+        private var configOverride: BasePNConfigurationOverride? = null
+        protected val configuration: BasePNConfigurationOverride
+            get() = configOverride ?: pubnub.configuration
+
         private val log = LoggerFactory.getLogger(this.javaClass.simpleName)
 
         private lateinit var cachedCallback: Consumer<Result<Output>>
@@ -35,7 +43,7 @@ abstract class EndpointCore<Input, Output> protected constructor(protected val p
         private var silenceFailures = false
         private val retryableRestCaller =
             RetryableRestCaller<Input>(
-                pubnub.configuration.retryConfiguration,
+                configuration.retryConfiguration,
                 getEndpointGroupName(),
                 isEndpointRetryable(),
             )
@@ -92,7 +100,7 @@ abstract class EndpointCore<Input, Output> protected constructor(protected val p
             call.enqueue(
                 object : RetryableCallback<Input>(
                     call = call,
-                    retryConfiguration = pubnub.configuration.retryConfiguration,
+                    retryConfiguration = configuration.retryConfiguration,
                     endpointGroupName = getEndpointGroupName(),
                     isEndpointRetryable = isEndpointRetryable(),
                     executorService = pubnub.executorService,
@@ -179,13 +187,13 @@ abstract class EndpointCore<Input, Output> protected constructor(protected val p
             map += queryParam
 
             map["pnsdk"] = pubnub.generatePnsdk()
-            map["uuid"] = pubnub.configuration.userId.value
+            map["uuid"] = configuration.userId.value
 
-            if (pubnub.configuration.includeInstanceIdentifier) {
+            if (configuration.includeInstanceIdentifier) {
                 map["instanceid"] = pubnub.instanceId
             }
 
-            if (pubnub.configuration.includeRequestIdentifier) {
+            if (configuration.includeRequestIdentifier) {
                 map["requestid"] = pubnub.requestId()
             }
 
@@ -193,8 +201,8 @@ abstract class EndpointCore<Input, Output> protected constructor(protected val p
                 val token = pubnub.tokenManager.getToken()
                 if (token != null) {
                     map["auth"] = token
-                } else if (pubnub.configuration.authKey.isValid()) {
-                    map["auth"] = pubnub.configuration.authKey
+                } else if (configuration.authKey.isValid()) {
+                    map["auth"] = configuration.authKey
                 }
             }
             return map
@@ -407,12 +415,16 @@ abstract class EndpointCore<Input, Output> protected constructor(protected val p
         protected open fun getAffectedChannelGroups(): List<String> = emptyList()
 
         protected open fun validateParams() {
-            if (isSubKeyRequired() && !pubnub.configuration.subscribeKey.isValid()) {
+            if (isSubKeyRequired() && !configuration.subscribeKey.isValid()) {
                 throw PubNubException(PubNubError.SUBSCRIBE_KEY_MISSING)
             }
-            if (isPubKeyRequired() && !pubnub.configuration.publishKey.isValid()) {
+            if (isPubKeyRequired() && !configuration.publishKey.isValid()) {
                 throw PubNubException(PubNubError.PUBLISH_KEY_MISSING)
             }
+        }
+
+        override fun overrideConfiguration(configuration: BasePNConfigurationOverride) {
+            this.configOverride = configuration
         }
 
         protected abstract fun doWork(queryParams: HashMap<String, String>): Call<Input>

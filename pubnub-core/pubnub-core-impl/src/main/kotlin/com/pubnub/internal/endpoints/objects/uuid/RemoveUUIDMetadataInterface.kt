@@ -1,5 +1,7 @@
 package com.pubnub.internal.endpoints.objects.uuid
 
-interface RemoveUUIDMetadataInterface {
+import com.pubnub.api.endpoints.HasOverridableConfig
+
+interface RemoveUUIDMetadataInterface : HasOverridableConfig {
     val uuid: String?
 }

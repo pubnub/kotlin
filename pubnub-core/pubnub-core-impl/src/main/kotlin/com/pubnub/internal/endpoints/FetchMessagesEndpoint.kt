@@ -97,7 +97,7 @@ class FetchMessagesEndpoint internal constructor(
                 value.map { serverMessageItem ->
                     val (newMessage, error) =
                         serverMessageItem.message.tryDecryptMessage(
-                            pubnub.cryptoModule,
+                            pubnub.configuration.cryptoModule,
                             pubnub.mapper,
                         )
                     val newActions =
