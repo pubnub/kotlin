@@ -29,7 +29,7 @@ class RevokeTokenEndpoint(
     override fun doWork(queryParams: HashMap<String, String>): Call<RevokeTokenResponse> {
         return pubnub.retrofitManager
             .accessManagerService
-            .revokeToken(pubnub.configuration.subscribeKey, repairEncoding(token), queryParams)
+            .revokeToken(configuration.subscribeKey, repairEncoding(token), queryParams)
     }
 
     override fun createResponse(input: Response<RevokeTokenResponse>): Unit = Unit

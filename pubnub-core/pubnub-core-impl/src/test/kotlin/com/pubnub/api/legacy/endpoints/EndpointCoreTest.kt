@@ -14,11 +14,13 @@ import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.BasePubNubImpl
 import com.pubnub.internal.EndpointCore
+import com.pubnub.internal.v2.BasePNConfigurationImpl
 import com.pubnub.test.listen
 import okhttp3.Request
 import okio.Timeout
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import retrofit2.Call
@@ -76,7 +78,6 @@ class EndpointCoreTest : BaseTest() {
     @Test
     fun testBaseParamsPersistentRequestId() {
         config.includeInstanceIdentifier = true
-        // initPubNub()
 
         val instanceId1 = AtomicReference<String>()
         val instanceId2 = AtomicReference<String>()
@@ -94,6 +95,26 @@ class EndpointCoreTest : BaseTest() {
     }
 
     @Test
+    fun testOverrideConfiguration_instanceAndRequestId() {
+        config.includeInstanceIdentifier = true
+        config.includeRequestIdentifier = true
+
+        fakeEndpoint {
+            println(it)
+            assertNull(it["instanceid"])
+            assertNull(it["requestid"])
+        }.apply {
+            overrideConfiguration(
+                BasePNConfigurationImpl(
+                    userId = config.userId,
+                    includeRequestIdentifier = false,
+                    includeInstanceIdentifier = false,
+                ),
+            )
+        }.sync()
+    }
+
+    @Test
     fun testUuid() {
         val expectedUuid = UserId(BasePubNubImpl.generateUUID())
         config.userId = expectedUuid
@@ -101,6 +122,18 @@ class EndpointCoreTest : BaseTest() {
 
         fakeEndpoint {
             assertEquals(expectedUuid.value, it["uuid"])
+        }.sync()
+    }
+
+    @Test
+    fun testOverrideConfiguration_Uuid() {
+        val expectedUuid = UserId(BasePubNubImpl.generateUUID())
+        config.userId = UserId("someOtherUUID")
+
+        fakeEndpoint {
+            assertEquals(expectedUuid.value, it["uuid"])
+        }.apply {
+            overrideConfiguration(BasePNConfigurationImpl(userId = expectedUuid))
         }.sync()
     }
 

@@ -32,7 +32,7 @@ class RemoveMessageActionEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<Void> {
         return pubnub.retrofitManager.messageActionService
             .deleteMessageAction(
-                subKey = pubnub.configuration.subscribeKey,
+                subKey = configuration.subscribeKey,
                 channel = channel,
                 messageTimetoken = messageTimetoken.toString().lowercase(Locale.getDefault()),
                 actionTimetoken = actionTimetoken.toString().lowercase(Locale.getDefault()),

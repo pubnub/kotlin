@@ -27,7 +27,7 @@ class GetAllUUIDMetadataEndpoint internal constructor(
             queryParams + collectionQueryParameters.createCollectionQueryParams() + withInclude.createIncludeQueryParams()
 
         return pubnub.retrofitManager.objectsService.getAllUUIDMetadata(
-            subKey = pubnub.configuration.subscribeKey,
+            subKey = configuration.subscribeKey,
             options = params,
         )
     }

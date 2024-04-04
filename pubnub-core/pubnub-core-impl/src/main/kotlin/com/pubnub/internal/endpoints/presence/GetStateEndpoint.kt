@@ -37,7 +37,7 @@ class GetStateEndpoint internal constructor(
         addQueryParams(queryParams)
 
         return pubnub.retrofitManager.presenceService.getState(
-            pubnub.configuration.subscribeKey,
+            configuration.subscribeKey,
             channels.toCsv(),
             uuid,
             queryParams,

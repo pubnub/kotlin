@@ -28,7 +28,7 @@ class GetChannelMembersEndpoint internal constructor(
 
         return pubnub.retrofitManager.objectsService.getChannelMembers(
             channel = channel,
-            subKey = pubnub.configuration.subscribeKey,
+            subKey = configuration.subscribeKey,
             options = params,
         )
     }

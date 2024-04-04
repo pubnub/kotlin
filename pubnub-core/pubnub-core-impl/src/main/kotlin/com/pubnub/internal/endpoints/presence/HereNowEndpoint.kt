@@ -34,13 +34,13 @@ class HereNowEndpoint internal constructor(
 
         return if (!isGlobalHereNow()) {
             pubnub.retrofitManager.presenceService.hereNow(
-                pubnub.configuration.subscribeKey,
+                configuration.subscribeKey,
                 channels.toCsv(),
                 queryParams,
             )
         } else {
             pubnub.retrofitManager.presenceService.globalHereNow(
-                pubnub.configuration.subscribeKey,
+                configuration.subscribeKey,
                 queryParams,
             )
         }

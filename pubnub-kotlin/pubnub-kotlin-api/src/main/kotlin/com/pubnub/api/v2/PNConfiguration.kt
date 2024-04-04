@@ -16,7 +16,7 @@ import javax.net.ssl.HostnameVerifier
 import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.X509ExtendedTrustManager
 
-interface PNConfiguration : BasePNConfiguration {
+interface PNConfiguration : BasePNConfiguration, PNConfigurationOverride {
     companion object {
         @JvmStatic
         fun builder(
@@ -75,5 +75,61 @@ interface PNConfiguration : BasePNConfiguration {
         override var managePresenceListManually: Boolean
 
         fun build(): PNConfiguration
+    }
+}
+
+interface PNConfigurationOverride {
+    interface Builder : BasePNConfigurationOverride.Builder {
+        /**
+         * The subscribe key from the admin panel.
+         */
+        override var subscribeKey: String
+
+        /**
+         * The publish key from the admin panel (only required if publishing).
+         */
+        override var publishKey: String
+
+        /**
+         * Retry configuration for requests.
+         *  Defaults to [RetryConfiguration.None].
+         *
+         *  Use [RetryConfiguration.Linear] to set retry with linear delay interval
+         *  Use [RetryConfiguration.Exponential] to set retry with exponential delay interval
+         *  Delay will valy from provided value by random value.
+         */
+        override var retryConfiguration: RetryConfiguration
+
+        /**
+         * The user ID that the PubNub client will use.
+         */
+        override var userId: UserId
+
+        /**
+         * Whether to include a [PubNub.instanceId] with every request.
+         *
+         * Defaults to `false`.
+         */
+        override var includeInstanceIdentifier: Boolean
+
+        /**
+         * Whether to include a [PubNub.requestId] with every request.
+         *
+         * Defaults to `true`.
+         */
+        override var includeRequestIdentifier: Boolean
+
+        /**
+         * If Access Manager is utilized, client will use this authKey in all restricted requests.
+         */
+        override var authKey: String
+
+        /**
+         * CryptoModule is responsible for handling encryption and decryption.
+         * If set, all communications to and from PubNub will be encrypted.
+         */
+        override var cryptoModule: CryptoModule?
+
+        fun build(): PNConfigurationOverride
     }
 }

@@ -27,7 +27,7 @@ class GetAllChannelMetadataEndpoint internal constructor(
             queryParams + collectionQueryParameters.createCollectionQueryParams() + includeQueryParam.createIncludeQueryParams()
 
         return pubnub.retrofitManager.objectsService.getAllChannelMetadata(
-            subKey = pubnub.configuration.subscribeKey,
+            subKey = configuration.subscribeKey,
             options = params,
         )
     }

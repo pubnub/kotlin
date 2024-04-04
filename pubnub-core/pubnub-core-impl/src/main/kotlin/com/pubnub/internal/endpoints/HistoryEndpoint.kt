@@ -51,7 +51,7 @@ class HistoryEndpoint internal constructor(
         addQueryParams(queryParams)
 
         return pubnub.retrofitManager.historyService.fetchHistory(
-            pubnub.configuration.subscribeKey,
+            configuration.subscribeKey,
             channel,
             queryParams,
         )
@@ -84,7 +84,7 @@ class HistoryEndpoint internal constructor(
                 if (includeTimetoken || includeMeta) {
                     historyMessageWithError =
                         pubnub.mapper.getField(historyEntry, "message")!!
-                            .tryDecryptMessage(pubnub.configuration.cryptoModule, pubnub.mapper)
+                            .tryDecryptMessage(configuration.cryptoModule, pubnub.mapper)
                     if (includeTimetoken) {
                         timetoken = pubnub.mapper.elementToLong(historyEntry, "timetoken")
                     }
@@ -92,7 +92,7 @@ class HistoryEndpoint internal constructor(
                         meta = pubnub.mapper.getField(historyEntry, "meta")
                     }
                 } else {
-                    historyMessageWithError = historyEntry.tryDecryptMessage(pubnub.configuration.cryptoModule, pubnub.mapper)
+                    historyMessageWithError = historyEntry.tryDecryptMessage(configuration.cryptoModule, pubnub.mapper)
                 }
 
                 val message: JsonElement = historyMessageWithError.first

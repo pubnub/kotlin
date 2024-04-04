@@ -33,7 +33,7 @@ class GrantTokenEndpoint(
         if (!pubnub.configuration.secretKey.isValid()) {
             throw PubNubException(PubNubError.SECRET_KEY_MISSING)
         }
-        if (!pubnub.configuration.subscribeKey.isValid()) {
+        if (!configuration.subscribeKey.isValid()) {
             throw PubNubException(PubNubError.SUBSCRIBE_KEY_MISSING)
         }
         if ((channels + channelGroups + uuids).isEmpty()) {
@@ -56,7 +56,7 @@ class GrantTokenEndpoint(
             )
         return pubnub.retrofitManager
             .accessManagerService
-            .grantToken(pubnub.configuration.subscribeKey, requestBody, queryParams)
+            .grantToken(configuration.subscribeKey, requestBody, queryParams)
     }
 
     override fun createResponse(input: Response<GrantTokenResponse>): PNGrantTokenResult {

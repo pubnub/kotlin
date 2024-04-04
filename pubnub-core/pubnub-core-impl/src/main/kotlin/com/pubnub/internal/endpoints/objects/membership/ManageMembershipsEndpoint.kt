@@ -35,7 +35,7 @@ class ManageMembershipsEndpoint internal constructor(
                 includeQueryParam.createIncludeQueryParams()
         return pubnub.retrofitManager.objectsService.patchMemberships(
             uuid = uuid,
-            subKey = pubnub.configuration.subscribeKey,
+            subKey = configuration.subscribeKey,
             options = params,
             body =
                 ChangeMembershipInput(

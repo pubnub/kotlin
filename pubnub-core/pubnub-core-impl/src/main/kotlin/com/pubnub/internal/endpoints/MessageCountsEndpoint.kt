@@ -39,7 +39,7 @@ class MessageCountsEndpoint internal constructor(
         addQueryParams(queryParams)
 
         return pubnub.retrofitManager.historyService.fetchCount(
-            subKey = pubnub.configuration.subscribeKey,
+            subKey = configuration.subscribeKey,
             channels = channels.toCsv(),
             options = queryParams,
         )

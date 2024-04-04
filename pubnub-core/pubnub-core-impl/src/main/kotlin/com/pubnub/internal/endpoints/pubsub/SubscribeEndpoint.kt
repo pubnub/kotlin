@@ -35,7 +35,7 @@ class SubscribeEndpoint internal constructor(pubnub: PubNubCore) : EndpointCore<
         addQueryParams(queryParams)
 
         return pubnub.retrofitManager.subscribeService.subscribe(
-            pubnub.configuration.subscribeKey,
+            configuration.subscribeKey,
             channels.toCsv(),
             queryParams,
         )

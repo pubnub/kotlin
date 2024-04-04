@@ -46,7 +46,7 @@ class AddMessageActionEndpoint internal constructor(
 
         return pubnub.retrofitManager.messageActionService
             .addMessageAction(
-                subKey = pubnub.configuration.subscribeKey,
+                subKey = configuration.subscribeKey,
                 channel = channel,
                 messageTimetoken = messageAction.messageTimetoken.toString().lowercase(Locale.getDefault()),
                 body = body,

@@ -29,7 +29,7 @@ class SetChannelMetadataEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNChannelMetadata>> {
         val params = queryParams + includeQueryParam.createIncludeQueryParams()
         return pubnub.retrofitManager.objectsService.setChannelMetadata(
-            subKey = pubnub.configuration.subscribeKey,
+            subKey = configuration.subscribeKey,
             body =
                 ChannelMetadataInput(
                     name = name,

@@ -50,7 +50,7 @@ open class GrantEndpoint(
 
         return pubnub.retrofitManager.accessManagerService
             .grant(
-                subKey = pubnub.configuration.subscribeKey,
+                subKey = configuration.subscribeKey,
                 options = queryParams,
             )
     }

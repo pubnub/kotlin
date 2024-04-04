@@ -32,7 +32,7 @@ class DeleteMessagesEndpoint internal constructor(
         addQueryParams(queryParams)
 
         return pubnub.retrofitManager.historyService.deleteMessages(
-            pubnub.configuration.subscribeKey,
+            configuration.subscribeKey,
             channels.toCsv(),
             queryParams,
         )

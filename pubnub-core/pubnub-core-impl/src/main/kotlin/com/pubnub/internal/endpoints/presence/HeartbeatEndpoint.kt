@@ -38,7 +38,7 @@ class HeartbeatEndpoint internal constructor(
             }
 
         return pubnub.retrofitManager.presenceService.heartbeat(
-            pubnub.configuration.subscribeKey,
+            configuration.subscribeKey,
             channelsCsv,
             queryParams,
         )

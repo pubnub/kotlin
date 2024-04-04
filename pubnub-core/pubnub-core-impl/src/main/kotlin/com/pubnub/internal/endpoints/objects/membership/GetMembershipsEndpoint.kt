@@ -29,7 +29,7 @@ class GetMembershipsEndpoint internal constructor(
 
         return pubnub.retrofitManager.objectsService.getMemberships(
             uuid = uuid,
-            subKey = pubnub.configuration.subscribeKey,
+            subKey = configuration.subscribeKey,
             options = params,
         )
     }

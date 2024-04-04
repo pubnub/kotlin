@@ -38,7 +38,7 @@ class RemoveChannelChannelGroupEndpoint internal constructor(
 
         return pubnub.retrofitManager.channelGroupService
             .removeChannel(
-                pubnub.configuration.subscribeKey,
+                configuration.subscribeKey,
                 channelGroup,
                 queryParams,
             )

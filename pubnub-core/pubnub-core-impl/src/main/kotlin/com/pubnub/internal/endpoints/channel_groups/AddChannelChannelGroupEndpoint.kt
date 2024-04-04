@@ -38,7 +38,7 @@ class AddChannelChannelGroupEndpoint internal constructor(
 
         return pubnub.retrofitManager.channelGroupService
             .addChannelChannelGroup(
-                pubnub.configuration.subscribeKey,
+                configuration.subscribeKey,
                 channelGroup,
                 queryParams,
             )

@@ -43,8 +43,8 @@ class PublishEndpoint internal constructor(
             val payload = getBodyMessage(message)
 
             pubnub.retrofitManager.publishService.publishWithPost(
-                pubnub.configuration.publishKey,
-                pubnub.configuration.subscribeKey,
+                configuration.publishKey,
+                configuration.subscribeKey,
                 channel,
                 payload,
                 queryParams,
@@ -54,8 +54,8 @@ class PublishEndpoint internal constructor(
             val stringifiedMessage = getParamMessage(message)
 
             pubnub.retrofitManager.publishService.publish(
-                pubnub.configuration.publishKey,
-                pubnub.configuration.subscribeKey,
+                configuration.publishKey,
+                configuration.subscribeKey,
                 channel,
                 stringifiedMessage,
                 queryParams,
@@ -97,10 +97,10 @@ class PublishEndpoint internal constructor(
     // endregion
 
     // region Message parsers
-    private fun getBodyMessage(message: Any): Any = pubnub.configuration.cryptoModule?.encryptString(toJson(message)) ?: message
+    private fun getBodyMessage(message: Any): Any = configuration.cryptoModule?.encryptString(toJson(message)) ?: message
 
     private fun getParamMessage(message: Any): String =
-        pubnub.configuration.cryptoModule?.encryptString(toJson(message))?.quoted() ?: toJson(message)
+        configuration.cryptoModule?.encryptString(toJson(message))?.quoted() ?: toJson(message)
 
     private fun toJson(message: Any): String = pubnub.mapper.toJson(message)
     // endregion

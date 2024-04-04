@@ -46,7 +46,7 @@ class GetFileUrlEndpoint(
             val call: Call<ResponseBody> =
                 pubnub.retrofitManager.filesService
                     .downloadFile(
-                        pubnub.configuration.subscribeKey,
+                        configuration.subscribeKey,
                         channel,
                         fileId,
                         fileName,

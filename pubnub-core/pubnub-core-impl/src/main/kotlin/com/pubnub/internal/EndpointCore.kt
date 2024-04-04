@@ -3,11 +3,9 @@ package com.pubnub.internal
 import com.google.gson.JsonElement
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
-import com.pubnub.api.endpoints.HasOverridableConfig
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.retry.RetryableEndpointGroup
+import com.pubnub.api.v2.BasePNConfiguration
 import com.pubnub.api.v2.BasePNConfiguration.Companion.isValid
-import com.pubnub.api.v2.BasePNConfigurationOverride
 import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.internal.retry.RetryableBase
 import com.pubnub.internal.retry.RetryableCallback
@@ -21,8 +19,6 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import java.util.function.Consumer
 
-interface EndpointInterface<Output> : ExtendedRemoteAction<Output>, HasOverridableConfig
-
 /**
  * Base class for all PubNub API operation implementations.
  *
@@ -32,8 +28,8 @@ interface EndpointInterface<Output> : ExtendedRemoteAction<Output>, HasOverridab
  */
 abstract class EndpointCore<Input, Output> protected constructor(protected val pubnub: PubNubCore) :
     EndpointInterface<Output> {
-        private var configOverride: BasePNConfigurationOverride? = null
-        protected val configuration: BasePNConfigurationOverride
+        private var configOverride: BasePNConfiguration? = null
+        final override val configuration: BasePNConfiguration
             get() = configOverride ?: pubnub.configuration
 
         private val log = LoggerFactory.getLogger(this.javaClass.simpleName)
@@ -423,7 +419,7 @@ abstract class EndpointCore<Input, Output> protected constructor(protected val p
             }
         }
 
-        override fun overrideConfiguration(configuration: BasePNConfigurationOverride) {
+        override fun overrideConfiguration(configuration: BasePNConfiguration) {
             this.configOverride = configuration
         }
 

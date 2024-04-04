@@ -577,4 +577,56 @@ interface BasePNConfigurationOverride {
      * If set, all communications to and from PubNub will be encrypted.
      */
     val cryptoModule: CryptoModule?
+
+    interface Builder {
+        /**
+         * The subscribe key from the admin panel.
+         */
+        val subscribeKey: String
+
+        /**
+         * The publish key from the admin panel (only required if publishing).
+         */
+        val publishKey: String
+
+        /**
+         * Retry configuration for requests.
+         *  Defaults to [RetryConfiguration.None].
+         *
+         *  Use [RetryConfiguration.Linear] to set retry with linear delay interval
+         *  Use [RetryConfiguration.Exponential] to set retry with exponential delay interval
+         *  Delay will valy from provided value by random value.
+         */
+        val retryConfiguration: RetryConfiguration
+
+        /**
+         * The user ID that the PubNub client will use.
+         */
+        val userId: UserId
+
+        /**
+         * Whether to include a [PubNub.instanceId] with every request.
+         *
+         * Defaults to `false`.
+         */
+        val includeInstanceIdentifier: Boolean
+
+        /**
+         * Whether to include a [PubNub.requestId] with every request.
+         *
+         * Defaults to `true`.
+         */
+        val includeRequestIdentifier: Boolean
+
+        /**
+         * If Access Manager is utilized, client will use this authKey in all restricted requests.
+         */
+        val authKey: String
+
+        /**
+         * CryptoModule is responsible for handling encryption and decryption.
+         * If set, all communications to and from PubNub will be encrypted.
+         */
+        val cryptoModule: CryptoModule?
+    }
 }

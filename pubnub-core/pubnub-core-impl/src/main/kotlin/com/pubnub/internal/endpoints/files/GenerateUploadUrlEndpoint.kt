@@ -54,7 +54,7 @@ internal class GenerateUploadUrlEndpoint(
 
     override fun doWork(queryParams: HashMap<String, String>): Call<GeneratedUploadUrlResponse> {
         return pubnub.retrofitManager.filesService.generateUploadUrl(
-            pubnub.configuration.subscribeKey,
+            configuration.subscribeKey,
             channel,
             GenerateUploadUrlPayload(fileName),
             queryParams,

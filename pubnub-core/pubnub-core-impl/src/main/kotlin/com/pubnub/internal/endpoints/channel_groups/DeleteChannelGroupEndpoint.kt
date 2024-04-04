@@ -29,7 +29,7 @@ class DeleteChannelGroupEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<Void> {
         return pubnub.retrofitManager.channelGroupService
             .deleteChannelGroup(
-                pubnub.configuration.subscribeKey,
+                configuration.subscribeKey,
                 channelGroup,
                 queryParams,
             )

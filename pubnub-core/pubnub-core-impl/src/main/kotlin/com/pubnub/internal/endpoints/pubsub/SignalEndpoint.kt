@@ -29,8 +29,8 @@ class SignalEndpoint internal constructor(
 
     override fun doWork(queryParams: HashMap<String, String>): Call<List<Any>> {
         return pubnub.retrofitManager.signalService.signal(
-            pubKey = pubnub.configuration.publishKey,
-            subKey = pubnub.configuration.subscribeKey,
+            pubKey = configuration.publishKey,
+            subKey = configuration.subscribeKey,
             channel = channel,
             message = pubnub.mapper.toJson(message),
             options = queryParams,

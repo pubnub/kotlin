@@ -19,7 +19,7 @@ class WhereNowEndpoint internal constructor(
 ) : EndpointCore<Envelope<WhereNowPayload>, PNWhereNowResult>(pubnub), WhereNowInterface {
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<WhereNowPayload>> {
         return pubnub.retrofitManager.presenceService.whereNow(
-            pubnub.configuration.subscribeKey,
+            configuration.subscribeKey,
             uuid,
             queryParams,
         )

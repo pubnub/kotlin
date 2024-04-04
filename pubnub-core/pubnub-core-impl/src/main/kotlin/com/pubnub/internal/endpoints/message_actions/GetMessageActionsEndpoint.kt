@@ -34,7 +34,7 @@ class GetMessageActionsEndpoint internal constructor(
 
         return pubnub.retrofitManager.messageActionService
             .getMessageActions(
-                pubnub.configuration.subscribeKey,
+                configuration.subscribeKey,
                 channel,
                 queryParams,
             )

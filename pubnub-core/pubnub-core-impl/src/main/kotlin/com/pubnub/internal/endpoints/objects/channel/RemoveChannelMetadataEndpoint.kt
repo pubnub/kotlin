@@ -15,7 +15,7 @@ class RemoveChannelMetadataEndpoint(
 ) : EndpointCore<EntityEnvelope<Any?>, PNRemoveMetadataResult>(pubnub), RemoveChannelMetadataInterface {
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<Any?>> {
         return pubnub.retrofitManager.objectsService.deleteChannelMetadata(
-            subKey = pubnub.configuration.subscribeKey,
+            subKey = configuration.subscribeKey,
             channel = channel,
         )
     }

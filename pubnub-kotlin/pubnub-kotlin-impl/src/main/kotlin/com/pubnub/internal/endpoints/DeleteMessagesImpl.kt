@@ -1,6 +1,8 @@
 package com.pubnub.internal.endpoints
 
 import com.pubnub.api.endpoints.DeleteMessages
+import com.pubnub.api.models.consumer.history.PNDeleteMessagesResult
+import com.pubnub.internal.EndpointImpl
 import com.pubnub.internal.PubNubImpl
 
 /**
@@ -8,4 +10,5 @@ import com.pubnub.internal.PubNubImpl
  */
 class DeleteMessagesImpl internal constructor(deleteMessages: DeleteMessagesInterface) :
     DeleteMessagesInterface by deleteMessages,
-    DeleteMessages
+    DeleteMessages,
+    EndpointImpl<PNDeleteMessagesResult>(deleteMessages.configuration)

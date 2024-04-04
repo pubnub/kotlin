@@ -15,8 +15,8 @@ class RemoveUUIDMetadataEndpoint(
 ) : EndpointCore<EntityEnvelope<Any?>, PNRemoveMetadataResult>(pubnub), RemoveUUIDMetadataInterface {
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<Any?>> {
         return pubnub.retrofitManager.objectsService.deleteUUIDMetadata(
-            subKey = pubnub.configuration.subscribeKey,
-            uuid = uuid ?: pubnub.configuration.userId.value,
+            subKey = configuration.subscribeKey,
+            uuid = uuid ?: configuration.userId.value,
         )
     }
 

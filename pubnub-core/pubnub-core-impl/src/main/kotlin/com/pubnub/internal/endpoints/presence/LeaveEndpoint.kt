@@ -29,7 +29,7 @@ class LeaveEndpoint internal constructor(pubnub: PubNubCore) : EndpointCore<Void
     override fun doWork(queryParams: HashMap<String, String>): Call<Void> {
         addQueryParams(queryParams)
         return pubnub.retrofitManager.presenceService.leave(
-            pubnub.configuration.subscribeKey,
+            configuration.subscribeKey,
             channels.toCsv(),
             queryParams,
         )
