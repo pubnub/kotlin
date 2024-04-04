@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<baseline version="1.0">
+    <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/AddChannelChannelGroupImpl.kt">
+        <error line="1" column="9" source="standard:package-name" />
+    </file>
+    <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/AllChannelsChannelGroupImpl.kt">
+        <error line="1" column="9" source="standard:package-name" />
+    </file>
+    <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/DeleteChannelGroupImpl.kt">
+        <error line="1" column="9" source="standard:package-name" />
+    </file>
+    <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/ListAllChannelGroupImpl.kt">
+        <error line="1" column="9" source="standard:package-name" />
+    </file>
+    <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/RemoveChannelChannelGroupImpl.kt">
+        <error line="1" column="9" source="standard:package-name" />
+    </file>
+    <file name="src/main/kotlin/com/pubnub/internal/endpoints/message_actions/AddMessageActionImpl.kt">
+        <error line="1" column="9" source="standard:package-name" />
+    </file>
+    <file name="src/main/kotlin/com/pubnub/internal/endpoints/message_actions/GetMessageActionsImpl.kt">
+        <error line="1" column="9" source="standard:package-name" />
+    </file>
+    <file name="src/main/kotlin/com/pubnub/internal/endpoints/message_actions/RemoveMessageActionImpl.kt">
+        <error line="1" column="9" source="standard:package-name" />
+    </file>
+</baseline>

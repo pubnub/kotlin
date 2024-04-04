@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <baseline version="1.0">
-    <file name="src/main/kotlin/com/pubnub/api/PubNubError.kt">
-        <error line="170" column="1" source="standard:max-line-length" />
-    </file>
     <file name="src/main/kotlin/com/pubnub/api/models/consumer/access_manager/v3/PNGrantTokenResult.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
@@ -26,16 +23,5 @@
     </file>
     <file name="src/main/kotlin/com/pubnub/api/models/consumer/pubsub/message_actions/PNMessageActionResult.kt">
         <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/api/retry/RetryConfiguration.kt">
-        <error line="38" column="42" source="standard:discouraged-comment-location" />
-        <error line="39" column="58" source="standard:discouraged-comment-location" />
-        <error line="68" column="58" source="standard:discouraged-comment-location" />
-        <error line="69" column="58" source="standard:discouraged-comment-location" />
-        <error line="70" column="63" source="standard:discouraged-comment-location" />
-        <error line="77" column="45" source="standard:discouraged-comment-location" />
-        <error line="78" column="45" source="standard:discouraged-comment-location" />
-        <error line="79" column="63" source="standard:discouraged-comment-location" />
-        <error line="93" column="1" source="standard:max-line-length" />
     </file>
 </baseline>

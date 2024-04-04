@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<baseline version="1.0">
+    <file name="src/main/kotlin/com/pubnub/api/endpoints/channel_groups/AddChannelChannelGroup.kt">
+        <error line="1" column="9" source="standard:package-name" />
+    </file>
+    <file name="src/main/kotlin/com/pubnub/api/endpoints/channel_groups/AllChannelsChannelGroup.kt">
+        <error line="1" column="9" source="standard:package-name" />
+    </file>
+    <file name="src/main/kotlin/com/pubnub/api/endpoints/channel_groups/DeleteChannelGroup.kt">
+        <error line="1" column="9" source="standard:package-name" />
+    </file>
+    <file name="src/main/kotlin/com/pubnub/api/endpoints/channel_groups/ListAllChannelGroup.kt">
+        <error line="1" column="9" source="standard:package-name" />
+    </file>
+    <file name="src/main/kotlin/com/pubnub/api/endpoints/channel_groups/RemoveChannelChannelGroup.kt">
+        <error line="1" column="9" source="standard:package-name" />
+    </file>
+    <file name="src/main/kotlin/com/pubnub/api/endpoints/message_actions/AddMessageAction.kt">
+        <error line="1" column="9" source="standard:package-name" />
+    </file>
+    <file name="src/main/kotlin/com/pubnub/api/endpoints/message_actions/GetMessageActions.kt">
+        <error line="1" column="9" source="standard:package-name" />
+    </file>
+    <file name="src/main/kotlin/com/pubnub/api/endpoints/message_actions/RemoveMessageAction.kt">
+        <error line="1" column="9" source="standard:package-name" />
+    </file>
+    <file name="src/main/kotlin/com/pubnub/api/models/consumer/access_manager/PNAccessManagerGrantResults.kt">
+        <error line="1" column="9" source="standard:package-name" />
+    </file>
+    <file name="src/main/kotlin/com/pubnub/api/models/consumer/access_manager/sum/SpacePermissions.kt">
+        <error line="1" column="9" source="standard:package-name" />
+    </file>
+    <file name="src/main/kotlin/com/pubnub/api/models/consumer/access_manager/sum/UserPermissions.kt">
+        <error line="1" column="9" source="standard:package-name" />
+    </file>
+    <file name="src/main/kotlin/com/pubnub/api/models/consumer/access_manager/v3/ChannelGrant.kt">
+        <error line="1" column="9" source="standard:package-name" />
+    </file>
+    <file name="src/main/kotlin/com/pubnub/api/models/consumer/access_manager/v3/ChannelGroupGrant.kt">
+        <error line="1" column="9" source="standard:package-name" />
+    </file>
+    <file name="src/main/kotlin/com/pubnub/api/models/consumer/access_manager/v3/Grants.kt">
+        <error line="1" column="9" source="standard:package-name" />
+    </file>
+    <file name="src/main/kotlin/com/pubnub/api/models/consumer/access_manager/v3/UUIDGrant.kt">
+        <error line="1" column="9" source="standard:package-name" />
+    </file>
+</baseline>
