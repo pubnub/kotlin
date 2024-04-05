@@ -11,6 +11,7 @@ import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.getOrThrow
+import com.pubnub.api.v2.entities.Channel
 import com.pubnub.api.v2.subscriptions.SubscriptionCursor
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.internal.managers.MapperManager
@@ -764,5 +765,30 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             throw failure.get()
         }
         assertEquals(5, success.get())
+    }
+
+    @Test
+    fun testPublishAndSignalUsingChannelEntity() {
+        val messageReceived = AtomicBoolean()
+        val signalReceived = AtomicBoolean()
+        val channelName = randomChannel()
+        val channel: Channel = pubnub.channel(channelName)
+
+        val subscription = channel.subscription()
+        subscription.onMessage = { messageReceived.set(true) }
+        subscription.onSignal = { signalReceived.set(true) }
+        subscription.subscribe()
+        Thread.sleep(1000)
+
+        channel.publish(message = "My message").sync()
+        channel.signal(message = "My signal").sync()
+        channel.fire(message = "My Fire").sync() // fire will not be delivered to listener only to PubNub Functions Event Handlers
+
+        Awaitility.await()
+            .atMost(DEFAULT_LISTEN_DURATION.toLong(), TimeUnit.SECONDS)
+            .untilAtomic(messageReceived, Matchers.equalTo(true))
+        Awaitility.await()
+            .atMost(DEFAULT_LISTEN_DURATION.toLong(), TimeUnit.SECONDS)
+            .untilAtomic(signalReceived, Matchers.equalTo(true))
     }
 }

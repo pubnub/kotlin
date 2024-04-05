@@ -30,6 +30,48 @@ class FilesIntegrationTest : BaseIntegrationTest() {
     }
 
     @Test
+    fun testSendFileAndDeleteFileOnChannelEntity() {
+        val sendFileResultReference: AtomicReference<PNFileUploadResult> = AtomicReference()
+        val fileSent = CountDownLatch(1)
+        val channelName: String = randomChannel()
+        val fileName = "fileName$channelName.txt"
+        val message = "This is message"
+        val meta = "This is meta"
+        val content = "This is content"
+
+        val channel = pubnub.channel(channelName)
+        ByteArrayInputStream(content.toByteArray(StandardCharsets.UTF_8)).use {
+            channel.sendFile(
+                fileName = fileName,
+                inputStream = it,
+                message = message,
+                meta = meta,
+            ).async { result ->
+                result.onSuccess {
+                    sendFileResultReference.set(it)
+                }
+                fileSent.countDown()
+            }
+        }
+
+        if (!fileSent.await(3, TimeUnit.SECONDS)) {
+            Assert.fail()
+            return
+        }
+
+        val sendFileResult = sendFileResultReference.get()
+        if (sendFileResult == null) {
+            Assert.fail()
+            return
+        }
+
+        channel.deleteFile(
+            fileName = fileName,
+            fileId = sendFileResult.file.id,
+        ).sync()
+    }
+
+    @Test
     fun uploadAsyncAndDelete() {
         val channel: String = randomChannel()
         val content = "This is content"

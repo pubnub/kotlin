@@ -47,7 +47,6 @@ import com.pubnub.api.endpoints.presence.HereNow
 import com.pubnub.api.endpoints.presence.SetState
 import com.pubnub.api.endpoints.presence.WhereNow
 import com.pubnub.api.endpoints.pubsub.Publish
-import com.pubnub.api.endpoints.pubsub.Signal
 import com.pubnub.api.endpoints.push.AddChannelsToPush
 import com.pubnub.api.endpoints.push.ListPushProvisions
 import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice
@@ -55,6 +54,8 @@ import com.pubnub.api.endpoints.push.RemoveChannelsFromPush
 import com.pubnub.api.v2.BasePNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
+import com.pubnub.api.v2.endpoints.pubsub.PublishBuilder
+import com.pubnub.api.v2.endpoints.pubsub.SignalBuilder
 import com.pubnub.api.v2.entities.Channel
 import com.pubnub.api.v2.entities.ChannelGroup
 import com.pubnub.api.v2.entities.ChannelMetadata
@@ -319,6 +320,16 @@ interface PubNub :
      * Data should not contain special Java/Kotlin classes or functions as these will not serialize.
      * String content can include any single-byte or multi-byte UTF-8 character.
      */
+    fun publish(message: Any, channel: String): PublishBuilder
+
+    @Deprecated(
+        replaceWith =
+            ReplaceWith(
+                "publish(message, channel)"
+            ),
+        level = DeprecationLevel.WARNING,
+        message = "Use publish(Object, String) instead",
+    )
     fun publish(): Publish
 
     /**
@@ -328,7 +339,17 @@ interface PubNub :
      * This limit applies only to the payload, and not to the URI or headers.
      * If you require a larger payload size, please [contact support](mailto:support@pubnub.com).
      */
-    fun signal(): Signal
+    fun signal(message: Any, channel: String): SignalBuilder
+
+    @Deprecated(
+        replaceWith =
+            ReplaceWith(
+                "signal(message, channel)"
+            ),
+        level = DeprecationLevel.WARNING,
+        message = "Use signal(Object, String) instead",
+    )
+    fun signal(): com.pubnub.api.endpoints.pubsub.Signal
 
     /**
      * Lists all registered channel groups for the subscribe key.
@@ -494,6 +515,16 @@ interface PubNub :
      * The message sent via `fire()` isn't replicated, and so won't be received by any subscribers to the channel.
      * The message is also not stored in history.
      */
+    fun fire(message: Any, channel: String): PublishBuilder
+
+    @Deprecated(
+        replaceWith =
+            ReplaceWith(
+                "publish(message, channel)"
+            ),
+        level = DeprecationLevel.WARNING,
+        message = "Use publish(Object, String) instead",
+    )
     fun fire(): Publish
 
     /**

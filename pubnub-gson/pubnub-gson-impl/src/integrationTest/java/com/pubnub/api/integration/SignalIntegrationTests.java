@@ -51,10 +51,8 @@ public class SignalIntegrationTests extends BaseIntegrationTest {
         final String expectedChannel = randomChannel();
         final String expectedPayload = RandomGenerator.newValue(5);
 
-        pubNub.signal()
-                .message(expectedPayload)
-                .channel(expectedChannel)
-                .async((result) -> {
+        pubNub.signal(expectedPayload, expectedChannel)
+                .async(result -> {
                     assertFalse(result.isFailure());
                     success.set(true);
                 });
@@ -67,10 +65,7 @@ public class SignalIntegrationTests extends BaseIntegrationTest {
         final String expectedChannel = randomChannel();
         final String expectedPayload = RandomGenerator.newValue(5);
 
-        final PNPublishResult signalResult = pubNub.signal()
-                .message(expectedPayload)
-                .channel(expectedChannel)
-                .sync();
+        final PNPublishResult signalResult = pubNub.signal(expectedPayload, expectedChannel).sync();
 
         assertNotNull(signalResult);
     }

@@ -5,6 +5,7 @@ import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.pubsub.Publish;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.PNPublishResult;
+import com.pubnub.api.v2.endpoints.pubsub.PublishBuilder;
 import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.Setter;
@@ -12,7 +13,7 @@ import lombok.experimental.Accessors;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class PublishImpl extends DelegatingEndpoint<PNPublishResult> implements Publish {
+public class PublishImpl extends DelegatingEndpoint<PNPublishResult> implements Publish, PublishBuilder {
 
     private Object message;
     private String channel;
@@ -25,6 +26,13 @@ public class PublishImpl extends DelegatingEndpoint<PNPublishResult> implements 
     public PublishImpl(PubNubCore pubnub) {
         super(pubnub);
         this.replicate = true;
+    }
+
+    public PublishImpl(PubNubCore pubnub, Object message, String channel) {
+        super(pubnub);
+        this.replicate = true;
+        this.message = message;
+        this.channel = channel;
     }
 
     @Override
