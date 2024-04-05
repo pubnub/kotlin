@@ -37,12 +37,13 @@ abstract class EndpointCore<Input, Output> protected constructor(protected val p
         private lateinit var cachedCallback: Consumer<Result<Output>>
         private lateinit var call: Call<Input>
         private var silenceFailures = false
-        private val retryableRestCaller =
+        private val retryableRestCaller by lazy {
             RetryableRestCaller<Input>(
                 configuration.retryConfiguration,
                 getEndpointGroupName(),
                 isEndpointRetryable(),
             )
+        }
 
         /**
          * Key-value object to pass with every PubNub API operation. Used for debugging purposes.
