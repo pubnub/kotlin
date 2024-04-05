@@ -5,16 +5,19 @@ import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects_api.uuid.PNSetUUIDMetadataResult;
 import com.pubnub.api.models.consumer.objects_api.uuid.PNUUIDMetadata;
+import com.pubnub.internal.EndpointInterface;
 import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
+import com.pubnub.internal.models.consumer.objects.uuid.PNUUIDMetadataResult;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
-public class SetUUIDMetadataImpl extends DelegatingEndpoint<PNSetUUIDMetadataResult> implements SetUUIDMetadata {
+public class SetUUIDMetadataImpl extends DelegatingEndpoint<PNUUIDMetadataResult, PNSetUUIDMetadataResult> implements SetUUIDMetadata {
     @Setter
     private String uuid;
     @Setter
@@ -48,19 +51,26 @@ public class SetUUIDMetadataImpl extends DelegatingEndpoint<PNSetUUIDMetadataRes
     }
 
     @Override
-    protected ExtendedRemoteAction<PNSetUUIDMetadataResult> createAction() {
+    @NotNull
+    protected EndpointInterface<PNUUIDMetadataResult> createAction() {
+        return pubnub.setUUIDMetadata(
+                uuid,
+                name,
+                externalId,
+                profileUrl,
+                email,
+                custom,
+                includeCustom,
+                type,
+                status
+        );
+    }
+
+    @NotNull
+    @Override
+    protected ExtendedRemoteAction<PNSetUUIDMetadataResult> mapResult(@NotNull ExtendedRemoteAction<PNUUIDMetadataResult> action) {
         return new MappingRemoteAction<>(
-                pubnub.setUUIDMetadata(
-                        uuid,
-                        name,
-                        externalId,
-                        profileUrl,
-                        email,
-                        custom,
-                        includeCustom,
-                        type,
-                        status
-                ),
+                action,
                 result -> new PNSetUUIDMetadataResult(
                         result.getStatus(),
                         PNUUIDMetadata.from(result.getData())

@@ -8,11 +8,13 @@ import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects_api.membership.PNChannelMembership;
 import com.pubnub.api.models.consumer.objects_api.membership.PNSetMembershipResult;
+import com.pubnub.internal.EndpointInterface;
 import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.internal.models.consumer.objects.PNMembershipKey;
 import com.pubnub.internal.models.consumer.objects.membership.ChannelMembershipInput;
 import com.pubnub.internal.models.consumer.objects.membership.PNChannelMembership.Partial;
+import com.pubnub.internal.models.consumer.objects.membership.PNChannelMembershipArrayResult;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -26,7 +28,7 @@ import java.util.List;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class SetMembershipsImpl extends DelegatingEndpoint<PNSetMembershipResult> implements SetMemberships {
+public class SetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipArrayResult, PNSetMembershipResult> implements SetMemberships {
     private final Collection<PNChannelMembership> channels;
     private String uuid;
     private Integer limit;
@@ -43,7 +45,8 @@ public class SetMembershipsImpl extends DelegatingEndpoint<PNSetMembershipResult
     }
 
     @Override
-    protected ExtendedRemoteAction<PNSetMembershipResult> createAction() {
+    @NotNull
+    protected EndpointInterface<PNChannelMembershipArrayResult> createAction() {
         ArrayList<ChannelMembershipInput> channelList = new ArrayList<>(channels.size());
         for (PNChannelMembership channel : channels) {
             channelList.add(new Partial(
@@ -54,20 +57,23 @@ public class SetMembershipsImpl extends DelegatingEndpoint<PNSetMembershipResult
                     null
             ));
         }
-        return new MappingRemoteAction<>(
-                pubnub.setMemberships(
-                        channelList,
-                        uuid,
-                        limit,
-                        page,
-                        filter,
-                        toInternal(sort),
-                        includeTotalCount,
-                        includeCustom,
-                        toInternal(includeChannel)
-                ),
-                PNSetMembershipResult::from
+        return pubnub.setMemberships(
+                channelList,
+                uuid,
+                limit,
+                page,
+                filter,
+                toInternal(sort),
+                includeTotalCount,
+                includeCustom,
+                toInternal(includeChannel)
         );
+    }
+
+    @NotNull
+    @Override
+    protected ExtendedRemoteAction<PNSetMembershipResult> mapResult(@NotNull ExtendedRemoteAction<PNChannelMembershipArrayResult> action) {
+        return new MappingRemoteAction<>(action, PNSetMembershipResult::from);
     }
 
     @AllArgsConstructor

@@ -3,16 +3,17 @@ package com.pubnub.internal.endpoints.pubsub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.pubsub.Publish;
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.PNPublishResult;
+import com.pubnub.internal.EndpointInterface;
 import com.pubnub.internal.PubNubCore;
-import com.pubnub.internal.endpoints.DelegatingEndpoint;
+import com.pubnub.internal.endpoints.IdentityMappingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class PublishImpl extends DelegatingEndpoint<PNPublishResult> implements Publish {
+public class PublishImpl extends IdentityMappingEndpoint<PNPublishResult> implements Publish {
 
     private Object message;
     private String channel;
@@ -28,7 +29,8 @@ public class PublishImpl extends DelegatingEndpoint<PNPublishResult> implements 
     }
 
     @Override
-    protected ExtendedRemoteAction<PNPublishResult> createAction() {
+    @NotNull
+    protected EndpointInterface<PNPublishResult> createAction() {
         return pubnub.publish(
                 channel,
                 message,

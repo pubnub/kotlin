@@ -1,6 +1,8 @@
 package com.pubnub.internal.endpoints
 
 import com.pubnub.api.endpoints.MessageCounts
+import com.pubnub.api.models.consumer.history.PNMessageCountResult
+import com.pubnub.internal.EndpointImpl
 import com.pubnub.internal.PubNubImpl
 
 /**
@@ -8,4 +10,5 @@ import com.pubnub.internal.PubNubImpl
  */
 class MessageCountsImpl internal constructor(messageCounts: MessageCountsInterface) :
     MessageCountsInterface by messageCounts,
-    MessageCounts
+    MessageCounts,
+    EndpointImpl<PNMessageCountResult>(messageCounts)

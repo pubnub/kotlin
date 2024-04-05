@@ -2,20 +2,21 @@ package com.pubnub.internal.endpoints.push;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.enums.PNPushEnvironment;
 import com.pubnub.api.enums.PNPushType;
 import com.pubnub.api.models.consumer.push.PNPushRemoveChannelResult;
+import com.pubnub.internal.EndpointInterface;
 import com.pubnub.internal.PubNubCore;
-import com.pubnub.internal.endpoints.DelegatingEndpoint;
+import com.pubnub.internal.endpoints.IdentityMappingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class RemoveChannelsFromPushImpl extends DelegatingEndpoint<PNPushRemoveChannelResult> implements com.pubnub.api.endpoints.push.RemoveChannelsFromPush {
+public class RemoveChannelsFromPushImpl extends IdentityMappingEndpoint<PNPushRemoveChannelResult> implements com.pubnub.api.endpoints.push.RemoveChannelsFromPush {
 
     private PNPushType pushType;
     private List<String> channels;
@@ -28,7 +29,8 @@ public class RemoveChannelsFromPushImpl extends DelegatingEndpoint<PNPushRemoveC
     }
 
     @Override
-    protected ExtendedRemoteAction<PNPushRemoveChannelResult> createAction() {
+    @NotNull
+    protected EndpointInterface<PNPushRemoveChannelResult> createAction() {
         return pubnub.removePushNotificationsFromChannels(
                 pushType,
                 channels,

@@ -2,8 +2,10 @@ package com.pubnub.api.endpoints;
 
 import com.pubnub.api.models.consumer.history.PNDeleteMessagesResult;
 
+import java.util.List;
+
 public interface DeleteMessages extends Endpoint<PNDeleteMessagesResult> {
-    DeleteMessages channels(java.util.List<String> channels);
+    DeleteMessages channels(List<String> channels);
 
     DeleteMessages start(Long start);
 

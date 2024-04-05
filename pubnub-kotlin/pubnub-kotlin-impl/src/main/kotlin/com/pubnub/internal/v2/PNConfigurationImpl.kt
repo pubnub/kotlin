@@ -58,7 +58,7 @@ class PNConfigurationImpl(
     override val pnsdkSuffixes: Map<String, String>,
     override val retryConfiguration: RetryConfiguration,
     override val managePresenceListManually: Boolean,
-) : BasePNConfigurationImpl(userId), PNConfiguration {
+) : BasePNConfigurationImpl(userId), PNConfiguration, PNConfigurationOverride {
     class Builder internal constructor(defaultConfiguration: BasePNConfiguration) :
         BasePNConfigurationImpl.Builder(defaultConfiguration),
         PNConfiguration.Builder,
@@ -357,4 +357,8 @@ class PNConfigurationImpl(
                 )
             }
         }
+
+    override fun override(): PNConfigurationOverride.Builder {
+        return Builder(this)
+    }
 }

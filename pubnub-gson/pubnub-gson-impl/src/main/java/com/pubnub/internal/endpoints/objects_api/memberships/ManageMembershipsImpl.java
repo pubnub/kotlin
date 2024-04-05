@@ -8,12 +8,15 @@ import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects_api.membership.PNChannelMembership;
 import com.pubnub.api.models.consumer.objects_api.membership.PNManageMembershipResult;
+import com.pubnub.internal.EndpointInterface;
 import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.internal.models.consumer.objects.membership.ChannelMembershipInput;
+import com.pubnub.internal.models.consumer.objects.membership.PNChannelMembershipArrayResult;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,7 +24,7 @@ import java.util.Collections;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class ManageMembershipsImpl extends DelegatingEndpoint<PNManageMembershipResult> implements ManageMemberships {
+public class ManageMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipArrayResult, PNManageMembershipResult> implements ManageMemberships {
     private Collection<PNChannelMembership> set;
     private Collection<PNChannelMembership> remove;
     private String uuid;
@@ -39,8 +42,15 @@ public class ManageMembershipsImpl extends DelegatingEndpoint<PNManageMembership
         remove = channelsToRemove;
     }
 
+    @NotNull
     @Override
-    protected ExtendedRemoteAction<PNManageMembershipResult> createAction() {
+    protected ExtendedRemoteAction<PNManageMembershipResult> mapResult(@NotNull ExtendedRemoteAction<PNChannelMembershipArrayResult> action) {
+        return new MappingRemoteAction<>(action, PNManageMembershipResult::from);
+    }
+
+    @Override
+    @NotNull
+    protected EndpointInterface<PNChannelMembershipArrayResult> createAction() {
         ArrayList<ChannelMembershipInput> toSet = new ArrayList<>(set.size());
         for (PNChannelMembership channel : set) {
             toSet.add(new com.pubnub.internal.models.consumer.objects.membership.PNChannelMembership.Partial(
@@ -56,7 +66,7 @@ public class ManageMembershipsImpl extends DelegatingEndpoint<PNManageMembership
             toRemove.add(channel.getChannel().getId());
         }
 
-        return new MappingRemoteAction<>(
+        return
                 pubnub.manageMemberships(
                         toSet,
                         toRemove,
@@ -68,8 +78,7 @@ public class ManageMembershipsImpl extends DelegatingEndpoint<PNManageMembership
                         includeTotalCount,
                         includeCustom,
                         SetMembershipsImpl.toInternal(includeChannel)
-                ),
-                PNManageMembershipResult::from);
+                );
     }
 
     @AllArgsConstructor

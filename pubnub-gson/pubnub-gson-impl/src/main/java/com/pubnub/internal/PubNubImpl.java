@@ -77,7 +77,6 @@ import com.pubnub.internal.endpoints.TimeImpl;
 import com.pubnub.internal.endpoints.access.GrantImpl;
 import com.pubnub.internal.endpoints.access.GrantTokenImpl;
 import com.pubnub.internal.endpoints.access.RevokeTokenImpl;
-import com.pubnub.internal.endpoints.access.builder.GrantTokenBuilderImpl;
 import com.pubnub.internal.endpoints.channel_groups.AddChannelChannelGroupImpl;
 import com.pubnub.internal.endpoints.channel_groups.AllChannelsChannelGroupImpl;
 import com.pubnub.internal.endpoints.channel_groups.DeleteChannelGroupImpl;
@@ -256,14 +255,14 @@ public class PubNubImpl extends BasePubNubImpl<
     @Override
     @NotNull
     public GrantTokenBuilder grantToken() {
-        return new GrantTokenBuilderImpl(getPubNubCore(), new GrantTokenImpl(getPubNubCore()));
+        return new GrantTokenImpl(getPubNubCore());
     }
 
     @Override
     @NotNull
     @SuppressWarnings("deprecation")
     public GrantTokenBuilder grantToken(int ttl) {
-        return new GrantTokenBuilderImpl(getPubNubCore(), new GrantTokenImpl(getPubNubCore()).ttl(ttl));
+        return new GrantTokenImpl(getPubNubCore()).ttl(ttl);
     }
 
     @Override

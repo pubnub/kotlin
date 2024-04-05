@@ -9,8 +9,10 @@ import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects_api.member.PNRemoveChannelMembersResult;
 import com.pubnub.api.models.consumer.objects_api.member.PNUUID;
+import com.pubnub.internal.EndpointInterface;
 import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
+import com.pubnub.internal.models.consumer.objects.member.PNMemberArrayResult;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -23,7 +25,7 @@ import java.util.List;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class RemoveChannelMembersImpl extends DelegatingEndpoint<PNRemoveChannelMembersResult> implements RemoveChannelMembers {
+public class RemoveChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayResult, PNRemoveChannelMembersResult> implements RemoveChannelMembers {
 
     private Integer limit = null;
     private PNPage page;
@@ -44,9 +46,16 @@ public class RemoveChannelMembersImpl extends DelegatingEndpoint<PNRemoveChannel
         }
     }
 
+    @NotNull
     @Override
-    protected ExtendedRemoteAction<PNRemoveChannelMembersResult> createAction() {
-        return new MappingRemoteAction<>(pubnub.removeChannelMembers(
+    protected ExtendedRemoteAction<PNRemoveChannelMembersResult> mapResult(@NotNull ExtendedRemoteAction<PNMemberArrayResult> action) {
+        return new MappingRemoteAction<>(action, PNRemoveChannelMembersResult::from);
+    }
+
+    @Override
+    @NotNull
+    protected EndpointInterface<PNMemberArrayResult> createAction() {
+        return pubnub.removeChannelMembers(
                 channel,
                 uuids,
                 limit,
@@ -56,7 +65,7 @@ public class RemoveChannelMembersImpl extends DelegatingEndpoint<PNRemoveChannel
                 includeTotalCount,
                 includeCustom,
                 SetChannelMembersImpl.toInternal(includeUUID)
-        ), PNRemoveChannelMembersResult::from);
+        );
     }
 
     @AllArgsConstructor

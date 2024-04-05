@@ -2,19 +2,20 @@ package com.pubnub.internal.endpoints.presence;
 
 
 import com.pubnub.api.endpoints.presence.HereNow;
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.presence.PNHereNowResult;
+import com.pubnub.internal.EndpointInterface;
 import com.pubnub.internal.PubNubCore;
-import com.pubnub.internal.endpoints.DelegatingEndpoint;
+import com.pubnub.internal.endpoints.IdentityMappingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class HereNowImpl extends DelegatingEndpoint<PNHereNowResult> implements HereNow {
+public class HereNowImpl extends IdentityMappingEndpoint<PNHereNowResult> implements HereNow {
     private List<String> channels = new ArrayList<>();
     private List<String> channelGroups = new ArrayList<>();
     private boolean includeState = false;
@@ -25,7 +26,8 @@ public class HereNowImpl extends DelegatingEndpoint<PNHereNowResult> implements 
     }
 
     @Override
-    protected ExtendedRemoteAction<PNHereNowResult> createAction() {
+    @NotNull
+    protected EndpointInterface<PNHereNowResult> createAction() {
         return pubnub.hereNow(
                 channels,
                 channelGroups,

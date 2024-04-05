@@ -9,11 +9,13 @@ import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects_api.member.PNSetChannelMembersResult;
 import com.pubnub.api.models.consumer.objects_api.member.PNUUID;
+import com.pubnub.internal.EndpointInterface;
 import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.internal.models.consumer.objects.PNMemberKey;
 import com.pubnub.internal.models.consumer.objects.member.MemberInput;
 import com.pubnub.internal.models.consumer.objects.member.PNMember;
+import com.pubnub.internal.models.consumer.objects.member.PNMemberArrayResult;
 import com.pubnub.internal.models.consumer.objects.member.PNUUIDDetailsLevel;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
@@ -28,7 +30,7 @@ import java.util.List;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class SetChannelMembersImpl extends DelegatingEndpoint<PNSetChannelMembersResult> implements SetChannelMembers {
+public class SetChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayResult, PNSetChannelMembersResult> implements SetChannelMembers {
 
     private Integer limit = null;
     private PNPage page;
@@ -46,30 +48,20 @@ public class SetChannelMembersImpl extends DelegatingEndpoint<PNSetChannelMember
         this.uuids = uuids;
     }
 
+    @NotNull
     @Override
-    protected ExtendedRemoteAction<PNSetChannelMembersResult> createAction() {
+    protected ExtendedRemoteAction<PNSetChannelMembersResult> mapResult(@NotNull ExtendedRemoteAction<PNMemberArrayResult> action) {
+        return new MappingRemoteAction<>(action, PNSetChannelMembersResult::from);
+    }
+
+    @Override
+    @NotNull
+    protected EndpointInterface<PNMemberArrayResult> createAction() {
         List<MemberInput> memberInputs = new ArrayList<>(uuids.size());
         for (PNUUID uuid : uuids) {
-            memberInputs.add(new PNMember.Partial(
-                    uuid.getUuid().getId(),
-                    (uuid instanceof PNUUID.UUIDWithCustom)
-                            ? ((PNUUID.UUIDWithCustom) uuid).getCustom()
-                            : null,
-                    uuid.getStatus()));
+            memberInputs.add(new PNMember.Partial(uuid.getUuid().getId(), (uuid instanceof PNUUID.UUIDWithCustom) ? ((PNUUID.UUIDWithCustom) uuid).getCustom() : null, uuid.getStatus()));
         }
-        return new MappingRemoteAction<>(
-                pubnub.setChannelMembers(
-                        channel,
-                        memberInputs,
-                        limit,
-                        page,
-                        filter,
-                        toInternal(sort),
-                        includeTotalCount,
-                        includeCustom,
-                        toInternal(includeUUID)
-                ),
-                PNSetChannelMembersResult::from);
+        return pubnub.setChannelMembers(channel, memberInputs, limit, page, filter, toInternal(sort), includeTotalCount, includeCustom, toInternal(includeUUID));
     }
 
     static Collection<? extends com.pubnub.internal.models.consumer.objects.PNSortKey<PNMemberKey>> toInternal(Collection<PNSortKey> sort) {

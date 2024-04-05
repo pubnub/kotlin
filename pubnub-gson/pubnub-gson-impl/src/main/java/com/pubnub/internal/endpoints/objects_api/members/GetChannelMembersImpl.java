@@ -7,18 +7,21 @@ import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects_api.member.PNGetChannelMembersResult;
+import com.pubnub.internal.EndpointInterface;
 import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
+import com.pubnub.internal.models.consumer.objects.member.PNMemberArrayResult;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.Collections;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class GetChannelMembersImpl extends DelegatingEndpoint<PNGetChannelMembersResult> implements GetChannelMembers {
+public class GetChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayResult, PNGetChannelMembersResult> implements GetChannelMembers {
 
     private final String channel;
     private Integer limit = null;
@@ -34,9 +37,15 @@ public class GetChannelMembersImpl extends DelegatingEndpoint<PNGetChannelMember
         this.channel = channel;
     }
 
+    @NotNull
     @Override
-    protected ExtendedRemoteAction<PNGetChannelMembersResult> createAction() {
-        return new MappingRemoteAction<>(pubnub.getChannelMembers(
+    protected ExtendedRemoteAction<PNGetChannelMembersResult> mapResult(@NotNull ExtendedRemoteAction<PNMemberArrayResult> action) {
+        return new MappingRemoteAction<>(action, PNGetChannelMembersResult::from);
+    }
+
+    @Override
+    protected EndpointInterface<PNMemberArrayResult> createAction() {
+        return pubnub.getChannelMembers(
                 channel,
                 limit,
                 page,
@@ -45,7 +54,7 @@ public class GetChannelMembersImpl extends DelegatingEndpoint<PNGetChannelMember
                 includeTotalCount,
                 includeCustom,
                 SetChannelMembersImpl.toInternal(includeUUID)
-        ), PNGetChannelMembersResult::from);
+        );
     }
 
     @AllArgsConstructor

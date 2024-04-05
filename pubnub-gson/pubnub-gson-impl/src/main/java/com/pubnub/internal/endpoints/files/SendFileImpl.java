@@ -6,15 +6,16 @@ import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.files.PNFileUploadResult;
 import com.pubnub.internal.PubNubCore;
-import com.pubnub.internal.endpoints.DelegatingEndpoint;
+import com.pubnub.internal.endpoints.IdentityMappingAction;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStream;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class SendFileImpl extends DelegatingEndpoint<PNFileUploadResult> implements SendFile {
+public class SendFileImpl extends IdentityMappingAction<PNFileUploadResult> implements SendFile {
 
     private final String channel;
     private final String fileName;
@@ -39,6 +40,7 @@ public class SendFileImpl extends DelegatingEndpoint<PNFileUploadResult> impleme
     }
 
     @Override
+    @NotNull
     protected ExtendedRemoteAction<PNFileUploadResult> createAction() {
         return pubnub.sendFile(
                 channel,

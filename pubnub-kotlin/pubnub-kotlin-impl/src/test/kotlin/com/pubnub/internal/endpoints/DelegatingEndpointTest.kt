@@ -2,10 +2,11 @@ package com.pubnub.internal.endpoints
 
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.v2.BasePNConfigurationOverride
+import com.pubnub.api.v2.BasePNConfiguration
 import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.api.v2.callbacks.getOrThrow
 import com.pubnub.internal.DelegatingEndpoint
+import com.pubnub.internal.EndpointInterface
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -19,7 +20,7 @@ internal class DelegatingEndpointTest {
     var retryCalled = false
 
     val action =
-        object : ExtendedRemoteAction<Boolean> {
+        object : EndpointInterface<Boolean> {
             override fun operationType(): PNOperationType {
                 return PNOperationType.FileOperation
             }
@@ -36,6 +37,13 @@ internal class DelegatingEndpointTest {
                 silentCancelCalled = true
             }
 
+            override fun overrideConfiguration(configuration: BasePNConfiguration) {
+                TODO("Not yet implemented")
+            }
+
+            override val configuration: BasePNConfiguration
+                get() = TODO("Not yet implemented")
+
             override fun async(callback: Consumer<Result<Boolean>>) {
                 callback.accept(Result.success(true))
             }
@@ -49,10 +57,6 @@ internal class DelegatingEndpointTest {
             object : DelegatingEndpoint<Boolean, Boolean>(action) {
                 override fun convertAction(remoteAction: ExtendedRemoteAction<Boolean>): ExtendedRemoteAction<Boolean> {
                     return remoteAction
-                }
-
-                override fun overrideConfiguration(configuration: BasePNConfigurationOverride) {
-                    TODO("Not yet implemented")
                 }
             }
     }

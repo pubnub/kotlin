@@ -5,13 +5,14 @@ import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.BuilderSteps;
 import com.pubnub.api.endpoints.files.GetFileUrl;
 import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps;
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.files.PNFileUrlResult;
+import com.pubnub.internal.EndpointInterface;
 import com.pubnub.internal.PubNubCore;
-import com.pubnub.internal.endpoints.DelegatingEndpoint;
+import com.pubnub.internal.endpoints.IdentityMappingEndpoint;
 import com.pubnub.internal.endpoints.files.requiredparambuilder.ChannelFileNameFileIdBuilder;
+import org.jetbrains.annotations.NotNull;
 
-public class GetFileUrlImpl extends DelegatingEndpoint<PNFileUrlResult> implements GetFileUrl {
+public class GetFileUrlImpl extends IdentityMappingEndpoint<PNFileUrlResult> implements GetFileUrl {
 
     private final String channel;
     private final String fileId;
@@ -25,7 +26,8 @@ public class GetFileUrlImpl extends DelegatingEndpoint<PNFileUrlResult> implemen
     }
 
     @Override
-    protected ExtendedRemoteAction<PNFileUrlResult> createAction() {
+    @NotNull
+    protected EndpointInterface<PNFileUrlResult> createAction() {
         return pubnub.getFileUrl(
                 channel,
                 fileName,

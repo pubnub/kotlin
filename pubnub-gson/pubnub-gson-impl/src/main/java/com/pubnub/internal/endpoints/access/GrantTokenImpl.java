@@ -1,17 +1,24 @@
 package com.pubnub.internal.endpoints.access;
 
 import com.pubnub.api.PubNubException;
+import com.pubnub.api.UserId;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.access.GrantToken;
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
+import com.pubnub.api.endpoints.access.builder.GrantTokenBuilder;
+import com.pubnub.api.endpoints.access.builder.GrantTokenEntitiesBuilder;
+import com.pubnub.api.endpoints.access.builder.GrantTokenObjectsBuilder;
+import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions;
+import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions;
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult;
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant;
+import com.pubnub.internal.EndpointInterface;
 import com.pubnub.internal.PubNubCore;
-import com.pubnub.internal.endpoints.DelegatingEndpoint;
+import com.pubnub.internal.endpoints.IdentityMappingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,7 +26,7 @@ import java.util.List;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class GrantTokenImpl extends DelegatingEndpoint<PNGrantTokenResult> implements GrantToken {
+public class GrantTokenImpl extends IdentityMappingEndpoint<PNGrantTokenResult> implements GrantToken, GrantTokenBuilder, GrantTokenEntitiesBuilder, GrantTokenObjectsBuilder {
 
     private Integer ttl;
     private Object meta;
@@ -40,7 +47,8 @@ public class GrantTokenImpl extends DelegatingEndpoint<PNGrantTokenResult> imple
     }
 
     @Override
-    protected ExtendedRemoteAction<PNGrantTokenResult> createAction() {
+    @NotNull
+    protected EndpointInterface<PNGrantTokenResult> createAction() {
         return pubnub.grantToken(
                 ttl,
                 meta,
@@ -49,6 +57,76 @@ public class GrantTokenImpl extends DelegatingEndpoint<PNGrantTokenResult> imple
                 toInternalChannelGroups(channelGroups),
                 toInternalUuids(uuids)
         );
+    }
+
+    @Override
+    public GrantTokenEntitiesBuilder spacesPermissions(List<SpacePermissions> spacesPermissions) {
+        List<ChannelGrant> channelGrants = new ArrayList<>();
+        for (SpacePermissions spacePermission : spacesPermissions) {
+            final ChannelGrant channelGrant;
+            if (spacePermission.isPatternResource()) {
+                channelGrant = ChannelGrant.pattern(spacePermission.getId());
+            } else {
+                channelGrant = ChannelGrant.name(spacePermission.getId());
+            }
+            if (spacePermission.isRead()) {
+                channelGrant.read();
+            }
+            if (spacePermission.isWrite()) {
+                channelGrant.write();
+            }
+            if (spacePermission.isManage()) {
+                channelGrant.manage();
+            }
+            if (spacePermission.isDelete()) {
+                channelGrant.delete();
+            }
+            if (spacePermission.isUpdate()) {
+                channelGrant.update();
+            }
+            if (spacePermission.isJoin()) {
+                channelGrant.join();
+            }
+            if (spacePermission.isGet()) {
+                channelGrant.get();
+            }
+            channelGrants.add(channelGrant);
+        }
+
+        channels(channelGrants);
+        return this;
+    }
+
+    @Override
+    public GrantTokenEntitiesBuilder usersPermissions(List<UserPermissions> usersPermissions) {
+        List<UUIDGrant> uuidsGrants = new ArrayList<>();
+        for (UserPermissions userPermissions : usersPermissions) {
+            final UUIDGrant channelGrant;
+            if (userPermissions.isPatternResource()) {
+                channelGrant = UUIDGrant.pattern(userPermissions.getId());
+            } else {
+                channelGrant = UUIDGrant.id(userPermissions.getId());
+            }
+            if (userPermissions.isDelete()) {
+                channelGrant.delete();
+            }
+            if (userPermissions.isUpdate()) {
+                channelGrant.update();
+            }
+            if (userPermissions.isGet()) {
+                channelGrant.get();
+            }
+            uuidsGrants.add(channelGrant);
+        }
+
+        uuids(uuidsGrants);
+        return this;
+    }
+
+    @Override
+    public GrantTokenEntitiesBuilder authorizedUserId(UserId userId) {
+        authorizedUUID(userId.getValue());
+        return this;
     }
 
     private List<? extends com.pubnub.internal.models.consumer.access_manager.v3.ChannelGrant> toInternalChannels(List<ChannelGrant> channels) {

@@ -2,8 +2,11 @@ package com.pubnub.internal.endpoints
 
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.v2.BasePNConfiguration
 import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.api.v2.callbacks.getOrThrow
+import com.pubnub.internal.EndpointInterface
+import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -11,14 +14,14 @@ import org.junit.jupiter.api.Test
 import java.util.function.Consumer
 
 internal class DelegatingEndpointTest {
-    private lateinit var delegatingEndpoint: DelegatingEndpoint<Boolean>
+    private lateinit var delegatingEndpoint: DelegatingEndpoint<Boolean, Boolean>
 
     var validateParamsCalled = false
     var silentCancelCalled = false
     var retryCalled = false
 
     val action =
-        object : ExtendedRemoteAction<Boolean> {
+        object : EndpointInterface<Boolean> {
             override fun operationType(): PNOperationType {
                 return PNOperationType.FileOperation
             }
@@ -35,6 +38,13 @@ internal class DelegatingEndpointTest {
                 silentCancelCalled = true
             }
 
+            override fun overrideConfiguration(configuration: BasePNConfiguration) {
+                TODO("Not yet implemented")
+            }
+
+            override val configuration: BasePNConfiguration
+                get() = TODO("Not yet implemented")
+
             override fun async(callback: Consumer<Result<Boolean>>) {
                 callback.accept(Result.success(true))
             }
@@ -47,8 +57,12 @@ internal class DelegatingEndpointTest {
         retryCalled = false
 
         delegatingEndpoint =
-            object : DelegatingEndpoint<Boolean>(null) {
-                override fun createAction(): ExtendedRemoteAction<Boolean> {
+            object : DelegatingEndpoint<Boolean, Boolean>(mockk()) {
+                override fun createAction(): EndpointInterface<Boolean> {
+                    return action
+                }
+
+                override fun mapResult(action: ExtendedRemoteAction<Boolean>): ExtendedRemoteAction<Boolean> {
                     return action
                 }
 

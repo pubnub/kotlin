@@ -11,4 +11,4 @@ import com.pubnub.internal.PubNubImpl
 class DeleteMessagesImpl internal constructor(deleteMessages: DeleteMessagesInterface) :
     DeleteMessagesInterface by deleteMessages,
     DeleteMessages,
-    EndpointImpl<PNDeleteMessagesResult>(deleteMessages.configuration)
+    EndpointImpl<PNDeleteMessagesResult>(deleteMessages)
