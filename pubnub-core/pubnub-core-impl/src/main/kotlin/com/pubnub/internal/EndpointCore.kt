@@ -34,8 +34,8 @@ abstract class EndpointCore<Input, Output> protected constructor(protected val p
             get() = configOverride ?: pubnub.configuration
 
         protected val retrofitManager: RetrofitManager
-            get() = configOverride?.let { override ->
-                RetrofitManager(pubnub.retrofitManager, override)
+            get() = configOverride?.let { configOverrideNonNull ->
+                RetrofitManager(pubnub.retrofitManager, configOverrideNonNull)
             } ?: pubnub.retrofitManager
 
         private val log = LoggerFactory.getLogger(this.javaClass.simpleName)

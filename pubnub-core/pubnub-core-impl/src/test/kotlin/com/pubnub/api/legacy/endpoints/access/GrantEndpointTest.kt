@@ -127,13 +127,13 @@ class GrantEndpointTest : BaseTest() {
         config.subscribeKey = "aaa"
         config.publishKey = "bbb"
         config.secretKey = "ccc"
-        val override =  config.build()
+        val override = config.build()
 
         pubnub.grant(
             authKeys = listOf("key1"),
             channels = listOf("ch1"),
         ).apply {
-          overrideConfiguration(override)
+            overrideConfiguration(override)
         }.sync()
 
         val requests =
