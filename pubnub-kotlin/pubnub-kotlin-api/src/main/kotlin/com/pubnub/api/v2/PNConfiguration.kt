@@ -81,6 +81,15 @@ interface PNConfiguration : BasePNConfiguration {
 }
 
 interface PNConfigurationOverride : BasePNConfigurationOverride {
+    companion object {
+        @JvmStatic
+        fun from(configuration: BasePNConfiguration): Builder {
+            return Class.forName("com.pubnub.internal.v2.PNConfigurationImpl\$Builder")
+                .getConstructor(BasePNConfiguration::class.java)
+                .newInstance(configuration) as Builder
+        }
+    }
+
     interface Builder : BasePNConfigurationOverride.Builder {
         override var subscribeKey: String
         override var publishKey: String

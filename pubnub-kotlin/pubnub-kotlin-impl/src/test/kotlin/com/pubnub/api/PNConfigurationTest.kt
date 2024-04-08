@@ -3,6 +3,7 @@ package com.pubnub.api
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNReconnectionPolicy
 import com.pubnub.api.retry.RetryConfiguration
+import com.pubnub.api.v2.PNConfigurationOverride
 import com.pubnub.internal.BasePubNubImpl
 import org.junit.Assert
 import org.junit.Test
@@ -107,5 +108,14 @@ class PNConfigurationTest {
         config.cipherKey = "enigma"
 
         Assert.assertEquals(expectedCryptoModule, config.cryptoModule)
+    }
+
+    @Test
+    fun `create config override from existing config`() {
+        val config = PNConfiguration(UserId(BasePubNubImpl.generateUUID()))
+        val override = PNConfigurationOverride.from(config).apply {
+            userId = UserId("override")
+        }.build()
+        Assert.assertEquals("override", override.userId.value)
     }
 }
