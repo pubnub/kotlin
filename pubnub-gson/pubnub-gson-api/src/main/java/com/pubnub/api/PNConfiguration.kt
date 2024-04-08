@@ -348,8 +348,6 @@ class PNConfiguration(userId: UserId) : BasePNConfiguration {
      * for the current [userId] with every automatic heartbeat (if [heartbeatInterval] is greater than 0)
      * and initial subscribe connection (also after e.g. loss of network).
      *
-     * Applies only when [enableEventEngine] is true.
-     *
      * Defaults to `true`.
      *
      * Please note that `maintainPresenceState` doesn't apply to state that was set on channel groups.
