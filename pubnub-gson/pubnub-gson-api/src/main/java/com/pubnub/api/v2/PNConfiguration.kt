@@ -279,6 +279,15 @@ interface PNConfiguration : BasePNConfiguration, PNConfigurationOverride {
 }
 
 interface PNConfigurationOverride : BasePNConfigurationOverride {
+    companion object {
+        @JvmStatic
+        fun from(configuration: BasePNConfiguration): Builder {
+            return Class.forName("com.pubnub.internal.v2.PNConfigurationImpl\$Builder")
+                .getConstructor(BasePNConfiguration::class.java)
+                .newInstance(configuration) as Builder
+        }
+    }
+
     interface Builder : BasePNConfigurationOverride.Builder {
         fun setUserId(userId: UserId): PNConfiguration.Builder
 

@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
+import com.pubnub.api.UserId;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.crypto.CryptoModule;
@@ -20,6 +21,8 @@ import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult;
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
+import com.pubnub.api.v2.PNConfiguration;
+import com.pubnub.api.v2.PNConfigurationOverride;
 import org.awaitility.Awaitility;
 import org.awaitility.Durations;
 import org.hamcrest.Matchers;
@@ -102,6 +105,52 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
                             0).getMessage());
 
                     success.set(true);
+                });
+
+        Awaitility.await().atMost(Durations.TEN_SECONDS).untilTrue(success);
+    }
+
+    @Test
+    public void testPublishMessageWithOverrideUuid() throws PubNubException {
+        final AtomicBoolean success = new AtomicBoolean();
+        final String expectedChannel = randomChannel();
+        final JsonObject messagePayload = new JsonObject();
+        final String expectedUser = PubNub.generateUUID();
+
+        try {
+            messagePayload.addProperty("name", "joe");
+            messagePayload.addProperty("age", 48);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        final JsonObject whatToExpect = messagePayload;
+
+        PNConfiguration overrideConfig = PNConfigurationOverride.from(pubNub.getConfiguration()).setUserId(new UserId(expectedUser)).build();
+
+        pubNub.publish()
+                .channel(expectedChannel)
+                .message(messagePayload)
+                .overrideConfiguration(overrideConfig)
+                .sync();
+
+        pause(2);
+
+        pubNub.fetchMessages()
+                .channels(Collections.singletonList(expectedChannel))
+                .maximumPerChannel(1)
+                .async((result) -> {
+                    assertFalse(result.isFailure());
+                    result.onSuccess(pnFetchMessagesResult -> {
+                        assertEquals(1, pnFetchMessagesResult.getChannels().size());
+                        assertEquals(1, pnFetchMessagesResult.getChannels().get(expectedChannel).size());
+                        assertEquals(whatToExpect, pnFetchMessagesResult.getChannels().get(expectedChannel).get(
+                                0).getMessage());
+                        assertEquals(expectedUser, pnFetchMessagesResult.getChannels().get(expectedChannel).get(
+                                0).getUuid());
+
+                        success.set(true);
+                    });
                 });
 
         Awaitility.await().atMost(Durations.TEN_SECONDS).untilTrue(success);

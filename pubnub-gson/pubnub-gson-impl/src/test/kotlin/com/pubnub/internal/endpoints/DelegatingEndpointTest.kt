@@ -1,8 +1,11 @@
 package com.pubnub.internal.endpoints
 
+import com.pubnub.api.UserId
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
+import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.v2.BasePNConfiguration
+import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.api.v2.callbacks.getOrThrow
 import com.pubnub.internal.EndpointInterface
@@ -19,9 +22,12 @@ internal class DelegatingEndpointTest {
     var validateParamsCalled = false
     var silentCancelCalled = false
     var retryCalled = false
+    var mapping: (ExtendedRemoteAction<Boolean>) -> ExtendedRemoteAction<Boolean> = { it }
 
     val action =
         object : EndpointInterface<Boolean> {
+            private lateinit var overridenConfiguration: BasePNConfiguration
+
             override fun operationType(): PNOperationType {
                 return PNOperationType.FileOperation
             }
@@ -39,11 +45,11 @@ internal class DelegatingEndpointTest {
             }
 
             override fun overrideConfiguration(configuration: BasePNConfiguration) {
-                TODO("Not yet implemented")
+                overridenConfiguration = configuration
             }
 
             override val configuration: BasePNConfiguration
-                get() = TODO("Not yet implemented")
+                get() = overridenConfiguration
 
             override fun async(callback: Consumer<Result<Boolean>>) {
                 callback.accept(Result.success(true))
@@ -63,7 +69,7 @@ internal class DelegatingEndpointTest {
                 }
 
                 override fun mapResult(action: ExtendedRemoteAction<Boolean>): ExtendedRemoteAction<Boolean> {
-                    return action
+                    return mapping(action)
                 }
 
                 override fun validateParams() {
@@ -82,6 +88,27 @@ internal class DelegatingEndpointTest {
     @Test
     fun `when remoteAction is called it returns action from createAction `() {
         assertEquals(action, delegatingEndpoint.remoteAction)
+    }
+
+    @Test
+    fun `when remoteAction is called and mapping is set it returns mapped action from createAction `() {
+        var mappedAction: ExtendedRemoteAction<Boolean>? = null
+        mapping = { MappingRemoteAction(it) { result -> !result }.also { mapped -> mappedAction = mapped } }
+
+        delegatingEndpoint.remoteAction
+
+        assertEquals(mappedAction, delegatingEndpoint.remoteAction)
+    }
+
+    @Test
+    fun `when mapping is set then overrideConfiguration sets override on original endpoint `() {
+        mapping = { MappingRemoteAction(it) { result -> !result } }
+        val overridingConfig = PNConfiguration.builder(UserId("myUser"), "mySub").build()
+
+        delegatingEndpoint.overrideConfiguration(overridingConfig)
+        delegatingEndpoint.remoteAction
+
+        assertEquals(overridingConfig, action.configuration)
     }
 
     @Test
@@ -109,5 +136,13 @@ internal class DelegatingEndpointTest {
     fun `when operationType is called calls operationType on delegate`() {
         assertEquals(PNOperationType.FileOperation, delegatingEndpoint.operationType)
         assertEquals(PNOperationType.FileOperation, delegatingEndpoint.operationType())
+    }
+
+    @Test
+    fun `IdentityMappingEndpoint returns the same remote action`() {
+        delegatingEndpoint = object : IdentityMappingEndpoint<Boolean>(mockk()) {
+            override fun createAction(): EndpointInterface<Boolean> = action
+        }
+        assertEquals(action, delegatingEndpoint.remoteAction)
     }
 }

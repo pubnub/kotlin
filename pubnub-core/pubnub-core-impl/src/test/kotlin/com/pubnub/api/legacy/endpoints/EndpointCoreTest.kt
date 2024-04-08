@@ -41,7 +41,6 @@ class EndpointCoreTest : BaseTest() {
     @Test
     fun testBaseParamsIncludeInstanceId() {
         config.includeInstanceIdentifier = true
-        // initPubNub()
 
         fakeEndpoint {
             assertTrue(it.containsKey("instanceid"))
