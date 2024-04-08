@@ -28,7 +28,6 @@ class GrantEndpointTest : BaseTest() {
         config.secretKey = "secretKey"
         config.includeInstanceIdentifier = true
         config.includeRequestIdentifier = true
-        // initPubNub()
     }
 
     @Test
@@ -86,6 +85,62 @@ class GrantEndpointTest : BaseTest() {
         assertEquals(1, requests.size)
 
         decomposeAndVerifySignature(pubnub.configuration, requests[0])
+    }
+
+    @Test
+    fun `can verify signature generated with config override`() {
+        stubFor(
+            get(urlPathEqualTo("/v2/auth/grant/sub-key/aaa"))
+                .withQueryParam("channel", matching("ch1"))
+                .withQueryParam("auth", matching("key1"))
+                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("r", matching("0"))
+                .withQueryParam("w", matching("0"))
+                .withQueryParam("m", matching("0"))
+                .willReturn(
+                    aResponse().withBody(
+                        """
+                        {
+                          "message": "Success",
+                          "payload": {
+                            "level": "user",
+                            "subscribe_key": "sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f",
+                            "ttl": 1,
+                            "channel": "ch1",
+                            "auths": {
+                              "key1": {
+                                "r": 0,
+                                "w": 0,
+                                "m": 0
+                              }
+                            }
+                          },
+                          "service": "Access Manager",
+                          "status": 200
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
+        )
+        pubnub // this creates the pubnub instance using the default config
+        // so we can now create a second config to use for override:
+        config.subscribeKey = "aaa"
+        config.publishKey = "bbb"
+        config.secretKey = "ccc"
+        val override =  config.build()
+
+        pubnub.grant(
+            authKeys = listOf("key1"),
+            channels = listOf("ch1"),
+        ).apply {
+          overrideConfiguration(override)
+        }.sync()
+
+        val requests =
+            findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/aaa.*")))
+        assertEquals(1, requests.size)
+
+        decomposeAndVerifySignature(override, requests[0])
     }
 
     @Test

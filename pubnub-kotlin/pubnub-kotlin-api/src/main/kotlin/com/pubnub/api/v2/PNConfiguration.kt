@@ -93,6 +93,7 @@ interface PNConfigurationOverride : BasePNConfigurationOverride {
     interface Builder : BasePNConfigurationOverride.Builder {
         override var subscribeKey: String
         override var publishKey: String
+        override var secretKey: String
         override var retryConfiguration: RetryConfiguration
         override var userId: UserId
         override var includeInstanceIdentifier: Boolean

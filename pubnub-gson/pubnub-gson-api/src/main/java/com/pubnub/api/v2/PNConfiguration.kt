@@ -39,27 +39,12 @@ interface PNConfiguration : BasePNConfiguration, PNConfigurationOverride {
 
         override fun subscribeKey(subscribeKey: String): Builder
 
-        /**
-         * The publish key from the admin panel (only required if publishing).
-         */
         override fun publishKey(publishKey: String): Builder
 
-        /**
-         * The secret key from the admin panel (only required for modifying/revealing access permissions).
-         *
-         * Keep away from Android.
-         */
-        fun secretKey(secretKey: String): Builder
+        override fun secretKey(secretKey: String): Builder
 
-        /**
-         * If Access Manager is utilized, client will use this authKey in all restricted requests.
-         */
         override fun authKey(authKey: String): Builder
 
-        /**
-         * CryptoModule is responsible for handling encryption and decryption.
-         * If set, all communications to and from PubNub will be encrypted.
-         */
         override fun cryptoModule(cryptoModule: CryptoModule?): Builder
 
         /**
@@ -332,6 +317,13 @@ interface PNConfigurationOverride : BasePNConfigurationOverride {
          * If set, all communications to and from PubNub will be encrypted.
          */
         fun cryptoModule(cryptoModule: CryptoModule?): Builder
+
+        /**
+         * The secret key from the admin panel (only required for modifying/revealing access permissions).
+         *
+         * Keep away from Android.
+         */
+        fun secretKey(secretKey: String): Builder
 
         fun build(): PNConfiguration
     }

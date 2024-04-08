@@ -540,6 +540,13 @@ interface BasePNConfigurationOverride {
         val publishKey: String
 
         /**
+         * The secret key from the admin panel (only required for modifying/revealing access permissions).
+         *
+         * Keep away from Android.
+         */
+        val secretKey: String
+
+        /**
          * Retry configuration for requests.
          *  Defaults to [RetryConfiguration.None].
          *
