@@ -22,12 +22,6 @@ public class SignalImpl extends DelegatingEndpoint<PNPublishResult> implements S
         super(pubnub);
     }
 
-    public SignalImpl(PubNubCore pubnub, Object message, String channel) {
-        super(pubnub);
-        this.message = message;
-        this.channel = channel;
-    }
-
     @Override
     protected ExtendedRemoteAction<PNPublishResult> createAction() {
         return pubnub.signal(channel, message);

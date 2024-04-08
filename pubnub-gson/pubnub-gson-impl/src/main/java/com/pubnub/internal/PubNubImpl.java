@@ -295,7 +295,7 @@ public class PubNubImpl extends BasePubNubImpl<
     @Override
     @NotNull
     public PublishBuilder publish(@NotNull Object message, @NotNull String channel) {
-        return new PublishImpl(getPubNubCore(), message, channel);
+        return new PublishImpl(getPubNubCore()).message(message).channel(channel);
     }
 
     @Override
@@ -307,7 +307,7 @@ public class PubNubImpl extends BasePubNubImpl<
     @Override
     @NotNull
     public SignalBuilder signal(@NotNull Object message, @NotNull String channel) {
-        return new SignalImpl(getPubNubCore(), message, channel);
+        return new SignalImpl(getPubNubCore()).message(message).channel(channel);
     }
 
     @Override

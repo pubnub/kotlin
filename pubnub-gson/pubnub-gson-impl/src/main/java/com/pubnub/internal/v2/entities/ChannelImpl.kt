@@ -7,8 +7,6 @@ import com.pubnub.api.v2.entities.Channel
 import com.pubnub.api.v2.subscriptions.EmptyOptions
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.endpoints.pubsub.PublishImpl
-import com.pubnub.internal.endpoints.pubsub.SignalImpl
 import com.pubnub.internal.v2.subscription.SubscriptionImpl
 
 class ChannelImpl(pubnub: PubNubImpl, channelName: String) :
@@ -18,19 +16,21 @@ class ChannelImpl(pubnub: PubNubImpl, channelName: String) :
         { channels, channelGroups, options -> SubscriptionImpl(pubnub, channels, channelGroups, options) },
     ),
     Channel {
+    private val pubNubImpl: PubNubImpl = pubnub
+
     override fun subscription(): Subscription {
         return subscription(EmptyOptions)
     }
 
     override fun publish(message: Any): PublishBuilder {
-        return PublishImpl(pubnub, message, channelName.id)
+        return pubNubImpl.publish(message, channelName.id)
     }
 
     override fun signal(message: Any): SignalBuilder {
-        return SignalImpl(pubnub, message, channelName.id)
+        return pubNubImpl.signal(message, channelName.id)
     }
 
     override fun fire(message: Any): PublishBuilder {
-        return PublishImpl(pubnub, message, channelName.id)
+        return pubNubImpl.publish(message, channelName.id).replicate(false).shouldStore(false)
     }
 }

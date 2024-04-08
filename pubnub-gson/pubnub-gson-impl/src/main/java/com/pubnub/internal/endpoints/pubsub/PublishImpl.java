@@ -28,13 +28,6 @@ public class PublishImpl extends DelegatingEndpoint<PNPublishResult> implements 
         this.replicate = true;
     }
 
-    public PublishImpl(PubNubCore pubnub, Object message, String channel) {
-        super(pubnub);
-        this.replicate = true;
-        this.message = message;
-        this.channel = channel;
-    }
-
     @Override
     protected ExtendedRemoteAction<PNPublishResult> createAction() {
         return pubnub.publish(

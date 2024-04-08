@@ -322,6 +322,28 @@ interface PubNub :
      */
     fun publish(message: Any, channel: String): PublishBuilder
 
+    /**
+     * Send a message to all subscribers of a channel.
+     *
+     * To publish a message you must first specify a valid [PNConfiguration.setPublishKey].
+     * A successfully published message is replicated across the PubNub Real-Time Network and sent
+     * simultaneously to all subscribed clients on a channel.
+     *
+     * Messages in transit can be secured from potential eavesdroppers with SSL/TLS by setting
+     * [PNConfiguration.setSecure] to `true` during initialization.
+     *
+     * **Publish Anytime**
+     *
+     *
+     * It is not required to be subscribed to a channel in order to publish to that channel.
+     *
+     * **Message Data:**
+     *
+     *
+     * The message argument can contain any JSON serializable data, including: Objects, Arrays, Integers and Strings.
+     * Data should not contain special Java/Kotlin classes or functions as these will not serialize.
+     * String content can include any single-byte or multi-byte UTF-8 character.
+     */
     @Deprecated(
         replaceWith =
             ReplaceWith(
@@ -341,6 +363,13 @@ interface PubNub :
      */
     fun signal(message: Any, channel: String): SignalBuilder
 
+    /**
+     * Send a signal to all subscribers of a channel.
+     *
+     * By default, signals are limited to a message payload size of 30 bytes.
+     * This limit applies only to the payload, and not to the URI or headers.
+     * If you require a larger payload size, please [contact support](mailto:support@pubnub.com).
+     */
     @Deprecated(
         replaceWith =
             ReplaceWith(
@@ -517,6 +546,16 @@ interface PubNub :
      */
     fun fire(message: Any, channel: String): PublishBuilder
 
+    /**
+     * Send a message to PubNub Functions Event Handlers.
+     *
+     * These messages will go directly to any Event Handlers registered on the channel that you fire to
+     * and will trigger their execution. The content of the fired request will be available for processing
+     * within the Event Handler.
+     *
+     * The message sent via `fire()` isn't replicated, and so won't be received by any subscribers to the channel.
+     * The message is also not stored in history.
+     */
     @Deprecated(
         replaceWith =
             ReplaceWith(
