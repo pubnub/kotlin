@@ -26,7 +26,7 @@ class GetAllUUIDMetadataEndpoint internal constructor(
         val params =
             queryParams + collectionQueryParameters.createCollectionQueryParams() + withInclude.createIncludeQueryParams()
 
-        return pubnub.retrofitManager.objectsService.getAllUUIDMetadata(
+        return retrofitManager.objectsService.getAllUUIDMetadata(
             subKey = configuration.subscribeKey,
             options = params,
         )

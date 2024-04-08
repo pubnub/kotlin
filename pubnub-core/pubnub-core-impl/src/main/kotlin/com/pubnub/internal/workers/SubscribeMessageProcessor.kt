@@ -199,7 +199,7 @@ internal class SubscribeMessageProcessor(
             }
 
         if (PubNubUtil.shouldSignRequest(pubnub.configuration)) {
-            val timestamp: Int = pubnub.timestamp()
+            val timestamp: Int = PubNubCore.timestamp()
             val signature: String = generateSignature(pubnub.configuration, basePath, authKey, timestamp)
             queryParams.add(PubNubUtil.TIMESTAMP_QUERY_PARAM_NAME + "=" + timestamp)
             queryParams.add(PubNubUtil.SIGNATURE_QUERY_PARAM_NAME + "=" + signature)
@@ -225,12 +225,14 @@ internal class SubscribeMessageProcessor(
             queryParams["auth"] = authKey
         }
         return PubNubUtil.generateSignature(
-            configuration,
             url,
             queryParams,
             "get",
             null,
             timestamp,
+            configuration.subscribeKey,
+            configuration.publishKey,
+            configuration.secretKey,
         )
     }
 

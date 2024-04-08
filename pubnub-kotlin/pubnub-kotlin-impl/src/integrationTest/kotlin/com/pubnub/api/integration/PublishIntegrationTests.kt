@@ -10,6 +10,7 @@ import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
+import com.pubnub.api.v2.PNConfigurationOverride
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.getOrThrow
 import com.pubnub.api.v2.subscriptions.SubscriptionCursor
@@ -153,6 +154,32 @@ class PublishIntegrationTests : BaseIntegrationTest() {
                 overrideConfiguration {
                     userId = UserId(expectedUser)
                 }
+            }.sync()
+            val msg = nextMessage()
+            assertEquals(expectedChannel, msg.channel)
+            assertEquals(expectedUser, msg.publisher)
+            assertEquals(messagePayload, msg.message)
+        }
+    }
+
+    @Test
+    fun testReceiveMessageWithConfigOverride2() {
+        val expectedChannel = randomChannel()
+        val messagePayload = generateMessage(pubnub)
+        val expectedUser = PubNub.generateUUID()
+
+        val observer = createPubNub {}
+        pubnub.test {
+            subscribe(expectedChannel)
+            observer.publish(
+                message = messagePayload,
+                channel = expectedChannel,
+            ).apply {
+                overrideConfiguration(
+                    PNConfigurationOverride.from(pubnub.configuration).apply {
+                        userId = UserId(expectedUser)
+                    }.build(),
+                )
             }.sync()
             val msg = nextMessage()
             assertEquals(expectedChannel, msg.channel)

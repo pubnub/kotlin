@@ -1,6 +1,7 @@
 package com.pubnub.internal.managers
 
 import com.pubnub.api.enums.PNLogVerbosity
+import com.pubnub.api.v2.BasePNConfiguration
 import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.interceptor.SignatureInterceptor
 import com.pubnub.internal.services.AccessManagerService
@@ -20,18 +21,19 @@ import com.pubnub.internal.vendor.AppEngineFactory.Factory
 import okhttp3.Call
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.jetbrains.annotations.TestOnly
 import retrofit2.Retrofit
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.TimeUnit
 
-class RetrofitManager(val pubnub: PubNubCore) {
-    private var transactionClientInstance: OkHttpClient? = null
-
-    private var subscriptionClientInstance: OkHttpClient? = null
-
-    private var noSignatureClientInstance: OkHttpClient? = null
-
-    private var signatureInterceptor: SignatureInterceptor
+class RetrofitManager(
+    val pubnub: PubNubCore,
+    private val configuration: BasePNConfiguration,
+    @get:TestOnly internal var transactionClientInstance: OkHttpClient? = null,
+    @get:TestOnly internal var subscriptionClientInstance: OkHttpClient? = null,
+    @get:TestOnly internal var noSignatureClientInstance: OkHttpClient? = null,
+) {
+    private var signatureInterceptor: SignatureInterceptor = SignatureInterceptor(configuration)
 
     internal val timeService: TimeService
     internal val publishService: PublishService
@@ -48,14 +50,23 @@ class RetrofitManager(val pubnub: PubNubCore) {
     internal val filesService: FilesService
     internal val s3Service: S3Service
 
-    init {
-        signatureInterceptor = SignatureInterceptor(pubnub)
+    /**
+     * Use to get a new RetrofitManager with shared OkHttpClients while overriding configuration values.
+     */
+    constructor(retrofitManager: RetrofitManager, configuration: BasePNConfiguration) : this(
+        retrofitManager.pubnub,
+        configuration,
+        retrofitManager.transactionClientInstance,
+        retrofitManager.subscriptionClientInstance,
+        retrofitManager.noSignatureClientInstance,
+    )
 
-        if (!pubnub.configuration.googleAppEngineNetworking) {
-            transactionClientInstance = createOkHttpClient(pubnub.configuration.nonSubscribeRequestTimeout)
-            subscriptionClientInstance = createOkHttpClient(pubnub.configuration.subscribeTimeout)
+    init {
+        if (!configuration.googleAppEngineNetworking) {
+            transactionClientInstance = createOkHttpClient(configuration.nonSubscribeRequestTimeout, parentOkHttpClient = transactionClientInstance)
+            subscriptionClientInstance = createOkHttpClient(configuration.subscribeTimeout, parentOkHttpClient = subscriptionClientInstance)
             noSignatureClientInstance =
-                createOkHttpClient(pubnub.configuration.nonSubscribeRequestTimeout, withSignature = false)
+                createOkHttpClient(configuration.nonSubscribeRequestTimeout, withSignature = false, parentOkHttpClient = noSignatureClientInstance)
         }
 
         val transactionInstance = createRetrofit(transactionClientInstance)
@@ -85,14 +96,16 @@ class RetrofitManager(val pubnub: PubNubCore) {
     private fun createOkHttpClient(
         readTimeout: Int,
         withSignature: Boolean = true,
+        parentOkHttpClient: OkHttpClient? = null,
     ): OkHttpClient {
-        val okHttpBuilder =
-            OkHttpClient.Builder()
-                .retryOnConnectionFailure(false)
-                .readTimeout(readTimeout.toLong(), TimeUnit.SECONDS)
-                .connectTimeout(pubnub.configuration.connectTimeout.toLong(), TimeUnit.SECONDS)
+        val okHttpBuilder = parentOkHttpClient?.newBuilder() ?: OkHttpClient.Builder()
 
-        with(pubnub.configuration) {
+        okHttpBuilder
+            .retryOnConnectionFailure(false)
+            .readTimeout(readTimeout.toLong(), TimeUnit.SECONDS)
+            .connectTimeout(configuration.connectTimeout.toLong(), TimeUnit.SECONDS)
+
+        with(configuration) {
             if (logVerbosity == PNLogVerbosity.BODY) {
                 okHttpBuilder.addInterceptor(
                     HttpLoggingInterceptor().apply {
@@ -107,8 +120,8 @@ class RetrofitManager(val pubnub: PubNubCore) {
 
             if (sslSocketFactory != null && x509ExtendedTrustManager != null) {
                 okHttpBuilder.sslSocketFactory(
-                    pubnub.configuration.sslSocketFactory!!,
-                    pubnub.configuration.x509ExtendedTrustManager!!,
+                    configuration.sslSocketFactory!!,
+                    configuration.x509ExtendedTrustManager!!,
                 )
             }
             connectionSpec?.let { okHttpBuilder.connectionSpecs(listOf(it)) }
@@ -120,12 +133,13 @@ class RetrofitManager(val pubnub: PubNubCore) {
         }
 
         if (withSignature) {
+            okHttpBuilder.interceptors().removeAll { it is SignatureInterceptor }
             okHttpBuilder.addInterceptor(signatureInterceptor)
         }
 
         val okHttpClient = okHttpBuilder.build()
 
-        pubnub.configuration.maximumConnections?.let { okHttpClient.dispatcher.maxRequestsPerHost = it }
+        configuration.maximumConnections?.let { okHttpClient.dispatcher.maxRequestsPerHost = it }
 
         return okHttpClient
     }
@@ -136,8 +150,8 @@ class RetrofitManager(val pubnub: PubNubCore) {
                 .baseUrl(pubnub.baseUrl())
                 .addConverterFactory(pubnub.mapper.converterFactory)
 
-        if (pubnub.configuration.googleAppEngineNetworking) {
-            retrofitBuilder.callFactory(Factory(pubnub))
+        if (configuration.googleAppEngineNetworking) {
+            retrofitBuilder.callFactory(Factory(configuration))
         } else if (callFactory != null) {
             retrofitBuilder.callFactory(callFactory)
         } else {

@@ -76,13 +76,13 @@ class FetchMessagesEndpoint internal constructor(
         addQueryParams(queryParams)
 
         return if (!includeMessageActions) {
-            pubnub.retrofitManager.historyService.fetchMessages(
+            retrofitManager.historyService.fetchMessages(
                 subKey = configuration.subscribeKey,
                 channels = channels.toCsv(),
                 options = queryParams,
             )
         } else {
-            pubnub.retrofitManager.historyService.fetchMessagesWithActions(
+            retrofitManager.historyService.fetchMessagesWithActions(
                 subKey = configuration.subscribeKey,
                 channel = channels.first(),
                 options = queryParams,

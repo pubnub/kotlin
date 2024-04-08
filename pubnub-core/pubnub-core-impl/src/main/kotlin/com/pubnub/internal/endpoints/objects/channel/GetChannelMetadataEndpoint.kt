@@ -22,7 +22,7 @@ class GetChannelMetadataEndpoint internal constructor(
     GetChannelMetadataInterface {
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNChannelMetadata>> {
         val params = queryParams + includeQueryParam.createIncludeQueryParams()
-        return pubnub.retrofitManager.objectsService.getChannelMetadata(
+        return retrofitManager.objectsService.getChannelMetadata(
             subKey = configuration.subscribeKey,
             channel = channel,
             options = params,

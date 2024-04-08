@@ -44,7 +44,7 @@ class ListFilesEndpoint(
         if (next != null) {
             queryParams[NEXT_PAGE_QUERY_PARAM] = next.pageHash
         }
-        return pubnub.retrofitManager.filesService.listFiles(
+        return retrofitManager.filesService.listFiles(
             configuration.subscribeKey,
             channel,
             queryParams,

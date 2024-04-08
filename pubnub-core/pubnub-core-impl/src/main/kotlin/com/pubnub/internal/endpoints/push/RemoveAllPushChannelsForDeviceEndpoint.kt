@@ -37,14 +37,14 @@ class RemoveAllPushChannelsForDeviceEndpoint internal constructor(
         addQueryParams(queryParams)
 
         return if (pushType != PNPushType.APNS2) {
-            pubnub.retrofitManager.pushService
+            retrofitManager.pushService
                 .removeAllChannelsForDevice(
                     subKey = configuration.subscribeKey,
                     pushToken = deviceId,
                     options = queryParams,
                 )
         } else {
-            pubnub.retrofitManager.pushService
+            retrofitManager.pushService
                 .removeAllChannelsForDeviceApns2(
                     subKey = configuration.subscribeKey,
                     deviceApns2 = deviceId,

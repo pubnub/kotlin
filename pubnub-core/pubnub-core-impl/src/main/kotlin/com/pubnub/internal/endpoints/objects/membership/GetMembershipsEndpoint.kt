@@ -27,7 +27,7 @@ class GetMembershipsEndpoint internal constructor(
         val params =
             queryParams + collectionQueryParameters.createCollectionQueryParams() + includeQueryParam.createIncludeQueryParams()
 
-        return pubnub.retrofitManager.objectsService.getMemberships(
+        return retrofitManager.objectsService.getMemberships(
             uuid = uuid,
             subKey = configuration.subscribeKey,
             options = params,

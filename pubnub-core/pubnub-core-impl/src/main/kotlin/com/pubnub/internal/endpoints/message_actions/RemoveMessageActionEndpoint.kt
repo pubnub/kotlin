@@ -30,7 +30,7 @@ class RemoveMessageActionEndpoint internal constructor(
     override fun getAffectedChannels() = listOf(channel)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Void> {
-        return pubnub.retrofitManager.messageActionService
+        return retrofitManager.messageActionService
             .deleteMessageAction(
                 subKey = configuration.subscribeKey,
                 channel = channel,

@@ -112,10 +112,13 @@ class PNConfigurationTest {
 
     @Test
     fun `create config override from existing config`() {
-        val config = PNConfiguration(UserId(BasePubNubImpl.generateUUID()))
+        val config = PNConfiguration(UserId(BasePubNubImpl.generateUUID())).apply {
+            subscribeKey = "expectedSubscribe"
+        }
         val override = PNConfigurationOverride.from(config).apply {
             userId = UserId("override")
         }.build()
         Assert.assertEquals("override", override.userId.value)
+        Assert.assertEquals("expectedSubscribe", override.subscribeKey)
     }
 }

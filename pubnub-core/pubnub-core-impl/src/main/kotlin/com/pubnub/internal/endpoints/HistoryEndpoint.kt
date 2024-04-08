@@ -50,7 +50,7 @@ class HistoryEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<JsonElement> {
         addQueryParams(queryParams)
 
-        return pubnub.retrofitManager.historyService.fetchHistory(
+        return retrofitManager.historyService.fetchHistory(
             configuration.subscribeKey,
             channel,
             queryParams,

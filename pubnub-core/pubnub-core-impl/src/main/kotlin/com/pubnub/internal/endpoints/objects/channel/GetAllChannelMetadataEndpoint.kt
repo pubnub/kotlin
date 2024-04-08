@@ -26,7 +26,7 @@ class GetAllChannelMetadataEndpoint internal constructor(
         val params =
             queryParams + collectionQueryParameters.createCollectionQueryParams() + includeQueryParam.createIncludeQueryParams()
 
-        return pubnub.retrofitManager.objectsService.getAllChannelMetadata(
+        return retrofitManager.objectsService.getAllChannelMetadata(
             subKey = configuration.subscribeKey,
             options = params,
         )

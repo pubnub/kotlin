@@ -28,7 +28,7 @@ class SignalEndpoint internal constructor(
     override fun getAffectedChannels() = listOf(channel)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<List<Any>> {
-        return pubnub.retrofitManager.signalService.signal(
+        return retrofitManager.signalService.signal(
             pubKey = configuration.publishKey,
             subKey = configuration.subscribeKey,
             channel = channel,

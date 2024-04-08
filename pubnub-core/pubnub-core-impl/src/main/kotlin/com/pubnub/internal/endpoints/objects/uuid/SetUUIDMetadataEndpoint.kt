@@ -29,7 +29,7 @@ class SetUUIDMetadataEndpoint internal constructor(
 ) : EndpointCore<EntityEnvelope<PNUUIDMetadata>, PNUUIDMetadataResult>(pubnub), SetUUIDMetadataInterface {
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNUUIDMetadata>> {
         val params = queryParams + withInclude.createIncludeQueryParams()
-        return pubnub.retrofitManager.objectsService.setUUIDMetadata(
+        return retrofitManager.objectsService.setUUIDMetadata(
             subKey = configuration.subscribeKey,
             body =
                 UUIDMetadataInput(

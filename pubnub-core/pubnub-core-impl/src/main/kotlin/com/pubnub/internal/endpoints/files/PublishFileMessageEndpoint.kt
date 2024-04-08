@@ -49,7 +49,7 @@ open class PublishFileMessageEndpoint(
         shouldStore?.numericString?.let { queryParams["store"] = it }
         ttl?.let { queryParams["ttl"] = it.toString() }
 
-        return pubnub.retrofitManager.filesService.notifyAboutFileUpload(
+        return retrofitManager.filesService.notifyAboutFileUpload(
             configuration.publishKey,
             configuration.subscribeKey,
             channel,

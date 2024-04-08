@@ -32,7 +32,7 @@ class GetMessageActionsEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<PNGetMessageActionsResult> {
         addQueryParams(queryParams)
 
-        return pubnub.retrofitManager.messageActionService
+        return retrofitManager.messageActionService
             .getMessageActions(
                 configuration.subscribeKey,
                 channel,

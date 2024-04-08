@@ -26,7 +26,7 @@ class GetFileUrlEndpoint(
     pubNub: PubNubCore,
 ) : EndpointCore<ResponseBody, PNFileUrlResult>(pubNub), GetFileUrlInterface {
     private lateinit var cachedCallback: Consumer<Result<PNFileUrlResult>>
-    private val executorService: ExecutorService = pubNub.retrofitManager.getTransactionClientExecutorService() ?: Executors.newSingleThreadExecutor()
+    private val executorService: ExecutorService = retrofitManager.getTransactionClientExecutorService() ?: Executors.newSingleThreadExecutor()
 
     @Throws(PubNubException::class)
     override fun validateParams() {
@@ -44,7 +44,7 @@ class GetFileUrlEndpoint(
         return try {
             val baseParams: Map<String, String> = createBaseParams()
             val call: Call<ResponseBody> =
-                pubnub.retrofitManager.filesService
+                retrofitManager.filesService
                     .downloadFile(
                         configuration.subscribeKey,
                         channel,
@@ -56,7 +56,7 @@ class GetFileUrlEndpoint(
                 PubNubUtil.signRequest(
                     call.request(),
                     pubnub.configuration,
-                    pubnub.timestamp(),
+                    PubNubCore.timestamp(),
                 )
             PNFileUrlResult(signedRequest.url.toString())
         } catch (e: Exception) {

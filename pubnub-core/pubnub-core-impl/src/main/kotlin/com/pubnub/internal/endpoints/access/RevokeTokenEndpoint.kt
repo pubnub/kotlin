@@ -27,7 +27,7 @@ class RevokeTokenEndpoint(
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<RevokeTokenResponse> {
-        return pubnub.retrofitManager
+        return retrofitManager
             .accessManagerService
             .revokeToken(configuration.subscribeKey, repairEncoding(token), queryParams)
     }

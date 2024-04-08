@@ -54,7 +54,7 @@ class GrantTokenEndpoint(
                 meta = meta,
                 uuid = authorizedUUID,
             )
-        return pubnub.retrofitManager
+        return retrofitManager
             .accessManagerService
             .grantToken(configuration.subscribeKey, requestBody, queryParams)
     }

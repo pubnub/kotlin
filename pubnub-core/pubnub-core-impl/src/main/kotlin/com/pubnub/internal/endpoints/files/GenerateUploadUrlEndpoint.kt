@@ -53,7 +53,7 @@ internal class GenerateUploadUrlEndpoint(
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<GeneratedUploadUrlResponse> {
-        return pubnub.retrofitManager.filesService.generateUploadUrl(
+        return retrofitManager.filesService.generateUploadUrl(
             configuration.subscribeKey,
             channel,
             GenerateUploadUrlPayload(fileName),

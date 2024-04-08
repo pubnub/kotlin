@@ -28,7 +28,7 @@ class DeleteFileEndpoint(
 
     @Throws(PubNubException::class)
     override fun doWork(queryParams: HashMap<String, String>): Call<Unit> =
-        pubnub.retrofitManager.filesService.deleteFile(
+        retrofitManager.filesService.deleteFile(
             configuration.subscribeKey,
             channel,
             fileId,

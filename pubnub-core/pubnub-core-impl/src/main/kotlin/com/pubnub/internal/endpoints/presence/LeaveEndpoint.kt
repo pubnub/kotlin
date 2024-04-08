@@ -28,7 +28,7 @@ class LeaveEndpoint internal constructor(pubnub: PubNubCore) : EndpointCore<Void
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Void> {
         addQueryParams(queryParams)
-        return pubnub.retrofitManager.presenceService.leave(
+        return retrofitManager.presenceService.leave(
             configuration.subscribeKey,
             channels.toCsv(),
             queryParams,
@@ -37,7 +37,7 @@ class LeaveEndpoint internal constructor(pubnub: PubNubCore) : EndpointCore<Void
 
     private fun addQueryParams(queryParams: HashMap<String, String>) {
         queryParams["channel-group"] = channelGroups.toCsv()
-        PubNubUtil.maybeAddEeQueryParam(pubnub.configuration, queryParams)
+        PubNubUtil.maybeAddEeQueryParam(queryParams)
     }
 
     override fun createResponse(input: Response<Void>) = true

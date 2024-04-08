@@ -37,14 +37,14 @@ class ListPushProvisionsEndpoint internal constructor(
         addQueryParams(queryParams)
 
         return if (pushType != PNPushType.APNS2) {
-            pubnub.retrofitManager.pushService
+            retrofitManager.pushService
                 .listChannelsForDevice(
                     subKey = configuration.subscribeKey,
                     pushToken = deviceId,
                     options = queryParams,
                 )
         } else {
-            pubnub.retrofitManager.pushService
+            retrofitManager.pushService
                 .listChannelsForDeviceApns2(
                     subKey = configuration.subscribeKey,
                     deviceApns2 = deviceId,

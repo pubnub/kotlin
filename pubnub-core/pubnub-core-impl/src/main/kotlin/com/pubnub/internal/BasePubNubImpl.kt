@@ -47,7 +47,7 @@ abstract class BasePubNubImpl<
         get() = PubNubCore.SDK_VERSION
 
     override val timestamp: Int
-        get() = pubNubCore.timestamp()
+        get() = PubNubCore.timestamp()
 
     override val baseUrl: String
         get() = pubNubCore.baseUrl()

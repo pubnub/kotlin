@@ -289,7 +289,7 @@ interface PNConfigurationOverride : BasePNConfigurationOverride {
     }
 
     interface Builder : BasePNConfigurationOverride.Builder {
-        fun setUserId(userId: UserId): PNConfiguration.Builder
+        fun setUserId(userId: UserId): Builder
 
         fun subscribeKey(subscribeKey: String): Builder
 

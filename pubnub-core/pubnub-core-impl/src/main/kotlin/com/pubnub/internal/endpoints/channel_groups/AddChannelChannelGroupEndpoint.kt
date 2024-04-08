@@ -36,7 +36,7 @@ class AddChannelChannelGroupEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<Void> {
         addQueryParams(queryParams)
 
-        return pubnub.retrofitManager.channelGroupService
+        return retrofitManager.channelGroupService
             .addChannelChannelGroup(
                 configuration.subscribeKey,
                 channelGroup,

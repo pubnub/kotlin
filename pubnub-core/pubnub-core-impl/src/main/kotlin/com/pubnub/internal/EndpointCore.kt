@@ -7,6 +7,7 @@ import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.api.v2.BasePNConfiguration
 import com.pubnub.api.v2.BasePNConfiguration.Companion.isValid
 import com.pubnub.api.v2.callbacks.Result
+import com.pubnub.internal.managers.RetrofitManager
 import com.pubnub.internal.retry.RetryableBase
 import com.pubnub.internal.retry.RetryableCallback
 import com.pubnub.internal.retry.RetryableRestCaller
@@ -31,6 +32,11 @@ abstract class EndpointCore<Input, Output> protected constructor(protected val p
         private var configOverride: BasePNConfiguration? = null
         final override val configuration: BasePNConfiguration
             get() = configOverride ?: pubnub.configuration
+
+        protected val retrofitManager: RetrofitManager
+            get() = configOverride?.let { override ->
+                RetrofitManager(pubnub.retrofitManager, override)
+            } ?: pubnub.retrofitManager
 
         private val log = LoggerFactory.getLogger(this.javaClass.simpleName)
 

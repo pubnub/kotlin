@@ -42,7 +42,7 @@ class PublishEndpoint internal constructor(
         return if (usePost) {
             val payload = getBodyMessage(message)
 
-            pubnub.retrofitManager.publishService.publishWithPost(
+            retrofitManager.publishService.publishWithPost(
                 configuration.publishKey,
                 configuration.subscribeKey,
                 channel,
@@ -53,7 +53,7 @@ class PublishEndpoint internal constructor(
             // HTTP GET request
             val stringifiedMessage = getParamMessage(message)
 
-            pubnub.retrofitManager.publishService.publish(
+            retrofitManager.publishService.publish(
                 configuration.publishKey,
                 configuration.subscribeKey,
                 channel,

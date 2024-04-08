@@ -29,7 +29,7 @@ class AllChannelsChannelGroupEndpoint internal constructor(
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<Map<String, Any>>> {
-        return pubnub.retrofitManager.channelGroupService
+        return retrofitManager.channelGroupService
             .allChannelsChannelGroup(
                 configuration.subscribeKey,
                 channelGroup,
