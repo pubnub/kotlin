@@ -18,6 +18,8 @@ class ChannelImpl(pubnub: PubNubImpl, channelName: ChannelName) :
         { channels, channelGroups, options -> SubscriptionImpl(pubnub, channels, channelGroups, options) },
     ),
     Channel {
+    private val pubNubImpl: PubNubImpl = pubnub
+
     override fun publish(
         message: Any,
         meta: Any?,
@@ -26,33 +28,15 @@ class ChannelImpl(pubnub: PubNubImpl, channelName: ChannelName) :
         replicate: Boolean,
         ttl: Int?
     ): Publish {
-        return com.pubnub.internal.endpoints.pubsub.PublishImpl(
-            pubnub.publish(
-                channelName.id,
-                message,
-                meta,
-                shouldStore,
-                usePost,
-                replicate,
-                ttl,
-            ),
-        )
+        return pubNubImpl.publish(channelName.id, message, meta, shouldStore, usePost, replicate, ttl)
     }
 
     override fun signal(message: Any): Signal {
-        return com.pubnub.internal.endpoints.pubsub.SignalImpl(pubnub.signal(channelName.id, message))
+        return pubNubImpl.signal(channelName.id, message)
     }
 
     override fun fire(message: Any, meta: Any?, usePost: Boolean, ttl: Int?): Publish {
-        return com.pubnub.internal.endpoints.pubsub.PublishImpl(
-            pubnub.fire(
-                channelName.id,
-                message,
-                meta,
-                usePost,
-                ttl,
-            ),
-        )
+        return pubNubImpl.fire(channelName.id, message, meta, usePost, ttl)
     }
 
     override fun sendFile(
@@ -64,26 +48,13 @@ class ChannelImpl(pubnub: PubNubImpl, channelName: ChannelName) :
         shouldStore: Boolean?,
         cipherKey: String?
     ): SendFile {
-        return com.pubnub.internal.endpoints.files.SendFileImpl(
-            pubnub.sendFile(
-                channelName.id,
-                fileName,
-                inputStream,
-                message,
-                meta,
-                ttl,
-                shouldStore,
-                cipherKey,
-            ),
-        )
+        return pubNubImpl.sendFile(channelName.id, fileName, inputStream, message, meta, ttl, shouldStore, cipherKey)
     }
 
     override fun deleteFile(
         fileName: String,
         fileId: String
     ): DeleteFile {
-        return com.pubnub.internal.endpoints.files.DeleteFileImpl(
-            pubnub.deleteFile(channelName.id, fileName, fileId),
-        )
+        return pubNubImpl.deleteFile(channelName.id, fileName, fileId)
     }
 }
