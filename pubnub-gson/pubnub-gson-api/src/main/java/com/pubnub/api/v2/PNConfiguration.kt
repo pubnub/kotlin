@@ -100,7 +100,23 @@ interface PNConfiguration : BasePNConfiguration, PNConfigurationOverride {
 
         override fun connectTimeout(connectTimeout: Int): Builder
 
-        override fun nonSubscribeRequestTimeout(nonSubscribeRequestTimeout: Int): Builder
+        /**
+         * For non subscribe operations (publish, herenow, etc),
+         * This property relates to a read timeout that is applied from the moment the connection between a client
+         * and the server has been successfully established. It defines a maximum time of inactivity between two
+         * data packets when waiting for the server’s response.
+         *
+         * The value is in seconds.
+         *
+         * Defaults to 10.
+         */
+        @Deprecated(
+            "This setting relates to *read* timeout and was renamed to `nonSubscribeReadTimeout`",
+            replaceWith = ReplaceWith("nonSubscribeReadTimeout")
+        )
+        fun nonSubscribeRequestTimeout(nonSubscribeRequestTimeout: Int): Builder
+
+        override fun nonSubscribeReadTimeout(nonSubscribeReadTimeout: Int): Builder
 
         /**
          * If operating behind a misbehaving proxy, allow the client to shuffle the subdomains.
@@ -325,7 +341,7 @@ interface PNConfigurationOverride : BasePNConfigurationOverride {
          *
          * Defaults to 10.
          */
-        fun nonSubscribeRequestTimeout(nonSubscribeRequestTimeout: Int): Builder
+        fun nonSubscribeReadTimeout(nonSubscribeReadTimeout: Int): Builder
 
         /**
          * Create a [PNConfiguration] object with values from this builder.

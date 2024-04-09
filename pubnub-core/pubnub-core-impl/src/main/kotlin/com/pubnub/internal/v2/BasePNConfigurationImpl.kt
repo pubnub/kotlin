@@ -38,7 +38,7 @@ open class BasePNConfigurationImpl internal constructor(
     override val heartbeatInterval: Int = 0,
     override val subscribeTimeout: Int = SUBSCRIBE_TIMEOUT,
     override val connectTimeout: Int = CONNECT_TIMEOUT,
-    override val nonSubscribeRequestTimeout: Int = NON_SUBSCRIBE_REQUEST_TIMEOUT,
+    override val nonSubscribeReadTimeout: Int = NON_SUBSCRIBE_REQUEST_TIMEOUT,
     override val cacheBusting: Boolean = false,
     override val suppressLeaveEvents: Boolean = false,
     override val maintainPresenceState: Boolean = true,
@@ -106,7 +106,7 @@ open class BasePNConfigurationImpl internal constructor(
 
         override val connectTimeout: Int = defaultConfiguration.connectTimeout
 
-        override val nonSubscribeRequestTimeout: Int = defaultConfiguration.nonSubscribeRequestTimeout
+        override val nonSubscribeReadTimeout: Int = defaultConfiguration.nonSubscribeReadTimeout
 
         override val cacheBusting: Boolean = defaultConfiguration.cacheBusting
 
