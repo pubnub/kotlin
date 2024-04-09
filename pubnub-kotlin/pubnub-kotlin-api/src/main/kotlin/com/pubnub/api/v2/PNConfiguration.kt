@@ -76,6 +76,9 @@ interface PNConfiguration : BasePNConfiguration {
         override var retryConfiguration: RetryConfiguration
         override var managePresenceListManually: Boolean
 
+        /**
+         * Create a [PNConfiguration] object with values from this builder.
+         */
         fun build(): PNConfiguration
     }
 }
@@ -100,7 +103,12 @@ interface PNConfigurationOverride : BasePNConfigurationOverride {
         override var includeRequestIdentifier: Boolean
         override var authKey: String
         override var cryptoModule: CryptoModule?
+        override var connectTimeout: Int
+        override var nonSubscribeRequestTimeout: Int
 
+        /**
+         * Create a [PNConfiguration] object with values from this builder.
+         */
         fun build(): PNConfiguration
     }
 }
