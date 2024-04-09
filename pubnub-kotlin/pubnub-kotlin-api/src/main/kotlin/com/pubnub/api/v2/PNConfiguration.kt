@@ -34,8 +34,6 @@ interface PNConfiguration : BasePNConfiguration {
         }
     }
 
-    fun override(): PNConfigurationOverride.Builder
-
     interface Builder : BasePNConfiguration.Builder {
         override var userId: UserId
         override var subscribeKey: String
@@ -51,7 +49,17 @@ interface PNConfiguration : BasePNConfiguration {
         override var heartbeatInterval: Int
         override var subscribeTimeout: Int
         override var connectTimeout: Int
+
+        @Deprecated(
+            "This setting relates to *read* timeout and was renamed to `nonSubscribeReadTimeout`",
+            replaceWith = ReplaceWith("nonSubscribeReadTimeout")
+        )
         override var nonSubscribeRequestTimeout: Int
+            get() = nonSubscribeReadTimeout
+            set(value) {
+                nonSubscribeReadTimeout = value
+            }
+        override var nonSubscribeReadTimeout: Int
         override var cacheBusting: Boolean
         override var suppressLeaveEvents: Boolean
         override var maintainPresenceState: Boolean
@@ -76,6 +84,9 @@ interface PNConfiguration : BasePNConfiguration {
         override var retryConfiguration: RetryConfiguration
         override var managePresenceListManually: Boolean
 
+        /**
+         * Create a [PNConfiguration] object with values from this builder.
+         */
         fun build(): PNConfiguration
     }
 }
@@ -100,7 +111,12 @@ interface PNConfigurationOverride : BasePNConfigurationOverride {
         override var includeRequestIdentifier: Boolean
         override var authKey: String
         override var cryptoModule: CryptoModule?
+        override var connectTimeout: Int
+        override var nonSubscribeReadTimeout: Int
 
+        /**
+         * Create a [PNConfiguration] object with values from this builder.
+         */
         fun build(): PNConfiguration
     }
 }

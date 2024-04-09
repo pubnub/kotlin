@@ -228,17 +228,17 @@ class PNConfiguration(override var userId: UserId) : BasePNConfiguration {
      */
     override var connectTimeout = configuration.connectTimeout
 
-    /**
-     * For non subscribe operations (publish, herenow, etc),
-     * This property relates to a read timeout that is applied from the moment the connection between a client
-     * and the server has been successfully established. It defines a maximum time of inactivity between two
-     * data packets when waiting for the server’s response.
-     *
-     * The value is in seconds.
-     *
-     * Defaults to 10.
-     */
-    override var nonSubscribeRequestTimeout = configuration.nonSubscribeRequestTimeout
+    @Deprecated(
+        "This setting relates to *read* timeout and was renamed to `nonSubscribeReadTimeout`",
+        replaceWith = ReplaceWith("nonSubscribeReadTimeout")
+    )
+    override var nonSubscribeRequestTimeout: Int
+        get() = nonSubscribeReadTimeout
+        set(value) {
+            nonSubscribeReadTimeout = value
+        }
+
+    override var nonSubscribeReadTimeout: Int = configuration.nonSubscribeReadTimeout
 
     /**
      * If operating behind a misbehaving proxy, allow the client to shuffle the subdomains.

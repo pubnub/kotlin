@@ -63,10 +63,10 @@ class RetrofitManager(
 
     init {
         if (!configuration.googleAppEngineNetworking) {
-            transactionClientInstance = createOkHttpClient(configuration.nonSubscribeRequestTimeout, parentOkHttpClient = transactionClientInstance)
+            transactionClientInstance = createOkHttpClient(configuration.nonSubscribeReadTimeout, parentOkHttpClient = transactionClientInstance)
             subscriptionClientInstance = createOkHttpClient(configuration.subscribeTimeout, parentOkHttpClient = subscriptionClientInstance)
             noSignatureClientInstance =
-                createOkHttpClient(configuration.nonSubscribeRequestTimeout, withSignature = false, parentOkHttpClient = noSignatureClientInstance)
+                createOkHttpClient(configuration.nonSubscribeReadTimeout, withSignature = false, parentOkHttpClient = noSignatureClientInstance)
         }
 
         val transactionInstance = createRetrofit(transactionClientInstance)

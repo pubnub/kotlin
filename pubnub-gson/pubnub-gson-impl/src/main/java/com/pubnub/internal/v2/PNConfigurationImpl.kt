@@ -33,7 +33,7 @@ class PNConfigurationImpl(
     override val heartbeatInterval: Int,
     override val subscribeTimeout: Int,
     override val connectTimeout: Int,
-    override val nonSubscribeRequestTimeout: Int,
+    override val nonSubscribeReadTimeout: Int,
     override val cacheBusting: Boolean,
     override val suppressLeaveEvents: Boolean,
     override val maintainPresenceState: Boolean,
@@ -181,12 +181,20 @@ class PNConfigurationImpl(
             override var connectTimeout: Int = super.connectTimeout
                 private set
 
-            override fun nonSubscribeRequestTimeout(nonSubscribeRequestTimeout: Int): Builder {
-                this.nonSubscribeRequestTimeout = nonSubscribeRequestTimeout
+            @Deprecated(
+                "This setting relates to *read* timeout and was renamed to `nonSubscribeReadTimeout`",
+                replaceWith = ReplaceWith("nonSubscribeReadTimeout")
+            )
+            override fun nonSubscribeRequestTimeout(nonSubscribeRequestTimeout: Int): PNConfiguration.Builder {
+                return this.nonSubscribeReadTimeout(nonSubscribeRequestTimeout)
+            }
+
+            override fun nonSubscribeReadTimeout(nonSubscribeReadTimeout: Int): Builder {
+                this.nonSubscribeReadTimeout = nonSubscribeReadTimeout
                 return this
             }
 
-            override var nonSubscribeRequestTimeout: Int = super.nonSubscribeRequestTimeout
+            override var nonSubscribeReadTimeout: Int = super.nonSubscribeReadTimeout
                 private set
 
             override fun cacheBusting(cacheBusting: Boolean): Builder {
@@ -389,7 +397,7 @@ class PNConfigurationImpl(
                     heartbeatInterval = heartbeatInterval,
                     subscribeTimeout = subscribeTimeout,
                     connectTimeout = connectTimeout,
-                    nonSubscribeRequestTimeout = nonSubscribeRequestTimeout,
+                    nonSubscribeReadTimeout = nonSubscribeReadTimeout,
                     cacheBusting = cacheBusting,
                     suppressLeaveEvents = suppressLeaveEvents,
                     maintainPresenceState = maintainPresenceState,
