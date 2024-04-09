@@ -12,7 +12,7 @@ public interface Endpoint<T> extends ExtendedRemoteAction<T> {
      * <p>
      * Example:
      * <pre>
-     * configOverride = PNConfiguration.from(pubnub.configuration)
+     * configOverride = PNConfigurationOverride.from(pubnub.configuration)
      * configOverride.userId(UserId("example"))
      * endpoint.overrideConfiguration(configOverride.build()).sync()
      * </pre>

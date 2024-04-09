@@ -20,7 +20,7 @@ interface Endpoint<OUTPUT> : ExtendedRemoteAction<OUTPUT> {
      *
      * Example:
      * ```
-     * val configOverride = PNConfiguration.from(pubnub.configuration).apply {
+     * val configOverride = PNConfigurationOverride.from(pubnub.configuration).apply {
      *     userId = UserId("example")
      * }.build()
      *

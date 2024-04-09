@@ -174,13 +174,11 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             observer.publish(
                 message = messagePayload,
                 channel = expectedChannel,
-            ).apply {
-                overrideConfiguration(
-                    PNConfigurationOverride.from(pubnub.configuration).apply {
-                        userId = UserId(expectedUser)
-                    }.build(),
-                )
-            }.sync()
+            ).overrideConfiguration(
+                PNConfigurationOverride.from(pubnub.configuration).apply {
+                    userId = UserId(expectedUser)
+                }.build(),
+            ).sync()
             val msg = nextMessage()
             assertEquals(expectedChannel, msg.channel)
             assertEquals(expectedUser, msg.publisher)
