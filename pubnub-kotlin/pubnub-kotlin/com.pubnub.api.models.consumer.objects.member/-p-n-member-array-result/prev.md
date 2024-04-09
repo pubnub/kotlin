@@ -1,6 +1,0 @@
-//[pubnub-kotlin](../../../index.md)/[com.pubnub.api.models.consumer.objects.member](../index.md)/[PNMemberArrayResult](index.md)/[prev](prev.md)
-
-# prev
-
-[jvm]\
-val [prev](prev.md): [PNPage.PNPrev](../../../../pubnub-kotlin/com.pubnub.api.models.consumer.objects/-p-n-page/-p-n-prev/index.md)?

@@ -3,7 +3,7 @@
 # BasePNConfiguration
 
 [jvm]\
-interface [BasePNConfiguration](index.md)
+interface [BasePNConfiguration](index.md) : [BasePNConfigurationOverride](../-base-p-n-configuration-override/index.md)
 
 A storage for user-provided information which describe further PubNub client behaviour. Configuration instance contains additional set of properties which allow performing precise PubNub client configuration.
 
@@ -39,7 +39,8 @@ A storage for user-provided information which describe further PubNub client beh
 | [managePresenceListManually](manage-presence-list-manually.md) | [jvm]<br>abstract val [managePresenceListManually](manage-presence-list-manually.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)<br>Enables explicit presence control. When set to true heartbeat calls will contain only channels and groups added explicitly using PubNubCore.presence. Should be used only with ACL set on the server side. For more information please contact PubNub support |
 | [maximumConnections](maximum-connections.md) | [jvm]<br>abstract val [maximumConnections](maximum-connections.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)? |
 | [maximumMessagesCacheSize](maximum-messages-cache-size.md) | [jvm]<br>abstract val [maximumMessagesCacheSize](maximum-messages-cache-size.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
-| [nonSubscribeRequestTimeout](non-subscribe-request-timeout.md) | [jvm]<br>abstract val [nonSubscribeRequestTimeout](non-subscribe-request-timeout.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)<br>For non subscribe operations (publish, herenow, etc), This property relates to a read timeout that is applied from the moment the connection between a client and the server has been successfully established. It defines a maximum time of inactivity between two data packets when waiting for the server’s response. |
+| [nonSubscribeReadTimeout](non-subscribe-read-timeout.md) | [jvm]<br>abstract val [nonSubscribeReadTimeout](non-subscribe-read-timeout.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)<br>For non subscribe operations (publish, herenow, etc), This property relates to a read timeout that is applied from the moment the connection between a client and the server has been successfully established. It defines a maximum time of inactivity between two data packets when waiting for the server’s response. |
+| [nonSubscribeRequestTimeout](non-subscribe-request-timeout.md) | [jvm]<br>open val [~~nonSubscribeRequestTimeout~~](non-subscribe-request-timeout.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)<br>For non subscribe operations (publish, herenow, etc), This property relates to a read timeout that is applied from the moment the connection between a client and the server has been successfully established. It defines a maximum time of inactivity between two data packets when waiting for the server’s response. |
 | [origin](origin.md) | [jvm]<br>abstract val [origin](origin.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)<br>Custom origin if needed. |
 | [pnsdkSuffixes](pnsdk-suffixes.md) | [jvm]<br>abstract val [pnsdkSuffixes](pnsdk-suffixes.md): [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt; |
 | [presenceTimeout](presence-timeout.md) | [jvm]<br>abstract val [presenceTimeout](presence-timeout.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)<br>Sets the custom presence server timeout. |
@@ -57,9 +58,3 @@ A storage for user-provided information which describe further PubNub client beh
 | [userId](user-id.md) | [jvm]<br>abstract val [userId](user-id.md): [UserId](../../com.pubnub.api/-user-id/index.md)<br>The user ID that the PubNub client will use. |
 | [uuid](uuid.md) | [jvm]<br>open val [~~uuid~~](uuid.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
 | [x509ExtendedTrustManager](x509-extended-trust-manager.md) | [jvm]<br>abstract val [x509ExtendedTrustManager](x509-extended-trust-manager.md): [X509ExtendedTrustManager](https://docs.oracle.com/javase/8/docs/api/javax/net/ssl/X509ExtendedTrustManager.html)? |
-
-## Functions
-
-| Name | Summary |
-|---|---|
-| [generatePnsdk](generate-pnsdk.md) | [jvm]<br>open fun [generatePnsdk](generate-pnsdk.md)(version: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |

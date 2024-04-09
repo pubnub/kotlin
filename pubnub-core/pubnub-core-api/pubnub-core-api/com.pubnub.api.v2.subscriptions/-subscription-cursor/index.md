@@ -7,7 +7,7 @@ class [SubscriptionCursor](index.md)(val timetoken: [Long](https://kotlinlang.or
 
 A holder for a timetoken value.
 
-Used with [BaseSubscription.subscribe](../../../../../pubnub-gson/com.pubnub.api.v2.subscriptions/-base-subscription/subscribe.md) to start listening for events newer or equal to the requested timetoken.
+Used with [BaseSubscription.subscribe](../../../../../pubnub-core/pubnub-core-api/com.pubnub.api.v2.subscriptions/-base-subscription/subscribe.md) to start listening for events newer or equal to the requested timetoken.
 
 ## Constructors
 

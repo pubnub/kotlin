@@ -13,4 +13,4 @@ jvm
 
 | | |
 |---|---|
-| timetoken | optional timetoken to use for the subscriptions on reconnection. Only applicable when PNConfiguration.enableEventEngine is true, otherwise ignored |
+| timetoken | optional timetoken to use for the subscriptions on reconnection. |

@@ -11,6 +11,7 @@
 | [com.pubnub.api.crypto](pubnub-core-api/com.pubnub.api.crypto/index.md) |
 | [com.pubnub.api.crypto.cryptor](pubnub-core-api/com.pubnub.api.crypto.cryptor/index.md) |
 | [com.pubnub.api.crypto.data](pubnub-core-api/com.pubnub.api.crypto.data/index.md) |
+| [com.pubnub.api.endpoints](pubnub-core-api/com.pubnub.api.endpoints/index.md) |
 | [com.pubnub.api.endpoints.remoteaction](pubnub-core-api/com.pubnub.api.endpoints.remoteaction/index.md) |
 | [com.pubnub.api.enums](pubnub-core-api/com.pubnub.api.enums/index.md) |
 | [com.pubnub.api.models](pubnub-core-api/com.pubnub.api.models/index.md) |

@@ -6,4 +6,5 @@
 
 | Name | Summary |
 |---|---|
-| [BasePNConfiguration](-base-p-n-configuration/index.md) | [jvm]<br>interface [BasePNConfiguration](-base-p-n-configuration/index.md)<br>A storage for user-provided information which describe further PubNub client behaviour. Configuration instance contains additional set of properties which allow performing precise PubNub client configuration. |
+| [BasePNConfiguration](-base-p-n-configuration/index.md) | [jvm]<br>interface [BasePNConfiguration](-base-p-n-configuration/index.md) : [BasePNConfigurationOverride](-base-p-n-configuration-override/index.md)<br>A storage for user-provided information which describe further PubNub client behaviour. Configuration instance contains additional set of properties which allow performing precise PubNub client configuration. |
+| [BasePNConfigurationOverride](-base-p-n-configuration-override/index.md) | [jvm]<br>interface [BasePNConfigurationOverride](-base-p-n-configuration-override/index.md) |

@@ -7,7 +7,7 @@ abstract fun [remove](remove.md)(subscription: [Subscription](index.md))
 
 Remove the [subscription](remove.md) from this set.
 
-Please note that removing a subscription from the set does not automatically [unsubscribe](../../../../../pubnub-gson/com.pubnub.api.v2.subscriptions/-base-subscription-set/unsubscribe.md) or [close](../../../../../pubnub-gson/com.pubnub.api.v2.subscriptions/-base-subscription-set/close.md) it.
+Please note that removing a subscription from the set does not automatically [unsubscribe](../../../../../pubnub-core/pubnub-core-api/com.pubnub.api.v2.subscriptions/-base-subscription-set/unsubscribe.md) or [close](../../../../../pubnub-core/pubnub-core-api/com.pubnub.api.v2.subscriptions/-base-subscription-set/close.md) it.
 
 #### Parameters
 

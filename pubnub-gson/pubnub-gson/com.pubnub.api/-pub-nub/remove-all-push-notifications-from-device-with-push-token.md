@@ -1,8 +1,0 @@
-//[pubnub-gson](../../../index.md)/[com.pubnub.api](../index.md)/[PubNub](index.md)/[removeAllPushNotificationsFromDeviceWithPushToken](remove-all-push-notifications-from-device-with-push-token.md)
-
-# removeAllPushNotificationsFromDeviceWithPushToken
-
-[jvm]\
-abstract fun [removeAllPushNotificationsFromDeviceWithPushToken](remove-all-push-notifications-from-device-with-push-token.md)(): [RemoveAllPushChannelsForDevice](../../com.pubnub.api.endpoints.push/-remove-all-push-channels-for-device/index.md)
-
-Disable push notifications from all channels registered with the specified [RemoveAllPushChannelsForDevice.deviceId](../../../../pubnub-gson/com.pubnub.api.endpoints.push/-remove-all-push-channels-for-device/device-id.md).

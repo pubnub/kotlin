@@ -1,0 +1,10 @@
+//[pubnub-gson-api](../../../../index.md)/[com.pubnub.api.v2](../../index.md)/[PNConfiguration](../index.md)/[Builder](index.md)/[fileMessagePublishRetryLimit](file-message-publish-retry-limit.md)
+
+# fileMessagePublishRetryLimit
+
+[jvm]\
+abstract fun [fileMessagePublishRetryLimit](file-message-publish-retry-limit.md)(fileMessagePublishRetryLimit: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)): [PNConfiguration.Builder](index.md)
+
+How many times publishing file message should automatically retry before marking the action as failed
+
+Defaults to `5`
