@@ -48,6 +48,9 @@ class PubNubSharedPlugin : Plugin<Project> {
                         "ktlint_standard_max-line-length" to "disabled",
                         "ktlint_standard_if-else-wrapping" to "disabled",
                         "ktlint_standard_discouraged-comment-location" to "disabled",
+                        "ktlint_standard_trailing-comma-on-declaration-site" to "disabled",
+                        "ktlint_standard_trailing-comma-on-call-site" to "disabled",
+                        "ktlint_standard_function-signature" to "disabled",
                     )
                 )
             }
