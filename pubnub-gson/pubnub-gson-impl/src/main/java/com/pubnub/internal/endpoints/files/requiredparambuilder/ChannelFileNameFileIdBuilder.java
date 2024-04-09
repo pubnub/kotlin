@@ -10,7 +10,6 @@ public abstract class ChannelFileNameFileIdBuilder<T> implements
     private final ChannelStep<FileNameStep<FileIdStep<T>>> builder;
 
     public ChannelFileNameFileIdBuilder(ChannelStep<FileNameStep<FileIdStep<T>>> builder) {
-
         this.builder = builder;
     }
 

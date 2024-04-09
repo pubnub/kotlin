@@ -4,7 +4,7 @@ import com.pubnub.api.Endpoint
 import com.pubnub.api.models.consumer.history.PNDeleteMessagesResult
 
 /**
- * @see [PubNub.deleteMessages]
+ * @see [com.pubnub.api.PubNub.deleteMessages]
  */
 interface DeleteMessages : Endpoint<PNDeleteMessagesResult> {
     val channels: List<String>

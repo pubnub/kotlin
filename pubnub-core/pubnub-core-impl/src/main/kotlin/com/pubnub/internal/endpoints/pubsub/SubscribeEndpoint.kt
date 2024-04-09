@@ -34,8 +34,8 @@ class SubscribeEndpoint internal constructor(pubnub: PubNubCore) : EndpointCore<
     override fun doWork(queryParams: HashMap<String, String>): Call<SubscribeEnvelope> {
         addQueryParams(queryParams)
 
-        return pubnub.retrofitManager.subscribeService.subscribe(
-            pubnub.configuration.subscribeKey,
+        return retrofitManager.subscribeService.subscribe(
+            configuration.subscribeKey,
             channels.toCsv(),
             queryParams,
         )
@@ -64,7 +64,7 @@ class SubscribeEndpoint internal constructor(pubnub: PubNubCore) : EndpointCore<
             queryParams["state"] = pubnub.mapper.toJson(it)
         }
 
-        PubNubUtil.maybeAddEeQueryParam(pubnub.configuration, queryParams)
+        PubNubUtil.maybeAddEeQueryParam(queryParams)
     }
 
     override fun createResponse(input: Response<SubscribeEnvelope>): SubscribeEnvelope {

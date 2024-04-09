@@ -1,5 +1,6 @@
 package com.pubnub.internal.vendor;
 
+import com.pubnub.api.v2.BasePNConfiguration;
 import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.PubNubUtil;
 import okhttp3.Call;
@@ -22,11 +23,11 @@ import java.net.URL;
 
 public class AppEngineFactory implements Call {
     private Request request;
-    private PubNubCore pubNub;
+    private final BasePNConfiguration configuration;
 
-    AppEngineFactory(Request request, PubNubCore pubNub) {
+    AppEngineFactory(Request request, BasePNConfiguration configuration) {
         this.request = request;
-        this.pubNub = pubNub;
+        this.configuration = configuration;
     }
 
     @NotNull
@@ -38,7 +39,7 @@ public class AppEngineFactory implements Call {
     @NotNull
     @Override
     public Response execute() throws IOException {
-        request = PubNubUtil.INSTANCE.signRequest(request, pubNub.getConfiguration(), pubNub.timestamp$pubnub_core_impl());
+        request = PubNubUtil.INSTANCE.signRequest(request, configuration, PubNubCore.timestamp());
 
         URL url = request.url().url();
         final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -136,16 +137,16 @@ public class AppEngineFactory implements Call {
     }
 
     public static class Factory implements Call.Factory {
-        private final PubNubCore pubNub;
+        private final BasePNConfiguration configuration;
 
-        public Factory(PubNubCore pubNub) {
-            this.pubNub = pubNub;
+        public Factory(BasePNConfiguration configuration) {
+            this.configuration = configuration;
         }
 
         @NotNull
         @Override
         public Call newCall(Request request) {
-            return new AppEngineFactory(request, pubNub);
+            return new AppEngineFactory(request, configuration);
         }
     }
 }

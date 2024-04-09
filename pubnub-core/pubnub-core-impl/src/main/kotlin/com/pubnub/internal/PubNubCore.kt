@@ -118,10 +118,10 @@ class PubNubCore internal constructor(
         internal const val TIMESTAMP_DIVIDER = 1000
         internal const val SDK_VERSION = PUBNUB_VERSION
         internal const val MAX_SEQUENCE = 65535
-    }
 
-    internal val cryptoModule: CryptoModule?
-        get() = configuration.cryptoModule
+        @JvmStatic
+        fun timestamp() = (Date().time / TIMESTAMP_DIVIDER).toInt()
+    }
 
     private val subscriptionFactory: SubscriptionFactory<BaseSubscriptionImpl<BaseEventListener>> =
         { channels, channelGroups, options ->
@@ -143,7 +143,7 @@ class PubNubCore internal constructor(
     internal val executorService: ScheduledExecutorService = Executors.newScheduledThreadPool(numberOfThreadsInPool)
 
     private val basePathManager = BasePathManager(configuration)
-    internal val retrofitManager = RetrofitManager(this)
+    internal val retrofitManager = RetrofitManager(this, configuration)
     internal val publishSequenceManager = PublishSequenceManager(MAX_SEQUENCE)
     internal val tokenManager: TokenManager = TokenManager()
     private val tokenParser: TokenParser = TokenParser()
@@ -185,8 +185,6 @@ class PubNubCore internal constructor(
     internal fun baseUrl() = basePathManager.basePath()
 
     internal fun requestId() = UUID.randomUUID().toString()
-
-    internal fun timestamp() = (Date().time / TIMESTAMP_DIVIDER).toInt()
     //endregion
 
     fun generatePnsdk(): String {

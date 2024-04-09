@@ -18,8 +18,8 @@ class WhereNowEndpoint internal constructor(
     override val uuid: String = pubnub.configuration.userId.value,
 ) : EndpointCore<Envelope<WhereNowPayload>, PNWhereNowResult>(pubnub), WhereNowInterface {
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<WhereNowPayload>> {
-        return pubnub.retrofitManager.presenceService.whereNow(
-            pubnub.configuration.subscribeKey,
+        return retrofitManager.presenceService.whereNow(
+            configuration.subscribeKey,
             uuid,
             queryParams,
         )

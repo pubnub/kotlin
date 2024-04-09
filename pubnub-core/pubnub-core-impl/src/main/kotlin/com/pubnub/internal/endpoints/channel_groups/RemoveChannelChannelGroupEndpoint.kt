@@ -18,7 +18,7 @@ class RemoveChannelChannelGroupEndpoint internal constructor(
     pubnub: PubNubCore,
     override val channelGroup: String,
     override val channels: List<String>,
-) : EndpointCore<Void, PNChannelGroupsRemoveChannelResult>(pubnub), IRemoveChannelChannelGroup {
+) : EndpointCore<Void, PNChannelGroupsRemoveChannelResult>(pubnub), RemoveChannelChannelGroupInterface {
     override fun getAffectedChannels() = channels
 
     override fun getAffectedChannelGroups() = listOf(channelGroup)
@@ -36,9 +36,9 @@ class RemoveChannelChannelGroupEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<Void> {
         addQueryParams(queryParams)
 
-        return pubnub.retrofitManager.channelGroupService
+        return retrofitManager.channelGroupService
             .removeChannel(
-                pubnub.configuration.subscribeKey,
+                configuration.subscribeKey,
                 channelGroup,
                 queryParams,
             )

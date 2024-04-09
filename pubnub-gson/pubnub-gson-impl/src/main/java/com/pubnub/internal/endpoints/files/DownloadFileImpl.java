@@ -5,16 +5,17 @@ import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.BuilderSteps;
 import com.pubnub.api.endpoints.files.DownloadFile;
 import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps;
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.files.PNDownloadFileResult;
+import com.pubnub.internal.EndpointInterface;
 import com.pubnub.internal.PubNubCore;
-import com.pubnub.internal.endpoints.DelegatingEndpoint;
+import com.pubnub.internal.endpoints.IdentityMappingEndpoint;
 import com.pubnub.internal.endpoints.files.requiredparambuilder.ChannelFileNameFileIdBuilder;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 
 @Accessors(chain = true, fluent = true)
-public class DownloadFileImpl extends DelegatingEndpoint<PNDownloadFileResult> implements DownloadFile {
+public class DownloadFileImpl extends IdentityMappingEndpoint<PNDownloadFileResult> implements DownloadFile {
 
     private final String channel;
     private final String fileId;
@@ -31,7 +32,8 @@ public class DownloadFileImpl extends DelegatingEndpoint<PNDownloadFileResult> i
     }
 
     @Override
-    protected ExtendedRemoteAction<PNDownloadFileResult> createAction() {
+    @NotNull
+    protected EndpointInterface<PNDownloadFileResult> createAction() {
         return pubnub.downloadFile(
                 channel,
                 fileName,

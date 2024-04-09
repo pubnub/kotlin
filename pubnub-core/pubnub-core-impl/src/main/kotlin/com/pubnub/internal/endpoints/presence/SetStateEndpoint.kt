@@ -45,8 +45,8 @@ class SetStateEndpoint internal constructor(
 
         addQueryParams(queryParams)
 
-        return pubnub.retrofitManager.presenceService.setState(
-            pubnub.configuration.subscribeKey,
+        return retrofitManager.presenceService.setState(
+            configuration.subscribeKey,
             channels.toCsv(),
             uuid,
             queryParams,

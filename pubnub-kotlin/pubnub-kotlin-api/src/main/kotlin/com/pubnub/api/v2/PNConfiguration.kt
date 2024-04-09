@@ -34,6 +34,8 @@ interface PNConfiguration : BasePNConfiguration {
         }
     }
 
+    fun override(): PNConfigurationOverride.Builder
+
     interface Builder : BasePNConfiguration.Builder {
         override var userId: UserId
         override var subscribeKey: String
@@ -73,6 +75,31 @@ interface PNConfiguration : BasePNConfiguration {
         override var pnsdkSuffixes: Map<String, String>
         override var retryConfiguration: RetryConfiguration
         override var managePresenceListManually: Boolean
+
+        fun build(): PNConfiguration
+    }
+}
+
+interface PNConfigurationOverride : BasePNConfigurationOverride {
+    companion object {
+        @JvmStatic
+        fun from(configuration: BasePNConfiguration): Builder {
+            return Class.forName("com.pubnub.internal.v2.PNConfigurationImpl\$Builder")
+                .getConstructor(BasePNConfiguration::class.java)
+                .newInstance(configuration) as Builder
+        }
+    }
+
+    interface Builder : BasePNConfigurationOverride.Builder {
+        override var subscribeKey: String
+        override var publishKey: String
+        override var secretKey: String
+        override var retryConfiguration: RetryConfiguration
+        override var userId: UserId
+        override var includeInstanceIdentifier: Boolean
+        override var includeRequestIdentifier: Boolean
+        override var authKey: String
+        override var cryptoModule: CryptoModule?
 
         fun build(): PNConfiguration
     }

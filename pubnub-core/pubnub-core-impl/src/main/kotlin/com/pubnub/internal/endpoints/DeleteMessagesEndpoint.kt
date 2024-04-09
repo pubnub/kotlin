@@ -31,8 +31,8 @@ class DeleteMessagesEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<Void> {
         addQueryParams(queryParams)
 
-        return pubnub.retrofitManager.historyService.deleteMessages(
-            pubnub.configuration.subscribeKey,
+        return retrofitManager.historyService.deleteMessages(
+            configuration.subscribeKey,
             channels.toCsv(),
             queryParams,
         )

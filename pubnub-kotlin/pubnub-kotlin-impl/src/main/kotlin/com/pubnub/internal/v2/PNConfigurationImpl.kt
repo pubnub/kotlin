@@ -7,6 +7,7 @@ import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.v2.BasePNConfiguration
 import com.pubnub.api.v2.PNConfiguration
+import com.pubnub.api.v2.PNConfigurationOverride
 import okhttp3.Authenticator
 import okhttp3.CertificatePinner
 import okhttp3.ConnectionSpec
@@ -57,10 +58,11 @@ class PNConfigurationImpl(
     override val pnsdkSuffixes: Map<String, String>,
     override val retryConfiguration: RetryConfiguration,
     override val managePresenceListManually: Boolean,
-) : BasePNConfigurationImpl(userId), PNConfiguration {
+) : BasePNConfigurationImpl(userId), PNConfiguration, PNConfigurationOverride {
     class Builder internal constructor(defaultConfiguration: BasePNConfiguration) :
         BasePNConfigurationImpl.Builder(defaultConfiguration),
-        PNConfiguration.Builder {
+        PNConfiguration.Builder,
+        PNConfigurationOverride.Builder {
             private val log = LoggerFactory.getLogger(this::class.simpleName)
 
             override var userId: UserId = super.userId
@@ -353,4 +355,8 @@ class PNConfigurationImpl(
                 )
             }
         }
+
+    override fun override(): PNConfigurationOverride.Builder {
+        return Builder(this)
+    }
 }

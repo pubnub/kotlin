@@ -1,22 +1,22 @@
 package com.pubnub.internal.endpoints.presence;
 
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
+import com.pubnub.api.endpoints.presence.Heartbeat;
+import com.pubnub.internal.EndpointInterface;
 import com.pubnub.internal.PubNubCore;
-import com.pubnub.internal.endpoints.DelegatingEndpoint;
+import com.pubnub.internal.endpoints.IdentityMappingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Setter
 @Accessors(chain = true, fluent = true)
-public class HeartbeatImpl extends DelegatingEndpoint<Boolean> implements com.pubnub.api.endpoints.presence.Heartbeat {
+public class HeartbeatImpl extends IdentityMappingEndpoint<Boolean> implements Heartbeat {
 
-    @Setter
     private List<String> channels;
-    @Setter
     private List<String> channelGroups;
-    @Setter
     private Object state;
 
     public HeartbeatImpl(PubNubCore pubnub) {
@@ -26,7 +26,8 @@ public class HeartbeatImpl extends DelegatingEndpoint<Boolean> implements com.pu
     }
 
     @Override
-    protected ExtendedRemoteAction<Boolean> createAction() {
+    @NotNull
+    protected EndpointInterface<Boolean> createAction() {
         return new HeartbeatEndpoint(pubnub, channels, channelGroups, state);
     }
 }

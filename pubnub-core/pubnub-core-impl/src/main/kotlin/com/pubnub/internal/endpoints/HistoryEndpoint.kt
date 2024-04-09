@@ -50,8 +50,8 @@ class HistoryEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<JsonElement> {
         addQueryParams(queryParams)
 
-        return pubnub.retrofitManager.historyService.fetchHistory(
-            pubnub.configuration.subscribeKey,
+        return retrofitManager.historyService.fetchHistory(
+            configuration.subscribeKey,
             channel,
             queryParams,
         )
@@ -84,7 +84,7 @@ class HistoryEndpoint internal constructor(
                 if (includeTimetoken || includeMeta) {
                     historyMessageWithError =
                         pubnub.mapper.getField(historyEntry, "message")!!
-                            .tryDecryptMessage(pubnub.cryptoModule, pubnub.mapper)
+                            .tryDecryptMessage(configuration.cryptoModule, pubnub.mapper)
                     if (includeTimetoken) {
                         timetoken = pubnub.mapper.elementToLong(historyEntry, "timetoken")
                     }
@@ -92,7 +92,7 @@ class HistoryEndpoint internal constructor(
                         meta = pubnub.mapper.getField(historyEntry, "meta")
                     }
                 } else {
-                    historyMessageWithError = historyEntry.tryDecryptMessage(pubnub.cryptoModule, pubnub.mapper)
+                    historyMessageWithError = historyEntry.tryDecryptMessage(configuration.cryptoModule, pubnub.mapper)
                 }
 
                 val message: JsonElement = historyMessageWithError.first

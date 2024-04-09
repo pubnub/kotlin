@@ -16,9 +16,9 @@ class ListAllChannelGroupEndpoint internal constructor(pubnub: PubNubCore) :
     EndpointCore<Envelope<Map<String, Any>>, PNChannelGroupsListAllResult>(pubnub),
     ListAllChannelGroupInterface {
         override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<Map<String, Any>>> {
-            return pubnub.retrofitManager.channelGroupService
+            return retrofitManager.channelGroupService
                 .listAllChannelGroup(
-                    pubnub.configuration.subscribeKey,
+                    configuration.subscribeKey,
                     queryParams,
                 )
         }

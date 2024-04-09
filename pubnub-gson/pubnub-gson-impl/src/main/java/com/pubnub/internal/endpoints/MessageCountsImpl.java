@@ -3,17 +3,18 @@ package com.pubnub.internal.endpoints;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.MessageCounts;
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.history.PNMessageCountResult;
+import com.pubnub.internal.EndpointInterface;
 import com.pubnub.internal.PubNubCore;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class MessageCountsImpl extends DelegatingEndpoint<PNMessageCountResult> implements MessageCounts {
+public class MessageCountsImpl extends IdentityMappingEndpoint<PNMessageCountResult> implements MessageCounts {
 
     /**
      * The channel name you wish to pull history from. May be a single channel, or multiple channels, separated by
@@ -32,7 +33,8 @@ public class MessageCountsImpl extends DelegatingEndpoint<PNMessageCountResult> 
     }
 
     @Override
-    protected ExtendedRemoteAction<PNMessageCountResult> createAction() {
+    @NotNull
+    protected EndpointInterface<PNMessageCountResult> createAction() {
         return pubnub.messageCounts(channels, channelsTimetoken);
     }
 

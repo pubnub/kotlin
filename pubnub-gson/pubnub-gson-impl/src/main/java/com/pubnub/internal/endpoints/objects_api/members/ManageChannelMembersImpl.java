@@ -9,13 +9,16 @@ import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects_api.member.PNManageChannelMembersResult;
 import com.pubnub.api.models.consumer.objects_api.member.PNUUID;
+import com.pubnub.internal.EndpointInterface;
 import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.internal.models.consumer.objects.member.MemberInput;
 import com.pubnub.internal.models.consumer.objects.member.PNMember;
+import com.pubnub.internal.models.consumer.objects.member.PNMemberArrayResult;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,7 +27,7 @@ import java.util.List;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class ManageChannelMembersImpl extends DelegatingEndpoint<PNManageChannelMembersResult> implements ManageChannelMembers {
+public class ManageChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayResult, PNManageChannelMembersResult> implements ManageChannelMembers {
 
     private Integer limit = null;
     private PNPage page;
@@ -44,8 +47,15 @@ public class ManageChannelMembersImpl extends DelegatingEndpoint<PNManageChannel
         this.uuidsToRemove = uuidsToRemove;
     }
 
+    @NotNull
     @Override
-    protected ExtendedRemoteAction<PNManageChannelMembersResult> createAction() {
+    protected ExtendedRemoteAction<PNManageChannelMembersResult> mapResult(@NotNull ExtendedRemoteAction<PNMemberArrayResult> action) {
+        return new MappingRemoteAction<>(action, PNManageChannelMembersResult::from);
+    }
+
+    @Override
+    @NotNull
+    protected EndpointInterface<PNMemberArrayResult> createAction() {
         List<String> toRemove = new ArrayList<String>(uuidsToRemove.size());
         for (PNUUID pnuuid : uuidsToRemove) {
             toRemove.add(pnuuid.getUuid().getId());
@@ -59,7 +69,7 @@ public class ManageChannelMembersImpl extends DelegatingEndpoint<PNManageChannel
             ));
         }
 
-        return new MappingRemoteAction<>(pubnub.manageChannelMembers(
+        return pubnub.manageChannelMembers(
                 channel,
                 toSet,
                 toRemove,
@@ -70,7 +80,7 @@ public class ManageChannelMembersImpl extends DelegatingEndpoint<PNManageChannel
                 includeTotalCount,
                 includeCustom,
                 SetChannelMembersImpl.toInternal(includeUUID)
-        ), PNManageChannelMembersResult::from);
+        );
     }
 
     @AllArgsConstructor

@@ -6,15 +6,16 @@ import com.pubnub.api.endpoints.BuilderSteps.ChannelStep;
 import com.pubnub.api.endpoints.files.DeleteFile;
 import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps.FileIdStep;
 import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps.FileNameStep;
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.files.PNDeleteFileResult;
+import com.pubnub.internal.EndpointInterface;
 import com.pubnub.internal.PubNubCore;
-import com.pubnub.internal.endpoints.DelegatingEndpoint;
+import com.pubnub.internal.endpoints.IdentityMappingEndpoint;
 import com.pubnub.internal.endpoints.files.requiredparambuilder.ChannelFileNameFileIdBuilder;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 
 @Accessors(chain = true, fluent = true)
-public class DeleteFileImpl extends DelegatingEndpoint<PNDeleteFileResult> implements DeleteFile {
+public class DeleteFileImpl extends IdentityMappingEndpoint<PNDeleteFileResult> implements DeleteFile {
 
     private final String channel;
     private final String fileId;
@@ -28,7 +29,8 @@ public class DeleteFileImpl extends DelegatingEndpoint<PNDeleteFileResult> imple
     }
 
     @Override
-    protected ExtendedRemoteAction<PNDeleteFileResult> createAction() {
+    @NotNull
+    protected EndpointInterface<PNDeleteFileResult> createAction() {
         return pubnub.deleteFile(
                 channel,
                 fileName,

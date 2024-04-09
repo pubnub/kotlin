@@ -3,17 +3,18 @@ package com.pubnub.internal.endpoints.message_actions;
 import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.endpoints.message_actions.GetMessageActions;
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.PNBoundedPage;
 import com.pubnub.api.models.consumer.message_actions.PNGetMessageActionsResult;
+import com.pubnub.internal.EndpointInterface;
 import com.pubnub.internal.PubNubCore;
-import com.pubnub.internal.endpoints.DelegatingEndpoint;
+import com.pubnub.internal.endpoints.IdentityMappingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class GetMessageActionsImpl extends DelegatingEndpoint<PNGetMessageActionsResult> implements GetMessageActions {
+public class GetMessageActionsImpl extends IdentityMappingEndpoint<PNGetMessageActionsResult> implements GetMessageActions {
 
     private String channel;
     private Long start;
@@ -32,7 +33,8 @@ public class GetMessageActionsImpl extends DelegatingEndpoint<PNGetMessageAction
     }
 
     @Override
-    protected ExtendedRemoteAction<PNGetMessageActionsResult> createAction() {
+    @NotNull
+    protected EndpointInterface<PNGetMessageActionsResult> createAction() {
         return pubnub.getMessageActions(channel, new PNBoundedPage(start, end, limit));
     }
 }

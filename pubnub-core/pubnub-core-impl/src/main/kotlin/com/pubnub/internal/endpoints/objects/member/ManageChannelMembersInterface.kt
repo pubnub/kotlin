@@ -1,3 +1,5 @@
 package com.pubnub.internal.endpoints.objects.member
 
-interface ManageChannelMembersInterface
+import com.pubnub.api.endpoints.HasOverridableConfig
+
+interface ManageChannelMembersInterface : HasOverridableConfig

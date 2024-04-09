@@ -3,16 +3,17 @@ package com.pubnub.internal.endpoints.access;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.access.RevokeToken;
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
+import com.pubnub.internal.EndpointInterface;
 import com.pubnub.internal.PubNubCore;
-import com.pubnub.internal.endpoints.DelegatingEndpoint;
+import com.pubnub.internal.endpoints.IdentityMappingEndpoint;
 import kotlin.Unit;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class RevokeTokenImpl extends DelegatingEndpoint<Unit> implements RevokeToken {
+public class RevokeTokenImpl extends IdentityMappingEndpoint<Unit> implements RevokeToken {
 
     private String token;
 
@@ -21,7 +22,8 @@ public class RevokeTokenImpl extends DelegatingEndpoint<Unit> implements RevokeT
     }
 
     @Override
-    protected ExtendedRemoteAction<Unit> createAction() {
+    @NotNull
+    protected EndpointInterface<Unit> createAction() {
         return pubnub.revokeToken(token);
     }
 

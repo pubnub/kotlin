@@ -37,8 +37,8 @@ class HeartbeatEndpoint internal constructor(
                 ","
             }
 
-        return pubnub.retrofitManager.presenceService.heartbeat(
-            pubnub.configuration.subscribeKey,
+        return retrofitManager.presenceService.heartbeat(
+            configuration.subscribeKey,
             channelsCsv,
             queryParams,
         )
@@ -55,7 +55,7 @@ class HeartbeatEndpoint internal constructor(
             queryParams["state"] = pubnub.mapper.toJson(it)
         }
 
-        PubNubUtil.maybeAddEeQueryParam(pubnub.configuration, queryParams)
+        PubNubUtil.maybeAddEeQueryParam(queryParams)
     }
 
     override fun createResponse(input: Response<Void>): Boolean {

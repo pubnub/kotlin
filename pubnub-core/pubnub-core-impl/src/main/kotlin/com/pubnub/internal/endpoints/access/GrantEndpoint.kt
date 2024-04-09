@@ -48,9 +48,9 @@ open class GrantEndpoint(
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<AccessManagerGrantPayload>> {
         addQueryParams(queryParams)
 
-        return pubnub.retrofitManager.accessManagerService
+        return retrofitManager.accessManagerService
             .grant(
-                subKey = pubnub.configuration.subscribeKey,
+                subKey = configuration.subscribeKey,
                 options = queryParams,
             )
     }

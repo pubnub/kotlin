@@ -6,6 +6,7 @@ import com.pubnub.api.endpoints.presence.SetState;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.presence.PNSetStateResult;
+import com.pubnub.internal.EndpointInterface;
 import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import lombok.Setter;
@@ -20,7 +21,7 @@ import java.util.List;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class SetStateImpl extends DelegatingEndpoint<PNSetStateResult> implements SetState {
+public class SetStateImpl extends DelegatingEndpoint<Object, PNSetStateResult> implements SetState {
     @NotNull
     private List<String> channels = new ArrayList<>();
     @NotNull
@@ -61,11 +62,22 @@ public class SetStateImpl extends DelegatingEndpoint<PNSetStateResult> implement
         return true;
     }
 
+    @NotNull
     @Override
-    protected ExtendedRemoteAction<PNSetStateResult> createAction() {
+    protected ExtendedRemoteAction<PNSetStateResult> mapResult(@NotNull ExtendedRemoteAction<Object> action) {
+        if (withHeartbeat) {
+            return new MappingRemoteAction<>(action, result -> new PNSetStateResult(pubnub.getMapper().toJsonTree(state)));
+        } else {
+            return new MappingRemoteAction<>(action, result -> (PNSetStateResult) result);
+        }
+    }
+
+    @Override
+    @NotNull
+    protected EndpointInterface<Object> createAction() {
         if (!withHeartbeat) {
             // Regular way of setting presence explicitly is through SetPresenceState:
-            return pubnub.setPresenceState(
+            return (EndpointInterface<Object>) (Object) pubnub.setPresenceState(
                     channels,
                     channelGroups,
                     state,
@@ -74,8 +86,7 @@ public class SetStateImpl extends DelegatingEndpoint<PNSetStateResult> implement
         } else {
             // Some clients require alternative way of setting it through Heartbeat
             // Which is a feature brought over from the legacy Java SDK, and we need to be compatible:
-            return new MappingRemoteAction<>(
-                    new HeartbeatEndpoint(pubnub, channels, channelGroups, state), aBoolean -> new PNSetStateResult(pubnub.getMapper().toJsonTree(state)));
+            return (EndpointInterface<Object>) (Object) new HeartbeatEndpoint(pubnub, channels, channelGroups, state);
         }
     }
 }

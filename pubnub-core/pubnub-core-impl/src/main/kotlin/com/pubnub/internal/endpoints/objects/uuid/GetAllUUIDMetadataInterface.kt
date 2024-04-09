@@ -1,3 +1,5 @@
 package com.pubnub.internal.endpoints.objects.uuid
 
-interface GetAllUUIDMetadataInterface
+import com.pubnub.api.endpoints.HasOverridableConfig
+
+interface GetAllUUIDMetadataInterface : HasOverridableConfig

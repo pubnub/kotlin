@@ -36,8 +36,8 @@ class GetStateEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<JsonElement>> {
         addQueryParams(queryParams)
 
-        return pubnub.retrofitManager.presenceService.getState(
-            pubnub.configuration.subscribeKey,
+        return retrofitManager.presenceService.getState(
+            configuration.subscribeKey,
             channels.toCsv(),
             uuid,
             queryParams,

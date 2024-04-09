@@ -32,9 +32,9 @@ class ManageChannelMembersEndpoint(
         val params =
             queryParams + collectionQueryParameters.createCollectionQueryParams() + includeQueryParam.createIncludeQueryParams()
 
-        return pubnub.retrofitManager.objectsService.patchChannelMembers(
+        return retrofitManager.objectsService.patchChannelMembers(
             channel = channel,
-            subKey = pubnub.configuration.subscribeKey,
+            subKey = configuration.subscribeKey,
             options = params,
             body =
                 ChangeMemberInput(

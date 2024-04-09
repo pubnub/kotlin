@@ -41,7 +41,7 @@ open class PublishFileMessageEndpoint(
     @Throws(PubNubException::class)
     override fun doWork(queryParams: HashMap<String, String>): Call<List<Any>> {
         val stringifiedMessage: String = pubnub.mapper.toJson(FileUploadNotification(message, pnFile))
-        val messageAsString = pubnub.cryptoModule?.encryptString(stringifiedMessage)?.quoted() ?: stringifiedMessage
+        val messageAsString = configuration.cryptoModule?.encryptString(stringifiedMessage)?.quoted() ?: stringifiedMessage
         meta?.let {
             val stringifiedMeta: String = pubnub.mapper.toJson(it)
             queryParams["meta"] = stringifiedMeta
@@ -49,9 +49,9 @@ open class PublishFileMessageEndpoint(
         shouldStore?.numericString?.let { queryParams["store"] = it }
         ttl?.let { queryParams["ttl"] = it.toString() }
 
-        return pubnub.retrofitManager.filesService.notifyAboutFileUpload(
-            pubnub.configuration.publishKey,
-            pubnub.configuration.subscribeKey,
+        return retrofitManager.filesService.notifyAboutFileUpload(
+            configuration.publishKey,
+            configuration.subscribeKey,
             channel,
             messageAsString,
             queryParams,

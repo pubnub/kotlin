@@ -1,9 +1,9 @@
 package com.pubnub.internal.endpoints.presence
 
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.models.consumer.presence.PNSetStateResult
+import com.pubnub.internal.EndpointInterface
 
-interface SetStateInterface : ExtendedRemoteAction<PNSetStateResult> {
+interface SetStateInterface : EndpointInterface<PNSetStateResult> {
     val channels: List<String>
     val channelGroups: List<String>
     val state: Any

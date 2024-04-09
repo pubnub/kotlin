@@ -27,9 +27,9 @@ class DeleteChannelGroupEndpoint internal constructor(
     override fun getAffectedChannelGroups() = listOf(channelGroup)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Void> {
-        return pubnub.retrofitManager.channelGroupService
+        return retrofitManager.channelGroupService
             .deleteChannelGroup(
-                pubnub.configuration.subscribeKey,
+                configuration.subscribeKey,
                 channelGroup,
                 queryParams,
             )

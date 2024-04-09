@@ -1,3 +1,5 @@
 package com.pubnub.internal.endpoints.objects.membership
 
-interface ManageMembershipsInterface
+import com.pubnub.api.endpoints.HasOverridableConfig
+
+interface ManageMembershipsInterface : HasOverridableConfig

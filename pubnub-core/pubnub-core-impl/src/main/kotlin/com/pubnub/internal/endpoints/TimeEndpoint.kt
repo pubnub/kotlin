@@ -17,7 +17,7 @@ class TimeEndpoint(pubnub: PubNubCore, private val excludeFromRetry: Boolean = f
 
     override fun getAffectedChannelGroups() = emptyList<String>()
 
-    override fun doWork(queryParams: HashMap<String, String>) = pubnub.retrofitManager.timeService.fetchTime(queryParams)
+    override fun doWork(queryParams: HashMap<String, String>) = retrofitManager.timeService.fetchTime(queryParams)
 
     override fun createResponse(input: Response<List<Long>>): PNTimeResult {
         return PNTimeResult(input.body()!![0])

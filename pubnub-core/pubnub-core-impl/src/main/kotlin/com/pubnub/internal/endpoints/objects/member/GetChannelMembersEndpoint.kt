@@ -26,9 +26,9 @@ class GetChannelMembersEndpoint internal constructor(
         val params =
             queryParams + collectionQueryParameters.createCollectionQueryParams() + includeQueryParam.createIncludeQueryParams()
 
-        return pubnub.retrofitManager.objectsService.getChannelMembers(
+        return retrofitManager.objectsService.getChannelMembers(
             channel = channel,
-            subKey = pubnub.configuration.subscribeKey,
+            subKey = configuration.subscribeKey,
             options = params,
         )
     }

@@ -76,14 +76,14 @@ class FetchMessagesEndpoint internal constructor(
         addQueryParams(queryParams)
 
         return if (!includeMessageActions) {
-            pubnub.retrofitManager.historyService.fetchMessages(
-                subKey = pubnub.configuration.subscribeKey,
+            retrofitManager.historyService.fetchMessages(
+                subKey = configuration.subscribeKey,
                 channels = channels.toCsv(),
                 options = queryParams,
             )
         } else {
-            pubnub.retrofitManager.historyService.fetchMessagesWithActions(
-                subKey = pubnub.configuration.subscribeKey,
+            retrofitManager.historyService.fetchMessagesWithActions(
+                subKey = configuration.subscribeKey,
                 channel = channels.first(),
                 options = queryParams,
             )
@@ -97,7 +97,7 @@ class FetchMessagesEndpoint internal constructor(
                 value.map { serverMessageItem ->
                     val (newMessage, error) =
                         serverMessageItem.message.tryDecryptMessage(
-                            pubnub.cryptoModule,
+                            configuration.cryptoModule,
                             pubnub.mapper,
                         )
                     val newActions =

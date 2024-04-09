@@ -1,19 +1,20 @@
 package com.pubnub.internal.endpoints.presence;
 
 import com.pubnub.api.endpoints.presence.GetState;
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.presence.PNGetStateResult;
+import com.pubnub.internal.EndpointInterface;
 import com.pubnub.internal.PubNubCore;
-import com.pubnub.internal.endpoints.DelegatingEndpoint;
+import com.pubnub.internal.endpoints.IdentityMappingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class GetStateImpl extends DelegatingEndpoint<PNGetStateResult> implements GetState {
+public class GetStateImpl extends IdentityMappingEndpoint<PNGetStateResult> implements GetState {
 
     private List<String> channels = new ArrayList<>();
     private List<String> channelGroups = new ArrayList<>();
@@ -25,7 +26,8 @@ public class GetStateImpl extends DelegatingEndpoint<PNGetStateResult> implement
     }
 
     @Override
-    protected ExtendedRemoteAction<PNGetStateResult> createAction() {
+    @NotNull
+    protected EndpointInterface<PNGetStateResult> createAction() {
         return pubnub.getPresenceState(
                 channels,
                 channelGroups,

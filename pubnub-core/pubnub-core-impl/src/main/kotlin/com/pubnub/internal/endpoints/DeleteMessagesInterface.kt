@@ -1,9 +1,9 @@
 package com.pubnub.internal.endpoints
 
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.models.consumer.history.PNDeleteMessagesResult
+import com.pubnub.internal.EndpointInterface
 
-interface DeleteMessagesInterface : ExtendedRemoteAction<PNDeleteMessagesResult> {
+interface DeleteMessagesInterface : EndpointInterface<PNDeleteMessagesResult> {
     val channels: List<String>
     val start: Long?
     val end: Long?

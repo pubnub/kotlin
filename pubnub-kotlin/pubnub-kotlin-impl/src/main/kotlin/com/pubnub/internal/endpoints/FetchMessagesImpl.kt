@@ -1,6 +1,8 @@
 package com.pubnub.internal.endpoints
 
 import com.pubnub.api.endpoints.FetchMessages
+import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
+import com.pubnub.internal.EndpointImpl
 import com.pubnub.internal.PubNubImpl
 
 /**
@@ -8,4 +10,5 @@ import com.pubnub.internal.PubNubImpl
  */
 class FetchMessagesImpl internal constructor(fetchMessages: FetchMessagesInterface) :
     FetchMessagesInterface by fetchMessages,
-    FetchMessages
+    FetchMessages,
+    EndpointImpl<PNFetchMessagesResult>(fetchMessages)

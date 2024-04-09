@@ -8,8 +8,10 @@ import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects_api.membership.PNChannelMembership;
 import com.pubnub.api.models.consumer.objects_api.membership.PNRemoveMembershipResult;
+import com.pubnub.internal.EndpointInterface;
 import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
+import com.pubnub.internal.models.consumer.objects.membership.PNChannelMembershipArrayResult;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -21,7 +23,7 @@ import java.util.Collections;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class RemoveMembershipsImpl extends DelegatingEndpoint<PNRemoveMembershipResult> implements RemoveMemberships {
+public class RemoveMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipArrayResult, PNRemoveMembershipResult> implements RemoveMemberships {
     private final Collection<PNChannelMembership> channelMemberships;
     private String uuid;
     private Integer limit;
@@ -37,25 +39,30 @@ public class RemoveMembershipsImpl extends DelegatingEndpoint<PNRemoveMembership
         this.channelMemberships = channelMemberships;
     }
 
+    @NotNull
     @Override
-    protected ExtendedRemoteAction<PNRemoveMembershipResult> createAction() {
+    protected ExtendedRemoteAction<PNRemoveMembershipResult> mapResult(@NotNull ExtendedRemoteAction<PNChannelMembershipArrayResult> action) {
+        return new MappingRemoteAction<>(action, PNRemoveMembershipResult::from);
+    }
+
+    @Override
+    @NotNull
+    protected EndpointInterface<PNChannelMembershipArrayResult> createAction() {
         ArrayList<String> channelList = new ArrayList<>(channelMemberships.size());
         for (PNChannelMembership channel : channelMemberships) {
             channelList.add(channel.getChannel().getId());
         }
-        return new MappingRemoteAction<>(
-                pubnub.removeMemberships(
-                        channelList,
-                        uuid,
-                        limit,
-                        page,
-                        filter,
-                        SetMembershipsImpl.toInternal(sort),
-                        includeTotalCount,
-                        includeCustom,
-                        SetMembershipsImpl.toInternal(includeChannel)
-                ),
-                PNRemoveMembershipResult::from);
+        return pubnub.removeMemberships(
+                channelList,
+                uuid,
+                limit,
+                page,
+                filter,
+                SetMembershipsImpl.toInternal(sort),
+                includeTotalCount,
+                includeCustom,
+                SetMembershipsImpl.toInternal(includeChannel)
+        );
     }
 
     @AllArgsConstructor

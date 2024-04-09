@@ -6,6 +6,7 @@ import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.v2.BasePNConfiguration
+import com.pubnub.api.v2.BasePNConfigurationOverride
 import okhttp3.Authenticator
 import okhttp3.CertificatePinner
 import okhttp3.ConnectionSpec
@@ -75,7 +76,7 @@ open class BasePNConfigurationImpl internal constructor(
         userId: UserId,
     ) : this(userId, "")
 
-    abstract class Builder(defaultConfiguration: BasePNConfiguration) : BasePNConfiguration.Builder {
+    abstract class Builder(defaultConfiguration: BasePNConfiguration) : BasePNConfiguration.Builder, BasePNConfigurationOverride.Builder {
         override val userId: UserId = defaultConfiguration.userId
 
         override val subscribeKey: String = defaultConfiguration.subscribeKey

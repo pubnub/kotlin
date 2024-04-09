@@ -2,13 +2,14 @@ package com.pubnub.internal.endpoints.message_actions;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.endpoints.message_actions.AddMessageAction;
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult;
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction;
+import com.pubnub.internal.EndpointInterface;
 import com.pubnub.internal.PubNubCore;
-import com.pubnub.internal.endpoints.DelegatingEndpoint;
+import com.pubnub.internal.endpoints.IdentityMappingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 
 import static com.pubnub.api.builder.PubNubErrorBuilder.PNERROBJ_CHANNEL_MISSING;
 import static com.pubnub.api.builder.PubNubErrorBuilder.PNERROBJ_MESSAGE_ACTION_MISSING;
@@ -17,7 +18,7 @@ import static com.pubnub.api.builder.PubNubErrorBuilder.PNERROBJ_MESSAGE_TIMETOK
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class AddMessageActionImpl extends DelegatingEndpoint<PNAddMessageActionResult> implements AddMessageAction {
+public class AddMessageActionImpl extends IdentityMappingEndpoint<PNAddMessageActionResult> implements AddMessageAction {
 
     private String channel;
     private PNMessageAction messageAction;
@@ -27,7 +28,8 @@ public class AddMessageActionImpl extends DelegatingEndpoint<PNAddMessageActionR
     }
 
     @Override
-    protected ExtendedRemoteAction<PNAddMessageActionResult> createAction() {
+    @NotNull
+    protected EndpointInterface<PNAddMessageActionResult> createAction() {
         return pubnub.addMessageAction(channel, messageAction);
     }
 

@@ -1,6 +1,8 @@
 package com.pubnub.internal.endpoints.access
 
-interface GrantInterface {
+import com.pubnub.api.endpoints.HasOverridableConfig
+
+interface GrantInterface : HasOverridableConfig {
     val read: Boolean
     val write: Boolean
     val manage: Boolean

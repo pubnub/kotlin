@@ -2,9 +2,9 @@ package com.pubnub.internal.endpoints;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.PNBoundedPage;
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult;
+import com.pubnub.internal.EndpointInterface;
 import com.pubnub.internal.PubNubCore;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -17,7 +17,7 @@ import java.util.List;
 @Setter
 @Slf4j
 @Accessors(chain = true, fluent = true)
-public class FetchMessagesImpl extends DelegatingEndpoint<PNFetchMessagesResult> implements com.pubnub.api.endpoints.FetchMessages {
+public class FetchMessagesImpl extends IdentityMappingEndpoint<PNFetchMessagesResult> implements com.pubnub.api.endpoints.FetchMessages {
     private static final int SINGLE_CHANNEL_DEFAULT_MESSAGES = 100;
     private static final int SINGLE_CHANNEL_MAX_MESSAGES = 100;
     private static final int MULTIPLE_CHANNEL_DEFAULT_MESSAGES = 25;
@@ -39,9 +39,9 @@ public class FetchMessagesImpl extends DelegatingEndpoint<PNFetchMessagesResult>
         super(pubnub);
     }
 
-    @NotNull
     @Override
-    protected ExtendedRemoteAction<PNFetchMessagesResult> createAction() {
+    @NotNull
+    protected EndpointInterface<PNFetchMessagesResult> createAction() {
         return pubnub.fetchMessages(
                 channels,
                 new PNBoundedPage(start, end, maximumPerChannel),

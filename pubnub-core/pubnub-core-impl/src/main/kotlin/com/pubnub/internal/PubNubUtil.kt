@@ -66,7 +66,13 @@ internal object PubNubUtil {
         if (!pnConfiguration.secretKey.isValid()) {
             return originalRequest
         }
-        val signature = generateSignature(pnConfiguration, originalRequest, timestamp)
+        val signature = generateSignature(
+            originalRequest,
+            timestamp,
+            pnConfiguration.subscribeKey,
+            pnConfiguration.publishKey,
+            pnConfiguration.secretKey,
+        )
         val rebuiltUrl =
             originalRequest.url.newBuilder()
                 .addQueryParameter("timestamp", timestamp.toString())
@@ -80,12 +86,14 @@ internal object PubNubUtil {
     }
 
     fun generateSignature(
-        configuration: BasePNConfiguration,
         requestURL: String,
         queryParams: MutableMap<String, String>,
         method: String,
         requestBody: String?,
         timestamp: Int,
+        subscribeKey: String,
+        publishKey: String,
+        secretKey: String,
     ): String {
         val signatureBuilder = StringBuilder()
         queryParams["timestamp"] = timestamp.toString()
@@ -100,13 +108,13 @@ internal object PubNubUtil {
 
         val isV2Signature: Boolean = !(requestURL.startsWith("/publish") && method.equals("post", ignoreCase = true))
         if (!isV2Signature) {
-            signatureBuilder.append(configuration.subscribeKey).append("\n")
-            signatureBuilder.append(configuration.publishKey).append("\n")
+            signatureBuilder.append(subscribeKey).append("\n")
+            signatureBuilder.append(publishKey).append("\n")
             signatureBuilder.append(requestURL).append("\n")
             signatureBuilder.append(encodedQueryString)
         } else {
             signatureBuilder.append(method.uppercase(Locale.getDefault())).append("\n")
-            signatureBuilder.append(configuration.publishKey).append("\n")
+            signatureBuilder.append(publishKey).append("\n")
             signatureBuilder.append(requestURL).append("\n")
             signatureBuilder.append(encodedQueryString).append("\n")
             signatureBuilder.append(requestBody)
@@ -114,7 +122,7 @@ internal object PubNubUtil {
 
         var signature = ""
         try {
-            signature = signSHA256(configuration.secretKey, signatureBuilder.toString())
+            signature = signSHA256(secretKey, signatureBuilder.toString())
             if (isV2Signature) {
                 signature = removeTrailingEqualSigns(signature)
                 signature = "v2.$signature"
@@ -158,10 +166,12 @@ internal object PubNubUtil {
     }
 
     private fun generateSignature(
-        configuration: BasePNConfiguration,
         request: Request,
         timestamp: Int,
-    ): String? {
+        subscribeKey: String,
+        publishKey: String,
+        secretKey: String,
+    ): String {
         val queryParams: MutableMap<String, String> = mutableMapOf()
         for (queryKey: String in request.url.queryParameterNames) {
             val value = request.url.queryParameter(queryKey)
@@ -170,12 +180,14 @@ internal object PubNubUtil {
             }
         }
         return generateSignature(
-            configuration,
             request.url.encodedPath,
             queryParams,
             request.method,
             requestBodyToString(request),
             timestamp,
+            subscribeKey,
+            publishKey,
+            secretKey,
         )
     }
 
@@ -244,10 +256,7 @@ internal object PubNubUtil {
         }
     }
 
-    internal fun maybeAddEeQueryParam(
-        configuration: BasePNConfiguration,
-        queryParams: MutableMap<String, String>,
-    ) {
+    internal fun maybeAddEeQueryParam(queryParams: MutableMap<String, String>) {
         queryParams["ee"] = ""
     }
 }

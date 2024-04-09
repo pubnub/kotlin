@@ -38,8 +38,8 @@ class MessageCountsEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<JsonElement> {
         addQueryParams(queryParams)
 
-        return pubnub.retrofitManager.historyService.fetchCount(
-            subKey = pubnub.configuration.subscribeKey,
+        return retrofitManager.historyService.fetchCount(
+            subKey = configuration.subscribeKey,
             channels = channels.toCsv(),
             options = queryParams,
         )

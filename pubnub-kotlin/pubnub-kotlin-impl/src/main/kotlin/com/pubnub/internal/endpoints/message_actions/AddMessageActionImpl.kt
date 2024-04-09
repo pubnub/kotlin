@@ -1,6 +1,8 @@
 package com.pubnub.internal.endpoints.message_actions
 
 import com.pubnub.api.endpoints.message_actions.AddMessageAction
+import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult
+import com.pubnub.internal.EndpointImpl
 import com.pubnub.internal.PubNubImpl
 
 /**
@@ -8,4 +10,5 @@ import com.pubnub.internal.PubNubImpl
  */
 class AddMessageActionImpl internal constructor(addMessageAction: AddMessageActionInterface) :
     AddMessageActionInterface by addMessageAction,
-    AddMessageAction
+    AddMessageAction,
+    EndpointImpl<PNAddMessageActionResult>(addMessageAction)

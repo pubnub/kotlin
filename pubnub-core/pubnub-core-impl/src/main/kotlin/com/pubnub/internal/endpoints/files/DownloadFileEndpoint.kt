@@ -31,8 +31,8 @@ class DownloadFileEndpoint(
 
     @Throws(PubNubException::class)
     override fun doWork(queryParams: HashMap<String, String>): Call<ResponseBody> =
-        pubnub.retrofitManager.filesService.downloadFile(
-            pubnub.configuration.subscribeKey,
+        retrofitManager.filesService.downloadFile(
+            configuration.subscribeKey,
             channel,
             fileId,
             fileName,

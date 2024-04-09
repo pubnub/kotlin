@@ -3,12 +3,14 @@ package com.pubnub.api.integration
 import com.google.gson.JsonObject
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
+import com.pubnub.api.UserId
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
+import com.pubnub.api.v2.PNConfigurationOverride
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.getOrThrow
 import com.pubnub.api.v2.entities.Channel
@@ -133,6 +135,54 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             val msg = nextMessage()
             assertEquals(expectedChannel, msg.channel)
             assertEquals(observer.configuration.userId.value, msg.publisher)
+            assertEquals(messagePayload, msg.message)
+        }
+    }
+
+    @Test
+    fun testReceiveMessageWithConfigOverride() {
+        val expectedChannel = randomChannel()
+        val messagePayload = generateMessage(pubnub)
+        val expectedUser = PubNub.generateUUID()
+
+        val observer = createPubNub {}
+        pubnub.test {
+            subscribe(expectedChannel)
+            observer.publish(
+                message = messagePayload,
+                channel = expectedChannel,
+            ).apply {
+                overrideConfiguration {
+                    userId = UserId(expectedUser)
+                }
+            }.sync()
+            val msg = nextMessage()
+            assertEquals(expectedChannel, msg.channel)
+            assertEquals(expectedUser, msg.publisher)
+            assertEquals(messagePayload, msg.message)
+        }
+    }
+
+    @Test
+    fun testReceiveMessageWithConfigOverride2() {
+        val expectedChannel = randomChannel()
+        val messagePayload = generateMessage(pubnub)
+        val expectedUser = PubNub.generateUUID()
+
+        val observer = createPubNub {}
+        pubnub.test {
+            subscribe(expectedChannel)
+            observer.publish(
+                message = messagePayload,
+                channel = expectedChannel,
+            ).overrideConfiguration(
+                PNConfigurationOverride.from(pubnub.configuration).apply {
+                    userId = UserId(expectedUser)
+                }.build(),
+            ).sync()
+            val msg = nextMessage()
+            assertEquals(expectedChannel, msg.channel)
+            assertEquals(expectedUser, msg.publisher)
             assertEquals(messagePayload, msg.message)
         }
     }

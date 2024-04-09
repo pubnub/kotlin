@@ -3,16 +3,17 @@ package com.pubnub.internal.endpoints.files;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.files.ListFiles;
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.models.consumer.files.PNListFilesResult;
 import com.pubnub.api.models.consumer.objects.PNPage;
+import com.pubnub.internal.EndpointInterface;
 import com.pubnub.internal.PubNubCore;
-import com.pubnub.internal.endpoints.DelegatingEndpoint;
+import com.pubnub.internal.endpoints.IdentityMappingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 
 @Accessors(chain = true, fluent = true)
-public class ListFilesImpl extends DelegatingEndpoint<PNListFilesResult> implements ListFiles {
+public class ListFilesImpl extends IdentityMappingEndpoint<PNListFilesResult> implements ListFiles {
 
     private final String channel;
 
@@ -27,7 +28,8 @@ public class ListFilesImpl extends DelegatingEndpoint<PNListFilesResult> impleme
     }
 
     @Override
-    protected ExtendedRemoteAction<PNListFilesResult> createAction() {
+    @NotNull
+    protected EndpointInterface<PNListFilesResult> createAction() {
         return pubnub.listFiles(
                 channel,
                 limit,

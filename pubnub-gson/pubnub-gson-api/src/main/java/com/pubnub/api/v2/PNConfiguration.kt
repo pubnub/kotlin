@@ -5,6 +5,7 @@ import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.retry.RetryConfiguration
+import com.pubnub.api.v2.PNConfiguration.Builder
 import com.pubnub.internal.v2.BasePNConfigurationImpl
 import okhttp3.Authenticator
 import okhttp3.CertificatePinner
@@ -16,7 +17,7 @@ import javax.net.ssl.HostnameVerifier
 import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.X509ExtendedTrustManager
 
-interface PNConfiguration : BasePNConfiguration {
+interface PNConfiguration : BasePNConfiguration, PNConfigurationOverride {
     companion object {
         @JvmStatic
         fun builder(
@@ -31,35 +32,20 @@ interface PNConfiguration : BasePNConfiguration {
         }
     }
 
-    interface Builder : BasePNConfiguration.Builder {
-        fun build(): PNConfiguration
+    interface Builder : BasePNConfiguration.Builder, PNConfigurationOverride.Builder {
+        override fun build(): PNConfiguration
 
-        fun setUserId(userId: UserId): Builder
+        override fun setUserId(userId: UserId): Builder
 
-        fun subscribeKey(subscribeKey: String): Builder
+        override fun subscribeKey(subscribeKey: String): Builder
 
-        /**
-         * The publish key from the admin panel (only required if publishing).
-         */
-        fun publishKey(publishKey: String): Builder
+        override fun publishKey(publishKey: String): Builder
 
-        /**
-         * The secret key from the admin panel (only required for modifying/revealing access permissions).
-         *
-         * Keep away from Android.
-         */
-        fun secretKey(secretKey: String): Builder
+        override fun secretKey(secretKey: String): Builder
 
-        /**
-         * If Access Manager is utilized, client will use this authKey in all restricted requests.
-         */
-        fun authKey(authKey: String): Builder
+        override fun authKey(authKey: String): Builder
 
-        /**
-         * CryptoModule is responsible for handling encryption and decryption.
-         * If set, all communications to and from PubNub will be encrypted.
-         */
-        fun cryptoModule(cryptoModule: CryptoModule?): Builder
+        override fun cryptoModule(cryptoModule: CryptoModule?): Builder
 
         /**
          * Custom origin if needed.
@@ -170,14 +156,14 @@ interface PNConfiguration : BasePNConfiguration {
          *
          * Defaults to `false`.
          */
-        fun includeInstanceIdentifier(includeInstanceIdentifier: Boolean): Builder
+        override fun includeInstanceIdentifier(includeInstanceIdentifier: Boolean): Builder
 
         /**
          * Whether to include a [PubNubCore.requestId] with every request.
          *
          * Defaults to `true`.
          */
-        fun includeRequestIdentifier(includeRequestIdentifier: Boolean): Builder
+        override fun includeRequestIdentifier(includeRequestIdentifier: Boolean): Builder
 
         /**
          * @see [okhttp3.Dispatcher.setMaxRequestsPerHost]
@@ -261,7 +247,7 @@ interface PNConfiguration : BasePNConfiguration {
          *  Use [RetryConfiguration.Exponential] to set retry with exponential delay interval
          *  Delay will valy from provided value by random value.
          */
-        fun retryConfiguration(retryConfiguration: RetryConfiguration): Builder
+        override fun retryConfiguration(retryConfiguration: RetryConfiguration): Builder
 
         /**
          * Enables explicit presence control.
@@ -272,5 +258,71 @@ interface PNConfiguration : BasePNConfiguration {
          * @see BasePNConfigurationImpl.heartbeatInterval
          */
         fun managePresenceListManually(managePresenceListManually: Boolean): Builder
+    }
+}
+
+interface PNConfigurationOverride : BasePNConfigurationOverride {
+    companion object {
+        @JvmStatic
+        fun from(configuration: BasePNConfiguration): Builder {
+            return Class.forName("com.pubnub.internal.v2.PNConfigurationImpl\$Builder")
+                .getConstructor(BasePNConfiguration::class.java)
+                .newInstance(configuration) as Builder
+        }
+    }
+
+    interface Builder : BasePNConfigurationOverride.Builder {
+        fun setUserId(userId: UserId): Builder
+
+        fun subscribeKey(subscribeKey: String): Builder
+
+        /**
+         * The publish key from the admin panel (only required if publishing).
+         */
+        fun publishKey(publishKey: String): Builder
+
+        /**
+         * Retry configuration for requests.
+         *  Defaults to [RetryConfiguration.None].
+         *
+         *  Use [RetryConfiguration.Linear] to set retry with linear delay interval
+         *  Use [RetryConfiguration.Exponential] to set retry with exponential delay interval
+         *  Delay will valy from provided value by random value.
+         */
+        fun retryConfiguration(retryConfiguration: RetryConfiguration): Builder
+
+        /**
+         * Whether to include a [PubNubCore.instanceId] with every request.
+         *
+         * Defaults to `false`.
+         */
+        fun includeInstanceIdentifier(includeInstanceIdentifier: Boolean): Builder
+
+        /**
+         * Whether to include a [PubNubCore.requestId] with every request.
+         *
+         * Defaults to `true`.
+         */
+        fun includeRequestIdentifier(includeRequestIdentifier: Boolean): Builder
+
+        /**
+         * If Access Manager is utilized, client will use this authKey in all restricted requests.
+         */
+        fun authKey(authKey: String): Builder
+
+        /**
+         * CryptoModule is responsible for handling encryption and decryption.
+         * If set, all communications to and from PubNub will be encrypted.
+         */
+        fun cryptoModule(cryptoModule: CryptoModule?): Builder
+
+        /**
+         * The secret key from the admin panel (only required for modifying/revealing access permissions).
+         *
+         * Keep away from Android.
+         */
+        fun secretKey(secretKey: String): Builder
+
+        fun build(): PNConfiguration
     }
 }
