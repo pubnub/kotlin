@@ -1,3 +1,13 @@
+## v9.1.0
+April 09 2024
+
+#### Added
+- Added methods for publishing messages and signals on the `Channel` class. Also added new builder factories on `PubNub` with required parameters provided upfront, e.g. `PubNub.publish(message,channel)`. .
+- Allow overriding certain PubNub configuration options per API call through `Endpoint.overrideConfiguration`.
+
+#### Modified
+- Remaining classes from `com.pubnub.internal` package were hidden from compilation classpath. Users should only use classes in `com.pubnub.api` package.
+
 ## v9.0.0
 March 28 2024
 
