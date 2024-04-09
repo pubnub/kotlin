@@ -10,7 +10,6 @@ import org.junit.Assert
 import org.junit.Test
 
 class PNConfigurationIntegrationTests : BaseIntegrationTest() {
-
     @Test
     fun `create pubnub with immutable configuration`() {
         val expectedUuid = PubNub.generateUUID()
@@ -52,7 +51,6 @@ class PNConfigurationIntegrationTests : BaseIntegrationTest() {
 
         Assert.assertEquals(Keys.subKey, config.subscribeKey)
         Assert.assertEquals(Keys.pubKey, config.publishKey)
-
 
         val overrideConfig = PNConfigurationOverride.from(config).apply {
             publishKey = "overridePublishKey"
