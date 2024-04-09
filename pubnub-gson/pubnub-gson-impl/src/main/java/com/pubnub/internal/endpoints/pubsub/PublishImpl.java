@@ -4,6 +4,7 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.pubsub.Publish;
 import com.pubnub.api.models.consumer.PNPublishResult;
+import com.pubnub.api.v2.endpoints.pubsub.PublishBuilder;
 import com.pubnub.internal.EndpointInterface;
 import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.IdentityMappingEndpoint;
@@ -13,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class PublishImpl extends IdentityMappingEndpoint<PNPublishResult> implements Publish {
+public class PublishImpl extends IdentityMappingEndpoint<PNPublishResult> implements Publish, PublishBuilder {
 
     private Object message;
     private String channel;

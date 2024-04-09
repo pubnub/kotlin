@@ -61,6 +61,8 @@ import com.pubnub.api.endpoints.push.RemoveChannelsFromPush;
 import com.pubnub.api.v2.BasePNConfiguration;
 import com.pubnub.api.v2.callbacks.EventListener;
 import com.pubnub.api.v2.callbacks.StatusListener;
+import com.pubnub.api.v2.endpoints.pubsub.PublishBuilder;
+import com.pubnub.api.v2.endpoints.pubsub.SignalBuilder;
 import com.pubnub.api.v2.entities.Channel;
 import com.pubnub.api.v2.entities.ChannelGroup;
 import com.pubnub.api.v2.entities.ChannelMetadata;
@@ -291,8 +293,20 @@ public class PubNubImpl extends BasePubNubImpl<
 
     @Override
     @NotNull
+    public PublishBuilder publish(@NotNull Object message, @NotNull String channel) {
+        return new PublishImpl(getPubNubCore()).message(message).channel(channel);
+    }
+
+    @Override
+    @NotNull
     public Signal signal() {
         return new SignalImpl(getPubNubCore());
+    }
+
+    @Override
+    @NotNull
+    public SignalBuilder signal(@NotNull Object message, @NotNull String channel) {
+        return new SignalImpl(getPubNubCore()).message(message).channel(channel);
     }
 
     @Override
@@ -579,6 +593,12 @@ public class PubNubImpl extends BasePubNubImpl<
     @NotNull
     public Publish fire() {
         return publish().shouldStore(false).replicate(false);
+    }
+
+    @Override
+    @NotNull
+    public PublishBuilder fire(Object message, String channel) {
+        return publish(message, channel).shouldStore(false).replicate(false);
     }
 
     @Override

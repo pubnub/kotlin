@@ -23,6 +23,8 @@ import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult;
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
 import com.pubnub.api.v2.PNConfiguration;
 import com.pubnub.api.v2.PNConfigurationOverride;
+import com.pubnub.api.v2.entities.Channel;
+import com.pubnub.api.v2.subscriptions.Subscription;
 import org.awaitility.Awaitility;
 import org.awaitility.Durations;
 import org.hamcrest.Matchers;
@@ -61,6 +63,14 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
         final String expectedChannel = randomChannel();
         final JsonObject messagePayload = generateMessage(pubNub);
 
+        pubNub.publish(messagePayload, expectedChannel).shouldStore(true).usePOST(true).async((result) -> {
+            assertFalse(result.isFailure());
+            success.set(true);
+        });
+
+        Awaitility.await().atMost(Durations.FIVE_SECONDS).untilTrue(success);
+        success.set(false);
+
         pubNub.publish()
                 .message(messagePayload)
                 .channel(expectedChannel)
@@ -70,6 +80,32 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
                 });
 
         Awaitility.await().atMost(Durations.FIVE_SECONDS).untilTrue(success);
+    }
+
+    @Test
+    public void testPublishUsingChannelEntity() throws InterruptedException, PubNubException {
+        AtomicBoolean messageReceived = new AtomicBoolean(false);
+        AtomicBoolean signalReceived = new AtomicBoolean(false);
+        String channelName = randomChannel();
+        Channel channel = pubNub.channel(channelName);
+
+        Subscription subscription = channel.subscription();
+        subscription.setOnMessage(message -> messageReceived.set(true));
+        subscription.setOnSignal(pnSignalResult -> signalReceived.set(true));
+        subscription.subscribe();
+        Thread.sleep(1000);
+
+        channel.publish("My message").meta("meta").sync();
+        channel.signal("My signal").sync();
+        channel.fire("My fire").sync(); // just to test API
+
+        Awaitility.await()
+                .atMost(Durations.FIVE_SECONDS)
+                .untilAtomic(messageReceived, Matchers.equalTo(true));
+        Awaitility.await()
+                .atMost(Durations.FIVE_SECONDS)
+                .untilAtomic(signalReceived, Matchers.equalTo(true));
+
     }
 
     @Test
@@ -87,10 +123,7 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
 
         final JsonObject whatToExpect = messagePayload;
 
-        pubNub.publish()
-                .channel(expectedChannel)
-                .message(messagePayload)
-                .sync();
+        pubNub.publish(messagePayload, expectedChannel).sync();
 
         pause(2);
 
@@ -351,11 +384,7 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
         payload.put("name", "John Doe");
         payload.put("city", "San Francisco");
 
-        pubNub.publish()
-                .message(payload)
-                .channel(channel)
-                .usePOST(true)
-                .sync();
+        pubNub.publish(payload, channel).usePOST(true).sync();
 
         pause(3);
 

@@ -610,9 +610,7 @@ public class HistoryIntegrationTest extends BaseIntegrationTest {
         final String channel = random();
 
         // publish a message without any metadata
-        pubNub.publish()
-                .message(random())
-                .channel(channel)
+        pubNub.publish(random(), channel)
                 .shouldStore(true)
                 .sync();
 

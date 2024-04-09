@@ -5,6 +5,7 @@ import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.pubsub.Signal;
 import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.internal.EndpointInterface;
+import com.pubnub.api.v2.endpoints.pubsub.SignalBuilder;
 import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.IdentityMappingEndpoint;
 import lombok.Setter;
@@ -13,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class SignalImpl extends IdentityMappingEndpoint<PNPublishResult> implements Signal {
+public class SignalImpl extends IdentityMappingEndpoint<PNPublishResult> implements Signal, SignalBuilder {
 
     private Object message;
     private String channel;
