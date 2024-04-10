@@ -54,7 +54,7 @@
       "clearedSuffix": false
     }
   ],
-  "pubnub-core/pubnub-core-impl/src/test/kotlin/com/pubnub/api/legacy/PubNubTest.kt": [
+  "pubnub-core/pubnub-core-impl/src/test/kotlin/com/pubnub/api/legacy/PubNubCoreTest.kt": [
     {
       "pattern": "assertEquals\\(\"(v?(\\d+\\.?){2,}([a-zA-Z0-9-]+(\\.?\\d+)?)?)\", version\\)$",
       "clearedPrefix": true,

@@ -1,7 +1,7 @@
 {
   "kotlin": {
     "path": "./",
-    "name": "Kotlin SDK",
+    "name": "Java & Kotlin SDK",
     "main": true,
     "overrideRelease": true
   }
