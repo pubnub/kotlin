@@ -1,3 +1,9 @@
+## v9.1.1
+April 15 2024
+
+#### Fixed
+- The parameter names were not saved in compiled class files and were shown as `o`, `s1` etc. in the IDE. This change fixes the SDK to correctly show parameter names.
+
 ## v9.1.0
 April 09 2024
 

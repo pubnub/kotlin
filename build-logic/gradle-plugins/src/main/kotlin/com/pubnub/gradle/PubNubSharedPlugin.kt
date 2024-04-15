@@ -4,6 +4,7 @@ import com.vanniktech.maven.publish.MavenPublishPlugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaLibraryPlugin
+import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.api.tasks.testing.Test
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
@@ -15,6 +16,7 @@ import org.gradle.testing.jacoco.plugins.JacocoPlugin
 import org.gradle.testing.jacoco.tasks.JacocoReport
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
 import org.jlleitschuh.gradle.ktlint.KtlintPlugin
 
@@ -34,6 +36,16 @@ class PubNubSharedPlugin : Plugin<Project> {
             extensions.configure<KotlinJvmProjectExtension> {
                 jvmToolchain(8)
             }
+
+            tasks.named("compileKotlin", KotlinJvmCompile::class.java) {
+                it.compilerOptions {
+                    javaParameters.set(true)
+                }
+            }
+            tasks.withType<JavaCompile>().configureEach {
+                it.options.compilerArgs.add("-parameters")
+            }
+
 
             // Ktlint
             extensions.configure<KtlintExtension> {
