@@ -42,6 +42,7 @@ import com.pubnub.api.endpoints.objects_api.uuid.GetAllUUIDMetadata
 import com.pubnub.api.endpoints.objects_api.uuid.GetUUIDMetadata
 import com.pubnub.api.endpoints.objects_api.uuid.RemoveUUIDMetadata
 import com.pubnub.api.endpoints.objects_api.uuid.SetUUIDMetadata
+import com.pubnub.api.endpoints.objects_api.uuid.SetUserMetadata
 import com.pubnub.api.endpoints.presence.GetState
 import com.pubnub.api.endpoints.presence.HereNow
 import com.pubnub.api.endpoints.presence.SetState
@@ -406,9 +407,24 @@ interface PubNub :
     fun deleteChannelGroup(): DeleteChannelGroup
 
     /**
-     * Set metadata for a UUID in the database, optionally including the custom data object for each.
+     * Set metadata for a UUID (i.e. user) in the database, optionally including the custom data object.
+     *
+     * Parameters that are set to null (default) will not be changed.
      */
+    @Deprecated(
+        message = "It's not possible to set metadata to `null` using this function. Use `setUserMetadata` " +
+            "which offers the option to overwrite, leave as is or clear metadata.",
+        ReplaceWith("setUserMetadata()")
+    )
     fun setUUIDMetadata(): SetUUIDMetadata
+
+    /**
+     * Set metadata for a UUID in the database, optionally including the custom data object.
+     *
+     * For parameters use `Optional.of(value)` to set a `value` for the metadata, `Optional.of(null)` to clear the
+     * metadata (i.e. set it to `null`) and `Optional.none()` (default) to keep the existing value of the metadata field.
+     */
+    fun setUserMetadata(): SetUserMetadata
 
     /**
      * Returns a paginated list of UUID Metadata objects, optionally including the custom data object for each.

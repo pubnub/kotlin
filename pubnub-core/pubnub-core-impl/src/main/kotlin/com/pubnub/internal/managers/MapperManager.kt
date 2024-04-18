@@ -11,11 +11,16 @@ import com.google.gson.JsonParseException
 import com.google.gson.JsonSerializationContext
 import com.google.gson.JsonSerializer
 import com.google.gson.TypeAdapter
+import com.google.gson.TypeAdapterFactory
+import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonToken
 import com.google.gson.stream.JsonWriter
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.utils.Optional
+import com.pubnub.api.utils.onAbsent
+import com.pubnub.api.utils.onValue
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -41,7 +46,7 @@ class MapperManager {
                     }
                 }
 
-                override fun read(_in: JsonReader): Boolean? {
+                override fun read(_in: JsonReader): Boolean {
                     val peek: JsonToken = _in.peek()
                     return when (peek) {
                         JsonToken.BOOLEAN -> _in.nextBoolean()
@@ -52,6 +57,43 @@ class MapperManager {
                 }
             }
 
+        val optionalTypeFactory = object : TypeAdapterFactory {
+            override fun <T> create(gson: Gson, type: TypeToken<T>): TypeAdapter<T>? {
+                if (type.rawType != Optional::class.java) {
+                    return null
+                }
+                val factory = this
+                return object : TypeAdapter<T>() {
+                    override fun write(out: JsonWriter, value: T) {
+                        val writeNulls = out.serializeNulls
+                        try {
+                            value as Optional<*>
+                            value.onValue { it: Any? ->
+                                if (it == null) {
+                                    // value is Optional.of(null), write it out to JSON:
+                                    out.serializeNulls = true
+                                    out.nullValue()
+                                } else {
+                                    // value is Optional.of(something), write it out using the right adapter:
+                                    val delegate = gson.getDelegateAdapter(factory, TypeToken.get(it::class.java)) as TypeAdapter<Any>
+                                    delegate.write(out, it)
+                                }
+                            }.onAbsent {
+                                // value is Optional.none(), skip it (serializeNulls is false)
+                                out.nullValue()
+                            }
+                        } finally {
+                            out.serializeNulls = writeNulls
+                        }
+                    }
+
+                    override fun read(reader: JsonReader): T {
+                        error("Not used for reading")
+                    }
+                }
+            }
+        }
+
         objectMapper =
             GsonBuilder()
                 .registerTypeAdapter(Boolean::class.javaObjectType, booleanAsIntAdapter)
@@ -59,6 +101,7 @@ class MapperManager {
                 .registerTypeAdapter(Boolean::class.java, booleanAsIntAdapter)
                 .registerTypeAdapter(JSONObject::class.java, JSONObjectAdapter())
                 .registerTypeAdapter(JSONArray::class.java, JSONArrayAdapter())
+                .registerTypeAdapterFactory(optionalTypeFactory)
                 .disableHtmlEscaping()
                 .create()
         converterFactory = GsonConverterFactory.create(objectMapper)

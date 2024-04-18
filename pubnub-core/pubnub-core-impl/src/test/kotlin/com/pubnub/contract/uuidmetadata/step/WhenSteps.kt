@@ -1,5 +1,6 @@
 package com.pubnub.contract.uuidmetadata.step
 
+import com.pubnub.api.utils.Optional
 import com.pubnub.contract.state.World
 import com.pubnub.contract.uuidmetadata.state.UUIDMetadataState
 import io.cucumber.java.en.When
@@ -29,14 +30,14 @@ class WhenSteps(
         val uuidMetadata = uuidMetadataState.uuidMetadata!!
         world.pubnub.pubNubCore.setUUIDMetadata(
             uuid = uuidMetadata.id,
-            custom = uuidMetadata.custom,
-            externalId = uuidMetadata.externalId,
-            profileUrl = uuidMetadata.profileUrl,
-            email = uuidMetadata.email,
-            name = uuidMetadata.name,
-            status = uuidMetadata.status,
-            type = uuidMetadata.type,
-        ).sync()?.let {
+            custom = Optional.of(uuidMetadata.custom),
+            externalId = Optional.of(uuidMetadata.externalId),
+            profileUrl = Optional.of(uuidMetadata.profileUrl),
+            email = Optional.of(uuidMetadata.email),
+            name = Optional.of(uuidMetadata.name),
+            status = Optional.of(uuidMetadata.status),
+            type = Optional.of(uuidMetadata.type),
+        ).sync().let {
             uuidMetadataState.uuidMetadata = it.data
             world.responseStatus = it.status
         }

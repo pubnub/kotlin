@@ -75,6 +75,7 @@ import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
+import com.pubnub.api.utils.Optional
 import com.pubnub.api.v2.BasePNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
@@ -800,6 +801,32 @@ class PubNubImpl(
         includeCustom: Boolean,
         type: String?,
         status: String?,
+    ): SetUUIDMetadata {
+        return com.pubnub.internal.endpoints.objects.uuid.SetUUIDMetadataImpl(
+            pubNubCore.setUUIDMetadata(
+                uuid,
+                Optional.ofNullable(name),
+                Optional.ofNullable(externalId),
+                Optional.ofNullable(profileUrl),
+                Optional.ofNullable(email),
+                Optional.ofNullable(custom),
+                includeCustom,
+                Optional.ofNullable(type),
+                Optional.ofNullable(status),
+            ),
+        )
+    }
+
+    override fun setUserMetadata(
+        uuid: String?,
+        name: Optional<String?>,
+        externalId: Optional<String?>,
+        profileUrl: Optional<String?>,
+        email: Optional<String?>,
+        custom: Optional<Any?>,
+        includeCustom: Boolean,
+        type: Optional<String?>,
+        status: Optional<String?>,
     ): SetUUIDMetadata {
         return com.pubnub.internal.endpoints.objects.uuid.SetUUIDMetadataImpl(
             pubNubCore.setUUIDMetadata(

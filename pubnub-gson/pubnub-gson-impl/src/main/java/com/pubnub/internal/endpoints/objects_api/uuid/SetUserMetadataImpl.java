@@ -1,15 +1,17 @@
 package com.pubnub.internal.endpoints.objects_api.uuid;
 
-import com.pubnub.api.endpoints.objects_api.uuid.SetUUIDMetadata;
+import com.pubnub.api.endpoints.objects_api.uuid.SetUserMetadata;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects_api.uuid.PNSetUUIDMetadataResult;
 import com.pubnub.api.models.consumer.objects_api.uuid.PNUUIDMetadata;
 import com.pubnub.api.utils.Optional;
+import com.pubnub.api.utils.OptionalKt;
 import com.pubnub.internal.EndpointInterface;
 import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.DelegatingEndpoint;
 import com.pubnub.internal.models.consumer.objects.uuid.PNUUIDMetadataResult;
+import kotlin.Unit;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
@@ -18,36 +20,43 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
-public class SetUUIDMetadataImpl extends DelegatingEndpoint<PNUUIDMetadataResult, PNSetUUIDMetadataResult> implements SetUUIDMetadata {
+public class SetUserMetadataImpl extends DelegatingEndpoint<PNUUIDMetadataResult, PNSetUUIDMetadataResult> implements SetUserMetadata {
     @Setter
     private String uuid;
     @Setter
-    private String name;
+    private Optional<String> name = Optional.none();
     @Setter
-    private String externalId;
+    private Optional<String> externalId = Optional.none();
     @Setter
-    private String profileUrl;
+    private Optional<String> profileUrl = Optional.none();
     @Setter
-    private String email;
+    private Optional<String> email = Optional.none();
 
-    private Map<String, Object> custom;
+    private Optional<Map<String, ?>> custom = Optional.none();
     @Setter
     private boolean includeCustom;
     @Setter
-    private String type;
+    private Optional<String> type = Optional.none();
     @Setter
-    private String status;
+    private Optional<String> status = Optional.none();
 
-    public SetUUIDMetadataImpl(final PubNubCore pubnub) {
+    public SetUserMetadataImpl(final PubNubCore pubnub) {
         super(pubnub);
     }
 
-    @Override public SetUUIDMetadata custom(Map<String, Object> custom) {
+    @NotNull
+    @Override
+    public SetUserMetadata custom(@NotNull Optional<? extends Map<String, ?>> custom) {
         final HashMap<String, Object> customHashMap = new HashMap<>();
-        if (custom != null) {
-            customHashMap.putAll(custom);
-        }
-        this.custom = customHashMap;
+        OptionalKt.onValue(custom, stringObjectMap -> {
+            customHashMap.putAll(stringObjectMap);
+            this.custom = Optional.of(customHashMap);
+            return Unit.INSTANCE;
+        });
+        OptionalKt.onAbsent(custom, () -> {
+            this.custom = Optional.none();
+            return Unit.INSTANCE;
+        });
         return this;
     }
 
@@ -56,14 +65,14 @@ public class SetUUIDMetadataImpl extends DelegatingEndpoint<PNUUIDMetadataResult
     protected EndpointInterface<PNUUIDMetadataResult> createAction() {
         return pubnub.setUUIDMetadata(
                 uuid,
-                Optional.ofNullable(name),
-                Optional.ofNullable(externalId),
-                Optional.ofNullable(profileUrl),
-                Optional.ofNullable(email),
-                Optional.ofNullable(custom),
+                name,
+                externalId,
+                profileUrl,
+                email,
+                custom,
                 includeCustom,
-                Optional.ofNullable(type),
-                Optional.ofNullable(status)
+                type,
+                status
         );
     }
 

@@ -9,6 +9,7 @@ import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.objects.PNPage
+import com.pubnub.api.utils.Optional
 import com.pubnub.api.v2.BasePNConfiguration
 import com.pubnub.api.v2.callbacks.BaseEventListener
 import com.pubnub.api.v2.subscriptions.BaseSubscription
@@ -1257,14 +1258,14 @@ class PubNubCore internal constructor(
      */
     fun setUUIDMetadata(
         uuid: String? = null,
-        name: String? = null,
-        externalId: String? = null,
-        profileUrl: String? = null,
-        email: String? = null,
-        custom: Any? = null,
+        name: Optional<String?> = Optional.none(),
+        externalId: Optional<String?> = Optional.none(),
+        profileUrl: Optional<String?> = Optional.none(),
+        email: Optional<String?> = Optional.none(),
+        custom: Optional<Any?> = Optional.none(),
         includeCustom: Boolean = false,
-        type: String? = null,
-        status: String? = null,
+        type: Optional<String?> = Optional.none(),
+        status: Optional<String?> = Optional.none(),
     ) = SetUUIDMetadataEndpoint(
         pubnub = this,
         uuid = uuid,

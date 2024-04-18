@@ -48,6 +48,7 @@ import com.pubnub.api.endpoints.objects_api.uuid.GetAllUUIDMetadata;
 import com.pubnub.api.endpoints.objects_api.uuid.GetUUIDMetadata;
 import com.pubnub.api.endpoints.objects_api.uuid.RemoveUUIDMetadata;
 import com.pubnub.api.endpoints.objects_api.uuid.SetUUIDMetadata;
+import com.pubnub.api.endpoints.objects_api.uuid.SetUserMetadata;
 import com.pubnub.api.endpoints.presence.GetState;
 import com.pubnub.api.endpoints.presence.HereNow;
 import com.pubnub.api.endpoints.presence.SetState;
@@ -109,6 +110,7 @@ import com.pubnub.internal.endpoints.objects_api.uuid.GetAllUUIDMetadataImpl;
 import com.pubnub.internal.endpoints.objects_api.uuid.GetUUIDMetadataImpl;
 import com.pubnub.internal.endpoints.objects_api.uuid.RemoveUUIDMetadataImpl;
 import com.pubnub.internal.endpoints.objects_api.uuid.SetUUIDMetadataImpl;
+import com.pubnub.internal.endpoints.objects_api.uuid.SetUserMetadataImpl;
 import com.pubnub.internal.endpoints.presence.GetStateImpl;
 import com.pubnub.internal.endpoints.presence.HereNowImpl;
 import com.pubnub.internal.endpoints.presence.SetStateImpl;
@@ -342,8 +344,15 @@ public class PubNubImpl extends BasePubNubImpl<
     // Start Objects API
 
     @Override
+    @NotNull
     public SetUUIDMetadata setUUIDMetadata() {
         return new SetUUIDMetadataImpl(getPubNubCore());
+    }
+
+    @Override
+    @NotNull
+    public SetUserMetadata setUserMetadata() {
+        return new SetUserMetadataImpl(getPubNubCore());
     }
 
     @Override

@@ -63,6 +63,7 @@ import com.pubnub.api.models.consumer.objects.member.MemberInput
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
+import com.pubnub.api.utils.Optional
 import com.pubnub.api.v2.BasePNConfiguration
 import com.pubnub.api.v2.callbacks.EventEmitter
 import com.pubnub.api.v2.callbacks.EventListener
@@ -924,7 +925,9 @@ interface PubNub :
     ): GetUUIDMetadata
 
     /**
-     * Set metadata for a UUID in the database, optionally including the custom data object for each.
+     * Set metadata for a UUID in the database, optionally including the custom data object.
+     *
+     * Parameters that are set to null (default) will not be changed.
      *
      * @param uuid Unique user identifier. If not supplied then current user’s uuid is used.
      * @param name Display name for the user. Maximum 200 characters.
@@ -934,6 +937,14 @@ interface PubNub :
      * @param custom Object with supported data types.
      * @param includeCustom Include respective additional fields in the response.
      */
+    @Deprecated(
+        message = "It's not possible to set metadata to `null` using this function. Use `setUserMetadata` which" +
+            "offers the option to overwrite, leave as is or clear metadata.",
+        ReplaceWith(
+            "setUserMetadata(uuid, Optional.ofNullable(name), Optional.ofNullable(externalId), Optional.ofNullable(profileUrl), Optional.ofNullable(email), Optional.ofNullable(custom), includeCustom, Optional.ofNullable(type), Optional.ofNullable(status))",
+            "com.pubnub.api.utils.Optional"
+        )
+    )
     fun setUUIDMetadata(
         uuid: String? = null,
         name: String? = null,
@@ -944,6 +955,32 @@ interface PubNub :
         includeCustom: Boolean = false,
         type: String? = null,
         status: String? = null,
+    ): SetUUIDMetadata
+
+    /**
+     * Set metadata for a UUID in the database, optionally including the custom data object.
+     *
+     * For parameters use `Optional.of(value)` to set a `value` for the metadata, `Optional.of(null)` to clear the
+     * metadata (i.e. set it to `null`) and `Optional.none()` (default) to keep the existing value of the metadata field.
+     *
+     * @param uuid Unique user identifier. If not supplied then current user’s uuid is used.
+     * @param name Display name for the user. Maximum 200 characters.
+     * @param externalId User's identifier in an external system
+     * @param profileUrl The URL of the user's profile picture
+     * @param email The user's email address. Maximum 80 characters.
+     * @param custom Object with supported data types.
+     * @param includeCustom Include respective additional fields in the response.
+     */
+    fun setUserMetadata(
+        uuid: String? = null,
+        name: Optional<String?> = Optional.none(),
+        externalId: Optional<String?> = Optional.none(),
+        profileUrl: Optional<String?> = Optional.none(),
+        email: Optional<String?> = Optional.none(),
+        custom: Optional<Any?> = Optional.none(),
+        includeCustom: Boolean = false,
+        type: Optional<String?> = Optional.none(),
+        status: Optional<String?> = Optional.none(),
     ): SetUUIDMetadata
 
     /**

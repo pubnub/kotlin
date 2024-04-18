@@ -275,13 +275,13 @@
         <error line="28" column="9" source="standard:function-naming" />
     </file>
     <file name="src/test/kotlin/com/pubnub/contract/uuidmetadata/step/WhenSteps.kt">
-        <error line="12" column="9" source="standard:function-naming" />
-        <error line="20" column="9" source="standard:function-naming" />
-        <error line="28" column="9" source="standard:function-naming" />
-        <error line="46" column="9" source="standard:function-naming" />
-        <error line="51" column="9" source="standard:function-naming" />
-        <error line="56" column="9" source="standard:function-naming" />
-        <error line="64" column="9" source="standard:function-naming" />
+        <error line="13" column="9" source="standard:function-naming" />
+        <error line="21" column="9" source="standard:function-naming" />
+        <error line="29" column="9" source="standard:function-naming" />
+        <error line="47" column="9" source="standard:function-naming" />
+        <error line="52" column="9" source="standard:function-naming" />
+        <error line="57" column="9" source="standard:function-naming" />
+        <error line="65" column="9" source="standard:function-naming" />
     </file>
     <file name="src/test/kotlin/com/pubnub/internal/suite/channel_groups/AddChannelChannelGroupTestSuite.kt">
         <error line="1" column="9" source="standard:package-name" />

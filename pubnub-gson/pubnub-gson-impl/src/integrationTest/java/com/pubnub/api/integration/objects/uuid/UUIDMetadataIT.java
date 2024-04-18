@@ -6,6 +6,7 @@ import com.pubnub.api.models.consumer.objects_api.uuid.PNGetAllUUIDMetadataResul
 import com.pubnub.api.models.consumer.objects_api.uuid.PNGetUUIDMetadataResult;
 import com.pubnub.api.models.consumer.objects_api.uuid.PNRemoveUUIDMetadataResult;
 import com.pubnub.api.models.consumer.objects_api.uuid.PNSetUUIDMetadataResult;
+import com.pubnub.api.utils.Optional;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.HttpStatus;
 import org.junit.After;
@@ -31,6 +32,7 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class UUIDMetadataIT extends ObjectsApiBaseIT {
     private static final Logger LOG = LoggerFactory.getLogger(UUIDMetadataIT.class);
@@ -77,6 +79,58 @@ public class UUIDMetadataIT extends ObjectsApiBaseIT {
         assertNotNull(setUUIDMetadataResult.getData().getCustom());
         assertEquals(statusValue, setUUIDMetadataResult.getData().getStatus());
         assertEquals(typeValue, setUUIDMetadataResult.getData().getType());
+    }
+
+    @Test
+    public void setUUIDHappyPathWithOptionals() throws PubNubException {
+        //given
+
+        //when
+        final PNSetUUIDMetadataResult setUUIDMetadataResult = pubNubUnderTest.setUserMetadata()
+                .uuid(randomTestUUID)
+                .name(Optional.of(randomName))
+                .email(Optional.of(randomEmail))
+                .profileUrl(Optional.of(randomProfileUrl))
+                .externalId(Optional.of(randomExternalId))
+                .custom(Optional.of(customUUIDObject()))
+                .includeCustom(true)
+                .status(Optional.of(statusValue))
+                .type(Optional.of(typeValue))
+                .sync();
+
+        //then
+        assertNotNull(setUUIDMetadataResult);
+        assertEquals(HttpStatus.SC_OK, setUUIDMetadataResult.getStatus());
+        createdUUIDMetadataList.add(setUUIDMetadataResult);
+        assertEquals(randomTestUUID, setUUIDMetadataResult.getData().getId());
+        assertEquals(randomName, setUUIDMetadataResult.getData().getName());
+        assertEquals(randomEmail, setUUIDMetadataResult.getData().getEmail());
+        assertEquals(randomProfileUrl, setUUIDMetadataResult.getData().getProfileUrl());
+        assertEquals(randomExternalId, setUUIDMetadataResult.getData().getExternalId());
+        assertNotNull(setUUIDMetadataResult.getData().getCustom());
+        assertEquals(statusValue, setUUIDMetadataResult.getData().getStatus());
+        assertEquals(typeValue, setUUIDMetadataResult.getData().getType());
+
+        final PNSetUUIDMetadataResult setUUIDMetadataResult2 = pubNubUnderTest.setUserMetadata()
+                .uuid(randomTestUUID)
+                .name(Optional.of("newName"))
+                .email(Optional.of(null))
+                .profileUrl(Optional.none())
+                .includeCustom(true)
+                .sync();
+
+        //then
+        assertNotNull(setUUIDMetadataResult2);
+        assertEquals(HttpStatus.SC_OK, setUUIDMetadataResult2.getStatus());
+        createdUUIDMetadataList.add(setUUIDMetadataResult2);
+        assertEquals(randomTestUUID, setUUIDMetadataResult2.getData().getId());
+        assertEquals("newName", setUUIDMetadataResult2.getData().getName());
+        assertNull(setUUIDMetadataResult2.getData().getEmail());
+        assertEquals(randomProfileUrl, setUUIDMetadataResult2.getData().getProfileUrl());
+        assertEquals(randomExternalId, setUUIDMetadataResult2.getData().getExternalId());
+        assertNotNull(setUUIDMetadataResult2.getData().getCustom());
+        assertEquals(statusValue, setUUIDMetadataResult2.getData().getStatus());
+        assertEquals(typeValue, setUUIDMetadataResult2.getData().getType());
     }
 
     @Test

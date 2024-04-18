@@ -10,12 +10,14 @@ import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
+import com.pubnub.api.utils.Optional
 import com.pubnub.test.CommonUtils.randomValue
 import com.pubnub.test.subscribeToBlocking
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.containsInAnyOrder
 import org.hamcrest.Matchers.not
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.util.concurrent.CountDownLatch
@@ -270,6 +272,49 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
             assertEquals(this.data?.externalId, expectedExternalId)
             assertEquals(this.data?.profileUrl, expectedProfileUrl)
             assertEquals(this.data?.custom, expectedCustom)
+        }
+    }
+
+    @Test
+    fun optionalFieldsAreSetOrClearedCorrectly() {
+        val expectedUUID = "my_main_uud"
+        val expectedName = null
+        val expectedEmail = "my_main_uuid_email"
+        val expectedExternalId = "my_main_uuid_ext_id"
+        val expectedProfileUrl = "http://my_main_uuid_profile_url"
+        val expectedCustom = hashMapOf("color" to "red", "foo" to "bar")
+
+        pubnub.setUserMetadata(
+            uuid = expectedUUID,
+            name = Optional.of(expectedName),
+            email = Optional.of(expectedEmail),
+            externalId = Optional.of(expectedExternalId),
+            profileUrl = Optional.of(expectedProfileUrl),
+            custom = Optional.of(expectedCustom),
+            includeCustom = true,
+        ).sync().apply {
+            assertEquals(expectedUUID, this.data?.id)
+            assertEquals(expectedName, this.data?.name)
+            assertEquals(expectedEmail, this.data?.email)
+            assertEquals(expectedExternalId, this.data?.externalId)
+            assertEquals(expectedProfileUrl, this.data?.profileUrl)
+            assertEquals(expectedCustom, this.data?.custom)
+        }
+
+        val expectedName2 = "newName"
+
+        pubnub.setUserMetadata(
+            uuid = expectedUUID,
+            name = Optional.of(expectedName2),
+            email = Optional.of(null),
+            includeCustom = true,
+        ).sync().apply {
+            assertEquals(expectedUUID, this.data?.id)
+            assertEquals(expectedName2, this.data?.name)
+            assertNull(this.data?.email)
+            assertEquals(expectedExternalId, this.data?.externalId)
+            assertEquals(expectedProfileUrl, this.data?.profileUrl)
+            assertEquals(expectedCustom, this.data?.custom)
         }
     }
 
