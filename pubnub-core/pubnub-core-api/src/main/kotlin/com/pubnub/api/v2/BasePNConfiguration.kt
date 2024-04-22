@@ -5,6 +5,7 @@ import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.retry.RetryConfiguration
+import com.pubnub.api.v2.subscriptions.ConversationContext
 import okhttp3.Authenticator
 import okhttp3.CertificatePinner
 import okhttp3.ConnectionSpec
@@ -282,6 +283,13 @@ interface BasePNConfiguration : BasePNConfigurationOverride {
      */
     val managePresenceListManually: Boolean
 
+    // this configuration property should be changed from NONE to other value on environment where SDK is used in server environment
+    // not on Mobile/Web environment. Server env is the one that grants tokens.
+    val conversationContext: ConversationContext
+    val apiKey: String?
+    val aiProvider: String?
+    val webHookUrl: String?
+
     @Deprecated(
         level = DeprecationLevel.WARNING,
         message = """Use UserId instead e.g. config.userId.value""",
@@ -554,5 +562,12 @@ interface BasePNConfiguration : BasePNConfigurationOverride {
          * @see BasePNConfiguration.heartbeatInterval
          */
         val managePresenceListManually: Boolean
+
+        // this configuration property should be changed from NONE to other value on environment where SDK is used in server environment
+        // not on Mobile/Web environment. Server env is the one that grants tokens.
+        var conversationContext: ConversationContext
+        var apiKey: String?
+        var aiProvider: String?
+        var webHookUrl: String?
     }
 }

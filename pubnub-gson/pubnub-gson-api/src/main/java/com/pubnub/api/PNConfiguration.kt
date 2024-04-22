@@ -6,6 +6,7 @@ import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.enums.PNReconnectionPolicy
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.v2.BasePNConfiguration
+import com.pubnub.api.v2.subscriptions.ConversationContext
 import com.pubnub.internal.v2.BasePNConfigurationImpl
 import okhttp3.Authenticator
 import okhttp3.CertificatePinner
@@ -611,6 +612,38 @@ class PNConfiguration(userId: UserId) : BasePNConfiguration {
     }
 
     override var managePresenceListManually: Boolean = defaultConfiguration.managePresenceListManually
+        private set
+
+    fun setConversationContext(context: ConversationContext): PNConfiguration {
+        this.conversationContext = context
+        return this
+    }
+
+    override var conversationContext: ConversationContext = defaultConfiguration.conversationContext
+        private set
+
+    fun setApiKey(apiKey: String): PNConfiguration {
+        this.apiKey = apiKey
+        return this
+    }
+
+    override var apiKey: String? = defaultConfiguration.apiKey
+        private set
+
+    fun setAiProvider(aiProvider: String): PNConfiguration {
+        this.aiProvider = aiProvider
+        return this
+    }
+
+    override var aiProvider: String? = defaultConfiguration.aiProvider
+        private set
+
+    fun setWebHookUrl(webHookUrl: String): PNConfiguration {
+        this.webHookUrl = webHookUrl
+        return this
+    }
+
+    override var webHookUrl: String? = defaultConfiguration.webHookUrl
         private set
 
     /**

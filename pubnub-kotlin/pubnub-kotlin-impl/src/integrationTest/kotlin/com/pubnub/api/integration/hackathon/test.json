@@ -1,0 +1,22 @@
+[
+  {
+    "channel": "ch_1708413101631_D7DE6FC7B7",
+    "uuid": "client-a8738e06-1abf-4d36-a8de-fe35a4e24395",
+    "message": "Did you hear about Prime Minister decision?"
+  },
+  {
+    "channel": "ch_1708413101631_D7DE6FC7B7",
+    "uuid": "client-e3d27f67-b29e-40cc-97b7-4024b72cc973",
+    "message": "Yes I heard about King decision."
+  },
+  {
+    "channel": "ch_1708413101631_76E5F9E4B0",
+    "uuid": "client-a8738e06-1abf-4d36-a8de-fe35a4e24395",
+    "message": "Hi"
+  },
+  {
+    "channel": "ch_1708413101631_76E5F9E4B0",
+    "uuid": "client-e3d27f67-b29e-40cc-97b7-4024b72cc973",
+    "message": "Hi"
+  }
+]

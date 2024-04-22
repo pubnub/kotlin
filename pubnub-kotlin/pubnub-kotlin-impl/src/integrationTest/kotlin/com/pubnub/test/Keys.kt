@@ -19,6 +19,12 @@ interface KeysConfig : Config {
 
     @get:Config.Key("pamSecKey")
     val pamSecKey: String
+
+    @get:Config.Key("apiKeyChatGpt")
+    val apiKeyChatGpt: String
+
+    @get:Config.Key("webHookUrl")
+    val webHookUrl: String
 }
 
 val Keys: KeysConfig = ConfigFactory.create(KeysConfig::class.java, System.getenv())

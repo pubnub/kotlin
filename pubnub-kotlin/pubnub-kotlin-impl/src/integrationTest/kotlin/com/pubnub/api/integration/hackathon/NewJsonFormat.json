@@ -1,0 +1,12 @@
+{
+  "channels": {
+    "ch1": [
+      {"message": "Message01"},
+      {"message": "Message02"}
+    ],
+    "ch2":[
+      {"message":  "Message01"},
+      {"message":  "Message02"}
+    ]
+  }
+}

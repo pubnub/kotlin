@@ -7,6 +7,7 @@ import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.v2.BasePNConfiguration
 import com.pubnub.api.v2.BasePNConfigurationOverride
+import com.pubnub.api.v2.subscriptions.ConversationContext
 import okhttp3.Authenticator
 import okhttp3.CertificatePinner
 import okhttp3.ConnectionSpec
@@ -62,6 +63,10 @@ open class BasePNConfigurationImpl internal constructor(
     override val pnsdkSuffixes: Map<String, String> = emptyMap(),
     override val retryConfiguration: RetryConfiguration = RetryConfiguration.None,
     override val managePresenceListManually: Boolean = false,
+    override var conversationContext: ConversationContext = ConversationContext.NONE,
+    override var apiKey: String? = null,
+    override var aiProvider: String? = null,
+    override var webHookUrl: String? = null,
 ) : BasePNConfiguration {
     companion object {
         const val DEFAULT_DEDUPE_SIZE = 100
@@ -150,5 +155,9 @@ open class BasePNConfigurationImpl internal constructor(
         override val retryConfiguration: RetryConfiguration = defaultConfiguration.retryConfiguration
 
         override val managePresenceListManually: Boolean = defaultConfiguration.managePresenceListManually
+        override var conversationContext: ConversationContext = defaultConfiguration.conversationContext
+        override var apiKey: String? = defaultConfiguration.apiKey
+        override var aiProvider: String? = defaultConfiguration.aiProvider
+        override var webHookUrl: String? = defaultConfiguration.webHookUrl
     }
 }

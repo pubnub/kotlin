@@ -12,6 +12,7 @@ import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.v2.BasePNConfiguration
 import com.pubnub.api.v2.callbacks.BaseEventListener
 import com.pubnub.api.v2.subscriptions.BaseSubscription
+import com.pubnub.api.v2.subscriptions.ConversationContext
 import com.pubnub.api.v2.subscriptions.EmptyOptions
 import com.pubnub.api.v2.subscriptions.SubscriptionCursor
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
@@ -106,6 +107,7 @@ import java.util.Date
 import java.util.UUID
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.TimeUnit
 import kotlin.time.Duration.Companion.seconds
 
 class PubNubCore internal constructor(
@@ -114,6 +116,18 @@ class PubNubCore internal constructor(
     eventEnginesConf: EventEnginesConf = EventEnginesConf(),
     private val pnsdkName: String,
 ) {
+    var conversationSupervisorExecutor: ScheduledExecutorService? = null
+
+    init {
+        if (configuration.conversationContext != ConversationContext.NONE) {
+            conversationSupervisorExecutor = Executors.newSingleThreadScheduledExecutor()
+
+            conversationSupervisorExecutor?.scheduleAtFixedRate({
+                println("Starting loop that will execute query to AI")
+            }, 0, 1, TimeUnit.SECONDS)
+        }
+    }
+
     companion object {
         internal const val TIMESTAMP_DIVIDER = 1000
         internal const val SDK_VERSION = PUBNUB_VERSION
@@ -2116,6 +2130,8 @@ class PubNubCore internal constructor(
 
         retrofitManager.destroy()
         executorService.shutdown()
+
+        conversationSupervisorExecutor?.shutdown()
     }
 
     /**
@@ -2127,6 +2143,8 @@ class PubNubCore internal constructor(
 
         retrofitManager.destroy(true)
         executorService.shutdownNow()
+
+        conversationSupervisorExecutor?.shutdown()
     }
 
     fun parseToken(token: String): PNToken {

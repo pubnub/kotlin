@@ -1,0 +1,23 @@
+{
+  "id": "chatcmpl-9Gm3aacVjh2SaJoS8Ems8sghrsjUL",
+  "object": "chat.completion",
+  "created": 1713785006,
+  "model": "gpt-4-0613",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\"decision\": \"yes\", \"probabilityInPercents\": 95, \"channel\": \"ch_1713785000931_B561233BEE\", \"user\": \"client-1b9c09d7-c0c7-4489-af78-2fb4ece8251b\", \"message\": \"Did you hear about Prime Minister decision?\"}"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 471,
+    "completion_tokens": 78,
+    "total_tokens": 549
+  },
+  "system_fingerprint": null
+}

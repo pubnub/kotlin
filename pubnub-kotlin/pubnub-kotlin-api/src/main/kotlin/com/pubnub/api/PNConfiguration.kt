@@ -6,6 +6,7 @@ import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.enums.PNReconnectionPolicy
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.v2.BasePNConfiguration
+import com.pubnub.api.v2.subscriptions.ConversationContext
 import com.pubnub.internal.v2.BasePNConfigurationImpl
 import com.pubnub.internal.v2.BasePNConfigurationImpl.Companion.MINIMUM_PRESENCE_TIMEOUT
 import okhttp3.Authenticator
@@ -391,4 +392,12 @@ class PNConfiguration(override var userId: UserId) : BasePNConfiguration {
     override var retryConfiguration = configuration.retryConfiguration
 
     override var managePresenceListManually: Boolean = configuration.managePresenceListManually
+
+    override val conversationContext: ConversationContext = configuration.conversationContext
+
+    override val apiKey: String? = configuration.apiKey
+
+    override val aiProvider: String? = configuration.aiProvider
+
+    override val webHookUrl: String? = configuration.webHookUrl
 }
