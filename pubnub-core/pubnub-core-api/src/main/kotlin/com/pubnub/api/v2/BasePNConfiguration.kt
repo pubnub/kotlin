@@ -565,9 +565,9 @@ interface BasePNConfiguration : BasePNConfigurationOverride {
 
         // this configuration property should be changed from NONE to other value on environment where SDK is used in server environment
         // not on Mobile/Web environment. Server env is the one that grants tokens.
-        var conversationContext: ConversationContext
-        var apiKey: String?
-        var aiProvider: String?
-        var webHookUrl: String?
+        val conversationContext: ConversationContext
+        val apiKey: String?
+        val aiProvider: String?
+        val webHookUrl: String?
     }
 }

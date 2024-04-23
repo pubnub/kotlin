@@ -5,6 +5,7 @@ import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.retry.RetryConfiguration
+import com.pubnub.api.v2.subscriptions.ConversationContext
 import com.pubnub.internal.v2.BasePNConfigurationImpl
 import okhttp3.Authenticator
 import okhttp3.CertificatePinner
@@ -83,6 +84,10 @@ interface PNConfiguration : BasePNConfiguration {
         override var pnsdkSuffixes: Map<String, String>
         override var retryConfiguration: RetryConfiguration
         override var managePresenceListManually: Boolean
+        override var conversationContext: ConversationContext
+        override val apiKey: String?
+        override val aiProvider: String?
+        override val webHookUrl: String?
 
         /**
          * Create a [PNConfiguration] object with values from this builder.

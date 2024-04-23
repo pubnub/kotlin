@@ -8,6 +8,7 @@ import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.v2.BasePNConfiguration
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.PNConfigurationOverride
+import com.pubnub.api.v2.subscriptions.ConversationContext
 import okhttp3.Authenticator
 import okhttp3.CertificatePinner
 import okhttp3.ConnectionSpec
@@ -58,6 +59,10 @@ class PNConfigurationImpl(
     override val pnsdkSuffixes: Map<String, String>,
     override val retryConfiguration: RetryConfiguration,
     override val managePresenceListManually: Boolean,
+    override val conversationContext: ConversationContext,
+    override val apiKey: String?,
+    override val aiProvider: String?,
+    override val webHookUrl: String?,
 ) : BasePNConfigurationImpl(userId), PNConfiguration, PNConfigurationOverride {
     class Builder internal constructor(defaultConfiguration: BasePNConfiguration) :
         BasePNConfigurationImpl.Builder(defaultConfiguration),
@@ -158,6 +163,11 @@ class PNConfigurationImpl(
 
             override var managePresenceListManually: Boolean = super.managePresenceListManually
 
+            override var conversationContext: ConversationContext = super.conversationContext
+            override var apiKey: String? = super.apiKey
+            override var aiProvider: String? = super.aiProvider
+            override var webHookUrl: String? = super.webHookUrl
+
             override fun build(): PNConfiguration {
                 return PNConfigurationImpl(
                     userId = userId,
@@ -198,6 +208,10 @@ class PNConfigurationImpl(
                     pnsdkSuffixes = pnsdkSuffixes,
                     retryConfiguration = retryConfiguration,
                     managePresenceListManually = managePresenceListManually,
+                    conversationContext = conversationContext,
+                    apiKey = apiKey,
+                    aiProvider = aiProvider,
+                    webHookUrl = webHookUrl,
                 )
             }
         }

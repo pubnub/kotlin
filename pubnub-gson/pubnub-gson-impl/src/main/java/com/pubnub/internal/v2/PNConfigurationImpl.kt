@@ -7,6 +7,7 @@ import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.v2.BasePNConfiguration
 import com.pubnub.api.v2.PNConfiguration
+import com.pubnub.api.v2.subscriptions.ConversationContext
 import okhttp3.Authenticator
 import okhttp3.CertificatePinner
 import okhttp3.ConnectionSpec
@@ -57,6 +58,10 @@ class PNConfigurationImpl(
     override val pnsdkSuffixes: Map<String, String>,
     override val retryConfiguration: RetryConfiguration,
     override val managePresenceListManually: Boolean,
+    override val conversationContext: ConversationContext,
+    override val apiKey: String?,
+    override val aiProvider: String?,
+    override val webHookUrl: String?,
 ) : BasePNConfigurationImpl(userId), PNConfiguration {
     class Builder internal constructor(defaultConfiguration: BasePNConfiguration) :
         BasePNConfigurationImpl.Builder(defaultConfiguration),
@@ -381,6 +386,38 @@ class PNConfigurationImpl(
             override var managePresenceListManually: Boolean = super.managePresenceListManually
                 private set
 
+            override fun conversationContext(conversationContext: ConversationContext): Builder {
+                this.conversationContext = conversationContext
+                return this
+            }
+
+            override var conversationContext: ConversationContext = super.conversationContext
+                private set
+
+            override fun apiKey(apiKey: String): Builder {
+                this.apiKey = apiKey
+                return this
+            }
+
+            override var apiKey: String? = super.apiKey
+                private set
+
+            override fun aiProvider(aiProvider: String): Builder {
+                this.aiProvider = aiProvider
+                return this
+            }
+
+            override var aiProvider: String? = super.aiProvider
+                private set
+
+            override fun webHookUrl(webHookUrl: String): Builder {
+                this.webHookUrl = webHookUrl
+                return this
+            }
+
+            override var webHookUrl: String? = super.webHookUrl
+                private set
+
             override fun build(): PNConfiguration {
                 return PNConfigurationImpl(
                     userId = userId,
@@ -421,6 +458,10 @@ class PNConfigurationImpl(
                     pnsdkSuffixes = pnsdkSuffixes,
                     retryConfiguration = retryConfiguration,
                     managePresenceListManually = managePresenceListManually,
+                    conversationContext = conversationContext,
+                    apiKey = apiKey,
+                    aiProvider = aiProvider,
+                    webHookUrl = webHookUrl,
                 )
             }
         }

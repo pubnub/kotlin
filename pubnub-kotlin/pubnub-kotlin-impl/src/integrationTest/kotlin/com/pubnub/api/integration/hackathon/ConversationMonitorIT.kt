@@ -2,11 +2,14 @@ package com.pubnub.api.integration.hackathon
 
 import com.google.gson.Gson
 import com.google.gson.JsonElement
+import com.pubnub.api.PubNub
+import com.pubnub.api.UserId
 import com.pubnub.api.integration.BaseIntegrationTest
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.history.PNFetchMessageItem
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
 import com.pubnub.api.models.consumer.presence.PNHereNowResult
+import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.subscriptions.ConversationContext
 import com.pubnub.test.CommonUtils.randomChannel
 import com.pubnub.test.Keys
@@ -18,6 +21,7 @@ import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.io.IOException
+import java.util.UUID
 import java.util.concurrent.TimeUnit
 
 class ConversationMonitorIT : BaseIntegrationTest() {
@@ -36,6 +40,17 @@ class ConversationMonitorIT : BaseIntegrationTest() {
     //  # zrobić demo
     //  # jak wykorzystać translację np Bahasa Indonesia -> English
     //  # posprzątać kod tzn. mieć lekki test to testowania Translacji, ChatGpt,
+
+    @Test
+    fun canUseConversationContextMonitor() {
+        val configBuilder = PNConfiguration.builder(UserId("client-${UUID.randomUUID()}"), Keys.subKey) {
+            publishKey = Keys.pubKey
+            conversationContext = ConversationContext.SPORTS
+        }
+        val pubnubSupervisor = PubNub.create(configBuilder.build())
+
+        Thread.sleep(20000)
+    }
 
     @Test
     fun canAnalyzeConversation() {
@@ -244,18 +259,11 @@ class ConversationMonitorIT : BaseIntegrationTest() {
     )
 
     fun callChatGptApi(prompt: String, apiKey: String): Answer {
-//        val client = OkHttpClient()
         val client = OkHttpClient.Builder()
-//            .protocols(Arrays.asList(Protocol.HTTP_1_1))
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
             .build()
-
-//        val json = JSONObject()
-//        json.put("prompt", prompt)
-//        json.put("max_tokens", 100)
-//        json.put("model", "gpt-4")
 
         val jsonBody = JSONObject()
         jsonBody.put("model", "gpt-4")
@@ -263,7 +271,6 @@ class ConversationMonitorIT : BaseIntegrationTest() {
             "messages",
             listOf(
                 mapOf("role" to "system", "content" to "You are a helpful assistant."),
-//                mapOf("role" to "user", "content" to "what is capital of Egypt") // działa
                 mapOf("role" to "user", "content" to prompt)
             )
         )

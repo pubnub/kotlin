@@ -63,10 +63,10 @@ open class BasePNConfigurationImpl internal constructor(
     override val pnsdkSuffixes: Map<String, String> = emptyMap(),
     override val retryConfiguration: RetryConfiguration = RetryConfiguration.None,
     override val managePresenceListManually: Boolean = false,
-    override var conversationContext: ConversationContext = ConversationContext.NONE,
-    override var apiKey: String? = null,
-    override var aiProvider: String? = null,
-    override var webHookUrl: String? = null,
+    override val conversationContext: ConversationContext = ConversationContext.NONE,
+    override val apiKey: String? = null,
+    override val aiProvider: String? = null,
+    override val webHookUrl: String? = null,
 ) : BasePNConfiguration {
     companion object {
         const val DEFAULT_DEDUPE_SIZE = 100
@@ -155,9 +155,9 @@ open class BasePNConfigurationImpl internal constructor(
         override val retryConfiguration: RetryConfiguration = defaultConfiguration.retryConfiguration
 
         override val managePresenceListManually: Boolean = defaultConfiguration.managePresenceListManually
-        override var conversationContext: ConversationContext = defaultConfiguration.conversationContext
-        override var apiKey: String? = defaultConfiguration.apiKey
-        override var aiProvider: String? = defaultConfiguration.aiProvider
-        override var webHookUrl: String? = defaultConfiguration.webHookUrl
+        override val conversationContext: ConversationContext = defaultConfiguration.conversationContext
+        override val apiKey: String? = defaultConfiguration.apiKey
+        override val aiProvider: String? = defaultConfiguration.aiProvider
+        override val webHookUrl: String? = defaultConfiguration.webHookUrl
     }
 }

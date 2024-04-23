@@ -5,7 +5,7 @@ import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.retry.RetryConfiguration
-import com.pubnub.api.v2.PNConfiguration.Builder
+import com.pubnub.api.v2.subscriptions.ConversationContext
 import com.pubnub.internal.v2.BasePNConfigurationImpl
 import okhttp3.Authenticator
 import okhttp3.CertificatePinner
@@ -257,6 +257,14 @@ interface PNConfiguration : BasePNConfiguration, PNConfigurationOverride {
          * @see BasePNConfigurationImpl.heartbeatInterval
          */
         fun managePresenceListManually(managePresenceListManually: Boolean): Builder
+
+        fun conversationContext(conversationContext: ConversationContext): Builder
+
+        fun apiKey(apiKey: String): Builder
+
+        fun aiProvider(aiProvider: String): Builder
+
+        fun webHookUrl(webHookUrl: String): Builder
     }
 }
 
