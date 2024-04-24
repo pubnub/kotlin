@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
+import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.integration.BaseIntegrationTest
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.history.PNFetchMessageItem
@@ -32,24 +33,42 @@ class ConversationMonitorIT : BaseIntegrationTest() {
     // v# jak pobrać wszystkie kanały, które są używane <- użyć HereNow(GLOBAL), zamien allUsersInPubNub na allChannels
     // v# stwórz osobnego PubNuba, który będzie monitorował konwersację
     // v# ten osobny PubNub będzie miał w konfiguracji ustawione conversationContext
-    //  # stworzyc osobnę klasę ConversationContextMonitor, która będzie nasłuchiwałą i informowała o wybranej kontekscie konwersacji i wysyłała webhooka
+    // v# stworzyc osobnę klasę ConversationContextMonitor, która będzie nasłuchiwałą i informowała o wybranej kontekscie konwersacji i wysyłała webhooka
     //  # zmien format simplifiedChannels na NewJsonFormat.json tak, żeby można było dostać od GPT informację o konteksie z wielu kanałów
-    //  # można by przechowywać timestamp, pytać co 1 minutę, sprawdzać ilość wiadomości i jak się uzbiera odpowiednia ilość to wołać Chat
-    //  # ten kodzik mógłby odpalać klient na SDK serwerowym, tym który ma secret-Key i przydziela tokeny. Sprawdzić ile messadzy zwrata history
+    // v# można by przechowywać timestamp, pytać co 1 minutę, sprawdzać ilość wiadomości i jak się uzbiera odpowiednia ilość to wołać Chat
+    // v# ten kodzik mógłby odpalać klient na SDK serwerowym, tym który ma secret-Key i przydziela tokeny. Sprawdzić ile messadzy zwrata history
     //  # create validation if this is server SDK usage e.g. secret key is present
     //  # zrobić demo
     //  # jak wykorzystać translację np Bahasa Indonesia -> English
     //  # posprzątać kod tzn. mieć lekki test to testowania Translacji, ChatGpt,
+    //  #sprawdz rózne języki
+    //  Indonezyjski
+    //     Apa kamu suka sepakbola?       <-- Lubisz piłkę nożną?
+    //     Saya lebih suka bermain tenis. <-- Wolę grać w tenisa.
+    // Japonski
+    //     あなたはサッカーが好きですか？  <-- Lubisz piłkę nożną?
+    //     私はテニスをするほうが好きです。<-- Wolę grać w tenisa.
+    // Angielski
+    //     Did you hear about the Prime Minister's decision?
+    //     No, I only heard about the King's decision.
 
     @Test
     fun canUseConversationContextMonitor() {
         val configBuilder = PNConfiguration.builder(UserId("client-${UUID.randomUUID()}"), Keys.subKey) {
             publishKey = Keys.pubKey
-            conversationContext = ConversationContext.SPORTS
+            conversationContext = ConversationContext.HEALTH
+            apiKey = Keys.apiKeyChatGpt
+            webHookUrl = Keys.webHookUrl
+            logVerbosity = PNLogVerbosity.BODY
         }
         val pubnubSupervisor = PubNub.create(configBuilder.build())
 
-        Thread.sleep(20000)
+        Thread.sleep(200000)
+    }
+
+    @Test
+    fun deleteMessages() {
+        pubnub.deleteMessages(channels = listOf("monitoredChannel", "sportChannel")).sync()
     }
 
     @Test

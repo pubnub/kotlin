@@ -116,15 +116,17 @@ class PubNubCore internal constructor(
     eventEnginesConf: EventEnginesConf = EventEnginesConf(),
     private val pnsdkName: String,
 ) {
-    var conversationSupervisorExecutor: ScheduledExecutorService? = null
+    private var conversationSupervisorExecutor: ScheduledExecutorService? = null
+    private val conversationContextMonitor = ConversationContextMonitor(this)
 
     init {
         if (configuration.conversationContext != ConversationContext.NONE) {
             conversationSupervisorExecutor = Executors.newSingleThreadScheduledExecutor()
 
             conversationSupervisorExecutor?.scheduleAtFixedRate({
-                println("Starting loop that will execute query to AI")
-            }, 0, 1, TimeUnit.SECONDS)
+                println("Starting monitoring conversation using AI")
+                conversationContextMonitor.monitorConversationAndSendNotification()
+            }, 2, 30, TimeUnit.SECONDS)
         }
     }
 

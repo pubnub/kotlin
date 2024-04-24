@@ -85,9 +85,9 @@ interface PNConfiguration : BasePNConfiguration {
         override var retryConfiguration: RetryConfiguration
         override var managePresenceListManually: Boolean
         override var conversationContext: ConversationContext
-        override val apiKey: String?
-        override val aiProvider: String?
-        override val webHookUrl: String?
+        override var apiKey: String?
+        override var aiProvider: String?
+        override var webHookUrl: String?
 
         /**
          * Create a [PNConfiguration] object with values from this builder.
