@@ -400,4 +400,6 @@ class PNConfiguration(override var userId: UserId) : BasePNConfiguration {
     override val aiProvider: String? = configuration.aiProvider
 
     override val webHookUrl: String? = configuration.webHookUrl
+
+    override val monitoredChannels: List<String>? = configuration.monitoredChannels
 }

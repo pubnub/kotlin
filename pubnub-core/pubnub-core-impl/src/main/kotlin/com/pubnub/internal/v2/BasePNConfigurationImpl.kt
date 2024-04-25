@@ -67,6 +67,7 @@ open class BasePNConfigurationImpl internal constructor(
     override val apiKey: String? = null,
     override val aiProvider: String? = null,
     override val webHookUrl: String? = null,
+    override val monitoredChannels: List<String>? = null
 ) : BasePNConfiguration {
     companion object {
         const val DEFAULT_DEDUPE_SIZE = 100
@@ -159,5 +160,6 @@ open class BasePNConfigurationImpl internal constructor(
         override val apiKey: String? = defaultConfiguration.apiKey
         override val aiProvider: String? = defaultConfiguration.aiProvider
         override val webHookUrl: String? = defaultConfiguration.webHookUrl
+        override val monitoredChannels: List<String>? = defaultConfiguration.monitoredChannels
     }
 }

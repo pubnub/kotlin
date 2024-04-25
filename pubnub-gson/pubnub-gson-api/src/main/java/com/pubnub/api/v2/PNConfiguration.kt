@@ -265,6 +265,8 @@ interface PNConfiguration : BasePNConfiguration, PNConfigurationOverride {
         fun aiProvider(aiProvider: String): Builder
 
         fun webHookUrl(webHookUrl: String): Builder
+
+        fun monitoredChannels(monitoredChannels: List<String>): Builder
     }
 }
 

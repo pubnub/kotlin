@@ -56,9 +56,11 @@ class ConversationMonitorIT : BaseIntegrationTest() {
     fun canUseConversationContextMonitor() {
         val configBuilder = PNConfiguration.builder(UserId("client-${UUID.randomUUID()}"), Keys.subKey) {
             publishKey = Keys.pubKey
-            conversationContext = ConversationContext.HEALTH
+            conversationContext = ConversationContext.SPORTS
             apiKey = Keys.apiKeyChatGpt
             webHookUrl = Keys.webHookUrl
+//            monitoredChannels = listOf("monitoredChannel", "sportChannel")
+//            monitoredChannels = listOf("sportChannel")
             logVerbosity = PNLogVerbosity.BODY
         }
         val pubnubSupervisor = PubNub.create(configBuilder.build())

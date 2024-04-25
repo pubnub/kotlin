@@ -646,6 +646,14 @@ class PNConfiguration(userId: UserId) : BasePNConfiguration {
     override var webHookUrl: String? = defaultConfiguration.webHookUrl
         private set
 
+    fun setMonitoredChannels(monitoredChannels: List<String>): PNConfiguration {
+        this.monitoredChannels = monitoredChannels
+        return this
+    }
+
+    override var monitoredChannels: List<String>? = defaultConfiguration.monitoredChannels
+        private set
+
     /**
      * Set to [PNReconnectionPolicy.LINEAR] for automatic reconnects.
      *

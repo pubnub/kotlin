@@ -62,6 +62,7 @@ class PNConfigurationImpl(
     override val apiKey: String?,
     override val aiProvider: String?,
     override val webHookUrl: String?,
+    override val monitoredChannels: List<String>?,
 ) : BasePNConfigurationImpl(userId), PNConfiguration {
     class Builder internal constructor(defaultConfiguration: BasePNConfiguration) :
         BasePNConfigurationImpl.Builder(defaultConfiguration),
@@ -418,6 +419,14 @@ class PNConfigurationImpl(
             override var webHookUrl: String? = super.webHookUrl
                 private set
 
+            override fun monitoredChannels(monitoredChannels: List<String>): Builder {
+                this.monitoredChannels = monitoredChannels
+                return this
+            }
+
+            override var monitoredChannels: List<String>? = super.monitoredChannels
+                private set
+
             override fun build(): PNConfiguration {
                 return PNConfigurationImpl(
                     userId = userId,
@@ -462,6 +471,7 @@ class PNConfigurationImpl(
                     apiKey = apiKey,
                     aiProvider = aiProvider,
                     webHookUrl = webHookUrl,
+                    monitoredChannels = monitoredChannels
                 )
             }
         }

@@ -2,6 +2,7 @@ package com.pubnub.internal
 
 import com.google.gson.Gson
 import com.google.gson.JsonElement
+import com.google.gson.reflect.TypeToken
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.history.PNFetchMessageItem
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
@@ -20,55 +21,62 @@ class ConversationContextMonitor(private val pubNub: PubNubCore) {
     private val apiKey: String? = pubNub.configuration.apiKey
     private val conversationContext: ConversationContext = pubNub.configuration.conversationContext
     private val webHookUrl: String? = pubNub.configuration.webHookUrl
+    private val monitoredChannelsFromConfig: List<String>? = pubNub.configuration.monitoredChannels
     private val gson = Gson()
 
     fun monitorConversationAndSendNotification() {
         // todo if there are less than 50 messages wait for next execution of conversationSupervisorExecutor
+        var monitoredChannels: MutableSet<String>?
 
-        // get all currently subscribe channels. What about channels that someone only publish to? They are not support for now.
-        val globalHereNowResult: PNHereNowResult? = pubNub.hereNow().sync()
-        val allChannels: MutableSet<String>? = globalHereNowResult?.channels?.keys
+        // no channels have been specified by user
+        if (monitoredChannelsFromConfig.isNullOrEmpty()) {
+            // get all currently subscribe channels. What about channels that someone only publish to? They are not support for now.
+            val globalHereNowResult: PNHereNowResult = pubNub.hereNow().sync()
+            monitoredChannels = globalHereNowResult.channels.keys
+        } else {
+            monitoredChannels = monitoredChannelsFromConfig?.toMutableSet()
+        }
+
         var messagesForAllChannels: PNFetchMessagesResult? = null
-        allChannels?.let {
+        monitoredChannels?.let {
             messagesForAllChannels = getMessagesForMonitoredChannelAndUpdateTimestamp(it)
         }
 
         // I would like to convert using gson "channels" to JSON but only following fields : channel, message, uuid
-        val simplifiedMessages: List<SimplifiedMessageItem> = convertMessagesFromAllChannelsIntoSimplifiedMessages(messagesForAllChannels)
-
-//        val gson = Gson()
-        // todo zmien strukturę tak żeby dla każdego kanału podana była lista wiadomości
+        val simplifiedMessages: List<SimplifiedMessageItem> =
+            convertMessagesFromAllChannelsIntoSimplifiedMessages(messagesForAllChannels)
 
         if (simplifiedMessages.isNotEmpty()) {
             val conversations: String = gson.toJson(simplifiedMessages)
             val prompt = buildPromptToChatGpt(conversations)
-            val response: Answer = callChatGptApi(prompt, apiKey!!)
+            val response: List<Answer> = callChatGptApi(prompt, apiKey!!)
             printResponseDetails(response)
             // send info to webhook
-            if (response.decision.equals("Yes", ignoreCase = true)) {
-                callWebhook(response)
-            }
+            callWebhook(response)
         }
     }
 
-    private fun printResponseDetails(response: Answer) {
-        println("ChatGPT Response: ")
-        println("             Decision: ${response.decision} ")
-        println("             ProbabilityInPercents: ${response.probabilityInPercents}")
-        println("             User: ${response.user}")
-        println("             Channel: ${response.channel}")
-        println("             Message: ${response.message}")
+    private fun printResponseDetails(response: List<Answer>) {
+        for (answer in response) {
+            println("ChatGPT Response: ")
+            println("             Decision: ${answer.decision} ")
+            println("             ProbabilityInPercents: ${answer.probabilityInPercents}")
+            println("             User: ${answer.user}")
+            println("             Channel: ${answer.channel}")
+            println("             Message: ${answer.message}")
+            println("             ConversationContext: ${answer.conversationContext}")
+        }
     }
 
-    // todo replace "politics" with pnConfiguration.conversationContext.toString
     private fun buildPromptToChatGpt(conversations: String): String {
         // send json to ChatGpt asking for opinion
-        val questions = "I will pass conversation. Please, extract conversation. It is stored in field \"message\".\n" +
-            "Answer \\\"yes\\\" if it talks about $conversationContext and answer \\\"no\\\" if it doesn't talk about $conversationContext. Include probability. Example response should be in JSON format and look like: \n" +
-            "{“decision” = “yes”, “probabilityInPercents” = 80, “user” = “client-5f6aac7e-2254-4e30-a55e-2778bd71503e”, “channel” = “ch_1702020815470_1A27301E2A”, message=“Did you hear about Prime Minister decision?”}\n" +
-            "Or\n" +
-            "{“decision” = “no”, “probabilityInPercents” = 90, “user” = “client-a6be84f4-199d-4d45-aa60-b746c9f6eaab”, “channel” = “ch_1702020815471_6D16D3B3AC”,  message=“”}\n" +
-            "In your response there should be only JSON object containing decision, probabilityInPercents, channel, user, message. Remember in response there should be only one object containing decision, probabilityInPercents, channel, user, message. This is the conversation:"
+        val questions =
+            "I will pass conversation. Please, extract conversation. It is stored in field \"message\". Aggragate messages by channel\n" +
+                "Answer \\\"yes\\\" if it talks about $conversationContext and answer \\\"no\\\" if it doesn't talk about $conversationContext. Include probability. Response should be in JSON format and look like: \n" +
+                "{“decision” = “yes”, “probabilityInPercents” = 80, “user” = “client-5f6aac7e-2254-4e30-a55e-2778bd71503e”, “channel” = “ch_1702020815470_1A27301E2A”, message=“Did you hear about Prime Minister decision?”, conversationContext=“politics”}\n" +
+                "Or\n" +
+                "{“decision” = “no”, “probabilityInPercents” = 90, “user” = “client-a6be84f4-199d-4d45-aa60-b746c9f6eaab”, “channel” = “ch_1702020815471_6D16D3B3AC”,  message=“”, conversationContext=“politics”}\n" +
+                "Your response should be only JSON  string containing list of objects containing decision, probabilityInPercents, channel, user, message. This is the conversation:"
         return questions + conversations
     }
 
@@ -96,7 +104,7 @@ class ConversationContextMonitor(private val pubNub: PubNubCore) {
         return conversationHistory
     }
 
-    fun callChatGptApi(prompt: String, apiKey: String): Answer {
+    fun callChatGptApi(prompt: String, apiKey: String): List<Answer> {
         val client = OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
@@ -132,46 +140,52 @@ class ConversationContextMonitor(private val pubNub: PubNubCore) {
             val gson = Gson()
             val data = gson.fromJson(message, ChatCompletion::class.java)
             val answerAsJson = data.choices[0].message.content
-            val answer: Answer = gson.fromJson(answerAsJson, Answer::class.java)
-            return answer // we are expecting JSON here
+            val answerListType = object : TypeToken<List<Answer>>() {}.type
+            val answerList: List<Answer> = gson.fromJson(answerAsJson, answerListType)
+            return answerList // we are expecting JSON here
         }
     }
 
-    private fun callWebhook(response: Answer) {
-        val jsonBody = """
-        {
-            "decision": ${response.decision},
-            "probabilityInPercents": ${response.probabilityInPercents},
-            "user": ${response.user},
-            "channel": ${response.channel},
-            "message": ${response.message},
-        }
-        """.trimIndent()
+    private fun callWebhook(response: List<Answer>) {
+        for (answer in response) {
+            if (answer.decision.equals("Yes", ignoreCase = true)) {
+                val jsonBody = """
+                {
+                    "decision": ${answer.decision},
+                    "probabilityInPercents": ${answer.probabilityInPercents},
+                    "user": ${answer.user},
+                    "channel": ${answer.channel},
+                    "message": ${answer.message},
+                    "conversationContext“: ${answer.conversationContext}
+                }
+                """.trimIndent()
 
-        // Specify the media type for the request body (application/json in this case)
-        val mediaType = "application/json; charset=utf-8".toMediaType()
+                // Specify the media type for the request body (application/json in this case)
+                val mediaType = "application/json; charset=utf-8".toMediaType()
 
-        // Create an OkHttpClient instance
-        val client = OkHttpClient()
+                // Create an OkHttpClient instance
+                val client = OkHttpClient()
 
-        // Create the request body
-        val requestBody = jsonBody.toRequestBody(mediaType)
+                // Create the request body
+                val requestBody = jsonBody.toRequestBody(mediaType)
 
-        // Build the request
-        val request = Request.Builder()
-            .url(webHookUrl!!)
-            .header("Content-Type", "application/json")
-            .post(requestBody)
-            .build()
+                // Build the request
+                val request = Request.Builder()
+                    .url(webHookUrl!!)
+                    .header("Content-Type", "application/json")
+                    .post(requestBody)
+                    .build()
 
-        // Execute the request
-        val response = client.newCall(request).execute()
+                // Execute the request
+                val response = client.newCall(request).execute()
 
-        // Check the response
-        if (response.isSuccessful) {
-            println("Webhook call successful. Response: ${response.body?.string()}")
-        } else {
-            println("Webhook call failed. Response code: ${response.code}")
+                // Check the response
+                if (response.isSuccessful) {
+                    println("Webhook call successful. Response: ${response.body?.string()}")
+                } else {
+                    println("Webhook call failed. Response code: ${response.code}")
+                }
+            }
         }
     }
 }
@@ -184,10 +198,11 @@ data class SimplifiedMessageItem(
 
 data class Answer(
     val decision: String, // yes or no
-    val probabilityInPercents: String, // change to Int?
+    val probabilityInPercents: Int,
     val user: String, // client-dda82791-eb4d-48ca-9fa4-cab910381221
     val channel: String,
-    val message: String
+    val message: String,
+    val conversationContext: String,
 )
 
 data class ChatCompletion(

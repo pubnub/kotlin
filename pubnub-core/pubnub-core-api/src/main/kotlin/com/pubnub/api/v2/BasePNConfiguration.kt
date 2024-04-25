@@ -289,6 +289,7 @@ interface BasePNConfiguration : BasePNConfigurationOverride {
     val apiKey: String?
     val aiProvider: String?
     val webHookUrl: String?
+    val monitoredChannels: List<String>?
 
     @Deprecated(
         level = DeprecationLevel.WARNING,
@@ -569,5 +570,6 @@ interface BasePNConfiguration : BasePNConfigurationOverride {
         val apiKey: String?
         val aiProvider: String?
         val webHookUrl: String?
+        val monitoredChannels: List<String>?
     }
 }

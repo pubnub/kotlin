@@ -88,6 +88,7 @@ interface PNConfiguration : BasePNConfiguration {
         override var apiKey: String?
         override var aiProvider: String?
         override var webHookUrl: String?
+        override var monitoredChannels: List<String>?
 
         /**
          * Create a [PNConfiguration] object with values from this builder.
