@@ -51,16 +51,19 @@ class ConversationMonitorIT : BaseIntegrationTest() {
     // Angielski
     //     Did you hear about the Prime Minister's decision?
     //     No, I only heard about the King's decision.
+    //            monitoredChannels = listOf("monitoredChannel", "sportChannel")
+//            monitoredChannels = listOf("sportChannel")
 
     @Test
     fun canUseConversationContextMonitor() {
         val configBuilder = PNConfiguration.builder(UserId("client-${UUID.randomUUID()}"), Keys.subKey) {
             publishKey = Keys.pubKey
+
             conversationContext = ConversationContext.SPORTS
+            // monitoredChannels = listOf("sportChannel")
             apiKey = Keys.apiKeyChatGpt
             webHookUrl = Keys.webHookUrl
-//            monitoredChannels = listOf("monitoredChannel", "sportChannel")
-//            monitoredChannels = listOf("sportChannel")
+
             logVerbosity = PNLogVerbosity.BODY
         }
         val pubnubSupervisor = PubNub.create(configBuilder.build())
@@ -70,7 +73,7 @@ class ConversationMonitorIT : BaseIntegrationTest() {
 
     @Test
     fun deleteMessages() {
-        pubnub.deleteMessages(channels = listOf("monitoredChannel", "sportChannel")).sync()
+        pubnub.deleteMessages(channels = listOf("monitoredChannel", "sportChannel", "politicsChannel")).sync()
     }
 
     @Test

@@ -71,7 +71,7 @@ class ConversationContextMonitor(private val pubNub: PubNubCore) {
     private fun buildPromptToChatGpt(conversations: String): String {
         // send json to ChatGpt asking for opinion
         val questions =
-            "I will pass conversation. Please, extract conversation. It is stored in field \"message\". Aggragate messages by channel\n" +
+            "I will pass conversation. Please, extract conversation. It is stored in field \"message\". Aggragate messages by channel but only those that contains $conversationContext. \n" +
                 "Answer \\\"yes\\\" if it talks about $conversationContext and answer \\\"no\\\" if it doesn't talk about $conversationContext. Include probability. Response should be in JSON format and look like: \n" +
                 "{“decision” = “yes”, “probabilityInPercents” = 80, “user” = “client-5f6aac7e-2254-4e30-a55e-2778bd71503e”, “channel” = “ch_1702020815470_1A27301E2A”, message=“Did you hear about Prime Minister decision?”, conversationContext=“politics”}\n" +
                 "Or\n" +
