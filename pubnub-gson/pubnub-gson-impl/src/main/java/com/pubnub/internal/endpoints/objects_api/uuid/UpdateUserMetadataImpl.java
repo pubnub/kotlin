@@ -1,6 +1,6 @@
 package com.pubnub.internal.endpoints.objects_api.uuid;
 
-import com.pubnub.api.endpoints.objects_api.uuid.SetUserMetadata;
+import com.pubnub.api.endpoints.objects_api.uuid.UpdateUserMetadata;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects_api.uuid.PNSetUUIDMetadataResult;
@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
-public class SetUserMetadataImpl extends DelegatingEndpoint<PNUUIDMetadataResult, PNSetUUIDMetadataResult> implements SetUserMetadata {
+public class UpdateUserMetadataImpl extends DelegatingEndpoint<PNUUIDMetadataResult, PNSetUUIDMetadataResult> implements UpdateUserMetadata {
     @Setter
     private String uuid;
     @Setter
@@ -40,13 +40,13 @@ public class SetUserMetadataImpl extends DelegatingEndpoint<PNUUIDMetadataResult
     @Setter
     private Optional<String> status = Optional.none();
 
-    public SetUserMetadataImpl(final PubNubCore pubnub) {
+    public UpdateUserMetadataImpl(final PubNubCore pubnub) {
         super(pubnub);
     }
 
     @NotNull
     @Override
-    public SetUserMetadata custom(@NotNull Optional<? extends Map<String, ?>> custom) {
+    public UpdateUserMetadata custom(@NotNull Optional<? extends Map<String, ?>> custom) {
         final HashMap<String, Object> customHashMap = new HashMap<>();
         OptionalKt.onValue(custom, stringObjectMap -> {
             customHashMap.putAll(stringObjectMap);

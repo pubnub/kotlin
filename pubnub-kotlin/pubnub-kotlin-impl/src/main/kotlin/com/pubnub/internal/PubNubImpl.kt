@@ -743,7 +743,7 @@ class PubNubImpl(
     }
 
     @Deprecated(
-        "It's not possible to set metadata to `null` using this function. Use `updateChannelMetadata` whichoffers the option to overwrite, leave as is or clear metadata.",
+        "It's not possible to set metadata to `null` using this function. Use `updateChannelMetadata` which offers the option to overwrite, leave as is or clear metadata.",
         replaceWith = ReplaceWith(
             "updateChannelMetadata(channel, Optional.ofNullable(name), Optional.ofNullable(description), Optional.ofNullable(custom), includeCustom, Optional.ofNullable(type), Optional.ofNullable(status))",
             "com.pubnub.api.utils.Optional"
@@ -821,9 +821,9 @@ class PubNubImpl(
     }
 
     @Deprecated(
-        "It's not possible to set metadata to `null` using this function. Use `setUserMetadata` whichoffers the option to overwrite, leave as is or clear metadata.",
+        "It's not possible to set metadata to `null` using this function. Use `updateUserMetadata` which offers the option to overwrite, leave as is or clear metadata.",
         replaceWith = ReplaceWith(
-            "setUserMetadata(uuid, Optional.ofNullable(name), Optional.ofNullable(externalId), Optional.ofNullable(profileUrl), Optional.ofNullable(email), Optional.ofNullable(custom), includeCustom, Optional.ofNullable(type), Optional.ofNullable(status))",
+            "updateUserMetadata(uuid, Optional.ofNullable(name), Optional.ofNullable(externalId), Optional.ofNullable(profileUrl), Optional.ofNullable(email), Optional.ofNullable(custom), includeCustom, Optional.ofNullable(type), Optional.ofNullable(status))",
             "com.pubnub.api.utils.Optional"
         )
     )
@@ -853,7 +853,7 @@ class PubNubImpl(
         )
     }
 
-    override fun setUserMetadata(
+    override fun updateUserMetadata(
         uuid: String?,
         name: Optional<String?>,
         externalId: Optional<String?>,

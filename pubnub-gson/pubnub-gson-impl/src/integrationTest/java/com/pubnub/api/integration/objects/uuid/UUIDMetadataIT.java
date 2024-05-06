@@ -86,7 +86,7 @@ public class UUIDMetadataIT extends ObjectsApiBaseIT {
         //given
 
         //when
-        final PNSetUUIDMetadataResult setUUIDMetadataResult = pubNubUnderTest.setUserMetadata()
+        final PNSetUUIDMetadataResult setUUIDMetadataResult = pubNubUnderTest.updateUserMetadata()
                 .uuid(randomTestUUID)
                 .name(Optional.of(randomName))
                 .email(Optional.of(randomEmail))
@@ -111,7 +111,7 @@ public class UUIDMetadataIT extends ObjectsApiBaseIT {
         assertEquals(statusValue, setUUIDMetadataResult.getData().getStatus());
         assertEquals(typeValue, setUUIDMetadataResult.getData().getType());
 
-        final PNSetUUIDMetadataResult setUUIDMetadataResult2 = pubNubUnderTest.setUserMetadata()
+        final PNSetUUIDMetadataResult setUUIDMetadataResult2 = pubNubUnderTest.updateUserMetadata()
                 .uuid(randomTestUUID)
                 .name(Optional.of("newName"))
                 .email(Optional.of(null))

@@ -965,10 +965,10 @@ interface PubNub :
      * @param includeCustom Include respective additional fields in the response.
      */
     @Deprecated(
-        message = "It's not possible to set metadata to `null` using this function. Use `setUserMetadata` which" +
+        message = "It's not possible to set metadata to `null` using this function. Use `updateUserMetadata` which" +
             "offers the option to overwrite, leave as is or clear metadata.",
         ReplaceWith(
-            "setUserMetadata(uuid, Optional.ofNullable(name), Optional.ofNullable(externalId), Optional.ofNullable(profileUrl), Optional.ofNullable(email), Optional.ofNullable(custom), includeCustom, Optional.ofNullable(type), Optional.ofNullable(status))",
+            "updateUserMetadata(uuid, Optional.ofNullable(name), Optional.ofNullable(externalId), Optional.ofNullable(profileUrl), Optional.ofNullable(email), Optional.ofNullable(custom), includeCustom, Optional.ofNullable(type), Optional.ofNullable(status))",
             "com.pubnub.api.utils.Optional"
         )
     )
@@ -998,7 +998,7 @@ interface PubNub :
      * @param custom Object with supported data types.
      * @param includeCustom Include respective additional fields in the response.
      */
-    fun setUserMetadata(
+    fun updateUserMetadata(
         uuid: String? = null,
         name: Optional<String?> = Optional.none(),
         externalId: Optional<String?> = Optional.none(),

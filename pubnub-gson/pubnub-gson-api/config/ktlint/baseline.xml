@@ -3,7 +3,7 @@
     <file name="src/main/java/com/pubnub/api/endpoints/objects_api/channel/UpdateChannelMetadata.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
-    <file name="src/main/java/com/pubnub/api/endpoints/objects_api/uuid/SetUserMetadata.kt">
+    <file name="src/main/java/com/pubnub/api/endpoints/objects_api/uuid/UpdateUserMetadata.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>
 </baseline>

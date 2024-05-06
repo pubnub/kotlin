@@ -285,7 +285,7 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
         val expectedProfileUrl = "http://my_main_uuid_profile_url"
         val expectedCustom = hashMapOf("color" to "red", "foo" to "bar")
 
-        pubnub.setUserMetadata(
+        pubnub.updateUserMetadata(
             uuid = expectedUUID,
             name = Optional.of(expectedName),
             email = Optional.of(expectedEmail),
@@ -304,7 +304,7 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
 
         val expectedName2 = "newName"
 
-        pubnub.setUserMetadata(
+        pubnub.updateUserMetadata(
             uuid = expectedUUID,
             name = Optional.of(expectedName2),
             email = Optional.of(null),
