@@ -324,7 +324,7 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
         val expectedChannel = randomChannel()
         val expectedName = null
         val expectedDescription = "my_desc"
-        val expectedStatus= "mystatus"
+        val expectedStatus = "mystatus"
         val expectedCustom = hashMapOf("color" to "red", "foo" to "bar")
 
         pubnub.updateChannelMetadata(
