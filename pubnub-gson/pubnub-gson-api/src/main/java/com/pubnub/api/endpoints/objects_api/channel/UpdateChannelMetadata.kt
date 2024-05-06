@@ -6,17 +6,17 @@ import com.pubnub.api.models.consumer.objects_api.channel.PNSetChannelMetadataRe
 import com.pubnub.api.utils.Optional
 
 interface UpdateChannelMetadata : Endpoint<PNSetChannelMetadataResult?> {
-    fun name(name: Optional<String?>): UpdateChannelMetadata?
+    fun name(name: Optional<String?>): UpdateChannelMetadata
 
-    fun description(description: Optional<String?>): UpdateChannelMetadata?
+    fun description(description: Optional<String?>): UpdateChannelMetadata
 
-    fun status(status: Optional<String?>): UpdateChannelMetadata?
+    fun status(status: Optional<String?>): UpdateChannelMetadata
 
-    fun type(type: Optional<String?>): UpdateChannelMetadata?
+    fun type(type: Optional<String?>): UpdateChannelMetadata
 
-    fun custom(custom: Optional<Map<String?, Any?>?>): UpdateChannelMetadata?
+    fun custom(custom: Optional<Map<String?, Any?>?>): UpdateChannelMetadata
 
-    fun includeCustom(includeCustom: Boolean): UpdateChannelMetadata?
+    fun includeCustom(includeCustom: Boolean): UpdateChannelMetadata
 
     interface Builder : ChannelStep<UpdateChannelMetadata> {
         override fun channel(channel: String): UpdateChannelMetadata

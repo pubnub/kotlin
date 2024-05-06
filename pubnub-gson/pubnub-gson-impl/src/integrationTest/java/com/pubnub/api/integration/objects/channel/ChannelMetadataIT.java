@@ -7,6 +7,7 @@ import com.pubnub.api.models.consumer.objects_api.channel.PNGetAllChannelsMetada
 import com.pubnub.api.models.consumer.objects_api.channel.PNGetChannelMetadataResult;
 import com.pubnub.api.models.consumer.objects_api.channel.PNRemoveChannelMetadataResult;
 import com.pubnub.api.models.consumer.objects_api.channel.PNSetChannelMetadataResult;
+import com.pubnub.api.utils.Optional;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.HttpStatus;
 import org.jetbrains.annotations.NotNull;
@@ -33,6 +34,7 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class ChannelMetadataIT extends ObjectsApiBaseIT {
     private static final Logger LOG = LoggerFactory.getLogger(ChannelMetadataIT.class);
@@ -47,6 +49,52 @@ public class ChannelMetadataIT extends ObjectsApiBaseIT {
     private final String typeValue = "chat";
 
     private final List<PNSetChannelMetadataResult> createdChannelMetadataList = new ArrayList<>();
+
+
+    @Test
+    public void setChannelHappyPathWithOptionals() throws PubNubException {
+        //given
+
+        //when
+        final PNSetChannelMetadataResult setChannelMetadataResult = pubNubUnderTest.updateChannelMetadata()
+                .channel(randomChannelMetadataId)
+                .description(Optional.of(randomDescription))
+                .custom(Optional.of(customChannelObject()))
+                .includeCustom(true)
+                .status(Optional.of(statusValue))
+                .type(Optional.of(typeValue))
+                .sync();
+
+        //then
+        assertNotNull(setChannelMetadataResult);
+        assertEquals(HttpStatus.SC_OK, setChannelMetadataResult.getStatus());
+        createdChannelMetadataList.add(setChannelMetadataResult);
+        assertEquals(randomChannelMetadataId, setChannelMetadataResult.getData().getId());
+        assertEquals(randomDescription,
+                setChannelMetadataResult.getData().getDescription());
+        assertNotNull(setChannelMetadataResult.getData().getCustom());
+        assertEquals(statusValue, setChannelMetadataResult.getData().getStatus());
+        assertEquals(typeValue, setChannelMetadataResult.getData().getType());
+
+        final PNSetChannelMetadataResult setChannelMetadataResult2 = pubNubUnderTest.updateChannelMetadata()
+                .channel(randomChannelMetadataId)
+                .description(Optional.of("newDesc"))
+                .includeCustom(true)
+                .status(Optional.of(null))
+                .sync();
+
+
+        //then
+        assertNotNull(setChannelMetadataResult2);
+        assertEquals(HttpStatus.SC_OK, setChannelMetadataResult2.getStatus());
+        createdChannelMetadataList.add(setChannelMetadataResult2);
+        assertEquals(randomChannelMetadataId, setChannelMetadataResult2.getData().getId());
+        assertEquals("newDesc",
+                setChannelMetadataResult2.getData().getDescription());
+        assertNotNull(setChannelMetadataResult2.getData().getCustom());
+        assertNull(setChannelMetadataResult2.getData().getStatus());
+        assertEquals(typeValue, setChannelMetadataResult2.getData().getType());
+    }
 
     @Test
     public void setChannelHappyPath() throws PubNubException {
@@ -67,7 +115,7 @@ public class ChannelMetadataIT extends ObjectsApiBaseIT {
         assertEquals(HttpStatus.SC_OK, setChannelMetadataResult.getStatus());
         createdChannelMetadataList.add(setChannelMetadataResult);
         assertEquals(randomChannelMetadataId, setChannelMetadataResult.getData().getId());
-        assertEquals(setChannelMetadataResult.getData().getDescription(),
+        assertEquals(randomDescription,
                 setChannelMetadataResult.getData().getDescription());
         assertNotNull(setChannelMetadataResult.getData().getCustom());
         assertEquals(statusValue, setChannelMetadataResult.getData().getStatus());

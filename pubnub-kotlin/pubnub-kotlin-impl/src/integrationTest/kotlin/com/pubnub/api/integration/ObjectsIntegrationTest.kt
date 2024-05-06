@@ -11,6 +11,7 @@ import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.utils.Optional
+import com.pubnub.test.CommonUtils.randomChannel
 import com.pubnub.test.CommonUtils.randomValue
 import com.pubnub.test.subscribeToBlocking
 import org.hamcrest.MatcherAssert.assertThat
@@ -276,7 +277,7 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun optionalFieldsAreSetOrClearedCorrectly() {
+    fun optionalUuidFieldsAreSetOrClearedCorrectly() {
         val expectedUUID = "my_main_uud"
         val expectedName = null
         val expectedEmail = "my_main_uuid_email"
@@ -315,6 +316,45 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
             assertEquals(expectedExternalId, this.data?.externalId)
             assertEquals(expectedProfileUrl, this.data?.profileUrl)
             assertEquals(expectedCustom, this.data?.custom)
+        }
+    }
+
+    @Test
+    fun optionalChannelFieldsAreSetOrClearedCorrectly() {
+        val expectedChannel = randomChannel()
+        val expectedName = null
+        val expectedDescription = "my_desc"
+        val expectedStatus= "mystatus"
+        val expectedCustom = hashMapOf("color" to "red", "foo" to "bar")
+
+        pubnub.updateChannelMetadata(
+            channel = expectedChannel,
+            name = Optional.of(expectedName),
+            description = Optional.of(expectedDescription),
+            custom = Optional.of(expectedCustom),
+            includeCustom = true,
+            status = Optional.of(expectedStatus)
+        ).sync().apply {
+            assertEquals(expectedChannel, this.data?.id)
+            assertEquals(expectedName, this.data?.name)
+            assertEquals(expectedDescription, this.data?.description)
+            assertEquals(expectedCustom, this.data?.custom)
+            assertEquals(expectedStatus, this.data?.status)
+        }
+
+        val expectedName2 = "newName"
+
+        pubnub.updateChannelMetadata(
+            channel = expectedChannel,
+            name = Optional.of(expectedName2),
+            description = Optional.of(null),
+            includeCustom = true,
+        ).sync().apply {
+            assertEquals(expectedChannel, this.data?.id)
+            assertEquals(expectedName2, this.data?.name)
+            assertEquals(expectedCustom, this.data?.custom)
+            assertEquals(expectedStatus, this.data?.status)
+            assertNull(this.data?.description)
         }
     }
 
