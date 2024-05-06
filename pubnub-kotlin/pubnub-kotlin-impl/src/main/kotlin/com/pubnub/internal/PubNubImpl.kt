@@ -742,6 +742,13 @@ class PubNubImpl(
         )
     }
 
+    @Deprecated(
+        "It's not possible to set metadata to `null` using this function. Use `updateChannelMetadata` whichoffers the option to overwrite, leave as is or clear metadata.",
+        replaceWith = ReplaceWith(
+            "updateChannelMetadata(channel, Optional.ofNullable(name), Optional.ofNullable(description), Optional.ofNullable(custom), includeCustom, Optional.ofNullable(type), Optional.ofNullable(status))",
+            "com.pubnub.api.utils.Optional"
+        )
+    )
     override fun setChannelMetadata(
         channel: String,
         name: String?,
@@ -750,6 +757,28 @@ class PubNubImpl(
         includeCustom: Boolean,
         type: String?,
         status: String?,
+    ): SetChannelMetadata {
+        return com.pubnub.internal.endpoints.objects.channel.SetChannelMetadataImpl(
+            pubNubCore.setChannelMetadata(
+                channel,
+                name = Optional.ofNullable(name),
+                description = Optional.ofNullable(description),
+                custom = Optional.ofNullable(custom),
+                includeCustom = includeCustom,
+                type = Optional.ofNullable(type),
+                status = Optional.ofNullable(status)
+            ),
+        )
+    }
+
+    override fun updateChannelMetadata(
+        channel: String,
+        name: Optional<String?>,
+        description: Optional<String?>,
+        custom: Optional<Any?>,
+        includeCustom: Boolean,
+        type: Optional<String?>,
+        status: Optional<String?>
     ): SetChannelMetadata {
         return com.pubnub.internal.endpoints.objects.channel.SetChannelMetadataImpl(
             pubNubCore.setChannelMetadata(channel, name, description, custom, includeCustom, type, status),
@@ -791,6 +820,13 @@ class PubNubImpl(
         )
     }
 
+    @Deprecated(
+        "It's not possible to set metadata to `null` using this function. Use `setUserMetadata` whichoffers the option to overwrite, leave as is or clear metadata.",
+        replaceWith = ReplaceWith(
+            "setUserMetadata(uuid, Optional.ofNullable(name), Optional.ofNullable(externalId), Optional.ofNullable(profileUrl), Optional.ofNullable(email), Optional.ofNullable(custom), includeCustom, Optional.ofNullable(type), Optional.ofNullable(status))",
+            "com.pubnub.api.utils.Optional"
+        )
+    )
     override fun setUUIDMetadata(
         uuid: String?,
         name: String?,

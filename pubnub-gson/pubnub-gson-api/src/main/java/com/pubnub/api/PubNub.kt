@@ -30,6 +30,7 @@ import com.pubnub.api.endpoints.objects_api.channel.GetAllChannelsMetadata
 import com.pubnub.api.endpoints.objects_api.channel.GetChannelMetadata
 import com.pubnub.api.endpoints.objects_api.channel.RemoveChannelMetadata
 import com.pubnub.api.endpoints.objects_api.channel.SetChannelMetadata
+import com.pubnub.api.endpoints.objects_api.channel.UpdateChannelMetadata
 import com.pubnub.api.endpoints.objects_api.members.GetChannelMembers
 import com.pubnub.api.endpoints.objects_api.members.ManageChannelMembers
 import com.pubnub.api.endpoints.objects_api.members.RemoveChannelMembers
@@ -442,9 +443,22 @@ interface PubNub :
     fun removeUUIDMetadata(): RemoveUUIDMetadata
 
     /**
-     * Set metadata for a Channel in the database, optionally including the custom data object for each.
+     * Set metadata for a Channel in the database, optionally including the custom data object.
      */
+    @Deprecated(
+        message = "It's not possible to set metadata to `null` using this function. Use `updateChannelMetadata` " +
+            "which offers the option to overwrite, leave as is or clear metadata.",
+        ReplaceWith("updateChannelMetadata()")
+    )
     fun setChannelMetadata(): SetChannelMetadata.Builder
+
+    /**
+     * Set metadata for a Channel in the database, optionally including the custom data object.
+     *
+     * For parameters use `Optional.of(value)` to set a `value` for the metadata, `Optional.of(null)` to clear the
+     * metadata (i.e. set it to `null`) and `Optional.none()` (default) to keep the existing value of the metadata field.
+     */
+    fun updateChannelMetadata(): UpdateChannelMetadata.Builder
 
     /**
      * Returns a paginated list of Channel Metadata objects, optionally including the custom data object for each.

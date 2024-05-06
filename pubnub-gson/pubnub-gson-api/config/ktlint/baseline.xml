@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <baseline version="1.0">
+    <file name="src/main/java/com/pubnub/api/endpoints/objects_api/channel/UpdateChannelMetadata.kt">
+        <error line="1" column="9" source="standard:package-name" />
+    </file>
     <file name="src/main/java/com/pubnub/api/endpoints/objects_api/uuid/SetUserMetadata.kt">
         <error line="1" column="9" source="standard:package-name" />
     </file>

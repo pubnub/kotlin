@@ -861,7 +861,7 @@ interface PubNub :
     ): GetChannelMetadata
 
     /**
-     * Set metadata for a Channel in the database, optionally including the custom data object for each.
+     * Set metadata for a Channel in the database, optionally including the custom data object.
      *
      * @param channel Channel name.
      * @param name Name of a channel.
@@ -869,6 +869,14 @@ interface PubNub :
      * @param custom Object with supported data types.
      * @param includeCustom Include respective additional fields in the response.
      */
+    @Deprecated(
+        message = "It's not possible to set metadata to `null` using this function. Use `updateChannelMetadata` which" +
+            "offers the option to overwrite, leave as is or clear metadata.",
+        ReplaceWith(
+            "updateChannelMetadata(channel, Optional.ofNullable(name), Optional.ofNullable(description), Optional.ofNullable(custom), includeCustom, Optional.ofNullable(type), Optional.ofNullable(status))",
+            "com.pubnub.api.utils.Optional"
+        )
+    )
     fun setChannelMetadata(
         channel: String,
         name: String? = null,
@@ -877,6 +885,25 @@ interface PubNub :
         includeCustom: Boolean = false,
         type: String? = null,
         status: String? = null,
+    ): SetChannelMetadata
+
+    /**
+     * Set metadata for a Channel in the database, optionally including the custom data object.
+     *
+     * @param channel Channel name.
+     * @param name Name of a channel.
+     * @param description Description of a channel.
+     * @param custom Object with supported data types.
+     * @param includeCustom Include respective additional fields in the response.
+     */
+    fun updateChannelMetadata(
+        channel: String,
+        name: Optional<String?> = Optional.none(),
+        description: Optional<String?> = Optional.none(),
+        custom: Optional<Any?> = Optional.none(),
+        includeCustom: Boolean = false,
+        type: Optional<String?> = Optional.none(),
+        status: Optional<String?> = Optional.none(),
     ): SetChannelMetadata
 
     /**

@@ -36,6 +36,7 @@ import com.pubnub.api.endpoints.objects_api.channel.GetAllChannelsMetadata;
 import com.pubnub.api.endpoints.objects_api.channel.GetChannelMetadata;
 import com.pubnub.api.endpoints.objects_api.channel.RemoveChannelMetadata;
 import com.pubnub.api.endpoints.objects_api.channel.SetChannelMetadata;
+import com.pubnub.api.endpoints.objects_api.channel.UpdateChannelMetadata;
 import com.pubnub.api.endpoints.objects_api.members.GetChannelMembers;
 import com.pubnub.api.endpoints.objects_api.members.ManageChannelMembers;
 import com.pubnub.api.endpoints.objects_api.members.RemoveChannelMembers;
@@ -98,6 +99,7 @@ import com.pubnub.internal.endpoints.objects_api.channel.GetAllChannelsMetadataI
 import com.pubnub.internal.endpoints.objects_api.channel.GetChannelMetadataImpl;
 import com.pubnub.internal.endpoints.objects_api.channel.RemoveChannelMetadataImpl;
 import com.pubnub.internal.endpoints.objects_api.channel.SetChannelMetadataImpl;
+import com.pubnub.internal.endpoints.objects_api.channel.UpdateChannelMetadataImpl;
 import com.pubnub.internal.endpoints.objects_api.members.GetChannelMembersImpl;
 import com.pubnub.internal.endpoints.objects_api.members.ManageChannelMembersImpl;
 import com.pubnub.internal.endpoints.objects_api.members.RemoveChannelMembersImpl;
@@ -374,8 +376,15 @@ public class PubNubImpl extends BasePubNubImpl<
     }
 
     @Override
+    @NotNull
     public SetChannelMetadata.Builder setChannelMetadata() {
         return new SetChannelMetadataImpl.Builder(getPubNubCore());
+    }
+
+    @Override
+    @NotNull
+    public UpdateChannelMetadata.Builder updateChannelMetadata() {
+        return new UpdateChannelMetadataImpl.Builder(getPubNubCore());
     }
 
     @Override

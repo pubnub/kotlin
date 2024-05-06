@@ -1168,12 +1168,12 @@ class PubNubCore internal constructor(
      */
     fun setChannelMetadata(
         channel: String,
-        name: String? = null,
-        description: String? = null,
-        custom: Any? = null,
+        name: Optional<String?> = Optional.none(),
+        description: Optional<String?> = Optional.none(),
+        custom: Optional<Any?> = Optional.none(),
         includeCustom: Boolean = false,
-        type: String? = null,
-        status: String? = null,
+        type: Optional<String?> = Optional.none(),
+        status: Optional<String?> = Optional.none(),
     ) = SetChannelMetadataEndpoint(
         pubnub = this,
         channel = channel,

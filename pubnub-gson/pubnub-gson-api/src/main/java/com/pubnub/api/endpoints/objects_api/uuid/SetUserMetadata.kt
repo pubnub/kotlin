@@ -5,8 +5,6 @@ import com.pubnub.api.models.consumer.objects_api.uuid.PNSetUUIDMetadataResult
 import com.pubnub.api.utils.Optional
 
 interface SetUserMetadata : Endpoint<PNSetUUIDMetadataResult?> {
-    fun custom(custom: Optional<Map<String, Any?>?>): SetUserMetadata
-
     fun uuid(uuid: String): SetUserMetadata
 
     fun name(name: Optional<String?>): SetUserMetadata
@@ -16,6 +14,8 @@ interface SetUserMetadata : Endpoint<PNSetUUIDMetadataResult?> {
     fun profileUrl(profileUrl: Optional<String?>): SetUserMetadata
 
     fun email(email: Optional<String?>): SetUserMetadata
+
+    fun custom(custom: Optional<Map<String, Any?>?>): SetUserMetadata
 
     fun includeCustom(includeCustom: Boolean): SetUserMetadata
 
