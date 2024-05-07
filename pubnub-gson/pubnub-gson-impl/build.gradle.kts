@@ -2,7 +2,9 @@ plugins {
     checkstyle
     alias(libs.plugins.benmanes.versions)
     alias(libs.plugins.lombok)
-    id("pubnub.shared")
+    id("pubnub.java-library")
+    id("pubnub.kotlin-library")
+    id("pubnub.test")
     id("pubnub.dokka")
     id("pubnub.integration-test")
 }

@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.benmanes.versions)
-    id("pubnub.shared")
+    id("pubnub.kotlin-library")
+    id("pubnub.test")
     id("pubnub.integration-test")
 }
 
