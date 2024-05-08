@@ -8,9 +8,9 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
+import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Collections;
-import java.util.Random;
 
 public class Crypto {
 
@@ -50,7 +50,7 @@ public class Crypto {
                     .toLowerCase().getBytes(ENCODING_UTF_8);
             if (dynamicIV) {
                 ivBytes = new byte[16];
-                new Random().nextBytes(ivBytes);
+                new SecureRandom().nextBytes(ivBytes);
             } else {
                 ivBytes = initializationVector.getBytes(ENCODING_UTF_8);
                 INIT = true;
