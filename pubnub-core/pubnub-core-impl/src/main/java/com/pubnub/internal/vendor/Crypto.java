@@ -23,6 +23,7 @@ public class Crypto {
     String initializationVector = "0123456789012345";
     String cipherKey;
     boolean INIT = false;
+    private SecureRandom secureRandom = new SecureRandom();
 
     public Crypto(String cipherKey) {
         this(cipherKey, false);
@@ -50,7 +51,7 @@ public class Crypto {
                     .toLowerCase().getBytes(ENCODING_UTF_8);
             if (dynamicIV) {
                 ivBytes = new byte[16];
-                new SecureRandom().nextBytes(ivBytes);
+                secureRandom.nextBytes(ivBytes);
             } else {
                 ivBytes = initializationVector.getBytes(ENCODING_UTF_8);
                 INIT = true;
