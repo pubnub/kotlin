@@ -5,6 +5,7 @@ import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction
 import com.pubnub.internal.DelegatingEndpoint
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.models.consumer.objects.uuid.PNUUIDMetadataArrayResult
+import com.pubnub.internal.models.from
 
 /**
  * @see [PubNubImpl.getAllUUIDMetadata]
@@ -20,7 +21,7 @@ class GetAllUUIDMetadataImpl internal constructor(getAllUUIDMetadata: GetAllUUID
         ): ExtendedRemoteAction<com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult> {
             return MappingRemoteAction(
                 remoteAction,
-                com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult.Companion::from,
+                ::from,
             )
         }
     }

@@ -6,14 +6,14 @@ plugins {
 }
 
 kotlin {
-    js(IR) {
+    js() {
         browser {
         }
         binaries.executable()
     }
+    jvmToolchain(8)
     jvm {
         compilations.all {
-            jvmToolchain(8)
             compilerOptions.configure {
                 javaParameters.set(true)
             }

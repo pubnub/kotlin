@@ -1,7 +1,5 @@
 package com.pubnub.api.models.consumer.access_manager
 
-import com.pubnub.internal.PubNubCore
-
 /**
  * Result of the [PubNubCore.grant] operation
  *
@@ -18,27 +16,7 @@ class PNAccessManagerGrantResult(
     val subscribeKey: String,
     val channels: Map<String, Map<String, PNAccessManagerKeyData>?>,
     val channelGroups: Map<String, Map<String, PNAccessManagerKeyData>?>,
-) {
-    companion object {
-        fun from(result: com.pubnub.internal.models.consumer.access_manager.PNAccessManagerGrantResult): PNAccessManagerGrantResult {
-            with(result) {
-                return PNAccessManagerGrantResult(
-                    level,
-                    ttl,
-                    subscribeKey,
-                    channels.toApi(),
-                    channelGroups.toApi(),
-                )
-            }
-        }
-    }
-}
-
-private fun Map<String, Map<String, com.pubnub.internal.models.consumer.access_manager.PNAccessManagerKeyData>?>.toApi(): Map<String, Map<String, PNAccessManagerKeyData>?> {
-    return mapValues {
-        it.value?.mapValues { PNAccessManagerKeyData.from(it.value) }
-    }
-}
+)
 
 open class PNAccessManagerKeyData {
     /**
@@ -63,20 +41,6 @@ open class PNAccessManagerKeyData {
     var getEnabled: Boolean = false
     var updateEnabled: Boolean = false
     var joinEnabled: Boolean = false
-
-    companion object {
-        fun from(value: com.pubnub.internal.models.consumer.access_manager.PNAccessManagerKeyData): PNAccessManagerKeyData {
-            return PNAccessManagerKeyData().apply {
-                this.readEnabled = value.readEnabled
-                this.manageEnabled = value.manageEnabled
-                this.writeEnabled = value.writeEnabled
-                this.deleteEnabled = value.deleteEnabled
-                this.getEnabled = value.getEnabled
-                this.updateEnabled = value.updateEnabled
-                this.joinEnabled = value.joinEnabled
-            }
-        }
-    }
 }
 
 class PNAccessManagerKeysData {

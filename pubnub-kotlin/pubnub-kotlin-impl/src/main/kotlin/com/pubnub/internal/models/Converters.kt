@@ -19,15 +19,18 @@ import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
 import com.pubnub.api.models.consumer.objects.PNKey
 import com.pubnub.api.models.consumer.objects.PNMemberKey
 import com.pubnub.api.models.consumer.objects.PNMembershipKey
+import com.pubnub.api.models.consumer.objects.PNRemoveMetadataResult
 import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.SortField
 import com.pubnub.api.models.consumer.objects.member.MemberInput
+import com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
+import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult
 import com.pubnub.api.models.consumer.presence.PNWhereNowResult
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.internal.SpaceId
@@ -333,17 +336,17 @@ internal fun <T : SortField, T2 : com.pubnub.internal.models.consumer.objects.So
 private fun <T : SortField, T2 : com.pubnub.internal.models.consumer.objects.SortField> PNSortKey<T>.toInternal(): com.pubnub.internal.models.consumer.objects.PNSortKey<T2> {
     @Suppress("UNCHECKED_CAST")
     val sortKey: T2 =
-        when (this.key) {
+        when (val key = this.key) {
             is PNKey -> {
-                com.pubnub.internal.models.consumer.objects.PNKey.valueOf(this.key.name) as T2
+                com.pubnub.internal.models.consumer.objects.PNKey.valueOf(key.name) as T2
             }
 
             is PNMembershipKey -> {
-                com.pubnub.internal.models.consumer.objects.PNMembershipKey.valueOf(this.key.name) as T2
+                com.pubnub.internal.models.consumer.objects.PNMembershipKey.valueOf(key.name) as T2
             }
 
             is PNMemberKey -> {
-                com.pubnub.internal.models.consumer.objects.PNMemberKey.valueOf(this.key.name) as T2
+                com.pubnub.internal.models.consumer.objects.PNMemberKey.valueOf(key.name) as T2
             }
 
             else -> {
@@ -401,7 +404,7 @@ private fun MemberInput.toInternal(): com.pubnub.internal.models.consumer.object
 fun com.pubnub.internal.models.consumer.objects.membership.PNChannelMembershipArrayResult.toApi(): PNChannelMembershipArrayResult {
     return PNChannelMembershipArrayResult(
         status = status,
-        data = data.map(PNChannelMembership.Companion::from),
+        data = data.map(::from),
         totalCount = totalCount,
         next = next,
         prev = prev,
@@ -410,4 +413,55 @@ fun com.pubnub.internal.models.consumer.objects.membership.PNChannelMembershipAr
 
 fun com.pubnub.internal.models.consumer.presence.PNWhereNowResult.toApi(): PNWhereNowResult {
     return PNWhereNowResult(channels)
+}
+
+fun from(data: com.pubnub.internal.models.consumer.objects.PNRemoveMetadataResult): PNRemoveMetadataResult {
+    return PNRemoveMetadataResult(data.status)
+}
+
+fun from(data: com.pubnub.internal.models.consumer.objects.member.PNMemberArrayResult): com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult {
+    return PNMemberArrayResult(
+        data.status,
+        data.data.map(::from),
+        data.totalCount,
+        data.next,
+        data.prev,
+    )
+}
+
+fun from(data: com.pubnub.internal.models.consumer.objects.member.PNMember): com.pubnub.api.models.consumer.objects.member.PNMember {
+    return com.pubnub.api.models.consumer.objects.member.PNMember(
+        data.uuid,
+        data.custom,
+        data.updated,
+        data.eTag,
+        data.status,
+    )
+}
+
+fun from(data: com.pubnub.internal.models.consumer.objects.membership.PNChannelMembership): PNChannelMembership {
+    return PNChannelMembership(
+        data.channel,
+        data.custom,
+        data.updated,
+        data.eTag,
+        data.status,
+    )
+}
+
+fun from(data: com.pubnub.internal.models.consumer.objects.uuid.PNUUIDMetadataArrayResult): PNUUIDMetadataArrayResult {
+    return PNUUIDMetadataArrayResult(
+        data.status,
+        data.data,
+        data.totalCount,
+        data.next,
+        data.prev,
+    )
+}
+
+fun from(data: com.pubnub.internal.models.consumer.objects.uuid.PNUUIDMetadataResult): com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult {
+    return com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult(
+        data.status,
+        data.data,
+    )
 }

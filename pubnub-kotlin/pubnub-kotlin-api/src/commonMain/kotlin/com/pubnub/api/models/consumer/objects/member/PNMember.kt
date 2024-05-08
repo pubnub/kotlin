@@ -1,7 +1,6 @@
 package com.pubnub.api.models.consumer.objects.member
 
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
-import com.pubnub.internal.models.consumer.objects.member.PNMember
 
 data class PNMember(
     val uuid: PNUUIDMetadata?,
@@ -16,17 +15,5 @@ data class PNMember(
         override val status: String? = null,
     ) : MemberInput {
         override val uuid: String = uuidId
-    }
-
-    companion object {
-        fun from(data: PNMember): com.pubnub.api.models.consumer.objects.member.PNMember {
-            return com.pubnub.api.models.consumer.objects.member.PNMember(
-                data.uuid,
-                data.custom,
-                data.updated,
-                data.eTag,
-                data.status,
-            )
-        }
     }
 }

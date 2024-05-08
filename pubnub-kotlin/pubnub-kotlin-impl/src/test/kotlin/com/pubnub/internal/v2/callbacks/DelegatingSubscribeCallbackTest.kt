@@ -1,6 +1,7 @@
 package com.pubnub.internal.v2.callbacks
 
 import com.pubnub.api.PubNub
+import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.models.consumer.PNStatus
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -9,14 +10,14 @@ internal class DelegatingSubscribeCallbackTest {
     @Test
     fun testEquals() {
         val statusListener =
-            object : com.pubnub.api.callbacks.SubscribeCallback() {
+            object : SubscribeCallback() {
                 override fun status(
                     pubnub: PubNub,
                     status: PNStatus,
                 ) {}
             }
         val otherStatusListener =
-            object : com.pubnub.api.callbacks.SubscribeCallback() {
+            object : SubscribeCallback() {
                 override fun status(
                     pubnub: PubNub,
                     status: PNStatus,

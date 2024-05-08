@@ -5,6 +5,7 @@ import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction
 import com.pubnub.internal.DelegatingEndpoint
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.models.consumer.objects.member.PNMemberArrayResult
+import com.pubnub.internal.models.from
 
 /**
  * @see [PubNubImpl.manageChannelMembers]
@@ -20,7 +21,7 @@ class ManageChannelMembersImpl internal constructor(manageChannelMembers: Manage
         ): ExtendedRemoteAction<com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult> {
             return MappingRemoteAction(
                 remoteAction,
-                com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult::from,
+                ::from,
             )
         }
     }

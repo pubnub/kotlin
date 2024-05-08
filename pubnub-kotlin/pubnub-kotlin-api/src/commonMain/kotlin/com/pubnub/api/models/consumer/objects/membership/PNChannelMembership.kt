@@ -9,18 +9,6 @@ data class PNChannelMembership(
     val eTag: String,
     val status: String?,
 ) {
-    companion object {
-        fun from(data: com.pubnub.internal.models.consumer.objects.membership.PNChannelMembership): PNChannelMembership {
-            return PNChannelMembership(
-                data.channel,
-                data.custom,
-                data.updated,
-                data.eTag,
-                data.status,
-            )
-        }
-    }
-
     data class Partial(
         val channelId: String,
         override val custom: Any? = null,

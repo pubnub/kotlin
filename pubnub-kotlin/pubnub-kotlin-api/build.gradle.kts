@@ -1,11 +1,37 @@
 plugins {
     alias(libs.plugins.benmanes.versions)
-    id("pubnub.kotlin-library")
+    id("pubnub.shared")
     id("pubnub.dokka")
+    kotlin("multiplatform")
 }
 
-dependencies {
-    api(project(":pubnub-core:pubnub-core-api"))
-    implementation(project(":pubnub-core:pubnub-core-impl"))
-    implementation(libs.slf4j)
+kotlin {
+    jvmToolchain(8)
+    js {
+        browser {
+        }
+        binaries.executable()
+    }
+    jvm {
+        compilations.all {
+            compilerOptions.configure {
+                javaParameters.set(true)
+            }
+        }
+    }
+
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                api(project(":pubnub-core:pubnub-core-api"))
+            }
+        }
+
+        val jvmMain by getting {
+            dependencies {
+                implementation(project(":pubnub-core:pubnub-core-impl"))
+                implementation(libs.slf4j)
+            }
+        }
+    }
 }
