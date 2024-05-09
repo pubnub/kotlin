@@ -14,8 +14,11 @@ kotlin {
     }
     jvm {
         compilations.all {
-            compilerOptions.configure {
-                javaParameters.set(true)
+            compileTaskProvider.configure {
+                compilerOptions {
+                    freeCompilerArgs.add("-Xexpect-actual-classes")
+                    javaParameters.set(true)
+                }
             }
         }
     }

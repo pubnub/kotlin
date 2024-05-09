@@ -7,6 +7,7 @@ import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
+import com.pubnub.api.models.consumer.history.PNHistoryResult
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.v2.BasePNConfiguration
@@ -522,7 +523,7 @@ class PubNubCore internal constructor(
         channel: String,
         start: Long? = null,
         end: Long? = null,
-        count: Int = HistoryEndpoint.MAX_COUNT,
+        count: Int = PNHistoryResult.MAX_COUNT,
         reverse: Boolean = false,
         includeTimetoken: Boolean = false,
         includeMeta: Boolean = false,

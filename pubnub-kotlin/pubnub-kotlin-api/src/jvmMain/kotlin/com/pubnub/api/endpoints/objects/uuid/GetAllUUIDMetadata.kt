@@ -6,5 +6,4 @@ import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult
 /**
  * @see [PubNub.getAllUUIDMetadata]
  */
-interface GetAllUUIDMetadata :
-    Endpoint<PNUUIDMetadataArrayResult>
+interface GetAllUUIDMetadata : Endpoint<PNUUIDMetadataArrayResult>

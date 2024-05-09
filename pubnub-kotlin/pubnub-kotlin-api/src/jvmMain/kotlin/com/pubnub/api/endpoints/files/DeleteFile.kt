@@ -6,4 +6,4 @@ import com.pubnub.api.models.consumer.files.PNDeleteFileResult
 /**
  * @see [PubNub.deleteFile]
  */
-interface DeleteFile : Endpoint<PNDeleteFileResult?>
+interface DeleteFile : Endpoint<PNDeleteFileResult>

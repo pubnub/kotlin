@@ -16,4 +16,14 @@ abstract class EndpointImpl<OUTPUT>(private val endpoint: HasOverridableConfig) 
         endpoint.overrideConfiguration(configuration)
         return this
     }
+
+    override fun async(action: (Result<OUTPUT>) -> Unit) {
+        async { it: com.pubnub.api.v2.callbacks.Result<OUTPUT> ->
+            it.onSuccess { value ->
+                action(Result.success(value))
+            }.onFailure { exception ->
+                action(Result.failure(exception))
+            }
+        }
+    }
 }
