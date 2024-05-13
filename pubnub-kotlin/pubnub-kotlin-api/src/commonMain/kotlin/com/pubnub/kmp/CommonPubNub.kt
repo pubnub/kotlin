@@ -25,7 +25,6 @@ import com.pubnub.api.models.consumer.files.PNListFilesResult
 import com.pubnub.api.models.consumer.files.PNPublishFileMessageResult
 import com.pubnub.api.models.consumer.history.PNDeleteMessagesResult
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
-import com.pubnub.api.models.consumer.history.PNHistoryResult
 import com.pubnub.api.models.consumer.history.PNMessageCountResult
 import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult
 import com.pubnub.api.models.consumer.message_actions.PNGetMessageActionsResult
@@ -272,106 +271,49 @@ interface CommonPubNub {
         environment: PNPushEnvironment = PNPushEnvironment.DEVELOPMENT,
     ): Endpoint<PNPushRemoveAllChannelsResult>
 
-    /**
-     * Fetch historical messages of a channel.
-     *
-     * It is possible to control how messages are returned and in what order, for example you can:
-     * - Search for messages starting on the newest end of the timeline (default behavior - `reverse = false`)
-     * - Search for messages from the oldest end of the timeline by setting `reverse` to `true`.
-     * - Page through results by providing a `start` OR `end` timetoken.
-     * - Retrieve a slice of the time line by providing both a `start` AND `end` timetoken.
-     * - Limit the number of messages to a specific quantity using the `count` parameter.
-     *
-     * **Start & End parameter usage clarity:**
-     * - If only the `start` parameter is specified (without `end`),
-     * you will receive messages that are older than and up to that `start` timetoken value.
-     * - If only the `end` parameter is specified (without `start`)
-     * you will receive messages that match that end timetoken value and newer.
-     * - Specifying values for both start and end parameters
-     * will return messages between those timetoken values (inclusive on the `end` value)
-     * - Keep in mind that you will still receive a maximum of 100 messages
-     * even if there are more messages that meet the timetoken values.
-     * Iterative calls to history adjusting the start timetoken is necessary to page through the full set of results
-     * if more than 100 messages meet the timetoken values.
-     *
-     * @param channel Channel to return history messages from.
-     * @param start Timetoken delimiting the start of time slice (exclusive) to pull messages from.
-     * @param end Timetoken delimiting the end of time slice (inclusive) to pull messages from.
-     * @param count Specifies the number of historical messages to return.
-     *              Default and maximum value is `100`.
-     * @param reverse Whether to traverse the time ine in reverse starting with the oldest message first.
-     *                Default is `false`.
-     * @param includeTimetoken Whether to include message timetokens in the response.
-     *                         Defaults to `false`.
-     * @param includeMeta Whether to include message metadata in response.
-     *                    Defaults to `false`.
-     */
-    fun history(
-        channel: String,
-        start: Long? = null,
-        end: Long? = null,
-        count: Int = PNHistoryResult.MAX_COUNT,
-        reverse: Boolean = false,
-        includeTimetoken: Boolean = false,
-        includeMeta: Boolean = false,
-    ): Endpoint<PNHistoryResult>
-
-    /**
-     * Fetch historical messages from multiple channels.
-     * The `includeMessageActions` flag also allows you to fetch message actions along with the messages.
-     *
-     * It's possible to control how messages are returned and in what order. For example, you can:
-     * - Search for messages starting on the newest end of the timeline.
-     * - Search for messages from the oldest end of the timeline.
-     * - Page through results by providing a `start` OR `end` time token.
-     * - Retrieve a slice of the time line by providing both a `start` AND `end` time token.
-     * - Limit the number of messages to a specific quantity using the `count` parameter.
-     * - Batch history returns up to 25 messages per channel, on a maximum of 500 channels.
-     * Use the start and end timestamps to page through the next batch of messages.
-     *
-     * **Start & End parameter usage clarity:**
-     * - If you specify only the `start` parameter (without `end`),
-     * you will receive messages that are older than and up to that `start` timetoken.
-     * - If you specify only the `end` parameter (without `start`),
-     * you will receive messages from that `end` timetoken and newer.
-     * - Specify values for both `start` and `end` parameters to retrieve messages between those timetokens
-     * (inclusive of the `end` value).
-     * - Keep in mind that you will still receive a maximum of 25 messages
-     * even if there are more messages that meet the timetoken values.
-     * - Iterative calls to history adjusting the start timetoken is necessary to page through the full set of results
-     * if more than 25 messages meet the timetoken values.
-     *
-     * @param channels Channels to return history messages from.
-     * @param maximumPerChannel Specifies the number of historical messages to return per channel.
-     *                          If [includeMessageActions] is `false`, then `1` is the default (and maximum) value.
-     *                          Otherwise it's `25`.
-     * @param start Timetoken delimiting the start of time slice (exclusive) to pull messages from.
-     * @param end Time token delimiting the end of time slice (inclusive) to pull messages from.
-     * @param includeMeta Whether to include message metadata in response.
-     *                    Defaults to `false`.
-     * @param includeMessageActions Whether to include message actions in response.
-     *                              Defaults to `false`.
-     */
-    @Deprecated(
-        replaceWith =
-        ReplaceWith(
-            "fetchMessages(channels = channels, page = PNBoundedPage(start = start, end = end, " +
-                    "limit = maximumPerChannel),includeMeta = includeMeta, " +
-                    "includeMessageActions = includeMessageActions, includeMessageType = includeMessageType)",
-            "com.pubnub.api.models.consumer.PNBoundedPage",
-        ),
-        level = DeprecationLevel.WARNING,
-        message = "Use fetchMessages(String, PNBoundedPage, Boolean, Boolean, Boolean) instead",
-    )
-    fun fetchMessages(
-        channels: List<String>,
-        maximumPerChannel: Int = 0,
-        start: Long? = null,
-        end: Long? = null,
-        includeMeta: Boolean = false,
-        includeMessageActions: Boolean = false,
-        includeMessageType: Boolean = true,
-    ): Endpoint<PNFetchMessagesResult>
+//    /**
+//     * Fetch historical messages of a channel.
+//     *
+//     * It is possible to control how messages are returned and in what order, for example you can:
+//     * - Search for messages starting on the newest end of the timeline (default behavior - `reverse = false`)
+//     * - Search for messages from the oldest end of the timeline by setting `reverse` to `true`.
+//     * - Page through results by providing a `start` OR `end` timetoken.
+//     * - Retrieve a slice of the time line by providing both a `start` AND `end` timetoken.
+//     * - Limit the number of messages to a specific quantity using the `count` parameter.
+//     *
+//     * **Start & End parameter usage clarity:**
+//     * - If only the `start` parameter is specified (without `end`),
+//     * you will receive messages that are older than and up to that `start` timetoken value.
+//     * - If only the `end` parameter is specified (without `start`)
+//     * you will receive messages that match that end timetoken value and newer.
+//     * - Specifying values for both start and end parameters
+//     * will return messages between those timetoken values (inclusive on the `end` value)
+//     * - Keep in mind that you will still receive a maximum of 100 messages
+//     * even if there are more messages that meet the timetoken values.
+//     * Iterative calls to history adjusting the start timetoken is necessary to page through the full set of results
+//     * if more than 100 messages meet the timetoken values.
+//     *
+//     * @param channel Channel to return history messages from.
+//     * @param start Timetoken delimiting the start of time slice (exclusive) to pull messages from.
+//     * @param end Timetoken delimiting the end of time slice (inclusive) to pull messages from.
+//     * @param count Specifies the number of historical messages to return.
+//     *              Default and maximum value is `100`.
+//     * @param reverse Whether to traverse the time ine in reverse starting with the oldest message first.
+//     *                Default is `false`.
+//     * @param includeTimetoken Whether to include message timetokens in the response.
+//     *                         Defaults to `false`.
+//     * @param includeMeta Whether to include message metadata in response.
+//     *                    Defaults to `false`.
+//     */
+//    fun history(
+//        channel: String,
+//        start: Long? = null,
+//        end: Long? = null,
+//        count: Int = PNHistoryResult.MAX_COUNT,
+//        reverse: Boolean = false,
+//        includeTimetoken: Boolean = false,
+//        includeMeta: Boolean = false,
+//    ): Endpoint<PNHistoryResult>
 
     /**
      * Fetch historical messages from multiple channels.
@@ -561,32 +503,6 @@ interface CommonPubNub {
         messageTimetoken: Long,
         actionTimetoken: Long,
     ): Endpoint<PNRemoveMessageActionResult>
-
-    /**
-     * Get a list of message actions in a channel. Returns a list of actions in the response.
-     *
-     * @param channel Channel to fetch message actions from.
-     * @param start Message Action timetoken denoting the start of the range requested
-     *              (return values will be less than start).
-     * @param end Message Action timetoken denoting the end of the range requested
-     *            (return values will be greater than or equal to end).
-     * @param limit Specifies the number of message actions to return in response.
-     */
-    @Deprecated(
-        replaceWith =
-        ReplaceWith(
-            "getMessageActions(channel = channel, page = PNBoundedPage(start = start, end = end, limit = limit))",
-            "com.pubnub.api.models.consumer.PNBoundedPage",
-        ),
-        level = DeprecationLevel.WARNING,
-        message = "Use getMessageActions(String, PNBoundedPage) instead",
-    )
-    fun getMessageActions(
-        channel: String,
-        start: Long? = null,
-        end: Long? = null,
-        limit: Int? = null,
-    ): Endpoint<PNGetMessageActionsResult>
 
     /**
      * Get a list of message actions in a channel. Returns a list of actions in the response.
@@ -929,31 +845,6 @@ interface CommonPubNub {
      * @param includeChannelDetails Include custom fields for channels metadata.
      */
     fun getMemberships(
-        uuid: String? = null,
-        limit: Int? = null,
-        page: PNPage? = null,
-        filter: String? = null,
-        sort: Collection<PNSortKey<PNMembershipKey>> = listOf(),
-        includeCount: Boolean = false,
-        includeCustom: Boolean = false,
-        includeChannelDetails: PNChannelDetailsLevel? = null,
-    ): Endpoint<PNChannelMembershipArrayResult>
-
-    /**
-     * @see [PubNub.setMemberships]
-     */
-    @Deprecated(
-        replaceWith =
-        ReplaceWith(
-            "setMemberships(channels = channels, uuid = uuid, limit = limit, " +
-                    "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
-                    "includeChannelDetails = includeChannelDetails)",
-        ),
-        level = DeprecationLevel.WARNING,
-        message = "Use setMemberships instead",
-    )
-    fun addMemberships(
-        channels: List<ChannelMembershipInput>,
         uuid: String? = null,
         limit: Int? = null,
         page: PNPage? = null,

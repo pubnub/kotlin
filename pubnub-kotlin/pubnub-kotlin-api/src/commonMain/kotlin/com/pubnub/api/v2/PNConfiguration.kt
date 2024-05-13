@@ -6,4 +6,8 @@ import com.pubnub.api.UserId
 
 expect interface PNConfiguration {
     val userId: UserId
+    val subscribeKey: String
+    val publishKey: String
 }
+
+expect fun createPNConfiguration(userId: UserId, subscribeKey: String): PNConfiguration

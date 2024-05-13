@@ -427,14 +427,14 @@ interface PubNub :
         level = DeprecationLevel.WARNING,
         message = "Use fetchMessages(String, PNBoundedPage, Boolean, Boolean, Boolean) instead",
     )
-    override fun fetchMessages(
+    fun fetchMessages(
         channels: List<String>,
-        maximumPerChannel: Int,
-        start: Long?,
-        end: Long?,
-        includeMeta: Boolean,
-        includeMessageActions: Boolean,
-        includeMessageType: Boolean,
+        maximumPerChannel: Int = 0,
+        start: Long? = null,
+        end: Long? = null,
+        includeMeta: Boolean = false,
+        includeMessageActions: Boolean = false,
+        includeMessageType: Boolean = true,
     ): FetchMessages
 
     /**
@@ -645,11 +645,11 @@ interface PubNub :
         level = DeprecationLevel.WARNING,
         message = "Use getMessageActions(String, PNBoundedPage) instead",
     )
-    override fun getMessageActions(
+    fun getMessageActions(
         channel: String,
-        start: Long?,
-        end: Long?,
-        limit: Int?,
+        start: Long? = null,
+        end: Long? = null,
+        limit: Int? = null,
     ): GetMessageActions
 
     /**
@@ -1015,16 +1015,16 @@ interface PubNub :
         level = DeprecationLevel.WARNING,
         message = "Use setMemberships instead",
     )
-    override fun addMemberships(
+    fun addMemberships(
         channels: List<ChannelMembershipInput>,
-        uuid: String?,
-        limit: Int?,
-        page: PNPage?,
-        filter: String?,
-        sort: Collection<PNSortKey<PNMembershipKey>>,
-        includeCount: Boolean,
-        includeCustom: Boolean,
-        includeChannelDetails: PNChannelDetailsLevel?,
+        uuid: String? = null,
+        limit: Int? = null,
+        page: PNPage? = null,
+        filter: String? = null,
+        sort: Collection<PNSortKey<PNMembershipKey>> = listOf(),
+        includeCount: Boolean = false,
+        includeCustom: Boolean = false,
+        includeChannelDetails: PNChannelDetailsLevel? = null,
     ): ManageMemberships
 
     /**

@@ -20,6 +20,7 @@ import PubNub.SetMembershipsParameters
 import PubNub.SetUUIDMetadataParameters
 import PubNub.UUIDMembershipObject
 import PubNub.UUIDMetadataObject
+import com.pubnub.api.JsonElement
 import com.pubnub.kmp.Optional
 import org.khronos.webgl.ArrayBuffer
 import org.w3c.files.Blob
@@ -70,7 +71,6 @@ external interface PagedObjectsResponse<DataType> : ObjectsResponse<Array<DataTy
         get() = definedExternally
         set(value) = definedExternally
 }
-
 
 external interface ObjectsFunctions {
     fun  setUUIDMetadata(params: SetUUIDMetadataParameters, callback: Callback<SetUUIDMetadataResponse>)
@@ -477,58 +477,43 @@ open external class PubNub(config: Any /* UUID | UserId */) {
             get() = definedExternally
             set(value) = definedExternally
     }
-    interface `T$16` {
+    interface Action {
         var uuid: String
         var actionTimetoken: dynamic /* String | Number */
             get() = definedExternally
             set(value) = definedExternally
     }
-    interface `T$17` {
-        @nativeGetter
-        operator fun get(value: String): Array<`T$16`>?
-        @nativeSetter
-        operator fun set(value: String, value2: Array<`T$16`>)
-    }
-    interface `T$18` {
-        @nativeGetter
-        operator fun get(type: String): `T$17`?
-        @nativeSetter
-        operator fun set(type: String, value: `T$17`)
-    }
-    interface `T$19` {
+    interface ActionContentToAction: JsMap<Array<Action>>
+    interface ActionTypeToActions : JsMap<ActionContentToAction>
+    
+    interface FetchMessageItem {
         var channel: String
-        var message: Any
+        var message: JsonElement
         var timetoken: dynamic /* String | Number */
             get() = definedExternally
             set(value) = definedExternally
         var messageType: dynamic /* String? | Number? */
             get() = definedExternally
             set(value) = definedExternally
-        var uuid: String?
-            get() = definedExternally
-            set(value) = definedExternally
+        var uuid: String
         var error: String?
             get() = definedExternally
             set(value) = definedExternally
         var meta: Json?
             get() = definedExternally
             set(value) = definedExternally
-        var actions: `T$18`
+        var actions: ActionTypeToActions
     }
-    interface `T$20` {
-        @nativeGetter
-        operator fun get(channel: String): Array<`T$19`>?
-        @nativeSetter
-        operator fun set(channel: String, value: Array<`T$19`>)
-    }
-    interface `T$21` {
+    interface ChannelsToFetchMessageItemsMap : JsMap<Array<FetchMessageItem>>
+
+    interface Page {
         var url: String
         var start: String
         var max: Number
     }
     interface FetchMessagesResponse {
-        var channels: `T$20`
-        var more: `T$21`?
+        var channels: ChannelsToFetchMessageItemsMap
+        var more: Page?
             get() = definedExternally
             set(value) = definedExternally
     }
@@ -1532,3 +1517,12 @@ external interface ExponentialRetryPolicyConfiguration {
     var maximumDelay: Number
     var maximumRetry: Number
 }
+external interface JsMap<V>
+
+fun <V> entriesOf(jsObject: JsMap<V>): List<Pair<String, V>> =
+    (js("Object.entries") as (dynamic) -> Array<Array<V>>)
+        .invoke(jsObject)
+        .map { entry -> entry[0] as String to entry[1] }
+
+fun <V> JsMap<V>.toMap(): Map<String, V> =
+    entriesOf(this).toMap()
