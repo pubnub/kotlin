@@ -30,6 +30,12 @@ kotlin {
             }
         }
 
+        val commonTest by getting {
+            dependencies {
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0-RC.2")
+            }
+        }
+
         val jvmMain by getting {
             dependencies {
                 implementation(project(":pubnub-core:pubnub-core-impl"))

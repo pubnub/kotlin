@@ -1,10 +1,8 @@
-package com.pubnub.kmp
+package com.pubnub.test
 
-import ObjectsResponse
 import com.pubnub.api.Endpoint
 import com.pubnub.api.JsonElement
 import com.pubnub.api.UserId
-import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.PNBoundedPage
@@ -26,9 +24,7 @@ import com.pubnub.api.models.consumer.files.PNDeleteFileResult
 import com.pubnub.api.models.consumer.files.PNFileUrlResult
 import com.pubnub.api.models.consumer.files.PNListFilesResult
 import com.pubnub.api.models.consumer.files.PNPublishFileMessageResult
-import com.pubnub.api.models.consumer.history.HistoryMessageType
 import com.pubnub.api.models.consumer.history.PNDeleteMessagesResult
-import com.pubnub.api.models.consumer.history.PNFetchMessageItem
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
 import com.pubnub.api.models.consumer.history.PNMessageCountResult
 import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult
@@ -49,7 +45,6 @@ import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult
-import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult
 import com.pubnub.api.models.consumer.presence.PNGetStateResult
@@ -63,62 +58,14 @@ import com.pubnub.api.models.consumer.push.PNPushListProvisionsResult
 import com.pubnub.api.models.consumer.push.PNPushRemoveAllChannelsResult
 import com.pubnub.api.models.consumer.push.PNPushRemoveChannelResult
 import com.pubnub.api.v2.PNConfiguration
-import com.pubnub.api.v2.callbacks.CommonEventListener
-import com.pubnub.api.v2.callbacks.CommonStatusListener
+import com.pubnub.kmp.CommonPubNub
+import kotlinx.datetime.Clock
 
-import toMap
-import PubNub as PubNubJs
+expect fun<T> createEndpoint(action: () -> T): Endpoint<T>
 
-class PubNub(override val configuration: PNConfiguration) : CommonPubNub {
+class FakePubNub(override val configuration: PNConfiguration) : CommonPubNub {
 
-    private val jsPubNub: PubNubJs = PubNubJs(configuration.toJs())
-    override fun addListener(listener: CommonEventListener) {
-        jsPubNub.addListener(object : PubNubJs.ListenerParameters {
-            override val status: ((statusEvent: PubNubJs.StatusEvent) -> Unit)? = null
-            override val message: (messageEvent: PubNubJs.MessageEvent) -> Unit = { it: PubNubJs.MessageEvent ->
-                listener.message(this@PubNub, PNMessageResult(
-                    BasePubSubResult(
-                        it.channel,
-                        it.subscription,
-                        it.timetoken.toLong(),
-                        it.userMetadata as? JsonElement, // TODO kmp
-                        it.publisher
-                    ),
-                    it.message as JsonElement, // TODO kmp
-                    null //TODO it.error
-                ))
-            }
-            override val presence: ((presenceEvent: PubNubJs.PresenceEvent) -> Unit)?
-                get() = TODO("Not yet implemented")
-            override val signal: ((signalEvent: PubNubJs.SignalEvent) -> Unit)?
-                get() = TODO("Not yet implemented")
-            override val messageAction: ((messageActionEvent: PubNubJs.MessageActionEvent) -> Unit)?
-                get() = TODO("Not yet implemented")
-            override val file: ((fileEvent: PubNubJs.FileEvent) -> Unit)?
-                get() = TODO("Not yet implemented")
-
-        })
-    }
-
-    override fun addListener(listener: CommonStatusListener) {
-        TODO("Not yet implemented")
-    }
-
-    /**
-     * Remove a listener.
-     *
-     * @param listener The listener to be removed, previously added with [addListener].
-     */
-    override fun removeListener(listener: Listener) {
-        TODO("Not yet implemented")
-    }
-
-    /**
-     * Removes all listeners.
-     */
-    override fun removeAllListeners() {
-        TODO("Not yet implemented")
-    }
+    private val messages: MutableList<PNMessageResult> = mutableListOf()
 
     override fun publish(
         channel: String,
@@ -129,19 +76,20 @@ class PubNub(override val configuration: PNConfiguration) : CommonPubNub {
         replicate: Boolean,
         ttl: Int?
     ): Endpoint<PNPublishResult> {
-        val params = object : PubNubJs.PublishParameters {
-            override var message: Any = message
-            override var channel: String = channel
-            override var storeInHistory: Boolean? = shouldStore
-            override var meta: Any? = meta
-            override var sendByPost: Boolean? = usePost
-            override var ttl: Number? = ttl
-        }
-        return Endpoint({jsPubNub.publish(params)}) { it: PubNubJs.PublishResponse ->
-            PNPublishResult(it.timetoken.toLong())
+        return createEndpoint {
+            val tt = Clock.System.now().toEpochMilliseconds() / 1000
+            messages.add(
+                PNMessageResult(
+                    BasePubSubResult(channel, null, tt, null, configuration.userId.value),
+                    message as JsonElement,
+                    null
+                )
+            )
+            PNPublishResult(tt)
         }
     }
 
+    
     override fun fire(
         channel: String,
         message: Any,
@@ -149,35 +97,25 @@ class PubNub(override val configuration: PNConfiguration) : CommonPubNub {
         usePost: Boolean,
         ttl: Int?
     ): Endpoint<PNPublishResult> {
-        val params = object : PubNubJs.FireParameters {
-            override var message: Any = message
-            override var channel: String = channel
-            override var meta: Any? = meta
-            override var sendByPost: Boolean? = usePost
-        }
-        return Endpoint({jsPubNub.fire(params)}) { it: PubNubJs.PublishResponse ->
-            PNPublishResult(it.timetoken.toLong())
-        }
+        TODO("Not yet implemented")
     }
 
+    
     override fun signal(channel: String, message: Any): Endpoint<PNPublishResult> {
-        val params = object : PubNubJs.SignalParameters {
-            override var message: Any = message
-            override var channel: String = channel
-        }
-        return Endpoint({jsPubNub.signal(params)}) { it: PubNubJs.SignalResponse ->
-            PNPublishResult(it.timetoken.toLong())
-        }
+        TODO("Not yet implemented")
     }
 
+    
     override fun getSubscribedChannels(): List<String> {
-        return jsPubNub.getSubscribedChannels().toList()
+        TODO("Not yet implemented")
     }
 
+    
     override fun getSubscribedChannelGroups(): List<String> {
-        return jsPubNub.getSubscribedChannelGroups().toList()
+        TODO("Not yet implemented")
     }
 
+    
     override fun addPushNotificationsOnChannels(
         pushType: PNPushType,
         channels: List<String>,
@@ -188,6 +126,7 @@ class PubNub(override val configuration: PNConfiguration) : CommonPubNub {
         TODO("Not yet implemented")
     }
 
+    
     override fun auditPushChannelProvisions(
         pushType: PNPushType,
         deviceId: String,
@@ -197,7 +136,7 @@ class PubNub(override val configuration: PNConfiguration) : CommonPubNub {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun removePushNotificationsFromChannels(
         pushType: PNPushType,
         channels: List<String>,
@@ -208,7 +147,7 @@ class PubNub(override val configuration: PNConfiguration) : CommonPubNub {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun removeAllPushNotificationsFromDeviceWithPushToken(
         pushType: PNPushType,
         deviceId: String,
@@ -218,6 +157,7 @@ class PubNub(override val configuration: PNConfiguration) : CommonPubNub {
         TODO("Not yet implemented")
     }
 
+    
     override fun fetchMessages(
         channels: List<String>,
         page: PNBoundedPage,
@@ -226,51 +166,20 @@ class PubNub(override val configuration: PNConfiguration) : CommonPubNub {
         includeMessageActions: Boolean,
         includeMessageType: Boolean
     ): Endpoint<PNFetchMessagesResult> {
-        val params = createJsObject<PubNubJs.FetchMessagesParameters> {
-            this.channels = channels.toTypedArray()
-            this.start = page.start
-            this.end = page.end
-            this.count = page.limit
-            this.includeUUID = includeUUID
-            this.includeMeta = includeMeta
-            this.withMessageActions = includeMessageActions
-            this.includeMessageType = includeMessageType
-        }
-        return Endpoint({ jsPubNub.fetchMessages(params) }) { it: PubNubJs.FetchMessagesResponse ->
-            PNFetchMessagesResult(it.channels.toMap().mapValues {
-                it.value.map { item ->
-                    PNFetchMessageItem(
-                        item.uuid,
-                        item.message,
-                        item.meta as JsonElement,
-                        item.timetoken.toString().toLong(),
-                        item.actions.toMap().mapValues { entry: Map.Entry<String, PubNubJs.ActionContentToAction> ->
-                            entry.value.toMap().mapValues { entry2: Map.Entry<String, Array<PubNubJs.Action>> ->
-                                it.value.map { action ->
-                                    PNFetchMessageItem.Action(action.uuid, action.timetoken.toString())
-                                }
-                            }
-                        },
-                        HistoryMessageType.of(item.messageType.toString().toInt()),
-                        null, //TODO item.error
-                    )
-                }
-            }, it.more?.let { PNBoundedPage(it.start.toLong(), null, it.max.toInt()) }
-            )
-        }
+        TODO("Not yet implemented")
     }
 
-
+    
     override fun deleteMessages(channels: List<String>, start: Long?, end: Long?): Endpoint<PNDeleteMessagesResult> {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun messageCounts(channels: List<String>, channelsTimetoken: List<Long>): Endpoint<PNMessageCountResult> {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun hereNow(
         channels: List<String>,
         channelGroups: List<String>,
@@ -280,12 +189,12 @@ class PubNub(override val configuration: PNConfiguration) : CommonPubNub {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun whereNow(uuid: String): Endpoint<PNWhereNowResult> {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun setPresenceState(
         channels: List<String>,
         channelGroups: List<String>,
@@ -295,7 +204,7 @@ class PubNub(override val configuration: PNConfiguration) : CommonPubNub {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun getPresenceState(
         channels: List<String>,
         channelGroups: List<String>,
@@ -304,17 +213,17 @@ class PubNub(override val configuration: PNConfiguration) : CommonPubNub {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun presence(channels: List<String>, channelGroups: List<String>, connected: Boolean) {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun addMessageAction(channel: String, messageAction: PNMessageAction): Endpoint<PNAddMessageActionResult> {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun removeMessageAction(
         channel: String,
         messageTimetoken: Long,
@@ -323,11 +232,12 @@ class PubNub(override val configuration: PNConfiguration) : CommonPubNub {
         TODO("Not yet implemented")
     }
 
+    
     override fun getMessageActions(channel: String, page: PNBoundedPage): Endpoint<PNGetMessageActionsResult> {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun addChannelsToChannelGroup(
         channels: List<String>,
         channelGroup: String
@@ -335,11 +245,12 @@ class PubNub(override val configuration: PNConfiguration) : CommonPubNub {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun listChannelsForChannelGroup(channelGroup: String): Endpoint<PNChannelGroupsAllChannelsResult> {
         TODO("Not yet implemented")
     }
 
+    
     override fun removeChannelsFromChannelGroup(
         channels: List<String>,
         channelGroup: String
@@ -347,17 +258,17 @@ class PubNub(override val configuration: PNConfiguration) : CommonPubNub {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun listAllChannelGroups(): Endpoint<PNChannelGroupsListAllResult> {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun deleteChannelGroup(channelGroup: String): Endpoint<PNChannelGroupsDeleteGroupResult> {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun grant(
         read: Boolean,
         write: Boolean,
@@ -372,7 +283,7 @@ class PubNub(override val configuration: PNConfiguration) : CommonPubNub {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun grant(
         read: Boolean,
         write: Boolean,
@@ -390,7 +301,7 @@ class PubNub(override val configuration: PNConfiguration) : CommonPubNub {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun grantToken(
         ttl: Int,
         meta: Any?,
@@ -402,7 +313,7 @@ class PubNub(override val configuration: PNConfiguration) : CommonPubNub {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun grantToken(
         ttl: Int,
         meta: Any?,
@@ -413,96 +324,17 @@ class PubNub(override val configuration: PNConfiguration) : CommonPubNub {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun revokeToken(token: String): Endpoint<Unit> {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun time(): Endpoint<PNTimeResult> {
         TODO("Not yet implemented")
     }
 
-    fun setUserMetadata(
-        uuid: String?,
-        name: String?,
-        externalId: String?,
-        profileUrl: String?,
-        email: String?,
-        custom: Map<String, Any?>?,
-        includeCustom: Boolean,
-        type: String?,
-        status: String?
-    ): Endpoint<PNUUIDMetadataResult> {
-        return Endpoint(promiseFactory = {
-            val params = object : PubNubJs.SetUUIDMetadataParameters {
-                override var data: PubNubJs.UUIDMetadata = UUIDMetadata(
-                    name.toOptional(),
-                    externalId.toOptional(),
-                    profileUrl.toOptional(),
-                    email.toOptional(),
-                    status.toOptional(),
-                    type.toOptional(),
-                    custom.toOptional()
-                )
-
-                override var uuid: String? = uuid
-
-                override var include: PubNubJs.`T$30`? = object : PubNubJs.`T$30` {
-                    override var customFields: Boolean? = includeCustom
-                }
-            }
-
-            jsPubNub.objects.setUUIDMetadata(params)
-        }) { it: ObjectsResponse<PubNubJs.UUIDMetadataObject> ->
-            PNUUIDMetadataResult(
-                it.status.toInt(),
-                with(it.data) {
-                    PNUUIDMetadata(
-                        id,
-                        name,
-                        externalId,
-                        profileUrl,
-                        email,
-                        custom,
-                        updated,
-                        eTag,
-                        type,
-                        status
-                    )
-                }
-            )
-        }
-    }
-
-    fun removeUserMetadata(uuid: String?): Endpoint<PNRemoveMetadataResult> {
-        return Endpoint({
-            jsPubNub.objects.removeUUIDMetadata(object : PubNubJs.RemoveUUIDMetadataParameters {
-                override var uuid: String? = uuid
-            })
-        }) { response ->
-            PNRemoveMetadataResult(response.status.toInt())
-        }
-    }
-
-    fun getUserMetadata(
-        uuid: String?,
-        includeCustom: Boolean
-    ): Endpoint<PNUUIDMetadataResult> {
-        TODO("Not yet implemented")
-    }
-
-    fun getAllUserMetadata(
-        limit: Int?,
-        page: PNPage?,
-        filter: String?,
-        sort: Collection<PNSortKey<PNKey>>,
-        includeCount: Boolean,
-        includeCustom: Boolean
-    ): Endpoint<PNUUIDMetadataArrayResult> {
-        TODO("Not yet implemented")
-    }
-
+    
     override fun getAllChannelMetadata(
         limit: Int?,
         page: PNPage?,
@@ -514,15 +346,12 @@ class PubNub(override val configuration: PNConfiguration) : CommonPubNub {
         TODO("Not yet implemented")
     }
 
-
-    override fun getChannelMetadata(
-        channel: String,
-        includeCustom: Boolean
-    ): Endpoint<PNChannelMetadataResult> {
+    
+    override fun getChannelMetadata(channel: String, includeCustom: Boolean): Endpoint<PNChannelMetadataResult> {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun setChannelMetadata(
         channel: String,
         name: String?,
@@ -535,12 +364,12 @@ class PubNub(override val configuration: PNConfiguration) : CommonPubNub {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun removeChannelMetadata(channel: String): Endpoint<PNRemoveMetadataResult> {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun getAllUUIDMetadata(
         limit: Int?,
         page: PNPage?,
@@ -552,12 +381,12 @@ class PubNub(override val configuration: PNConfiguration) : CommonPubNub {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun getUUIDMetadata(uuid: String?, includeCustom: Boolean): Endpoint<PNUUIDMetadataResult> {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun setUUIDMetadata(
         uuid: String?,
         name: String?,
@@ -572,12 +401,12 @@ class PubNub(override val configuration: PNConfiguration) : CommonPubNub {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun removeUUIDMetadata(uuid: String?): Endpoint<PNRemoveMetadataResult> {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun getMemberships(
         uuid: String?,
         limit: Int?,
@@ -591,6 +420,7 @@ class PubNub(override val configuration: PNConfiguration) : CommonPubNub {
         TODO("Not yet implemented")
     }
 
+    
     override fun setMemberships(
         channels: List<ChannelMembershipInput>,
         uuid: String?,
@@ -605,7 +435,7 @@ class PubNub(override val configuration: PNConfiguration) : CommonPubNub {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun removeMemberships(
         channels: List<String>,
         uuid: String?,
@@ -620,7 +450,7 @@ class PubNub(override val configuration: PNConfiguration) : CommonPubNub {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun manageMemberships(
         channelsToSet: List<ChannelMembershipInput>,
         channelsToRemove: List<String>,
@@ -636,7 +466,7 @@ class PubNub(override val configuration: PNConfiguration) : CommonPubNub {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun getChannelMembers(
         channel: String,
         limit: Int?,
@@ -650,7 +480,7 @@ class PubNub(override val configuration: PNConfiguration) : CommonPubNub {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun setChannelMembers(
         channel: String,
         uuids: List<MemberInput>,
@@ -665,7 +495,7 @@ class PubNub(override val configuration: PNConfiguration) : CommonPubNub {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun removeChannelMembers(
         channel: String,
         uuids: List<String>,
@@ -680,7 +510,7 @@ class PubNub(override val configuration: PNConfiguration) : CommonPubNub {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun manageChannelMembers(
         channel: String,
         uuidsToSet: Collection<MemberInput>,
@@ -696,22 +526,22 @@ class PubNub(override val configuration: PNConfiguration) : CommonPubNub {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun listFiles(channel: String, limit: Int?, next: PNPage.PNNext?): Endpoint<PNListFilesResult> {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun getFileUrl(channel: String, fileName: String, fileId: String): Endpoint<PNFileUrlResult> {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun deleteFile(channel: String, fileName: String, fileId: String): Endpoint<PNDeleteFileResult> {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun publishFileMessage(
         channel: String,
         fileName: String,
@@ -724,7 +554,7 @@ class PubNub(override val configuration: PNConfiguration) : CommonPubNub {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun subscribe(
         channels: List<String>,
         channelGroups: List<String>,
@@ -734,7 +564,7 @@ class PubNub(override val configuration: PNConfiguration) : CommonPubNub {
         TODO("Not yet implemented")
     }
 
-
+    
     override fun unsubscribe(channels: List<String>, channelGroups: List<String>) {
         TODO("Not yet implemented")
     }
@@ -742,67 +572,4 @@ class PubNub(override val configuration: PNConfiguration) : CommonPubNub {
     override fun setToken(token: String?) {
         TODO("Not yet implemented")
     }
-}
-
-
-
-fun UUIDMetadata(
-    name: Optional<String?>,
-    externalId: Optional<String?>,
-    profileUrl: Optional<String?>,
-    email: Optional<String?>,
-    status: Optional<String?>,
-    type: Optional<String?>,
-    custom: Optional<Map<String, Any?>?>
-): PubNubJs.UUIDMetadata {
-    val result: PubNubJs.UUIDMetadata = createJsObject()
-    name.onValue { result.name = it }
-    externalId.onValue { result.externalId = it }
-    profileUrl.onValue { result.profileUrl = it }
-    email.onValue { result.email = it }
-    status.onValue { result.status = it }
-    type.onValue { result.type = it }
-    custom.onValue { result.custom = it?.toCustomObject() }
-    return result
-}
-
-fun Map<String, Any?>.toCustomObject(): PubNubJs.CustomObject {
-    val custom = Any().asDynamic()
-    entries.forEach {
-        custom[it.key] = it.value
-    }
-    @Suppress("UnsafeCastFromDynamic")
-    return custom
-}
-
-fun <T> createJsObject(configure: T.() -> Unit = {}): T = Any().asDynamic() as T
-
-fun PNConfiguration.toJs(): PubNubJs.PNConfiguration {
-    val config: PubNubJs.PNConfiguration = createJsObject()
-    config.userId = userId.value
-    config.subscribeKey = subscribeKey
-    config.publishKey = publishKey
-    config.cipherKey
-//    config.authKeys: String?
-//    config.logVerbosity: Boolean?
-//    config.ssl: Boolean?
-//    config.origin: dynamic /* String? | Array<String>? */
-//    config.presenceTimeout: Number?
-//    config.heartbeatInterval: Number?
-//    config.restore: Boolean?
-//    config.keepAlive: Boolean?
-//    config.keepAliveSettings: KeepAliveSettings?
-//    config.subscribeRequestTimeout: Number?
-//    config.suppressLeaveEvents: Boolean?
-//    config.secretKey: String?
-//    config.requestMessageCountThreshold: Number?
-//    config.autoNetworkDetection: Boolean?
-//    config.listenToBrowserNetworkEvents: Boolean?
-//    config.useRandomIVs: Boolean?
-//    config.dedupeOnSubscribe: Boolean?
-//    config.cryptoModule: CryptoModule?
-//    config.retryConfiguration: dynamic /* LinearRetryPolicyConfiguration? | ExponentialRetryPolicyConfiguration? */
-//    config.enableEventEngine: Boolean?
-//    config.maintainPresenceState: Boolean?
-    return config
 }

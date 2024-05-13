@@ -8,6 +8,12 @@ expect interface PNConfiguration {
     val userId: UserId
     val subscribeKey: String
     val publishKey: String
+    val secretKey: String
+    val authKey: String
+    val cryptoModule: CryptoModule?
+
 }
+
+expect interface CryptoModule
 
 expect fun createPNConfiguration(userId: UserId, subscribeKey: String): PNConfiguration

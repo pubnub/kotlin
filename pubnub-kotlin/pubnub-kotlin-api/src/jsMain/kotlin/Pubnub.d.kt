@@ -650,7 +650,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     interface ListChannelsResponse {
         var channels: Array<String>
     }
-    interface `L$0` {
+    interface ObjectsListener {
         @nativeInvoke
         operator fun invoke(objectsEvent: SetUUIDMetadataEvent)
         @nativeInvoke
@@ -671,7 +671,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         val signal: ((signalEvent: SignalEvent) -> Unit)?
         val messageAction: ((messageActionEvent: MessageActionEvent) -> Unit)?
         val file: ((fileEvent: FileEvent) -> Unit)?
-        val objects: `L$0`?
+        val objects: ObjectsListener?
             get() = definedExternally
     }
     interface HereNowParameters {
@@ -1517,6 +1517,7 @@ external interface ExponentialRetryPolicyConfiguration {
     var maximumDelay: Number
     var maximumRetry: Number
 }
+
 external interface JsMap<V>
 
 fun <V> entriesOf(jsObject: JsMap<V>): List<Pair<String, V>> =

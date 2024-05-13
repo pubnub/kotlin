@@ -370,7 +370,7 @@ interface PubNub :
      * @param includeMeta Whether to include message metadata in response.
      *                    Defaults to `false`.
      */
-    override fun history(
+    fun history(
         channel: String,
         start: Long?,
         end: Long?,

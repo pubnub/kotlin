@@ -2,6 +2,7 @@ package com.pubnub.kmp
 
 import com.pubnub.api.Endpoint
 import com.pubnub.api.UserId
+import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.PNBoundedPage
@@ -55,6 +56,8 @@ import com.pubnub.api.models.consumer.push.PNPushListProvisionsResult
 import com.pubnub.api.models.consumer.push.PNPushRemoveAllChannelsResult
 import com.pubnub.api.models.consumer.push.PNPushRemoveChannelResult
 import com.pubnub.api.v2.PNConfiguration
+import com.pubnub.api.v2.callbacks.CommonEventListener
+import com.pubnub.api.v2.callbacks.CommonStatusListener
 
 expect fun createCommonPubNub(config: PNConfiguration): CommonPubNub
 
@@ -67,13 +70,21 @@ interface CommonPubNub {
      */
     val configuration: PNConfiguration
 
-//    /**
-//     * Add a legacy listener for both client status and events.
-//     * Prefer `addListener(EventListener)` and `addListener(StatusListener)` if possible.
-//     *
-//     * @param listener The listener to be added.
-//     */
-//    fun addListener(listener: SubscribeCallback) //TODO
+    fun addListener(listener: CommonEventListener)
+
+    fun addListener(listener: CommonStatusListener)
+
+    /**
+     * Remove a listener.
+     *
+     * @param listener The listener to be removed, previously added with [addListener].
+     */
+    fun removeListener(listener: Listener)
+
+    /**
+     * Removes all listeners.
+     */
+    fun removeAllListeners()
 
     //region api
 

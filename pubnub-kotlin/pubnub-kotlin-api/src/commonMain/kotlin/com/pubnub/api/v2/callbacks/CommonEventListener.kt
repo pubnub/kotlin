@@ -1,18 +1,18 @@
 package com.pubnub.api.v2.callbacks
 
-import com.pubnub.api.PubNub
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
+import com.pubnub.kmp.CommonPubNub
 
 /**
  * Implement this interface and pass it into [EventEmitter.addListener] to listen for events from the PubNub real-time
  * network.
  */
-interface EventListener : CommonEventListener {
+interface CommonEventListener : BaseEventListener {
     /**
      * Receive messages at subscribed channels.
      *
@@ -22,7 +22,7 @@ interface EventListener : CommonEventListener {
      * @param result Wrapper around the actual message content.
      */
     fun message(
-        pubnub: PubNub,
+        pubnub: CommonPubNub,
         result: PNMessageResult,
     ) {}
 
@@ -35,7 +35,7 @@ interface EventListener : CommonEventListener {
      * @param result Wrapper around a presence event.
      */
     fun presence(
-        pubnub: PubNub,
+        pubnub: CommonPubNub,
         result: PNPresenceEventResult,
     ) {}
 
@@ -48,7 +48,7 @@ interface EventListener : CommonEventListener {
      * @param result Wrapper around a signal event.
      */
     fun signal(
-        pubnub: PubNub,
+        pubnub: CommonPubNub,
         result: PNSignalResult,
     ) {}
 
@@ -59,7 +59,7 @@ interface EventListener : CommonEventListener {
      * @param result Wrapper around a message action event.
      */
     fun messageAction(
-        pubnub: PubNub,
+        pubnub: CommonPubNub,
         result: PNMessageActionResult,
     ) {}
 
@@ -70,7 +70,7 @@ interface EventListener : CommonEventListener {
      * @param result Wrapper around the object event.
      */
     fun objects(
-        pubnub: PubNub,
+        pubnub: CommonPubNub,
         result: PNObjectEventResult,
     ) {}
 
@@ -81,7 +81,7 @@ interface EventListener : CommonEventListener {
      * @param result Wrapper around the file event.
      */
     fun file(
-        pubnub: PubNub,
+        pubnub: CommonPubNub,
         result: PNFileEventResult,
     ) {}
 }

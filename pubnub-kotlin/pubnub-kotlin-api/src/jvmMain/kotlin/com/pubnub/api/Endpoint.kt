@@ -30,5 +30,5 @@ actual interface Endpoint<OUTPUT> : ExtendedRemoteAction<OUTPUT> {
      * @return Returns the same instance for convenience, so [sync] or [async] can be called next.
      */
     fun overrideConfiguration(configuration: PNConfiguration): Endpoint<OUTPUT>
-    actual fun async(action: (Result<OUTPUT>) -> Unit)
 }
+

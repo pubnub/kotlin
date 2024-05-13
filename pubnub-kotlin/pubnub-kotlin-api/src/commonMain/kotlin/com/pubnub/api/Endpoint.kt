@@ -1,5 +1,5 @@
 package com.pubnub.api
 
-expect interface Endpoint<OUTPUT> {
-    fun async(action: (Result<OUTPUT>) -> Unit)
-}
+expect interface Endpoint<OUTPUT>
+
+expect fun <T> Endpoint<T>.async(action: (Result<T>) -> Unit)
