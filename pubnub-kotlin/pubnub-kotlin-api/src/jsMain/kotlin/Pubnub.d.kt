@@ -149,6 +149,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     open fun stop()
     open fun reconnect()
     open fun addListener(params: ListenerParameters)
+    open fun addListener(params: StatusListenerParameters)
     open fun removeListener(params: ListenerParameters)
     open fun getSubscribedChannels(): Array<String>
     open fun getSubscribedChannelGroups(): Array<String>
@@ -449,32 +450,14 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     interface FetchMessagesParameters {
         var channels: Array<String>
         var count: Number?
-            get() = definedExternally
-            set(value) = definedExternally
         var stringifiedTimeToken: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
         var start: dynamic /* String? | Number? */
-            get() = definedExternally
-            set(value) = definedExternally
         var end: dynamic /* String? | Number? */
-            get() = definedExternally
-            set(value) = definedExternally
         var withMessageActions: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
         var includeMessageType: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
         var includeUUID: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
         var includeMeta: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
         var includeMessageActions: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
     }
     interface Action {
         var uuid: String
@@ -489,19 +472,11 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var channel: String
         var message: JsonElement
         var timetoken: dynamic /* String | Number */
-            get() = definedExternally
-            set(value) = definedExternally
         var messageType: dynamic /* String? | Number? */
-            get() = definedExternally
-            set(value) = definedExternally
         var uuid: String
         var error: String?
-            get() = definedExternally
-            set(value) = definedExternally
         var meta: Json?
-            get() = definedExternally
-            set(value) = definedExternally
-        var actions: ActionTypeToActions
+        var actions: ActionTypeToActions?
     }
     interface ChannelsToFetchMessageItemsMap : JsMap<Array<FetchMessageItem>>
 
@@ -664,7 +639,6 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         operator fun invoke(objectsEvent: RemoveMembershipEvent)
     }
     interface ListenerParameters {
-        val status: ((statusEvent: StatusEvent) -> Unit)?
         val message: ((messageEvent: MessageEvent) -> Unit)?
         val presence: ((presenceEvent: PresenceEvent) -> Unit)?
         val signal: ((signalEvent: SignalEvent) -> Unit)?
@@ -673,6 +647,11 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         val objects: ObjectsListener?
             get() = definedExternally
     }
+
+    interface StatusListenerParameters {
+        val status: ((statusEvent: StatusEvent) -> Unit)?
+    }
+
     interface HereNowParameters {
         var channels: Array<String>?
             get() = definedExternally
@@ -1004,7 +983,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
 //        operator fun set(key: String, value: Boolean)
 //    }
 
-    interface CustomObject
+    interface CustomObject : JsMap<Any>
 
     interface v2ObjectDataOmitId {
         var eTag: String

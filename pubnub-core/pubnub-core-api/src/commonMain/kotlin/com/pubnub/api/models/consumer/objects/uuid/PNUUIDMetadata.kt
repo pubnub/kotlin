@@ -6,7 +6,7 @@ data class PNUUIDMetadata(
     val externalId: String?,
     val profileUrl: String?,
     val email: String?,
-    val custom: Any?,
+    val custom: Map<String, Any?>?,
     val updated: String?,
     val eTag: String?,
     val type: String?,

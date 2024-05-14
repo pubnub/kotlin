@@ -53,6 +53,7 @@ import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
+import com.pubnub.api.models.consumer.history.PNHistoryResult
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.objects.PNKey
 import com.pubnub.api.models.consumer.objects.PNMemberKey
@@ -370,12 +371,12 @@ actual interface PubNub :
      */
     fun history(
         channel: String,
-        start: Long?,
-        end: Long?,
-        count: Int,
-        reverse: Boolean,
-        includeTimetoken: Boolean,
-        includeMeta: Boolean,
+        start: Long? = null,
+        end: Long? = null,
+        count: Int = PNHistoryResult.MAX_COUNT,
+        reverse: Boolean = false,
+        includeTimetoken: Boolean = false,
+        includeMeta: Boolean = false,
     ): History
 
     /**
