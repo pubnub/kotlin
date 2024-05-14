@@ -121,7 +121,6 @@ external interface `T$2` {
     var data: Any
 }
 
-//@JsModule("pubnub-js")
 open external class PubNub(config: Any /* UUID | UserId */) {
     open var channelGroups: ChannelGroups
     open var push: Push

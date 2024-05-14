@@ -6,4 +6,4 @@ import com.pubnub.api.models.consumer.push.PNPushListProvisionsResult
 /**
  * @see [PubNub.auditPushChannelProvisions]
  */
-interface ListPushProvisions : Endpoint<PNPushListProvisionsResult>
+actual interface ListPushProvisions : Endpoint<PNPushListProvisionsResult>

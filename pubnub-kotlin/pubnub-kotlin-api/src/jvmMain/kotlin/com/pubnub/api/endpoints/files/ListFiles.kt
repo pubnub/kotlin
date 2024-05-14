@@ -6,4 +6,4 @@ import com.pubnub.api.models.consumer.files.PNListFilesResult
 /**
  * @see [PubNub.listFiles]
  */
-interface ListFiles : Endpoint<PNListFilesResult>
+actual interface ListFiles : Endpoint<PNListFilesResult>

@@ -73,13 +73,11 @@ import com.pubnub.api.v2.entities.UserMetadata
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.internal.BasePubNubImpl
-import com.pubnub.kmp.CommonPubNub
 import java.io.InputStream
 
-interface PubNub :
+actual interface PubNub :
     BasePubNub<EventListener, Subscription, Channel, ChannelGroup, ChannelMetadata, UserMetadata, SubscriptionSet, StatusListener>,
-    EventEmitter,
-    CommonPubNub {
+    EventEmitter {
     companion object {
         /**
          * Initialize and return an instance of the PubNub client.
@@ -130,7 +128,7 @@ interface PubNub :
      * Modifying the values in this configuration is not advised, as it may lead
      * to undefined behavior.
      */
-    override val configuration: com.pubnub.api.v2.PNConfiguration
+    actual val configuration: com.pubnub.api.v2.PNConfiguration
 
     /**
      * Add a legacy listener for both client status and events.
@@ -186,7 +184,7 @@ interface PubNub :
      *            - If ttl isn't specified, then expiration of the message defaults
      *              back to the expiry value for the key.
      */
-    override fun publish(
+    actual fun publish(
         channel: String,
         message: Any,
         meta: Any?,
@@ -226,7 +224,7 @@ interface PubNub :
      *            - If ttl isn't specified, then expiration of the message defaults
      *              back to the expiry value for the key.
      */
-    override fun fire(
+    actual fun fire(
         channel: String,
         message: Any,
         meta: Any?,
@@ -244,7 +242,7 @@ interface PubNub :
      * @param channel The channel which the signal will be sent to.
      * @param message The payload which will be serialized and sent.
      */
-    override fun signal(
+    actual fun signal(
         channel: String,
         message: Any,
     ): Signal
@@ -254,14 +252,14 @@ interface PubNub :
      *
      * @return A list of channels the client is currently subscribed to.
      */
-    override fun getSubscribedChannels(): List<String>
+    actual fun getSubscribedChannels(): List<String>
 
     /**
      * Queries the local subscribe loop for channel groups currently in the mix.
      *
      * @return A list of channel groups the client is currently subscribed to.
      */
-    override fun getSubscribedChannelGroups(): List<String>
+    actual fun getSubscribedChannelGroups(): List<String>
 
     /**
      * Enable push notifications on provided set of channels.
@@ -275,7 +273,7 @@ interface PubNub :
      * @param topic Notifications topic name (usually it is bundle identifier of application for Apple platform).
      *              Required only if pushType set to [PNPushType.APNS2].
      */
-    override fun addPushNotificationsOnChannels(
+    actual fun addPushNotificationsOnChannels(
         pushType: PNPushType,
         channels: List<String>,
         deviceId: String,
@@ -293,7 +291,7 @@ interface PubNub :
      * @param topic Notifications topic name (usually it is bundle identifier of application for Apple platform).
      *              Required only if pushType set to [PNPushType.APNS2].
      */
-    override fun auditPushChannelProvisions(
+    actual fun auditPushChannelProvisions(
         pushType: PNPushType,
         deviceId: String,
         topic: String?,
@@ -311,7 +309,7 @@ interface PubNub :
      * @param topic Notifications topic name (usually it is bundle identifier of application for Apple platform).
      *              Required only if pushType set to [PNPushType.APNS2].
      */
-    override fun removePushNotificationsFromChannels(
+    actual fun removePushNotificationsFromChannels(
         pushType: PNPushType,
         channels: List<String>,
         deviceId: String,
@@ -329,7 +327,7 @@ interface PubNub :
      * @param topic Notifications topic name (usually it is bundle identifier of application for Apple platform).
      *              Required only if pushType set to [PNPushType.APNS2].
      */
-    override fun removeAllPushNotificationsFromDeviceWithPushToken(
+    actual fun removeAllPushNotificationsFromDeviceWithPushToken(
         pushType: PNPushType,
         deviceId: String,
         topic: String?,
@@ -472,7 +470,7 @@ interface PubNub :
      * @param includeMessageType Whether to include message type in response.
      *                              Defaults to `false`.
      */
-    override fun fetchMessages(
+    actual fun fetchMessages(
         channels: List<String>,
         page: PNBoundedPage,
         includeUUID: Boolean,
@@ -494,7 +492,7 @@ interface PubNub :
      * @param start Timetoken delimiting the start of time slice (exclusive) to delete messages from.
      * @param end Time token delimiting the end of time slice (inclusive) to delete messages from.
      */
-    override fun deleteMessages(
+    actual fun deleteMessages(
         channels: List<String>,
         start: Long?,
         end: Long?,
@@ -510,7 +508,7 @@ interface PubNub :
      *                          Specify a single timetoken to apply it to all channels.
      *                          Otherwise, the list of timetokens must be the same length as the list of channels.
      */
-    override fun messageCounts(
+    actual fun messageCounts(
         channels: List<String>,
         channelsTimetoken: List<Long>,
     ): MessageCounts
@@ -528,7 +526,7 @@ interface PubNub :
      * @param includeUUIDs Whether the response should include UUIDs od connected clients.
      *                     Defaults to `true`.
      */
-    override fun hereNow(
+    actual fun hereNow(
         channels: List<String>,
         channelGroups: List<String>,
         includeState: Boolean,
@@ -541,7 +539,7 @@ interface PubNub :
      * @param uuid UUID of the user to get its current channel subscriptions. Defaults to the UUID of the client.
      * @see [PNConfiguration.uuid]
      */
-    override fun whereNow(uuid: String): WhereNow
+    actual fun whereNow(uuid: String): WhereNow
 
     /**
      * Set state information specific to a subscriber UUID.
@@ -563,7 +561,7 @@ interface PubNub :
      * @param uuid UUID of the user to set the state for. Defaults to the UUID of the client.
      *             @see [PNConfiguration.uuid]
      */
-    override fun setPresenceState(
+    actual fun setPresenceState(
         channels: List<String>,
         channelGroups: List<String>,
         state: Any,
@@ -580,7 +578,7 @@ interface PubNub :
      * @param uuid UUID of the user to get the state from. Defaults to the UUID of the client.
      *             @see [PNConfiguration.uuid]
      */
-    override fun getPresenceState(
+    actual fun getPresenceState(
         channels: List<String>,
         channelGroups: List<String>,
         uuid: String,
@@ -595,7 +593,7 @@ interface PubNub :
      * @param channels Channels to subscribe/unsubscribe. Either `channel` or [channelGroups] are required.
      * @param channelGroups Channel groups to subscribe/unsubscribe. Either `channelGroups` or [channels] are required.
      */
-    override fun presence(
+    actual fun presence(
         channels: List<String>,
         channelGroups: List<String>,
         connected: Boolean,
@@ -608,7 +606,7 @@ interface PubNub :
      * @param messageAction The message action object containing the message action's type,
      *                      value and the publish timetoken of the original message.
      */
-    override fun addMessageAction(
+    actual fun addMessageAction(
         channel: String,
         messageAction: PNMessageAction,
     ): AddMessageAction
@@ -620,7 +618,7 @@ interface PubNub :
      * @param messageTimetoken The publish timetoken of the original message.
      * @param actionTimetoken The publish timetoken of the message action to be removed.
      */
-    override fun removeMessageAction(
+    actual fun removeMessageAction(
         channel: String,
         messageTimetoken: Long,
         actionTimetoken: Long,
@@ -658,7 +656,7 @@ interface PubNub :
      * @param channel Channel to fetch message actions from.
      * @param page The paging object used for pagination. @see [PNBoundedPage]
      */
-    override fun getMessageActions(
+    actual fun getMessageActions(
         channel: String,
         page: PNBoundedPage,
     ): GetMessageActions
@@ -669,7 +667,7 @@ interface PubNub :
      * @param channels The channels to add to the channel group.
      * @param channelGroup The channel group to add the channels to.
      */
-    override fun addChannelsToChannelGroup(
+    actual fun addChannelsToChannelGroup(
         channels: List<String>,
         channelGroup: String,
     ): AddChannelChannelGroup
@@ -679,7 +677,7 @@ interface PubNub :
      *
      * @param channelGroup Channel group to fetch the belonging channels.
      */
-    override fun listChannelsForChannelGroup(channelGroup: String): AllChannelsChannelGroup
+    actual fun listChannelsForChannelGroup(channelGroup: String): AllChannelsChannelGroup
 
     /**
      * Removes channels from a channel group.
@@ -687,7 +685,7 @@ interface PubNub :
      * @param channelGroup The channel group to remove channels from
      * @param channels The channels to remove from the channel group.
      */
-    override fun removeChannelsFromChannelGroup(
+    actual fun removeChannelsFromChannelGroup(
         channels: List<String>,
         channelGroup: String,
     ): RemoveChannelChannelGroup
@@ -695,14 +693,14 @@ interface PubNub :
     /**
      * Lists all registered channel groups for the subscribe key.
      */
-    override fun listAllChannelGroups(): ListAllChannelGroup
+    actual fun listAllChannelGroups(): ListAllChannelGroup
 
     /**
      * Removes the channel group.
      *
      * @param channelGroup The channel group to remove.
      */
-    override fun deleteChannelGroup(channelGroup: String): DeleteChannelGroup
+    actual fun deleteChannelGroup(channelGroup: String): DeleteChannelGroup
 
     /**
      * This function establishes access permissions for PubNub Access Manager (PAM) by setting the `read` or `write`
@@ -745,7 +743,7 @@ interface PubNub :
      *
      *                      It's possible to grant permissions to multiple [channelGroups] simultaneously.
      */
-    override fun grant(
+    fun grant(
         read: Boolean,
         write: Boolean,
         manage: Boolean,
@@ -760,7 +758,7 @@ interface PubNub :
     /**
      * See [grant]
      */
-    override fun grant(
+    fun grant(
         read: Boolean,
         write: Boolean,
         manage: Boolean,
@@ -794,7 +792,7 @@ interface PubNub :
      * @param uuids List of all uuid grants
      */
 
-    override fun grantToken(
+    actual fun grantToken(
         ttl: Int,
         meta: Any?,
         authorizedUUID: String?,
@@ -819,7 +817,7 @@ interface PubNub :
      * @param spacesPermissions List of all space grants
      * @param usersPermissions List of all userId grants
      */
-    override fun grantToken(
+    actual fun grantToken(
         ttl: Int,
         meta: Any?,
         authorizedUserId: UserId?,
@@ -832,12 +830,12 @@ interface PubNub :
      *
      * @param token Existing token with embedded permissions.
      */
-    override fun revokeToken(token: String): RevokeToken
+    actual fun revokeToken(token: String): RevokeToken
 
     /**
      * Returns a 17 digit precision Unix epoch from the server.
      */
-    override fun time(): Time
+    actual fun time(): Time
 
     /**
      * Returns a paginated list of Channel Metadata objects, optionally including the custom data object for each.
@@ -857,7 +855,7 @@ interface PubNub :
      *                     Default is `false`.
      * @param includeCustom Include respective additional fields in the response.
      */
-    override fun getAllChannelMetadata(
+    actual fun getAllChannelMetadata(
         limit: Int?,
         page: PNPage?,
         filter: String?,
@@ -872,7 +870,7 @@ interface PubNub :
      * @param channel Channel name.
      * @param includeCustom Include respective additional fields in the response.
      */
-    override fun getChannelMetadata(
+    actual fun getChannelMetadata(
         channel: String,
         includeCustom: Boolean,
     ): GetChannelMetadata
@@ -886,7 +884,7 @@ interface PubNub :
      * @param custom Object with supported data types.
      * @param includeCustom Include respective additional fields in the response.
      */
-    override fun setChannelMetadata(
+    actual fun setChannelMetadata(
         channel: String,
         name: String?,
         description: String?,
@@ -901,7 +899,7 @@ interface PubNub :
      *
      * @param channel Channel name.
      */
-    override fun removeChannelMetadata(channel: String): RemoveChannelMetadata
+    actual fun removeChannelMetadata(channel: String): RemoveChannelMetadata
 
     /**
      * Returns a paginated list of UUID Metadata objects, optionally including the custom data object for each.
@@ -921,7 +919,7 @@ interface PubNub :
      *                     Default is `false`.
      * @param includeCustom Include respective additional fields in the response.
      */
-    override fun getAllUUIDMetadata(
+    actual fun getAllUUIDMetadata(
         limit: Int?,
         page: PNPage?,
         filter: String?,
@@ -936,7 +934,7 @@ interface PubNub :
      * @param uuid Unique user identifier. If not supplied then current user’s uuid is used.
      * @param includeCustom Include respective additional fields in the response.
      */
-    override fun getUUIDMetadata(
+    actual fun getUUIDMetadata(
         uuid: String?,
         includeCustom: Boolean,
     ): GetUUIDMetadata
@@ -952,7 +950,7 @@ interface PubNub :
      * @param custom Object with supported data types.
      * @param includeCustom Include respective additional fields in the response.
      */
-    override fun setUUIDMetadata(
+    actual fun setUUIDMetadata(
         uuid: String?,
         name: String?,
         externalId: String?,
@@ -969,7 +967,7 @@ interface PubNub :
      *
      * @param uuid Unique user identifier. If not supplied then current user’s uuid is used.
      */
-    override fun removeUUIDMetadata(uuid: String?): RemoveUUIDMetadata
+    actual fun removeUUIDMetadata(uuid: String?): RemoveUUIDMetadata
 
     /**
      * The method returns a list of channel memberships for a user. This method doesn't return a user's subscriptions.
@@ -991,7 +989,7 @@ interface PubNub :
      * @param includeCustom Include respective additional fields in the response.
      * @param includeChannelDetails Include custom fields for channels metadata.
      */
-    override fun getMemberships(
+    actual fun getMemberships(
         uuid: String?,
         limit: Int?,
         page: PNPage?,
@@ -1049,7 +1047,7 @@ interface PubNub :
      * @param includeCustom Include respective additional fields in the response.
      * @param includeChannelDetails Include custom fields for channels metadata.
      */
-    override fun setMemberships(
+    actual fun setMemberships(
         channels: List<ChannelMembershipInput>,
         uuid: String?,
         limit: Int?,
@@ -1082,7 +1080,7 @@ interface PubNub :
      * @param includeCustom Include respective additional fields in the response.
      * @param includeChannelDetails Include custom fields for channels metadata.
      */
-    override fun removeMemberships(
+    actual fun removeMemberships(
         channels: List<String>,
         uuid: String?,
         limit: Int?,
@@ -1116,7 +1114,7 @@ interface PubNub :
      * @param includeCustom Include respective additional fields in the response.
      * @param includeChannelDetails Include custom fields for channels metadata.
      */
-    override fun manageMemberships(
+    actual fun manageMemberships(
         channelsToSet: List<ChannelMembershipInput>,
         channelsToRemove: List<String>,
         uuid: String?,
@@ -1174,7 +1172,7 @@ interface PubNub :
      * @param includeCustom Include respective additional fields in the response.
      * @param includeUUIDDetails Include custom fields for UUIDs metadata.
      */
-    override fun getChannelMembers(
+    actual fun getChannelMembers(
         channel: String,
         limit: Int?,
         page: PNPage?,
@@ -1232,7 +1230,7 @@ interface PubNub :
      * @param includeCustom Include respective additional fields in the response.
      * @param includeUUIDDetails Include custom fields for UUIDs metadata.
      */
-    override fun setChannelMembers(
+    actual fun setChannelMembers(
         channel: String,
         uuids: List<MemberInput>,
         limit: Int?,
@@ -1290,7 +1288,7 @@ interface PubNub :
      * @param includeCustom Include respective additional fields in the response.
      * @param includeUUIDDetails Include custom fields for UUIDs metadata.
      */
-    override fun removeChannelMembers(
+    actual fun removeChannelMembers(
         channel: String,
         uuids: List<String>,
         limit: Int?,
@@ -1324,7 +1322,7 @@ interface PubNub :
      * @param includeCustom Include respective additional fields in the response.
      * @param includeUUIDDetails Include custom fields for UUIDs metadata.
      */
-    override fun manageChannelMembers(
+    actual fun manageChannelMembers(
         channel: String,
         uuidsToSet: Collection<MemberInput>,
         uuidsToRemove: Collection<String>,
@@ -1381,7 +1379,7 @@ interface PubNub :
      * @param limit Number of files to return. Minimum value is 1, and maximum is 100. Default value is 100.
      * @param next Previously-returned cursor bookmark for fetching the next page. @see [PNPage.PNNext]
      */
-    override fun listFiles(
+    actual fun listFiles(
         channel: String,
         limit: Int?,
         next: PNPage.PNNext?,
@@ -1394,7 +1392,7 @@ interface PubNub :
      * @param fileName Name under which the uploaded file is stored.
      * @param fileId Unique identifier for the file, assigned during upload.
      */
-    override fun getFileUrl(
+    actual fun getFileUrl(
         channel: String,
         fileName: String,
         fileId: String,
@@ -1423,7 +1421,7 @@ interface PubNub :
      * @param fileName Name under which the uploaded file is stored.
      * @param fileId Unique identifier for the file, assigned during upload.
      */
-    override fun deleteFile(
+    actual fun deleteFile(
         channel: String,
         fileName: String,
         fileId: String,
@@ -1453,7 +1451,7 @@ interface PubNub :
      *                    If not specified, then the history configuration of the key is used.
      *
      */
-    override fun publishFileMessage(
+    actual fun publishFileMessage(
         channel: String,
         fileName: String,
         fileId: String,
@@ -1481,7 +1479,7 @@ interface PubNub :
      * @param withPresence Also subscribe to related presence channel.
      * @param withTimetoken A timetoken to start the subscribe loop from.
      */
-    override fun subscribe(
+    actual fun subscribe(
         channels: List<String>,
         channelGroups: List<String>,
         withPresence: Boolean,
@@ -1505,7 +1503,7 @@ interface PubNub :
      * @param channels Channels to subscribe/unsubscribe. Either `channel` or [channelGroups] are required.
      * @param channelGroups Channel groups to subscribe/unsubscribe. Either `channelGroups` or [channels] are required.
      */
-    override fun unsubscribe(
+    actual fun unsubscribe(
         channels: List<String>,
         channelGroups: List<String>,
     )

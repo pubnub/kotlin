@@ -6,7 +6,7 @@ import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsRemoveChannel
 /**
  * @see [PubNub.removeChannelsFromChannelGroup]
  */
-interface RemoveChannelChannelGroup : Endpoint<PNChannelGroupsRemoveChannelResult> {
+actual interface RemoveChannelChannelGroup : Endpoint<PNChannelGroupsRemoveChannelResult> {
     val channelGroup: String
     val channels: List<String>
 }

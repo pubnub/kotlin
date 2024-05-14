@@ -7,7 +7,7 @@ import com.pubnub.api.models.consumer.PNStatus
  * Implement this interface and pass it into [com.pubnub.api.v2.callbacks.StatusEmitter.addListener] to listen for
  * PubNub connection status changes.
  */
-interface StatusListener : CommonStatusListener {
+actual interface StatusListener : BaseStatusListener {
     /**
      * Receive status updates from the PubNub client, such as:
      * * [PNStatusCategory.PNConnectedCategory],
@@ -22,7 +22,7 @@ interface StatusListener : CommonStatusListener {
      * @param pubnub The client instance which has this listener attached.
      * @param status Wrapper around the actual message content.
      */
-    fun status(
+    actual fun status(
         pubnub: PubNub,
         status: PNStatus,
     )
