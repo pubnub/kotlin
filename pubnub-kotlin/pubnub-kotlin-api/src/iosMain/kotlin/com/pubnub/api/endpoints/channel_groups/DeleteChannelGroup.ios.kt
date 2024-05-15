@@ -6,4 +6,4 @@ import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsDeleteGroupRe
 /**
  * @see [PubNub.deleteChannelGroup]
  */
-expect interface DeleteChannelGroup : Endpoint<PNChannelGroupsDeleteGroupResult>
+actual interface DeleteChannelGroup : Endpoint<PNChannelGroupsDeleteGroupResult>

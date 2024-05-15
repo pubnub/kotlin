@@ -11,7 +11,7 @@ import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
 
-actual fun createCommonPubNub(config: PNConfiguration): PubNub {
+actual fun createPubNub(config: PNConfiguration): PubNub {
     return PubNub.create(config)
 }
 

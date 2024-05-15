@@ -6,4 +6,5 @@ import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsAllChannelsRe
 /**
  * @see [PubNub.listChannelsForChannelGroup]
  */
-expect interface AllChannelsChannelGroup : Endpoint<PNChannelGroupsAllChannelsResult>
+actual interface AllChannelsChannelGroup : Endpoint<PNChannelGroupsAllChannelsResult> {
+}

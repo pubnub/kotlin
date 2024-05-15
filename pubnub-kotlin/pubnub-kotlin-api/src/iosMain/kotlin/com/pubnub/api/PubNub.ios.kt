@@ -50,7 +50,6 @@ import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
-import com.pubnub.api.models.consumer.files.PNDownloadableFile
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.objects.PNKey
 import com.pubnub.api.models.consumer.objects.PNMemberKey
@@ -61,7 +60,6 @@ import com.pubnub.api.models.consumer.objects.member.MemberInput
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
-import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
@@ -71,14 +69,8 @@ import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
-import PubNub as PubNubJs
-
-actual fun createPubNub(config: PNConfiguration): PubNub {
-    return PubNubImpl(config)
-}
 
 actual interface PubNub {
-
     actual val configuration: PNConfiguration
     actual fun addListener(listener: EventListener)
     actual fun addListener(listener: StatusListener)
@@ -95,26 +87,44 @@ actual interface PubNub {
     ): Publish
 
     actual fun fire(
-        channel: String, message: Any, meta: Any?, usePost: Boolean, ttl: Int?
+        channel: String,
+        message: Any,
+        meta: Any?,
+        usePost: Boolean,
+        ttl: Int?
     ): Publish
 
     actual fun signal(channel: String, message: Any): Signal
     actual fun getSubscribedChannels(): List<String>
     actual fun getSubscribedChannelGroups(): List<String>
     actual fun addPushNotificationsOnChannels(
-        pushType: PNPushType, channels: List<String>, deviceId: String, topic: String?, environment: PNPushEnvironment
+        pushType: PNPushType,
+        channels: List<String>,
+        deviceId: String,
+        topic: String?,
+        environment: PNPushEnvironment
     ): AddChannelsToPush
 
     actual fun auditPushChannelProvisions(
-        pushType: PNPushType, deviceId: String, topic: String?, environment: PNPushEnvironment
+        pushType: PNPushType,
+        deviceId: String,
+        topic: String?,
+        environment: PNPushEnvironment
     ): ListPushProvisions
 
     actual fun removePushNotificationsFromChannels(
-        pushType: PNPushType, channels: List<String>, deviceId: String, topic: String?, environment: PNPushEnvironment
+        pushType: PNPushType,
+        channels: List<String>,
+        deviceId: String,
+        topic: String?,
+        environment: PNPushEnvironment
     ): RemoveChannelsFromPush
 
     actual fun removeAllPushNotificationsFromDeviceWithPushToken(
-        pushType: PNPushType, deviceId: String, topic: String?, environment: PNPushEnvironment
+        pushType: PNPushType,
+        deviceId: String,
+        topic: String?,
+        environment: PNPushEnvironment
     ): RemoveAllPushChannelsForDevice
 
     actual fun fetchMessages(
@@ -127,49 +137,68 @@ actual interface PubNub {
     ): FetchMessages
 
     actual fun deleteMessages(
-        channels: List<String>, start: Long?, end: Long?
+        channels: List<String>,
+        start: Long?,
+        end: Long?
     ): DeleteMessages
 
     actual fun messageCounts(
-        channels: List<String>, channelsTimetoken: List<Long>
+        channels: List<String>,
+        channelsTimetoken: List<Long>
     ): MessageCounts
 
     actual fun hereNow(
-        channels: List<String>, channelGroups: List<String>, includeState: Boolean, includeUUIDs: Boolean
+        channels: List<String>,
+        channelGroups: List<String>,
+        includeState: Boolean,
+        includeUUIDs: Boolean
     ): HereNow
 
     actual fun whereNow(uuid: String): WhereNow
     actual fun setPresenceState(
-        channels: List<String>, channelGroups: List<String>, state: Any, uuid: String
+        channels: List<String>,
+        channelGroups: List<String>,
+        state: Any,
+        uuid: String
     ): SetState
 
     actual fun getPresenceState(
-        channels: List<String>, channelGroups: List<String>, uuid: String
+        channels: List<String>,
+        channelGroups: List<String>,
+        uuid: String
     ): GetState
 
     actual fun presence(
-        channels: List<String>, channelGroups: List<String>, connected: Boolean
+        channels: List<String>,
+        channelGroups: List<String>,
+        connected: Boolean
     )
 
     actual fun addMessageAction(
-        channel: String, messageAction: PNMessageAction
+        channel: String,
+        messageAction: PNMessageAction
     ): AddMessageAction
 
     actual fun removeMessageAction(
-        channel: String, messageTimetoken: Long, actionTimetoken: Long
+        channel: String,
+        messageTimetoken: Long,
+        actionTimetoken: Long
     ): RemoveMessageAction
 
     actual fun getMessageActions(
-        channel: String, page: PNBoundedPage
+        channel: String,
+        page: PNBoundedPage
     ): GetMessageActions
 
     actual fun addChannelsToChannelGroup(
-        channels: List<String>, channelGroup: String
+        channels: List<String>,
+        channelGroup: String
     ): AddChannelChannelGroup
 
     actual fun listChannelsForChannelGroup(channelGroup: String): AllChannelsChannelGroup
     actual fun removeChannelsFromChannelGroup(
-        channels: List<String>, channelGroup: String
+        channels: List<String>,
+        channelGroup: String
     ): RemoveChannelChannelGroup
 
     actual fun listAllChannelGroups(): ListAllChannelGroup
@@ -203,7 +232,8 @@ actual interface PubNub {
     ): GetAllChannelMetadata
 
     actual fun getChannelMetadata(
-        channel: String, includeCustom: Boolean
+        channel: String,
+        includeCustom: Boolean
     ): GetChannelMetadata
 
     actual fun setChannelMetadata(
@@ -227,7 +257,8 @@ actual interface PubNub {
     ): GetAllUUIDMetadata
 
     actual fun getUUIDMetadata(
-        uuid: String?, includeCustom: Boolean
+        uuid: String?,
+        includeCustom: Boolean
     ): GetUUIDMetadata
 
     actual fun setUUIDMetadata(
@@ -340,31 +371,54 @@ actual interface PubNub {
     ): ManageChannelMembers
 
     actual fun listFiles(
-        channel: String, limit: Int?, next: PNPage.PNNext?
+        channel: String,
+        limit: Int?,
+        next: PNPage.PNNext?
     ): ListFiles
 
     actual fun getFileUrl(
-        channel: String, fileName: String, fileId: String
+        channel: String,
+        fileName: String,
+        fileId: String
     ): GetFileUrl
 
     actual fun deleteFile(
-        channel: String, fileName: String, fileId: String
+        channel: String,
+        fileName: String,
+        fileId: String
     ): DeleteFile
 
     actual fun publishFileMessage(
-        channel: String, fileName: String, fileId: String, message: Any?, meta: Any?, ttl: Int?, shouldStore: Boolean?
+        channel: String,
+        fileName: String,
+        fileId: String,
+        message: Any?,
+        meta: Any?,
+        ttl: Int?,
+        shouldStore: Boolean?
     ): PublishFileMessage
 
     actual fun subscribe(
-        channels: List<String>, channelGroups: List<String>, withPresence: Boolean, withTimetoken: Long
+        channels: List<String>,
+        channelGroups: List<String>,
+        withPresence: Boolean,
+        withTimetoken: Long
     )
 
     actual fun unsubscribe(
-        channels: List<String>, channelGroups: List<String>
+        channels: List<String>,
+        channelGroups: List<String>
     )
 
     actual fun setToken(token: String?)
 
+}
+
+actual fun createStatusListener(
+    pubnub: PubNub,
+    onStatus: (PubNub, PNStatus) -> Unit
+): StatusListener {
+    TODO("Not yet implemented")
 }
 
 actual fun createEventListener(
@@ -376,102 +430,15 @@ actual fun createEventListener(
     onObjects: (PubNub, PNObjectEventResult) -> Unit,
     onFile: (PubNub, PNFileEventResult) -> Unit
 ): EventListener {
-    val listener = object : PubNubJs.ListenerParameters {
-        override val message: (PubNubJs.MessageEvent) -> Unit = { messageEvent ->
-            onMessage(pubnub, PNMessageResult(
-                    BasePubSubResult(
-                        messageEvent.channel,
-                        messageEvent.subscription,
-                        messageEvent.timetoken.toLong(),
-                        messageEvent.userMetadata as? JsonElement, // TODO kmp
-                        messageEvent.publisher
-                    ),
-                    messageEvent.message as JsonElement, // TODO kmp
-                    null //TODO kmp error
-                ))
-        }
-        override val presence: ((presenceEvent: PubNubJs.PresenceEvent) -> Unit) = { presenceEvent ->
-            onPresence(pubnub, PNPresenceEventResult(
-                presenceEvent.action,
-                presenceEvent.uuid,
-                presenceEvent.timestamp.toLong(),
-                presenceEvent.occupancy.toInt(),
-                presenceEvent.state.asDynamic(), //TODO kmp
-                presenceEvent.channel,
-                presenceEvent.subscription,
-                presenceEvent.timetoken.toLong(),
-            ))
-
-        }
-        override val signal: ((signalEvent: PubNubJs.SignalEvent) -> Unit) = { signalEvent ->
-            onSignal(pubnub, PNSignalResult(
-                BasePubSubResult(
-                    signalEvent.channel,
-                    signalEvent.subscription,
-                    signalEvent.timetoken.toLong(),
-                    null,
-                    signalEvent.publisher
-                ),
-                signalEvent.message as JsonElement, // TODO kmp
-            ))
-        }
-
-        override val messageAction: ((messageActionEvent: PubNubJs.MessageActionEvent) -> Unit) = { messageActionEvent ->
-            onMessageAction(pubnub, PNMessageActionResult(
-                BasePubSubResult(
-                    messageActionEvent.channel,
-                    messageActionEvent.subscription,
-                    messageActionEvent.timetoken.toLong(),
-                    null,
-                    messageActionEvent.publisher
-                ),
-                messageActionEvent.event,
-                PNMessageAction(
-                    messageActionEvent.data.type,
-                    messageActionEvent.data.value,
-                    messageActionEvent.data.messageTimetoken.toLong()
-                ).apply {
-                    actionTimetoken = messageActionEvent.data.messageTimetoken.toLong()
-                }
-            ))
-        }
-        override val file: ((fileEvent: PubNubJs.FileEvent) -> Unit) = { fileEvent ->
-            onFile(pubnub, PNFileEventResult(
-                fileEvent.channel,
-                fileEvent.timetoken.toLong(),
-                fileEvent.publisher,
-                fileEvent.message,
-                PNDownloadableFile(fileEvent.file.id, fileEvent.file.name, fileEvent.file.url),
-                fileEvent.message as JsonElement, //TODO kmp
-                fileEvent.subscription,
-                null // TODO kmp error
-            ) )
-        }
-    }
-    return listener
+    TODO("Not yet implemented")
 }
 
-actual fun createStatusListener(
-    pubnub: PubNub,
-    onStatus: (PubNub, PNStatus) -> Unit
-): StatusListener {
-    return object : PubNubJs.StatusListenerParameters {
-        override val status: ((statusEvent: PubNubJs.StatusEvent) -> Unit) = { statusEvent ->
-            onStatus(pubnub, PNStatus(
-                enumValueOf(statusEvent.category), //TODO parse category
-                null,
-                statusEvent.currentTimetoken.toString().toLong(),
-                statusEvent.affectedChannels.toList(),
-                statusEvent.affectedChannelGroups.toList()
-            ))
-        }
-    }
-}
-
-class CustomObjectImpl(map: Map<String,Any?> = emptyMap()) : Map<String, Any?> by map
-
-actual typealias CustomObject = CustomObjectImpl
+actual class CustomObject
 
 actual fun createCustomObject(map: Map<String, Any?>): CustomObject {
-    return CustomObjectImpl(map)
+    TODO("Not yet implemented")
+}
+
+actual fun createPubNub(config: PNConfiguration): PubNub {
+    return PubNubImpl(config)
 }

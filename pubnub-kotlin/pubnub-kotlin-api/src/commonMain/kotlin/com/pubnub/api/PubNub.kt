@@ -70,7 +70,7 @@ import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
 
-expect fun createCommonPubNub(config: PNConfiguration): PubNub
+expect fun createPubNub(config: PNConfiguration): PubNub
 
 expect fun createEventListener(
     pubnub: PubNub,
