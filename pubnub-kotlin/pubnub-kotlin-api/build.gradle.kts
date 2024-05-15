@@ -67,17 +67,18 @@ kotlin {
             // Optional properties
             // Specify the framework linking type. It's dynamic by default.
             isStatic = true
+            export(project(":pubnub-core:pubnub-core-api"))
+            transitiveExport = true
         }
 
         pod("PubNubSwift") {
-//            headers = "PubNub/PubNub.h"
             source = git("https://github.com/pubnub/swift") {
                 branch = "feat/kmp"
             }
+//            headers = "PubNub/PubNub.h"
 //            source = path(project.file("swift"))
-
 //            version = "7.1.0"
-//            version = "5.3.0"
+
             moduleName = "PubNub"
             extraOpts += listOf("-compiler-option", "-fmodules")
         }
