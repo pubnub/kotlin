@@ -1,7 +1,10 @@
 package com.pubnub.api
 
+import com.pubnub.api.v2.callbacks.Consumer
+import com.pubnub.api.v2.callbacks.Result
+
 actual interface Endpoint<OUTPUT> {
-    fun asyncInternal(action: (Result<OUTPUT>) -> Unit)
+    actual fun async(callback: Consumer<Result<OUTPUT>>)
 }
 
-actual fun <T> Endpoint<T>.async(action: (Result<T>) -> Unit) = asyncInternal(action)
+//actual fun <T> Endpoint<T>.async(action: (Result<T>) -> Unit) = asyncInternal(action)

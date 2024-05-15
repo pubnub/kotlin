@@ -11,4 +11,7 @@ package com.pubnub.api
  */
 expect class PubNubException(pubnubError: PubNubError) : Exception {
     constructor(errorMessage: String?)
+    companion object {
+        fun from(e: Throwable): PubNubException
+    }
 }

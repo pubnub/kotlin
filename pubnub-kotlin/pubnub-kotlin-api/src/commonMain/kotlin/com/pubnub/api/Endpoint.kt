@@ -1,5 +1,8 @@
 package com.pubnub.api
 
-expect interface Endpoint<OUTPUT>
+import com.pubnub.api.v2.callbacks.Consumer
+import com.pubnub.api.v2.callbacks.Result
 
-expect fun <T> Endpoint<T>.async(action: (Result<T>) -> Unit)
+expect interface Endpoint<OUTPUT> {
+    fun async(callback: Consumer<Result<OUTPUT>>)
+}
