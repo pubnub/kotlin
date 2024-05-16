@@ -9,7 +9,7 @@ package com.pubnub.api
  * @property statusCode HTTP status code.
  * @property affectedCall A reference to the affected call. Useful for calling [retry][Endpoint.retry].
  */
-actual class PubNubException actual constructor(errorMessage: String?): Exception() {
+actual class PubNubException actual constructor(errorMessage: String?): Exception(errorMessage) {
 
     actual constructor(pubnubError: PubNubError) : this(pubnubError.message)
 }
