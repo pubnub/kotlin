@@ -433,10 +433,12 @@ actual fun createEventListener(
     TODO("Not yet implemented")
 }
 
-actual class CustomObject
+class CustomObjectImpl(map: Map<String, Any?> = emptyMap()) : Map<String, Any?> by map
+
+actual typealias CustomObject = CustomObjectImpl
 
 actual fun createCustomObject(map: Map<String, Any?>): CustomObject {
-    TODO("Not yet implemented")
+    return CustomObjectImpl(map)
 }
 
 actual fun createPubNub(config: PNConfiguration): PubNub {
