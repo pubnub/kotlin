@@ -11,4 +11,4 @@ import com.pubnub.internal.PubNubImpl
 class DeleteFileImpl internal constructor(deleteFile: DeleteFileInterface) :
     DeleteFileInterface by deleteFile,
     DeleteFile,
-    EndpointImpl<PNDeleteFileResult?>(deleteFile)
+    EndpointImpl<PNDeleteFileResult>(deleteFile)

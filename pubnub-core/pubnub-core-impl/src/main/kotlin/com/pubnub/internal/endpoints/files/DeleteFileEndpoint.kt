@@ -18,7 +18,7 @@ class DeleteFileEndpoint(
     private val fileName: String,
     private val fileId: String,
     pubNub: PubNubCore,
-) : EndpointCore<Unit, PNDeleteFileResult?>(pubNub), DeleteFileInterface {
+) : EndpointCore<Unit, PNDeleteFileResult>(pubNub), DeleteFileInterface {
     @Throws(PubNubException::class)
     override fun validateParams() {
         if (channel.isEmpty()) {

@@ -5,10 +5,10 @@ logback = "1.2.11"
 okhttp = "4.12.0"
 retrofit2 = "2.9.0"
 nexus = "2.0.0-rc-2"
-kotlin = "1.8.22"
+kotlin = "2.0.0-RC3"
 vanniktech = "0.22.0"
 ktlint = "12.1.0"
-dokka = "1.8.20"
+dokka = "1.9.20"
 
 [libraries]
 retrofit2 = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit2" }

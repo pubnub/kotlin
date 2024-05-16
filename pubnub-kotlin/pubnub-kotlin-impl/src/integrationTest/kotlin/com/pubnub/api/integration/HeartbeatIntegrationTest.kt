@@ -2,6 +2,7 @@ package com.pubnub.api.integration
 
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
+import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
@@ -42,7 +43,7 @@ class HeartbeatIntegrationTest : BaseIntegrationTest() {
             }
 
         observer.addListener(
-            object : com.pubnub.api.callbacks.SubscribeCallback() {
+            object : SubscribeCallback() {
                 override fun status(
                     pubnub: PubNub,
                     status: PNStatus,

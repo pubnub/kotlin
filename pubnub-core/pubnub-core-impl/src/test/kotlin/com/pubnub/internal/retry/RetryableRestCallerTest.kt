@@ -300,7 +300,7 @@ class RetryableRestCallerTest {
     @Test
     fun `should retry successfully when linear retryConfiguration is set and response is not successful and http error is 500 and endpoint is not excluded from retryConfiguration`() {
         // given
-        @Suppress("INVISIBLE_MEMBER")
+        @Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE")
         val retryConfiguration =
             RetryConfiguration.Linear.createForTest(delayInSec = 10.milliseconds, maxRetryNumber = 3, isInternal = true)
         val retryableRestCaller = getRetryableRestCaller(retryConfiguration = retryConfiguration)
@@ -323,7 +323,7 @@ class RetryableRestCallerTest {
     @Test
     fun `should retry successfully when exponential retryConfiguration is set and response is not successful and http error is 500 and endpoint is not excluded from retryConfiguration`() {
         // given
-        @Suppress("INVISIBLE_MEMBER")
+        @Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE")
         val retryConfiguration =
             RetryConfiguration.Exponential.createForTest(
                 minDelayInSec = 10.milliseconds,
@@ -352,7 +352,7 @@ class RetryableRestCallerTest {
     @Test
     fun `should retry successfully when linear retryConfiguration is set and SocketTimeoutException is thrown`() {
         // given
-        @Suppress("INVISIBLE_MEMBER")
+        @Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE")
         val retryConfiguration =
             RetryConfiguration.Linear.createForTest(delayInSec = 10.milliseconds, maxRetryNumber = 2, isInternal = true)
         val retryableRestCaller = getRetryableRestCaller(retryConfiguration = retryConfiguration)
@@ -373,7 +373,7 @@ class RetryableRestCallerTest {
     @Test
     fun `should retry and throw exception when linear retryConfiguration is set and UnknownHostException is thrown`() {
         // given
-        @Suppress("INVISIBLE_MEMBER")
+        @Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE")
         val retryConfiguration =
             RetryConfiguration.Linear.createForTest(delayInSec = 10.milliseconds, maxRetryNumber = 2, isInternal = true)
         val retryableRestCaller = getRetryableRestCaller(retryConfiguration = retryConfiguration)

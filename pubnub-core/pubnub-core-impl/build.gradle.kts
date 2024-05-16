@@ -2,7 +2,9 @@ import com.pubnub.gradle.tasks.GenerateVersionTask
 
 plugins {
     alias(libs.plugins.benmanes.versions)
-    id("pubnub.shared")
+    id("pubnub.java-library")
+    id("pubnub.kotlin-library")
+    id("pubnub.test")
 }
 
 val generateVersion =

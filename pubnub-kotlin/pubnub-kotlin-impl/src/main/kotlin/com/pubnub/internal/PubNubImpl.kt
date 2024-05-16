@@ -75,7 +75,6 @@ import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
-import com.pubnub.api.v2.BasePNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.api.v2.entities.BaseChannel
@@ -117,7 +116,7 @@ import java.io.InputStream
 private const val PNSDK_PUBNUB_KOTLIN = "PubNub-Kotlin"
 
 class PubNubImpl(
-    override val configuration: BasePNConfiguration,
+    override val configuration: com.pubnub.api.v2.PNConfiguration,
 ) : BasePubNubImpl<EventListener, Subscription, Channel, ChannelGroup, ChannelMetadata, UserMetadata, SubscriptionSet, StatusListener>(
         configuration,
         PNSDK_PUBNUB_KOTLIN,

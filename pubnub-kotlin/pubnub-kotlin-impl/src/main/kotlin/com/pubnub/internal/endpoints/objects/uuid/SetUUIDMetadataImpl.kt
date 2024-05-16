@@ -5,6 +5,7 @@ import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction
 import com.pubnub.internal.DelegatingEndpoint
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.models.consumer.objects.uuid.PNUUIDMetadataResult
+import com.pubnub.internal.models.from
 
 /**
  * @see [PubNubImpl.setUUIDMetadata]
@@ -18,6 +19,6 @@ class SetUUIDMetadataImpl internal constructor(setUUIDMetadata: SetUUIDMetadataE
         override fun convertAction(
             remoteAction: ExtendedRemoteAction<PNUUIDMetadataResult>,
         ): ExtendedRemoteAction<com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult> {
-            return MappingRemoteAction(remoteAction, com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult::from)
+            return MappingRemoteAction(remoteAction, ::from)
         }
     }

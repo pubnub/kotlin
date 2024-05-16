@@ -4,6 +4,7 @@ import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction
 import com.pubnub.api.models.consumer.objects.PNRemoveMetadataResult
 import com.pubnub.internal.DelegatingEndpoint
+import com.pubnub.internal.models.from
 
 class RemoveUUIDMetadataImpl internal constructor(removeUUIDMetadata: RemoveUUIDMetadataEndpoint) :
     DelegatingEndpoint<PNRemoveMetadataResult, com.pubnub.internal.models.consumer.objects.PNRemoveMetadataResult>(
@@ -14,6 +15,6 @@ class RemoveUUIDMetadataImpl internal constructor(removeUUIDMetadata: RemoveUUID
         override fun convertAction(
             remoteAction: ExtendedRemoteAction<com.pubnub.internal.models.consumer.objects.PNRemoveMetadataResult>,
         ): ExtendedRemoteAction<PNRemoveMetadataResult> {
-            return MappingRemoteAction(remoteAction, PNRemoveMetadataResult.Companion::from)
+            return MappingRemoteAction(remoteAction, ::from)
         }
     }
