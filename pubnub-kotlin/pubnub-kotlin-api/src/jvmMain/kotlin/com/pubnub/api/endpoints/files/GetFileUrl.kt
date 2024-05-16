@@ -6,4 +6,4 @@ import com.pubnub.api.models.consumer.files.PNFileUrlResult
 /**
  * @see [PubNub.getFileUrl]
  */
-interface GetFileUrl : Endpoint<PNFileUrlResult>
+actual interface GetFileUrl : Endpoint<PNFileUrlResult>

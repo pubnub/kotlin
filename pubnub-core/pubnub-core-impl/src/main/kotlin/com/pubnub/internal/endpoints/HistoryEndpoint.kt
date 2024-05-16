@@ -27,15 +27,11 @@ class HistoryEndpoint internal constructor(
     override val includeTimetoken: Boolean,
     override val includeMeta: Boolean,
 ) : EndpointCore<JsonElement, PNHistoryResult>(pubnub), HistoryInterface {
-    companion object {
-        const val MAX_COUNT = 100
-    }
-
     private val countParam: Int =
-        if (count in 1..MAX_COUNT) {
+        if (count in 1..PNHistoryResult.MAX_COUNT) {
             count
         } else {
-            MAX_COUNT
+            PNHistoryResult.MAX_COUNT
         }
 
     override fun validateParams() {

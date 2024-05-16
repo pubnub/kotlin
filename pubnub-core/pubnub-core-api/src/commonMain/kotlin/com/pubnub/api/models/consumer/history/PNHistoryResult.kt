@@ -14,7 +14,11 @@ class PNHistoryResult(
     val messages: List<PNHistoryItemResult>,
     val startTimetoken: Long,
     val endTimetoken: Long,
-)
+) {
+    companion object {
+        const val MAX_COUNT = 100
+    }
+}
 
 /**
  * Encapsulates a message in terms of a history entry.

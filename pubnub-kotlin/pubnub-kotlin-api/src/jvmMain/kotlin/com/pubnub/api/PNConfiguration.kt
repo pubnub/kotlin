@@ -5,7 +5,7 @@ import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.enums.PNReconnectionPolicy
 import com.pubnub.api.retry.RetryConfiguration
-import com.pubnub.api.v2.BasePNConfiguration
+import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.internal.v2.BasePNConfigurationImpl
 import com.pubnub.internal.v2.BasePNConfigurationImpl.Companion.MINIMUM_PRESENCE_TIMEOUT
 import okhttp3.Authenticator
@@ -21,7 +21,7 @@ import javax.net.ssl.X509ExtendedTrustManager
     message = "Use `com.pubnub.api.v2.PNConfiguration.builder` instead.",
     replaceWith = ReplaceWith("com.pubnub.api.v2.PNConfiguration.builder(userId, subscribeKey)"),
 )
-class PNConfiguration(override var userId: UserId) : BasePNConfiguration {
+class PNConfiguration(override var userId: UserId) : PNConfiguration {
     private val configuration = BasePNConfigurationImpl(userId)
     private val log = LoggerFactory.getLogger("PNConfiguration")
 

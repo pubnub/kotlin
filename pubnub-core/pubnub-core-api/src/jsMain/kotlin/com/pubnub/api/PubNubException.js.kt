@@ -12,4 +12,14 @@ package com.pubnub.api
 actual class PubNubException actual constructor(errorMessage: String?): Exception(errorMessage) {
 
     actual constructor(pubnubError: PubNubError) : this(pubnubError.message)
+
+    actual companion object {
+        actual fun from(e: Throwable): PubNubException {
+            return if (e is PubNubException) {
+                e
+            } else {
+                PubNubException(e.message)
+            }
+        }
+    }
 }

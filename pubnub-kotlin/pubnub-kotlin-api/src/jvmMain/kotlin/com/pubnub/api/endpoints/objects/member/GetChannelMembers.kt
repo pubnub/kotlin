@@ -6,5 +6,4 @@ import com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult
 /**
  * @see [PubNub.getChannelMembers]
  */
-interface GetChannelMembers :
-    Endpoint<PNMemberArrayResult>
+actual interface GetChannelMembers : Endpoint<PNMemberArrayResult>

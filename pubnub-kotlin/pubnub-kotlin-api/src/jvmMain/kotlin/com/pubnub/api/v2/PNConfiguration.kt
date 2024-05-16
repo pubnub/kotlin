@@ -16,7 +16,7 @@ import javax.net.ssl.HostnameVerifier
 import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.X509ExtendedTrustManager
 
-interface PNConfiguration : BasePNConfiguration {
+actual interface PNConfiguration : BasePNConfiguration {
     companion object {
         @JvmStatic
         fun builder(

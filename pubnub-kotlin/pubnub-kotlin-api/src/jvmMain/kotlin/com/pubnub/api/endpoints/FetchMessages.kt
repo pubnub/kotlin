@@ -7,7 +7,7 @@ import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
 /**
  * @see [PubNub.fetchMessages]
  */
-interface FetchMessages : Endpoint<PNFetchMessagesResult> {
+actual interface FetchMessages : Endpoint<PNFetchMessagesResult> {
     val channels: List<String>
     val page: PNBoundedPage
     val includeUUID: Boolean

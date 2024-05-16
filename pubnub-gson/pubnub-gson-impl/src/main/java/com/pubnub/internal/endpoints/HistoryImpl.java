@@ -18,7 +18,7 @@ public class HistoryImpl extends IdentityMappingEndpoint<PNHistoryResult> implem
     private Long start;
     private Long end;
     private boolean reverse;
-    private int count = HistoryEndpoint.MAX_COUNT;
+    private int count = PNHistoryResult.MAX_COUNT;
     private boolean includeTimetoken;
     private boolean includeMeta;
 

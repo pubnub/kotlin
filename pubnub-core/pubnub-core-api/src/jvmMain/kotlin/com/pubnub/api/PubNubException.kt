@@ -46,8 +46,8 @@ actual data class PubNubException(
         pubnubError = pubnubError,
     )
 
-    companion object {
-        fun from(e: Throwable): PubNubException =
+    actual companion object {
+        actual fun from(e: Throwable): PubNubException =
             if (e is PubNubException) {
                 e
             } else {
