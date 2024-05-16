@@ -76,24 +76,25 @@ import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.v2.PNConfiguration
-import com.pubnub.api.v2.callbacks.EventListener
-import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.kmp.Optional
 import com.pubnub.kmp.toOptional
 
 import PubNub as PubNubJs
 
 class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
-    override fun addListener(listener: EventListener) {
-        TODO("Not yet implemented")
+
+    private val jsPubNub: PubNubJs = PubNubJs(configuration.toJs())
+
+    override fun addListener(listener: PubNubJs.ListenerParameters) {
+        jsPubNub.addListener(listener)
     }
 
-    override fun addListener(listener: StatusListener) {
-        TODO("Not yet implemented")
+    override fun addListener(listener: PubNubJs.StatusListenerParameters) {
+        jsPubNub.addListener(listener)
     }
 
     override fun removeListener(listener: Listener) {
-        TODO("Not yet implemented")
+        jsPubNub.removeListener(listener.asDynamic())
     }
 
     override fun removeAllListeners() {
@@ -109,24 +110,35 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         replicate: Boolean,
         ttl: Int?
     ): Publish {
-        TODO("Not yet implemented")
+        return PublishImpl(jsPubNub, createJsObject {
+            this.message = message
+            this.channel = channel
+            this.storeInHistory = shouldStore
+            this.meta = meta
+            this.sendByPost = usePost
+            this.ttl = ttl
+        })
     }
 
     override fun fire(channel: String, message: Any, meta: Any?, usePost: Boolean, ttl: Int?): Publish {
-        TODO("Not yet implemented")
+        return FireImpl(jsPubNub, createJsObject {
+            this.message = message
+            this.channel = channel
+            this.meta = meta
+            this.sendByPost = usePost
+        })
     }
 
     override fun signal(channel: String, message: Any): Signal {
-        TODO("Not yet implemented")
+        return SignalImpl(jsPubNub,  createJsObject {
+            this.message = message
+            this.channel = channel
+        })
     }
 
-    override fun getSubscribedChannels(): List<String> {
-        TODO("Not yet implemented")
-    }
+    override fun getSubscribedChannels(): List<String> = jsPubNub.getSubscribedChannels().toList()
 
-    override fun getSubscribedChannelGroups(): List<String> {
-        TODO("Not yet implemented")
-    }
+    override fun getSubscribedChannelGroups(): List<String> = jsPubNub.getSubscribedChannelGroups().toList()
 
     override fun addPushNotificationsOnChannels(
         pushType: PNPushType,
@@ -174,7 +186,18 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         includeMessageActions: Boolean,
         includeMessageType: Boolean
     ): FetchMessages {
-        TODO("Not yet implemented")
+        return FetchMessagesImpl(jsPubNub, createJsObject {
+            this.channels = channels.toTypedArray()
+            this.start = page.start
+            this.end = page.end
+            this.count = page.limit
+            this.includeUUID = includeUUID
+            this.includeMeta = includeMeta
+            this.withMessageActions = includeMessageActions
+            this.includeMessageActions = includeMessageActions
+            this.includeMessageType = includeMessageType
+            this.stringifiedTimeToken = true
+        })
     }
 
     override fun deleteMessages(channels: List<String>, start: Long?, end: Long?): DeleteMessages {
@@ -191,11 +214,18 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         includeState: Boolean,
         includeUUIDs: Boolean
     ): HereNow {
-        TODO("Not yet implemented")
+        return HereNowImpl(jsPubNub, createJsObject {
+            this.channels = channels.toTypedArray()
+            this.channelGroups = channelGroups.toTypedArray()
+            this.includeState = includeState
+            this.includeUUIDs = includeUUIDs
+        })
     }
 
     override fun whereNow(uuid: String): WhereNow {
-        TODO("Not yet implemented")
+        return WhereNowImpl(jsPubNub, createJsObject {
+            this.uuid = uuid
+        })
     }
 
     override fun setPresenceState(
@@ -216,7 +246,14 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     }
 
     override fun addMessageAction(channel: String, messageAction: PNMessageAction): AddMessageAction {
-        TODO("Not yet implemented")
+        return AddMessageActionImpl(jsPubNub, createJsObject {
+            this.channel = channel
+            this.messageTimetoken = messageAction.messageTimetoken.toString()
+            this.action = createJsObject {
+                this.type = messageAction.type
+                this.value = messageAction.value
+            }
+        })
     }
 
     override fun removeMessageAction(
@@ -224,30 +261,47 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         messageTimetoken: Long,
         actionTimetoken: Long
     ): RemoveMessageAction {
-        TODO("Not yet implemented")
+        return RemoveMessageActionImpl(jsPubNub, createJsObject {
+            this.channel = channel
+            this.messageTimetoken = messageTimetoken.toString()
+            this.actionTimetoken = actionTimetoken.toString()
+        })
     }
 
     override fun getMessageActions(channel: String, page: PNBoundedPage): GetMessageActions {
-        TODO("Not yet implemented")
+        return GetMessageActionImpl(jsPubNub, createJsObject {
+            this.channel = channel
+            this.start = page.start?.toString()
+            this.end = page.end?.toString()
+            this.limit = page.limit
+        })
     }
 
     override fun addChannelsToChannelGroup(channels: List<String>, channelGroup: String): AddChannelChannelGroup {
-        TODO("Not yet implemented")
+        return AddChannelChannelGroupImpl(jsPubNub, createJsObject {
+            this.channels = channels.toTypedArray()
+            this.channelGroup = channelGroup
+        })
     }
 
     override fun listChannelsForChannelGroup(channelGroup: String): AllChannelsChannelGroup {
-        TODO("Not yet implemented")
+        return AllChannelsChannelGroupImpl(jsPubNub, createJsObject {
+            this.channelGroup = channelGroup
+        })
     }
 
     override fun removeChannelsFromChannelGroup(
         channels: List<String>,
         channelGroup: String
     ): RemoveChannelChannelGroup {
-        TODO("Not yet implemented")
+        return RemoveChannelChannelGroupImpl(jsPubNub, createJsObject {
+            this.channels = channels.toTypedArray()
+            this.channelGroup = channelGroup
+        })
     }
 
     override fun listAllChannelGroups(): ListAllChannelGroup {
-        TODO("Not yet implemented")
+        return ListAllChannelGroupImpl(jsPubNub)
     }
 
     override fun deleteChannelGroup(channelGroup: String): DeleteChannelGroup {
@@ -335,16 +389,35 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         externalId: String?,
         profileUrl: String?,
         email: String?,
-        custom: CustomObject?,
+        custom: CustomObjectImpl?,
         includeCustom: Boolean,
         type: String?,
         status: String?
     ): SetUUIDMetadata {
-        TODO("Not yet implemented")
+
+        val params = createJsObject<PubNubJs.SetUUIDMetadataParameters> {
+            data = UUIDMetadata(
+                name.toOptional(),
+                externalId.toOptional(),
+                profileUrl.toOptional(),
+                email.toOptional(),
+                status.toOptional(),
+                type.toOptional(),
+                custom.toOptional()
+            )
+            this.uuid = uuid
+
+            include = object : PubNubJs.`T$30` {
+                override var customFields: Boolean? = includeCustom
+            }
+        }
+        return SetUUIDMetadataImpl(jsPubNub, params)
     }
 
     override fun removeUUIDMetadata(uuid: String?): RemoveUUIDMetadata {
-        TODO("Not yet implemented")
+        return RemoveUUIDMetadataImpl(jsPubNub, createJsObject {
+            this.uuid = uuid
+        })
     }
 
     override fun getMemberships(
@@ -413,7 +486,27 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         includeCustom: Boolean,
         includeUUIDDetails: PNUUIDDetailsLevel?
     ): GetChannelMembers {
-        TODO("Not yet implemented")
+        return GetChannelMembersImpl(jsPubNub, createJsObject {
+            this.channel = channel
+            this.limit = limit
+            this.page = page?.let { pageNotNull ->
+                createJsObject<PubNubJs.MetadataPage> {
+                    if (pageNotNull is PNPage.PNNext) {
+                        this.next = pageNotNull.pageHash
+                    } else {
+                        this.prev = pageNotNull.pageHash
+                    }
+                }
+            }
+            this.filter = filter
+            this.include = createJsObject<PubNubJs.IncludeOptions> {
+                if (includeUUIDDetails == PNUUIDDetailsLevel.UUID || includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM) this.UUIDFields = true
+                if (includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM) this.customUUIDFields = true
+                this.customFields = includeCustom
+                this.totalCount = includeCount
+            }
+            this.sort = sort.associateBy(keySelector = { pnSortKey -> pnSortKey.key.fieldName }, valueTransform = { pnSortKey -> pnSortKey.dir })
+        })
     }
 
     override fun setChannelMembers(
@@ -489,16 +582,25 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         withPresence: Boolean,
         withTimetoken: Long
     ) {
-        TODO("Not yet implemented")
+        jsPubNub.subscribe(createJsObject {
+            this.channels = channels.toTypedArray()
+            this.channelGroups = channelGroups.toTypedArray()
+            this.withPresence = withPresence
+            this.timetoken = withTimetoken
+        })
     }
 
     override fun unsubscribe(channels: List<String>, channelGroups: List<String>) {
-        TODO("Not yet implemented")
+        jsPubNub.unsubscribe(createJsObject {
+            this.channels = channels.toTypedArray()
+            this.channelGroups = channelGroups.toTypedArray()
+        })
     }
 
     override fun setToken(token: String?) {
-        TODO("Not yet implemented")
+        jsPubNub.setToken(token)
     }
+
 }
 
 fun UUIDMetadata(
