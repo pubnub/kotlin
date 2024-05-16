@@ -23,8 +23,8 @@ import com.pubnub.api.endpoints.files.ListFiles
 import com.pubnub.api.endpoints.files.PublishFileMessage
 import com.pubnub.api.endpoints.message_actions.AddMessageAction
 import com.pubnub.api.endpoints.message_actions.AddMessageActionImpl
-import com.pubnub.api.endpoints.message_actions.GetMessageActionImpl
 import com.pubnub.api.endpoints.message_actions.GetMessageActions
+import com.pubnub.api.endpoints.message_actions.GetMessageActionImpl
 import com.pubnub.api.endpoints.message_actions.RemoveMessageAction
 import com.pubnub.api.endpoints.message_actions.RemoveMessageActionImpl
 import com.pubnub.api.endpoints.objects.channel.GetAllChannelMetadata
@@ -109,7 +109,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         replicate: Boolean,
         ttl: Int?
     ): Publish {
-        return PublishImpl(jsPubNub, createJsObject<PubNubJs.PublishParameters> {
+        return PublishImpl(jsPubNub, createJsObject {
             this.message = message
             this.channel = channel
             this.storeInHistory = shouldStore
