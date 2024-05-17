@@ -439,6 +439,8 @@ expect interface PubNub {
         channelGroups: List<String> = emptyList(),
     )
 
+    fun unsubscribeAll()
+
     fun setToken(token: String?)
 
     fun destroy()

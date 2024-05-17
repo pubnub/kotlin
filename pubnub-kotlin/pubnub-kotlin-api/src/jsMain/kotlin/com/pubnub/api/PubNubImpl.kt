@@ -597,6 +597,10 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         })
     }
 
+    override fun unsubscribeAll() {
+        jsPubNub.unsubscribeAll()
+    }
+
     override fun setToken(token: String?) {
         jsPubNub.setToken(token)
     }

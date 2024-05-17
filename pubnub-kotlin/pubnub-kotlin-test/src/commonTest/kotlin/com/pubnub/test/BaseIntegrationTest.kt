@@ -22,6 +22,7 @@ abstract class BaseIntegrationTest {
 
     @AfterTest
     fun after() {
+        pubnub.unsubscribeAll()
         pubnub.destroy()
     }
 }

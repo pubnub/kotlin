@@ -363,6 +363,8 @@ actual interface PubNub {
         channels: List<String>, channelGroups: List<String>
     )
 
+    actual fun unsubscribeAll()
+
     actual fun setToken(token: String?)
     actual fun destroy()
 

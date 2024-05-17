@@ -412,6 +412,7 @@ actual interface PubNub {
 
     actual fun setToken(token: String?)
     actual fun destroy()
+    actual fun unsubscribeAll()
 
 }
 
