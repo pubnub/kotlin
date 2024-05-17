@@ -16,13 +16,13 @@ actual interface CryptoModule
 
 actual fun createPNConfiguration(
     userId: UserId,
-    subscribeKey: String
+    subscribeKey: String,
+    publishKey: String
 ): PNConfiguration {
     return object : PNConfiguration {
         override val userId: UserId = userId
         override val subscribeKey: String = subscribeKey
-        override val publishKey: String
-            get() = TODO("Not yet implemented")
+        override val publishKey: String = publishKey
         override val secretKey: String
             get() = TODO("Not yet implemented")
         override val authKey: String

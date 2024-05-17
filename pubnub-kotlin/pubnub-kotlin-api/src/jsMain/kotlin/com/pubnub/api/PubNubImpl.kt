@@ -110,7 +110,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         replicate: Boolean,
         ttl: Int?
     ): Publish {
-        return PublishImpl(jsPubNub, createJsObject {
+        return PublishImpl(jsPubNub, createJsObject<PubNubJs.PublishParameters> {
             this.message = message
             this.channel = channel
             this.storeInHistory = shouldStore
@@ -601,6 +601,10 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         jsPubNub.setToken(token)
     }
 
+    override fun destroy() {
+
+    }
+
 }
 
 fun UUIDMetadata(
@@ -632,14 +636,13 @@ fun Map<String, Any?>.toJsObject(): PubNubJs.CustomObject {
     return custom
 }
 
-fun <T> createJsObject(configure: T.() -> Unit = {}): T = js("({})") as T
+fun <T> createJsObject(configure: T.() -> Unit = {}): T = (js("({})") as T).apply(configure)
 
 fun PNConfiguration.toJs(): PubNubJs.PNConfiguration {
     val config: PubNubJs.PNConfiguration = createJsObject()
     config.userId = userId.value
     config.subscribeKey = subscribeKey
     config.publishKey = publishKey
-    config.cipherKey
 //    config.authKeys: String?
 //    config.logVerbosity: Boolean?
 //    config.ssl: Boolean?

@@ -34,32 +34,6 @@ import kotlin.js.Date
 import kotlin.js.Json
 import kotlin.js.Promise
 
-typealias PubnubData = MessageEvent
-
-typealias SetUUIDMetadataResponse = ObjectsResponse<UUIDMetadataObject>
-
-typealias RemoveUUIDMetadataResponse = ObjectsResponse<Any>
-
-typealias GetAllUUIDMetadataResponse = PagedObjectsResponse<UUIDMetadataObject>
-
-typealias GetUUIDMetadataResponse = ObjectsResponse<UUIDMetadataObject>
-
-typealias SetChannelMetadataResponse = ObjectsResponse<ChannelMetadataObject>
-
-typealias RemoveChannelMetadataResponse = ObjectsResponse<Any>
-
-typealias GetAllChannelMetadataResponse = PagedObjectsResponse<ChannelMetadataObject>
-
-typealias GetChannelMetadataResponse = ObjectsResponse<ChannelMetadataObject>
-
-typealias ManageChannelMembersResponse = PagedObjectsResponse<UUIDMembershipObject>
-
-typealias ManageMembershipsResponse = PagedObjectsResponse<ChannelMembershipObject>
-
-typealias Callback<ResponseType> = (status: PubnubStatus, response: ResponseType) -> Unit
-
-typealias StatusCallback = (status: PubnubStatus) -> Unit
-
 external interface ObjectsResponse<DataType> {
     var status: Number
     var data: DataType
@@ -130,6 +104,8 @@ external interface RemoveMessageActionResult {
     var data: Any
 }
 
+@JsModule("pubnub")
+@JsNonModule
 open external class PubNub(config: Any /* UUID | UserId */) {
     open var channelGroups: ChannelGroups
     open var push: Push
@@ -1650,13 +1626,3 @@ external interface ExponentialRetryPolicyConfiguration {
     var maximumDelay: Number
     var maximumRetry: Number
 }
-
-external interface JsMap<V>
-
-fun <V> entriesOf(jsObject: JsMap<V>): List<Pair<String, V>> =
-    (js("Object.entries") as (dynamic) -> Array<Array<V>>)
-        .invoke(jsObject)
-        .map { entry -> entry[0] as String to entry[1] }
-
-fun <V> JsMap<V>.toMap(): Map<String, V> =
-    entriesOf(this).toMap()

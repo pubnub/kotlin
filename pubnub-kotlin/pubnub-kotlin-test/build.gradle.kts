@@ -8,6 +8,12 @@ kotlin {
     jvmToolchain(8)
     js {
         browser {
+            testTask {
+                useMocha {
+                    timeout = "10s"
+                }
+            }
+
         }
         binaries.executable()
     }
@@ -31,9 +37,16 @@ kotlin {
             }
         }
 
-        val jvmMain by getting {
+        val commonTest by getting {
             dependencies {
-                implementation(project(":pubnub-core:pubnub-core-impl"))
+                implementation(kotlin("test"))
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
+            }
+        }
+
+        val jvmTest by getting {
+            dependencies {
+                implementation(project(":pubnub-kotlin:pubnub-kotlin-impl"))
                 implementation(libs.slf4j)
             }
         }

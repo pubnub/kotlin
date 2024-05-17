@@ -1,9 +1,6 @@
 package com.pubnub.api.v2
 
 import com.pubnub.api.UserId
-import com.pubnub.api.enums.PNHeartbeatNotificationOptions
-import com.pubnub.api.enums.PNLogVerbosity
-import com.pubnub.api.retry.RetryConfiguration
 
 actual interface PNConfiguration {
     actual val userId: UserId
@@ -16,7 +13,8 @@ actual interface PNConfiguration {
 
 actual fun createPNConfiguration(
     userId: UserId,
-    subscribeKey: String
+    subscribeKey: String,
+    publishKey: String
 ): PNConfiguration {
     return object : PNConfiguration {
         override val userId: UserId
@@ -24,7 +22,7 @@ actual fun createPNConfiguration(
         override val subscribeKey: String
             get() = subscribeKey
         override val publishKey: String
-            get() = ""
+            get() = publishKey
         override val secretKey: String
             get() = TODO("Not yet implemented")
         override val authKey: String

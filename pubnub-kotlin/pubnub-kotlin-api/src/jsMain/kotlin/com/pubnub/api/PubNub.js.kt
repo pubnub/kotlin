@@ -364,6 +364,7 @@ actual interface PubNub {
     )
 
     actual fun setToken(token: String?)
+    actual fun destroy()
 
 }
 
@@ -376,8 +377,9 @@ actual fun createEventListener(
     onObjects: (PubNub, PNObjectEventResult) -> Unit,
     onFile: (PubNub, PNFileEventResult) -> Unit
 ): EventListener {
-    val listener = object : PubNubJs.ListenerParameters {
+    return object : PubNubJs.ListenerParameters {
         override val message: (PubNubJs.MessageEvent) -> Unit = { messageEvent ->
+            println("AAA")
             onMessage(pubnub, PNMessageResult(
                     BasePubSubResult(
                         messageEvent.channel,
@@ -386,7 +388,7 @@ actual fun createEventListener(
                         messageEvent.userMetadata as? JsonElement, // TODO kmp
                         messageEvent.publisher
                     ),
-                    messageEvent.message as JsonElement, // TODO kmp
+                    messageEvent.message.unsafeCast<JsonElement>(), // TODO kmp
                     null //TODO kmp error
                 ))
         }
@@ -448,7 +450,6 @@ actual fun createEventListener(
             ) )
         }
     }
-    return listener
 }
 
 actual fun createStatusListener(

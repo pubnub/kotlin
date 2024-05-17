@@ -16,4 +16,4 @@ expect interface PNConfiguration {
 
 expect interface CryptoModule
 
-expect fun createPNConfiguration(userId: UserId, subscribeKey: String): PNConfiguration
+expect fun createPNConfiguration(userId: UserId, subscribeKey: String, publishKey: String): PNConfiguration

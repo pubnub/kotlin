@@ -482,4 +482,8 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     override fun setToken(token: String?) {
         TODO("Not yet implemented")
     }
+
+    override fun destroy() {
+        TODO("Not yet implemented")
+    }
 }
