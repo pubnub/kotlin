@@ -109,7 +109,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         replicate: Boolean,
         ttl: Int?
     ): Publish {
-        return PublishImpl(jsPubNub, createJsObject {
+        return PublishImpl(jsPubNub, createJsObject<PubNubJs.PublishParameters> {
             this.message = message
             this.channel = channel
             this.storeInHistory = shouldStore
