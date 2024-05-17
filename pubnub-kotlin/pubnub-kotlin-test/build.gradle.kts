@@ -1,7 +1,11 @@
+import org.jetbrains.dokka.DokkaDefaults.moduleName
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
+
 plugins {
     alias(libs.plugins.benmanes.versions)
     id("pubnub.shared")
     kotlin("multiplatform")
+    kotlin("native.cocoapods")
 }
 
 kotlin {
@@ -28,6 +32,12 @@ kotlin {
         }
     }
 
+    listOf(
+        iosArm64(),
+//        iosX64(),
+        iosSimulatorArm64(),
+    )
+
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -49,6 +59,43 @@ kotlin {
                 implementation(project(":pubnub-kotlin:pubnub-kotlin-impl"))
                 implementation(libs.slf4j)
             }
+        }
+    }
+
+    cocoapods {
+        ios.deploymentTarget = "14"
+
+        // Required properties
+        // Specify the required Pod version here. Otherwise, the Gradle project version is used.
+        version = "1.0"
+        summary = "Some description for a Kotlin/Native module"
+        homepage = "Link to a Kotlin/Native module homepage"
+
+        // Optional properties
+        // Configure the Pod name here instead of changing the Gradle project name
+        name = "PubNubKMPTest"
+
+        // Maps custom Xcode configuration to NativeBuildType
+        xcodeConfigurationToNativeBuildType["CUSTOM_DEBUG"] = NativeBuildType.DEBUG
+        xcodeConfigurationToNativeBuildType["CUSTOM_RELEASE"] = NativeBuildType.RELEASE
+
+        framework {
+            // Required properties
+            // Framework name configuration. Use this property instead of deprecated 'frameworkName'
+            baseName = "PubNubKMPTest"
+
+            // Optional properties
+            // Specify the framework linking type. It's dynamic by default.
+            isStatic = true
+        }
+
+        pod("PubNubSwift") {
+            source = git("https://github.com/pubnub/swift") {
+                branch = "feat/kmp"
+            }
+
+            moduleName = "PubNub"
+            extraOpts += listOf("-compiler-option", "-fmodules")
         }
     }
 }
