@@ -6,7 +6,7 @@ import com.pubnub.api.JsonElement
 import com.pubnub.api.models.consumer.presence.PNHereNowChannelData
 import com.pubnub.api.models.consumer.presence.PNHereNowOccupantData
 import com.pubnub.api.models.consumer.presence.PNHereNowResult
-import toMap
+import com.pubnub.kmp.toMap
 
 class HereNowImpl(pubnub: PubNub, params: PubNub.HereNowParameters) : HereNow, EndpointImpl<PubNub.HereNowResponse, PNHereNowResult>(
     promiseFactory = { pubnub.hereNow(params) },

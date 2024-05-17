@@ -411,6 +411,7 @@ actual interface PubNub {
     )
 
     actual fun setToken(token: String?)
+    actual fun destroy()
 
 }
 

@@ -102,5 +102,11 @@ kotlin {
                 implementation(libs.slf4j)
             }
         }
+
+        val jsMain by getting {
+            dependencies {
+                implementation(npm("pubnub", "8.1.0"))
+            }
+        }
     }
 }

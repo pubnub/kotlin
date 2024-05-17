@@ -7,7 +7,7 @@ import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.history.HistoryMessageType
 import com.pubnub.api.models.consumer.history.PNFetchMessageItem
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
-import toMap
+import com.pubnub.kmp.toMap
 
 class FetchMessagesImpl(pubnub: PubNub, params: PubNub.FetchMessagesParameters) : FetchMessages,
     EndpointImpl<PubNub.FetchMessagesResponse, PNFetchMessagesResult>(promiseFactory = { pubnub.fetchMessages(params) },
