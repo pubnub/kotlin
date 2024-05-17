@@ -89,7 +89,13 @@ internal class DelegatingEventListenerTest {
             pn,
             PNObjectEventResult(
                 BasePubSubResult("a", "b", 0L, null, null),
-                PNSetChannelMetadataEventMessage("a", "b", "c", "d", PNChannelMetadata("a", "b", null, "c", "d", null, null, null)),
+                PNSetChannelMetadataEventMessage(
+                    "a",
+                    "b",
+                    "c",
+                    "d",
+                    PNChannelMetadata("a", "b", null, mapOf("c" to "c"), "d", null, null, null)
+                ),
             ),
         )
 
