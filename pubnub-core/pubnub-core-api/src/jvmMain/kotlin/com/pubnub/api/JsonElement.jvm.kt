@@ -1,7 +1,7 @@
 package com.pubnub.api
 
-actual typealias JsonValue = com.google.gson.JsonElement
+actual typealias JsonElement = com.google.gson.JsonElement
 
-actual fun JsonValue.asString(): String {
+actual fun JsonElement.asString(): String {
     return this.asString
 }

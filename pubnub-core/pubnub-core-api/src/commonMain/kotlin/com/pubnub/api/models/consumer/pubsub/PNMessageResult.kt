@@ -1,6 +1,6 @@
 package com.pubnub.api.models.consumer.pubsub
 
-import com.pubnub.api.JsonValue
+import com.pubnub.api.JsonElement
 import com.pubnub.api.PubNubError
 
 /**
@@ -8,7 +8,7 @@ import com.pubnub.api.PubNubError
  */
 class PNMessageResult(
     private val basePubSubResult: PubSubResult,
-    override val message: JsonValue,
+    override val message: JsonElement,
     val error: PubNubError? = null,
 ) : MessageResult, PubSubResult by basePubSubResult {
     override fun equals(other: Any?): Boolean {

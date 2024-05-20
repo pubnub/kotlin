@@ -2,7 +2,7 @@ package com.pubnub.api.endpoints
 
 import PubNub
 import com.pubnub.api.EndpointImpl
-import com.pubnub.api.JsonValue
+import com.pubnub.api.JsonElement
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.history.HistoryMessageType
 import com.pubnub.api.models.consumer.history.PNFetchMessageItem
@@ -17,7 +17,7 @@ class FetchMessagesImpl(pubnub: PubNub, params: PubNub.FetchMessagesParameters) 
                     PNFetchMessageItem(
                         item.uuid,
                         item.message,
-                        item.meta as JsonValue,
+                        item.meta as JsonElement,
                         item.timetoken.toString().toLong(),
                         item.actions?.toMap()?.mapValues { entry: Map.Entry<String, PubNub.ActionContentToAction> ->
                             entry.value.toMap().mapValues { entry2: Map.Entry<String, Array<PubNub.Action>> ->

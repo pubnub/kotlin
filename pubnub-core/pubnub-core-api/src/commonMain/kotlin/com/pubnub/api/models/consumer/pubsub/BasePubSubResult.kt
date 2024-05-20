@@ -1,12 +1,12 @@
 package com.pubnub.api.models.consumer.pubsub
 
-import com.pubnub.api.JsonValue
+import com.pubnub.api.JsonElement
 
 interface PubSubResult : PNEvent {
     override val channel: String
     override val subscription: String?
     override val timetoken: Long?
-    val userMetadata: JsonValue?
+    val userMetadata: JsonElement?
     val publisher: String?
 }
 
@@ -21,6 +21,6 @@ data class BasePubSubResult(
     override val channel: String,
     override val subscription: String?,
     override val timetoken: Long?,
-    override val userMetadata: JsonValue?,
+    override val userMetadata: JsonElement?,
     override val publisher: String?,
 ) : PubSubResult

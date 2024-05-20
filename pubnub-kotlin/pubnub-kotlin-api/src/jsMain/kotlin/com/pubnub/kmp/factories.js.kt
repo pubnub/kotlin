@@ -1,7 +1,7 @@
 package com.pubnub.kmp
 
-import com.pubnub.api.JsonValueImpl
-import com.pubnub.api.JsonValue
+import com.pubnub.api.JsonElementImpl
+import com.pubnub.api.JsonElement
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubImpl
 import com.pubnub.api.models.consumer.PNStatus
@@ -40,10 +40,10 @@ actual fun createEventListener(
                         messageEvent.channel,
                         messageEvent.subscription,
                         messageEvent.timetoken.toLong(),
-                        messageEvent.userMetadata as? JsonValue, // TODO kmp
+                        messageEvent.userMetadata as? JsonElement, // TODO kmp
                         messageEvent.publisher
                     ),
-                    JsonValueImpl(messageEvent.message),
+                    JsonElementImpl(messageEvent.message),
                     null //TODO kmp error
                 )
             )
@@ -55,7 +55,7 @@ actual fun createEventListener(
                     presenceEvent.uuid,
                     presenceEvent.timestamp.toLong(),
                     presenceEvent.occupancy.toInt(),
-                    JsonValueImpl(presenceEvent.state.asDynamic()),
+                    JsonElementImpl(presenceEvent.state.asDynamic()),
                     presenceEvent.channel,
                     presenceEvent.subscription,
                     presenceEvent.timetoken.toLong(),
@@ -73,7 +73,7 @@ actual fun createEventListener(
                         null,
                         signalEvent.publisher
                     ),
-                    signalEvent.message as JsonValue, // TODO kmp
+                    signalEvent.message as JsonElement, // TODO kmp
                 )
             )
         }
@@ -106,7 +106,7 @@ actual fun createEventListener(
                     fileEvent.publisher,
                     fileEvent.message,
                     PNDownloadableFile(fileEvent.file.id, fileEvent.file.name, fileEvent.file.url),
-                    fileEvent.message as JsonValue, //TODO kmp
+                    fileEvent.message as JsonElement, //TODO kmp
                     fileEvent.subscription,
                     null // TODO kmp error
                 )
