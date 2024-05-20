@@ -6,6 +6,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.api.v2.BasePNConfiguration
 import com.pubnub.api.v2.BasePNConfiguration.Companion.isValid
+import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.internal.managers.RetrofitManager
 import com.pubnub.internal.retry.RetryableBase
@@ -18,7 +19,6 @@ import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
-import java.util.function.Consumer
 
 /**
  * Base class for all PubNub API operation implementations.

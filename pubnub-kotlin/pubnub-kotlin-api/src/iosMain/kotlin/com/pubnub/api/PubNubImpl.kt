@@ -36,8 +36,11 @@ import com.pubnub.api.endpoints.presence.HereNow
 import com.pubnub.api.endpoints.presence.SetState
 import com.pubnub.api.endpoints.presence.WhereNow
 import com.pubnub.api.endpoints.pubsub.Publish
+import com.pubnub.api.endpoints.pubsub.PublishImpl
 import com.pubnub.api.endpoints.pubsub.Signal
+import com.pubnub.api.endpoints.pubsub.SignalImpl
 import com.pubnub.api.endpoints.push.AddChannelsToPush
+import com.pubnub.api.endpoints.push.AddChannelsToPushImpl
 import com.pubnub.api.endpoints.push.ListPushProvisions
 import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice
 import com.pubnub.api.endpoints.push.RemoveChannelsFromPush
@@ -62,10 +65,16 @@ import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
+import kotlinx.cinterop.ExperimentalForeignApi
 
 class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
 
-//    val swiftPubNub = cocoapods.PubNubSwift.
+    @OptIn(ExperimentalForeignApi::class)
+    private val pubNubObjC = cocoapods.PubNubSwift.PubNubObjC(
+        user = configuration.userId.value,
+        subKey = configuration.subscribeKey,
+        pubKey = configuration.publishKey
+    )
 
     override fun addListener(listener: EventListener) {
         TODO("Not yet implemented")
@@ -83,6 +92,8 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         TODO("Not yet implemented")
     }
 
+    @OptIn(ExperimentalForeignApi::class)
+    // TODO: replicate and usePost parameters are not present in Swift SDK
     override fun publish(
         channel: String,
         message: Any,
@@ -92,25 +103,47 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         replicate: Boolean,
         ttl: Int?
     ): Publish {
-        TODO("Not yet implemented")
+        return PublishImpl(
+            pubnub = pubNubObjC,
+            channel = channel,
+            message = message,
+            meta = meta,
+            shouldStore = shouldStore,
+            ttl = ttl
+        )
     }
 
+    @OptIn(ExperimentalForeignApi::class)
+    // TODO: usePost parameter is not present in Swift SDK
     override fun fire(channel: String, message: Any, meta: Any?, usePost: Boolean, ttl: Int?): Publish {
-        TODO("Not yet implemented")
+        return PublishImpl(
+            pubnub = pubNubObjC,
+            channel = channel,
+            message = message,
+            meta = meta,
+            shouldStore = false,
+            ttl = 0
+        )
     }
 
+    @OptIn(ExperimentalForeignApi::class)
     override fun signal(channel: String, message: Any): Signal {
-        TODO("Not yet implemented")
+        return SignalImpl(pubnub = pubNubObjC, channel = channel, message = message)
     }
 
+    @OptIn(ExperimentalForeignApi::class)
     override fun getSubscribedChannels(): List<String> {
-        TODO("Not yet implemented")
+        return pubNubObjC.subscribedChannels() as List<String>
     }
 
+    @OptIn(ExperimentalForeignApi::class)
     override fun getSubscribedChannelGroups(): List<String> {
-        TODO("Not yet implemented")
+        return pubNubObjC.subscribedChannelGroups() as List<String>
     }
 
+    // TODO: Missing pushType (PushService like APNS, GCM, etc) parameter
+    // TODO: Why do we need topic parameter here?
+    @OptIn(ExperimentalForeignApi::class)
     override fun addPushNotificationsOnChannels(
         pushType: PNPushType,
         channels: List<String>,
@@ -118,7 +151,11 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         topic: String?,
         environment: PNPushEnvironment
     ): AddChannelsToPush {
-        TODO("Not yet implemented")
+        return AddChannelsToPushImpl(
+            pubnub = pubNubObjC,
+            channels = channels,
+            deviceId = deviceId
+        )
     }
 
     override fun auditPushChannelProvisions(
@@ -480,6 +517,14 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     }
 
     override fun setToken(token: String?) {
+        TODO("Not yet implemented")
+    }
+
+    override fun destroy() {
+        TODO("Not yet implemented")
+    }
+
+    override fun unsubscribeAll() {
         TODO("Not yet implemented")
     }
 }

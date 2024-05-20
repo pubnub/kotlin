@@ -5,16 +5,12 @@
     "CONFLICTING_OVERLOADS"
 )
 
-import PubNub.ChannelMembershipObject
-import PubNub.ChannelMetadataObject
 import PubNub.GetAllMetadataParameters
 import PubNub.GetChannelMembersParameters
 import PubNub.GetChannelMetadataParameters
 import PubNub.GetMembershipsParametersv2
 import PubNub.GetUUIDMetadataParameters
 import PubNub.MessageAction
-import PubNub.MessageEvent
-import PubNub.PubnubStatus
 import PubNub.RemoveChannelMembersParameters
 import PubNub.RemoveChannelMetadataParameters
 import PubNub.RemoveMembershipsParameters
@@ -23,9 +19,8 @@ import PubNub.SetChannelMembersParameters
 import PubNub.SetChannelMetadataParameters
 import PubNub.SetMembershipsParameters
 import PubNub.SetUUIDMetadataParameters
-import PubNub.UUIDMembershipObject
-import PubNub.UUIDMetadataObject
 import com.pubnub.api.JsonElement
+import com.pubnub.kmp.JsMap
 import com.pubnub.kmp.Optional
 import org.khronos.webgl.ArrayBuffer
 import org.w3c.files.Blob
@@ -34,31 +29,31 @@ import kotlin.js.Date
 import kotlin.js.Json
 import kotlin.js.Promise
 
-typealias PubnubData = MessageEvent
+typealias PubnubData = PubNub.MessageEvent
 
-typealias SetUUIDMetadataResponse = ObjectsResponse<UUIDMetadataObject>
+typealias SetUUIDMetadataResponse = ObjectsResponse<PubNub.UUIDMetadataObject>
 
 typealias RemoveUUIDMetadataResponse = ObjectsResponse<Any>
 
-typealias GetAllUUIDMetadataResponse = PagedObjectsResponse<UUIDMetadataObject>
+typealias GetAllUUIDMetadataResponse = PagedObjectsResponse<PubNub.UUIDMetadataObject>
 
-typealias GetUUIDMetadataResponse = ObjectsResponse<UUIDMetadataObject>
+typealias GetUUIDMetadataResponse = ObjectsResponse<PubNub.UUIDMetadataObject>
 
-typealias SetChannelMetadataResponse = ObjectsResponse<ChannelMetadataObject>
+typealias SetChannelMetadataResponse = ObjectsResponse<PubNub.ChannelMetadataObject>
 
 typealias RemoveChannelMetadataResponse = ObjectsResponse<Any>
 
-typealias GetAllChannelMetadataResponse = PagedObjectsResponse<ChannelMetadataObject>
+typealias GetAllChannelMetadataResponse = PagedObjectsResponse<PubNub.ChannelMetadataObject>
 
-typealias GetChannelMetadataResponse = ObjectsResponse<ChannelMetadataObject>
+typealias GetChannelMetadataResponse = ObjectsResponse<PubNub.ChannelMetadataObject>
 
-typealias ManageChannelMembersResponse = PagedObjectsResponse<UUIDMembershipObject>
+typealias ManageChannelMembersResponse = PagedObjectsResponse<PubNub.UUIDMembershipObject>
 
-typealias ManageMembershipsResponse = PagedObjectsResponse<ChannelMembershipObject>
+typealias ManageMembershipsResponse = PagedObjectsResponse<PubNub.ChannelMembershipObject>
 
-typealias Callback<ResponseType> = (status: PubnubStatus, response: ResponseType) -> Unit
+typealias Callback<ResponseType> = (status: PubNub.PubnubStatus, response: ResponseType) -> Unit
 
-typealias StatusCallback = (status: PubnubStatus) -> Unit
+typealias StatusCallback = (status: PubNub.PubnubStatus) -> Unit
 
 external interface ObjectsResponse<DataType> {
     var status: Number
@@ -130,6 +125,8 @@ external interface RemoveMessageActionResult {
     var data: Any
 }
 
+@JsModule("pubnub")
+@JsNonModule
 open external class PubNub(config: Any /* UUID | UserId */) {
     open var channelGroups: ChannelGroups
     open var push: Push
@@ -1650,13 +1647,3 @@ external interface ExponentialRetryPolicyConfiguration {
     var maximumDelay: Number
     var maximumRetry: Number
 }
-
-external interface JsMap<V>
-
-fun <V> entriesOf(jsObject: JsMap<V>): List<Pair<String, V>> =
-    (js("Object.entries") as (dynamic) -> Array<Array<V>>)
-        .invoke(jsObject)
-        .map { entry -> entry[0] as String to entry[1] }
-
-fun <V> JsMap<V>.toMap(): Map<String, V> =
-    entriesOf(this).toMap()

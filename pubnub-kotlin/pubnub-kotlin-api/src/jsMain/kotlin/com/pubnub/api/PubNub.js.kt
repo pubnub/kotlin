@@ -363,7 +363,10 @@ actual interface PubNub {
         channels: List<String>, channelGroups: List<String>
     )
 
+    actual fun unsubscribeAll()
+
     actual fun setToken(token: String?)
+    actual fun destroy()
 
 }
 
@@ -376,7 +379,7 @@ actual fun createEventListener(
     onObjects: (PubNub, PNObjectEventResult) -> Unit,
     onFile: (PubNub, PNFileEventResult) -> Unit
 ): EventListener {
-    val listener = object : PubNubJs.ListenerParameters {
+    return object : PubNubJs.ListenerParameters {
         override val message: (PubNubJs.MessageEvent) -> Unit = { messageEvent ->
             onMessage(pubnub, PNMessageResult(
                     BasePubSubResult(
@@ -386,7 +389,7 @@ actual fun createEventListener(
                         messageEvent.userMetadata as? JsonElement, // TODO kmp
                         messageEvent.publisher
                     ),
-                    messageEvent.message as JsonElement, // TODO kmp
+                    messageEvent.message.unsafeCast<JsonElement>(), // TODO kmp
                     null //TODO kmp error
                 ))
         }
@@ -448,7 +451,6 @@ actual fun createEventListener(
             ) )
         }
     }
-    return listener
 }
 
 actual fun createStatusListener(
