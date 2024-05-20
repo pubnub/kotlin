@@ -32,7 +32,7 @@ open class PublishImpl(
             meta = meta,
             shouldStore = if (shouldStore != null) NSNumber(bool = shouldStore) else null,
             ttl = if (ttl != null) NSNumber(int = ttl) else null,
-            onResponse = callback.onSuccessHandler { PNPublishResult(it.toLong()) },
+            onSuccess = callback.onSuccessHandler { PNPublishResult(it.toLong()) },
             onFailure = callback.onFailureHandler()
         )
     }

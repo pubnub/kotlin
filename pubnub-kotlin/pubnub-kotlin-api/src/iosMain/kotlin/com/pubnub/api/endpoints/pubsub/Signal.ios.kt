@@ -24,7 +24,7 @@ open class SignalImpl(
         pubnub.signalWithChannel(
             channel = channel,
             message = message,
-            onResponse = callback.onSuccessHandler { PNPublishResult(it.toLong()) },
+            onSuccess = callback.onSuccessHandler { PNPublishResult(it.toLong()) },
             onFailure = callback.onFailureHandler()
         )
     }
