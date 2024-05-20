@@ -46,6 +46,7 @@ import com.pubnub.api.endpoints.presence.GetState
 import com.pubnub.api.endpoints.presence.HereNow
 import com.pubnub.api.endpoints.presence.HereNowImpl
 import com.pubnub.api.endpoints.presence.SetState
+import com.pubnub.api.endpoints.presence.SetStateImpl
 import com.pubnub.api.endpoints.presence.WhereNow
 import com.pubnub.api.endpoints.presence.WhereNowImpl
 import com.pubnub.api.endpoints.pubsub.FireImpl
@@ -76,6 +77,7 @@ import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.v2.PNConfiguration
+import com.pubnub.kmp.CustomObjectImpl
 import com.pubnub.kmp.Optional
 import com.pubnub.kmp.toOptional
 import PubNub as PubNubJs
@@ -109,7 +111,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         replicate: Boolean,
         ttl: Int?
     ): Publish {
-        return PublishImpl(jsPubNub, createJsObject<PubNubJs.PublishParameters> {
+        return PublishImpl(jsPubNub, createJsObject {
             this.message = message
             this.channel = channel
             this.storeInHistory = shouldStore
@@ -231,9 +233,12 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         channels: List<String>,
         channelGroups: List<String>,
         state: Any,
-        uuid: String
     ): SetState {
-        TODO("Not yet implemented")
+        return SetStateImpl(jsPubNub, createJsObject {
+            this.state = state
+            this.channels = channels.toTypedArray()
+            this.channelGroups = channelGroups.toTypedArray()
+        })
     }
 
     override fun getPresenceState(channels: List<String>, channelGroups: List<String>, uuid: String): GetState {

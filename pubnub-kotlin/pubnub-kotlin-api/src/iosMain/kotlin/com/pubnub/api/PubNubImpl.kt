@@ -65,6 +65,7 @@ import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
+import com.pubnub.kmp.CustomObject
 import kotlinx.cinterop.ExperimentalForeignApi
 
 class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
@@ -222,7 +223,6 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         channels: List<String>,
         channelGroups: List<String>,
         state: Any,
-        uuid: String
     ): SetState {
         TODO("Not yet implemented")
     }

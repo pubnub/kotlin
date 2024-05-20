@@ -43,7 +43,7 @@ kotlin {
             dependencies {
                 api(project(":pubnub-kotlin:pubnub-kotlin-api"))
                 api(project(":pubnub-core:pubnub-core-api"))
-                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0-RC.2")
+                implementation(libs.datetime)
             }
         }
 
@@ -51,13 +51,13 @@ kotlin {
             dependencies {
                 implementation(kotlin("test"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
+                implementation(libs.coroutines.test)
             }
         }
 
         val jvmTest by getting {
             dependencies {
                 implementation(project(":pubnub-kotlin:pubnub-kotlin-impl"))
-                implementation(libs.slf4j)
             }
         }
     }

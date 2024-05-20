@@ -562,11 +562,35 @@ actual interface PubNub :
      * @param uuid UUID of the user to set the state for. Defaults to the UUID of the client.
      *             @see [PNConfiguration.uuid]
      */
+    fun setPresenceState(
+        channels: List<String> = listOf(),
+        channelGroups: List<String> = listOf(),
+        state: Any,
+        uuid: String = configuration.userId.value,
+    ): SetState
+
+    /**
+     * Set state information specific to a subscriber UUID.
+     *
+     * State information is supplied as a JSON object of key/value pairs.
+     *
+     * If [PNConfiguration.maintainPresenceState] is `true`, and the `uuid` matches [PNConfiguration.uuid], the state
+     * for channels will be saved in the PubNub client and resent with every heartbeat and initial subscribe request.
+     * In that case, it's not recommended to mix setting state through channels *and* channel groups, as state set
+     * through the channel group will be overwritten after the next heartbeat or subscribe reconnection (e.g. after loss
+     * of network).
+     *
+     * @param channels Channels to set the state to.
+     * @param channelGroups Channel groups to set the state to.
+     * @param state The actual state object to set.
+     *              NOTE: Presence state must be expressed as a JsonObject.
+     *              When calling [PubNub.setPresenceState], be sure to supply an initialized JsonObject
+     *              or POJO which can be serialized to a JsonObject.
+     */
     actual fun setPresenceState(
         channels: List<String>,
         channelGroups: List<String>,
         state: Any,
-        uuid: String,
     ): SetState
 
     /**

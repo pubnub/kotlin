@@ -1,6 +1,6 @@
 package com.pubnub.api.models.consumer.history
 
-import com.pubnub.api.JsonElement
+import com.pubnub.api.JsonValue
 import com.pubnub.api.PubNubError
 
 /**
@@ -32,8 +32,8 @@ class PNHistoryResult(
  * so PubNub can't decrypt the unencrypted message and return the message.
  */
 data class PNHistoryItemResult(
-    val entry: JsonElement,
+    val entry: JsonValue,
     val timetoken: Long? = null,
-    val meta: JsonElement? = null,
+    val meta: JsonValue? = null,
     val error: PubNubError? = null,
 )

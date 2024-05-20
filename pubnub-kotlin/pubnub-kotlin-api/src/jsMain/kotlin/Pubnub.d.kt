@@ -19,7 +19,7 @@ import PubNub.SetChannelMembersParameters
 import PubNub.SetChannelMetadataParameters
 import PubNub.SetMembershipsParameters
 import PubNub.SetUUIDMetadataParameters
-import com.pubnub.api.JsonElement
+import com.pubnub.api.JsonValue
 import com.pubnub.kmp.JsMap
 import com.pubnub.kmp.Optional
 import org.khronos.webgl.ArrayBuffer
@@ -520,7 +520,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
 
     interface FetchMessageItem {
         var channel: String
-        var message: JsonElement
+        var message: JsonValue
         var timetoken: dynamic /* String | Number */
         var messageType: dynamic /* String? | Number? */
         var uuid: String

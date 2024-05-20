@@ -1,6 +1,6 @@
 package com.pubnub.api.models.consumer.pubsub
 
-import com.pubnub.api.JsonElement
+import com.pubnub.api.JsonValue
 
 /**
  * Wrapper around a presence event.
@@ -28,7 +28,7 @@ class PNPresenceEventResult(
     val uuid: String? = null,
     val timestamp: Long? = null,
     val occupancy: Int? = null,
-    val state: JsonElement? = null,
+    val state: JsonValue? = null,
     override val channel: String,
     override val subscription: String? = null,
     override val timetoken: Long? = null,

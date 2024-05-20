@@ -3,7 +3,7 @@ package com.pubnub.test
 import com.pubnub.api.Endpoint
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
-import com.pubnub.api.createPubNub
+import com.pubnub.kmp.createPubNub
 import com.pubnub.api.v2.createPNConfiguration
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume

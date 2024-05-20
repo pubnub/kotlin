@@ -1,6 +1,6 @@
 package com.pubnub.api.models.consumer.presence
 
-import com.pubnub.api.JsonElement
+import com.pubnub.api.JsonValue
 
 /**
  * Result of the [PubNubImpl.setPresenceState] operation.
@@ -8,5 +8,5 @@ import com.pubnub.api.JsonElement
  * @property state The actual state object.
  */
 class PNSetStateResult(
-    val state: JsonElement,
+    val state: JsonValue,
 )

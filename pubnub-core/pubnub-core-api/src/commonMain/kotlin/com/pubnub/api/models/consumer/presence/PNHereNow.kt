@@ -1,6 +1,6 @@
 package com.pubnub.api.models.consumer.presence
 
-import com.pubnub.api.JsonElement
+import com.pubnub.api.JsonValue
 
 /**
  * Result of the HereNow operation.
@@ -37,5 +37,5 @@ class PNHereNowChannelData(
  */
 class PNHereNowOccupantData(
     val uuid: String,
-    val state: JsonElement? = null,
+    val state: JsonValue? = null,
 )

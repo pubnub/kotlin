@@ -44,7 +44,6 @@ import com.pubnub.api.endpoints.push.RemoveChannelsFromPush
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.PNBoundedPage
-import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions
 import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
@@ -60,32 +59,10 @@ import com.pubnub.api.models.consumer.objects.member.MemberInput
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
-import com.pubnub.api.models.consumer.pubsub.PNMessageResult
-import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
-import com.pubnub.api.models.consumer.pubsub.PNSignalResult
-import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
-import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
-import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
-
-expect fun createPubNub(config: PNConfiguration): PubNub
-
-expect fun createEventListener(
-    pubnub: PubNub,
-    onMessage: (PubNub, PNMessageResult) -> Unit = { _, _ -> },
-    onPresence: (PubNub, PNPresenceEventResult) -> Unit = { _, _ -> },
-    onSignal: (PubNub, PNSignalResult) -> Unit = { _, _ -> },
-    onMessageAction: (PubNub, PNMessageActionResult) -> Unit = { _, _ -> },
-    onObjects: (PubNub, PNObjectEventResult) -> Unit = { _, _ -> },
-    onFile: (PubNub, PNFileEventResult) -> Unit = { _, _ -> },
-): EventListener
-
-expect fun createStatusListener(
-    pubnub: PubNub,
-    onStatus: (PubNub, PNStatus) -> Unit = { _, _ -> },
-): StatusListener
+import com.pubnub.kmp.CustomObject
 
 expect interface PubNub {
     val configuration: PNConfiguration
@@ -176,11 +153,20 @@ expect interface PubNub {
     ): HereNow
 
     fun whereNow(uuid: String = configuration.userId.value): WhereNow
+
+
+// TODO bring back when/if all SDKs accept a `uuid` parameter
+//    fun setPresenceState(
+//        channels: List<String> = listOf(),
+//        channelGroups: List<String> = listOf(),
+//        state: Any,
+//        uuid: String = configuration.userId.value,
+//    ): SetState
+
     fun setPresenceState(
         channels: List<String> = listOf(),
         channelGroups: List<String> = listOf(),
         state: Any,
-        uuid: String = configuration.userId.value,
     ): SetState
 
     fun getPresenceState(
@@ -445,7 +431,3 @@ expect interface PubNub {
 
     fun destroy()
 }
-
-expect class CustomObject
-
-expect fun createCustomObject(map: Map<String, Any?>): CustomObject

@@ -1,5 +1,6 @@
-package com.pubnub.api
+package com.pubnub.kmp
 
+import com.pubnub.api.PubNub
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
@@ -51,12 +52,6 @@ actual fun createEventListener(
     }
 }
 
-actual typealias CustomObject = Any
-
-actual fun createCustomObject(map: Map<String, Any?>): CustomObject {
-    return map
-}
-
 actual fun createStatusListener(
     pubnub: PubNub,
     onStatus: (PubNub, PNStatus) -> Unit
@@ -66,4 +61,8 @@ actual fun createStatusListener(
             onStatus(pubnub, status)
         }
     }
+}
+
+actual fun createCustomObject(map: Map<String, Any?>): CustomObject {
+    return map
 }

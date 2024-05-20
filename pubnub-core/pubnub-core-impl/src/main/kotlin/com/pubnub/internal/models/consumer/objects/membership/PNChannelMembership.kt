@@ -4,7 +4,7 @@ import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 
 data class PNChannelMembership(
     val channel: PNChannelMetadata?,
-    val custom: Any?,
+    val custom: Map<String, Any?>?,
     val updated: String,
     val eTag: String,
     val status: String?,

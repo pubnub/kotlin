@@ -1,6 +1,6 @@
 package com.pubnub.api.models.consumer.history
 
-import com.pubnub.api.JsonElement
+import com.pubnub.api.JsonValue
 import com.pubnub.api.PubNubError
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.history.PNFetchMessageItem.Action
@@ -36,8 +36,8 @@ data class PNFetchMessagesResult(
  */
 data class PNFetchMessageItem(
     val uuid: String?,
-    val message: JsonElement,
-    val meta: JsonElement?,
+    val message: JsonValue,
+    val meta: JsonValue?,
     val timetoken: Long?,
     val actions: Map<String, Map<String, List<Action>>>? = null,
     val messageType: HistoryMessageType?,

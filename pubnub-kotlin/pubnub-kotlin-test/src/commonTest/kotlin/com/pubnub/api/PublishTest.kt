@@ -1,6 +1,7 @@
 package com.pubnub.api
 
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
+import com.pubnub.kmp.createEventListener
 import com.pubnub.test.BaseIntegrationTest
 import com.pubnub.test.await
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +27,7 @@ class PublishTest : BaseIntegrationTest() {
     @Test
     fun can_receive_message() = runTest(timeout = 10.seconds) {
         val queue = Channel<PNMessageResult>()
-        pubnub.addListener(createEventListener(pubnub, onMessage = {pubNub, pnMessageResult ->
+        pubnub.addListener(createEventListener(pubnub, onMessage = { pubNub, pnMessageResult ->
             backgroundScope.launch {
                 queue.send(pnMessageResult)
             }

@@ -1,7 +1,7 @@
 package com.pubnub.api
 
-actual abstract class JsonElement
+actual abstract class JsonValue
 
-actual fun JsonElement.asString(): String {
+actual fun JsonValue.asString(): String {
     return TODO()
 }
