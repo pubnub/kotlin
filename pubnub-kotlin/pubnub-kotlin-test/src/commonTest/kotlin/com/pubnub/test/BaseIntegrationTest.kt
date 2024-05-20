@@ -27,8 +27,7 @@ abstract class BaseIntegrationTest {
     }
 }
 
-
-suspend fun <T> Endpoint<T>.await() = suspendCancellableCoroutine<T> { cont ->
+suspend fun <T> Endpoint<T>.await() = suspendCancellableCoroutine { cont ->
     async { result ->
         result.onSuccess {
             cont.resume(it)

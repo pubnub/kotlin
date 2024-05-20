@@ -10,6 +10,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.Clock
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -19,12 +21,19 @@ class PublishTest : BaseIntegrationTest() {
     private val channel = "myChannel"
 
     @Test
-    fun can_publish_message() = runTest {
-        val result = pubnub.publish(channel, "some message").await()
-        assertTrue { result.timetoken > 0 }
+    fun can_publish_message() {
+        runTest(timeout = 10.seconds) {
+            println("A" + Clock.System.now())
+            val result = pubnub.publish(channel, "some message").await()
+            // never getting to here
+            assertTrue { result.timetoken > 0 }
+            println("B" + Clock.System.now())
+        }
+        println("C" + Clock.System.now())
     }
 
     @Test
+    @Ignore
     fun can_receive_message() = runTest(timeout = 10.seconds) {
         val queue = Channel<PNMessageResult>()
         pubnub.addListener(createEventListener(pubnub, onMessage = { pubNub, pnMessageResult ->

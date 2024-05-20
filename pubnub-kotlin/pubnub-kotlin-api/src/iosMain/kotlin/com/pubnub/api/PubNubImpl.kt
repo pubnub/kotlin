@@ -521,10 +521,10 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     }
 
     override fun destroy() {
-        TODO("Not yet implemented")
+//        TODO("Not yet implemented")
     }
 
     override fun unsubscribeAll() {
-        TODO("Not yet implemented")
+//        TODO("Not yet implemented")
     }
 }

@@ -1,7 +1,6 @@
 package com.pubnub.kmp
 
 import com.pubnub.api.JsonElementImpl
-import com.pubnub.api.JsonElement
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubImpl
 import com.pubnub.api.models.consumer.PNStatus

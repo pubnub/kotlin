@@ -10,6 +10,8 @@ import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSNumber
+import platform.posix.uint64_t
+import platform.zlib.uLong
 
 /**
  * @see [PubNub.publish]
@@ -32,7 +34,7 @@ open class PublishImpl(
             meta = meta,
             shouldStore = if (shouldStore != null) NSNumber(bool = shouldStore) else null,
             ttl = if (ttl != null) NSNumber(int = ttl) else null,
-            onResponse = callback.onSuccessHandler { PNPublishResult(it.toLong()) },
+            onSuccess = callback.onSuccessHandler { PNPublishResult(it.toLong()) },
             onFailure = callback.onFailureHandler()
         )
     }

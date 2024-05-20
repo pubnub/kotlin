@@ -87,6 +87,10 @@ kotlin {
             // Optional properties
             // Specify the framework linking type. It's dynamic by default.
             isStatic = true
+
+            export(":pubnub-kotlin:pubnub-kotlin-api")
+            export(":pubnub-core:pubnub-core-api")
+            transitiveExport = true
         }
 
         pod("PubNubSwift") {
@@ -98,4 +102,9 @@ kotlin {
             extraOpts += listOf("-compiler-option", "-fmodules")
         }
     }
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeSimulatorTest>().configureEach {
+    standalone.set(false)
+    device.set("iPhone 15 Pro")
 }
