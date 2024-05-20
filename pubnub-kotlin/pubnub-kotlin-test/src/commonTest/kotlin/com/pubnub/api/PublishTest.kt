@@ -1,6 +1,9 @@
 package com.pubnub.api
 
+import com.pubnub.api.models.consumer.PNPublishResult
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
+import com.pubnub.api.v2.callbacks.Consumer
+import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.kmp.createEventListener
 import com.pubnub.test.BaseIntegrationTest
 import com.pubnub.test.await
@@ -21,16 +24,12 @@ class PublishTest : BaseIntegrationTest() {
     private val channel = "myChannel"
 
     @Test
-    fun can_publish_message() {
+    fun can_publish_message() =
         runTest(timeout = 10.seconds) {
-            println("A" + Clock.System.now())
             val result = pubnub.publish(channel, "some message").await()
             // never getting to here
             assertTrue { result.timetoken > 0 }
-            println("B" + Clock.System.now())
         }
-        println("C" + Clock.System.now())
-    }
 
     @Test
     @Ignore

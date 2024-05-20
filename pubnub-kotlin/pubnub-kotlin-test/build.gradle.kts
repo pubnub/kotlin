@@ -1,5 +1,7 @@
 import org.jetbrains.dokka.DokkaDefaults.moduleName
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
+import org.jetbrains.kotlin.gradle.plugin.mpp.TestExecutable
 
 plugins {
     alias(libs.plugins.benmanes.versions)
@@ -100,6 +102,14 @@ kotlin {
 
             moduleName = "PubNub"
             extraOpts += listOf("-compiler-option", "-fmodules")
+        }
+    }
+
+    targets.withType<KotlinNativeTarget> {
+        if (konanTarget.family.isAppleFamily) {
+            binaries.withType<TestExecutable> {
+                freeCompilerArgs += listOf("-e", "testlauncher.mainBackground")
+            }
         }
     }
 }

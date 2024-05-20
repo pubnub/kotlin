@@ -9,19 +9,17 @@ package com.pubnub.api
  * @property statusCode HTTP status code.
  * @property affectedCall A reference to the affected call. Useful for calling [retry][Endpoint.retry].
  */
-actual class PubNubException() : Exception() {
+actual class PubNubException actual constructor(errorMessage: String?): Exception(errorMessage) {
 
-    actual constructor(pubnubError: PubNubError): this() {
-        TODO("Not yet implemented")
-    }
-
-    actual constructor(errorMessage: String?) : this() {
-        TODO("Not yet implemented")
-    }
+    actual constructor(pubnubError: PubNubError) : this(pubnubError.message)
 
     actual companion object {
         actual fun from(e: Throwable): PubNubException {
-            TODO("Not yet implemented")
+            return if (e is PubNubException) {
+                e
+            } else {
+                PubNubException(e.message)
+            }
         }
     }
 }
