@@ -3,6 +3,7 @@ package com.pubnub.api.endpoints.presence
 import PubNub
 import com.pubnub.api.EndpointImpl
 import com.pubnub.api.JsonElement
+import com.pubnub.api.JsonElementImpl
 import com.pubnub.api.models.consumer.presence.PNHereNowChannelData
 import com.pubnub.api.models.consumer.presence.PNHereNowOccupantData
 import com.pubnub.api.models.consumer.presence.PNHereNowResult
@@ -22,7 +23,7 @@ class HereNowImpl(pubnub: PubNub, params: PubNub.HereNowParameters) : HereNow, E
                     data.occupants.map { occupant ->
                         PNHereNowOccupantData(
                             occupant.uuid,
-                            occupant.state as JsonElement // TODO kmp
+                            JsonElementImpl(occupant.state),
                         )
                     }
                 )

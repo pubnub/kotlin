@@ -40,7 +40,7 @@ actual fun createEventListener(
                         messageEvent.channel,
                         messageEvent.subscription,
                         messageEvent.timetoken.toLong(),
-                        messageEvent.userMetadata as? JsonElement, // TODO kmp
+                        JsonElementImpl(messageEvent.userMetadata),
                         messageEvent.publisher
                     ),
                     JsonElementImpl(messageEvent.message),
@@ -55,7 +55,7 @@ actual fun createEventListener(
                     presenceEvent.uuid,
                     presenceEvent.timestamp.toLong(),
                     presenceEvent.occupancy.toInt(),
-                    JsonElementImpl(presenceEvent.state.asDynamic()),
+                    JsonElementImpl(presenceEvent.state),
                     presenceEvent.channel,
                     presenceEvent.subscription,
                     presenceEvent.timetoken.toLong(),
@@ -73,7 +73,7 @@ actual fun createEventListener(
                         null,
                         signalEvent.publisher
                     ),
-                    signalEvent.message as JsonElement, // TODO kmp
+                    JsonElementImpl(signalEvent.message),
                 )
             )
         }
@@ -106,7 +106,7 @@ actual fun createEventListener(
                     fileEvent.publisher,
                     fileEvent.message,
                     PNDownloadableFile(fileEvent.file.id, fileEvent.file.name, fileEvent.file.url),
-                    fileEvent.message as JsonElement, //TODO kmp
+                    JsonElementImpl(fileEvent.message),
                     fileEvent.subscription,
                     null // TODO kmp error
                 )
