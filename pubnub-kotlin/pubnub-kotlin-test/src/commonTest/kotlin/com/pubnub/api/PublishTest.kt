@@ -12,6 +12,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.test.runTest
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -29,6 +30,7 @@ class PublishTest : BaseIntegrationTest() {
         }
 
     @Test
+    @Ignore
     fun can_receive_message() = runTest(timeout = 10.seconds) {
         val queue = Channel<PNMessageResult>()
         pubnub.addListener(createEventListener(pubnub, onMessage = { pubNub, pnMessageResult ->

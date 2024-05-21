@@ -276,21 +276,11 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
 
     override fun grantToken(
         ttl: Int,
-        meta: Any?,
+        meta: CustomObject?,
         authorizedUUID: String?,
         channels: List<ChannelGrant>,
         channelGroups: List<ChannelGroupGrant>,
         uuids: List<UUIDGrant>
-    ): GrantToken {
-        TODO("Not yet implemented")
-    }
-
-    override fun grantToken(
-        ttl: Int,
-        meta: Any?,
-        authorizedUserId: UserId?,
-        spacesPermissions: List<SpacePermissions>,
-        usersPermissions: List<UserPermissions>
     ): GrantToken {
         TODO("Not yet implemented")
     }

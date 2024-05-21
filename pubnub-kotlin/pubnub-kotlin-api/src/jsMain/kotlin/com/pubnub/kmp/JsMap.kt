@@ -1,5 +1,7 @@
 package com.pubnub.kmp
 
+import com.pubnub.api.createJsObject
+
 external interface JsMap<V>
 
 fun <V> entriesOf(jsObject: JsMap<V>): List<Pair<String, V>> =
@@ -9,3 +11,9 @@ fun <V> entriesOf(jsObject: JsMap<V>): List<Pair<String, V>> =
 
 fun <V> JsMap<V>.toMap(): Map<String, V> =
     entriesOf(this).toMap()
+
+fun <V> Map<String, V>.toJsMap(): JsMap<V> = createJsObject<dynamic> {
+    entries.forEach {
+        this[it.key] = it.value
+    }
+}.unsafeCast<JsMap<V>>()

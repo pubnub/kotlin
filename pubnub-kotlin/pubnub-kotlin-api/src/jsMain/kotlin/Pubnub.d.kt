@@ -848,22 +848,14 @@ open external class PubNub(config: Any /* UUID | UserId */) {
             set(value) = definedExternally
     }
 
-    interface `T$26` {
-        @nativeGetter
-        operator fun get(key: String): GrantTokenPermissions?
-
-        @nativeSetter
-        operator fun set(key: String, value: GrantTokenPermissions)
-    }
-
-    interface `T$27` {
-        var channels: `T$26`?
+    interface PatternsOrResources {
+        var channels: JsMap<GrantTokenPermissions>?
             get() = definedExternally
             set(value) = definedExternally
-        var groups: `T$26`?
+        var groups: JsMap<GrantTokenPermissions>?
             get() = definedExternally
             set(value) = definedExternally
-        var uuids: `T$26`?
+        var uuids: JsMap<GrantTokenPermissions>?
             get() = definedExternally
             set(value) = definedExternally
     }
@@ -873,10 +865,10 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var authorized_uuid: String?
             get() = definedExternally
             set(value) = definedExternally
-        var resources: `T$27`?
+        var resources: PatternsOrResources?
             get() = definedExternally
             set(value) = definedExternally
-        var patterns: `T$27`?
+        var patterns: PatternsOrResources?
             get() = definedExternally
             set(value) = definedExternally
         var meta: Json?

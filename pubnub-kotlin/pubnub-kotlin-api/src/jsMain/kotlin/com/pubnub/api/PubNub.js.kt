@@ -163,19 +163,11 @@ actual interface PubNub {
     actual fun deleteChannelGroup(channelGroup: String): DeleteChannelGroup
     actual fun grantToken(
         ttl: Int,
-        meta: Any?,
+        meta: CustomObject?,
         authorizedUUID: String?,
         channels: List<ChannelGrant>,
         channelGroups: List<ChannelGroupGrant>,
         uuids: List<UUIDGrant>
-    ): GrantToken
-
-    actual fun grantToken(
-        ttl: Int,
-        meta: Any?,
-        authorizedUserId: UserId?,
-        spacesPermissions: List<SpacePermissions>,
-        usersPermissions: List<UserPermissions>
     ): GrantToken
 
     actual fun revokeToken(token: String): RevokeToken

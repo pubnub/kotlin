@@ -842,7 +842,7 @@ actual interface PubNub :
      * @param spacesPermissions List of all space grants
      * @param usersPermissions List of all userId grants
      */
-    actual fun grantToken(
+    fun grantToken(
         ttl: Int,
         meta: Any?,
         authorizedUserId: UserId?,

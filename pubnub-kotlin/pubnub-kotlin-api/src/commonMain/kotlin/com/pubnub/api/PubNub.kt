@@ -213,19 +213,11 @@ expect interface PubNub {
 
     fun grantToken(
         ttl: Int,
-        meta: Any? = null,
+        meta: CustomObject? = null,
         authorizedUUID: String? = null,
         channels: List<ChannelGrant> = emptyList(),
         channelGroups: List<ChannelGroupGrant> = emptyList(),
         uuids: List<UUIDGrant> = emptyList(),
-    ): GrantToken
-
-    fun grantToken(
-        ttl: Int,
-        meta: Any? = null,
-        authorizedUserId: UserId? = null,
-        spacesPermissions: List<SpacePermissions> = emptyList(),
-        usersPermissions: List<UserPermissions> = emptyList(),
     ): GrantToken
 
     fun revokeToken(token: String): RevokeToken
