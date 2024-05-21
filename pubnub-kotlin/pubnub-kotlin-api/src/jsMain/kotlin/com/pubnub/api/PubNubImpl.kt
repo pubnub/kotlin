@@ -77,6 +77,8 @@ import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.v2.PNConfiguration
+import com.pubnub.api.v2.callbacks.EventListener
+import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.kmp.CustomObjectImpl
 import com.pubnub.kmp.Optional
 import com.pubnub.kmp.toOptional
@@ -86,16 +88,16 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
 
     private val jsPubNub: PubNubJs = PubNubJs(configuration.toJs())
 
-    override fun addListener(listener: PubNubJs.ListenerParameters) {
-        jsPubNub.addListener(listener)
+    override fun addListener(listener: EventListener) {
+        jsPubNub.addListener(listener.asDynamic().unsafeCast<PubNubJs.ListenerParameters>()) // todo figure out a better way (similar to DelegatingEventListener in JVM)
     }
 
-    override fun addListener(listener: PubNubJs.StatusListenerParameters) {
-        jsPubNub.addListener(listener)
+    override fun addListener(listener: StatusListener) {
+        jsPubNub.addListener(listener.asDynamic().unsafeCast<PubNubJs.StatusListenerParameters>()) // todo figure out a better way (similar to DelegatingEventListener in JVM)
     }
 
     override fun removeListener(listener: Listener) {
-        jsPubNub.removeListener(listener.asDynamic())
+        jsPubNub.removeListener(listener)
     }
 
     override fun removeAllListeners() {

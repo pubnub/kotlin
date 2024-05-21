@@ -156,7 +156,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     open fun reconnect()
     open fun addListener(params: ListenerParameters)
     open fun addListener(params: StatusListenerParameters)
-    open fun removeListener(params: ListenerParameters)
+    open fun removeListener(params: Any)
     open fun getSubscribedChannels(): Array<String>
     open fun getSubscribedChannelGroups(): Array<String>
     open fun hereNow(params: HereNowParameters, callback: Callback<HereNowResponse>)

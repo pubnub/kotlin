@@ -31,7 +31,7 @@ actual fun createEventListener(
     onObjects: (PubNub, PNObjectEventResult) -> Unit,
     onFile: (PubNub, PNFileEventResult) -> Unit
 ): EventListener {
-    return object : PubNubJs.ListenerParameters {
+    val listener = object : PubNubJs.ListenerParameters {
         override val message: (PubNubJs.MessageEvent) -> Unit = { messageEvent ->
             onMessage(
                 pubnub, PNMessageResult(
@@ -112,13 +112,14 @@ actual fun createEventListener(
             )
         }
     }
+    return listener.asDynamic()
 }
 
 actual fun createStatusListener(
     pubnub: PubNub,
     onStatus: (PubNub, PNStatus) -> Unit
 ): StatusListener {
-    return object : PubNubJs.StatusListenerParameters {
+    val listener = object : PubNubJs.StatusListenerParameters {
         override val status: ((statusEvent: PubNubJs.StatusEvent) -> Unit) = { statusEvent ->
             onStatus(
                 pubnub, PNStatus(
@@ -131,6 +132,7 @@ actual fun createStatusListener(
             )
         }
     }
+    return listener.asDynamic()
 }
 
 actual fun createCustomObject(map: Map<String, Any?>): CustomObject {
