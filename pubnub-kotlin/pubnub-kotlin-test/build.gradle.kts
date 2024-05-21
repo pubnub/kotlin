@@ -6,6 +6,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.TestExecutable
 plugins {
     alias(libs.plugins.benmanes.versions)
     id("pubnub.shared")
+    id("pubnub.ios-simulator-test")
     kotlin("multiplatform")
     kotlin("native.cocoapods")
 }
@@ -113,8 +114,10 @@ kotlin {
         }
     }
 }
+/*
 
 tasks.withType<org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeSimulatorTest>().configureEach {
     standalone.set(false)
     device.set("iPhone 15 Pro")
 }
+*/
