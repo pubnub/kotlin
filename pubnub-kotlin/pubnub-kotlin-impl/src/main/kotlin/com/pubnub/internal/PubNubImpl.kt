@@ -519,6 +519,21 @@ class PubNubImpl(
         )
     }
 
+    override fun setPresenceState(
+        channels: List<String>,
+        channelGroups: List<String>,
+        state: Any
+    ): SetState {
+        return com.pubnub.internal.endpoints.presence.SetStateImpl(
+            pubNubCore.setPresenceState(
+                channels,
+                channelGroups,
+                state,
+                configuration.userId.value,
+            ),
+        )
+    }
+
     override fun getPresenceState(
         channels: List<String>,
         channelGroups: List<String>,

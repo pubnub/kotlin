@@ -4,7 +4,7 @@ import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 
 data class PNMember(
     val uuid: PNUUIDMetadata?,
-    val custom: Any? = null,
+    val custom: Map<String, Any>? = null,
     val updated: String,
     val eTag: String,
     val status: String?,

@@ -6,5 +6,4 @@ import com.pubnub.api.models.consumer.presence.PNSetStateResult
 /**
  * @see [PubNub.setPresenceState]
  */
-actual interface SetState : Endpoint<PNSetStateResult> {
-}
+actual interface SetState : Endpoint<PNSetStateResult>

@@ -42,5 +42,9 @@ gradlePlugin {
             id = "pubnub.kotlin-library"
             implementationClass = "com.pubnub.gradle.PubNubKotlinLibraryPlugin"
         }
+        register("pubnubIosSimulatorTest") {
+            id = "pubnub.ios-simulator-test"
+            implementationClass = "com.pubnub.gradle.PubNubIosSimulatorTestPlugin"
+        }
     }
 }

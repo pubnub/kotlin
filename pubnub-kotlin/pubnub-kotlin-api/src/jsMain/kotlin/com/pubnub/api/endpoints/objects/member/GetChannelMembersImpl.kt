@@ -28,7 +28,7 @@ class GetChannelMembersImpl(pubnub: PubNub, params: PubNub.GetChannelMembersPara
                         member.uuid.type,
                         member.uuid.status
                     ),
-                    member.custom,
+                    member.custom?.toMap(),
                     member.updated,
                     member.eTag,
                     member.status

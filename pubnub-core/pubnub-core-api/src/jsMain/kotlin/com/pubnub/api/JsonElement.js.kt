@@ -2,8 +2,10 @@
 
 package com.pubnub.api
 
-actual abstract class JsonElement
+actual abstract class JsonElement(val value: Any?)
+
+class JsonElementImpl(value: Any?) : JsonElement(value)
 
 actual fun JsonElement.asString(): String {
-    return this.toString() // todo ?
+    return value.toString() // todo kmp
 }

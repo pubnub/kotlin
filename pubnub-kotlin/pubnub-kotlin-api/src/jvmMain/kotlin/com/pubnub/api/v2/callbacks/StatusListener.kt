@@ -1,13 +1,14 @@
 package com.pubnub.api.v2.callbacks
 
 import com.pubnub.api.PubNub
+import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.models.consumer.PNStatus
 
 /**
  * Implement this interface and pass it into [com.pubnub.api.v2.callbacks.StatusEmitter.addListener] to listen for
  * PubNub connection status changes.
  */
-actual interface StatusListener : BaseStatusListener {
+actual interface StatusListener : BaseStatusListener, Listener {
     /**
      * Receive status updates from the PubNub client, such as:
      * * [PNStatusCategory.PNConnectedCategory],

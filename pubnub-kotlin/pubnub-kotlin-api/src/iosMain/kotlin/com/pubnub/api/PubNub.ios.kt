@@ -44,7 +44,6 @@ import com.pubnub.api.endpoints.push.RemoveChannelsFromPush
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.PNBoundedPage
-import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions
 import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
@@ -60,15 +59,10 @@ import com.pubnub.api.models.consumer.objects.member.MemberInput
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
-import com.pubnub.api.models.consumer.pubsub.PNMessageResult
-import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
-import com.pubnub.api.models.consumer.pubsub.PNSignalResult
-import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
-import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
-import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
+import com.pubnub.kmp.CustomObject
 
 actual interface PubNub {
     actual val configuration: PNConfiguration
@@ -159,7 +153,6 @@ actual interface PubNub {
         channels: List<String>,
         channelGroups: List<String>,
         state: Any,
-        uuid: String
     ): SetState
 
     actual fun getPresenceState(
@@ -205,19 +198,11 @@ actual interface PubNub {
     actual fun deleteChannelGroup(channelGroup: String): DeleteChannelGroup
     actual fun grantToken(
         ttl: Int,
-        meta: Any?,
+        meta: CustomObject?,
         authorizedUUID: String?,
         channels: List<ChannelGrant>,
         channelGroups: List<ChannelGroupGrant>,
         uuids: List<UUIDGrant>
-    ): GrantToken
-
-    actual fun grantToken(
-        ttl: Int,
-        meta: Any?,
-        authorizedUserId: UserId?,
-        spacesPermissions: List<SpacePermissions>,
-        usersPermissions: List<UserPermissions>
     ): GrantToken
 
     actual fun revokeToken(token: String): RevokeToken
@@ -416,31 +401,3 @@ actual interface PubNub {
 
 }
 
-actual fun createStatusListener(
-    pubnub: PubNub,
-    onStatus: (PubNub, PNStatus) -> Unit
-): StatusListener {
-    TODO("Not yet implemented")
-}
-
-actual fun createEventListener(
-    pubnub: PubNub,
-    onMessage: (PubNub, PNMessageResult) -> Unit,
-    onPresence: (PubNub, PNPresenceEventResult) -> Unit,
-    onSignal: (PubNub, PNSignalResult) -> Unit,
-    onMessageAction: (PubNub, PNMessageActionResult) -> Unit,
-    onObjects: (PubNub, PNObjectEventResult) -> Unit,
-    onFile: (PubNub, PNFileEventResult) -> Unit
-): EventListener {
-    TODO("Not yet implemented")
-}
-
-actual class CustomObject
-
-actual fun createCustomObject(map: Map<String, Any?>): CustomObject {
-    TODO("Not yet implemented")
-}
-
-actual fun createPubNub(config: PNConfiguration): PubNub {
-    return PubNubImpl(config)
-}

@@ -7,12 +7,14 @@ import com.pubnub.api.endpoints.FetchMessagesImpl
 import com.pubnub.api.endpoints.MessageCounts
 import com.pubnub.api.endpoints.Time
 import com.pubnub.api.endpoints.access.GrantToken
+import com.pubnub.api.endpoints.access.GrantTokenImpl
 import com.pubnub.api.endpoints.access.RevokeToken
 import com.pubnub.api.endpoints.channel_groups.AddChannelChannelGroup
 import com.pubnub.api.endpoints.channel_groups.AddChannelChannelGroupImpl
 import com.pubnub.api.endpoints.channel_groups.AllChannelsChannelGroup
 import com.pubnub.api.endpoints.channel_groups.AllChannelsChannelGroupImpl
 import com.pubnub.api.endpoints.channel_groups.DeleteChannelGroup
+import com.pubnub.api.endpoints.channel_groups.DeleteChannelGroupImpl
 import com.pubnub.api.endpoints.channel_groups.ListAllChannelGroup
 import com.pubnub.api.endpoints.channel_groups.ListAllChannelGroupImpl
 import com.pubnub.api.endpoints.channel_groups.RemoveChannelChannelGroup
@@ -23,8 +25,8 @@ import com.pubnub.api.endpoints.files.ListFiles
 import com.pubnub.api.endpoints.files.PublishFileMessage
 import com.pubnub.api.endpoints.message_actions.AddMessageAction
 import com.pubnub.api.endpoints.message_actions.AddMessageActionImpl
-import com.pubnub.api.endpoints.message_actions.GetMessageActionImpl
 import com.pubnub.api.endpoints.message_actions.GetMessageActions
+import com.pubnub.api.endpoints.message_actions.GetMessageActionImpl
 import com.pubnub.api.endpoints.message_actions.RemoveMessageAction
 import com.pubnub.api.endpoints.message_actions.RemoveMessageActionImpl
 import com.pubnub.api.endpoints.objects.channel.GetAllChannelMetadata
@@ -43,9 +45,11 @@ import com.pubnub.api.endpoints.objects.uuid.RemoveUUIDMetadataImpl
 import com.pubnub.api.endpoints.objects.uuid.SetUUIDMetadata
 import com.pubnub.api.endpoints.objects.uuid.SetUUIDMetadataImpl
 import com.pubnub.api.endpoints.presence.GetState
+import com.pubnub.api.endpoints.presence.GetStateImpl
 import com.pubnub.api.endpoints.presence.HereNow
 import com.pubnub.api.endpoints.presence.HereNowImpl
 import com.pubnub.api.endpoints.presence.SetState
+import com.pubnub.api.endpoints.presence.SetStateImpl
 import com.pubnub.api.endpoints.presence.WhereNow
 import com.pubnub.api.endpoints.presence.WhereNowImpl
 import com.pubnub.api.endpoints.pubsub.FireImpl
@@ -64,6 +68,10 @@ import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions
 import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
+import com.pubnub.api.models.consumer.access_manager.v3.PNAbstractGrant
+import com.pubnub.api.models.consumer.access_manager.v3.PNGrant
+import com.pubnub.api.models.consumer.access_manager.v3.PNPatternGrant
+import com.pubnub.api.models.consumer.access_manager.v3.PNResourceGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.objects.PNKey
@@ -76,24 +84,30 @@ import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.v2.PNConfiguration
+import com.pubnub.api.v2.callbacks.EventListener
+import com.pubnub.api.v2.callbacks.StatusListener
+import com.pubnub.kmp.CustomObject
+import com.pubnub.kmp.CustomObjectImpl
 import com.pubnub.kmp.Optional
+import com.pubnub.kmp.toJsMap
 import com.pubnub.kmp.toOptional
+import kotlin.js.json
 import PubNub as PubNubJs
 
 class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
 
     private val jsPubNub: PubNubJs = PubNubJs(configuration.toJs())
 
-    override fun addListener(listener: PubNubJs.ListenerParameters) {
-        jsPubNub.addListener(listener)
+    override fun addListener(listener: EventListener) {
+        jsPubNub.addListener(listener.asDynamic().unsafeCast<PubNubJs.ListenerParameters>()) // todo figure out a better way (similar to DelegatingEventListener in JVM)
     }
 
-    override fun addListener(listener: PubNubJs.StatusListenerParameters) {
-        jsPubNub.addListener(listener)
+    override fun addListener(listener: StatusListener) {
+        jsPubNub.addListener(listener.asDynamic().unsafeCast<PubNubJs.StatusListenerParameters>()) // todo figure out a better way (similar to DelegatingEventListener in JVM)
     }
 
     override fun removeListener(listener: Listener) {
-        jsPubNub.removeListener(listener.asDynamic())
+        jsPubNub.removeListener(listener)
     }
 
     override fun removeAllListeners() {
@@ -109,7 +123,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         replicate: Boolean,
         ttl: Int?
     ): Publish {
-        return PublishImpl(jsPubNub, createJsObject<PubNubJs.PublishParameters> {
+        return PublishImpl(jsPubNub, createJsObject {
             this.message = message
             this.channel = channel
             this.storeInHistory = shouldStore
@@ -231,13 +245,20 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         channels: List<String>,
         channelGroups: List<String>,
         state: Any,
-        uuid: String
     ): SetState {
-        TODO("Not yet implemented")
+        return SetStateImpl(jsPubNub, createJsObject {
+            this.state = state
+            this.channels = channels.toTypedArray()
+            this.channelGroups = channelGroups.toTypedArray()
+        })
     }
 
     override fun getPresenceState(channels: List<String>, channelGroups: List<String>, uuid: String): GetState {
-        TODO("Not yet implemented")
+        return GetStateImpl(jsPubNub, createJsObject {
+            this.channels = channels.toTypedArray()
+            this.channelGroups = channelGroups.toTypedArray()
+            this.uuid = uuid
+        })
     }
 
     override fun presence(channels: List<String>, channelGroups: List<String>, connected: Boolean) {
@@ -304,28 +325,36 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     }
 
     override fun deleteChannelGroup(channelGroup: String): DeleteChannelGroup {
-        TODO("Not yet implemented")
+        return DeleteChannelGroupImpl(jsPubNub, createJsObject {
+            this.channelGroup = channelGroup
+        })
     }
 
     override fun grantToken(
         ttl: Int,
-        meta: Any?,
+        meta: CustomObject?,
         authorizedUUID: String?,
         channels: List<ChannelGrant>,
         channelGroups: List<ChannelGroupGrant>,
         uuids: List<UUIDGrant>
     ): GrantToken {
-        TODO("Not yet implemented")
-    }
-
-    override fun grantToken(
-        ttl: Int,
-        meta: Any?,
-        authorizedUserId: UserId?,
-        spacesPermissions: List<SpacePermissions>,
-        usersPermissions: List<UserPermissions>
-    ): GrantToken {
-        TODO("Not yet implemented")
+        return GrantTokenImpl(jsPubNub, createJsObject {
+            this.meta = meta?.let { metaNotNull ->
+                json(*metaNotNull.entries.map { Pair(it.key, it.value) }.toTypedArray())
+            }
+            this.ttl = ttl
+            this.authorized_uuid = authorizedUUID
+            this.resources = createJsObject<PubNubJs.PatternsOrResources> {
+                this.channels = getGrantTokenPermissions<PNResourceGrant>(channels)
+                this.groups = getGrantTokenPermissions<PNResourceGrant>(channelGroups)
+                this.uuids = getGrantTokenPermissions<PNResourceGrant>(uuids)
+            }
+            this.patterns = createJsObject<PubNubJs.PatternsOrResources> {
+                this.channels = getGrantTokenPermissions<PNPatternGrant>(channels)
+                this.groups = getGrantTokenPermissions<PNPatternGrant>(channelGroups)
+                this.uuids = getGrantTokenPermissions<PNPatternGrant>(uuids)
+            }
+        })
     }
 
     override fun revokeToken(token: String): RevokeToken {
@@ -670,3 +699,17 @@ fun PNConfiguration.toJs(): PubNubJs.PNConfiguration {
     return config
 }
 
+
+private inline fun <reified T: PNAbstractGrant> getGrantTokenPermissions(grants: List<PNGrant>) =
+    grants.filterIsInstance<T>().associate {
+        it.id to createJsObject<PubNubJs.GrantTokenPermissions> {
+            this.get = it.get
+            this.join = it.join
+            this.delete = it.delete
+            this.update = it.update
+            this.write = it.write
+            this.manage = it.manage
+            this.read = it.read
+            //todo what about create? any other?
+        }
+    }.toJsMap()

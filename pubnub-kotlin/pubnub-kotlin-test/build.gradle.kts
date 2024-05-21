@@ -1,9 +1,12 @@
 import org.jetbrains.dokka.DokkaDefaults.moduleName
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
+import org.jetbrains.kotlin.gradle.plugin.mpp.TestExecutable
 
 plugins {
     alias(libs.plugins.benmanes.versions)
     id("pubnub.shared")
+    id("pubnub.ios-simulator-test")
     kotlin("multiplatform")
     kotlin("native.cocoapods")
 }
@@ -43,7 +46,7 @@ kotlin {
             dependencies {
                 api(project(":pubnub-kotlin:pubnub-kotlin-api"))
                 api(project(":pubnub-core:pubnub-core-api"))
-                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0-RC.2")
+                implementation(libs.datetime)
             }
         }
 
@@ -51,13 +54,13 @@ kotlin {
             dependencies {
                 implementation(kotlin("test"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
+                implementation(libs.coroutines.test)
             }
         }
 
         val jvmTest by getting {
             dependencies {
                 implementation(project(":pubnub-kotlin:pubnub-kotlin-impl"))
-                implementation(libs.slf4j)
             }
         }
     }
@@ -87,6 +90,10 @@ kotlin {
             // Optional properties
             // Specify the framework linking type. It's dynamic by default.
             isStatic = true
+
+            export(":pubnub-kotlin:pubnub-kotlin-api")
+            export(":pubnub-core:pubnub-core-api")
+            transitiveExport = true
         }
 
         pod("PubNubSwift") {
@@ -96,6 +103,14 @@ kotlin {
 
             moduleName = "PubNub"
             extraOpts += listOf("-compiler-option", "-fmodules")
+        }
+    }
+
+    targets.withType<KotlinNativeTarget> {
+        if (konanTarget.family.isAppleFamily) {
+            binaries.withType<TestExecutable> {
+                freeCompilerArgs += listOf("-e", "testlauncher.mainBackground")
+            }
         }
     }
 }
