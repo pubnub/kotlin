@@ -1122,7 +1122,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
 
     interface UUIDMetadata : ObjectParam, UUIDMetadataFieldsNullable, Partial
     interface UUIDMetadataObject : v2ObjectData, UUIDMetadataFieldsNullable
-    interface `T$30` {
+    interface UuidIncludeCustom {
         var customFields: Boolean?
             get() = definedExternally
             set(value) = definedExternally
@@ -1133,7 +1133,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
             get() = definedExternally
             set(value) = definedExternally
         var data: UUIDMetadata
-        var include: `T$30`?
+        var include: UuidIncludeCustom?
             get() = definedExternally
             set(value) = definedExternally
     }
@@ -1144,7 +1144,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
             set(value) = definedExternally
     }
 
-    interface `T$31` {
+    interface UuidIncludeOptions {
         var totalCount: Boolean?
             get() = definedExternally
             set(value) = definedExternally
@@ -1163,13 +1163,13 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     }
 
     interface GetAllMetadataParameters {
-        var include: `T$31`?
+        var include: UuidIncludeOptions?
             get() = definedExternally
             set(value) = definedExternally
         var filter: String?
             get() = definedExternally
             set(value) = definedExternally
-        var sort: Any?
+        var sort: Map<String, String>?
             get() = definedExternally
             set(value) = definedExternally
         var limit: Number?
@@ -1184,7 +1184,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var uuid: String?
             get() = definedExternally
             set(value) = definedExternally
-        var include: `T$30`?
+        var include: UuidIncludeCustom?
             get() = definedExternally
             set(value) = definedExternally
     }
@@ -1208,7 +1208,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     interface SetChannelMetadataParameters {
         var channel: String
         var data: ChannelMetadata
-        var include: `T$30`?
+        var include: UuidIncludeCustom?
             get() = definedExternally
             set(value) = definedExternally
     }
