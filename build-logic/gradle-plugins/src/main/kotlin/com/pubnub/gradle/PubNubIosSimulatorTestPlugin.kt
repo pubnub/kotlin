@@ -16,8 +16,10 @@ class PubNubIosSimulatorTestPlugin : Plugin<Project> {
             apply<KotlinMultiplatformPluginWrapper>()
 
             val deviceName = project.findProperty("IOS_SIMULATOR_ID") as? String ?: "iPhone 15 Pro"
+            val isMacOs = providers.systemProperty("os.name").map { it.contains("mac", ignoreCase = true) }
 
-            tasks.register<Exec>("bootIOSSimulator") {
+            val bootTask = tasks.register<Exec>("bootIOSSimulator") {
+                onlyIf { isMacOs.get() }
                 isIgnoreExitValue = true
                 commandLine("xcrun", "simctl", "boot", deviceName)
                 doLast {
@@ -29,18 +31,17 @@ class PubNubIosSimulatorTestPlugin : Plugin<Project> {
             }
 
             val shutdownTask = tasks.register<Exec>("shutdownIOSSimulator") {
+                onlyIf { isMacOs.get() }
                 commandLine("xcrun", "simctl", "shutdown", deviceName)
+                dependsOn(tasks.withType<KotlinNativeSimulatorTest>())
             }
 
             tasks.withType<KotlinNativeSimulatorTest>().configureEach {
-                it.dependsOn("bootIOSSimulator")
+                it.onlyIf { isMacOs.get() }
                 it.standalone.set(false)
                 it.device.set(deviceName)
+                it.dependsOn(bootTask)
                 it.finalizedBy(shutdownTask)
-            }
-
-            shutdownTask.configure {
-                it.dependsOn(tasks.withType<KotlinNativeSimulatorTest>())
             }
         }
     }
