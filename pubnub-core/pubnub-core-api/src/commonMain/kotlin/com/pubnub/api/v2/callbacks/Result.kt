@@ -231,3 +231,18 @@ public inline fun <R, T> Result<T>.map(transform: (value: T) -> R): Result<R> {
         else -> Result(value)
     }
 }
+
+public inline fun <R, T> Result<T>.mapCatching(transform: (value: T) -> R): Result<R> {
+    return when {
+        isSuccess -> runCatching { transform(value as T) }
+        else -> Result(value)
+    }
+}
+
+public inline fun <T, R> T.runCatching(block: T.() -> R): Result<R> {
+    return try {
+        Result.success(block())
+    } catch (e: Throwable) {
+        Result.failure(e)
+    }
+}
