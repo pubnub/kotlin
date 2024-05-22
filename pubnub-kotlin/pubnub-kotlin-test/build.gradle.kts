@@ -1,7 +1,9 @@
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type
 import org.jetbrains.dokka.DokkaDefaults.moduleName
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 import org.jetbrains.kotlin.gradle.plugin.mpp.TestExecutable
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.benmanes.versions)
@@ -9,6 +11,7 @@ plugins {
     id("pubnub.ios-simulator-test")
     kotlin("multiplatform")
     kotlin("native.cocoapods")
+    id("com.codingfeline.buildkonfig") version "0.15.1"
 }
 
 kotlin {
@@ -113,4 +116,30 @@ kotlin {
             }
         }
     }
+
+    buildkonfig {
+        packageName = "com.pubnub.test"
+        objectName = "Keys"
+
+        defaultConfigs {
+            val testProps = Properties()
+            try {
+                rootProject.file("test.properties").inputStream().use {
+                    testProps.load(it)
+                }
+            } catch (e: Exception) {
+                testProps.setProperty("pubKey", "demo")
+                testProps.setProperty("subKey", "demo")
+                testProps.setProperty("pamPubKey", "demo")
+                testProps.setProperty("pamSubKey", "demo")
+                testProps.setProperty("pamSecKey", "demo")
+            }
+            buildConfigField(Type.STRING, "pubKey", testProps.getProperty("pubKey"))
+            buildConfigField(Type.STRING, "subKey", testProps.getProperty("subKey"))
+            buildConfigField(Type.STRING, "pamPubKey", testProps.getProperty("pamPubKey"))
+            buildConfigField(Type.STRING, "pamSubKey", testProps.getProperty("pamSubKey"))
+            buildConfigField(Type.STRING, "pamSecKey", testProps.getProperty("pamSecKey"))
+        }
+    }
+
 }

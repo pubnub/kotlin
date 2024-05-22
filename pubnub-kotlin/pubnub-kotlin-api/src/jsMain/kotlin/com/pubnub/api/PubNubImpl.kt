@@ -6,9 +6,11 @@ import com.pubnub.api.endpoints.FetchMessages
 import com.pubnub.api.endpoints.FetchMessagesImpl
 import com.pubnub.api.endpoints.MessageCounts
 import com.pubnub.api.endpoints.Time
+import com.pubnub.api.endpoints.TimeImpl
 import com.pubnub.api.endpoints.access.GrantToken
 import com.pubnub.api.endpoints.access.GrantTokenImpl
 import com.pubnub.api.endpoints.access.RevokeToken
+import com.pubnub.api.endpoints.access.RevokeTokenImpl
 import com.pubnub.api.endpoints.channel_groups.AddChannelChannelGroup
 import com.pubnub.api.endpoints.channel_groups.AddChannelChannelGroupImpl
 import com.pubnub.api.endpoints.channel_groups.AllChannelsChannelGroup
@@ -39,7 +41,9 @@ import com.pubnub.api.endpoints.objects.member.ManageChannelMembers
 import com.pubnub.api.endpoints.objects.membership.GetMemberships
 import com.pubnub.api.endpoints.objects.membership.ManageMemberships
 import com.pubnub.api.endpoints.objects.uuid.GetAllUUIDMetadata
+import com.pubnub.api.endpoints.objects.uuid.GetAllUUIDMetadataImpl
 import com.pubnub.api.endpoints.objects.uuid.GetUUIDMetadata
+import com.pubnub.api.endpoints.objects.uuid.GetUUIDMetadataImpl
 import com.pubnub.api.endpoints.objects.uuid.RemoveUUIDMetadata
 import com.pubnub.api.endpoints.objects.uuid.RemoveUUIDMetadataImpl
 import com.pubnub.api.endpoints.objects.uuid.SetUUIDMetadata
@@ -358,11 +362,11 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     }
 
     override fun revokeToken(token: String): RevokeToken {
-        TODO("Not yet implemented")
+        return RevokeTokenImpl(jsPubNub, token)
     }
 
     override fun time(): Time {
-        TODO("Not yet implemented")
+        return TimeImpl(jsPubNub)
     }
 
     override fun getAllChannelMetadata(
@@ -404,11 +408,34 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         includeCount: Boolean,
         includeCustom: Boolean
     ): GetAllUUIDMetadata {
-        TODO("Not yet implemented")
+        return GetAllUUIDMetadataImpl(jsPubNub, createJsObject {
+            this.limit = limit
+            this.page = page?.let { pageNotNull ->
+                createJsObject<PubNubJs.MetadataPage> {
+                    if (pageNotNull is PNPage.PNNext) {
+                        this.next = pageNotNull.pageHash
+                    } else {
+                        this.prev = pageNotNull.pageHash
+                    }
+                }
+            }
+            this.filter = filter
+            this.include = createJsObject<PubNubJs.UuidIncludeOptions> {
+                this.customFields = includeCustom
+                this.totalCount = includeCount
+            }
+            this.sort = sort.associateBy(keySelector = { pnSortKey -> pnSortKey.key.fieldName }, valueTransform = { pnSortKey -> pnSortKey.dir })
+
+        })
     }
 
     override fun getUUIDMetadata(uuid: String?, includeCustom: Boolean): GetUUIDMetadata {
-        TODO("Not yet implemented")
+        return GetUUIDMetadataImpl(jsPubNub, createJsObject {
+            this.uuid = uuid
+            this.include = createJsObject<PubNubJs.UuidIncludeCustom> {
+                this.customFields = customFields
+            }
+        })
     }
 
     override fun setUUIDMetadata(
@@ -422,8 +449,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         type: String?,
         status: String?
     ): SetUUIDMetadata {
-
-        val params = createJsObject<PubNubJs.SetUUIDMetadataParameters> {
+        return SetUUIDMetadataImpl(jsPubNub, createJsObject {
             data = UUIDMetadata(
                 name.toOptional(),
                 externalId.toOptional(),
@@ -435,11 +461,10 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
             )
             this.uuid = uuid
 
-            include = object : PubNubJs.`T$30` {
-                override var customFields: Boolean? = includeCustom
+            include = createJsObject<PubNubJs.UuidIncludeCustom> {
+                this.customFields = includeCustom
             }
-        }
-        return SetUUIDMetadataImpl(jsPubNub, params)
+        })
     }
 
     override fun removeUUIDMetadata(uuid: String?): RemoveUUIDMetadata {

@@ -17,7 +17,7 @@ abstract class BaseIntegrationTest {
 
     @BeforeTest
     fun before() {
-        pubnub = createPubNub(createPNConfiguration(UserId("demo_user"), "demo", "demo"))
+        pubnub = createPubNub(createPNConfiguration(UserId("demo_user"), Keys.subKey, Keys.pubKey))
     }
 
     @AfterTest
