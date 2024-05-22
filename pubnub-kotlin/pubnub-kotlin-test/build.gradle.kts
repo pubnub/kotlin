@@ -128,6 +128,7 @@ kotlin {
                     testProps.load(it)
                 }
             } catch (e: Exception) {
+                e.printStackTrace()
                 testProps.setProperty("pubKey", "demo")
                 testProps.setProperty("subKey", "demo")
                 testProps.setProperty("pamPubKey", "demo")

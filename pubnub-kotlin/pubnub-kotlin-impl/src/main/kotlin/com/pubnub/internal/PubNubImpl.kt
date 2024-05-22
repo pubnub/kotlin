@@ -111,6 +111,7 @@ import com.pubnub.internal.v2.entities.UserMetadataImpl
 import com.pubnub.internal.v2.subscription.EmitterHelper
 import com.pubnub.internal.v2.subscription.SubscriptionImpl
 import com.pubnub.internal.v2.subscription.SubscriptionSetImpl
+import com.pubnub.kmp.CustomObject
 import java.io.InputStream
 
 private const val PNSDK_PUBNUB_KOTLIN = "PubNub-Kotlin"
@@ -759,7 +760,7 @@ class PubNubImpl(
         channel: String,
         name: String?,
         description: String?,
-        custom: Any?,
+        custom: CustomObject?,
         includeCustom: Boolean,
         type: String?,
         status: String?,

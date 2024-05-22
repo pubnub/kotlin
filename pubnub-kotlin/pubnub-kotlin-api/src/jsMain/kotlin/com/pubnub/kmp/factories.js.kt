@@ -3,16 +3,24 @@ package com.pubnub.kmp
 import com.pubnub.api.JsonElementImpl
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubImpl
+import com.pubnub.api.asMap
+import com.pubnub.api.asString
+import com.pubnub.api.endpoints.objects.uuid.toPNUUIDMetadata
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.files.PNDownloadableFile
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
+import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
+import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
+import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteUUIDMetadataEventMessage
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
+import com.pubnub.api.models.consumer.pubsub.objects.PNSetChannelMetadataEventMessage
+import com.pubnub.api.models.consumer.pubsub.objects.PNSetUUIDMetadataEventMessage
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
@@ -110,6 +118,49 @@ actual fun createEventListener(
                     null // TODO kmp error
                 )
             )
+        }
+        override val objects = { event: PubNubJs.BaseObjectsEvent ->
+            val eventAndType = event.message.event to event.message.type
+            onObjects(pubnub, PNObjectEventResult(
+                BasePubSubResult(
+                    event.channel,
+                    event.subscription,
+                    event.timetoken.toLong(),
+                    null,
+                    event.publisher
+                ),
+                when(eventAndType) {
+//                    "set" to "channel" -> PNSetChannelMetadataEventMessage(
+//                        event.message.source,
+//                        event.message.version,
+//                        event.message.event,
+//                        event.message.type,
+//                        () {
+//                            PNChannelMetadata(
+//                                i
+//                            )
+//                        }
+//                    )
+                    "set" to "uuid" -> PNSetUUIDMetadataEventMessage(
+                        event.message.source,
+                        event.message.version,
+                        event.message.event,
+                        event.message.type,
+                        event.message.data.unsafeCast<PubNubJs.UUIDMetadataObject>().toPNUUIDMetadata()
+                    )
+//                    "set" to "membership" -> {}
+//                    "delete" to "channel" -> {}
+                    "delete" to "uuid" -> PNDeleteUUIDMetadataEventMessage(
+                        event.message.source,
+                        event.message.version,
+                        event.message.event,
+                        event.message.type,
+                        event.message.data.asDynamic().id
+                    )
+//                    "delete" to "membership" -> {}
+                    else -> throw IllegalStateException("Bad object event")
+                }
+            ))
         }
     }
     return listener.asDynamic()

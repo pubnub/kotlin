@@ -5,5 +5,5 @@ expect abstract class JsonElement
 
 expect fun JsonElement.asString(): String
 //expect fun JsonElement.asNumber(): Number
-//expect fun JsonElement.asMap(): Map<String, Any?>
+expect fun JsonElement.asMap(): Map<String, JsonElement>
 //expect fun JsonElement.asList(): List<Any?>

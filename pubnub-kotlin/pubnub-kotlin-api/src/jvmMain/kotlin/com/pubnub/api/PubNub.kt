@@ -74,6 +74,7 @@ import com.pubnub.api.v2.entities.UserMetadata
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.internal.BasePubNubImpl
+import com.pubnub.kmp.CustomObject
 import java.io.InputStream
 
 actual interface PubNub :
@@ -844,10 +845,10 @@ actual interface PubNub :
      */
     fun grantToken(
         ttl: Int,
-        meta: Any?,
-        authorizedUserId: UserId?,
-        spacesPermissions: List<SpacePermissions>,
-        usersPermissions: List<UserPermissions>,
+        meta: Any? = null,
+        authorizedUserId: UserId? = null,
+        spacesPermissions: List<SpacePermissions> = emptyList(),
+        usersPermissions: List<UserPermissions> = emptyList(),
     ): GrantToken
 
     /**
@@ -913,7 +914,7 @@ actual interface PubNub :
         channel: String,
         name: String?,
         description: String?,
-        custom: Any?,
+        custom: CustomObject?,
         includeCustom: Boolean,
         type: String?,
         status: String?,

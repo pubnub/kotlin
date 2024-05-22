@@ -3,7 +3,6 @@ package com.pubnub.api.endpoints.objects.uuid
 import GetUUIDMetadataResponse
 import ObjectsResponse
 import PubNub
-import SetUUIDMetadataResponse
 import com.pubnub.api.EndpointImpl
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult

@@ -44,8 +44,6 @@ import com.pubnub.api.endpoints.push.RemoveChannelsFromPush
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.PNBoundedPage
-import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions
-import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
@@ -240,7 +238,7 @@ expect interface PubNub {
         channel: String,
         name: String? = null,
         description: String? = null,
-        custom: Any? = null,
+        custom: CustomObject? = null,
         includeCustom: Boolean = false,
         type: String? = null,
         status: String? = null,
