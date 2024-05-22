@@ -8,11 +8,9 @@ import com.pubnub.api.onFailureHandler
 import com.pubnub.api.onSuccessHandler
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
+import com.pubnub.kmp.toNSData
 import kotlinx.cinterop.ExperimentalForeignApi
-import platform.Foundation.NSString
-import platform.Foundation.NSUTF8StringEncoding
-import platform.Foundation.dataUsingEncoding
-
+import platform.Foundation.NSData
 /**
  * @see [PubNub.addPushNotificationsOnChannels]
  */
@@ -25,17 +23,13 @@ open class AddChannelsToPushImpl(
     private val deviceId: String
 ): AddChannelsToPush {
     override fun async(callback: Consumer<Result<PNPushAddChannelResult>>) {
-        val deviceIdData = (deviceId as NSString).dataUsingEncoding(NSUTF8StringEncoding)
-
-        if (deviceIdData != null) {
+        deviceId.toNSData()?.let { data: NSData ->
             pubnub.addChannelsToPushNotificationsWithChannels(
                 channels = channels,
-                deviceId = deviceIdData,
+                deviceId = data,
                 onSuccess = callback.onSuccessHandler { PNPushAddChannelResult() },
                 onFailure = callback.onFailureHandler()
             )
-        } else {
-            callback.accept(Result.failure(PubNubException(errorMessage = "Cannot decode $deviceId to NSData object")))
-        }
+        } ?: callback.accept(Result.failure(PubNubException("Cannot create NSData from $deviceId")))
     }
 }
