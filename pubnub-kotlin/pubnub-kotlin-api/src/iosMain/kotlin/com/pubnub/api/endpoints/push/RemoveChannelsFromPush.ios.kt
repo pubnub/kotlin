@@ -7,9 +7,9 @@ import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.push.PNPushRemoveChannelResult
 import com.pubnub.api.onFailureHandler
 import com.pubnub.api.onSuccessHandler
-import com.pubnub.api.toNSData
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
+import com.pubnub.kmp.toNSData
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSData
 
@@ -33,8 +33,6 @@ open class RemoveChannelsFromPushImpl(
                 onSuccess = callback.onSuccessHandler { PNPushRemoveChannelResult() },
                 onFailure = callback.onFailureHandler()
             )
-        } ?: run {
-            callback.accept(Result.failure(PubNubException("Cannot create NSData from $deviceId")))
-        }
+        } ?: callback.accept(Result.failure(PubNubException("Cannot create NSData from $deviceId")))
     }
 }

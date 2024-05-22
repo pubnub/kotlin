@@ -4,13 +4,11 @@ import cocoapods.PubNubSwift.PubNubObjC
 import com.pubnub.api.Endpoint
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNPushType
-import com.pubnub.api.models.consumer.push.PNPushListProvisionsResult
 import com.pubnub.api.models.consumer.push.PNPushRemoveAllChannelsResult
 import com.pubnub.api.onFailureHandler
-import com.pubnub.api.onSuccessHandler
-import com.pubnub.api.toNSData
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
+import com.pubnub.kmp.toNSData
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSData
 
@@ -33,8 +31,6 @@ open class RemoveAllPushChannelsForDeviceImpl(
                 onSuccess = { callback.accept(Result.success(PNPushRemoveAllChannelsResult())) },
                 onFailure = callback.onFailureHandler()
             )
-        } ?: run {
-            callback.accept(Result.failure(PubNubException("Cannot create NSData from $deviceId")))
-        }
+        } ?: callback.accept(Result.failure(PubNubException("Cannot create NSData from $deviceId")))
     }
 }
