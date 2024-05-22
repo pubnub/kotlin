@@ -42,8 +42,11 @@ import com.pubnub.api.endpoints.pubsub.SignalImpl
 import com.pubnub.api.endpoints.push.AddChannelsToPush
 import com.pubnub.api.endpoints.push.AddChannelsToPushImpl
 import com.pubnub.api.endpoints.push.ListPushProvisions
+import com.pubnub.api.endpoints.push.ListPushProvisionsImpl
 import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice
+import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDeviceImpl
 import com.pubnub.api.endpoints.push.RemoveChannelsFromPush
+import com.pubnub.api.endpoints.push.RemoveChannelsFromPushImpl
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.PNBoundedPage
@@ -112,6 +115,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         )
     }
 
+
     @OptIn(ExperimentalForeignApi::class)
     // TODO: usePost parameter is not present in Swift SDK
     override fun fire(channel: String, message: Any, meta: Any?, usePost: Boolean, ttl: Int?): Publish {
@@ -140,9 +144,9 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         return pubNubObjC.subscribedChannelGroups() as List<String>
     }
 
+    @OptIn(ExperimentalForeignApi::class)
     // TODO: Missing pushType (PushService like APNS, GCM, etc) parameter
     // TODO: Why do we need topic parameter here?
-    @OptIn(ExperimentalForeignApi::class)
     override fun addPushNotificationsOnChannels(
         pushType: PNPushType,
         channels: List<String>,
@@ -157,15 +161,19 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         )
     }
 
+    @OptIn(ExperimentalForeignApi::class)
+    // TODO: topic and environment parameters are not present in Swift SDK
     override fun auditPushChannelProvisions(
         pushType: PNPushType,
         deviceId: String,
         topic: String?,
         environment: PNPushEnvironment
     ): ListPushProvisions {
-        TODO("Not yet implemented")
+        return ListPushProvisionsImpl(pubnub = pubNubObjC, deviceId = deviceId, pushType = pushType)
     }
 
+    @OptIn(ExperimentalForeignApi::class)
+    // TODO: topic and environment parameters are not present in Swift SDK
     override fun removePushNotificationsFromChannels(
         pushType: PNPushType,
         channels: List<String>,
@@ -173,16 +181,26 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         topic: String?,
         environment: PNPushEnvironment
     ): RemoveChannelsFromPush {
-        TODO("Not yet implemented")
+        return RemoveChannelsFromPushImpl(
+            pubnub = pubNubObjC,
+            channels = channels,
+            deviceId = deviceId,
+            pushType = pushType
+        )
     }
 
+    @OptIn(ExperimentalForeignApi::class)
     override fun removeAllPushNotificationsFromDeviceWithPushToken(
         pushType: PNPushType,
         deviceId: String,
         topic: String?,
         environment: PNPushEnvironment
     ): RemoveAllPushChannelsForDevice {
-        TODO("Not yet implemented")
+        return RemoveAllPushChannelsForDeviceImpl(
+            pubnub = pubNubObjC,
+            deviceId = deviceId,
+            pushType = pushType
+        )
     }
 
     override fun fetchMessages(
