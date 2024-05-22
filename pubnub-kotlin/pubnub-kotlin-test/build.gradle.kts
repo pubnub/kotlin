@@ -123,8 +123,16 @@ kotlin {
 
         defaultConfigs {
             val testProps = Properties()
-            rootProject.file("test.properties").inputStream().use {
-                testProps.load(it)
+            try {
+                rootProject.file("test.properties").inputStream().use {
+                    testProps.load(it)
+                }
+            } catch (e: Exception) {
+                testProps.setProperty("pubKey", "demo")
+                testProps.setProperty("subKey", "demo")
+                testProps.setProperty("pamPubKey", "demo")
+                testProps.setProperty("pamSubKey", "demo")
+                testProps.setProperty("pamSecKey", "demo")
             }
             buildConfigField(Type.STRING, "pubKey", testProps.getProperty("pubKey"))
             buildConfigField(Type.STRING, "subKey", testProps.getProperty("subKey"))
