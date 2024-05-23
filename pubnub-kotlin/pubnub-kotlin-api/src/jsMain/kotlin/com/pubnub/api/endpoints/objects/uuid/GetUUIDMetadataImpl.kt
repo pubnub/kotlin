@@ -16,6 +16,6 @@ class GetUUIDMetadataImpl(pubnub: PubNub, params: PubNub.GetUUIDMetadataParamete
 
 fun ObjectsResponse<PubNub.UUIDMetadataObject>.toPNUUIDMetadataResult() = PNUUIDMetadataResult(status.toInt(), data.toPNUUIDMetadata())
 
-fun PubNub.UUIDMetadataObject.toPNUUIDMetadata() = PNUUIDMetadata(
+internal fun PubNub.UUIDMetadataObject.toPNUUIDMetadata() = PNUUIDMetadata(
     id, name, externalId, profileUrl, email, custom?.toMap(), updated, eTag, type, status
 )

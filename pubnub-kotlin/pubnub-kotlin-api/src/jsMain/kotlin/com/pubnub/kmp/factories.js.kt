@@ -5,6 +5,7 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubImpl
 import com.pubnub.api.asMap
 import com.pubnub.api.asString
+import com.pubnub.api.endpoints.objects.channel.toChannelMetadata
 import com.pubnub.api.endpoints.objects.uuid.toPNUUIDMetadata
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.files.PNDownloadableFile
@@ -130,17 +131,13 @@ actual fun createEventListener(
                     event.publisher
                 ),
                 when(eventAndType) {
-//                    "set" to "channel" -> PNSetChannelMetadataEventMessage(
-//                        event.message.source,
-//                        event.message.version,
-//                        event.message.event,
-//                        event.message.type,
-//                        () {
-//                            PNChannelMetadata(
-//                                i
-//                            )
-//                        }
-//                    )
+                    "set" to "channel" -> PNSetChannelMetadataEventMessage(
+                        event.message.source,
+                        event.message.version,
+                        event.message.event,
+                        event.message.type,
+                        event.message.data.unsafeCast<PubNubJs.ChannelMetadataObject>().toChannelMetadata()
+                    )
                     "set" to "uuid" -> PNSetUUIDMetadataEventMessage(
                         event.message.source,
                         event.message.version,

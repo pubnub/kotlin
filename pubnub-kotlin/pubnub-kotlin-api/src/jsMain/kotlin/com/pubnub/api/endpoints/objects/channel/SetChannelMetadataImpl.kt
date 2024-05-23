@@ -18,12 +18,12 @@ class SetChannelMetadataImpl(pubnub: PubNub, params: PubNub.SetChannelMetadataPa
         responseMapping = SetChannelMetadataResponse::toChannelMetadataResult
     )
 
-private fun SetChannelMetadataResponse.toChannelMetadataResult(): PNChannelMetadataResult {
+internal fun SetChannelMetadataResponse.toChannelMetadataResult(): PNChannelMetadataResult {
     return PNChannelMetadataResult(status.toInt(),
         data.toChannelMetadata())
 }
 
-private fun PubNub.ChannelMetadataObject.toChannelMetadata(): PNChannelMetadata {
+internal fun PubNub.ChannelMetadataObject.toChannelMetadata(): PNChannelMetadata {
     return PNChannelMetadata(
         id,
         name,

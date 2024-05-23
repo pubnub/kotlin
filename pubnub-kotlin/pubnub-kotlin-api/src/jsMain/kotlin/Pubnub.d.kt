@@ -1219,13 +1219,13 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var channel: String
     }
 
-    interface `T$33` {
+    interface IncludeCustomFields {
         var customFields: Boolean
     }
 
     interface GetChannelMetadataParameters {
         var channel: String
-        var include: `T$33`?
+        var include: IncludeCustomFields?
             get() = definedExternally
             set(value) = definedExternally
     }

@@ -33,7 +33,9 @@ import com.pubnub.api.endpoints.message_actions.RemoveMessageAction
 import com.pubnub.api.endpoints.message_actions.RemoveMessageActionImpl
 import com.pubnub.api.endpoints.objects.channel.GetAllChannelMetadata
 import com.pubnub.api.endpoints.objects.channel.GetChannelMetadata
+import com.pubnub.api.endpoints.objects.channel.GetChannelMetadataImpl
 import com.pubnub.api.endpoints.objects.channel.RemoveChannelMetadata
+import com.pubnub.api.endpoints.objects.channel.RemoveChannelMetadataImpl
 import com.pubnub.api.endpoints.objects.channel.SetChannelMetadata
 import com.pubnub.api.endpoints.objects.channel.SetChannelMetadataImpl
 import com.pubnub.api.endpoints.objects.member.GetChannelMembers
@@ -381,7 +383,12 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     }
 
     override fun getChannelMetadata(channel: String, includeCustom: Boolean): GetChannelMetadata {
-        TODO("Not yet implemented")
+        return GetChannelMetadataImpl(jsPubNub, createJsObject {
+            this.channel = channel
+            this.include = createJsObject<PubNubJs.IncludeCustomFields> {
+                this.customFields = includeCustom
+            }
+        })
     }
 
     override fun setChannelMetadata(
@@ -410,7 +417,9 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     }
 
     override fun removeChannelMetadata(channel: String): RemoveChannelMetadata {
-        TODO("Not yet implemented")
+        return RemoveChannelMetadataImpl(jsPubNub, createJsObject {
+            this.channel = channel
+        })
     }
 
     override fun getAllUUIDMetadata(
