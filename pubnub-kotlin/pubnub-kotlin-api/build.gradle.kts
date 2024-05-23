@@ -9,6 +9,7 @@ plugins {
 }
 
 kotlin {
+    task("testClasses")
     jvmToolchain(8)
     js {
         browser {

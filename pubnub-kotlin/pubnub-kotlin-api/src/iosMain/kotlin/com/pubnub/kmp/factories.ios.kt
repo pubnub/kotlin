@@ -3,6 +3,7 @@ package com.pubnub.kmp
 import cocoapods.PubNubSwift.EventListenerObjC
 import cocoapods.PubNubSwift.PubNubMessageActionObjC
 import cocoapods.PubNubSwift.PubNubMessageObjC
+import cocoapods.PubNubSwift.PubNubPresenceEventResultObjC
 import com.pubnub.api.JsonElement
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubImpl
@@ -12,7 +13,6 @@ import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
-import com.pubnub.api.models.consumer.pubsub.PubSubResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
@@ -41,15 +41,16 @@ actual fun createEventListener(
             onMessage = {
                 onMessage(pubnub, createMessageResult(it))
             },
-            onPresence = {},
+            onPresence = { presenceEvents ->
+                createPresenceEventResults(presenceEvents).forEach {
+                    onPresence(pubnub, it)
+                }
+            },
             onSignal = {
-                createSignalResult(it)
+                onSignal(pubnub, createSignalResult(it))
             },
-            onMessageActionAdded = {
+            onMessageAction = {
                 onMessageAction(pubnub, createMessageActionResult(it, "added"))
-            },
-            onMessageActionRemoved = {
-                onMessageAction(pubnub, createMessageActionResult(it, "removed"))
             },
             onAppContext = {},
             onFile = {}
@@ -68,7 +69,7 @@ private fun createMessageResult(from: PubNubMessageObjC?): PNMessageResult {
             publisher = from?.publisher()
         ),
         message = from?.payload() as JsonElement,
-        error = null // TODO: Map error from Swift SDK to Kotlin's PubNubError
+        error = null // TODO: Map error from Swift SDK to PubNubError in Kotlin SDK
     )
 }
 
@@ -103,6 +104,29 @@ private fun createMessageActionResult(from: PubNubMessageActionObjC?, event: Str
             messageTimetoken = from?.messageTimetoken()?.toLong() ?: 0
         )
     )
+}
+
+@OptIn(ExperimentalForeignApi::class)
+private fun createPresenceEventResults(from: List<*>?): List<PNPresenceEventResult> {
+    return (from as? List<PubNubPresenceEventResultObjC>)?.let {
+        it.map { item: PubNubPresenceEventResultObjC ->
+            PNPresenceEventResult(
+                event = item.event(),
+                uuid = item.uuid(),
+                timestamp = item.timestamp()?.longValue,
+                occupancy = item.occupancy()?.intValue,
+                state = item.state() as JsonElement,
+                channel = item.channel() ?: "",
+                subscription = item.subscription(),
+                timetoken = item.timetoken()?.longValue,
+                join = item.join() as? List<String>,
+                leave = item.leave() as? List<String>,
+                timeout = item.timeout() as? List<String>,
+                hereNowRefresh = item.refreshHereNow()?.boolValue,
+                userMetadata = item.userMetadata()
+            )
+        }
+    } ?: emptyList()
 }
 
 actual fun createStatusListener(
