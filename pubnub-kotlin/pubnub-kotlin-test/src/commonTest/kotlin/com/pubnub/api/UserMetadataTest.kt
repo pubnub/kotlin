@@ -1,5 +1,8 @@
 package com.pubnub.api
 
+import com.pubnub.api.models.consumer.objects.PNPage
+import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
+import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteUUIDMetadataEventMessage
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
@@ -10,9 +13,11 @@ import com.pubnub.test.await
 import com.pubnub.test.randomString
 import com.pubnub.test.test
 import kotlinx.coroutines.test.runTest
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 import kotlin.time.Duration.Companion.seconds
 
@@ -139,6 +144,87 @@ class UserMetadataTest : BaseIntegrationTest() {
             val message = result.extractedMessage
             message as PNDeleteUUIDMetadataEventMessage
             assertEquals(uuid, message.uuid)
+        }
+    }
+
+    @Test
+    fun can_get_metadata() = runTest(timeout = 10.seconds) {
+        // given
+        pubnub.setUUIDMetadata(
+            uuid,
+            name = name,
+            externalId = externalId,
+            profileUrl = profileUrl,
+            email = email,
+            status = status,
+            custom = custom,
+            includeCustom = includeCustom,
+            type = type
+        ).await()
+
+        //when
+        val result = pubnub.getUUIDMetadata(uuid, includeCustom = true).await()
+
+        // then
+        val pnuuidMetadata = result.data
+        requireNotNull(pnuuidMetadata)
+        assertEquals(uuid, pnuuidMetadata.id)
+        assertEquals(name, pnuuidMetadata.name)
+        assertEquals(externalId, pnuuidMetadata.externalId)
+        assertEquals(profileUrl, pnuuidMetadata.profileUrl)
+        assertEquals(email, pnuuidMetadata.email)
+        assertEquals(status, pnuuidMetadata.status)
+        assertEquals(customData, pnuuidMetadata.custom)
+        assertEquals(type, pnuuidMetadata.type)
+    }
+
+    @Test
+    @Ignore // very slow, use to test once
+    fun can_get_all_metadata_with_paging() = runTest(timeout = 30.seconds) {
+        // given
+        repeat(10) {
+            pubnub.setUUIDMetadata(
+                uuid + it,
+                name = name,
+                externalId = externalId,
+                profileUrl = profileUrl,
+                email = email,
+                status = status,
+                custom = custom,
+                includeCustom = includeCustom,
+                type = type
+            ).await()
+        }
+
+        // when
+        val allUsers = mutableListOf<PNUUIDMetadata>()
+        var next: PNPage.PNNext? = null
+        while(true) {
+            val result: PNUUIDMetadataArrayResult = pubnub.getAllUUIDMetadata(limit = 4, page = next, includeCustom = true).await()
+            allUsers.addAll(result.data)
+            next = result.next
+            if (next == null || result.data.isEmpty()) {
+                break
+            }
+        }
+
+        // clean up before asserting
+        repeat(10) {
+            pubnub.removeUUIDMetadata(uuid + it)
+        }
+
+        // then
+        assertTrue { allUsers.size >= 10 }
+        repeat(10) {
+            val pnuuidMetadata = allUsers.firstOrNull { user -> user.id == uuid + it }
+            assertNotNull(pnuuidMetadata)
+            assertEquals(name, pnuuidMetadata.name)
+            assertEquals(externalId, pnuuidMetadata.externalId)
+            assertEquals(profileUrl, pnuuidMetadata.profileUrl)
+            assertEquals(email, pnuuidMetadata.email)
+            assertEquals(status, pnuuidMetadata.status)
+            assertEquals(customData, pnuuidMetadata.custom)
+            assertEquals(type, pnuuidMetadata.type)
         }
     }
 }

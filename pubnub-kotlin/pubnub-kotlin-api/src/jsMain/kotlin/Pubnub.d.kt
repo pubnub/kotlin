@@ -1150,7 +1150,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var filter: String?
             get() = definedExternally
             set(value) = definedExternally
-        var sort: Map<String, String>?
+        var sort: JsMap<String>?
             get() = definedExternally
             set(value) = definedExternally
         var limit: Number?
@@ -1262,7 +1262,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var filter: String?
             get() = definedExternally
             set(value) = definedExternally
-        var sort: Map<String, String>?
+        var sort: JsMap<String>?
             get() = definedExternally
             set(value) = definedExternally
         var limit: Number?

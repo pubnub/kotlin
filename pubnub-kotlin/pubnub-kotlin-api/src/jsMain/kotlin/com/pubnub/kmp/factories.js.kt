@@ -14,6 +14,7 @@ import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
+import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteChannelMetadataEventMessage
 import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteUUIDMetadataEventMessage
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetChannelMetadataEventMessage
@@ -142,7 +143,13 @@ actual fun createEventListener(
                         event.message.data.unsafeCast<PubNubJs.UUIDMetadataObject>().toPNUUIDMetadata()
                     )
 //                    "set" to "membership" -> {}
-//                    "delete" to "channel" -> {}
+                    "delete" to "channel" -> PNDeleteChannelMetadataEventMessage(
+                        event.message.source,
+                        event.message.version,
+                        event.message.event,
+                        event.message.type,
+                        event.message.data.asDynamic().id
+                    )
                     "delete" to "uuid" -> PNDeleteUUIDMetadataEventMessage(
                         event.message.source,
                         event.message.version,

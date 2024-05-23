@@ -446,7 +446,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
                 this.customFields = includeCustom
                 this.totalCount = includeCount
             }
-            this.sort = sort.associateBy(keySelector = { pnSortKey -> pnSortKey.key.fieldName }, valueTransform = { pnSortKey -> pnSortKey.dir })
+            this.sort = sort.associateBy(keySelector = { pnSortKey -> pnSortKey.key.fieldName }, valueTransform = { pnSortKey -> pnSortKey.dir }).toJsMap()
         })
     }
 
@@ -579,7 +579,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
                 this.customFields = includeCustom
                 this.totalCount = includeCount
             }
-            this.sort = sort.associateBy(keySelector = { pnSortKey -> pnSortKey.key.fieldName }, valueTransform = { pnSortKey -> pnSortKey.dir })
+            this.sort = sort.associateBy(keySelector = { pnSortKey -> pnSortKey.key.fieldName }, valueTransform = { pnSortKey -> pnSortKey.dir }).toJsMap()
         })
     }
 
