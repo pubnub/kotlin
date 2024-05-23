@@ -146,7 +146,6 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         return pubNubObjC.subscribedChannelGroups() as List<String>
     }
 
-
     // TODO: Missing pushType (PushService like APNS, GCM, etc) parameter
     // TODO: Why do we need topic parameter here?
     override fun addPushNotificationsOnChannels(
