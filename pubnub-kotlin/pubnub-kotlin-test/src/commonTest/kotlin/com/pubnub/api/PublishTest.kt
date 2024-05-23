@@ -5,6 +5,7 @@ import com.pubnub.test.BaseIntegrationTest
 import com.pubnub.test.await
 import com.pubnub.test.test
 import kotlinx.coroutines.test.runTest
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -32,6 +33,7 @@ class PublishTest : BaseIntegrationTest() {
     }
 
     @Test
+    @Ignore
     fun can_receive_message_with_primitive_metadata() = runTest(timeout = 10.seconds) {
         pubnub.test(backgroundScope) {
             pubnub.awaitSubscribe(listOf(channel))

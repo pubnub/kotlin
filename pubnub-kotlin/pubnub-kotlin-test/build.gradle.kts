@@ -128,7 +128,7 @@ kotlin {
                     testProps.load(it)
                 }
             } catch (e: Exception) {
-                e.printStackTrace()
+                println("No test.properties found in root project. Using 'demo' for all keys.")
                 testProps.setProperty("pubKey", "demo")
                 testProps.setProperty("subKey", "demo")
                 testProps.setProperty("pamPubKey", "demo")

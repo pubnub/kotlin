@@ -3,15 +3,11 @@ package com.pubnub.kmp
 import com.pubnub.api.JsonElementImpl
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubImpl
-import com.pubnub.api.asMap
-import com.pubnub.api.asString
 import com.pubnub.api.endpoints.objects.channel.toChannelMetadata
 import com.pubnub.api.endpoints.objects.uuid.toPNUUIDMetadata
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.files.PNDownloadableFile
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
-import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
-import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult

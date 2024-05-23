@@ -1,5 +1,7 @@
 package com.pubnub.api
 
+import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteChannelMetadataEventMessage
+import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteUUIDMetadataEventMessage
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetChannelMetadataEventMessage
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetUUIDMetadataEventMessage
@@ -99,32 +101,29 @@ class ChannelMetadataTest : BaseIntegrationTest() {
             pubnub.getChannelMetadata(channel).await()
         }
     }
-//
-//    @Test
-//    fun can_receive_delete_metadata_event() = runTest(timeout = 10.seconds) {
-//        pubnub.test(backgroundScope) {
-//            // given
-//            pubnub.setUUIDMetadata(
-//                channel,
-//                name = name,
-//                externalId = externalId,
-//                profileUrl = profileUrl,
-//                email = email,
-//                status = status,
-//                custom = custom,
-//                includeCustom = includeCustom,
-//                type = type
-//            ).await()
-//            pubnub.awaitSubscribe(listOf(channel))
-//
-//            // when
-//            pubnub.removeUUIDMetadata(channel).await()
-//
-//            // then
-//            val result = nextEvent<PNObjectEventResult>()
-//            val message = result.extractedMessage
-//            message as PNDeleteUUIDMetadataEventMessage
-//            assertEquals(channel, message.uuid)
-//        }
-//    }
+
+    @Test
+    fun can_receive_delete_metadata_event() = runTest(timeout = 10.seconds) {
+        pubnub.test(backgroundScope) {
+            pubnub.setChannelMetadata(
+                channel,
+                name = name,
+                status = status,
+                custom = custom,
+                includeCustom = includeCustom,
+                type = type,
+                description = description
+            ).await()
+            pubnub.awaitSubscribe(listOf(channel))
+
+            // when
+            pubnub.removeChannelMetadata(channel).await()
+
+            // then
+            val result = nextEvent<PNObjectEventResult>()
+            val message = result.extractedMessage
+            message as PNDeleteChannelMetadataEventMessage
+            assertEquals(channel, message.channel)
+        }
+    }
 }

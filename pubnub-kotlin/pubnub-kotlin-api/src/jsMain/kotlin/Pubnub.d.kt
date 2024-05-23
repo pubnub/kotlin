@@ -699,27 +699,6 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var channels: Array<String>
     }
 
-    interface ObjectsListener {
-//        @nativeInvoke
-//        operator fun invoke(objectsEvent: SetUUIDMetadataEvent)
-//
-//        @nativeInvoke
-//        operator fun invoke(objectsEvent: RemoveUUIDMetadataEvent)
-//
-//        @nativeInvoke
-//        operator fun invoke(objectsEvent: SetChannelMetadataEvent)
-//
-//        @nativeInvoke
-//        operator fun invoke(objectsEvent: RemoveChannelMetadataEvent)
-//
-//        @nativeInvoke
-//        operator fun invoke(objectsEvent: SetMembershipEvent)
-//
-//        @nativeInvoke
-//        operator fun invoke(objectsEvent: RemoveMembershipEvent)
-        var invoke: (BaseObjectsEvent) -> Unit
-    }
-
     interface ListenerParameters {
         val message: ((messageEvent: MessageEvent) -> Unit)?
         val presence: ((presenceEvent: PresenceEvent) -> Unit)?
