@@ -3,6 +3,7 @@ package com.pubnub.api
 import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.endpoints.DeleteMessages
 import com.pubnub.api.endpoints.FetchMessages
+import com.pubnub.api.endpoints.FetchMessagesImpl
 import com.pubnub.api.endpoints.MessageCounts
 import com.pubnub.api.endpoints.Time
 import com.pubnub.api.endpoints.access.GrantToken
@@ -70,7 +71,6 @@ import com.pubnub.kmp.CustomObject
 import kotlinx.cinterop.ExperimentalForeignApi
 
 class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
-
     @OptIn(ExperimentalForeignApi::class)
     private val pubNubObjC = cocoapods.PubNubSwift.PubNubObjC(
         user = configuration.userId.value,
@@ -78,8 +78,9 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         pubKey = configuration.publishKey
     )
 
+    @OptIn(ExperimentalForeignApi::class)
     override fun addListener(listener: EventListener) {
-        TODO("Not yet implemented")
+        pubNubObjC.addEventListenerWithListener(listener = listener.underlying)
     }
 
     override fun addListener(listener: StatusListener) {
@@ -203,6 +204,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         )
     }
 
+    @OptIn(ExperimentalForeignApi::class)
     override fun fetchMessages(
         channels: List<String>,
         page: PNBoundedPage,
@@ -211,7 +213,15 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         includeMessageActions: Boolean,
         includeMessageType: Boolean
     ): FetchMessages {
-        TODO("Not yet implemented")
+        return FetchMessagesImpl(
+            pubnub = pubNubObjC,
+            channels = channels,
+            page = page,
+            includeUUID = includeUUID,
+            includeMeta = includeMeta,
+            includeMessageActions = includeMessageActions,
+            includeMessageType = includeMessageType
+        )
     }
 
     override fun deleteMessages(channels: List<String>, start: Long?, end: Long?): DeleteMessages {
