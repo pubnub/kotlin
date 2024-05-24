@@ -307,18 +307,18 @@ expect interface PubNub {
         includeChannelDetails: PNChannelDetailsLevel? = null,
     ): ManageMemberships
 
-    fun manageMemberships(
-        channelsToSet: List<ChannelMembershipInput>,
-        channelsToRemove: List<String>,
-        uuid: String? = null,
-        limit: Int? = null,
-        page: PNPage? = null,
-        filter: String? = null,
-        sort: Collection<PNSortKey<PNMembershipKey>> = listOf(),
-        includeCount: Boolean = false,
-        includeCustom: Boolean = false,
-        includeChannelDetails: PNChannelDetailsLevel? = null,
-    ): ManageMemberships
+//    fun manageMemberships(
+//        channelsToSet: List<ChannelMembershipInput>,
+//        channelsToRemove: List<String>,
+//        uuid: String? = null,
+//        limit: Int? = null,
+//        page: PNPage? = null,
+//        filter: String? = null,
+//        sort: Collection<PNSortKey<PNMembershipKey>> = listOf(),
+//        includeCount: Boolean = false,
+//        includeCustom: Boolean = false,
+//        includeChannelDetails: PNChannelDetailsLevel? = null,
+//    ): ManageMemberships
 
     fun getChannelMembers(
         channel: String,
@@ -355,18 +355,18 @@ expect interface PubNub {
         includeUUIDDetails: PNUUIDDetailsLevel? = null,
     ): ManageChannelMembers
 
-    fun manageChannelMembers(
-        channel: String,
-        uuidsToSet: Collection<MemberInput>,
-        uuidsToRemove: Collection<String>,
-        limit: Int? = null,
-        page: PNPage? = null,
-        filter: String? = null,
-        sort: Collection<PNSortKey<PNMemberKey>> = listOf(),
-        includeCount: Boolean = false,
-        includeCustom: Boolean = false,
-        includeUUIDDetails: PNUUIDDetailsLevel? = null,
-    ): ManageChannelMembers
+//    fun manageChannelMembers(
+//        channel: String,
+//        uuidsToSet: Collection<MemberInput>,
+//        uuidsToRemove: Collection<String>,
+//        limit: Int? = null,
+//        page: PNPage? = null,
+//        filter: String? = null,
+//        sort: Collection<PNSortKey<PNMemberKey>> = listOf(),
+//        includeCount: Boolean = false,
+//        includeCustom: Boolean = false,
+//        includeUUIDDetails: PNUUIDDetailsLevel? = null,
+//    ): ManageChannelMembers
 
     //
     fun listFiles(

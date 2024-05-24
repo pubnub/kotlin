@@ -1125,7 +1125,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
             set(value) = definedExternally
     }
 
-    interface UuidIncludeOptions {
+    interface MetadataIncludeOptions {
         var totalCount: Boolean?
             get() = definedExternally
             set(value) = definedExternally
@@ -1144,7 +1144,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     }
 
     interface GetAllMetadataParameters {
-        var include: UuidIncludeOptions?
+        var include: MetadataIncludeOptions?
             get() = definedExternally
             set(value) = definedExternally
         var filter: String?
@@ -1223,7 +1223,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     }
 
     interface ChannelMembershipObject : v2ObjectDataOmitId {
-        var channel: dynamic /* ChannelMetadataObject & HasStatus | HasId */
+        var channel: ChannelMetadataObject?
             get() = definedExternally
             set(value) = definedExternally
         var status: String?
@@ -1273,7 +1273,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
             set(value) = definedExternally
     }
 
-    interface `T$36` {
+    interface MembershipIncludeOptions {
         var totalCount: Boolean?
             get() = definedExternally
             set(value) = definedExternally
@@ -1298,7 +1298,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     }
 
     interface ChannelMembersParameters {
-        var include: `T$36`?
+        var include: MembershipIncludeOptions?
             get() = definedExternally
             set(value) = definedExternally
         var filter: String?
@@ -1336,7 +1336,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var uuid: String?
             get() = definedExternally
             set(value) = definedExternally
-        var channels: Array<dynamic /* String | SetCustom */>?
+        var channels: Array<SetCustom /* String | SetCustom */>?
             get() = definedExternally
             set(value) = definedExternally
     }
@@ -1350,7 +1350,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
 
     interface SetChannelMembersParameters : UUIDMembersParameters {
         var channel: String
-        var uuids: Array<dynamic /* String | SetCustom */>
+        var uuids: Array<SetCustom>
     }
 
     interface RemoveChannelMembersParameters : UUIDMembersParameters {
