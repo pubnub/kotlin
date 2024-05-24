@@ -214,8 +214,8 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     ): FetchMessages {
         return FetchMessagesImpl(jsPubNub, createJsObject {
             this.channels = channels.toTypedArray()
-            this.start = page.start
-            this.end = page.end
+            this.start = page.start.toString()
+            this.end = page.end.toString()
             this.count = page.limit
             this.includeUUID = includeUUID
             this.includeMeta = includeMeta
