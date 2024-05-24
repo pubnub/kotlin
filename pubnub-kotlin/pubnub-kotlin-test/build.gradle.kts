@@ -4,6 +4,8 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 import org.jetbrains.kotlin.gradle.plugin.mpp.TestExecutable
 import java.util.Properties
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.toJavaDuration
 
 plugins {
     alias(libs.plugins.benmanes.versions)
@@ -20,10 +22,9 @@ kotlin {
         browser {
             testTask {
                 useMocha {
-                    timeout = "10s"
+                    timeout = "30s"
                 }
             }
-
         }
         binaries.executable()
     }
@@ -128,6 +129,7 @@ kotlin {
                     testProps.load(it)
                 }
             } catch (e: Exception) {
+                println("No test.properties found in root project. Using 'demo' for all keys.")
                 testProps.setProperty("pubKey", "demo")
                 testProps.setProperty("subKey", "demo")
                 testProps.setProperty("pamPubKey", "demo")

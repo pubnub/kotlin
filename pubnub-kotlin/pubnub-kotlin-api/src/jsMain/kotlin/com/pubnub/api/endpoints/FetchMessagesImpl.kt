@@ -2,7 +2,6 @@ package com.pubnub.api.endpoints
 
 import PubNub
 import com.pubnub.api.EndpointImpl
-import com.pubnub.api.JsonElement
 import com.pubnub.api.JsonElementImpl
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.history.HistoryMessageType

@@ -1,7 +1,5 @@
 package com.pubnub.kmp
 
-import com.pubnub.api.createJsObject
-
 external interface JsMap<V>
 
 fun <V> entriesOf(jsObject: JsMap<V>): List<Pair<String, V>> =
@@ -17,3 +15,6 @@ fun <V> Map<String, V>.toJsMap(): JsMap<V> = createJsObject<dynamic> {
         this[it.key] = it.value
     }
 }.unsafeCast<JsMap<V>>()
+
+
+fun <T> createJsObject(configure: T.() -> Unit = {}): T = (js("({})") as T).apply(configure)

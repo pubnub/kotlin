@@ -50,8 +50,6 @@ import com.pubnub.api.endpoints.push.RemoveChannelsFromPushImpl
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.PNBoundedPage
-import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions
-import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
@@ -330,7 +328,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         channel: String,
         name: String?,
         description: String?,
-        custom: Any?,
+        custom: CustomObject?,
         includeCustom: Boolean,
         type: String?,
         status: String?

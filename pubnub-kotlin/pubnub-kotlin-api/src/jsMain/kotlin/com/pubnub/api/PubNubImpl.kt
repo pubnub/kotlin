@@ -27,14 +27,17 @@ import com.pubnub.api.endpoints.files.ListFiles
 import com.pubnub.api.endpoints.files.PublishFileMessage
 import com.pubnub.api.endpoints.message_actions.AddMessageAction
 import com.pubnub.api.endpoints.message_actions.AddMessageActionImpl
-import com.pubnub.api.endpoints.message_actions.GetMessageActions
 import com.pubnub.api.endpoints.message_actions.GetMessageActionImpl
+import com.pubnub.api.endpoints.message_actions.GetMessageActions
 import com.pubnub.api.endpoints.message_actions.RemoveMessageAction
 import com.pubnub.api.endpoints.message_actions.RemoveMessageActionImpl
 import com.pubnub.api.endpoints.objects.channel.GetAllChannelMetadata
 import com.pubnub.api.endpoints.objects.channel.GetChannelMetadata
+import com.pubnub.api.endpoints.objects.channel.GetChannelMetadataImpl
 import com.pubnub.api.endpoints.objects.channel.RemoveChannelMetadata
+import com.pubnub.api.endpoints.objects.channel.RemoveChannelMetadataImpl
 import com.pubnub.api.endpoints.objects.channel.SetChannelMetadata
+import com.pubnub.api.endpoints.objects.channel.SetChannelMetadataImpl
 import com.pubnub.api.endpoints.objects.member.GetChannelMembers
 import com.pubnub.api.endpoints.objects.member.GetChannelMembersImpl
 import com.pubnub.api.endpoints.objects.member.ManageChannelMembers
@@ -68,8 +71,6 @@ import com.pubnub.api.endpoints.push.RemoveChannelsFromPush
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.PNBoundedPage
-import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions
-import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNAbstractGrant
@@ -93,6 +94,7 @@ import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.kmp.CustomObject
 import com.pubnub.kmp.CustomObjectImpl
 import com.pubnub.kmp.Optional
+import com.pubnub.kmp.createJsObject
 import com.pubnub.kmp.toJsMap
 import com.pubnub.kmp.toOptional
 import kotlin.js.json
@@ -131,7 +133,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
             this.message = message
             this.channel = channel
             this.storeInHistory = shouldStore
-            this.meta = meta
+            this.meta = if (meta is CustomObjectImpl) { meta.toJsObject() } else meta
             this.sendByPost = usePost
             this.ttl = ttl
         })
@@ -381,23 +383,43 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     }
 
     override fun getChannelMetadata(channel: String, includeCustom: Boolean): GetChannelMetadata {
-        TODO("Not yet implemented")
+        return GetChannelMetadataImpl(jsPubNub, createJsObject {
+            this.channel = channel
+            this.include = createJsObject<PubNubJs.IncludeCustomFields> {
+                this.customFields = includeCustom
+            }
+        })
     }
 
     override fun setChannelMetadata(
         channel: String,
         name: String?,
         description: String?,
-        custom: Any?,
+        custom: CustomObject?,
         includeCustom: Boolean,
         type: String?,
         status: String?
     ): SetChannelMetadata {
-        TODO("Not yet implemented")
+        return SetChannelMetadataImpl(jsPubNub, createJsObject {
+            this.channel = channel
+            this.data = ChannelMetadata(
+                name.toOptional(),
+                description.toOptional(),
+                status.toOptional(),
+                type.toOptional(),
+                custom.toOptional()
+            )
+
+            this.include = createJsObject<PubNubJs.UuidIncludeCustom> {
+                this.customFields = includeCustom
+            }
+        })
     }
 
     override fun removeChannelMetadata(channel: String): RemoveChannelMetadata {
-        TODO("Not yet implemented")
+        return RemoveChannelMetadataImpl(jsPubNub, createJsObject {
+            this.channel = channel
+        })
     }
 
     override fun getAllUUIDMetadata(
@@ -424,8 +446,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
                 this.customFields = includeCustom
                 this.totalCount = includeCount
             }
-            this.sort = sort.associateBy(keySelector = { pnSortKey -> pnSortKey.key.fieldName }, valueTransform = { pnSortKey -> pnSortKey.dir })
-
+            this.sort = sort.associateBy(keySelector = { pnSortKey -> pnSortKey.key.fieldName }, valueTransform = { pnSortKey -> pnSortKey.dir }).toJsMap()
         })
     }
 
@@ -444,7 +465,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         externalId: String?,
         profileUrl: String?,
         email: String?,
-        custom: CustomObjectImpl?,
+        custom: CustomObject?,
         includeCustom: Boolean,
         type: String?,
         status: String?
@@ -558,7 +579,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
                 this.customFields = includeCustom
                 this.totalCount = includeCount
             }
-            this.sort = sort.associateBy(keySelector = { pnSortKey -> pnSortKey.key.fieldName }, valueTransform = { pnSortKey -> pnSortKey.dir })
+            this.sort = sort.associateBy(keySelector = { pnSortKey -> pnSortKey.key.fieldName }, valueTransform = { pnSortKey -> pnSortKey.dir }).toJsMap()
         })
     }
 
@@ -684,6 +705,26 @@ fun UUIDMetadata(
     return result
 }
 
+fun ChannelMetadata(
+    name: Optional<String?>,
+    description: Optional<String?>,
+    status: Optional<String?>,
+    type: Optional<String?>,
+    custom: Optional<Map<String, Any?>?>
+): PubNubJs.ChannelMetadata {
+    val result: PubNubJs.ChannelMetadata = createJsObject()
+    name.onValue { result.name = it }
+    description.onValue { result.description = it }
+    status.onValue { result.status = it }
+    type.onValue { result.type = it }
+    custom.onValue { result.custom = it?.toJsObject() }
+    return result
+}
+
+
+
+
+
 fun Map<String, Any?>.toJsObject(): PubNubJs.CustomObject {
     val custom = createJsObject<dynamic> {  }
     entries.forEach {
@@ -692,8 +733,6 @@ fun Map<String, Any?>.toJsObject(): PubNubJs.CustomObject {
     @Suppress("UnsafeCastFromDynamic")
     return custom
 }
-
-fun <T> createJsObject(configure: T.() -> Unit = {}): T = (js("({})") as T).apply(configure)
 
 fun PNConfiguration.toJs(): PubNubJs.PNConfiguration {
     val config: PubNubJs.PNConfiguration = createJsObject()

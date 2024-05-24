@@ -348,6 +348,8 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     }
 
     interface `T$6` {
+        var source: String
+        var version: String
         var event: String /* "set" | "delete" */
         var type: String /* "uuid" | "channel" | "membership" */
         var data: Any?
@@ -697,34 +699,13 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var channels: Array<String>
     }
 
-    interface ObjectsListener {
-        @nativeInvoke
-        operator fun invoke(objectsEvent: SetUUIDMetadataEvent)
-
-        @nativeInvoke
-        operator fun invoke(objectsEvent: RemoveUUIDMetadataEvent)
-
-        @nativeInvoke
-        operator fun invoke(objectsEvent: SetChannelMetadataEvent)
-
-        @nativeInvoke
-        operator fun invoke(objectsEvent: RemoveChannelMetadataEvent)
-
-        @nativeInvoke
-        operator fun invoke(objectsEvent: SetMembershipEvent)
-
-        @nativeInvoke
-        operator fun invoke(objectsEvent: RemoveMembershipEvent)
-    }
-
     interface ListenerParameters {
         val message: ((messageEvent: MessageEvent) -> Unit)?
         val presence: ((presenceEvent: PresenceEvent) -> Unit)?
         val signal: ((signalEvent: SignalEvent) -> Unit)?
         val messageAction: ((messageActionEvent: MessageActionEvent) -> Unit)?
         val file: ((fileEvent: FileEvent) -> Unit)?
-        val objects: ObjectsListener?
-            get() = definedExternally
+        val objects: ((objectEvent: BaseObjectsEvent) -> Unit)?
     }
 
     interface StatusListenerParameters {
@@ -1169,7 +1150,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var filter: String?
             get() = definedExternally
             set(value) = definedExternally
-        var sort: Map<String, String>?
+        var sort: JsMap<String>?
             get() = definedExternally
             set(value) = definedExternally
         var limit: Number?
@@ -1203,7 +1184,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var type: String?
     }
 
-    interface ChannelMetadata : ObjectParam, ChannelMetadataFieldsPartial
+    interface ChannelMetadata : ObjectParam, ChannelMetadataFieldsNullable
     interface ChannelMetadataObject : v2ObjectData, ChannelMetadataFieldsNullable
     interface SetChannelMetadataParameters {
         var channel: String
@@ -1217,13 +1198,13 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var channel: String
     }
 
-    interface `T$33` {
+    interface IncludeCustomFields {
         var customFields: Boolean
     }
 
     interface GetChannelMetadataParameters {
         var channel: String
-        var include: `T$33`?
+        var include: IncludeCustomFields?
             get() = definedExternally
             set(value) = definedExternally
     }
@@ -1281,7 +1262,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var filter: String?
             get() = definedExternally
             set(value) = definedExternally
-        var sort: Map<String, String>?
+        var sort: JsMap<String>?
             get() = definedExternally
             set(value) = definedExternally
         var limit: Number?

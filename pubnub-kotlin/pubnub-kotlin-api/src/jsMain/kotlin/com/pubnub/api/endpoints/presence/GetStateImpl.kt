@@ -4,7 +4,6 @@ import PubNub
 import com.pubnub.api.EndpointImpl
 import com.pubnub.api.JsonElementImpl
 import com.pubnub.api.models.consumer.presence.PNGetStateResult
-import com.pubnub.api.models.consumer.presence.PNSetStateResult
 import com.pubnub.kmp.JsMap
 import com.pubnub.kmp.toMap
 
