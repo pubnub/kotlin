@@ -16,6 +16,7 @@ import cocoapods.PubNubSwift.PubNubSetUUIDMetadataEventMessageObjC
 import com.pubnub.api.JsonElement
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubImpl
+import com.pubnub.api.endpoints.objects.channel.SetChannelMetadata
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.files.PNDownloadableFile
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
