@@ -1,5 +1,7 @@
+//package com.pubnub.test
+//
+//import com.pubnub.api.JsonElement
 //import com.pubnub.api.PubNub
-//import com.pubnub.api.UserId
 //import com.pubnub.api.callbacks.Listener
 //import com.pubnub.api.endpoints.DeleteMessages
 //import com.pubnub.api.endpoints.FetchMessages
@@ -44,8 +46,7 @@
 //import com.pubnub.api.enums.PNPushEnvironment
 //import com.pubnub.api.enums.PNPushType
 //import com.pubnub.api.models.consumer.PNBoundedPage
-//import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions
-//import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions
+//import com.pubnub.api.models.consumer.PNPublishResult
 //import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 //import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
 //import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
@@ -62,6 +63,8 @@
 //import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 //import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 //import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult
+//import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
+//import com.pubnub.api.models.consumer.pubsub.PNEvent
 //import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 //import com.pubnub.api.v2.PNConfiguration
 //import com.pubnub.api.v2.callbacks.Consumer
@@ -69,9 +72,34 @@
 //import com.pubnub.api.v2.callbacks.Result
 //import com.pubnub.api.v2.callbacks.StatusListener
 //import com.pubnub.kmp.CustomObject
+//import kotlinx.coroutines.CoroutineScope
+//import kotlinx.coroutines.SupervisorJob
+//import kotlinx.coroutines.flow.MutableSharedFlow
+//import kotlinx.coroutines.flow.mapNotNull
+//import kotlinx.coroutines.launch
 //import kotlinx.datetime.Clock
+//import kotlinx.datetime.Instant
+//import kotlin.coroutines.EmptyCoroutineContext
+//import kotlin.time.Duration.Companion.minutes
+//
 //
 //class FakePubNub(override val configuration: PNConfiguration) : PubNub {
+//
+//    val scope = CoroutineScope(SupervisorJob())
+//
+//    fun Long.toEpochSeconds() = this / 10000000
+//    fun generateTimetoken() = Clock.System.now().toEpochMilliseconds() * 10000
+//
+//    val events = MutableSharedFlow<PNEvent>(100, 10)
+//    val subscriptionStream = events.mapNotNull {
+//        val tt = it.timetoken ?: return@mapNotNull null
+//        if (Clock.System.now() < Instant.fromEpochSeconds(tt.toEpochSeconds()) - 10.minutes) {
+//            it
+//        } else {
+//            null
+//        }
+//    }
+//
 //    val messages: MutableList<PNMessageResult> = mutableListOf()
 //    val userMetadata: MutableMap<String, PNUUIDMetadata> = mutableMapOf()
 //    val channelMetadata: MutableMap<String, PNChannelMetadata> = mutableMapOf()
@@ -101,7 +129,21 @@
 //        replicate: Boolean,
 //        ttl: Int?
 //    ): Publish {
-//        TODO("Not yet implemented")
+//        return object : Publish {
+//            override fun async(callback: Consumer<Result<PNPublishResult>>) {
+//                scope.launch {
+//                    events.emit(PNMessageResult(
+//                        BasePubSubResult(
+//                            channel,
+//                            null,
+//                            generateTimetoken(),
+//                            null,
+//                            configuration.userId.value
+//                        ), message, null
+//                    ))
+//                }
+//            }
+//        }
 //    }
 //
 //    override fun fire(channel: String, message: Any, meta: Any?, usePost: Boolean, ttl: Int?): Publish {

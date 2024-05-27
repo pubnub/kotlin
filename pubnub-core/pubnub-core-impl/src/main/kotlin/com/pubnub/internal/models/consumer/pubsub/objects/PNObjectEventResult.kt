@@ -95,7 +95,7 @@ data class PNSetMembershipEvent(
     val channel: String,
     @JsonAdapter(UnwrapSingleField::class)
     val uuid: String,
-    val custom: Any?,
+    val custom: Map<String,Any?>?,
     val eTag: String,
     val updated: String,
     val status: String?,

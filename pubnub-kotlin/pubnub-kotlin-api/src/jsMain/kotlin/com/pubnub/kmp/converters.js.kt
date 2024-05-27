@@ -75,8 +75,8 @@ internal fun ManageMembershipsResponse.toPNChannelMembershipArrayResult() = PNCh
         )
     },
     totalCount?.toInt(),
-    next?.let { com.pubnub.api.models.consumer.objects.PNPage.PNNext(it) },
-    prev?.let { com.pubnub.api.models.consumer.objects.PNPage.PNPrev(it) }
+    next?.let { PNPage.PNNext(it) },
+    prev?.let { PNPage.PNPrev(it) }
 )
 
 internal fun ObjectsResponse<PubNub.UUIDMetadataObject>.toPNUUIDMetadataResult() =

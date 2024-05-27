@@ -319,7 +319,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var message: `T$6`
         var subscription: String?
         var publisher: String?
-        var timetoken: Number
+        var timetoken: String
     }
 
     interface `T$7` {
@@ -354,7 +354,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     }
 
     interface RemoveChannelMetadataEvent : BaseObjectsEvent
-    interface `T$12` {
+    interface SetMembershipObject {
         var channel: HasId
         var uuid: HasId
         var custom: CustomObject?
@@ -365,11 +365,11 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     interface `T$13` {
         var event: String /* "set" */
         var type: String /* "membership" */
-        var data: `T$12`
+        var data: SetMembershipObject
     }
 
     interface SetMembershipEvent : BaseObjectsEvent
-    interface `T$14` {
+    interface DeleteMembershipObject {
         var channel: HasId
         var uuid: HasId
     }
@@ -377,7 +377,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     interface `T$15` {
         var event: String /* "delete" */
         var type: String /* "membership" */
-        var data: `T$14`
+        var data: DeleteMembershipObject
     }
 
     interface RemoveMembershipEvent : BaseObjectsEvent
