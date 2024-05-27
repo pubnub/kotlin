@@ -70,15 +70,14 @@ import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.kmp.CustomObject
 import kotlinx.cinterop.ExperimentalForeignApi
 
+@OptIn(ExperimentalForeignApi::class)
 class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
-    @OptIn(ExperimentalForeignApi::class)
     private val pubNubObjC = cocoapods.PubNubSwift.PubNubObjC(
         user = configuration.userId.value,
         subKey = configuration.subscribeKey,
         pubKey = configuration.publishKey
     )
 
-    @OptIn(ExperimentalForeignApi::class)
     override fun addListener(listener: EventListener) {
         pubNubObjC.addEventListenerWithListener(listener = listener.underlying)
     }
@@ -95,7 +94,6 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         TODO("Not yet implemented")
     }
 
-    @OptIn(ExperimentalForeignApi::class)
     // TODO: replicate and usePost parameters are not present in Swift SDK
     override fun publish(
         channel: String,
@@ -116,8 +114,6 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         )
     }
 
-
-    @OptIn(ExperimentalForeignApi::class)
     // TODO: usePost parameter is not present in Swift SDK
     override fun fire(channel: String, message: Any, meta: Any?, usePost: Boolean, ttl: Int?): Publish {
         return PublishImpl(
@@ -130,22 +126,19 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         )
     }
 
-    @OptIn(ExperimentalForeignApi::class)
     override fun signal(channel: String, message: Any): Signal {
         return SignalImpl(pubnub = pubNubObjC, channel = channel, message = message)
     }
 
-    @OptIn(ExperimentalForeignApi::class)
     override fun getSubscribedChannels(): List<String> {
         return pubNubObjC.subscribedChannels() as List<String>
     }
 
-    @OptIn(ExperimentalForeignApi::class)
     override fun getSubscribedChannelGroups(): List<String> {
         return pubNubObjC.subscribedChannelGroups() as List<String>
     }
 
-    @OptIn(ExperimentalForeignApi::class)
+
     // TODO: Missing pushType (PushService like APNS, GCM, etc) parameter
     // TODO: Why do we need topic parameter here?
     override fun addPushNotificationsOnChannels(
@@ -162,7 +155,6 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         )
     }
 
-    @OptIn(ExperimentalForeignApi::class)
     // TODO: topic and environment parameters are not present in Swift SDK
     override fun auditPushChannelProvisions(
         pushType: PNPushType,
@@ -173,7 +165,6 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         return ListPushProvisionsImpl(pubnub = pubNubObjC, deviceId = deviceId, pushType = pushType)
     }
 
-    @OptIn(ExperimentalForeignApi::class)
     // TODO: topic and environment parameters are not present in Swift SDK
     override fun removePushNotificationsFromChannels(
         pushType: PNPushType,
@@ -190,7 +181,6 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         )
     }
 
-    @OptIn(ExperimentalForeignApi::class)
     override fun removeAllPushNotificationsFromDeviceWithPushToken(
         pushType: PNPushType,
         deviceId: String,
@@ -204,7 +194,6 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         )
     }
 
-    @OptIn(ExperimentalForeignApi::class)
     override fun fetchMessages(
         channels: List<String>,
         page: PNBoundedPage,
