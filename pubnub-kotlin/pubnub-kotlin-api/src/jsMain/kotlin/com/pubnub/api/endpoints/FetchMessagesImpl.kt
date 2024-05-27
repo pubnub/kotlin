@@ -22,11 +22,11 @@ class FetchMessagesImpl(pubnub: PubNub, params: PubNub.FetchMessagesParameters) 
                         item.actions?.toMap()?.mapValues { entry: Map.Entry<String, PubNub.ActionContentToAction> ->
                             entry.value.toMap().mapValues { entry2: Map.Entry<String, Array<PubNub.Action>> ->
                                 entry2.value.map { action ->
-                                    PNFetchMessageItem.Action(action.uuid, action.actionTimetoken.toString())
+                                    PNFetchMessageItem.Action(action.uuid, action.actionTimetoken)
                                 }
                             }
                         },
-                        HistoryMessageType.of(item.messageType?.toString()?.toInt()),
+                        HistoryMessageType.of(item.messageType?.toInt()),
                         null, //TODO item.error
                     )
                 }

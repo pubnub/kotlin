@@ -1,5 +1,6 @@
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type
 import org.jetbrains.dokka.DokkaDefaults.moduleName
+import org.jetbrains.kotlin.builtins.StandardNames.FqNames.target
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 import org.jetbrains.kotlin.gradle.plugin.mpp.TestExecutable
@@ -19,7 +20,19 @@ plugins {
 kotlin {
     jvmToolchain(8)
     js {
+//        compilations.all {
+//            compileTaskProvider.configure {
+//                kotlinOptions {
+//                    target = "es2015"
+//                }
+//            }
+//        }
+
         browser {
+//            dceTask {
+//                keep("com.pubnub.api", "com.pubnub.kmp")
+//            }
+
             testTask {
                 useMocha {
                     timeout = "30s"
@@ -50,6 +63,7 @@ kotlin {
             dependencies {
                 api(project(":pubnub-kotlin:pubnub-kotlin-api"))
                 api(project(":pubnub-core:pubnub-core-api"))
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
                 implementation(libs.datetime)
             }
         }
