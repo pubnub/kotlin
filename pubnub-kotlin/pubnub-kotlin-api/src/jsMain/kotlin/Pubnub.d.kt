@@ -1119,6 +1119,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     interface SetCustom {
         var id: String
         var custom: CustomObject?
+        var status: String?
 
     }
 

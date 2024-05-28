@@ -558,7 +558,8 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
             this.uuid = uuid
             this.channels = channels.map { createJsObject<PubNubJs.SetCustom> {
                 this.id = it.channel
-                this.custom = it.custom?.toJsObject() //TODO KMP it's impossible to set status in JS ?
+                this.custom = it.custom?.toJsObject()
+                this.status = status //todo this doesn't seem to get to the server with JS, or cannot read it back
             } }.toTypedArray()
             this.limit = limit
         })
@@ -655,6 +656,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
             this.uuids = uuids.map { createJsObject<PubNubJs.SetCustom> {
                 this.id = it.uuid
                 this.custom = it.custom?.toJsObject()
+                this.status = status
             } }.toTypedArray()
             this.limit = limit
             this.page = page.toMetadataPage()
@@ -666,8 +668,9 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
                 this.statusField = true
                 if (includeUUIDDetails == PNUUIDDetailsLevel.UUID || includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM) this.UUIDFields = true
                 if (includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM) this.customUUIDFields = true
+//                this.UUIDStatusField = true
+                //todo we don't have parameters for all fields here
             }
-            //todo we don't have parameters for all fields here
         })
     }
 

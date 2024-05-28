@@ -1,8 +1,11 @@
 package com.pubnub.api
 
+import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
+import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteChannelMetadataEventMessage
+import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteMembershipEventMessage
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetChannelMetadataEventMessage
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetMembershipEvent
@@ -16,6 +19,7 @@ import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
 import kotlin.time.Duration.Companion.seconds
 
 class MembershipsTest : BaseIntegrationTest() {
@@ -66,50 +70,47 @@ class MembershipsTest : BaseIntegrationTest() {
         }
     }
 
-//    @Test
-//    fun can_delete_metadata() = runTest(timeout = 10.seconds) {
-//        // given
-//        pubnub.setChannelMetadata(
-//            channel,
-//            name = name,
-//            status = status,
-//            custom = custom,
-//            includeCustom = includeCustom,
-//            type = type,
-//            description = description
-//        ).await()
-//
-//        // when
-//        pubnub.removeChannelMetadata(channel).await()
-//
-//        // then
-//        assertFailsWith<PubNubException> {
-//            pubnub.getChannelMetadata(channel).await()
-//        }
-//    }
-//
-//    @Test
-//    fun can_receive_delete_metadata_event() = runTest(timeout = 10.seconds) {
-//        pubnub.test(backgroundScope) {
-//            pubnub.setChannelMetadata(
-//                channel,
-//                name = name,
-//                status = status,
-//                custom = custom,
-//                includeCustom = includeCustom,
-//                type = type,
-//                description = description
-//            ).await()
-//            pubnub.awaitSubscribe(listOf(channel))
-//
-//            // when
-//            pubnub.removeChannelMetadata(channel).await()
-//
-//            // then
-//            val result = nextEvent<PNObjectEventResult>()
-//            val message = result.extractedMessage
-//            message as PNDeleteChannelMetadataEventMessage
-//            assertEquals(channel, message.channel)
-//        }
-//    }
+    @Test
+    fun can_delete_membership() = runTest(timeout = 10.seconds) {
+        // given
+        pubnub.setMemberships(
+            listOf(PNChannelMembership.Partial(channel, custom, status))
+        ).await()
+
+        // when
+        pubnub.removeMemberships(listOf(channel)).await()
+
+        // then
+        var next: PNPage.PNNext? = null
+        while(true) {
+            val result = pubnub.getChannelMembers(channel, page = next).await()
+            next = result.next
+            assertFalse { result.data.any { it.uuid?.id == pubnub.configuration.userId.value } }
+            if (next == null || result.data.isEmpty()) {
+                break
+            }
+        }
+    }
+
+    @Test
+    fun can_receive_delete_membership_event() = runTest(timeout = 10.seconds) {
+        pubnub.test(backgroundScope) {
+            // given
+            pubnub.setMemberships(
+                listOf(PNChannelMembership.Partial(channel, custom, status))
+            ).await()
+
+            pubnub.awaitSubscribe(listOf(channel))
+
+            // when
+            pubnub.removeMemberships(listOf(channel)).await()
+
+            // then
+            val result = nextEvent<PNObjectEventResult>()
+            val message = result.extractedMessage
+            message as PNDeleteMembershipEventMessage
+            assertEquals(pubnub.configuration.userId.value, message.data.uuid)
+            assertEquals(channel, message.data.channelId)
+        }
+    }
 }
