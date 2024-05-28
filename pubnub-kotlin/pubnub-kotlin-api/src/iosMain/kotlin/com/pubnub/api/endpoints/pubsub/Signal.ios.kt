@@ -1,6 +1,7 @@
 package com.pubnub.api.endpoints.pubsub
 
 import cocoapods.PubNubSwift.PubNubObjC
+import cocoapods.PubNubSwift.signalWithChannel
 import com.pubnub.api.Endpoint
 import com.pubnub.api.models.consumer.PNPublishResult
 import com.pubnub.api.onFailureHandler
@@ -15,7 +16,7 @@ import kotlinx.cinterop.ExperimentalForeignApi
 actual interface Signal : Endpoint<PNPublishResult>
 
 @OptIn(ExperimentalForeignApi::class)
-open class SignalImpl(
+class SignalImpl(
     private val pubnub: PubNubObjC,
     private val channel: String,
     private val message: Any

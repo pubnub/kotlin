@@ -1,11 +1,19 @@
 package com.pubnub.api
 
+import cocoapods.PubNubSwift.addEventListenerWithListener
+import cocoapods.PubNubSwift.subscribeWithChannels
+import cocoapods.PubNubSwift.subscribedChannelGroups
+import cocoapods.PubNubSwift.subscribedChannels
+import cocoapods.PubNubSwift.unsubscribeFrom
 import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.endpoints.DeleteMessages
+import com.pubnub.api.endpoints.DeleteMessagesImpl
 import com.pubnub.api.endpoints.FetchMessages
 import com.pubnub.api.endpoints.FetchMessagesImpl
 import com.pubnub.api.endpoints.MessageCounts
+import com.pubnub.api.endpoints.MessageCountsImpl
 import com.pubnub.api.endpoints.Time
+import com.pubnub.api.endpoints.TimeImpl
 import com.pubnub.api.endpoints.access.GrantToken
 import com.pubnub.api.endpoints.access.RevokeToken
 import com.pubnub.api.endpoints.channel_groups.AddChannelChannelGroup
@@ -214,11 +222,20 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     }
 
     override fun deleteMessages(channels: List<String>, start: Long?, end: Long?): DeleteMessages {
-        TODO("Not yet implemented")
+        return DeleteMessagesImpl(
+            pubnub = pubNubObjC,
+            channels = channels,
+            start = start,
+            end = end
+        )
     }
 
     override fun messageCounts(channels: List<String>, channelsTimetoken: List<Long>): MessageCounts {
-        TODO("Not yet implemented")
+        return MessageCountsImpl(
+            pubnub = pubNubObjC,
+            channels = channels,
+            channelsTimetoken = channelsTimetoken
+        )
     }
 
     override fun hereNow(
@@ -305,7 +322,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     }
 
     override fun time(): Time {
-        TODO("Not yet implemented")
+        return TimeImpl(pubnub = pubNubObjC)
     }
 
     override fun getAllChannelMetadata(
@@ -514,11 +531,16 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         withPresence: Boolean,
         withTimetoken: Long
     ) {
-        TODO("Not yet implemented")
+        pubNubObjC.subscribeWithChannels(
+            channels = channels,
+            channelGroups = channelGroups,
+            withPresence = withPresence,
+            timetoken = withTimetoken.toULong()
+        )
     }
 
     override fun unsubscribe(channels: List<String>, channelGroups: List<String>) {
-        TODO("Not yet implemented")
+        pubNubObjC.unsubscribeFrom(channels = channels, channelGroups = channelGroups)
     }
 
     override fun setToken(token: String?) {

@@ -1,6 +1,7 @@
 package com.pubnub.api.endpoints.push
 
 import cocoapods.PubNubSwift.PubNubObjC
+import cocoapods.PubNubSwift.listPushChannelsWithDeviceId
 import com.pubnub.api.Endpoint
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNPushType
@@ -19,7 +20,7 @@ import platform.Foundation.NSData
 actual interface ListPushProvisions : Endpoint<PNPushListProvisionsResult>
 
 @OptIn(ExperimentalForeignApi::class)
-open class ListPushProvisionsImpl(
+class ListPushProvisionsImpl(
     private val pubnub: PubNubObjC,
     private val deviceId: String,
     private val pushType: PNPushType

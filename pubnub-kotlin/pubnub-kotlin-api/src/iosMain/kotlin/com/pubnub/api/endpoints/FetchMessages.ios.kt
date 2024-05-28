@@ -4,6 +4,7 @@ import cocoapods.PubNubSwift.PubNubBoundedPageObjC
 import cocoapods.PubNubSwift.PubNubMessageActionObjC
 import cocoapods.PubNubSwift.PubNubMessageObjC
 import cocoapods.PubNubSwift.PubNubObjC
+import cocoapods.PubNubSwift.fetchMessagesFrom
 import com.pubnub.api.Endpoint
 import com.pubnub.api.JsonElement
 import com.pubnub.api.PubNubError

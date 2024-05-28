@@ -1,11 +1,14 @@
 package com.pubnub.api.endpoints.push
 
 import cocoapods.PubNubSwift.PubNubObjC
+import cocoapods.PubNubSwift.removeAllChannelsFromPushWithPushType
 import com.pubnub.api.Endpoint
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNPushType
+import com.pubnub.api.models.consumer.history.PNDeleteMessagesResult
 import com.pubnub.api.models.consumer.push.PNPushRemoveAllChannelsResult
 import com.pubnub.api.onFailureHandler
+import com.pubnub.api.onSuccessReturnValue
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.kmp.toNSData
@@ -18,7 +21,7 @@ import platform.Foundation.NSData
 actual interface RemoveAllPushChannelsForDevice : Endpoint<PNPushRemoveAllChannelsResult>
 
 @OptIn(ExperimentalForeignApi::class)
-open class RemoveAllPushChannelsForDeviceImpl(
+class RemoveAllPushChannelsForDeviceImpl(
     private val pubnub: PubNubObjC,
     private val deviceId: String,
     private val pushType: PNPushType
@@ -28,7 +31,7 @@ open class RemoveAllPushChannelsForDeviceImpl(
             pubnub.removeAllChannelsFromPushWithPushType(
                 pushType = pushType.toParamString(),
                 deviceId = data,
-                onSuccess = { callback.accept(Result.success(PNPushRemoveAllChannelsResult())) },
+                onSuccess = callback.onSuccessReturnValue(PNPushRemoveAllChannelsResult()),
                 onFailure = callback.onFailureHandler()
             )
         } ?: callback.accept(Result.failure(PubNubException("Cannot create NSData from $deviceId")))
