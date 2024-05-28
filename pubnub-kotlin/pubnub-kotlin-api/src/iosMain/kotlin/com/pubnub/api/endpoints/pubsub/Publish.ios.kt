@@ -1,6 +1,7 @@
 package com.pubnub.api.endpoints.pubsub
 
 import cocoapods.PubNubSwift.PubNubObjC
+import cocoapods.PubNubSwift.publishWithChannel
 import com.pubnub.api.Endpoint
 import com.pubnub.api.PubNub
 import com.pubnub.api.models.consumer.PNPublishResult
@@ -10,8 +11,6 @@ import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSNumber
-import platform.posix.uint64_t
-import platform.zlib.uLong
 
 /**
  * @see [PubNub.publish]
@@ -19,7 +18,7 @@ import platform.zlib.uLong
 actual interface Publish : Endpoint<PNPublishResult>
 
 @OptIn(ExperimentalForeignApi::class)
-open class PublishImpl(
+class PublishImpl(
     private val pubnub: PubNubObjC,
     private val channel: String,
     private val message: Any,

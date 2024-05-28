@@ -1,6 +1,7 @@
 package com.pubnub.api.endpoints.push
 
 import cocoapods.PubNubSwift.PubNubObjC
+import cocoapods.PubNubSwift.removeChannelsFromPushWithChannels
 import com.pubnub.api.Endpoint
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNPushType
@@ -18,7 +19,7 @@ import platform.Foundation.NSData
  */
 actual interface RemoveChannelsFromPush : Endpoint<PNPushRemoveChannelResult>
 @OptIn(ExperimentalForeignApi::class)
-open class RemoveChannelsFromPushImpl(
+class RemoveChannelsFromPushImpl(
     private val pubnub: PubNubObjC,
     private val channels: List<String>,
     private val deviceId: String,
