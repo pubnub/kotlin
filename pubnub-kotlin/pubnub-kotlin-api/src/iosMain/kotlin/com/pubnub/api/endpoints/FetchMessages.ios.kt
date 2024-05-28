@@ -72,7 +72,7 @@ open class FetchMessagesImpl(
                     error = PubNubError.CRYPTO_ERROR
                 )
             }
-        } ?: HashMap()
+        } ?: emptyMap()
     }
 
     private fun mapMessageActions(rawValue: List<*>): Map<String, Map<String, List<PNFetchMessageItem.Action>>> {
@@ -89,6 +89,6 @@ open class FetchMessagesImpl(
                     )
                 }
             }
-        } ?: HashMap()
+        } ?: emptyMap()
     }
 }

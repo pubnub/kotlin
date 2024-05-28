@@ -14,6 +14,6 @@ actual interface EventListener : Listener {
     val underlying: EventListenerObjC
 }
 @OptIn(ExperimentalForeignApi::class)
-open class EventListenerImpl(
+class EventListenerImpl(
     override val underlying: EventListenerObjC
 ): EventListener {}
