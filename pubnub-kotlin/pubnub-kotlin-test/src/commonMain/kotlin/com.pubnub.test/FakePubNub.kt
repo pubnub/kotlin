@@ -1,6 +1,7 @@
-//import com.pubnub.api.CustomObject
+//package com.pubnub.test
+//
+//import com.pubnub.api.JsonElement
 //import com.pubnub.api.PubNub
-//import com.pubnub.api.UserId
 //import com.pubnub.api.callbacks.Listener
 //import com.pubnub.api.endpoints.DeleteMessages
 //import com.pubnub.api.endpoints.FetchMessages
@@ -45,8 +46,7 @@
 //import com.pubnub.api.enums.PNPushEnvironment
 //import com.pubnub.api.enums.PNPushType
 //import com.pubnub.api.models.consumer.PNBoundedPage
-//import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions
-//import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions
+//import com.pubnub.api.models.consumer.PNPublishResult
 //import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 //import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
 //import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
@@ -56,90 +56,54 @@
 //import com.pubnub.api.models.consumer.objects.PNMembershipKey
 //import com.pubnub.api.models.consumer.objects.PNPage
 //import com.pubnub.api.models.consumer.objects.PNSortKey
+//import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 //import com.pubnub.api.models.consumer.objects.member.MemberInput
 //import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 //import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
 //import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 //import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 //import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult
+//import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
+//import com.pubnub.api.models.consumer.pubsub.PNEvent
+//import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 //import com.pubnub.api.v2.PNConfiguration
+//import com.pubnub.api.v2.callbacks.Consumer
 //import com.pubnub.api.v2.callbacks.EventListener
+//import com.pubnub.api.v2.callbacks.Result
 //import com.pubnub.api.v2.callbacks.StatusListener
-//import com.pubnub.test.createEndpoint
+//import com.pubnub.kmp.CustomObject
+//import kotlinx.coroutines.CoroutineScope
+//import kotlinx.coroutines.SupervisorJob
+//import kotlinx.coroutines.flow.MutableSharedFlow
+//import kotlinx.coroutines.flow.mapNotNull
+//import kotlinx.coroutines.launch
 //import kotlinx.datetime.Clock
+//import kotlinx.datetime.Instant
+//import kotlin.coroutines.EmptyCoroutineContext
+//import kotlin.time.Duration.Companion.minutes
 //
-////package com.pubnub.test
-////
-////import com.pubnub.api.Endpoint
-////import com.pubnub.api.JsonElement
-////import com.pubnub.api.PubNub
-////import com.pubnub.api.UserId
-////import com.pubnub.api.callbacks.Listener
-////import com.pubnub.api.endpoints.pubsub.Publish
-////import com.pubnub.api.enums.PNPushEnvironment
-////import com.pubnub.api.enums.PNPushType
-////import com.pubnub.api.models.consumer.PNBoundedPage
-////import com.pubnub.api.models.consumer.PNPublishResult
-////import com.pubnub.api.models.consumer.PNTimeResult
-////import com.pubnub.api.models.consumer.access_manager.PNAccessManagerGrantResult
-////import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions
-////import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions
-////import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
-////import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
-////import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult
-////import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
-////import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsAddChannelResult
-////import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsAllChannelsResult
-////import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsDeleteGroupResult
-////import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsListAllResult
-////import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsRemoveChannelResult
-////import com.pubnub.api.models.consumer.files.PNDeleteFileResult
-////import com.pubnub.api.models.consumer.files.PNFileUrlResult
-////import com.pubnub.api.models.consumer.files.PNListFilesResult
-////import com.pubnub.api.models.consumer.files.PNPublishFileMessageResult
-////import com.pubnub.api.models.consumer.history.PNDeleteMessagesResult
-////import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
-////import com.pubnub.api.models.consumer.history.PNMessageCountResult
-////import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult
-////import com.pubnub.api.models.consumer.message_actions.PNGetMessageActionsResult
-////import com.pubnub.api.models.consumer.message_actions.PNMessageAction
-////import com.pubnub.api.models.consumer.message_actions.PNRemoveMessageActionResult
-////import com.pubnub.api.models.consumer.objects.PNKey
-////import com.pubnub.api.models.consumer.objects.PNMemberKey
-////import com.pubnub.api.models.consumer.objects.PNMembershipKey
-////import com.pubnub.api.models.consumer.objects.PNPage
-////import com.pubnub.api.models.consumer.objects.PNRemoveMetadataResult
-////import com.pubnub.api.models.consumer.objects.PNSortKey
-////import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataArrayResult
-////import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataResult
-////import com.pubnub.api.models.consumer.objects.member.MemberInput
-////import com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult
-////import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
-////import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
-////import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
-////import com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult
-////import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
-////import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult
-////import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult
-////import com.pubnub.api.models.consumer.presence.PNGetStateResult
-////import com.pubnub.api.models.consumer.presence.PNHereNowResult
-////import com.pubnub.api.models.consumer.presence.PNSetStateResult
-////import com.pubnub.api.models.consumer.presence.PNWhereNowResult
-////import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
-////import com.pubnub.api.models.consumer.pubsub.PNMessageResult
-////import com.pubnub.api.models.consumer.push.PNPushAddChannelResult
-////import com.pubnub.api.models.consumer.push.PNPushListProvisionsResult
-////import com.pubnub.api.models.consumer.push.PNPushRemoveAllChannelsResult
-////import com.pubnub.api.models.consumer.push.PNPushRemoveChannelResult
-////import com.pubnub.api.v2.PNConfiguration
-////import com.pubnub.api.v2.callbacks.EventListener
-////import com.pubnub.api.v2.callbacks.StatusListener
-////
-////import kotlinx.datetime.Clock
-////
-////expect fun <T> createEndpoint(action: () -> T): Endpoint<T>
-////
+//
 //class FakePubNub(override val configuration: PNConfiguration) : PubNub {
+//
+//    val scope = CoroutineScope(SupervisorJob())
+//
+//    fun Long.toEpochSeconds() = this / 10000000
+//    fun generateTimetoken() = Clock.System.now().toEpochMilliseconds() * 10000
+//
+//    val events = MutableSharedFlow<PNEvent>(100, 10)
+//    val subscriptionStream = events.mapNotNull {
+//        val tt = it.timetoken ?: return@mapNotNull null
+//        if (Clock.System.now() < Instant.fromEpochSeconds(tt.toEpochSeconds()) - 10.minutes) {
+//            it
+//        } else {
+//            null
+//        }
+//    }
+//
+//    val messages: MutableList<PNMessageResult> = mutableListOf()
+//    val userMetadata: MutableMap<String, PNUUIDMetadata> = mutableMapOf()
+//    val channelMetadata: MutableMap<String, PNChannelMetadata> = mutableMapOf()
+//
 //    override fun addListener(listener: EventListener) {
 //        TODO("Not yet implemented")
 //    }
@@ -165,7 +129,21 @@
 //        replicate: Boolean,
 //        ttl: Int?
 //    ): Publish {
-//        TODO("Not yet implemented")
+//        return object : Publish {
+//            override fun async(callback: Consumer<Result<PNPublishResult>>) {
+//                scope.launch {
+//                    events.emit(PNMessageResult(
+//                        BasePubSubResult(
+//                            channel,
+//                            null,
+//                            generateTimetoken(),
+//                            null,
+//                            configuration.userId.value
+//                        ), message, null
+//                    ))
+//                }
+//            }
+//        }
 //    }
 //
 //    override fun fire(channel: String, message: Any, meta: Any?, usePost: Boolean, ttl: Int?): Publish {
@@ -254,15 +232,6 @@
 //        TODO("Not yet implemented")
 //    }
 //
-//    override fun setPresenceState(
-//        channels: List<String>,
-//        channelGroups: List<String>,
-//        state: Any,
-//        uuid: String
-//    ): SetState {
-//        TODO("Not yet implemented")
-//    }
-//
 //    override fun getPresenceState(channels: List<String>, channelGroups: List<String>, uuid: String): GetState {
 //        TODO("Not yet implemented")
 //    }
@@ -310,27 +279,6 @@
 //        TODO("Not yet implemented")
 //    }
 //
-//    override fun grantToken(
-//        ttl: Int,
-//        meta: Any?,
-//        authorizedUUID: String?,
-//        channels: List<ChannelGrant>,
-//        channelGroups: List<ChannelGroupGrant>,
-//        uuids: List<UUIDGrant>
-//    ): GrantToken {
-//        TODO("Not yet implemented")
-//    }
-//
-//    override fun grantToken(
-//        ttl: Int,
-//        meta: Any?,
-//        authorizedUserId: UserId?,
-//        spacesPermissions: List<SpacePermissions>,
-//        usersPermissions: List<UserPermissions>
-//    ): GrantToken {
-//        TODO("Not yet implemented")
-//    }
-//
 //    override fun revokeToken(token: String): RevokeToken {
 //        TODO("Not yet implemented")
 //    }
@@ -351,18 +299,6 @@
 //    }
 //
 //    override fun getChannelMetadata(channel: String, includeCustom: Boolean): GetChannelMetadata {
-//        TODO("Not yet implemented")
-//    }
-//
-//    override fun setChannelMetadata(
-//        channel: String,
-//        name: String?,
-//        description: String?,
-//        custom: Any?,
-//        includeCustom: Boolean,
-//        type: String?,
-//        status: String?
-//    ): SetChannelMetadata {
 //        TODO("Not yet implemented")
 //    }
 //
@@ -396,7 +332,6 @@
 //        type: String?,
 //        status: String?
 //    ): SetUUIDMetadata {
-//        return createEndpoint {
 //            val actualUuid = uuid ?: configuration.userId.value
 //            val result = userMetadata.compute(actualUuid) { a: String, b: PNUUIDMetadata? ->
 //                PNUUIDMetadata(
@@ -412,14 +347,18 @@
 //                    status ?: b?.status
 //                )
 //            }
-//            PNUUIDMetadataResult(
-//                200,
-//                if (!includeCustom) {
-//                    result?.copy(custom = null)
-//                } else {
-//                    result
-//                }
-//            )
+//        return object : SetUUIDMetadata {
+//            override fun async(callback: Consumer<Result<PNUUIDMetadataResult>>) {
+//                callback.accept(Result.success(PNUUIDMetadataResult(
+//                    200,
+//                    if (!includeCustom) {
+//                        result?.copy(custom = null)
+//                    } else {
+//                        result
+//                    }
+//                )
+//                ))
+//            }
 //        }
 //    }
 //
@@ -580,11 +519,44 @@
 //        TODO("Not yet implemented")
 //    }
 //
+//    override fun setPresenceState(channels: List<String>, channelGroups: List<String>, state: Any): SetState {
+//        TODO("Not yet implemented")
+//    }
+//
+//    override fun grantToken(
+//        ttl: Int,
+//        meta: CustomObject?,
+//        authorizedUUID: String?,
+//        channels: List<ChannelGrant>,
+//        channelGroups: List<ChannelGroupGrant>,
+//        uuids: List<UUIDGrant>
+//    ): GrantToken {
+//        TODO("Not yet implemented")
+//    }
+//
+//    override fun setChannelMetadata(
+//        channel: String,
+//        name: String?,
+//        description: String?,
+//        custom: CustomObject?,
+//        includeCustom: Boolean,
+//        type: String?,
+//        status: String?
+//    ): SetChannelMetadata {
+//        TODO("Not yet implemented")
+//    }
+//
+//    override fun unsubscribeAll() {
+//        TODO("Not yet implemented")
+//    }
+//
+//    override fun destroy() {
+//        TODO("Not yet implemented")
+//    }
+//
 //}
 ////
-////    val messages: MutableList<PNMessageResult> = mutableListOf()
-////    val userMetadata: MutableMap<String, PNUUIDMetadata> = mutableMapOf()
-////    val channelMetadata: MutableMap<String, PNUUIDMetadata> = mutableMapOf()
+//
 ////
 ////    /**
 ////     * Remove a listener.
@@ -936,43 +908,7 @@
 ////        }
 ////    }
 ////
-////    override fun setUUIDMetadata(
-////        uuid: String?,
-////        name: String?,
-////        externalId: String?,
-////        profileUrl: String?,
-////        email: String?,
-////        custom: Any?,
-////        includeCustom: Boolean,
-////        type: String?,
-////        status: String?
-////    ): Endpoint<PNUUIDMetadataResult> {
-////        return createEndpoint {
-////            val actualUuid = uuid ?: configuration.userId.value
-////            val result = userMetadata.compute(actualUuid) { a: String, b: PNUUIDMetadata? ->
-////                PNUUIDMetadata(
-////                    actualUuid,
-////                    name ?: b?.name,
-////                    externalId ?: b?.externalId,
-////                    profileUrl ?: b?.profileUrl,
-////                    email ?: b?.email,
-////                    custom ?: b?.custom,
-////                    Clock.System.now().toString(),
-////                    null,
-////                    type ?: b?.type,
-////                    status ?: b?.status
-////                )
-////            }
-////            PNUUIDMetadataResult(
-////                200,
-////                if (!includeCustom) {
-////                    result?.copy(custom = null)
-////                } else {
-////                    result
-////                }
-////            )
-////        }
-////    }
+////
 ////
 ////    override fun removeUUIDMetadata(uuid: String?): Endpoint<PNRemoveMetadataResult> {
 ////        val actualUuid = uuid ?: configuration.userId.value
@@ -1180,3 +1116,4 @@
 //        return newValue
 //    }
 //}
+//

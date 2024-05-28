@@ -1140,17 +1140,17 @@ actual interface PubNub :
      * @param includeCustom Include respective additional fields in the response.
      * @param includeChannelDetails Include custom fields for channels metadata.
      */
-    actual fun manageMemberships(
+    fun manageMemberships(
         channelsToSet: List<ChannelMembershipInput>,
         channelsToRemove: List<String>,
-        uuid: String?,
-        limit: Int?,
-        page: PNPage?,
-        filter: String?,
-        sort: Collection<PNSortKey<PNMembershipKey>>,
-        includeCount: Boolean,
-        includeCustom: Boolean,
-        includeChannelDetails: PNChannelDetailsLevel?,
+        uuid: String? = null,
+        limit: Int? = null,
+        page: PNPage? = null,
+        filter: String? = null,
+        sort: Collection<PNSortKey<PNMembershipKey>> = listOf(),
+        includeCount: Boolean = false,
+        includeCustom: Boolean = false,
+        includeChannelDetails: PNChannelDetailsLevel? = null,
     ): ManageMemberships
 
     /**
@@ -1348,17 +1348,17 @@ actual interface PubNub :
      * @param includeCustom Include respective additional fields in the response.
      * @param includeUUIDDetails Include custom fields for UUIDs metadata.
      */
-    actual fun manageChannelMembers(
+    fun manageChannelMembers(
         channel: String,
         uuidsToSet: Collection<MemberInput>,
         uuidsToRemove: Collection<String>,
-        limit: Int?,
-        page: PNPage?,
-        filter: String?,
-        sort: Collection<PNSortKey<PNMemberKey>>,
-        includeCount: Boolean,
-        includeCustom: Boolean,
-        includeUUIDDetails: PNUUIDDetailsLevel?,
+        limit: Int? = null,
+        page: PNPage? = null,
+        filter: String? = null,
+        sort: Collection<PNSortKey<PNMemberKey>> = listOf(),
+        includeCount: Boolean = false,
+        includeCustom: Boolean = false,
+        includeUUIDDetails: PNUUIDDetailsLevel? = null,
     ): ManageChannelMembers
 
     /**

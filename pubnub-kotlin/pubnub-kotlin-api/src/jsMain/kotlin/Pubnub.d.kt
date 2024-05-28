@@ -1,8 +1,5 @@
 @file:Suppress(
-    "INTERFACE_WITH_SUPERCLASS",
-    "OVERRIDING_FINAL_MEMBER",
-    "RETURN_TYPE_MISMATCH_ON_OVERRIDE",
-    "CONFLICTING_OVERLOADS"
+    "INTERFACE_WITH_SUPERCLASS", "OVERRIDING_FINAL_MEMBER", "RETURN_TYPE_MISMATCH_ON_OVERRIDE", "CONFLICTING_OVERLOADS"
 )
 
 import PubNub.GetAllMetadataParameters
@@ -28,8 +25,6 @@ import org.w3c.files.File
 import kotlin.js.Date
 import kotlin.js.Json
 import kotlin.js.Promise
-
-typealias PubnubData = PubNub.MessageEvent
 
 typealias SetUUIDMetadataResponse = ObjectsResponse<PubNub.UUIDMetadataObject>
 
@@ -62,47 +57,40 @@ external interface ObjectsResponse<DataType> {
 
 external interface PagedObjectsResponse<DataType> : ObjectsResponse<Array<DataType>> {
     var prev: String?
-        get() = definedExternally
-        set(value) = definedExternally
     var next: String?
-        get() = definedExternally
-        set(value) = definedExternally
     var totalCount: Number?
-        get() = definedExternally
-        set(value) = definedExternally
 }
 
 external interface ObjectsFunctions {
     fun setUUIDMetadata(params: SetUUIDMetadataParameters, callback: Callback<SetUUIDMetadataResponse>)
     fun setUUIDMetadata(params: SetUUIDMetadataParameters): Promise<SetUUIDMetadataResponse>
     fun removeUUIDMetadata(callback: Callback<RemoveUUIDMetadataResponse>)
-    fun removeUUIDMetadata(params: RemoveUUIDMetadataParameters = definedExternally): Promise<RemoveUUIDMetadataResponse>
+    fun removeUUIDMetadata(params: RemoveUUIDMetadataParameters): Promise<RemoveUUIDMetadataResponse>
     fun removeUUIDMetadata(): Promise<RemoveUUIDMetadataResponse>
     fun removeUUIDMetadata(params: RemoveUUIDMetadataParameters, callback: Callback<RemoveUUIDMetadataResponse>)
     fun getAllUUIDMetadata(callback: Callback<GetAllUUIDMetadataResponse>)
-    fun getAllUUIDMetadata(params: GetAllMetadataParameters = definedExternally): Promise<GetAllUUIDMetadataResponse>
+    fun getAllUUIDMetadata(params: GetAllMetadataParameters): Promise<GetAllUUIDMetadataResponse>
     fun getAllUUIDMetadata(): Promise<GetAllUUIDMetadataResponse>
     fun getAllUUIDMetadata(params: GetAllMetadataParameters, callback: Callback<GetAllUUIDMetadataResponse>)
     fun getUUIDMetadata(callback: Callback<GetUUIDMetadataResponse>)
-    fun getUUIDMetadata(params: GetUUIDMetadataParameters = definedExternally): Promise<GetUUIDMetadataResponse>
+    fun getUUIDMetadata(params: GetUUIDMetadataParameters): Promise<GetUUIDMetadataResponse>
     fun getUUIDMetadata(): Promise<GetUUIDMetadataResponse>
     fun getUUIDMetadata(params: GetUUIDMetadataParameters, callback: Callback<GetUUIDMetadataResponse>)
     fun setChannelMetadata(params: SetChannelMetadataParameters, callback: Callback<SetChannelMetadataResponse>)
     fun setChannelMetadata(params: SetChannelMetadataParameters): Promise<SetChannelMetadataResponse>
     fun removeChannelMetadata(
-        params: RemoveChannelMetadataParameters,
-        callback: Callback<RemoveChannelMetadataResponse>
+        params: RemoveChannelMetadataParameters, callback: Callback<RemoveChannelMetadataResponse>
     )
 
     fun removeChannelMetadata(params: RemoveChannelMetadataParameters): Promise<RemoveChannelMetadataResponse>
     fun getAllChannelMetadata(callback: Callback<GetAllChannelMetadataResponse>)
-    fun getAllChannelMetadata(params: GetAllMetadataParameters = definedExternally): Promise<GetAllChannelMetadataResponse>
+    fun getAllChannelMetadata(params: GetAllMetadataParameters): Promise<GetAllChannelMetadataResponse>
     fun getAllChannelMetadata(): Promise<GetAllChannelMetadataResponse>
     fun getAllChannelMetadata(params: GetAllMetadataParameters, callback: Callback<GetAllChannelMetadataResponse>)
     fun getChannelMetadata(params: GetChannelMetadataParameters, callback: Callback<GetChannelMetadataResponse>)
     fun getChannelMetadata(params: GetChannelMetadataParameters): Promise<GetChannelMetadataResponse>
     fun getMemberships(callback: Callback<ManageMembershipsResponse>)
-    fun getMemberships(params: GetMembershipsParametersv2 = definedExternally): Promise<ManageMembershipsResponse>
+    fun getMemberships(params: GetMembershipsParametersv2): Promise<ManageMembershipsResponse>
     fun getMemberships(): Promise<ManageMembershipsResponse>
     fun getMemberships(params: GetMembershipsParametersv2, callback: Callback<ManageMembershipsResponse>)
     fun setMemberships(params: SetMembershipsParameters, callback: Callback<ManageMembershipsResponse>)
@@ -195,23 +183,17 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     open fun getMessageActions(params: GetMessageActionsParameters, callback: Callback<GetMessageActionsResponse>)
     open fun getMessageActions(params: GetMessageActionsParameters): Promise<GetMessageActionsResponse>
     open fun encrypt(
-        data: String,
-        customCipherKey: String = definedExternally,
-        options: CryptoParameters = definedExternally
+        data: String, customCipherKey: String = definedExternally, options: CryptoParameters = definedExternally
     ): String
 
     open fun decrypt(
-        data: String?,
-        customCipherKey: String = definedExternally,
-        options: CryptoParameters = definedExternally
+        data: String?, customCipherKey: String = definedExternally, options: CryptoParameters = definedExternally
     ): Any
 
     open fun decrypt(data: String?): Any
     open fun decrypt(data: String?, customCipherKey: String = definedExternally): Any
     open fun decrypt(
-        data: Any?,
-        customCipherKey: String = definedExternally,
-        options: CryptoParameters = definedExternally
+        data: Any?, customCipherKey: String = definedExternally, options: CryptoParameters = definedExternally
     ): Any
 
     open fun decrypt(data: Any?): Any
@@ -220,20 +202,10 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     open fun time(callback: Callback<FetchTimeResponse>)
     interface KeepAliveSettings {
         var keepAliveMsecs: Number?
-            get() = definedExternally
-            set(value) = definedExternally
         var freeSocketKeepAliveTimeout: Number?
-            get() = definedExternally
-            set(value) = definedExternally
         var timeout: Number?
-            get() = definedExternally
-            set(value) = definedExternally
         var maxSockets: Number?
-            get() = definedExternally
-            set(value) = definedExternally
         var maxFreeSockets: Number?
-            get() = definedExternally
-            set(value) = definedExternally
     }
 
     interface PNConfiguration : Partial {
@@ -271,13 +243,10 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var message: Any
         var publisher: String
         var error: String?
-            get() = definedExternally
-            set(value) = definedExternally
         var actualChannel: String
         var subscribedChannel: String
         var userMetadata: Any?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface StatusEvent {
@@ -286,12 +255,8 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var affectedChannels: Array<String>
         var subscribedChannels: Array<String>
         var affectedChannelGroups: Array<String>
-        var lastTimetoken: dynamic /* Number | String */
-            get() = definedExternally
-            set(value) = definedExternally
-        var currentTimetoken: dynamic /* Number | String */
-            get() = definedExternally
-            set(value) = definedExternally
+        var lastTimetoken: String
+        var currentTimetoken: String
         var statusCode: Number?
     }
 
@@ -300,8 +265,6 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var channel: String
         var occupancy: Number
         var state: Any?
-            get() = definedExternally
-            set(value) = definedExternally
         var subscription: String
         var timestamp: Number
         var timetoken: String
@@ -322,8 +285,6 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var channel: String
         var publisher: String
         var subscription: String?
-            get() = definedExternally
-            set(value) = definedExternally
         var timetoken: String
         var event: String
         var data: MessageAction
@@ -343,8 +304,6 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var message: Any
         var file: `T$5`
         var userMetadata: Any?
-            get() = definedExternally
-            set(value) = definedExternally
     }
 
     interface `T$6` {
@@ -360,9 +319,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var message: `T$6`
         var subscription: String?
         var publisher: String?
-            get() = definedExternally
-            set(value) = definedExternally
-        var timetoken: Number
+        var timetoken: String
     }
 
     interface `T$7` {
@@ -397,7 +354,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     }
 
     interface RemoveChannelMetadataEvent : BaseObjectsEvent
-    interface `T$12` {
+    interface SetMembershipObject {
         var channel: HasId
         var uuid: HasId
         var custom: CustomObject?
@@ -408,11 +365,11 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     interface `T$13` {
         var event: String /* "set" */
         var type: String /* "membership" */
-        var data: `T$12`
+        var data: SetMembershipObject
     }
 
     interface SetMembershipEvent : BaseObjectsEvent
-    interface `T$14` {
+    interface DeleteMembershipObject {
         var channel: HasId
         var uuid: HasId
     }
@@ -420,7 +377,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     interface `T$15` {
         var event: String /* "delete" */
         var type: String /* "membership" */
-        var data: `T$14`
+        var data: DeleteMembershipObject
     }
 
     interface RemoveMembershipEvent : BaseObjectsEvent
@@ -428,17 +385,9 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var message: Any
         var channel: String
         var storeInHistory: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
         var sendByPost: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
         var meta: Any?
-            get() = definedExternally
-            set(value) = definedExternally
         var ttl: Number?
-            get() = definedExternally
-            set(value) = definedExternally
     }
 
     interface PublishResponse {
@@ -458,42 +407,23 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var channel: String
         var count: Number
         var stringifiedTimeToken: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
         var includeTimetoken: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
         var reverse: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
-        var start: dynamic /* String? | Number? */
-            get() = definedExternally
-            set(value) = definedExternally
-        var end: dynamic /* String? | Number? */
-            get() = definedExternally
-            set(value) = definedExternally
+        var start: String?
+        var end: String?
         var includeMeta: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface HistoryMessage {
         var entry: Any
-        var timetoken: dynamic /* String? | Number? */
-            get() = definedExternally
-            set(value) = definedExternally
+        var timetoken: String?
         var meta: Any?
-            get() = definedExternally
-            set(value) = definedExternally
     }
 
     interface HistoryResponse {
-        var endTimeToken: dynamic /* String? | Number? */
-            get() = definedExternally
-            set(value) = definedExternally
-        var startTimeToken: dynamic /* String? | Number? */
-            get() = definedExternally
-            set(value) = definedExternally
+        var endTimeToken: String?
+        var startTimeToken: String?
         var messages: Array<HistoryMessage>
     }
 
@@ -501,8 +431,8 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var channels: Array<String>
         var count: Number?
         var stringifiedTimeToken: Boolean?
-        var start: dynamic /* String? | Number? */
-        var end: dynamic /* String? | Number? */
+        var start: String?
+        var end: String?
         var withMessageActions: Boolean?
         var includeMessageType: Boolean?
         var includeUUID: Boolean?
@@ -512,9 +442,8 @@ open external class PubNub(config: Any /* UUID | UserId */) {
 
     interface Action {
         var uuid: String
-        var actionTimetoken: dynamic /* String | Number */
-            get() = definedExternally
-            set(value) = definedExternally
+        var actionTimetoken: String
+
     }
 
     interface ActionContentToAction : JsMap<Array<Action>>
@@ -523,8 +452,8 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     interface FetchMessageItem {
         var channel: String
         var message: JsonElement
-        var timetoken: dynamic /* String | Number */
-        var messageType: dynamic /* String? | Number? */
+        var timetoken: String
+        var messageType: String?
         var uuid: String
         var error: String?
         var meta: Json?
@@ -542,37 +471,21 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     interface FetchMessagesResponse {
         var channels: ChannelsToFetchMessageItemsMap
         var more: Page?
-            get() = definedExternally
-            set(value) = definedExternally
     }
 
     interface DeleteMessagesParameters {
         var channel: String
-        var start: dynamic /* String? | Number? */
-            get() = definedExternally
-            set(value) = definedExternally
-        var end: dynamic /* String? | Number? */
-            get() = definedExternally
-            set(value) = definedExternally
+        var start: String?
+        var end: String?
     }
 
     interface MessageCountsParameters {
         var channels: Array<String>
         var channelTimetokens: dynamic /* Array<String> | Array<Number> */
-            get() = definedExternally
-            set(value) = definedExternally
-    }
-
-    interface `T$22` {
-        @nativeGetter
-        operator fun get(channel: String): Number?
-
-        @nativeSetter
-        operator fun set(channel: String, value: Number)
     }
 
     interface MessageCountsResponse {
-        var channels: `T$22`
+        var channels: JsMap<Number>
     }
 
     interface Push {
@@ -591,22 +504,18 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var device: String
         var pushGateway: String
         var environment: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var topic: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface PushDeviceParameters {
         var device: String
         var pushGateway: String
         var environment: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var topic: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface PushListChannelsResponse {
@@ -616,48 +525,38 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     interface PubnubStatus {
         var error: Boolean
         var category: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var operation: String
         var statusCode: Number
         var errorData: Error?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface FireParameters {
         var message: Any
         var channel: String
         var sendByPost: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var meta: Any?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface SubscribeParameters {
         var channels: Array<String>?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var channelGroups: Array<String>?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var withPresence: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var timetoken: Number?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface UnsubscribeParameters {
         var channels: Array<String>?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var channelGroups: Array<String>?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface ChannelGroups {
@@ -714,24 +613,19 @@ open external class PubNub(config: Any /* UUID | UserId */) {
 
     interface HereNowParameters {
         var channels: Array<String>?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var channelGroups: Array<String>?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var includeUUIDs: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var includeState: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface HereNowOccupantData {
         var uuid: String
         var state: Any?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface HereNowChannelData {
@@ -750,8 +644,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
 
     interface WhereNowParameters {
         var uuid: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface WhereNowResponse {
@@ -760,14 +653,11 @@ open external class PubNub(config: Any /* UUID | UserId */) {
 
     interface SetStateParameters {
         var channels: Array<String>?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var channelGroups: Array<String>?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var state: Any?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface SetStateResponse {
@@ -776,14 +666,11 @@ open external class PubNub(config: Any /* UUID | UserId */) {
 
     interface GetStateParameters {
         var uuid: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var channels: Array<String>?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var channelGroups: Array<String>?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface GetStateResponse {
@@ -792,69 +679,50 @@ open external class PubNub(config: Any /* UUID | UserId */) {
 
     interface GrantParameters {
         var channels: Array<String>?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var channelGroups: Array<String>?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var uuids: Array<String>?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var authKeys: Array<String>?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var ttl: Number?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var read: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var write: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var manage: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var delete: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var get: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var join: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var update: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface PatternsOrResources {
         var channels: JsMap<GrantTokenPermissions>?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var groups: JsMap<GrantTokenPermissions>?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var uuids: JsMap<GrantTokenPermissions>?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface GrantTokenParameters {
         var ttl: Number
         var authorized_uuid: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var resources: PatternsOrResources?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var patterns: PatternsOrResources?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var meta: Json?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface ParsedGrantToken : GrantTokenParameters {
@@ -865,26 +733,19 @@ open external class PubNub(config: Any /* UUID | UserId */) {
 
     interface GrantTokenPermissions {
         var read: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var write: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var manage: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var delete: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var get: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var join: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var update: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface RevokeTokenResponse {
@@ -920,80 +781,64 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     interface GetMessageActionsParameters {
         var channel: String
         var start: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var end: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var limit: Number?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface GetMessageActionsResponse {
         var data: Array<MessageAction>
         var start: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var end: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface ListFilesParameters {
         var channel: String
         var limit: Number?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var next: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface SendFileParameters {
         var channel: String
         var file: dynamic /* StreamFileInput | BufferFileInput | UriFileInput */
-            get() = definedExternally
-            set(value) = definedExternally
+
         var message: Any?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var cipherKey: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var storeInHistory: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var ttl: Number?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var meta: Any?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface StreamFileInput {
         var stream: Any
         var name: String
         var mimeType: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface BufferFileInput {
         var data: Any
         var name: String
         var mimeType: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface UriFileInput {
         var uri: String
         var name: String
         var mimeType: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface DownloadFileParameters {
@@ -1001,8 +846,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var id: String
         var name: String
         var cipherKey: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface FileInputParameters {
@@ -1014,19 +858,15 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     interface PublishFileParameters {
         var channel: String
         var message: Any?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var fileId: String
         var fileName: String
         var storeInHistory: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var ttl: Number?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var meta: Any?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface `T$29` {
@@ -1073,8 +913,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var eTag: String
         var updated: String
         var custom: CustomObject?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface v2ObjectData {
@@ -1082,14 +921,12 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var eTag: String
         var updated: String
         var custom: CustomObject?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface ObjectParam {
         var custom: CustomObject?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface UUIDMetadataFieldsNullable {
@@ -1105,69 +942,54 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     interface UUIDMetadataObject : v2ObjectData, UUIDMetadataFieldsNullable
     interface UuidIncludeCustom {
         var customFields: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface SetUUIDMetadataParameters {
         var uuid: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var data: UUIDMetadata
         var include: UuidIncludeCustom?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface RemoveUUIDMetadataParameters {
         var uuid: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
-    interface UuidIncludeOptions {
+    interface MetadataIncludeOptions {
         var totalCount: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var customFields: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface MetadataPage {
         var next: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var prev: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface GetAllMetadataParameters {
-        var include: UuidIncludeOptions?
-            get() = definedExternally
-            set(value) = definedExternally
+        var include: MetadataIncludeOptions?
+
         var filter: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var sort: JsMap<String>?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var limit: Number?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var page: MetadataPage?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface GetUUIDMetadataParameters {
         var uuid: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var include: UuidIncludeCustom?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface ChannelMetadataFieldsPartial {
@@ -1190,8 +1012,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var channel: String
         var data: ChannelMetadata
         var include: UuidIncludeCustom?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface RemoveChannelMetadataParameters {
@@ -1205,114 +1026,85 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     interface GetChannelMetadataParameters {
         var channel: String
         var include: IncludeCustomFields?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface HasStatus {
         var status: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface UUIDMembershipObject : v2ObjectDataOmitId {
         var uuid: UUIDMetadataObject /* UUIDMetadataObject & HasStatus | HasId */
         var status: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface ChannelMembershipObject : v2ObjectDataOmitId {
-        var channel: dynamic /* ChannelMetadataObject & HasStatus | HasId */
-            get() = definedExternally
-            set(value) = definedExternally
+        var channel: ChannelMetadataObject?
+
         var status: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface IncludeOptions {
         var totalCount: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var customFields: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var UUIDFields: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var customUUIDFields: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var statusField: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var UUIDStatusField: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var UUIDTypeField: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface UUIDMembersParameters {
         var include: IncludeOptions?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var filter: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var sort: JsMap<String>?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var limit: Number?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var page: MetadataPage?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
-    interface `T$36` {
+    interface MembershipIncludeOptions {
         var totalCount: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var customFields: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var channelFields: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var customChannelFields: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var statusField: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var channelStatusField: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var channelTypeField: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface ChannelMembersParameters {
-        var include: `T$36`?
-            get() = definedExternally
-            set(value) = definedExternally
+        var include: MembershipIncludeOptions?
+
         var filter: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var sort: Any?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var limit: Number?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var page: MetadataPage?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface GetChannelMembersParameters : UUIDMembersParameters {
@@ -1321,36 +1113,32 @@ open external class PubNub(config: Any /* UUID | UserId */) {
 
     interface GetMembershipsParametersv2 : ChannelMembersParameters {
         var uuid: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface SetCustom {
         var id: String
         var custom: CustomObject?
-            get() = definedExternally
-            set(value) = definedExternally
+        var status: String?
+
     }
 
     interface SetMembershipsParameters : ChannelMembersParameters {
         var uuid: String?
-            get() = definedExternally
-            set(value) = definedExternally
-        var channels: Array<dynamic /* String | SetCustom */>?
-            get() = definedExternally
-            set(value) = definedExternally
+
+        var channels: Array<SetCustom /* String | SetCustom */>?
+
     }
 
     interface RemoveMembershipsParameters : ChannelMembersParameters {
         var uuid: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var channels: Array<String>
     }
 
     interface SetChannelMembersParameters : UUIDMembersParameters {
         var channel: String
-        var uuids: Array<dynamic /* String | SetCustom */>
+        var uuids: Array<SetCustom>
     }
 
     interface RemoveChannelMembersParameters : UUIDMembersParameters {
@@ -1360,17 +1148,13 @@ open external class PubNub(config: Any /* UUID | UserId */) {
 
     interface CryptoParameters {
         var encryptKey: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var keyEncoding: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var keyLength: Number?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var mode: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface FetchTimeResponse {
@@ -1379,74 +1163,58 @@ open external class PubNub(config: Any /* UUID | UserId */) {
 
     interface APNS2Configuration {
         var collapseId: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var expirationDate: Date?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var targets: Array<APNS2Target>
     }
 
     interface APNS2Target {
         var topic: String
         var environment: String? /* "development" | "production" */
-            get() = definedExternally
-            set(value) = definedExternally
+
         var excludedDevices: Array<String>?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface BaseNotificationPayload {
         var subtitle: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var payload: Any?
         var badge: Number?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var sound: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var title: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var body: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface APNSNotificationPayload : BaseNotificationPayload {
         var configurations: Array<APNS2Configuration>
         var apnsPushType: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var isSilent: Boolean
     }
 
     interface MPNSNotificationPayload : BaseNotificationPayload {
         var backContent: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var backTitle: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var count: Number?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var type: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface FCMNotificationPayload : BaseNotificationPayload {
         var isSilent: Boolean
         var icon: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var tag: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface `T$37` {
@@ -1459,20 +1227,15 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var payload: `T$37`
         var debugging: Boolean
         var subtitle: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var badge: Number?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var sound: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var title: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var body: String?
-            get() = definedExternally
-            set(value) = definedExternally
+
         var apns: APNSNotificationPayload
         var mpns: MPNSNotificationPayload
         var fcm: FCMNotificationPayload
@@ -1499,8 +1262,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
 
     interface PubNubFileType {
         var data: dynamic /* File | Blob */
-            get() = definedExternally
-            set(value) = definedExternally
+
         var name: String
         var mimeType: String
         fun create(config: Any): PubNubFileType
@@ -1513,17 +1275,14 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     interface CryptorConfiguration {
         var cipherKey: String
         var useRandomIVs: Boolean?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface CryptoModuleConfiguration {
         var default: dynamic /* Cryptor | LegacyCryptor<PubNubFileType> */
-            get() = definedExternally
-            set(value) = definedExternally
+
         var cryptors: Array<dynamic /* Cryptor | LegacyCryptor<PubNubFileType> */>?
-            get() = definedExternally
-            set(value) = definedExternally
+
     }
 
     interface EncryptedDataType {

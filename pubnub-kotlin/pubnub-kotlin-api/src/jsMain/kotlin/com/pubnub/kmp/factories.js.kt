@@ -3,8 +3,6 @@ package com.pubnub.kmp
 import com.pubnub.api.JsonElementImpl
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubImpl
-import com.pubnub.api.endpoints.objects.channel.toChannelMetadata
-import com.pubnub.api.endpoints.objects.uuid.toPNUUIDMetadata
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.files.PNDownloadableFile
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
@@ -15,9 +13,13 @@ import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteChannelMetadataEventMessage
+import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteMembershipEvent
+import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteMembershipEventMessage
 import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteUUIDMetadataEventMessage
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetChannelMetadataEventMessage
+import com.pubnub.api.models.consumer.pubsub.objects.PNSetMembershipEvent
+import com.pubnub.api.models.consumer.pubsub.objects.PNSetMembershipEventMessage
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetUUIDMetadataEventMessage
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
@@ -127,7 +129,7 @@ actual fun createEventListener(
                     null,
                     event.publisher
                 ),
-                when(eventAndType) {
+                when (eventAndType) {
                     "set" to "channel" -> PNSetChannelMetadataEventMessage(
                         event.message.source,
                         event.message.version,
@@ -135,6 +137,7 @@ actual fun createEventListener(
                         event.message.type,
                         event.message.data.unsafeCast<PubNubJs.ChannelMetadataObject>().toChannelMetadata()
                     )
+
                     "set" to "uuid" -> PNSetUUIDMetadataEventMessage(
                         event.message.source,
                         event.message.version,
@@ -142,7 +145,24 @@ actual fun createEventListener(
                         event.message.type,
                         event.message.data.unsafeCast<PubNubJs.UUIDMetadataObject>().toPNUUIDMetadata()
                     )
-//                    "set" to "membership" -> {}
+
+                    "set" to "membership" -> event.message.data.unsafeCast<PubNubJs.SetMembershipObject>().let {
+                        PNSetMembershipEventMessage(
+                            event.message.source,
+                            event.message.version,
+                            event.message.event,
+                            event.message.type,
+                            PNSetMembershipEvent(
+                                it.channel.id,
+                                it.uuid.id,
+                                it.custom?.toMap(),
+                                it.eTag,
+                                it.updated,
+                                null //todo missing
+                            )
+                        )
+                    }
+
                     "delete" to "channel" -> PNDeleteChannelMetadataEventMessage(
                         event.message.source,
                         event.message.version,
@@ -150,6 +170,7 @@ actual fun createEventListener(
                         event.message.type,
                         event.message.data.asDynamic().id
                     )
+
                     "delete" to "uuid" -> PNDeleteUUIDMetadataEventMessage(
                         event.message.source,
                         event.message.version,
@@ -157,7 +178,20 @@ actual fun createEventListener(
                         event.message.type,
                         event.message.data.asDynamic().id
                     )
-//                    "delete" to "membership" -> {}
+
+                    "delete" to "membership" -> PNDeleteMembershipEventMessage(
+                        event.message.source,
+                        event.message.version,
+                        event.message.event,
+                        event.message.type,
+                        event.message.data.unsafeCast<PubNubJs.DeleteMembershipObject>().let {
+                            PNDeleteMembershipEvent(
+                                it.channel.id,
+                                it.uuid.id
+                            )
+                        }
+                    )
+
                     else -> throw IllegalStateException("Bad object event")
                 }
             ))

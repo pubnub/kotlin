@@ -430,20 +430,20 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         TODO("Not yet implemented")
     }
 
-    override fun manageMemberships(
-        channelsToSet: List<ChannelMembershipInput>,
-        channelsToRemove: List<String>,
-        uuid: String?,
-        limit: Int?,
-        page: PNPage?,
-        filter: String?,
-        sort: Collection<PNSortKey<PNMembershipKey>>,
-        includeCount: Boolean,
-        includeCustom: Boolean,
-        includeChannelDetails: PNChannelDetailsLevel?
-    ): ManageMemberships {
-        TODO("Not yet implemented")
-    }
+//    override fun manageMemberships(
+//        channelsToSet: List<ChannelMembershipInput>,
+//        channelsToRemove: List<String>,
+//        uuid: String?,
+//        limit: Int?,
+//        page: PNPage?,
+//        filter: String?,
+//        sort: Collection<PNSortKey<PNMembershipKey>>,
+//        includeCount: Boolean,
+//        includeCustom: Boolean,
+//        includeChannelDetails: PNChannelDetailsLevel?
+//    ): ManageMemberships {
+//        TODO("Not yet implemented")
+//    }
 
     override fun getChannelMembers(
         channel: String,
@@ -486,20 +486,20 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         TODO("Not yet implemented")
     }
 
-    override fun manageChannelMembers(
-        channel: String,
-        uuidsToSet: Collection<MemberInput>,
-        uuidsToRemove: Collection<String>,
-        limit: Int?,
-        page: PNPage?,
-        filter: String?,
-        sort: Collection<PNSortKey<PNMemberKey>>,
-        includeCount: Boolean,
-        includeCustom: Boolean,
-        includeUUIDDetails: PNUUIDDetailsLevel?
-    ): ManageChannelMembers {
-        TODO("Not yet implemented")
-    }
+//    override fun manageChannelMembers(
+//        channel: String,
+//        uuidsToSet: Collection<MemberInput>,
+//        uuidsToRemove: Collection<String>,
+//        limit: Int?,
+//        page: PNPage?,
+//        filter: String?,
+//        sort: Collection<PNSortKey<PNMemberKey>>,
+//        includeCount: Boolean,
+//        includeCustom: Boolean,
+//        includeUUIDDetails: PNUUIDDetailsLevel?
+//    ): ManageChannelMembers {
+//        TODO("Not yet implemented")
+//    }
 
     override fun listFiles(channel: String, limit: Int?, next: PNPage.PNNext?): ListFiles {
         TODO("Not yet implemented")

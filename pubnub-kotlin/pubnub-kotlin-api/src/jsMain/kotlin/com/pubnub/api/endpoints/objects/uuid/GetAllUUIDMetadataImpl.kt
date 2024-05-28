@@ -5,6 +5,7 @@ import PubNub
 import com.pubnub.api.EndpointImpl
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult
+import com.pubnub.kmp.toPNUUIDMetadata
 
 class GetAllUUIDMetadataImpl(pubnub: PubNub, params: PubNub.GetAllMetadataParameters) : GetAllUUIDMetadata,
     EndpointImpl<GetAllUUIDMetadataResponse, PNUUIDMetadataArrayResult>(promiseFactory = { pubnub.objects.getAllUUIDMetadata(params) },

@@ -9,7 +9,13 @@ actual interface Endpoint<OUTPUT> {
 }
 
 fun <T,U> Consumer<Result<U>>.onSuccessHandler(mapper: (T) -> U) : (T) -> Unit {
-    return fun(input: T) { accept(Result.success(mapper(input))) }
+    return fun(input: T) { accept(
+        try {
+            Result.success(mapper(input))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    ) }
 }
 
 fun <T> Consumer<Result<T>>.onSuccessReturnValue(value: T) : () -> Unit {

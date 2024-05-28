@@ -255,18 +255,18 @@ actual interface PubNub {
         includeChannelDetails: PNChannelDetailsLevel?
     ): ManageMemberships
 
-    actual fun manageMemberships(
-        channelsToSet: List<ChannelMembershipInput>,
-        channelsToRemove: List<String>,
-        uuid: String?,
-        limit: Int?,
-        page: PNPage?,
-        filter: String?,
-        sort: Collection<PNSortKey<PNMembershipKey>>,
-        includeCount: Boolean,
-        includeCustom: Boolean,
-        includeChannelDetails: PNChannelDetailsLevel?
-    ): ManageMemberships
+//    actual fun manageMemberships(
+//        channelsToSet: List<ChannelMembershipInput>,
+//        channelsToRemove: List<String>,
+//        uuid: String?,
+//        limit: Int?,
+//        page: PNPage?,
+//        filter: String?,
+//        sort: Collection<PNSortKey<PNMembershipKey>>,
+//        includeCount: Boolean,
+//        includeCustom: Boolean,
+//        includeChannelDetails: PNChannelDetailsLevel?
+//    ): ManageMemberships
 
     actual fun getChannelMembers(
         channel: String,
@@ -303,18 +303,18 @@ actual interface PubNub {
         includeUUIDDetails: PNUUIDDetailsLevel?
     ): ManageChannelMembers
 
-    actual fun manageChannelMembers(
-        channel: String,
-        uuidsToSet: Collection<MemberInput>,
-        uuidsToRemove: Collection<String>,
-        limit: Int?,
-        page: PNPage?,
-        filter: String?,
-        sort: Collection<PNSortKey<PNMemberKey>>,
-        includeCount: Boolean,
-        includeCustom: Boolean,
-        includeUUIDDetails: PNUUIDDetailsLevel?
-    ): ManageChannelMembers
+//    actual fun manageChannelMembers(
+//        channel: String,
+//        uuidsToSet: Collection<MemberInput>,
+//        uuidsToRemove: Collection<String>,
+//        limit: Int?,
+//        page: PNPage?,
+//        filter: String?,
+//        sort: Collection<PNSortKey<PNMemberKey>>,
+//        includeCount: Boolean,
+//        includeCustom: Boolean,
+//        includeUUIDDetails: PNUUIDDetailsLevel?
+//    ): ManageChannelMembers
 
     actual fun listFiles(
         channel: String, limit: Int?, next: PNPage.PNNext?

@@ -235,7 +235,7 @@ private fun mapObjectMessage(from: PubNubObjectEventMessageObjC?): PNObjectEvent
             data = PNSetMembershipEvent(
                 channel = from.data().channel(),
                 uuid = from.data().uuid(),
-                custom = from.data().custom(),
+                custom = from.data().custom() as Map<String, Any?>?, //TODO this will probably fail
                 eTag = from.data().eTag(),
                 updated = from.data().updated(),
                 status = from.data().status()
