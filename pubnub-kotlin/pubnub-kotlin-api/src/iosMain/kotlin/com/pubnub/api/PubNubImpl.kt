@@ -1,10 +1,19 @@
 package com.pubnub.api
 
+import cocoapods.PubNubSwift.addEventListenerWithListener
+import cocoapods.PubNubSwift.subscribeWithChannels
+import cocoapods.PubNubSwift.subscribedChannelGroups
+import cocoapods.PubNubSwift.subscribedChannels
+import cocoapods.PubNubSwift.unsubscribeFrom
 import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.endpoints.DeleteMessages
+import com.pubnub.api.endpoints.DeleteMessagesImpl
 import com.pubnub.api.endpoints.FetchMessages
+import com.pubnub.api.endpoints.FetchMessagesImpl
 import com.pubnub.api.endpoints.MessageCounts
+import com.pubnub.api.endpoints.MessageCountsImpl
 import com.pubnub.api.endpoints.Time
+import com.pubnub.api.endpoints.TimeImpl
 import com.pubnub.api.endpoints.access.GrantToken
 import com.pubnub.api.endpoints.access.RevokeToken
 import com.pubnub.api.endpoints.channel_groups.AddChannelChannelGroup
@@ -69,9 +78,8 @@ import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.kmp.CustomObject
 import kotlinx.cinterop.ExperimentalForeignApi
 
+@OptIn(ExperimentalForeignApi::class)
 class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
-
-    @OptIn(ExperimentalForeignApi::class)
     private val pubNubObjC = cocoapods.PubNubSwift.PubNubObjC(
         user = configuration.userId.value,
         subKey = configuration.subscribeKey,
@@ -79,7 +87,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     )
 
     override fun addListener(listener: EventListener) {
-        TODO("Not yet implemented")
+        pubNubObjC.addEventListenerWithListener(listener = listener.underlying)
     }
 
     override fun addListener(listener: StatusListener) {
@@ -94,7 +102,6 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         TODO("Not yet implemented")
     }
 
-    @OptIn(ExperimentalForeignApi::class)
     // TODO: replicate and usePost parameters are not present in Swift SDK
     override fun publish(
         channel: String,
@@ -115,8 +122,6 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         )
     }
 
-
-    @OptIn(ExperimentalForeignApi::class)
     // TODO: usePost parameter is not present in Swift SDK
     override fun fire(channel: String, message: Any, meta: Any?, usePost: Boolean, ttl: Int?): Publish {
         return PublishImpl(
@@ -129,22 +134,19 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         )
     }
 
-    @OptIn(ExperimentalForeignApi::class)
     override fun signal(channel: String, message: Any): Signal {
         return SignalImpl(pubnub = pubNubObjC, channel = channel, message = message)
     }
 
-    @OptIn(ExperimentalForeignApi::class)
     override fun getSubscribedChannels(): List<String> {
         return pubNubObjC.subscribedChannels() as List<String>
     }
 
-    @OptIn(ExperimentalForeignApi::class)
     override fun getSubscribedChannelGroups(): List<String> {
         return pubNubObjC.subscribedChannelGroups() as List<String>
     }
 
-    @OptIn(ExperimentalForeignApi::class)
+
     // TODO: Missing pushType (PushService like APNS, GCM, etc) parameter
     // TODO: Why do we need topic parameter here?
     override fun addPushNotificationsOnChannels(
@@ -161,7 +163,6 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         )
     }
 
-    @OptIn(ExperimentalForeignApi::class)
     // TODO: topic and environment parameters are not present in Swift SDK
     override fun auditPushChannelProvisions(
         pushType: PNPushType,
@@ -172,7 +173,6 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         return ListPushProvisionsImpl(pubnub = pubNubObjC, deviceId = deviceId, pushType = pushType)
     }
 
-    @OptIn(ExperimentalForeignApi::class)
     // TODO: topic and environment parameters are not present in Swift SDK
     override fun removePushNotificationsFromChannels(
         pushType: PNPushType,
@@ -189,7 +189,6 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         )
     }
 
-    @OptIn(ExperimentalForeignApi::class)
     override fun removeAllPushNotificationsFromDeviceWithPushToken(
         pushType: PNPushType,
         deviceId: String,
@@ -211,15 +210,32 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         includeMessageActions: Boolean,
         includeMessageType: Boolean
     ): FetchMessages {
-        TODO("Not yet implemented")
+        return FetchMessagesImpl(
+            pubnub = pubNubObjC,
+            channels = channels,
+            page = page,
+            includeUUID = includeUUID,
+            includeMeta = includeMeta,
+            includeMessageActions = includeMessageActions,
+            includeMessageType = includeMessageType
+        )
     }
 
     override fun deleteMessages(channels: List<String>, start: Long?, end: Long?): DeleteMessages {
-        TODO("Not yet implemented")
+        return DeleteMessagesImpl(
+            pubnub = pubNubObjC,
+            channels = channels,
+            start = start,
+            end = end
+        )
     }
 
     override fun messageCounts(channels: List<String>, channelsTimetoken: List<Long>): MessageCounts {
-        TODO("Not yet implemented")
+        return MessageCountsImpl(
+            pubnub = pubNubObjC,
+            channels = channels,
+            channelsTimetoken = channelsTimetoken
+        )
     }
 
     override fun hereNow(
@@ -306,7 +322,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     }
 
     override fun time(): Time {
-        TODO("Not yet implemented")
+        return TimeImpl(pubnub = pubNubObjC)
     }
 
     override fun getAllChannelMetadata(
@@ -515,11 +531,16 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         withPresence: Boolean,
         withTimetoken: Long
     ) {
-        TODO("Not yet implemented")
+        pubNubObjC.subscribeWithChannels(
+            channels = channels,
+            channelGroups = channelGroups,
+            withPresence = withPresence,
+            timetoken = withTimetoken.toULong()
+        )
     }
 
     override fun unsubscribe(channels: List<String>, channelGroups: List<String>) {
-        TODO("Not yet implemented")
+        pubNubObjC.unsubscribeFrom(channels = channels, channelGroups = channelGroups)
     }
 
     override fun setToken(token: String?) {

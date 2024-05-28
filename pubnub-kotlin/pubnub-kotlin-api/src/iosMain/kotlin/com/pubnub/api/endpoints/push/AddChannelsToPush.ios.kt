@@ -1,6 +1,7 @@
 package com.pubnub.api.endpoints.push
 
 import cocoapods.PubNubSwift.PubNubObjC
+import cocoapods.PubNubSwift.addChannelsToPushNotificationsWithChannels
 import com.pubnub.api.Endpoint
 import com.pubnub.api.PubNubException
 import com.pubnub.api.models.consumer.push.PNPushAddChannelResult
@@ -17,7 +18,7 @@ import platform.Foundation.NSData
 actual interface AddChannelsToPush : Endpoint<PNPushAddChannelResult>
 
 @OptIn(ExperimentalForeignApi::class)
-open class AddChannelsToPushImpl(
+class AddChannelsToPushImpl(
     private val pubnub: PubNubObjC,
     private val channels: List<String>,
     private val deviceId: String
