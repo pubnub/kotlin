@@ -22,6 +22,10 @@ fun <T> Consumer<Result<T>>.onSuccessReturnValue(value: T) : () -> Unit {
     return fun() { accept(Result.success(value)) }
 }
 
+fun <T> Consumer<Result<T>>.onSuccessReturnValue(value: T) : () -> Unit {
+    return fun() { accept(Result.success(value)) }
+}
+
 fun <T> Consumer<Result<T>>.onFailureHandler(mapper: (NSError?) -> Throwable = { error: NSError? ->
     PubNubException(errorMessage = error?.localizedDescription)
 } ): (NSError?) -> Unit {
