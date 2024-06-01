@@ -1,88 +1,99 @@
-//package com.pubnub.test
-//
-//import com.pubnub.api.JsonElement
-//import com.pubnub.api.PubNub
-//import com.pubnub.api.callbacks.Listener
-//import com.pubnub.api.endpoints.DeleteMessages
-//import com.pubnub.api.endpoints.FetchMessages
-//import com.pubnub.api.endpoints.MessageCounts
-//import com.pubnub.api.endpoints.Time
-//import com.pubnub.api.endpoints.access.GrantToken
-//import com.pubnub.api.endpoints.access.RevokeToken
-//import com.pubnub.api.endpoints.channel_groups.AddChannelChannelGroup
-//import com.pubnub.api.endpoints.channel_groups.AllChannelsChannelGroup
-//import com.pubnub.api.endpoints.channel_groups.DeleteChannelGroup
-//import com.pubnub.api.endpoints.channel_groups.ListAllChannelGroup
-//import com.pubnub.api.endpoints.channel_groups.RemoveChannelChannelGroup
-//import com.pubnub.api.endpoints.files.DeleteFile
-//import com.pubnub.api.endpoints.files.GetFileUrl
-//import com.pubnub.api.endpoints.files.ListFiles
-//import com.pubnub.api.endpoints.files.PublishFileMessage
-//import com.pubnub.api.endpoints.message_actions.AddMessageAction
-//import com.pubnub.api.endpoints.message_actions.GetMessageActions
-//import com.pubnub.api.endpoints.message_actions.RemoveMessageAction
-//import com.pubnub.api.endpoints.objects.channel.GetAllChannelMetadata
-//import com.pubnub.api.endpoints.objects.channel.GetChannelMetadata
-//import com.pubnub.api.endpoints.objects.channel.RemoveChannelMetadata
-//import com.pubnub.api.endpoints.objects.channel.SetChannelMetadata
-//import com.pubnub.api.endpoints.objects.member.GetChannelMembers
-//import com.pubnub.api.endpoints.objects.member.ManageChannelMembers
-//import com.pubnub.api.endpoints.objects.membership.GetMemberships
-//import com.pubnub.api.endpoints.objects.membership.ManageMemberships
-//import com.pubnub.api.endpoints.objects.uuid.GetAllUUIDMetadata
-//import com.pubnub.api.endpoints.objects.uuid.GetUUIDMetadata
-//import com.pubnub.api.endpoints.objects.uuid.RemoveUUIDMetadata
-//import com.pubnub.api.endpoints.objects.uuid.SetUUIDMetadata
-//import com.pubnub.api.endpoints.presence.GetState
-//import com.pubnub.api.endpoints.presence.HereNow
-//import com.pubnub.api.endpoints.presence.SetState
-//import com.pubnub.api.endpoints.presence.WhereNow
-//import com.pubnub.api.endpoints.pubsub.Publish
-//import com.pubnub.api.endpoints.pubsub.Signal
-//import com.pubnub.api.endpoints.push.AddChannelsToPush
-//import com.pubnub.api.endpoints.push.ListPushProvisions
-//import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice
-//import com.pubnub.api.endpoints.push.RemoveChannelsFromPush
-//import com.pubnub.api.enums.PNPushEnvironment
-//import com.pubnub.api.enums.PNPushType
-//import com.pubnub.api.models.consumer.PNBoundedPage
-//import com.pubnub.api.models.consumer.PNPublishResult
-//import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
-//import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
-//import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
-//import com.pubnub.api.models.consumer.message_actions.PNMessageAction
-//import com.pubnub.api.models.consumer.objects.PNKey
-//import com.pubnub.api.models.consumer.objects.PNMemberKey
-//import com.pubnub.api.models.consumer.objects.PNMembershipKey
-//import com.pubnub.api.models.consumer.objects.PNPage
-//import com.pubnub.api.models.consumer.objects.PNSortKey
-//import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
-//import com.pubnub.api.models.consumer.objects.member.MemberInput
-//import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
-//import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
-//import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
-//import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
-//import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult
-//import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
-//import com.pubnub.api.models.consumer.pubsub.PNEvent
-//import com.pubnub.api.models.consumer.pubsub.PNMessageResult
-//import com.pubnub.api.v2.PNConfiguration
-//import com.pubnub.api.v2.callbacks.Consumer
-//import com.pubnub.api.v2.callbacks.EventListener
-//import com.pubnub.api.v2.callbacks.Result
-//import com.pubnub.api.v2.callbacks.StatusListener
-//import com.pubnub.kmp.CustomObject
-//import kotlinx.coroutines.CoroutineScope
-//import kotlinx.coroutines.SupervisorJob
-//import kotlinx.coroutines.flow.MutableSharedFlow
-//import kotlinx.coroutines.flow.mapNotNull
-//import kotlinx.coroutines.launch
-//import kotlinx.datetime.Clock
-//import kotlinx.datetime.Instant
-//import kotlin.coroutines.EmptyCoroutineContext
-//import kotlin.time.Duration.Companion.minutes
-//
-//
+package com.pubnub.test
+
+import com.pubnub.api.JsonElement
+import com.pubnub.api.PubNub
+import com.pubnub.api.asMap
+import com.pubnub.api.callbacks.Listener
+import com.pubnub.api.endpoints.DeleteMessages
+import com.pubnub.api.endpoints.FetchMessages
+import com.pubnub.api.endpoints.MessageCounts
+import com.pubnub.api.endpoints.Time
+import com.pubnub.api.endpoints.access.GrantToken
+import com.pubnub.api.endpoints.access.RevokeToken
+import com.pubnub.api.endpoints.channel_groups.AddChannelChannelGroup
+import com.pubnub.api.endpoints.channel_groups.AllChannelsChannelGroup
+import com.pubnub.api.endpoints.channel_groups.DeleteChannelGroup
+import com.pubnub.api.endpoints.channel_groups.ListAllChannelGroup
+import com.pubnub.api.endpoints.channel_groups.RemoveChannelChannelGroup
+import com.pubnub.api.endpoints.files.DeleteFile
+import com.pubnub.api.endpoints.files.GetFileUrl
+import com.pubnub.api.endpoints.files.ListFiles
+import com.pubnub.api.endpoints.files.PublishFileMessage
+import com.pubnub.api.endpoints.message_actions.AddMessageAction
+import com.pubnub.api.endpoints.message_actions.GetMessageActions
+import com.pubnub.api.endpoints.message_actions.RemoveMessageAction
+import com.pubnub.api.endpoints.objects.channel.GetAllChannelMetadata
+import com.pubnub.api.endpoints.objects.channel.GetChannelMetadata
+import com.pubnub.api.endpoints.objects.channel.RemoveChannelMetadata
+import com.pubnub.api.endpoints.objects.channel.SetChannelMetadata
+import com.pubnub.api.endpoints.objects.member.GetChannelMembers
+import com.pubnub.api.endpoints.objects.member.ManageChannelMembers
+import com.pubnub.api.endpoints.objects.membership.GetMemberships
+import com.pubnub.api.endpoints.objects.membership.ManageMemberships
+import com.pubnub.api.endpoints.objects.uuid.GetAllUUIDMetadata
+import com.pubnub.api.endpoints.objects.uuid.GetUUIDMetadata
+import com.pubnub.api.endpoints.objects.uuid.RemoveUUIDMetadata
+import com.pubnub.api.endpoints.objects.uuid.SetUUIDMetadata
+import com.pubnub.api.endpoints.presence.GetState
+import com.pubnub.api.endpoints.presence.HereNow
+import com.pubnub.api.endpoints.presence.SetState
+import com.pubnub.api.endpoints.presence.WhereNow
+import com.pubnub.api.endpoints.pubsub.Publish
+import com.pubnub.api.endpoints.pubsub.Signal
+import com.pubnub.api.endpoints.push.AddChannelsToPush
+import com.pubnub.api.endpoints.push.ListPushProvisions
+import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice
+import com.pubnub.api.endpoints.push.RemoveChannelsFromPush
+import com.pubnub.api.enums.PNPushEnvironment
+import com.pubnub.api.enums.PNPushType
+import com.pubnub.api.models.consumer.PNBoundedPage
+import com.pubnub.api.models.consumer.PNPublishResult
+import com.pubnub.api.models.consumer.PNStatus
+import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
+import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
+import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
+import com.pubnub.api.models.consumer.message_actions.PNMessageAction
+import com.pubnub.api.models.consumer.objects.PNKey
+import com.pubnub.api.models.consumer.objects.PNMemberKey
+import com.pubnub.api.models.consumer.objects.PNMembershipKey
+import com.pubnub.api.models.consumer.objects.PNPage
+import com.pubnub.api.models.consumer.objects.PNSortKey
+import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
+import com.pubnub.api.models.consumer.objects.member.MemberInput
+import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
+import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
+import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
+import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
+import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult
+import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
+import com.pubnub.api.models.consumer.pubsub.PNEvent
+import com.pubnub.api.models.consumer.pubsub.PNMessageResult
+import com.pubnub.api.v2.PNConfiguration
+import com.pubnub.api.v2.callbacks.Consumer
+import com.pubnub.api.v2.callbacks.EventListener
+import com.pubnub.api.v2.callbacks.Result
+import com.pubnub.api.v2.callbacks.StatusListener
+import com.pubnub.kmp.CustomObject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.scan
+import kotlinx.coroutines.flow.transformLatest
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
+import kotlin.time.Duration.Companion.minutes
+
+
+expect fun EventListener.emit(pubnub: PubNub, event: PNEvent)
+expect fun StatusListener.emit(pubnub: PubNub, status: PNStatus)
+expect fun Any.toJsonElement(): JsonElement
+
 //class FakePubNub(override val configuration: PNConfiguration) : PubNub {
 //
 //    val scope = CoroutineScope(SupervisorJob())
@@ -90,7 +101,7 @@
 //    fun Long.toEpochSeconds() = this / 10000000
 //    fun generateTimetoken() = Clock.System.now().toEpochMilliseconds() * 10000
 //
-//    val events = MutableSharedFlow<PNEvent>(100, 10)
+//    val events = MutableSharedFlow<PNEvent>(100, 100)
 //    val subscriptionStream = events.mapNotNull {
 //        val tt = it.timetoken ?: return@mapNotNull null
 //        if (Clock.System.now() < Instant.fromEpochSeconds(tt.toEpochSeconds()) - 10.minutes) {
@@ -100,24 +111,71 @@
 //        }
 //    }
 //
+//    private val subscribedChannelAndGroups =  MutableStateFlow<Pair<Set<String>, Set<String>>>(Pair(emptySet(), emptySet()))
+//    private val timetoken = MutableSharedFlow<Long>()
+//
+//    init {
+//        scope.launch {
+//            subscribedChannelAndGroups.scan(Pair(setOf(), setOf())) { last: Pair<Set<String>, Set<String>>, next: Pair<Set<String>, Set<String>> ->
+//                if (last.first.isEmpty() && last.second.isEmpty() && (next.first.isNotEmpty() || next.second.isNotEmpty())) {
+//                    //emit connected
+//                } else if (next.first.isEmpty() && next.second.isEmpty() && (last.first.isNotEmpty() || last.second.isNotEmpty())) {
+//                    timetoken.emit(0)
+//                    //emit disconnected
+//                } else {
+//                    //emit changed
+//                }
+//                next
+//            }.collectLatest { subscriptions: Pair<Set<String>, Set<String>> ->
+//                events.collect { event: PNEvent ->
+//                    if (event.channel in subscriptions.first) {
+//                        listeners.value.filterIsInstance<EventListener>().forEach {
+//                            it.emit(this@FakePubNub, event)
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+//
+//
 //    val messages: MutableList<PNMessageResult> = mutableListOf()
 //    val userMetadata: MutableMap<String, PNUUIDMetadata> = mutableMapOf()
 //    val channelMetadata: MutableMap<String, PNChannelMetadata> = mutableMapOf()
 //
+//    private val listeners = MutableStateFlow(setOf<Listener>())
+//
 //    override fun addListener(listener: EventListener) {
-//        TODO("Not yet implemented")
+//        listeners.update { previousSet ->
+//            buildSet {
+//                addAll(previousSet)
+//                add(listener)
+//            }
+//        }
 //    }
 //
 //    override fun addListener(listener: StatusListener) {
-//        TODO("Not yet implemented")
+//        listeners.update { previousSet ->
+//            buildSet {
+//                addAll(previousSet)
+//                add(listener)
+//            }
+//        }
 //    }
 //
 //    override fun removeListener(listener: Listener) {
-//        TODO("Not yet implemented")
+//        listeners.update { previousSet ->
+//            buildSet {
+//                addAll(previousSet)
+//                remove(listener)
+//            }
+//        }
 //    }
 //
 //    override fun removeAllListeners() {
-//        TODO("Not yet implemented")
+//        listeners.update {
+//            emptySet()
+//        }
 //    }
 //
 //    override fun publish(
@@ -137,9 +195,9 @@
 //                            channel,
 //                            null,
 //                            generateTimetoken(),
-//                            null,
+//                            meta?.toJsonElement(),
 //                            configuration.userId.value
-//                        ), message, null
+//                        ), message.toJsonElement(), null
 //                    ))
 //                }
 //            }
@@ -155,11 +213,11 @@
 //    }
 //
 //    override fun getSubscribedChannels(): List<String> {
-//        TODO("Not yet implemented")
+//        return subscribedChannelAndGroups.value.first.toList()
 //    }
 //
 //    override fun getSubscribedChannelGroups(): List<String> {
-//        TODO("Not yet implemented")
+//        return subscribedChannelAndGroups.value.second.toList()
 //    }
 //
 //    override fun addPushNotificationsOnChannels(
@@ -340,7 +398,7 @@
 //                    externalId ?: b?.externalId,
 //                    profileUrl ?: b?.profileUrl,
 //                    email ?: b?.email,
-//                    custom ?: b?.custom,
+//                    custom?.toJsonElement()?.asMap() ?: b?.custom,
 //                    Clock.System.now().toString(),
 //                    null,
 //                    type ?: b?.type,
@@ -407,21 +465,6 @@
 //        TODO("Not yet implemented")
 //    }
 //
-//    override fun manageMemberships(
-//        channelsToSet: List<ChannelMembershipInput>,
-//        channelsToRemove: List<String>,
-//        uuid: String?,
-//        limit: Int?,
-//        page: PNPage?,
-//        filter: String?,
-//        sort: Collection<PNSortKey<PNMembershipKey>>,
-//        includeCount: Boolean,
-//        includeCustom: Boolean,
-//        includeChannelDetails: PNChannelDetailsLevel?
-//    ): ManageMemberships {
-//        TODO("Not yet implemented")
-//    }
-//
 //    override fun getChannelMembers(
 //        channel: String,
 //        limit: Int?,
@@ -463,21 +506,6 @@
 //        TODO("Not yet implemented")
 //    }
 //
-//    override fun manageChannelMembers(
-//        channel: String,
-//        uuidsToSet: Collection<MemberInput>,
-//        uuidsToRemove: Collection<String>,
-//        limit: Int?,
-//        page: PNPage?,
-//        filter: String?,
-//        sort: Collection<PNSortKey<PNMemberKey>>,
-//        includeCount: Boolean,
-//        includeCustom: Boolean,
-//        includeUUIDDetails: PNUUIDDetailsLevel?
-//    ): ManageChannelMembers {
-//        TODO("Not yet implemented")
-//    }
-//
 //    override fun listFiles(channel: String, limit: Int?, next: PNPage.PNNext?): ListFiles {
 //        TODO("Not yet implemented")
 //    }
@@ -508,11 +536,41 @@
 //        withPresence: Boolean,
 //        withTimetoken: Long
 //    ) {
-//        TODO("Not yet implemented")
+//        subscribedChannelAndGroups.update { existingSubscriptions ->
+//            Pair(
+//                buildSet {
+//                    addAll(existingSubscriptions.first)
+//                    addAll(channels)
+//                    if (withPresence) {
+//                        addAll(channels.map { "${it}-pnpres" })
+//                    }
+//                },
+//                buildSet {
+//                    addAll(existingSubscriptions.second)
+//                    addAll(channelGroups)
+//                    if (withPresence) {
+//                        addAll(channelGroups.map { "${it}-pnpres" })
+//                    }
+//                }
+//            )
+//        }
 //    }
 //
 //    override fun unsubscribe(channels: List<String>, channelGroups: List<String>) {
-//        TODO("Not yet implemented")
+//        subscribedChannelAndGroups.update { existingSubscriptions ->
+//            Pair(
+//                buildSet {
+//                    addAll(existingSubscriptions.first)
+//                    removeAll(channels.toSet())
+//                    removeAll(channels.map { "${it}-pnpres" }.toSet())
+//                },
+//                buildSet {
+//                    addAll(existingSubscriptions.second)
+//                    removeAll(channelGroups.toSet())
+//                    removeAll(channelGroups.map { "${it}-pnpres" }.toSet())
+//                }
+//            )
+//        }
 //    }
 //
 //    override fun setToken(token: String?) {

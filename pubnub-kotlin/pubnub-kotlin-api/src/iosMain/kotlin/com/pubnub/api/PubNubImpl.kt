@@ -75,6 +75,7 @@ import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
+import com.pubnub.kmp.Codable
 import com.pubnub.kmp.CustomObject
 import kotlinx.cinterop.ExperimentalForeignApi
 
@@ -115,8 +116,8 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         return PublishImpl(
             pubnub = pubNubObjC,
             channel = channel,
-            message = message,
-            meta = meta,
+            message = (message as? Codable)?.toCodable() ?: message,
+            meta = (meta as? Codable)?.toCodable() ?: meta,
             shouldStore = shouldStore,
             ttl = ttl
         )

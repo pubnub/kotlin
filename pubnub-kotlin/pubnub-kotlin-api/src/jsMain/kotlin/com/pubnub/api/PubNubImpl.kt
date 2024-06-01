@@ -137,10 +137,10 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         ttl: Int?
     ): Publish {
         return PublishImpl(jsPubNub, createJsObject {
-            this.message = message
+            this.message = message.adjustCollectionTypes()!!
             this.channel = channel
             this.storeInHistory = shouldStore
-            this.meta = if (meta is CustomObjectImpl) { meta.toJsObject() } else meta
+            this.meta = meta.adjustCollectionTypes()
             this.sendByPost = usePost
             this.ttl = ttl
         })
@@ -775,6 +775,28 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
 
     }
 
+}
+
+private fun Any?.adjustCollectionTypes(): Any? {
+    return when (this) {
+        is Map<*, *> -> {
+            val json = json()
+            entries.forEach {
+                json[it.key.toString()] = it.value.adjustCollectionTypes()
+            }
+            json
+        }
+        is Collection<*> -> {
+            this.map { it.adjustCollectionTypes() }.toTypedArray()
+        }
+        is Array<*> -> {
+            this.map { it.adjustCollectionTypes() }.toTypedArray()
+        }
+        is Long -> {
+            return toString()
+        }
+        else -> this
+    }
 }
 
 fun UUIDMetadata(
