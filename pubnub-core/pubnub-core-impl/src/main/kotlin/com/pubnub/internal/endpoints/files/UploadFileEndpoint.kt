@@ -160,6 +160,8 @@ internal class UploadFileEndpoint(
 
     private fun Response<Unit>.readErrorMessage(): String {
         val dbFactory = DocumentBuilderFactory.newInstance()
+        dbFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+        dbFactory.isXIncludeAware = false;
         val dBuilder = dbFactory.newDocumentBuilder()
         val doc = dBuilder.parse(errorBody()!!.byteStream())
         doc.documentElement.normalize()
