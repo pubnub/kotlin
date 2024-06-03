@@ -98,9 +98,10 @@ class ChannelMetadataTest : BaseIntegrationTest() {
         pubnub.removeChannelMetadata(channel).await()
 
         // then
-        assertFailsWith<PubNubException> {
+        val exception = assertFailsWith<PubNubException> {
             pubnub.getChannelMetadata(channel).await()
         }
+        assertEquals(404, exception.statusCode)
     }
 
     @Test
