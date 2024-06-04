@@ -13,7 +13,7 @@ import cocoapods.PubNubSwift.PubNubPresenceEventResultObjC
 import cocoapods.PubNubSwift.PubNubSetChannelMetadataEventMessageObjC
 import cocoapods.PubNubSwift.PubNubSetMembershipEventMessageObjC
 import cocoapods.PubNubSwift.PubNubSetUUIDMetadataEventMessageObjC
-import com.pubnub.api.JsonElement
+import com.pubnub.api.JsonElementImpl
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubImpl
 import com.pubnub.api.models.consumer.PNStatus
@@ -58,6 +58,12 @@ actual fun createEventListener(
     onFile: (PubNub, PNFileEventResult) -> Unit
 ): EventListener {
     return EventListenerImpl(
+        onMessage = onMessage,
+        onMessageAction = onMessageAction,
+        onPresence = onPresence,
+        onObjects = onObjects,
+        onFile = onFile,
+        onSignal = onSignal,
         underlying = EventListenerObjC(
             onMessage = { onMessage(pubnub, createMessageResult(it)) },
             onPresence = { presenceEvents -> createPresenceEventResults(presenceEvents).forEach { onPresence(pubnub, it) } },
@@ -76,10 +82,10 @@ private fun createMessageResult(from: PubNubMessageObjC?): PNMessageResult {
             channel = from!!.channel(),
             subscription = from.subscription(),
             timetoken = from.published().toLong(),
-            userMetadata = from.metadata() as? JsonElement,
+            userMetadata = JsonElementImpl(from.metadata()),
             publisher = from.publisher()
         ),
-        message = from.payload() as JsonElement,
+        message = JsonElementImpl(from.payload()),
         error = null // TODO: Map error from Swift SDK to PubNubError in Kotlin SDK
     )
 }
@@ -91,10 +97,10 @@ private fun createSignalResult(from: PubNubMessageObjC?): PNSignalResult {
             channel = from!!.channel(),
             subscription = from.subscription(),
             timetoken = from.published().toLong(),
-            userMetadata = from.metadata() as? JsonElement,
+            userMetadata = JsonElementImpl(from.metadata()),
             publisher = from.publisher()
         ),
-        message = from.payload() as JsonElement
+        message = JsonElementImpl(from.payload())
     )
 }
 
@@ -119,14 +125,14 @@ private fun createMessageActionResult(from: PubNubMessageActionObjC?): PNMessage
 
 @OptIn(ExperimentalForeignApi::class)
 private fun createPresenceEventResults(from: List<*>?): List<PNPresenceEventResult> {
-    return (from as? List<PubNubPresenceEventResultObjC>)?.let {
+    return (from as List<PubNubPresenceEventResultObjC>).let {
         it.map { item: PubNubPresenceEventResultObjC ->
             PNPresenceEventResult(
                 event = item.event(),
                 uuid = item.uuid(),
                 timestamp = item.timetoken()?.longValue,
                 occupancy = item.occupancy()?.intValue,
-                state = item.state() as JsonElement,
+                state = JsonElementImpl(item.state()),
                 channel = item.channel() ?: "",
                 subscription = item.subscription(),
                 timetoken = item.timetoken()?.longValue,
@@ -134,10 +140,10 @@ private fun createPresenceEventResults(from: List<*>?): List<PNPresenceEventResu
                 leave = item.leave() as? List<String>,
                 timeout = item.timeout() as? List<String>,
                 hereNowRefresh = item.refreshHereNow()?.boolValue,
-                userMetadata = item.userMetadata()
+                userMetadata = JsonElementImpl(item.userMetadata())
             )
         }
-    } ?: emptyList()
+    }
 }
 
 @OptIn(ExperimentalForeignApi::class)
@@ -147,7 +153,7 @@ private fun createFileEventResult(from: PubNubFileEventResultObjC?): PNFileEvent
         timetoken = from.timetoken()?.longValue,
         publisher = from.publisher(),
         message = from.message(),
-        jsonMessage = from.message() as JsonElement,
+        jsonMessage = JsonElementImpl(from.message()),
         file = PNDownloadableFile(
             id = from.file().id(),
             name = from.file().name(),
@@ -164,7 +170,7 @@ private fun createObjectEvent(from: PubNubObjectEventResultObjC?): PNObjectEvent
                 channel = from!!.channel(),
                 subscription =  from.subscription(),
                 timetoken = from.timetoken()?.longValue,
-                userMetadata = from.userMetadata() as? JsonElement,
+                userMetadata = JsonElementImpl(from.userMetadata()),
                 publisher = from.publisher(),
             ), extractedMessage = it
         )
@@ -264,5 +270,5 @@ actual fun createStatusListener(
 }
 
 actual fun createCustomObject(map: Map<String, Any?>): CustomObject {
-    TODO("Not yet implemented")
+    return CustomObject(map)
 }

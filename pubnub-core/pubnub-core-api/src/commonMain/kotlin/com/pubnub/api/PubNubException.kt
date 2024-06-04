@@ -9,8 +9,11 @@ package com.pubnub.api
  * @property statusCode HTTP status code.
  * @property affectedCall A reference to the affected call. Useful for calling [retry][Endpoint.retry].
  */
-expect class PubNubException(pubnubError: PubNubError) : Exception {
-    constructor(errorMessage: String?)
+expect class PubNubException(errorMessage: String?, cause: Throwable? = null) : Exception {
+    constructor(pubnubError: PubNubError, cause: Throwable? = null)
+
+    val statusCode: Int
+
     companion object {
         fun from(e: Throwable): PubNubException
     }

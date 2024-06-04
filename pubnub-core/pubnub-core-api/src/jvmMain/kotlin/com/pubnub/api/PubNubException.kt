@@ -17,7 +17,7 @@ actual data class PubNubException(
     val errorMessage: String? = null,
     val pubnubError: PubNubError? = null,
     val jso: String? = null,
-    val statusCode: Int = 0,
+    actual val statusCode: Int = 0,
     val affectedCall: Call<*>? = null,
     val retryAfterHeaderValue: Int? = null,
     val affectedChannels: List<String> = emptyList(),
@@ -34,11 +34,14 @@ actual data class PubNubException(
         val clientRequest: Request,
     )
 
-    actual constructor(errorMessage: String?) : this(errorMessage, pubnubError = null)
+    @JvmOverloads
+    actual constructor(errorMessage: String?, cause: Throwable?) : this(errorMessage, pubnubError = null, cause = cause)
 
-    actual constructor(pubnubError: PubNubError) : this(
+    @JvmOverloads
+    actual constructor(pubnubError: PubNubError, cause: Throwable?) : this(
         errorMessage = pubnubError.message,
         pubnubError = pubnubError,
+        cause = cause
     )
 
     constructor(pubnubError: PubNubError, message: String) : this(

@@ -46,5 +46,9 @@ gradlePlugin {
             id = "pubnub.ios-simulator-test"
             implementationClass = "com.pubnub.gradle.PubNubIosSimulatorTestPlugin"
         }
+        register("pubnubMultiplatform") {
+            id = "pubnub.multiplatform"
+            implementationClass = "com.pubnub.gradle.PubNubKotlinMultiplatformPlugin"
+        }
     }
 }

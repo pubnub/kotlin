@@ -56,11 +56,11 @@ class PubNubTest(
     private val messageQueue = Channel<PNEvent>(10)
     private val statusQueue = Channel<PNStatus>(10)
 
-    private val statusVerificationListener = createStatusListener(pubNub) { _, status ->
-        backgroundScope.launch {
-            statusQueue.send(status)
-        }
-    }
+//    private val statusVerificationListener = createStatusListener(pubNub) { _, status ->
+//        backgroundScope.launch {
+//            statusQueue.send(status)
+//        }
+//    }
     private val eventVerificationListener = createEventListener(
         pubNub,
         onMessage = { _, event ->
@@ -98,7 +98,7 @@ class PubNubTest(
 
     init {
         pubNub.addListener(eventVerificationListener)
-        pubNub.addListener(statusVerificationListener)
+//        pubNub.addListener(statusVerificationListener)
     }
 
     suspend fun PubNub.awaitSubscribe(
