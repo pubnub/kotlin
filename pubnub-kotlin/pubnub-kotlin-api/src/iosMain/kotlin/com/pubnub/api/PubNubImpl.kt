@@ -1,6 +1,7 @@
 package com.pubnub.api
 
 import cocoapods.PubNubSwift.addEventListenerWithListener
+import cocoapods.PubNubSwift.setWithToken
 import cocoapods.PubNubSwift.subscribeWithChannels
 import cocoapods.PubNubSwift.subscribedChannelGroups
 import cocoapods.PubNubSwift.subscribedChannels
@@ -17,18 +18,27 @@ import com.pubnub.api.endpoints.TimeImpl
 import com.pubnub.api.endpoints.access.GrantToken
 import com.pubnub.api.endpoints.access.RevokeToken
 import com.pubnub.api.endpoints.channel_groups.AddChannelChannelGroup
+import com.pubnub.api.endpoints.channel_groups.AddChannelChannelGroupImpl
 import com.pubnub.api.endpoints.channel_groups.AllChannelsChannelGroup
+import com.pubnub.api.endpoints.channel_groups.AllChannelsChannelGroupImpl
 import com.pubnub.api.endpoints.channel_groups.DeleteChannelGroup
+import com.pubnub.api.endpoints.channel_groups.DeleteChannelGroupImpl
 import com.pubnub.api.endpoints.channel_groups.ListAllChannelGroup
+import com.pubnub.api.endpoints.channel_groups.ListAllChannelGroupImpl
 import com.pubnub.api.endpoints.channel_groups.RemoveChannelChannelGroup
+import com.pubnub.api.endpoints.channel_groups.RemoveChannelChannelGroupImpl
 import com.pubnub.api.endpoints.files.DeleteFile
 import com.pubnub.api.endpoints.files.GetFileUrl
 import com.pubnub.api.endpoints.files.ListFiles
 import com.pubnub.api.endpoints.files.PublishFileMessage
 import com.pubnub.api.endpoints.message_actions.AddMessageAction
+import com.pubnub.api.endpoints.message_actions.AddMessageActionImpl
 import com.pubnub.api.endpoints.message_actions.GetMessageActions
+import com.pubnub.api.endpoints.message_actions.GetMessageActionsImpl
 import com.pubnub.api.endpoints.message_actions.RemoveMessageAction
+import com.pubnub.api.endpoints.message_actions.RemoveMessageActionImpl
 import com.pubnub.api.endpoints.objects.channel.GetAllChannelMetadata
+import com.pubnub.api.endpoints.objects.channel.GetAllChannelMetadataImpl
 import com.pubnub.api.endpoints.objects.channel.GetChannelMetadata
 import com.pubnub.api.endpoints.objects.channel.RemoveChannelMetadata
 import com.pubnub.api.endpoints.objects.channel.SetChannelMetadata
@@ -41,9 +51,12 @@ import com.pubnub.api.endpoints.objects.uuid.GetUUIDMetadata
 import com.pubnub.api.endpoints.objects.uuid.RemoveUUIDMetadata
 import com.pubnub.api.endpoints.objects.uuid.SetUUIDMetadata
 import com.pubnub.api.endpoints.presence.GetState
+import com.pubnub.api.endpoints.presence.GetStateImpl
 import com.pubnub.api.endpoints.presence.HereNow
+import com.pubnub.api.endpoints.presence.HereNowImpl
 import com.pubnub.api.endpoints.presence.SetState
 import com.pubnub.api.endpoints.presence.WhereNow
+import com.pubnub.api.endpoints.presence.WhereNowImpl
 import com.pubnub.api.endpoints.pubsub.Publish
 import com.pubnub.api.endpoints.pubsub.PublishImpl
 import com.pubnub.api.endpoints.pubsub.Signal
@@ -147,7 +160,6 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         return pubNubObjC.subscribedChannelGroups() as List<String>
     }
 
-
     // TODO: Missing pushType (PushService like APNS, GCM, etc) parameter
     // TODO: Why do we need topic parameter here?
     override fun addPushNotificationsOnChannels(
@@ -245,11 +257,17 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         includeState: Boolean,
         includeUUIDs: Boolean
     ): HereNow {
-        TODO("Not yet implemented")
+        return HereNowImpl(
+            pubnub = pubNubObjC,
+            channels = channels,
+            channelGroups = channelGroups,
+            includeState = includeState,
+            includeUUIDs = includeUUIDs
+        )
     }
 
     override fun whereNow(uuid: String): WhereNow {
-        TODO("Not yet implemented")
+        return WhereNowImpl(pubnub = pubNubObjC, uuid = uuid)
     }
 
     override fun setPresenceState(
@@ -261,7 +279,12 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     }
 
     override fun getPresenceState(channels: List<String>, channelGroups: List<String>, uuid: String): GetState {
-        TODO("Not yet implemented")
+        return GetStateImpl(
+            pubnub = pubNubObjC,
+            channels = channels,
+            channelGroups = channelGroups,
+            uuid = uuid
+        )
     }
 
     override fun presence(channels: List<String>, channelGroups: List<String>, connected: Boolean) {
@@ -269,7 +292,13 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     }
 
     override fun addMessageAction(channel: String, messageAction: PNMessageAction): AddMessageAction {
-        TODO("Not yet implemented")
+        return AddMessageActionImpl(
+            pubnub = pubNubObjC,
+            channel = channel,
+            actionType = messageAction.type,
+            actionValue = messageAction.value,
+            messageTimetoken = messageAction.messageTimetoken
+        )
     }
 
     override fun removeMessageAction(
@@ -277,34 +306,51 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         messageTimetoken: Long,
         actionTimetoken: Long
     ): RemoveMessageAction {
-        TODO("Not yet implemented")
+        return RemoveMessageActionImpl(
+            pubnub = pubNubObjC,
+            channel = channel,
+            messageTimetoken = messageTimetoken,
+            actionTimetoken = actionTimetoken
+        )
     }
 
     override fun getMessageActions(channel: String, page: PNBoundedPage): GetMessageActions {
-        TODO("Not yet implemented")
+        return GetMessageActionsImpl(
+            pubnub = pubNubObjC,
+            channel = channel,
+            page = page
+        )
     }
 
     override fun addChannelsToChannelGroup(channels: List<String>, channelGroup: String): AddChannelChannelGroup {
-        TODO("Not yet implemented")
+        return AddChannelChannelGroupImpl(
+            pubnub = pubNubObjC,
+            channels = channels,
+            channelGroup = channelGroup
+        )
     }
 
     override fun listChannelsForChannelGroup(channelGroup: String): AllChannelsChannelGroup {
-        TODO("Not yet implemented")
+        return AllChannelsChannelGroupImpl(pubnub = pubNubObjC, channelGroup = channelGroup)
     }
 
     override fun removeChannelsFromChannelGroup(
         channels: List<String>,
         channelGroup: String
     ): RemoveChannelChannelGroup {
-        TODO("Not yet implemented")
+        return RemoveChannelChannelGroupImpl(
+            pubnub = pubNubObjC,
+            channels = channels,
+            channelGroup = channelGroup
+        )
     }
 
     override fun listAllChannelGroups(): ListAllChannelGroup {
-        TODO("Not yet implemented")
+        return ListAllChannelGroupImpl(pubnub = pubNubObjC)
     }
 
     override fun deleteChannelGroup(channelGroup: String): DeleteChannelGroup {
-        TODO("Not yet implemented")
+        return DeleteChannelGroupImpl(pubnub = pubNubObjC, channelGroup = channelGroup)
     }
 
     override fun grantToken(
@@ -334,7 +380,15 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         includeCount: Boolean,
         includeCustom: Boolean
     ): GetAllChannelMetadata {
-        TODO("Not yet implemented")
+        return GetAllChannelMetadataImpl(
+            pubnub = pubNubObjC,
+            limit = limit,
+            page = page,
+            filter = filter,
+            sort = sort,
+            includeCount = includeCount,
+            includeCustom = includeCustom
+        )
     }
 
     override fun getChannelMetadata(channel: String, includeCustom: Boolean): GetChannelMetadata {
@@ -544,8 +598,11 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         pubNubObjC.unsubscribeFrom(channels = channels, channelGroups = channelGroups)
     }
 
+    // TODO: Why token is optional? What's the desired behavior for a null value?
     override fun setToken(token: String?) {
-        TODO("Not yet implemented")
+        token?.let {
+            pubNubObjC.setWithToken(token)
+        }
     }
 
     override fun destroy() {

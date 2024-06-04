@@ -179,86 +179,86 @@ private fun createObjectEvent(from: PubNubObjectEventResultObjC?): PNObjectEvent
 
 @OptIn(ExperimentalForeignApi::class)
 private fun mapObjectMessage(from: PubNubObjectEventMessageObjC?): PNObjectEventMessage? {
-    if (from is PubNubSetUUIDMetadataEventMessageObjC) {
-        return PNSetUUIDMetadataEventMessage(
-            source = from.source(),
-            version = from.version(),
-            event = from.event(),
-            type = from.type(),
-            data = PNUUIDMetadata(
-                id = from.data().id(),
-                name = from.data().name(),
-                externalId = from.data().externalId(),
-                profileUrl = from.data().profileUrl(),
-                email = from.data().email(),
-                custom = from.data().custom() as? Map<String, Any?>,
-                updated = from.data().updated(),
-                eTag = from.data().eTag(),
-                type = from.data().type(),
-                status = from.data().status()
+    when (from) {
+        is PubNubSetUUIDMetadataEventMessageObjC ->
+            return PNSetUUIDMetadataEventMessage(
+                source = from.source(),
+                version = from.version(),
+                event = from.event(),
+                type = from.type(),
+                data = PNUUIDMetadata(
+                    id = from.data().id(),
+                    name = from.data().name(),
+                    externalId = from.data().externalId(),
+                    profileUrl = from.data().profileUrl(),
+                    email = from.data().email(),
+                    custom = from.data().custom() as? Map<String, Any?>,
+                    updated = from.data().updated(),
+                    eTag = from.data().eTag(),
+                    type = from.data().type(),
+                    status = from.data().status()
+                )
             )
-        )
-    } else if (from is PubNubDeleteUUIDMetadataEventMessageObjC) {
-        return PNDeleteUUIDMetadataEventMessage(
-            source = from.source(),
-            version = from.version(),
-            event = from.event(),
-            type = from.type(),
-            uuid = from.uuid()
-        )
-    } else if (from is PubNubSetChannelMetadataEventMessageObjC) {
-        return PNSetChannelMetadataEventMessage(
-            source = from.source(),
-            version = from.version(),
-            event = from.event(),
-            type = from.type(),
-            data = PNChannelMetadata(
-                id = from.data().id(),
-                name = from.data().name(),
-                description = from.data().descr(),
-                custom = from.data().custom() as? Map<String, Any?>,
-                updated = from.data().updated(),
-                eTag = from.data().eTag(),
-                type = from.data().type(),
-                status = from.data().status()
+        is PubNubDeleteUUIDMetadataEventMessageObjC ->
+            return PNDeleteUUIDMetadataEventMessage(
+                source = from.source(),
+                version = from.version(),
+                event = from.event(),
+                type = from.type(),
+                uuid = from.uuid()
             )
-        )
-    } else if (from is PubNubDeleteChannelMetadataEventMessageObjC) {
-        return PNDeleteChannelMetadataEventMessage(
-            source = from.source(),
-            version = from.version(),
-            event = from.event(),
-            type = from.type(),
-            channel = from.channel()
-        )
-    } else if (from is PubNubSetMembershipEventMessageObjC) {
-        return PNSetMembershipEventMessage(
-            source = from.source(),
-            version = from.version(),
-            event = from.event(),
-            type = from.type(),
-            data = PNSetMembershipEvent(
-                channel = from.data().channel(),
-                uuid = from.data().uuid(),
-                custom = from.data().custom() as Map<String, Any?>?,
-                eTag = from.data().eTag(),
-                updated = from.data().updated(),
-                status = from.data().status()
+        is PubNubSetChannelMetadataEventMessageObjC ->
+            return PNSetChannelMetadataEventMessage(
+                source = from.source(),
+                version = from.version(),
+                event = from.event(),
+                type = from.type(),
+                data = PNChannelMetadata(
+                    id = from.data().id(),
+                    name = from.data().name(),
+                    description = from.data().descr(),
+                    custom = from.data().custom() as? Map<String, Any?>,
+                    updated = from.data().updated(),
+                    eTag = from.data().eTag(),
+                    type = from.data().type(),
+                    status = from.data().status()
+                )
             )
-        )
-    } else if (from is PubNubDeleteMembershipEventMessageObjC) {
-        return PNDeleteMembershipEventMessage(
-            source = from.source(),
-            version = from.version(),
-            event = from.event(),
-            type = from.type(),
-            data = PNDeleteMembershipEvent(
-                channelId = from.data().channelId(),
-                uuid = from.data().uuid()
+        is PubNubDeleteChannelMetadataEventMessageObjC ->
+            return PNDeleteChannelMetadataEventMessage(
+                source = from.source(),
+                version = from.version(),
+                event = from.event(),
+                type = from.type(),
+                channel = from.channel()
             )
-        )
-    } else {
-        return null
+        is PubNubSetMembershipEventMessageObjC ->
+            return PNSetMembershipEventMessage(
+                source = from.source(),
+                version = from.version(),
+                event = from.event(),
+                type = from.type(),
+                data = PNSetMembershipEvent(
+                    channel = from.data().channel(),
+                    uuid = from.data().uuid(),
+                    custom = from.data().custom() as? Map<String, Any?>, // TODO: This will fail,
+                    eTag = from.data().eTag(),
+                    updated = from.data().updated(),
+                    status = from.data().status()
+                )
+            )
+        is PubNubDeleteMembershipEventMessageObjC ->
+            return PNDeleteMembershipEventMessage(
+                source = from.source(),
+                version = from.version(),
+                event = from.event(),
+                type = from.type(),
+                data = PNDeleteMembershipEvent(
+                    channelId = from.data().channelId(),
+                    uuid = from.data().uuid()
+                )
+            )
+        else -> return null
     }
 }
 
