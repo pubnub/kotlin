@@ -1,6 +1,5 @@
 package com.pubnub.api
 
-import com.pubnub.kmp.Codable
 import com.pubnub.kmp.PLATFORM
 import com.pubnub.kmp.createCustomObject
 import com.pubnub.test.BaseIntegrationTest
@@ -11,10 +10,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withContext
 import kotlin.js.JsExport
-import kotlin.math.exp
 import kotlin.test.Ignore
 import kotlin.test.Test
-import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlin.time.Duration.Companion.seconds
@@ -24,15 +21,7 @@ data class ABC (
     val aaa: Boolean = false,
     val bbb: Int = 123,
     val ccc: String = "platform: $PLATFORM"
-) : Codable {
-    override fun toCodable(): Any {
-        return mapOf(
-            "aaa" to aaa,
-            "bbb" to bbb,
-            "ccc" to ccc
-        )
-    }
-}
+)
 
 class PublishTest : BaseIntegrationTest() {
     private val channel = "myChannel"

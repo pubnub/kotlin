@@ -72,7 +72,6 @@ class PubNubKotlinMultiplatformPlugin : Plugin<Project> {
                         // Optional properties
                         // Specify the framework linking type. It's dynamic by default.
                         isStatic = true
-                        export(project(":pubnub-core:pubnub-core-api"))
                         transitiveExport = true
                     }
 

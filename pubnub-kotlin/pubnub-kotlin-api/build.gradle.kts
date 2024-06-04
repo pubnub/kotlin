@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
-
 plugins {
     alias(libs.plugins.benmanes.versions)
     id("pubnub.shared")
@@ -26,6 +24,14 @@ kotlin {
             dependencies {
                 implementation(npm("pubnub", "8.1.0"))
             }
+        }
+    }
+}
+
+kotlin {
+    cocoapods {
+        framework {
+            export(project(":pubnub-core:pubnub-core-api"))
         }
     }
 }
