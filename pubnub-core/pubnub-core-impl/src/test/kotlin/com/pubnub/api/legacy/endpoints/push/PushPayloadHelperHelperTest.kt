@@ -313,6 +313,7 @@ class PushPayloadHelperHelperTest : BaseTest() {
                         color = "color"
                         sound = "sound"
                         tag = "tag"
+                        clickAction = "clickAction_1"
                         bodyLocKey = "bodyLocKey"
                         bodyLocArgs = listOf("a", "b")
                         titleLocKey = "titleLocKey"
@@ -393,6 +394,7 @@ class PushPayloadHelperHelperTest : BaseTest() {
                     "color": "color",
                     "sound": "sound",
                     "tag": "tag",
+                    "click_action": "clickAction_1",
                     "body_loc_key": "bodyLocKey",
                     "body_loc_args": [
                       "a",

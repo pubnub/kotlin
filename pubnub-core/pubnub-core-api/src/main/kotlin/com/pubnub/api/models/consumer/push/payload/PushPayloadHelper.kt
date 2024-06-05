@@ -269,6 +269,7 @@ class PushPayloadHelper {
                 var color: String? = null
                 var sound: String? = null
                 var tag: String? = null
+                var clickAction: String? = null
                 var bodyLocKey: String? = null
                 var bodyLocArgs: List<String>? = null
                 var titleLocKey: String? = null
@@ -336,6 +337,7 @@ class PushPayloadHelper {
                     color?.let { put("color", it) }
                     sound?.let { put("sound", it) }
                     tag?.let { put("tag", it) }
+                    clickAction?.let { put("click_action", it) }
                     bodyLocKey?.let { put("body_loc_key", it) }
                     bodyLocArgs?.let { put("body_loc_args", it) }
                     titleLocKey?.let { put("title_loc_key", it) }
