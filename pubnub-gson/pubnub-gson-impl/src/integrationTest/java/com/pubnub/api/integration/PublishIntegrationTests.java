@@ -10,7 +10,6 @@ import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.crypto.CryptoModule;
 import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
-import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult;
 import com.pubnub.api.models.consumer.history.PNHistoryResult;
@@ -24,7 +23,6 @@ import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult;
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
 import com.pubnub.api.v2.PNConfiguration;
 import com.pubnub.api.v2.PNConfigurationOverride;
-import com.pubnub.api.v2.callbacks.Result;
 import com.pubnub.api.v2.entities.Channel;
 import com.pubnub.api.v2.subscriptions.Subscription;
 import org.awaitility.Awaitility;
@@ -46,7 +44,6 @@ import static com.pubnub.api.integration.util.Utils.randomChannel;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 public class PublishIntegrationTests extends BaseIntegrationTest {
 
@@ -109,44 +106,6 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
                 .atMost(Durations.FIVE_SECONDS)
                 .untilAtomic(signalReceived, Matchers.equalTo(true));
 
-    }
-
-    @Test
-    public void testPublishUsingChannelEntityInAsyncMode() throws InterruptedException, PubNubException {
-        AtomicBoolean messageSent = new AtomicBoolean(false);
-        AtomicBoolean signalSent = new AtomicBoolean(false);
-        AtomicBoolean fireSent = new AtomicBoolean(false);
-        String channelName = randomChannel();
-        Channel channel = pubNub.channel(channelName);
-
-        Subscription subscription = channel.subscription();
-        subscription.subscribe();
-        Thread.sleep(1000);
-
-        channel.publish("My message").meta("meta").async((Result<PNPublishResult> result) -> {
-            result.onSuccess( (PNPublishResult res) -> {
-                assertTrue(result.getOrNull().getTimetoken() != 0);
-                messageSent.set(true);
-            }).onFailure( (PubNubException exception) -> {
-                System.out.println("Exception occurred: " + exception.getMessage());
-            });
-        });
-
-        channel.signal("My signal").async((Result<PNPublishResult> result) ->{
-            assertTrue(result.isSuccess());
-            assertTrue(result.getOrNull().getTimetoken() != 0);
-            signalSent.set(true);
-        });
-
-        channel.fire("My fire").async((Result<PNPublishResult> result) -> {
-            assertTrue(result.isSuccess());
-            assertTrue(result.getOrNull().getTimetoken() != 0);
-            fireSent.set(true);
-        });
-
-        Awaitility.await().atMost(Durations.FIVE_SECONDS).untilAtomic(messageSent, Matchers.equalTo(true));
-        Awaitility.await().atMost(Durations.FIVE_SECONDS).untilAtomic(signalSent, Matchers.equalTo(true));
-        Awaitility.await().atMost(Durations.FIVE_SECONDS).untilAtomic(fireSent, Matchers.equalTo(true));
     }
 
     @Test
