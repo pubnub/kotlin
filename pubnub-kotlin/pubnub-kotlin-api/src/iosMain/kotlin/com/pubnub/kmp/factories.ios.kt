@@ -1,6 +1,15 @@
 package com.pubnub.kmp
 
 import cocoapods.PubNubSwift.EventListenerObjC
+import cocoapods.PubNubSwift.PubNubConnectionStatusCategoryObjC
+import cocoapods.PubNubSwift.PubNubConnectionStatusCategoryObjCConnected
+import cocoapods.PubNubSwift.PubNubConnectionStatusCategoryObjCConnectionError
+import cocoapods.PubNubSwift.PubNubConnectionStatusCategoryObjCDisconnected
+import cocoapods.PubNubSwift.PubNubConnectionStatusCategoryObjCDisconnectedUnexpectedly
+import cocoapods.PubNubSwift.PubNubConnectionStatusCategoryObjCHeartbeatFailed
+import cocoapods.PubNubSwift.PubNubConnectionStatusCategoryObjCHeartbeatSuccess
+import cocoapods.PubNubSwift.PubNubConnectionStatusCategoryObjCMalformedResponseCategory
+import cocoapods.PubNubSwift.PubNubConnectionStatusCategoryObjCSubscriptionChanged
 import cocoapods.PubNubSwift.PubNubDeleteChannelMetadataEventMessageObjC
 import cocoapods.PubNubSwift.PubNubDeleteMembershipEventMessageObjC
 import cocoapods.PubNubSwift.PubNubDeleteUUIDMetadataEventMessageObjC
@@ -13,9 +22,12 @@ import cocoapods.PubNubSwift.PubNubPresenceEventResultObjC
 import cocoapods.PubNubSwift.PubNubSetChannelMetadataEventMessageObjC
 import cocoapods.PubNubSwift.PubNubSetMembershipEventMessageObjC
 import cocoapods.PubNubSwift.PubNubSetUUIDMetadataEventMessageObjC
+import cocoapods.PubNubSwift.StatusListenerObjC
 import com.pubnub.api.JsonElementImpl
 import com.pubnub.api.PubNub
+import com.pubnub.api.PubNubException
 import com.pubnub.api.PubNubImpl
+import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.files.PNDownloadableFile
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
@@ -41,6 +53,7 @@ import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.EventListenerImpl
 import com.pubnub.api.v2.callbacks.StatusListener
+import com.pubnub.api.v2.callbacks.StatusListenerImpl
 import kotlinx.cinterop.ExperimentalForeignApi
 
 actual fun createPubNub(config: PNConfiguration): PubNub {
@@ -58,12 +71,6 @@ actual fun createEventListener(
     onFile: (PubNub, PNFileEventResult) -> Unit
 ): EventListener {
     return EventListenerImpl(
-        onMessage = onMessage,
-        onMessageAction = onMessageAction,
-        onPresence = onPresence,
-        onObjects = onObjects,
-        onFile = onFile,
-        onSignal = onSignal,
         underlying = EventListenerObjC(
             onMessage = { onMessage(pubnub, createMessageResult(it)) },
             onPresence = { presenceEvents -> createPresenceEventResults(presenceEvents).forEach { onPresence(pubnub, it) } },
@@ -262,11 +269,44 @@ private fun mapObjectMessage(from: PubNubObjectEventMessageObjC?): PNObjectEvent
     }
 }
 
+@OptIn(ExperimentalForeignApi::class)
 actual fun createStatusListener(
     pubnub: PubNub,
     onStatus: (PubNub, PNStatus) -> Unit
 ): StatusListener {
-    TODO("Not yet implemented")
+    return StatusListenerImpl(
+        underlying = StatusListenerObjC(onStatusChange = { status ->
+            when (status?.category()) {
+                PubNubConnectionStatusCategoryObjCConnected ->
+                    PNStatusCategory.PNConnectedCategory
+                PubNubConnectionStatusCategoryObjCDisconnected ->
+                    PNStatusCategory.PNDisconnectedCategory
+                PubNubConnectionStatusCategoryObjCDisconnectedUnexpectedly ->
+                    PNStatusCategory.PNUnexpectedDisconnectCategory
+                PubNubConnectionStatusCategoryObjCConnectionError ->
+                    PNStatusCategory.PNConnectionError
+                PubNubConnectionStatusCategoryObjCMalformedResponseCategory ->
+                    PNStatusCategory.PNMalformedResponseCategory
+                PubNubConnectionStatusCategoryObjCHeartbeatFailed ->
+                    PNStatusCategory.PNHeartbeatFailed
+                PubNubConnectionStatusCategoryObjCHeartbeatSuccess ->
+                    PNStatusCategory.PNHeartbeatSuccess
+                PubNubConnectionStatusCategoryObjCSubscriptionChanged ->
+                    PNStatusCategory.PNSubscriptionChanged
+                else -> null
+            }?.let { category ->
+                onStatus(
+                    pubnub, PNStatus(
+                        category = category,
+                        exception = status?.error()?.let { error -> PubNubException(errorMessage = error.localizedDescription) },
+                        currentTimetoken = status?.currentTimetoken()?.longValue(),
+                        affectedChannels = status?.affectedChannels() as Set<String>,
+                        affectedChannelGroups = status?.affectedChannelGroups() as Set<String>
+                    )
+                )
+            }
+        })
+    )
 }
 
 actual fun createCustomObject(map: Map<String, Any?>): CustomObject {
