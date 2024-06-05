@@ -1,8 +1,6 @@
 package com.pubnub.api.models.consumer.push.payload
 
 import com.pubnub.api.enums.PNPushEnvironment
-import java.beans.Visibility
-import java.util.Locale
 
 class PushPayloadHelper {
     var commonPayload: Map<String, Any>? = null
@@ -100,7 +98,7 @@ class PushPayloadHelper {
                     return mutableMapOf<String, Any>().apply {
                         topic?.let { put("topic", it) }
                         excludeDevices?.let { put("excluded_devices", it) }
-                        environment?.let { put("environment", it.name.lowercase(Locale.getDefault())) }
+                        environment?.let { put("environment", it.name.lowercase()) }
                     }
                 }
             }
@@ -132,80 +130,117 @@ class PushPayloadHelper {
         var notification: Notification? = null
         var android: AndroidConfig? = null
         var webpush: WebpushConfig? = null
+        var apns: ApnsConfig? = null
+        var fcmOptions: FcmOptions? = null
+
+        override fun toMap(): Map<String, Any> {
+            return mutableMapOf<String, Any>().apply {
+                data?.let {
+                    if (it.isNotEmpty()) {
+                        put("data", it)
+                    }
+                }
+                notification?.let {
+                    it.toMap().let { map ->
+                        if (map.isNotEmpty()) {
+                            put("notification", map)
+                        }
+                    }
+                }
+                android?.let {
+                    it.toMap().let { map ->
+                        if (map.isNotEmpty()) {
+                            put("android", map)
+                        }
+                    }
+                }
+                webpush?.let {
+                    it.toMap().let { map ->
+                        if (map.isNotEmpty()) {
+                            put("webpush", map)
+                        }
+                    }
+                }
+                apns?.let {
+                    it.toMap().let { map ->
+                        if (map.isNotEmpty()) {
+                            put("apns", map)
+                        }
+                    }
+                }
+                fcmOptions?.let {
+                    it.toMap().let { map ->
+                        if (map.isNotEmpty()) {
+                            put("fcm_options", map)
+                        }
+                    }
+                }
+            }
+        }
 
         class WebpushConfig : PushPayloadSerializer {
             var headers: Map<String, String>? = null
             var data: Map<String, String>? = null
             var notification: Map<String, Any>? = null
-            var fcm_options: WebpushFcmOptions? = null
+            var fcmOptions: WebpushFcmOptions? = null
 
             class WebpushFcmOptions : PushPayloadSerializer {
                 var link: String? = null
-                var analytics_label: String? = null
+                var analyticsLabel: String? = null
 
                 override fun toMap(): Map<String, Any> {
-                    TODO("Not yet implemented")
+                    return buildMap {
+                        link?.let { put("link", it) }
+                        analyticsLabel?.let { put("analytics_label", it) }
+                    }
                 }
             }
 
             override fun toMap(): Map<String, Any> {
-                TODO("Not yet implemented")
+                return buildMap {
+                    headers?.let { put("headers", it) }
+                    data?.let { put("data", it) }
+                    notification?.let { put("notification", it) }
+                    fcmOptions?.let { put("fcm_options", it.toMap()) }
+                }
             }
-
         }
-
-        var apns: ApnsConfig? = null
 
         class ApnsConfig : PushPayloadSerializer {
             var headers: Map<String, String>? = null
             var payload: Map<String, String>? = null
-            var fcm_options: ApnsFcmOptions? = null
+            var fcmOptions: ApnsFcmOptions? = null
 
             class ApnsFcmOptions : PushPayloadSerializer {
-                var analytics_label: String? = null
+                var analyticsLabel: String? = null
                 var image: String? = null
 
                 override fun toMap(): Map<String, Any> {
-                    TODO("Not yet implemented")
+                    return buildMap {
+                        analyticsLabel?.let { put("analytics_label", it) }
+                        image?.let { put("image", it) }
+                    }
                 }
-
             }
 
             override fun toMap(): Map<String, Any> {
-                TODO("Not yet implemented")
+                return buildMap {
+                    headers?.let { put("headers", it) }
+                    payload?.let { put("payload", it) }
+                    fcmOptions?.let { put("fcm_options", it.toMap()) }
+                }
             }
-
         }
 
-        var fcm_options: FcmOptions? = null
-
-        class FcmOptions: PushPayloadSerializer {
-            var analytics_label: String? = null
+        class FcmOptions : PushPayloadSerializer {
+            var analyticsLabel: String? = null
 
             override fun toMap(): Map<String, Any> {
-                TODO("Not yet implemented")
+                return buildMap {
+                    analyticsLabel?.let { put("analytics_label", it) }
+                }
             }
-
         }
-
-        var token: String? = null
-            set(value) {
-                topic = null
-                condition = null
-                field = value
-            }
-        var topic: String? = null
-            set(value) {
-                token = null
-                condition = null
-                field = value
-            }
-        var condition: String? = null
-            set(value) {
-                topic = null
-                token = null
-                field = value
-            }
 
         class AndroidConfig : PushPayloadSerializer {
             var collapseKey: String? = null
@@ -218,10 +253,11 @@ class PushPayloadHelper {
             var directBootOk: Boolean = false
 
             class AndroidFcmOptions : PushPayloadSerializer {
-                var analytics_label: String? = null
+                var analyticsLabel: String? = null
+
                 override fun toMap(): Map<String, Any> {
                     return buildMap {
-                        analytics_label?.let { put("analytics_label", it) }
+                        analyticsLabel?.let { put("analytics_label", it) }
                     }
                 }
             }
@@ -233,39 +269,48 @@ class PushPayloadHelper {
                 var color: String? = null
                 var sound: String? = null
                 var tag: String? = null
-                var body_loc_key: String? = null
-                var body_loc_args: List<String>? = null
-                var title_loc_key: String? = null
-                var title_loc_args: List<String>? = null
-                var channel_id: String? = null
+                var bodyLocKey: String? = null
+                var bodyLocArgs: List<String>? = null
+                var titleLocKey: String? = null
+                var titleLocArgs: List<String>? = null
+                var channelId: String? = null
                 var ticker: String? = null
                 var sticky: Boolean = false
-                var event_time: String? = null
-                var local_only: Boolean? = null
-                var notification_priority: NotificationPriority = NotificationPriority.PRIORITY_DEFAULT
-                var default_sound: Boolean? = null
-                var default_vibrate_timings: Boolean? = null
-                var default_light_settings: Boolean? = null
-                var vibrate_timings: List<String>? = null
+                var eventTime: String? = null
+                var localOnly: Boolean? = null
+                var notificationPriority: NotificationPriority = NotificationPriority.PRIORITY_DEFAULT
+                var defaultSound: Boolean? = null
+                var defaultVibrateTimings: Boolean? = null
+                var defaultLightSettings: Boolean? = null
+                var vibrateTimings: List<String>? = null
                 var visibility: Visibility? = null
-                var notification_count: Int? = null
-                var light_settings: LightSettings? = null
+                var notificationCount: Int? = null
+                var lightSettings: LightSettings? = null
                 var image: String? = null
 
                 class LightSettings : PushPayloadSerializer {
-                    //                    var color : {
-//                        "red": number,
-//                        "green": number,
-//                        "blue": number,
-//                        "alpha": number
-//                    }
-                    var light_on_duration: String? = null
-                    var light_off_duration: String? = null
+                    var color: Color? = null
+                    var lightOnDuration: String? = null
+                    var lightOffDuration: String? = null
 
-                    override fun toMap(): Map<String, Any> {
-                        TODO("Not yet implemented")
+                    class Color(val red: Float, val green: Float, val blue: Float, val alpha: Float) : PushPayloadSerializer {
+                        override fun toMap(): Map<String, Any> {
+                            return buildMap {
+                                put("red", red)
+                                put("green", green)
+                                put("blue", blue)
+                                put("alpha", alpha)
+                            }
+                        }
                     }
 
+                    override fun toMap(): Map<String, Any> {
+                        return buildMap {
+                            color?.let { put("color", it.toMap()) }
+                            lightOnDuration?.let { put("light_on_duration", it) }
+                            lightOffDuration?.let { put("light_off_duration", it) }
+                        }
+                    }
                 }
 
                 enum class Visibility {
@@ -284,39 +329,37 @@ class PushPayloadHelper {
                     PRIORITY_MAX
                 }
 
-                override fun toMap(): Map<String, Any> =
-                    buildMap {
-                        title?.let { put("title", it) }
-                        body?.let { put("body", it) }
-                        icon?.let { put("icon", it) }
-                        color?.let { put("color", it) }
-                        sound?.let { put("sound", it) }
-                        tag?.let { put("tag", it) }
-                        body_loc_key?.let { put("body_loc_key", it) }
-                        body_loc_args?.let { put("body_loc_args", it) }
-                        title_loc_key?.let { put("title_loc_key", it) }
-                        title_loc_args?.let { put("title_loc_args", it) }
-                        channel_id?.let { put("channel_id", it) }
-                        ticker?.let { put("ticker", it) }
-                        put("sticky", sticky)
-                        event_time?.let { put("event_time", it) }
-                        local_only?.let { put("local_only", it) }
-                        put("notification_priority", notification_priority.name)
-                        default_sound?.let { put("default_sound", it) }
-                        default_vibrate_timings?.let { put("default_vibrate_timings", it) }
-                        default_light_settings?.let { put("default_light_settings", it) }
-                        vibrate_timings?.let { put("vibrate_timings", it) }
-                        visibility?.let { put("visibility", it.name) }
-                        notification_count?.let { put("notification_count", it) }
-                        light_settings?.let { put("light_settings", it.toMap()) }
-                        image?.let { put("image", it) }
-                    }
-
+                override fun toMap(): Map<String, Any> = buildMap {
+                    title?.let { put("title", it) }
+                    body?.let { put("body", it) }
+                    icon?.let { put("icon", it) }
+                    color?.let { put("color", it) }
+                    sound?.let { put("sound", it) }
+                    tag?.let { put("tag", it) }
+                    bodyLocKey?.let { put("body_loc_key", it) }
+                    bodyLocArgs?.let { put("body_loc_args", it) }
+                    titleLocKey?.let { put("title_loc_key", it) }
+                    titleLocArgs?.let { put("title_loc_args", it) }
+                    channelId?.let { put("channel_id", it) }
+                    ticker?.let { put("ticker", it) }
+                    put("sticky", sticky)
+                    eventTime?.let { put("event_time", it) }
+                    localOnly?.let { put("local_only", it) }
+                    put("notification_priority", notificationPriority.name)
+                    defaultSound?.let { put("default_sound", it) }
+                    defaultVibrateTimings?.let { put("default_vibrate_timings", it) }
+                    defaultLightSettings?.let { put("default_light_settings", it) }
+                    vibrateTimings?.let { put("vibrate_timings", it) }
+                    visibility?.let { put("visibility", it.name) }
+                    notificationCount?.let { put("notification_count", it) }
+                    lightSettings?.let { put("light_settings", it.toMap()) }
+                    image?.let { put("image", it) }
+                }
             }
 
-
             enum class AndroidMessagePriority {
-                NORMAL, HIGH
+                NORMAL,
+                HIGH
             }
 
             override fun toMap(): Map<String, Any> {
@@ -329,24 +372,6 @@ class PushPayloadHelper {
                     notification?.let { put("notification", it.toMap()) }
                     fcmOptions?.let { put("fcm_options", it.toMap()) }
                     put("direct_boot_ok", directBootOk)
-                }
-            }
-        }
-
-        override fun toMap(): Map<String, Any> {
-            return mutableMapOf<String, Any>().apply {
-                custom?.let { putAll(it) }
-                data?.let {
-                    if (it.isNotEmpty()) {
-                        put("data", it)
-                    }
-                }
-                notification?.let {
-                    it.toMap().run {
-                        if (this.isNotEmpty()) {
-                            put("notification", this)
-                        }
-                    }
                 }
             }
         }
