@@ -40,15 +40,20 @@ import com.pubnub.api.endpoints.message_actions.RemoveMessageActionImpl
 import com.pubnub.api.endpoints.objects.channel.GetAllChannelMetadata
 import com.pubnub.api.endpoints.objects.channel.GetAllChannelMetadataImpl
 import com.pubnub.api.endpoints.objects.channel.GetChannelMetadata
+import com.pubnub.api.endpoints.objects.channel.GetChannelMetadataImpl
 import com.pubnub.api.endpoints.objects.channel.RemoveChannelMetadata
+import com.pubnub.api.endpoints.objects.channel.RemoveChannelMetadataImpl
 import com.pubnub.api.endpoints.objects.channel.SetChannelMetadata
 import com.pubnub.api.endpoints.objects.member.GetChannelMembers
 import com.pubnub.api.endpoints.objects.member.ManageChannelMembers
 import com.pubnub.api.endpoints.objects.membership.GetMemberships
 import com.pubnub.api.endpoints.objects.membership.ManageMemberships
 import com.pubnub.api.endpoints.objects.uuid.GetAllUUIDMetadata
+import com.pubnub.api.endpoints.objects.uuid.GetAllUUIDMetadataImpl
 import com.pubnub.api.endpoints.objects.uuid.GetUUIDMetadata
+import com.pubnub.api.endpoints.objects.uuid.GetUUIDMetadataImpl
 import com.pubnub.api.endpoints.objects.uuid.RemoveUUIDMetadata
+import com.pubnub.api.endpoints.objects.uuid.RemoveUUIDMetadataImpl
 import com.pubnub.api.endpoints.objects.uuid.SetUUIDMetadata
 import com.pubnub.api.endpoints.presence.GetState
 import com.pubnub.api.endpoints.presence.GetStateImpl
@@ -391,7 +396,11 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     }
 
     override fun getChannelMetadata(channel: String, includeCustom: Boolean): GetChannelMetadata {
-        TODO("Not yet implemented")
+        return GetChannelMetadataImpl(
+            pubnub = pubNubObjC,
+            channel = channel,
+            includeCustom = includeCustom
+        )
     }
 
     override fun setChannelMetadata(
@@ -407,7 +416,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     }
 
     override fun removeChannelMetadata(channel: String): RemoveChannelMetadata {
-        TODO("Not yet implemented")
+        return RemoveChannelMetadataImpl(pubnub = pubNubObjC, channel = channel)
     }
 
     override fun getAllUUIDMetadata(
@@ -418,11 +427,19 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         includeCount: Boolean,
         includeCustom: Boolean
     ): GetAllUUIDMetadata {
-        TODO("Not yet implemented")
+        return GetAllUUIDMetadataImpl(
+            pubnub = pubNubObjC,
+            limit = limit,
+            page = page,
+            filter = filter,
+            sort = sort,
+            includeCount = includeCount,
+            includeCustom = includeCustom
+        )
     }
 
     override fun getUUIDMetadata(uuid: String?, includeCustom: Boolean): GetUUIDMetadata {
-        TODO("Not yet implemented")
+        return GetUUIDMetadataImpl(pubnub = pubNubObjC, uuid = uuid, includeCustom = includeCustom)
     }
 
     override fun setUUIDMetadata(
@@ -440,7 +457,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     }
 
     override fun removeUUIDMetadata(uuid: String?): RemoveUUIDMetadata {
-        TODO("Not yet implemented")
+        return RemoveUUIDMetadataImpl(pubnub = pubNubObjC, uuid = uuid)
     }
 
     override fun getMemberships(
