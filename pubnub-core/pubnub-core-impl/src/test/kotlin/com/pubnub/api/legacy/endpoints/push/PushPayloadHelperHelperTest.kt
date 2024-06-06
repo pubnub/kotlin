@@ -1,5 +1,6 @@
 package com.pubnub.api.legacy.endpoints.push
 
+import com.google.gson.GsonBuilder
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper
@@ -7,6 +8,16 @@ import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.APNSPayload
 import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.APNSPayload.APNS2Configuration
 import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.APNSPayload.APS
 import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayload
+import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayload.AndroidConfig.AndroidFcmOptions
+import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayload.AndroidConfig.AndroidMessagePriority
+import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayload.AndroidConfig.AndroidNotification.LightSettings
+import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayload.AndroidConfig.AndroidNotification.NotificationPriority
+import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayload.AndroidConfig.AndroidNotification.Visibility
+import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayload.ApnsConfig
+import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayload.ApnsConfig.ApnsFcmOptions
+import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayload.FcmOptions
+import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayload.WebpushConfig
+import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayload.WebpushConfig.WebpushFcmOptions
 import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.MPNSPayload
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -282,34 +293,185 @@ class PushPayloadHelperHelperTest : BaseTest() {
 
         pushPayloadHelper.fcmPayload =
             FCMPayload().apply {
+                data = mapOf("data_1" to "aa")
                 notification =
                     FCMPayload.Notification().apply {
                         body = "Notification body"
-                        image = null
+                        image = "image"
                         title = ""
                     }
-                custom = mapOf("a" to "a", "b" to 1)
-                data = mapOf("data_1" to "a", "data_2" to 1)
+                android = FCMPayload.AndroidConfig().apply {
+                    collapseKey = "collapseKey"
+                    priority = AndroidMessagePriority.HIGH
+                    ttl = "ttl"
+                    restrictedPackageName = "restricted"
+                    data = mapOf("android_data_1" to "a")
+                    notification = FCMPayload.AndroidConfig.AndroidNotification().apply {
+                        title = "title"
+                        body = "body"
+                        icon = "icon"
+                        color = "color"
+                        sound = "sound"
+                        tag = "tag"
+                        clickAction = "clickAction_1"
+                        bodyLocKey = "bodyLocKey"
+                        bodyLocArgs = listOf("a", "b")
+                        titleLocKey = "titleLocKey"
+                        titleLocArgs = listOf("b", "c")
+                        channelId = "channelId"
+                        ticker = "ticker"
+                        sticky = true
+                        eventTime = "eventTime"
+                        localOnly = false
+                        notificationPriority = NotificationPriority.PRIORITY_LOW
+                        defaultSound = true
+                        defaultVibrateTimings = true
+                        defaultLightSettings = true
+                        vibrateTimings = listOf("d", "e")
+                        visibility = Visibility.SECRET
+                        notificationCount = 4
+                        lightSettings = LightSettings().apply {
+                            this.color = LightSettings.Color(1f, 1f, 1f, 1f)
+                            this.lightOnDuration = "4"
+                            this.lightOffDuration = "5"
+                        }
+                        image = "image"
+                    }
+                    fcmOptions = AndroidFcmOptions().apply {
+                        this.analyticsLabel = "analytics_1"
+                    }
+                    directBootOk = true
+                }
+                webpush = WebpushConfig().apply {
+                    headers = mapOf("header_1" to "aaa")
+                    data = mapOf("web_data_1" to "")
+                    notification = mapOf("notification" to "aaa")
+                    fcmOptions = WebpushFcmOptions().apply {
+                        link = "link"
+                        analyticsLabel = "analytics_2"
+                    }
+                }
+                apns = ApnsConfig().apply {
+                    headers = mapOf("header_2" to "bbb")
+                    payload = mapOf("payload_2" to "ccc")
+                    fcmOptions = ApnsFcmOptions().apply {
+                        analyticsLabel = "analytics_3"
+                        image = "image"
+                    }
+                }
+                fcmOptions = FcmOptions().apply {
+                    analyticsLabel = "analytics_4"
+                }
             }
 
         val map = pushPayloadHelper.build()
+        val gson = GsonBuilder().setPrettyPrinting().create()
+        val json = gson.toJson(map)
 
-        val pnFcmMap = map["pn_gcm"] as Map<*, *>
-        assertNotNull(pnFcmMap)
+        val expected = """
+            {
+              "pn_fcm": {
+                "data": {
+                  "data_1": "aa"
+                },
+                "notification": {
+                  "title": "",
+                  "body": "Notification body",
+                  "image": "image"
+                },
+                "android": {
+                  "collapse_key": "collapseKey",
+                  "priority": "HIGH",
+                  "ttl": "ttl",
+                  "restricted_package_name": "restricted",
+                  "data": {
+                    "android_data_1": "a"
+                  },
+                  "notification": {
+                    "title": "title",
+                    "body": "body",
+                    "icon": "icon",
+                    "color": "color",
+                    "sound": "sound",
+                    "tag": "tag",
+                    "click_action": "clickAction_1",
+                    "body_loc_key": "bodyLocKey",
+                    "body_loc_args": [
+                      "a",
+                      "b"
+                    ],
+                    "title_loc_key": "titleLocKey",
+                    "title_loc_args": [
+                      "b",
+                      "c"
+                    ],
+                    "channel_id": "channelId",
+                    "ticker": "ticker",
+                    "sticky": true,
+                    "event_time": "eventTime",
+                    "local_only": false,
+                    "notification_priority": "PRIORITY_LOW",
+                    "default_sound": true,
+                    "default_vibrate_timings": true,
+                    "default_light_settings": true,
+                    "vibrate_timings": [
+                      "d",
+                      "e"
+                    ],
+                    "visibility": "SECRET",
+                    "notification_count": 4,
+                    "light_settings": {
+                      "color": {
+                        "red": 1.0,
+                        "green": 1.0,
+                        "blue": 1.0,
+                        "alpha": 1.0
+                      },
+                      "light_on_duration": "4",
+                      "light_off_duration": "5"
+                    },
+                    "image": "image"
+                  },
+                  "fcm_options": {
+                    "analytics_label": "analytics_1"
+                  },
+                  "direct_boot_ok": true
+                },
+                "webpush": {
+                  "headers": {
+                    "header_1": "aaa"
+                  },
+                  "data": {
+                    "web_data_1": ""
+                  },
+                  "notification": {
+                    "notification": "aaa"
+                  },
+                  "fcm_options": {
+                    "link": "link",
+                    "analytics_label": "analytics_2"
+                  }
+                },
+                "apns": {
+                  "headers": {
+                    "header_2": "bbb"
+                  },
+                  "payload": {
+                    "payload_2": "ccc"
+                  },
+                  "fcm_options": {
+                    "analytics_label": "analytics_3",
+                    "image": "image"
+                  }
+                },
+                "fcm_options": {
+                  "analytics_label": "analytics_4"
+                }
+              }
+            }
+        """.trimIndent()
 
-        val pnFcmDataMap = pnFcmMap["data"] as Map<*, *>
-        val pnFcmNotificationsMap = pnFcmMap["notification"] as Map<*, *>
-
-        assertNotNull(pnFcmDataMap)
-        assertNotNull(pnFcmNotificationsMap)
-
-        assertEquals(pnFcmMap["a"], "a")
-        assertEquals(pnFcmMap["b"], 1)
-        assertEquals(pnFcmDataMap["data_1"], "a")
-        assertEquals(pnFcmDataMap["data_2"], 1)
-        assertEquals(pnFcmNotificationsMap["body"], "Notification body")
-        assertEquals(pnFcmNotificationsMap["image"], null)
-        assertEquals(pnFcmNotificationsMap["title"], "")
+        assertEquals(expected, json)
     }
 
     @Test
@@ -318,7 +480,7 @@ class PushPayloadHelperHelperTest : BaseTest() {
         val fcmPayload = FCMPayload()
         pushPayloadHelper.fcmPayload = fcmPayload
         val map = pushPayloadHelper.build()
-        val pnFcmMap = map["pn_gcm"]
+        val pnFcmMap = map["pn_fcm"]
         assertNull(pnFcmMap)
     }
 
@@ -331,10 +493,10 @@ class PushPayloadHelperHelperTest : BaseTest() {
         customMap["key_2"] = 2
         val fcmPayload = FCMPayload()
         fcmPayload.notification = notification
-        fcmPayload.custom = customMap
+        fcmPayload.data = customMap
         pushPayloadHelper.fcmPayload = fcmPayload
         val map = pushPayloadHelper.build()
-        val pnFcmMap = map["pn_gcm"] as Map<*, *>
+        val pnFcmMap = map["pn_fcm"] as Map<*, *>
         val pnFcmNotificationMap = pnFcmMap["notification"]
         assertNull(pnFcmNotificationMap)
     }
@@ -347,7 +509,7 @@ class PushPayloadHelperHelperTest : BaseTest() {
         fcmPayload.data = dataMap
         pushPayloadHelper.fcmPayload = fcmPayload
         val map = pushPayloadHelper.build()
-        val pnFcmMap = map["pn_gcm"]
+        val pnFcmMap = map["pn_fcm"]
         assertNull(pnFcmMap)
     }
 
@@ -367,7 +529,7 @@ class PushPayloadHelperHelperTest : BaseTest() {
         pushPayloadHelper.fcmPayload = fcmPayload
         val map = pushPayloadHelper.build()
 
-        val pnFcmMap = map["pn_gcm"] as Map<*, *>
+        val pnFcmMap = map["pn_fcm"] as Map<*, *>
         val pnFcmDataMap = pnFcmMap["data"] as Map<*, *>
         assertNotNull(pnFcmDataMap)
         assertFalse(pnFcmDataMap.isEmpty())
@@ -386,7 +548,7 @@ class PushPayloadHelperHelperTest : BaseTest() {
         val pushPayloadHelper = PushPayloadHelper()
         pushPayloadHelper.fcmPayload =
             FCMPayload().apply {
-                custom =
+                data =
                     mapOf(
                         "key_1" to "value_1",
                         "key_2" to 2,
@@ -396,7 +558,7 @@ class PushPayloadHelperHelperTest : BaseTest() {
             }
         val map = pushPayloadHelper.build()
 
-        val pnFcmMap = map["pn_gcm"] as Map<*, *>
+        val pnFcmMap = (map["pn_fcm"] as Map<*, *>)["data"] as Map<String, *>
         assertNotNull(pnFcmMap)
         assertFalse(pnFcmMap.isEmpty())
         assertTrue(pnFcmMap.containsKey("key_1"))
