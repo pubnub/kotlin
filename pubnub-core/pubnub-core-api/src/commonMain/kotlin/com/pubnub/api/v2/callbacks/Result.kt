@@ -246,3 +246,10 @@ public inline fun <T, R> T.runCatching(block: T.() -> R): Result<R> {
         Result.failure(e)
     }
 }
+
+public inline fun <T> Result<T>.wrapException(block: (PubNubException) -> PubNubException): Result<T> {
+    return when {
+        isSuccess -> this
+        else -> Result.failure(block(exceptionOrNull()!!))
+    }
+}
