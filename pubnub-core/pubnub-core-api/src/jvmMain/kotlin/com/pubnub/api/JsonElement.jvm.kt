@@ -1,5 +1,9 @@
 package com.pubnub.api
 
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonObject
+
 actual typealias JsonElement = com.google.gson.JsonElement
 
 actual fun JsonElement.asString(): String? {
@@ -32,4 +36,8 @@ actual fun JsonElement.asDouble(): Double? {
 
 actual fun JsonElement.asNumber(): Number? {
     return if (this.isJsonPrimitive && this.asJsonPrimitive.isNumber) this.asNumber else null
+}
+
+actual fun createJsonElement(any: Any?): JsonElement {
+    return GsonBuilder().serializeNulls().create().toJsonTree(any)
 }

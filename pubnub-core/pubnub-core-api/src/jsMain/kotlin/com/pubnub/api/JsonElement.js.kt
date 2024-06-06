@@ -4,10 +4,15 @@ package com.pubnub.api
 
 import com.pubnub.kmp.JsMap
 import com.pubnub.kmp.toMap
+import kotlin.js.json
 
 actual abstract class JsonElement(val value: Any?)
 
-class JsonElementImpl(value: Any?) : JsonElement(value)
+class JsonElementImpl(value: Any?) : JsonElement(value) {
+    override fun toString(): String {
+        return "JsonElementImpl(${value.toString()} : ${value?.let { it::class }})"
+    }
+}
 
 actual fun JsonElement.asString(): String? {
     return value as? String
@@ -34,10 +39,56 @@ actual fun JsonElement.asBoolean(): Boolean? {
 }
 
 actual fun JsonElement.asDouble(): Double? {
-    println(value.toString() + " " + value!!::class)
     return (value as? Number)?.toDouble()
 }
 
 actual fun JsonElement.asNumber(): Number? {
     return value as? Number
+}
+
+actual fun createJsonElement(any: Any?): JsonElement {
+    return JsonElementImpl(any.adjustCollectionTypes())
+}
+
+internal fun Any?.adjustCollectionTypes(): Any? {
+    return when (this) {
+        is Map<*, *> -> {
+            val json = json()
+            entries.forEach {
+                val value = it.value.adjustCollectionTypes()
+                if (value is JsonElementImpl) {
+                    json[it.key.toString()] = value.value
+                } else {
+                    json[it.key.toString()] = value
+                }
+            }
+            json
+        }
+
+        is Collection<*> -> {
+            this.map { it.adjustCollectionTypes() }.map {
+                    if (it is JsonElementImpl) {
+                        it.value
+                    } else {
+                        it
+                    }
+                }.toTypedArray()
+        }
+
+        is Array<*> -> {
+            this.map { it.adjustCollectionTypes() }.map {
+                if (it is JsonElementImpl) {
+                    it.value
+                } else {
+                    it
+                }
+            }.toTypedArray()
+        }
+
+        is Long -> {
+            return toString()
+        }
+
+        else -> this
+    }
 }
