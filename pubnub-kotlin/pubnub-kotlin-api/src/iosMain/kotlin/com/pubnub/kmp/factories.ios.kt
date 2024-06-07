@@ -78,7 +78,13 @@ actual fun createEventListener(
             onMessageAction = { onMessageAction(pubnub, createMessageActionResult(it)) },
             onAppContext = {  if (createObjectEvent(it) != null) { createObjectEvent(it) } else {} },
             onFile = { onFile(pubnub, createFileEventResult(it)) }
-        )
+        ),
+        onMessage = onMessage,
+        onPresence = onPresence,
+        onSignal = onSignal,
+        onMessageAction = onMessageAction,
+        onObjects = onObjects,
+        onFile = onFile
     )
 }
 
@@ -248,7 +254,7 @@ private fun mapObjectMessage(from: PubNubObjectEventMessageObjC?): PNObjectEvent
                 data = PNSetMembershipEvent(
                     channel = from.data().channel(),
                     uuid = from.data().uuid(),
-                    custom = from.data().custom() as? Map<String, Any?>, // TODO: This will fail,
+                    custom = from.data().custom() as? Map<String, Any?>, // TODO: Verify,
                     eTag = from.data().eTag(),
                     updated = from.data().updated(),
                     status = from.data().status()
@@ -305,7 +311,8 @@ actual fun createStatusListener(
                     )
                 )
             }
-        })
+        }),
+        onStatusChange = onStatus
     )
 }
 
