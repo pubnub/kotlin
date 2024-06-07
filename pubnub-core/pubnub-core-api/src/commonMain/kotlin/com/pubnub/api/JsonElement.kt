@@ -12,3 +12,12 @@ expect fun JsonElement.asString(): String?
 expect fun JsonElement.asMap(): Map<String, JsonElement>?
 
 expect fun createJsonElement(any: Any?): JsonElement
+
+fun JsonElement.decode(): Any? {
+    if (isNull()) return null
+    return asMap()?.mapValues { it.value.decode() }
+        ?: asList()?.map { it.decode() }
+        ?: asNumber()
+        ?: asBoolean()
+        ?: asString()
+}

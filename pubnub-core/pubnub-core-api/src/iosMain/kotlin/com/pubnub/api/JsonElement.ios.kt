@@ -79,5 +79,5 @@ actual fun JsonElement.asNumber(): Number? {
 }
 
 actual fun createJsonElement(any: Any?): JsonElement {
-    TODO("Not yet implemented")
+    return JsonElementImpl(AnyJSONObjC(any))
 }
