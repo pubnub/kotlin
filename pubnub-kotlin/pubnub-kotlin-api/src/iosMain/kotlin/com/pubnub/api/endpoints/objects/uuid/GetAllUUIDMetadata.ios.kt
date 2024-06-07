@@ -54,27 +54,29 @@ class GetAllUUIDMetadataImpl(
             },
             includeCount = includeCount,
             includeCustom = includeCustom,
-            onSuccess = callback.onSuccessHandler {
-                PNUUIDMetadataArrayResult(
-                    status = it?.status()?.toInt() ?: 0,
-                    data = (it?.data() as List<PubNubUUIDMetadataObjC>).map { metadata ->
-                        PNUUIDMetadata(
-                            id = metadata.id(),
-                            name = metadata.name(),
-                            externalId = metadata.externalId(),
-                            profileUrl = metadata.profileUrl(),
-                            email = metadata.email(),
-                            custom = metadata.custom() as? Map<String, Any?>,
-                            updated = metadata.updated(),
-                            eTag = metadata.eTag(),
-                            type = metadata.type(),
-                            status = metadata.status()
-                        )
-                    },
-                    totalCount = it.totalCount()?.intValue ?: 0,
-                    next = it.next()?.end()?.let { hash -> PNPage.PNNext(pageHash = hash) },
-                    prev = it.next()?.start()?.let { hash -> PNPage.PNPrev(pageHash = hash) }
-                )
+            onSuccess = { data, totalCount, next ->
+                callback.accept(Result.success(
+                    PNUUIDMetadataArrayResult(
+                        status = 200,
+                        data = (data as List<PubNubUUIDMetadataObjC>).map { metadata ->
+                            PNUUIDMetadata(
+                                id = metadata.id(),
+                                name = metadata.name(),
+                                externalId = metadata.externalId(),
+                                profileUrl = metadata.profileUrl(),
+                                email = metadata.email(),
+                                custom = metadata.custom() as? Map<String, Any?>, // TODO: Verify
+                                updated = metadata.updated(),
+                                eTag = metadata.eTag(),
+                                type = metadata.type(),
+                                status = metadata.status()
+                            )
+                        },
+                        totalCount = totalCount?.intValue ?: 0,
+                        next = next?.end()?.let { hash -> PNPage.PNNext(pageHash = hash) },
+                        prev = next?.start()?.let { hash -> PNPage.PNPrev(pageHash = hash) }
+                    )
+                ))
             },
             onFailure = callback.onFailureHandler()
         )

@@ -44,6 +44,7 @@ import com.pubnub.api.endpoints.objects.channel.GetChannelMetadataImpl
 import com.pubnub.api.endpoints.objects.channel.RemoveChannelMetadata
 import com.pubnub.api.endpoints.objects.channel.RemoveChannelMetadataImpl
 import com.pubnub.api.endpoints.objects.channel.SetChannelMetadata
+import com.pubnub.api.endpoints.objects.channel.SetChannelMetadataImpl
 import com.pubnub.api.endpoints.objects.member.GetChannelMembers
 import com.pubnub.api.endpoints.objects.member.ManageChannelMembers
 import com.pubnub.api.endpoints.objects.membership.GetMemberships
@@ -55,6 +56,7 @@ import com.pubnub.api.endpoints.objects.uuid.GetUUIDMetadataImpl
 import com.pubnub.api.endpoints.objects.uuid.RemoveUUIDMetadata
 import com.pubnub.api.endpoints.objects.uuid.RemoveUUIDMetadataImpl
 import com.pubnub.api.endpoints.objects.uuid.SetUUIDMetadata
+import com.pubnub.api.endpoints.objects.uuid.SetUUIDMetadataImpl
 import com.pubnub.api.endpoints.presence.GetState
 import com.pubnub.api.endpoints.presence.GetStateImpl
 import com.pubnub.api.endpoints.presence.HereNow
@@ -412,7 +414,16 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         type: String?,
         status: String?
     ): SetChannelMetadata {
-        TODO("Not yet implemented")
+        return SetChannelMetadataImpl(
+            pubnub = pubNubObjC,
+            channel = channel,
+            name = name,
+            description = description,
+            custom = custom,
+            includeCustom = includeCustom,
+            type = type,
+            status = status
+        )
     }
 
     override fun removeChannelMetadata(channel: String): RemoveChannelMetadata {
@@ -453,7 +464,18 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         type: String?,
         status: String?
     ): SetUUIDMetadata {
-        TODO("Not yet implemented")
+        return SetUUIDMetadataImpl(
+            pubnub = pubNubObjC,
+            uuid = uuid,
+            name = name,
+            externalId = externalId,
+            profileUrl = profileUrl,
+            email = email,
+            custom = custom,
+            includeCustom = includeCustom,
+            type = type,
+            status = status
+        )
     }
 
     override fun removeUUIDMetadata(uuid: String?): RemoveUUIDMetadata {

@@ -1,6 +1,5 @@
 package com.pubnub.api.endpoints.objects.channel
 
-import cocoapods.PubNubSwift.PubNubGetChannelMetadataResultObjC
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.getChannelMetadataWithChannel
 import com.pubnub.api.Endpoint
