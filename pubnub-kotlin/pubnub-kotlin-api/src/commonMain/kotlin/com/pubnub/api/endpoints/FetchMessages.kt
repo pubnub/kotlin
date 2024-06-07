@@ -6,5 +6,4 @@ import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
 /**
  * @see [PubNub.fetchMessages]
  */
-expect interface FetchMessages : Endpoint<PNFetchMessagesResult> {
-}
+expect interface FetchMessages : Endpoint<PNFetchMessagesResult>

@@ -77,3 +77,7 @@ actual fun JsonElement.asNumber(): Number? {
         else -> null
     }
 }
+
+actual fun createJsonElement(any: Any?): JsonElement {
+    return JsonElementImpl(AnyJSONObjC(any))
+}
