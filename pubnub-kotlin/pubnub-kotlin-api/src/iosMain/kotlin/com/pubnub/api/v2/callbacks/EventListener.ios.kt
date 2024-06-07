@@ -18,13 +18,13 @@ import kotlinx.cinterop.ExperimentalForeignApi
 
 @OptIn(ExperimentalForeignApi::class)
 actual interface EventListener : Listener {
+    val underlying: EventListenerObjC
     val onMessage: (PubNub, PNMessageResult) -> Unit
     val onPresence: (PubNub, PNPresenceEventResult) -> Unit
     val onSignal: (PubNub, PNSignalResult) -> Unit
     val onMessageAction: (PubNub, PNMessageActionResult) -> Unit
     val onObjects: (PubNub, PNObjectEventResult) -> Unit
     val onFile: (PubNub, PNFileEventResult) -> Unit
-    val underlying: EventListenerObjC
 }
 @OptIn(ExperimentalForeignApi::class)
 class EventListenerImpl(
