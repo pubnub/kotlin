@@ -205,7 +205,7 @@ private fun mapObjectMessage(from: PubNubObjectEventMessageObjC?): PNObjectEvent
                     externalId = from.data().externalId(),
                     profileUrl = from.data().profileUrl(),
                     email = from.data().email(),
-                    custom = from.data().custom() as? Map<String, Any?>,
+                    custom = from.data().custom() as? Map<String, Any?>, // TODO: Verify
                     updated = from.data().updated(),
                     eTag = from.data().eTag(),
                     type = from.data().type(),
@@ -230,7 +230,7 @@ private fun mapObjectMessage(from: PubNubObjectEventMessageObjC?): PNObjectEvent
                     id = from.data().id(),
                     name = from.data().name(),
                     description = from.data().descr(),
-                    custom = from.data().custom() as? Map<String, Any?>,
+                    custom = from.data().custom() as? Map<String, Any?>, // TODO: Verify
                     updated = from.data().updated(),
                     eTag = from.data().eTag(),
                     type = from.data().type(),
