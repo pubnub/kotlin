@@ -8,16 +8,17 @@ import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.APNSPayload
 import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.APNSPayload.APNS2Configuration
 import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.APNSPayload.APS
 import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayload
-import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayload.AndroidConfig.AndroidFcmOptions
-import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayload.AndroidConfig.AndroidMessagePriority
-import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayload.AndroidConfig.AndroidNotification.LightSettings
-import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayload.AndroidConfig.AndroidNotification.NotificationPriority
-import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayload.AndroidConfig.AndroidNotification.Visibility
-import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayload.ApnsConfig
-import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayload.ApnsConfig.ApnsFcmOptions
-import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayload.FcmOptions
-import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayload.WebpushConfig
-import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayload.WebpushConfig.WebpushFcmOptions
+import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayloadV2
+import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayloadV2.AndroidConfig.AndroidFcmOptions
+import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayloadV2.AndroidConfig.AndroidMessagePriority
+import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayloadV2.AndroidConfig.AndroidNotification.LightSettings
+import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayloadV2.AndroidConfig.AndroidNotification.NotificationPriority
+import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayloadV2.AndroidConfig.AndroidNotification.Visibility
+import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayloadV2.ApnsConfig
+import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayloadV2.ApnsConfig.ApnsFcmOptions
+import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayloadV2.FcmOptions
+import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayloadV2.WebpushConfig
+import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayloadV2.WebpushConfig.WebpushFcmOptions
 import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.MPNSPayload
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -40,6 +41,7 @@ class PushPayloadHelperHelperTest : BaseTest() {
         pushPayloadHelper.apnsPayload = null
         pushPayloadHelper.commonPayload = null
         pushPayloadHelper.fcmPayload = null
+        pushPayloadHelper.fcmPayloadV2 = null
         pushPayloadHelper.mpnsPayload = null
         val map = pushPayloadHelper.build()
         assertTrue(map.isEmpty())
@@ -51,6 +53,7 @@ class PushPayloadHelperHelperTest : BaseTest() {
         pushPayloadHelper.apnsPayload = APNSPayload()
         pushPayloadHelper.commonPayload = HashMap()
         pushPayloadHelper.fcmPayload = FCMPayload()
+        pushPayloadHelper.fcmPayloadV2 = FCMPayloadV2()
         pushPayloadHelper.mpnsPayload = MPNSPayload()
         val map = pushPayloadHelper.build()
         assertTrue(map.isEmpty())
@@ -288,25 +291,61 @@ class PushPayloadHelperHelperTest : BaseTest() {
     }
 
     @Test
-    fun testGoogle_Valid_1() {
+    fun testGoogle_Valid_legacy1() {
         val pushPayloadHelper = PushPayloadHelper()
 
         pushPayloadHelper.fcmPayload =
             FCMPayload().apply {
-                data = mapOf("data_1" to "aa")
                 notification =
                     FCMPayload.Notification().apply {
+                        body = "Notification body"
+                        image = null
+                        title = ""
+                    }
+                custom = mapOf("a" to "a", "b" to 1)
+                data = mapOf("data_1" to "a", "data_2" to 1)
+            }
+
+        val map = pushPayloadHelper.build()
+
+        val pnFcmMap = map["pn_gcm"] as Map<*, *>
+        assertNotNull(pnFcmMap)
+
+        val pnFcmDataMap = pnFcmMap["data"] as Map<*, *>
+        val pnFcmNotificationsMap = pnFcmMap["notification"] as Map<*, *>
+
+        assertNotNull(pnFcmDataMap)
+        assertNotNull(pnFcmNotificationsMap)
+
+        assertEquals(pnFcmMap["a"], "a")
+        assertEquals(pnFcmMap["b"], 1)
+        assertEquals(pnFcmDataMap["data_1"], "a")
+        assertEquals(pnFcmDataMap["data_2"], 1)
+        assertEquals(pnFcmNotificationsMap["body"], "Notification body")
+        assertEquals(pnFcmNotificationsMap["image"], null)
+        assertEquals(pnFcmNotificationsMap["title"], "")
+    }
+
+    @Test
+    fun testGoogle_Valid_1() {
+        val pushPayloadHelper = PushPayloadHelper()
+
+        pushPayloadHelper.fcmPayloadV2 =
+            FCMPayloadV2().apply {
+                data = mapOf("data_1" to "aa")
+                notification =
+                    FCMPayloadV2.Notification().apply {
                         body = "Notification body"
                         image = "image"
                         title = ""
                     }
-                android = FCMPayload.AndroidConfig().apply {
+                android = FCMPayloadV2.AndroidConfig().apply {
                     collapseKey = "collapseKey"
                     priority = AndroidMessagePriority.HIGH
                     ttl = "ttl"
                     restrictedPackageName = "restricted"
                     data = mapOf("android_data_1" to "a")
-                    notification = FCMPayload.AndroidConfig.AndroidNotification().apply {
+                    notification = FCMPayloadV2.AndroidConfig.AndroidNotification().apply {
                         title = "title"
                         body = "body"
                         icon = "icon"
@@ -477,8 +516,8 @@ class PushPayloadHelperHelperTest : BaseTest() {
     @Test
     fun testGoogle_Empty() {
         val pushPayloadHelper = PushPayloadHelper()
-        val fcmPayload = FCMPayload()
-        pushPayloadHelper.fcmPayload = fcmPayload
+        val fcmPayload = FCMPayloadV2()
+        pushPayloadHelper.fcmPayloadV2 = fcmPayload
         val map = pushPayloadHelper.build()
         val pnFcmMap = map["pn_fcm"]
         assertNull(pnFcmMap)
@@ -487,14 +526,14 @@ class PushPayloadHelperHelperTest : BaseTest() {
     @Test
     fun testGoogle_EmptyNotification() {
         val pushPayloadHelper = PushPayloadHelper()
-        val notification = FCMPayload.Notification()
+        val notification = FCMPayloadV2.Notification()
         val customMap = HashMap<String, String>()
         customMap["key_1"] = "1"
         customMap["key_2"] = "2"
-        val fcmPayload = FCMPayload()
+        val fcmPayload = FCMPayloadV2()
         fcmPayload.notification = notification
         fcmPayload.data = customMap
-        pushPayloadHelper.fcmPayload = fcmPayload
+        pushPayloadHelper.fcmPayloadV2 = fcmPayload
         val map = pushPayloadHelper.build()
         val pnFcmMap = map["pn_fcm"] as Map<*, *>
         val pnFcmNotificationMap = pnFcmMap["notification"]
@@ -504,10 +543,10 @@ class PushPayloadHelperHelperTest : BaseTest() {
     @Test
     fun testGoogle_EmptyData() {
         val pushPayloadHelper = PushPayloadHelper()
-        val fcmPayload = FCMPayload()
+        val fcmPayload = FCMPayloadV2()
         val dataMap = HashMap<String, String>()
         fcmPayload.data = dataMap
-        pushPayloadHelper.fcmPayload = fcmPayload
+        pushPayloadHelper.fcmPayloadV2 = fcmPayload
         val map = pushPayloadHelper.build()
         val pnFcmMap = map["pn_fcm"]
         assertNull(pnFcmMap)
@@ -517,7 +556,7 @@ class PushPayloadHelperHelperTest : BaseTest() {
     fun testGoogle_Valid_2() {
         val pushPayloadHelper = PushPayloadHelper()
         val fcmPayload =
-            FCMPayload().apply {
+            FCMPayloadV2().apply {
                 data =
                     mapOf(
                         "key_1" to "value_1",
@@ -526,7 +565,7 @@ class PushPayloadHelperHelperTest : BaseTest() {
                         "key_4" to "",
                     )
             }
-        pushPayloadHelper.fcmPayload = fcmPayload
+        pushPayloadHelper.fcmPayloadV2 = fcmPayload
         val map = pushPayloadHelper.build()
 
         val pnFcmMap = map["pn_fcm"] as Map<*, *>
@@ -546,8 +585,8 @@ class PushPayloadHelperHelperTest : BaseTest() {
     @Test
     fun testGoogle_Custom() {
         val pushPayloadHelper = PushPayloadHelper()
-        pushPayloadHelper.fcmPayload =
-            FCMPayload().apply {
+        pushPayloadHelper.fcmPayloadV2 =
+            FCMPayloadV2().apply {
                 data =
                     mapOf(
                         "key_1" to "value_1",
