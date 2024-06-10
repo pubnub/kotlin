@@ -49,6 +49,14 @@ actual data class PubNubException(
         pubnubError = pubnubError,
     )
 
+    // test only
+    actual constructor( errorMessage: String?, statusCode: Int, cause: Throwable?) : this(
+        statusCode = statusCode,
+        errorMessage = errorMessage,
+        cause = cause,
+        pubnubError = null
+    )
+
     actual companion object {
         actual fun from(e: Throwable): PubNubException =
             if (e is PubNubException) {

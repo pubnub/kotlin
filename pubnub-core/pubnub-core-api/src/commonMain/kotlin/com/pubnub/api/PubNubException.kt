@@ -11,7 +11,8 @@ package com.pubnub.api
  */
 expect class PubNubException(errorMessage: String?, cause: Throwable? = null) : Exception {
     constructor(pubnubError: PubNubError, cause: Throwable? = null)
-
+    // test only
+    constructor(errorMessage: String?, statusCode: Int, cause: Throwable? = null)
     val statusCode: Int
 
     companion object {
