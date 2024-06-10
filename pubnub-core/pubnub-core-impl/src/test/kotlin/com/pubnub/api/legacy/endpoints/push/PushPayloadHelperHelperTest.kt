@@ -488,9 +488,9 @@ class PushPayloadHelperHelperTest : BaseTest() {
     fun testGoogle_EmptyNotification() {
         val pushPayloadHelper = PushPayloadHelper()
         val notification = FCMPayload.Notification()
-        val customMap = HashMap<String, Any>()
+        val customMap = HashMap<String, String>()
         customMap["key_1"] = "1"
-        customMap["key_2"] = 2
+        customMap["key_2"] = "2"
         val fcmPayload = FCMPayload()
         fcmPayload.notification = notification
         fcmPayload.data = customMap
@@ -505,7 +505,7 @@ class PushPayloadHelperHelperTest : BaseTest() {
     fun testGoogle_EmptyData() {
         val pushPayloadHelper = PushPayloadHelper()
         val fcmPayload = FCMPayload()
-        val dataMap = HashMap<String, Any>()
+        val dataMap = HashMap<String, String>()
         fcmPayload.data = dataMap
         pushPayloadHelper.fcmPayload = fcmPayload
         val map = pushPayloadHelper.build()
@@ -521,8 +521,8 @@ class PushPayloadHelperHelperTest : BaseTest() {
                 data =
                     mapOf(
                         "key_1" to "value_1",
-                        "key_2" to 2,
-                        "key_3" to true,
+                        "key_2" to "2",
+                        "key_3" to "true",
                         "key_4" to "",
                     )
             }
@@ -551,14 +551,14 @@ class PushPayloadHelperHelperTest : BaseTest() {
                 data =
                     mapOf(
                         "key_1" to "value_1",
-                        "key_2" to 2,
-                        "key_3" to true,
+                        "key_2" to "2",
+                        "key_3" to "true",
                         "key_4" to "",
                     )
             }
         val map = pushPayloadHelper.build()
 
-        val pnFcmMap = (map["pn_fcm"] as Map<*, *>)["data"] as Map<String, *>
+        val pnFcmMap = (map["pn_fcm"] as Map<*, *>)["data"] as Map<String, String>
         assertNotNull(pnFcmMap)
         assertFalse(pnFcmMap.isEmpty())
         assertTrue(pnFcmMap.containsKey("key_1"))

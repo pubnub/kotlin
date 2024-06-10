@@ -126,7 +126,7 @@ class PushPayloadHelper {
     }
 
     class FCMPayload : PushPayloadSerializer {
-        var data: Map<String, Any>? = null
+        var data: Map<String, String>? = null
         var notification: Notification? = null
         var android: AndroidConfig? = null
         var webpush: WebpushConfig? = null
