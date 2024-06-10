@@ -9,17 +9,33 @@ actual interface Endpoint<OUTPUT> {
 }
 
 fun <T,U> Consumer<Result<U>>.onSuccessHandler(mapper: (T) -> U) : (T) -> Unit {
-    return fun(input: T) { accept(
-        try {
-            Result.success(mapper(input))
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    ) }
+    return { input: T ->
+        accept(
+            try {
+                Result.success(mapper(input))
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+        )
+    }
+}
+
+fun <T, X, Y, U> Consumer<Result<U>>.onSuccessHandler3(mapper: (T, X, Y) -> U) : (T, X, Y) -> Unit {
+    return { input: T, secondInput: X, thirdInput: Y ->
+        accept(
+            try {
+                Result.success(mapper(input, secondInput, thirdInput))
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+        )
+    }
 }
 
 fun <T> Consumer<Result<T>>.onSuccessReturnValue(value: T) : () -> Unit {
-    return fun() { accept(Result.success(value)) }
+    return {
+        accept(Result.success(value))
+    }
 }
 
 fun <T> Consumer<Result<T>>.onFailureHandler(mapper: (NSError?) -> Throwable = { error: NSError? ->

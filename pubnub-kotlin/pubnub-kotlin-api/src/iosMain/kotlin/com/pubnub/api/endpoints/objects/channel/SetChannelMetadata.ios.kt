@@ -1,5 +1,6 @@
 package com.pubnub.api.endpoints.objects.channel
 
+import cocoapods.PubNubSwift.AnyJSONObjC
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.setChannelMetadataWithChannel
 import com.pubnub.api.Endpoint
@@ -34,7 +35,7 @@ class SetChannelMetadataImpl(
             channel = channel,
             name = name,
             description = description,
-            custom = null, // TODO: How to retrieve value from CustomObject?
+            custom = AnyJSONObjC(value = custom?.value),
             includeCustom = includeCustom,
             type = type,
             status = status,

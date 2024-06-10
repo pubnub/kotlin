@@ -1,5 +1,6 @@
 package com.pubnub.api.endpoints.objects.uuid
 
+import cocoapods.PubNubSwift.AnyJSONObjC
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.setUUIDMetadataWithUuid
 import com.pubnub.api.Endpoint
@@ -37,7 +38,7 @@ class SetUUIDMetadataImpl(
             externalId = externalId,
             profileUrl = profileUrl,
             email = email,
-            custom = null, // TODO: How to retrieve value from CustomObject?
+            custom = AnyJSONObjC(value = custom?.value),
             includeCustom = includeCustom,
             type = type,
             status = status,

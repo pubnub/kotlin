@@ -1,3 +1,3 @@
 package com.pubnub.kmp
 
-actual class CustomObject(private val value: Any)
+actual class CustomObject(val value: Any)
