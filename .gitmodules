@@ -1,0 +1,4 @@
+[submodule "swift"]
+	path = swift
+	url = https://github.com/pubnub/swift
+	branch = feat/kmp

@@ -76,11 +76,11 @@ class PubNubKotlinMultiplatformPlugin : Plugin<Project> {
                     }
 
                     pod("PubNubSwift") {
-                        source = git("https://github.com/pubnub/swift") {
-                            branch = "feat/kmp"
-                        }
+//                        source = git("https://github.com/pubnub/swift") {
+//                            branch = "feat/kmp"
+//                        }
 //            headers = "PubNub/PubNub.h"
-//                        source = path(rootProject.file("../../swift"))
+                        source = path(rootProject.file("swift"))
 //            version = "7.1.0"
 
                         moduleName = "PubNub"
