@@ -1,3 +1,12 @@
+## v9.2.0
+June 11 2024
+
+#### Added
+- Add new FCMPayloadV2 for required new FCM push message format.
+
+#### Fixed
+- Disallow DTD in XML parser and enable SecureRandom.
+
 ## v9.1.1
 April 15 2024
 
