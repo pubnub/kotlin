@@ -2,11 +2,11 @@ package com.pubnub.api.endpoints.push
 
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.addChannelsToPushNotificationsWithChannels
-import com.pubnub.api.Endpoint
+import com.pubnub.kmp.PNFuture
 import com.pubnub.api.PubNubException
 import com.pubnub.api.models.consumer.push.PNPushAddChannelResult
-import com.pubnub.api.onFailureHandler
-import com.pubnub.api.onSuccessHandler
+import com.pubnub.kmp.onFailureHandler
+import com.pubnub.kmp.onSuccessHandler
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.kmp.toNSData
@@ -15,7 +15,7 @@ import platform.Foundation.NSData
 /**
  * @see [PubNub.addPushNotificationsOnChannels]
  */
-actual interface AddChannelsToPush : Endpoint<PNPushAddChannelResult>
+actual interface AddChannelsToPush : PNFuture<PNPushAddChannelResult>
 
 @OptIn(ExperimentalForeignApi::class)
 class AddChannelsToPushImpl(

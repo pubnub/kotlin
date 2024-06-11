@@ -2,11 +2,11 @@ package com.pubnub.api.endpoints.message_actions
 
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.removeMessageActionWithChannel
-import com.pubnub.api.Endpoint
+import com.pubnub.kmp.PNFuture
 import com.pubnub.api.PubNub
 import com.pubnub.api.models.consumer.message_actions.PNRemoveMessageActionResult
-import com.pubnub.api.onFailureHandler
-import com.pubnub.api.onSuccessReturnValue
+import com.pubnub.kmp.onFailureHandler
+import com.pubnub.kmp.onSuccessReturnValue
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -14,7 +14,7 @@ import kotlinx.cinterop.ExperimentalForeignApi
 /**
  * @see [PubNub.removeMessageAction]
  */
-actual interface RemoveMessageAction : Endpoint<PNRemoveMessageActionResult> {
+actual interface RemoveMessageAction : PNFuture<PNRemoveMessageActionResult> {
 }
 
 @OptIn(ExperimentalForeignApi::class)

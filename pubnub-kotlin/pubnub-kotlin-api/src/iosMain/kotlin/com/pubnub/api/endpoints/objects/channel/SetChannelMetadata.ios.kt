@@ -3,11 +3,11 @@ package com.pubnub.api.endpoints.objects.channel
 import cocoapods.PubNubSwift.AnyJSONObjC
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.setChannelMetadataWithChannel
-import com.pubnub.api.Endpoint
+import com.pubnub.kmp.PNFuture
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataResult
-import com.pubnub.api.onFailureHandler
-import com.pubnub.api.onSuccessHandler
+import com.pubnub.kmp.onFailureHandler
+import com.pubnub.kmp.onSuccessHandler
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.kmp.CustomObject
@@ -17,7 +17,7 @@ import platform.posix.stat
 /**
  * @see [PubNub.setChannelMetadata]
  */
-actual interface SetChannelMetadata : Endpoint<PNChannelMetadataResult>
+actual interface SetChannelMetadata : PNFuture<PNChannelMetadataResult>
 
 @OptIn(ExperimentalForeignApi::class)
 class SetChannelMetadataImpl(

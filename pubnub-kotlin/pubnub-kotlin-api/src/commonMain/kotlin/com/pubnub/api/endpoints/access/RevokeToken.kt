@@ -1,5 +1,5 @@
 package com.pubnub.api.endpoints.access
 
-import com.pubnub.api.Endpoint
+import com.pubnub.kmp.PNFuture
 
-expect interface RevokeToken : Endpoint<Unit>
+expect interface RevokeToken : PNFuture<Unit>

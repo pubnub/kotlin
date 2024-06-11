@@ -22,9 +22,17 @@ import com.pubnub.api.endpoints.channel_groups.ListAllChannelGroupImpl
 import com.pubnub.api.endpoints.channel_groups.RemoveChannelChannelGroup
 import com.pubnub.api.endpoints.channel_groups.RemoveChannelChannelGroupImpl
 import com.pubnub.api.endpoints.files.DeleteFile
+import com.pubnub.api.endpoints.files.DeleteFileImpl
+import com.pubnub.api.endpoints.files.DownloadFile
+import com.pubnub.api.endpoints.files.DownloadFileImpl
 import com.pubnub.api.endpoints.files.GetFileUrl
+import com.pubnub.api.endpoints.files.GetFileUrlImpl
 import com.pubnub.api.endpoints.files.ListFiles
+import com.pubnub.api.endpoints.files.ListFilesImpl
 import com.pubnub.api.endpoints.files.PublishFileMessage
+import com.pubnub.api.endpoints.files.PublishFileMessageImpl
+import com.pubnub.api.endpoints.files.SendFile
+import com.pubnub.api.endpoints.files.SendFileImpl
 import com.pubnub.api.endpoints.message_actions.AddMessageAction
 import com.pubnub.api.endpoints.message_actions.AddMessageActionImpl
 import com.pubnub.api.endpoints.message_actions.GetMessageActionImpl
@@ -101,6 +109,7 @@ import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.kmp.CustomObject
 import com.pubnub.kmp.CustomObjectImpl
 import com.pubnub.kmp.Optional
+import com.pubnub.kmp.Uploadable
 import com.pubnub.kmp.createJsObject
 import com.pubnub.kmp.toJsMap
 import com.pubnub.kmp.toOptional
@@ -137,10 +146,10 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         ttl: Int?
     ): Publish {
         return PublishImpl(jsPubNub, createJsObject {
-            this.message = message.adjustCollectionTypes()!!
+            this.message = message.adjustCollectionTypes()
             this.channel = channel
             this.storeInHistory = shouldStore
-            this.meta = meta.adjustCollectionTypes()
+            this.meta = meta?.adjustCollectionTypes()
             this.sendByPost = usePost
             this.ttl = ttl
         })
@@ -719,15 +728,29 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
 //    }
 
     override fun listFiles(channel: String, limit: Int?, next: PNPage.PNNext?): ListFiles {
-        TODO("Not yet implemented")
+        return ListFilesImpl(jsPubNub, createJsObject {
+            this.channel = channel
+            this.limit = limit
+            if (next != null) {
+                this.next = next.pageHash
+            }
+        })
     }
 
     override fun getFileUrl(channel: String, fileName: String, fileId: String): GetFileUrl {
-        TODO("Not yet implemented")
+        return GetFileUrlImpl(jsPubNub, createJsObject {
+            this.channel = channel
+            this.name = fileName
+            this.id = fileId
+        })
     }
 
     override fun deleteFile(channel: String, fileName: String, fileId: String): DeleteFile {
-        TODO("Not yet implemented")
+        return DeleteFileImpl(jsPubNub, createJsObject {
+            this.channel = channel
+            this.name = fileName
+            this.id = fileId
+        })
     }
 
     override fun publishFileMessage(
@@ -739,7 +762,15 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         ttl: Int?,
         shouldStore: Boolean?
     ): PublishFileMessage {
-        TODO("Not yet implemented")
+        return PublishFileMessageImpl(jsPubNub, createJsObject {
+            this.channel = channel
+            this.fileName = fileName
+            this.fileId = fileId
+            this.message = message?.adjustCollectionTypes()
+            this.meta = meta?.adjustCollectionTypes()
+            this.ttl = ttl
+            this.storeInHistory = shouldStore
+        })
     }
 
     override fun subscribe(
@@ -775,22 +806,51 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
 
     }
 
+    override fun sendFile(
+        channel: String,
+        fileName: String,
+        inputStream: Uploadable,
+        message: Any?,
+        meta: Any?,
+        ttl: Int?,
+        shouldStore: Boolean?,
+        cipherKey: String?
+    ): SendFile {
+        return SendFileImpl(jsPubNub, createJsObject {
+            this.channel = channel
+            this.file = inputStream.fileInput
+            this.message = message
+            this.meta = meta
+            this.ttl = ttl
+            this.storeInHistory = shouldStore
+            this.cipherKey = cipherKey
+        })
+    }
+
+    override fun downloadFile(channel: String, fileName: String, fileId: String, cipherKey: String?): DownloadFile {
+        return DownloadFileImpl(jsPubNub, createJsObject {
+            this.channel = channel
+            this.name = fileName
+            this.id = fileId
+            this.cipherKey = cipherKey
+        })
+    }
 }
 
-private fun Any?.adjustCollectionTypes(): Any? {
+private fun Any.adjustCollectionTypes(): Any {
     return when (this) {
         is Map<*, *> -> {
             val json = json()
             entries.forEach {
-                json[it.key.toString()] = it.value.adjustCollectionTypes()
+                json[it.key.toString()] = it.value?.adjustCollectionTypes()
             }
             json
         }
         is Collection<*> -> {
-            this.map { it.adjustCollectionTypes() }.toTypedArray()
+            this.map { it?.adjustCollectionTypes() }.toTypedArray()
         }
         is Array<*> -> {
-            this.map { it.adjustCollectionTypes() }.toTypedArray()
+            this.map { it?.adjustCollectionTypes() }.toTypedArray()
         }
         is Long -> {
             return toString()
@@ -834,10 +894,6 @@ fun ChannelMetadata(
     custom.onValue { result.custom = it?.toJsObject() }
     return result
 }
-
-
-
-
 
 fun Map<String, Any?>.toJsObject(): PubNubJs.CustomObject {
     val custom = createJsObject<dynamic> {  }

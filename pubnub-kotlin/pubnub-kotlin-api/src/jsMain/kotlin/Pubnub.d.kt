@@ -869,7 +869,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
 
     }
 
-    interface `T$29` {
+    interface UploadedFile {
         var name: String
         var id: String
         var size: Number
@@ -878,7 +878,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
 
     interface ListFilesResponse {
         var status: Number
-        var data: Array<`T$29`>
+        var data: Array<UploadedFile>
         var next: String
         var count: Number
     }

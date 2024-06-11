@@ -2,12 +2,11 @@ package com.pubnub.api.endpoints.objects.uuid
 
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.getUUIDMetadataWithUuid
-import com.pubnub.api.Endpoint
-import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
+import com.pubnub.kmp.PNFuture
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult
-import com.pubnub.api.onFailureHandler
-import com.pubnub.api.onSuccessHandler
+import com.pubnub.kmp.onFailureHandler
+import com.pubnub.kmp.onSuccessHandler
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -15,7 +14,7 @@ import kotlinx.cinterop.ExperimentalForeignApi
 /**
  * @see [PubNub.getUUIDMetadata]
  */
-actual interface GetUUIDMetadata : Endpoint<PNUUIDMetadataResult> {
+actual interface GetUUIDMetadata : PNFuture<PNUUIDMetadataResult> {
 }
 
 @OptIn(ExperimentalForeignApi::class)

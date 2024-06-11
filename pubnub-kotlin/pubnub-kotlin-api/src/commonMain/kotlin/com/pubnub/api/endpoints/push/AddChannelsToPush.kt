@@ -1,9 +1,9 @@
 package com.pubnub.api.endpoints.push
 
-import com.pubnub.api.Endpoint
+import com.pubnub.kmp.PNFuture
 import com.pubnub.api.models.consumer.push.PNPushAddChannelResult
 
 /**
  * @see [PubNub.addPushNotificationsOnChannels]
  */
-expect interface AddChannelsToPush : Endpoint<PNPushAddChannelResult>
+expect interface AddChannelsToPush : PNFuture<PNPushAddChannelResult>

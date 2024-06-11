@@ -2,13 +2,12 @@ package com.pubnub.api.endpoints.push
 
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.removeAllChannelsFromPushWithPushType
-import com.pubnub.api.Endpoint
+import com.pubnub.kmp.PNFuture
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNPushType
-import com.pubnub.api.models.consumer.history.PNDeleteMessagesResult
 import com.pubnub.api.models.consumer.push.PNPushRemoveAllChannelsResult
-import com.pubnub.api.onFailureHandler
-import com.pubnub.api.onSuccessReturnValue
+import com.pubnub.kmp.onFailureHandler
+import com.pubnub.kmp.onSuccessReturnValue
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.kmp.toNSData
@@ -18,7 +17,7 @@ import platform.Foundation.NSData
 /**
  * @see [PubNub.removeAllPushNotificationsFromDeviceWithPushToken]
  */
-actual interface RemoveAllPushChannelsForDevice : Endpoint<PNPushRemoveAllChannelsResult>
+actual interface RemoveAllPushChannelsForDevice : PNFuture<PNPushRemoveAllChannelsResult>
 
 @OptIn(ExperimentalForeignApi::class)
 class RemoveAllPushChannelsForDeviceImpl(

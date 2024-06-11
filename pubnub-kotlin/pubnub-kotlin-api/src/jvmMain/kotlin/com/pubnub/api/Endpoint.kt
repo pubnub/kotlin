@@ -4,7 +4,7 @@ import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.PNConfigurationOverride
 
-actual interface Endpoint<OUTPUT> : ExtendedRemoteAction<OUTPUT> {
+interface Endpoint<OUTPUT> : ExtendedRemoteAction<OUTPUT> {
     /**
      * Allows to override certain configuration options (see [PNConfigurationOverride.Builder]) for this request only.
      *

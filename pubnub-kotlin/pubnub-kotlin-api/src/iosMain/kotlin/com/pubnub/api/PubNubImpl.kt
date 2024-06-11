@@ -30,9 +30,11 @@ import com.pubnub.api.endpoints.channel_groups.ListAllChannelGroupImpl
 import com.pubnub.api.endpoints.channel_groups.RemoveChannelChannelGroup
 import com.pubnub.api.endpoints.channel_groups.RemoveChannelChannelGroupImpl
 import com.pubnub.api.endpoints.files.DeleteFile
+import com.pubnub.api.endpoints.files.DownloadFile
 import com.pubnub.api.endpoints.files.GetFileUrl
 import com.pubnub.api.endpoints.files.ListFiles
 import com.pubnub.api.endpoints.files.PublishFileMessage
+import com.pubnub.api.endpoints.files.SendFile
 import com.pubnub.api.endpoints.message_actions.AddMessageAction
 import com.pubnub.api.endpoints.message_actions.AddMessageActionImpl
 import com.pubnub.api.endpoints.message_actions.GetMessageActions
@@ -98,6 +100,7 @@ import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.kmp.CustomObject
+import com.pubnub.kmp.Uploadable
 import kotlinx.cinterop.ExperimentalForeignApi
 
 @OptIn(ExperimentalForeignApi::class)
@@ -651,5 +654,22 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
 
     override fun unsubscribeAll() {
 //        TODO("Not yet implemented")
+    }
+
+    override fun sendFile(
+        channel: String,
+        fileName: String,
+        inputStream: Uploadable,
+        message: Any?,
+        meta: Any?,
+        ttl: Int?,
+        shouldStore: Boolean?,
+        cipherKey: String?
+    ): SendFile {
+        TODO("Not yet implemented")
+    }
+
+    override fun downloadFile(channel: String, fileName: String, fileId: String, cipherKey: String?): DownloadFile {
+        TODO("Not yet implemented")
     }
 }

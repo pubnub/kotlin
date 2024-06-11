@@ -2,10 +2,10 @@ package com.pubnub.api.endpoints.pubsub
 
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.signalWithChannel
-import com.pubnub.api.Endpoint
+import com.pubnub.kmp.PNFuture
 import com.pubnub.api.models.consumer.PNPublishResult
-import com.pubnub.api.onFailureHandler
-import com.pubnub.api.onSuccessHandler
+import com.pubnub.kmp.onFailureHandler
+import com.pubnub.kmp.onSuccessHandler
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -13,7 +13,7 @@ import kotlinx.cinterop.ExperimentalForeignApi
 /**
  * @see [PubNub.signal]
  */
-actual interface Signal : Endpoint<PNPublishResult>
+actual interface Signal : PNFuture<PNPublishResult>
 
 @OptIn(ExperimentalForeignApi::class)
 class SignalImpl(

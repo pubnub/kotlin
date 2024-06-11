@@ -2,12 +2,12 @@ package com.pubnub.api.endpoints.push
 
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.listPushChannelsWithDeviceId
-import com.pubnub.api.Endpoint
+import com.pubnub.kmp.PNFuture
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.push.PNPushListProvisionsResult
-import com.pubnub.api.onFailureHandler
-import com.pubnub.api.onSuccessHandler
+import com.pubnub.kmp.onFailureHandler
+import com.pubnub.kmp.onSuccessHandler
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.kmp.toNSData
@@ -17,7 +17,7 @@ import platform.Foundation.NSData
 /**
  * @see [PubNub.auditPushChannelProvisions]
  */
-actual interface ListPushProvisions : Endpoint<PNPushListProvisionsResult>
+actual interface ListPushProvisions : PNFuture<PNPushListProvisionsResult>
 
 @OptIn(ExperimentalForeignApi::class)
 class ListPushProvisionsImpl(

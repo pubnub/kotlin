@@ -1387,15 +1387,15 @@ actual interface PubNub :
      * @param cipherKey Key to be used to encrypt uploaded data. If not provided,
      *                  cipherKey in @see [PNConfiguration] will be used, if provided.
      */
-    fun sendFile(
+    actual fun sendFile(
         channel: String,
         fileName: String,
         inputStream: InputStream,
-        message: Any? = null,
-        meta: Any? = null,
-        ttl: Int? = null,
-        shouldStore: Boolean? = null,
-        cipherKey: String? = null,
+        message: Any?,
+        meta: Any?,
+        ttl: Int?,
+        shouldStore: Boolean?,
+        cipherKey: String?,
     ): SendFile
 
     /**
@@ -1433,11 +1433,11 @@ actual interface PubNub :
      * @param cipherKey Key to be used to decrypt downloaded data. If a key is not provided,
      *                  the SDK uses the cipherKey from the @see [PNConfiguration].
      */
-    fun downloadFile(
+    actual fun downloadFile(
         channel: String,
         fileName: String,
         fileId: String,
-        cipherKey: String? = null,
+        cipherKey: String?,
     ): DownloadFile
 
     /**

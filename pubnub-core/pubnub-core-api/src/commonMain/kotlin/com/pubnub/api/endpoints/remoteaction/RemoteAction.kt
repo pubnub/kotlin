@@ -4,6 +4,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
+import com.pubnub.kmp.PNFuture
 
 interface ExtendedRemoteAction<Output> : RemoteAction<Output> {
     /**
@@ -12,7 +13,7 @@ interface ExtendedRemoteAction<Output> : RemoteAction<Output> {
     fun operationType(): PNOperationType
 }
 
-interface RemoteAction<Output> : Cancelable {
+interface RemoteAction<Output> : PNFuture<Output>, Cancelable {
     /**
      * Run the action synchronously, potentially blocking the calling thread.
      * @return returns the result of the action
@@ -39,7 +40,7 @@ interface RemoteAction<Output> : Cancelable {
      * }
      * ```
      */
-    fun async(callback: Consumer<Result<Output>>)
+    override fun async(callback: Consumer<Result<Output>>)
 
     /**
      * Attempt to retry the action and deliver the result to a callback registered with a previous call to [async].

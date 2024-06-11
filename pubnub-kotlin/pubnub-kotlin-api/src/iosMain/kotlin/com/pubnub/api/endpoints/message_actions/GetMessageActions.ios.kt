@@ -3,12 +3,12 @@ package com.pubnub.api.endpoints.message_actions
 import cocoapods.PubNubSwift.PubNubBoundedPageObjC
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.getMessageActionsFrom
-import com.pubnub.api.Endpoint
+import com.pubnub.kmp.PNFuture
 import com.pubnub.api.PubNub
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.message_actions.PNGetMessageActionsResult
-import com.pubnub.api.onFailureHandler
-import com.pubnub.api.onSuccessHandler
+import com.pubnub.kmp.onFailureHandler
+import com.pubnub.kmp.onSuccessHandler
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -17,7 +17,7 @@ import platform.Foundation.NSNumber
 /**
  * @see [PubNub.getMessageActions]
  */
-actual interface GetMessageActions : Endpoint<PNGetMessageActionsResult> {
+actual interface GetMessageActions : PNFuture<PNGetMessageActionsResult> {
 }
 
 @OptIn(ExperimentalForeignApi::class)

@@ -1,10 +1,10 @@
 package com.pubnub.api.endpoints.channel_groups
 
 import PubNub
-import com.pubnub.api.Endpoint
+import com.pubnub.kmp.PNFuture
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsDeleteGroupResult
 
 /**
  * @see [PubNub.deleteChannelGroup]
  */
-actual interface DeleteChannelGroup : Endpoint<PNChannelGroupsDeleteGroupResult>
+actual interface DeleteChannelGroup : PNFuture<PNChannelGroupsDeleteGroupResult>
