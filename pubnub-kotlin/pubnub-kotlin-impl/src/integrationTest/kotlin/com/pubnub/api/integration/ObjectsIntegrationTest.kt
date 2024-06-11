@@ -3,6 +3,8 @@ package com.pubnub.api.integration
 import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.models.consumer.PNStatus
+import com.pubnub.api.models.consumer.objects.PNMembershipKey
+import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.objects.member.PNMember
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
@@ -91,6 +93,7 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
         val getAllResult =
             pubnub.getMemberships(
                 uuid = testUuid,
+                sort = listOf(PNSortKey.PNDesc(PNMembershipKey.CHANNEL_ID)),
                 includeChannelDetails = PNChannelDetailsLevel.CHANNEL,
             ).sync()
 
