@@ -3,4 +3,17 @@
 # fcmPayload
 
 [jvm]\
-var [fcmPayload](fcm-payload.md): [PushPayloadHelper.FCMPayload](-f-c-m-payload/index.md)?
+var [~~fcmPayload~~](fcm-payload.md): [PushPayloadHelper.FCMPayload](-f-c-m-payload/index.md)?
+
+---
+
+### Deprecated
+
+The legacy GCM/FCM payload is deprecated and willbe removed in the next major release. Use `fcmPayloadV2` with the `FCMPayloadV2` message body instead.
+
+#### Replace with
+
+```kotlin
+fcmPayloadV2
+```
+---
