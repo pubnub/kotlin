@@ -8,77 +8,67 @@ plugins {
     alias(libs.plugins.benmanes.versions)
     id("pubnub.shared")
     id("pubnub.ios-simulator-test")
-    id("pubnub.multiplatform")
+//    id("pubnub.multiplatform")
+    kotlin("multiplatform")
 
     id("com.codingfeline.buildkonfig") version "0.15.1"
 }
 
 kotlin {
+    jvmToolchain(8)
+
     js {
-//        compilations.all {
-//            compileTaskProvider.configure {
-//                kotlinOptions {
-//                    target = "es2015"
-//                }
-//            }
-//        }
-
         browser {
-//            dceTask {
-//                keep("com.pubnub.api", "com.pubnub.kmp")
-//            }
-
-            testTask {
-                useMocha {
-                    timeout = "30s"
-                }
-            }
         }
+        binaries.executable()
     }
+    jvm()
+    iosArm64()
+    iosSimulatorArm64()
 
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                api(project(":pubnub-kotlin:pubnub-kotlin-api"))
-                api(project(":pubnub-core:pubnub-core-api"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
-                implementation(libs.datetime)
-            }
-        }
-
-        val commonTest by getting {
-            dependencies {
-                implementation(kotlin("test"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
-                implementation(libs.coroutines.test)
-            }
-        }
-
-        val jvmMain by getting {
-            dependencies {
-                implementation(project(":pubnub-core:pubnub-core-impl"))
-            }
-        }
-
-        val jvmTest by getting {
-            dependencies {
-                implementation(project(":pubnub-kotlin:pubnub-kotlin-impl"))
-            }
-        }
+//        val commonMain by getting {
+//            dependencies {
+//                api(project(":pubnub-kotlin:pubnub-kotlin-api"))
+//                api(project(":pubnub-core:pubnub-core-api"))
+//                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
+//                implementation(libs.datetime)
+//            }
+//        }
+//
+//        val commonTest by getting {
+//            dependencies {
+//                implementation(kotlin("test"))
+//                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
+//                implementation(libs.coroutines.test)
+//            }
+//        }
+//
+//        val jvmMain by getting {
+//            dependencies {
+//                implementation(project(":pubnub-core:pubnub-core-impl"))
+//            }
+//        }
+//
+//        val jvmTest by getting {
+//            dependencies {
+//                implementation(project(":pubnub-kotlin:pubnub-kotlin-impl"))
+//            }
+//        }
     }
 
 
-    targets.withType<KotlinNativeTarget> {
-        if (konanTarget.family.isAppleFamily) {
-            binaries.withType<TestExecutable> {
-                freeCompilerArgs += listOf("-e", "testlauncher.mainBackground")
-            }
-        }
-    }
+//    targets.withType<KotlinNativeTarget> {
+//        if (konanTarget.family.isAppleFamily) {
+//            binaries.withType<TestExecutable> {
+//                freeCompilerArgs += listOf("-e", "testlauncher.mainBackground")
+//            }
+//        }
+//    }
 
     buildkonfig {
         packageName = "com.pubnub.test"
-        objectName = "Keys"
+        exposeObjectWithName = "Keys"
 
         defaultConfigs {
             val testProps = Properties()

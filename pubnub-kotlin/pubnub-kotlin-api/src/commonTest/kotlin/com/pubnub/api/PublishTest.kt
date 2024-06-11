@@ -5,10 +5,7 @@ import com.pubnub.kmp.createCustomObject
 import com.pubnub.test.BaseIntegrationTest
 import com.pubnub.test.await
 import com.pubnub.test.test
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.withContext
 import kotlin.js.JsExport
 import kotlin.test.Ignore
 import kotlin.test.Test
@@ -51,11 +48,7 @@ class PublishTest : BaseIntegrationTest() {
     @Test
     fun can_receive_message_with_object_metadata() = runTest(timeout = 10.seconds) {
         pubnub.test(backgroundScope) {
-//            pubnub.awaitSubscribe(listOf(channel))
-            pubnub.subscribe(listOf(channel))
-            withContext(Dispatchers.Default) {
-                delay(2000)
-            }
+            pubnub.awaitSubscribe(listOf(channel))
             val mapData = mapOf(
                 "stringValue" to "bbb",
                 "mapValue" to mapOf("innerKey" to false),
@@ -70,18 +63,13 @@ class PublishTest : BaseIntegrationTest() {
             val result = nextMessage()
             assertEquals("some message", result.message.asString())
             deepCompare(mapData, result.userMetadata!!)
-//            assertEquals(mapOf("aa" to "bb"), result.userMetadata?.asMap()?.mapValues { it.value.asString() })
         }
     }
 
     @Test
     fun can_receive_message_with_primitive_payload() = runTest(timeout = 10.seconds) {
         pubnub.test(backgroundScope) {
-//            pubnub.awaitSubscribe(listOf(channel))
-            pubnub.subscribe(listOf(channel))
-            withContext(Dispatchers.Default) {
-                delay(2000)
-            }
+            pubnub.awaitSubscribe(listOf(channel))
             pubnub.publish(
                 channel,
                 111,
@@ -101,11 +89,7 @@ class PublishTest : BaseIntegrationTest() {
     @Test
     fun can_receive_message_with_map_payload() = runTest(timeout = 10.seconds) {
         pubnub.test(backgroundScope) {
-//            pubnub.awaitSubscribe(listOf(channel))
-            pubnub.subscribe(listOf(channel))
-            withContext(Dispatchers.Default) {
-                delay(2000)
-            }
+            pubnub.awaitSubscribe(listOf(channel))
             val mapData = mapOf(
                 "stringValue" to "bbb",
                 "mapValue" to mapOf("innerKey" to false),
@@ -126,11 +110,7 @@ class PublishTest : BaseIntegrationTest() {
     @Test
     fun can_receive_message_with_payload_with_floats() = runTest(timeout = 10.seconds) {
         pubnub.test(backgroundScope) {
-//            pubnub.awaitSubscribe(listOf(channel))
-            pubnub.subscribe(listOf(channel))
-            withContext(Dispatchers.Default) {
-                delay(2000)
-            }
+            pubnub.awaitSubscribe(listOf(channel))
             val mapData = mapOf(
                 "floatValue" to 1.23f,
                 "doubleValue" to 1.23,
