@@ -4,7 +4,14 @@ import com.pubnub.api.enums.PNPushEnvironment
 
 class PushPayloadHelper {
     var commonPayload: Map<String, Any>? = null
+
+    @Deprecated(
+        replaceWith = ReplaceWith("fcmPayloadV2"),
+        message = "The legacy GCM/FCM payload is deprecated and will" +
+            "be removed in the next major release. Use `fcmPayloadV2` with the `FCMPayloadV2` message body instead."
+    )
     var fcmPayload: FCMPayload? = null
+    var fcmPayloadV2: FCMPayloadV2? = null
     var mpnsPayload: MPNSPayload? = null
     var apnsPayload: APNSPayload? = null
 
@@ -18,6 +25,13 @@ class PushPayloadHelper {
                 }
             }
             fcmPayload?.let {
+                it.toMap().run {
+                    if (isNotEmpty()) {
+                        put("pn_gcm", this)
+                    }
+                }
+            }
+            fcmPayloadV2?.let {
                 it.toMap().run {
                     if (isNotEmpty()) {
                         put("pn_fcm", this)
@@ -126,7 +140,45 @@ class PushPayloadHelper {
     }
 
     class FCMPayload : PushPayloadSerializer {
+        var custom: Map<String, Any>? = null
         var data: Map<String, Any>? = null
+        var notification: Notification? = null
+
+        override fun toMap(): Map<String, Any> {
+            return mutableMapOf<String, Any>().apply {
+                custom?.let { putAll(it) }
+                data?.let {
+                    if (it.isNotEmpty()) {
+                        put("data", it)
+                    }
+                }
+                notification?.let {
+                    it.toMap().run {
+                        if (this.isNotEmpty()) {
+                            put("notification", this)
+                        }
+                    }
+                }
+            }
+        }
+
+        class Notification : PushPayloadSerializer {
+            var title: String? = null
+            var body: String? = null
+            var image: String? = null
+
+            override fun toMap(): Map<String, Any> {
+                return mutableMapOf<String, Any>().apply {
+                    title?.let { put("title", it) }
+                    body?.let { put("body", it) }
+                    image?.let { put("image", it) }
+                }
+            }
+        }
+    }
+
+    class FCMPayloadV2 : PushPayloadSerializer {
+        var data: Map<String, String>? = null
         var notification: Notification? = null
         var android: AndroidConfig? = null
         var webpush: WebpushConfig? = null
@@ -315,14 +367,16 @@ class PushPayloadHelper {
                 }
 
                 enum class Visibility {
-                    VISIBILITY_UNSPECIFIED,
                     PRIVATE,
                     PUBLIC,
-                    SECRET,
+                    SECRET;
+
+                    override fun toString(): String {
+                        return name.lowercase()
+                    }
                 }
 
                 enum class NotificationPriority {
-                    PRIORITY_UNSPECIFIED,
                     PRIORITY_MIN,
                     PRIORITY_LOW,
                     PRIORITY_DEFAULT,
@@ -361,7 +415,11 @@ class PushPayloadHelper {
 
             enum class AndroidMessagePriority {
                 NORMAL,
-                HIGH
+                HIGH;
+
+                override fun toString(): String {
+                    return name.lowercase()
+                }
             }
 
             override fun toMap(): Map<String, Any> {
