@@ -23,5 +23,11 @@ kotlin {
                 implementation(libs.slf4j)
             }
         }
+
+        val commonTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
+            }
+        }
     }
 }
