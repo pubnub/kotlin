@@ -1,6 +1,8 @@
 package com.pubnub.api
 
 import cocoapods.PubNubSwift.addEventListenerWithListener
+import cocoapods.PubNubSwift.addStatusListenerWithListener
+import cocoapods.PubNubSwift.removeEventListenerWithListener
 import cocoapods.PubNubSwift.setWithToken
 import cocoapods.PubNubSwift.subscribeWithChannels
 import cocoapods.PubNubSwift.subscribedChannelGroups
@@ -111,11 +113,11 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     }
 
     override fun addListener(listener: StatusListener) {
-        TODO("Not yet implemented")
+        pubNubObjC.addStatusListenerWithListener(listener = listener.underlying)
     }
 
     override fun removeListener(listener: Listener) {
-        TODO("Not yet implemented")
+//        pubNubObjC.removeEventListenerWithListener(listener)
     }
 
     override fun removeAllListeners() {
