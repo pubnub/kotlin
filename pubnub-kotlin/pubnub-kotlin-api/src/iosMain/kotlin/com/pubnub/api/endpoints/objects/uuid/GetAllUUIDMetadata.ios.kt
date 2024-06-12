@@ -17,6 +17,7 @@ import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult
 import com.pubnub.api.onFailureHandler
 import com.pubnub.api.onSuccessHandler
+import com.pubnub.api.onSuccessHandler3
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -54,26 +55,26 @@ class GetAllUUIDMetadataImpl(
             },
             includeCount = includeCount,
             includeCustom = includeCustom,
-            onSuccess = callback.onSuccessHandler {
+            onSuccess = callback.onSuccessHandler3() { data, totalCount, next ->
                 PNUUIDMetadataArrayResult(
-                    status = it?.status()?.toInt() ?: 0,
-                    data = (it?.data() as List<PubNubUUIDMetadataObjC>).map { metadata ->
+                    status = 200,
+                    data = (data as List<PubNubUUIDMetadataObjC>).map { metadata ->
                         PNUUIDMetadata(
                             id = metadata.id(),
                             name = metadata.name(),
                             externalId = metadata.externalId(),
                             profileUrl = metadata.profileUrl(),
                             email = metadata.email(),
-                            custom = metadata.custom() as? Map<String, Any?>,
+                            custom = metadata.custom() as? Map<String, Any?>, // TODO: Verify
                             updated = metadata.updated(),
                             eTag = metadata.eTag(),
                             type = metadata.type(),
                             status = metadata.status()
                         )
                     },
-                    totalCount = it.totalCount()?.intValue ?: 0,
-                    next = it.next()?.end()?.let { hash -> PNPage.PNNext(pageHash = hash) },
-                    prev = it.next()?.start()?.let { hash -> PNPage.PNPrev(pageHash = hash) }
+                    totalCount = totalCount?.intValue ?: 0,
+                    next = next?.end()?.let { hash -> PNPage.PNNext(pageHash = hash) },
+                    prev = next?.start()?.let { hash -> PNPage.PNPrev(pageHash = hash) }
                 )
             },
             onFailure = callback.onFailureHandler()

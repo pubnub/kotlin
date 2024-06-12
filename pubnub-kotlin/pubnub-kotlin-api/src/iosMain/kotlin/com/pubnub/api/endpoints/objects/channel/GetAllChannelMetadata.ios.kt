@@ -1,7 +1,6 @@
 package com.pubnub.api.endpoints.objects.channel
 
 import cocoapods.PubNubSwift.PubNubChannelMetadataObjC
-import cocoapods.PubNubSwift.PubNubGetChannelMetadataResultObjC
 import cocoapods.PubNubSwift.PubNubHashedPageObjC
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.PubNubSortPropertyObjC
@@ -14,6 +13,7 @@ import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataArrayResult
 import com.pubnub.api.onFailureHandler
 import com.pubnub.api.onSuccessHandler
+import com.pubnub.api.onSuccessHandler3
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -51,24 +51,24 @@ class GetAllChannelMetadataImpl(
             },
             includeCount = includeCount,
             includeCustom = includeCustom,
-            onSuccess = callback.onSuccessHandler {
+            onSuccess = callback.onSuccessHandler3() { data, totalCount, next ->
                 PNChannelMetadataArrayResult(
-                    status = it?.status()?.toInt() ?: 0,
-                    data = (it?.data() as List<PubNubChannelMetadataObjC>).map { metadata ->
+                    status = 200,
+                    data = (data as List<PubNubChannelMetadataObjC>).map { metadata ->
                         PNChannelMetadata(
                             id = metadata.id(),
                             name = metadata.name(),
                             description = metadata.descr(),
-                            custom = metadata.custom() as? Map<String, Any?>,
+                            custom = metadata.custom() as? Map<String, Any?>, // TODO: Verify
                             updated = metadata.updated(),
                             eTag = metadata.eTag(),
                             type = metadata.type(),
                             status = metadata.status()
                         )
                     },
-                    totalCount = it.totalCount()?.intValue ?: 0,
-                    next = it.next()?.end()?.let { hash -> PNPage.PNNext(pageHash = hash) },
-                    prev = it.next()?.start()?.let { hash -> PNPage.PNPrev(pageHash = hash) }
+                    totalCount = totalCount?.intValue,
+                    next = next?.end()?.let { hash -> PNPage.PNNext(pageHash = hash) },
+                    prev = next?.start()?.let { hash -> PNPage.PNPrev(pageHash = hash) }
                 )
             },
             onFailure = callback.onFailureHandler()
