@@ -3,13 +3,14 @@ plugins {
     id("pubnub.shared")
     id("pubnub.dokka")
     id("pubnub.multiplatform")
+    alias(libs.plugins.kotlinx.atomicfu)
 }
 
 kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-
+                implementation(libs.kotlinx.atomicfu)
             }
         }
 
@@ -31,3 +32,7 @@ kotlin {
         }
     }
 }
+
+//atomicfu {
+//    dependenciesVersion = "0.24.0"
+//}
