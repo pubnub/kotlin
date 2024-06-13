@@ -50,9 +50,15 @@ import com.pubnub.api.endpoints.objects.channel.RemoveChannelMetadataImpl
 import com.pubnub.api.endpoints.objects.channel.SetChannelMetadata
 import com.pubnub.api.endpoints.objects.channel.SetChannelMetadataImpl
 import com.pubnub.api.endpoints.objects.member.GetChannelMembers
+import com.pubnub.api.endpoints.objects.member.GetChannelMembersImpl
 import com.pubnub.api.endpoints.objects.member.ManageChannelMembers
+import com.pubnub.api.endpoints.objects.member.RemoveChannelMembersImpl
+import com.pubnub.api.endpoints.objects.member.SetChannelMembersImpl
+import com.pubnub.api.endpoints.objects.membership.AddMembershipsImpl
 import com.pubnub.api.endpoints.objects.membership.GetMemberships
+import com.pubnub.api.endpoints.objects.membership.GetMembershipsImpl
 import com.pubnub.api.endpoints.objects.membership.ManageMemberships
+import com.pubnub.api.endpoints.objects.membership.RemoveMembershipsImpl
 import com.pubnub.api.endpoints.objects.uuid.GetAllUUIDMetadata
 import com.pubnub.api.endpoints.objects.uuid.GetAllUUIDMetadataImpl
 import com.pubnub.api.endpoints.objects.uuid.GetUUIDMetadata
@@ -160,15 +166,19 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     }
 
     override fun signal(channel: String, message: Any): Signal {
-        return SignalImpl(pubnub = pubNubObjC, channel = channel, message = message)
+        return SignalImpl(
+            pubnub = pubNubObjC,
+            channel = channel,
+            message = message
+        )
     }
 
     override fun getSubscribedChannels(): List<String> {
-        return pubNubObjC.subscribedChannels() as List<String>
+        return pubNubObjC.subscribedChannels().filterIsInstance<String>()
     }
 
     override fun getSubscribedChannelGroups(): List<String> {
-        return pubNubObjC.subscribedChannelGroups() as List<String>
+        return pubNubObjC.subscribedChannelGroups().filterIsInstance<String>()
     }
 
     // TODO: Missing pushType (PushService like APNS, GCM, etc) parameter
@@ -194,7 +204,11 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         topic: String?,
         environment: PNPushEnvironment
     ): ListPushProvisions {
-        return ListPushProvisionsImpl(pubnub = pubNubObjC, deviceId = deviceId, pushType = pushType)
+        return ListPushProvisionsImpl(
+            pubnub = pubNubObjC,
+            deviceId = deviceId,
+            pushType = pushType
+        )
     }
 
     // TODO: topic and environment parameters are not present in Swift SDK
@@ -278,7 +292,10 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     }
 
     override fun whereNow(uuid: String): WhereNow {
-        return WhereNowImpl(pubnub = pubNubObjC, uuid = uuid)
+        return WhereNowImpl(
+            pubnub = pubNubObjC,
+            uuid = uuid
+        )
     }
 
     override fun setPresenceState(
@@ -342,7 +359,10 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     }
 
     override fun listChannelsForChannelGroup(channelGroup: String): AllChannelsChannelGroup {
-        return AllChannelsChannelGroupImpl(pubnub = pubNubObjC, channelGroup = channelGroup)
+        return AllChannelsChannelGroupImpl(
+            pubnub = pubNubObjC,
+            channelGroup = channelGroup
+        )
     }
 
     override fun removeChannelsFromChannelGroup(
@@ -361,7 +381,10 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     }
 
     override fun deleteChannelGroup(channelGroup: String): DeleteChannelGroup {
-        return DeleteChannelGroupImpl(pubnub = pubNubObjC, channelGroup = channelGroup)
+        return DeleteChannelGroupImpl(
+            pubnub = pubNubObjC,
+            channelGroup = channelGroup
+        )
     }
 
     override fun grantToken(
@@ -432,7 +455,10 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     }
 
     override fun removeChannelMetadata(channel: String): RemoveChannelMetadata {
-        return RemoveChannelMetadataImpl(pubnub = pubNubObjC, channel = channel)
+        return RemoveChannelMetadataImpl(
+            pubnub = pubNubObjC,
+            channel = channel
+        )
     }
 
     override fun getAllUUIDMetadata(
@@ -455,7 +481,11 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     }
 
     override fun getUUIDMetadata(uuid: String?, includeCustom: Boolean): GetUUIDMetadata {
-        return GetUUIDMetadataImpl(pubnub = pubNubObjC, uuid = uuid, includeCustom = includeCustom)
+        return GetUUIDMetadataImpl(
+            pubnub = pubNubObjC,
+            uuid = uuid,
+            includeCustom = includeCustom
+        )
     }
 
     override fun setUUIDMetadata(
@@ -484,7 +514,10 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     }
 
     override fun removeUUIDMetadata(uuid: String?): RemoveUUIDMetadata {
-        return RemoveUUIDMetadataImpl(pubnub = pubNubObjC, uuid = uuid)
+        return RemoveUUIDMetadataImpl(
+            pubnub = pubNubObjC,
+            uuid = uuid
+        )
     }
 
     override fun getMemberships(
@@ -497,7 +530,17 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         includeCustom: Boolean,
         includeChannelDetails: PNChannelDetailsLevel?
     ): GetMemberships {
-        TODO("Not yet implemented")
+        return GetMembershipsImpl(
+            pubnub = pubNubObjC,
+            uuid = uuid,
+            limit = limit,
+            page = page,
+            filter = filter,
+            sort = sort,
+            includeCount = includeCount,
+            includeCustom = includeCustom,
+            includeChannelDetails = includeChannelDetails
+        )
     }
 
     override fun setMemberships(
@@ -511,7 +554,18 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         includeCustom: Boolean,
         includeChannelDetails: PNChannelDetailsLevel?
     ): ManageMemberships {
-        TODO("Not yet implemented")
+        return AddMembershipsImpl(
+            pubnub = pubNubObjC,
+            channels = channels,
+            uuid = uuid,
+            limit = limit,
+            page = page,
+            filter = filter,
+            sort = sort,
+            includeCount = includeCount,
+            includeCustom = includeCustom,
+            includeChannelDetails = includeChannelDetails
+        )
     }
 
     override fun removeMemberships(
@@ -525,23 +579,19 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         includeCustom: Boolean,
         includeChannelDetails: PNChannelDetailsLevel?
     ): ManageMemberships {
-        TODO("Not yet implemented")
+        return RemoveMembershipsImpl(
+            pubnub = pubNubObjC,
+            channels = channels,
+            uuid = uuid,
+            limit = limit,
+            page = page,
+            filter = filter,
+            sort = sort,
+            includeCount = includeCount,
+            includeCustom = includeCustom,
+            includeChannelDetails = includeChannelDetails
+        )
     }
-
-//    override fun manageMemberships(
-//        channelsToSet: List<ChannelMembershipInput>,
-//        channelsToRemove: List<String>,
-//        uuid: String?,
-//        limit: Int?,
-//        page: PNPage?,
-//        filter: String?,
-//        sort: Collection<PNSortKey<PNMembershipKey>>,
-//        includeCount: Boolean,
-//        includeCustom: Boolean,
-//        includeChannelDetails: PNChannelDetailsLevel?
-//    ): ManageMemberships {
-//        TODO("Not yet implemented")
-//    }
 
     override fun getChannelMembers(
         channel: String,
@@ -553,7 +603,17 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         includeCustom: Boolean,
         includeUUIDDetails: PNUUIDDetailsLevel?
     ): GetChannelMembers {
-        TODO("Not yet implemented")
+        return GetChannelMembersImpl(
+            pubnub = pubNubObjC,
+            channel = channel,
+            limit = limit,
+            page = page,
+            filter = filter,
+            sort = sort,
+            includeCount = includeCount,
+            includeCustom = includeCustom,
+            includeUUIDDetails = includeUUIDDetails
+        )
     }
 
     override fun setChannelMembers(
@@ -567,7 +627,18 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         includeCustom: Boolean,
         includeUUIDDetails: PNUUIDDetailsLevel?
     ): ManageChannelMembers {
-        TODO("Not yet implemented")
+        return SetChannelMembersImpl(
+            pubnub = pubNubObjC,
+            channel = channel,
+            uuids = uuids,
+            limit = limit,
+            page = page,
+            filter = filter,
+            sort = sort,
+            includeCount = includeCount,
+            includeCustom = includeCustom,
+            includeUUIDDetails = includeUUIDDetails
+        )
     }
 
     override fun removeChannelMembers(
@@ -581,23 +652,19 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         includeCustom: Boolean,
         includeUUIDDetails: PNUUIDDetailsLevel?
     ): ManageChannelMembers {
-        TODO("Not yet implemented")
+        return RemoveChannelMembersImpl(
+            pubnub = pubNubObjC,
+            channel = channel,
+            uuids = uuids,
+            limit = limit,
+            page = page,
+            filter = filter,
+            sort = sort,
+            includeCount = includeCount,
+            includeCustom = includeCustom,
+            includeUUIDDetails = includeUUIDDetails
+        )
     }
-
-//    override fun manageChannelMembers(
-//        channel: String,
-//        uuidsToSet: Collection<MemberInput>,
-//        uuidsToRemove: Collection<String>,
-//        limit: Int?,
-//        page: PNPage?,
-//        filter: String?,
-//        sort: Collection<PNSortKey<PNMemberKey>>,
-//        includeCount: Boolean,
-//        includeCustom: Boolean,
-//        includeUUIDDetails: PNUUIDDetailsLevel?
-//    ): ManageChannelMembers {
-//        TODO("Not yet implemented")
-//    }
 
     override fun listFiles(channel: String, limit: Int?, next: PNPage.PNNext?): ListFiles {
         TODO("Not yet implemented")
@@ -638,7 +705,10 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     }
 
     override fun unsubscribe(channels: List<String>, channelGroups: List<String>) {
-        pubNubObjC.unsubscribeFrom(channels = channels, channelGroups = channelGroups)
+        pubNubObjC.unsubscribeFrom(
+            channels = channels,
+            channelGroups = channelGroups
+        )
     }
 
     // TODO: Why token is optional? What's the desired behavior for a null value?
