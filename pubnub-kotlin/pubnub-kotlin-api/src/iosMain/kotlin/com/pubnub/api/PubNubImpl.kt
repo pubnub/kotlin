@@ -2,11 +2,12 @@ package com.pubnub.api
 
 import cocoapods.PubNubSwift.addEventListenerWithListener
 import cocoapods.PubNubSwift.addStatusListenerWithListener
-import cocoapods.PubNubSwift.removeEventListenerWithListener
+import cocoapods.PubNubSwift.disconnect
 import cocoapods.PubNubSwift.setWithToken
 import cocoapods.PubNubSwift.subscribeWithChannels
 import cocoapods.PubNubSwift.subscribedChannelGroups
 import cocoapods.PubNubSwift.subscribedChannels
+import cocoapods.PubNubSwift.unsubscribeAll
 import cocoapods.PubNubSwift.unsubscribeFrom
 import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.endpoints.DeleteMessages
@@ -30,10 +31,14 @@ import com.pubnub.api.endpoints.channel_groups.ListAllChannelGroupImpl
 import com.pubnub.api.endpoints.channel_groups.RemoveChannelChannelGroup
 import com.pubnub.api.endpoints.channel_groups.RemoveChannelChannelGroupImpl
 import com.pubnub.api.endpoints.files.DeleteFile
+import com.pubnub.api.endpoints.files.DeleteFileImpl
 import com.pubnub.api.endpoints.files.DownloadFile
 import com.pubnub.api.endpoints.files.GetFileUrl
+import com.pubnub.api.endpoints.files.GetFileUrlImpl
 import com.pubnub.api.endpoints.files.ListFiles
+import com.pubnub.api.endpoints.files.ListFilesImpl
 import com.pubnub.api.endpoints.files.PublishFileMessage
+import com.pubnub.api.endpoints.files.PublishFileMessageImpl
 import com.pubnub.api.endpoints.files.SendFile
 import com.pubnub.api.endpoints.message_actions.AddMessageAction
 import com.pubnub.api.endpoints.message_actions.AddMessageActionImpl
@@ -72,6 +77,7 @@ import com.pubnub.api.endpoints.presence.GetStateImpl
 import com.pubnub.api.endpoints.presence.HereNow
 import com.pubnub.api.endpoints.presence.HereNowImpl
 import com.pubnub.api.endpoints.presence.SetState
+import com.pubnub.api.endpoints.presence.SetStateImpl
 import com.pubnub.api.endpoints.presence.WhereNow
 import com.pubnub.api.endpoints.presence.WhereNowImpl
 import com.pubnub.api.endpoints.pubsub.Publish
@@ -303,7 +309,12 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         channelGroups: List<String>,
         state: Any,
     ): SetState {
-        TODO("Not yet implemented")
+        return SetStateImpl(
+            pubnub = pubNubObjC,
+            channels = channels,
+            channelGroups = channelGroups,
+            state = state
+        )
     }
 
     override fun getPresenceState(channels: List<String>, channelGroups: List<String>, uuid: String): GetState {
@@ -667,15 +678,30 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     }
 
     override fun listFiles(channel: String, limit: Int?, next: PNPage.PNNext?): ListFiles {
-        TODO("Not yet implemented")
+        return ListFilesImpl(
+            pubnub = pubNubObjC,
+            channel = channel,
+            limit = limit,
+            next = next
+        )
     }
 
     override fun getFileUrl(channel: String, fileName: String, fileId: String): GetFileUrl {
-        TODO("Not yet implemented")
+        return GetFileUrlImpl(
+            pubnub = pubNubObjC,
+            channel = channel,
+            fileName = fileName,
+            fileId = fileId
+        )
     }
 
     override fun deleteFile(channel: String, fileName: String, fileId: String): DeleteFile {
-        TODO("Not yet implemented")
+        return DeleteFileImpl(
+            pubnub = pubNubObjC,
+            channel = channel,
+            fileName = fileName,
+            fileId = fileId
+        )
     }
 
     override fun publishFileMessage(
@@ -687,7 +713,16 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         ttl: Int?,
         shouldStore: Boolean?
     ): PublishFileMessage {
-        TODO("Not yet implemented")
+        return PublishFileMessageImpl(
+            pubnub = pubNubObjC,
+            channel = channel,
+            fileName = fileName,
+            fileId = fileId,
+            message = message,
+            meta = meta,
+            ttl = ttl,
+            shouldStore = shouldStore
+        )
     }
 
     override fun subscribe(
@@ -714,16 +749,16 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     // TODO: Why token is optional? What's the desired behavior for a null value?
     override fun setToken(token: String?) {
         token?.let {
-            pubNubObjC.setWithToken(token)
+            pubNubObjC.setWithToken(it)
         }
     }
 
     override fun destroy() {
-//        TODO("Not yet implemented")
+        pubNubObjC.disconnect()
     }
 
     override fun unsubscribeAll() {
-//        TODO("Not yet implemented")
+        pubNubObjC.unsubscribeAll()
     }
 
     override fun sendFile(
