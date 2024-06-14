@@ -13,9 +13,11 @@ import com.pubnub.api.endpoints.channel_groups.DeleteChannelGroup
 import com.pubnub.api.endpoints.channel_groups.ListAllChannelGroup
 import com.pubnub.api.endpoints.channel_groups.RemoveChannelChannelGroup
 import com.pubnub.api.endpoints.files.DeleteFile
+import com.pubnub.api.endpoints.files.DownloadFile
 import com.pubnub.api.endpoints.files.GetFileUrl
 import com.pubnub.api.endpoints.files.ListFiles
 import com.pubnub.api.endpoints.files.PublishFileMessage
+import com.pubnub.api.endpoints.files.SendFile
 import com.pubnub.api.endpoints.message_actions.AddMessageAction
 import com.pubnub.api.endpoints.message_actions.GetMessageActions
 import com.pubnub.api.endpoints.message_actions.RemoveMessageAction
@@ -47,6 +49,7 @@ import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
+import com.pubnub.api.models.consumer.files.PNDownloadFileResult
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.objects.PNKey
 import com.pubnub.api.models.consumer.objects.PNMemberKey
@@ -61,6 +64,7 @@ import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.kmp.CustomObject
+import com.pubnub.kmp.Uploadable
 
 expect interface PubNub {
     val configuration: PNConfiguration
@@ -381,12 +385,24 @@ expect interface PubNub {
         fileId: String,
     ): GetFileUrl
 
-    //    fun downloadFile(
-//        channel: String,
-//        fileName: String,
-//        fileId: String,
-//        cipherKey: String? = null,
-//    ): Endpoint<PNDownloadFileResult> // TODO inputstream
+    fun sendFile(
+        channel: String,
+        fileName: String,
+        inputStream: Uploadable,
+        message: Any? = null,
+        meta: Any? = null,
+        ttl: Int? = null,
+        shouldStore: Boolean? = null,
+        cipherKey: String? = null,
+    ): SendFile
+
+    fun downloadFile(
+        channel: String,
+        fileName: String,
+        fileId: String,
+        cipherKey: String? = null,
+    ): DownloadFile
+
     fun deleteFile(
         channel: String,
         fileName: String,

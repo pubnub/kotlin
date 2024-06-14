@@ -1,8 +1,8 @@
-package com.pubnub.api
+package com.pubnub.kmp
 
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
 
-expect interface Endpoint<OUTPUT> {
+interface PNFuture<OUTPUT> {
     fun async(callback: Consumer<Result<OUTPUT>>)
 }

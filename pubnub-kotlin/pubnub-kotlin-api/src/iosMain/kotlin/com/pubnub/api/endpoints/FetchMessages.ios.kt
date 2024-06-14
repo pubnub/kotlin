@@ -5,15 +5,15 @@ import cocoapods.PubNubSwift.PubNubMessageActionObjC
 import cocoapods.PubNubSwift.PubNubMessageObjC
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.fetchMessagesFrom
-import com.pubnub.api.Endpoint
+import com.pubnub.kmp.PNFuture
 import com.pubnub.api.JsonElement
 import com.pubnub.api.PubNubError
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.history.HistoryMessageType
 import com.pubnub.api.models.consumer.history.PNFetchMessageItem
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
-import com.pubnub.api.onFailureHandler
-import com.pubnub.api.onSuccessHandler
+import com.pubnub.kmp.onFailureHandler
+import com.pubnub.kmp.onSuccessHandler
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -22,7 +22,7 @@ import platform.Foundation.NSNumber
 /**
  * @see [PubNub.fetchMessages]
  */
-actual interface FetchMessages : Endpoint<PNFetchMessagesResult> {}
+actual interface FetchMessages : PNFuture<PNFetchMessagesResult> {}
 
 @OptIn(ExperimentalForeignApi::class)
 open class FetchMessagesImpl(

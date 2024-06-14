@@ -3,11 +3,11 @@ package com.pubnub.api.endpoints.objects.uuid
 import cocoapods.PubNubSwift.AnyJSONObjC
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.setUUIDMetadataWithUuid
-import com.pubnub.api.Endpoint
+import com.pubnub.kmp.PNFuture
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult
-import com.pubnub.api.onFailureHandler
-import com.pubnub.api.onSuccessHandler
+import com.pubnub.kmp.onFailureHandler
+import com.pubnub.kmp.onSuccessHandler
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.kmp.CustomObject
@@ -16,7 +16,7 @@ import kotlinx.cinterop.ExperimentalForeignApi
 /**
  * @see [PubNub.setUUIDMetadata]
  */
-actual interface SetUUIDMetadata : Endpoint<PNUUIDMetadataResult>
+actual interface SetUUIDMetadata : PNFuture<PNUUIDMetadataResult>
 
 @OptIn(ExperimentalForeignApi::class)
 class SetUUIDMetadataImpl(

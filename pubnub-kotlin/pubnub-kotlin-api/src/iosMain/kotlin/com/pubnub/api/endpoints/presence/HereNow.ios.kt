@@ -4,13 +4,13 @@ import cocoapods.PubNubSwift.PubNubHereNowChannelDataObjC
 import cocoapods.PubNubSwift.PubNubHereNowOccupantDataObjC
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.hereNowWithChannels
-import com.pubnub.api.Endpoint
+import com.pubnub.kmp.PNFuture
 import com.pubnub.api.JsonElement
 import com.pubnub.api.models.consumer.presence.PNHereNowChannelData
 import com.pubnub.api.models.consumer.presence.PNHereNowOccupantData
 import com.pubnub.api.models.consumer.presence.PNHereNowResult
-import com.pubnub.api.onFailureHandler
-import com.pubnub.api.onSuccessHandler
+import com.pubnub.kmp.onFailureHandler
+import com.pubnub.kmp.onSuccessHandler
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -18,7 +18,7 @@ import kotlinx.cinterop.ExperimentalForeignApi
 /**
  * @see [PubNub.hereNow]
  */
-actual interface HereNow : Endpoint<PNHereNowResult> {
+actual interface HereNow : PNFuture<PNHereNowResult> {
 }
 
 @OptIn(ExperimentalForeignApi::class)

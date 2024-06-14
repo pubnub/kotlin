@@ -2,11 +2,11 @@ package com.pubnub.api.endpoints.message_actions
 
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.addMessageActionWithChannel
-import com.pubnub.api.Endpoint
+import com.pubnub.kmp.PNFuture
 import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
-import com.pubnub.api.onFailureHandler
-import com.pubnub.api.onSuccessHandler
+import com.pubnub.kmp.onFailureHandler
+import com.pubnub.kmp.onSuccessHandler
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -14,7 +14,7 @@ import kotlinx.cinterop.ExperimentalForeignApi
 /**
  * @see [PubNub.addMessageAction]
  */
-actual interface AddMessageAction : Endpoint<PNAddMessageActionResult> {
+actual interface AddMessageAction : PNFuture<PNAddMessageActionResult> {
 }
 
 @OptIn(ExperimentalForeignApi::class)

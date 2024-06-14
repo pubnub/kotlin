@@ -2,6 +2,7 @@ package com.pubnub.api.v2
 
 import com.pubnub.api.UserId
 
+@JsExport
 actual interface PNConfiguration {
     actual val userId: UserId
     actual val subscribeKey: String

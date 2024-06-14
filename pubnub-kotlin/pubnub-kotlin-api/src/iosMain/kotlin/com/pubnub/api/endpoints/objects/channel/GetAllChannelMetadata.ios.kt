@@ -5,15 +5,15 @@ import cocoapods.PubNubSwift.PubNubHashedPageObjC
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.PubNubSortPropertyObjC
 import cocoapods.PubNubSwift.getAllChannelMetadataWithLimit
-import com.pubnub.api.Endpoint
+import com.pubnub.kmp.PNFuture
 import com.pubnub.api.models.consumer.objects.PNKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataArrayResult
-import com.pubnub.api.onFailureHandler
-import com.pubnub.api.onSuccessHandler
-import com.pubnub.api.onSuccessHandler3
+import com.pubnub.kmp.onFailureHandler
+import com.pubnub.kmp.onSuccessHandler
+import com.pubnub.kmp.onSuccessHandler3
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -22,7 +22,7 @@ import platform.Foundation.NSNumber
 /**
  * @see [PubNub.getAllChannelMetadata]
  */
-actual interface GetAllChannelMetadata : Endpoint<PNChannelMetadataArrayResult>
+actual interface GetAllChannelMetadata : PNFuture<PNChannelMetadataArrayResult>
 
 @OptIn(ExperimentalForeignApi::class)
 class GetAllChannelMetadataImpl(

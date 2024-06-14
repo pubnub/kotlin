@@ -1,9 +1,9 @@
 package com.pubnub.api.endpoints.files
 
-import com.pubnub.api.Endpoint
+import com.pubnub.kmp.PNFuture
 import com.pubnub.api.models.consumer.files.PNPublishFileMessageResult
 
 /**
  * @see [PubNub.publishFileMessage]
  */
-actual interface PublishFileMessage : Endpoint<PNPublishFileMessageResult>
+actual interface PublishFileMessage : PNFuture<PNPublishFileMessageResult>

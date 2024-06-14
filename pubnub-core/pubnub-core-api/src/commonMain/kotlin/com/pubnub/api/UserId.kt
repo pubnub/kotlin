@@ -1,5 +1,8 @@
 package com.pubnub.api
 
+import kotlin.js.JsExport
+
+@JsExport
 data class UserId
     @Throws(PubNubException::class)
     constructor(val value: String) {

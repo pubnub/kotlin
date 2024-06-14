@@ -1,8 +1,8 @@
 package com.pubnub.api.models.consumer.files
 
-import java.io.InputStream
+import com.pubnub.kmp.Downloadable
 
 data class PNDownloadFileResult(
     val fileName: String,
-    val byteStream: InputStream?,
+    val byteStream: Downloadable?,
 )

@@ -1,6 +1,5 @@
 package com.pubnub.test
 
-import com.pubnub.api.Endpoint
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNStatusCategory
@@ -8,6 +7,7 @@ import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.v2.createPNConfiguration
+import com.pubnub.kmp.PNFuture
 import com.pubnub.kmp.createEventListener
 import com.pubnub.kmp.createPubNub
 import com.pubnub.kmp.createStatusListener
@@ -37,7 +37,7 @@ abstract class BaseIntegrationTest {
     }
 }
 
-suspend fun <T> Endpoint<T>.await() = suspendCancellableCoroutine { cont ->
+suspend fun <T> PNFuture<T>.await() = suspendCancellableCoroutine { cont ->
     async { result ->
         result.onSuccess {
             cont.resume(it)

@@ -2,11 +2,11 @@ package com.pubnub.api.endpoints.pubsub
 
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.publishWithChannel
-import com.pubnub.api.Endpoint
+import com.pubnub.kmp.PNFuture
 import com.pubnub.api.PubNub
 import com.pubnub.api.models.consumer.PNPublishResult
-import com.pubnub.api.onFailureHandler
-import com.pubnub.api.onSuccessHandler
+import com.pubnub.kmp.onFailureHandler
+import com.pubnub.kmp.onSuccessHandler
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -15,7 +15,7 @@ import platform.Foundation.NSNumber
 /**
  * @see [PubNub.publish]
  */
-actual interface Publish : Endpoint<PNPublishResult>
+actual interface Publish : PNFuture<PNPublishResult>
 
 @OptIn(ExperimentalForeignApi::class)
 class PublishImpl(

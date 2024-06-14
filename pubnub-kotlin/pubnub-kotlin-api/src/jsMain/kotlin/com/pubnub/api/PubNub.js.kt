@@ -13,9 +13,11 @@ import com.pubnub.api.endpoints.channel_groups.DeleteChannelGroup
 import com.pubnub.api.endpoints.channel_groups.ListAllChannelGroup
 import com.pubnub.api.endpoints.channel_groups.RemoveChannelChannelGroup
 import com.pubnub.api.endpoints.files.DeleteFile
+import com.pubnub.api.endpoints.files.DownloadFile
 import com.pubnub.api.endpoints.files.GetFileUrl
 import com.pubnub.api.endpoints.files.ListFiles
 import com.pubnub.api.endpoints.files.PublishFileMessage
+import com.pubnub.api.endpoints.files.SendFile
 import com.pubnub.api.endpoints.message_actions.AddMessageAction
 import com.pubnub.api.endpoints.message_actions.GetMessageActions
 import com.pubnub.api.endpoints.message_actions.RemoveMessageAction
@@ -61,6 +63,7 @@ import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.kmp.CustomObject
+import com.pubnub.kmp.Uploadable
 
 actual interface PubNub {
 
@@ -344,5 +347,23 @@ actual interface PubNub {
 
     actual fun setToken(token: String?)
     actual fun destroy()
+
+    actual fun sendFile(
+        channel: String,
+        fileName: String,
+        inputStream: Uploadable,
+        message: Any?,
+        meta: Any?,
+        ttl: Int?,
+        shouldStore: Boolean?,
+        cipherKey: String?
+    ): SendFile
+
+    actual fun downloadFile(
+        channel: String,
+        fileName: String,
+        fileId: String,
+        cipherKey: String?
+    ): DownloadFile
 
 }

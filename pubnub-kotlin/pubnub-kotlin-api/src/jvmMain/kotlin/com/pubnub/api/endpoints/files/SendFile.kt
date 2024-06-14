@@ -6,4 +6,4 @@ import com.pubnub.api.models.consumer.files.PNFileUploadResult
 /**
  * @see [PubNub.sendFile]
  */
-interface SendFile : ExtendedRemoteAction<PNFileUploadResult>
+actual interface SendFile : ExtendedRemoteAction<PNFileUploadResult>
