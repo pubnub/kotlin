@@ -170,7 +170,7 @@ private fun createFileEventResult(from: PubNubFileEventResultObjC?): PNFileEvent
         file = PNDownloadableFile(
             id = from.file().id(),
             name = from.file().name(),
-            url = from.file().url()
+            url = from.file().url()?.absoluteString ?: ""
         )
     )
 }

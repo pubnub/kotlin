@@ -187,7 +187,6 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         return pubNubObjC.subscribedChannelGroups().filterIsInstance<String>()
     }
 
-    // TODO: Missing pushType (PushService like APNS, GCM, etc) parameter
     // TODO: Why do we need topic parameter here?
     override fun addPushNotificationsOnChannels(
         pushType: PNPushType,
@@ -199,11 +198,12 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         return AddChannelsToPushImpl(
             pubnub = pubNubObjC,
             channels = channels,
-            deviceId = deviceId
+            deviceId = deviceId,
+            pushType = pushType
         )
     }
 
-    // TODO: topic and environment parameters are not present in Swift SDK
+    // TODO: Why do we need topic and environment parameters here?
     override fun auditPushChannelProvisions(
         pushType: PNPushType,
         deviceId: String,
@@ -217,7 +217,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         )
     }
 
-    // TODO: topic and environment parameters are not present in Swift SDK
+    // TODO: Why do we need topic and environment parameters here?
     override fun removePushNotificationsFromChannels(
         pushType: PNPushType,
         channels: List<String>,
