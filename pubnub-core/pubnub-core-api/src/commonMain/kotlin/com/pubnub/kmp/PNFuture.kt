@@ -79,8 +79,8 @@ fun <T> PNFuture<T>.catch(action: (Exception) -> Result<T>): PNFuture<T> = objec
     }
 }
 
-internal fun Collection<PNFuture<Any?>>.awaitAll(): PNFuture<Array<Any?>> = object : PNFuture<Array<Any?>> {
-    override fun async(callback: Consumer<Result<Array<Any?>>>) {
+fun <T>  Collection<PNFuture<T>>.awaitAll(): PNFuture<Array<T>> = object : PNFuture<Array<T>> {
+    override fun async(callback: Consumer<Result<Array<T>>>) {
         val counter = atomic(0)
         val failed = atomic(false)
         val array = Array<Any?>(size) { null }
@@ -90,7 +90,7 @@ internal fun Collection<PNFuture<Any?>>.awaitAll(): PNFuture<Array<Any?>> = obje
                     array[index] = value
                     val counterIncremented = counter.incrementAndGet()
                     if (counterIncremented == size) {
-                        callback.accept(Result.success(array))
+                        callback.accept(Result.success(array as Array<T>))
                     }
                 }.onFailure { exception ->
                     val failedWasSetPreviously = failed.getAndSet(true)
