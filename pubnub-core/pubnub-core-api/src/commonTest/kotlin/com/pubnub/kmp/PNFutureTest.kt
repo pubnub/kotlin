@@ -1,10 +1,6 @@
 package com.pubnub.kmp
 
-import asFuture
-import awaitAll
 import com.pubnub.api.v2.callbacks.Result
-import then
-import thenAsync
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
