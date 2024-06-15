@@ -3,7 +3,6 @@ package com.pubnub.api.endpoints.pubsub
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.publishWithChannel
 import com.pubnub.kmp.PNFuture
-import com.pubnub.api.PubNub
 import com.pubnub.api.models.consumer.PNPublishResult
 import com.pubnub.kmp.onFailureHandler
 import com.pubnub.kmp.onSuccessHandler

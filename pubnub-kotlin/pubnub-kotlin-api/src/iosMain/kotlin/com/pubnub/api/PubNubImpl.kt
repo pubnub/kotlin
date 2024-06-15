@@ -112,6 +112,7 @@ import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.kmp.CustomObject
+import com.pubnub.kmp.PubNub
 import com.pubnub.kmp.Uploadable
 import kotlinx.cinterop.ExperimentalForeignApi
 

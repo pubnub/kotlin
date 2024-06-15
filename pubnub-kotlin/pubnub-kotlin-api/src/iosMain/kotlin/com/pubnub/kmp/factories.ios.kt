@@ -24,7 +24,6 @@ import cocoapods.PubNubSwift.PubNubSetMembershipEventMessageObjC
 import cocoapods.PubNubSwift.PubNubSetUUIDMetadataEventMessageObjC
 import cocoapods.PubNubSwift.StatusListenerObjC
 import com.pubnub.api.JsonElementImpl
-import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
 import com.pubnub.api.PubNubImpl
 import com.pubnub.api.enums.PNStatusCategory

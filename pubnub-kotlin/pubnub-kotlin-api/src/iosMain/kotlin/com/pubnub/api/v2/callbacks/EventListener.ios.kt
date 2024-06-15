@@ -1,14 +1,13 @@
 package com.pubnub.api.v2.callbacks
 
 import cocoapods.PubNubSwift.EventListenerObjC
-import com.pubnub.api.PubNub
-import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
+import com.pubnub.kmp.PubNub
 import kotlinx.cinterop.ExperimentalForeignApi
 
 /**

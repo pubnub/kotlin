@@ -109,6 +109,7 @@ import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.kmp.CustomObject
 import com.pubnub.kmp.CustomObjectImpl
 import com.pubnub.kmp.Optional
+import com.pubnub.kmp.PubNub
 import com.pubnub.kmp.Uploadable
 import com.pubnub.kmp.createJsObject
 import com.pubnub.kmp.toJsMap

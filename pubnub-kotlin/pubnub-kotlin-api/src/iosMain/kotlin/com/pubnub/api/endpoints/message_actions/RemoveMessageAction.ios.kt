@@ -3,7 +3,6 @@ package com.pubnub.api.endpoints.message_actions
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.removeMessageActionWithChannel
 import com.pubnub.kmp.PNFuture
-import com.pubnub.api.PubNub
 import com.pubnub.api.models.consumer.message_actions.PNRemoveMessageActionResult
 import com.pubnub.kmp.onFailureHandler
 import com.pubnub.kmp.onSuccessReturnValue

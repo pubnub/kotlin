@@ -3,7 +3,6 @@ package com.pubnub.api.endpoints
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.timeOnSuccess
 import com.pubnub.kmp.PNFuture
-import com.pubnub.api.PubNub
 import com.pubnub.api.models.consumer.PNTimeResult
 import com.pubnub.kmp.onFailureHandler
 import com.pubnub.kmp.onSuccessHandler

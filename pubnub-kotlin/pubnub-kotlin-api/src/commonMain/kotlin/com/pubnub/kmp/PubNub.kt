@@ -1,4 +1,4 @@
-package com.pubnub.api
+package com.pubnub.kmp
 
 import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.endpoints.DeleteMessages
@@ -49,7 +49,6 @@ import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
-import com.pubnub.api.models.consumer.files.PNDownloadFileResult
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.objects.PNKey
 import com.pubnub.api.models.consumer.objects.PNMemberKey
@@ -66,7 +65,7 @@ import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.kmp.CustomObject
 import com.pubnub.kmp.Uploadable
 
-expect interface PubNub {
+interface PubNub {
     val configuration: PNConfiguration
     fun addListener(listener: EventListener)
     fun addListener(listener: StatusListener)
