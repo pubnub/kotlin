@@ -17,7 +17,7 @@ import kotlinx.cinterop.ExperimentalForeignApi
  */
 
 @OptIn(ExperimentalForeignApi::class)
-actual interface EventListener : Listener {
+actual interface EventListener : BaseEventListener {
     val underlying: EventListenerObjC
     val onMessage: (PubNub, PNMessageResult) -> Unit
     val onPresence: (PubNub, PNPresenceEventResult) -> Unit

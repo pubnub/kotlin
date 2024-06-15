@@ -1,13 +1,12 @@
 package com.pubnub.api.v2.entities
 
-import com.pubnub.api.PNConfiguration
 import com.pubnub.api.endpoints.files.DeleteFile
 import com.pubnub.api.endpoints.files.SendFile
 import com.pubnub.api.endpoints.pubsub.Publish
 import com.pubnub.api.endpoints.pubsub.Signal
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.subscriptions.Subscription
-import java.io.InputStream
+import com.pubnub.kmp.Uploadable
 
 /**
  * A representation of a PubNub channel identified by its [name].
@@ -142,7 +141,7 @@ interface Channel : BaseChannel<EventListener, Subscription> {
      */
     fun sendFile(
         fileName: String,
-        inputStream: InputStream,
+        inputStream: Uploadable,
         message: Any? = null,
         meta: Any? = null,
         ttl: Int? = null,
