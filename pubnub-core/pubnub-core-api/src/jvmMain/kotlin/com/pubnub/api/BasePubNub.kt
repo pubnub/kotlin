@@ -118,9 +118,9 @@ interface BasePubNub<
      * @return a [SubscriptionSet] containing subscriptions for the given [channels] and [channelGroups]
      */
     fun subscriptionSetOf(
-        channels: Set<String> = emptySet(),
-        channelGroups: Set<String> = emptySet(),
-        options: SubscriptionOptions = EmptyOptions,
+        channels: Set<String>,
+        channelGroups: Set<String>,
+        options: SubscriptionOptions,
     ): SubscriptionSet
 
     /**

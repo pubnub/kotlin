@@ -62,8 +62,14 @@ import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
-import com.pubnub.kmp.CustomObject
-import com.pubnub.kmp.Uploadable
+import com.pubnub.api.v2.entities.Channel
+import com.pubnub.api.v2.entities.ChannelGroup
+import com.pubnub.api.v2.entities.ChannelMetadata
+import com.pubnub.api.v2.entities.UserMetadata
+import com.pubnub.api.v2.subscriptions.EmptyOptions
+import com.pubnub.api.v2.subscriptions.Subscription
+import com.pubnub.api.v2.subscriptions.SubscriptionOptions
+import com.pubnub.api.v2.subscriptions.SubscriptionSet
 
 interface PubNub {
     val configuration: PNConfiguration
@@ -436,5 +442,20 @@ interface PubNub {
 
     fun destroy()
 
+    fun channel(name: String): Channel
+
+    fun channelGroup(name: String): ChannelGroup
+
+    fun channelMetadata(id: String): ChannelMetadata
+
+    fun userMetadata(id: String): UserMetadata
+
+    fun subscriptionSetOf(subscriptions: Set<Subscription>): SubscriptionSet
+
+    fun subscriptionSetOf(
+        channels: Set<String> = emptySet(),
+        channelGroups: Set<String> = emptySet(),
+        options: SubscriptionOptions = EmptyOptions,
+    ): SubscriptionSet
 
 }

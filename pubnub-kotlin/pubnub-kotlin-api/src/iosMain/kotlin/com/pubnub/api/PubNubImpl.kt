@@ -111,6 +111,13 @@ import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
+import com.pubnub.api.v2.entities.Channel
+import com.pubnub.api.v2.entities.ChannelGroup
+import com.pubnub.api.v2.entities.ChannelMetadata
+import com.pubnub.api.v2.entities.UserMetadata
+import com.pubnub.api.v2.subscriptions.Subscription
+import com.pubnub.api.v2.subscriptions.SubscriptionOptions
+import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.kmp.CustomObject
 import com.pubnub.kmp.PubNub
 import com.pubnub.kmp.Uploadable
@@ -756,6 +763,34 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
 
     override fun destroy() {
         pubNubObjC.disconnect()
+    }
+
+    override fun channel(name: String): Channel {
+        TODO("Not yet implemented")
+    }
+
+    override fun channelGroup(name: String): ChannelGroup {
+        TODO("Not yet implemented")
+    }
+
+    override fun channelMetadata(id: String): ChannelMetadata {
+        TODO("Not yet implemented")
+    }
+
+    override fun userMetadata(id: String): UserMetadata {
+        TODO("Not yet implemented")
+    }
+
+    override fun subscriptionSetOf(subscriptions: Set<Subscription>): SubscriptionSet {
+        TODO("Not yet implemented")
+    }
+
+    override fun subscriptionSetOf(
+        channels: Set<String>,
+        channelGroups: Set<String>,
+        options: SubscriptionOptions
+    ): SubscriptionSet {
+        TODO("Not yet implemented")
     }
 
     override fun unsubscribeAll() {
