@@ -481,7 +481,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
 
     interface MessageCountsParameters {
         var channels: Array<String>
-        var channelTimetokens: dynamic /* Array<String> | Array<Number> */
+        var channelTimetokens: Array<String>
     }
 
     interface MessageCountsResponse {
