@@ -13,7 +13,7 @@ import com.pubnub.kmp.PNFuture
 import com.pubnub.kmp.createObjectSortProperties
 import com.pubnub.kmp.createPNUUIDMetadata
 import com.pubnub.kmp.createPubNubHashedPage
-import com.pubnub.kmp.filteredList
+import com.pubnub.kmp.transform
 import com.pubnub.kmp.onFailureHandler
 import com.pubnub.kmp.onSuccessHandler3
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -45,7 +45,7 @@ class GetAllUUIDMetadataImpl(
             onSuccess = callback.onSuccessHandler3 { uuids, totalCount, next ->
                 PNUUIDMetadataArrayResult(
                     status = 200,
-                    data = uuids.filteredList { rawValue: PubNubUUIDMetadataObjC -> createPNUUIDMetadata(from = rawValue) },
+                    data = uuids.transform { rawValue: PubNubUUIDMetadataObjC -> createPNUUIDMetadata(from = rawValue) },
                     totalCount = totalCount?.intValue ?: 0,
                     next = next?.end()?.let { hash -> PNPage.PNNext(pageHash = hash) },
                     prev = next?.start()?.let { hash -> PNPage.PNPrev(pageHash = hash) }

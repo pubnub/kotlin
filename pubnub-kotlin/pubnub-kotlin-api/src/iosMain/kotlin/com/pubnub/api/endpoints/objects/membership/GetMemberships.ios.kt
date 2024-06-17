@@ -13,7 +13,7 @@ import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.kmp.createPNChannelMembership
 import com.pubnub.kmp.createPubNubHashedPage
-import com.pubnub.kmp.filteredList
+import com.pubnub.kmp.transform
 import com.pubnub.kmp.onFailureHandler
 import com.pubnub.kmp.onSuccessHandler3
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -50,7 +50,7 @@ class GetMembershipsImpl(
             onSuccess = callback.onSuccessHandler3 { memberships, totalCount, next ->
                 PNChannelMembershipArrayResult(
                     status = 200,
-                    data = memberships.filteredList { rawValue: PubNubMembershipMetadataObjC -> createPNChannelMembership(rawValue) },
+                    data = memberships.transform { rawValue: PubNubMembershipMetadataObjC -> createPNChannelMembership(rawValue) },
                     totalCount = totalCount?.intValue,
                     next = next?.end()?.let { hash -> PNPage.PNNext(pageHash = hash) },
                     prev = next?.start()?.let { hash -> PNPage.PNPrev(pageHash = hash) }

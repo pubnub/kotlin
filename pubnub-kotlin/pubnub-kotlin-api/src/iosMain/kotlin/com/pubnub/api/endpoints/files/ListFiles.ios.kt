@@ -10,7 +10,7 @@ import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.kmp.createPubNubHashedPage
-import com.pubnub.kmp.filteredList
+import com.pubnub.kmp.transform
 import com.pubnub.kmp.onFailureHandler
 import com.pubnub.kmp.onSuccessHandler2
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -38,7 +38,7 @@ class ListFilesImpl(
                     count = files?.size ?: 0, // TODO: count property is not retrieved from ListFilesSuccessResponse in Swift SDK
                     next = nextPageHash?.let { PNPage.PNNext(pageHash = it) },
                     status = 200,
-                    data = files.filteredList { rawValue: PubNubFileObjC ->
+                    data = files.transform { rawValue: PubNubFileObjC ->
                         PNUploadedFile(
                             id = rawValue.id(),
                             name = rawValue.name(),

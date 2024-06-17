@@ -39,7 +39,7 @@ internal fun createPNUUIDMetadata(from: PubNubUUIDMetadataObjC): PNUUIDMetadata 
         externalId = from.externalId(),
         profileUrl = from.profileUrl(),
         email = from.email(),
-        custom = from.custom() as? Map<String, Any?>, // TODO: Verify
+        custom = from.custom()?.asMap() as? Map<String, Any?>, // TODO: Verify
         updated = from.updated(),
         eTag = from.eTag(),
         type = from.type(),
@@ -53,7 +53,7 @@ internal fun createPNChannelMetadata(from: PubNubChannelMetadataObjC): PNChannel
         id = from.id(),
         name = from.name(),
         description = from.descr(),
-        custom = from.custom() as? Map<String, Any?>, // TODO: Verify
+        custom = from.custom()?.asMap() as? Map<String, Any?>, // TODO: Verify
         updated = from.updated(),
         eTag = from.eTag(),
         type = from.type(),
@@ -78,13 +78,13 @@ internal fun createPNChannelMembership(from: PubNubMembershipMetadataObjC): PNCh
             id = from.channel()?.id() ?: "",
             name = from.channel()?.name() ?: "",
             description = from.channel()?.descr() ?: "",
-            custom = from.channel()?.custom()?.asMap() as? Map<String, Any?>,
+            custom = from.channel()?.custom()?.asMap() as? Map<String, Any?>, // TODO: Verify
             updated = from.channel()?.updated(),
             eTag = from.channel()?.eTag(),
             type = from.channel()?.type(),
             status = from.channel()?.status()
         ),
-        custom = from.custom() as Map<String, Any>,
+        custom = from.custom() as? Map<String, Any>, // TODO: Verify
         updated = from.updated() ?: "",
         eTag = from.eTag() ?: "",
         status = from.status()
@@ -95,13 +95,13 @@ internal fun createPNChannelMembership(from: PubNubMembershipMetadataObjC): PNCh
 internal fun createPNMember(from: PubNubMembershipMetadataObjC): PNMember {
     return PNMember(
         uuid = from.uuid()?.let { createPNUUIDMetadata(from = it) },
-        custom = from.custom() as Map<String, Any>, // TODO: Check
+        custom = from.custom() as? Map<String, Any>, // TODO: Verify
         updated = from.updated() ?: "",
         eTag = from.eTag() ?: "",
         status = from.status()
     )
 }
 
-internal inline fun <reified T, U> List<*>?.filteredList(mapper: (T) -> U): Collection<U> {
+internal inline fun <reified T, U> List<*>?.transform(mapper: (T) -> U): Collection<U> {
     return this?.filterIsInstance<T>()?.map(mapper) ?: emptyList()
 }
