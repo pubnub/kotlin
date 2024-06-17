@@ -13,7 +13,7 @@ import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.kmp.createObjectSortProperties
 import com.pubnub.kmp.createPNChannelMetadata
 import com.pubnub.kmp.createPubNubHashedPage
-import com.pubnub.kmp.transform
+import com.pubnub.kmp.filterAndMap
 import com.pubnub.kmp.onFailureHandler
 import com.pubnub.kmp.onSuccessHandler3
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -45,7 +45,7 @@ class GetAllChannelMetadataImpl(
             onSuccess = callback.onSuccessHandler3 { channels, totalCount, next ->
                 PNChannelMetadataArrayResult(
                     status = 200,
-                    data = channels.transform { rawValue: PubNubChannelMetadataObjC -> createPNChannelMetadata(rawValue) },
+                    data = channels.filterAndMap { rawValue: PubNubChannelMetadataObjC -> createPNChannelMetadata(rawValue) },
                     totalCount = totalCount?.intValue,
                     next = next?.end()?.let { hash -> PNPage.PNNext(pageHash = hash) },
                     prev = next?.start()?.let { hash -> PNPage.PNPrev(pageHash = hash) }

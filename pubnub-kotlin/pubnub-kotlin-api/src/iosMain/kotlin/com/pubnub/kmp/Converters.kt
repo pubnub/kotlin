@@ -102,6 +102,6 @@ internal fun createPNMember(from: PubNubMembershipMetadataObjC): PNMember {
     )
 }
 
-internal inline fun <reified T, U> List<*>?.transform(mapper: (T) -> U): Collection<U> {
+internal inline fun <reified T, U> List<*>?.filterAndMap(mapper: (T) -> U): Collection<U> {
     return this?.filterIsInstance<T>()?.map(mapper) ?: emptyList()
 }
