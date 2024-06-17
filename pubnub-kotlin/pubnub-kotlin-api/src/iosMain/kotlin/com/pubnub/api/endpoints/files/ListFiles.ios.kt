@@ -33,12 +33,12 @@ class ListFilesImpl(
             channel = channel,
             limit = limit?.let { NSNumber(it) },
             next = createPubNubHashedPage(from = next),
-            onSuccess = callback.onSuccessHandler2 { data, next ->
+            onSuccess = callback.onSuccessHandler2 { files, nextPageHash ->
                 PNListFilesResult(
-                    count = data?.size ?: 0, // TODO: count property is not retrieved from ListFilesSuccessResponse in Swift SDK
-                    next = next?.let { PNPage.PNNext(pageHash = it) },
+                    count = files?.size ?: 0, // TODO: count property is not retrieved from ListFilesSuccessResponse in Swift SDK
+                    next = nextPageHash?.let { PNPage.PNNext(pageHash = it) },
                     status = 200,
-                    data = filteredList(from = data) { rawValue: PubNubFileObjC ->
+                    data = files.filteredList { rawValue: PubNubFileObjC ->
                         PNUploadedFile(
                             id = rawValue.id(),
                             name = rawValue.name(),

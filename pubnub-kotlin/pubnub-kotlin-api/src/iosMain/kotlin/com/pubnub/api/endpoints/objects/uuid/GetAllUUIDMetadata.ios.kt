@@ -42,10 +42,10 @@ class GetAllUUIDMetadataImpl(
             sort = createObjectSortProperties(from = sort),
             includeCount = includeCount,
             includeCustom = includeCustom,
-            onSuccess = callback.onSuccessHandler3 { data, totalCount, next ->
+            onSuccess = callback.onSuccessHandler3 { uuids, totalCount, next ->
                 PNUUIDMetadataArrayResult(
                     status = 200,
-                    data = filteredList(data) { rawValue: PubNubUUIDMetadataObjC -> createPNUUIDMetadata(from = rawValue) },
+                    data = uuids.filteredList { rawValue: PubNubUUIDMetadataObjC -> createPNUUIDMetadata(from = rawValue) },
                     totalCount = totalCount?.intValue ?: 0,
                     next = next?.end()?.let { hash -> PNPage.PNNext(pageHash = hash) },
                     prev = next?.start()?.let { hash -> PNPage.PNPrev(pageHash = hash) }

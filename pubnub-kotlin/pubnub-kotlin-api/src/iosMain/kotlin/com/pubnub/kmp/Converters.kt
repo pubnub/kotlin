@@ -18,12 +18,12 @@ import platform.Foundation.NSString
 import platform.Foundation.NSUTF8StringEncoding
 import platform.Foundation.dataUsingEncoding
 
-fun String.toNSData(): NSData? {
+internal fun String.toNSData(): NSData? {
     return (this as NSString).dataUsingEncoding(NSUTF8StringEncoding)
 }
 
 @OptIn(ExperimentalForeignApi::class)
-fun createPubNubHashedPage(from: PNPage?): PubNubHashedPageObjC {
+internal fun createPubNubHashedPage(from: PNPage?): PubNubHashedPageObjC {
     return PubNubHashedPageObjC(
         start = if (from is PNPage.PNNext) { from.pageHash } else { null },
         end = if (from is PNPage.PNPrev) { from.pageHash } else { null },
@@ -32,7 +32,7 @@ fun createPubNubHashedPage(from: PNPage?): PubNubHashedPageObjC {
 }
 
 @OptIn(ExperimentalForeignApi::class)
-fun createPNUUIDMetadata(from: PubNubUUIDMetadataObjC): PNUUIDMetadata {
+internal fun createPNUUIDMetadata(from: PubNubUUIDMetadataObjC): PNUUIDMetadata {
     return PNUUIDMetadata(
         id = from.id(),
         name = from.name(),
@@ -48,7 +48,7 @@ fun createPNUUIDMetadata(from: PubNubUUIDMetadataObjC): PNUUIDMetadata {
 }
 
 @OptIn(ExperimentalForeignApi::class)
-fun createPNChannelMetadata(from: PubNubChannelMetadataObjC): PNChannelMetadata {
+internal fun createPNChannelMetadata(from: PubNubChannelMetadataObjC): PNChannelMetadata {
     return PNChannelMetadata(
         id = from.id(),
         name = from.name(),
@@ -62,7 +62,7 @@ fun createPNChannelMetadata(from: PubNubChannelMetadataObjC): PNChannelMetadata 
 }
 
 @OptIn(ExperimentalForeignApi::class)
-fun createObjectSortProperties(from: Collection<PNSortKey<PNKey>>) : List<PubNubSortPropertyObjC> {
+internal fun createObjectSortProperties(from: Collection<PNSortKey<PNKey>>) : List<PubNubSortPropertyObjC> {
     return from.map {
         PubNubSortPropertyObjC(
             key = it.key.fieldName,
@@ -72,7 +72,7 @@ fun createObjectSortProperties(from: Collection<PNSortKey<PNKey>>) : List<PubNub
 }
 
 @OptIn(ExperimentalForeignApi::class)
-fun createPNChannelMembership(from: PubNubMembershipMetadataObjC): PNChannelMembership {
+internal fun createPNChannelMembership(from: PubNubMembershipMetadataObjC): PNChannelMembership {
     return PNChannelMembership(
         channel = PNChannelMetadata(
             id = from.channel()?.id() ?: "",
@@ -92,7 +92,7 @@ fun createPNChannelMembership(from: PubNubMembershipMetadataObjC): PNChannelMemb
 }
 
 @OptIn(ExperimentalForeignApi::class)
-fun createPNMember(from: PubNubMembershipMetadataObjC): PNMember {
+internal fun createPNMember(from: PubNubMembershipMetadataObjC): PNMember {
     return PNMember(
         uuid = from.uuid()?.let { createPNUUIDMetadata(from = it) },
         custom = from.custom() as Map<String, Any>, // TODO: Check
@@ -102,12 +102,6 @@ fun createPNMember(from: PubNubMembershipMetadataObjC): PNMember {
     )
 }
 
-inline fun <reified T, U> filteredList(from: List<*>?, mapper: (T) -> U): Collection<U> {
-    return from?.filterIsInstance<T>()?.map { mapper(it) } ?: emptyList()
-}
-@OptIn(ExperimentalForeignApi::class)
-fun createPNChannelMembershipArray(from: List<PubNubChannelMetadataObjC>): Collection<PNChannelMetadata> {
-    return from.map {
-        createPNChannelMetadata(from = it)
-    }
+internal inline fun <reified T, U> List<*>?.filteredList(mapper: (T) -> U): Collection<U> {
+    return this?.filterIsInstance<T>()?.map(mapper) ?: emptyList()
 }

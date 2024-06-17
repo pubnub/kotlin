@@ -49,12 +49,12 @@ class AddMembershipsImpl(
             sort = sort.map { it.key.fieldName },
             includeCount = includeCount,
             includeCustom = includeCustom,
-            includeChannelFields = includeChannelDetails == PNChannelDetailsLevel.CHANNEL,
+            includeChannelFields = includeChannelDetails == PNChannelDetailsLevel.CHANNEL || includeChannelDetails == PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM,
             includeChannelCustomFields = includeChannelDetails == PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM,
-            onSuccess = callback.onSuccessHandler3 { data, totalCount, next ->
+            onSuccess = callback.onSuccessHandler3 { memberships, totalCount, next ->
                 PNChannelMembershipArrayResult(
                     status = 200,
-                    data = filteredList(data) { rawValue: PubNubMembershipMetadataObjC -> createPNChannelMembership(rawValue) },
+                    data = memberships.filteredList { rawValue: PubNubMembershipMetadataObjC -> createPNChannelMembership(rawValue) },
                     totalCount = totalCount?.intValue,
                     next = next?.end()?.let { hash -> PNPage.PNNext(pageHash = hash) },
                     prev = next?.start()?.let { hash -> PNPage.PNPrev(pageHash = hash) }
@@ -88,12 +88,12 @@ class RemoveMembershipsImpl(
             sort = sort.map { it.key.fieldName },
             includeCount = includeCount,
             includeCustom = includeCustom,
-            includeChannelFields = includeChannelDetails == PNChannelDetailsLevel.CHANNEL,
+            includeChannelFields = includeChannelDetails == PNChannelDetailsLevel.CHANNEL || includeChannelDetails == PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM,
             includeChannelCustomFields = includeChannelDetails == PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM,
-            onSuccess = callback.onSuccessHandler3 { data, totalCount, next ->
+            onSuccess = callback.onSuccessHandler3 { memberships, totalCount, next ->
                 PNChannelMembershipArrayResult(
                     status = 200,
-                    data = filteredList(data) { rawValue: PubNubMembershipMetadataObjC -> createPNChannelMembership(rawValue) },
+                    data = memberships.filteredList { rawValue: PubNubMembershipMetadataObjC -> createPNChannelMembership(rawValue) },
                     totalCount = totalCount?.intValue,
                     next = next?.end()?.let { hash -> PNPage.PNNext(pageHash = hash) },
                     prev = next?.start()?.let { hash -> PNPage.PNPrev(pageHash = hash) }

@@ -50,12 +50,12 @@ class SetChannelMembersImpl(
             sort = sort.map { it.key.fieldName },
             includeCount = includeCount,
             includeCustom = includeCustom,
-            includeUUIDFields = includeUUIDDetails == PNUUIDDetailsLevel.UUID,
+            includeUUIDFields = includeUUIDDetails == PNUUIDDetailsLevel.UUID || includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM,
             includeUUIDCustomFields = includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM,
-            onSuccess = callback.onSuccessHandler3 { data, totalCount, next ->
+            onSuccess = callback.onSuccessHandler3 { memberships, totalCount, next ->
                 PNMemberArrayResult(
                     status = 200,
-                    data = filteredList(data) { rawValue: PubNubMembershipMetadataObjC -> createPNMember(rawValue) },
+                    data = memberships.filteredList { rawValue: PubNubMembershipMetadataObjC -> createPNMember(rawValue) },
                     totalCount = totalCount?.intValue,
                     next = next?.end()?.let { hash -> PNPage.PNNext(pageHash = hash) },
                     prev = next?.start()?.let { hash -> PNPage.PNPrev(pageHash = hash) }
@@ -90,11 +90,11 @@ class RemoveChannelMembersImpl(
             includeCount = includeCount,
             includeCustom = includeCustom,
             includeUUIDFields = includeUUIDDetails == PNUUIDDetailsLevel.UUID,
-            includeUUIDCustomFields = includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM,
-            onSuccess = callback.onSuccessHandler3 { data, totalCount, next ->
+            includeUUIDCustomFields = includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM || includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM,
+            onSuccess = callback.onSuccessHandler3 { memberships, totalCount, next ->
                 PNMemberArrayResult(
                     status = 200,
-                    data = filteredList(data) { rawValue: PubNubMembershipMetadataObjC -> createPNMember(rawValue) },
+                    data = memberships.filteredList { rawValue: PubNubMembershipMetadataObjC -> createPNMember(rawValue) },
                     totalCount = totalCount?.intValue,
                     next = next?.end()?.let { hash -> PNPage.PNNext(pageHash = hash) },
                     prev = next?.start()?.let { hash -> PNPage.PNPrev(pageHash = hash) }
