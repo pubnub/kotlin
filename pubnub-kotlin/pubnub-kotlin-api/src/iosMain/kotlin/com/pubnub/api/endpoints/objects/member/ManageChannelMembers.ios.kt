@@ -89,8 +89,8 @@ class RemoveChannelMembersImpl(
             sort = sort.map { it.key.fieldName },
             includeCount = includeCount,
             includeCustom = includeCustom,
-            includeUUIDFields = includeUUIDDetails == PNUUIDDetailsLevel.UUID,
-            includeUUIDCustomFields = includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM || includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM,
+            includeUUIDFields = includeUUIDDetails == PNUUIDDetailsLevel.UUID || includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM,
+            includeUUIDCustomFields = includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM,
             onSuccess = callback.onSuccessHandler3 { memberships, totalCount, next ->
                 PNMemberArrayResult(
                     status = 200,
