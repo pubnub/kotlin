@@ -9,6 +9,7 @@ import com.pubnub.kmp.onFailureHandler
 import com.pubnub.kmp.onSuccessHandler
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
+import com.pubnub.kmp.createPNChannelMetadata
 import kotlinx.cinterop.ExperimentalForeignApi
 
 /**
@@ -28,17 +29,8 @@ class GetChannelMetadataImpl(
             includeCustom = includeCustom,
             onSuccess = callback.onSuccessHandler {
                 PNChannelMetadataResult(
-                    status = 200, // TODO: Determine this field
-                    data = PNChannelMetadata(
-                        id = it?.id() ?: "",
-                        name = it?.name(),
-                        description = it?.descr(),
-                        custom = it?.custom() as? Map<String, Any?>, // TODO: Check
-                        updated = it?.updated(),
-                        eTag = it?.eTag(),
-                        type = it?.type(),
-                        status = it?.status()
-                    )
+                    status = 200,
+                    data = it?.let { rawValue -> createPNChannelMetadata(from = rawValue) }
                 )
             },
             onFailure = callback.onFailureHandler()

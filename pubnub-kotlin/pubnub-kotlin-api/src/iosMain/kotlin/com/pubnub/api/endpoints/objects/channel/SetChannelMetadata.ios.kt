@@ -11,6 +11,7 @@ import com.pubnub.kmp.onSuccessHandler
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.kmp.CustomObject
+import com.pubnub.kmp.createPNChannelMetadata
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.posix.stat
 
@@ -42,16 +43,7 @@ class SetChannelMetadataImpl(
             onSuccess = callback.onSuccessHandler {
                 PNChannelMetadataResult(
                     status = 200,
-                    data = PNChannelMetadata(
-                        id = it?.id() ?: "",
-                        name = it?.name(),
-                        description = it?.descr(),
-                        custom = it?.custom()?.asMap() as? Map<String, Any>, // TODO: Verify
-                        updated = it?.updated(),
-                        eTag = it?.eTag(),
-                        type = it?.type(),
-                        status = it?.status()
-                    )
+                    data = it?.let { rawValue -> createPNChannelMetadata(from = rawValue) }
                 )
             },
             onFailure = callback.onFailureHandler()

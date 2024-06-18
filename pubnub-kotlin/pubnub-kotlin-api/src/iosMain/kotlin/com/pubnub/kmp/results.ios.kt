@@ -29,6 +29,18 @@ fun <T, X, Y, U> Consumer<Result<U>>.onSuccessHandler3(mapper: (T, X, Y) -> U) :
     }
 }
 
+fun <T, X, Y> Consumer<Result<Y>>.onSuccessHandler2(mapper: (T, X) -> Y) : (T, X) -> Unit {
+    return { input: T, secondInput: X ->
+        accept(
+            try {
+                Result.success(mapper(input, secondInput))
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+        )
+    }
+}
+
 fun <T> Consumer<Result<T>>.onSuccessReturnValue(value: T) : () -> Unit {
     return {
         accept(Result.success(value))

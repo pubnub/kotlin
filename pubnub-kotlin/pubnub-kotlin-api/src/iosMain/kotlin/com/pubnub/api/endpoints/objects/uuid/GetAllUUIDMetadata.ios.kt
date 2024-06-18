@@ -1,18 +1,19 @@
 package com.pubnub.api.endpoints.objects.uuid
 
-import cocoapods.PubNubSwift.PubNubHashedPageObjC
 import cocoapods.PubNubSwift.PubNubObjC
-import cocoapods.PubNubSwift.PubNubSortPropertyObjC
 import cocoapods.PubNubSwift.PubNubUUIDMetadataObjC
 import cocoapods.PubNubSwift.getAllUUIDMetadataWithLimit
 import com.pubnub.api.models.consumer.objects.PNKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
-import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.kmp.PNFuture
+import com.pubnub.kmp.createObjectSortProperties
+import com.pubnub.kmp.createPNUUIDMetadata
+import com.pubnub.kmp.createPubNubHashedPage
+import com.pubnub.kmp.filterAndMap
 import com.pubnub.kmp.onFailureHandler
 import com.pubnub.kmp.onSuccessHandler3
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -36,37 +37,15 @@ class GetAllUUIDMetadataImpl(
     override fun async(callback: Consumer<Result<PNUUIDMetadataArrayResult>>) {
         pubnub.getAllUUIDMetadataWithLimit(
             limit = limit?.let { NSNumber(it) },
-            page = PubNubHashedPageObjC(
-                start = if (page is PNPage.PNNext) { page.pageHash } else { null },
-                end = if (page is PNPage.PNPrev) { page.pageHash } else { null },
-                totalCount = null
-            ),
+            page = createPubNubHashedPage(from = page),
             filter = filter,
-            sort = sort.map {
-                PubNubSortPropertyObjC(
-                    key = it.key.fieldName,
-                    direction = it.dir
-                )
-            },
+            sort = createObjectSortProperties(from = sort),
             includeCount = includeCount,
             includeCustom = includeCustom,
-            onSuccess = callback.onSuccessHandler3() { data, totalCount, next ->
+            onSuccess = callback.onSuccessHandler3 { uuids, totalCount, next ->
                 PNUUIDMetadataArrayResult(
                     status = 200,
-                    data = (data as List<PubNubUUIDMetadataObjC>).map { metadata ->
-                        PNUUIDMetadata(
-                            id = metadata.id(),
-                            name = metadata.name(),
-                            externalId = metadata.externalId(),
-                            profileUrl = metadata.profileUrl(),
-                            email = metadata.email(),
-                            custom = metadata.custom() as? Map<String, Any?>, // TODO: Verify
-                            updated = metadata.updated(),
-                            eTag = metadata.eTag(),
-                            type = metadata.type(),
-                            status = metadata.status()
-                        )
-                    },
+                    data = uuids.filterAndMap { rawValue: PubNubUUIDMetadataObjC -> createPNUUIDMetadata(from = rawValue) },
                     totalCount = totalCount?.intValue ?: 0,
                     next = next?.end()?.let { hash -> PNPage.PNNext(pageHash = hash) },
                     prev = next?.start()?.let { hash -> PNPage.PNPrev(pageHash = hash) }

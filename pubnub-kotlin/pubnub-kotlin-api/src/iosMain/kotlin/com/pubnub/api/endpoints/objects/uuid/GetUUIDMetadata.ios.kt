@@ -3,12 +3,12 @@ package com.pubnub.api.endpoints.objects.uuid
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.getUUIDMetadataWithUuid
 import com.pubnub.kmp.PNFuture
-import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult
 import com.pubnub.kmp.onFailureHandler
 import com.pubnub.kmp.onSuccessHandler
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
+import com.pubnub.kmp.createPNUUIDMetadata
 import kotlinx.cinterop.ExperimentalForeignApi
 
 /**
@@ -30,20 +30,10 @@ class GetUUIDMetadataImpl(
             onSuccess = callback.onSuccessHandler {
                 PNUUIDMetadataResult(
                     status = 200,
-                    data = PNUUIDMetadata(
-                        id = it?.id() ?: "",
-                        name = it?.name(),
-                        externalId = it?.externalId(),
-                        profileUrl = it?.profileUrl(),
-                        email = it?.email(),
-                        custom = it?.custom() as? Map<String, Any?>, // TODO: Check
-                        updated = it?.updated(),
-                        eTag = it?.eTag(),
-                        type = it?.type(),
-                        status = it?.status()
-                    )
+                    data = it?.let { createPNUUIDMetadata(from = it) }
                 )
             },
-            onFailure = callback.onFailureHandler())
+            onFailure = callback.onFailureHandler()
+        )
     }
 }

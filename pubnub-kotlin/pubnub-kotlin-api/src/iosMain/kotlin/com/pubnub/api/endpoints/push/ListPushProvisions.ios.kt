@@ -30,7 +30,7 @@ class ListPushProvisionsImpl(
             pubnub.listPushChannelsWithDeviceId(
                 deviceId = data,
                 pushType = pushType.toParamString(),
-                onSuccess = callback.onSuccessHandler { PNPushListProvisionsResult(channels = it as List<String>) },
+                onSuccess = callback.onSuccessHandler { PNPushListProvisionsResult(channels = it?.filterIsInstance<String>() ?: emptyList()) },
                 onFailure = callback.onFailureHandler()
             )
         } ?: callback.accept(Result.failure(PubNubException("Cannot create NSData from $deviceId")))
