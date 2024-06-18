@@ -48,13 +48,13 @@ class SendFileImpl(
                 meta = meta,
                 ttl = ttl?.let { NSNumber(it) },
                 shouldStore = shouldStore?.let { NSNumber(it) },
-                onSuccess = callback.onSuccessHandler2 { file, timetoken ->
+                onSuccess = callback.onSuccessHandler2 { uploadedFile, timetoken ->
                     PNFileUploadResult(
                         status = 200,
                         timetoken = timetoken.toLong(),
                         file = PNBaseFile(
-                            id = file?.id() ?: "",
-                            name = file?.name() ?: ""
+                            id = uploadedFile?.id().orEmpty(),
+                            name = uploadedFile?.name().orEmpty()
                         )
                     )
                 },
