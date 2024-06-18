@@ -33,6 +33,7 @@ import com.pubnub.api.endpoints.channel_groups.RemoveChannelChannelGroupImpl
 import com.pubnub.api.endpoints.files.DeleteFile
 import com.pubnub.api.endpoints.files.DeleteFileImpl
 import com.pubnub.api.endpoints.files.DownloadFile
+import com.pubnub.api.endpoints.files.DownloadFileImpl
 import com.pubnub.api.endpoints.files.GetFileUrl
 import com.pubnub.api.endpoints.files.GetFileUrlImpl
 import com.pubnub.api.endpoints.files.ListFiles
@@ -40,6 +41,7 @@ import com.pubnub.api.endpoints.files.ListFilesImpl
 import com.pubnub.api.endpoints.files.PublishFileMessage
 import com.pubnub.api.endpoints.files.PublishFileMessageImpl
 import com.pubnub.api.endpoints.files.SendFile
+import com.pubnub.api.endpoints.files.SendFileImpl
 import com.pubnub.api.endpoints.message_actions.AddMessageAction
 import com.pubnub.api.endpoints.message_actions.AddMessageActionImpl
 import com.pubnub.api.endpoints.message_actions.GetMessageActions
@@ -761,6 +763,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         pubNubObjC.unsubscribeAll()
     }
 
+    // TODO: cipherKey is used from PubNubConfiguration in Swift SDK
     override fun sendFile(
         channel: String,
         fileName: String,
@@ -771,10 +774,24 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         shouldStore: Boolean?,
         cipherKey: String?
     ): SendFile {
-        TODO("Not yet implemented")
+        return SendFileImpl(
+            pubnub = pubNubObjC,
+            channel = channel,
+            fileName = fileName,
+            inputStream = inputStream,
+            message = message,
+            meta = meta,
+            ttl = ttl,
+            shouldStore = shouldStore
+        )
     }
 
     override fun downloadFile(channel: String, fileName: String, fileId: String, cipherKey: String?): DownloadFile {
-        TODO("Not yet implemented")
+        return DownloadFileImpl(
+            pubnub = pubNubObjC,
+            channel = channel,
+            fileName = fileName,
+            fileId = fileId
+        )
     }
 }
