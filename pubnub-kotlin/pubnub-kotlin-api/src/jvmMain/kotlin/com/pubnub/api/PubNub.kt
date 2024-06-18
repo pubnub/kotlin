@@ -1025,6 +1025,7 @@ interface PubNub :
         includeCount: Boolean,
         includeCustom: Boolean,
         includeChannelDetails: PNChannelDetailsLevel?,
+        includeType: Boolean,
     ): GetMemberships
 
     /**
@@ -1084,6 +1085,7 @@ interface PubNub :
         includeCount: Boolean,
         includeCustom: Boolean,
         includeChannelDetails: PNChannelDetailsLevel?,
+        includeType: Boolean,
     ): ManageMemberships
 
     /**
@@ -1117,6 +1119,7 @@ interface PubNub :
         includeCount: Boolean,
         includeCustom: Boolean,
         includeChannelDetails: PNChannelDetailsLevel?,
+        includeType: Boolean,
     ): ManageMemberships
 
     /**
@@ -1152,6 +1155,7 @@ interface PubNub :
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeChannelDetails: PNChannelDetailsLevel? = null,
+        includeType: Boolean = false,
     ): ManageMemberships
 
     /**
@@ -1208,6 +1212,7 @@ interface PubNub :
         includeCount: Boolean,
         includeCustom: Boolean,
         includeUUIDDetails: PNUUIDDetailsLevel?,
+        includeType: Boolean,
     ): GetChannelMembers
 
     /**
@@ -1267,6 +1272,7 @@ interface PubNub :
         includeCount: Boolean,
         includeCustom: Boolean,
         includeUUIDDetails: PNUUIDDetailsLevel?,
+        includeType: Boolean,
     ): ManageChannelMembers
 
     /**
@@ -1325,6 +1331,7 @@ interface PubNub :
         includeCount: Boolean,
         includeCustom: Boolean,
         includeUUIDDetails: PNUUIDDetailsLevel?,
+        includeType: Boolean,
     ): ManageChannelMembers
 
     /**

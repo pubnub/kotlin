@@ -5,6 +5,7 @@ import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
+import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.createPNConfiguration
 import com.pubnub.kmp.PNFuture
 import com.pubnub.kmp.PubNub
@@ -23,11 +24,13 @@ import kotlin.test.assertTrue
 
 abstract class BaseIntegrationTest {
 
+    lateinit var config: PNConfiguration
     lateinit var pubnub: PubNub
 
     @BeforeTest
-    fun before() {
-        pubnub = createPubNub(createPNConfiguration(UserId("demo_user"), Keys.subKey, Keys.pubKey))
+    open fun before() {
+        config = createPNConfiguration(UserId("demo_user"), Keys.subKey, Keys.pubKey)
+        pubnub = createPubNub(config)
     }
 
     @AfterTest

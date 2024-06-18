@@ -329,9 +329,9 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
         ).sync()
 
         pubnub.manageMemberships(
-            uuid = testUuid,
             channelsToSet = listOf(PNChannelMembership.Partial(channelId = otherChannel, status = status)),
             channelsToRemove = listOf(),
+            uuid = testUuid,
         ).sync()
 
         val getAllResult =
@@ -361,9 +361,9 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
 
         val removeResult =
             pubnub.manageMemberships(
-                uuid = testUuid,
                 channelsToSet = listOf(),
                 channelsToRemove = listOf(channel, otherChannel),
+                uuid = testUuid,
             ).sync().data
 
         assertThat(

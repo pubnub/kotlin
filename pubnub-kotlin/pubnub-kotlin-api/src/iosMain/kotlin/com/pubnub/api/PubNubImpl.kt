@@ -677,7 +677,8 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         sort: Collection<PNSortKey<PNMemberKey>>,
         includeCount: Boolean,
         includeCustom: Boolean,
-        includeUUIDDetails: PNUUIDDetailsLevel?
+        includeUUIDDetails: PNUUIDDetailsLevel?,
+        includeType: Boolean
     ): ManageChannelMembers {
         return RemoveChannelMembersImpl(
             pubnub = pubNubObjC,

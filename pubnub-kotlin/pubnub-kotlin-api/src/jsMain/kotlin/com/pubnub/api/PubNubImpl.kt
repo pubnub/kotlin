@@ -562,7 +562,8 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         sort: Collection<PNSortKey<PNMembershipKey>>,
         includeCount: Boolean,
         includeCustom: Boolean,
-        includeChannelDetails: PNChannelDetailsLevel?
+        includeChannelDetails: PNChannelDetailsLevel?,
+        includeType: Boolean,
     ): GetMemberships {
         return GetMembershipsImpl(jsPubNub, createJsObject {
             this.sort = sort.toJsMap()
@@ -574,7 +575,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
                     this.channelFields = true
                     this.customChannelFields = includeChannelDetails == PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM
                 }
-                this.channelTypeField = false
+                this.channelTypeField = includeType
                 this.channelStatusField = true
                 //todo we don't have parameters for all fields here?
             }
@@ -590,7 +591,8 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         sort: Collection<PNSortKey<PNMembershipKey>>,
         includeCount: Boolean,
         includeCustom: Boolean,
-        includeChannelDetails: PNChannelDetailsLevel?
+        includeChannelDetails: PNChannelDetailsLevel?,
+        includeType: Boolean,
     ): ManageMemberships {
         return SetMembershipsImpl(jsPubNub, createJsObject {
             this.sort = sort.toJsMap()
@@ -603,14 +605,14 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
                     this.channelFields = true
                     this.customChannelFields = includeChannelDetails == PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM
                 }
-                this.channelTypeField = false
+                this.channelTypeField = includeType
                 this.channelStatusField = true
                 //todo we don't have parameters for all fields here?
             }
             this.uuid = uuid
             this.channels = channels.map { createJsObject<PubNubJs.SetCustom> {
                 this.id = it.channel
-                this.custom = it.custom?.toJsObject()
+                this.custom = it.custom?.adjustCollectionTypes()?.unsafeCast<PubNubJs.CustomObject>()
                 this.status = status //todo this doesn't seem to get to the server with JS, or cannot read it back
             } }.toTypedArray()
             this.limit = limit
@@ -626,7 +628,8 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         sort: Collection<PNSortKey<PNMembershipKey>>,
         includeCount: Boolean,
         includeCustom: Boolean,
-        includeChannelDetails: PNChannelDetailsLevel?
+        includeChannelDetails: PNChannelDetailsLevel?,
+        includeType: Boolean,
     ): ManageMemberships {
         return RemoveMembershipsImpl(jsPubNub, createJsObject {
             this.sort = sort.toJsMap()
@@ -639,7 +642,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
                     this.channelFields = true
                     this.customChannelFields = includeChannelDetails == PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM
                 }
-                this.channelTypeField = false
+                this.channelTypeField = includeType
                 this.channelStatusField = true
                 //todo we don't have parameters for all fields here?
             }
@@ -673,7 +676,8 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         sort: Collection<PNSortKey<PNMemberKey>>,
         includeCount: Boolean,
         includeCustom: Boolean,
-        includeUUIDDetails: PNUUIDDetailsLevel?
+        includeUUIDDetails: PNUUIDDetailsLevel?,
+        includeType: Boolean,
     ): GetChannelMembers {
         return GetChannelMembersImpl(jsPubNub, createJsObject {
             this.channel = channel
@@ -685,7 +689,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
                 if (includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM) this.customUUIDFields = true
                 this.customFields = includeCustom
                 this.totalCount = includeCount
-                this.UUIDTypeField = false
+                this.UUIDTypeField = includeType
                 //todo we don't have parameters for all fields here
             }
             this.sort = sort.toJsMap()
@@ -701,13 +705,14 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         sort: Collection<PNSortKey<PNMemberKey>>,
         includeCount: Boolean,
         includeCustom: Boolean,
-        includeUUIDDetails: PNUUIDDetailsLevel?
+        includeUUIDDetails: PNUUIDDetailsLevel?,
+        includeType: Boolean,
     ): ManageChannelMembers {
         return SetChannelMembersImpl(jsPubNub, createJsObject {
             this.channel = channel
             this.uuids = uuids.map { createJsObject<PubNubJs.SetCustom> {
                 this.id = it.uuid
-                this.custom = it.custom?.toJsObject()
+                this.custom = it.custom?.adjustCollectionTypes()?.unsafeCast<PubNubJs.CustomObject>()
                 this.status = status
             } }.toTypedArray()
             this.limit = limit
@@ -721,6 +726,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
                 if (includeUUIDDetails == PNUUIDDetailsLevel.UUID || includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM) this.UUIDFields = true
                 if (includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM) this.customUUIDFields = true
 //                this.UUIDStatusField = true
+                this.UUIDTypeField = includeType
                 //todo we don't have parameters for all fields here
             }
         })
@@ -735,7 +741,8 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         sort: Collection<PNSortKey<PNMemberKey>>,
         includeCount: Boolean,
         includeCustom: Boolean,
-        includeUUIDDetails: PNUUIDDetailsLevel?
+        includeUUIDDetails: PNUUIDDetailsLevel?,
+        includeType: Boolean
     ): ManageChannelMembers {
         return RemoveChannelMembersImpl(jsPubNub, createJsObject {
             this.channel = channel
@@ -750,6 +757,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
                 this.statusField = true
                 if (includeUUIDDetails == PNUUIDDetailsLevel.UUID || includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM) this.UUIDFields = true
                 if (includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM) this.customUUIDFields = true
+                this.UUIDTypeField = includeType
                 //todo we don't have parameters for all fields here
             }
         })
@@ -946,7 +954,7 @@ fun UUIDMetadata(
     email.onValue { result.email = it }
     status.onValue { result.status = it }
     type.onValue { result.type = it }
-    custom.onValue { result.custom = it?.toJsObject() }
+    custom.onValue { result.custom = it?.adjustCollectionTypes()?.unsafeCast<PubNubJs.CustomObject>() }
     return result
 }
 
@@ -962,18 +970,18 @@ fun ChannelMetadata(
     description.onValue { result.description = it }
     status.onValue { result.status = it }
     type.onValue { result.type = it }
-    custom.onValue { result.custom = it?.toJsObject() }
+    custom.onValue { result.custom = it?.adjustCollectionTypes()?.unsafeCast<PubNubJs.CustomObject>() }
     return result
 }
-
-fun Map<String, Any?>.toJsObject(): PubNubJs.CustomObject {
-    val custom = createJsObject<dynamic> {  }
-    entries.forEach {
-        custom[it.key] = it.value
-    }
-    @Suppress("UnsafeCastFromDynamic")
-    return custom
-}
+//
+//fun Map<String, Any?>.toJsObject(): PubNubJs.CustomObject {
+//    val custom = createJsObject<dynamic> {  }
+//    entries.forEach {
+//        custom[it.key] = it.value
+//    }
+//    @Suppress("UnsafeCastFromDynamic")
+//    return custom
+//}
 
 fun PNConfiguration.toJs(): PubNubJs.PNConfiguration {
     val config: PubNubJs.PNConfiguration = createJsObject()

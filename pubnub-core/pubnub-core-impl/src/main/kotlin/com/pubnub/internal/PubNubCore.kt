@@ -1315,6 +1315,7 @@ class PubNubCore internal constructor(
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeChannelDetails: PNChannelDetailsLevel? = null,
+        includeType: Boolean  = false,
     ) = GetMembershipsEndpoint(
         pubnub = this,
         uuid = uuid ?: configuration.userId.value,
@@ -1330,7 +1331,7 @@ class PubNubCore internal constructor(
             IncludeQueryParam(
                 includeCustom = includeCustom,
                 includeChannelDetails = includeChannelDetails,
-                includeType = false,
+                includeChannelType = includeType,
             ),
     )
 
@@ -1401,6 +1402,7 @@ class PubNubCore internal constructor(
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeChannelDetails: PNChannelDetailsLevel? = null,
+        includeType: Boolean = false
     ) = manageMemberships(
         channelsToSet = channels,
         channelsToRemove = listOf(),
@@ -1412,6 +1414,7 @@ class PubNubCore internal constructor(
         includeCount = includeCount,
         includeCustom = includeCustom,
         includeChannelDetails = includeChannelDetails,
+        includeType = includeType
     )
 
     /**
@@ -1445,6 +1448,7 @@ class PubNubCore internal constructor(
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeChannelDetails: PNChannelDetailsLevel? = null,
+        includeType: Boolean = false,
     ) = manageMemberships(
         channelsToSet = listOf(),
         channelsToRemove = channels,
@@ -1456,6 +1460,7 @@ class PubNubCore internal constructor(
         includeCount = includeCount,
         includeCustom = includeCustom,
         includeChannelDetails = includeChannelDetails,
+        includeType = includeType,
     )
 
     /**
@@ -1491,6 +1496,7 @@ class PubNubCore internal constructor(
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeChannelDetails: PNChannelDetailsLevel? = null,
+        includeType: Boolean = false,
     ) = ManageMembershipsEndpoint(
         pubnub = this,
         channelsToSet = channelsToSet,
@@ -1508,7 +1514,7 @@ class PubNubCore internal constructor(
             IncludeQueryParam(
                 includeCustom = includeCustom,
                 includeChannelDetails = includeChannelDetails,
-                includeType = false,
+                includeChannelType = includeType,
             ),
     )
 
@@ -1575,6 +1581,7 @@ class PubNubCore internal constructor(
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeUUIDDetails: PNUUIDDetailsLevel? = null,
+        includeType: Boolean = false,
     ) = GetChannelMembersEndpoint(
         pubnub = this,
         channel = channel,
@@ -1590,7 +1597,7 @@ class PubNubCore internal constructor(
             IncludeQueryParam(
                 includeCustom = includeCustom,
                 includeUUIDDetails = includeUUIDDetails,
-                includeType = false,
+                includeUuidType = includeType,
             ),
     )
 
@@ -1661,6 +1668,7 @@ class PubNubCore internal constructor(
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeUUIDDetails: PNUUIDDetailsLevel? = null,
+        includeType: Boolean = false,
     ) = manageChannelMembers(
         channel = channel,
         uuidsToSet = uuids,
@@ -1672,6 +1680,7 @@ class PubNubCore internal constructor(
         includeCount = includeCount,
         includeCustom = includeCustom,
         includeUUIDDetails = includeUUIDDetails,
+        includeType = includeType
     )
 
     /**
@@ -1740,6 +1749,7 @@ class PubNubCore internal constructor(
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeUUIDDetails: PNUUIDDetailsLevel? = null,
+        includeType: Boolean = false,
     ) = manageChannelMembers(
         channel = channel,
         uuidsToSet = listOf(),
@@ -1751,6 +1761,7 @@ class PubNubCore internal constructor(
         includeCount = includeCount,
         includeCustom = includeCustom,
         includeUUIDDetails = includeUUIDDetails,
+        includeType = includeType,
     )
 
     /**
@@ -1786,6 +1797,7 @@ class PubNubCore internal constructor(
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeUUIDDetails: PNUUIDDetailsLevel? = null,
+        includeType: Boolean = false,
     ) = ManageChannelMembersEndpoint(
         pubnub = this,
         channel = channel,
@@ -1803,7 +1815,7 @@ class PubNubCore internal constructor(
             IncludeQueryParam(
                 includeCustom = includeCustom,
                 includeUUIDDetails = includeUUIDDetails,
-                includeType = false,
+                includeUuidType = includeType,
             ),
     )
 

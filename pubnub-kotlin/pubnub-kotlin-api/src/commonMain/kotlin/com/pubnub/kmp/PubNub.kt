@@ -290,6 +290,7 @@ interface PubNub {
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeChannelDetails: PNChannelDetailsLevel? = null,
+        includeType: Boolean = false,
     ): GetMemberships
 
     fun setMemberships(
@@ -302,6 +303,7 @@ interface PubNub {
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeChannelDetails: PNChannelDetailsLevel? = null,
+        includeType: Boolean = false,
     ): ManageMemberships
 
     fun removeMemberships(
@@ -314,6 +316,7 @@ interface PubNub {
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeChannelDetails: PNChannelDetailsLevel? = null,
+        includeType: Boolean = false,
     ): ManageMemberships
 
 //    fun manageMemberships(
@@ -338,6 +341,7 @@ interface PubNub {
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeUUIDDetails: PNUUIDDetailsLevel? = null,
+        includeType: Boolean = false,
     ): GetChannelMembers
 
     fun setChannelMembers(
@@ -350,6 +354,7 @@ interface PubNub {
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeUUIDDetails: PNUUIDDetailsLevel? = null,
+        includeType: Boolean = false,
     ): ManageChannelMembers
 
     fun removeChannelMembers(
@@ -362,6 +367,7 @@ interface PubNub {
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeUUIDDetails: PNUUIDDetailsLevel? = null,
+        includeType: Boolean = false,
     ): ManageChannelMembers
 
 //    fun manageChannelMembers(

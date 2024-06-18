@@ -9,6 +9,8 @@ data class IncludeQueryParam(
     private val includeUUIDDetails: PNUUIDDetailsLevel? = null,
     private val includeType: Boolean = true,
     private val includeStatus: Boolean = true,
+    private val includeChannelType: Boolean = false,
+    private val includeUuidType: Boolean = false
 ) {
     internal fun createIncludeQueryParams(): Map<String, String> {
         val includeList = mutableListOf<String>()
@@ -27,6 +29,12 @@ data class IncludeQueryParam(
         }
         if (includeType) {
             includeList.add("type")
+        }
+        if (includeChannelType) {
+            includeList.add("channel.type")
+        }
+        if (includeUuidType) {
+            includeList.add("uuid.type")
         }
         if (includeStatus) {
             includeList.add("status")
