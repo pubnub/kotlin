@@ -1,6 +1,5 @@
 package com.pubnub.kmp
 
-import com.pubnub.api.PubNub
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult

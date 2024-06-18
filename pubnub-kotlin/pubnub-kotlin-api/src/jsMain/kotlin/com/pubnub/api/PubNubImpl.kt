@@ -2,9 +2,11 @@ package com.pubnub.api
 
 import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.endpoints.DeleteMessages
+import com.pubnub.api.endpoints.DeleteMessagesImpl
 import com.pubnub.api.endpoints.FetchMessages
 import com.pubnub.api.endpoints.FetchMessagesImpl
 import com.pubnub.api.endpoints.MessageCounts
+import com.pubnub.api.endpoints.MessageCountsImpl
 import com.pubnub.api.endpoints.Time
 import com.pubnub.api.endpoints.TimeImpl
 import com.pubnub.api.endpoints.access.GrantToken
@@ -79,9 +81,13 @@ import com.pubnub.api.endpoints.pubsub.PublishImpl
 import com.pubnub.api.endpoints.pubsub.Signal
 import com.pubnub.api.endpoints.pubsub.SignalImpl
 import com.pubnub.api.endpoints.push.AddChannelsToPush
+import com.pubnub.api.endpoints.push.AddChannelsToPushImpl
 import com.pubnub.api.endpoints.push.ListPushProvisions
+import com.pubnub.api.endpoints.push.ListPushProvisionsImpl
 import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice
+import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDeviceImpl
 import com.pubnub.api.endpoints.push.RemoveChannelsFromPush
+import com.pubnub.api.endpoints.push.RemoveChannelsFromPushImpl
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.PNBoundedPage
@@ -106,9 +112,17 @@ import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
+import com.pubnub.api.v2.entities.Channel
+import com.pubnub.api.v2.entities.ChannelGroup
+import com.pubnub.api.v2.entities.ChannelMetadata
+import com.pubnub.api.v2.entities.UserMetadata
+import com.pubnub.api.v2.subscriptions.Subscription
+import com.pubnub.api.v2.subscriptions.SubscriptionOptions
+import com.pubnub.api.v2.subscriptions.SubscriptionSet
+import com.pubnub.internal.v2.entities.ChannelImpl
 import com.pubnub.kmp.CustomObject
-import com.pubnub.kmp.CustomObjectImpl
 import com.pubnub.kmp.Optional
+import com.pubnub.kmp.PubNub
 import com.pubnub.kmp.Uploadable
 import com.pubnub.kmp.createJsObject
 import com.pubnub.kmp.toJsMap
@@ -182,7 +196,13 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         topic: String?,
         environment: PNPushEnvironment
     ): AddChannelsToPush {
-        TODO("Not yet implemented")
+        return AddChannelsToPushImpl(jsPubNub, createJsObject {
+            this.pushGateway = pushType.toParamString()
+            this.channels = channels.toTypedArray()
+            this.device = deviceId
+            this.topic = topic
+            this.environment = environment.name.lowercase()
+        })
     }
 
     override fun auditPushChannelProvisions(
@@ -191,7 +211,12 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         topic: String?,
         environment: PNPushEnvironment
     ): ListPushProvisions {
-        TODO("Not yet implemented")
+        return ListPushProvisionsImpl(jsPubNub, createJsObject {
+            this.pushGateway = pushType.toParamString()
+            this.device = deviceId
+            this.topic = topic
+            this.topic = topic
+        })
     }
 
     override fun removePushNotificationsFromChannels(
@@ -201,7 +226,13 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         topic: String?,
         environment: PNPushEnvironment
     ): RemoveChannelsFromPush {
-        TODO("Not yet implemented")
+        return RemoveChannelsFromPushImpl(jsPubNub, createJsObject {
+            this.pushGateway = pushType.toParamString()
+            this.channels = channels.toTypedArray()
+            this.device = deviceId
+            this.topic = topic
+            this.environment = environment.toParamString()
+        })
     }
 
     override fun removeAllPushNotificationsFromDeviceWithPushToken(
@@ -210,7 +241,12 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         topic: String?,
         environment: PNPushEnvironment
     ): RemoveAllPushChannelsForDevice {
-        TODO("Not yet implemented")
+        return RemoveAllPushChannelsForDeviceImpl(jsPubNub, createJsObject {
+            this.pushGateway = pushType.toParamString()
+            this.device = deviceId
+            this.topic = topic
+            this.environment = environment.toParamString()
+        })
     }
 
     override fun fetchMessages(
@@ -223,8 +259,8 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     ): FetchMessages {
         return FetchMessagesImpl(jsPubNub, createJsObject {
             this.channels = channels.toTypedArray()
-            this.start = page.start.toString()
-            this.end = page.end.toString()
+            this.start = page.start?.toString()
+            this.end = page.end?.toString()
             this.count = page.limit
             this.includeUUID = includeUUID
             this.includeMeta = includeMeta
@@ -236,11 +272,18 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     }
 
     override fun deleteMessages(channels: List<String>, start: Long?, end: Long?): DeleteMessages {
-        TODO("Not yet implemented")
+        return DeleteMessagesImpl(jsPubNub, createJsObject {
+            this.channel = channels.first()// channels.toTypedArray() todo JS doesn't accept multiple channels here!
+            this.start = start?.toString()
+            this.end = end?.toString()
+        })
     }
 
     override fun messageCounts(channels: List<String>, channelsTimetoken: List<Long>): MessageCounts {
-        TODO("Not yet implemented")
+        return MessageCountsImpl(jsPubNub, createJsObject {
+            this.channels = channels.toTypedArray()
+            this.channelTimetokens = channelsTimetoken.map { it.toString() }.toTypedArray()
+        })
     }
 
     override fun hereNow(
@@ -804,6 +847,34 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
 
     override fun destroy() {
 
+    }
+
+    override fun channel(name: String): Channel {
+        return ChannelImpl(jsPubNub.asDynamic().channel(name))
+    }
+
+    override fun channelGroup(name: String): ChannelGroup {
+        TODO("Not yet implemented")
+    }
+
+    override fun channelMetadata(id: String): ChannelMetadata {
+        TODO("Not yet implemented")
+    }
+
+    override fun userMetadata(id: String): UserMetadata {
+        TODO("Not yet implemented")
+    }
+
+    override fun subscriptionSetOf(subscriptions: Set<Subscription>): SubscriptionSet {
+        TODO("Not yet implemented")
+    }
+
+    override fun subscriptionSetOf(
+        channels: Set<String>,
+        channelGroups: Set<String>,
+        options: SubscriptionOptions
+    ): SubscriptionSet {
+        TODO("Not yet implemented")
     }
 
     override fun sendFile(

@@ -4,7 +4,6 @@ import cocoapods.PubNubSwift.PubNubBoundedPageObjC
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.getMessageActionsFrom
 import com.pubnub.kmp.PNFuture
-import com.pubnub.api.PubNub
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.message_actions.PNGetMessageActionsResult
 import com.pubnub.kmp.onFailureHandler

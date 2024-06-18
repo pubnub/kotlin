@@ -1,6 +1,5 @@
 package com.pubnub.kmp
 
-import com.pubnub.api.PubNub
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
@@ -11,19 +10,21 @@ import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
+import com.pubnub.api.PubNub
+import com.pubnub.kmp.PubNub as PubNubKmp
 
-actual fun createPubNub(config: PNConfiguration): PubNub {
+actual fun createPubNub(config: PNConfiguration): PubNubKmp {
     return PubNub.create(config)
 }
 
 actual fun createEventListener(
-    pubnub: PubNub,
-    onMessage: (PubNub, PNMessageResult) -> Unit,
-    onPresence: (PubNub, PNPresenceEventResult) -> Unit,
-    onSignal: (PubNub, PNSignalResult) -> Unit,
-    onMessageAction: (PubNub, PNMessageActionResult) -> Unit,
-    onObjects: (PubNub, PNObjectEventResult) -> Unit,
-    onFile: (PubNub, PNFileEventResult) -> Unit
+    pubnub: PubNubKmp,
+    onMessage: (PubNubKmp, PNMessageResult) -> Unit,
+    onPresence: (PubNubKmp, PNPresenceEventResult) -> Unit,
+    onSignal: (PubNubKmp, PNSignalResult) -> Unit,
+    onMessageAction: (PubNubKmp, PNMessageActionResult) -> Unit,
+    onObjects: (PubNubKmp, PNObjectEventResult) -> Unit,
+    onFile: (PubNubKmp, PNFileEventResult) -> Unit
 ): EventListener {
     return object : EventListener {
         override fun message(pubnub: PubNub, result: PNMessageResult) {
@@ -53,8 +54,8 @@ actual fun createEventListener(
 }
 
 actual fun createStatusListener(
-    pubnub: PubNub,
-    onStatus: (PubNub, PNStatus) -> Unit
+    pubnub: PubNubKmp,
+    onStatus: (PubNubKmp, PNStatus) -> Unit
 ): StatusListener {
     return object : StatusListener {
         override fun status(pubnub: PubNub, status: PNStatus) {
