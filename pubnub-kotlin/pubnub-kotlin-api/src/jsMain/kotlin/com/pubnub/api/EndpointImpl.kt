@@ -14,7 +14,6 @@ open class EndpointImpl<T,U>(private val promiseFactory: () -> Promise<T>, priva
                 callback.accept(Result.success(responseMapping(response)))
             },
             onRejected = { throwable ->
-                println(JSON.stringify(throwable))
                 callback.accept(Result.failure(throwable))
             }
         )

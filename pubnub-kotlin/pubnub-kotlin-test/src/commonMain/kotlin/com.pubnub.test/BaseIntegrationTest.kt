@@ -30,7 +30,7 @@ abstract class BaseIntegrationTest {
 
     @BeforeTest
     open fun before() {
-        config = createPNConfiguration(UserId("demo_user"), Keys.subKey, Keys.pubKey)
+        config = createPNConfiguration(UserId(randomString()), Keys.subKey, Keys.pubKey)
         pubnub = createPubNub(config)
     }
 
