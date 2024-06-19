@@ -38,6 +38,7 @@ public class SetChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayResul
     private Collection<PNSortKey> sort = Collections.emptyList();
     private boolean includeTotalCount;
     private boolean includeCustom;
+    private boolean includeType;
     private Include.PNUUIDDetailsLevel includeUUID;
     private final String channel;
     private final Collection<PNUUID> uuids;
@@ -61,7 +62,7 @@ public class SetChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayResul
         for (PNUUID uuid : uuids) {
             memberInputs.add(new PNMember.Partial(uuid.getUuid().getId(), (uuid instanceof PNUUID.UUIDWithCustom) ? ((PNUUID.UUIDWithCustom) uuid).getCustom() : null, uuid.getStatus()));
         }
-        return pubnub.setChannelMembers(channel, memberInputs, limit, page, filter, toInternal(sort), includeTotalCount, includeCustom, toInternal(includeUUID));
+        return pubnub.setChannelMembers(channel, memberInputs, limit, page, filter, toInternal(sort), includeTotalCount, includeCustom, toInternal(includeUUID), includeType);
     }
 
     static Collection<? extends com.pubnub.internal.models.consumer.objects.PNSortKey<PNMemberKey>> toInternal(Collection<PNSortKey> sort) {

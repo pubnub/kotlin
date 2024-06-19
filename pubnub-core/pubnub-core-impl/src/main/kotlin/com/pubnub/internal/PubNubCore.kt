@@ -1315,7 +1315,7 @@ class PubNubCore internal constructor(
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeChannelDetails: PNChannelDetailsLevel? = null,
-        includeType: Boolean  = false,
+        includeType: Boolean = false,
     ) = GetMembershipsEndpoint(
         pubnub = this,
         uuid = uuid ?: configuration.userId.value,

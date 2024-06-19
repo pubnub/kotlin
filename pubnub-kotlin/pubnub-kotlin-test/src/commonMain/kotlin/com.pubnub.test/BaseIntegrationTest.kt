@@ -27,6 +27,7 @@ abstract class BaseIntegrationTest {
     lateinit var config: PNConfiguration
     lateinit var pubnub: PubNub
 
+
     @BeforeTest
     open fun before() {
         config = createPNConfiguration(UserId("demo_user"), Keys.subKey, Keys.pubKey)
