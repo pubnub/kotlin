@@ -2,6 +2,9 @@ package com.pubnub.api
 
 import cocoapods.PubNubSwift.addEventListenerWithListener
 import cocoapods.PubNubSwift.addStatusListenerWithListener
+import cocoapods.PubNubSwift.channelGroupWith
+import cocoapods.PubNubSwift.channelMetadataWith
+import cocoapods.PubNubSwift.channelWith
 import cocoapods.PubNubSwift.disconnect
 import cocoapods.PubNubSwift.setWithToken
 import cocoapods.PubNubSwift.subscribeWithChannels
@@ -120,6 +123,9 @@ import com.pubnub.api.v2.entities.UserMetadata
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
+import com.pubnub.internal.entities.ChannelGroupImpl
+import com.pubnub.internal.entities.ChannelImpl
+import com.pubnub.internal.entities.ChannelMetadataImpl
 import com.pubnub.kmp.CustomObject
 import com.pubnub.kmp.PubNub
 import com.pubnub.kmp.Uploadable
@@ -768,15 +774,15 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     }
 
     override fun channel(name: String): Channel {
-        TODO("Not yet implemented")
+        return ChannelImpl(channel = pubNubObjC.channelWith(name = name))
     }
 
     override fun channelGroup(name: String): ChannelGroup {
-        TODO("Not yet implemented")
+        return ChannelGroupImpl(channelGroup = pubNubObjC.channelGroupWith(name = name))
     }
 
     override fun channelMetadata(id: String): ChannelMetadata {
-        TODO("Not yet implemented")
+        return ChannelMetadataImpl(channelMetadata = pubNubObjC.channelMetadataWith(id = id))
     }
 
     override fun userMetadata(id: String): UserMetadata {

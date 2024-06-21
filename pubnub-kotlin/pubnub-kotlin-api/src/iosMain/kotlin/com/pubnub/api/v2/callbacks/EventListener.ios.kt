@@ -34,4 +34,4 @@ class EventListenerImpl(
     override val onMessageAction: (PubNub, PNMessageActionResult) -> Unit,
     override val onObjects: (PubNub, PNObjectEventResult) -> Unit,
     override val onFile: (PubNub, PNFileEventResult) -> Unit
-): EventListener {}
+): EventListener
