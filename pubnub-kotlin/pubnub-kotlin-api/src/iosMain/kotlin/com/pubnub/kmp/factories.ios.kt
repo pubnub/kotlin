@@ -1,7 +1,6 @@
 package com.pubnub.kmp
 
-import cocoapods.PubNubSwift.EventListenerObjC
-import cocoapods.PubNubSwift.PubNubConnectionStatusCategoryObjC
+import cocoapods.PubNubSwift.PubNubAppContextEventObjC
 import cocoapods.PubNubSwift.PubNubConnectionStatusCategoryObjCConnected
 import cocoapods.PubNubSwift.PubNubConnectionStatusCategoryObjCConnectionError
 import cocoapods.PubNubSwift.PubNubConnectionStatusCategoryObjCDisconnected
@@ -10,19 +9,18 @@ import cocoapods.PubNubSwift.PubNubConnectionStatusCategoryObjCHeartbeatFailed
 import cocoapods.PubNubSwift.PubNubConnectionStatusCategoryObjCHeartbeatSuccess
 import cocoapods.PubNubSwift.PubNubConnectionStatusCategoryObjCMalformedResponseCategory
 import cocoapods.PubNubSwift.PubNubConnectionStatusCategoryObjCSubscriptionChanged
-import cocoapods.PubNubSwift.PubNubDeleteChannelMetadataEventMessageObjC
-import cocoapods.PubNubSwift.PubNubDeleteMembershipEventMessageObjC
-import cocoapods.PubNubSwift.PubNubDeleteUUIDMetadataEventMessageObjC
-import cocoapods.PubNubSwift.PubNubFileEventResultObjC
+import cocoapods.PubNubSwift.PubNubEventListenerObjC
+import cocoapods.PubNubSwift.PubNubFileChangeEventObjC
 import cocoapods.PubNubSwift.PubNubMessageActionObjC
 import cocoapods.PubNubSwift.PubNubMessageObjC
-import cocoapods.PubNubSwift.PubNubObjectEventMessageObjC
-import cocoapods.PubNubSwift.PubNubObjectEventResultObjC
-import cocoapods.PubNubSwift.PubNubPresenceEventResultObjC
-import cocoapods.PubNubSwift.PubNubSetChannelMetadataEventMessageObjC
-import cocoapods.PubNubSwift.PubNubSetMembershipEventMessageObjC
-import cocoapods.PubNubSwift.PubNubSetUUIDMetadataEventMessageObjC
-import cocoapods.PubNubSwift.StatusListenerObjC
+import cocoapods.PubNubSwift.PubNubPresenceChangeObjC
+import cocoapods.PubNubSwift.PubNubRemoveChannelMetadataResultObjC
+import cocoapods.PubNubSwift.PubNubRemoveMembershipResultObjC
+import cocoapods.PubNubSwift.PubNubRemoveUUIDMetadataResultObjC
+import cocoapods.PubNubSwift.PubNubSetChannelMetadataResultObjC
+import cocoapods.PubNubSwift.PubNubSetMembershipResultObjC
+import cocoapods.PubNubSwift.PubNubSetUUIDMetadataResultObjC
+import cocoapods.PubNubSwift.PubNubStatusListenerObjC
 import com.pubnub.api.JsonElementImpl
 import com.pubnub.api.PubNubException
 import com.pubnub.api.PubNubImpl
@@ -70,7 +68,7 @@ actual fun createEventListener(
     onFile: (PubNub, PNFileEventResult) -> Unit
 ): EventListener {
     return EventListenerImpl(
-        underlying = EventListenerObjC(
+        underlying = PubNubEventListenerObjC(
             onMessage = { onMessage(pubnub, createMessageResult(it)) },
             onPresence = { presenceEvents -> createPresenceEventResults(presenceEvents).forEach { onPresence(pubnub, it) } },
             onSignal = { onSignal(pubnub, createSignalResult(it)) },
@@ -137,29 +135,27 @@ private fun createMessageActionResult(from: PubNubMessageActionObjC?): PNMessage
 
 @OptIn(ExperimentalForeignApi::class)
 private fun createPresenceEventResults(from: List<*>?): List<PNPresenceEventResult> {
-    return (from as List<PubNubPresenceEventResultObjC>).let {
-        it.map { item: PubNubPresenceEventResultObjC ->
-            PNPresenceEventResult(
-                event = item.event(),
-                uuid = item.uuid(),
-                timestamp = item.timetoken()?.longValue,
-                occupancy = item.occupancy()?.intValue,
-                state = JsonElementImpl(item.state()),
-                channel = item.channel() ?: "",
-                subscription = item.subscription(),
-                timetoken = item.timetoken()?.longValue,
-                join = item.join() as? List<String>,
-                leave = item.leave() as? List<String>,
-                timeout = item.timeout() as? List<String>,
-                hereNowRefresh = item.refreshHereNow()?.boolValue,
-                userMetadata = JsonElementImpl(item.userMetadata())
-            )
-        }
-    }
+    return from.filterAndMap { rawValue: PubNubPresenceChangeObjC ->
+        PNPresenceEventResult(
+            event = rawValue.event(),
+            uuid = rawValue.uuid(),
+            timestamp = rawValue.timetoken()?.longValue,
+            occupancy = rawValue.occupancy()?.intValue,
+            state = JsonElementImpl(rawValue.state()),
+            channel = rawValue.channel().orEmpty(),
+            subscription = rawValue.subscription(),
+            timetoken = rawValue.timetoken()?.longValue,
+            join = rawValue.join()?.filterIsInstance<String>(),
+            leave = rawValue.leave()?.filterIsInstance<String>(),
+            timeout = rawValue.timeout()?.filterIsInstance<String>(),
+            hereNowRefresh = rawValue.refreshHereNow()?.boolValue,
+            userMetadata = JsonElementImpl(rawValue.userMetadata())
+        )
+    }.toList()
 }
 
 @OptIn(ExperimentalForeignApi::class)
-private fun createFileEventResult(from: PubNubFileEventResultObjC?): PNFileEventResult {
+private fun createFileEventResult(from: PubNubFileChangeEventObjC?): PNFileEventResult {
     return PNFileEventResult(
         channel = from!!.channel(),
         timetoken = from.timetoken()?.longValue,
@@ -175,8 +171,8 @@ private fun createFileEventResult(from: PubNubFileEventResultObjC?): PNFileEvent
 }
 
 @OptIn(ExperimentalForeignApi::class)
-private fun createObjectEvent(from: PubNubObjectEventResultObjC?): PNObjectEventResult? {
-    return mapObjectMessage(from?.message())?.let {
+private fun createObjectEvent(from: PubNubAppContextEventObjC?): PNObjectEventResult? {
+    return mapAppContextEvent(from)?.let {
         PNObjectEventResult(
             result = BasePubSubResult(
                 channel = from!!.channel(),
@@ -190,28 +186,28 @@ private fun createObjectEvent(from: PubNubObjectEventResultObjC?): PNObjectEvent
 }
 
 @OptIn(ExperimentalForeignApi::class)
-private fun mapObjectMessage(from: PubNubObjectEventMessageObjC?): PNObjectEventMessage? {
+private fun mapAppContextEvent(from: PubNubAppContextEventObjC?): PNObjectEventMessage? {
     when (from) {
-        is PubNubSetUUIDMetadataEventMessageObjC ->
+        is PubNubSetUUIDMetadataResultObjC ->
             return PNSetUUIDMetadataEventMessage(
                 source = from.source(),
                 version = from.version(),
                 event = from.event(),
                 type = from.type(),
                 data = PNUUIDMetadata(
-                    id = from.data().id(),
-                    name = from.data().name(),
-                    externalId = from.data().externalId(),
-                    profileUrl = from.data().profileUrl(),
-                    email = from.data().email(),
-                    custom = from.data().custom() as? Map<String, Any?>, // TODO: Verify
-                    updated = from.data().updated(),
-                    eTag = from.data().eTag(),
-                    type = from.data().type(),
-                    status = from.data().status()
+                    id = from.metadata().id(),
+                    name = from.metadata().name(),
+                    externalId = from.metadata().externalId(),
+                    profileUrl = from.metadata().profileUrl(),
+                    email = from.metadata().email(),
+                    custom = from.metadata().custom() as? Map<String, Any?>, // TODO: Verify
+                    updated = from.metadata().updated(),
+                    eTag = from.metadata().eTag(),
+                    type = from.metadata().type(),
+                    status = from.metadata().status()
                 )
             )
-        is PubNubDeleteUUIDMetadataEventMessageObjC ->
+        is PubNubRemoveUUIDMetadataResultObjC ->
             return PNDeleteUUIDMetadataEventMessage(
                 source = from.source(),
                 version = from.version(),
@@ -219,24 +215,24 @@ private fun mapObjectMessage(from: PubNubObjectEventMessageObjC?): PNObjectEvent
                 type = from.type(),
                 uuid = from.uuid()
             )
-        is PubNubSetChannelMetadataEventMessageObjC ->
+        is PubNubSetChannelMetadataResultObjC ->
             return PNSetChannelMetadataEventMessage(
                 source = from.source(),
                 version = from.version(),
                 event = from.event(),
                 type = from.type(),
                 data = PNChannelMetadata(
-                    id = from.data().id(),
-                    name = from.data().name(),
-                    description = from.data().descr(),
-                    custom = from.data().custom() as? Map<String, Any?>, // TODO: Verify
-                    updated = from.data().updated(),
-                    eTag = from.data().eTag(),
-                    type = from.data().type(),
-                    status = from.data().status()
+                    id = from.metadata().id(),
+                    name = from.metadata().name(),
+                    description = from.metadata().descr(),
+                    custom = from.metadata().custom() as? Map<String, Any?>, // TODO: Verify
+                    updated = from.metadata().updated(),
+                    eTag = from.metadata().eTag(),
+                    type = from.metadata().type(),
+                    status = from.metadata().status()
                 )
             )
-        is PubNubDeleteChannelMetadataEventMessageObjC ->
+        is PubNubRemoveChannelMetadataResultObjC ->
             return PNDeleteChannelMetadataEventMessage(
                 source = from.source(),
                 version = from.version(),
@@ -244,30 +240,30 @@ private fun mapObjectMessage(from: PubNubObjectEventMessageObjC?): PNObjectEvent
                 type = from.type(),
                 channel = from.channel()
             )
-        is PubNubSetMembershipEventMessageObjC ->
+        is PubNubSetMembershipResultObjC ->
             return PNSetMembershipEventMessage(
                 source = from.source(),
                 version = from.version(),
                 event = from.event(),
                 type = from.type(),
                 data = PNSetMembershipEvent(
-                    channel = from.data().channel(),
-                    uuid = from.data().uuid(),
-                    custom = from.data().custom() as? Map<String, Any?>, // TODO: Verify,
-                    eTag = from.data().eTag(),
-                    updated = from.data().updated(),
-                    status = from.data().status()
+                    channel = from.metadata().channel()?.name().orEmpty(),
+                    uuid = from.metadata().uuid()?.id().orEmpty(),
+                    custom = from.metadata().custom() as? Map<String, Any?>, // TODO: Verify,
+                    eTag = from.metadata().eTag().orEmpty(),
+                    updated = from.metadata().updated().orEmpty(),
+                    status = from.metadata().status().orEmpty()
                 )
             )
-        is PubNubDeleteMembershipEventMessageObjC ->
+        is PubNubRemoveMembershipResultObjC ->
             return PNDeleteMembershipEventMessage(
                 source = from.source(),
                 version = from.version(),
                 event = from.event(),
                 type = from.type(),
                 data = PNDeleteMembershipEvent(
-                    channelId = from.data().channelId(),
-                    uuid = from.data().uuid()
+                    channelId = from.channelId(),
+                    uuid = from.uuid()
                 )
             )
         else -> return null
@@ -280,7 +276,7 @@ actual fun createStatusListener(
     onStatus: (PubNub, PNStatus) -> Unit
 ): StatusListener {
     return StatusListenerImpl(
-        underlying = StatusListenerObjC(onStatusChange = { status ->
+        underlying = PubNubStatusListenerObjC(onStatusChange = { status ->
             when (status?.category()) {
                 PubNubConnectionStatusCategoryObjCConnected ->
                     PNStatusCategory.PNConnectedCategory
@@ -305,8 +301,8 @@ actual fun createStatusListener(
                         category = category,
                         exception = status?.error()?.let { error -> PubNubException(errorMessage = error.localizedDescription) },
                         currentTimetoken = status?.currentTimetoken()?.longValue(),
-                        affectedChannels = status?.affectedChannels() as Set<String>,
-                        affectedChannelGroups = status?.affectedChannelGroups() as Set<String>
+                        affectedChannels = status?.affectedChannels()?.filterIsInstance<String>()?.toSet() ?: emptySet(),
+                        affectedChannelGroups = status?.affectedChannelGroups()?.filterIsInstance<String>()?.toSet() ?: emptySet()
                     )
                 )
             }

@@ -24,7 +24,7 @@ class WhereNowImpl(
     override fun async(callback: Consumer<Result<PNWhereNowResult>>) {
         pubnub.whereNowWithUuid(
             uuid = uuid,
-            onSuccess = callback.onSuccessHandler { PNWhereNowResult(it as? List<String> ?: emptyList()) },
+            onSuccess = callback.onSuccessHandler { PNWhereNowResult(it?.filterIsInstance<String>() ?: emptyList()) },
             onFailure = callback.onFailureHandler()
         )
     }

@@ -25,7 +25,7 @@ class MessageCountsImpl(
         pubnub.messageCountsFor(
             channels = channels,
             channelsTimetokens = channelsTimetoken,
-            onSuccess = callback.onSuccessHandler { PNMessageCountResult(it?.channels() as Map<String, Long>) },
+            onSuccess = callback.onSuccessHandler { PNMessageCountResult(it as Map<String, Long>) },
             onFailure = callback.onFailureHandler()
         )
     }

@@ -42,7 +42,7 @@ class HereNowImpl(
                     PNHereNowChannelData(
                         channelName = entry.value.channelName(),
                         occupancy = entry.value.occupancy().toInt(),
-                        occupants = (entry.value.occupants() as? List<PubNubHereNowOccupantDataObjC>)?.map { occupant ->
+                        occupants = (entry.value.occupants().filterIsInstance<PubNubHereNowOccupantDataObjC>()).map { occupant ->
                             PNHereNowOccupantData(
                                 uuid = occupant.uuid(),
                                 state = occupant.state() as JsonElement

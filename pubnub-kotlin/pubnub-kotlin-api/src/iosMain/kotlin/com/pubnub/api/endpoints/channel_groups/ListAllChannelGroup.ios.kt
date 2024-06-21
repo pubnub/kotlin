@@ -21,7 +21,7 @@ class ListAllChannelGroupImpl(
 ): ListAllChannelGroup {
     override fun async(callback: Consumer<Result<PNChannelGroupsListAllResult>>) {
         pubnub.listChannelGroupsOnSuccess(
-            onSuccess = callback.onSuccessHandler { PNChannelGroupsListAllResult(groups = it as List<String>) },
+            onSuccess = callback.onSuccessHandler { PNChannelGroupsListAllResult(groups = it?.filterIsInstance<String>() ?: emptyList()) },
             onFailure = callback.onFailureHandler()
         )
     }
