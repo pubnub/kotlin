@@ -31,10 +31,10 @@ class AddMessageActionImpl(
             actionType = actionType,
             actionValue = actionValue,
             messageTimetoken = messageTimetoken.toULong(),
-            onSuccess = callback.onSuccessHandler { PNAddMessageActionResult(
+            onSuccess = callback.onSuccessHandler {   PNAddMessageActionResult(
                 action = PNMessageAction(
-                    type = it?.type() ?: "",
-                    value = it?.value() ?: "",
+                    type = it?.actionType().orEmpty(),
+                    value = it?.actionValue().orEmpty(),
                     messageTimetoken = it?.messageTimetoken()?.toLong() ?: 0
                 )
             )}, onFailure = callback.onFailureHandler()

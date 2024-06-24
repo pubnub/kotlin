@@ -1,6 +1,6 @@
 package com.pubnub.api.v2.callbacks
 
-import cocoapods.PubNubSwift.StatusListenerObjC
+import cocoapods.PubNubSwift.PubNubStatusListenerObjC
 import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.kmp.PubNub
@@ -12,12 +12,12 @@ import kotlinx.cinterop.ExperimentalForeignApi
  */
 @OptIn(ExperimentalForeignApi::class)
 actual interface StatusListener : Listener {
-    val underlying: StatusListenerObjC
+    val underlying: PubNubStatusListenerObjC
     val onStatusChange: (PubNub, PNStatus) -> Unit
 }
 
 @OptIn(ExperimentalForeignApi::class)
 class StatusListenerImpl(
-    override val underlying: StatusListenerObjC,
+    override val underlying: PubNubStatusListenerObjC,
     override val onStatusChange: (PubNub, PNStatus) -> Unit
 ): StatusListener {}

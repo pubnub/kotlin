@@ -1,6 +1,6 @@
 package com.pubnub.api.v2.callbacks
 
-import cocoapods.PubNubSwift.EventListenerObjC
+import cocoapods.PubNubSwift.PubNubEventListenerObjC
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
@@ -17,7 +17,7 @@ import kotlinx.cinterop.ExperimentalForeignApi
 
 @OptIn(ExperimentalForeignApi::class)
 actual interface EventListener : BaseEventListener {
-    val underlying: EventListenerObjC
+    val underlying: PubNubEventListenerObjC
     val onMessage: (PubNub, PNMessageResult) -> Unit
     val onPresence: (PubNub, PNPresenceEventResult) -> Unit
     val onSignal: (PubNub, PNSignalResult) -> Unit
@@ -27,11 +27,11 @@ actual interface EventListener : BaseEventListener {
 }
 @OptIn(ExperimentalForeignApi::class)
 class EventListenerImpl(
-    override val underlying: EventListenerObjC,
+    override val underlying: PubNubEventListenerObjC,
     override val onMessage: (PubNub, PNMessageResult) -> Unit,
     override val onPresence: (PubNub, PNPresenceEventResult) -> Unit,
     override val onSignal: (PubNub, PNSignalResult) -> Unit,
     override val onMessageAction: (PubNub, PNMessageActionResult) -> Unit,
     override val onObjects: (PubNub, PNObjectEventResult) -> Unit,
     override val onFile: (PubNub, PNFileEventResult) -> Unit
-): EventListener {}
+): EventListener

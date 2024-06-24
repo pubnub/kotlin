@@ -2,7 +2,6 @@ package com.pubnub.api.endpoints.files
 
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.downloadFileWithChannel
-import com.pubnub.api.PubNub
 import com.pubnub.api.models.consumer.files.PNDownloadFileResult
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result

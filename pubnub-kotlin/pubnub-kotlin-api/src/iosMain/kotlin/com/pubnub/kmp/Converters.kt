@@ -3,7 +3,7 @@ package com.pubnub.kmp
 import cocoapods.PubNubSwift.PubNubChannelMetadataObjC
 import cocoapods.PubNubSwift.PubNubHashedPageObjC
 import cocoapods.PubNubSwift.PubNubMembershipMetadataObjC
-import cocoapods.PubNubSwift.PubNubSortPropertyObjC
+import cocoapods.PubNubSwift.PubNubObjectSortPropertyObjC
 import cocoapods.PubNubSwift.PubNubUUIDMetadataObjC
 import com.pubnub.api.models.consumer.objects.PNKey
 import com.pubnub.api.models.consumer.objects.PNPage
@@ -62,9 +62,9 @@ internal fun createPNChannelMetadata(from: PubNubChannelMetadataObjC): PNChannel
 }
 
 @OptIn(ExperimentalForeignApi::class)
-internal fun createObjectSortProperties(from: Collection<PNSortKey<PNKey>>) : List<PubNubSortPropertyObjC> {
+internal fun createObjectSortProperties(from: Collection<PNSortKey<PNKey>>) : List<PubNubObjectSortPropertyObjC> {
     return from.map {
-        PubNubSortPropertyObjC(
+        PubNubObjectSortPropertyObjC(
             key = it.key.fieldName,
             direction = it.dir
         )
