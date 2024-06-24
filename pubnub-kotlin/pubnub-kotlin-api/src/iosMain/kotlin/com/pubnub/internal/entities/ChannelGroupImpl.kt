@@ -16,6 +16,7 @@ class ChannelGroupImpl(
         get() = channelGroup.name()
 
     override fun subscription(options: SubscriptionOptions): Subscription {
+        // TODO: Add support for handling SubscriptionOptions
         return SubscriptionImpl(objCSubscription = PubNubSubscriptionObjC(entity = channelGroup))
     }
 }

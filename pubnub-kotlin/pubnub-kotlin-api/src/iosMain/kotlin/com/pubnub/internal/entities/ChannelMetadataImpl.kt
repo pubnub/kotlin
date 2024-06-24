@@ -17,6 +17,7 @@ class ChannelMetadataImpl(
         get() = channelMetadata.name()
 
     override fun subscription(options: SubscriptionOptions): Subscription {
+        // TODO: Add support for handling SubscriptionOptions
         return SubscriptionImpl(objCSubscription = PubNubSubscriptionObjC(entity = channelMetadata))
     }
 }
