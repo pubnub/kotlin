@@ -9,6 +9,7 @@ import com.pubnub.kmp.onFailureHandler
 import com.pubnub.kmp.onSuccessHandler
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
+import com.pubnub.kmp.safeCast
 import kotlinx.cinterop.ExperimentalForeignApi
 
 /**
@@ -29,7 +30,7 @@ class GetStateImpl(
             channels = channels,
             channelGroups = channelGroups,
             uuid = uuid,
-            onSuccess = callback.onSuccessHandler { PNGetStateResult(stateByUUID = it as Map<String, JsonElement>) },
+            onSuccess = callback.onSuccessHandler { PNGetStateResult(stateByUUID = it?.safeCast() ?: emptyMap()) },
             onFailure = callback.onFailureHandler()
         )
     }

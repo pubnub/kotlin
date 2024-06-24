@@ -6,6 +6,7 @@ import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.hereNowWithChannels
 import com.pubnub.kmp.PNFuture
 import com.pubnub.api.JsonElement
+import com.pubnub.api.JsonElementImpl
 import com.pubnub.api.models.consumer.presence.PNHereNowChannelData
 import com.pubnub.api.models.consumer.presence.PNHereNowOccupantData
 import com.pubnub.api.models.consumer.presence.PNHereNowResult
@@ -13,6 +14,7 @@ import com.pubnub.kmp.onFailureHandler
 import com.pubnub.kmp.onSuccessHandler
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
+import com.pubnub.kmp.safeCast
 import kotlinx.cinterop.ExperimentalForeignApi
 
 /**
@@ -38,16 +40,16 @@ class HereNowImpl(
             onSuccess = callback.onSuccessHandler { PNHereNowResult(
                 totalChannels = it?.totalChannels()?.toInt() ?: 0,
                 totalOccupancy = it?.totalOccupancy()?.toInt() ?: 0,
-                channels = (it?.channels() as? Map<String, PubNubHereNowChannelDataObjC>)?.mapValues { entry ->
+                channels = (it?.channels()?.safeCast<String, PubNubHereNowChannelDataObjC>())?.mapValues { entry ->
                     PNHereNowChannelData(
                         channelName = entry.value.channelName(),
                         occupancy = entry.value.occupancy().toInt(),
                         occupants = (entry.value.occupants().filterIsInstance<PubNubHereNowOccupantDataObjC>()).map { occupant ->
                             PNHereNowOccupantData(
                                 uuid = occupant.uuid(),
-                                state = occupant.state() as JsonElement
+                                state = JsonElementImpl(occupant.state())
                             )
-                        } ?: emptyList()
+                        }
                     )
                 }?.toMutableMap() ?: emptyMap<String, PNHereNowChannelData>().toMutableMap()
             )},

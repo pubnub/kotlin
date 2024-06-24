@@ -43,7 +43,7 @@ class ListFilesImpl(
                             id = rawValue.id(),
                             name = rawValue.name(),
                             size = rawValue.size().toInt(),
-                            created = rawValue.createdDate().toString() // TODO: Map to expected date format
+                            created = rawValue.createdDateStringValue().orEmpty()
                         )
                     }
                 )

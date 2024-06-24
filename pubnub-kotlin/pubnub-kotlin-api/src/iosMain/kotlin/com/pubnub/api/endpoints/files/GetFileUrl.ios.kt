@@ -27,7 +27,7 @@ class GetFileUrlImpl(
             channel = channel,
             fileName = fileName,
             fileId = fileId,
-            onSuccess = callback.onSuccessHandler { PNFileUrlResult(url = it ?: "") },
+            onSuccess = callback.onSuccessHandler { PNFileUrlResult(url = it.orEmpty()) },
             onFailure = callback.onFailureHandler()
         )
     }
