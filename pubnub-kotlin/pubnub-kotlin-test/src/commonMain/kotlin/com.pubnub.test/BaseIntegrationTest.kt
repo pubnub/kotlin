@@ -26,12 +26,16 @@ abstract class BaseIntegrationTest {
 
     lateinit var config: PNConfiguration
     lateinit var pubnub: PubNub
+    lateinit var configPam: PNConfiguration
+    lateinit var pubnubPam: PubNub
 
 
     @BeforeTest
     open fun before() {
         config = createPNConfiguration(UserId(randomString()), Keys.subKey, Keys.pubKey)
         pubnub = createPubNub(config)
+        configPam = createPNConfiguration(UserId(randomString()), Keys.pamSubKey, Keys.pamPubKey, Keys.pamSecKey)
+        pubnubPam = createPubNub(configPam)
     }
 
     @AfterTest
