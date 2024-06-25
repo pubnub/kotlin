@@ -15,7 +15,8 @@ actual interface PNConfiguration {
 actual fun createPNConfiguration(
     userId: UserId,
     subscribeKey: String,
-    publishKey: String
+    publishKey: String,
+    secretKey: String?
 ): PNConfiguration {
     return object : PNConfiguration {
         override val userId: UserId
@@ -25,7 +26,7 @@ actual fun createPNConfiguration(
         override val publishKey: String
             get() = publishKey
         override val secretKey: String
-            get() = TODO("Not yet implemented")
+            get() = secretKey.orEmpty()
         override val authKey: String
             get() = TODO("Not yet implemented")
         override val cryptoModule: CryptoModule?
