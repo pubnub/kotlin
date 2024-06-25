@@ -108,5 +108,5 @@ internal inline fun <reified T, U> List<*>?.filterAndMap(mapper: (T) -> U): Coll
 
 @Suppress("UNCHECKED_CAST")
 inline fun <reified K, reified V> Map<*, *>.safeCast(): Map<K, V> {
-    return this as? Map<K,V> ?: emptyMap()
+    return this as? Map<K,V> ?: error("Cannot make the cast")
 }
