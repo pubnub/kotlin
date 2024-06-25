@@ -846,6 +846,7 @@ class PubNubImpl(
         includeCount: Boolean,
         includeCustom: Boolean,
         includeChannelDetails: PNChannelDetailsLevel?,
+        includeType: Boolean,
     ): GetMemberships {
         return com.pubnub.internal.endpoints.objects.membership.GetMembershipsImpl(
             pubNubCore.getMemberships(
@@ -857,6 +858,7 @@ class PubNubImpl(
                 includeCount,
                 includeCustom,
                 includeChannelDetails.toInternal(),
+                includeType
             ),
         )
     }
@@ -871,6 +873,7 @@ class PubNubImpl(
         includeCount: Boolean,
         includeCustom: Boolean,
         includeChannelDetails: PNChannelDetailsLevel?,
+        includeType: Boolean,
     ): ManageMemberships {
         return com.pubnub.internal.endpoints.objects.membership.ManageMembershipsImpl(
             pubNubCore.setMemberships(
@@ -883,6 +886,7 @@ class PubNubImpl(
                 includeCount,
                 includeCustom,
                 includeChannelDetails.toInternal(),
+                includeType
             ),
         )
     }
@@ -897,6 +901,7 @@ class PubNubImpl(
         includeCount: Boolean,
         includeCustom: Boolean,
         includeChannelDetails: PNChannelDetailsLevel?,
+        includeType: Boolean,
     ): ManageMemberships {
         return com.pubnub.internal.endpoints.objects.membership.ManageMembershipsImpl(
             pubNubCore.removeMemberships(
@@ -909,6 +914,7 @@ class PubNubImpl(
                 includeCount,
                 includeCustom,
                 includeChannelDetails.toInternal(),
+                includeType
             ),
         )
     }
@@ -924,6 +930,7 @@ class PubNubImpl(
         includeCount: Boolean,
         includeCustom: Boolean,
         includeChannelDetails: PNChannelDetailsLevel?,
+        includeType: Boolean,
     ): ManageMemberships {
         return com.pubnub.internal.endpoints.objects.membership.ManageMembershipsImpl(
             pubNubCore.manageMemberships(
@@ -937,6 +944,7 @@ class PubNubImpl(
                 includeCount,
                 includeCustom,
                 includeChannelDetails.toInternal(),
+                includeType
             ),
         )
     }
@@ -950,6 +958,7 @@ class PubNubImpl(
         includeCount: Boolean,
         includeCustom: Boolean,
         includeUUIDDetails: PNUUIDDetailsLevel?,
+        includeType: Boolean,
     ): GetChannelMembers {
         return com.pubnub.internal.endpoints.objects.member.GetChannelMembersImpl(
             pubNubCore.getChannelMembers(
@@ -961,6 +970,7 @@ class PubNubImpl(
                 includeCount,
                 includeCustom,
                 includeUUIDDetails.toInternal(),
+                includeType
             ),
         )
     }
@@ -1134,6 +1144,7 @@ class PubNubImpl(
         includeCount: Boolean,
         includeCustom: Boolean,
         includeUUIDDetails: PNUUIDDetailsLevel?,
+        includeType: Boolean,
     ): ManageChannelMembers {
         return com.pubnub.internal.endpoints.objects.member.ManageChannelMembersImpl(
             pubNubCore.setChannelMembers(
@@ -1146,6 +1157,7 @@ class PubNubImpl(
                 includeCount,
                 includeCustom,
                 includeUUIDDetails.toInternal(),
+                includeType
             ),
         )
     }
@@ -1196,6 +1208,7 @@ class PubNubImpl(
         includeCount: Boolean,
         includeCustom: Boolean,
         includeUUIDDetails: PNUUIDDetailsLevel?,
+        includeType: Boolean,
     ): ManageChannelMembers {
         return com.pubnub.internal.endpoints.objects.member.ManageChannelMembersImpl(
             pubNubCore.removeChannelMembers(

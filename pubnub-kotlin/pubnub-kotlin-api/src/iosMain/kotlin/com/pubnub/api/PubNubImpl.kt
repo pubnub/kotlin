@@ -555,7 +555,8 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         sort: Collection<PNSortKey<PNMembershipKey>>,
         includeCount: Boolean,
         includeCustom: Boolean,
-        includeChannelDetails: PNChannelDetailsLevel?
+        includeChannelDetails: PNChannelDetailsLevel?,
+        includeType: Boolean,
     ): GetMemberships {
         return GetMembershipsImpl(
             pubnub = pubNubObjC,
@@ -579,7 +580,8 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         sort: Collection<PNSortKey<PNMembershipKey>>,
         includeCount: Boolean,
         includeCustom: Boolean,
-        includeChannelDetails: PNChannelDetailsLevel?
+        includeChannelDetails: PNChannelDetailsLevel?,
+        includeType: Boolean,
     ): ManageMemberships {
         return AddMembershipsImpl(
             pubnub = pubNubObjC,
@@ -604,7 +606,8 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         sort: Collection<PNSortKey<PNMembershipKey>>,
         includeCount: Boolean,
         includeCustom: Boolean,
-        includeChannelDetails: PNChannelDetailsLevel?
+        includeChannelDetails: PNChannelDetailsLevel?,
+        includeType: Boolean,
     ): ManageMemberships {
         return RemoveMembershipsImpl(
             pubnub = pubNubObjC,
@@ -628,7 +631,8 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         sort: Collection<PNSortKey<PNMemberKey>>,
         includeCount: Boolean,
         includeCustom: Boolean,
-        includeUUIDDetails: PNUUIDDetailsLevel?
+        includeUUIDDetails: PNUUIDDetailsLevel?,
+        includeType: Boolean,
     ): GetChannelMembers {
         return GetChannelMembersImpl(
             pubnub = pubNubObjC,
@@ -652,7 +656,8 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         sort: Collection<PNSortKey<PNMemberKey>>,
         includeCount: Boolean,
         includeCustom: Boolean,
-        includeUUIDDetails: PNUUIDDetailsLevel?
+        includeUUIDDetails: PNUUIDDetailsLevel?,
+        includeType: Boolean,
     ): ManageChannelMembers {
         return SetChannelMembersImpl(
             pubnub = pubNubObjC,
@@ -677,7 +682,8 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         sort: Collection<PNSortKey<PNMemberKey>>,
         includeCount: Boolean,
         includeCustom: Boolean,
-        includeUUIDDetails: PNUUIDDetailsLevel?
+        includeUUIDDetails: PNUUIDDetailsLevel?,
+        includeType: Boolean
     ): ManageChannelMembers {
         return RemoveChannelMembersImpl(
             pubnub = pubNubObjC,

@@ -52,13 +52,13 @@ class PNFutureTest {
         val value1 = true
         val value2 = 1
         val value3: Any? = null
-        var set: Array<Any?>? = null
-        listOf<PNFuture<Any?>>(value1.asFuture(), value2.asFuture(), value3.asFuture()).awaitAll().async { result: Result<Array<Any?>> ->
+        var set: List<Any?>? = null
+        listOf<PNFuture<Any?>>(value1.asFuture(), value2.asFuture(), value3.asFuture()).awaitAll().async { result: Result<List<Any?>> ->
             assertTrue { result.isSuccess }
             result.onSuccess {
                 set = it
             }
         }
-        assertContentEquals(arrayOf(value1, value2, value3), set)
+        assertContentEquals(listOf(value1, value2, value3), set)
     }
 }

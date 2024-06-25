@@ -1,7 +1,5 @@
+
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
-import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
-import org.jetbrains.kotlin.gradle.plugin.mpp.TestExecutable
 import java.util.Properties
 
 plugins {
@@ -27,14 +25,15 @@ kotlin {
     iosSimulatorArm64()
 
     sourceSets {
-//        val commonMain by getting {
-//            dependencies {
-//                api(project(":pubnub-kotlin:pubnub-kotlin-api"))
-//                api(project(":pubnub-core:pubnub-core-api"))
-//                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
+        val commonMain by getting {
+            dependencies {
+                api(project(":pubnub-kotlin:pubnub-kotlin-api"))
+                api(project(":pubnub-core:pubnub-core-api"))
+                api(kotlin("test"))
+                api(libs.coroutines.test)
 //                implementation(libs.datetime)
-//            }
-//        }
+            }
+        }
 //
 //        val commonTest by getting {
 //            dependencies {
@@ -44,11 +43,11 @@ kotlin {
 //            }
 //        }
 //
-//        val jvmMain by getting {
-//            dependencies {
-//                implementation(project(":pubnub-core:pubnub-core-impl"))
-//            }
-//        }
+        val jvmMain by getting {
+            dependencies {
+                api(kotlin("test-junit"))
+            }
+        }
 //
 //        val jvmTest by getting {
 //            dependencies {

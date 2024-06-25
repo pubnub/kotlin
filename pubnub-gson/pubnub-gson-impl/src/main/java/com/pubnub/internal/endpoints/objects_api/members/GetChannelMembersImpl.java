@@ -30,6 +30,7 @@ public class GetChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayResul
     private Collection<PNSortKey> sort = Collections.emptyList();
     private boolean includeTotalCount;
     private boolean includeCustom;
+    private boolean includeType;
     private Include.PNUUIDDetailsLevel includeUUID;
 
     public GetChannelMembersImpl(String channel, final PubNubCore pubnubInstance) {
@@ -53,7 +54,8 @@ public class GetChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayResul
                 SetChannelMembersImpl.toInternal(sort),
                 includeTotalCount,
                 includeCustom,
-                SetChannelMembersImpl.toInternal(includeUUID)
+                SetChannelMembersImpl.toInternal(includeUUID),
+                includeType
         );
     }
 

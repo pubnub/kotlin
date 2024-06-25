@@ -3,12 +3,8 @@ package com.pubnub.api
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
-import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult
-import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteChannelMetadataEventMessage
 import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteMembershipEventMessage
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
-import com.pubnub.api.models.consumer.pubsub.objects.PNSetChannelMetadataEventMessage
-import com.pubnub.api.models.consumer.pubsub.objects.PNSetMembershipEvent
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetMembershipEventMessage
 import com.pubnub.kmp.createCustomObject
 import com.pubnub.test.BaseIntegrationTest
@@ -16,10 +12,8 @@ import com.pubnub.test.await
 import com.pubnub.test.randomString
 import com.pubnub.test.test
 import kotlinx.coroutines.test.runTest
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.time.Duration.Companion.seconds
 

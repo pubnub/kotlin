@@ -33,6 +33,7 @@ public class RemoveChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayRe
     private Collection<PNSortKey> sort = Collections.emptyList();
     private boolean includeTotalCount;
     private boolean includeCustom;
+    private boolean includeType;
     private final String channel;
     private final List<String> uuids;
     private Include.PNUUIDDetailsLevel includeUUID;
@@ -64,7 +65,8 @@ public class RemoveChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayRe
                 SetChannelMembersImpl.toInternal(sort),
                 includeTotalCount,
                 includeCustom,
-                SetChannelMembersImpl.toInternal(includeUUID)
+                SetChannelMembersImpl.toInternal(includeUUID),
+                includeType
         );
     }
 

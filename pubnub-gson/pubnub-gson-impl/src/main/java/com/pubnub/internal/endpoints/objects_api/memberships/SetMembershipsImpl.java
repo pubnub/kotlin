@@ -37,6 +37,7 @@ public class SetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipAr
     private Collection<PNSortKey> sort = Collections.emptyList();
     private boolean includeTotalCount;
     private boolean includeCustom;
+    private boolean includeType;
     private Include.PNChannelDetailsLevel includeChannel;
 
     public SetMembershipsImpl(@NotNull Collection<PNChannelMembership> channelMemberships, final PubNubCore pubnubInstance) {
@@ -66,7 +67,8 @@ public class SetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipAr
                 toInternal(sort),
                 includeTotalCount,
                 includeCustom,
-                toInternal(includeChannel)
+                toInternal(includeChannel),
+                includeType
         );
     }
 
