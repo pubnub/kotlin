@@ -8,6 +8,7 @@ import com.pubnub.kmp.onFailureHandler
 import com.pubnub.kmp.onSuccessHandler
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
+import com.pubnub.kmp.safeCast
 import kotlinx.cinterop.ExperimentalForeignApi
 
 /**
@@ -25,7 +26,7 @@ class MessageCountsImpl(
         pubnub.messageCountsFor(
             channels = channels,
             channelsTimetokens = channelsTimetoken,
-            onSuccess = callback.onSuccessHandler { PNMessageCountResult(it as Map<String, Long>) },
+            onSuccess = callback.onSuccessHandler { PNMessageCountResult(it?.safeCast() ?: emptyMap()) },
             onFailure = callback.onFailureHandler()
         )
     }

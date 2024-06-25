@@ -9,7 +9,6 @@ actual interface PNConfiguration {
     actual val secretKey: String
     actual val authKey: String
     actual val cryptoModule: CryptoModule?
-
 }
 
 actual interface CryptoModule

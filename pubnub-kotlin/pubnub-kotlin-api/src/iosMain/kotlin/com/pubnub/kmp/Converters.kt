@@ -39,7 +39,7 @@ internal fun createPNUUIDMetadata(from: PubNubUUIDMetadataObjC): PNUUIDMetadata 
         externalId = from.externalId(),
         profileUrl = from.profileUrl(),
         email = from.email(),
-        custom = from.custom()?.asMap() as? Map<String, Any?>, // TODO: Verify
+        custom = from.custom()?.asMap()?.safeCast<String, Any?>(),
         updated = from.updated(),
         eTag = from.eTag(),
         type = from.type(),
@@ -53,7 +53,7 @@ internal fun createPNChannelMetadata(from: PubNubChannelMetadataObjC): PNChannel
         id = from.id(),
         name = from.name(),
         description = from.descr(),
-        custom = from.custom()?.asMap() as? Map<String, Any?>, // TODO: Verify
+        custom = from.custom()?.asMap()?.safeCast<String, Any?>(),
         updated = from.updated(),
         eTag = from.eTag(),
         type = from.type(),
@@ -75,18 +75,18 @@ internal fun createObjectSortProperties(from: Collection<PNSortKey<PNKey>>) : Li
 internal fun createPNChannelMembership(from: PubNubMembershipMetadataObjC): PNChannelMembership {
     return PNChannelMembership(
         channel = PNChannelMetadata(
-            id = from.channel()?.id() ?: "",
-            name = from.channel()?.name() ?: "",
-            description = from.channel()?.descr() ?: "",
-            custom = from.channel()?.custom()?.asMap() as? Map<String, Any?>, // TODO: Verify
+            id = from.channel()?.id().orEmpty(),
+            name = from.channel()?.name().orEmpty(),
+            description = from.channel()?.descr().orEmpty(),
+            custom = from.channel()?.custom()?.asMap()?.safeCast(),
             updated = from.channel()?.updated(),
             eTag = from.channel()?.eTag(),
             type = from.channel()?.type(),
             status = from.channel()?.status()
         ),
-        custom = from.custom() as? Map<String, Any>, // TODO: Verify
-        updated = from.updated() ?: "",
-        eTag = from.eTag() ?: "",
+        custom = from.custom()?.safeCast(),
+        updated = from.updated().orEmpty(),
+        eTag = from.eTag().orEmpty(),
         status = from.status()
     )
 }
@@ -95,13 +95,18 @@ internal fun createPNChannelMembership(from: PubNubMembershipMetadataObjC): PNCh
 internal fun createPNMember(from: PubNubMembershipMetadataObjC): PNMember {
     return PNMember(
         uuid = from.uuid()?.let { createPNUUIDMetadata(from = it) },
-        custom = from.custom() as? Map<String, Any>, // TODO: Verify
-        updated = from.updated() ?: "",
-        eTag = from.eTag() ?: "",
+        custom = from.custom()?.safeCast(), // TODO: Verify
+        updated = from.updated().orEmpty(),
+        eTag = from.eTag().orEmpty(),
         status = from.status()
     )
 }
 
 internal inline fun <reified T, U> List<*>?.filterAndMap(mapper: (T) -> U): Collection<U> {
     return this?.filterIsInstance<T>()?.map(mapper) ?: emptyList()
+}
+
+@Suppress("UNCHECKED_CAST")
+inline fun <reified K, reified V> Map<*, *>.safeCast(): Map<K, V> {
+    return this as? Map<K,V> ?: error("Cannot make the cast")
 }

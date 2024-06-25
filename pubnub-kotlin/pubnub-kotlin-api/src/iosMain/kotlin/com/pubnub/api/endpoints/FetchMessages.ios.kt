@@ -7,6 +7,7 @@ import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.fetchMessagesFrom
 import com.pubnub.kmp.PNFuture
 import com.pubnub.api.JsonElement
+import com.pubnub.api.JsonElementImpl
 import com.pubnub.api.PubNubError
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.history.HistoryMessageType
@@ -16,6 +17,7 @@ import com.pubnub.kmp.onFailureHandler
 import com.pubnub.kmp.onSuccessHandler
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
+import com.pubnub.kmp.safeCast
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSNumber
 
@@ -60,12 +62,12 @@ open class FetchMessagesImpl(
     }
 
     private fun mapMessages(rawValue: Map<Any?, *>?): Map<String, List<PNFetchMessageItem>> {
-        return (rawValue as? Map<String, List<PubNubMessageObjC>>)?.mapValues { entry ->
+        return (rawValue?.safeCast<String, List<PubNubMessageObjC>>())?.mapValues { entry ->
             entry.value.map {
                 PNFetchMessageItem(
                     uuid = it.publisher(),
-                    message = it.payload() as JsonElement,
-                    meta = it.metadata() as? JsonElement,
+                    message = JsonElementImpl(it.payload()),
+                    meta = it.metadata()?.let { obj -> JsonElementImpl(obj) },
                     timetoken = it.published().toLong(),
                     actions = mapMessageActions(rawValue = it.actions()),
                     messageType = HistoryMessageType.of(it.messageType().toInt()),
@@ -78,7 +80,7 @@ open class FetchMessagesImpl(
     private fun mapMessageActions(rawValue: List<*>): Map<String, Map<String, List<PNFetchMessageItem.Action>>> {
         return rawValue.filterIsInstance<PubNubMessageActionObjC>().groupBy { messageAction ->
             messageAction.actionType()
-        }?.mapValues { entry ->
+        }.mapValues { entry ->
             entry.value.groupBy { groupedMessageAction ->
                 groupedMessageAction.actionValue()
             }.mapValues { groupedEntry ->

@@ -20,4 +20,4 @@ actual interface StatusListener : Listener {
 class StatusListenerImpl(
     override val underlying: PubNubStatusListenerObjC,
     override val onStatusChange: (PubNub, PNStatus) -> Unit
-): StatusListener {}
+): StatusListener

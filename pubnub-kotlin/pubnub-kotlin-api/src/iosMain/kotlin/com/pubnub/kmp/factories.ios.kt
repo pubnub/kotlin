@@ -200,7 +200,7 @@ private fun mapAppContextEvent(from: PubNubAppContextEventObjC?): PNObjectEventM
                     externalId = from.metadata().externalId(),
                     profileUrl = from.metadata().profileUrl(),
                     email = from.metadata().email(),
-                    custom = from.metadata().custom() as? Map<String, Any?>, // TODO: Verify
+                    custom = from.metadata().custom()?.asMap()?.safeCast(),
                     updated = from.metadata().updated(),
                     eTag = from.metadata().eTag(),
                     type = from.metadata().type(),
@@ -225,7 +225,7 @@ private fun mapAppContextEvent(from: PubNubAppContextEventObjC?): PNObjectEventM
                     id = from.metadata().id(),
                     name = from.metadata().name(),
                     description = from.metadata().descr(),
-                    custom = from.metadata().custom() as? Map<String, Any?>, // TODO: Verify
+                    custom = from.metadata().custom()?.asMap()?.safeCast(),
                     updated = from.metadata().updated(),
                     eTag = from.metadata().eTag(),
                     type = from.metadata().type(),
@@ -249,7 +249,7 @@ private fun mapAppContextEvent(from: PubNubAppContextEventObjC?): PNObjectEventM
                 data = PNSetMembershipEvent(
                     channel = from.metadata().channel()?.name().orEmpty(),
                     uuid = from.metadata().uuid()?.id().orEmpty(),
-                    custom = from.metadata().custom() as? Map<String, Any?>, // TODO: Verify,
+                    custom = from.metadata().custom()?.safeCast(),
                     eTag = from.metadata().eTag().orEmpty(),
                     updated = from.metadata().updated().orEmpty(),
                     status = from.metadata().status().orEmpty()

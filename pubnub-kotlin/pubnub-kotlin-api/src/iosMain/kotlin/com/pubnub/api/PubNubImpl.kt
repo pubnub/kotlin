@@ -6,12 +6,14 @@ import cocoapods.PubNubSwift.channelGroupWith
 import cocoapods.PubNubSwift.channelMetadataWith
 import cocoapods.PubNubSwift.channelWith
 import cocoapods.PubNubSwift.disconnect
+import cocoapods.PubNubSwift.removeAllListeners
 import cocoapods.PubNubSwift.setWithToken
 import cocoapods.PubNubSwift.subscribeWithChannels
 import cocoapods.PubNubSwift.subscribedChannelGroups
 import cocoapods.PubNubSwift.subscribedChannels
 import cocoapods.PubNubSwift.unsubscribeAll
 import cocoapods.PubNubSwift.unsubscribeFrom
+import cocoapods.PubNubSwift.userMetadataWith
 import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.endpoints.DeleteMessages
 import com.pubnub.api.endpoints.DeleteMessagesImpl
@@ -126,6 +128,7 @@ import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.internal.entities.ChannelGroupImpl
 import com.pubnub.internal.entities.ChannelImpl
 import com.pubnub.internal.entities.ChannelMetadataImpl
+import com.pubnub.internal.entities.UserMetadataImpl
 import com.pubnub.kmp.CustomObject
 import com.pubnub.kmp.PubNub
 import com.pubnub.kmp.Uploadable
@@ -152,7 +155,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     }
 
     override fun removeAllListeners() {
-        TODO("Not yet implemented")
+        pubNubObjC.removeAllListeners()
     }
 
     // TODO: replicate and usePost parameters are not present in Swift SDK
@@ -792,13 +795,12 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     }
 
     override fun userMetadata(id: String): UserMetadata {
-        TODO("Not yet implemented")
+        return UserMetadataImpl(userMetadata = pubNubObjC.userMetadataWith(id = id))
     }
 
     override fun subscriptionSetOf(subscriptions: Set<Subscription>): SubscriptionSet {
         TODO("Not yet implemented")
     }
-
     override fun subscriptionSetOf(
         channels: Set<String>,
         channelGroups: Set<String>,
