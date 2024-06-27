@@ -7,44 +7,73 @@ import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.api.v2.callbacks.mapCatching
 import kotlinx.atomicfu.atomic
+import kotlinx.atomicfu.locks.ReentrantLock
+import kotlinx.atomicfu.locks.reentrantLock
+import kotlinx.atomicfu.locks.withLock
 import kotlin.jvm.JvmName
 
-fun <T> PubNubException.asFuture(): PNFuture<T> = object : PNFuture<T> {
-    override fun async(callback: Consumer<Result<T>>) {
-        callback.accept(Result.failure(this@asFuture))
-    }
-}
+private class CompletablePNFuture<T> : PNFuture<T> {
+    private val reentrantLock: ReentrantLock = reentrantLock()
+    private lateinit var result: Result<T>
+    private var callback: Consumer<Result<T>>? = null
 
-fun <T> T.asFuture(): PNFuture<T> = object : PNFuture<T> {
-    override fun async(callback: Consumer<Result<T>>) {
-        callback.accept(Result.success(this@asFuture))
-    }
-}
-
-fun <T> Result<T>.asFuture(): PNFuture<T> = object : PNFuture<T> {
-    override fun async(callback: Consumer<Result<T>>) {
-        callback.accept(this@asFuture)
-    }
-}
-
-fun <T, U> PNFuture<T>.then(action: (T) -> U): PNFuture<U> = object : PNFuture<U> {
-    override fun async(callback: Consumer<Result<U>>) {
-        this@then.async { it: Result<T> ->
-            callback.accept(it.mapCatching(action))
-        }
-    }
-}
-
-fun <T, U> PNFuture<T>.thenAsync(action: (T) -> PNFuture<U>): PNFuture<U> = object : PNFuture<U> {
-    override fun async(callback: Consumer<Result<U>>) {
-        this@thenAsync.async { firstFutureResult: Result<T> ->
-            val intermediateResult: Result<PNFuture<U>> = firstFutureResult.mapCatching(action)
-            intermediateResult.onFailure {
-                callback.accept(Result.failure(it))
-            }.onSuccess { secondFuture: PNFuture<U> ->
-                secondFuture.async(callback)
+    fun complete(result: Result<T>) {
+        reentrantLock.withLock {
+            if (!this::result.isInitialized) {
+                this.result = result
+                callback?.accept(result)
+            } else {
+                error("This CompletablePNFuture has already completed with result $result")
             }
         }
+    }
+
+    override fun async(callback: Consumer<Result<T>>) {
+        reentrantLock.withLock {
+            if (this.callback != null) {
+                error("Only one callback is supported for CompletablePNFuture.")
+            }
+            if (!this::result.isInitialized) {
+                this.callback = callback
+            } else {
+                callback.accept(result)
+            }
+        }
+    }
+}
+
+fun <T> PubNubException.asFuture(): PNFuture<T> = PNFuture { callback ->
+    callback.accept(Result.failure(this@asFuture))
+}
+
+fun <T> T.asFuture(): PNFuture<T> = PNFuture { callback ->
+    callback.accept(Result.success(this@asFuture))
+}
+
+fun <T> Result<T>.asFuture(): PNFuture<T> = PNFuture { callback ->
+    callback.accept(this@asFuture)
+}
+
+fun <T, U> PNFuture<T>.then(action: (T) -> U): PNFuture<U> = PNFuture { callback ->
+    this@then.async { it: Result<T> ->
+        callback.accept(it.mapCatching(action))
+    }
+}
+
+fun <T, U> PNFuture<T>.thenAsync(action: (T) -> PNFuture<U>): PNFuture<U> = PNFuture { callback ->
+    this@thenAsync.async { firstFutureResult: Result<T> ->
+        val intermediateResult: Result<PNFuture<U>> = firstFutureResult.mapCatching(action)
+        intermediateResult.onFailure {
+            callback.accept(Result.failure(it))
+        }.onSuccess { secondFuture: PNFuture<U> ->
+            secondFuture.async(callback)
+        }
+    }
+}
+
+fun <T> PNFuture<T>.remember() : PNFuture<T> = CompletablePNFuture<T>().also { completableFuture ->
+    this@remember.async {
+        completableFuture.complete(it)
     }
 }
 
@@ -77,6 +106,10 @@ fun <T> PNFuture<T>.catch(action: (Exception) -> Result<T>): PNFuture<T> = PNFut
 }
 
 fun <T>  Collection<PNFuture<T>>.awaitAll(): PNFuture<List<T>> = PNFuture { callback ->
+    if (isEmpty()) {
+        callback.accept(Result.success(emptyList()))
+        return@PNFuture
+    }
     val counter = atomic(0)
     val failed = atomic(false)
     val array = Array<Any?>(size) { null }

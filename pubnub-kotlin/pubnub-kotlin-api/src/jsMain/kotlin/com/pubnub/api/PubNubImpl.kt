@@ -120,6 +120,8 @@ import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.internal.v2.entities.ChannelImpl
+import com.pubnub.internal.v2.subscriptions.SubscriptionImpl
+import com.pubnub.internal.v2.subscriptions.SubscriptionSetImpl
 import com.pubnub.kmp.CustomObject
 import com.pubnub.kmp.Optional
 import com.pubnub.kmp.PubNub
@@ -882,7 +884,12 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         channelGroups: Set<String>,
         options: SubscriptionOptions
     ): SubscriptionSet {
-        TODO("Not yet implemented")
+        val params = mapOf(
+            "channels" to channels.toTypedArray(),
+            "channelGroups" to channelGroups.toTypedArray(),
+            //todo use options // "options" to
+        ).toJsMap()
+        return SubscriptionSetImpl(jsPubNub.asDynamic().subscriptionSet(params))
     }
 
     override fun sendFile(
