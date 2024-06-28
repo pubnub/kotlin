@@ -49,4 +49,8 @@ class PNStatus(
         result = 31 * result + affectedChannelGroups.hashCode()
         return result
     }
+
+    override fun toString(): String {
+        return "PNStatus(error=$error, affectedChannelGroups=$affectedChannelGroups, affectedChannels=$affectedChannels, currentTimetoken=$currentTimetoken, exception=$exception, category=$category)"
+    }
 }

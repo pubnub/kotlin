@@ -140,8 +140,7 @@ class UserMetadataTest : BaseIntegrationTest() {
 
             // then
             val result = nextEvent<PNObjectEventResult>()
-            val message = result.extractedMessage
-            message as PNDeleteUUIDMetadataEventMessage
+            val message = result.extractedMessage as PNDeleteUUIDMetadataEventMessage
             assertEquals(uuid, message.uuid)
         }
     }

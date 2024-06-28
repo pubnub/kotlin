@@ -105,7 +105,6 @@ class PubNubTest(
         },
     )
 
-
     init {
         pubNub.addListener(eventVerificationListener)
         pubNub.addListener(statusVerificationListener)
@@ -117,6 +116,7 @@ class PubNubTest(
         withPresence: Boolean = false
     ) = suspendCancellableCoroutine { cont ->
         val statusListener = createStatusListener(pubNub) { _, pnStatus ->
+            println(pnStatus)
             if ((pnStatus.category == PNStatusCategory.PNConnectedCategory || pnStatus.category == PNStatusCategory.PNSubscriptionChanged)
                 && pnStatus.affectedChannels.containsAll(channels) && pnStatus.affectedChannelGroups.containsAll(
                     channelGroups
@@ -196,7 +196,6 @@ class PubNubTest(
 //        }
 //    }
 
-    @Suppress("UNCHECKED_CAST")
     suspend fun <T : PNEvent> nextEvent(): T {
         return messageQueue.receive() as T
     }

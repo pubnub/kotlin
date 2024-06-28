@@ -252,11 +252,11 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     interface StatusEvent {
         var category: String
         var operation: String
-        var affectedChannels: Array<String>
-        var subscribedChannels: Array<String>
-        var affectedChannelGroups: Array<String>
+        var affectedChannels: Array<String>?
+        var subscribedChannels: Array<String>?
+        var affectedChannelGroups: Array<String>?
         var lastTimetoken: String
-        var currentTimetoken: String
+        var currentTimetoken: String?
         var statusCode: Number?
     }
 
@@ -391,7 +391,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     }
 
     interface PublishResponse {
-        var timetoken: Number
+        var timetoken: String
     }
 
     interface SignalParameters {
@@ -548,7 +548,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
 
         var withPresence: Boolean?
 
-        var timetoken: Number?
+        var timetoken: String?
 
     }
 

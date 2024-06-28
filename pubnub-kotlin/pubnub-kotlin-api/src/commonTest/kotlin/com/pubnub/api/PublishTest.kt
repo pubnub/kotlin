@@ -39,6 +39,7 @@ class PublishTest : BaseIntegrationTest() {
 
 
     @Test
+    @Ignore // only JVM supports custom classes
     fun can_publish_message_object() =
         runTest(timeout = 10.seconds) {
             val result = pubnub.publish(channel, ABC()).await()

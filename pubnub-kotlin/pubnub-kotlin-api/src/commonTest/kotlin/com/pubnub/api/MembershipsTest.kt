@@ -102,8 +102,7 @@ class MembershipsTest : BaseIntegrationTest() {
 
             // then
             val result = nextEvent<PNObjectEventResult>()
-            val message = result.extractedMessage
-            message as PNDeleteMembershipEventMessage
+            val message = result.extractedMessage as PNDeleteMembershipEventMessage
             assertEquals(pubnub.configuration.userId.value, message.data.uuid)
             assertEquals(channel, message.data.channelId)
         }

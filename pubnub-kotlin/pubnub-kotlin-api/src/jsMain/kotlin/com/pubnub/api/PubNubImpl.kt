@@ -715,7 +715,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
             this.uuids = uuids.map { createJsObject<PubNubJs.SetCustom> {
                 this.id = it.uuid
                 this.custom = it.custom?.adjustCollectionTypes()?.unsafeCast<PubNubJs.CustomObject>()
-                this.status = status
+                this.status = it.status
             } }.toTypedArray()
             this.limit = limit
             this.page = page.toMetadataPage()
@@ -836,7 +836,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
             this.channels = channels.toTypedArray()
             this.channelGroups = channelGroups.toTypedArray()
             this.withPresence = withPresence
-            this.timetoken = withTimetoken
+            this.timetoken = withTimetoken.adjustCollectionTypes() as? String
         })
     }
 
@@ -995,8 +995,10 @@ fun PNConfiguration.toJs(): PubNubJs.PNConfiguration {
     config.userId = userId.value
     config.subscribeKey = subscribeKey
     config.publishKey = publishKey
+
 //    config.authKeys: String?
-//    config.logVerbosity: Boolean?
+    config.logVerbosity = logVerbosity
+    config.enableEventEngine = enableEventEngine
 //    config.ssl: Boolean?
 //    config.origin: dynamic /* String? | Array<String>? */
 //    config.presenceTimeout: Number?
