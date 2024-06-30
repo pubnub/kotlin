@@ -1292,6 +1292,16 @@ open external class PubNub(config: Any /* UUID | UserId */) {
 
     interface LegacyCryptor<T>
 
+    interface SubscriptionOptions {
+        var receivePresenceEvents: Boolean
+    }
+
+    interface SubscriptionSetParams {
+        var channels: Array<String>
+        var channelGroups: Array<String>
+        var subscriptionOptions: SubscriptionOptions
+    }
+
     companion object {
         var CATEGORIES: Any
         var OPERATIONS: Any
@@ -1379,3 +1389,4 @@ external interface ExponentialRetryPolicyConfiguration {
     var maximumDelay: Number
     var maximumRetry: Number
 }
+

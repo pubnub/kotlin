@@ -116,6 +116,7 @@ import com.pubnub.api.v2.entities.Channel
 import com.pubnub.api.v2.entities.ChannelGroup
 import com.pubnub.api.v2.entities.ChannelMetadata
 import com.pubnub.api.v2.entities.UserMetadata
+import com.pubnub.api.v2.subscriptions.ReceivePresenceEventsImpl
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
@@ -884,11 +885,15 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         channelGroups: Set<String>,
         options: SubscriptionOptions
     ): SubscriptionSet {
-        val params = mapOf(
-            "channels" to channels.toTypedArray(),
-            "channelGroups" to channelGroups.toTypedArray(),
-            //todo use options // "options" to
-        ).toJsMap()
+        val params = createJsObject<PubNubJs.SubscriptionSetParams> {
+            this.channels = channels.toTypedArray()
+            this.channelGroups = channelGroups.toTypedArray()
+            this.subscriptionOptions = createJsObject {
+                if (options.allOptions.filterIsInstance<ReceivePresenceEventsImpl>().isNotEmpty()) {
+                    receivePresenceEvents = true
+                }
+            }
+        }
         return SubscriptionSetImpl(jsPubNub.asDynamic().subscriptionSet(params))
     }
 
