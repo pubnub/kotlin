@@ -14,12 +14,12 @@ kotlin {
     js {
         browser {
             testTask {
-                useMocha {
-                    timeout = "30s"
-                }
-//                useKarma {
-//                    useChrome()
+//                useMocha {
+//                    timeout = "30s"
 //                }
+                useKarma {
+                    useChrome()
+                }
             }
         }
     }

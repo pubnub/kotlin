@@ -7,9 +7,7 @@ import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.createPNConfiguration
-import com.pubnub.api.v2.entities.Subscribable
 import com.pubnub.api.v2.subscriptions.EmptyOptions
-import com.pubnub.api.v2.subscriptions.SubscribeCapable
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.kmp.PNFuture
 import com.pubnub.kmp.PubNub
@@ -39,14 +37,14 @@ abstract class BaseIntegrationTest {
 
     @BeforeTest
     open fun before() {
-        config = createPNConfiguration(UserId(randomString()), Keys.subKey, Keys.pubKey)
+        config = createPNConfiguration(UserId(randomString()), Keys.subKey, Keys.pubKey, logVerbosity = true)
         pubnub = createPubNub(config)
         configPam = createPNConfiguration(UserId(randomString()), Keys.pamSubKey, Keys.pamPubKey, Keys.pamSecKey)
         pubnubPam = createPubNub(configPam)
     }
 
     @AfterTest
-    fun after() {
+    open fun after() {
         pubnub.unsubscribeAll()
         pubnub.destroy()
         pubnubPam.unsubscribeAll()

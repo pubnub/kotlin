@@ -451,7 +451,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
 
     interface FetchMessageItem {
         var channel: String
-        var message: JsonElement
+        var message: Any
         var timetoken: String
         var messageType: String?
         var uuid: String

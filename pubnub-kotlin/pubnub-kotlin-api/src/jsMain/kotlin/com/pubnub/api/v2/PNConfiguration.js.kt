@@ -18,7 +18,8 @@ actual fun createPNConfiguration(
     userId: UserId,
     subscribeKey: String,
     publishKey: String,
-    secretKey: String?
+    secretKey: String?,
+    logVerbosity: Boolean
 ): PNConfiguration {
     return object : PNConfiguration {
         override val userId: UserId
@@ -36,7 +37,7 @@ actual fun createPNConfiguration(
         override val enableEventEngine: Boolean
             get() = false
         override val logVerbosity: Boolean
-            get() = true
+            get() = logVerbosity
     }
 }
 

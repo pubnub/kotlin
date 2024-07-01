@@ -71,13 +71,13 @@ open class FetchMessagesImpl(
                     timetoken = it.published().toLong(),
                     actions = mapMessageActions(rawValue = it.actions()),
                     messageType = HistoryMessageType.of(it.messageType().toInt()),
-                    error = PubNubError.CRYPTO_ERROR
+                    error = null //todo translate crypto errors
                 )
             }
         } ?: emptyMap()
     }
 
-    private fun mapMessageActions(rawValue: List<*>): Map<String, Map<String, List<PNFetchMessageItem.Action>>> {
+    private fun mapMessageActions(rawValue: List<*>): Map<String, Map<String, List<PNFetchMessageItem.Action>>>? {
         return rawValue.filterIsInstance<PubNubMessageActionObjC>().groupBy { messageAction ->
             messageAction.actionType()
         }.mapValues { entry ->
@@ -91,6 +91,8 @@ open class FetchMessagesImpl(
                     )
                 }
             }
-        } ?: emptyMap()
+        }.ifEmpty {
+            null
+        }
     }
 }
