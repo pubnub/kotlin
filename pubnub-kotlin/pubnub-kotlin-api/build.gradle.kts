@@ -17,6 +17,9 @@ kotlin {
                 useMocha {
                     timeout = "30s"
                 }
+//                useKarma {
+//                    useChrome()
+//                }
             }
         }
     }
@@ -36,7 +39,7 @@ kotlin {
 
         val jsMain by getting {
             dependencies {
-                implementation(npm("pubnub", "8.1.0"))
+                implementation(npm("pubnub", "8.2.4"))
             }
         }
 

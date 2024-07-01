@@ -24,7 +24,7 @@ class MembersTest : BaseIntegrationTest() {
     private val type = randomString()
 
     @Test
-    fun can_set_members() = runTest(timeout = 10.seconds) {
+    fun can_set_members() = runTest(timeout = defaultTimeout) {
         // when
         val result = pubnub.setChannelMembers(
             channel,
@@ -40,7 +40,7 @@ class MembersTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_delete_members() = runTest(timeout = 10.seconds) {
+    fun can_delete_members() = runTest(timeout = defaultTimeout) {
         // given
         pubnub.setChannelMembers(
             channel,

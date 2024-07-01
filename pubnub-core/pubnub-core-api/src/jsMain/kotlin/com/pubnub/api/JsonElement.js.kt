@@ -6,7 +6,20 @@ import com.pubnub.kmp.JsMap
 import com.pubnub.kmp.toMap
 import kotlin.js.json
 
-actual abstract class JsonElement(val value: Any?)
+actual abstract class JsonElement(val value: Any?) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is JsonElement) return false
+
+        if (value != other.value) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return value?.hashCode() ?: 0
+    }
+}
 
 class JsonElementImpl(value: Any?) : JsonElement(value) {
     override fun toString(): String {

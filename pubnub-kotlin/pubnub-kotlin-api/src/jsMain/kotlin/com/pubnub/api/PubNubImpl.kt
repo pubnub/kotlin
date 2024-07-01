@@ -116,6 +116,7 @@ import com.pubnub.api.v2.entities.Channel
 import com.pubnub.api.v2.entities.ChannelGroup
 import com.pubnub.api.v2.entities.ChannelMetadata
 import com.pubnub.api.v2.entities.UserMetadata
+import com.pubnub.api.v2.subscriptions.ReceivePresenceEventsImpl
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
@@ -715,7 +716,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
             this.uuids = uuids.map { createJsObject<PubNubJs.SetCustom> {
                 this.id = it.uuid
                 this.custom = it.custom?.adjustCollectionTypes()?.unsafeCast<PubNubJs.CustomObject>()
-                this.status = status
+                this.status = it.status
             } }.toTypedArray()
             this.limit = limit
             this.page = page.toMetadataPage()
@@ -836,7 +837,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
             this.channels = channels.toTypedArray()
             this.channelGroups = channelGroups.toTypedArray()
             this.withPresence = withPresence
-            this.timetoken = withTimetoken
+            this.timetoken = withTimetoken.adjustCollectionTypes() as? String
         })
     }
 
@@ -884,11 +885,15 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         channelGroups: Set<String>,
         options: SubscriptionOptions
     ): SubscriptionSet {
-        val params = mapOf(
-            "channels" to channels.toTypedArray(),
-            "channelGroups" to channelGroups.toTypedArray(),
-            //todo use options // "options" to
-        ).toJsMap()
+        val params = createJsObject<PubNubJs.SubscriptionSetParams> {
+            this.channels = channels.toTypedArray()
+            this.channelGroups = channelGroups.toTypedArray()
+            this.subscriptionOptions = createJsObject {
+                if (options.allOptions.filterIsInstance<ReceivePresenceEventsImpl>().isNotEmpty()) {
+                    receivePresenceEvents = true
+                }
+            }
+        }
         return SubscriptionSetImpl(jsPubNub.asDynamic().subscriptionSet(params))
     }
 
@@ -995,8 +1000,10 @@ fun PNConfiguration.toJs(): PubNubJs.PNConfiguration {
     config.userId = userId.value
     config.subscribeKey = subscribeKey
     config.publishKey = publishKey
+
 //    config.authKeys: String?
-//    config.logVerbosity: Boolean?
+    config.logVerbosity = logVerbosity
+    config.enableEventEngine = enableEventEngine
 //    config.ssl: Boolean?
 //    config.origin: dynamic /* String? | Array<String>? */
 //    config.presenceTimeout: Number?

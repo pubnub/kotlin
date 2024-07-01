@@ -7,6 +7,10 @@ import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.createPNConfiguration
+import com.pubnub.api.v2.entities.Subscribable
+import com.pubnub.api.v2.subscriptions.EmptyOptions
+import com.pubnub.api.v2.subscriptions.SubscribeCapable
+import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.kmp.PNFuture
 import com.pubnub.kmp.PubNub
 import com.pubnub.kmp.createEventListener
@@ -21,8 +25,11 @@ import kotlin.coroutines.resumeWithException
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.assertTrue
+import kotlin.time.Duration.Companion.seconds
 
 abstract class BaseIntegrationTest {
+
+    val defaultTimeout = 10.seconds
 
     lateinit var config: PNConfiguration
     lateinit var configPam: PNConfiguration
@@ -105,16 +112,36 @@ class PubNubTest(
         },
     )
 
-
     init {
         pubNub.addListener(eventVerificationListener)
         pubNub.addListener(statusVerificationListener)
     }
 
+    suspend fun com.pubnub.api.v2.entities.Channel.awaitSubscribe(options: SubscriptionOptions = EmptyOptions) = suspendCancellableCoroutine { cont ->
+        val subscription = subscription(options)
+        val statusListener = createStatusListener(pubNub) { _, pnStatus ->
+            if ((pnStatus.category == PNStatusCategory.PNConnectedCategory || pnStatus.category == PNStatusCategory.PNSubscriptionChanged)
+                && pnStatus.affectedChannels.contains(name)) {
+                cont.resume(subscription)
+            }
+            if (pnStatus.category == PNStatusCategory.PNUnexpectedDisconnectCategory || pnStatus.category == PNStatusCategory.PNConnectionError) {
+                cont.resumeWithException(pnStatus.exception ?: RuntimeException(pnStatus.category.toString()))
+            }
+        }
+        pubNub.addListener(statusListener)
+        cont.invokeOnCancellation {
+            pubNub.removeListener(statusListener)
+        }
+        subscription.subscribe()
+    }
+
     suspend fun PubNub.awaitSubscribe(
         channels: Collection<String> = setOf(),
         channelGroups: Collection<String> = setOf(),
-        withPresence: Boolean = false
+        withPresence: Boolean = false,
+        customSubscriptionBlock: () -> Unit = {
+            subscribe(channels.toList(), channelGroups.toList(), withPresence)
+        }
     ) = suspendCancellableCoroutine { cont ->
         val statusListener = createStatusListener(pubNub) { _, pnStatus ->
             if ((pnStatus.category == PNStatusCategory.PNConnectedCategory || pnStatus.category == PNStatusCategory.PNSubscriptionChanged)
@@ -132,7 +159,7 @@ class PubNubTest(
         cont.invokeOnCancellation {
             pubNub.removeListener(statusListener)
         }
-        subscribe(channels.toList(), channelGroups.toList(), withPresence)
+        customSubscriptionBlock()
     }
 
 //    fun subscribe(
@@ -196,7 +223,6 @@ class PubNubTest(
 //        }
 //    }
 
-    @Suppress("UNCHECKED_CAST")
     suspend fun <T : PNEvent> nextEvent(): T {
         return messageQueue.receive() as T
     }

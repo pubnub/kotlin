@@ -28,7 +28,7 @@ class MembershipsTest : BaseIntegrationTest() {
     private val type = randomString()
 
     @Test
-    fun can_set_memberships() = runTest(timeout = 10.seconds) {
+    fun can_set_memberships() = runTest(timeout = defaultTimeout) {
         // when
         val result = pubnub.setMemberships(
             listOf(PNChannelMembership.Partial(channel, custom, status)),
@@ -43,7 +43,7 @@ class MembershipsTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_receive_set_membership_event() = runTest(timeout = 10.seconds) {
+    fun can_receive_set_membership_event() = runTest(timeout = defaultTimeout) {
         pubnub.test(backgroundScope) {
             // given
             pubnub.awaitSubscribe(listOf(channel))
@@ -66,7 +66,7 @@ class MembershipsTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_delete_membership() = runTest(timeout = 10.seconds) {
+    fun can_delete_membership() = runTest(timeout = defaultTimeout) {
         // given
         pubnub.setMemberships(
             listOf(PNChannelMembership.Partial(channel, custom, status))
@@ -88,7 +88,7 @@ class MembershipsTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_receive_delete_membership_event() = runTest(timeout = 10.seconds) {
+    fun can_receive_delete_membership_event() = runTest(timeout = defaultTimeout) {
         pubnub.test(backgroundScope) {
             // given
             pubnub.setMemberships(
@@ -102,8 +102,7 @@ class MembershipsTest : BaseIntegrationTest() {
 
             // then
             val result = nextEvent<PNObjectEventResult>()
-            val message = result.extractedMessage
-            message as PNDeleteMembershipEventMessage
+            val message = result.extractedMessage as PNDeleteMembershipEventMessage
             assertEquals(pubnub.configuration.userId.value, message.data.uuid)
             assertEquals(channel, message.data.channelId)
         }

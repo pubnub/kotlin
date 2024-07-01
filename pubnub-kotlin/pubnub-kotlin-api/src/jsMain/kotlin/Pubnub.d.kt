@@ -252,11 +252,11 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     interface StatusEvent {
         var category: String
         var operation: String
-        var affectedChannels: Array<String>
-        var subscribedChannels: Array<String>
-        var affectedChannelGroups: Array<String>
+        var affectedChannels: Array<String>?
+        var subscribedChannels: Array<String>?
+        var affectedChannelGroups: Array<String>?
         var lastTimetoken: String
-        var currentTimetoken: String
+        var currentTimetoken: String?
         var statusCode: Number?
     }
 
@@ -391,7 +391,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     }
 
     interface PublishResponse {
-        var timetoken: Number
+        var timetoken: String
     }
 
     interface SignalParameters {
@@ -548,7 +548,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
 
         var withPresence: Boolean?
 
-        var timetoken: Number?
+        var timetoken: String?
 
     }
 
@@ -1292,6 +1292,16 @@ open external class PubNub(config: Any /* UUID | UserId */) {
 
     interface LegacyCryptor<T>
 
+    interface SubscriptionOptions {
+        var receivePresenceEvents: Boolean
+    }
+
+    interface SubscriptionSetParams {
+        var channels: Array<String>
+        var channelGroups: Array<String>
+        var subscriptionOptions: SubscriptionOptions
+    }
+
     companion object {
         var CATEGORIES: Any
         var OPERATIONS: Any
@@ -1379,3 +1389,4 @@ external interface ExponentialRetryPolicyConfiguration {
     var maximumDelay: Number
     var maximumRetry: Number
 }
+
