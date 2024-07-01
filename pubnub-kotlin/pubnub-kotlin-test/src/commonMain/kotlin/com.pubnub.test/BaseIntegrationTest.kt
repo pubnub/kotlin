@@ -138,7 +138,10 @@ class PubNubTest(
     suspend fun PubNub.awaitSubscribe(
         channels: Collection<String> = setOf(),
         channelGroups: Collection<String> = setOf(),
-        withPresence: Boolean = false
+        withPresence: Boolean = false,
+        customSubscriptionBlock: () -> Unit = {
+            subscribe(channels.toList(), channelGroups.toList(), withPresence)
+        }
     ) = suspendCancellableCoroutine { cont ->
         val statusListener = createStatusListener(pubNub) { _, pnStatus ->
             if ((pnStatus.category == PNStatusCategory.PNConnectedCategory || pnStatus.category == PNStatusCategory.PNSubscriptionChanged)
@@ -156,7 +159,7 @@ class PubNubTest(
         cont.invokeOnCancellation {
             pubNub.removeListener(statusListener)
         }
-        subscribe(channels.toList(), channelGroups.toList(), withPresence)
+        customSubscriptionBlock()
     }
 
 //    fun subscribe(
