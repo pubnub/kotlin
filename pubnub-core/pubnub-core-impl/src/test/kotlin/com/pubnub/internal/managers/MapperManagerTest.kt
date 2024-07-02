@@ -69,4 +69,45 @@ internal class MapperManagerTest {
         assertEquals(expected, json1)
         assertEquals(expected, json2)
     }
+
+    @Test
+    fun fromJson_numbers() {
+        val mapperManager = MapperManager()
+        val map = mapOf(
+            "a" to 12345678,
+            "b" to 1.2313,
+            "c" to 943809302493249023L,
+            "d" to 1,
+            "e" to 0,
+            "f" to "943809302493249023"
+        )
+        val json = mapperManager.toJson(map)
+        val decodedMap = mapperManager.fromJson<Map<String, Any?>>(json, Map::class.java)
+        decodedMap.forEach { t, u ->
+            println("$t: $u (${u!!::class}")
+        }
+        assertEquals(map["a"], decodedMap["a"].tryLong()?.toInt())
+        assertEquals(map["b"], decodedMap["b"].tryDouble())
+        assertEquals(map["c"], decodedMap["c"].tryLong())
+        assertEquals(map["d"], decodedMap["d"].tryLong()?.toInt())
+        assertEquals(map["e"], decodedMap["e"].tryLong()?.toInt())
+        assertEquals(map["f"], decodedMap["f"])
+        assertEquals(map["f"].toString().toLong(), decodedMap["f"].tryLong())
+    }
+}
+
+private fun Any?.tryLong(): Long? {
+    return when (this) {
+        is Number -> toLong()
+        is String -> toLongOrNull()
+        else -> null
+    }
+}
+
+private fun Any?.tryDouble(): Double? {
+    return when (this) {
+        is Number -> toDouble()
+        is String -> toDoubleOrNull()
+        else -> null
+    }
 }

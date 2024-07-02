@@ -41,14 +41,14 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
                 type = type,
             ).sync()
 
-        val getAllResult = pubnub.getAllChannelMetadata().sync()
+        val getAllResult = pubnub.getAllChannelMetadata(filter = "id == \"$channel\"").sync()
         val getSingleResult = pubnub.getChannelMetadata(channel = channel).sync()
         pubnub.removeChannelMetadata(channel = channel).sync()
 
         assertTrue(getAllResult.data.any { it.id == channel })
         assertEquals(setResult, getSingleResult)
 
-        val getAllAfterRemovalResult = pubnub.getAllChannelMetadata().sync()
+        val getAllAfterRemovalResult = pubnub.getAllChannelMetadata(filter = "id == \"$channel\"").sync()
 
         assertTrue(getAllAfterRemovalResult.data.none { it.id == channel })
     }
@@ -66,14 +66,14 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
         assertEquals(status, setResult.data?.status)
         assertEquals(type, setResult.data?.type)
 
-        val getAllResult = pubnub.getAllUUIDMetadata().sync()
+        val getAllResult = pubnub.getAllUUIDMetadata(filter = "id == \"$testUuid\"").sync()
         val getSingleResult = pubnub.getUUIDMetadata(uuid = testUuid).sync()
         pubnub.removeUUIDMetadata(uuid = testUuid).sync()
 
         assertTrue(getAllResult.data.any { it.id == testUuid })
         assertEquals(setResult, getSingleResult)
 
-        val getAllAfterRemovalResult = pubnub.getAllUUIDMetadata().sync()
+        val getAllAfterRemovalResult = pubnub.getAllUUIDMetadata(filter = "id == \"$testUuid\"").sync()
 
         assertTrue(getAllAfterRemovalResult.data.none { it.id == testUuid })
     }

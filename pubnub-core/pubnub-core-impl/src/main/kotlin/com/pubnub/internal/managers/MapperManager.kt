@@ -10,6 +10,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParseException
 import com.google.gson.JsonSerializationContext
 import com.google.gson.JsonSerializer
+import com.google.gson.ToNumberPolicy
 import com.google.gson.TypeAdapter
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonToken
@@ -60,6 +61,7 @@ class MapperManager {
                 .registerTypeAdapter(JSONObject::class.java, JSONObjectAdapter())
                 .registerTypeAdapter(JSONArray::class.java, JSONArrayAdapter())
                 .disableHtmlEscaping()
+                .setObjectToNumberStrategy(ToNumberPolicy.LAZILY_PARSED_NUMBER)
                 .create()
         converterFactory = GsonConverterFactory.create(objectMapper)
     }
