@@ -90,7 +90,9 @@ class PushPayloadHelper {
             var authMethod: APNS2AuthMethod? = null
 
             enum class APNS2AuthMethod {
-                TOKEN, CERT, CERTIFICATE;
+                TOKEN,
+                CERT,
+                CERTIFICATE;
 
                 override fun toString(): String {
                     return name.lowercase()
