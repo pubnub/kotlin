@@ -174,6 +174,7 @@ class PushPayloadHelperHelperTest : BaseTest() {
                 expiration = "exp_1"
                 version = "v1"
                 targets = null
+                authMethod = APNS2Configuration.APNS2AuthMethod.TOKEN
             }
         val apns2Config2 =
             APNS2Configuration().apply {
@@ -215,6 +216,7 @@ class PushPayloadHelperHelperTest : BaseTest() {
         assertEquals("exp_1", pnPushList[0]["expiration"])
         assertEquals("collapse_1", pnPushList[0]["collapse_id"])
         assertEquals("v1", pnPushList[0]["version"])
+        assertEquals("token", pnPushList[0]["auth_method"])
         assertFalse(pnPushList[0].containsKey("targets"))
 
         assertEquals("exp_2", pnPushList[1]["expiration"])

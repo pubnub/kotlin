@@ -87,6 +87,15 @@ class PushPayloadHelper {
             var expiration: String? = null
             var targets: List<Target>? = null
             var version: String? = null
+            var authMethod: APNS2AuthMethod? = null
+
+            enum class APNS2AuthMethod {
+                TOKEN, CERT, CERTIFICATE;
+
+                override fun toString(): String {
+                    return name.lowercase()
+                }
+            }
 
             override fun toMap(): Map<String, Any> {
                 return mutableMapOf<String, Any>().apply {
@@ -100,6 +109,7 @@ class PushPayloadHelper {
                         }
                     }
                     version?.let { put("version", it) }
+                    authMethod?.let { put("auth_method", it.toString()) }
                 }
             }
 
