@@ -8,5 +8,5 @@ open class [PNObject](index.md)
 
 | |
 |---|
-| [PNUUIDMetadata](../../com.pubnub.api.models.consumer.objects_api.uuid/-p-n-u-u-i-d-metadata/index.md) |
 | [PNChannelMetadata](../../com.pubnub.api.models.consumer.objects_api.channel/-p-n-channel-metadata/index.md) |
+| [PNUUIDMetadata](../../com.pubnub.api.models.consumer.objects_api.uuid/-p-n-u-u-i-d-metadata/index.md) |

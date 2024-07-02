@@ -8,9 +8,9 @@ abstract class [PubSubBuilder](index.md)
 
 | |
 |---|
-| [PresenceBuilder](../-presence-builder/index.md) |
 | [SubscribeBuilder](../-subscribe-builder/index.md) |
 | [UnsubscribeBuilder](../-unsubscribe-builder/index.md) |
+| [PresenceBuilder](../-presence-builder/index.md) |
 
 ## Constructors
 

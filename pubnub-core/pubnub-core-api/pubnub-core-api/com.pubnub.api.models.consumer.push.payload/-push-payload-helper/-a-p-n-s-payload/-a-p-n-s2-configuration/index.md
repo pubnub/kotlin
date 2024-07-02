@@ -15,12 +15,14 @@ class [APNS2Configuration](index.md) : [PushPayloadSerializer](../../../-push-pa
 
 | Name | Summary |
 |---|---|
+| [APNS2AuthMethod](-a-p-n-s2-auth-method/index.md) | [jvm]<br>enum [APNS2AuthMethod](-a-p-n-s2-auth-method/index.md) : [Enum](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html)&lt;[PushPayloadHelper.APNSPayload.APNS2Configuration.APNS2AuthMethod](-a-p-n-s2-auth-method/index.md)&gt; |
 | [Target](-target/index.md) | [jvm]<br>class [Target](-target/index.md) : [PushPayloadSerializer](../../../-push-payload-serializer/index.md) |
 
 ## Properties
 
 | Name | Summary |
 |---|---|
+| [authMethod](auth-method.md) | [jvm]<br>var [authMethod](auth-method.md): [PushPayloadHelper.APNSPayload.APNS2Configuration.APNS2AuthMethod](-a-p-n-s2-auth-method/index.md)? |
 | [collapseId](collapse-id.md) | [jvm]<br>var [collapseId](collapse-id.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? |
 | [expiration](expiration.md) | [jvm]<br>var [expiration](expiration.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? |
 | [targets](targets.md) | [jvm]<br>var [targets](targets.md): [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[PushPayloadHelper.APNSPayload.APNS2Configuration.Target](-target/index.md)&gt;? |

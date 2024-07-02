@@ -9,18 +9,18 @@ interface [ChannelStep](index.md)&lt;[T](index.md)&gt;
 | |
 |---|
 | [Builder](../../../com.pubnub.api.endpoints.files/-delete-file/-builder/index.md) |
-| [Builder](../../../com.pubnub.api.endpoints.files/-get-file-url/-builder/index.md) |
-| [Builder](../../../com.pubnub.api.endpoints.files/-publish-file-message/-builder/index.md) |
 | [Builder](../../../com.pubnub.api.endpoints.files/-send-file/-builder/index.md) |
+| [Builder](../../../com.pubnub.api.endpoints.files/-publish-file-message/-builder/index.md) |
 | [Builder](../../../com.pubnub.api.endpoints.files/-list-files/-builder/index.md) |
+| [Builder](../../../com.pubnub.api.endpoints.files/-get-file-url/-builder/index.md) |
 | [Builder](../../../com.pubnub.api.endpoints.files/-download-file/-builder/index.md) |
-| [Builder](../../../com.pubnub.api.endpoints.objects_api.members/-set-channel-members/-builder/index.md) |
-| [Builder](../../../com.pubnub.api.endpoints.objects_api.members/-remove-channel-members/-builder/index.md) |
-| [Builder](../../../com.pubnub.api.endpoints.objects_api.members/-get-channel-members/-builder/index.md) |
-| [Builder](../../../com.pubnub.api.endpoints.objects_api.members/-manage-channel-members/-builder/index.md) |
-| [Builder](../../../com.pubnub.api.endpoints.objects_api.channel/-set-channel-metadata/-builder/index.md) |
-| [Builder](../../../com.pubnub.api.endpoints.objects_api.channel/-get-channel-metadata/-builder/index.md) |
 | [Builder](../../../com.pubnub.api.endpoints.objects_api.channel/-remove-channel-metadata/-builder/index.md) |
+| [Builder](../../../com.pubnub.api.endpoints.objects_api.channel/-get-channel-metadata/-builder/index.md) |
+| [Builder](../../../com.pubnub.api.endpoints.objects_api.channel/-set-channel-metadata/-builder/index.md) |
+| [Builder](../../../com.pubnub.api.endpoints.objects_api.members/-manage-channel-members/-builder/index.md) |
+| [Builder](../../../com.pubnub.api.endpoints.objects_api.members/-get-channel-members/-builder/index.md) |
+| [Builder](../../../com.pubnub.api.endpoints.objects_api.members/-remove-channel-members/-builder/index.md) |
+| [Builder](../../../com.pubnub.api.endpoints.objects_api.members/-set-channel-members/-builder/index.md) |
 
 ## Functions
 
