@@ -10,7 +10,7 @@ enum class HistoryMessageType(val value: Int) {
     companion object {
         fun of(value: Int?): HistoryMessageType =
             when (value) {
-                null, 0 -> Message
+                null, 0, -1, 999 -> Message
                 4 -> File
                 else -> throw PubNubException("Unknown message type value $value")
             }

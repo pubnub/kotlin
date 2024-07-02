@@ -174,16 +174,16 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
 
     override fun fire(channel: String, message: Any, meta: Any?, usePost: Boolean, ttl: Int?): Publish {
         return FireImpl(jsPubNub, createJsObject {
-            this.message = message
+            this.message = message.adjustCollectionTypes()
             this.channel = channel
-            this.meta = meta
+            this.meta = meta?.adjustCollectionTypes()
             this.sendByPost = usePost
         })
     }
 
     override fun signal(channel: String, message: Any): Signal {
         return SignalImpl(jsPubNub,  createJsObject {
-            this.message = message
+            this.message = message.adjustCollectionTypes()
             this.channel = channel
         })
     }
@@ -204,7 +204,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
             this.channels = channels.toTypedArray()
             this.device = deviceId
             this.topic = topic
-            this.environment = environment.name.lowercase()
+            this.environment = environment.toParamString()
         })
     }
 
@@ -218,7 +218,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
             this.pushGateway = pushType.toParamString()
             this.device = deviceId
             this.topic = topic
-            this.topic = topic
+            this.environment = environment.toParamString()
         })
     }
 

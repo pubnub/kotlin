@@ -58,6 +58,9 @@ class GetMessageActionsImpl(
             type = rawValue.actionType(),
             value = rawValue.actionValue(),
             messageTimetoken = rawValue.messageTimetoken().toLong()
-        )
+        ).apply {
+            actionTimetoken = rawValue.actionTimetoken().toLong()
+            uuid = rawValue.publisher()
+        }
     }
 }

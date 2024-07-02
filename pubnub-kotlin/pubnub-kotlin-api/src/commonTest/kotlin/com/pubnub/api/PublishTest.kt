@@ -1,5 +1,6 @@
 package com.pubnub.api
 
+import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.kmp.PLATFORM
 import com.pubnub.kmp.createCustomObject
 import com.pubnub.test.BaseIntegrationTest
@@ -31,12 +32,25 @@ class PublishTest : BaseIntegrationTest() {
         }
 
     @Test
+    fun can_signal() =
+        runTest(timeout = defaultTimeout) {
+            val result = pubnub.signal(channel, "some message").await()
+            assertTrue { result.timetoken > 0 }
+        }
+
+    @Test
     fun can_publish_message_map() =
         runTest(timeout = defaultTimeout) {
             val result = pubnub.publish(channel, mapOf("platform" to PLATFORM, "otherKey" to 123, "another" to true)).await()
             assertTrue { result.timetoken > 0 }
         }
 
+    @Test
+    fun can_signal_map() =
+        runTest(timeout = defaultTimeout) {
+            val result = pubnub.signal(channel, mapOf("platform" to PLATFORM, "otherKey" to 123, "another" to true)).await()
+            assertTrue { result.timetoken > 0 }
+        }
 
     @Test
     @Ignore // only JVM supports custom classes
@@ -104,6 +118,23 @@ class PublishTest : BaseIntegrationTest() {
                 mapData,
             ).await()
             val result = nextMessage().message
+            deepCompare(mapData, result)
+        }
+    }
+
+    @Test
+    fun can_receive_signal_with_map_payload() = runTest(timeout = defaultTimeout) {
+        pubnub.test(backgroundScope) {
+            pubnub.awaitSubscribe(listOf(channel))
+            val mapData = mapOf(
+                "stringValue" to "bbb",
+                "mapValue" to mapOf("innerKey" to false)
+            )
+            pubnub.signal(
+                channel,
+                mapData,
+            ).await()
+            val result = nextEvent<PNSignalResult>().message
             deepCompare(mapData, result)
         }
     }
