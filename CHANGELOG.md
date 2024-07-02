@@ -1,3 +1,9 @@
+## v9.2.1
+July 02 2024
+
+#### Added
+- Add missing `auth_method` to APNS2 configuration.
+
 ## v9.2.0
 June 11 2024
 
