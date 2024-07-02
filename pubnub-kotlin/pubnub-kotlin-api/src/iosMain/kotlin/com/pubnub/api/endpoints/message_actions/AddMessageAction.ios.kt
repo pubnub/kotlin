@@ -35,8 +35,11 @@ class AddMessageActionImpl(
                 action = PNMessageAction(
                     type = it?.actionType().orEmpty(),
                     value = it?.actionValue().orEmpty(),
-                    messageTimetoken = it?.messageTimetoken()?.toLong() ?: 0
-                )
+                    messageTimetoken = it?.messageTimetoken()?.toLong() ?: 0,
+                ).apply {
+                    uuid = it?.publisher()
+                    actionTimetoken = it?.actionTimetoken()?.toLong()
+                }
             )}, onFailure = callback.onFailureHandler()
         )
     }
