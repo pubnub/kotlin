@@ -26,13 +26,14 @@ class DeleteMessagesTest : BaseIntegrationTest() {
         ).await()
 
         pubnub.deleteMessages(
-            listOf(channel),
+            channels = listOf(channel),
             start = result.timetoken + 1,
             end = result.timetoken
         ).await()
 
         val messages = pubnub.fetchMessages(
-            listOf(channel), PNBoundedPage(
+            channels = listOf(channel),
+            page = PNBoundedPage(
                 start = result.timetoken + 1,
                 end = result.timetoken
             )
