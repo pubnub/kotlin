@@ -1,3 +1,9 @@
+## v9.2.2
+July 04 2024
+
+#### Fixed
+- SetState via Heartbeat fix.
+
 ## v9.2.1
 July 02 2024
 
