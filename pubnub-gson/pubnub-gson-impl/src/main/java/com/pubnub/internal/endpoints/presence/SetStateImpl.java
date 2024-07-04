@@ -97,10 +97,6 @@ public class SetStateImpl extends DelegatingEndpoint<Object, PNSetStateResult> i
         for (String channel : channels) {
             stateParamValue.put(channel, state);
         }
-        for (String channelGroup : channelGroups) {
-            stateParamValue.put(channelGroup, state);
-        }
-
         return stateParamValue;
     }
 }
