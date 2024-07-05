@@ -1,6 +1,7 @@
 package com.pubnub.api
 
-import com.pubnub.api.models.consumer.pubsub.PNEvent
+import com.pubnub.api.models.consumer.objects.PNPage
+import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteChannelMetadataEventMessage
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetChannelMetadataEventMessage
@@ -13,6 +14,7 @@ import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 import kotlin.time.Duration.Companion.seconds
 
@@ -129,6 +131,56 @@ class ChannelMetadataTest : BaseIntegrationTest() {
             assertTrue { message is PNDeleteChannelMetadataEventMessage }
             message as PNDeleteChannelMetadataEventMessage
             assertEquals(channel, message.channel)
+        }
+    }
+
+    @Test
+    fun can_get_all_metadata_with_paging() = runTest(timeout = 30.seconds) {
+        // given
+        repeat(6) {
+            pubnub.setChannelMetadata(
+                channel+it,
+                name = name,
+                status = status,
+                custom = custom,
+                includeCustom = includeCustom,
+                type = type,
+                description = description
+            ).await()
+        }
+
+        // when
+        val allChannels = mutableListOf<PNChannelMetadata>()
+        var next: PNPage.PNNext? = null
+        while(true) {
+            val result = pubnub.getAllChannelMetadata(
+                limit = 2,
+                page = next,
+                includeCustom = true,
+                filter = "id LIKE \"$channel*\""
+            ).await()
+            allChannels.addAll(result.data)
+            next = result.next
+            if (next == null || result.data.isEmpty()) {
+                break
+            }
+        }
+
+        // clean up before asserting
+        repeat(6) {
+            pubnub.removeChannelMetadata(channel + it)
+        }
+
+        // then
+        assertTrue { allChannels.size == 6 }
+        repeat(6) {index ->
+            val pnChannelMetadata = allChannels.firstOrNull { it.id == channel + index }
+            assertNotNull(pnChannelMetadata)
+            assertEquals(name, pnChannelMetadata.name)
+            assertEquals(description, pnChannelMetadata.description)
+            assertEquals(status, pnChannelMetadata.status)
+            assertEquals(customData, pnChannelMetadata.custom)
+            assertEquals(type, pnChannelMetadata.type)
         }
     }
 }
