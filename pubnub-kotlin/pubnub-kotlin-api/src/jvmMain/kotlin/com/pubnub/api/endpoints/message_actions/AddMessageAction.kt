@@ -7,7 +7,7 @@ import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 /**
  * @see [PubNub.addMessageAction]
  */
-actual interface AddMessageAction : Endpoint<PNAddMessageActionResult> {
+interface AddMessageAction : com.pubnub.kmp.endpoints.message_actions.AddMessageAction, Endpoint<PNAddMessageActionResult> {
     val channel: String
     val messageAction: PNMessageAction
 }

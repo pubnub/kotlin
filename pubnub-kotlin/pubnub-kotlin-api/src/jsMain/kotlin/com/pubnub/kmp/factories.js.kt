@@ -47,7 +47,7 @@ actual fun createEventListener(
                         messageEvent.channel,
                         messageEvent.subscription,
                         messageEvent.timetoken.toLong(),
-                        JsonElementImpl(messageEvent.userMetadata),
+                        messageEvent.userMetadata?.let { JsonElementImpl(it) },
                         messageEvent.publisher
                     ),
                     JsonElementImpl(messageEvent.message),

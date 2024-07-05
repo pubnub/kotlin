@@ -2,7 +2,7 @@ package com.pubnub.internal.entities
 
 import cocoapods.PubNubSwift.PubNubChannelGroupEntityObjC
 import cocoapods.PubNubSwift.PubNubSubscriptionObjC
-import com.pubnub.api.v2.entities.ChannelGroup
+import com.pubnub.kmp.v2.entities.ChannelGroup
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.internal.subscription.SubscriptionImpl

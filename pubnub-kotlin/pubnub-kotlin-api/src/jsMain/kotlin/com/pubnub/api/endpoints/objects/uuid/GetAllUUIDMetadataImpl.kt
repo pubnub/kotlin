@@ -1,4 +1,4 @@
-package com.pubnub.api.endpoints.objects.uuid
+package com.pubnub.kmp.endpoints.objects.uuid
 
 import GetAllUUIDMetadataResponse
 import PubNub

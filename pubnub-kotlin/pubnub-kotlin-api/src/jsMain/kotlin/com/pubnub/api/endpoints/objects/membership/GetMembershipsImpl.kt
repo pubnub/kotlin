@@ -1,4 +1,4 @@
-package com.pubnub.api.endpoints.objects.membership
+package com.pubnub.kmp.endpoints.objects.membership
 
 import ManageMembershipsResponse
 import PubNub

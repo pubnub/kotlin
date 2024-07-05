@@ -1,4 +1,4 @@
-package com.pubnub.api.endpoints.objects.member
+package com.pubnub.kmp.endpoints.objects.member
 
 import ManageChannelMembersResponse
 import PubNub

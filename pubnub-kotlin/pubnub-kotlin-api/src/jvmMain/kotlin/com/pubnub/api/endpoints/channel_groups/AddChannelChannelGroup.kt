@@ -6,7 +6,7 @@ import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsAddChannelRes
 /**
  * @see [PubNub.addChannelsToChannelGroup]
  */
-actual interface AddChannelChannelGroup : Endpoint<PNChannelGroupsAddChannelResult> {
+interface AddChannelChannelGroup : com.pubnub.kmp.endpoints.channel_groups.AddChannelChannelGroup, Endpoint<PNChannelGroupsAddChannelResult> {
     val channelGroup: String
     val channels: List<String>
 }

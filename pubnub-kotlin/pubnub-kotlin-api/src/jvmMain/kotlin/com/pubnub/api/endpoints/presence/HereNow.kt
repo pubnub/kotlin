@@ -6,7 +6,7 @@ import com.pubnub.api.models.consumer.presence.PNHereNowResult
 /**
  * @see [PubNub.hereNow]
  */
-actual interface HereNow : Endpoint<PNHereNowResult> {
+interface HereNow : com.pubnub.kmp.endpoints.presence.HereNow, Endpoint<PNHereNowResult> {
     val channels: List<String>
     val channelGroups: List<String>
     val includeState: Boolean

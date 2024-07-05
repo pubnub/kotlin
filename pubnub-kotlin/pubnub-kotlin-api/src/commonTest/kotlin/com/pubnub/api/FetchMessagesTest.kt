@@ -1,5 +1,6 @@
 package com.pubnub.api
 
+import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.history.HistoryMessageType
 import com.pubnub.api.models.consumer.history.PNFetchMessageItem
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
@@ -90,6 +91,39 @@ class FetchMessagesTest : BaseIntegrationTest() {
             ),
             fetchResultWithoutActions.channels,
         )
+    }
+
+    @Test
+    fun fetchMessages_with_limit_1() = runTest {
+        val expectedMessage = randomString()
+
+        val result = pubnub.publish(
+            channel = channel,
+            message = expectedMessage,
+            shouldStore = true,
+            ttl = 60,
+        ).await()
+
+        val fetchResult = pubnub.fetchMessages(
+            channels = listOf(channel),
+            page = PNBoundedPage(limit = 1)
+        ).await()
+
+        val expectedItem = PNFetchMessageItem(
+            uuid = pubnub.configuration.userId.value,
+            message = createJsonElement(expectedMessage),
+            timetoken = result.timetoken,
+            meta = null,
+            messageType = HistoryMessageType.Message,
+        )
+
+        val expectedChannelsResponse: Map<String, List<PNFetchMessageItem>> = mapOf(
+            channel to listOf(
+                expectedItem,
+            ),
+        )
+
+        assertEquals(expectedChannelsResponse, fetchResult.channels)
     }
 
 }

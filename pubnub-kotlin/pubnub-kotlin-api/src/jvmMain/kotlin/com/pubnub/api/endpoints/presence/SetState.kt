@@ -6,7 +6,7 @@ import com.pubnub.api.models.consumer.presence.PNSetStateResult
 /**
  * @see [PubNub.setPresenceState]
  */
-actual interface SetState : Endpoint<PNSetStateResult> {
+interface SetState : com.pubnub.kmp.endpoints.presence.SetState, Endpoint<PNSetStateResult> {
     val channels: List<String>
     val channelGroups: List<String>
     val state: Any

@@ -6,6 +6,6 @@ import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult
 /**
  * @see [PubNub.getUUIDMetadata]
  */
-actual interface GetUUIDMetadata : Endpoint<PNUUIDMetadataResult> {
+interface GetUUIDMetadata : com.pubnub.kmp.endpoints.objects.uuid.GetUUIDMetadata, Endpoint<PNUUIDMetadataResult> {
     val uuid: String
 }

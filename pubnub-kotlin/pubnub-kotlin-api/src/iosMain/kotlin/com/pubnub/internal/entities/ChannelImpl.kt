@@ -2,11 +2,11 @@ package com.pubnub.internal.entities
 
 import cocoapods.PubNubSwift.PubNubChannelEntityObjC
 import cocoapods.PubNubSwift.PubNubSubscriptionObjC
-import com.pubnub.api.endpoints.files.DeleteFile
-import com.pubnub.api.endpoints.files.SendFile
-import com.pubnub.api.endpoints.pubsub.Publish
-import com.pubnub.api.endpoints.pubsub.Signal
-import com.pubnub.api.v2.entities.Channel
+import com.pubnub.kmp.endpoints.files.DeleteFile
+import com.pubnub.kmp.endpoints.files.SendFile
+import com.pubnub.kmp.endpoints.pubsub.Publish
+import com.pubnub.kmp.endpoints.pubsub.Signal
+import com.pubnub.kmp.v2.entities.Channel
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.internal.subscription.SubscriptionImpl
@@ -20,7 +20,7 @@ class ChannelImpl(
     override fun publish(
         message: Any,
         meta: Any?,
-        shouldStore: Boolean?,
+        shouldStore: Boolean,
         usePost: Boolean,
         replicate: Boolean,
         ttl: Int?

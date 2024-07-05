@@ -2,4 +2,4 @@ package com.pubnub.api.endpoints.access
 
 import com.pubnub.api.Endpoint
 
-actual interface RevokeToken : Endpoint<Unit>
+interface RevokeToken : com.pubnub.kmp.endpoints.access.RevokeToken, Endpoint<Unit>

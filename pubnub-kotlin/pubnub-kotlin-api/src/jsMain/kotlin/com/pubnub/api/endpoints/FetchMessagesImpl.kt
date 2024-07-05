@@ -1,4 +1,4 @@
-package com.pubnub.api.endpoints
+package com.pubnub.kmp.endpoints
 
 import PubNub
 import com.pubnub.api.EndpointImpl
@@ -14,12 +14,12 @@ class FetchMessagesImpl(pubnub: PubNub, params: PubNub.FetchMessagesParameters) 
     EndpointImpl<PubNub.FetchMessagesResponse, PNFetchMessagesResult>(
         promiseFactory = { pubnub.fetchMessages(params) },
         responseMapping = { response ->
-            PNFetchMessagesResult(response.channels.toMap().mapValues {
-                it.value.map { item ->
+            PNFetchMessagesResult(response.channels.toMap().mapValues { entry ->
+                entry.value.map { item ->
                     PNFetchMessageItem(
                         item.uuid,
                         createJsonElement(item.message),
-                        createJsonElement(item.meta),
+                        item.meta?.let { createJsonElement(it) },
                         item.timetoken.toString().toLong(),
                         item.actions?.toMap()?.mapValues { entry: Map.Entry<String, PubNub.ActionContentToAction> ->
                             entry.value.toMap().mapValues { entry2: Map.Entry<String, Array<PubNub.Action>> ->

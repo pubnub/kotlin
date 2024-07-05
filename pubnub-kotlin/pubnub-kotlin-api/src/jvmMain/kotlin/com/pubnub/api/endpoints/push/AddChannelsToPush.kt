@@ -6,4 +6,4 @@ import com.pubnub.api.models.consumer.push.PNPushAddChannelResult
 /**
  * @see [PubNub.addPushNotificationsOnChannels]
  */
-actual interface AddChannelsToPush : Endpoint<PNPushAddChannelResult>
+interface AddChannelsToPush : com.pubnub.kmp.endpoints.push.AddChannelsToPush, Endpoint<PNPushAddChannelResult>
