@@ -191,7 +191,7 @@ interface PubNub :
         channel: String,
         message: Any,
         meta: Any?,
-        shouldStore: Boolean?,
+        shouldStore: Boolean,
         usePost: Boolean,
         replicate: Boolean,
         ttl: Int?,

@@ -1,0 +1,31 @@
+package com.pubnub.kmp.endpoints
+
+import cocoapods.PubNubSwift.PubNubObjC
+import cocoapods.PubNubSwift.deleteMessagesFrom
+import com.pubnub.kmp.PNFuture
+import com.pubnub.api.models.consumer.history.PNDeleteMessagesResult
+import com.pubnub.kmp.onFailureHandler
+import com.pubnub.kmp.onSuccessReturnValue
+import com.pubnub.api.v2.callbacks.Consumer
+import com.pubnub.api.v2.callbacks.Result
+import com.pubnub.kmp.endpoints.DeleteMessages
+import kotlinx.cinterop.ExperimentalForeignApi
+import platform.Foundation.NSNumber
+
+@OptIn(ExperimentalForeignApi::class)
+class DeleteMessagesImpl (
+    private val pubnub: PubNubObjC,
+    private val channels: List<String>,
+    private val start: Long?,
+    private val end: Long?
+): DeleteMessages {
+    override fun async(callback: Consumer<Result<PNDeleteMessagesResult>>) {
+        pubnub.deleteMessagesFrom(
+            channels = channels,
+            start = start?.let { NSNumber(long = it) },
+            end = end?.let { NSNumber(long = it) },
+            onSuccess = callback.onSuccessReturnValue(PNDeleteMessagesResult()),
+            onFailure = callback.onFailureHandler()
+        )
+    }
+}

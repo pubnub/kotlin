@@ -1,4 +1,4 @@
-package com.pubnub.api.endpoints.files
+package com.pubnub.kmp.endpoints.files
 
 import PubNub
 import com.pubnub.api.EndpointImpl

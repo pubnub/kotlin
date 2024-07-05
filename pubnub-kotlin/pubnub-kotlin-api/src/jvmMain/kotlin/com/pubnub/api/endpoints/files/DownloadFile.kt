@@ -6,4 +6,4 @@ import com.pubnub.api.models.consumer.files.PNDownloadFileResult
 /**
  * @see [PubNub.downloadFile]
  */
-actual interface DownloadFile : Endpoint<PNDownloadFileResult>
+interface DownloadFile : com.pubnub.kmp.endpoints.files.DownloadFile, Endpoint<PNDownloadFileResult>

@@ -6,7 +6,7 @@ import com.pubnub.api.models.consumer.presence.PNGetStateResult
 /**
  * @see [PubNub.getPresenceState]
  */
-actual interface GetState : Endpoint<PNGetStateResult> {
+interface GetState : com.pubnub.kmp.endpoints.presence.GetState, Endpoint<PNGetStateResult> {
     val channels: List<String>
     val channelGroups: List<String>
     val uuid: String

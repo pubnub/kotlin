@@ -1,4 +1,4 @@
-package com.pubnub.api.endpoints.message_actions
+package com.pubnub.kmp.endpoints.message_actions
 
 import PubNub
 import com.pubnub.api.EndpointImpl

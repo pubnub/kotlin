@@ -14,13 +14,11 @@ class DeleteMessagesTest : BaseIntegrationTest() {
 
     @Test
     fun deleteMessages() = runTest {
-        val expectedMeta = mapOf(randomString() to randomString())
         val expectedMessage = randomString()
 
         val result = pubnub.publish(
             channel = channel,
             message = expectedMessage,
-            meta = expectedMeta,
             shouldStore = true,
             ttl = 60,
         ).await()
@@ -41,7 +39,7 @@ class DeleteMessagesTest : BaseIntegrationTest() {
 
         if (messages.channels.isNotEmpty()) {
             assertEquals(channel, messages.channels.entries.single().key)
-            assertTrue { messages.channels.entries.single().value.isEmpty() }
+            assertEquals(emptyList(), messages.channels.entries.single().value)
         }
     }
 }

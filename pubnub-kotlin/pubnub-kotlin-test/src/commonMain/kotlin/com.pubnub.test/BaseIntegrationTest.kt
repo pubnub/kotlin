@@ -15,11 +15,15 @@ import com.pubnub.kmp.createEventListener
 import com.pubnub.kmp.createPubNub
 import com.pubnub.kmp.createStatusListener
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
+import kotlin.math.truncate
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.assertTrue
@@ -39,7 +43,7 @@ abstract class BaseIntegrationTest {
     open fun before() {
         config = createPNConfiguration(UserId(randomString()), Keys.subKey, Keys.pubKey, logVerbosity = true)
         pubnub = createPubNub(config)
-        configPam = createPNConfiguration(UserId(randomString()), Keys.pamSubKey, Keys.pamPubKey, Keys.pamSecKey)
+        configPam = createPNConfiguration(UserId(randomString()), Keys.pamSubKey, Keys.pamPubKey, Keys.pamSecKey, logVerbosity = true)
         pubnubPam = createPubNub(configPam)
     }
 
@@ -52,14 +56,20 @@ abstract class BaseIntegrationTest {
     }
 }
 
-suspend fun <T> PNFuture<T>.await() = suspendCancellableCoroutine { cont ->
-    async { result ->
-        result.onSuccess {
-            cont.resume(it)
-        }.onFailure {
-            cont.resumeWithException(it)
+suspend fun <T> PNFuture<T>.await(): T {
+    val t = suspendCancellableCoroutine { cont ->
+        async { result ->
+            result.onSuccess {
+                cont.resume(it)
+            }.onFailure {
+                cont.resumeWithException(it)
+            }
         }
     }
+    withContext(Dispatchers.Default) {
+        delay(100)
+    }
+    return t
 }
 
 
@@ -115,7 +125,7 @@ class PubNubTest(
         pubNub.addListener(statusVerificationListener)
     }
 
-    suspend fun com.pubnub.api.v2.entities.Channel.awaitSubscribe(options: SubscriptionOptions = EmptyOptions) = suspendCancellableCoroutine { cont ->
+    suspend fun com.pubnub.kmp.v2.entities.Channel.awaitSubscribe(options: SubscriptionOptions = EmptyOptions) = suspendCancellableCoroutine { cont ->
         val subscription = subscription(options)
         val statusListener = createStatusListener(pubNub) { _, pnStatus ->
             if ((pnStatus.category == PNStatusCategory.PNConnectedCategory || pnStatus.category == PNStatusCategory.PNSubscriptionChanged)

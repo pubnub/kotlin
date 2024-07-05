@@ -1,5 +1,6 @@
 package com.pubnub.api
 
+import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteChannelMetadataEventMessage
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetChannelMetadataEventMessage
@@ -12,6 +13,7 @@ import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertTrue
 import kotlin.time.Duration.Companion.seconds
 
 class ChannelMetadataTest : BaseIntegrationTest() {
@@ -119,8 +121,12 @@ class ChannelMetadataTest : BaseIntegrationTest() {
             pubnub.removeChannelMetadata(channel).await()
 
             // then
-            val result = nextEvent<PNObjectEventResult>()
+            var result = nextEvent<PNObjectEventResult>()
+            if (result.extractedMessage !is PNDeleteChannelMetadataEventMessage) {
+                result = nextEvent()
+            }
             val message = result.extractedMessage
+            assertTrue { message is PNDeleteChannelMetadataEventMessage }
             message as PNDeleteChannelMetadataEventMessage
             assertEquals(channel, message.channel)
         }

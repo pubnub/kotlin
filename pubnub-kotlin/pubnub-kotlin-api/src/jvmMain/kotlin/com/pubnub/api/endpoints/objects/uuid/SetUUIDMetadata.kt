@@ -6,4 +6,4 @@ import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult
 /**
  * @see [PubNub.setUUIDMetadata]
  */
-actual interface SetUUIDMetadata : Endpoint<PNUUIDMetadataResult>
+interface SetUUIDMetadata : com.pubnub.kmp.endpoints.objects.uuid.SetUUIDMetadata, Endpoint<PNUUIDMetadataResult>

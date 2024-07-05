@@ -6,4 +6,4 @@ import com.pubnub.api.models.consumer.PNTimeResult
 /**
  * @see [PubNub.time]
  */
-actual interface Time : Endpoint<PNTimeResult>
+interface Time : com.pubnub.kmp.endpoints.Time, Endpoint<PNTimeResult>

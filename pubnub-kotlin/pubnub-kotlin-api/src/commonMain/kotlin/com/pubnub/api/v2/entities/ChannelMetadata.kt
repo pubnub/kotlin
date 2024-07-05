@@ -2,6 +2,7 @@ package com.pubnub.api.v2.entities
 
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.subscriptions.Subscription
+import com.pubnub.kmp.v2.entities.ChannelMetadata
 
 /**
  * A representation of a PubNub entity for tracking channel metadata changes.
@@ -10,4 +11,4 @@ import com.pubnub.api.v2.subscriptions.Subscription
  *
  * Use the [com.pubnub.api.PubNub.channelMetadata] factory method to create instances of this interface.
  */
-interface ChannelMetadata : BaseChannelMetadata<EventListener, Subscription>
+interface ChannelMetadata : BaseChannelMetadata<EventListener, Subscription>, ChannelMetadata

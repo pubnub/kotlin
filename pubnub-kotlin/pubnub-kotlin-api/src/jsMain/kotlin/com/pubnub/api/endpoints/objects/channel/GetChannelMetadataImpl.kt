@@ -1,4 +1,4 @@
-package com.pubnub.api.endpoints.objects.channel
+package com.pubnub.kmp.endpoints.objects.channel
 
 import GetChannelMetadataResponse
 import PubNub

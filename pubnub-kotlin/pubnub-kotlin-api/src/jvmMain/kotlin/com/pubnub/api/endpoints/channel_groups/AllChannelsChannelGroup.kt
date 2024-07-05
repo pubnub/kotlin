@@ -6,6 +6,6 @@ import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsAllChannelsRe
 /**
  * @see [PubNub.listChannelsForChannelGroup]
  */
-actual interface AllChannelsChannelGroup : Endpoint<PNChannelGroupsAllChannelsResult> {
+interface AllChannelsChannelGroup : com.pubnub.kmp.endpoints.channel_groups.AllChannelsChannelGroup, Endpoint<PNChannelGroupsAllChannelsResult> {
     val channelGroup: String
 }

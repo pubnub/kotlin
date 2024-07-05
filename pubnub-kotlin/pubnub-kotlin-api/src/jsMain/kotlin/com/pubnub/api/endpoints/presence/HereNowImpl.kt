@@ -1,4 +1,4 @@
-package com.pubnub.api.endpoints.presence
+package com.pubnub.kmp.endpoints.presence
 
 import PubNub
 import com.pubnub.api.EndpointImpl

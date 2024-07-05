@@ -1,93 +1,6 @@
 package com.pubnub.api
 
 import com.pubnub.api.callbacks.Listener
-import com.pubnub.api.endpoints.DeleteMessages
-import com.pubnub.api.endpoints.DeleteMessagesImpl
-import com.pubnub.api.endpoints.FetchMessages
-import com.pubnub.api.endpoints.FetchMessagesImpl
-import com.pubnub.api.endpoints.MessageCounts
-import com.pubnub.api.endpoints.MessageCountsImpl
-import com.pubnub.api.endpoints.Time
-import com.pubnub.api.endpoints.TimeImpl
-import com.pubnub.api.endpoints.access.GrantToken
-import com.pubnub.api.endpoints.access.GrantTokenImpl
-import com.pubnub.api.endpoints.access.RevokeToken
-import com.pubnub.api.endpoints.access.RevokeTokenImpl
-import com.pubnub.api.endpoints.channel_groups.AddChannelChannelGroup
-import com.pubnub.api.endpoints.channel_groups.AddChannelChannelGroupImpl
-import com.pubnub.api.endpoints.channel_groups.AllChannelsChannelGroup
-import com.pubnub.api.endpoints.channel_groups.AllChannelsChannelGroupImpl
-import com.pubnub.api.endpoints.channel_groups.DeleteChannelGroup
-import com.pubnub.api.endpoints.channel_groups.DeleteChannelGroupImpl
-import com.pubnub.api.endpoints.channel_groups.ListAllChannelGroup
-import com.pubnub.api.endpoints.channel_groups.ListAllChannelGroupImpl
-import com.pubnub.api.endpoints.channel_groups.RemoveChannelChannelGroup
-import com.pubnub.api.endpoints.channel_groups.RemoveChannelChannelGroupImpl
-import com.pubnub.api.endpoints.files.DeleteFile
-import com.pubnub.api.endpoints.files.DeleteFileImpl
-import com.pubnub.api.endpoints.files.DownloadFile
-import com.pubnub.api.endpoints.files.DownloadFileImpl
-import com.pubnub.api.endpoints.files.GetFileUrl
-import com.pubnub.api.endpoints.files.GetFileUrlImpl
-import com.pubnub.api.endpoints.files.ListFiles
-import com.pubnub.api.endpoints.files.ListFilesImpl
-import com.pubnub.api.endpoints.files.PublishFileMessage
-import com.pubnub.api.endpoints.files.PublishFileMessageImpl
-import com.pubnub.api.endpoints.files.SendFile
-import com.pubnub.api.endpoints.files.SendFileImpl
-import com.pubnub.api.endpoints.message_actions.AddMessageAction
-import com.pubnub.api.endpoints.message_actions.AddMessageActionImpl
-import com.pubnub.api.endpoints.message_actions.GetMessageActionImpl
-import com.pubnub.api.endpoints.message_actions.GetMessageActions
-import com.pubnub.api.endpoints.message_actions.RemoveMessageAction
-import com.pubnub.api.endpoints.message_actions.RemoveMessageActionImpl
-import com.pubnub.api.endpoints.objects.channel.GetAllChannelMetadata
-import com.pubnub.api.endpoints.objects.channel.GetAllChannelMetadataImpl
-import com.pubnub.api.endpoints.objects.channel.GetChannelMetadata
-import com.pubnub.api.endpoints.objects.channel.GetChannelMetadataImpl
-import com.pubnub.api.endpoints.objects.channel.RemoveChannelMetadata
-import com.pubnub.api.endpoints.objects.channel.RemoveChannelMetadataImpl
-import com.pubnub.api.endpoints.objects.channel.SetChannelMetadata
-import com.pubnub.api.endpoints.objects.channel.SetChannelMetadataImpl
-import com.pubnub.api.endpoints.objects.member.GetChannelMembers
-import com.pubnub.api.endpoints.objects.member.GetChannelMembersImpl
-import com.pubnub.api.endpoints.objects.member.ManageChannelMembers
-import com.pubnub.api.endpoints.objects.member.RemoveChannelMembersImpl
-import com.pubnub.api.endpoints.objects.member.SetChannelMembersImpl
-import com.pubnub.api.endpoints.objects.membership.GetMemberships
-import com.pubnub.api.endpoints.objects.membership.GetMembershipsImpl
-import com.pubnub.api.endpoints.objects.membership.ManageMemberships
-import com.pubnub.api.endpoints.objects.membership.RemoveMembershipsImpl
-import com.pubnub.api.endpoints.objects.membership.SetMembershipsImpl
-import com.pubnub.api.endpoints.objects.uuid.GetAllUUIDMetadata
-import com.pubnub.api.endpoints.objects.uuid.GetAllUUIDMetadataImpl
-import com.pubnub.api.endpoints.objects.uuid.GetUUIDMetadata
-import com.pubnub.api.endpoints.objects.uuid.GetUUIDMetadataImpl
-import com.pubnub.api.endpoints.objects.uuid.RemoveUUIDMetadata
-import com.pubnub.api.endpoints.objects.uuid.RemoveUUIDMetadataImpl
-import com.pubnub.api.endpoints.objects.uuid.SetUUIDMetadata
-import com.pubnub.api.endpoints.objects.uuid.SetUUIDMetadataImpl
-import com.pubnub.api.endpoints.presence.GetState
-import com.pubnub.api.endpoints.presence.GetStateImpl
-import com.pubnub.api.endpoints.presence.HereNow
-import com.pubnub.api.endpoints.presence.HereNowImpl
-import com.pubnub.api.endpoints.presence.SetState
-import com.pubnub.api.endpoints.presence.SetStateImpl
-import com.pubnub.api.endpoints.presence.WhereNow
-import com.pubnub.api.endpoints.presence.WhereNowImpl
-import com.pubnub.api.endpoints.pubsub.FireImpl
-import com.pubnub.api.endpoints.pubsub.Publish
-import com.pubnub.api.endpoints.pubsub.PublishImpl
-import com.pubnub.api.endpoints.pubsub.Signal
-import com.pubnub.api.endpoints.pubsub.SignalImpl
-import com.pubnub.api.endpoints.push.AddChannelsToPush
-import com.pubnub.api.endpoints.push.AddChannelsToPushImpl
-import com.pubnub.api.endpoints.push.ListPushProvisions
-import com.pubnub.api.endpoints.push.ListPushProvisionsImpl
-import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice
-import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDeviceImpl
-import com.pubnub.api.endpoints.push.RemoveChannelsFromPush
-import com.pubnub.api.endpoints.push.RemoveChannelsFromPushImpl
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.PNBoundedPage
@@ -112,24 +25,112 @@ import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
-import com.pubnub.api.v2.entities.Channel
-import com.pubnub.api.v2.entities.ChannelGroup
-import com.pubnub.api.v2.entities.ChannelMetadata
-import com.pubnub.api.v2.entities.UserMetadata
 import com.pubnub.api.v2.subscriptions.ReceivePresenceEventsImpl
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.internal.v2.entities.ChannelImpl
-import com.pubnub.internal.v2.subscriptions.SubscriptionImpl
 import com.pubnub.internal.v2.subscriptions.SubscriptionSetImpl
 import com.pubnub.kmp.CustomObject
+import com.pubnub.kmp.JsMap
 import com.pubnub.kmp.Optional
 import com.pubnub.kmp.PubNub
 import com.pubnub.kmp.Uploadable
 import com.pubnub.kmp.createJsObject
+import com.pubnub.kmp.endpoints.DeleteMessages
+import com.pubnub.kmp.endpoints.DeleteMessagesImpl
+import com.pubnub.kmp.endpoints.FetchMessages
+import com.pubnub.kmp.endpoints.FetchMessagesImpl
+import com.pubnub.kmp.endpoints.MessageCounts
+import com.pubnub.kmp.endpoints.MessageCountsImpl
+import com.pubnub.kmp.endpoints.Time
+import com.pubnub.kmp.endpoints.TimeImpl
+import com.pubnub.kmp.endpoints.access.GrantToken
+import com.pubnub.kmp.endpoints.access.GrantTokenImpl
+import com.pubnub.kmp.endpoints.access.RevokeToken
+import com.pubnub.kmp.endpoints.access.RevokeTokenImpl
+import com.pubnub.kmp.endpoints.channel_groups.AddChannelChannelGroup
+import com.pubnub.kmp.endpoints.channel_groups.AddChannelChannelGroupImpl
+import com.pubnub.kmp.endpoints.channel_groups.AllChannelsChannelGroup
+import com.pubnub.kmp.endpoints.channel_groups.AllChannelsChannelGroupImpl
+import com.pubnub.kmp.endpoints.channel_groups.DeleteChannelGroup
+import com.pubnub.kmp.endpoints.channel_groups.DeleteChannelGroupImpl
+import com.pubnub.kmp.endpoints.channel_groups.ListAllChannelGroup
+import com.pubnub.kmp.endpoints.channel_groups.ListAllChannelGroupImpl
+import com.pubnub.kmp.endpoints.channel_groups.RemoveChannelChannelGroup
+import com.pubnub.kmp.endpoints.channel_groups.RemoveChannelChannelGroupImpl
+import com.pubnub.kmp.endpoints.files.DeleteFile
+import com.pubnub.kmp.endpoints.files.DeleteFileImpl
+import com.pubnub.kmp.endpoints.files.DownloadFile
+import com.pubnub.kmp.endpoints.files.DownloadFileImpl
+import com.pubnub.kmp.endpoints.files.GetFileUrl
+import com.pubnub.kmp.endpoints.files.GetFileUrlImpl
+import com.pubnub.kmp.endpoints.files.ListFiles
+import com.pubnub.kmp.endpoints.files.ListFilesImpl
+import com.pubnub.kmp.endpoints.files.PublishFileMessage
+import com.pubnub.kmp.endpoints.files.PublishFileMessageImpl
+import com.pubnub.kmp.endpoints.files.SendFile
+import com.pubnub.kmp.endpoints.files.SendFileImpl
+import com.pubnub.kmp.endpoints.message_actions.AddMessageAction
+import com.pubnub.kmp.endpoints.message_actions.AddMessageActionImpl
+import com.pubnub.kmp.endpoints.message_actions.GetMessageActionImpl
+import com.pubnub.kmp.endpoints.message_actions.GetMessageActions
+import com.pubnub.kmp.endpoints.message_actions.RemoveMessageAction
+import com.pubnub.kmp.endpoints.message_actions.RemoveMessageActionImpl
+import com.pubnub.kmp.endpoints.objects.channel.GetAllChannelMetadata
+import com.pubnub.kmp.endpoints.objects.channel.GetAllChannelMetadataImpl
+import com.pubnub.kmp.endpoints.objects.channel.GetChannelMetadata
+import com.pubnub.kmp.endpoints.objects.channel.GetChannelMetadataImpl
+import com.pubnub.kmp.endpoints.objects.channel.RemoveChannelMetadata
+import com.pubnub.kmp.endpoints.objects.channel.RemoveChannelMetadataImpl
+import com.pubnub.kmp.endpoints.objects.channel.SetChannelMetadata
+import com.pubnub.kmp.endpoints.objects.channel.SetChannelMetadataImpl
+import com.pubnub.kmp.endpoints.objects.member.GetChannelMembers
+import com.pubnub.kmp.endpoints.objects.member.GetChannelMembersImpl
+import com.pubnub.kmp.endpoints.objects.member.ManageChannelMembers
+import com.pubnub.kmp.endpoints.objects.member.RemoveChannelMembersImpl
+import com.pubnub.kmp.endpoints.objects.member.SetChannelMembersImpl
+import com.pubnub.kmp.endpoints.objects.membership.GetMemberships
+import com.pubnub.kmp.endpoints.objects.membership.GetMembershipsImpl
+import com.pubnub.kmp.endpoints.objects.membership.ManageMemberships
+import com.pubnub.kmp.endpoints.objects.membership.RemoveMembershipsImpl
+import com.pubnub.kmp.endpoints.objects.membership.SetMembershipsImpl
+import com.pubnub.kmp.endpoints.objects.uuid.GetAllUUIDMetadata
+import com.pubnub.kmp.endpoints.objects.uuid.GetAllUUIDMetadataImpl
+import com.pubnub.kmp.endpoints.objects.uuid.GetUUIDMetadata
+import com.pubnub.kmp.endpoints.objects.uuid.GetUUIDMetadataImpl
+import com.pubnub.kmp.endpoints.objects.uuid.RemoveUUIDMetadata
+import com.pubnub.kmp.endpoints.objects.uuid.RemoveUUIDMetadataImpl
+import com.pubnub.kmp.endpoints.objects.uuid.SetUUIDMetadata
+import com.pubnub.kmp.endpoints.objects.uuid.SetUUIDMetadataImpl
+import com.pubnub.kmp.endpoints.presence.GetState
+import com.pubnub.kmp.endpoints.presence.GetStateImpl
+import com.pubnub.kmp.endpoints.presence.HereNow
+import com.pubnub.kmp.endpoints.presence.HereNowImpl
+import com.pubnub.kmp.endpoints.presence.SetState
+import com.pubnub.kmp.endpoints.presence.SetStateImpl
+import com.pubnub.kmp.endpoints.presence.WhereNow
+import com.pubnub.kmp.endpoints.presence.WhereNowImpl
+import com.pubnub.kmp.endpoints.pubsub.FireImpl
+import com.pubnub.kmp.endpoints.pubsub.Publish
+import com.pubnub.kmp.endpoints.pubsub.PublishImpl
+import com.pubnub.kmp.endpoints.pubsub.Signal
+import com.pubnub.kmp.endpoints.pubsub.SignalImpl
+import com.pubnub.kmp.endpoints.push.AddChannelsToPush
+import com.pubnub.kmp.endpoints.push.AddChannelsToPushImpl
+import com.pubnub.kmp.endpoints.push.ListPushProvisions
+import com.pubnub.kmp.endpoints.push.ListPushProvisionsImpl
+import com.pubnub.kmp.endpoints.push.RemoveAllPushChannelsForDevice
+import com.pubnub.kmp.endpoints.push.RemoveAllPushChannelsForDeviceImpl
+import com.pubnub.kmp.endpoints.push.RemoveChannelsFromPush
+import com.pubnub.kmp.endpoints.push.RemoveChannelsFromPushImpl
 import com.pubnub.kmp.toJsMap
+import com.pubnub.kmp.toMap
 import com.pubnub.kmp.toOptional
+import com.pubnub.kmp.v2.entities.Channel
+import com.pubnub.kmp.v2.entities.ChannelGroup
+import com.pubnub.kmp.v2.entities.ChannelMetadata
+import com.pubnub.kmp.v2.entities.UserMetadata
 import kotlin.js.json
 import PubNub as PubNubJs
 
@@ -157,7 +158,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         channel: String,
         message: Any,
         meta: Any?,
-        shouldStore: Boolean?,
+        shouldStore: Boolean,
         usePost: Boolean,
         replicate: Boolean,
         ttl: Int?
@@ -615,7 +616,9 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
             this.uuid = uuid
             this.channels = channels.map { createJsObject<PubNubJs.SetCustom> {
                 this.id = it.channel
-                this.custom = it.custom?.adjustCollectionTypes()?.unsafeCast<PubNubJs.CustomObject>()
+                this.custom = it.custom?.adjustCollectionTypes()?.unsafeCast<PubNubJs.CustomObject>()?.also {
+                    println("+++${it.unsafeCast<JsMap<String>>().toMap()}+++")
+                }
                 this.status = status //todo this doesn't seem to get to the server with JS, or cannot read it back
             } }.toTypedArray()
             this.limit = limit
@@ -1000,10 +1003,10 @@ fun PNConfiguration.toJs(): PubNubJs.PNConfiguration {
     config.userId = userId.value
     config.subscribeKey = subscribeKey
     config.publishKey = publishKey
-
-//    config.authKeys: String?
+    config.secretKey = secretKey
     config.logVerbosity = logVerbosity
     config.enableEventEngine = enableEventEngine
+//    config.authKey
 //    config.ssl: Boolean?
 //    config.origin: dynamic /* String? | Array<String>? */
 //    config.presenceTimeout: Number?

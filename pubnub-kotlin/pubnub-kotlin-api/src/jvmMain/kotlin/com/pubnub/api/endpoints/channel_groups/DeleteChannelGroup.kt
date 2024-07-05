@@ -6,6 +6,6 @@ import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsDeleteGroupRe
 /**
  * @see [PubNub.deleteChannelGroup]
  */
-actual interface DeleteChannelGroup : Endpoint<PNChannelGroupsDeleteGroupResult> {
+interface DeleteChannelGroup : com.pubnub.kmp.endpoints.channel_groups.DeleteChannelGroup, Endpoint<PNChannelGroupsDeleteGroupResult> {
     val channelGroup: String
 }

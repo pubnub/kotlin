@@ -6,4 +6,4 @@ import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataResult
 /**
  * @see [PubNub.setChannelMetadata]
  */
-actual interface SetChannelMetadata : Endpoint<PNChannelMetadataResult>
+interface SetChannelMetadata : com.pubnub.kmp.endpoints.objects.channel.SetChannelMetadata, Endpoint<PNChannelMetadataResult>

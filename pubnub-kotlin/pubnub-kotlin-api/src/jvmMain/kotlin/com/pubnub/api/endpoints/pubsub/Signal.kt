@@ -6,7 +6,7 @@ import com.pubnub.api.models.consumer.PNPublishResult
 /**
  * @see [PubNub.signal]
  */
-actual interface Signal : Endpoint<PNPublishResult> {
+interface Signal : com.pubnub.kmp.endpoints.pubsub.Signal, Endpoint<PNPublishResult> {
     val channel: String
     val message: Any
 }
