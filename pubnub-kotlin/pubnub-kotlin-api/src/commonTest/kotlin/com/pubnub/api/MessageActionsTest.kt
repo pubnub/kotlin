@@ -16,7 +16,7 @@ class MessageActionsTest : BaseIntegrationTest() {
     private val channel = randomString()
 
     @Test
-    fun add_getMessageAction() = runTest {
+    fun add_get_remove_MessageAction() = runTest {
         val expectedMeta = mapOf(randomString() to randomString())
         val expectedMessage = randomString()
         val expectedAction = randomString()
@@ -50,6 +50,14 @@ class MessageActionsTest : BaseIntegrationTest() {
         assertEquals(actionResult.messageTimetoken, foundAction.messageTimetoken)
         assertEquals(expectedAction, foundAction.type)
         assertEquals(config.userId.value, foundAction.uuid)
-    }
 
+        pubnub.removeMessageAction(channel, foundAction.messageTimetoken, foundAction.actionTimetoken!!).await()
+
+        val actionsAfterDelete = pubnub.getMessageActions(channel, PNBoundedPage(
+            start = actionResult.actionTimetoken!! + 1,
+            end = actionResult.actionTimetoken!!
+        )).await()
+
+        assertEquals(emptyList(), actionsAfterDelete.actions)
+    }
 }
