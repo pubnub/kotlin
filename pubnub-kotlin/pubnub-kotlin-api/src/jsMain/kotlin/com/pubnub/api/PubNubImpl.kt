@@ -616,9 +616,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
             this.uuid = uuid
             this.channels = channels.map { createJsObject<PubNubJs.SetCustom> {
                 this.id = it.channel
-                this.custom = it.custom?.adjustCollectionTypes()?.unsafeCast<PubNubJs.CustomObject>()?.also {
-                    println("+++${it.unsafeCast<JsMap<String>>().toMap()}+++")
-                }
+                this.custom = it.custom?.adjustCollectionTypes()?.unsafeCast<PubNubJs.CustomObject>()
                 this.status = status //todo this doesn't seem to get to the server with JS, or cannot read it back
             } }.toTypedArray()
             this.limit = limit

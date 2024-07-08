@@ -2,7 +2,6 @@ package com.pubnub.kmp.endpoints
 
 import PubNub
 import com.pubnub.api.EndpointImpl
-import com.pubnub.api.JsonElementImpl
 import com.pubnub.api.createJsonElement
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.history.HistoryMessageType
@@ -24,7 +23,7 @@ class FetchMessagesImpl(pubnub: PubNub, params: PubNub.FetchMessagesParameters) 
                         item.actions?.toMap()?.mapValues { entry: Map.Entry<String, PubNub.ActionContentToAction> ->
                             entry.value.toMap().mapValues { entry2: Map.Entry<String, Array<PubNub.Action>> ->
                                 entry2.value.map { action ->
-                                    PNFetchMessageItem.Action(action.uuid, action.actionTimetoken)
+                                    PNFetchMessageItem.Action(action.uuid, action.actionTimetoken.toLong())
                                 }
                             }
                         },

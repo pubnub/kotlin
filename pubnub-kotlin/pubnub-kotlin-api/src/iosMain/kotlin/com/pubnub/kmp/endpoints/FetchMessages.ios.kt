@@ -83,7 +83,7 @@ open class FetchMessagesImpl(
                 groupedEntry.value.map {
                     PNFetchMessageItem.Action(
                         uuid = it.publisher(),
-                        actionTimetoken = it.published()?.longValue.toString()
+                        actionTimetoken = it.published()?.longValue!!
                     )
                 }
             }
