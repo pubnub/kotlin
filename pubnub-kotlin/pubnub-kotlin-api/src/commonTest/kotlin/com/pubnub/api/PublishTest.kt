@@ -2,7 +2,6 @@ package com.pubnub.api
 
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.kmp.PLATFORM
-import com.pubnub.kmp.createCustomObject
 import com.pubnub.test.BaseIntegrationTest
 import com.pubnub.test.await
 import com.pubnub.test.test
@@ -12,7 +11,6 @@ import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
-import kotlin.time.Duration.Companion.seconds
 
 @JsExport
 data class ABC (
@@ -61,7 +59,7 @@ class PublishTest : BaseIntegrationTest() {
         }
 
     @Test
-    fun can_receive_message_with_object_metadata() = runTest(timeout = defaultTimeout) {
+    fun can_receive_message_with_map_metadata() = runTest(timeout = defaultTimeout) {
         pubnub.test(backgroundScope) {
             pubnub.awaitSubscribe(listOf(channel))
             val mapData = mapOf(
@@ -74,12 +72,14 @@ class PublishTest : BaseIntegrationTest() {
                 "longValue" to 1000L,
                 "listValue" to listOf(123, "aaa", mapOf("innerK" to "innerV"))
             )
-            pubnub.publish(channel, "some message", createCustomObject(mapData)).await()
+            pubnub.publish(channel, "some message", mapData).await()
             val result = nextMessage()
             assertEquals("some message", result.message.asString())
             deepCompare(mapData, result.userMetadata!!)
         }
     }
+
+    private fun isIOS() = PLATFORM == "iOS"
 
     @Test
     fun can_receive_message_with_primitive_payload() = runTest(timeout = defaultTimeout) {

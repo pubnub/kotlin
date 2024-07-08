@@ -1,5 +1,7 @@
 package com.pubnub.api.endpoints.objects.membership
 
+import cocoapods.PubNubSwift.AnyJSONObjC
+import cocoapods.PubNubSwift.PubNubChannelMetadataObjC
 import cocoapods.PubNubSwift.PubNubMembershipMetadataObjC
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.removeMembershipsWithChannels
@@ -41,7 +43,7 @@ class AddMembershipsImpl(
 ): ManageMemberships {
     override fun async(callback: Consumer<Result<PNChannelMembershipArrayResult>>) {
         pubnub.setMembershipsWithChannels(
-            channels = channels,
+            channels = channels.map { PubNubChannelMetadataObjC(it.channel, AnyJSONObjC(it.custom?.value), it.status)},
             uuid = uuid,
             limit = limit?.let { NSNumber(it) },
             page = createPubNubHashedPage(from = page),

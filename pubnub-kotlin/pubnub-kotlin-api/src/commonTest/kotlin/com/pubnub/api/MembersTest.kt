@@ -8,6 +8,7 @@ import com.pubnub.test.BaseIntegrationTest
 import com.pubnub.test.await
 import com.pubnub.test.randomString
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.yield
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -28,14 +29,29 @@ class MembersTest : BaseIntegrationTest() {
         // when
         val result = pubnub.setChannelMembers(
             channel,
-            listOf(PNMember.Partial(pubnub.configuration.userId.value, custom, status)),
+            listOf(PNMember.Partial(pubnub.configuration.userId.value, custom, null)),
             includeCustom = includeCustom,
-            includeUUIDDetails = PNUUIDDetailsLevel.UUID_WITH_CUSTOM
+            includeUUIDDetails = PNUUIDDetailsLevel.UUID_WITH_CUSTOM,
         ).await()
 
         // then
         val pnChannelDetails = result.data.single { it.uuid?.id == pubnub.configuration.userId.value }
         assertEquals(customData, pnChannelDetails.custom)
+//        assertEquals(status, pnChannelDetails.status)
+    }
+
+    @Test
+    fun can_set_members_with_status() = runTest(timeout = 10.seconds) {
+        // when
+        val result = pubnub.setChannelMembers(
+            channel,
+            listOf(PNMember.Partial(pubnub.configuration.userId.value, null, status)),
+            includeCustom = includeCustom,
+            includeUUIDDetails = PNUUIDDetailsLevel.UUID_WITH_CUSTOM,
+        ).await()
+
+        // then
+        val pnChannelDetails = result.data.single { it.uuid?.id == pubnub.configuration.userId.value }
         assertEquals(status, pnChannelDetails.status)
     }
 
@@ -53,6 +69,7 @@ class MembersTest : BaseIntegrationTest() {
         // then
         var next: PNPage.PNNext? = null
         while(true) {
+            yield()
             val result = pubnub.getMemberships(pubnub.configuration.userId.value, page = next).await()
             next = result.next
             assertFalse { result.data.any { it.channel?.id == channel } }

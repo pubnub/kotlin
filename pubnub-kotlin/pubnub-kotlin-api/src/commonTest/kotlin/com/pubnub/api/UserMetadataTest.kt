@@ -216,7 +216,7 @@ class UserMetadataTest : BaseIntegrationTest() {
         }
 
         // then
-        assertTrue { allUsers.size == 6 }
+        assertEquals(6, allUsers.size)
         repeat(6) {
             val pnuuidMetadata = allUsers.firstOrNull { user -> user.id == uuid + it }
             assertNotNull(pnuuidMetadata)

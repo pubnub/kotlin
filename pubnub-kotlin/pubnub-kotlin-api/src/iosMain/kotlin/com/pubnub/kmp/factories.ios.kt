@@ -165,7 +165,7 @@ private fun createFileEventResult(from: PubNubFileChangeEventObjC?): PNFileEvent
         file = PNDownloadableFile(
             id = from.file().id(),
             name = from.file().name(),
-            url = from.file().url()?.absoluteString ?: ""
+            url = from.file().url()?.absoluteString.orEmpty()
         )
     )
 }
@@ -200,7 +200,7 @@ private fun mapAppContextEvent(from: PubNubAppContextEventObjC?): PNObjectEventM
                     externalId = from.metadata().externalId(),
                     profileUrl = from.metadata().profileUrl(),
                     email = from.metadata().email(),
-                    custom = from.metadata().custom()?.asMap()?.safeCast(),
+                    custom = from.metadata().custom()?.safeCast(),
                     updated = from.metadata().updated(),
                     eTag = from.metadata().eTag(),
                     type = from.metadata().type(),
@@ -225,7 +225,7 @@ private fun mapAppContextEvent(from: PubNubAppContextEventObjC?): PNObjectEventM
                     id = from.metadata().id(),
                     name = from.metadata().name(),
                     description = from.metadata().descr(),
-                    custom = from.metadata().custom()?.asMap()?.safeCast(),
+                    custom = from.metadata().custom()?.safeCast(),
                     updated = from.metadata().updated(),
                     eTag = from.metadata().eTag(),
                     type = from.metadata().type(),

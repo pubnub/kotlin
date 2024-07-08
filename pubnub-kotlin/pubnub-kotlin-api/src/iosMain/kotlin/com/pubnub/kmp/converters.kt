@@ -39,7 +39,7 @@ internal fun createPNUUIDMetadata(from: PubNubUUIDMetadataObjC): PNUUIDMetadata 
         externalId = from.externalId(),
         profileUrl = from.profileUrl(),
         email = from.email(),
-        custom = from.custom()?.asMap()?.safeCast<String, Any?>(),
+        custom = from.custom()?.safeCast(),
         updated = from.updated(),
         eTag = from.eTag(),
         type = from.type(),
@@ -53,7 +53,7 @@ internal fun createPNChannelMetadata(from: PubNubChannelMetadataObjC): PNChannel
         id = from.id(),
         name = from.name(),
         description = from.descr(),
-        custom = from.custom()?.asMap()?.safeCast<String, Any?>(),
+        custom = from.custom()?.safeCast(),
         updated = from.updated(),
         eTag = from.eTag(),
         type = from.type(),
@@ -78,7 +78,7 @@ internal fun createPNChannelMembership(from: PubNubMembershipMetadataObjC): PNCh
             id = from.channel()?.id().orEmpty(),
             name = from.channel()?.name().orEmpty(),
             description = from.channel()?.descr().orEmpty(),
-            custom = from.channel()?.custom()?.asMap()?.safeCast(),
+            custom = from.channel()?.custom()?.safeCast(),
             updated = from.channel()?.updated(),
             eTag = from.channel()?.eTag(),
             type = from.channel()?.type(),
@@ -95,7 +95,7 @@ internal fun createPNChannelMembership(from: PubNubMembershipMetadataObjC): PNCh
 internal fun createPNMember(from: PubNubMembershipMetadataObjC): PNMember {
     return PNMember(
         uuid = from.uuid()?.let { createPNUUIDMetadata(from = it) },
-        custom = from.custom()?.safeCast(), // TODO: Verify
+        custom = from.custom()?.safeCast(),
         updated = from.updated().orEmpty(),
         eTag = from.eTag().orEmpty(),
         status = from.status()
