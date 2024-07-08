@@ -206,7 +206,6 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         return pubNubObjC.subscribedChannelGroups().filterIsInstance<String>()
     }
 
-    // TODO: Why do we need topic parameter here?
     override fun addPushNotificationsOnChannels(
         pushType: PNPushType,
         channels: List<String>,
@@ -215,14 +214,15 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         environment: PNPushEnvironment
     ): AddChannelsToPush {
         return AddChannelsToPushImpl(
+            pushType = pushType,
             pubnub = pubNubObjC,
             channels = channels,
             deviceId = deviceId,
-            pushType = pushType
+            topic = topic,
+            environment = environment
         )
     }
 
-    // TODO: Why do we need topic and environment parameters here?
     override fun auditPushChannelProvisions(
         pushType: PNPushType,
         deviceId: String,
@@ -232,11 +232,12 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         return ListPushProvisionsImpl(
             pubnub = pubNubObjC,
             deviceId = deviceId,
-            pushType = pushType
+            pushType = pushType,
+            topic = topic,
+            environment = environment
         )
     }
 
-    // TODO: Why do we need topic and environment parameters here?
     override fun removePushNotificationsFromChannels(
         pushType: PNPushType,
         channels: List<String>,
@@ -248,7 +249,9 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
             pubnub = pubNubObjC,
             channels = channels,
             deviceId = deviceId,
-            pushType = pushType
+            pushType = pushType,
+            topic = topic,
+            environment = environment
         )
     }
 
@@ -261,7 +264,9 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         return RemoveAllPushChannelsForDeviceImpl(
             pubnub = pubNubObjC,
             deviceId = deviceId,
-            pushType = pushType
+            pushType = pushType,
+            topic = topic,
+            environment = environment
         )
     }
 

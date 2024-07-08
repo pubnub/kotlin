@@ -4,6 +4,7 @@ import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.removeChannelsFromPushWithChannels
 import com.pubnub.kmp.PNFuture
 import com.pubnub.api.PubNubException
+import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.push.PNPushRemoveChannelResult
 import com.pubnub.kmp.onFailureHandler
@@ -23,7 +24,9 @@ class RemoveChannelsFromPushImpl(
     private val pubnub: PubNubObjC,
     private val channels: List<String>,
     private val deviceId: String,
-    private val pushType: PNPushType
+    private val pushType: PNPushType,
+    private val topic: String?,
+    private val environment: PNPushEnvironment,
 ): RemoveChannelsFromPush {
     override fun async(callback: Consumer<Result<PNPushRemoveChannelResult>>) {
         deviceId.toNSData()?.let { data: NSData ->
@@ -31,6 +34,8 @@ class RemoveChannelsFromPushImpl(
                 channels = channels,
                 deviceId = data,
                 pushType = pushType.toParamString(),
+                topic = topic.orEmpty(),
+                environment = environment.toParamString(),
                 onSuccess = callback.onSuccessHandler { PNPushRemoveChannelResult() },
                 onFailure = callback.onFailureHandler()
             )
