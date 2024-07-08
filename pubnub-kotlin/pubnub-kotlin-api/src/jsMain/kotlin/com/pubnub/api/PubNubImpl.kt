@@ -116,10 +116,13 @@ import com.pubnub.api.v2.entities.Channel
 import com.pubnub.api.v2.entities.ChannelGroup
 import com.pubnub.api.v2.entities.ChannelMetadata
 import com.pubnub.api.v2.entities.UserMetadata
+import com.pubnub.api.v2.subscriptions.ReceivePresenceEventsImpl
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.internal.v2.entities.ChannelImpl
+import com.pubnub.internal.v2.subscriptions.SubscriptionImpl
+import com.pubnub.internal.v2.subscriptions.SubscriptionSetImpl
 import com.pubnub.kmp.CustomObject
 import com.pubnub.kmp.Optional
 import com.pubnub.kmp.PubNub
@@ -171,16 +174,16 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
 
     override fun fire(channel: String, message: Any, meta: Any?, usePost: Boolean, ttl: Int?): Publish {
         return FireImpl(jsPubNub, createJsObject {
-            this.message = message
+            this.message = message.adjustCollectionTypes()
             this.channel = channel
-            this.meta = meta
+            this.meta = meta?.adjustCollectionTypes()
             this.sendByPost = usePost
         })
     }
 
     override fun signal(channel: String, message: Any): Signal {
         return SignalImpl(jsPubNub,  createJsObject {
-            this.message = message
+            this.message = message.adjustCollectionTypes()
             this.channel = channel
         })
     }
@@ -201,7 +204,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
             this.channels = channels.toTypedArray()
             this.device = deviceId
             this.topic = topic
-            this.environment = environment.name.lowercase()
+            this.environment = environment.toParamString()
         })
     }
 
@@ -215,7 +218,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
             this.pushGateway = pushType.toParamString()
             this.device = deviceId
             this.topic = topic
-            this.topic = topic
+            this.environment = environment.toParamString()
         })
     }
 
@@ -713,7 +716,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
             this.uuids = uuids.map { createJsObject<PubNubJs.SetCustom> {
                 this.id = it.uuid
                 this.custom = it.custom?.adjustCollectionTypes()?.unsafeCast<PubNubJs.CustomObject>()
-                this.status = status
+                this.status = it.status
             } }.toTypedArray()
             this.limit = limit
             this.page = page.toMetadataPage()
@@ -834,7 +837,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
             this.channels = channels.toTypedArray()
             this.channelGroups = channelGroups.toTypedArray()
             this.withPresence = withPresence
-            this.timetoken = withTimetoken
+            this.timetoken = withTimetoken.adjustCollectionTypes() as? String
         })
     }
 
@@ -882,7 +885,16 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         channelGroups: Set<String>,
         options: SubscriptionOptions
     ): SubscriptionSet {
-        TODO("Not yet implemented")
+        val params = createJsObject<PubNubJs.SubscriptionSetParams> {
+            this.channels = channels.toTypedArray()
+            this.channelGroups = channelGroups.toTypedArray()
+            this.subscriptionOptions = createJsObject {
+                if (options.allOptions.filterIsInstance<ReceivePresenceEventsImpl>().isNotEmpty()) {
+                    receivePresenceEvents = true
+                }
+            }
+        }
+        return SubscriptionSetImpl(jsPubNub.asDynamic().subscriptionSet(params))
     }
 
     override fun sendFile(
@@ -988,8 +1000,10 @@ fun PNConfiguration.toJs(): PubNubJs.PNConfiguration {
     config.userId = userId.value
     config.subscribeKey = subscribeKey
     config.publishKey = publishKey
+
 //    config.authKeys: String?
-//    config.logVerbosity: Boolean?
+    config.logVerbosity = logVerbosity
+    config.enableEventEngine = enableEventEngine
 //    config.ssl: Boolean?
 //    config.origin: dynamic /* String? | Array<String>? */
 //    config.presenceTimeout: Number?

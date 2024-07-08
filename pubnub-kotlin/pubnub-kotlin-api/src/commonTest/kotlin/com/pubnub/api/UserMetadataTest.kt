@@ -33,7 +33,7 @@ class UserMetadataTest : BaseIntegrationTest() {
     private val type = randomString()
 
     @Test
-    fun can_set_metadata() = runTest(timeout = 10.seconds) {
+    fun can_set_metadata() = runTest(timeout = defaultTimeout) {
         // when
         val result = pubnub.setUUIDMetadata(
             uuid,
@@ -61,7 +61,7 @@ class UserMetadataTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_receive_set_metadata_event() = runTest(timeout = 10.seconds) {
+    fun can_receive_set_metadata_event() = runTest(timeout = defaultTimeout) {
         pubnub.test(backgroundScope) {
             // given
             pubnub.awaitSubscribe(listOf(uuid))
@@ -95,7 +95,7 @@ class UserMetadataTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_delete_metadata() = runTest(timeout = 10.seconds) {
+    fun can_delete_metadata() = runTest(timeout = defaultTimeout) {
         // given
         pubnub.setUUIDMetadata(
             uuid,
@@ -119,7 +119,7 @@ class UserMetadataTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_receive_delete_metadata_event() = runTest(timeout = 10.seconds) {
+    fun can_receive_delete_metadata_event() = runTest(timeout = defaultTimeout) {
         pubnub.test(backgroundScope) {
             // given
             pubnub.setUUIDMetadata(
@@ -140,14 +140,13 @@ class UserMetadataTest : BaseIntegrationTest() {
 
             // then
             val result = nextEvent<PNObjectEventResult>()
-            val message = result.extractedMessage
-            message as PNDeleteUUIDMetadataEventMessage
+            val message = result.extractedMessage as PNDeleteUUIDMetadataEventMessage
             assertEquals(uuid, message.uuid)
         }
     }
 
     @Test
-    fun can_get_metadata() = runTest(timeout = 10.seconds) {
+    fun can_get_metadata() = runTest(timeout = defaultTimeout) {
         // given
         pubnub.setUUIDMetadata(
             uuid,
@@ -178,10 +177,9 @@ class UserMetadataTest : BaseIntegrationTest() {
     }
 
     @Test
-    @Ignore // very slow, use to test once
     fun can_get_all_metadata_with_paging() = runTest(timeout = 30.seconds) {
         // given
-        repeat(10) {
+        repeat(6) {
             pubnub.setUUIDMetadata(
                 uuid + it,
                 name = name,
@@ -199,7 +197,12 @@ class UserMetadataTest : BaseIntegrationTest() {
         val allUsers = mutableListOf<PNUUIDMetadata>()
         var next: PNPage.PNNext? = null
         while(true) {
-            val result: PNUUIDMetadataArrayResult = pubnub.getAllUUIDMetadata(limit = 4, page = next, includeCustom = true).await()
+            val result: PNUUIDMetadataArrayResult = pubnub.getAllUUIDMetadata(
+                limit = 2,
+                page = next,
+                includeCustom = true,
+                filter = "id LIKE \"$uuid*\""
+            ).await()
             allUsers.addAll(result.data)
             next = result.next
             if (next == null || result.data.isEmpty()) {
@@ -208,13 +211,13 @@ class UserMetadataTest : BaseIntegrationTest() {
         }
 
         // clean up before asserting
-        repeat(10) {
+        repeat(6) {
             pubnub.removeUUIDMetadata(uuid + it)
         }
 
         // then
-        assertTrue { allUsers.size >= 10 }
-        repeat(10) {
+        assertEquals(6, allUsers.size)
+        repeat(6) {
             val pnuuidMetadata = allUsers.firstOrNull { user -> user.id == uuid + it }
             assertNotNull(pnuuidMetadata)
             assertEquals(name, pnuuidMetadata.name)

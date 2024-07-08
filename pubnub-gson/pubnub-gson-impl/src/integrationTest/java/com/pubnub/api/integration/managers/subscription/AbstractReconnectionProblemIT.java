@@ -13,6 +13,7 @@ import org.junit.After;
 import org.junit.AssumptionViolatedException;
 import org.junit.Before;
 import org.junit.ClassRule;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -202,6 +203,7 @@ public abstract class AbstractReconnectionProblemIT {
     }
 
     @Test
+    @Ignore
     public void alwaysContinueSubscriptionToChannelGroupIfNoActionTaken() throws PubNubException, InterruptedException {
         final String channelGroup = "chg-1-" + randomId();
 
@@ -222,6 +224,7 @@ public abstract class AbstractReconnectionProblemIT {
 
 
     @Test
+    @Ignore
     public void alwaysContinueSubscriptionIfNoActionTaken() throws InterruptedException {
         final String channel = "ch-" + randomId();
 

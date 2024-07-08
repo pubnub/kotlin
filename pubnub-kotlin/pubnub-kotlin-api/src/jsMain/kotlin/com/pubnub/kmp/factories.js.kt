@@ -2,6 +2,7 @@ package com.pubnub.kmp
 
 import com.pubnub.api.JsonElementImpl
 import com.pubnub.api.PubNubImpl
+import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.files.PNDownloadableFile
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
@@ -205,15 +206,22 @@ actual fun createStatusListener(
 ): StatusListener {
     val listener = object : PubNubJs.StatusListenerParameters, StatusListener {
         override val status: ((statusEvent: PubNubJs.StatusEvent) -> Unit) = { statusEvent ->
-            onStatus(
-                pubnub, PNStatus(
-                    enumValueOf(statusEvent.category), //TODO parse category
-                    null,
-                    statusEvent.currentTimetoken.toString().toLong(),
-                    statusEvent.affectedChannels.toList(),
-                    statusEvent.affectedChannelGroups.toList()
+            val category = try {
+                enumValueOf<PNStatusCategory>(statusEvent.category) //TODO parse category
+            } catch (e: Exception) {
+                null
+            }
+            if (category != null) {
+                onStatus(
+                    pubnub, PNStatus(
+                        category,
+                        null,
+                        statusEvent.currentTimetoken.toString().toLongOrNull(),
+                        statusEvent.affectedChannels?.toList() ?: emptyList(),
+                        statusEvent.affectedChannelGroups?.toList() ?: emptyList()
+                    )
                 )
-            )
+            }
         }
     }
     return listener

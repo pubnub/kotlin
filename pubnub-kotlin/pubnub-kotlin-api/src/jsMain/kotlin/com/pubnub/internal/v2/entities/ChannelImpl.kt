@@ -6,10 +6,12 @@ import com.pubnub.api.endpoints.files.SendFile
 import com.pubnub.api.endpoints.pubsub.Publish
 import com.pubnub.api.endpoints.pubsub.Signal
 import com.pubnub.api.v2.entities.Channel
+import com.pubnub.api.v2.subscriptions.ReceivePresenceEventsImpl
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.internal.v2.subscriptions.SubscriptionImpl
 import com.pubnub.kmp.Uploadable
+import com.pubnub.kmp.createJsObject
 
 class ChannelImpl( private val jsChannel: dynamic): Channel {
 
@@ -53,7 +55,11 @@ class ChannelImpl( private val jsChannel: dynamic): Channel {
         get() = jsChannel.name
 
     override fun subscription(options: SubscriptionOptions): Subscription { //todo use options
-        return SubscriptionImpl(jsChannel.subscription())
+        return SubscriptionImpl(jsChannel.subscription(createJsObject<PubNub.SubscriptionOptions> {
+            if (options.allOptions.filterIsInstance<ReceivePresenceEventsImpl>().isNotEmpty()) {
+                receivePresenceEvents = true
+            }
+        }))
     }
 
 }

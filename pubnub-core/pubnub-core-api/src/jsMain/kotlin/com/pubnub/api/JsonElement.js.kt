@@ -6,7 +6,25 @@ import com.pubnub.kmp.JsMap
 import com.pubnub.kmp.toMap
 import kotlin.js.json
 
-actual abstract class JsonElement(val value: Any?)
+actual abstract class JsonElement(val value: Any?) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is JsonElement) return false
+
+        if (asMap() != null && other.asMap() != null) {
+            return asMap() == other.asMap()
+        } else if (asList() != null && other.asList() != null) {
+            return asList() == other.asList()
+        }
+        if (value != other.value) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return value?.hashCode() ?: 0
+    }
+}
 
 class JsonElementImpl(value: Any?) : JsonElement(value) {
     override fun toString(): String {
@@ -19,6 +37,7 @@ actual fun JsonElement.asString(): String? {
 }
 
 actual fun JsonElement.asMap(): Map<String, JsonElement>? {
+    if (value?.isJsObject() != true) return null
     return value.unsafeCast<JsMap<Any>>().toMap().mapValues { JsonElementImpl(it.value) }
 }
 
@@ -27,7 +46,7 @@ actual fun JsonElement.isNull(): Boolean {
 }
 
 actual fun JsonElement.asList(): List<JsonElement>? {
-    return (value as Array<*>).map { JsonElementImpl(it) }
+    return (value as? Array<*>)?.map { JsonElementImpl(it) }
 }
 
 actual fun JsonElement.asLong(): Long? {
@@ -48,6 +67,10 @@ actual fun JsonElement.asNumber(): Number? {
 
 actual fun createJsonElement(any: Any?): JsonElement {
     return JsonElementImpl(any.adjustCollectionTypes())
+}
+
+private fun Any.isJsObject(): Boolean {
+    return this !is Array<*> && jsTypeOf(this) == "object"
 }
 
 internal fun Any?.adjustCollectionTypes(): Any? {

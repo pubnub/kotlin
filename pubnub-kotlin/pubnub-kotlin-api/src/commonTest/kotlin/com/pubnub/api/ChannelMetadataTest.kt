@@ -25,7 +25,7 @@ class ChannelMetadataTest : BaseIntegrationTest() {
     private val type = randomString()
 
     @Test
-    fun can_set_metadata() = runTest(timeout = 10.seconds) {
+    fun can_set_metadata() = runTest(timeout = defaultTimeout) {
         // when
         val result = pubnub.setChannelMetadata(
             channel,
@@ -49,7 +49,7 @@ class ChannelMetadataTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_receive_set_metadata_event() = runTest(timeout = 10.seconds) {
+    fun can_receive_set_metadata_event() = runTest(timeout = defaultTimeout) {
         pubnub.test(backgroundScope) {
             // given
             pubnub.awaitSubscribe(listOf(channel))
@@ -79,7 +79,7 @@ class ChannelMetadataTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_delete_metadata() = runTest(timeout = 10.seconds) {
+    fun can_delete_metadata() = runTest(timeout = defaultTimeout) {
         // given
         pubnub.setChannelMetadata(
             channel,
@@ -102,7 +102,7 @@ class ChannelMetadataTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_receive_delete_metadata_event() = runTest(timeout = 10.seconds) {
+    fun can_receive_delete_metadata_event() = runTest(timeout = defaultTimeout) {
         pubnub.test(backgroundScope) {
             pubnub.setChannelMetadata(
                 channel,

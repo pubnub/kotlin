@@ -10,13 +10,16 @@ actual interface PNConfiguration {
     actual val secretKey: String
     actual val authKey: String
     actual val cryptoModule: CryptoModule?
+    val enableEventEngine: Boolean
+    val logVerbosity: Boolean
 }
 
 actual fun createPNConfiguration(
     userId: UserId,
     subscribeKey: String,
     publishKey: String,
-    secretKey: String?
+    secretKey: String?,
+    logVerbosity: Boolean
 ): PNConfiguration {
     return object : PNConfiguration {
         override val userId: UserId
@@ -31,6 +34,10 @@ actual fun createPNConfiguration(
             get() = TODO("Not yet implemented")
         override val cryptoModule: CryptoModule?
             get() = TODO("Not yet implemented")
+        override val enableEventEngine: Boolean
+            get() = false
+        override val logVerbosity: Boolean
+            get() = logVerbosity
     }
 }
 
