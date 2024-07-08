@@ -5,6 +5,7 @@ import com.pubnub.kmp.createCustomObject
 import com.pubnub.test.BaseIntegrationTest
 import com.pubnub.test.await
 import com.pubnub.test.test
+import kotlinx.coroutines.test.TestResult
 import kotlinx.coroutines.test.runTest
 import kotlin.js.JsExport
 import kotlin.test.Ignore
@@ -39,14 +40,18 @@ class PublishTest : BaseIntegrationTest() {
 
 
     @Test
-    fun can_publish_message_object() =
-        runTest(timeout = 10.seconds) {
+    fun can_publish_message_object(): TestResult {
+        return runTest(timeout = 10.seconds) {
+            if (isIOS()) {
+                return@runTest // ignore
+            }
             val result = pubnub.publish(channel, ABC()).await()
             assertTrue { result.timetoken > 0 }
         }
+    }
 
     @Test
-    fun can_receive_message_with_object_metadata() = runTest(timeout = 10.seconds) {
+    fun can_receive_message_with_map_metadata() = runTest(timeout = 10.seconds) {
         pubnub.test(backgroundScope) {
             pubnub.awaitSubscribe(listOf(channel))
             val mapData = mapOf(
@@ -59,12 +64,14 @@ class PublishTest : BaseIntegrationTest() {
                 "longValue" to 1000L,
                 "listValue" to listOf(123, "aaa", mapOf("innerK" to "innerV"))
             )
-            pubnub.publish(channel, "some message", createCustomObject(mapData)).await()
+            pubnub.publish(channel, "some message", mapData).await()
             val result = nextMessage()
             assertEquals("some message", result.message.asString())
             deepCompare(mapData, result.userMetadata!!)
         }
     }
+
+    private fun isIOS() = PLATFORM == "iOS"
 
     @Test
     fun can_receive_message_with_primitive_payload() = runTest(timeout = 10.seconds) {

@@ -30,18 +30,18 @@ class PubNubIosSimulatorTestPlugin : Plugin<Project> {
                 }
             }
 
-            val shutdownTask = tasks.register<Exec>("shutdownIOSSimulator") {
-                onlyIf { isMacOs.get() }
-                commandLine("xcrun", "simctl", "shutdown", deviceName)
-                dependsOn(tasks.withType<KotlinNativeSimulatorTest>())
-            }
+//            val shutdownTask = tasks.register<Exec>("shutdownIOSSimulator") {
+//                onlyIf { isMacOs.get() }
+//                commandLine("xcrun", "simctl", "shutdown", deviceName)
+//                dependsOn(tasks.withType<KotlinNativeSimulatorTest>())
+//            }
 
             tasks.withType<KotlinNativeSimulatorTest>().configureEach {
                 it.onlyIf { isMacOs.get() }
                 it.standalone.set(false)
                 it.device.set(deviceName)
                 it.dependsOn(bootTask)
-                it.finalizedBy(shutdownTask)
+//                it.finalizedBy(shutdownTask)
             }
         }
     }
