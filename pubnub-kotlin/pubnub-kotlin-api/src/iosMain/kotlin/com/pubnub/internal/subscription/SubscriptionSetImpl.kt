@@ -17,7 +17,7 @@ import kotlinx.cinterop.ExperimentalForeignApi
 @OptIn(ExperimentalForeignApi::class)
 class SubscriptionSetImpl(
     private val objCSubscriptionSet: PubNubSubscriptionSetObjC
-): SubscriptionSet {
+) : SubscriptionSet {
     override fun close() {
         objCSubscriptionSet.dispose()
     }

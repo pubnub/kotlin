@@ -8,15 +8,21 @@ import kotlin.js.json
 
 actual abstract class JsonElement(val value: Any?) {
     override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is JsonElement) return false
+        if (this === other) {
+            return true
+        }
+        if (other !is JsonElement) {
+            return false
+        }
 
         if (asMap() != null && other.asMap() != null) {
             return asMap() == other.asMap()
         } else if (asList() != null && other.asList() != null) {
             return asList() == other.asList()
         }
-        if (value != other.value) return false
+        if (value != other.value) {
+            return false
+        }
 
         return true
     }
@@ -28,7 +34,7 @@ actual abstract class JsonElement(val value: Any?) {
 
 class JsonElementImpl(value: Any?) : JsonElement(value) {
     override fun toString(): String {
-        return "JsonElementImpl(${value.toString()} : ${value?.let { it::class }})"
+        return "JsonElementImpl($value : ${value?.let { it::class }})"
     }
 }
 
@@ -37,7 +43,9 @@ actual fun JsonElement.asString(): String? {
 }
 
 actual fun JsonElement.asMap(): Map<String, JsonElement>? {
-    if (value?.isJsObject() != true) return null
+    if (value?.isJsObject() != true) {
+        return null
+    }
     return value.unsafeCast<JsMap<Any>>().toMap().mapValues { JsonElementImpl(it.value) }
 }
 
@@ -90,12 +98,12 @@ internal fun Any?.adjustCollectionTypes(): Any? {
 
         is Collection<*> -> {
             this.map { it.adjustCollectionTypes() }.map {
-                    if (it is JsonElementImpl) {
-                        it.value
-                    } else {
-                        it
-                    }
-                }.toTypedArray()
+                if (it is JsonElementImpl) {
+                    it.value
+                } else {
+                    it
+                }
+            }.toTypedArray()
         }
 
         is Array<*> -> {

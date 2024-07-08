@@ -1,13 +1,12 @@
 package com.pubnub.api.v2.entities
 
-import com.pubnub.kmp.endpoints.files.DeleteFile
-import com.pubnub.kmp.endpoints.files.SendFile
-import com.pubnub.kmp.endpoints.pubsub.Publish
-import com.pubnub.kmp.endpoints.pubsub.Signal
+import com.pubnub.api.endpoints.files.DeleteFile
+import com.pubnub.api.endpoints.files.SendFile
+import com.pubnub.api.endpoints.pubsub.Publish
+import com.pubnub.api.endpoints.pubsub.Signal
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.kmp.Uploadable
-import com.pubnub.kmp.v2.entities.Channel
 
 /**
  * A representation of a PubNub channel identified by its [name].
@@ -16,7 +15,7 @@ import com.pubnub.kmp.v2.entities.Channel
  *
  * Use the [com.pubnub.api.PubNub.channel] factory method to create instances of this interface.
  */
-interface Channel : BaseChannel<EventListener, Subscription>, Channel {
+interface Channel : BaseChannel<EventListener, Subscription> {
     /**
      * Send a message to all subscribers of the channel.
      *
@@ -60,13 +59,13 @@ interface Channel : BaseChannel<EventListener, Subscription>, Channel {
      *            - If ttl isn't specified, then expiration of the message defaults
      *              back to the expiry value for the key.
      */
-    override fun publish(
+    fun publish(
         message: Any,
-        meta: Any?,
-        shouldStore: Boolean,
-        usePost: Boolean,
-        replicate: Boolean,
-        ttl: Int?
+        meta: Any? = null,
+        shouldStore: Boolean = true,
+        usePost: Boolean = false,
+        replicate: Boolean = true,
+        ttl: Int? = null
     ): Publish
 
     /**
@@ -78,7 +77,7 @@ interface Channel : BaseChannel<EventListener, Subscription>, Channel {
      *
      * @param message The payload which will be serialized and sent.
      */
-    override fun signal(message: Any): Signal
+    fun signal(message: Any): Signal
 
     /**
      * Send a message to PubNub Functions Event Handlers.
@@ -109,7 +108,7 @@ interface Channel : BaseChannel<EventListener, Subscription>, Channel {
      *            - If ttl isn't specified, then expiration of the message defaults
      *              back to the expiry value for the key.
      */
-    override fun fire(
+    fun fire(
         message: Any,
         meta: Any?,
         usePost: Boolean,
@@ -140,14 +139,14 @@ interface Channel : BaseChannel<EventListener, Subscription>, Channel {
      *                    If not specified, then the history configuration of the key is used.
      * @param cipherKey Key to be used to encrypt uploaded data.
      */
-    override fun sendFile(
+    fun sendFile(
         fileName: String,
         inputStream: Uploadable,
-        message: Any?,
-        meta: Any?,
-        ttl: Int?,
-        shouldStore: Boolean?,
-        cipherKey: String?
+        message: Any? = null,
+        meta: Any? = null,
+        ttl: Int? = null,
+        shouldStore: Boolean? = null,
+        cipherKey: String? = null
     ): SendFile
 
     /**
@@ -156,5 +155,5 @@ interface Channel : BaseChannel<EventListener, Subscription>, Channel {
      * @param fileName Name under which the uploaded file is stored.
      * @param fileId Unique identifier for the file, assigned during upload.
      */
-    override fun deleteFile(fileName: String, fileId: String): DeleteFile
+    fun deleteFile(fileName: String, fileId: String): DeleteFile
 }

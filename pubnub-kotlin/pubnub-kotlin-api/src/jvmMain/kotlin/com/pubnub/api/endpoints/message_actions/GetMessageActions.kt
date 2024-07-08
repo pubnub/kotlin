@@ -7,7 +7,7 @@ import com.pubnub.api.models.consumer.message_actions.PNGetMessageActionsResult
 /**
  * @see [PubNub.getMessageActions]
  */
-interface GetMessageActions : com.pubnub.kmp.endpoints.message_actions.GetMessageActions, Endpoint<PNGetMessageActionsResult> {
+actual interface GetMessageActions : Endpoint<PNGetMessageActionsResult> {
     val channel: String
     val page: PNBoundedPage
 }

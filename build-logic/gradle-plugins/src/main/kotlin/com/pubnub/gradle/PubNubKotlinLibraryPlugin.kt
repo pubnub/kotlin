@@ -17,7 +17,6 @@ class PubNubKotlinLibraryPlugin : Plugin<Project> {
         with(target) {
             apply<PubNubSharedPlugin>()
             apply<KotlinPluginWrapper>()
-            apply<KtlintPlugin>()
 
             // Kotlin
             extensions.configure<KotlinJvmProjectExtension> {
@@ -30,29 +29,6 @@ class PubNubKotlinLibraryPlugin : Plugin<Project> {
                 }
             }
 
-            // Ktlint
-            extensions.configure<KtlintExtension> {
-                outputToConsole.set(true)
-                verbose.set(true)
-                additionalEditorconfig.set(
-                    mapOf(
-                        "ij_kotlin_imports_layout" to "*,java.**,javax.**,kotlin.**,^",
-                        "indent_size" to "4",
-                        "ktlint_standard_multiline-expression-wrapping" to "disabled",
-                        "ktlint_standard_string-template-indent" to "disabled",
-                        "ktlint_standard_max-line-length" to "disabled",
-                        "ktlint_standard_if-else-wrapping" to "disabled",
-                        "ktlint_standard_discouraged-comment-location" to "disabled",
-                        "ktlint_standard_trailing-comma-on-declaration-site" to "disabled",
-                        "ktlint_standard_trailing-comma-on-call-site" to "disabled",
-                        "ktlint_standard_function-signature" to "disabled",
-                    )
-                )
-            }
-
-            dependencies {
-                "ktlintRuleset"(project(":build-logic:ktlint-custom-rules"))
-            }
         }
     }
 }

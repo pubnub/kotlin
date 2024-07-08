@@ -1,4 +1,4 @@
-package com.pubnub.kmp.endpoints.objects.member
+package com.pubnub.api.endpoints.objects.member
 
 import ManageChannelMembersResponse
 import PubNub
@@ -10,4 +10,3 @@ class RemoveChannelMembersImpl(pubnub: PubNub, params: PubNub.RemoveChannelMembe
     promiseFactory = { pubnub.objects.removeChannelMembers(params) },
     responseMapping = ManageChannelMembersResponse::toPNMemberArrayResult
 )
-

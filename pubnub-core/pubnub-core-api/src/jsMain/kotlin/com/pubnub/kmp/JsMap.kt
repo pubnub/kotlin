@@ -16,5 +16,4 @@ fun <V> Map<String, V>.toJsMap(): JsMap<V> = createJsObject<dynamic> {
     }
 }.unsafeCast<JsMap<V>>()
 
-
 fun <T> createJsObject(configure: T.() -> Unit = {}): T = (js("({})") as T).apply(configure)

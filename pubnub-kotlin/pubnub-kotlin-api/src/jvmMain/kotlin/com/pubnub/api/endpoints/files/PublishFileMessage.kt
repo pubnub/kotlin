@@ -6,4 +6,4 @@ import com.pubnub.api.models.consumer.files.PNPublishFileMessageResult
 /**
  * @see [PubNub.publishFileMessage]
  */
-interface PublishFileMessage : com.pubnub.kmp.endpoints.files.PublishFileMessage, Endpoint<PNPublishFileMessageResult>
+actual interface PublishFileMessage : Endpoint<PNPublishFileMessageResult>

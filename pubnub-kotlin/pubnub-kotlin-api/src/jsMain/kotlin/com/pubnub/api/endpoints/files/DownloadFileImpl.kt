@@ -1,11 +1,8 @@
-package com.pubnub.kmp.endpoints.files
+package com.pubnub.api.endpoints.files
 
 import PubNub
 import com.pubnub.api.EndpointImpl
-import com.pubnub.api.models.consumer.files.PNBaseFile
 import com.pubnub.api.models.consumer.files.PNDownloadFileResult
-import com.pubnub.api.models.consumer.files.PNFileUploadResult
-import com.pubnub.kmp.Downloadable
 import com.pubnub.kmp.DownloadableImpl
 
 class DownloadFileImpl(pubnub: PubNub, params: PubNub.DownloadFileParameters) : DownloadFile, EndpointImpl<Any, PNDownloadFileResult>(

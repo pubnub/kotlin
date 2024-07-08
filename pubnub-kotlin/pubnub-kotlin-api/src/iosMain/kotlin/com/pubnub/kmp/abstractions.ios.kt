@@ -10,7 +10,7 @@ actual abstract class Uploadable
 data class DataUploadContent(
     val data: NSData,
     val contentType: String?
-): Uploadable()
+) : Uploadable()
 
 data class FileUploadContent(
     val url: NSURL

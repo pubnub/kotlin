@@ -48,7 +48,6 @@ class FetchMessagesTest : BaseIntegrationTest() {
         ).await()
         assertTrue { fetchResult.channels.isNotEmpty() }
 
-
         val expectedItem = PNFetchMessageItem(
             uuid = pubnub.configuration.userId.value,
             message = createJsonElement(expectedMessage),
@@ -125,5 +124,4 @@ class FetchMessagesTest : BaseIntegrationTest() {
 
         assertEquals(expectedChannelsResponse, fetchResult.channels)
     }
-
 }

@@ -6,4 +6,4 @@ import com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArra
 /**
  * @see [PubNub.manageMemberships]
  */
-interface ManageMemberships : com.pubnub.kmp.endpoints.objects.membership.ManageMemberships, Endpoint<PNChannelMembershipArrayResult>
+actual interface ManageMemberships : Endpoint<PNChannelMembershipArrayResult>

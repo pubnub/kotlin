@@ -23,7 +23,7 @@ class PushTest : BaseIntegrationTest() {
     private val deviceId =
         generateSequence { (0..9).random() }.take(70).toList().shuffled().joinToString(separator = "")
     private val topic = randomString()
-    private val mutex = Mutex() //for some reason without this on JS tests run concurrently with before/after and fail
+    private val mutex = Mutex() // for some reason without this on JS tests run concurrently with before/after and fail
 
     @BeforeTest
     override fun before() {
@@ -77,7 +77,8 @@ class PushTest : BaseIntegrationTest() {
             }
 
             assertEquals(
-                emptyList(), pubnub.auditPushChannelProvisions(PNPushType.FCM, deviceId).await().channels
+                emptyList(),
+                pubnub.auditPushChannelProvisions(PNPushType.FCM, deviceId).await().channels
             )
         }
     }
@@ -163,5 +164,4 @@ class PushTest : BaseIntegrationTest() {
             }
         }
     }
-
 }

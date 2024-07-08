@@ -139,7 +139,7 @@ class ChannelMetadataTest : BaseIntegrationTest() {
         // given
         repeat(6) {
             pubnub.setChannelMetadata(
-                channel+it,
+                channel + it,
                 name = name,
                 status = status,
                 custom = custom,
@@ -152,7 +152,7 @@ class ChannelMetadataTest : BaseIntegrationTest() {
         // when
         val allChannels = mutableListOf<PNChannelMetadata>()
         var next: PNPage.PNNext? = null
-        while(true) {
+        while (true) {
             val result = pubnub.getAllChannelMetadata(
                 limit = 2,
                 page = next,
@@ -173,7 +173,7 @@ class ChannelMetadataTest : BaseIntegrationTest() {
 
         // then
         assertTrue { allChannels.size == 6 }
-        repeat(6) {index ->
+        repeat(6) { index ->
             val pnChannelMetadata = allChannels.firstOrNull { it.id == channel + index }
             assertNotNull(pnChannelMetadata)
             assertEquals(name, pnChannelMetadata.name)

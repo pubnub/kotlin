@@ -1,4 +1,4 @@
-package com.pubnub.kmp.endpoints.channel_groups
+package com.pubnub.api.endpoints.channel_groups
 
 import PubNub
 import com.pubnub.api.EndpointImpl

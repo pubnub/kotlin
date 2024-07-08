@@ -1,4 +1,4 @@
-package com.pubnub.kmp.endpoints.files
+package com.pubnub.api.endpoints.files
 
 import PubNub
 import com.pubnub.api.EndpointImpl
@@ -10,7 +10,7 @@ class SendFileImpl(pubnub: PubNub, params: PubNub.SendFileParameters) : SendFile
     responseMapping = {
         PNFileUploadResult(
             it.timetoken.toLong(),
-            200, //TODO anything else possible here?
+            200, // TODO anything else possible here?
             PNBaseFile(
                 it.id,
                 it.name

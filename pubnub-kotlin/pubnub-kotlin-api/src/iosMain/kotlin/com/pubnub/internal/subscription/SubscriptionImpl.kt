@@ -1,7 +1,6 @@
 package com.pubnub.internal.subscription
 
 import cocoapods.PubNubSwift.PubNubSubscriptionObjC
-import com.pubnub.api.PubNubException
 import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
@@ -19,7 +18,6 @@ import kotlinx.cinterop.ExperimentalForeignApi
 class SubscriptionImpl(
     val objCSubscription: PubNubSubscriptionObjC
 ) : Subscription {
-
     override fun close() {
         objCSubscription.dispose()
     }

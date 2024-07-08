@@ -14,7 +14,6 @@ actual class PubNubException(
     errorMessage: String?,
     cause: Throwable?
 ) : Exception(errorMessage, cause) {
-
     actual constructor(errorMessage: String?, cause: Throwable?) : this(statusCode = 0, errorMessage, cause)
     actual constructor(pubnubError: PubNubError, cause: Throwable?) : this(statusCode = 0, pubnubError.message, cause)
 

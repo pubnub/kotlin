@@ -7,7 +7,6 @@ import kotlin.test.Test
 import kotlin.test.assertTrue
 
 class TimeTest : BaseIntegrationTest() {
-
     @Test
     fun time() = runTest {
         val time = pubnub.time().await()

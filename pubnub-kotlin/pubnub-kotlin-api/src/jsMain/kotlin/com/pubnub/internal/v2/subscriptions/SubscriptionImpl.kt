@@ -13,7 +13,6 @@ import com.pubnub.api.v2.subscriptions.SubscriptionCursor
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
 
 class SubscriptionImpl(private val jsSubscription: dynamic) : Subscription {
-
     override fun close() {
         unsubscribe()
     }
@@ -31,7 +30,7 @@ class SubscriptionImpl(private val jsSubscription: dynamic) : Subscription {
     }
 
     override fun removeAllListeners() {
-        TODO("Not yet implemented") //todo js doesn't support this?
+        TODO("Not yet implemented") // todo js doesn't support this?
     }
 
     override fun subscribe(cursor: SubscriptionCursor) { // todo use cursor
@@ -65,5 +64,4 @@ class SubscriptionImpl(private val jsSubscription: dynamic) : Subscription {
     override var onFile: ((PNFileEventResult) -> Unit)?
         get() = TODO("Not yet implemented")
         set(value) {}
-
 }

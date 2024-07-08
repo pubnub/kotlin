@@ -33,6 +33,3 @@ kotlin {
     }
 }
 
-//atomicfu {
-//    dependenciesVersion = "0.24.0"
-//}

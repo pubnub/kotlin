@@ -6,4 +6,4 @@ import com.pubnub.api.models.consumer.push.PNPushRemoveAllChannelsResult
 /**
  * @see [PubNub.removeAllPushNotificationsFromDeviceWithPushToken]
  */
-interface RemoveAllPushChannelsForDevice : com.pubnub.kmp.endpoints.push.RemoveAllPushChannelsForDevice, Endpoint<PNPushRemoveAllChannelsResult>
+actual interface RemoveAllPushChannelsForDevice : Endpoint<PNPushRemoveAllChannelsResult>

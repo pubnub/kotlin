@@ -68,7 +68,7 @@ data class PNDeleteUUIDMetadataEventMessage(
 data class PNSetMembershipEvent(
     val channel: String,
     val uuid: String,
-    val custom: Map<String,Any?>?,
+    val custom: Map<String, Any?>?,
     val eTag: String,
     val updated: String,
     val status: String?,

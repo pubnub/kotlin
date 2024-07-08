@@ -7,7 +7,6 @@ import com.pubnub.test.randomString
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 class DeleteMessagesTest : BaseIntegrationTest() {
     private val channel = randomString()

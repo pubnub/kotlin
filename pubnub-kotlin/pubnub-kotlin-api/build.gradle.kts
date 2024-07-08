@@ -7,7 +7,6 @@ plugins {
     id("pubnub.dokka")
     id("pubnub.multiplatform")
     id("pubnub.ios-simulator-test")
-
 }
 
 kotlin {

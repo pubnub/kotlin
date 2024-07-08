@@ -12,7 +12,6 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class HereWhereNowTest : BaseIntegrationTest() {
-
     @Test
     fun hereNow() = runTest(timeout = defaultTimeout) {
         val channel = randomString()
@@ -27,7 +26,6 @@ class HereWhereNowTest : BaseIntegrationTest() {
             assertEquals(1, result.totalChannels)
             assertEquals(1, result.totalOccupancy)
             assertEquals(channel, result.channels[channel]?.channelName)
-
         }
     }
 
@@ -44,6 +42,4 @@ class HereWhereNowTest : BaseIntegrationTest() {
             assertEquals(listOf(channel), result.channels)
         }
     }
-
-
 }

@@ -6,4 +6,4 @@ import com.pubnub.api.models.consumer.push.PNPushRemoveChannelResult
 /**
  * @see [PubNub.removePushNotificationsFromChannels]
  */
-interface RemoveChannelsFromPush : com.pubnub.kmp.endpoints.push.RemoveChannelsFromPush, Endpoint<PNPushRemoveChannelResult>
+actual interface RemoveChannelsFromPush : Endpoint<PNPushRemoveChannelResult>

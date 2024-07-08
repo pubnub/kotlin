@@ -6,7 +6,7 @@ import com.pubnub.api.models.consumer.history.PNMessageCountResult
 /**
  * @see [PubNub.messageCounts]
  */
-interface MessageCounts : com.pubnub.kmp.endpoints.MessageCounts, Endpoint<PNMessageCountResult> {
+actual interface MessageCounts : Endpoint<PNMessageCountResult> {
     val channels: List<String>
     val channelsTimetoken: List<Long>
 }

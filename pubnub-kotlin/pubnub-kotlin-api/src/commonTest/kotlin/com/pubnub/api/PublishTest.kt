@@ -13,7 +13,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 @JsExport
-data class ABC (
+data class ABC(
     val aaa: Boolean = false,
     val bbb: Int = 123,
     val ccc: String = "platform: $PLATFORM"
@@ -162,7 +162,7 @@ class PublishTest : BaseIntegrationTest() {
     }
 
     @Test
-    @Ignore //todo js doesn't support primitive metadata?
+    @Ignore // todo js doesn't support primitive metadata?
     fun can_receive_message_with_primitive_metadata() = runTest(timeout = defaultTimeout) {
         pubnub.test(backgroundScope) {
             pubnub.awaitSubscribe(listOf(channel))
@@ -178,7 +178,6 @@ class PublishTest : BaseIntegrationTest() {
         }
     }
 }
-
 
 private fun deepCompare(expected: Any?, actual: JsonElement) {
 //    println("e: " + expected.toString() + " " + expected!!::class)
@@ -205,7 +204,7 @@ private fun deepCompare(expected: Any?, actual: JsonElement) {
         assertEquals(expected.toDouble(), actual.asDouble()!!, 0.01)
     } else if (expected is String) {
         assertEquals(expected, actual.asString()!!)
-    } else if (expected == null){
+    } else if (expected == null) {
         assertTrue { actual.isNull() }
     }
 }

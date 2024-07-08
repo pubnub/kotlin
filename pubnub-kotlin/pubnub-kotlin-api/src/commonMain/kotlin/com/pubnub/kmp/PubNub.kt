@@ -1,6 +1,48 @@
 package com.pubnub.kmp
 
 import com.pubnub.api.callbacks.Listener
+import com.pubnub.api.endpoints.DeleteMessages
+import com.pubnub.api.endpoints.FetchMessages
+import com.pubnub.api.endpoints.MessageCounts
+import com.pubnub.api.endpoints.Time
+import com.pubnub.api.endpoints.access.GrantToken
+import com.pubnub.api.endpoints.access.RevokeToken
+import com.pubnub.api.endpoints.channel_groups.AddChannelChannelGroup
+import com.pubnub.api.endpoints.channel_groups.AllChannelsChannelGroup
+import com.pubnub.api.endpoints.channel_groups.DeleteChannelGroup
+import com.pubnub.api.endpoints.channel_groups.ListAllChannelGroup
+import com.pubnub.api.endpoints.channel_groups.RemoveChannelChannelGroup
+import com.pubnub.api.endpoints.files.DeleteFile
+import com.pubnub.api.endpoints.files.DownloadFile
+import com.pubnub.api.endpoints.files.GetFileUrl
+import com.pubnub.api.endpoints.files.ListFiles
+import com.pubnub.api.endpoints.files.PublishFileMessage
+import com.pubnub.api.endpoints.files.SendFile
+import com.pubnub.api.endpoints.message_actions.AddMessageAction
+import com.pubnub.api.endpoints.message_actions.GetMessageActions
+import com.pubnub.api.endpoints.message_actions.RemoveMessageAction
+import com.pubnub.api.endpoints.objects.channel.GetAllChannelMetadata
+import com.pubnub.api.endpoints.objects.channel.GetChannelMetadata
+import com.pubnub.api.endpoints.objects.channel.RemoveChannelMetadata
+import com.pubnub.api.endpoints.objects.channel.SetChannelMetadata
+import com.pubnub.api.endpoints.objects.member.GetChannelMembers
+import com.pubnub.api.endpoints.objects.member.ManageChannelMembers
+import com.pubnub.api.endpoints.objects.membership.GetMemberships
+import com.pubnub.api.endpoints.objects.membership.ManageMemberships
+import com.pubnub.api.endpoints.objects.uuid.GetAllUUIDMetadata
+import com.pubnub.api.endpoints.objects.uuid.GetUUIDMetadata
+import com.pubnub.api.endpoints.objects.uuid.RemoveUUIDMetadata
+import com.pubnub.api.endpoints.objects.uuid.SetUUIDMetadata
+import com.pubnub.api.endpoints.presence.GetState
+import com.pubnub.api.endpoints.presence.HereNow
+import com.pubnub.api.endpoints.presence.SetState
+import com.pubnub.api.endpoints.presence.WhereNow
+import com.pubnub.api.endpoints.pubsub.Publish
+import com.pubnub.api.endpoints.pubsub.Signal
+import com.pubnub.api.endpoints.push.AddChannelsToPush
+import com.pubnub.api.endpoints.push.ListPushProvisions
+import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice
+import com.pubnub.api.endpoints.push.RemoveChannelsFromPush
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.PNBoundedPage
@@ -20,63 +62,26 @@ import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
+import com.pubnub.api.v2.entities.Channel
+import com.pubnub.api.v2.entities.ChannelGroup
+import com.pubnub.api.v2.entities.ChannelMetadata
+import com.pubnub.api.v2.entities.UserMetadata
 import com.pubnub.api.v2.subscriptions.EmptyOptions
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
-import com.pubnub.kmp.endpoints.DeleteMessages
-import com.pubnub.kmp.endpoints.FetchMessages
-import com.pubnub.kmp.endpoints.MessageCounts
-import com.pubnub.kmp.endpoints.Time
-import com.pubnub.kmp.endpoints.access.GrantToken
-import com.pubnub.kmp.endpoints.access.RevokeToken
-import com.pubnub.kmp.endpoints.channel_groups.AddChannelChannelGroup
-import com.pubnub.kmp.endpoints.channel_groups.AllChannelsChannelGroup
-import com.pubnub.kmp.endpoints.channel_groups.DeleteChannelGroup
-import com.pubnub.kmp.endpoints.channel_groups.ListAllChannelGroup
-import com.pubnub.kmp.endpoints.channel_groups.RemoveChannelChannelGroup
-import com.pubnub.kmp.endpoints.files.DeleteFile
-import com.pubnub.kmp.endpoints.files.DownloadFile
-import com.pubnub.kmp.endpoints.files.GetFileUrl
-import com.pubnub.kmp.endpoints.files.ListFiles
-import com.pubnub.kmp.endpoints.files.PublishFileMessage
-import com.pubnub.kmp.endpoints.files.SendFile
-import com.pubnub.kmp.endpoints.message_actions.AddMessageAction
-import com.pubnub.kmp.endpoints.message_actions.GetMessageActions
-import com.pubnub.kmp.endpoints.message_actions.RemoveMessageAction
-import com.pubnub.kmp.endpoints.objects.channel.GetAllChannelMetadata
-import com.pubnub.kmp.endpoints.objects.channel.GetChannelMetadata
-import com.pubnub.kmp.endpoints.objects.channel.RemoveChannelMetadata
-import com.pubnub.kmp.endpoints.objects.channel.SetChannelMetadata
-import com.pubnub.kmp.endpoints.objects.member.GetChannelMembers
-import com.pubnub.kmp.endpoints.objects.member.ManageChannelMembers
-import com.pubnub.kmp.endpoints.objects.membership.GetMemberships
-import com.pubnub.kmp.endpoints.objects.membership.ManageMemberships
-import com.pubnub.kmp.endpoints.objects.uuid.GetAllUUIDMetadata
-import com.pubnub.kmp.endpoints.objects.uuid.GetUUIDMetadata
-import com.pubnub.kmp.endpoints.objects.uuid.RemoveUUIDMetadata
-import com.pubnub.kmp.endpoints.objects.uuid.SetUUIDMetadata
-import com.pubnub.kmp.endpoints.presence.GetState
-import com.pubnub.kmp.endpoints.presence.HereNow
-import com.pubnub.kmp.endpoints.presence.SetState
-import com.pubnub.kmp.endpoints.presence.WhereNow
-import com.pubnub.kmp.endpoints.pubsub.Publish
-import com.pubnub.kmp.endpoints.pubsub.Signal
-import com.pubnub.kmp.endpoints.push.AddChannelsToPush
-import com.pubnub.kmp.endpoints.push.ListPushProvisions
-import com.pubnub.kmp.endpoints.push.RemoveAllPushChannelsForDevice
-import com.pubnub.kmp.endpoints.push.RemoveChannelsFromPush
-import com.pubnub.kmp.v2.entities.Channel
-import com.pubnub.kmp.v2.entities.ChannelGroup
-import com.pubnub.kmp.v2.entities.ChannelMetadata
-import com.pubnub.kmp.v2.entities.UserMetadata
 
 interface PubNub {
     val configuration: PNConfiguration
+
     fun addListener(listener: EventListener)
+
     fun addListener(listener: StatusListener)
+
     fun removeListener(listener: Listener)
-    fun removeAllListeners()//region api
+
+    fun removeAllListeners() //region api
+
     fun publish(
         channel: String,
         message: Any,
@@ -101,7 +106,9 @@ interface PubNub {
     ): Signal
 
     fun getSubscribedChannels(): List<String>
+
     fun getSubscribedChannelGroups(): List<String>
+
     fun addPushNotificationsOnChannels(
         pushType: PNPushType,
         channels: List<String>,
@@ -161,7 +168,6 @@ interface PubNub {
 
     fun whereNow(uuid: String = configuration.userId.value): WhereNow
 
-
 // TODO bring back when/if all SDKs accept a `uuid` parameter
 //    fun setPresenceState(
 //        channels: List<String> = listOf(),
@@ -210,12 +216,14 @@ interface PubNub {
     ): AddChannelChannelGroup
 
     fun listChannelsForChannelGroup(channelGroup: String): AllChannelsChannelGroup
+
     fun removeChannelsFromChannelGroup(
         channels: List<String>,
         channelGroup: String,
     ): RemoveChannelChannelGroup
 
     fun listAllChannelGroups(): ListAllChannelGroup
+
     fun deleteChannelGroup(channelGroup: String): DeleteChannelGroup
 
     fun grantToken(
@@ -228,7 +236,9 @@ interface PubNub {
     ): GrantToken
 
     fun revokeToken(token: String): RevokeToken
+
     fun time(): Time
+
     fun getAllChannelMetadata(
         limit: Int? = null,
         page: PNPage? = null,
@@ -254,6 +264,7 @@ interface PubNub {
     ): SetChannelMetadata
 
     fun removeChannelMetadata(channel: String): RemoveChannelMetadata
+
     fun getAllUUIDMetadata(
         limit: Int? = null,
         page: PNPage? = null,
@@ -281,6 +292,7 @@ interface PubNub {
     ): SetUUIDMetadata
 
     fun removeUUIDMetadata(uuid: String? = null): RemoveUUIDMetadata
+
     fun getMemberships(
         uuid: String? = null,
         limit: Int? = null,
@@ -463,5 +475,4 @@ interface PubNub {
         channelGroups: Set<String> = emptySet(),
         options: SubscriptionOptions = EmptyOptions,
     ): SubscriptionSet
-
 }

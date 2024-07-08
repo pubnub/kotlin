@@ -11,7 +11,6 @@ expect interface PNConfiguration {
     val secretKey: String
     val authKey: String
     val cryptoModule: CryptoModule?
-
 }
 
 expect interface CryptoModule

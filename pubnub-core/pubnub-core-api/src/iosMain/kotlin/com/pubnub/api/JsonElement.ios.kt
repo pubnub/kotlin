@@ -7,8 +7,12 @@ import kotlinx.cinterop.ExperimentalForeignApi
 
 actual abstract class JsonElement(val value: Any?) {
     override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is JsonElement) return false
+        if (this === other) {
+            return true
+        }
+        if (other !is JsonElement) {
+            return false
+        }
 
         if (asMap() != null && other.asMap() != null) {
             return asMap() == other.asMap()
@@ -44,8 +48,8 @@ actual fun JsonElement.asString(): String? {
 actual fun JsonElement.asMap(): Map<String, JsonElement>? {
     return when (value) {
         is AnyJSONObjC -> (value.asMap() as? Map<String, Any>)?.mapValues {
-                JsonElementImpl(it.value)
-            }
+            JsonElementImpl(it.value)
+        }
         is Map<*, *> -> (value as Map<String, *>)?.mapValues { JsonElementImpl(it.value) }
         else -> null
     }
@@ -58,8 +62,8 @@ actual fun JsonElement.isNull(): Boolean {
 actual fun JsonElement.asList(): List<JsonElement>? {
     return when (value) {
         is AnyJSONObjC -> value.asList()?.map {
-                JsonElementImpl(it)
-            }
+            JsonElementImpl(it)
+        }
         is List<*> -> value.map { JsonElementImpl(it) }
         else -> null
     }
@@ -70,7 +74,11 @@ actual fun JsonElement.asLong(): Long? {
         is AnyJSONObjC -> value.asInt()?.longValue
         is Long -> value
         is Int -> value.toLong()
-        is Boolean -> if (value) 1 else 0
+        is Boolean -> if (value) {
+            1
+        } else {
+            0
+        }
         else -> null
     }
 }
@@ -87,7 +95,11 @@ actual fun JsonElement.asDouble(): Double? {
     return when (value) {
         is AnyJSONObjC -> value.asDouble()?.doubleValue
         is Number -> value.toDouble()
-        is Boolean -> if (value) 1.0 else 0.0
+        is Boolean -> if (value) {
+            1.0
+        } else {
+            0.0
+        }
         else -> null
     }
 }
@@ -96,7 +108,11 @@ actual fun JsonElement.asNumber(): Number? {
     return when (value) {
         is AnyJSONObjC -> value.asNumber() as? Number
         is Number -> value
-        is Boolean -> if (value) 1 else 0
+        is Boolean -> if (value) {
+            1
+        } else {
+            0
+        }
         else -> null
     }
 }

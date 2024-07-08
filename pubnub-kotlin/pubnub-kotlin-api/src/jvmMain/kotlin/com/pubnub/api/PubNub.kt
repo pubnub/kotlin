@@ -93,7 +93,8 @@ interface PubNub :
             ).getConstructor(com.pubnub.api.v2.PNConfiguration::class.java).newInstance(configuration) as PubNub
         }
 
-        @Deprecated(message = "Use `create` with the new PNConfiguration.Builder instead",
+        @Deprecated(
+            message = "Use `create` with the new PNConfiguration.Builder instead",
             replaceWith = ReplaceWith("create(userId, subscribeKey, builder)")
         )
         fun create(
@@ -117,7 +118,6 @@ interface PubNub :
                     com.pubnub.api.v2.PNConfiguration.builder(userId, subscribeKey, builder).build()
                 ) as PubNub
         }
-
 
         /**
          * Generates random UUID to use. You should set a unique UUID to identify the user or the device

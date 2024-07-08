@@ -1,4 +1,4 @@
-package com.pubnub.kmp.endpoints.objects.uuid
+package com.pubnub.api.endpoints.objects.uuid
 
 import GetUUIDMetadataResponse
 import PubNub
@@ -8,6 +8,7 @@ import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult
 import com.pubnub.kmp.toPNUUIDMetadataResult
 
 class SetUUIDMetadataImpl(pubnub: PubNub, params: PubNub.SetUUIDMetadataParameters) : SetUUIDMetadata,
-    EndpointImpl<SetUUIDMetadataResponse, PNUUIDMetadataResult>(promiseFactory = { pubnub.objects.setUUIDMetadata(params) },
+    EndpointImpl<SetUUIDMetadataResponse, PNUUIDMetadataResult>(
+        promiseFactory = { pubnub.objects.setUUIDMetadata(params) },
         responseMapping = GetUUIDMetadataResponse::toPNUUIDMetadataResult
     )

@@ -1,4 +1,4 @@
-package com.pubnub.kmp.endpoints.objects.channel
+package com.pubnub.api.endpoints.objects.channel
 
 import GetAllChannelMetadataResponse
 import PubNub
@@ -8,7 +8,8 @@ import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataArrayResu
 import com.pubnub.kmp.toChannelMetadata
 
 class GetAllChannelMetadataImpl(pubnub: PubNub, params: PubNub.GetAllMetadataParameters) : GetAllChannelMetadata,
-    EndpointImpl<GetAllChannelMetadataResponse, PNChannelMetadataArrayResult>(promiseFactory = { pubnub.objects.getAllChannelMetadata(params) },
+    EndpointImpl<GetAllChannelMetadataResponse, PNChannelMetadataArrayResult>(
+        promiseFactory = { pubnub.objects.getAllChannelMetadata(params) },
         responseMapping = { pagedObjectsResponse: GetAllChannelMetadataResponse ->
             PNChannelMetadataArrayResult(
                 pagedObjectsResponse.status.toInt(),
