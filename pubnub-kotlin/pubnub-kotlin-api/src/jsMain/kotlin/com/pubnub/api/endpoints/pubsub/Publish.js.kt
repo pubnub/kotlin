@@ -1,8 +1,7 @@
 package com.pubnub.api.endpoints.pubsub
 
-import PubNub
-import com.pubnub.kmp.PNFuture
 import com.pubnub.api.models.consumer.PNPublishResult
+import com.pubnub.kmp.PNFuture
 
 /**
  * @see [PubNub.publish]

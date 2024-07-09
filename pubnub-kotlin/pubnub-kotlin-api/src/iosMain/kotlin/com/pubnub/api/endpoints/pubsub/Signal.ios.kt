@@ -2,12 +2,12 @@ package com.pubnub.api.endpoints.pubsub
 
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.signalWithChannel
-import com.pubnub.kmp.PNFuture
 import com.pubnub.api.models.consumer.PNPublishResult
-import com.pubnub.kmp.onFailureHandler
-import com.pubnub.kmp.onSuccessHandler
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
+import com.pubnub.kmp.PNFuture
+import com.pubnub.kmp.onFailureHandler
+import com.pubnub.kmp.onSuccessHandler
 import kotlinx.cinterop.ExperimentalForeignApi
 
 /**
@@ -20,7 +20,7 @@ class SignalImpl(
     private val pubnub: PubNubObjC,
     private val channel: String,
     private val message: Any
-): Signal {
+) : Signal {
     override fun async(callback: Consumer<Result<PNPublishResult>>) {
         pubnub.signalWithChannel(
             channel = channel,

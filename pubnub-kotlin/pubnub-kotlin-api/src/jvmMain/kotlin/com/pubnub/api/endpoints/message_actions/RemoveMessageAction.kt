@@ -6,8 +6,7 @@ import com.pubnub.api.models.consumer.message_actions.PNRemoveMessageActionResul
 /**
  * @see [PubNub.removeMessageAction]
  */
-actual interface RemoveMessageAction :
-    Endpoint<PNRemoveMessageActionResult> {
+actual interface RemoveMessageAction : Endpoint<PNRemoveMessageActionResult> {
     val channel: String
     val messageTimetoken: Long
     val actionTimetoken: Long

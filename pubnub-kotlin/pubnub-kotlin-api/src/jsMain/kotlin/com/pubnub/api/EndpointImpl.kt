@@ -5,9 +5,8 @@ import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.kmp.PNFuture
 import kotlin.js.Promise
 
-open class EndpointImpl<T,U>(private val promiseFactory: () -> Promise<T>, private val responseMapping: (T) -> U):
+open class EndpointImpl<T, U>(private val promiseFactory: () -> Promise<T>, private val responseMapping: (T) -> U) :
     PNFuture<U> {
-
     override fun async(callback: Consumer<Result<U>>) {
         try {
             promiseFactory().then(

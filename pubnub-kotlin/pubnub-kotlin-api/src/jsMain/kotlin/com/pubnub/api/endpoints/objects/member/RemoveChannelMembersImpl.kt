@@ -10,4 +10,3 @@ class RemoveChannelMembersImpl(pubnub: PubNub, params: PubNub.RemoveChannelMembe
     promiseFactory = { pubnub.objects.removeChannelMembers(params) },
     responseMapping = ManageChannelMembersResponse::toPNMemberArrayResult
 )
-

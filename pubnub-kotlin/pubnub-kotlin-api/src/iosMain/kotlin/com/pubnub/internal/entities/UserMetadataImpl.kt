@@ -11,7 +11,7 @@ import kotlinx.cinterop.ExperimentalForeignApi
 @OptIn(ExperimentalForeignApi::class)
 class UserMetadataImpl(
     private val userMetadata: PubNubUserMetadataEntityObjC
-): UserMetadata {
+) : UserMetadata {
     override val id: String
         get() = userMetadata.name()
 

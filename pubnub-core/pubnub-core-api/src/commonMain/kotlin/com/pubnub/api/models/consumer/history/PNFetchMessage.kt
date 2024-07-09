@@ -44,7 +44,7 @@ data class PNFetchMessageItem(
     val error: PubNubError? = null,
 ) {
     // for compatibility with legacy Java SDK
-    class Action(uuid: String, actionTimetoken: String) :
+    class Action(uuid: String, actionTimetoken: Long) :
         com.pubnub.api.models.consumer.history.Action(uuid, actionTimetoken)
 }
 
@@ -56,7 +56,7 @@ data class PNFetchMessageItem(
  */
 open class Action(
     val uuid: String,
-    val actionTimetoken: String,
+    val actionTimetoken: Long,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) {

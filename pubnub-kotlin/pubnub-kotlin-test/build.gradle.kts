@@ -56,7 +56,6 @@ kotlin {
 //        }
     }
 
-
 //    targets.withType<KotlinNativeTarget> {
 //        if (konanTarget.family.isAppleFamily) {
 //            binaries.withType<TestExecutable> {
@@ -90,5 +89,4 @@ kotlin {
             buildConfigField(Type.STRING, "pamSecKey", testProps.getProperty("pamSecKey"))
         }
     }
-
 }

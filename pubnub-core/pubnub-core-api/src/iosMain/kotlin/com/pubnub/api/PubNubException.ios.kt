@@ -14,12 +14,11 @@ actual class PubNubException(
     errorMessage: String?,
     cause: Throwable?
 ) : Exception(errorMessage, cause) {
-
     actual constructor(errorMessage: String?, cause: Throwable?) : this(statusCode = 0, errorMessage, cause)
     actual constructor(pubnubError: PubNubError, cause: Throwable?) : this(statusCode = 0, pubnubError.message, cause)
 
     // test only
-    actual constructor(errorMessage: String?, statusCode: Int, cause: Throwable?) : this(statusCode, errorMessage,cause)
+    actual constructor(errorMessage: String?, statusCode: Int, cause: Throwable?) : this(statusCode, errorMessage, cause)
 
     actual companion object {
         actual fun from(e: Throwable): PubNubException {

@@ -1,8 +1,7 @@
 package com.pubnub.api.endpoints
 
-import PubNub
-import com.pubnub.kmp.PNFuture
 import com.pubnub.api.models.consumer.PNTimeResult
+import com.pubnub.kmp.PNFuture
 
 /**
  * @see [PubNub.time]

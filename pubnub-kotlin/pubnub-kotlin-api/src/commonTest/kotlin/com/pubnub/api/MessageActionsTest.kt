@@ -1,8 +1,6 @@
 package com.pubnub.api
 
 import com.pubnub.api.models.consumer.PNBoundedPage
-import com.pubnub.api.models.consumer.history.HistoryMessageType
-import com.pubnub.api.models.consumer.history.PNFetchMessageItem
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.test.BaseIntegrationTest
 import com.pubnub.test.await
@@ -16,7 +14,7 @@ class MessageActionsTest : BaseIntegrationTest() {
     private val channel = randomString()
 
     @Test
-    fun add_getMessageAction() = runTest {
+    fun add_get_remove_MessageAction() = runTest {
         val expectedMeta = mapOf(randomString() to randomString())
         val expectedMessage = randomString()
         val expectedAction = randomString()
@@ -39,10 +37,13 @@ class MessageActionsTest : BaseIntegrationTest() {
             ),
         ).await()
 
-        val actions = pubnub.getMessageActions(channel, PNBoundedPage(
-            start = actionResult.actionTimetoken!! + 1,
-            end = actionResult.actionTimetoken!!
-        )).await()
+        val actions = pubnub.getMessageActions(
+            channel,
+            PNBoundedPage(
+                start = actionResult.actionTimetoken!! + 1,
+                end = actionResult.actionTimetoken!!
+            )
+        ).await()
 
         assertTrue { actions.actions.isNotEmpty() }
         val foundAction = actions.actions.single { it.actionTimetoken == actionResult.actionTimetoken }
@@ -50,6 +51,17 @@ class MessageActionsTest : BaseIntegrationTest() {
         assertEquals(actionResult.messageTimetoken, foundAction.messageTimetoken)
         assertEquals(expectedAction, foundAction.type)
         assertEquals(config.userId.value, foundAction.uuid)
-    }
 
+        pubnub.removeMessageAction(channel, foundAction.messageTimetoken, foundAction.actionTimetoken!!).await()
+
+        val actionsAfterDelete = pubnub.getMessageActions(
+            channel,
+            PNBoundedPage(
+                start = actionResult.actionTimetoken!! + 1,
+                end = actionResult.actionTimetoken!!
+            )
+        ).await()
+
+        assertEquals(emptyList(), actionsAfterDelete.actions)
+    }
 }

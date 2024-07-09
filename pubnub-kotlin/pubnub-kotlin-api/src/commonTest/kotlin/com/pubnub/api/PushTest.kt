@@ -5,9 +5,12 @@ import com.pubnub.api.enums.PNPushType
 import com.pubnub.test.BaseIntegrationTest
 import com.pubnub.test.await
 import com.pubnub.test.randomString
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.withContext
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -20,17 +23,16 @@ class PushTest : BaseIntegrationTest() {
     private val deviceId =
         generateSequence { (0..9).random() }.take(70).toList().shuffled().joinToString(separator = "")
     private val topic = randomString()
-    private val mutex = Mutex() //for some reason without this on JS tests run concurrently with before/after and fail
+    private val mutex = Mutex() // for some reason without this on JS tests run concurrently with before/after and fail
 
     @BeforeTest
     override fun before() {
         super.before()
         runTest {
             mutex.withLock {
-                pubnub.removePushNotificationsFromChannels(PNPushType.FCM, channels, deviceId).await()
-                pubnub.removePushNotificationsFromChannels(
+                pubnub.removeAllPushNotificationsFromDeviceWithPushToken(PNPushType.FCM, deviceId).await()
+                pubnub.removeAllPushNotificationsFromDeviceWithPushToken(
                     PNPushType.APNS2,
-                    channels,
                     deviceId,
                     topic,
                     PNPushEnvironment.PRODUCTION
@@ -70,8 +72,14 @@ class PushTest : BaseIntegrationTest() {
                 deviceId,
             ).await()
 
-            assertTrue { pubnub.auditPushChannelProvisions(PNPushType.FCM, deviceId)
-                .await().channels.isEmpty() }
+            withContext(Dispatchers.Default) {
+                delay(1000)
+            }
+
+            assertEquals(
+                emptyList(),
+                pubnub.auditPushChannelProvisions(PNPushType.FCM, deviceId).await().channels
+            )
         }
     }
 
@@ -99,8 +107,10 @@ class PushTest : BaseIntegrationTest() {
                 PNPushEnvironment.PRODUCTION
             ).await()
 
-            assertTrue { pubnub.auditPushChannelProvisions(PNPushType.APNS2, deviceId, topic, PNPushEnvironment.PRODUCTION)
-                .await().channels.isEmpty() }
+            assertTrue {
+                pubnub.auditPushChannelProvisions(PNPushType.APNS2, deviceId, topic, PNPushEnvironment.PRODUCTION)
+                    .await().channels.isEmpty()
+            }
         }
     }
 
@@ -117,8 +127,7 @@ class PushTest : BaseIntegrationTest() {
                 deviceId,
             ).await()
 
-            assertTrue { pubnub.auditPushChannelProvisions(PNPushType.FCM, deviceId)
-                .await().channels.isEmpty() }
+            assertEquals(emptyList(), pubnub.auditPushChannelProvisions(PNPushType.FCM, deviceId).await().channels)
         }
     }
 
@@ -145,9 +154,14 @@ class PushTest : BaseIntegrationTest() {
                 PNPushEnvironment.PRODUCTION
             ).await()
 
-            assertTrue { pubnub.auditPushChannelProvisions(PNPushType.APNS2, deviceId, topic, PNPushEnvironment.PRODUCTION)
-                .await().channels.isEmpty() }
+            withContext(Dispatchers.Default) {
+                delay(1000)
+            }
+
+            assertTrue {
+                pubnub.auditPushChannelProvisions(PNPushType.APNS2, deviceId, topic, PNPushEnvironment.PRODUCTION)
+                    .await().channels.isEmpty()
+            }
         }
     }
-
 }

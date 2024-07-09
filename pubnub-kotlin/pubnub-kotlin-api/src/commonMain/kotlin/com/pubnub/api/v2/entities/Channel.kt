@@ -62,7 +62,7 @@ interface Channel : BaseChannel<EventListener, Subscription> {
     fun publish(
         message: Any,
         meta: Any? = null,
-        shouldStore: Boolean? = null,
+        shouldStore: Boolean = true,
         usePost: Boolean = false,
         replicate: Boolean = true,
         ttl: Int? = null
@@ -110,9 +110,9 @@ interface Channel : BaseChannel<EventListener, Subscription> {
      */
     fun fire(
         message: Any,
-        meta: Any? = null,
-        usePost: Boolean = false,
-        ttl: Int? = null
+        meta: Any?,
+        usePost: Boolean,
+        ttl: Int?
     ): Publish
 
     /**

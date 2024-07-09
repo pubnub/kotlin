@@ -31,4 +31,3 @@ interface Endpoint<OUTPUT> : ExtendedRemoteAction<OUTPUT> {
      */
     fun overrideConfiguration(configuration: PNConfiguration): Endpoint<OUTPUT>
 }
-

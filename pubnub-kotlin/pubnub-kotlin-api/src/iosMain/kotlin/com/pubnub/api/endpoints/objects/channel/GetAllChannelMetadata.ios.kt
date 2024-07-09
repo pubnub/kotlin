@@ -3,13 +3,13 @@ package com.pubnub.api.endpoints.objects.channel
 import cocoapods.PubNubSwift.PubNubChannelMetadataObjC
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.getAllChannelMetadataWithLimit
-import com.pubnub.kmp.PNFuture
 import com.pubnub.api.models.consumer.objects.PNKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataArrayResult
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
+import com.pubnub.kmp.PNFuture
 import com.pubnub.kmp.createObjectSortProperties
 import com.pubnub.kmp.createPNChannelMetadata
 import com.pubnub.kmp.createPubNubHashedPage
@@ -33,7 +33,7 @@ class GetAllChannelMetadataImpl(
     private val sort: Collection<PNSortKey<PNKey>>,
     private val includeCount: Boolean,
     private val includeCustom: Boolean
-): GetAllChannelMetadata {
+) : GetAllChannelMetadata {
     override fun async(callback: Consumer<Result<PNChannelMetadataArrayResult>>) {
         pubnub.getAllChannelMetadataWithLimit(
             limit = limit?.let { NSNumber(it) },

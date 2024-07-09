@@ -25,8 +25,16 @@ internal fun String.toNSData(): NSData? {
 @OptIn(ExperimentalForeignApi::class)
 internal fun createPubNubHashedPage(from: PNPage?): PubNubHashedPageObjC {
     return PubNubHashedPageObjC(
-        start = if (from is PNPage.PNNext) { from.pageHash } else { null },
-        end = if (from is PNPage.PNPrev) { from.pageHash } else { null },
+        start = if (from is PNPage.PNNext) {
+            from.pageHash
+        } else {
+            null
+        },
+        end = if (from is PNPage.PNPrev) {
+            from.pageHash
+        } else {
+            null
+        },
         totalCount = null
     )
 }
@@ -62,7 +70,7 @@ internal fun createPNChannelMetadata(from: PubNubChannelMetadataObjC): PNChannel
 }
 
 @OptIn(ExperimentalForeignApi::class)
-internal fun createObjectSortProperties(from: Collection<PNSortKey<PNKey>>) : List<PubNubObjectSortPropertyObjC> {
+internal fun createObjectSortProperties(from: Collection<PNSortKey<PNKey>>): List<PubNubObjectSortPropertyObjC> {
     return from.map {
         PubNubObjectSortPropertyObjC(
             key = it.key.fieldName,
@@ -108,5 +116,5 @@ internal inline fun <reified T, U> List<*>?.filterAndMap(mapper: (T) -> U): Coll
 
 @Suppress("UNCHECKED_CAST")
 inline fun <reified K, reified V> Map<*, *>.safeCast(): Map<K, V> {
-    return this as? Map<K,V> ?: error("Cannot make the cast")
+    return this as? Map<K, V> ?: error("Cannot make the cast")
 }

@@ -6,11 +6,11 @@ import cocoapods.PubNubSwift.getChannelMembersWithChannel
 import com.pubnub.api.models.consumer.objects.PNMemberKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
-import com.pubnub.kmp.PNFuture
 import com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
+import com.pubnub.kmp.PNFuture
 import com.pubnub.kmp.createPNMember
 import com.pubnub.kmp.createPubNubHashedPage
 import com.pubnub.kmp.filterAndMap

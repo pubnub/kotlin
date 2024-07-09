@@ -11,7 +11,7 @@ import kotlinx.cinterop.ExperimentalForeignApi
 @OptIn(ExperimentalForeignApi::class)
 class ChannelGroupImpl(
     private val channelGroup: PubNubChannelGroupEntityObjC
-): ChannelGroup {
+) : ChannelGroup {
     override val name: String
         get() = channelGroup.name()
 

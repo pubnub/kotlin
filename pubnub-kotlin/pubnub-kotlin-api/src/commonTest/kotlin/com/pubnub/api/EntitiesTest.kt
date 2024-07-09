@@ -29,9 +29,11 @@ class EntitiesTest : BaseIntegrationTest() {
             val subscription = channel.awaitSubscribe()
 
             var message: PNMessageResult? = null
-            subscription.addListener(createEventListener(pubnub, onMessage = { pubNub, pnMessageResult ->
-                message = pnMessageResult
-            }))
+            subscription.addListener(
+                createEventListener(pubnub, onMessage = { pubNub, pnMessageResult ->
+                    message = pnMessageResult
+                })
+            )
 
             pubnub.publish(channelName, "some message", shouldStore = false).await()
             yield()
@@ -45,7 +47,7 @@ class EntitiesTest : BaseIntegrationTest() {
         pubnub.test(backgroundScope) {
             val channelSet = setOf(channelName, "abc")
             val set = pubnub.subscriptionSetOf(channelSet)
-            pubnub.awaitSubscribe(channelSet)  {
+            pubnub.awaitSubscribe(channelSet) {
                 set.subscribe()
             }
             assertEquals(channelSet, pubnub.getSubscribedChannels().toSet())
@@ -57,15 +59,17 @@ class EntitiesTest : BaseIntegrationTest() {
         pubnub.test(backgroundScope) {
             val channelSet = setOf(channelName, "abc")
             val set = pubnub.subscriptionSetOf(channelSet)
-            pubnub.awaitSubscribe(channelSet)  {
+            pubnub.awaitSubscribe(channelSet) {
                 set.subscribe()
             }
             assertEquals(channelSet, pubnub.getSubscribedChannels().toSet())
 
             var messageFromSetSubscription: PNMessageResult? = null
-            set.addListener(createEventListener(pubnub, onMessage = { pubNub, pnMessageResult ->
-                messageFromSetSubscription = pnMessageResult
-            }))
+            set.addListener(
+                createEventListener(pubnub, onMessage = { pubNub, pnMessageResult ->
+                    messageFromSetSubscription = pnMessageResult
+                })
+            )
 
             pubnub.publish(channelName, "some message", shouldStore = false).await()
             val receivedMessage = nextMessage()

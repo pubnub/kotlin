@@ -16,11 +16,11 @@ import kotlinx.cinterop.ExperimentalForeignApi
 @OptIn(ExperimentalForeignApi::class)
 class ChannelImpl(
     private val channel: PubNubChannelEntityObjC
-): Channel {
+) : Channel {
     override fun publish(
         message: Any,
         meta: Any?,
-        shouldStore: Boolean?,
+        shouldStore: Boolean,
         usePost: Boolean,
         replicate: Boolean,
         ttl: Int?

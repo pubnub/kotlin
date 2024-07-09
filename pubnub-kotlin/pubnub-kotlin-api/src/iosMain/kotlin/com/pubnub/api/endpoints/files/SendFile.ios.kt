@@ -5,20 +5,20 @@ import cocoapods.PubNubSwift.PubNubFileContentObjC
 import cocoapods.PubNubSwift.PubNubInputStreamContentObjC
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.PubNubUploadableObjC
-import com.pubnub.api.models.consumer.files.PNFileUploadResult
-import com.pubnub.api.v2.callbacks.Consumer
-import com.pubnub.api.v2.callbacks.Result
-import com.pubnub.kmp.PNFuture
-import kotlinx.cinterop.ExperimentalForeignApi
 import cocoapods.PubNubSwift.sendFileWithChannel
 import com.pubnub.api.PubNubException
 import com.pubnub.api.models.consumer.files.PNBaseFile
+import com.pubnub.api.models.consumer.files.PNFileUploadResult
+import com.pubnub.api.v2.callbacks.Consumer
+import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.kmp.DataUploadContent
 import com.pubnub.kmp.FileUploadContent
+import com.pubnub.kmp.PNFuture
 import com.pubnub.kmp.StreamUploadContent
 import com.pubnub.kmp.Uploadable
 import com.pubnub.kmp.onFailureHandler
 import com.pubnub.kmp.onSuccessHandler2
+import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSInputStream
 import platform.Foundation.NSNumber
 
@@ -37,7 +37,7 @@ class SendFileImpl(
     private val meta: Any?,
     private val ttl: Int?,
     private val shouldStore: Boolean?,
-): SendFile {
+) : SendFile {
     override fun async(callback: Consumer<Result<PNFileUploadResult>>) {
         mapContent(inputStream)?.let { content ->
             pubnub.sendFileWithChannel(

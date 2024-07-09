@@ -7,7 +7,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class PNFutureTest {
-
     @Test
     fun asFuture1() {
         val value = true

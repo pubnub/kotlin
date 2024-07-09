@@ -3,12 +3,12 @@ package com.pubnub.api.endpoints.files
 import cocoapods.PubNubSwift.PubNubFileObjC
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.listFilesWithChannel
-import com.pubnub.kmp.PNFuture
 import com.pubnub.api.models.consumer.files.PNListFilesResult
 import com.pubnub.api.models.consumer.files.PNUploadedFile
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
+import com.pubnub.kmp.PNFuture
 import com.pubnub.kmp.createPubNubHashedPage
 import com.pubnub.kmp.filterAndMap
 import com.pubnub.kmp.onFailureHandler
@@ -27,7 +27,7 @@ class ListFilesImpl(
     private val channel: String,
     private val limit: Int?,
     private val next: PNPage.PNNext?
-): ListFiles {
+) : ListFiles {
     override fun async(callback: Consumer<Result<PNListFilesResult>>) {
         pubnub.listFilesWithChannel(
             channel = channel,

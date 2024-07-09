@@ -12,12 +12,10 @@ import com.pubnub.test.await
 import com.pubnub.test.randomString
 import com.pubnub.test.test
 import kotlinx.coroutines.test.runTest
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
 import kotlin.time.Duration.Companion.seconds
 
 class UserMetadataTest : BaseIntegrationTest() {
@@ -160,7 +158,7 @@ class UserMetadataTest : BaseIntegrationTest() {
             type = type
         ).await()
 
-        //when
+        // when
         val result = pubnub.getUUIDMetadata(uuid, includeCustom = true).await()
 
         // then
@@ -196,7 +194,7 @@ class UserMetadataTest : BaseIntegrationTest() {
         // when
         val allUsers = mutableListOf<PNUUIDMetadata>()
         var next: PNPage.PNNext? = null
-        while(true) {
+        while (true) {
             val result: PNUUIDMetadataArrayResult = pubnub.getAllUUIDMetadata(
                 limit = 2,
                 page = next,

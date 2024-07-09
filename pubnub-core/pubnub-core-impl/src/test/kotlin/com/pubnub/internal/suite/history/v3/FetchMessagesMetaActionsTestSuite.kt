@@ -39,7 +39,7 @@ class FetchMessagesMetaActionsTestSuite :
         assertEquals(1, actions!!.keys.size)
         assertEquals(1, actions["reaction"]!!["smile"]!!.size)
         assertEquals("publishersUuid", actions["reaction"]!!["smile"]!![0].uuid)
-        assertEquals("200", actions["reaction"]!!["smile"]!![0].actionTimetoken)
+        assertEquals(200, actions["reaction"]!!["smile"]!![0].actionTimetoken)
     }
 
     override fun successfulResponseBody() =

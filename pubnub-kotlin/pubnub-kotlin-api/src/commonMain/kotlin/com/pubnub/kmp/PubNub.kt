@@ -73,15 +73,20 @@ import com.pubnub.api.v2.subscriptions.SubscriptionSet
 
 interface PubNub {
     val configuration: PNConfiguration
+
     fun addListener(listener: EventListener)
+
     fun addListener(listener: StatusListener)
+
     fun removeListener(listener: Listener)
-    fun removeAllListeners()//region api
+
+    fun removeAllListeners() //region api
+
     fun publish(
         channel: String,
         message: Any,
         meta: Any? = null,
-        shouldStore: Boolean? = null,
+        shouldStore: Boolean = true,
         usePost: Boolean = false,
         replicate: Boolean = true,
         ttl: Int? = null,
@@ -101,7 +106,9 @@ interface PubNub {
     ): Signal
 
     fun getSubscribedChannels(): List<String>
+
     fun getSubscribedChannelGroups(): List<String>
+
     fun addPushNotificationsOnChannels(
         pushType: PNPushType,
         channels: List<String>,
@@ -161,7 +168,6 @@ interface PubNub {
 
     fun whereNow(uuid: String = configuration.userId.value): WhereNow
 
-
 // TODO bring back when/if all SDKs accept a `uuid` parameter
 //    fun setPresenceState(
 //        channels: List<String> = listOf(),
@@ -210,12 +216,14 @@ interface PubNub {
     ): AddChannelChannelGroup
 
     fun listChannelsForChannelGroup(channelGroup: String): AllChannelsChannelGroup
+
     fun removeChannelsFromChannelGroup(
         channels: List<String>,
         channelGroup: String,
     ): RemoveChannelChannelGroup
 
     fun listAllChannelGroups(): ListAllChannelGroup
+
     fun deleteChannelGroup(channelGroup: String): DeleteChannelGroup
 
     fun grantToken(
@@ -228,7 +236,9 @@ interface PubNub {
     ): GrantToken
 
     fun revokeToken(token: String): RevokeToken
+
     fun time(): Time
+
     fun getAllChannelMetadata(
         limit: Int? = null,
         page: PNPage? = null,
@@ -254,6 +264,7 @@ interface PubNub {
     ): SetChannelMetadata
 
     fun removeChannelMetadata(channel: String): RemoveChannelMetadata
+
     fun getAllUUIDMetadata(
         limit: Int? = null,
         page: PNPage? = null,
@@ -281,6 +292,7 @@ interface PubNub {
     ): SetUUIDMetadata
 
     fun removeUUIDMetadata(uuid: String? = null): RemoveUUIDMetadata
+
     fun getMemberships(
         uuid: String? = null,
         limit: Int? = null,
@@ -463,5 +475,4 @@ interface PubNub {
         channelGroups: Set<String> = emptySet(),
         options: SubscriptionOptions = EmptyOptions,
     ): SubscriptionSet
-
 }

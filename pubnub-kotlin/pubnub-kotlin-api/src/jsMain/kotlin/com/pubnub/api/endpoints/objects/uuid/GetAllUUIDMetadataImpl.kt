@@ -8,7 +8,8 @@ import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult
 import com.pubnub.kmp.toPNUUIDMetadata
 
 class GetAllUUIDMetadataImpl(pubnub: PubNub, params: PubNub.GetAllMetadataParameters) : GetAllUUIDMetadata,
-    EndpointImpl<GetAllUUIDMetadataResponse, PNUUIDMetadataArrayResult>(promiseFactory = { pubnub.objects.getAllUUIDMetadata(params) },
+    EndpointImpl<GetAllUUIDMetadataResponse, PNUUIDMetadataArrayResult>(
+        promiseFactory = { pubnub.objects.getAllUUIDMetadata(params) },
         responseMapping = { pagedObjectsResponse: GetAllUUIDMetadataResponse ->
             PNUUIDMetadataArrayResult(
                 pagedObjectsResponse.status.toInt(),

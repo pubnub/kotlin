@@ -73,7 +73,11 @@ actual fun createEventListener(
             onPresence = { presenceEvents -> createPresenceEventResults(presenceEvents).forEach { onPresence(pubnub, it) } },
             onSignal = { onSignal(pubnub, createSignalResult(it)) },
             onMessageAction = { onMessageAction(pubnub, createMessageActionResult(it)) },
-            onAppContext = {  if (createObjectEvent(it) != null) { createObjectEvent(it) } else {} },
+            onAppContext = {
+                if (createObjectEvent(it) != null) {
+                    createObjectEvent(it)
+                } else {}
+            },
             onFile = { onFile(pubnub, createFileEventResult(it)) }
         ),
         onMessage = onMessage,
@@ -176,11 +180,12 @@ private fun createObjectEvent(from: PubNubAppContextEventObjC?): PNObjectEventRe
         PNObjectEventResult(
             result = BasePubSubResult(
                 channel = from!!.channel(),
-                subscription =  from.subscription(),
+                subscription = from.subscription(),
                 timetoken = from.timetoken()?.longValue,
                 userMetadata = JsonElementImpl(from.userMetadata()),
                 publisher = from.publisher(),
-            ), extractedMessage = it
+            ),
+            extractedMessage = it
         )
     }
 }
@@ -297,7 +302,8 @@ actual fun createStatusListener(
                 else -> null
             }?.let { category ->
                 onStatus(
-                    pubnub, PNStatus(
+                    pubnub,
+                    PNStatus(
                         category = category,
                         exception = status?.error()?.let { error -> PubNubException(errorMessage = error.localizedDescription) },
                         currentTimetoken = status?.currentTimetoken()?.longValue(),

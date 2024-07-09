@@ -71,7 +71,7 @@ fun <T, U> PNFuture<T>.thenAsync(action: (T) -> PNFuture<U>): PNFuture<U> = PNFu
     }
 }
 
-fun <T> PNFuture<T>.remember() : PNFuture<T> = CompletablePNFuture<T>().also { completableFuture ->
+fun <T> PNFuture<T>.remember(): PNFuture<T> = CompletablePNFuture<T>().also { completableFuture ->
     this@remember.async {
         completableFuture.complete(it)
     }
@@ -90,7 +90,6 @@ fun <T> PNFuture<T>.alsoAsync(action: (T) -> PNFuture<*>): PNFuture<T> =
         }
     }
 
-
 fun <T> PNFuture<T>.catch(action: (Exception) -> Result<T>): PNFuture<T> = PNFuture<T> { callback ->
     this@catch.async { result: Result<T> ->
         result.onSuccess {
@@ -105,7 +104,7 @@ fun <T> PNFuture<T>.catch(action: (Exception) -> Result<T>): PNFuture<T> = PNFut
     }
 }
 
-fun <T>  Collection<PNFuture<T>>.awaitAll(): PNFuture<List<T>> = PNFuture { callback ->
+fun <T> Collection<PNFuture<T>>.awaitAll(): PNFuture<List<T>> = PNFuture { callback ->
     if (isEmpty()) {
         callback.accept(Result.success(emptyList()))
         return@PNFuture
@@ -132,11 +131,19 @@ fun <T>  Collection<PNFuture<T>>.awaitAll(): PNFuture<List<T>> = PNFuture { call
 }
 
 @Suppress("UNCHECKED_CAST")
-fun <T, U> awaitAll(future1: PNFuture<T>, future2: PNFuture<U>): PNFuture<Pair<T, U>> = listOf(future1 as PNFuture<Any?>, future2 as PNFuture<Any?>).awaitAll().then { it: List<Any?> ->
+fun <T, U> awaitAll(
+    future1: PNFuture<T>,
+    future2: PNFuture<U>
+): PNFuture<Pair<T, U>> = listOf(future1 as PNFuture<Any?>, future2 as PNFuture<Any?>).awaitAll().then { it: List<Any?> ->
     Pair(it[0] as T, it[1] as U)
 }
 
 @Suppress("UNCHECKED_CAST")
-fun <T, U, X> awaitAll(future1: PNFuture<T>, future2: PNFuture<U>, future3: PNFuture<X>): PNFuture<Triple<T, U, X>> = listOf(future1 as PNFuture<Any?>, future2 as PNFuture<Any?>, future3 as PNFuture<Any?>).awaitAll().then { it: List<Any?> ->
+fun <T, U, X> awaitAll(
+    future1: PNFuture<T>,
+    future2: PNFuture<U>,
+    future3: PNFuture<X>
+): PNFuture<Triple<T, U, X>> = listOf(future1 as PNFuture<Any?>, future2 as PNFuture<Any?>, future3 as PNFuture<Any?>).awaitAll().then {
+        it: List<Any?> ->
     Triple(it[0] as T, it[1] as U, it[2] as X)
 }

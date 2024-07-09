@@ -25,6 +25,7 @@ actual interface EventListener : BaseEventListener {
     val onObjects: (PubNub, PNObjectEventResult) -> Unit
     val onFile: (PubNub, PNFileEventResult) -> Unit
 }
+
 @OptIn(ExperimentalForeignApi::class)
 class EventListenerImpl(
     override val underlying: PubNubEventListenerObjC,
@@ -34,4 +35,4 @@ class EventListenerImpl(
     override val onMessageAction: (PubNub, PNMessageActionResult) -> Unit,
     override val onObjects: (PubNub, PNObjectEventResult) -> Unit,
     override val onFile: (PubNub, PNFileEventResult) -> Unit
-): EventListener
+) : EventListener

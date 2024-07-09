@@ -50,7 +50,7 @@ actual data class PubNubException(
     )
 
     // test only
-    actual constructor( errorMessage: String?, statusCode: Int, cause: Throwable?) : this(
+    actual constructor(errorMessage: String?, statusCode: Int, cause: Throwable?) : this(
         statusCode = statusCode,
         errorMessage = errorMessage,
         cause = cause,

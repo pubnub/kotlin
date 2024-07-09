@@ -11,10 +11,10 @@ import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
-import com.pubnub.kmp.PNFuture
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
+import com.pubnub.kmp.PNFuture
 import com.pubnub.kmp.createPNChannelMembership
 import com.pubnub.kmp.createPubNubHashedPage
 import com.pubnub.kmp.filterAndMap
@@ -40,10 +40,10 @@ class AddMembershipsImpl(
     private val includeCount: Boolean,
     private val includeCustom: Boolean,
     private val includeChannelDetails: PNChannelDetailsLevel?
-): ManageMemberships {
+) : ManageMemberships {
     override fun async(callback: Consumer<Result<PNChannelMembershipArrayResult>>) {
         pubnub.setMembershipsWithChannels(
-            channels = channels.map { PubNubChannelMetadataObjC(it.channel, AnyJSONObjC(it.custom?.value), it.status)},
+            channels = channels.map { PubNubChannelMetadataObjC(it.channel, AnyJSONObjC(it.custom?.value), it.status) },
             uuid = uuid,
             limit = limit?.let { NSNumber(it) },
             page = createPubNubHashedPage(from = page),
@@ -79,7 +79,7 @@ class RemoveMembershipsImpl(
     private val includeCount: Boolean,
     private val includeCustom: Boolean,
     private val includeChannelDetails: PNChannelDetailsLevel?
-): ManageMemberships {
+) : ManageMemberships {
     override fun async(callback: Consumer<Result<PNChannelMembershipArrayResult>>) {
         pubnub.removeMembershipsWithChannels(
             channels = channels,

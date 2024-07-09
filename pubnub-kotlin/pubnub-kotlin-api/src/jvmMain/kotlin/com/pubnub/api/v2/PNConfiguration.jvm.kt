@@ -14,7 +14,11 @@ actual fun createPNConfiguration(
     return PNConfiguration.builder(userId, subscribeKey) {
         this.publishKey = publishKey
         this.secretKey = secretKey.orEmpty()
-        this.logVerbosity = if (logVerbosity) PNLogVerbosity.BODY else PNLogVerbosity.NONE
+        this.logVerbosity = if (logVerbosity) {
+            PNLogVerbosity.BODY
+        } else {
+            PNLogVerbosity.NONE
+        }
     }.build()
 }
 

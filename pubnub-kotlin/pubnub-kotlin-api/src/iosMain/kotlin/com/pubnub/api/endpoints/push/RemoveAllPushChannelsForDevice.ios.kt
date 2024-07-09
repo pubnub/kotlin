@@ -2,15 +2,15 @@ package com.pubnub.api.endpoints.push
 
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.removeAllChannelsFromPushWithPushType
-import com.pubnub.kmp.PNFuture
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.push.PNPushRemoveAllChannelsResult
-import com.pubnub.kmp.onFailureHandler
-import com.pubnub.kmp.onSuccessReturnValue
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
+import com.pubnub.kmp.PNFuture
+import com.pubnub.kmp.onFailureHandler
+import com.pubnub.kmp.onSuccessReturnValue
 import com.pubnub.kmp.toNSData
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSData
@@ -27,7 +27,7 @@ class RemoveAllPushChannelsForDeviceImpl(
     private val pushType: PNPushType,
     private val topic: String?,
     private val environment: PNPushEnvironment
-): RemoveAllPushChannelsForDevice {
+) : RemoveAllPushChannelsForDevice {
     override fun async(callback: Consumer<Result<PNPushRemoveAllChannelsResult>>) {
         deviceId.toNSData()?.let { data: NSData ->
             pubnub.removeAllChannelsFromPushWithPushType(

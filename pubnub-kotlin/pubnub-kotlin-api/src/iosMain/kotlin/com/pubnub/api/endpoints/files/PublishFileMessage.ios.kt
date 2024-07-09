@@ -2,12 +2,12 @@ package com.pubnub.api.endpoints.files
 
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.publishFileMessageWithChannel
-import com.pubnub.kmp.onFailureHandler
-import com.pubnub.kmp.onSuccessHandler
-import com.pubnub.kmp.PNFuture
 import com.pubnub.api.models.consumer.files.PNPublishFileMessageResult
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
+import com.pubnub.kmp.PNFuture
+import com.pubnub.kmp.onFailureHandler
+import com.pubnub.kmp.onSuccessHandler
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSNumber
 
@@ -26,7 +26,7 @@ class PublishFileMessageImpl(
     private val meta: Any?,
     private val ttl: Int?,
     private val shouldStore: Boolean?
-): PublishFileMessage {
+) : PublishFileMessage {
     override fun async(callback: Consumer<Result<PNPublishFileMessageResult>>) {
         pubnub.publishFileMessageWithChannel(
             channel = channel,

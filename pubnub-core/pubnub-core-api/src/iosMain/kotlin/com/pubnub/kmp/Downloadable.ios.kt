@@ -6,4 +6,4 @@ actual abstract class Downloadable
 
 class DownloadableImpl(
     private val inputStream: NSInputStream
-): Downloadable()
+) : Downloadable()

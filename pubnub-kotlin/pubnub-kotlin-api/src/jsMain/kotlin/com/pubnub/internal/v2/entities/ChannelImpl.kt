@@ -13,12 +13,11 @@ import com.pubnub.internal.v2.subscriptions.SubscriptionImpl
 import com.pubnub.kmp.Uploadable
 import com.pubnub.kmp.createJsObject
 
-class ChannelImpl( private val jsChannel: dynamic): Channel {
-
+class ChannelImpl(private val jsChannel: dynamic) : Channel {
     override fun publish(
         message: Any,
         meta: Any?,
-        shouldStore: Boolean?,
+        shouldStore: Boolean,
         usePost: Boolean,
         replicate: Boolean,
         ttl: Int?
@@ -33,7 +32,6 @@ class ChannelImpl( private val jsChannel: dynamic): Channel {
     override fun fire(message: Any, meta: Any?, usePost: Boolean, ttl: Int?): Publish {
         TODO("Not yet implemented")
     }
-
 
     override fun sendFile(
         fileName: String,
@@ -54,12 +52,15 @@ class ChannelImpl( private val jsChannel: dynamic): Channel {
     override val name: String
         get() = jsChannel.name
 
-    override fun subscription(options: SubscriptionOptions): Subscription { //todo use options
-        return SubscriptionImpl(jsChannel.subscription(createJsObject<PubNub.SubscriptionOptions> {
-            if (options.allOptions.filterIsInstance<ReceivePresenceEventsImpl>().isNotEmpty()) {
-                receivePresenceEvents = true
-            }
-        }))
+    override fun subscription(options: SubscriptionOptions): Subscription { // todo use options
+        return SubscriptionImpl(
+            jsChannel.subscription(
+                createJsObject<PubNub.SubscriptionOptions> {
+                    if (options.allOptions.filterIsInstance<ReceivePresenceEventsImpl>().isNotEmpty()) {
+                        receivePresenceEvents = true
+                    }
+                }
+            )
+        )
     }
-
 }

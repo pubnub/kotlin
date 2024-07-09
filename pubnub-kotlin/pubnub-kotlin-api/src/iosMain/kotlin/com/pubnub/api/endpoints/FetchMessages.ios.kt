@@ -5,18 +5,16 @@ import cocoapods.PubNubSwift.PubNubMessageActionObjC
 import cocoapods.PubNubSwift.PubNubMessageObjC
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.fetchMessagesFrom
-import com.pubnub.kmp.PNFuture
-import com.pubnub.api.JsonElement
 import com.pubnub.api.JsonElementImpl
-import com.pubnub.api.PubNubError
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.history.HistoryMessageType
 import com.pubnub.api.models.consumer.history.PNFetchMessageItem
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
-import com.pubnub.kmp.onFailureHandler
-import com.pubnub.kmp.onSuccessHandler
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
+import com.pubnub.kmp.PNFuture
+import com.pubnub.kmp.onFailureHandler
+import com.pubnub.kmp.onSuccessHandler
 import com.pubnub.kmp.safeCast
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSNumber
@@ -24,7 +22,7 @@ import platform.Foundation.NSNumber
 /**
  * @see [PubNub.fetchMessages]
  */
-actual interface FetchMessages : PNFuture<PNFetchMessagesResult> {}
+actual interface FetchMessages : PNFuture<PNFetchMessagesResult>
 
 @OptIn(ExperimentalForeignApi::class)
 open class FetchMessagesImpl(
@@ -35,7 +33,7 @@ open class FetchMessagesImpl(
     private val includeMeta: Boolean,
     private val includeMessageActions: Boolean,
     private val includeMessageType: Boolean
-): FetchMessages {
+) : FetchMessages {
     override fun async(callback: Consumer<Result<PNFetchMessagesResult>>) {
         pubnub.fetchMessagesFrom(
             channels = channels,
@@ -46,7 +44,7 @@ open class FetchMessagesImpl(
             page = PubNubBoundedPageObjC(
                 start = page.start?.let { NSNumber(long = it) },
                 end = page.end?.let { NSNumber(long = it) },
-                limit =  page.limit?.let { NSNumber(int = it) }
+                limit = page.limit?.let { NSNumber(int = it) }
             ),
             onSuccess = callback.onSuccessHandler {
                 PNFetchMessagesResult(
@@ -56,7 +54,8 @@ open class FetchMessagesImpl(
                         end = it?.page()?.end()?.longValue,
                         limit = it?.page()?.limit()?.intValue
                     )
-                )},
+                )
+            },
             onFailure = callback.onFailureHandler()
         )
     }
@@ -71,7 +70,7 @@ open class FetchMessagesImpl(
                     timetoken = it.published().toLong(),
                     actions = mapMessageActions(rawValue = it.actions()),
                     messageType = HistoryMessageType.of(it.messageType().toInt()),
-                    error = null //todo translate crypto errors
+                    error = null // todo translate crypto errors
                 )
             }
         } ?: emptyMap()
@@ -87,7 +86,7 @@ open class FetchMessagesImpl(
                 groupedEntry.value.map {
                     PNFetchMessageItem.Action(
                         uuid = it.publisher(),
-                        actionTimetoken = it.published()?.longValue.toString()
+                        actionTimetoken = it.published()?.longValue!!
                     )
                 }
             }

@@ -10,11 +10,11 @@ import com.pubnub.api.models.consumer.objects.PNMemberKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.member.MemberInput
-import com.pubnub.kmp.PNFuture
 import com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
+import com.pubnub.kmp.PNFuture
 import com.pubnub.kmp.createPNMember
 import com.pubnub.kmp.createPubNubHashedPage
 import com.pubnub.kmp.filterAndMap
@@ -40,7 +40,7 @@ class SetChannelMembersImpl(
     private val includeCount: Boolean,
     private val includeCustom: Boolean,
     private val includeUUIDDetails: PNUUIDDetailsLevel?
-): ManageChannelMembers {
+) : ManageChannelMembers {
     override fun async(callback: Consumer<Result<PNMemberArrayResult>>) {
         pubnub.setChannelMembersWithChannel(
             channel = channel,
@@ -79,7 +79,7 @@ class RemoveChannelMembersImpl(
     private val includeCount: Boolean,
     private val includeCustom: Boolean,
     private val includeUUIDDetails: PNUUIDDetailsLevel?
-): ManageChannelMembers {
+) : ManageChannelMembers {
     override fun async(callback: Consumer<Result<PNMemberArrayResult>>) {
         pubnub.removeChannelMembersWithChannel(
             channel = channel,

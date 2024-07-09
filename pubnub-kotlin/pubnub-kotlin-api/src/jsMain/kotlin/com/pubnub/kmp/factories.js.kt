@@ -42,22 +42,24 @@ actual fun createEventListener(
     val listener = object : PubNubJs.ListenerParameters, EventListener {
         override val message: (PubNubJs.MessageEvent) -> Unit = { messageEvent ->
             onMessage(
-                pubnub, PNMessageResult(
+                pubnub,
+                PNMessageResult(
                     BasePubSubResult(
                         messageEvent.channel,
                         messageEvent.subscription,
                         messageEvent.timetoken.toLong(),
-                        JsonElementImpl(messageEvent.userMetadata),
+                        messageEvent.userMetadata?.let { JsonElementImpl(it) },
                         messageEvent.publisher
                     ),
                     JsonElementImpl(messageEvent.message),
-                    null //TODO kmp error
+                    null // TODO kmp error
                 )
             )
         }
         override val presence: ((presenceEvent: PubNubJs.PresenceEvent) -> Unit) = { presenceEvent ->
             onPresence(
-                pubnub, PNPresenceEventResult(
+                pubnub,
+                PNPresenceEventResult(
                     presenceEvent.action,
                     presenceEvent.uuid,
                     presenceEvent.timestamp.toLong(),
@@ -68,11 +70,11 @@ actual fun createEventListener(
                     presenceEvent.timetoken.toLong(),
                 )
             )
-
         }
         override val signal: ((signalEvent: PubNubJs.SignalEvent) -> Unit) = { signalEvent ->
             onSignal(
-                pubnub, PNSignalResult(
+                pubnub,
+                PNSignalResult(
                     BasePubSubResult(
                         signalEvent.channel,
                         signalEvent.subscription,
@@ -87,27 +89,31 @@ actual fun createEventListener(
 
         override val messageAction: ((messageActionEvent: PubNubJs.MessageActionEvent) -> Unit) =
             { messageActionEvent ->
-                onMessageAction(pubnub, PNMessageActionResult(
-                    BasePubSubResult(
-                        messageActionEvent.channel,
-                        messageActionEvent.subscription,
-                        messageActionEvent.timetoken.toLong(),
-                        null,
-                        messageActionEvent.publisher
-                    ),
-                    messageActionEvent.event,
-                    PNMessageAction(
-                        messageActionEvent.data.type,
-                        messageActionEvent.data.value,
-                        messageActionEvent.data.messageTimetoken.toLong()
-                    ).apply {
-                        actionTimetoken = messageActionEvent.data.messageTimetoken.toLong()
-                    }
-                ))
+                onMessageAction(
+                    pubnub,
+                    PNMessageActionResult(
+                        BasePubSubResult(
+                            messageActionEvent.channel,
+                            messageActionEvent.subscription,
+                            messageActionEvent.timetoken.toLong(),
+                            null,
+                            messageActionEvent.publisher
+                        ),
+                        messageActionEvent.event,
+                        PNMessageAction(
+                            messageActionEvent.data.type,
+                            messageActionEvent.data.value,
+                            messageActionEvent.data.messageTimetoken.toLong()
+                        ).apply {
+                            actionTimetoken = messageActionEvent.data.messageTimetoken.toLong()
+                        }
+                    )
+                )
             }
         override val file: ((fileEvent: PubNubJs.FileEvent) -> Unit) = { fileEvent ->
             onFile(
-                pubnub, PNFileEventResult(
+                pubnub,
+                PNFileEventResult(
                     fileEvent.channel,
                     fileEvent.timetoken.toLong(),
                     fileEvent.publisher,
@@ -121,80 +127,83 @@ actual fun createEventListener(
         }
         override val objects = { event: PubNubJs.BaseObjectsEvent ->
             val eventAndType = event.message.event to event.message.type
-            onObjects(pubnub, PNObjectEventResult(
-                BasePubSubResult(
-                    event.channel,
-                    event.subscription,
-                    event.timetoken.toLong(),
-                    null,
-                    event.publisher
-                ),
-                when (eventAndType) {
-                    "set" to "channel" -> PNSetChannelMetadataEventMessage(
-                        event.message.source,
-                        event.message.version,
-                        event.message.event,
-                        event.message.type,
-                        event.message.data.unsafeCast<PubNubJs.ChannelMetadataObject>().toChannelMetadata()
-                    )
-
-                    "set" to "uuid" -> PNSetUUIDMetadataEventMessage(
-                        event.message.source,
-                        event.message.version,
-                        event.message.event,
-                        event.message.type,
-                        event.message.data.unsafeCast<PubNubJs.UUIDMetadataObject>().toPNUUIDMetadata()
-                    )
-
-                    "set" to "membership" -> event.message.data.unsafeCast<PubNubJs.SetMembershipObject>().let {
-                        PNSetMembershipEventMessage(
+            onObjects(
+                pubnub,
+                PNObjectEventResult(
+                    BasePubSubResult(
+                        event.channel,
+                        event.subscription,
+                        event.timetoken.toLong(),
+                        null,
+                        event.publisher
+                    ),
+                    when (eventAndType) {
+                        "set" to "channel" -> PNSetChannelMetadataEventMessage(
                             event.message.source,
                             event.message.version,
                             event.message.event,
                             event.message.type,
-                            PNSetMembershipEvent(
-                                it.channel.id,
-                                it.uuid.id,
-                                it.custom?.toMap(),
-                                it.eTag,
-                                it.updated,
-                                null //todo missing
-                            )
+                            event.message.data.unsafeCast<PubNubJs.ChannelMetadataObject>().toChannelMetadata()
                         )
-                    }
 
-                    "delete" to "channel" -> PNDeleteChannelMetadataEventMessage(
-                        event.message.source,
-                        event.message.version,
-                        event.message.event,
-                        event.message.type,
-                        event.message.data.asDynamic().id
-                    )
+                        "set" to "uuid" -> PNSetUUIDMetadataEventMessage(
+                            event.message.source,
+                            event.message.version,
+                            event.message.event,
+                            event.message.type,
+                            event.message.data.unsafeCast<PubNubJs.UUIDMetadataObject>().toPNUUIDMetadata()
+                        )
 
-                    "delete" to "uuid" -> PNDeleteUUIDMetadataEventMessage(
-                        event.message.source,
-                        event.message.version,
-                        event.message.event,
-                        event.message.type,
-                        event.message.data.asDynamic().id
-                    )
-
-                    "delete" to "membership" -> PNDeleteMembershipEventMessage(
-                        event.message.source,
-                        event.message.version,
-                        event.message.event,
-                        event.message.type,
-                        event.message.data.unsafeCast<PubNubJs.DeleteMembershipObject>().let {
-                            PNDeleteMembershipEvent(
-                                it.channel.id,
-                                it.uuid.id
+                        "set" to "membership" -> event.message.data.unsafeCast<PubNubJs.SetMembershipObject>().let {
+                            PNSetMembershipEventMessage(
+                                event.message.source,
+                                event.message.version,
+                                event.message.event,
+                                event.message.type,
+                                PNSetMembershipEvent(
+                                    it.channel.id,
+                                    it.uuid.id,
+                                    it.custom?.toMap(),
+                                    it.eTag,
+                                    it.updated,
+                                    null // todo missing
+                                )
                             )
                         }
-                    )
 
-                    else -> throw IllegalStateException("Bad object event")
-                }
-            ))
+                        "delete" to "channel" -> PNDeleteChannelMetadataEventMessage(
+                            event.message.source,
+                            event.message.version,
+                            event.message.event,
+                            event.message.type,
+                            event.message.data.asDynamic().id
+                        )
+
+                        "delete" to "uuid" -> PNDeleteUUIDMetadataEventMessage(
+                            event.message.source,
+                            event.message.version,
+                            event.message.event,
+                            event.message.type,
+                            event.message.data.asDynamic().id
+                        )
+
+                        "delete" to "membership" -> PNDeleteMembershipEventMessage(
+                            event.message.source,
+                            event.message.version,
+                            event.message.event,
+                            event.message.type,
+                            event.message.data.unsafeCast<PubNubJs.DeleteMembershipObject>().let {
+                                PNDeleteMembershipEvent(
+                                    it.channel.id,
+                                    it.uuid.id
+                                )
+                            }
+                        )
+
+                        else -> throw IllegalStateException("Bad object event")
+                    }
+                )
+            )
         }
     }
     return listener
@@ -207,13 +216,14 @@ actual fun createStatusListener(
     val listener = object : PubNubJs.StatusListenerParameters, StatusListener {
         override val status: ((statusEvent: PubNubJs.StatusEvent) -> Unit) = { statusEvent ->
             val category = try {
-                enumValueOf<PNStatusCategory>(statusEvent.category) //TODO parse category
+                enumValueOf<PNStatusCategory>(statusEvent.category) // TODO parse category
             } catch (e: Exception) {
                 null
             }
             if (category != null) {
                 onStatus(
-                    pubnub, PNStatus(
+                    pubnub,
+                    PNStatus(
                         category,
                         null,
                         statusEvent.currentTimetoken.toString().toLongOrNull(),

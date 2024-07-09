@@ -16,7 +16,6 @@ import cocoapods.PubNubSwift.unsubscribeFrom
 import cocoapods.PubNubSwift.userMetadataWith
 import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.endpoints.DeleteMessages
-import com.pubnub.api.endpoints.DeleteMessagesImpl
 import com.pubnub.api.endpoints.FetchMessages
 import com.pubnub.api.endpoints.FetchMessagesImpl
 import com.pubnub.api.endpoints.MessageCounts
@@ -163,7 +162,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         channel: String,
         message: Any,
         meta: Any?,
-        shouldStore: Boolean?,
+        shouldStore: Boolean,
         usePost: Boolean,
         replicate: Boolean,
         ttl: Int?
@@ -290,7 +289,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     }
 
     override fun deleteMessages(channels: List<String>, start: Long?, end: Long?): DeleteMessages {
-        return DeleteMessagesImpl(
+        return com.pubnub.api.endpoints.DeleteMessagesImpl(
             pubnub = pubNubObjC,
             channels = channels,
             start = start,
@@ -806,6 +805,7 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     override fun subscriptionSetOf(subscriptions: Set<Subscription>): SubscriptionSet {
         TODO("Not yet implemented")
     }
+
     override fun subscriptionSetOf(
         channels: Set<String>,
         channelGroups: Set<String>,

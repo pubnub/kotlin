@@ -1,5 +1,8 @@
 @file:Suppress(
-    "INTERFACE_WITH_SUPERCLASS", "OVERRIDING_FINAL_MEMBER", "RETURN_TYPE_MISMATCH_ON_OVERRIDE", "CONFLICTING_OVERLOADS"
+    "INTERFACE_WITH_SUPERCLASS",
+    "OVERRIDING_FINAL_MEMBER",
+    "RETURN_TYPE_MISMATCH_ON_OVERRIDE",
+    "CONFLICTING_OVERLOADS"
 )
 
 import PubNub.GetAllMetadataParameters
@@ -16,7 +19,6 @@ import PubNub.SetChannelMembersParameters
 import PubNub.SetChannelMetadataParameters
 import PubNub.SetMembershipsParameters
 import PubNub.SetUUIDMetadataParameters
-import com.pubnub.api.JsonElement
 import com.pubnub.kmp.JsMap
 import com.pubnub.kmp.Optional
 import org.khronos.webgl.ArrayBuffer
@@ -63,45 +65,82 @@ external interface PagedObjectsResponse<DataType> : ObjectsResponse<Array<DataTy
 
 external interface ObjectsFunctions {
     fun setUUIDMetadata(params: SetUUIDMetadataParameters, callback: Callback<SetUUIDMetadataResponse>)
+
     fun setUUIDMetadata(params: SetUUIDMetadataParameters): Promise<SetUUIDMetadataResponse>
+
     fun removeUUIDMetadata(callback: Callback<RemoveUUIDMetadataResponse>)
+
     fun removeUUIDMetadata(params: RemoveUUIDMetadataParameters): Promise<RemoveUUIDMetadataResponse>
+
     fun removeUUIDMetadata(): Promise<RemoveUUIDMetadataResponse>
+
     fun removeUUIDMetadata(params: RemoveUUIDMetadataParameters, callback: Callback<RemoveUUIDMetadataResponse>)
+
     fun getAllUUIDMetadata(callback: Callback<GetAllUUIDMetadataResponse>)
+
     fun getAllUUIDMetadata(params: GetAllMetadataParameters): Promise<GetAllUUIDMetadataResponse>
+
     fun getAllUUIDMetadata(): Promise<GetAllUUIDMetadataResponse>
+
     fun getAllUUIDMetadata(params: GetAllMetadataParameters, callback: Callback<GetAllUUIDMetadataResponse>)
+
     fun getUUIDMetadata(callback: Callback<GetUUIDMetadataResponse>)
+
     fun getUUIDMetadata(params: GetUUIDMetadataParameters): Promise<GetUUIDMetadataResponse>
+
     fun getUUIDMetadata(): Promise<GetUUIDMetadataResponse>
+
     fun getUUIDMetadata(params: GetUUIDMetadataParameters, callback: Callback<GetUUIDMetadataResponse>)
+
     fun setChannelMetadata(params: SetChannelMetadataParameters, callback: Callback<SetChannelMetadataResponse>)
+
     fun setChannelMetadata(params: SetChannelMetadataParameters): Promise<SetChannelMetadataResponse>
+
     fun removeChannelMetadata(
-        params: RemoveChannelMetadataParameters, callback: Callback<RemoveChannelMetadataResponse>
+        params: RemoveChannelMetadataParameters,
+        callback: Callback<RemoveChannelMetadataResponse>
     )
 
     fun removeChannelMetadata(params: RemoveChannelMetadataParameters): Promise<RemoveChannelMetadataResponse>
+
     fun getAllChannelMetadata(callback: Callback<GetAllChannelMetadataResponse>)
+
     fun getAllChannelMetadata(params: GetAllMetadataParameters): Promise<GetAllChannelMetadataResponse>
+
     fun getAllChannelMetadata(): Promise<GetAllChannelMetadataResponse>
+
     fun getAllChannelMetadata(params: GetAllMetadataParameters, callback: Callback<GetAllChannelMetadataResponse>)
+
     fun getChannelMetadata(params: GetChannelMetadataParameters, callback: Callback<GetChannelMetadataResponse>)
+
     fun getChannelMetadata(params: GetChannelMetadataParameters): Promise<GetChannelMetadataResponse>
+
     fun getMemberships(callback: Callback<ManageMembershipsResponse>)
+
     fun getMemberships(params: GetMembershipsParametersv2): Promise<ManageMembershipsResponse>
+
     fun getMemberships(): Promise<ManageMembershipsResponse>
+
     fun getMemberships(params: GetMembershipsParametersv2, callback: Callback<ManageMembershipsResponse>)
+
     fun setMemberships(params: SetMembershipsParameters, callback: Callback<ManageMembershipsResponse>)
+
     fun setMemberships(params: SetMembershipsParameters): Promise<ManageMembershipsResponse>
+
     fun removeMemberships(params: RemoveMembershipsParameters, callback: Callback<ManageMembershipsResponse>)
+
     fun removeMemberships(params: RemoveMembershipsParameters): Promise<ManageMembershipsResponse>
+
     fun getChannelMembers(params: GetChannelMembersParameters, callback: Callback<ManageChannelMembersResponse>)
+
     fun getChannelMembers(params: GetChannelMembersParameters): Promise<ManageChannelMembersResponse>
+
     fun setChannelMembers(params: SetChannelMembersParameters, callback: Callback<ManageChannelMembersResponse>)
+
     fun setChannelMembers(params: SetChannelMembersParameters): Promise<ManageChannelMembersResponse>
+
     fun removeChannelMembers(params: RemoveChannelMembersParameters, callback: Callback<ManageChannelMembersResponse>)
+
     fun removeChannelMembers(params: RemoveChannelMembersParameters): Promise<ManageChannelMembersResponse>
 }
 
@@ -118,88 +157,165 @@ external interface RemoveMessageActionResult {
 open external class PubNub(config: Any /* UUID | UserId */) {
     open var channelGroups: ChannelGroups
     open var push: Push
+
     open fun setUUID(uuid: String)
+
     open fun getUUID(): String
+
     open fun setAuthKey(authKey: String)
+
     open fun setFilterExpression(filterExpression: String)
+
     open fun getFilterExpression(): String
+
     open fun publish(params: PublishParameters, callback: Callback<PublishResponse>)
+
     open fun publish(params: PublishParameters): Promise<PublishResponse>
+
     open fun fire(params: FireParameters, callback: Callback<PublishResponse>)
+
     open fun fire(params: FireParameters): Promise<PublishResponse>
+
     open fun signal(params: SignalParameters, callback: Callback<SignalResponse>)
+
     open fun signal(params: SignalParameters): Promise<SignalResponse>
+
     open fun history(params: HistoryParameters, callback: Callback<HistoryResponse>)
+
     open fun history(params: HistoryParameters): Promise<HistoryResponse>
+
     open fun fetchMessages(params: FetchMessagesParameters, callback: Callback<FetchMessagesResponse>)
+
     open fun fetchMessages(params: FetchMessagesParameters): Promise<FetchMessagesResponse>
+
     open fun deleteMessages(params: DeleteMessagesParameters, callback: StatusCallback)
+
     open fun deleteMessages(params: DeleteMessagesParameters): Promise<Unit>
+
     open fun messageCounts(params: MessageCountsParameters, callback: Callback<MessageCountsResponse>)
+
     open fun messageCounts(params: MessageCountsParameters): Promise<MessageCountsResponse>
+
     open fun subscribe(params: SubscribeParameters)
+
     open fun unsubscribe(params: UnsubscribeParameters)
+
     open fun unsubscribeAll()
+
     open fun stop()
+
     open fun reconnect()
+
     open fun addListener(params: ListenerParameters)
+
     open fun addListener(params: StatusListenerParameters)
+
     open fun removeListener(params: Any)
+
     open fun getSubscribedChannels(): Array<String>
+
     open fun getSubscribedChannelGroups(): Array<String>
+
     open fun hereNow(params: HereNowParameters, callback: Callback<HereNowResponse>)
+
     open fun hereNow(params: HereNowParameters): Promise<HereNowResponse>
+
     open fun whereNow(params: WhereNowParameters, callback: Callback<WhereNowResponse>)
+
     open fun whereNow(params: WhereNowParameters): Promise<WhereNowResponse>
+
     open fun getState(params: GetStateParameters, callback: Callback<GetStateResponse>)
+
     open fun getState(params: GetStateParameters): Promise<GetStateResponse>
+
     open fun setState(params: SetStateParameters, callback: Callback<SetStateResponse>)
+
     open fun setState(params: SetStateParameters): Promise<SetStateResponse>
+
     open fun grant(params: GrantParameters, callback: StatusCallback)
+
     open fun grant(params: GrantParameters): Promise<Unit>
+
     open fun grantToken(params: GrantTokenParameters, callback: Callback<String>)
+
     open fun grantToken(params: GrantTokenParameters): Promise<String>
+
     open fun setToken(params: String?)
+
     open fun getToken(): String?
+
     open fun parseToken(params: String): ParsedGrantToken
+
     open fun revokeToken(params: String, callback: Callback<RevokeTokenResponse>)
+
     open fun revokeToken(params: String): Promise<RevokeTokenResponse>
+
     open fun listFiles(params: ListFilesParameters, callback: Callback<ListFilesResponse>)
+
     open fun listFiles(params: ListFilesParameters): Promise<ListFilesResponse>
+
     open fun sendFile(params: SendFileParameters, callback: Callback<SendFileResponse>)
+
     open fun sendFile(params: SendFileParameters): Promise<SendFileResponse>
+
     open fun downloadFile(params: DownloadFileParameters, callback: Callback<Any>)
+
     open fun downloadFile(params: DownloadFileParameters): Promise<Any>
+
     open fun getFileUrl(params: FileInputParameters): String
+
     open fun deleteFile(params: FileInputParameters, callback: StatusCallback)
+
     open fun deleteFile(params: FileInputParameters): Promise<DeleteFileResponse>
+
     open fun publishFile(params: PublishFileParameters, callback: Callback<PublishFileResponse>)
+
     open fun publishFile(params: PublishFileParameters): Promise<PublishFileResponse>
+
     open var objects: ObjectsFunctions
+
     open fun addMessageAction(params: AddMessageActionParameters, callback: Callback<AddMessageActionResult>)
+
     open fun addMessageAction(params: AddMessageActionParameters): Promise<AddMessageActionResult>
+
     open fun removeMessageAction(params: RemoveMessageActionParameters, callback: Callback<RemoveMessageActionResult>)
+
     open fun removeMessageAction(params: RemoveMessageActionParameters): Promise<RemoveMessageActionResult>
+
     open fun getMessageActions(params: GetMessageActionsParameters, callback: Callback<GetMessageActionsResponse>)
+
     open fun getMessageActions(params: GetMessageActionsParameters): Promise<GetMessageActionsResponse>
+
     open fun encrypt(
-        data: String, customCipherKey: String = definedExternally, options: CryptoParameters = definedExternally
+        data: String,
+        customCipherKey: String = definedExternally,
+        options: CryptoParameters = definedExternally
     ): String
 
     open fun decrypt(
-        data: String?, customCipherKey: String = definedExternally, options: CryptoParameters = definedExternally
+        data: String?,
+        customCipherKey: String = definedExternally,
+        options: CryptoParameters = definedExternally
     ): Any
 
     open fun decrypt(data: String?): Any
+
     open fun decrypt(data: String?, customCipherKey: String = definedExternally): Any
+
     open fun decrypt(
-        data: Any?, customCipherKey: String = definedExternally, options: CryptoParameters = definedExternally
+        data: Any?,
+        customCipherKey: String = definedExternally,
+        options: CryptoParameters = definedExternally
     ): Any
 
     open fun decrypt(data: Any?): Any
+
     open fun decrypt(data: Any?, customCipherKey: String = definedExternally): Any
+
     open fun time(): Promise<FetchTimeResponse>
+
     open fun time(callback: Callback<FetchTimeResponse>)
+
     interface KeepAliveSettings {
         var keepAliveMsecs: Number?
         var freeSocketKeepAliveTimeout: Number?
@@ -216,7 +332,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var authKey: String?
         var logVerbosity: Boolean?
         var ssl: Boolean?
-        var origin: dynamic /* String? | Array<String>? */
+        var origin: dynamic // String? | Array<String>?
         var presenceTimeout: Number?
         var heartbeatInterval: Number?
         var restore: Boolean?
@@ -231,7 +347,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var useRandomIVs: Boolean?
         var dedupeOnSubscribe: Boolean?
         var cryptoModule: CryptoModule?
-        var retryConfiguration: dynamic /* LinearRetryPolicyConfiguration? | ExponentialRetryPolicyConfiguration? */
+        var retryConfiguration: dynamic // LinearRetryPolicyConfiguration? | ExponentialRetryPolicyConfiguration?
         var enableEventEngine: Boolean?
         var maintainPresenceState: Boolean?
     }
@@ -246,7 +362,6 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var actualChannel: String
         var subscribedChannel: String
         var userMetadata: Any?
-
     }
 
     interface StatusEvent {
@@ -261,7 +376,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     }
 
     interface PresenceEvent {
-        var action: String /* "join" | "leave" | "state-change" | "timeout" */
+        var action: String // "join" | "leave" | "state-change" | "timeout"
         var channel: String
         var occupancy: Number
         var state: Any?
@@ -309,8 +424,8 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     interface `T$6` {
         var source: String
         var version: String
-        var event: String /* "set" | "delete" */
-        var type: String /* "uuid" | "channel" | "membership" */
+        var event: String // "set" | "delete"
+        var type: String // "uuid" | "channel" | "membership"
         var data: Any?
     }
 
@@ -323,37 +438,41 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     }
 
     interface `T$7` {
-        var event: String /* "set" */
-        var type: String /* "uuid" */
+        var event: String // "set"
+        var type: String // "uuid"
         var data: UUIDMetadataObject
     }
 
     interface SetUUIDMetadataEvent : BaseObjectsEvent
+
     interface HasId {
         var id: String
     }
 
     interface `T$9` {
-        var event: String /* "delete" */
-        var type: String /* "uuid" */
+        var event: String // "delete"
+        var type: String // "uuid"
         var data: HasId
     }
 
     interface RemoveUUIDMetadataEvent : BaseObjectsEvent
+
     interface `T$10` {
-        var event: String /* "set" */
-        var type: String /* "channel" */
+        var event: String // "set"
+        var type: String // "channel"
         var data: ChannelMetadataObject
     }
 
     interface SetChannelMetadataEvent : BaseObjectsEvent
+
     interface `T$11` {
-        var event: String /* "delete" */
-        var type: String /* "channel" */
+        var event: String // "delete"
+        var type: String // "channel"
         var data: HasId
     }
 
     interface RemoveChannelMetadataEvent : BaseObjectsEvent
+
     interface SetMembershipObject {
         var channel: HasId
         var uuid: HasId
@@ -363,24 +482,26 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     }
 
     interface `T$13` {
-        var event: String /* "set" */
-        var type: String /* "membership" */
+        var event: String // "set"
+        var type: String // "membership"
         var data: SetMembershipObject
     }
 
     interface SetMembershipEvent : BaseObjectsEvent
+
     interface DeleteMembershipObject {
         var channel: HasId
         var uuid: HasId
     }
 
     interface `T$15` {
-        var event: String /* "delete" */
-        var type: String /* "membership" */
+        var event: String // "delete"
+        var type: String // "membership"
         var data: DeleteMembershipObject
     }
 
     interface RemoveMembershipEvent : BaseObjectsEvent
+
     interface PublishParameters {
         var message: Any
         var channel: String
@@ -412,7 +533,6 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var start: String?
         var end: String?
         var includeMeta: Boolean?
-
     }
 
     interface HistoryMessage {
@@ -443,10 +563,10 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     interface Action {
         var uuid: String
         var actionTimetoken: String
-
     }
 
     interface ActionContentToAction : JsMap<Array<Action>>
+
     interface ActionTypeToActions : JsMap<ActionContentToAction>
 
     interface FetchMessageItem {
@@ -490,12 +610,19 @@ open external class PubNub(config: Any /* UUID | UserId */) {
 
     interface Push {
         fun addChannels(params: PushChannelParameters, callback: StatusCallback)
+
         fun addChannels(params: PushChannelParameters): Promise<Unit>
+
         fun listChannels(params: PushDeviceParameters, callback: Callback<PushListChannelsResponse>)
+
         fun listChannels(params: PushDeviceParameters): Promise<PushListChannelsResponse>
+
         fun removeChannels(params: PushChannelParameters, callback: StatusCallback)
+
         fun removeChannels(params: PushChannelParameters): Promise<Unit>
+
         fun deleteDevice(params: PushDeviceParameters, callback: StatusCallback)
+
         fun deleteDevice(params: PushDeviceParameters): Promise<Unit>
     }
 
@@ -506,7 +633,6 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var environment: String?
 
         var topic: String?
-
     }
 
     interface PushDeviceParameters {
@@ -515,7 +641,6 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var environment: String?
 
         var topic: String?
-
     }
 
     interface PushListChannelsResponse {
@@ -529,7 +654,6 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var operation: String
         var statusCode: Number
         var errorData: Error?
-
     }
 
     interface FireParameters {
@@ -538,7 +662,6 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var sendByPost: Boolean?
 
         var meta: Any?
-
     }
 
     interface SubscribeParameters {
@@ -549,26 +672,33 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var withPresence: Boolean?
 
         var timetoken: String?
-
     }
 
     interface UnsubscribeParameters {
         var channels: Array<String>?
 
         var channelGroups: Array<String>?
-
     }
 
     interface ChannelGroups {
         fun addChannels(params: AddChannelParameters, callback: StatusCallback)
+
         fun addChannels(params: AddChannelParameters): Promise<Any>
+
         fun removeChannels(params: RemoveChannelParameters, callback: StatusCallback)
+
         fun removeChannels(params: RemoveChannelParameters): Promise<Any>
+
         fun listChannels(params: ListChannelsParameters, callback: Callback<ListChannelsResponse>)
+
         fun listChannels(params: ListChannelsParameters): Promise<ListChannelsResponse>
+
         fun listGroups(callback: Callback<ListAllGroupsResponse>)
+
         fun listGroups(): Promise<ListAllGroupsResponse>
+
         fun deleteGroup(params: DeleteGroupParameters, callback: StatusCallback)
+
         fun deleteGroup(params: DeleteGroupParameters): Promise<Any>
     }
 
@@ -619,13 +749,11 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var includeUUIDs: Boolean?
 
         var includeState: Boolean?
-
     }
 
     interface HereNowOccupantData {
         var uuid: String
         var state: Any?
-
     }
 
     interface HereNowChannelData {
@@ -644,7 +772,6 @@ open external class PubNub(config: Any /* UUID | UserId */) {
 
     interface WhereNowParameters {
         var uuid: String?
-
     }
 
     interface WhereNowResponse {
@@ -657,7 +784,6 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var channelGroups: Array<String>?
 
         var state: Any?
-
     }
 
     interface SetStateResponse {
@@ -670,7 +796,6 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var channels: Array<String>?
 
         var channelGroups: Array<String>?
-
     }
 
     interface GetStateResponse {
@@ -701,7 +826,6 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var join: Boolean?
 
         var update: Boolean?
-
     }
 
     interface PatternsOrResources {
@@ -710,7 +834,6 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var groups: JsMap<GrantTokenPermissions>?
 
         var uuids: JsMap<GrantTokenPermissions>?
-
     }
 
     interface GrantTokenParameters {
@@ -722,7 +845,6 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var patterns: PatternsOrResources?
 
         var meta: Json?
-
     }
 
     interface ParsedGrantToken : GrantTokenParameters {
@@ -745,7 +867,6 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var join: Boolean?
 
         var update: Boolean?
-
     }
 
     interface RevokeTokenResponse {
@@ -785,7 +906,6 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var end: String?
 
         var limit: Number?
-
     }
 
     interface GetMessageActionsResponse {
@@ -793,7 +913,6 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var start: String?
 
         var end: String?
-
     }
 
     interface ListFilesParameters {
@@ -801,12 +920,11 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var limit: Number?
 
         var next: String?
-
     }
 
     interface SendFileParameters {
         var channel: String
-        var file: dynamic /* StreamFileInput | BufferFileInput | UriFileInput */
+        var file: dynamic // StreamFileInput | BufferFileInput | UriFileInput
 
         var message: Any?
 
@@ -817,28 +935,24 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var ttl: Number?
 
         var meta: Any?
-
     }
 
     interface StreamFileInput {
         var stream: Any
         var name: String
         var mimeType: String?
-
     }
 
     interface BufferFileInput {
         var data: Any
         var name: String
         var mimeType: String?
-
     }
 
     interface UriFileInput {
         var uri: String
         var name: String
         var mimeType: String?
-
     }
 
     interface DownloadFileParameters {
@@ -846,7 +960,6 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var id: String
         var name: String
         var cipherKey: String?
-
     }
 
     interface FileInputParameters {
@@ -866,7 +979,6 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var ttl: Number?
 
         var meta: Any?
-
     }
 
     interface UploadedFile {
@@ -913,7 +1025,6 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var eTag: String
         var updated: String
         var custom: CustomObject?
-
     }
 
     interface v2ObjectData {
@@ -921,12 +1032,10 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var eTag: String
         var updated: String
         var custom: CustomObject?
-
     }
 
     interface ObjectParam {
         var custom: CustomObject?
-
     }
 
     interface UUIDMetadataFieldsNullable {
@@ -939,10 +1048,11 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     }
 
     interface UUIDMetadata : ObjectParam, UUIDMetadataFieldsNullable, Partial
+
     interface UUIDMetadataObject : v2ObjectData, UUIDMetadataFieldsNullable
+
     interface UuidIncludeCustom {
         var customFields: Boolean?
-
     }
 
     interface SetUUIDMetadataParameters {
@@ -950,26 +1060,22 @@ open external class PubNub(config: Any /* UUID | UserId */) {
 
         var data: UUIDMetadata
         var include: UuidIncludeCustom?
-
     }
 
     interface RemoveUUIDMetadataParameters {
         var uuid: String?
-
     }
 
     interface MetadataIncludeOptions {
         var totalCount: Boolean?
 
         var customFields: Boolean?
-
     }
 
     interface MetadataPage {
         var next: String?
 
         var prev: String?
-
     }
 
     interface GetAllMetadataParameters {
@@ -982,14 +1088,12 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var limit: Number?
 
         var page: MetadataPage?
-
     }
 
     interface GetUUIDMetadataParameters {
         var uuid: String?
 
         var include: UuidIncludeCustom?
-
     }
 
     interface ChannelMetadataFieldsPartial {
@@ -1007,12 +1111,13 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     }
 
     interface ChannelMetadata : ObjectParam, ChannelMetadataFieldsNullable
+
     interface ChannelMetadataObject : v2ObjectData, ChannelMetadataFieldsNullable
+
     interface SetChannelMetadataParameters {
         var channel: String
         var data: ChannelMetadata
         var include: UuidIncludeCustom?
-
     }
 
     interface RemoveChannelMetadataParameters {
@@ -1026,25 +1131,21 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     interface GetChannelMetadataParameters {
         var channel: String
         var include: IncludeCustomFields?
-
     }
 
     interface HasStatus {
         var status: String?
-
     }
 
     interface UUIDMembershipObject : v2ObjectDataOmitId {
-        var uuid: UUIDMetadataObject /* UUIDMetadataObject & HasStatus | HasId */
+        var uuid: UUIDMetadataObject // UUIDMetadataObject & HasStatus | HasId
         var status: String?
-
     }
 
     interface ChannelMembershipObject : v2ObjectDataOmitId {
         var channel: ChannelMetadataObject?
 
         var status: String?
-
     }
 
     interface IncludeOptions {
@@ -1061,7 +1162,6 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var UUIDStatusField: Boolean?
 
         var UUIDTypeField: Boolean?
-
     }
 
     interface UUIDMembersParameters {
@@ -1074,7 +1174,6 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var limit: Number?
 
         var page: MetadataPage?
-
     }
 
     interface MembershipIncludeOptions {
@@ -1091,7 +1190,6 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var channelStatusField: Boolean?
 
         var channelTypeField: Boolean?
-
     }
 
     interface ChannelMembersParameters {
@@ -1104,7 +1202,6 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var limit: Number?
 
         var page: MetadataPage?
-
     }
 
     interface GetChannelMembersParameters : UUIDMembersParameters {
@@ -1113,21 +1210,18 @@ open external class PubNub(config: Any /* UUID | UserId */) {
 
     interface GetMembershipsParametersv2 : ChannelMembersParameters {
         var uuid: String?
-
     }
 
     interface SetCustom {
         var id: String
         var custom: CustomObject?
         var status: String?
-
     }
 
     interface SetMembershipsParameters : ChannelMembersParameters {
         var uuid: String?
 
         var channels: Array<SetCustom /* String | SetCustom */>?
-
     }
 
     interface RemoveMembershipsParameters : ChannelMembersParameters {
@@ -1154,7 +1248,6 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var keyLength: Number?
 
         var mode: String?
-
     }
 
     interface FetchTimeResponse {
@@ -1171,10 +1264,9 @@ open external class PubNub(config: Any /* UUID | UserId */) {
 
     interface APNS2Target {
         var topic: String
-        var environment: String? /* "development" | "production" */
+        var environment: String? // "development" | "production"
 
         var excludedDevices: Array<String>?
-
     }
 
     interface BaseNotificationPayload {
@@ -1188,7 +1280,6 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var title: String?
 
         var body: String?
-
     }
 
     interface APNSNotificationPayload : BaseNotificationPayload {
@@ -1206,7 +1297,6 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var count: Number?
 
         var type: String?
-
     }
 
     interface FCMNotificationPayload : BaseNotificationPayload {
@@ -1214,7 +1304,6 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var icon: String?
 
         var tag: String?
-
     }
 
     interface `T$37` {
@@ -1239,50 +1328,63 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var apns: APNSNotificationPayload
         var mpns: MPNSNotificationPayload
         var fcm: FCMNotificationPayload
+
         fun buildPayload(platforms: Array<String>): Any?
     }
 
     open class CryptoModule(configuration: CryptoModuleConfiguration) {
-        open var defaultCryptor: dynamic /* Cryptor | LegacyCryptor<PubNubFileType> */
+        open var defaultCryptor: dynamic // Cryptor | LegacyCryptor<PubNubFileType>
         open var cryptors: Array<dynamic /* Cryptor | LegacyCryptor<PubNubFileType> */>
+
         open fun encrypt(data: ArrayBuffer): ArrayBuffer
+
         open fun encrypt(data: String): ArrayBuffer
-        open fun decrypt(data: ArrayBuffer): dynamic /* ArrayBuffer | String */
-        open fun decrypt(data: String): dynamic /* ArrayBuffer | String */
+
+        open fun decrypt(data: ArrayBuffer): dynamic // ArrayBuffer | String
+
+        open fun decrypt(data: String): dynamic // ArrayBuffer | String
+
         open fun encryptFile(file: PubNubFileType, fd: PubNubFileType): Promise<PubNubFileType>
+
         open fun decryptFile(file: PubNubFileType, fd: PubNubFileType): Promise<PubNubFileType>
 
         companion object {
             fun legacyCryptoModule(configuration: CryptorConfiguration): CryptoModule
+
             fun aesCbcCryptoModule(configuration: CryptorConfiguration): CryptoModule
+
             fun withDefaultCryptor(defaultCryptor: Cryptor): CryptoModule
+
             fun withDefaultCryptor(defaultCryptor: LegacyCryptor<PubNubFileType>): CryptoModule
         }
     }
 
     interface PubNubFileType {
-        var data: dynamic /* File | Blob */
+        var data: dynamic // File | Blob
 
         var name: String
         var mimeType: String
+
         fun create(config: Any): PubNubFileType
+
         fun toArrayBuffer(): ArrayBuffer
+
         fun toBlob(): Blob
+
         override fun toString(): String
+
         fun toFile(): File
     }
 
     interface CryptorConfiguration {
         var cipherKey: String
         var useRandomIVs: Boolean?
-
     }
 
     interface CryptoModuleConfiguration {
-        var default: dynamic /* Cryptor | LegacyCryptor<PubNubFileType> */
+        var default: dynamic // Cryptor | LegacyCryptor<PubNubFileType>
 
         var cryptors: Array<dynamic /* Cryptor | LegacyCryptor<PubNubFileType> */>?
-
     }
 
     interface EncryptedDataType {
@@ -1305,9 +1407,12 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     companion object {
         var CATEGORIES: Any
         var OPERATIONS: Any
+
         fun generateUUID(): String
+
         var LinearRetryPolicy: Any
         var ExponentialRetryPolicy: Any
+
         fun notificationPayload(title: String, body: String): NotificationsPayload
     }
 }
@@ -1389,4 +1494,3 @@ external interface ExponentialRetryPolicyConfiguration {
     var maximumDelay: Number
     var maximumRetry: Number
 }
-

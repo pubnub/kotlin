@@ -2,12 +2,12 @@ package com.pubnub.api.endpoints.objects.channel
 
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.removeChannelMetadataWithChannel
-import com.pubnub.kmp.PNFuture
 import com.pubnub.api.models.consumer.objects.PNRemoveMetadataResult
-import com.pubnub.kmp.onFailureHandler
-import com.pubnub.kmp.onSuccessHandler
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
+import com.pubnub.kmp.PNFuture
+import com.pubnub.kmp.onFailureHandler
+import com.pubnub.kmp.onSuccessHandler
 import kotlinx.cinterop.ExperimentalForeignApi
 
 actual interface RemoveChannelMetadata : PNFuture<PNRemoveMetadataResult>
@@ -16,7 +16,7 @@ actual interface RemoveChannelMetadata : PNFuture<PNRemoveMetadataResult>
 class RemoveChannelMetadataImpl(
     private val pubnub: PubNubObjC,
     private val channel: String
-): RemoveChannelMetadata {
+) : RemoveChannelMetadata {
     override fun async(callback: Consumer<Result<PNRemoveMetadataResult>>) {
         pubnub.removeChannelMetadataWithChannel(
             channel = channel,

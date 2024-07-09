@@ -1,5 +1,6 @@
 package com.pubnub.kmp
 
+import com.pubnub.api.PubNub
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
@@ -10,7 +11,6 @@ import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
-import com.pubnub.api.PubNub
 import com.pubnub.kmp.PubNub as PubNubKmp
 
 actual fun createPubNub(config: PNConfiguration): PubNubKmp {

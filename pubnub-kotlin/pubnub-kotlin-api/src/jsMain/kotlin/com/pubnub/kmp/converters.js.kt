@@ -81,6 +81,7 @@ internal fun ManageMembershipsResponse.toPNChannelMembershipArrayResult() = PNCh
 
 internal fun ObjectsResponse<PubNub.UUIDMetadataObject>.toPNUUIDMetadataResult() =
     PNUUIDMetadataResult(status.toInt(), data.toPNUUIDMetadata())
+
 internal fun PubNub.UUIDMetadataObject.toPNUUIDMetadata() = PNUUIDMetadata(
     id, name, externalId, profileUrl, email, custom?.toMap(), updated, eTag, type, status
 )

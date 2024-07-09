@@ -15,7 +15,6 @@ import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
-import kotlin.time.Duration.Companion.seconds
 
 class MembershipsTest : BaseIntegrationTest() {
     private val channel = "myChannel" + randomString()
@@ -77,7 +76,7 @@ class MembershipsTest : BaseIntegrationTest() {
 
         // then
         var next: PNPage.PNNext? = null
-        while(true) {
+        while (true) {
             val result = pubnub.getChannelMembers(channel, page = next).await()
             next = result.next
             assertFalse { result.data.any { it.uuid?.id == pubnub.configuration.userId.value } }

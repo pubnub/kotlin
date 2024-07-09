@@ -68,7 +68,7 @@ class MembersTest : BaseIntegrationTest() {
 
         // then
         var next: PNPage.PNNext? = null
-        while(true) {
+        while (true) {
             yield()
             val result = pubnub.getMemberships(pubnub.configuration.userId.value, page = next).await()
             next = result.next

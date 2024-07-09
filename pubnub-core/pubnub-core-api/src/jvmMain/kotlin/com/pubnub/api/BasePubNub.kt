@@ -11,7 +11,6 @@ import com.pubnub.api.v2.entities.BaseChannelMetadata
 import com.pubnub.api.v2.entities.BaseUserMetadata
 import com.pubnub.api.v2.subscriptions.BaseSubscription
 import com.pubnub.api.v2.subscriptions.BaseSubscriptionSet
-import com.pubnub.api.v2.subscriptions.EmptyOptions
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import java.io.InputStream
 

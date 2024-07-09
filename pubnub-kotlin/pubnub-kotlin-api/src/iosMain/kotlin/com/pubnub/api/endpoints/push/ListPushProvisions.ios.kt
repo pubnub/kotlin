@@ -2,15 +2,15 @@ package com.pubnub.api.endpoints.push
 
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.listPushChannelsWithDeviceId
-import com.pubnub.kmp.PNFuture
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.push.PNPushListProvisionsResult
-import com.pubnub.kmp.onFailureHandler
-import com.pubnub.kmp.onSuccessHandler
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
+import com.pubnub.kmp.PNFuture
+import com.pubnub.kmp.onFailureHandler
+import com.pubnub.kmp.onSuccessHandler
 import com.pubnub.kmp.toNSData
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSData
@@ -27,7 +27,7 @@ class ListPushProvisionsImpl(
     private val pushType: PNPushType,
     private val topic: String?,
     private val environment: PNPushEnvironment
-): ListPushProvisions {
+) : ListPushProvisions {
     override fun async(callback: Consumer<Result<PNPushListProvisionsResult>>) {
         deviceId.toNSData()?.let { data: NSData ->
             pubnub.listPushChannelsWithDeviceId(

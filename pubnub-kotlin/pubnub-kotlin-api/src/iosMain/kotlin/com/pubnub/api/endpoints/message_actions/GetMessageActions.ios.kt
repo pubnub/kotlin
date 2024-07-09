@@ -4,16 +4,14 @@ import cocoapods.PubNubSwift.PubNubBoundedPageObjC
 import cocoapods.PubNubSwift.PubNubMessageActionObjC
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.getMessageActionsFrom
-import com.pubnub.kmp.PNFuture
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.message_actions.PNGetMessageActionsResult
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
-import com.pubnub.kmp.onFailureHandler
-import com.pubnub.kmp.onSuccessHandler
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
-import com.pubnub.kmp.PubNub
+import com.pubnub.kmp.PNFuture
 import com.pubnub.kmp.filterAndMap
+import com.pubnub.kmp.onFailureHandler
 import com.pubnub.kmp.onSuccessHandler2
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSNumber
@@ -21,15 +19,14 @@ import platform.Foundation.NSNumber
 /**
  * @see [PubNub.getMessageActions]
  */
-actual interface GetMessageActions : PNFuture<PNGetMessageActionsResult> {
-}
+actual interface GetMessageActions : PNFuture<PNGetMessageActionsResult>
 
 @OptIn(ExperimentalForeignApi::class)
 class GetMessageActionsImpl(
     private val channel: String,
     private val pubnub: PubNubObjC,
     private val page: PNBoundedPage
-): GetMessageActions {
+) : GetMessageActions {
     override fun async(callback: Consumer<Result<PNGetMessageActionsResult>>) {
         pubnub.getMessageActionsFrom(
             channel = channel,
@@ -47,7 +44,6 @@ class GetMessageActionsImpl(
                         limit = next?.limit()?.intValue()
                     )
                 )
-
             },
             onFailure = callback.onFailureHandler()
         )

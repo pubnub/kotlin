@@ -23,7 +23,7 @@ class DownloadFileImpl(
     private val channel: String,
     private val fileName: String,
     private val fileId: String
-): DownloadFile {
+) : DownloadFile {
     override fun async(callback: Consumer<Result<PNDownloadFileResult>>) {
         pubnub.downloadFileWithChannel(
             channel = channel,
@@ -33,7 +33,8 @@ class DownloadFileImpl(
                 PNDownloadFileResult(
                     fileName = it?.name().orEmpty(),
                     byteStream = it?.url()?.let { url -> DownloadableImpl(inputStream = NSInputStream(uRL = url)) }
-                )},
+                )
+            },
             onFailure = callback.onFailureHandler()
         )
     }

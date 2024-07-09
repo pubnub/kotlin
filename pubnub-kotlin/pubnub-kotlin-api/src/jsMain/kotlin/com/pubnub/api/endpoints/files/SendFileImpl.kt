@@ -10,7 +10,7 @@ class SendFileImpl(pubnub: PubNub, params: PubNub.SendFileParameters) : SendFile
     responseMapping = {
         PNFileUploadResult(
             it.timetoken.toLong(),
-            200, //TODO anything else possible here?
+            200, // TODO anything else possible here?
             PNBaseFile(
                 it.id,
                 it.name

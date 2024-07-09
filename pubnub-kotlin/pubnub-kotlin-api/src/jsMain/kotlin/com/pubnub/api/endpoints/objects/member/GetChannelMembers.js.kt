@@ -1,8 +1,7 @@
 package com.pubnub.api.endpoints.objects.member
 
-import PubNub
-import com.pubnub.kmp.PNFuture
 import com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult
+import com.pubnub.kmp.PNFuture
 
 /**
  * @see [PubNub.getChannelMembers]

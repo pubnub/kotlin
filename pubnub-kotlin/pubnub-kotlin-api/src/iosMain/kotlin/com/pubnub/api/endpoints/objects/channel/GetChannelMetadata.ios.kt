@@ -2,14 +2,13 @@ package com.pubnub.api.endpoints.objects.channel
 
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.getChannelMetadataWithChannel
-import com.pubnub.kmp.PNFuture
-import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataResult
-import com.pubnub.kmp.onFailureHandler
-import com.pubnub.kmp.onSuccessHandler
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
+import com.pubnub.kmp.PNFuture
 import com.pubnub.kmp.createPNChannelMetadata
+import com.pubnub.kmp.onFailureHandler
+import com.pubnub.kmp.onSuccessHandler
 import kotlinx.cinterop.ExperimentalForeignApi
 
 /**
@@ -22,7 +21,7 @@ class GetChannelMetadataImpl(
     private val pubnub: PubNubObjC,
     private val channel: String,
     private val includeCustom: Boolean
-): GetChannelMetadata {
+) : GetChannelMetadata {
     override fun async(callback: Consumer<Result<PNChannelMetadataResult>>) {
         pubnub.getChannelMetadataWithChannel(
             channel = channel,

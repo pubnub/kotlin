@@ -14,8 +14,7 @@ import kotlinx.cinterop.ExperimentalForeignApi
 /**
  * @see [PubNub.addMessageAction]
  */
-actual interface AddMessageAction : PNFuture<PNAddMessageActionResult> {
-}
+actual interface AddMessageAction : PNFuture<PNAddMessageActionResult>
 
 @OptIn(ExperimentalForeignApi::class)
 class AddMessageActionImpl(
@@ -42,7 +41,8 @@ class AddMessageActionImpl(
                         actionTimetoken = messageActionObjC?.actionTimetoken()?.toLong()
                     }
                 )
-            }, onFailure = callback.onFailureHandler()
+            },
+            onFailure = callback.onFailureHandler()
         )
     }
 }
