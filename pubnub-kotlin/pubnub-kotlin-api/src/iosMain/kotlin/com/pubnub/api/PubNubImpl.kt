@@ -103,6 +103,7 @@ import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
+import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.objects.PNKey
@@ -811,6 +812,10 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
         channelGroups: Set<String>,
         options: SubscriptionOptions
     ): SubscriptionSet {
+        TODO("Not yet implemented")
+    }
+
+    override fun parseToken(token: String): PNToken {
         TODO("Not yet implemented")
     }
 

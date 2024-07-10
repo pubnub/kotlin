@@ -48,6 +48,7 @@ import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
+import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.objects.PNKey
@@ -475,4 +476,6 @@ interface PubNub {
         channelGroups: Set<String> = emptySet(),
         options: SubscriptionOptions = EmptyOptions,
     ): SubscriptionSet
+
+    fun parseToken(token: String): PNToken
 }
