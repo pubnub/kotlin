@@ -72,7 +72,8 @@ suspend fun <T> PNFuture<T>.await(): T {
 class PubNubTest(
     private val pubNub: PubNub,
     private val withPresenceOverride: Boolean,
-    backgroundScope: CoroutineScope
+    backgroundScope: CoroutineScope,
+    private val checkAllEvents: Boolean = true,
 ) {
     private val messageQueue = Channel<PNEvent>(10)
     private val statusQueue = Channel<PNStatus>(10)
@@ -247,18 +248,21 @@ class PubNubTest(
         val remainingMessages = buildList {
             messageQueue.tryReceive().getOrNull()?.apply { add(this) } ?: return@buildList
         }
-        assertTrue(
-            "There were ${remainingMessages.size} unverified events in the test: ${remainingMessages.joinToString(", ")}"
-        ) { remainingMessages.isEmpty() }
+        if (checkAllEvents) {
+            assertTrue(
+                "There were ${remainingMessages.size} unverified events in the test: ${remainingMessages.joinToString(", ")}"
+            ) { remainingMessages.isEmpty() }
+        }
     }
 }
 
 suspend fun PubNub.test(
     backgroundScope: CoroutineScope,
     withPresence: Boolean = false,
+    checkAllEvents: Boolean = true,
     action: suspend PubNubTest.() -> Unit,
 ) {
-    val pubNubTest = PubNubTest(this, withPresence, backgroundScope)
+    val pubNubTest = PubNubTest(this, withPresence, backgroundScope, checkAllEvents)
     try {
         with(pubNubTest) {
             action()

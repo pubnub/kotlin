@@ -97,6 +97,7 @@ import com.pubnub.api.models.consumer.access_manager.v3.PNAbstractGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNPatternGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNResourceGrant
+import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.objects.PNKey
@@ -1036,6 +1037,10 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
             }
         }
         return SubscriptionSetImpl(jsPubNub.asDynamic().subscriptionSet(params))
+    }
+
+    override fun parseToken(token: String): PNToken {
+        TODO("Not yet implemented")
     }
 
     override fun sendFile(
