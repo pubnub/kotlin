@@ -1,48 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <baseline version="1.0">
-    <file name="src/main/kotlin/com/pubnub/api/endpoints/channel_groups/AddChannelChannelGroup.kt">
-        <error line="1" column="9" source="standard:package-name" />
+    <file name="src/jsMain/kotlin/Pubnub.d.kt">
+        <error line="157" column="40" source="standard:comment-wrapping" />
+        <error line="408" column="15" source="standard:class-naming" />
+        <error line="424" column="15" source="standard:class-naming" />
+        <error line="440" column="15" source="standard:class-naming" />
+        <error line="452" column="15" source="standard:class-naming" />
+        <error line="460" column="15" source="standard:class-naming" />
+        <error line="468" column="15" source="standard:class-naming" />
+        <error line="484" column="15" source="standard:class-naming" />
+        <error line="497" column="15" source="standard:class-naming" />
+        <error line="841" column="13" source="standard:property-naming" />
+        <error line="1024" column="15" source="standard:class-naming" />
+        <error line="1030" column="15" source="standard:class-naming" />
+        <error line="1156" column="13" source="standard:property-naming" />
+        <error line="1162" column="13" source="standard:property-naming" />
+        <error line="1164" column="13" source="standard:property-naming" />
+        <error line="1224" column="39" source="standard:comment-wrapping" />
+        <error line="1309" column="15" source="standard:class-naming" />
+        <error line="1337" column="42" source="standard:comment-wrapping" />
+        <error line="1387" column="37" source="standard:comment-wrapping" />
+        <error line="1408" column="13" source="standard:property-naming" />
+        <error line="1409" column="13" source="standard:property-naming" />
+        <error line="1413" column="13" source="standard:property-naming" />
+        <error line="1414" column="13" source="standard:property-naming" />
+        <error line="1433" column="9" source="standard:property-naming" />
+        <error line="1434" column="9" source="standard:property-naming" />
+        <error line="1435" column="9" source="standard:property-naming" />
+        <error line="1436" column="9" source="standard:property-naming" />
+        <error line="1437" column="9" source="standard:property-naming" />
+        <error line="1438" column="9" source="standard:property-naming" />
+        <error line="1439" column="9" source="standard:property-naming" />
+        <error line="1440" column="9" source="standard:property-naming" />
+        <error line="1441" column="9" source="standard:property-naming" />
+        <error line="1442" column="9" source="standard:property-naming" />
+        <error line="1443" column="9" source="standard:property-naming" />
+        <error line="1444" column="9" source="standard:property-naming" />
+        <error line="1445" column="9" source="standard:property-naming" />
+        <error line="1449" column="9" source="standard:property-naming" />
+        <error line="1450" column="9" source="standard:property-naming" />
+        <error line="1451" column="9" source="standard:property-naming" />
+        <error line="1452" column="9" source="standard:property-naming" />
+        <error line="1453" column="9" source="standard:property-naming" />
+        <error line="1454" column="9" source="standard:property-naming" />
+        <error line="1455" column="9" source="standard:property-naming" />
+        <error line="1456" column="9" source="standard:property-naming" />
+        <error line="1457" column="9" source="standard:property-naming" />
+        <error line="1458" column="9" source="standard:property-naming" />
+        <error line="1459" column="9" source="standard:property-naming" />
+        <error line="1460" column="9" source="standard:property-naming" />
+        <error line="1461" column="9" source="standard:property-naming" />
+        <error line="1462" column="9" source="standard:property-naming" />
+        <error line="1463" column="9" source="standard:property-naming" />
+        <error line="1464" column="9" source="standard:property-naming" />
+        <error line="1465" column="9" source="standard:property-naming" />
+        <error line="1466" column="9" source="standard:property-naming" />
+        <error line="1467" column="9" source="standard:property-naming" />
+        <error line="1468" column="9" source="standard:property-naming" />
+        <error line="1469" column="9" source="standard:property-naming" />
+        <error line="1470" column="9" source="standard:property-naming" />
+        <error line="1471" column="9" source="standard:property-naming" />
+        <error line="1472" column="9" source="standard:property-naming" />
+        <error line="1473" column="9" source="standard:property-naming" />
+        <error line="1474" column="9" source="standard:property-naming" />
+        <error line="1475" column="9" source="standard:property-naming" />
+        <error line="1476" column="9" source="standard:property-naming" />
+        <error line="1477" column="9" source="standard:property-naming" />
+        <error line="1478" column="9" source="standard:property-naming" />
+        <error line="1479" column="9" source="standard:property-naming" />
+        <error line="1480" column="9" source="standard:property-naming" />
+        <error line="1481" column="9" source="standard:property-naming" />
+        <error line="1482" column="9" source="standard:property-naming" />
+        <error line="1483" column="9" source="standard:property-naming" />
+        <error line="1484" column="9" source="standard:property-naming" />
     </file>
-    <file name="src/main/kotlin/com/pubnub/api/endpoints/channel_groups/AllChannelsChannelGroup.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/api/endpoints/channel_groups/DeleteChannelGroup.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/api/endpoints/channel_groups/ListAllChannelGroup.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/api/endpoints/channel_groups/RemoveChannelChannelGroup.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/api/endpoints/message_actions/AddMessageAction.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/api/endpoints/message_actions/GetMessageActions.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/api/endpoints/message_actions/RemoveMessageAction.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/api/models/consumer/access_manager/PNAccessManagerGrantResults.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/api/models/consumer/access_manager/sum/SpacePermissions.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/api/models/consumer/access_manager/sum/UserPermissions.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/api/models/consumer/access_manager/v3/ChannelGrant.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/api/models/consumer/access_manager/v3/ChannelGroupGrant.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/api/models/consumer/access_manager/v3/Grants.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/api/models/consumer/access_manager/v3/UUIDGrant.kt">
-        <error line="1" column="9" source="standard:package-name" />
+    <file name="src/jsMain/kotlin/com/pubnub/api/PubNubImpl.kt">
+        <error line="1117" column="5" source="standard:function-naming" />
+        <error line="1137" column="5" source="standard:function-naming" />
     </file>
 </baseline>

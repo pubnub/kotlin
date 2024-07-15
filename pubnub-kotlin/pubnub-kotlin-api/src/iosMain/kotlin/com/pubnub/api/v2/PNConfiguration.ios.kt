@@ -1,6 +1,7 @@
 package com.pubnub.api.v2
 
 import com.pubnub.api.UserId
+import com.pubnub.api.enums.PNLogVerbosity
 
 actual interface PNConfiguration {
     actual val userId: UserId
@@ -8,17 +9,16 @@ actual interface PNConfiguration {
     actual val publishKey: String
     actual val secretKey: String
     actual val authKey: String
-    actual val cryptoModule: CryptoModule?
+    actual val logVerbosity: PNLogVerbosity
 }
-
-actual interface CryptoModule
 
 actual fun createPNConfiguration(
     userId: UserId,
     subscribeKey: String,
     publishKey: String,
     secretKey: String?,
-    logVerbosity: Boolean
+    authKey: String?,
+    logVerbosity: PNLogVerbosity
 ): PNConfiguration {
     return object : PNConfiguration {
         override val userId: UserId = userId
@@ -27,8 +27,8 @@ actual fun createPNConfiguration(
         override val secretKey: String
             get() = secretKey.orEmpty()
         override val authKey: String
-            get() = TODO("Not yet implemented")
-        override val cryptoModule: CryptoModule?
-            get() = TODO("Not yet implemented")
+            get() = authKey.orEmpty()
+        override val logVerbosity: PNLogVerbosity
+            get() = logVerbosity
     }
 }

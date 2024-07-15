@@ -1,5 +1,6 @@
 package com.pubnub.api
 
+import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.addEventListenerWithListener
 import cocoapods.PubNubSwift.addStatusListenerWithListener
 import cocoapods.PubNubSwift.channelGroupWith
@@ -7,6 +8,8 @@ import cocoapods.PubNubSwift.channelMetadataWith
 import cocoapods.PubNubSwift.channelWith
 import cocoapods.PubNubSwift.disconnect
 import cocoapods.PubNubSwift.removeAllListeners
+import cocoapods.PubNubSwift.removeEventListenerWithListener
+import cocoapods.PubNubSwift.removeStatusListenerWithListener
 import cocoapods.PubNubSwift.setWithToken
 import cocoapods.PubNubSwift.subscribeWithChannels
 import cocoapods.PubNubSwift.subscribedChannelGroups
@@ -98,6 +101,7 @@ import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice
 import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDeviceImpl
 import com.pubnub.api.endpoints.push.RemoveChannelsFromPush
 import com.pubnub.api.endpoints.push.RemoveChannelsFromPushImpl
+import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.PNBoundedPage
@@ -118,6 +122,7 @@ import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
+import com.pubnub.api.v2.createPNConfiguration
 import com.pubnub.api.v2.entities.Channel
 import com.pubnub.api.v2.entities.ChannelGroup
 import com.pubnub.api.v2.entities.ChannelMetadata
@@ -135,11 +140,22 @@ import com.pubnub.kmp.Uploadable
 import kotlinx.cinterop.ExperimentalForeignApi
 
 @OptIn(ExperimentalForeignApi::class)
-class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
-    private val pubNubObjC = cocoapods.PubNubSwift.PubNubObjC(
-        user = configuration.userId.value,
-        subKey = configuration.subscribeKey,
-        pubKey = configuration.publishKey
+class PubNubImpl(private val pubNubObjC: PubNubObjC) : PubNub {
+    constructor(configuration: PNConfiguration) : this(
+        PubNubObjC(
+            user = configuration.userId.value,
+            subKey = configuration.subscribeKey,
+            pubKey = configuration.publishKey
+        )
+    )
+
+    override val configuration: PNConfiguration = createPNConfiguration(
+        UserId(pubNubObjC.configObjC().userId()),
+        "", // todo
+        "", // todo
+        "", // todo
+        pubNubObjC.configObjC().authKey(),
+        PNLogVerbosity.NONE
     )
 
     override fun addListener(listener: EventListener) {
@@ -151,7 +167,10 @@ class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
     }
 
     override fun removeListener(listener: Listener) {
-//        pubNubObjC.removeEventListenerWithListener(listener)
+        when (listener) {
+            is EventListener -> pubNubObjC.removeEventListenerWithListener(listener.underlying)
+            is StatusListener -> pubNubObjC.removeStatusListenerWithListener(listener.underlying)
+        }
     }
 
     override fun removeAllListeners() {

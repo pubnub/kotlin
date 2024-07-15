@@ -3,6 +3,7 @@
 package com.pubnub.api.v2
 
 import com.pubnub.api.UserId
+import com.pubnub.api.enums.PNLogVerbosity
 
 expect interface PNConfiguration {
     val userId: UserId
@@ -10,15 +11,14 @@ expect interface PNConfiguration {
     val publishKey: String
     val secretKey: String
     val authKey: String
-    val cryptoModule: CryptoModule?
+    val logVerbosity: PNLogVerbosity
 }
-
-expect interface CryptoModule
 
 expect fun createPNConfiguration(
     userId: UserId,
     subscribeKey: String,
     publishKey: String,
     secretKey: String? = null,
-    logVerbosity: Boolean = false,
+    authKey: String? = null,
+    logVerbosity: PNLogVerbosity = PNLogVerbosity.NONE,
 ): PNConfiguration

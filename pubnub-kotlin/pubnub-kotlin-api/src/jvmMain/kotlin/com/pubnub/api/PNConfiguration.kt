@@ -126,7 +126,7 @@ class PNConfiguration(override var userId: UserId) : PNConfiguration {
     /**
      * Set to [PNLogVerbosity.BODY] to enable logging of network traffic, otherwise se to [PNLogVerbosity.NONE].
      */
-    override var logVerbosity = configuration.logVerbosity
+    override var logVerbosity: PNLogVerbosity = configuration.logVerbosity
 
     /**
      * Set Heartbeat notification options.

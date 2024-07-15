@@ -1,7 +1,6 @@
 package com.pubnub.api.v2
 
 import com.pubnub.api.UserId
-import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNLogVerbosity
 
 actual fun createPNConfiguration(
@@ -9,17 +8,14 @@ actual fun createPNConfiguration(
     subscribeKey: String,
     publishKey: String,
     secretKey: String?,
-    logVerbosity: Boolean
+    authKey: String?,
+    logVerbosity: PNLogVerbosity
 ): PNConfiguration {
     return PNConfiguration.builder(userId, subscribeKey) {
         this.publishKey = publishKey
         this.secretKey = secretKey.orEmpty()
-        this.logVerbosity = if (logVerbosity) {
-            PNLogVerbosity.BODY
-        } else {
-            PNLogVerbosity.NONE
-        }
+        this.authKey = authKey.orEmpty()
+        this.secretKey = secretKey.orEmpty()
+        this.logVerbosity = logVerbosity
     }.build()
 }
-
-actual typealias CryptoModule = CryptoModule
