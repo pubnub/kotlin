@@ -1,150 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <baseline version="1.0">
-    <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/AddChannelChannelGroupEndpoint.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/AddChannelChannelGroupInterface.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/AllChannelsChannelGroupEndpoint.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/AllChannelsChannelGroupInterface.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/DeleteChannelGroupEndpoint.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/DeleteChannelGroupInterface.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/ListAllChannelGroupEndpoint.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/ListAllChannelGroupInterface.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/RemoveChannelChannelGroupEndpoint.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/endpoints/channel_groups/RemoveChannelChannelGroupInterface.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/endpoints/message_actions/AddMessageActionEndpoint.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/endpoints/message_actions/AddMessageActionInterface.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/endpoints/message_actions/GetMessageActionsEndpoint.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/endpoints/message_actions/GetMessageActionsInterface.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/endpoints/message_actions/RemoveMessageActionEndpoint.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/endpoints/message_actions/RemoveMessageActionInterface.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
     <file name="src/main/kotlin/com/pubnub/internal/managers/BasePathManager.kt">
         <error line="15" column="17" source="standard:property-naming" />
         <error line="21" column="17" source="standard:property-naming" />
         <error line="27" column="17" source="standard:property-naming" />
     </file>
-    <file name="src/main/kotlin/com/pubnub/internal/models/consumer/access_manager/PNAccessManagerGrantResults.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/models/consumer/access_manager/sum/SpacePermissions.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/models/consumer/access_manager/sum/UserPermissions.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/models/consumer/access_manager/v3/ChannelGrant.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/models/consumer/access_manager/v3/ChannelGroupGrant.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/models/consumer/access_manager/v3/Grants.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/models/consumer/access_manager/v3/UUIDGrant.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/models/server/access_manager/AccessManagerGrantPayload.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/models/server/access_manager/v3/GrantTokenRequestBody.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/models/server/access_manager/v3/GrantTokenResponse.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/models/server/access_manager/v3/RevokeTokenResponse.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/models/server/message_actions/MessageActionsResponse.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/models/server/objects_api/ChangeMemberInput.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/models/server/objects_api/ChangeMembershipInput.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/models/server/objects_api/ChannelMetadataInput.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/models/server/objects_api/EntityArrayEnvelope.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/models/server/objects_api/EntityEnvelope.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/models/server/objects_api/ServerMemberInput.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/models/server/objects_api/ServerMembershipInput.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/models/server/objects_api/UUIDMetadataInput.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
     <file name="src/main/kotlin/com/pubnub/internal/subscribe/eventengine/effect/ReconnectionPolicy.kt">
         <error line="1" column="1" source="standard:no-empty-file" />
     </file>
-    <file name="src/test/kotlin/com/pubnub/api/legacy/endpoints/channel_groups/AddChannelBaseChannelGroupCoreEndpointTest.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/test/kotlin/com/pubnub/api/legacy/endpoints/channel_groups/AllChannelsBaseChannelGroupCoreEndpointTest.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/test/kotlin/com/pubnub/api/legacy/endpoints/channel_groups/DeleteBaseChannelGroupCoreEndpointTest.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/test/kotlin/com/pubnub/api/legacy/endpoints/channel_groups/ListAllBaseChannelGroupCoreEndpointTest.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/test/kotlin/com/pubnub/api/legacy/endpoints/channel_groups/RemoveChannelBaseChannelGroupCoreEndpointTest.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
     <file name="src/test/kotlin/com/pubnub/api/legacy/endpoints/files/TestsWithFiles.kt">
         <error line="17" column="30" source="standard:property-naming" />
-    </file>
-    <file name="src/test/kotlin/com/pubnub/api/legacy/endpoints/message_actions/AddMessageActionCoreEndpointTest.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/test/kotlin/com/pubnub/api/legacy/endpoints/message_actions/GetMessageActionCoreEndpointTest.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/test/kotlin/com/pubnub/api/legacy/endpoints/message_actions/ReceiveMessageActions.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/test/kotlin/com/pubnub/api/legacy/endpoints/message_actions/RemoveMessageActionCoreEndpointTest.kt">
-        <error line="1" column="9" source="standard:package-name" />
     </file>
     <file name="src/test/kotlin/com/pubnub/contract/access/state/GrantTokenState.kt">
         <error line="9" column="9" source="standard:property-naming" />
@@ -282,32 +147,5 @@
         <error line="51" column="9" source="standard:function-naming" />
         <error line="56" column="9" source="standard:function-naming" />
         <error line="64" column="9" source="standard:function-naming" />
-    </file>
-    <file name="src/test/kotlin/com/pubnub/internal/suite/channel_groups/AddChannelChannelGroupTestSuite.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/test/kotlin/com/pubnub/internal/suite/channel_groups/AllChannelsChannelGroupTestSuite.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/test/kotlin/com/pubnub/internal/suite/channel_groups/DeleteChannelGroupTestSuite.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/test/kotlin/com/pubnub/internal/suite/channel_groups/ListAllChannelGroupTestSuite.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/test/kotlin/com/pubnub/internal/suite/channel_groups/RemoveChannelChannelGroupTestSuite.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/test/kotlin/com/pubnub/internal/suite/message_actions/AddMessageActionTestSuite.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/test/kotlin/com/pubnub/internal/suite/message_actions/GetMessageActionsMultipleTestSuite.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/test/kotlin/com/pubnub/internal/suite/message_actions/GetMessageActionsTestSuite.kt">
-        <error line="1" column="9" source="standard:package-name" />
-    </file>
-    <file name="src/test/kotlin/com/pubnub/internal/suite/message_actions/RemoveMessageActionsTestSuite.kt">
-        <error line="1" column="9" source="standard:package-name" />
     </file>
 </baseline>

@@ -1,6 +1,7 @@
 package com.pubnub.test
 
 import com.pubnub.api.UserId
+import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNEvent
@@ -38,9 +39,15 @@ abstract class BaseIntegrationTest {
 
     @BeforeTest
     open fun before() {
-        config = createPNConfiguration(UserId(randomString()), Keys.subKey, Keys.pubKey, logVerbosity = true)
+        config = createPNConfiguration(UserId(randomString()), Keys.subKey, Keys.pubKey, logVerbosity = PNLogVerbosity.BODY)
         pubnub = createPubNub(config)
-        configPam = createPNConfiguration(UserId(randomString()), Keys.pamSubKey, Keys.pamPubKey, Keys.pamSecKey, logVerbosity = true)
+        configPam = createPNConfiguration(
+            UserId(randomString()),
+            Keys.pamSubKey,
+            Keys.pamPubKey,
+            Keys.pamSecKey,
+            logVerbosity = PNLogVerbosity.BODY
+        )
         pubnubPam = createPubNub(configPam)
     }
 

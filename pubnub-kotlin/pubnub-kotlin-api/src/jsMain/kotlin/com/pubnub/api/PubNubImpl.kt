@@ -88,6 +88,7 @@ import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice
 import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDeviceImpl
 import com.pubnub.api.endpoints.push.RemoveChannelsFromPush
 import com.pubnub.api.endpoints.push.RemoveChannelsFromPushImpl
+import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.PNBoundedPage
@@ -113,6 +114,7 @@ import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
+import com.pubnub.api.v2.createPNConfiguration
 import com.pubnub.api.v2.entities.Channel
 import com.pubnub.api.v2.entities.ChannelGroup
 import com.pubnub.api.v2.entities.ChannelMetadata
@@ -133,8 +135,18 @@ import com.pubnub.kmp.toOptional
 import kotlin.js.json
 import PubNub as PubNubJs
 
-class PubNubImpl(override val configuration: PNConfiguration) : PubNub {
-    private val jsPubNub: PubNubJs = PubNubJs(configuration.toJs())
+class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
+    constructor(configuration: PNConfiguration) : this(PubNubJs(configuration.toJs()))
+
+    override val configuration: PNConfiguration
+        get() = createPNConfiguration( // todo test this!
+            UserId(jsPubNub.getUUID()),
+            jsPubNub.asDynamic().configuration.subscribeKey,
+            jsPubNub.asDynamic().configuration.publishKey,
+            jsPubNub.asDynamic().configuration.secretKey,
+            jsPubNub.asDynamic().configuration.authKey,
+            jsPubNub.asDynamic().configuration.logVerbosity
+        )
 
     override fun addListener(listener: EventListener) {
         jsPubNub.addListener(
@@ -1153,7 +1165,7 @@ fun PNConfiguration.toJs(): PubNubJs.PNConfiguration {
     config.subscribeKey = subscribeKey
     config.publishKey = publishKey
     config.secretKey = secretKey
-    config.logVerbosity = logVerbosity
+    config.logVerbosity = logVerbosity == PNLogVerbosity.BODY
     config.enableEventEngine = enableEventEngine
 //    config.authKey
 //    config.ssl: Boolean?

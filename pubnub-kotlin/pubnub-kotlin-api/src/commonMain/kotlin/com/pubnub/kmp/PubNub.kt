@@ -81,7 +81,7 @@ interface PubNub {
 
     fun removeListener(listener: Listener)
 
-    fun removeAllListeners() //region api
+    fun removeAllListeners()
 
     fun publish(
         channel: String,
