@@ -77,6 +77,8 @@ open class FetchMessagesImpl(
     }
 
     private fun mapMessageActions(rawValue: List<*>): Map<String, Map<String, List<PNFetchMessageItem.Action>>>? {
+        println(rawValue)
+
         return rawValue.filterIsInstance<PubNubMessageActionObjC>().groupBy { messageAction ->
             messageAction.actionType()
         }.mapValues { entry ->
@@ -86,7 +88,7 @@ open class FetchMessagesImpl(
                 groupedEntry.value.map {
                     PNFetchMessageItem.Action(
                         uuid = it.publisher(),
-                        actionTimetoken = it.published()?.longValue!!
+                        actionTimetoken = it.actionTimetoken().toLong()
                     )
                 }
             }

@@ -47,8 +47,8 @@ class GetAllUUIDMetadataImpl(
                     status = 200,
                     data = uuids.filterAndMap { rawValue: PubNubUUIDMetadataObjC -> createPNUUIDMetadata(from = rawValue) },
                     totalCount = totalCount?.intValue ?: 0,
-                    next = next?.end()?.let { hash -> PNPage.PNNext(pageHash = hash) },
-                    prev = next?.start()?.let { hash -> PNPage.PNPrev(pageHash = hash) }
+                    next = next?.start()?.let { hash -> PNPage.PNNext(pageHash = hash) },
+                    prev = next?.end()?.let { hash -> PNPage.PNPrev(pageHash = hash) }
                 )
             },
             onFailure = callback.onFailureHandler()
