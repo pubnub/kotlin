@@ -4,9 +4,13 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.Exec
 import org.gradle.kotlin.dsl.apply
+import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.register
 import org.gradle.kotlin.dsl.withType
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinMultiplatformPluginWrapper
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.TestExecutable
 import org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeSimulatorTest
 import java.io.ByteArrayOutputStream
 
@@ -42,6 +46,16 @@ class PubNubIosSimulatorTestPlugin : Plugin<Project> {
                 it.device.set(deviceName)
                 it.dependsOn(bootTask)
 //                it.finalizedBy(shutdownTask)
+            }
+
+            extensions.configure<KotlinMultiplatformExtension> {
+                targets.withType<KotlinNativeTarget> {
+                    if (konanTarget.family.isAppleFamily) {
+                        binaries.withType<TestExecutable> {
+                            freeCompilerArgs += listOf("-e", "testlauncher.mainBackground")
+                        }
+                    }
+                }
             }
         }
     }
