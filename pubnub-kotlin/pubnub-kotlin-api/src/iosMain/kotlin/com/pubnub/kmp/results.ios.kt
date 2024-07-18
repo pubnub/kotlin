@@ -1,7 +1,6 @@
 package com.pubnub.kmp
 
 import cocoapods.PubNubSwift.PubNubErrorObjC
-import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result

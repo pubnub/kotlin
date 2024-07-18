@@ -1,9 +1,7 @@
 package com.pubnub.api
 
-import cocoapods.PubNubSwift.PubNubChannelEntityObjC
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.PubNubSubscriptionObjC
-import cocoapods.PubNubSwift.PubNubSubscriptionObjCMeta
 import cocoapods.PubNubSwift.PubNubSubscriptionSetObjC
 import cocoapods.PubNubSwift.addEventListenerWithListener
 import cocoapods.PubNubSwift.addStatusListenerWithListener
@@ -829,7 +827,9 @@ class PubNubImpl(private val pubNubObjC: PubNubObjC) : PubNub {
     }
 
     override fun subscriptionSetOf(subscriptions: Set<Subscription>): SubscriptionSet {
-        return SubscriptionSetImpl(PubNubSubscriptionSetObjC(subscriptions.filterIsInstance<SubscriptionImpl>().map { it.objCSubscription }))
+        return SubscriptionSetImpl(
+            PubNubSubscriptionSetObjC(subscriptions.filterIsInstance<SubscriptionImpl>().map { it.objCSubscription })
+        )
     }
 
     override fun subscriptionSetOf(
@@ -838,7 +838,10 @@ class PubNubImpl(private val pubNubObjC: PubNubObjC) : PubNub {
         options: SubscriptionOptions
     ): SubscriptionSet {
         val channelSubscriptions = channels.map { pubNubObjC.channelWith(it) }.map { entity -> PubNubSubscriptionObjC(entity) }
-        val channelGroupSubscriptions = channelGroups.map { pubNubObjC.channelGroupWith(it) }.map { entity -> PubNubSubscriptionObjC(entity) }
+        val channelGroupSubscriptions = channelGroups.map { pubNubObjC.channelGroupWith(it) }.map {
+                entity ->
+            PubNubSubscriptionObjC(entity)
+        }
 
         return SubscriptionSetImpl(
             PubNubSubscriptionSetObjC(channelGroupSubscriptions + channelSubscriptions)
