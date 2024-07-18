@@ -37,7 +37,6 @@ class MembersTest : BaseIntegrationTest() {
         // then
         val pnChannelDetails = result.data.single { it.uuid?.id == pubnub.configuration.userId.value }
         assertEquals(customData, pnChannelDetails.custom)
-//        assertEquals(status, pnChannelDetails.status)
     }
 
     @Test
