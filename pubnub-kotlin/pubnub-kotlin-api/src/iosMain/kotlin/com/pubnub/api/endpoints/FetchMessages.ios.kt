@@ -77,8 +77,6 @@ open class FetchMessagesImpl(
     }
 
     private fun mapMessageActions(rawValue: List<*>): Map<String, Map<String, List<PNFetchMessageItem.Action>>>? {
-        println(rawValue)
-
         return rawValue.filterIsInstance<PubNubMessageActionObjC>().groupBy { messageAction ->
             messageAction.actionType()
         }.mapValues { entry ->
