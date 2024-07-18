@@ -1,6 +1,8 @@
 package com.pubnub.api
 
 import cocoapods.PubNubSwift.PubNubObjC
+import cocoapods.PubNubSwift.PubNubSubscriptionObjC
+import cocoapods.PubNubSwift.PubNubSubscriptionSetObjC
 import cocoapods.PubNubSwift.addEventListenerWithListener
 import cocoapods.PubNubSwift.addStatusListenerWithListener
 import cocoapods.PubNubSwift.channelGroupWith
@@ -134,6 +136,8 @@ import com.pubnub.internal.entities.ChannelGroupImpl
 import com.pubnub.internal.entities.ChannelImpl
 import com.pubnub.internal.entities.ChannelMetadataImpl
 import com.pubnub.internal.entities.UserMetadataImpl
+import com.pubnub.internal.subscription.SubscriptionImpl
+import com.pubnub.internal.subscription.SubscriptionSetImpl
 import com.pubnub.kmp.CustomObject
 import com.pubnub.kmp.PubNub
 import com.pubnub.kmp.Uploadable
@@ -823,7 +827,9 @@ class PubNubImpl(private val pubNubObjC: PubNubObjC) : PubNub {
     }
 
     override fun subscriptionSetOf(subscriptions: Set<Subscription>): SubscriptionSet {
-        TODO("Not yet implemented")
+        return SubscriptionSetImpl(
+            PubNubSubscriptionSetObjC(subscriptions.filterIsInstance<SubscriptionImpl>().map { it.objCSubscription })
+        )
     }
 
     override fun subscriptionSetOf(
@@ -831,7 +837,15 @@ class PubNubImpl(private val pubNubObjC: PubNubObjC) : PubNub {
         channelGroups: Set<String>,
         options: SubscriptionOptions
     ): SubscriptionSet {
-        TODO("Not yet implemented")
+        val channelSubscriptions = channels.map { pubNubObjC.channelWith(it) }.map { entity -> PubNubSubscriptionObjC(entity) }
+        val channelGroupSubscriptions = channelGroups.map { pubNubObjC.channelGroupWith(it) }.map {
+                entity ->
+            PubNubSubscriptionObjC(entity)
+        }
+
+        return SubscriptionSetImpl(
+            PubNubSubscriptionSetObjC(channelGroupSubscriptions + channelSubscriptions)
+        )
     }
 
     override fun parseToken(token: String): PNToken {

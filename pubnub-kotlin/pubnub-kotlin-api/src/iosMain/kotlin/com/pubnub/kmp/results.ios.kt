@@ -1,8 +1,10 @@
 package com.pubnub.kmp
 
+import cocoapods.PubNubSwift.PubNubErrorObjC
 import com.pubnub.api.PubNubException
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
+import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSError
 
 fun <T, U> Consumer<Result<U>>.onSuccessHandler(mapper: (T) -> U): (T) -> Unit {
@@ -47,9 +49,14 @@ fun <T> Consumer<Result<T>>.onSuccessReturnValue(value: T): () -> Unit {
     }
 }
 
+@OptIn(ExperimentalForeignApi::class)
 fun <T> Consumer<Result<T>>.onFailureHandler(
     mapper: (NSError?) -> Throwable = { error: NSError? ->
-        PubNubException(errorMessage = error?.localizedDescription)
+        if (error is PubNubErrorObjC) {
+            PubNubException(error.statusCode().toInt(), error.localizedDescription, null)
+        } else {
+            PubNubException(errorMessage = error?.localizedDescription)
+        }
     }
 ): (NSError?) -> Unit {
     return { error: NSError? ->

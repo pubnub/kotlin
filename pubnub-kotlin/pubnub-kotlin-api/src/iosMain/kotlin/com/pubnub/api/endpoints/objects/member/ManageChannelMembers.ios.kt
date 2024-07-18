@@ -53,13 +53,13 @@ class SetChannelMembersImpl(
             includeCustom = includeCustom,
             includeUUIDFields = includeUUIDDetails == PNUUIDDetailsLevel.UUID || includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM,
             includeUUIDCustomFields = includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM,
-            onSuccess = callback.onSuccessHandler3 { memberships, totalCount, next ->
+            onSuccess = callback.onSuccessHandler3 { memberships, totalCount, page ->
                 PNMemberArrayResult(
                     status = 200,
                     data = memberships.filterAndMap { rawValue: PubNubMembershipMetadataObjC -> createPNMember(rawValue) },
                     totalCount = totalCount?.intValue,
-                    next = next?.end()?.let { hash -> PNPage.PNNext(pageHash = hash) },
-                    prev = next?.start()?.let { hash -> PNPage.PNPrev(pageHash = hash) }
+                    next = page?.start()?.let { hash -> PNPage.PNNext(pageHash = hash) },
+                    prev = page?.end()?.let { hash -> PNPage.PNPrev(pageHash = hash) }
                 )
             },
             onFailure = callback.onFailureHandler()

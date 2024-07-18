@@ -73,11 +73,7 @@ actual fun createEventListener(
             onPresence = { presenceEvents -> createPresenceEventResults(presenceEvents).forEach { onPresence(pubnub, it) } },
             onSignal = { onSignal(pubnub, createSignalResult(it)) },
             onMessageAction = { onMessageAction(pubnub, createMessageActionResult(it)) },
-            onAppContext = {
-                if (createObjectEvent(it) != null) {
-                    createObjectEvent(it)
-                } else {}
-            },
+            onAppContext = { value -> createObjectEvent(value)?.let { res -> onObjects(pubnub, res) } },
             onFile = { onFile(pubnub, createFileEventResult(it)) }
         ),
         onMessage = onMessage,
@@ -252,8 +248,8 @@ private fun mapAppContextEvent(from: PubNubAppContextEventObjC?): PNObjectEventM
                 event = from.event(),
                 type = from.type(),
                 data = PNSetMembershipEvent(
-                    channel = from.metadata().channel()?.name().orEmpty(),
-                    uuid = from.metadata().uuid()?.id().orEmpty(),
+                    channel = from.metadata().channelMetadataId(),
+                    uuid = from.metadata().uuidMetadataId(),
                     custom = from.metadata().custom()?.safeCast(),
                     eTag = from.metadata().eTag().orEmpty(),
                     updated = from.metadata().updated().orEmpty(),

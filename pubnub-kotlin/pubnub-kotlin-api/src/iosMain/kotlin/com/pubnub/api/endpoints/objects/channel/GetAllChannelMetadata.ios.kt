@@ -42,13 +42,13 @@ class GetAllChannelMetadataImpl(
             sort = createObjectSortProperties(from = sort),
             includeCount = includeCount,
             includeCustom = includeCustom,
-            onSuccess = callback.onSuccessHandler3 { channels, totalCount, next ->
+            onSuccess = callback.onSuccessHandler3 { channels, totalCount, page ->
                 PNChannelMetadataArrayResult(
                     status = 200,
                     data = channels.filterAndMap { rawValue: PubNubChannelMetadataObjC -> createPNChannelMetadata(rawValue) },
                     totalCount = totalCount?.intValue,
-                    next = next?.end()?.let { hash -> PNPage.PNNext(pageHash = hash) },
-                    prev = next?.start()?.let { hash -> PNPage.PNPrev(pageHash = hash) }
+                    next = page?.start()?.let { hash -> PNPage.PNNext(pageHash = hash) },
+                    prev = page?.end()?.let { hash -> PNPage.PNPrev(pageHash = hash) }
                 )
             },
             onFailure = callback.onFailureHandler()

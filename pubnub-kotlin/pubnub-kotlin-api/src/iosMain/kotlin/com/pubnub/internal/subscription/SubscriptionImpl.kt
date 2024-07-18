@@ -45,18 +45,23 @@ class SubscriptionImpl(
     override var onMessage: ((PNMessageResult) -> Unit)?
         get() = TODO("Not yet implemented")
         set(value) {}
+
     override var onPresence: ((PNPresenceEventResult) -> Unit)?
         get() = TODO("Not yet implemented")
         set(value) {}
+
     override var onSignal: ((PNSignalResult) -> Unit)?
         get() = TODO("Not yet implemented")
         set(value) {}
+
     override var onMessageAction: ((PNMessageActionResult) -> Unit)?
         get() = TODO("Not yet implemented")
         set(value) {}
+
     override var onObjects: ((PNObjectEventResult) -> Unit)?
         get() = TODO("Not yet implemented")
         set(value) {}
+
     override var onFile: ((PNFileEventResult) -> Unit)?
         get() = TODO("Not yet implemented")
         set(value) {}

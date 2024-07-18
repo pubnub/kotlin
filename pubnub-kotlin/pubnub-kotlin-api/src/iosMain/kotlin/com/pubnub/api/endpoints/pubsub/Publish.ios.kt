@@ -30,16 +30,8 @@ class PublishImpl(
             channel = channel,
             message = message,
             meta = meta,
-            shouldStore = if (shouldStore != null) {
-                NSNumber(bool = shouldStore)
-            } else {
-                null
-            },
-            ttl = if (ttl != null) {
-                NSNumber(int = ttl)
-            } else {
-                null
-            },
+            shouldStore = shouldStore?.let { NSNumber(bool = it) },
+            ttl = ttl?.let { NSNumber(it) },
             onSuccess = callback.onSuccessHandler { PNPublishResult(it.toLong()) },
             onFailure = callback.onFailureHandler()
         )

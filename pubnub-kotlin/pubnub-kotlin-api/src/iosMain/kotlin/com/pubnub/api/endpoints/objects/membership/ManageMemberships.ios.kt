@@ -53,13 +53,13 @@ class AddMembershipsImpl(
             includeCustom = includeCustom,
             includeChannelFields = includeChannelDetails == PNChannelDetailsLevel.CHANNEL || includeChannelDetails == PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM,
             includeChannelCustomFields = includeChannelDetails == PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM,
-            onSuccess = callback.onSuccessHandler3 { memberships, totalCount, next ->
+            onSuccess = callback.onSuccessHandler3 { memberships, totalCount, page ->
                 PNChannelMembershipArrayResult(
                     status = 200,
                     data = memberships.filterAndMap { rawValue: PubNubMembershipMetadataObjC -> createPNChannelMembership(rawValue) },
                     totalCount = totalCount?.intValue,
-                    next = next?.end()?.let { hash -> PNPage.PNNext(pageHash = hash) },
-                    prev = next?.start()?.let { hash -> PNPage.PNPrev(pageHash = hash) }
+                    next = page?.start()?.let { hash -> PNPage.PNNext(pageHash = hash) },
+                    prev = page?.end()?.let { hash -> PNPage.PNPrev(pageHash = hash) }
                 )
             },
             onFailure = callback.onFailureHandler()

@@ -46,11 +46,11 @@ class SubscriptionSetImpl(
         get() = TODO("Not yet implemented")
 
     override fun subscribe(cursor: SubscriptionCursor) {
-        TODO("Not yet implemented")
+        objCSubscriptionSet.subscribeWith(cursor.timetoken.toULong())
     }
 
     override fun unsubscribe() {
-        TODO("Not yet implemented")
+        objCSubscriptionSet.unsubscribe()
     }
 
     override var onMessage: ((PNMessageResult) -> Unit)?
@@ -64,6 +64,7 @@ class SubscriptionSetImpl(
     override var onSignal: ((PNSignalResult) -> Unit)?
         get() = TODO("Not yet implemented")
         set(value) {}
+
     override var onMessageAction: ((PNMessageActionResult) -> Unit)?
         get() = TODO("Not yet implemented")
         set(value) {}
