@@ -1,6 +1,3 @@
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
-import org.jetbrains.kotlin.gradle.plugin.mpp.TestExecutable
-
 plugins {
     alias(libs.plugins.benmanes.versions)
     id("pubnub.shared")
@@ -53,14 +50,6 @@ kotlin {
         val jvmTest by getting {
             dependencies {
                 implementation(project(":pubnub-kotlin:pubnub-kotlin-impl"))
-            }
-        }
-    }
-
-    targets.withType<KotlinNativeTarget> {
-        if (konanTarget.family.isAppleFamily) {
-            binaries.withType<TestExecutable> {
-                freeCompilerArgs += listOf("-e", "testlauncher.mainBackground")
             }
         }
     }
