@@ -33,6 +33,10 @@ actual abstract class JsonElement(val value: Any?) {
     override fun hashCode(): Int {
         return value?.hashCode() ?: 0
     }
+
+    override fun toString(): String {
+        return "JSONElement(${value.toString()})"
+    }
 }
 
 class JsonElementImpl(value: Any?) : JsonElement(value)
