@@ -73,7 +73,7 @@ class SendFileImpl(
                 fileURL = content.url
             )
             is StreamUploadContent -> PubNubInputStreamContentObjC(
-                stream = NSInputStream(content.url),
+                stream = content.stream,
                 contentType = content.contentType,
                 contentLength = content.contentLength.toLong()
             )
