@@ -75,7 +75,7 @@
         <error line="1484" column="9" source="standard:property-naming" />
     </file>
     <file name="src/jsMain/kotlin/com/pubnub/api/PubNubImpl.kt">
-        <error line="1117" column="5" source="standard:function-naming" />
-        <error line="1137" column="5" source="standard:function-naming" />
+        <error line="1116" column="5" source="standard:function-naming" />
+        <error line="1136" column="5" source="standard:function-naming" />
     </file>
 </baseline>

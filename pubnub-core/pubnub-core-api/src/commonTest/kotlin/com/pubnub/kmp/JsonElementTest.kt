@@ -7,11 +7,10 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class JsonElementTest {
-
     @Test
     fun asList() {
         val list = listOf("abc", "def")
-        val jsonList = createJsonElement(list.map { createJsonElement(it) })
+        val jsonList = createJsonElement(list)
 
         assertEquals(list, jsonList.asList()?.map { it.asString() })
     }

@@ -139,7 +139,6 @@ import com.pubnub.internal.entities.UserMetadataImpl
 import com.pubnub.internal.subscription.SubscriptionImpl
 import com.pubnub.internal.subscription.SubscriptionSetImpl
 import com.pubnub.kmp.CustomObject
-import com.pubnub.kmp.PubNub
 import com.pubnub.kmp.Uploadable
 import kotlinx.cinterop.ExperimentalForeignApi
 

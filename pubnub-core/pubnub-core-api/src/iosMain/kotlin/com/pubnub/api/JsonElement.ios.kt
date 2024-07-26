@@ -35,7 +35,7 @@ actual abstract class JsonElement(val value: Any?) {
     }
 
     override fun toString(): String {
-        return "JSONElement(${value.toString()})"
+        return "JSONElement($value)"
     }
 }
 

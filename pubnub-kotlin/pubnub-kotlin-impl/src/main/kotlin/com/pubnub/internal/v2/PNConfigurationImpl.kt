@@ -63,142 +63,142 @@ class PNConfigurationImpl(
         BasePNConfigurationImpl.Builder(defaultConfiguration),
         PNConfiguration.Builder,
         PNConfigurationOverride.Builder {
-            private val log = LoggerFactory.getLogger(this::class.simpleName)
+        private val log = LoggerFactory.getLogger(this::class.simpleName)
 
-            override var userId: UserId = super.userId
+        override var userId: UserId = super.userId
 
-            override var subscribeKey: String = super.subscribeKey
+        override var subscribeKey: String = super.subscribeKey
 
-            override var publishKey: String = super.publishKey
+        override var publishKey: String = super.publishKey
 
-            override var secretKey: String = super.secretKey
+        override var secretKey: String = super.secretKey
 
-            override var authKey: String = super.authKey
+        override var authKey: String = super.authKey
 
-            override var cryptoModule: CryptoModule? = super.cryptoModule
+        override var cryptoModule: CryptoModule? = super.cryptoModule
 
-            override var origin: String = super.origin
+        override var origin: String = super.origin
 
-            override var secure: Boolean = super.secure
+        override var secure: Boolean = super.secure
 
-            override var logVerbosity: PNLogVerbosity = super.logVerbosity
+        override var logVerbosity: PNLogVerbosity = super.logVerbosity
 
-            override var heartbeatNotificationOptions: PNHeartbeatNotificationOptions = super.heartbeatNotificationOptions
+        override var heartbeatNotificationOptions: PNHeartbeatNotificationOptions = super.heartbeatNotificationOptions
 
-            override var presenceTimeout: Int = super.presenceTimeout
-                set(value) {
-                    field =
-                        if (value < MINIMUM_PRESENCE_TIMEOUT) {
-                            log.warn("Presence timeout is too low. Defaulting to: $MINIMUM_PRESENCE_TIMEOUT")
-                            MINIMUM_PRESENCE_TIMEOUT
-                        } else {
-                            value
-                        }
-                    heartbeatInterval = (presenceTimeout / 2) - 1
-                }
-
-            override var heartbeatInterval: Int = super.heartbeatInterval
-
-            override var subscribeTimeout: Int = super.subscribeTimeout
-
-            override var connectTimeout: Int = super.connectTimeout
-
-            @Deprecated(
-                "This setting relates to *read* timeout and was renamed to `nonSubscribeReadTimeout`",
-                replaceWith = ReplaceWith("nonSubscribeReadTimeout")
-            )
-            override var nonSubscribeRequestTimeout: Int
-                get() = nonSubscribeReadTimeout
-                set(value) {
-                    nonSubscribeReadTimeout = value
-                }
-
-            override var nonSubscribeReadTimeout: Int = super.nonSubscribeReadTimeout
-
-            override var cacheBusting: Boolean = super.cacheBusting
-
-            override var suppressLeaveEvents: Boolean = super.suppressLeaveEvents
-
-            override var maintainPresenceState: Boolean = super.maintainPresenceState
-
-            override var filterExpression: String = super.filterExpression
-
-            override var includeInstanceIdentifier: Boolean = super.includeInstanceIdentifier
-
-            override var includeRequestIdentifier: Boolean = super.includeRequestIdentifier
-
-            override var maximumConnections: Int? = super.maximumConnections
-
-            override var googleAppEngineNetworking: Boolean = super.googleAppEngineNetworking
-
-            override var proxy: Proxy? = super.proxy
-
-            override var proxySelector: ProxySelector? = super.proxySelector
-
-            override var proxyAuthenticator: Authenticator? = super.proxyAuthenticator
-
-            override var certificatePinner: CertificatePinner? = super.certificatePinner
-
-            override var httpLoggingInterceptor: HttpLoggingInterceptor? = super.httpLoggingInterceptor
-
-            override var sslSocketFactory: SSLSocketFactory? = super.sslSocketFactory
-
-            override var x509ExtendedTrustManager: X509ExtendedTrustManager? = super.x509ExtendedTrustManager
-
-            override var connectionSpec: ConnectionSpec? = super.connectionSpec
-
-            override var hostnameVerifier: HostnameVerifier? = super.hostnameVerifier
-
-            override var fileMessagePublishRetryLimit: Int = super.fileMessagePublishRetryLimit
-            override var dedupOnSubscribe: Boolean = super.dedupOnSubscribe
-            override var maximumMessagesCacheSize: Int = super.maximumMessagesCacheSize
-            override var pnsdkSuffixes: Map<String, String> = super.pnsdkSuffixes
-
-            override var retryConfiguration: RetryConfiguration = super.retryConfiguration
-
-            override var managePresenceListManually: Boolean = super.managePresenceListManually
-
-            override fun build(): PNConfiguration {
-                return PNConfigurationImpl(
-                    userId = userId,
-                    subscribeKey = subscribeKey,
-                    publishKey = publishKey,
-                    secretKey = secretKey,
-                    authKey = authKey,
-                    cryptoModule = cryptoModule,
-                    origin = origin,
-                    secure = secure,
-                    logVerbosity = logVerbosity,
-                    heartbeatNotificationOptions = heartbeatNotificationOptions,
-                    presenceTimeout = presenceTimeout,
-                    heartbeatInterval = heartbeatInterval,
-                    subscribeTimeout = subscribeTimeout,
-                    connectTimeout = connectTimeout,
-                    nonSubscribeReadTimeout = nonSubscribeReadTimeout,
-                    cacheBusting = cacheBusting,
-                    suppressLeaveEvents = suppressLeaveEvents,
-                    maintainPresenceState = maintainPresenceState,
-                    filterExpression = filterExpression,
-                    includeInstanceIdentifier = includeInstanceIdentifier,
-                    includeRequestIdentifier = includeRequestIdentifier,
-                    maximumConnections = maximumConnections,
-                    googleAppEngineNetworking = googleAppEngineNetworking,
-                    proxy = proxy,
-                    proxySelector = proxySelector,
-                    proxyAuthenticator = proxyAuthenticator,
-                    certificatePinner = certificatePinner,
-                    httpLoggingInterceptor = httpLoggingInterceptor,
-                    sslSocketFactory = sslSocketFactory,
-                    x509ExtendedTrustManager = x509ExtendedTrustManager,
-                    connectionSpec = connectionSpec,
-                    hostnameVerifier = hostnameVerifier,
-                    fileMessagePublishRetryLimit = fileMessagePublishRetryLimit,
-                    dedupOnSubscribe = dedupOnSubscribe,
-                    maximumMessagesCacheSize = maximumMessagesCacheSize,
-                    pnsdkSuffixes = pnsdkSuffixes,
-                    retryConfiguration = retryConfiguration,
-                    managePresenceListManually = managePresenceListManually,
-                )
+        override var presenceTimeout: Int = super.presenceTimeout
+            set(value) {
+                field =
+                    if (value < MINIMUM_PRESENCE_TIMEOUT) {
+                        log.warn("Presence timeout is too low. Defaulting to: $MINIMUM_PRESENCE_TIMEOUT")
+                        MINIMUM_PRESENCE_TIMEOUT
+                    } else {
+                        value
+                    }
+                heartbeatInterval = (presenceTimeout / 2) - 1
             }
+
+        override var heartbeatInterval: Int = super.heartbeatInterval
+
+        override var subscribeTimeout: Int = super.subscribeTimeout
+
+        override var connectTimeout: Int = super.connectTimeout
+
+        @Deprecated(
+            "This setting relates to *read* timeout and was renamed to `nonSubscribeReadTimeout`",
+            replaceWith = ReplaceWith("nonSubscribeReadTimeout")
+        )
+        override var nonSubscribeRequestTimeout: Int
+            get() = nonSubscribeReadTimeout
+            set(value) {
+                nonSubscribeReadTimeout = value
+            }
+
+        override var nonSubscribeReadTimeout: Int = super.nonSubscribeReadTimeout
+
+        override var cacheBusting: Boolean = super.cacheBusting
+
+        override var suppressLeaveEvents: Boolean = super.suppressLeaveEvents
+
+        override var maintainPresenceState: Boolean = super.maintainPresenceState
+
+        override var filterExpression: String = super.filterExpression
+
+        override var includeInstanceIdentifier: Boolean = super.includeInstanceIdentifier
+
+        override var includeRequestIdentifier: Boolean = super.includeRequestIdentifier
+
+        override var maximumConnections: Int? = super.maximumConnections
+
+        override var googleAppEngineNetworking: Boolean = super.googleAppEngineNetworking
+
+        override var proxy: Proxy? = super.proxy
+
+        override var proxySelector: ProxySelector? = super.proxySelector
+
+        override var proxyAuthenticator: Authenticator? = super.proxyAuthenticator
+
+        override var certificatePinner: CertificatePinner? = super.certificatePinner
+
+        override var httpLoggingInterceptor: HttpLoggingInterceptor? = super.httpLoggingInterceptor
+
+        override var sslSocketFactory: SSLSocketFactory? = super.sslSocketFactory
+
+        override var x509ExtendedTrustManager: X509ExtendedTrustManager? = super.x509ExtendedTrustManager
+
+        override var connectionSpec: ConnectionSpec? = super.connectionSpec
+
+        override var hostnameVerifier: HostnameVerifier? = super.hostnameVerifier
+
+        override var fileMessagePublishRetryLimit: Int = super.fileMessagePublishRetryLimit
+        override var dedupOnSubscribe: Boolean = super.dedupOnSubscribe
+        override var maximumMessagesCacheSize: Int = super.maximumMessagesCacheSize
+        override var pnsdkSuffixes: Map<String, String> = super.pnsdkSuffixes
+
+        override var retryConfiguration: RetryConfiguration = super.retryConfiguration
+
+        override var managePresenceListManually: Boolean = super.managePresenceListManually
+
+        override fun build(): PNConfiguration {
+            return PNConfigurationImpl(
+                userId = userId,
+                subscribeKey = subscribeKey,
+                publishKey = publishKey,
+                secretKey = secretKey,
+                authKey = authKey,
+                cryptoModule = cryptoModule,
+                origin = origin,
+                secure = secure,
+                logVerbosity = logVerbosity,
+                heartbeatNotificationOptions = heartbeatNotificationOptions,
+                presenceTimeout = presenceTimeout,
+                heartbeatInterval = heartbeatInterval,
+                subscribeTimeout = subscribeTimeout,
+                connectTimeout = connectTimeout,
+                nonSubscribeReadTimeout = nonSubscribeReadTimeout,
+                cacheBusting = cacheBusting,
+                suppressLeaveEvents = suppressLeaveEvents,
+                maintainPresenceState = maintainPresenceState,
+                filterExpression = filterExpression,
+                includeInstanceIdentifier = includeInstanceIdentifier,
+                includeRequestIdentifier = includeRequestIdentifier,
+                maximumConnections = maximumConnections,
+                googleAppEngineNetworking = googleAppEngineNetworking,
+                proxy = proxy,
+                proxySelector = proxySelector,
+                proxyAuthenticator = proxyAuthenticator,
+                certificatePinner = certificatePinner,
+                httpLoggingInterceptor = httpLoggingInterceptor,
+                sslSocketFactory = sslSocketFactory,
+                x509ExtendedTrustManager = x509ExtendedTrustManager,
+                connectionSpec = connectionSpec,
+                hostnameVerifier = hostnameVerifier,
+                fileMessagePublishRetryLimit = fileMessagePublishRetryLimit,
+                dedupOnSubscribe = dedupOnSubscribe,
+                maximumMessagesCacheSize = maximumMessagesCacheSize,
+                pnsdkSuffixes = pnsdkSuffixes,
+                retryConfiguration = retryConfiguration,
+                managePresenceListManually = managePresenceListManually,
+            )
         }
+    }
 }
