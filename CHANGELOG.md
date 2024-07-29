@@ -1,3 +1,9 @@
+## v9.2.3
+July 29 2024
+
+#### Fixed
+- Fixed incorrect multiple callbacks (with exception) when sending files.
+
 ## v9.2.2
 July 04 2024
 
