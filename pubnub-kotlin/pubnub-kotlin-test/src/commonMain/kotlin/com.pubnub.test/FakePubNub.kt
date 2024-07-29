@@ -1,5 +1,6 @@
 package com.pubnub.test
 
+import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.endpoints.DeleteMessages
 import com.pubnub.api.endpoints.FetchMessages
@@ -70,7 +71,6 @@ import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.kmp.CustomObject
-import com.pubnub.kmp.PubNub
 import com.pubnub.kmp.Uploadable
 
 private fun notImplemented(): Nothing = TODO("Not implemented")

@@ -5,10 +5,13 @@ import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.creating
+import org.gradle.kotlin.dsl.getting
+import org.gradle.kotlin.dsl.provideDelegate
 import org.gradle.kotlin.dsl.withType
-import org.jetbrains.dokka.DokkaDefaults.moduleName
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinMultiplatformPluginWrapper
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetContainer
 import org.jetbrains.kotlin.gradle.plugin.cocoapods.CocoapodsExtension
 import org.jetbrains.kotlin.gradle.plugin.cocoapods.KotlinCocoapodsPlugin
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
@@ -43,13 +46,28 @@ class PubNubKotlinMultiplatformPlugin : Plugin<Project> {
 
                 listOf(
                     iosArm64(),
-                    // iosX64(),
                     iosSimulatorArm64(),
                 ).forEach {
                     it.binaries {
                         framework {
                             isStatic = true
                         }
+                    }
+                }
+                applyDefaultHierarchyTemplate()
+                with (sourceSets) {
+                    val commonMain = getByName("commonMain")
+
+                    val nonJvm = create("nonJvm") {
+                        it.dependsOn(commonMain)
+                    }
+
+                    val jsMain = getByName("jsMain") {
+                        it.dependsOn(nonJvm)
+                    }
+
+                    val iosMain = getByName("iosMain") {
+                        it.dependsOn(nonJvm)
                     }
                 }
 

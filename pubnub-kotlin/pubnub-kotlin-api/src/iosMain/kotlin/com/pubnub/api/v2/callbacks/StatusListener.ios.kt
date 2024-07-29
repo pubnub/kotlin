@@ -1,9 +1,9 @@
 package com.pubnub.api.v2.callbacks
 
 import cocoapods.PubNubSwift.PubNubStatusListenerObjC
+import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.models.consumer.PNStatus
-import com.pubnub.kmp.PubNub
 import kotlinx.cinterop.ExperimentalForeignApi
 
 /**

@@ -22,6 +22,7 @@ import cocoapods.PubNubSwift.PubNubSetMembershipResultObjC
 import cocoapods.PubNubSwift.PubNubSetUUIDMetadataResultObjC
 import cocoapods.PubNubSwift.PubNubStatusListenerObjC
 import com.pubnub.api.JsonElementImpl
+import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
 import com.pubnub.api.PubNubImpl
 import com.pubnub.api.enums.PNStatusCategory

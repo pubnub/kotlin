@@ -1,4 +1,4 @@
-package com.pubnub.kmp
+package com.pubnub.api
 
 import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.endpoints.DeleteMessages
@@ -71,8 +71,10 @@ import com.pubnub.api.v2.subscriptions.EmptyOptions
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
+import com.pubnub.kmp.CustomObject
+import com.pubnub.kmp.Uploadable
 
-interface PubNub {
+expect interface PubNub {
     val configuration: PNConfiguration
 
     fun addListener(listener: EventListener)
