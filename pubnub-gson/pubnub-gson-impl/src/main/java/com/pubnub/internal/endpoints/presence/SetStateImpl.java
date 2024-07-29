@@ -16,7 +16,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Setter
@@ -86,7 +88,15 @@ public class SetStateImpl extends DelegatingEndpoint<Object, PNSetStateResult> i
         } else {
             // Some clients require alternative way of setting it through Heartbeat
             // Which is a feature brought over from the legacy Java SDK, and we need to be compatible:
-            return (EndpointInterface<Object>) (Object) new HeartbeatEndpoint(pubnub, channels, channelGroups, state);
+            return (EndpointInterface<Object>) (Object) new HeartbeatEndpoint(pubnub, channels, channelGroups, composeStateParamValue());
         }
+    }
+
+    private Object composeStateParamValue() {
+        Map<String, Object> stateParamValue = new HashMap<>();
+        for (String channel : channels) {
+            stateParamValue.put(channel, state);
+        }
+        return stateParamValue;
     }
 }
