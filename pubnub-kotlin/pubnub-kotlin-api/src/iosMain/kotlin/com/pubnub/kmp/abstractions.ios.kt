@@ -1,6 +1,7 @@
 package com.pubnub.kmp
 
 import platform.Foundation.NSData
+import platform.Foundation.NSInputStream
 import platform.Foundation.NSURL
 
 actual class CustomObject(val value: Any)
@@ -17,7 +18,7 @@ data class FileUploadContent(
 ) : Uploadable()
 
 data class StreamUploadContent(
-    val url: NSURL,
+    val stream: NSInputStream,
     val contentType: String?,
     val contentLength: Int
 ) : Uploadable()
