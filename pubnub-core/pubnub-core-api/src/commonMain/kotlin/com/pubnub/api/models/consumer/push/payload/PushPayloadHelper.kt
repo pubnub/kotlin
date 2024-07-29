@@ -8,7 +8,7 @@ class PushPayloadHelper {
     @Deprecated(
         replaceWith = ReplaceWith("fcmPayloadV2"),
         message = "The legacy GCM/FCM payload is deprecated and will" +
-                "be removed in the next major release. Use `fcmPayloadV2` with the `FCMPayloadV2` message body instead."
+            "be removed in the next major release. Use `fcmPayloadV2` with the `FCMPayloadV2` message body instead."
     )
     var fcmPayload: FCMPayload? = null
     var fcmPayloadV2: FCMPayloadV2? = null
