@@ -46,11 +46,14 @@ internal class RetryingRemoteAction<T>(
                 for (i in 0 until maxNumberOfAutomaticRetries) {
                     try {
                         callback.accept(Result.success(remoteAction.sync()))
+                        return@Runnable
                     } catch (e: Throwable) {
                         lastException = e
                     }
                 }
-                callback.accept(Result.failure(PubNubException.from(lastException!!).copy(remoteAction = this)))
+                lastException?.let { exception ->
+                    callback.accept(Result.failure(PubNubException.from(exception).copy(remoteAction = this)))
+                }
             },
         )
     }
