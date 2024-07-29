@@ -1,6 +1,8 @@
 package com.pubnub.internal.managers
 
 import com.pubnub.api.PubNubException
+import com.pubnub.api.utils.Optional
+import com.pubnub.internal.models.server.objects_api.UUIDMetadataInput
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -68,5 +70,25 @@ internal class MapperManagerTest {
         val json2 = mapperManager.toJson(regularSet)
         assertEquals(expected, json1)
         assertEquals(expected, json2)
+    }
+
+    @Test
+    fun toJson_optionalsAndNulls() {
+        val mapperManager = MapperManager()
+        val input = UUIDMetadataInput(
+            name = Optional.of("aaa"),
+            email = Optional.of(null),
+            custom = Optional.of(
+                mapOf(
+                    "aaa" to "bbb",
+                    "ccc" to null
+                )
+            ),
+            externalId = Optional.none()
+        )
+
+        val output = mapperManager.toJson(input)
+
+        assertEquals("""{"name":"aaa","email":null,"custom":{"aaa":"bbb"}}""", output)
     }
 }

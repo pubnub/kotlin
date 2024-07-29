@@ -36,6 +36,7 @@ import com.pubnub.api.endpoints.objects_api.channel.GetAllChannelsMetadata;
 import com.pubnub.api.endpoints.objects_api.channel.GetChannelMetadata;
 import com.pubnub.api.endpoints.objects_api.channel.RemoveChannelMetadata;
 import com.pubnub.api.endpoints.objects_api.channel.SetChannelMetadata;
+import com.pubnub.api.endpoints.objects_api.channel.UpdateChannelMetadata;
 import com.pubnub.api.endpoints.objects_api.members.GetChannelMembers;
 import com.pubnub.api.endpoints.objects_api.members.ManageChannelMembers;
 import com.pubnub.api.endpoints.objects_api.members.RemoveChannelMembers;
@@ -48,6 +49,7 @@ import com.pubnub.api.endpoints.objects_api.uuid.GetAllUUIDMetadata;
 import com.pubnub.api.endpoints.objects_api.uuid.GetUUIDMetadata;
 import com.pubnub.api.endpoints.objects_api.uuid.RemoveUUIDMetadata;
 import com.pubnub.api.endpoints.objects_api.uuid.SetUUIDMetadata;
+import com.pubnub.api.endpoints.objects_api.uuid.UpdateUserMetadata;
 import com.pubnub.api.endpoints.presence.GetState;
 import com.pubnub.api.endpoints.presence.HereNow;
 import com.pubnub.api.endpoints.presence.SetState;
@@ -97,6 +99,7 @@ import com.pubnub.internal.endpoints.objects_api.channel.GetAllChannelsMetadataI
 import com.pubnub.internal.endpoints.objects_api.channel.GetChannelMetadataImpl;
 import com.pubnub.internal.endpoints.objects_api.channel.RemoveChannelMetadataImpl;
 import com.pubnub.internal.endpoints.objects_api.channel.SetChannelMetadataImpl;
+import com.pubnub.internal.endpoints.objects_api.channel.UpdateChannelMetadataImpl;
 import com.pubnub.internal.endpoints.objects_api.members.GetChannelMembersImpl;
 import com.pubnub.internal.endpoints.objects_api.members.ManageChannelMembersImpl;
 import com.pubnub.internal.endpoints.objects_api.members.RemoveChannelMembersImpl;
@@ -109,6 +112,7 @@ import com.pubnub.internal.endpoints.objects_api.uuid.GetAllUUIDMetadataImpl;
 import com.pubnub.internal.endpoints.objects_api.uuid.GetUUIDMetadataImpl;
 import com.pubnub.internal.endpoints.objects_api.uuid.RemoveUUIDMetadataImpl;
 import com.pubnub.internal.endpoints.objects_api.uuid.SetUUIDMetadataImpl;
+import com.pubnub.internal.endpoints.objects_api.uuid.UpdateUserMetadataImpl;
 import com.pubnub.internal.endpoints.presence.GetStateImpl;
 import com.pubnub.internal.endpoints.presence.HereNowImpl;
 import com.pubnub.internal.endpoints.presence.SetStateImpl;
@@ -342,8 +346,15 @@ public class PubNubImpl extends BasePubNubImpl<
     // Start Objects API
 
     @Override
+    @NotNull
     public SetUUIDMetadata setUUIDMetadata() {
         return new SetUUIDMetadataImpl(getPubNubCore());
+    }
+
+    @Override
+    @NotNull
+    public UpdateUserMetadata updateUserMetadata() {
+        return new UpdateUserMetadataImpl(getPubNubCore());
     }
 
     @Override
@@ -365,8 +376,15 @@ public class PubNubImpl extends BasePubNubImpl<
     }
 
     @Override
+    @NotNull
     public SetChannelMetadata.Builder setChannelMetadata() {
         return new SetChannelMetadataImpl.Builder(getPubNubCore());
+    }
+
+    @Override
+    @NotNull
+    public UpdateChannelMetadata.Builder updateChannelMetadata() {
+        return new UpdateChannelMetadataImpl.Builder(getPubNubCore());
     }
 
     @Override

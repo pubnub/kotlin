@@ -75,6 +75,7 @@ import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
+import com.pubnub.api.utils.Optional
 import com.pubnub.api.v2.BasePNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
@@ -741,6 +742,13 @@ class PubNubImpl(
         )
     }
 
+    @Deprecated(
+        "It's not possible to set metadata to `null` using this function. Use `updateChannelMetadata` which offers the option to overwrite, leave as is or clear metadata.",
+        replaceWith = ReplaceWith(
+            "updateChannelMetadata(channel, Optional.ofNullable(name), Optional.ofNullable(description), Optional.ofNullable(custom), includeCustom, Optional.ofNullable(type), Optional.ofNullable(status))",
+            "com.pubnub.api.utils.Optional"
+        )
+    )
     override fun setChannelMetadata(
         channel: String,
         name: String?,
@@ -749,6 +757,28 @@ class PubNubImpl(
         includeCustom: Boolean,
         type: String?,
         status: String?,
+    ): SetChannelMetadata {
+        return com.pubnub.internal.endpoints.objects.channel.SetChannelMetadataImpl(
+            pubNubCore.setChannelMetadata(
+                channel,
+                name = Optional.ofNullable(name),
+                description = Optional.ofNullable(description),
+                custom = Optional.ofNullable(custom),
+                includeCustom = includeCustom,
+                type = Optional.ofNullable(type),
+                status = Optional.ofNullable(status)
+            ),
+        )
+    }
+
+    override fun updateChannelMetadata(
+        channel: String,
+        name: Optional<String?>,
+        description: Optional<String?>,
+        custom: Optional<Any?>,
+        includeCustom: Boolean,
+        type: Optional<String?>,
+        status: Optional<String?>
     ): SetChannelMetadata {
         return com.pubnub.internal.endpoints.objects.channel.SetChannelMetadataImpl(
             pubNubCore.setChannelMetadata(channel, name, description, custom, includeCustom, type, status),
@@ -790,6 +820,13 @@ class PubNubImpl(
         )
     }
 
+    @Deprecated(
+        "It's not possible to set metadata to `null` using this function. Use `updateUserMetadata` which offers the option to overwrite, leave as is or clear metadata.",
+        replaceWith = ReplaceWith(
+            "updateUserMetadata(uuid, Optional.ofNullable(name), Optional.ofNullable(externalId), Optional.ofNullable(profileUrl), Optional.ofNullable(email), Optional.ofNullable(custom), includeCustom, Optional.ofNullable(type), Optional.ofNullable(status))",
+            "com.pubnub.api.utils.Optional"
+        )
+    )
     override fun setUUIDMetadata(
         uuid: String?,
         name: String?,
@@ -800,6 +837,32 @@ class PubNubImpl(
         includeCustom: Boolean,
         type: String?,
         status: String?,
+    ): SetUUIDMetadata {
+        return com.pubnub.internal.endpoints.objects.uuid.SetUUIDMetadataImpl(
+            pubNubCore.setUUIDMetadata(
+                uuid,
+                Optional.ofNullable(name),
+                Optional.ofNullable(externalId),
+                Optional.ofNullable(profileUrl),
+                Optional.ofNullable(email),
+                Optional.ofNullable(custom),
+                includeCustom,
+                Optional.ofNullable(type),
+                Optional.ofNullable(status),
+            ),
+        )
+    }
+
+    override fun updateUserMetadata(
+        uuid: String?,
+        name: Optional<String?>,
+        externalId: Optional<String?>,
+        profileUrl: Optional<String?>,
+        email: Optional<String?>,
+        custom: Optional<Any?>,
+        includeCustom: Boolean,
+        type: Optional<String?>,
+        status: Optional<String?>,
     ): SetUUIDMetadata {
         return com.pubnub.internal.endpoints.objects.uuid.SetUUIDMetadataImpl(
             pubNubCore.setUUIDMetadata(

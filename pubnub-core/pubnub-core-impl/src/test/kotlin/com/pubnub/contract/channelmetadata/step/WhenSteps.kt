@@ -1,5 +1,6 @@
 package com.pubnub.contract.channelmetadata.step
 
+import com.pubnub.api.utils.Optional
 import com.pubnub.contract.channelmetadata.state.ChannelMetadataState
 import com.pubnub.contract.state.World
 import io.cucumber.java.en.When
@@ -21,11 +22,11 @@ class WhenSteps(
         val channelMetadata = channelMetadataState.channelMetadata!!
         world.pubnub.pubNubCore.setChannelMetadata(
             channel = channelMetadata.id,
-            name = channelMetadata.name,
-            description = channelMetadata.description,
-            custom = channelMetadata.custom,
-            type = channelMetadata.type,
-            status = channelMetadata.status,
+            name = Optional.ofNullable(channelMetadata.name),
+            description = Optional.ofNullable(channelMetadata.description),
+            custom = Optional.ofNullable(channelMetadata.custom),
+            type = Optional.ofNullable(channelMetadata.type),
+            status = Optional.ofNullable(channelMetadata.status),
         ).sync().let {
             channelMetadataState.channelMetadata = it.data
             world.responseStatus = it.status

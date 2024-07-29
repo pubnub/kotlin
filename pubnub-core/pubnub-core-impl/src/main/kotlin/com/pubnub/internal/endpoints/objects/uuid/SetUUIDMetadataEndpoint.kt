@@ -3,6 +3,7 @@ package com.pubnub.internal.endpoints.objects.uuid
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.retry.RetryableEndpointGroup
+import com.pubnub.api.utils.Optional
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubCore
 import com.pubnub.internal.endpoints.objects.internal.IncludeQueryParam
@@ -18,14 +19,14 @@ import retrofit2.Response
 class SetUUIDMetadataEndpoint internal constructor(
     pubnub: PubNubCore,
     private val uuid: String?,
-    private val name: String?,
-    private val externalId: String?,
-    private val profileUrl: String?,
-    private val email: String?,
-    private val custom: Any?,
+    private val name: Optional<String?>,
+    private val externalId: Optional<String?>,
+    private val profileUrl: Optional<String?>,
+    private val email: Optional<String?>,
+    private val custom: Optional<Any?>,
     private val withInclude: IncludeQueryParam,
-    private val type: String?,
-    private val status: String?,
+    private val type: Optional<String?>,
+    private val status: Optional<String?>,
 ) : EndpointCore<EntityEnvelope<PNUUIDMetadata>, PNUUIDMetadataResult>(pubnub), SetUUIDMetadataInterface {
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNUUIDMetadata>> {
         val params = queryParams + withInclude.createIncludeQueryParams()
