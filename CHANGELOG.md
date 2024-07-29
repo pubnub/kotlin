@@ -1,3 +1,21 @@
+## v9.2.3
+July 29 2024
+
+#### Fixed
+- Fixed incorrect multiple callbacks (with exception) when sending files.
+
+## v9.2.2
+July 04 2024
+
+#### Fixed
+- SetState via Heartbeat fix.
+
+## v9.2.1
+July 02 2024
+
+#### Added
+- Add missing `auth_method` to APNS2 configuration.
+
 ## v9.2.0
 June 11 2024
 

@@ -8,7 +8,7 @@ class PushPayloadHelper {
     @Deprecated(
         replaceWith = ReplaceWith("fcmPayloadV2"),
         message = "The legacy GCM/FCM payload is deprecated and will" +
-            "be removed in the next major release. Use `fcmPayloadV2` with the `FCMPayloadV2` message body instead."
+                "be removed in the next major release. Use `fcmPayloadV2` with the `FCMPayloadV2` message body instead."
     )
     var fcmPayload: FCMPayload? = null
     var fcmPayloadV2: FCMPayloadV2? = null
@@ -87,6 +87,17 @@ class PushPayloadHelper {
             var expiration: String? = null
             var targets: List<Target>? = null
             var version: String? = null
+            var authMethod: APNS2AuthMethod? = null
+
+            enum class APNS2AuthMethod {
+                TOKEN,
+                CERT,
+                CERTIFICATE;
+
+                override fun toString(): String {
+                    return name.lowercase()
+                }
+            }
 
             override fun toMap(): Map<String, Any> {
                 return mutableMapOf<String, Any>().apply {
@@ -100,6 +111,7 @@ class PushPayloadHelper {
                         }
                     }
                     version?.let { put("version", it) }
+                    authMethod?.let { put("auth_method", it.toString()) }
                 }
             }
 

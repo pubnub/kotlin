@@ -90,6 +90,7 @@ class RetryingRemoteActionTest {
                 executorService,
             )
         val asyncSynchronization = CountDownLatch(1)
+        val noFailureCallsSynchronization = CountDownLatch(1)
 
         // when
         retryingRemoteAction.async { result ->
@@ -98,10 +99,16 @@ class RetryingRemoteActionTest {
                 Assert.assertEquals(expectedValue, it)
                 verify(exactly = 1) { remoteAction.sync() }
                 asyncSynchronization.countDown()
+            }.onFailure {
+                noFailureCallsSynchronization.countDown()
             }
         }
         if (!asyncSynchronization.await(3, TimeUnit.SECONDS)) {
             Assert.fail("Callback have not been called")
+        }
+
+        if (noFailureCallsSynchronization.await(3, TimeUnit.SECONDS)) {
+            Assert.fail("onFailure has been called when it shouldn't!")
         }
     }
 
