@@ -19,7 +19,6 @@ import com.pubnub.kmp.Uploadable
 import com.pubnub.kmp.onFailureHandler
 import com.pubnub.kmp.onSuccessHandler2
 import kotlinx.cinterop.ExperimentalForeignApi
-import platform.Foundation.NSInputStream
 import platform.Foundation.NSNumber
 
 /**
