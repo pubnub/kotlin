@@ -11,7 +11,7 @@ public class PNChannelMetadataResult implements ObjectResult<PNChannelMetadata>,
     private final String event;
     private final String channel;
     private final String subscription;
-    private final Long timetoken;
+    private final long timetoken;
     private final JsonElement userMetadata;
     private final String publisher;
     private final PNChannelMetadata data;

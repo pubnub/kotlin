@@ -24,14 +24,14 @@ import com.pubnub.api.JsonElement
  * @property userMetadata User metadata if any.
  */
 class PNPresenceEventResult(
-    val event: String? = null,
-    val uuid: String? = null,
-    val timestamp: Long? = null,
+    val event: String,
+    val uuid: String,
+    val timestamp: Long,
     val occupancy: Int? = null,
     val state: JsonElement? = null,
     override val channel: String,
     override val subscription: String? = null,
-    override val timetoken: Long? = null,
+    override val timetoken: Long,
     val join: List<String>? = null,
     val leave: List<String>? = null,
     val timeout: List<String>? = null,
@@ -95,14 +95,14 @@ class PNPresenceEventResult(
     }
 
     override fun hashCode(): Int {
-        var result = event?.hashCode() ?: 0
-        result = 31 * result + (uuid?.hashCode() ?: 0)
-        result = 31 * result + (timestamp?.hashCode() ?: 0)
+        var result = event.hashCode() ?: 0
+        result = 31 * result + (uuid.hashCode() ?: 0)
+        result = 31 * result + (timestamp.hashCode() ?: 0)
         result = 31 * result + (occupancy ?: 0)
         result = 31 * result + (state?.hashCode() ?: 0)
         result = 31 * result + channel.hashCode()
         result = 31 * result + (subscription?.hashCode() ?: 0)
-        result = 31 * result + (timetoken?.hashCode() ?: 0)
+        result = 31 * result + (timetoken.hashCode() ?: 0)
         result = 31 * result + (join?.hashCode() ?: 0)
         result = 31 * result + (leave?.hashCode() ?: 0)
         result = 31 * result + (timeout?.hashCode() ?: 0)

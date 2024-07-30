@@ -4,6 +4,7 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.endpoints.message_actions.AddMessageAction;
 import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult;
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction;
+import com.pubnub.api.models.consumer.message_actions.PNSavedMessageAction;
 import com.pubnub.internal.EndpointInterface;
 import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.IdentityMappingEndpoint;
@@ -21,7 +22,7 @@ import static com.pubnub.api.builder.PubNubErrorBuilder.PNERROBJ_MESSAGE_TIMETOK
 public class AddMessageActionImpl extends IdentityMappingEndpoint<PNAddMessageActionResult> implements AddMessageAction {
 
     private String channel;
-    private PNMessageAction messageAction;
+    private PNSavedMessageAction messageAction;
 
     public AddMessageActionImpl(PubNubCore pubnub) {
         super(pubnub);
@@ -41,7 +42,7 @@ public class AddMessageActionImpl extends IdentityMappingEndpoint<PNAddMessageAc
         if (messageAction == null) {
             throw new PubNubException(PNERROBJ_MESSAGE_ACTION_MISSING);
         }
-        if (messageAction.getMessageTimetoken() == null || messageAction.getMessageTimetoken() == 0) {
+        if (messageAction.getMessageTimetoken() == 0) {
             throw new PubNubException(PNERROBJ_MESSAGE_TIMETOKEN_MISSING);
         }
         if (messageAction.getValue().isEmpty()) {

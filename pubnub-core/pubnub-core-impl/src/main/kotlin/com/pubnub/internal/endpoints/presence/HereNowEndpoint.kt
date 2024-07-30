@@ -59,58 +59,60 @@ class HereNowEndpoint internal constructor(
     override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.PRESENCE
 
     private fun parseSingleChannelResponse(input: Envelope<JsonElement>): PNHereNowResult {
-        val pnHereNowResult =
-            PNHereNowResult(
-                totalChannels = 1,
-                totalOccupancy = input.occupancy,
-            )
-
-        val pnHereNowChannelData =
-            PNHereNowChannelData(
-                channelName = channels[0],
-                occupancy = input.occupancy,
-            )
+        val channelsMap = mutableMapOf<String, PNHereNowChannelData>()
+        val pnHereNowChannelData = PNHereNowChannelData(
+            channelName = channels[0],
+            occupancy = input.occupancy,
+            occupants = if (includeUUIDs) {
+                prepareOccupantData(input.uuids!!)
+            } else {
+                emptyList()
+            }
+        )
 
         if (includeUUIDs) {
-            pnHereNowChannelData.occupants = prepareOccupantData(input.uuids!!)
-            pnHereNowResult.channels[channels[0]] = pnHereNowChannelData
+            channelsMap[channels[0]] = pnHereNowChannelData
         }
 
-        return pnHereNowResult
+        return PNHereNowResult(
+            totalChannels = 1,
+            totalOccupancy = input.occupancy,
+            channels = channelsMap.toMap()
+        )
     }
 
     private fun parseMultipleChannelResponse(input: JsonElement): PNHereNowResult {
-        val pnHereNowResult =
-            PNHereNowResult(
-                totalChannels = pubnub.mapper.elementToInt(input, "total_channels"),
-                totalOccupancy = pubnub.mapper.elementToInt(input, "total_occupancy"),
-            )
+        val channelsMap = mutableMapOf<String, PNHereNowChannelData>()
 
         val it = pubnub.mapper.getObjectIterator(input, "channels")
-
         while (it.hasNext()) {
             val entry = it.next()
             val pnHereNowChannelData =
                 PNHereNowChannelData(
                     channelName = entry.key,
                     occupancy = pubnub.mapper.elementToInt(entry.value, "occupancy"),
+                    occupants = if (includeUUIDs) {
+                        prepareOccupantData(pubnub.mapper.getField(entry.value, "uuids")!!)
+                    } else {
+                        emptyList()
+                    }
                 )
-            if (includeUUIDs) {
-                pnHereNowChannelData.occupants = prepareOccupantData(pubnub.mapper.getField(entry.value, "uuids")!!)
-            }
-            pnHereNowResult.channels[entry.key] = pnHereNowChannelData
+
+            channelsMap[entry.key] = pnHereNowChannelData
         }
 
-        return pnHereNowResult
+        return PNHereNowResult(
+            totalChannels = pubnub.mapper.elementToInt(input, "total_channels"),
+            totalOccupancy = pubnub.mapper.elementToInt(input, "total_occupancy"),
+            channelsMap.toMap()
+        )
     }
 
-    private fun prepareOccupantData(input: JsonElement): MutableList<PNHereNowOccupantData> {
-        val occupantsResults = mutableListOf<PNHereNowOccupantData>()
-
+    private fun prepareOccupantData(input: JsonElement): List<PNHereNowOccupantData> = buildList {
         val it = pubnub.mapper.getArrayIterator(input)
         while (it?.hasNext()!!) {
             val occupant = it.next()
-            occupantsResults.add(
+            add(
                 if (includeState) {
                     PNHereNowOccupantData(
                         uuid = pubnub.mapper.elementToString(occupant, "uuid")!!,
@@ -123,8 +125,6 @@ class HereNowEndpoint internal constructor(
                 },
             )
         }
-
-        return occupantsResults
     }
 
     private fun addQueryParams(queryParams: MutableMap<String, String>) {

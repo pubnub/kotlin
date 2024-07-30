@@ -7,8 +7,8 @@ data class PNUUIDMetadata(
     val profileUrl: String?,
     val email: String?,
     val custom: Map<String, Any?>?,
-    val updated: String?,
-    val eTag: String?,
+    val updated: String,
+    val eTag: String,
     val type: String?,
     val status: String?,
 )

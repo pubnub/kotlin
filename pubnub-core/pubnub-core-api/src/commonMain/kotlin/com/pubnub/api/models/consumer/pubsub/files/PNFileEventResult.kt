@@ -7,9 +7,8 @@ import com.pubnub.api.models.consumer.pubsub.PNEvent
 
 class PNFileEventResult(
     override val channel: String,
-    // timetoken in every other event model is nullable
-    override val timetoken: Long?,
-    val publisher: String?,
+    override val timetoken: Long,
+    val publisher: String,
     val message: Any?,
     val file: PNDownloadableFile,
     val jsonMessage: JsonElement,

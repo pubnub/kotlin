@@ -48,8 +48,8 @@ internal fun createPNUUIDMetadata(from: PubNubUUIDMetadataObjC): PNUUIDMetadata 
         profileUrl = from.profileUrl(),
         email = from.email(),
         custom = from.custom()?.safeCast(),
-        updated = from.updated(),
-        eTag = from.eTag(),
+        updated = from.updated()!!,
+        eTag = from.eTag()!!,
         type = from.type(),
         status = from.status()
     )
@@ -62,8 +62,8 @@ internal fun createPNChannelMetadata(from: PubNubChannelMetadataObjC): PNChannel
         name = from.name(),
         description = from.descr(),
         custom = from.custom()?.safeCast(),
-        updated = from.updated(),
-        eTag = from.eTag(),
+        updated = from.updated()!!,
+        eTag = from.eTag()!!,
         type = from.type(),
         status = from.status()
     )
@@ -87,8 +87,8 @@ internal fun createPNChannelMembership(from: PubNubMembershipMetadataObjC): PNCh
             name = from.channel()?.name().orEmpty(),
             description = from.channel()?.descr().orEmpty(),
             custom = from.channel()?.custom()?.safeCast(),
-            updated = from.channel()?.updated(),
-            eTag = from.channel()?.eTag(),
+            updated = from.channel()?.updated()!!,
+            eTag = from.channel()?.eTag()!!,
             type = from.channel()?.type(),
             status = from.channel()?.status()
         ),

@@ -29,6 +29,7 @@ import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.files.PNDownloadableFile
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
+import com.pubnub.api.models.consumer.message_actions.PNSavedMessageAction
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
@@ -94,7 +95,7 @@ private fun createMessageResult(from: PubNubMessageObjC?): PNMessageResult {
             subscription = from.subscription(),
             timetoken = from.published().toLong(),
             userMetadata = JsonElementImpl(from.metadata()),
-            publisher = from.publisher()
+            publisher = from.publisher()!!
         ),
         message = JsonElementImpl(from.payload()),
         error = null // TODO: Map error from Swift SDK to PubNubError in Kotlin SDK
@@ -109,7 +110,7 @@ private fun createSignalResult(from: PubNubMessageObjC?): PNSignalResult {
             subscription = from.subscription(),
             timetoken = from.published().toLong(),
             userMetadata = JsonElementImpl(from.metadata()),
-            publisher = from.publisher()
+            publisher = from.publisher()!!
         ),
         message = JsonElementImpl(from.payload())
     )
@@ -126,10 +127,12 @@ private fun createMessageActionResult(from: PubNubMessageActionObjC?): PNMessage
             publisher = from.publisher()
         ),
         event = from.event(),
-        data = PNMessageAction(
+        data = PNSavedMessageAction(
             type = from.actionType(),
             value = from.actionValue(),
-            messageTimetoken = from.messageTimetoken().toLong()
+            messageTimetoken = from.messageTimetoken().toLong(),
+            uuid = from.publisher(),
+            actionTimetoken = from.actionTimetoken().toLong()
         )
     )
 }
@@ -138,14 +141,14 @@ private fun createMessageActionResult(from: PubNubMessageActionObjC?): PNMessage
 private fun createPresenceEventResults(from: List<*>?): List<PNPresenceEventResult> {
     return from.filterAndMap { rawValue: PubNubPresenceChangeObjC ->
         PNPresenceEventResult(
-            event = rawValue.event(),
-            uuid = rawValue.uuid(),
-            timestamp = rawValue.timetoken()?.longValue,
+            event = rawValue.event()!!,
+            uuid = rawValue.uuid()!!,
+            timestamp = rawValue.timetoken()?.longValue!!,
             occupancy = rawValue.occupancy()?.intValue,
             state = JsonElementImpl(rawValue.state()),
             channel = rawValue.channel().orEmpty(),
             subscription = rawValue.subscription(),
-            timetoken = rawValue.timetoken()?.longValue,
+            timetoken = rawValue.timetoken()?.longValue!!,
             join = rawValue.join()?.filterIsInstance<String>(),
             leave = rawValue.leave()?.filterIsInstance<String>(),
             timeout = rawValue.timeout()?.filterIsInstance<String>(),
@@ -159,8 +162,8 @@ private fun createPresenceEventResults(from: List<*>?): List<PNPresenceEventResu
 private fun createFileEventResult(from: PubNubFileChangeEventObjC?): PNFileEventResult {
     return PNFileEventResult(
         channel = from!!.channel(),
-        timetoken = from.timetoken()?.longValue,
-        publisher = from.publisher(),
+        timetoken = from.timetoken()?.longValue!!,
+        publisher = from.publisher()!!,
         message = from.message(),
         jsonMessage = JsonElementImpl(from.message()),
         file = PNDownloadableFile(
@@ -178,9 +181,9 @@ private fun createObjectEvent(from: PubNubAppContextEventObjC?): PNObjectEventRe
             result = BasePubSubResult(
                 channel = from!!.channel(),
                 subscription = from.subscription(),
-                timetoken = from.timetoken()?.longValue,
+                timetoken = from.timetoken()?.longValue!!,
                 userMetadata = JsonElementImpl(from.userMetadata()),
-                publisher = from.publisher(),
+                publisher = from.publisher()!!,
             ),
             extractedMessage = it
         )
@@ -203,8 +206,8 @@ private fun mapAppContextEvent(from: PubNubAppContextEventObjC?): PNObjectEventM
                     profileUrl = from.metadata().profileUrl(),
                     email = from.metadata().email(),
                     custom = from.metadata().custom()?.safeCast(),
-                    updated = from.metadata().updated(),
-                    eTag = from.metadata().eTag(),
+                    updated = from.metadata().updated()!!,
+                    eTag = from.metadata().eTag()!!,
                     type = from.metadata().type(),
                     status = from.metadata().status()
                 )
@@ -228,8 +231,8 @@ private fun mapAppContextEvent(from: PubNubAppContextEventObjC?): PNObjectEventM
                     name = from.metadata().name(),
                     description = from.metadata().descr(),
                     custom = from.metadata().custom()?.safeCast(),
-                    updated = from.metadata().updated(),
-                    eTag = from.metadata().eTag(),
+                    updated = from.metadata().updated()!!,
+                    eTag = from.metadata().eTag()!!,
                     type = from.metadata().type(),
                     status = from.metadata().status()
                 )

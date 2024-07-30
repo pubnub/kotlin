@@ -47,11 +47,11 @@ class AddMessageActionTestSuite :
         )
 
     override fun verifyResultExpectations(result: PNAddMessageActionResult) {
-        assertEquals(123L, result.messageTimetoken)
-        assertEquals("reaction", result.type)
-        assertEquals("someUuid", result.uuid)
-        assertEquals("smiley", result.value)
-        assertEquals(1000L, result.actionTimetoken)
+        assertEquals(123L, result.action.messageTimetoken)
+        assertEquals("reaction", result.action.type)
+        assertEquals("someUuid", result.action.uuid)
+        assertEquals("smiley", result.action.value)
+        assertEquals(1000L, result.action.actionTimetoken)
     }
 
     override fun mappingBuilder() =

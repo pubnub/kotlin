@@ -33,7 +33,7 @@ class GetChannelMetadataEndpoint internal constructor(
         return input.body()!!.let {
             PNChannelMetadataResult(
                 status = it.status,
-                data = it.data,
+                data = it.data!!,
             )
         }
     }

@@ -1,6 +1,6 @@
 package com.pubnub.api.models.consumer.pubsub.message_actions
 
-import com.pubnub.api.models.consumer.message_actions.PNMessageAction
+import com.pubnub.api.models.consumer.message_actions.PNSavedMessageAction
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.api.models.consumer.pubsub.PubSubResult
 import com.pubnub.api.models.consumer.pubsub.objects.ObjectResult
@@ -14,9 +14,9 @@ import com.pubnub.api.models.consumer.pubsub.objects.ObjectResult
 class PNMessageActionResult(
     private val result: BasePubSubResult,
     override val event: String,
-    override val data: PNMessageAction,
-) : ObjectResult<PNMessageAction>, PubSubResult by result {
-    val messageAction: PNMessageAction = data
+    override val data: PNSavedMessageAction,
+) : ObjectResult<PNSavedMessageAction>, PubSubResult by result {
+    val messageAction: PNSavedMessageAction = data
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

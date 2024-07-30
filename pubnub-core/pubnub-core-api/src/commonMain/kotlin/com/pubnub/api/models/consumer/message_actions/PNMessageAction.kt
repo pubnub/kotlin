@@ -1,7 +1,5 @@
 package com.pubnub.api.models.consumer.message_actions
 
-import kotlin.jvm.JvmField
-
 /**
  * Concrete implementation of a message action.
  *
@@ -17,75 +15,77 @@ import kotlin.jvm.JvmField
  */
 
 open class PNMessageAction(
-    @JvmField var type: String,
-    @JvmField var value: String,
-    @JvmField var messageTimetoken: Long,
+    val type: String,
+    val value: String,
+    val messageTimetoken: Long,
 ) {
     constructor() : this("", "", 0L)
 
-    internal constructor(pnMessageAction: PNMessageAction) : this(
-        pnMessageAction.type,
-        pnMessageAction.value,
-        pnMessageAction.messageTimetoken,
-    ) {
-        this.uuid = pnMessageAction.uuid
-        this.actionTimetoken = pnMessageAction.actionTimetoken
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
+        }
+        if (other == null || this::class != other::class) {
+            return false
+        }
+
+        other as PNMessageAction
+
+        if (type != other.type) {
+            return false
+        }
+        if (value != other.value) {
+            return false
+        }
+        if (messageTimetoken != other.messageTimetoken) {
+            return false
+        }
+
+        return true
     }
 
-    /**
-     * Message action's author.
-     */
-    @JvmField
-    var uuid: String? = null
+    override fun hashCode(): Int {
+        var result = type.hashCode()
+        result = 31 * result + value.hashCode()
+        result = 31 * result + messageTimetoken.hashCode()
+        return result
+    }
+}
 
-    /**
-     * Timestamp when the message action was created.
-     */
-    @JvmField
-    var actionTimetoken: Long? = null
+class PNSavedMessageAction(
+    type: String,
+    value: String,
+    messageTimetoken: Long,
+    val uuid: String,
+    val actionTimetoken: Long,
+) : PNMessageAction(type, value, messageTimetoken) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
+        }
+        if (other == null || this::class != other::class) {
+            return false
+        }
+        if (!super.equals(other)) {
+            return false
+        }
 
-    fun setType(type: String): PNMessageAction {
-        this.type = type
-        return this
+        other as PNSavedMessageAction
+
+        if (uuid != other.uuid) {
+            return false
+        }
+        if (actionTimetoken != other.actionTimetoken) {
+            return false
+        }
+
+        return true
     }
 
-    fun setValue(value: String): PNMessageAction {
-        this.value = value
-        return this
-    }
-
-    fun setMessageTimetoken(messageTimetoken: Long): PNMessageAction {
-        this.messageTimetoken = messageTimetoken
-        return this
-    }
-
-    fun setUuid(uuid: String): PNMessageAction {
-        this.uuid = uuid
-        return this
-    }
-
-    fun setActionTimetoken(actionTimetoken: Long): PNMessageAction {
-        this.actionTimetoken = actionTimetoken
-        return this
-    }
-
-    fun getType(): String {
-        return this.type
-    }
-
-    fun getValue(): String {
-        return this.value
-    }
-
-    fun getMessageTimetoken(): Long? {
-        return this.messageTimetoken
-    }
-
-    fun getUuid(): String? {
-        return this.uuid
-    }
-
-    fun getActionTimetoken(): Long? {
-        return this.actionTimetoken
+    override fun hashCode(): Int {
+        var result = super.hashCode()
+        result = 31 * result + uuid.hashCode()
+        result = 31 * result + actionTimetoken.hashCode()
+        return result
     }
 }

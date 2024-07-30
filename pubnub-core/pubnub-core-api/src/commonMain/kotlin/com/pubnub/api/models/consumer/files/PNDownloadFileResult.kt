@@ -4,5 +4,5 @@ import com.pubnub.kmp.Downloadable
 
 data class PNDownloadFileResult(
     val fileName: String,
-    val byteStream: Downloadable?,
+    val byteStream: Downloadable,
 )

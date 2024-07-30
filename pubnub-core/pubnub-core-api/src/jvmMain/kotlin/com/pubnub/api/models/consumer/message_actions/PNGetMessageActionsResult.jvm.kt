@@ -5,7 +5,7 @@ import com.pubnub.api.models.consumer.PNBoundedPage
 
 actual class PNGetMessageActionsResult actual constructor(
     @SerializedName("data")
-    actual val actions: List<PNMessageAction>,
+    actual val actions: List<PNSavedMessageAction>,
     @SerializedName("more")
     actual val page: PNBoundedPage?,
 )

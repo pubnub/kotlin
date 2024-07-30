@@ -56,11 +56,11 @@ class AddMessageActionCoreEndpointTest : BaseTest() {
                     ),
             ).sync()
 
-        assertEquals(result.messageTimetoken, 123L)
-        assertEquals(result.type, "emoji")
-        assertEquals(result.uuid, "someUuid")
-        assertEquals(result.value, "smiley")
-        assertEquals(result.actionTimetoken, 1000L)
+        assertEquals(result.action.messageTimetoken, 123L)
+        assertEquals(result.action.type, "emoji")
+        assertEquals(result.action.uuid, "someUuid")
+        assertEquals(result.action.value, "smiley")
+        assertEquals(result.action.actionTimetoken, 1000L)
     }
 
     @Test
@@ -99,11 +99,11 @@ class AddMessageActionCoreEndpointTest : BaseTest() {
         ).async { result ->
             assertFalse(result.isFailure)
             result.onSuccess {
-                assertEquals(it.messageTimetoken, 123L)
-                assertEquals(it.type, "emoji")
-                assertEquals(it.uuid, "someUuid")
-                assertEquals(it.value, "smiley")
-                assertEquals(it.actionTimetoken, 1000L)
+                assertEquals(it.action.messageTimetoken, 123L)
+                assertEquals(it.action.type, "emoji")
+                assertEquals(it.action.uuid, "someUuid")
+                assertEquals(it.action.value, "smiley")
+                assertEquals(it.action.actionTimetoken, 1000L)
                 success.set(true)
             }
         }

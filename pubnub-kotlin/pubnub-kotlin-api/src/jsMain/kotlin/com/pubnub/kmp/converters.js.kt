@@ -6,6 +6,7 @@ import ObjectsResponse
 import PubNub
 import SetChannelMetadataResponse
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
+import com.pubnub.api.models.consumer.message_actions.PNSavedMessageAction
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataResult
@@ -87,11 +88,10 @@ internal fun PubNub.UUIDMetadataObject.toPNUUIDMetadata() = PNUUIDMetadata(
 )
 
 internal fun PubNub.MessageAction.toMessageAction() =
-    PNMessageAction(
+    PNSavedMessageAction(
         type,
         value,
-        messageTimetoken.toLong()
-    ).apply {
-        this.actionTimetoken = this@toMessageAction.actionTimetoken.toLong()
-        this.uuid = this@toMessageAction.uuid
-    }
+        messageTimetoken.toLong(),
+        actionTimetoken = this@toMessageAction.actionTimetoken.toLong(),
+        uuid = this@toMessageAction.uuid,
+    )

@@ -11,7 +11,7 @@ public class PNMembershipResult implements ObjectResult<PNMembership>, PubSubRes
     private final PNMembership data;
     private final String channel;
     private final String subscription;
-    private final Long timetoken;
+    private final long timetoken;
     private final JsonElement userMetadata;
     private final String publisher;
 

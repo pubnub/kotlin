@@ -12,8 +12,7 @@ import com.pubnub.api.JsonElement
 class PNHereNowResult(
     val totalChannels: Int,
     val totalOccupancy: Int,
-    // TODO this should be immutable
-    val channels: MutableMap<String, PNHereNowChannelData> = mutableMapOf(),
+    val channels: Map<String, PNHereNowChannelData>,
 )
 
 /**
@@ -26,7 +25,7 @@ class PNHereNowResult(
 class PNHereNowChannelData(
     val channelName: String,
     val occupancy: Int,
-    var occupants: List<PNHereNowOccupantData> = emptyList(),
+    val occupants: List<PNHereNowOccupantData>,
 )
 
 /**

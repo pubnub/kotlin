@@ -6,6 +6,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
+import com.pubnub.api.models.consumer.message_actions.PNSavedMessageAction
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubCore
@@ -21,7 +22,7 @@ class AddMessageActionEndpoint internal constructor(
     pubnub: PubNubCore,
     override val channel: String,
     override val messageAction: PNMessageAction,
-) : EndpointCore<EntityEnvelope<PNMessageAction>, PNAddMessageActionResult>(pubnub), AddMessageActionInterface {
+) : EndpointCore<EntityEnvelope<PNSavedMessageAction>, PNAddMessageActionResult>(pubnub), AddMessageActionInterface {
     override fun validateParams() {
         super.validateParams()
         if (channel.isBlank()) {
@@ -37,7 +38,7 @@ class AddMessageActionEndpoint internal constructor(
 
     override fun getAffectedChannels() = listOf(channel)
 
-    override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNMessageAction>> {
+    override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNSavedMessageAction>> {
         val body =
             JsonObject().apply {
                 addProperty("type", messageAction.type)
@@ -54,7 +55,7 @@ class AddMessageActionEndpoint internal constructor(
             )
     }
 
-    override fun createResponse(input: Response<EntityEnvelope<PNMessageAction>>): PNAddMessageActionResult =
+    override fun createResponse(input: Response<EntityEnvelope<PNSavedMessageAction>>): PNAddMessageActionResult =
         PNAddMessageActionResult(
             action = input.body()!!.data!!,
         )

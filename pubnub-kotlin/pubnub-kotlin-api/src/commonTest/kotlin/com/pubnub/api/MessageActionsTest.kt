@@ -40,25 +40,25 @@ class MessageActionsTest : BaseIntegrationTest() {
         val actions = pubnub.getMessageActions(
             channel,
             PNBoundedPage(
-                start = actionResult.actionTimetoken!! + 1,
-                end = actionResult.actionTimetoken!!
+                start = actionResult.action.actionTimetoken + 1,
+                end = actionResult.action.actionTimetoken!!
             )
         ).await()
 
         assertTrue { actions.actions.isNotEmpty() }
-        val foundAction = actions.actions.single { it.actionTimetoken == actionResult.actionTimetoken }
+        val foundAction = actions.actions.single { it.actionTimetoken == actionResult.action.actionTimetoken }
         assertEquals(expectedActionValue, foundAction.value)
-        assertEquals(actionResult.messageTimetoken, foundAction.messageTimetoken)
+        assertEquals(actionResult.action.messageTimetoken, foundAction.messageTimetoken)
         assertEquals(expectedAction, foundAction.type)
         assertEquals(config.userId.value, foundAction.uuid)
 
-        pubnub.removeMessageAction(channel, foundAction.messageTimetoken, foundAction.actionTimetoken!!).await()
+        pubnub.removeMessageAction(channel, foundAction.messageTimetoken, foundAction.actionTimetoken).await()
 
         val actionsAfterDelete = pubnub.getMessageActions(
             channel,
             PNBoundedPage(
-                start = actionResult.actionTimetoken!! + 1,
-                end = actionResult.actionTimetoken!!
+                start = actionResult.action.actionTimetoken + 1,
+                end = actionResult.action.actionTimetoken
             )
         ).await()
 

@@ -58,7 +58,7 @@ class FetchMessagesTest : BaseIntegrationTest() {
                 expectedAction to mapOf(
                     expectedActionValue to listOf(
                         PNFetchMessageItem.Action(
-                            actionTimetoken = actionResult.actionTimetoken!!,
+                            actionTimetoken = actionResult.action.actionTimetoken,
                             uuid = pubnub.configuration.userId.value,
                         ),
                     ),

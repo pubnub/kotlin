@@ -3,7 +3,7 @@ package com.pubnub.api.endpoints.message_actions
 import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.addMessageActionWithChannel
 import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult
-import com.pubnub.api.models.consumer.message_actions.PNMessageAction
+import com.pubnub.api.models.consumer.message_actions.PNSavedMessageAction
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.kmp.PNFuture
@@ -32,14 +32,13 @@ class AddMessageActionImpl(
             messageTimetoken = messageTimetoken.toULong(),
             onSuccess = callback.onSuccessHandler { messageActionObjC ->
                 PNAddMessageActionResult(
-                    action = PNMessageAction(
+                    action = PNSavedMessageAction(
                         type = messageActionObjC?.actionType().orEmpty(),
                         value = messageActionObjC?.actionValue().orEmpty(),
-                        messageTimetoken = messageActionObjC?.messageTimetoken()?.toLong() ?: 0,
-                    ).apply {
-                        uuid = messageActionObjC?.publisher()
-                        actionTimetoken = messageActionObjC?.actionTimetoken()?.toLong()
-                    }
+                        messageTimetoken = messageActionObjC?.messageTimetoken()?.toLong()!!,
+                        uuid = messageActionObjC.publisher(),
+                        actionTimetoken = messageActionObjC.actionTimetoken().toLong(),
+                    )
                 )
             },
             onFailure = callback.onFailureHandler()

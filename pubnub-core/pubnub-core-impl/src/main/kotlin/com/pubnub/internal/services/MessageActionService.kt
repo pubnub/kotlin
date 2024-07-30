@@ -1,7 +1,7 @@
 package com.pubnub.internal.services
 
 import com.pubnub.api.models.consumer.message_actions.PNGetMessageActionsResult
-import com.pubnub.api.models.consumer.message_actions.PNMessageAction
+import com.pubnub.api.models.consumer.message_actions.PNSavedMessageAction
 import com.pubnub.internal.models.server.objects_api.EntityEnvelope
 import retrofit2.Call
 import retrofit2.http.Body
@@ -22,7 +22,7 @@ MessageActionService {
         @Path("messageTimetoken") messageTimetoken: String,
         @Body body: Any,
         @QueryMap options: Map<String, String>,
-    ): Call<EntityEnvelope<PNMessageAction>>
+    ): Call<EntityEnvelope<PNSavedMessageAction>>
 
     @GET("v1/message-actions/{subKey}/channel/{channel}")
     fun getMessageActions(

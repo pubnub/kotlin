@@ -11,7 +11,7 @@ public class PNUUIDMetadataResult implements ObjectResult<PNUUIDMetadata>, PubSu
     private final PNUUIDMetadata data;
     private final String channel;
     private final String subscription;
-    private final Long timetoken;
+    private final long timetoken;
     private final JsonElement userMetadata;
     private final String publisher;
 

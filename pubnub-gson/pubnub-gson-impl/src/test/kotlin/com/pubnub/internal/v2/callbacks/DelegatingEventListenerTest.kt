@@ -74,27 +74,27 @@ internal class DelegatingEventListenerTest {
         delegating.objects(
             pn,
             PNObjectEventResult(
-                BasePubSubResult("a", "b", 0L, null, null),
+                BasePubSubResult("a", "b", 0L, null, "nonNull"),
                 PNSetMembershipEventMessage("a", "b", "c", "d", PNSetMembershipEvent("a", "b", null, "c", "d", null)),
             ),
         )
         delegating.objects(
             pn,
             PNObjectEventResult(
-                BasePubSubResult("a", "b", 0L, null, null),
-                PNSetUUIDMetadataEventMessage("a", "b", "c", "d", PNUUIDMetadata("a", "b", null, "c", "d", null, null, null, null, null)),
+                BasePubSubResult("a", "b", 0L, null, "nonNull"),
+                PNSetUUIDMetadataEventMessage("a", "b", "c", "d", PNUUIDMetadata("a", "b", null, "c", "d", null, "nonNull", "nonNull", null, null)),
             ),
         )
         delegating.objects(
             pn,
             PNObjectEventResult(
-                BasePubSubResult("a", "b", 0L, null, null),
+                BasePubSubResult("a", "b", 0L, null, "nonNull"),
                 PNSetChannelMetadataEventMessage(
                     "a",
                     "b",
                     "c",
                     "d",
-                    PNChannelMetadata("a", "b", null, mapOf("c" to "c"), "d", null, null, null)
+                    PNChannelMetadata("a", "b", null, mapOf("c" to "c"), "d", "nonNull", null, null)
                 ),
             ),
         )

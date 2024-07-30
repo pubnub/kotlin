@@ -5,8 +5,8 @@ data class PNChannelMetadata(
     val name: String?,
     val description: String?,
     val custom: Map<String, Any?>?,
-    val updated: String?,
-    val eTag: String?,
+    val updated: String,
+    val eTag: String,
     val type: String?,
     val status: String?,
 )

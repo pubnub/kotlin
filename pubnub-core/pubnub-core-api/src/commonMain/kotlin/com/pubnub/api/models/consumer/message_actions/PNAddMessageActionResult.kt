@@ -5,5 +5,4 @@ package com.pubnub.api.models.consumer.message_actions
  *
  * Essentially a wrapper around [PNMessageAction].
  */
-class PNAddMessageActionResult(action: PNMessageAction) :
-    PNMessageAction(action)
+class PNAddMessageActionResult(val action: PNSavedMessageAction)

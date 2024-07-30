@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test
 class EventEmitterImplTest {
     lateinit var emitterImpl: EventEmitterImpl
     val testPubNub = TestPubNub(BasePNConfigurationImpl(UserId("aa")))
-    val basePubSubResult = BasePubSubResult("a", null, null, null, null)
+    val basePubSubResult = BasePubSubResult("a", null, 0L, null, "nonNull")
     val message = JsonPrimitive(1)
 
     @BeforeEach

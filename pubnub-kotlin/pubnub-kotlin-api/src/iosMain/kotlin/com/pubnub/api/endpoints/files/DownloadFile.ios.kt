@@ -32,7 +32,7 @@ class DownloadFileImpl(
             onSuccess = callback.onSuccessHandler {
                 PNDownloadFileResult(
                     fileName = it?.name().orEmpty(),
-                    byteStream = it?.url()?.let { url -> DownloadableImpl(inputStream = NSInputStream(uRL = url)) }
+                    byteStream = it?.url()?.let { url -> DownloadableImpl(inputStream = NSInputStream(uRL = url)) }!!
                 )
             },
             onFailure = callback.onFailureHandler()

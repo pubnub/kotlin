@@ -3,6 +3,7 @@ package com.pubnub.internal.subscribe.eventengine.effect
 import com.google.gson.JsonPrimitive
 import com.pubnub.api.models.consumer.files.PNDownloadableFile
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
+import com.pubnub.api.models.consumer.message_actions.PNSavedMessageAction
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
@@ -113,7 +114,7 @@ class EmitMessagesEffectTest {
         val messagesConsumer = CreateMessagesConsumerImpl()
         val basePubSubResult = createBasePubSubResult()
         val pnMessageResult = PNMessageResult(basePubSubResult, JsonPrimitive(message))
-        val pnPresenceEventResult = PNPresenceEventResult(channel = "channel")
+        val pnPresenceEventResult = PNPresenceEventResult(channel = "channel", uuid = "uuid", timetoken = 0L, event = "", timestamp = 0L)
         val pnFileEventResult = createPnFileEventResult(message)
         val pnSignalResult = PNSignalResult(basePubSubResult, JsonPrimitive("604C7"))
         val pnMessageActionResult = createPnMessageActionResult(messageActionType)
@@ -178,10 +179,12 @@ class EmitMessagesEffectTest {
 
     private fun createPnMessageActionResult(messageActionType: String): PNMessageActionResult {
         val pnMessageAction =
-            PNMessageAction(
+            PNSavedMessageAction(
                 messageActionType,
                 "\uD83D\uDE07\uD83E\uDD16\uD83E\uDD22\uD83D\uDE1E\uD83D\uDE03",
                 16832965735787913,
+                "uuid",
+                312321
             )
         val pnMessageActionResult = PNMessageActionResult(createBasePubSubResult(), "added", pnMessageAction)
         return pnMessageActionResult

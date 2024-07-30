@@ -7,6 +7,7 @@ import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.files.PNDownloadableFile
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
+import com.pubnub.api.models.consumer.message_actions.PNSavedMessageAction
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
@@ -101,13 +102,13 @@ actual fun createEventListener(
                             messageActionEvent.publisher
                         ),
                         messageActionEvent.event,
-                        PNMessageAction(
-                            messageActionEvent.data.type,
-                            messageActionEvent.data.value,
-                            messageActionEvent.data.messageTimetoken.toLong()
-                        ).apply {
-                            actionTimetoken = messageActionEvent.data.messageTimetoken.toLong()
-                        }
+                        PNSavedMessageAction(
+                            type = messageActionEvent.data.type,
+                            value = messageActionEvent.data.value,
+                            messageTimetoken = messageActionEvent.data.messageTimetoken.toLong(),
+                            uuid = messageActionEvent.data.uuid,
+                            actionTimetoken = messageActionEvent.data.actionTimetoken.toLong(),
+                        )
                     )
                 )
             }
@@ -136,7 +137,7 @@ actual fun createEventListener(
                         event.subscription,
                         event.timetoken.toLong(),
                         null,
-                        event.publisher
+                        event.publisher!!
                     ),
                     when (eventAndType) {
                         "set" to "channel" -> PNSetChannelMetadataEventMessage(

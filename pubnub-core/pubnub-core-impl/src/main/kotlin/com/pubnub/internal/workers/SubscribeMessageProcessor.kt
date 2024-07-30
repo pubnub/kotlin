@@ -3,7 +3,7 @@ package com.pubnub.internal.workers
 import com.google.gson.JsonElement
 import com.google.gson.JsonNull
 import com.pubnub.api.models.consumer.files.PNDownloadableFile
-import com.pubnub.api.models.consumer.message_actions.PNMessageAction
+import com.pubnub.api.models.consumer.message_actions.PNSavedMessageAction
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
@@ -73,14 +73,14 @@ internal class SubscribeMessageProcessor(
             val isHereNowRefresh = message.payload?.asJsonObject?.get("here_now_refresh")
 
             return PNPresenceEventResult(
-                event = presencePayload.action,
-                uuid = presencePayload.uuid,
-                timestamp = presencePayload.timestamp,
+                event = presencePayload.action!!,
+                uuid = presencePayload.uuid!!,
+                timestamp = presencePayload.timestamp!!,
                 occupancy = presencePayload.occupancy,
                 state = presencePayload.data,
                 channel = strippedPresenceChannel,
                 subscription = strippedPresenceSubscription,
-                timetoken = publishMetaData?.publishTimetoken,
+                timetoken = publishMetaData?.publishTimetoken!!,
                 join = getDelta(message.payload?.asJsonObject?.get("join")),
                 leave = getDelta(message.payload?.asJsonObject?.get("leave")),
                 timeout = getDelta(message.payload?.asJsonObject?.get("timeout")),
@@ -99,9 +99,9 @@ internal class SubscribeMessageProcessor(
                 BasePubSubResult(
                     channel = channel,
                     subscription = subscriptionMatch,
-                    timetoken = publishMetaData?.publishTimetoken,
+                    timetoken = publishMetaData?.publishTimetoken!!,
                     userMetadata = message.userMetadata,
-                    publisher = message.issuingClientId,
+                    publisher = message.issuingClientId!!,
                 )
 
             return when (message.type) {
@@ -136,7 +136,7 @@ internal class SubscribeMessageProcessor(
                     PNMessageActionResult(
                         result = result,
                         event = objectPayload.event,
-                        data = pubnub.mapper.convertValue(data, PNMessageAction::class.java),
+                        data = pubnub.mapper.convertValue(data, PNSavedMessageAction::class.java),
                     )
                 }
 

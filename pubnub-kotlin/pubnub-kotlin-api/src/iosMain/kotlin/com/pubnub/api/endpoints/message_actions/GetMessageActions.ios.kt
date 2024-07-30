@@ -7,6 +7,7 @@ import cocoapods.PubNubSwift.getMessageActionsFrom
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.message_actions.PNGetMessageActionsResult
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
+import com.pubnub.api.models.consumer.message_actions.PNSavedMessageAction
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.kmp.PNFuture
@@ -49,14 +50,13 @@ class GetMessageActionsImpl(
         )
     }
 
-    private fun createMessageAction(rawValue: PubNubMessageActionObjC): PNMessageAction {
-        return PNMessageAction(
+    private fun createMessageAction(rawValue: PubNubMessageActionObjC): PNSavedMessageAction {
+        return PNSavedMessageAction(
             type = rawValue.actionType(),
             value = rawValue.actionValue(),
-            messageTimetoken = rawValue.messageTimetoken().toLong()
-        ).apply {
-            actionTimetoken = rawValue.actionTimetoken().toLong()
-            uuid = rawValue.publisher()
-        }
+            messageTimetoken = rawValue.messageTimetoken().toLong(),
+            actionTimetoken = rawValue.actionTimetoken().toLong(),
+            uuid = rawValue.publisher(),
+        )
     }
 }
