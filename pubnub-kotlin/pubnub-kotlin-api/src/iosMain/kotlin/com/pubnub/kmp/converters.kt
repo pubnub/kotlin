@@ -83,9 +83,9 @@ internal fun createObjectSortProperties(from: Collection<PNSortKey<PNKey>>): Lis
 internal fun createPNChannelMembership(from: PubNubMembershipMetadataObjC): PNChannelMembership {
     return PNChannelMembership(
         channel = PNChannelMetadata(
-            id = from.channel()?.id().orEmpty(),
-            name = from.channel()?.name().orEmpty(),
-            description = from.channel()?.descr().orEmpty(),
+            id = from.channelMetadataId(),
+            name = from.channel()?.name(),
+            description = from.channel()?.descr(),
             custom = from.channel()?.custom()?.safeCast(),
             updated = from.channel()?.updated(),
             eTag = from.channel()?.eTag(),
