@@ -106,7 +106,8 @@ actual fun createEventListener(
                             messageActionEvent.data.value,
                             messageActionEvent.data.messageTimetoken.toLong()
                         ).apply {
-                            actionTimetoken = messageActionEvent.data.messageTimetoken.toLong()
+                            actionTimetoken = messageActionEvent.data.actionTimetoken.toLong()
+                            uuid = messageActionEvent.data.uuid
                         }
                     )
                 )
