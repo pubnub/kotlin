@@ -115,10 +115,7 @@ public class MessageActionsTest extends BaseIntegrationTest {
 
         final PNAddMessageActionResult addMessageActionResult = pubNub.addMessageAction()
                 .channel(expectedChannel)
-                .messageAction(new PNMessageAction.Builder()
-                        .setType("reaction")
-                        .setValue(expectedValue)
-                        .setMessageTimetoken(publishResult.getTimetoken()).build())
+                .messageAction(new PNMessageAction("reaction", expectedValue,publishResult.getTimetoken()))
                 .sync();
 
         assert addMessageActionResult != null;
@@ -172,10 +169,7 @@ public class MessageActionsTest extends BaseIntegrationTest {
             try {
                 pubNub.addMessageAction()
                         .channel(expectedChannel)
-                        .messageAction(new PNMessageAction.Builder()
-                                .setType("reaction")
-                                .setValue(RandomGenerator.emoji())
-                                .setMessageTimetoken(pnPublishResult.getTimetoken()).build())
+                        .messageAction(new PNMessageAction("reaction", RandomGenerator.emoji(), pnPublishResult.getTimetoken()))
                         .sync();
             } catch (PubNubException e) {
                 e.printStackTrace();
@@ -207,10 +201,7 @@ public class MessageActionsTest extends BaseIntegrationTest {
             pause((int) Durations.ONE_HUNDRED_MILLISECONDS.getSeconds());
             pubNub.addMessageAction()
                     .channel(expectedChannelName)
-                    .messageAction(new PNMessageAction.Builder()
-                            .setType("reaction")
-                            .setValue((i + 1) + "_" + RandomGenerator.emoji())
-                            .setMessageTimetoken(messages.get(i).getTimetoken()).build())
+                    .messageAction(new PNMessageAction("reaction", (i + 1) + "_" + RandomGenerator.emoji(), messages.get(i).getTimetoken()))
                     .sync();
         }
 
@@ -290,10 +281,7 @@ public class MessageActionsTest extends BaseIntegrationTest {
         for (int i = 0; i < publishList.size(); i++) {
             pubNub.addMessageAction()
                     .channel(expectedChannel)
-                    .messageAction(new PNMessageAction.Builder()
-                            .setType("REACTION")
-                            .setValue((i + 1) + "_" + RandomGenerator.newValue(5))
-                            .setMessageTimetoken(publishList.get(i).getTimetoken()).build())
+                    .messageAction(new PNMessageAction("REACTION", (i + 1) + "_" + RandomGenerator.newValue(5), publishList.get(i).getTimetoken()))
                     .sync();
         }
 
@@ -369,37 +357,25 @@ public class MessageActionsTest extends BaseIntegrationTest {
             if (i % 2 == 0 && i % 3 == 0) {
                 pubNub.addMessageAction()
                         .channel(expectedChannel)
-                        .messageAction(new PNMessageAction.Builder()
-                                .setType("receipt")
-                                .setValue(RandomGenerator.emoji())
-                                .setMessageTimetoken(publishResultList.get(i).getTimetoken()).build())
+                        .messageAction(new PNMessageAction("receipt", RandomGenerator.emoji(), publishResultList.get(i).getTimetoken()))
                         .sync();
             }
             if (i % 3 == 0) {
                 pubNub.addMessageAction()
                         .channel(expectedChannel)
-                        .messageAction(new PNMessageAction.Builder()
-                                .setType("receipt")
-                                .setValue(RandomGenerator.emoji())
-                                .setMessageTimetoken(publishResultList.get(i).getTimetoken()).build())
+                        .messageAction(new PNMessageAction("receipt", RandomGenerator.emoji(), publishResultList.get(i).getTimetoken()))
                         .sync();
             }
             if (i % 2 == 0) {
                 pubNub.addMessageAction()
                         .channel(expectedChannel)
-                        .messageAction(new PNMessageAction.Builder()
-                                .setType("receipt")
-                                .setValue(RandomGenerator.emoji())
-                                .setMessageTimetoken(publishResultList.get(i).getTimetoken()).build())
+                        .messageAction(new PNMessageAction("receipt", RandomGenerator.emoji(), publishResultList.get(i).getTimetoken()))
                         .sync();
             }
             if (i % 5 == 0) {
                 pubNub.addMessageAction()
                         .channel(expectedChannel)
-                        .messageAction(new PNMessageAction.Builder()
-                                .setType("fiver")
-                                .setValue(RandomGenerator.emoji())
-                                .setMessageTimetoken(publishResultList.get(i).getTimetoken()).build())
+                        .messageAction(new PNMessageAction("fiver", RandomGenerator.emoji(), publishResultList.get(i).getTimetoken()))
                         .sync();
             }
         }
@@ -489,10 +465,7 @@ public class MessageActionsTest extends BaseIntegrationTest {
                         try {
                             pubNub.addMessageAction()
                                     .channel(expectedChannelName)
-                                    .messageAction(new PNMessageAction.Builder()
-                                            .setType("reaction")
-                                            .setValue(RandomGenerator.emoji())
-                                            .setMessageTimetoken(pnPublishResult.getTimetoken()).build())
+                                    .messageAction(new PNMessageAction("reaction", RandomGenerator.emoji(), pnPublishResult.getTimetoken()))
                                     .sync();
                         } catch (PubNubException e) {
                             e.printStackTrace();
@@ -572,50 +545,6 @@ public class MessageActionsTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void testAddAction_NoMessageTimeToken() {
-        try {
-            pubNub.addMessageAction()
-                    .channel(random())
-                    .messageAction(new PNMessageAction.Builder()
-                            .setType(random())
-                            .setValue(random()).build())
-                    .sync();
-        } catch (PubNubException e) {
-            assertException(PNERROBJ_MESSAGE_TIMETOKEN_MISSING, e);
-        }
-    }
-
-    @Test
-    public void testAddAction_NoMessageActionType() {
-        try {
-            pubNub.addMessageAction()
-                    .channel(random())
-                    .messageAction(new PNMessageAction.Builder()
-                            .setValue(random())
-                            .setMessageTimetoken(1L).build()
-                    )
-                    .sync();
-        } catch (PubNubException e) {
-            assertException(PNERROBJ_MESSAGE_ACTION_TYPE_MISSING, e);
-        }
-    }
-
-    @Test
-    public void testAddAction_NoMessageActionValue() {
-        try {
-            pubNub.addMessageAction()
-                    .channel(random())
-                    .messageAction(new PNMessageAction.Builder()
-                            .setType(random())
-                            .setMessageTimetoken(1L).build()
-                    )
-                    .sync();
-        } catch (PubNubException e) {
-            assertException(PNERROBJ_MESSAGE_ACTION_VALUE_MISSING, e);
-        }
-    }
-
-    @Test
     public void testGetActions_NoChannel() {
         try {
             pubNub.getMessageActions()
@@ -673,10 +602,7 @@ public class MessageActionsTest extends BaseIntegrationTest {
         assert pnPublishResult != null;
         pubNub.addMessageAction()
                 .channel(expectedChannel)
-                .messageAction(new PNMessageAction.Builder()
-                        .setType("reaction")
-                        .setValue(expectedEmoji)
-                        .setMessageTimetoken(pnPublishResult.getTimetoken()).build()
+                .messageAction(new PNMessageAction("reaction", expectedEmoji, pnPublishResult.getTimetoken())
                 )
                 .sync();
 
@@ -684,10 +610,7 @@ public class MessageActionsTest extends BaseIntegrationTest {
 
         pubNub.addMessageAction()
                 .channel(expectedChannel)
-                .messageAction(new PNMessageAction.Builder()
-                        .setType("reaction")
-                        .setValue(expectedEmoji)
-                        .setMessageTimetoken(pnPublishResult.getTimetoken()).build()
+                .messageAction(new PNMessageAction("reaction", expectedEmoji, pnPublishResult.getTimetoken())
                 )
                 .async((result) -> {
                     assertTrue(result.isFailure());

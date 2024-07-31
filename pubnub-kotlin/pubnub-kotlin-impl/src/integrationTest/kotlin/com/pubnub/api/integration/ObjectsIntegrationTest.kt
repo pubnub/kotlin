@@ -383,8 +383,8 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
             profileUrl = null,
             email = null,
             custom = null,
-            updated = "nonNull",
-            eTag = "nonNull",
+            updated = noUpdated,
+            eTag = noEtag,
             type = null,
             status = null,
         )
@@ -396,8 +396,8 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
             name = null,
             description = null,
             custom = null,
-            updated = "nonNull",
-            eTag = "nonNull",
+            updated = noUpdated,
+            eTag = noEtag,
             type = null,
             status = null,
         )

@@ -814,10 +814,7 @@ abstract class AccessManagerIntegrationTest extends BaseIntegrationTest {
         requestAccess(WRITE);
         pubNub.addMessageAction()
                 .channel(expectedChannel)
-                .messageAction(new PNMessageAction.Builder()
-                        .setType("reaction")
-                        .setValue(RandomGenerator.emoji())
-                        .setMessageTimetoken(1L).build())
+                .messageAction(new PNMessageAction("reaction", RandomGenerator.emoji(), 1L))
                 .async((result) -> {
                     try {
                         assertFalse(result.isFailure());
@@ -841,10 +838,7 @@ abstract class AccessManagerIntegrationTest extends BaseIntegrationTest {
 
         pubNub.addMessageAction()
                 .channel(expectedChannel)
-                .messageAction(new PNMessageAction.Builder()
-                        .setType("reaction")
-                        .setValue(RandomGenerator.emoji())
-                        .setMessageTimetoken(1L).build())
+                .messageAction(new PNMessageAction("reaction", RandomGenerator.emoji(), 1L))
                 .async((result) -> {
                     try {
                         assertFalse(result.isFailure());
@@ -916,10 +910,7 @@ abstract class AccessManagerIntegrationTest extends BaseIntegrationTest {
         requestAccess(WRITE);
         final PNAddMessageActionResult addMessageActionResult = pubNub.addMessageAction()
                 .channel(expectedChannel)
-                .messageAction(new PNMessageAction.Builder()
-                        .setType("reaction")
-                        .setValue(RandomGenerator.emoji())
-                        .setMessageTimetoken(1L).build())
+                .messageAction(new PNMessageAction("reaction", RandomGenerator.emoji(), 1L))
                 .sync();
         assertNotNull(addMessageActionResult);
 
@@ -962,10 +953,7 @@ abstract class AccessManagerIntegrationTest extends BaseIntegrationTest {
         assertNotNull(publishResult);
         PNAddMessageActionResult addMessageActionResult = pubNub.addMessageAction()
                 .channel(expectedChannel)
-                .messageAction(new PNMessageAction.Builder()
-                        .setType("reaction")
-                        .setValue(RandomGenerator.emoji())
-                        .setMessageTimetoken(publishResult.getTimetoken()).build())
+                .messageAction(new PNMessageAction("reaction", RandomGenerator.emoji(), publishResult.getTimetoken()))
                 .sync();
 
         revokeAllAccess();

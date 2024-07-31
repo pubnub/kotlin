@@ -173,10 +173,7 @@ public class HistoryIntegrationTest extends BaseIntegrationTest {
 
         pubNub.addMessageAction()
                 .channel(expectedChannelName)
-                .messageAction(new PNMessageAction.Builder()
-                        .setType("reaction")
-                        .setValue(RandomGenerator.emoji())
-                        .setMessageTimetoken(results.get(0).getTimetoken()).build())
+                .messageAction(new PNMessageAction("reaction", RandomGenerator.emoji(), results.get(0).getTimetoken()))
                 .sync();
 
         final PNFetchMessagesResult fetchMessagesResult = pubNub.fetchMessages()
@@ -207,10 +204,7 @@ public class HistoryIntegrationTest extends BaseIntegrationTest {
 
         pubNub.addMessageAction()
                 .channel(expectedChannelName)
-                .messageAction(new PNMessageAction.Builder()
-                        .setType("reaction")
-                        .setValue(RandomGenerator.emoji())
-                        .setMessageTimetoken(results.get(0).getTimetoken()).build())
+                .messageAction(new PNMessageAction("reaction", RandomGenerator.emoji(), results.get(0).getTimetoken()))
                 .sync();
 
         pause(3);
@@ -440,10 +434,7 @@ public class HistoryIntegrationTest extends BaseIntegrationTest {
             if (i % 2 == 0) {
                 final PNAddMessageActionResult reaction = pubNub.addMessageAction()
                         .channel(expectedChannelName)
-                        .messageAction(new PNMessageAction.Builder()
-                                .setType("reaction")
-                                .setValue(RandomGenerator.emoji())
-                                .setMessageTimetoken(mixed.get(i).getTimetoken()).build())
+                        .messageAction(new PNMessageAction("reaction", RandomGenerator.emoji(), mixed.get(i).getTimetoken()))
                         .sync();
                 assert reaction != null;
                 messagesWithActions.add(reaction.getAction().getMessageTimetoken());
