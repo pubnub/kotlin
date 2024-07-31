@@ -4,5 +4,5 @@ import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 
 data class PNUUIDMetadataResult(
     val status: Int,
-    val data: PNUUIDMetadata?,
+    val data: PNUUIDMetadata,
 )

@@ -25,7 +25,7 @@ import com.pubnub.api.JsonElement
  */
 class PNPresenceEventResult(
     val event: String,
-    val uuid: String,
+    val uuid: String? = null,
     val timestamp: Long,
     val occupancy: Int? = null,
     val state: JsonElement? = null,

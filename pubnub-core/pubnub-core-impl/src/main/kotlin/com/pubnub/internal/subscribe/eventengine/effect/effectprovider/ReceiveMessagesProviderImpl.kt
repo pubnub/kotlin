@@ -25,7 +25,12 @@ internal class ReceiveMessagesProviderImpl(val pubNub: PubNubCore, val messagePr
         return subscribe.map {
             val sdkMessages: List<PNEvent> =
                 it.messages.mapNotNull {
-                    messageProcessor.processIncomingPayload(it)
+                    try {
+                        messageProcessor.processIncomingPayload(it)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        null
+                    }
                 }
             ReceiveMessagesResult(
                 sdkMessages,

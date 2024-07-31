@@ -32,7 +32,7 @@ class GetUUIDMetadataEndpoint internal constructor(
         return input.body()!!.let {
             PNUUIDMetadataResult(
                 status = it.status,
-                data = it.data,
+                data = it.data!!,
             )
         }
     }

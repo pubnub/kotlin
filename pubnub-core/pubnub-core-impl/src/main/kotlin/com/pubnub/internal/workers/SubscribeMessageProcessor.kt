@@ -74,7 +74,7 @@ internal class SubscribeMessageProcessor(
 
             return PNPresenceEventResult(
                 event = presencePayload.action!!,
-                uuid = presencePayload.uuid!!,
+                uuid = presencePayload.uuid,
                 timestamp = presencePayload.timestamp!!,
                 occupancy = presencePayload.occupancy,
                 state = presencePayload.data,
@@ -101,7 +101,7 @@ internal class SubscribeMessageProcessor(
                     subscription = subscriptionMatch,
                     timetoken = publishMetaData?.publishTimetoken!!,
                     userMetadata = message.userMetadata,
-                    publisher = message.issuingClientId!!,
+                    publisher = message.issuingClientId,
                 )
 
             return when (message.type) {
@@ -160,7 +160,7 @@ internal class SubscribeMessageProcessor(
                                         fileUploadNotification.file.name,
                                     ),
                             ),
-                        publisher = message.issuingClientId,
+                        publisher = message.issuingClientId!!,
                         timetoken = result.timetoken,
                         jsonMessage =
                             fileUploadNotification.message?.let { pubnub.mapper.toJsonTree(it) }

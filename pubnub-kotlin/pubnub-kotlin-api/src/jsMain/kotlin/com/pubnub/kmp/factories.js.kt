@@ -136,7 +136,7 @@ actual fun createEventListener(
                         event.subscription,
                         event.timetoken.toLong(),
                         null,
-                        event.publisher!!
+                        event.publisher
                     ),
                     when (eventAndType) {
                         "set" to "channel" -> PNSetChannelMetadataEventMessage(

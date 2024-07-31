@@ -94,7 +94,7 @@ private fun createMessageResult(from: PubNubMessageObjC?): PNMessageResult {
             subscription = from.subscription(),
             timetoken = from.published().toLong(),
             userMetadata = JsonElementImpl(from.metadata()),
-            publisher = from.publisher()!!
+            publisher = from.publisher()
         ),
         message = JsonElementImpl(from.payload()),
         error = null // TODO: Map error from Swift SDK to PubNubError in Kotlin SDK
@@ -109,7 +109,7 @@ private fun createSignalResult(from: PubNubMessageObjC?): PNSignalResult {
             subscription = from.subscription(),
             timetoken = from.published().toLong(),
             userMetadata = JsonElementImpl(from.metadata()),
-            publisher = from.publisher()!!
+            publisher = from.publisher()
         ),
         message = JsonElementImpl(from.payload())
     )
@@ -182,7 +182,7 @@ private fun createObjectEvent(from: PubNubAppContextEventObjC?): PNObjectEventRe
                 subscription = from.subscription(),
                 timetoken = from.timetoken()?.longValue!!,
                 userMetadata = JsonElementImpl(from.userMetadata()),
-                publisher = from.publisher()!!,
+                publisher = from.publisher(),
             ),
             extractedMessage = it
         )
