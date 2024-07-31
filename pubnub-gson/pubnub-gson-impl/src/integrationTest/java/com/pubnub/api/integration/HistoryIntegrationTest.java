@@ -173,10 +173,10 @@ public class HistoryIntegrationTest extends BaseIntegrationTest {
 
         pubNub.addMessageAction()
                 .channel(expectedChannelName)
-                .messageAction(new PNMessageAction()
+                .messageAction(new PNMessageAction.Builder()
                         .setType("reaction")
                         .setValue(RandomGenerator.emoji())
-                        .setMessageTimetoken(results.get(0).getTimetoken()))
+                        .setMessageTimetoken(results.get(0).getTimetoken()).build())
                 .sync();
 
         final PNFetchMessagesResult fetchMessagesResult = pubNub.fetchMessages()
@@ -191,7 +191,7 @@ public class HistoryIntegrationTest extends BaseIntegrationTest {
             assertNotNull(messageItem.getMessage());
             assertNotNull(messageItem.getTimetoken());
             assertNull(messageItem.getMeta());
-            if (messageItem.getTimetoken().equals(results.get(0).getTimetoken())) {
+            if (messageItem.getTimetoken() == results.get(0).getTimetoken()) {
                 assertNotNull(messageItem.getActions());
             } else {
                 assertTrue(messageItem.getActions().isEmpty());
@@ -207,10 +207,10 @@ public class HistoryIntegrationTest extends BaseIntegrationTest {
 
         pubNub.addMessageAction()
                 .channel(expectedChannelName)
-                .messageAction(new PNMessageAction()
+                .messageAction(new PNMessageAction.Builder()
                         .setType("reaction")
                         .setValue(RandomGenerator.emoji())
-                        .setMessageTimetoken(results.get(0).getTimetoken()))
+                        .setMessageTimetoken(results.get(0).getTimetoken()).build())
                 .sync();
 
         pause(3);
@@ -227,7 +227,7 @@ public class HistoryIntegrationTest extends BaseIntegrationTest {
             assertNotNull(messageItem.getMessage());
             assertNotNull(messageItem.getTimetoken());
             assertNotNull(messageItem.getMeta());
-            if (messageItem.getTimetoken().equals(results.get(0).getTimetoken())) {
+            if (messageItem.getTimetoken() == results.get(0).getTimetoken()) {
                 assertNotNull(messageItem.getActions());
             } else {
                 assertTrue(messageItem.getActions().isEmpty());
@@ -440,13 +440,13 @@ public class HistoryIntegrationTest extends BaseIntegrationTest {
             if (i % 2 == 0) {
                 final PNAddMessageActionResult reaction = pubNub.addMessageAction()
                         .channel(expectedChannelName)
-                        .messageAction(new PNMessageAction()
+                        .messageAction(new PNMessageAction.Builder()
                                 .setType("reaction")
                                 .setValue(RandomGenerator.emoji())
-                                .setMessageTimetoken(mixed.get(i).getTimetoken()))
+                                .setMessageTimetoken(mixed.get(i).getTimetoken()).build())
                         .sync();
                 assert reaction != null;
-                messagesWithActions.add(reaction.getMessageTimetoken());
+                messagesWithActions.add(reaction.getAction().getMessageTimetoken());
             }
         }
 

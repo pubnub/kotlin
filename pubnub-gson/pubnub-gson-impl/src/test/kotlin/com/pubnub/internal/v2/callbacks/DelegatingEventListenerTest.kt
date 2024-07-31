@@ -82,7 +82,13 @@ internal class DelegatingEventListenerTest {
             pn,
             PNObjectEventResult(
                 BasePubSubResult("a", "b", 0L, null, "nonNull"),
-                PNSetUUIDMetadataEventMessage("a", "b", "c", "d", PNUUIDMetadata("a", "b", null, "c", "d", null, "nonNull", "nonNull", null, null)),
+                PNSetUUIDMetadataEventMessage(
+                    "a",
+                    "b",
+                    "c",
+                    "d",
+                    PNUUIDMetadata("a", "b", null, "c", "d", null, "nonNull", "nonNull", null, null)
+                ),
             ),
         )
         delegating.objects(

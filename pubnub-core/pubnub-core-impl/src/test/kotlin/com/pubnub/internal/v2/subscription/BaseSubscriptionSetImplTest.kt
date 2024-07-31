@@ -133,7 +133,7 @@ class BaseSubscriptionSetImplTest {
 
         pubnub.listenerManager.announce(
             PNMessageResult(
-                BasePubSubResult(channelName, null, null, null, null),
+                BasePubSubResult(channelName, null, 0L, null, "nonNull"),
                 JsonNull.INSTANCE,
             ),
         )

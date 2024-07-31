@@ -383,7 +383,7 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
 
         PNPublishResult pnPublishResult01 = pubNub.publish().message(expectedMessage).channel(chan01.getName()).sync();
         pubNub.signal().message(expectedMessage).channel(chan01.getName()).sync();
-        PNMessageAction pnMessageAction = new PNMessageAction().setType("reaction").setValue(RandomGenerator.emoji()).setMessageTimetoken(pnPublishResult01.getTimetoken());
+        PNMessageAction pnMessageAction = new PNMessageAction.Builder().setType("reaction").setValue(RandomGenerator.emoji()).setMessageTimetoken(pnPublishResult01.getTimetoken()).build();
         pubNub.addMessageAction().messageAction(pnMessageAction).channel(chan01.getName()).sync();
         pubNub.setChannelMetadata().channel(chan01.getName()).name("Channel name").description("-=desc").status("active").type("Chat").sync();
         pubNub.setMemberships().channelMemberships(Arrays.asList(PNChannelMembership.channel(chan01.getName()))).sync();
@@ -410,7 +410,7 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
         PNPublishResult pnPublishResult02 = pubNub.publish().message(expectedMessage).channel(chan01.getName()).sync();
         pubNub.setPresenceState().state(expectedStatePayload).channels(Collections.singletonList(chan01.getName())).sync();
         pubNub.signal().message(expectedMessage).channel(chan01.getName()).sync();
-        pnMessageAction = new PNMessageAction().setType("reaction02").setValue(RandomGenerator.emoji()).setMessageTimetoken(pnPublishResult02.getTimetoken());
+        pnMessageAction = new PNMessageAction.Builder().setType("reaction02").setValue(RandomGenerator.emoji()).setMessageTimetoken(pnPublishResult02.getTimetoken()).build();
         pubNub.addMessageAction().messageAction(pnMessageAction).channel(chan01.getName()).sync();
         pubNub.setChannelMetadata().channel(chan01.getName()).name("Channel name").description("desc").status("active").type("Chat").sync();
         pubNub.setMemberships().channelMemberships(Arrays.asList(PNChannelMembership.channel(chan01.getName()))).uuid("differentUUID").sync();
@@ -453,8 +453,8 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
         PNPublishResult pnPublishResult02 = pubNub.publish().channel(channel02.getName()).message("anything").sync();
         pubNub.signal().channel(channel01.getName()).message("anything").sync();
         pubNub.signal().channel(channel02.getName()).message("anything").sync();
-        PNMessageAction pnMessageAction01 = new PNMessageAction().setType("reaction").setValue(RandomGenerator.emoji()).setMessageTimetoken(pnPublishResult01.getTimetoken());
-        PNMessageAction pnMessageAction02 = new PNMessageAction().setType("reaction").setValue(RandomGenerator.emoji()).setMessageTimetoken(pnPublishResult02.getTimetoken());
+        PNMessageAction pnMessageAction01 = new PNMessageAction.Builder().setType("reaction").setValue(RandomGenerator.emoji()).setMessageTimetoken(pnPublishResult01.getTimetoken()).build();
+        PNMessageAction pnMessageAction02 = new PNMessageAction.Builder().setType("reaction").setValue(RandomGenerator.emoji()).setMessageTimetoken(pnPublishResult02.getTimetoken()).build();
         pubNub.addMessageAction().messageAction(pnMessageAction01).channel(channel01.getName()).sync();
         pubNub.addMessageAction().messageAction(pnMessageAction02).channel(channel02.getName()).sync();
         Thread.sleep(1000);
@@ -475,8 +475,8 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
         pubNub.signal().channel(channel02.getName()).message("anything").sync();
         pubNub.setPresenceState().state(expectedStatePayload).channels(Collections.singletonList(channel01.getName())).sync();
         pubNub.setPresenceState().state(expectedStatePayload).channels(Collections.singletonList(channel02.getName())).sync();
-        pnMessageAction01 = new PNMessageAction().setType("reaction02").setValue(RandomGenerator.emoji()).setMessageTimetoken(pnPublishResult01.getTimetoken());
-        pnMessageAction02 = new PNMessageAction().setType("reaction02").setValue(RandomGenerator.emoji()).setMessageTimetoken(pnPublishResult02.getTimetoken());
+        pnMessageAction01 = new PNMessageAction.Builder().setType("reaction02").setValue(RandomGenerator.emoji()).setMessageTimetoken(pnPublishResult01.getTimetoken()).build();
+        pnMessageAction02 = new PNMessageAction.Builder().setType("reaction02").setValue(RandomGenerator.emoji()).setMessageTimetoken(pnPublishResult02.getTimetoken()).build();
         pubNub.addMessageAction().messageAction(pnMessageAction01).channel(channel01.getName()).sync();
         pubNub.addMessageAction().messageAction(pnMessageAction02).channel(channel02.getName()).sync();
 

@@ -6,7 +6,6 @@ import cocoapods.PubNubSwift.PubNubObjC
 import cocoapods.PubNubSwift.getMessageActionsFrom
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.message_actions.PNGetMessageActionsResult
-import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.message_actions.PNSavedMessageAction
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result

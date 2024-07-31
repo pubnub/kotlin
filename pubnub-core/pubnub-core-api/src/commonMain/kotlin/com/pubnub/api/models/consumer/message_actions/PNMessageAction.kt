@@ -19,6 +19,26 @@ open class PNMessageAction(
     val value: String,
     val messageTimetoken: Long,
 ) {
+    class Builder {
+        private var type: String? = null
+        private var value: String? = null
+        private var messageTimetoken: Long? = null
+
+        fun setMessageTimetoken(timetoken: Long) = apply {
+            this.messageTimetoken = timetoken
+        }
+
+        fun setValue(value: String) = apply {
+            this.value = value
+        }
+
+        fun setType(type: String) = apply {
+            this.type = type
+        }
+
+        fun build() = PNMessageAction(type!!, value!!, messageTimetoken!!)
+    }
+
     constructor() : this("", "", 0L)
 
     override fun equals(other: Any?): Boolean {

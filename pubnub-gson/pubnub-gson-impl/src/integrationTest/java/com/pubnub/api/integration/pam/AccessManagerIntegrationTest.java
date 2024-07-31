@@ -814,10 +814,10 @@ abstract class AccessManagerIntegrationTest extends BaseIntegrationTest {
         requestAccess(WRITE);
         pubNub.addMessageAction()
                 .channel(expectedChannel)
-                .messageAction(new PNMessageAction()
+                .messageAction(new PNMessageAction.Builder()
                         .setType("reaction")
                         .setValue(RandomGenerator.emoji())
-                        .setMessageTimetoken(1L))
+                        .setMessageTimetoken(1L).build())
                 .async((result) -> {
                     try {
                         assertFalse(result.isFailure());
@@ -841,10 +841,10 @@ abstract class AccessManagerIntegrationTest extends BaseIntegrationTest {
 
         pubNub.addMessageAction()
                 .channel(expectedChannel)
-                .messageAction(new PNMessageAction()
+                .messageAction(new PNMessageAction.Builder()
                         .setType("reaction")
                         .setValue(RandomGenerator.emoji())
-                        .setMessageTimetoken(1L))
+                        .setMessageTimetoken(1L).build())
                 .async((result) -> {
                     try {
                         assertFalse(result.isFailure());
@@ -916,10 +916,10 @@ abstract class AccessManagerIntegrationTest extends BaseIntegrationTest {
         requestAccess(WRITE);
         final PNAddMessageActionResult addMessageActionResult = pubNub.addMessageAction()
                 .channel(expectedChannel)
-                .messageAction(new PNMessageAction()
+                .messageAction(new PNMessageAction.Builder()
                         .setType("reaction")
                         .setValue(RandomGenerator.emoji())
-                        .setMessageTimetoken(1L))
+                        .setMessageTimetoken(1L).build())
                 .sync();
         assertNotNull(addMessageActionResult);
 
@@ -928,8 +928,8 @@ abstract class AccessManagerIntegrationTest extends BaseIntegrationTest {
         requestAccess(DELETE);
         pubNub.removeMessageAction()
                 .channel(expectedChannel)
-                .messageTimetoken(addMessageActionResult.getMessageTimetoken())
-                .actionTimetoken(addMessageActionResult.getActionTimetoken())
+                .messageTimetoken(addMessageActionResult.getAction().getMessageTimetoken())
+                .actionTimetoken(addMessageActionResult.getAction().getActionTimetoken())
                 .async((result) -> {
                     try {
                         assertFalse(result.isFailure());
@@ -962,10 +962,10 @@ abstract class AccessManagerIntegrationTest extends BaseIntegrationTest {
         assertNotNull(publishResult);
         PNAddMessageActionResult addMessageActionResult = pubNub.addMessageAction()
                 .channel(expectedChannel)
-                .messageAction(new PNMessageAction()
+                .messageAction(new PNMessageAction.Builder()
                         .setType("reaction")
                         .setValue(RandomGenerator.emoji())
-                        .setMessageTimetoken(publishResult.getTimetoken()))
+                        .setMessageTimetoken(publishResult.getTimetoken()).build())
                 .sync();
 
         revokeAllAccess();
@@ -975,8 +975,8 @@ abstract class AccessManagerIntegrationTest extends BaseIntegrationTest {
         assertNotNull(addMessageActionResult);
         pubNub.removeMessageAction()
                 .channel(expectedChannel)
-                .messageTimetoken(addMessageActionResult.getMessageTimetoken())
-                .actionTimetoken(addMessageActionResult.getActionTimetoken())
+                .messageTimetoken(addMessageActionResult.getAction().getMessageTimetoken())
+                .actionTimetoken(addMessageActionResult.getAction().getActionTimetoken())
                 .async((result) -> {
                     try {
                         assertFalse(result.isFailure());

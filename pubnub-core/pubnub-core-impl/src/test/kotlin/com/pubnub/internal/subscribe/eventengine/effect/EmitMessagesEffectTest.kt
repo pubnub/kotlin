@@ -2,7 +2,6 @@ package com.pubnub.internal.subscribe.eventengine.effect
 
 import com.google.gson.JsonPrimitive
 import com.pubnub.api.models.consumer.files.PNDownloadableFile
-import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.message_actions.PNSavedMessageAction
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.api.models.consumer.pubsub.PNEvent

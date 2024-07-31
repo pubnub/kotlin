@@ -4,7 +4,6 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.endpoints.message_actions.AddMessageAction;
 import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult;
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction;
-import com.pubnub.api.models.consumer.message_actions.PNSavedMessageAction;
 import com.pubnub.internal.EndpointInterface;
 import com.pubnub.internal.PubNubCore;
 import com.pubnub.internal.endpoints.IdentityMappingEndpoint;
@@ -22,7 +21,7 @@ import static com.pubnub.api.builder.PubNubErrorBuilder.PNERROBJ_MESSAGE_TIMETOK
 public class AddMessageActionImpl extends IdentityMappingEndpoint<PNAddMessageActionResult> implements AddMessageAction {
 
     private String channel;
-    private PNSavedMessageAction messageAction;
+    private PNMessageAction messageAction;
 
     public AddMessageActionImpl(PubNubCore pubnub) {
         super(pubnub);

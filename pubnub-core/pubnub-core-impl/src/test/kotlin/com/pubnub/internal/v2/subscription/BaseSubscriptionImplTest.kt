@@ -82,7 +82,7 @@ class BaseSubscriptionImplTest {
 
         pubnub.listenerManager.announce(
             PNMessageResult(
-                BasePubSubResult(channelName, null, null, null, null),
+                BasePubSubResult(channelName, null, 0L, null, "nonNull"),
                 JsonNull.INSTANCE,
             ),
         )
@@ -116,7 +116,7 @@ class BaseSubscriptionImplTest {
         subWithFilter.subscribe()
         pubnub.listenerManager.announce(
             PNMessageResult(
-                BasePubSubResult(channelName, null, null, null, null),
+                BasePubSubResult(channelName, null, 0L, null, "nonNull"),
                 JsonNull.INSTANCE,
             ),
         )
@@ -135,7 +135,7 @@ class BaseSubscriptionImplTest {
         // when
         pubnub.listenerManager.announce(
             PNMessageResult(
-                BasePubSubResult(channelName, null, 1000L, null, null),
+                BasePubSubResult(channelName, null, 1000L, null, "nonNull"),
                 JsonNull.INSTANCE,
             ),
         )

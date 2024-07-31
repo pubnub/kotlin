@@ -13,6 +13,7 @@ import com.pubnub.api.models.consumer.history.Action
 import com.pubnub.api.models.consumer.history.PNFetchMessageItem
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
+import com.pubnub.api.models.consumer.message_actions.PNSavedMessageAction
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
@@ -110,7 +111,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
 
         pubnub.removeMessageAction(
             messageTimetoken = publishResult.timetoken,
-            actionTimetoken = addMessageActionResult.actionTimetoken!!,
+            actionTimetoken = addMessageActionResult.action.actionTimetoken,
             channel = expectedChannel,
         ).asyncRetry { result ->
             assertFalse(result.isFailure)
@@ -140,7 +141,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
                 assertEquals(1, it.actions.size)
                 assertEquals(
                     it.actions[0].actionTimetoken,
-                    addMessageActionResult.actionTimetoken,
+                    addMessageActionResult.action.actionTimetoken,
                 )
             }
         }
@@ -209,7 +210,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
             expectedChannelName,
             System.currentTimeMillis() * 10_000,
             object : Callback {
-                override fun onMore(actions: List<PNMessageAction>) {
+                override fun onMore(actions: List<PNSavedMessageAction>) {
                     count.set(count.get() + actions.size)
                 }
 
@@ -223,7 +224,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
     }
 
     interface Callback {
-        fun onMore(actions: List<PNMessageAction>)
+        fun onMore(actions: List<PNSavedMessageAction>)
 
         fun onDone()
     }
@@ -281,14 +282,14 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
             ).sync()
         }
 
-        val pnActionList = mutableListOf<PNMessageAction>()
+        val pnActionList = mutableListOf<PNSavedMessageAction>()
 
         pageActions(
             3,
             expectedChannel,
             null,
             object : Callback {
-                override fun onMore(actions: List<PNMessageAction>) {
+                override fun onMore(actions: List<PNSavedMessageAction>) {
                     pnActionList.addAll(actions.reversed())
                 }
 
@@ -316,7 +317,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
                     ),
             )
         val messageActionsResult = builder.sync()
-        if (messageActionsResult!!.actions.isNotEmpty()) {
+        if (messageActionsResult.actions.isNotEmpty()) {
             callback.onMore(messageActionsResult.actions)
             pageActions(chunk, channel, messageActionsResult.actions[0].actionTimetoken, callback)
         } else {

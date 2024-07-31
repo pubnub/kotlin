@@ -5,7 +5,6 @@ import ManageMembershipsResponse
 import ObjectsResponse
 import PubNub
 import SetChannelMetadataResponse
-import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.message_actions.PNSavedMessageAction
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata

@@ -4,7 +4,7 @@ import com.google.gson.JsonPrimitive
 import com.pubnub.api.BasePubNub
 import com.pubnub.api.UserId
 import com.pubnub.api.models.consumer.files.PNDownloadableFile
-import com.pubnub.api.models.consumer.message_actions.PNMessageAction
+import com.pubnub.api.models.consumer.message_actions.PNSavedMessageAction
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
@@ -113,7 +113,10 @@ class EventEmitterImplTest {
             },
         )
 
-        emitterImpl.presence(testPubNub, PNPresenceEventResult(channel = "a"))
+        emitterImpl.presence(
+            testPubNub,
+            PNPresenceEventResult(channel = "a", event = "join", uuid = "nonNull", timestamp = 0L, timetoken = 0L)
+        )
 
         assertTrue(success)
     }
@@ -132,7 +135,10 @@ class EventEmitterImplTest {
             },
         )
 
-        emitterImpl.presence(testPubNub, AnnouncementEnvelope(PNPresenceEventResult(channel = "a")))
+        emitterImpl.presence(
+            testPubNub,
+            AnnouncementEnvelope(PNPresenceEventResult(channel = "a", event = "join", uuid = "nonNull", timestamp = 0L, timetoken = 0L))
+        )
 
         assertTrue(success)
     }
@@ -189,7 +195,10 @@ class EventEmitterImplTest {
             },
         )
 
-        emitterImpl.messageAction(testPubNub, PNMessageActionResult(basePubSubResult, "a", PNMessageAction()))
+        emitterImpl.messageAction(
+            testPubNub,
+            PNMessageActionResult(basePubSubResult, "a", PNSavedMessageAction("nonNull", "nonNull", 0L, "nonNull", 0L))
+        )
 
         assertTrue(success)
     }
@@ -208,7 +217,12 @@ class EventEmitterImplTest {
             },
         )
 
-        emitterImpl.messageAction(testPubNub, AnnouncementEnvelope(PNMessageActionResult(basePubSubResult, "a", PNMessageAction())))
+        emitterImpl.messageAction(
+            testPubNub,
+            AnnouncementEnvelope(
+                PNMessageActionResult(basePubSubResult, "a", PNSavedMessageAction("nonNull", "nonNull", 0L, "nonNull", 0L))
+            )
+        )
 
         assertTrue(success)
     }
@@ -268,7 +282,7 @@ class EventEmitterImplTest {
             },
         )
 
-        emitterImpl.file(testPubNub, PNFileEventResult("a", null, null, null, PNDownloadableFile("a", "b", "c"), message))
+        emitterImpl.file(testPubNub, PNFileEventResult("a", 0L, "nonNull", null, PNDownloadableFile("a", "b", "c"), message))
 
         assertTrue(success)
     }
@@ -289,7 +303,7 @@ class EventEmitterImplTest {
 
         emitterImpl.file(
             testPubNub,
-            AnnouncementEnvelope(PNFileEventResult("a", null, null, null, PNDownloadableFile("a", "b", "c"), message)),
+            AnnouncementEnvelope(PNFileEventResult("a", 0L, "nonNull", null, PNDownloadableFile("a", "b", "c"), message)),
         )
 
         assertTrue(success)
@@ -314,7 +328,7 @@ class EventEmitterImplTest {
         )
         emitterImpl.message(
             testPubNub,
-            AnnouncementEnvelope(PNMessageResult(BasePubSubResult("acceptedChannel", null, null, null, null), message)),
+            AnnouncementEnvelope(PNMessageResult(BasePubSubResult("acceptedChannel", null, 0L, null, "nonNull"), message)),
         )
         assertTrue(success)
     }
@@ -338,7 +352,7 @@ class EventEmitterImplTest {
         )
         emitterImpl.message(
             testPubNub,
-            AnnouncementEnvelope(PNMessageResult(BasePubSubResult("anotherChannel", null, null, null, null), message)),
+            AnnouncementEnvelope(PNMessageResult(BasePubSubResult("anotherChannel", null, 0L, null, "nonNull"), message)),
         )
         assertFalse(success)
     }
