@@ -34,7 +34,8 @@ class GetMembershipsImpl(
     private val sort: Collection<PNSortKey<PNMembershipKey>>,
     private val includeCount: Boolean,
     private val includeCustom: Boolean,
-    private val includeChannelDetails: PNChannelDetailsLevel?
+    private val includeChannelDetails: PNChannelDetailsLevel?,
+    private val includeChannelType: Boolean
 ) : GetMemberships {
     override fun async(callback: Consumer<Result<PNChannelMembershipArrayResult>>) {
         pubnub.getMembershipsWithUuid(
@@ -47,6 +48,7 @@ class GetMembershipsImpl(
             includeCustom = includeCustom,
             includeChannelFields = includeChannelDetails == PNChannelDetailsLevel.CHANNEL || includeChannelDetails == PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM,
             includeChannelCustomFields = includeChannelDetails == PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM,
+            includeChannelType = includeChannelType,
             onSuccess = callback.onSuccessHandler3 { memberships, totalCount, page ->
                 PNChannelMembershipArrayResult(
                     status = 200,

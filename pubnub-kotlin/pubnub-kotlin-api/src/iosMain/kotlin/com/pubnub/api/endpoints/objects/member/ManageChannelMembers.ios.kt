@@ -39,7 +39,8 @@ class SetChannelMembersImpl(
     private val sort: Collection<PNSortKey<PNMemberKey>>,
     private val includeCount: Boolean,
     private val includeCustom: Boolean,
-    private val includeUUIDDetails: PNUUIDDetailsLevel?
+    private val includeUUIDDetails: PNUUIDDetailsLevel?,
+    private val includeUUIDType: Boolean
 ) : ManageChannelMembers {
     override fun async(callback: Consumer<Result<PNMemberArrayResult>>) {
         pubnub.setChannelMembersWithChannel(
@@ -53,6 +54,7 @@ class SetChannelMembersImpl(
             includeCustom = includeCustom,
             includeUUIDFields = includeUUIDDetails == PNUUIDDetailsLevel.UUID || includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM,
             includeUUIDCustomFields = includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM,
+            includeUUIDType = includeUUIDType,
             onSuccess = callback.onSuccessHandler3 { memberships, totalCount, page ->
                 PNMemberArrayResult(
                     status = 200,
@@ -78,7 +80,8 @@ class RemoveChannelMembersImpl(
     private val sort: Collection<PNSortKey<PNMemberKey>>,
     private val includeCount: Boolean,
     private val includeCustom: Boolean,
-    private val includeUUIDDetails: PNUUIDDetailsLevel?
+    private val includeUUIDDetails: PNUUIDDetailsLevel?,
+    private val includeUUIDType: Boolean
 ) : ManageChannelMembers {
     override fun async(callback: Consumer<Result<PNMemberArrayResult>>) {
         pubnub.removeChannelMembersWithChannel(
@@ -92,6 +95,7 @@ class RemoveChannelMembersImpl(
             includeCustom = includeCustom,
             includeUUIDFields = includeUUIDDetails == PNUUIDDetailsLevel.UUID || includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM,
             includeUUIDCustomFields = includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM,
+            includeUUIDType = includeUUIDType,
             onSuccess = callback.onSuccessHandler3 { memberships, totalCount, next ->
                 PNMemberArrayResult(
                     status = 200,
