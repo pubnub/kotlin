@@ -1,1 +1,1 @@
-./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository
+./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository --no-configuration-cache

@@ -1,2 +1,2 @@
 echo "Build Kotlin SDK module artifacts"
-./gradlew jar
+./gradlew jar --no-configuration-cache

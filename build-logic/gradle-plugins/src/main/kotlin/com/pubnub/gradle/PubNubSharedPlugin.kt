@@ -3,10 +3,13 @@ package com.pubnub.gradle
 import com.vanniktech.maven.publish.MavenPublishPlugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.publish.PublishingExtension
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
+import org.gradle.kotlin.dsl.maven
 import org.gradle.kotlin.dsl.project
+import org.gradle.kotlin.dsl.repositories
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
 import org.jlleitschuh.gradle.ktlint.KtlintPlugin
 
@@ -15,6 +18,14 @@ class PubNubSharedPlugin : Plugin<Project> {
         with(target) {
             apply<MavenPublishPlugin>()
             apply<KtlintPlugin>()
+
+            extensions.configure<PublishingExtension> {
+                repositories {
+                    it.maven(uri(rootProject.layout.buildDirectory.dir("repo"))) { ->
+                        name = "repo"
+                    }
+                }
+            }
 
             group = providers.gradleProperty("GROUP").get()
             version = providers.gradleProperty("VERSION_NAME").get()
@@ -42,7 +53,7 @@ class PubNubSharedPlugin : Plugin<Project> {
             }
 
             dependencies {
-                "ktlintRuleset"(project(":build-logic:ktlint-custom-rules"))
+                "ktlintRuleset"("com.pubnub:ktlint-custom-rules:1.0.0")
             }
         }
     }

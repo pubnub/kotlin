@@ -1,11 +1,11 @@
 Pod::Spec.new do |spec|
     spec.name                     = 'pubnub_core_api'
-    spec.version                  = '1.0'
-    spec.homepage                 = 'Link to a Kotlin/Native module homepage'
+    spec.version                  = '9.2.3'
+    spec.homepage                 = ''
     spec.source                   = { :http=> ''}
     spec.authors                  = ''
     spec.license                  = ''
-    spec.summary                  = 'Some description for a Kotlin/Native module'
+    spec.summary                  = ''
     spec.vendored_frameworks      = 'build/cocoapods/framework/pubnub_core_api.framework'
     spec.libraries                = 'c++'
     spec.ios.deployment_target    = '14'

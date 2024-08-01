@@ -5,55 +5,65 @@ import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
-import org.gradle.kotlin.dsl.creating
-import org.gradle.kotlin.dsl.getting
-import org.gradle.kotlin.dsl.provideDelegate
-import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinMultiplatformPluginWrapper
-import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetContainer
 import org.jetbrains.kotlin.gradle.plugin.cocoapods.CocoapodsExtension
 import org.jetbrains.kotlin.gradle.plugin.cocoapods.KotlinCocoapodsPlugin
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
-import org.jetbrains.kotlin.gradle.plugin.mpp.TestExecutable
+import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
+import org.jetbrains.kotlin.gradle.targets.js.yarn.yarn
 
 class PubNubKotlinMultiplatformPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             apply<KotlinMultiplatformPluginWrapper>()
-            apply<KotlinCocoapodsPlugin>()
+            if (enableAnyIosTarget) {
+                apply<KotlinCocoapodsPlugin>()
+            }
 
             // Kotlin
             extensions.configure<KotlinMultiplatformExtension> {
+                compilerOptions.freeCompilerArgs.add("-Xexpect-actual-classes")
                 jvmToolchain(8)
 
-                js {
-                    browser {
+                if (enableJsTarget) {
+                    js { ->
+                        useEsModules()
+                        browser {
+                            testTask {
+                                it.useMocha {
+                                    timeout = "10s"
+                                }
+                            }
+                        }
+//                    nodejs {
+//                        testTask {
+//                            it.useMocha {
+//                                timeout = "5s"
+//                            }
+//                        }
+//                    }
                     }
-                    binaries.executable()
                 }
-                jvm {
-                    compilations.all {
-                        it.compileTaskProvider.configure {
-                            it.compilerOptions {
-                                freeCompilerArgs.add("-Xexpect-actual-classes")
+
+                jvm { ->
+                    compilations.configureEach { compilation ->
+                        compilation.compileTaskProvider.configure { task ->
+                            task.compilerOptions {
                                 javaParameters.set(true)
                             }
                         }
                     }
                 }
 
-                listOf(
-                    iosArm64(),
-                    iosSimulatorArm64(),
-                ).forEach {
-                    it.binaries {
-                        framework {
-                            isStatic = true
-                        }
-                    }
+
+                if (enableIosTarget) {
+                    iosArm64()
                 }
+                if (enableIosSimulatorTarget) {
+                    iosSimulatorArm64()
+                }
+
                 applyDefaultHierarchyTemplate()
                 with (sourceSets) {
                     val commonMain = getByName("commonMain")
@@ -62,54 +72,57 @@ class PubNubKotlinMultiplatformPlugin : Plugin<Project> {
                         it.dependsOn(commonMain)
                     }
 
-                    val jsMain = getByName("jsMain") {
-                        it.dependsOn(nonJvm)
+                    if (enableJsTarget) {
+                        getByName("jsMain") {
+                            it.dependsOn(nonJvm)
+                        }
                     }
 
-                    val iosMain = getByName("iosMain") {
-                        it.dependsOn(nonJvm)
+                    if (enableAnyIosTarget) {
+                        getByName("iosMain") {
+                            it.dependsOn(nonJvm)
+                        }
                     }
                 }
 
-                (this as? ExtensionAware)?.extensions?.configure<CocoapodsExtension> {
-                    ios.deploymentTarget = "14"
+                if (enableAnyIosTarget) {
+                    (this as? ExtensionAware)?.extensions?.configure<CocoapodsExtension> {
+                        ios.deploymentTarget = "14"
+//
+//                    summary = "Some description for a Kotlin/Native module"
+//                    homepage = "Link to a Kotlin/Native module homepage"
 
-                    // Required properties
-                    // Specify the required Pod version here. Otherwise, the Gradle project version is used.
-                    version = "1.0"
-                    summary = "Some description for a Kotlin/Native module"
-                    homepage = "Link to a Kotlin/Native module homepage"
+                        // Maps custom Xcode configuration to NativeBuildType
+                        xcodeConfigurationToNativeBuildType["CUSTOM_DEBUG"] = NativeBuildType.DEBUG
+                        xcodeConfigurationToNativeBuildType["CUSTOM_RELEASE"] = NativeBuildType.RELEASE
 
-                    // Maps custom Xcode configuration to NativeBuildType
-                    xcodeConfigurationToNativeBuildType["CUSTOM_DEBUG"] = NativeBuildType.DEBUG
-                    xcodeConfigurationToNativeBuildType["CUSTOM_RELEASE"] = NativeBuildType.RELEASE
+                        framework {
+                            isStatic = true
+                            transitiveExport = true
+                        }
 
-//        podfile = project.file(project.file("Sample Chat app/Podfile"))
-
-                    framework {
-                        // Required properties
-                        // Framework name configuration. Use this property instead of deprecated 'frameworkName'
-
-                        // Optional properties
-                        // Specify the framework linking type. It's dynamic by default.
-                        isStatic = true
-                        transitiveExport = true
-                    }
-
-                    pod("PubNubSwift") {
+                        pod("PubNubSwift") {
+                            val swiftPath = project.findProperty("SWIFT_PATH") as? String ?: "swift"
 //                        source = git("https://github.com/pubnub/swift") {
 //                            branch = "feat/kmp"
 //                        }
-//            headers = "PubNub/PubNub.h"
-                        source = path(rootProject.file("swift"))
-//            version = "7.1.0"
-
-                        moduleName = "PubNub"
-                        extraOpts += listOf("-compiler-option", "-fmodules")
+//                        version = "7.1.0"
+                            source = path(rootProject.file(swiftPath))
+                            moduleName = "PubNub"
+                            extraOpts += listOf("-compiler-option", "-fmodules")
+                        }
                     }
                 }
             }
-
+            if (enableJsTarget) {
+                yarn.yarnLockMismatchReport = YarnLockMismatchReport.WARNING
+                yarn.yarnLockAutoReplace = true
+            }
         }
     }
 }
+
+val Project.enableJsTarget get() = project.findProperty("ENABLE_TARGET_JS") == "true"
+val Project.enableIosTarget get() = project.findProperty("ENABLE_TARGET_IOS") == "true"
+val Project.enableIosSimulatorTarget get() = project.findProperty("ENABLE_TARGET_IOS_SIMULATOR") == "true"
+val Project.enableAnyIosTarget get() = enableIosTarget || enableIosSimulatorTarget

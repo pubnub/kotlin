@@ -1,5 +1,8 @@
 
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type
+import com.pubnub.gradle.enableIosSimulatorTarget
+import com.pubnub.gradle.enableIosTarget
+import com.pubnub.gradle.enableJsTarget
 import java.util.Properties
 
 plugins {
@@ -15,14 +18,20 @@ plugins {
 kotlin {
     jvmToolchain(8)
 
-    js {
-        browser {
+    if (enableJsTarget) {
+        js {
+            useEsModules()
+            browser()
+            nodejs()
         }
-        binaries.executable()
     }
     jvm()
-    iosArm64()
-    iosSimulatorArm64()
+    if (enableIosTarget) {
+        iosArm64()
+    }
+    if (enableIosSimulatorTarget) {
+        iosSimulatorArm64()
+    }
 
     sourceSets {
         val commonMain by getting {
@@ -31,38 +40,21 @@ kotlin {
                 api(project(":pubnub-core:pubnub-core-api"))
                 api(kotlin("test"))
                 api(libs.coroutines.test)
-//                implementation(libs.datetime)
             }
         }
-//
-//        val commonTest by getting {
-//            dependencies {
-//                implementation(kotlin("test"))
-//                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
-//                implementation(libs.coroutines.test)
-//            }
-//        }
-//
+
         val jvmMain by getting {
             dependencies {
                 api(kotlin("test-junit"))
             }
         }
-//
-//        val jvmTest by getting {
-//            dependencies {
-//                implementation(project(":pubnub-kotlin:pubnub-kotlin-impl"))
-//            }
-//        }
     }
 
-//    targets.withType<KotlinNativeTarget> {
-//        if (konanTarget.family.isAppleFamily) {
-//            binaries.withType<TestExecutable> {
-//                freeCompilerArgs += listOf("-e", "testlauncher.mainBackground")
-//            }
-//        }
-//    }
+    ktlint {
+        filter {
+            exclude { it: FileTreeElement -> it.file.absolutePath.also { println(it) }.contains("/build/") }
+        }
+    }
 
     buildkonfig {
         packageName = "com.pubnub.test"
