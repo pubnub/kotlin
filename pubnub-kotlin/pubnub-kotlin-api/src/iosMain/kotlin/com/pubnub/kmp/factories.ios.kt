@@ -117,20 +117,25 @@ private fun createSignalResult(from: PubNubMessageObjC?): PNSignalResult {
 
 @OptIn(ExperimentalForeignApi::class)
 private fun createMessageActionResult(from: PubNubMessageActionObjC?): PNMessageActionResult {
+    val messageAction = PNMessageAction(
+        type = from!!.actionType(),
+        value = from.actionValue(),
+        messageTimetoken = from.messageTimetoken().toLong()
+    ).apply {
+        actionTimetoken = from.actionTimetoken().toLong()
+        uuid = from.publisher()
+    }
+
     return PNMessageActionResult(
         result = BasePubSubResult(
-            channel = from!!.channel(),
+            channel = from.channel(),
             subscription = from.subscription(),
             timetoken = from.actionTimetoken().toLong(),
             userMetadata = null,
             publisher = from.publisher()
         ),
         event = from.event(),
-        data = PNMessageAction(
-            type = from.actionType(),
-            value = from.actionValue(),
-            messageTimetoken = from.messageTimetoken().toLong()
-        )
+        data = messageAction
     )
 }
 

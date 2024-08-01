@@ -597,7 +597,8 @@ class PubNubImpl(private val pubNubObjC: PubNubObjC) : PubNub {
             sort = sort,
             includeCount = includeCount,
             includeCustom = includeCustom,
-            includeChannelDetails = includeChannelDetails
+            includeChannelDetails = includeChannelDetails,
+            includeChannelType = includeType
         )
     }
 
@@ -623,7 +624,8 @@ class PubNubImpl(private val pubNubObjC: PubNubObjC) : PubNub {
             sort = sort,
             includeCount = includeCount,
             includeCustom = includeCustom,
-            includeChannelDetails = includeChannelDetails
+            includeChannelDetails = includeChannelDetails,
+            includeChannelType = includeType
         )
     }
 
@@ -649,7 +651,8 @@ class PubNubImpl(private val pubNubObjC: PubNubObjC) : PubNub {
             sort = sort,
             includeCount = includeCount,
             includeCustom = includeCustom,
-            includeChannelDetails = includeChannelDetails
+            includeChannelDetails = includeChannelDetails,
+            includeChannelType = includeType
         )
     }
 
@@ -673,7 +676,8 @@ class PubNubImpl(private val pubNubObjC: PubNubObjC) : PubNub {
             sort = sort,
             includeCount = includeCount,
             includeCustom = includeCustom,
-            includeUUIDDetails = includeUUIDDetails
+            includeUUIDDetails = includeUUIDDetails,
+            includeUUIDType = includeType
         )
     }
 
@@ -699,7 +703,8 @@ class PubNubImpl(private val pubNubObjC: PubNubObjC) : PubNub {
             sort = sort,
             includeCount = includeCount,
             includeCustom = includeCustom,
-            includeUUIDDetails = includeUUIDDetails
+            includeUUIDDetails = includeUUIDDetails,
+            includeUUIDType = includeType
         )
     }
 
@@ -725,7 +730,8 @@ class PubNubImpl(private val pubNubObjC: PubNubObjC) : PubNub {
             sort = sort,
             includeCount = includeCount,
             includeCustom = includeCustom,
-            includeUUIDDetails = includeUUIDDetails
+            includeUUIDDetails = includeUUIDDetails,
+            includeUUIDType = includeType
         )
     }
 
