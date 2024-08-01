@@ -49,7 +49,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
       - name: Validate clean build
-        run: ./gradlew build
+        run: ./gradlew ktlintFormat publishAllPublicationsToRepoRepository
       - name: Cancel workflow runs for commit on error
         if: failure()
         uses: ./.github/.release/actions/actions/utils/fast-jobs-failure

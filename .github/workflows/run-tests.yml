@@ -31,6 +31,12 @@ jobs:
       - name: Build and run tests
         run: |
           ./gradlew check
+        env:
+          SDK_PUB_KEY: ${{ secrets.SDK_PUB_KEY }}
+          SDK_SUB_KEY: ${{ secrets.SDK_PUB_KEY }}
+          SDK_PAM_SUB_KEY: ${{ secrets.SDK_PAM_SUB_KEY }}
+          SDK_PAM_PUB_KEY: ${{ secrets.SDK_PAM_PUB_KEY }}
+          SDK_PAM_SEC_KEY: ${{ secrets.SDK_PAM_SEC_KEY }}
       - name: Cancel workflow runs for commit on error
         if: failure()
         uses: ./.github/.release/actions/actions/utils/fast-jobs-failure

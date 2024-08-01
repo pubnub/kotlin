@@ -67,12 +67,21 @@ kotlin {
                     testProps.load(it)
                 }
             } catch (e: Exception) {
-                println("No test.properties found in root project. Using 'demo' for all keys.")
-                testProps.setProperty("pubKey", "demo")
-                testProps.setProperty("subKey", "demo")
-                testProps.setProperty("pamPubKey", "demo")
-                testProps.setProperty("pamSubKey", "demo")
-                testProps.setProperty("pamSecKey", "demo")
+                println("No test.properties found in root project. Trying to get keys from env")
+                try {
+                    testProps.setProperty("pubKey", providers.environmentVariable("SDK_PUB_KEY").get())
+                    testProps.setProperty("subKey", providers.environmentVariable("SDK_SUB_KEY").get())
+                    testProps.setProperty("pamPubKey", providers.environmentVariable("SDK_PAM_PUB_KEY").get())
+                    testProps.setProperty("pamSubKey", providers.environmentVariable("SDK_PAM_SUB_KEY").get())
+                    testProps.setProperty("pamSecKey", providers.environmentVariable("SDK_PAM_SEC_KEY").get())
+                } catch (e: IllegalStateException) {
+                    println("No env variables found. Setting all keys to demo")
+                    testProps.setProperty("pubKey", "demo")
+                    testProps.setProperty("subKey", "demo")
+                    testProps.setProperty("pamPubKey", "demo")
+                    testProps.setProperty("pamSubKey", "demo")
+                    testProps.setProperty("pamSecKey", "demo")
+                }
             }
             buildConfigField(Type.STRING, "pubKey", testProps.getProperty("pubKey"))
             buildConfigField(Type.STRING, "subKey", testProps.getProperty("subKey"))
