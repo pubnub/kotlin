@@ -1,5 +1,6 @@
-package com.pubnub.api
+package com.pubnub.test.integration
 
+import com.pubnub.api.PubNubException
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteChannelMetadataEventMessage
@@ -29,7 +30,7 @@ class ChannelMetadataTest : BaseIntegrationTest() {
     private val type = randomString()
 
     @Test
-    fun can_set_metadata() = runTest(timeout = defaultTimeout) {
+    fun can_set_metadata() = runTest {
         // when
         val result = pubnub.setChannelMetadata(
             channel,
@@ -53,7 +54,7 @@ class ChannelMetadataTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_receive_set_metadata_event() = runTest(timeout = defaultTimeout) {
+    fun can_receive_set_metadata_event() = runTest {
         pubnub.test(backgroundScope) {
             // given
             pubnub.awaitSubscribe(listOf(channel))
@@ -83,7 +84,7 @@ class ChannelMetadataTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_delete_metadata() = runTest(timeout = defaultTimeout) {
+    fun can_delete_metadata() = runTest {
         // given
         pubnub.setChannelMetadata(
             channel,
@@ -106,7 +107,7 @@ class ChannelMetadataTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_receive_delete_metadata_event() = runTest(timeout = defaultTimeout) {
+    fun can_receive_delete_metadata_event() = runTest {
         pubnub.test(backgroundScope) {
             pubnub.setChannelMetadata(
                 channel,

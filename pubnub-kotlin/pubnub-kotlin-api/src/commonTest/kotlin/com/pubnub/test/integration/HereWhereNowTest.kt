@@ -1,4 +1,4 @@
-package com.pubnub.api
+package com.pubnub.test.integration
 
 import com.pubnub.test.BaseIntegrationTest
 import com.pubnub.test.await
@@ -13,7 +13,7 @@ import kotlin.test.assertEquals
 
 class HereWhereNowTest : BaseIntegrationTest() {
     @Test
-    fun hereNow() = runTest(timeout = defaultTimeout) {
+    fun hereNow() = runTest {
         val channel = randomString()
         pubnub.test(backgroundScope) {
             pubnub.awaitSubscribe(listOf(channel))
@@ -30,7 +30,7 @@ class HereWhereNowTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun whereNow() = runTest(timeout = defaultTimeout) {
+    fun whereNow() = runTest {
         val channel = randomString()
         pubnub.test(backgroundScope) {
             pubnub.awaitSubscribe(listOf(channel))

@@ -128,6 +128,9 @@ class PubNubKotlinMultiplatformPlugin : Plugin<Project> {
                     it.showExceptions = true
                     it.exceptionFormat = TestExceptionFormat.FULL
                 }
+//                if (providers.environmentVariable("CI").isPresent && !providers.environmentVariable("CI_FORCE_RUN_INTEGRATION_TESTS").isPresent) {
+//                    filter.excludeTestsMatching("com.pubnub.test.integration.*")
+//                }
             }
         }
     }

@@ -27,11 +27,8 @@ import kotlin.coroutines.resumeWithException
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.assertTrue
-import kotlin.time.Duration.Companion.seconds
 
 abstract class BaseIntegrationTest {
-    val defaultTimeout = 10.seconds
-
     lateinit var config: PNConfiguration
     lateinit var configPam: PNConfiguration
     lateinit var pubnub: PubNub

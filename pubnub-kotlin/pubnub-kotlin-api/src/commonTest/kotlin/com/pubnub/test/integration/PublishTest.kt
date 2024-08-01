@@ -1,5 +1,12 @@
-package com.pubnub.api
+package com.pubnub.test.integration
 
+import com.pubnub.api.JsonElement
+import com.pubnub.api.asDouble
+import com.pubnub.api.asList
+import com.pubnub.api.asLong
+import com.pubnub.api.asMap
+import com.pubnub.api.asString
+import com.pubnub.api.isNull
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.kmp.PLATFORM
 import com.pubnub.test.BaseIntegrationTest
@@ -24,28 +31,28 @@ class PublishTest : BaseIntegrationTest() {
 
     @Test
     fun can_publish_message_string() =
-        runTest(timeout = defaultTimeout) {
+        runTest {
             val result = pubnub.publish(channel, "some message").await()
             assertTrue { result.timetoken > 0 }
         }
 
     @Test
     fun can_signal() =
-        runTest(timeout = defaultTimeout) {
+        runTest {
             val result = pubnub.signal(channel, "some message").await()
             assertTrue { result.timetoken > 0 }
         }
 
     @Test
     fun can_publish_message_map() =
-        runTest(timeout = defaultTimeout) {
+        runTest {
             val result = pubnub.publish(channel, mapOf("platform" to PLATFORM, "otherKey" to 123, "another" to true)).await()
             assertTrue { result.timetoken > 0 }
         }
 
     @Test
     fun can_signal_map() =
-        runTest(timeout = defaultTimeout) {
+        runTest {
             val result = pubnub.signal(channel, mapOf("platform" to PLATFORM, "otherKey" to 123, "another" to true)).await()
             assertTrue { result.timetoken > 0 }
         }
@@ -53,13 +60,13 @@ class PublishTest : BaseIntegrationTest() {
     @Test
     @Ignore // only JVM supports custom classes
     fun can_publish_message_object() =
-        runTest(timeout = defaultTimeout) {
+        runTest {
             val result = pubnub.publish(channel, ABC()).await()
             assertTrue { result.timetoken > 0 }
         }
 
     @Test
-    fun can_receive_message_with_map_metadata() = runTest(timeout = defaultTimeout) {
+    fun can_receive_message_with_map_metadata() = runTest {
         pubnub.test(backgroundScope) {
             pubnub.awaitSubscribe(listOf(channel))
             val mapData = mapOf(
@@ -82,7 +89,7 @@ class PublishTest : BaseIntegrationTest() {
     private fun isIOS() = PLATFORM == "iOS"
 
     @Test
-    fun can_receive_message_with_primitive_payload() = runTest(timeout = defaultTimeout) {
+    fun can_receive_message_with_primitive_payload() = runTest {
         pubnub.test(backgroundScope) {
             pubnub.awaitSubscribe(listOf(channel))
             pubnub.publish(
@@ -102,7 +109,7 @@ class PublishTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_receive_message_with_map_payload() = runTest(timeout = defaultTimeout) {
+    fun can_receive_message_with_map_payload() = runTest {
         pubnub.test(backgroundScope) {
             pubnub.awaitSubscribe(listOf(channel))
             val mapData = mapOf(
@@ -123,7 +130,7 @@ class PublishTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_receive_signal_with_map_payload() = runTest(timeout = defaultTimeout) {
+    fun can_receive_signal_with_map_payload() = runTest {
         pubnub.test(backgroundScope) {
             pubnub.awaitSubscribe(listOf(channel))
             val mapData = mapOf(
@@ -140,7 +147,7 @@ class PublishTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_receive_message_with_payload_with_floats() = runTest(timeout = defaultTimeout) {
+    fun can_receive_message_with_payload_with_floats() = runTest {
         pubnub.test(backgroundScope) {
             pubnub.awaitSubscribe(listOf(channel))
             val mapData = mapOf(
@@ -163,7 +170,7 @@ class PublishTest : BaseIntegrationTest() {
 
     @Test
     @Ignore // todo js doesn't support primitive metadata?
-    fun can_receive_message_with_primitive_metadata() = runTest(timeout = defaultTimeout) {
+    fun can_receive_message_with_primitive_metadata() = runTest {
         pubnub.test(backgroundScope) {
             pubnub.awaitSubscribe(listOf(channel))
             pubnub.publish(channel, "some message", "some meta").await()

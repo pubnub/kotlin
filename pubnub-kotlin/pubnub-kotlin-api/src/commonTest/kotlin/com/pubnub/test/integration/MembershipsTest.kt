@@ -1,4 +1,4 @@
-package com.pubnub.api
+package com.pubnub.test.integration
 
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
@@ -27,7 +27,7 @@ class MembershipsTest : BaseIntegrationTest() {
     private val type = randomString()
 
     @Test
-    fun can_set_memberships() = runTest(timeout = defaultTimeout) {
+    fun can_set_memberships() = runTest {
         // when
         val result = pubnub.setMemberships(
             listOf(PNChannelMembership.Partial(channel, custom, status)),
@@ -42,7 +42,7 @@ class MembershipsTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_receive_set_membership_event() = runTest(timeout = defaultTimeout) {
+    fun can_receive_set_membership_event() = runTest {
         pubnub.test(backgroundScope) {
             // given
             pubnub.awaitSubscribe(listOf(channel))
@@ -65,7 +65,7 @@ class MembershipsTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_delete_membership() = runTest(timeout = defaultTimeout) {
+    fun can_delete_membership() = runTest {
         // given
         pubnub.setMemberships(
             listOf(PNChannelMembership.Partial(channel, custom, status))
@@ -87,7 +87,7 @@ class MembershipsTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_receive_delete_membership_event() = runTest(timeout = defaultTimeout) {
+    fun can_receive_delete_membership_event() = runTest {
         pubnub.test(backgroundScope) {
             // given
             pubnub.setMemberships(

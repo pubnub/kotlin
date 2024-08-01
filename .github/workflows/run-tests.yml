@@ -33,7 +33,7 @@ jobs:
           ./gradlew check
         env:
           SDK_PUB_KEY: ${{ secrets.SDK_PUB_KEY }}
-          SDK_SUB_KEY: ${{ secrets.SDK_PUB_KEY }}
+          SDK_SUB_KEY: ${{ secrets.SDK_SUB_KEY }}
           SDK_PAM_SUB_KEY: ${{ secrets.SDK_PAM_SUB_KEY }}
           SDK_PAM_PUB_KEY: ${{ secrets.SDK_PAM_PUB_KEY }}
           SDK_PAM_SEC_KEY: ${{ secrets.SDK_PAM_SEC_KEY }}

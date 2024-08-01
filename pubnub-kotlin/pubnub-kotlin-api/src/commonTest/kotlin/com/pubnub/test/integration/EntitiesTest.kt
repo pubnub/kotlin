@@ -1,4 +1,4 @@
-package com.pubnub.api
+package com.pubnub.test.integration
 
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.kmp.createEventListener
@@ -14,7 +14,7 @@ class EntitiesTest : BaseIntegrationTest() {
     private val channelName = "myChannel"
 
     @Test
-    fun can_subscribe_channel_subscription() = runTest(timeout = defaultTimeout) {
+    fun can_subscribe_channel_subscription() = runTest {
         pubnub.test(backgroundScope) {
             val channel = pubnub.channel(channelName)
             val subscription = channel.awaitSubscribe()
@@ -23,7 +23,7 @@ class EntitiesTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_get_events_from_channel_subscription() = runTest(timeout = defaultTimeout) {
+    fun can_get_events_from_channel_subscription() = runTest {
         pubnub.test(backgroundScope) {
             val channel = pubnub.channel(channelName)
             val subscription = channel.awaitSubscribe()
@@ -43,7 +43,7 @@ class EntitiesTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_subscribe_channel_subscriptionSet() = runTest(timeout = defaultTimeout) {
+    fun can_subscribe_channel_subscriptionSet() = runTest {
         pubnub.test(backgroundScope) {
             val channelSet = setOf(channelName, "abc")
             val set = pubnub.subscriptionSetOf(channelSet)
@@ -55,7 +55,7 @@ class EntitiesTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_get_events_from_channel_subscriptionSet() = runTest(timeout = defaultTimeout) {
+    fun can_get_events_from_channel_subscriptionSet() = runTest {
         pubnub.test(backgroundScope) {
             val channelSet = setOf(channelName, "abc")
             val set = pubnub.subscriptionSetOf(channelSet)

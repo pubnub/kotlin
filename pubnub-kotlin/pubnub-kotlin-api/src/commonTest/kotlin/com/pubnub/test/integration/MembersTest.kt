@@ -1,4 +1,4 @@
-package com.pubnub.api
+package com.pubnub.test.integration
 
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.member.PNMember
@@ -25,7 +25,7 @@ class MembersTest : BaseIntegrationTest() {
     private val type = randomString()
 
     @Test
-    fun can_set_members() = runTest(timeout = defaultTimeout) {
+    fun can_set_members() = runTest {
         // when
         val result = pubnub.setChannelMembers(
             channel,
@@ -55,7 +55,7 @@ class MembersTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_delete_members() = runTest(timeout = defaultTimeout) {
+    fun can_delete_members() = runTest {
         // given
         pubnub.setChannelMembers(
             channel,

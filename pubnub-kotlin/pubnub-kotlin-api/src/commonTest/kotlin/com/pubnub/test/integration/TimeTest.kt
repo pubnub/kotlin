@@ -1,4 +1,4 @@
-package com.pubnub.api
+package com.pubnub.test.integration
 
 import com.pubnub.test.BaseIntegrationTest
 import com.pubnub.test.await
