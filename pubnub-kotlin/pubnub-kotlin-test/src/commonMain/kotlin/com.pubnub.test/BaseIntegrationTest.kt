@@ -172,29 +172,12 @@ class PubNubTest(
         customSubscriptionBlock()
     }
 
-//    fun subscribe(
-//        channels: Collection<String> = emptyList(),
-//        channelGroups: Collection<String> = emptyList(),
-//        withPresence: Boolean = false,
-//    ) {
-//        pubNub.subscribe(channels.toList(), channelGroups.toList(), withPresence = withPresence || withPresenceOverride)
-//        val status = statusQueue.take()
-//        Assert.assertTrue(
-//            status.category == PNStatusCategory.PNConnectedCategory || status.category == PNStatusCategory.PNSubscriptionChanged,
-//        )
-//        if (status.category == PNStatusCategory.PNConnectedCategory) {
-//            Assert.assertTrue(status.affectedChannels.containsAll(channels))
-//            Assert.assertTrue(status.affectedChannelGroups.containsAll(channelGroups))
-//        } else if (status.category == PNStatusCategory.PNSubscriptionChanged) {
-//            Assert.assertTrue(status.affectedChannels.containsAll(channels))
-//            Assert.assertTrue(status.affectedChannelGroups.containsAll(channelGroups))
-//        }
-//    }
-
     suspend fun PubNub.awaitUnsubscribe(
         channels: Collection<String> = setOf(),
         channelGroups: Collection<String> = setOf(),
-        withPresence: Boolean = false
+        customUnsubscribeBlock: () -> Unit = {
+            unsubscribe(channels.toList(), channelGroups.toList())
+        }
     ) = suspendCancellableCoroutine { cont ->
         val statusListener = createStatusListener(pubNub) { _, pnStatus ->
             if (pnStatus.category == PNStatusCategory.PNDisconnectedCategory || pnStatus.category == PNStatusCategory.PNSubscriptionChanged &&
@@ -212,7 +195,7 @@ class PubNubTest(
         cont.invokeOnCancellation {
             pubNub.removeListener(statusListener)
         }
-        unsubscribe(channels.toList(), channelGroups.toList())
+        customUnsubscribeBlock()
     }
 
 //    fun unsubscribeAll() {
