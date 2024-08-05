@@ -1,8 +1,8 @@
 package com.pubnub.internal.endpoints.objects.channel
 
 import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataResult
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
+import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubCore

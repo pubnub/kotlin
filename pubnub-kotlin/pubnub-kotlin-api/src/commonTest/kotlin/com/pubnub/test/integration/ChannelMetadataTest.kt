@@ -63,9 +63,9 @@ class ChannelMetadataTest : BaseIntegrationTest() {
             pubnub.setChannelMetadata(
                 channel,
                 name = name,
-                status = status,
+                status = null,
                 custom = custom,
-                includeCustom = includeCustom,
+                includeCustom = false,
                 type = type,
                 description = description
             ).await()
@@ -77,7 +77,7 @@ class ChannelMetadataTest : BaseIntegrationTest() {
             assertEquals(channel, message.data.id)
             assertEquals(name, message.data.name?.value)
             assertEquals(description, message.data.description?.value)
-            assertEquals(status, message.data.status?.value)
+            assertEquals(null, message.data.status?.value)
             assertEquals(customData, message.data.custom?.value)
             assertEquals(type, message.data.type?.value)
         }
@@ -146,7 +146,6 @@ class ChannelMetadataTest : BaseIntegrationTest() {
                 custom = custom,
                 includeCustom = includeCustom,
                 type = type,
-                description = description
             ).await()
         }
 
@@ -178,7 +177,7 @@ class ChannelMetadataTest : BaseIntegrationTest() {
             val pnChannelMetadata = allChannels.firstOrNull { it.id == channel + index }
             assertNotNull(pnChannelMetadata)
             assertEquals(name, pnChannelMetadata.name?.value)
-            assertEquals(description, pnChannelMetadata.description?.value)
+            assertEquals(null, pnChannelMetadata.description!!.value)
             assertEquals(status, pnChannelMetadata.status?.value)
             assertEquals(customData, pnChannelMetadata.custom?.value)
             assertEquals(type, pnChannelMetadata.type?.value)
