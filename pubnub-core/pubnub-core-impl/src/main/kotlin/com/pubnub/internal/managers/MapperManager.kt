@@ -12,16 +12,20 @@ import com.google.gson.JsonSerializationContext
 import com.google.gson.JsonSerializer
 import com.google.gson.ToNumberPolicy
 import com.google.gson.TypeAdapter
+import com.google.gson.TypeAdapterFactory
+import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonToken
 import com.google.gson.stream.JsonWriter
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.utils.PatchValue
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Converter
 import retrofit2.converter.gson.GsonConverterFactory
+import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
 class MapperManager {
@@ -42,7 +46,7 @@ class MapperManager {
                     }
                 }
 
-                override fun read(_in: JsonReader): Boolean? {
+                override fun read(_in: JsonReader): Boolean {
                     val peek: JsonToken = _in.peek()
                     return when (peek) {
                         JsonToken.BOOLEAN -> _in.nextBoolean()
@@ -53,6 +57,57 @@ class MapperManager {
                 }
             }
 
+        val patchValueTypeFactory = object : TypeAdapterFactory {
+            override fun <T> create(gson: Gson, type: TypeToken<T>): TypeAdapter<T>? {
+                if (type.rawType != PatchValue::class.java) {
+                    return null
+                }
+                val factory = this
+                return object : TypeAdapter<T>() {
+                    override fun write(out: JsonWriter, patchValue: T) {
+                        val writeNulls = out.serializeNulls
+                        try {
+                            if (patchValue == null) {
+                                // value is PatchValue.none(), skip it (serializeNulls is false)
+                                out.nullValue()
+                            } else {
+                                patchValue as PatchValue<T>
+                                if (patchValue.value == null) {
+                                    // value is PatchValue.of(null), write it out to JSON:
+                                    out.serializeNulls = true
+                                    out.nullValue()
+                                } else {
+                                    // value is PatchValue.of(something), write it out using the right adapter:
+                                    val delegate = gson.getDelegateAdapter(
+                                        factory,
+                                        TypeToken.get(patchValue.value!!::class.java)
+                                    ) as TypeAdapter<Any>
+                                    delegate.write(out, patchValue.value)
+                                }
+                            }
+                        } finally {
+                            out.serializeNulls = writeNulls
+                        }
+                    }
+
+                    override fun read(reader: JsonReader): T {
+                        val token = reader.peek()
+                        if (token == JsonToken.NULL) {
+                            @Suppress("UNCHECKED_CAST")
+                            reader.nextNull()
+                            return PatchValue.of(null) as T
+                        } else {
+                            val delegate = gson.getDelegateAdapter(
+                                factory,
+                                TypeToken.get((type.type as ParameterizedType).actualTypeArguments.first())
+                            )
+                            return PatchValue.of(delegate.read(reader)) as T
+                        }
+                    }
+                }
+            }
+        }
+
         objectMapper =
             GsonBuilder()
                 .registerTypeAdapter(Boolean::class.javaObjectType, booleanAsIntAdapter)
@@ -60,6 +115,25 @@ class MapperManager {
                 .registerTypeAdapter(Boolean::class.java, booleanAsIntAdapter)
                 .registerTypeAdapter(JSONObject::class.java, JSONObjectAdapter())
                 .registerTypeAdapter(JSONArray::class.java, JSONArrayAdapter())
+                .registerTypeAdapterFactory(patchValueTypeFactory)
+//                .registerTypeAdapter(PartialPNChannelMetadata::class.java, object :
+//                    TypeAdapter<PartialPNChannelMetadata>() {
+//
+//                    override fun write(out: JsonWriter?, value: PartialPNChannelMetadata?) {
+//                        TODO("Not yet implemented")
+//                    }
+//
+//                    /**
+//                     * Reads one JSON value (an array, object, string, number, boolean or null)
+//                     * and converts it to a Java object. Returns the converted object.
+//                     *
+//                     * @return the converted Java object. May be null.
+//                     */
+//                    override fun read(`in`: JsonReader?): PartialPNChannelMetadata {
+//                        ReflectiveTypeAdapterFactory.
+//                    }
+//
+//                })
                 .disableHtmlEscaping()
                 .setObjectToNumberStrategy(ToNumberPolicy.LAZILY_PARSED_NUMBER)
                 .create()
@@ -144,7 +218,7 @@ class MapperManager {
         clazz: Class<T>,
     ): T {
         return try {
-            this.objectMapper.fromJson<T>(input, clazz)
+            this.objectMapper.fromJson(input, clazz)
         } catch (e: JsonParseException) {
             throw PubNubException(
                 pubnubError = PubNubError.PARSING_ERROR,

@@ -2,6 +2,8 @@ package com.pubnub.internal.v2.callbacks;
 
 import com.pubnub.api.BasePubNub;
 import com.pubnub.api.PubNub;
+import com.pubnub.api.models.consumer.objects.channel.PartialPNChannelMetadata;
+import com.pubnub.api.models.consumer.objects_api.channel.ConvertersKt;
 import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadata;
 import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadataResult;
 import com.pubnub.api.models.consumer.objects_api.membership.PNMembership;
@@ -112,8 +114,8 @@ public class DelegatingEventListener implements EventListenerCore {
 
     @NotNull
     static PNChannelMetadataResult getSetChannelMetadataResult(PNObjectEventResult objectEvent, PNSetChannelMetadataEventMessage message) {
-        com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata data = message.getData();
-        PNChannelMetadata newData = PNChannelMetadata.from(data);
+        PartialPNChannelMetadata data = message.getData();
+        PNChannelMetadata newData = ConvertersKt.from(data);
         return new PNChannelMetadataResult(
                 message.getEvent(),
                 objectEvent.getChannel(),

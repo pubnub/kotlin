@@ -2,7 +2,7 @@ package com.pubnub.test.integration
 
 import com.pubnub.api.PubNubException
 import com.pubnub.api.models.consumer.objects.PNPage
-import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
+import com.pubnub.api.models.consumer.objects.channel.PartialPNChannelMetadata
 import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteChannelMetadataEventMessage
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetChannelMetadataEventMessage
@@ -46,11 +46,11 @@ class ChannelMetadataTest : BaseIntegrationTest() {
         val pnuuidMetadata = result.data
         requireNotNull(pnuuidMetadata)
         assertEquals(channel, pnuuidMetadata.id)
-        assertEquals(name, pnuuidMetadata.name)
-        assertEquals(status, pnuuidMetadata.status)
-        assertEquals(customData, pnuuidMetadata.custom)
-        assertEquals(type, pnuuidMetadata.type)
-        assertEquals(description, pnuuidMetadata.description)
+        assertEquals(name, pnuuidMetadata.name?.value)
+        assertEquals(status, pnuuidMetadata.status?.value)
+        assertEquals(customData, pnuuidMetadata.custom?.value)
+        assertEquals(type, pnuuidMetadata.type?.value)
+        assertEquals(description, pnuuidMetadata.description?.value)
     }
 
     @Test
@@ -75,11 +75,11 @@ class ChannelMetadataTest : BaseIntegrationTest() {
             val message = result.extractedMessage
             message as PNSetChannelMetadataEventMessage
             assertEquals(channel, message.data.id)
-            assertEquals(name, message.data.name)
-            assertEquals(description, message.data.description)
-            assertEquals(status, message.data.status)
-            assertEquals(customData, message.data.custom)
-            assertEquals(type, message.data.type)
+            assertEquals(name, message.data.name?.value)
+            assertEquals(description, message.data.description?.value)
+            assertEquals(status, message.data.status?.value)
+            assertEquals(customData, message.data.custom?.value)
+            assertEquals(type, message.data.type?.value)
         }
     }
 
@@ -151,7 +151,7 @@ class ChannelMetadataTest : BaseIntegrationTest() {
         }
 
         // when
-        val allChannels = mutableListOf<PNChannelMetadata>()
+        val allChannels = mutableListOf<PartialPNChannelMetadata>()
         var next: PNPage.PNNext? = null
         while (true) {
             val result = pubnub.getAllChannelMetadata(
@@ -177,11 +177,11 @@ class ChannelMetadataTest : BaseIntegrationTest() {
         repeat(6) { index ->
             val pnChannelMetadata = allChannels.firstOrNull { it.id == channel + index }
             assertNotNull(pnChannelMetadata)
-            assertEquals(name, pnChannelMetadata.name)
-            assertEquals(description, pnChannelMetadata.description)
-            assertEquals(status, pnChannelMetadata.status)
-            assertEquals(customData, pnChannelMetadata.custom)
-            assertEquals(type, pnChannelMetadata.type)
+            assertEquals(name, pnChannelMetadata.name?.value)
+            assertEquals(description, pnChannelMetadata.description?.value)
+            assertEquals(status, pnChannelMetadata.status?.value)
+            assertEquals(customData, pnChannelMetadata.custom?.value)
+            assertEquals(type, pnChannelMetadata.type?.value)
         }
     }
 }

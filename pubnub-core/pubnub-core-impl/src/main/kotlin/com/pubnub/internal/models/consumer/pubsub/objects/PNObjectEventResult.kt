@@ -3,7 +3,7 @@ package com.pubnub.internal.models.consumer.pubsub.objects
 import com.google.gson.JsonDeserializer
 import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
-import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
+import com.pubnub.api.models.consumer.objects.channel.PartialPNChannelMetadata
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.api.models.consumer.pubsub.PubSubResult
@@ -42,7 +42,7 @@ data class PNSetChannelMetadataEventMessage(
     override val version: String,
     override val event: String,
     override val type: String,
-    val data: PNChannelMetadata,
+    val data: PartialPNChannelMetadata,
 ) : PNObjectEventMessage()
 
 data class PNSetUUIDMetadataEventMessage(

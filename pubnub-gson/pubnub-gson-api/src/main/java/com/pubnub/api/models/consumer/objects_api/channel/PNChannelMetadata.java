@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,32 +32,27 @@ public class PNChannelMetadata extends PNObject {
         this(id, name, null);
     }
 
+    protected PNChannelMetadata(String id, String name, String description, Object custom, String updated, String eTag, String type, String status) {
+        super(id);
+        this.name = name;
+        this.description = description;
+        this.custom = custom;
+        this.updated = updated;
+        this.eTag = eTag;
+        this.type = type;
+        this.status = status;
+    }
+
     @Override
     public PNChannelMetadata setCustom(Object custom) {
         super.setCustom(custom);
         return this;
     }
 
-    @Nullable
-    public static PNChannelMetadata from(@Nullable com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata data) {
-        if (data == null) {
-            return null;
-        }
-        PNChannelMetadata newData = new PNChannelMetadata(
-                data.getId(), data.getName(), data.getDescription()
-        );
-        newData.setETag(data.getETag());
-        newData.setType(data.getType());
-        newData.setStatus(data.getStatus());
-        newData.setCustom(data.getCustom());
-        newData.setUpdated(data.getUpdated());
-        return newData;
-    }
-
-    public static List<PNChannelMetadata> from(Collection<com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata> data) {
+    public static List<PNChannelMetadata> from(Collection<com.pubnub.api.models.consumer.objects.channel.PartialPNChannelMetadata> data) {
         List<PNChannelMetadata> channels = new ArrayList<>(data.size());
-        for (com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata datum : data) {
-            channels.add(PNChannelMetadata.from(datum));
+        for (com.pubnub.api.models.consumer.objects.channel.PartialPNChannelMetadata datum : data) {
+            channels.add(ConvertersKt.from(datum));
         }
         return channels;
     }

@@ -1,8 +1,8 @@
 package com.pubnub.internal.endpoints.objects.channel
 
 import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataResult
+import com.pubnub.api.models.consumer.objects.channel.PartialPNChannelMetadata
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubCore
@@ -24,9 +24,9 @@ class SetChannelMetadataEndpoint internal constructor(
     private val includeQueryParam: IncludeQueryParam,
     private val type: String?,
     private val status: String?,
-) : EndpointCore<EntityEnvelope<PNChannelMetadata>, PNChannelMetadataResult>(pubnub),
+) : EndpointCore<EntityEnvelope<PartialPNChannelMetadata>, PNChannelMetadataResult>(pubnub),
     SetChannelMetadataInterface {
-    override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNChannelMetadata>> {
+    override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PartialPNChannelMetadata>> {
         val params = queryParams + includeQueryParam.createIncludeQueryParams()
         return retrofitManager.objectsService.setChannelMetadata(
             subKey = configuration.subscribeKey,
@@ -43,7 +43,7 @@ class SetChannelMetadataEndpoint internal constructor(
         )
     }
 
-    override fun createResponse(input: Response<EntityEnvelope<PNChannelMetadata>>): PNChannelMetadataResult {
+    override fun createResponse(input: Response<EntityEnvelope<PartialPNChannelMetadata>>): PNChannelMetadataResult {
         return input.body()!!.let {
             PNChannelMetadataResult(
                 status = it.status,

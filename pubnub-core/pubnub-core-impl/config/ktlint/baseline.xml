@@ -52,12 +52,12 @@
         <error line="27" column="9" source="standard:function-naming" />
     </file>
     <file name="src/test/kotlin/com/pubnub/contract/channelmetadata/step/WhenSteps.kt">
-        <error line="12" column="9" source="standard:function-naming" />
-        <error line="20" column="9" source="standard:function-naming" />
-        <error line="36" column="9" source="standard:function-naming" />
-        <error line="47" column="9" source="standard:function-naming" />
-        <error line="55" column="9" source="standard:function-naming" />
-        <error line="63" column="9" source="standard:function-naming" />
+        <error line="13" column="9" source="standard:function-naming" />
+        <error line="21" column="9" source="standard:function-naming" />
+        <error line="37" column="9" source="standard:function-naming" />
+        <error line="48" column="9" source="standard:function-naming" />
+        <error line="56" column="9" source="standard:function-naming" />
+        <error line="64" column="9" source="standard:function-naming" />
     </file>
     <file name="src/test/kotlin/com/pubnub/contract/crypto/CryptoModuleSteps.kt">
         <error line="63" column="9" source="standard:function-naming" />

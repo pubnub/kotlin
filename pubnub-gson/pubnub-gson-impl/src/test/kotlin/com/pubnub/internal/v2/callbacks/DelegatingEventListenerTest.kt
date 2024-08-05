@@ -4,12 +4,13 @@ import com.google.gson.JsonPrimitive
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
-import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
+import com.pubnub.api.models.consumer.objects.channel.PartialPNChannelMetadata
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadataResult
 import com.pubnub.api.models.consumer.objects_api.membership.PNMembershipResult
 import com.pubnub.api.models.consumer.objects_api.uuid.PNUUIDMetadataResult
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
+import com.pubnub.api.utils.PatchValue
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.internal.models.consumer.pubsub.objects.PNDeleteChannelMetadataEventMessage
 import com.pubnub.internal.models.consumer.pubsub.objects.PNDeleteMembershipEvent
@@ -94,7 +95,16 @@ internal class DelegatingEventListenerTest {
                     "b",
                     "c",
                     "d",
-                    PNChannelMetadata("a", "b", null, mapOf("c" to "c"), "d", null, null, null)
+                    PartialPNChannelMetadata(
+                        "a",
+                        PatchValue.of("b"),
+                        null,
+                        PatchValue.of(mapOf("c" to "c")),
+                        PatchValue.of("d"),
+                        null,
+                        null,
+                        null
+                    )
                 ),
             ),
         )
@@ -183,7 +193,17 @@ internal class DelegatingEventListenerTest {
 
     @Test
     fun getSetChannelMetadataResult() {
-        val metadata = PNChannelMetadata(id, name, description, custom, updated, eTag, type, status)
+        val metadata =
+            PartialPNChannelMetadata(
+                id,
+                PatchValue.of(name),
+                PatchValue.of(description),
+                PatchValue.of(custom),
+                PatchValue.of(updated),
+                PatchValue.of(eTag),
+                PatchValue.of(type),
+                PatchValue.of(status)
+            )
         val message = PNSetChannelMetadataEventMessage(source, version, event, type, metadata)
         val objectEvent = PNObjectEventResult(BasePubSubResult(channel, subscription, timetoken, userMetadata, publisher), message)
 

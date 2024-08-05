@@ -4,7 +4,7 @@ import com.pubnub.api.endpoints.objects_api.channel.GetChannelMetadata;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataResult;
-import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadata;
+import com.pubnub.api.models.consumer.objects_api.channel.ConvertersKt;
 import com.pubnub.api.models.consumer.objects_api.channel.PNGetChannelMetadataResult;
 import com.pubnub.internal.EndpointInterface;
 import com.pubnub.internal.PubNubCore;
@@ -32,8 +32,7 @@ public class GetChannelMetadataImpl extends DelegatingEndpoint<PNChannelMetadata
         return new MappingRemoteAction<>(action, (PNChannelMetadataResult pnChannelMetadataResult) ->
                 new PNGetChannelMetadataResult(
                         pnChannelMetadataResult.getStatus(),
-                        PNChannelMetadata.from(pnChannelMetadataResult.getData()
-                        )
+                        ConvertersKt.from(pnChannelMetadataResult.getData())
                 ));
     }
 

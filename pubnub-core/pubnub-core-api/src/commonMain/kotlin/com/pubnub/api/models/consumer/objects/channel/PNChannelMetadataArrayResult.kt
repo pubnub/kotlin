@@ -4,7 +4,7 @@ import com.pubnub.api.models.consumer.objects.PNPage
 
 data class PNChannelMetadataArrayResult(
     val status: Int,
-    val data: Collection<PNChannelMetadata>,
+    val data: Collection<PartialPNChannelMetadata>,
     val totalCount: Int?,
     val next: PNPage.PNNext?,
     val prev: PNPage.PNPrev?,
