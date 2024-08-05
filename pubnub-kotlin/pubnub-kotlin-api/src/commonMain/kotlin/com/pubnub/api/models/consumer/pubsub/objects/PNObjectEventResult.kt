@@ -1,6 +1,6 @@
 package com.pubnub.api.models.consumer.pubsub.objects
 
-import com.pubnub.api.models.consumer.objects.channel.NewPNChannelMetadata
+import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.api.models.consumer.pubsub.PubSubResult
@@ -22,7 +22,7 @@ data class PNSetChannelMetadataEventMessage(
     override val version: String,
     override val event: String,
     override val type: String,
-    val data: NewPNChannelMetadata,
+    val data: PNChannelMetadata,
 ) : PNObjectEventMessage()
 
 data class PNSetUUIDMetadataEventMessage(

@@ -2,7 +2,7 @@ package com.pubnub.test.integration
 
 import com.pubnub.api.PubNubException
 import com.pubnub.api.models.consumer.objects.PNPage
-import com.pubnub.api.models.consumer.objects.channel.NewPNChannelMetadata
+import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteChannelMetadataEventMessage
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetChannelMetadataEventMessage
@@ -151,7 +151,7 @@ class ChannelMetadataTest : BaseIntegrationTest() {
         }
 
         // when
-        val allChannels = mutableListOf<NewPNChannelMetadata>()
+        val allChannels = mutableListOf<PNChannelMetadata>()
         var next: PNPage.PNNext? = null
         while (true) {
             val result = pubnub.getAllChannelMetadata(

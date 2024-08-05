@@ -5,7 +5,7 @@ import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.objects.PNMembershipKey
 import com.pubnub.api.models.consumer.objects.PNSortKey
-import com.pubnub.api.models.consumer.objects.channel.NewPNChannelMetadata
+import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.objects.member.PNMember
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
@@ -390,8 +390,8 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
         )
     }
 
-    private fun channelMetadata(id: String): NewPNChannelMetadata {
-        return NewPNChannelMetadata(
+    private fun channelMetadata(id: String): PNChannelMetadata {
+        return PNChannelMetadata(
             id = id,
             name = null,
             description = null,

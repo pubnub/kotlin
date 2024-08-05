@@ -1,6 +1,5 @@
 package com.pubnub.api.models.consumer.objects_api.membership;
 
-import com.pubnub.api.models.consumer.objects_api.channel.ConvertersKt;
 import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadata;
 import com.pubnub.internal.models.consumer.objects.membership.PNChannelMembership;
 import lombok.Data;
@@ -38,7 +37,7 @@ public class PNMembership {
         if (data == null) {
             return null;
         }
-        PNChannelMetadata metadata = ConvertersKt.from(data.getChannel());
+        PNChannelMetadata metadata = PNChannelMetadata.from(data.getChannel());
         PNMembership newData = new PNMembership(metadata);
         newData.setCustom(data.getCustom());
 //        newData.setUuid(data.get) //TODO where to get this? does it even exist in server responses?

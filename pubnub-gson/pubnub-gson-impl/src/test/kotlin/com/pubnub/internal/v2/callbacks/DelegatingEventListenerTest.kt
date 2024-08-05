@@ -4,7 +4,6 @@ import com.google.gson.JsonPrimitive
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
-import com.pubnub.api.models.consumer.objects.channel.NewPNChannelMetadata
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadataResult
 import com.pubnub.api.models.consumer.objects_api.membership.PNMembershipResult
@@ -95,7 +94,7 @@ internal class DelegatingEventListenerTest {
                     "b",
                     "c",
                     "d",
-                    NewPNChannelMetadata(
+                    com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata(
                         "a",
                         PatchValue.of("b"),
                         null,
@@ -194,7 +193,7 @@ internal class DelegatingEventListenerTest {
     @Test
     fun getSetChannelMetadataResult() {
         val metadata =
-            NewPNChannelMetadata(
+            com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata(
                 id,
                 PatchValue.of(name),
                 PatchValue.of(description),

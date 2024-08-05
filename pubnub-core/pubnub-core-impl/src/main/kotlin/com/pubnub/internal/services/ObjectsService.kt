@@ -1,6 +1,6 @@
 package com.pubnub.internal.services
 
-import com.pubnub.api.models.consumer.objects.channel.NewPNChannelMetadata
+import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.internal.models.consumer.objects.member.PNMember
 import com.pubnub.internal.models.consumer.objects.membership.PNChannelMembership
@@ -52,14 +52,14 @@ internal interface ObjectsService {
     fun getAllChannelMetadata(
         @Path("subKey") subKey: String,
         @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
-    ): Call<EntityArrayEnvelope<NewPNChannelMetadata>>
+    ): Call<EntityArrayEnvelope<PNChannelMetadata>>
 
     @GET("v2/objects/{subKey}/channels/{channel}")
     fun getChannelMetadata(
         @Path("subKey") subKey: String,
         @Path("channel") channel: String,
         @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
-    ): Call<EntityEnvelope<NewPNChannelMetadata>>
+    ): Call<EntityEnvelope<PNChannelMetadata>>
 
     @PATCH("v2/objects/{subKey}/channels/{channel}")
     @Headers("Content-Type: application/json; charset=UTF-8")
@@ -68,7 +68,7 @@ internal interface ObjectsService {
         @Path("channel") channel: String,
         @Body body: ChannelMetadataInput,
         @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
-    ): Call<EntityEnvelope<NewPNChannelMetadata>>
+    ): Call<EntityEnvelope<PNChannelMetadata>>
 
     @DELETE("v2/objects/{subKey}/channels/{channel}")
     fun deleteChannelMetadata(

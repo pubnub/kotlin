@@ -1,10 +1,10 @@
 package com.pubnub.api.models.consumer.objects.membership
 
-import com.pubnub.api.models.consumer.objects.channel.NewPNChannelMetadata
+import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.kmp.CustomObject
 
 data class PNChannelMembership(
-    val channel: NewPNChannelMetadata,
+    val channel: PNChannelMetadata,
     val custom: Map<String, Any?>?,
     val updated: String,
     val eTag: String,
