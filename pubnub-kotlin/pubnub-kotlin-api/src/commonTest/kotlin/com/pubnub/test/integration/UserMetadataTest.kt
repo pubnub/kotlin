@@ -1,5 +1,6 @@
-package com.pubnub.api
+package com.pubnub.test.integration
 
+import com.pubnub.api.PubNubException
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult
@@ -31,7 +32,7 @@ class UserMetadataTest : BaseIntegrationTest() {
     private val type = randomString()
 
     @Test
-    fun can_set_metadata() = runTest(timeout = defaultTimeout) {
+    fun can_set_metadata() = runTest {
         // when
         val result = pubnub.setUUIDMetadata(
             uuid,
@@ -59,7 +60,7 @@ class UserMetadataTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_receive_set_metadata_event() = runTest(timeout = defaultTimeout) {
+    fun can_receive_set_metadata_event() = runTest {
         pubnub.test(backgroundScope) {
             // given
             pubnub.awaitSubscribe(listOf(uuid))
@@ -93,7 +94,7 @@ class UserMetadataTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_delete_metadata() = runTest(timeout = defaultTimeout) {
+    fun can_delete_metadata() = runTest {
         // given
         pubnub.setUUIDMetadata(
             uuid,
@@ -117,7 +118,7 @@ class UserMetadataTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_receive_delete_metadata_event() = runTest(timeout = defaultTimeout) {
+    fun can_receive_delete_metadata_event() = runTest {
         pubnub.test(backgroundScope) {
             // given
             pubnub.setUUIDMetadata(
@@ -144,7 +145,7 @@ class UserMetadataTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_get_metadata() = runTest(timeout = defaultTimeout) {
+    fun can_get_metadata() = runTest {
         // given
         pubnub.setUUIDMetadata(
             uuid,

@@ -1,3 +1,7 @@
+import com.pubnub.gradle.enableAnyIosTarget
+import com.pubnub.gradle.enableJsTarget
+import org.jetbrains.kotlin.gradle.plugin.cocoapods.CocoapodsExtension
+
 plugins {
     alias(libs.plugins.benmanes.versions)
     id("pubnub.shared")
@@ -7,18 +11,6 @@ plugins {
 }
 
 kotlin {
-    js {
-        browser {
-            testTask {
-//                useMocha {
-//                    timeout = "30s"
-//                }
-                useKarma {
-                    useChrome()
-                }
-            }
-        }
-    }
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -33,9 +25,11 @@ kotlin {
             }
         }
 
-        val jsMain by getting {
-            dependencies {
-                implementation(npm("pubnub", "8.2.4"))
+        if (enableJsTarget) {
+            val jsMain by getting {
+                dependencies {
+                    implementation(npm("pubnub", "8.2.4"))
+                }
             }
         }
 
@@ -53,12 +47,11 @@ kotlin {
             }
         }
     }
-}
-
-kotlin {
-    cocoapods {
-        framework {
-            export(project(":pubnub-core:pubnub-core-api"))
+    if (enableAnyIosTarget) {
+        (this as ExtensionAware).extensions.configure<CocoapodsExtension> {
+            framework {
+                export(project(":pubnub-core:pubnub-core-api"))
+            }
         }
     }
 }

@@ -3,10 +3,6 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
 }
 
-kotlin {
-    jvmToolchain(8)
-}
-
 dependencies {
     compileOnly(gradleKotlinDsl())
     compileOnly(libs.nexus.gradlePlugin)

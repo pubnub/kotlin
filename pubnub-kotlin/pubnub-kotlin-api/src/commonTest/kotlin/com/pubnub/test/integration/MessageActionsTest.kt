@@ -1,4 +1,4 @@
-package com.pubnub.api
+package com.pubnub.test.integration
 
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction

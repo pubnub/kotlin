@@ -1,4 +1,4 @@
-package com.pubnub.api
+package com.pubnub.test.integration
 
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
