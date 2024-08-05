@@ -1,7 +1,7 @@
 package com.pubnub.internal.managers
 
 import com.pubnub.api.PubNubException
-import com.pubnub.api.models.consumer.objects.channel.PartialPNChannelMetadata
+import com.pubnub.api.models.consumer.objects.channel.NewPNChannelMetadata
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
@@ -105,7 +105,7 @@ internal class MapperManagerTest {
             { "id" : "myId", "name": null, "description": "myDescription", "eTag": "myEtag", "custom": { "a" : "b" } }
         """.trimIndent()
 
-        val output: PartialPNChannelMetadata = mapperManager.fromJson(input, PartialPNChannelMetadata::class.java)
+        val output: NewPNChannelMetadata = mapperManager.fromJson(input, NewPNChannelMetadata::class.java)
 
         assertEquals("myId", output.id)
         assertNotNull(output.name)

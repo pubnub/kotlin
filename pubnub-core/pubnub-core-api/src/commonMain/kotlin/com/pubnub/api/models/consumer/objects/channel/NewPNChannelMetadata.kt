@@ -2,7 +2,7 @@ package com.pubnub.api.models.consumer.objects.channel
 
 import com.pubnub.api.utils.PatchValue
 
-data class PartialPNChannelMetadata(
+data class NewPNChannelMetadata(
     val id: String,
     val name: PatchValue<String?>?,
     val description: PatchValue<String?>?,
@@ -12,7 +12,7 @@ data class PartialPNChannelMetadata(
     val type: PatchValue<String?>?,
     val status: PatchValue<String?>?,
 ) {
-    operator fun plus(update: PartialPNChannelMetadata): PartialPNChannelMetadata {
+    operator fun plus(update: NewPNChannelMetadata): NewPNChannelMetadata {
         return copy(
             name = update.name ?: name,
             description = update.description ?: description,

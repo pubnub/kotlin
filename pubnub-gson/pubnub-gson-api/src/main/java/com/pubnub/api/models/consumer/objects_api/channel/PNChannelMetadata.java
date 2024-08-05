@@ -49,9 +49,9 @@ public class PNChannelMetadata extends PNObject {
         return this;
     }
 
-    public static List<PNChannelMetadata> from(Collection<com.pubnub.api.models.consumer.objects.channel.PartialPNChannelMetadata> data) {
+    public static List<PNChannelMetadata> from(Collection<com.pubnub.api.models.consumer.objects.channel.NewPNChannelMetadata> data) {
         List<PNChannelMetadata> channels = new ArrayList<>(data.size());
-        for (com.pubnub.api.models.consumer.objects.channel.PartialPNChannelMetadata datum : data) {
+        for (com.pubnub.api.models.consumer.objects.channel.NewPNChannelMetadata datum : data) {
             channels.add(ConvertersKt.from(datum));
         }
         return channels;

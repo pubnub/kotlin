@@ -1,6 +1,5 @@
 package com.pubnub.contract.channelmetadata.step
 
-import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.contract.channelmetadata.state.ChannelMetadataState
 import com.pubnub.contract.state.World
 import io.cucumber.java.en.When
@@ -12,7 +11,7 @@ class WhenSteps(
     @When("I get the channel metadata")
     fun i_get_the_channel_metadata() {
         world.pubnub.pubNubCore.getChannelMetadata(channel = channelMetadataState.channelId).sync()?.let {
-            channelMetadataState.channelMetadata = PNChannelMetadata.from(it.data)
+            channelMetadataState.channelMetadata = it.data
             world.responseStatus = it.status
         }
     }
@@ -22,13 +21,13 @@ class WhenSteps(
         val channelMetadata = channelMetadataState.channelMetadata!!
         world.pubnub.pubNubCore.setChannelMetadata(
             channel = channelMetadata.id,
-            name = channelMetadata.name,
-            description = channelMetadata.description,
-            custom = channelMetadata.custom,
-            type = channelMetadata.type,
-            status = channelMetadata.status,
+            name = channelMetadata.name?.value,
+            description = channelMetadata.description?.value,
+            custom = channelMetadata.custom?.value,
+            type = channelMetadata.type?.value,
+            status = channelMetadata.status?.value,
         ).sync().let {
-            channelMetadataState.channelMetadata = PNChannelMetadata.from(it.data)
+            channelMetadataState.channelMetadata = it.data
             world.responseStatus = it.status
         }
     }
@@ -39,7 +38,7 @@ class WhenSteps(
             channel = channelMetadataState.channelId,
             includeCustom = true,
         ).sync().let {
-            channelMetadataState.channelMetadata = PNChannelMetadata.from(it.data)
+            channelMetadataState.channelMetadata = it.data
             world.responseStatus = it.status
         }
     }
@@ -55,7 +54,7 @@ class WhenSteps(
     @When("I get all channel metadata")
     fun i_get_all_channel_metadata() {
         world.pubnub.pubNubCore.getAllChannelMetadata().sync().let {
-            channelMetadataState.channelMetadatas = it.data.map(PNChannelMetadata::from)
+            channelMetadataState.channelMetadatas = it.data
             world.responseStatus = it.status
         }
     }
@@ -65,7 +64,7 @@ class WhenSteps(
         world.pubnub.pubNubCore.getAllChannelMetadata(
             includeCustom = true,
         ).sync().let {
-            channelMetadataState.channelMetadatas = it.data.map(PNChannelMetadata::from)
+            channelMetadataState.channelMetadatas = it.data
             world.responseStatus = it.status
         }
     }

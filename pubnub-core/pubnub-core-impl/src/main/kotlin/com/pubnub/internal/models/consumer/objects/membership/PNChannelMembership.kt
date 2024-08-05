@@ -1,9 +1,9 @@
 package com.pubnub.internal.models.consumer.objects.membership
 
-import com.pubnub.api.models.consumer.objects.channel.PartialPNChannelMetadata
+import com.pubnub.api.models.consumer.objects.channel.NewPNChannelMetadata
 
 data class PNChannelMembership(
-    val channel: PartialPNChannelMetadata,
+    val channel: NewPNChannelMetadata,
     val custom: Map<String, Any?>?,
     val updated: String,
     val eTag: String,

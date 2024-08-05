@@ -1,8 +1,8 @@
 package com.pubnub.api.models.consumer.objects_api.channel
 
-import com.pubnub.api.models.consumer.objects.channel.PartialPNChannelMetadata
+import com.pubnub.api.models.consumer.objects.channel.NewPNChannelMetadata
 
-fun from(data: PartialPNChannelMetadata): PNChannelMetadata {
+fun from(data: NewPNChannelMetadata): PNChannelMetadata {
     val newData = PNChannelMetadata(
         // id =
         data.id,
