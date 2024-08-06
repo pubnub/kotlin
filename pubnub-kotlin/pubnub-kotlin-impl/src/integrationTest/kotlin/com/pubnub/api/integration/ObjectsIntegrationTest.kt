@@ -65,8 +65,8 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
                 type = type,
             ).sync()
 
-        assertEquals(status, setResult.data?.status)
-        assertEquals(type, setResult.data?.type)
+        assertEquals(status, setResult.data?.status?.value)
+        assertEquals(type, setResult.data?.type?.value)
 
         val getAllResult = pubnub.getAllUUIDMetadata(filter = "id == \"$testUuid\"").sync()
         val getSingleResult = pubnub.getUUIDMetadata(uuid = testUuid).sync()
@@ -267,12 +267,12 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
             custom = expectedCustom,
             includeCustom = true,
         ).sync().apply {
-            assertEquals(this.data?.id, expectedUUID)
-            assertEquals(this.data?.name, expectedName)
-            assertEquals(this.data?.email, expectedEmail)
-            assertEquals(this.data?.externalId, expectedExternalId)
-            assertEquals(this.data?.profileUrl, expectedProfileUrl)
-            assertEquals(this.data?.custom, expectedCustom)
+            assertEquals(expectedUUID, this.data?.id)
+            assertEquals(expectedName, this.data?.name?.value)
+            assertEquals(expectedEmail, this.data?.email?.value)
+            assertEquals(expectedExternalId, this.data?.externalId?.value)
+            assertEquals(expectedProfileUrl, this.data?.profileUrl?.value)
+            assertEquals(expectedCustom, this.data?.custom?.value)
         }
     }
 

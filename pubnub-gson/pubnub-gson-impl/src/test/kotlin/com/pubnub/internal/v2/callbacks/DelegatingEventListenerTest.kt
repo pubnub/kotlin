@@ -4,12 +4,12 @@ import com.google.gson.JsonPrimitive
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
-import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadataResult
 import com.pubnub.api.models.consumer.objects_api.membership.PNMembershipResult
 import com.pubnub.api.models.consumer.objects_api.uuid.PNUUIDMetadataResult
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
+import com.pubnub.api.utils.PatchValue
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.internal.models.consumer.pubsub.objects.PNDeleteChannelMetadataEventMessage
 import com.pubnub.internal.models.consumer.pubsub.objects.PNDeleteMembershipEvent
@@ -82,7 +82,13 @@ internal class DelegatingEventListenerTest {
             pn,
             PNObjectEventResult(
                 BasePubSubResult("a", "b", 0L, null, null),
-                PNSetUUIDMetadataEventMessage("a", "b", "c", "d", PNUUIDMetadata("a", "b", null, "c", "d", null, null, null, null, null)),
+                PNSetUUIDMetadataEventMessage(
+                    "a",
+                    "b",
+                    "c",
+                    "d",
+                    PNUUIDMetadata("a", PatchValue.of("b"), null, PatchValue.of("c"), PatchValue.of("d"), null, null, null, null, null)
+                ),
             ),
         )
         delegating.objects(
@@ -94,7 +100,16 @@ internal class DelegatingEventListenerTest {
                     "b",
                     "c",
                     "d",
-                    PNChannelMetadata("a", "b", null, mapOf("c" to "c"), "d", null, null, null)
+                    com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata(
+                        "a",
+                        PatchValue.of("b"),
+                        null,
+                        PatchValue.of(mapOf("c" to "c")),
+                        PatchValue.of("d"),
+                        null,
+                        null,
+                        null
+                    )
                 ),
             ),
         )
@@ -129,7 +144,18 @@ internal class DelegatingEventListenerTest {
 
     @Test
     fun getSetUuidMetadataResult() {
-        val metadata = PNUUIDMetadata(id, name, externalId, profileUrl, email, custom, updated, eTag, type, status)
+        val metadata = PNUUIDMetadata(
+            id,
+            PatchValue.of(name),
+            PatchValue.of(externalId),
+            PatchValue.of(profileUrl),
+            PatchValue.of(email),
+            PatchValue.of(custom),
+            PatchValue.of(updated),
+            PatchValue.of(eTag),
+            PatchValue.of(type),
+            PatchValue.of(status)
+        )
         val message = PNSetUUIDMetadataEventMessage(source, version, event, type, metadata)
         val objectEvent = PNObjectEventResult(BasePubSubResult(channel, subscription, timetoken, userMetadata, publisher), message)
 
@@ -183,7 +209,17 @@ internal class DelegatingEventListenerTest {
 
     @Test
     fun getSetChannelMetadataResult() {
-        val metadata = PNChannelMetadata(id, name, description, custom, updated, eTag, type, status)
+        val metadata =
+            com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata(
+                id,
+                PatchValue.of(name),
+                PatchValue.of(description),
+                PatchValue.of(custom),
+                PatchValue.of(updated),
+                PatchValue.of(eTag),
+                PatchValue.of(type),
+                PatchValue.of(status)
+            )
         val message = PNSetChannelMetadataEventMessage(source, version, event, type, metadata)
         val objectEvent = PNObjectEventResult(BasePubSubResult(channel, subscription, timetoken, userMetadata, publisher), message)
 

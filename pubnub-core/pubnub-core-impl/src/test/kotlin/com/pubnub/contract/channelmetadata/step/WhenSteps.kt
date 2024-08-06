@@ -21,11 +21,11 @@ class WhenSteps(
         val channelMetadata = channelMetadataState.channelMetadata!!
         world.pubnub.pubNubCore.setChannelMetadata(
             channel = channelMetadata.id,
-            name = channelMetadata.name,
-            description = channelMetadata.description,
-            custom = channelMetadata.custom,
-            type = channelMetadata.type,
-            status = channelMetadata.status,
+            name = channelMetadata.name?.value,
+            description = channelMetadata.description?.value,
+            custom = channelMetadata.custom?.value,
+            type = channelMetadata.type?.value,
+            status = channelMetadata.status?.value,
         ).sync().let {
             channelMetadataState.channelMetadata = it.data
             world.responseStatus = it.status

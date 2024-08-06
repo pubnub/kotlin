@@ -1,7 +1,10 @@
 package com.pubnub.internal.managers
 
 import com.pubnub.api.PubNubException
+import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 
 internal class MapperManagerTest {
@@ -93,6 +96,29 @@ internal class MapperManagerTest {
         assertEquals(map["e"], decodedMap["e"].tryLong()?.toInt())
         assertEquals(map["f"], decodedMap["f"])
         assertEquals(map["f"].toString().toLong(), decodedMap["f"].tryLong())
+    }
+
+    @Test
+    fun fromJson_optionalsAndNulls() {
+        val mapperManager = MapperManager()
+        val input = """
+            { "id" : "myId", "name": null, "description": "myDescription", "eTag": "myEtag", "custom": { "a" : "b" } }
+        """.trimIndent()
+
+        val output: PNChannelMetadata = mapperManager.fromJson(input, PNChannelMetadata::class.java)
+
+        assertEquals("myId", output.id)
+        assertNotNull(output.name)
+        assertNull(output.name?.value)
+
+        assertEquals("myDescription", output.description?.value)
+
+        assertNull(output.updated)
+        assertNull(output.status)
+
+        assertEquals(mapOf("a" to "b"), output.custom?.value)
+
+        assertEquals("myEtag", output.eTag?.value)
     }
 }
 

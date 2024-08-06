@@ -298,7 +298,6 @@ class PubNubCore internal constructor(
         message: Any,
         meta: Any? = null,
         usePost: Boolean = false,
-        ttl: Int? = null,
     ) = publish(
         channel = channel,
         message = message,
@@ -306,7 +305,6 @@ class PubNubCore internal constructor(
         shouldStore = false,
         usePost = usePost,
         replicate = false,
-        ttl = ttl,
     )
 
     /**

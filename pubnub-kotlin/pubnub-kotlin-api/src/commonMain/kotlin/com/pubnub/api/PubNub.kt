@@ -100,7 +100,6 @@ expect interface PubNub {
         message: Any,
         meta: Any? = null,
         usePost: Boolean = false,
-        ttl: Int? = null,
     ): Publish
 
     fun signal(

@@ -3,7 +3,7 @@ package com.pubnub.internal.models.consumer.objects.membership
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 
 data class PNChannelMembership(
-    val channel: PNChannelMetadata?,
+    val channel: PNChannelMetadata,
     val custom: Map<String, Any?>?,
     val updated: String,
     val eTag: String,

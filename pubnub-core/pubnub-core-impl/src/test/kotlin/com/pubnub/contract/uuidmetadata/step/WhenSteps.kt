@@ -30,13 +30,13 @@ class WhenSteps(
         world.pubnub.pubNubCore.setUUIDMetadata(
             uuid = uuidMetadata.id,
             custom = uuidMetadata.custom,
-            externalId = uuidMetadata.externalId,
-            profileUrl = uuidMetadata.profileUrl,
-            email = uuidMetadata.email,
-            name = uuidMetadata.name,
-            status = uuidMetadata.status,
-            type = uuidMetadata.type,
-        ).sync()?.let {
+            externalId = uuidMetadata.externalId?.value,
+            profileUrl = uuidMetadata.profileUrl?.value,
+            email = uuidMetadata.email?.value,
+            name = uuidMetadata.name?.value,
+            status = uuidMetadata.status?.value,
+            type = uuidMetadata.type?.value,
+        ).sync().let {
             uuidMetadataState.uuidMetadata = it.data
             world.responseStatus = it.status
         }
