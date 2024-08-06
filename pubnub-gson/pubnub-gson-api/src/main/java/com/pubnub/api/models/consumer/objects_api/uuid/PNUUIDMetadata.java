@@ -51,16 +51,16 @@ public class PNUUIDMetadata extends PNObject {
         if (data == null) {
             return null;
         }
-        PNUUIDMetadata newData = new PNUUIDMetadata(data.getId(), data.getName())
-                .setProfileUrl(data.getProfileUrl())
-                .setEmail(data.getEmail())
-                .setExternalId(data.getExternalId())
-                .setStatus(data.getStatus())
-                .setType(data.getType())
-                .setCustom(data.getCustom());
+        PNUUIDMetadata newData = new PNUUIDMetadata(data.getId(), data.getName() != null ? data.getName().getValue() : null)
+                .setProfileUrl(data.getProfileUrl() != null ? data.getProfileUrl().getValue() : null)
+                .setEmail(data.getEmail() != null ? data.getEmail().getValue() : null)
+                .setExternalId(data.getExternalId() != null ? data.getExternalId().getValue() : null)
+                .setStatus(data.getStatus() != null ? data.getStatus().getValue() : null)
+                .setType(data.getType() != null ? data.getType().getValue() : null)
+                .setCustom(data.getCustom() != null ? data.getCustom().getValue() : null);
 
-        newData.setETag(data.getETag());
-        newData.setUpdated(data.getUpdated());
+        newData.setETag(data.getETag() != null ? data.getETag().getValue() : null);
+        newData.setUpdated(data.getUpdated() != null ? data.getUpdated().getValue() : null);
         return newData;
     }
 }

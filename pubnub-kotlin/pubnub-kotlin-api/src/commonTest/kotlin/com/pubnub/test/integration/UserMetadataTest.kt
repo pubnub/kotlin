@@ -17,6 +17,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 import kotlin.time.Duration.Companion.seconds
 
 class UserMetadataTest : BaseIntegrationTest() {
@@ -50,13 +51,13 @@ class UserMetadataTest : BaseIntegrationTest() {
         val pnuuidMetadata = result.data
         requireNotNull(pnuuidMetadata)
         assertEquals(uuid, pnuuidMetadata.id)
-        assertEquals(name, pnuuidMetadata.name)
-        assertEquals(externalId, pnuuidMetadata.externalId)
-        assertEquals(profileUrl, pnuuidMetadata.profileUrl)
-        assertEquals(email, pnuuidMetadata.email)
-        assertEquals(status, pnuuidMetadata.status)
-        assertEquals(customData, pnuuidMetadata.custom)
-        assertEquals(type, pnuuidMetadata.type)
+        assertEquals(name, pnuuidMetadata.name?.value)
+        assertEquals(externalId, pnuuidMetadata.externalId?.value)
+        assertEquals(profileUrl, pnuuidMetadata.profileUrl?.value)
+        assertEquals(email, pnuuidMetadata.email?.value)
+        assertEquals(status, pnuuidMetadata.status?.value)
+        assertEquals(customData, pnuuidMetadata.custom?.value)
+        assertEquals(type, pnuuidMetadata.type?.value)
     }
 
     @Test
@@ -68,7 +69,6 @@ class UserMetadataTest : BaseIntegrationTest() {
             // when
             pubnub.setUUIDMetadata(
                 uuid,
-                name = name,
                 externalId = externalId,
                 profileUrl = profileUrl,
                 email = email,
@@ -83,13 +83,13 @@ class UserMetadataTest : BaseIntegrationTest() {
             val message = result.extractedMessage
             message as PNSetUUIDMetadataEventMessage
             assertEquals(uuid, message.data.id)
-            assertEquals(name, message.data.name)
-            assertEquals(externalId, message.data.externalId)
-            assertEquals(profileUrl, message.data.profileUrl)
-            assertEquals(email, message.data.email)
-            assertEquals(status, message.data.status)
-            assertEquals(customData, message.data.custom)
-            assertEquals(type, message.data.type)
+            assertNull(message.data.name)
+            assertEquals(externalId, message.data.externalId?.value)
+            assertEquals(profileUrl, message.data.profileUrl?.value)
+            assertEquals(email, message.data.email?.value)
+            assertEquals(status, message.data.status?.value)
+            assertEquals(customData, message.data.custom?.value)
+            assertEquals(type, message.data.type?.value)
         }
     }
 
@@ -166,13 +166,13 @@ class UserMetadataTest : BaseIntegrationTest() {
         val pnuuidMetadata = result.data
         requireNotNull(pnuuidMetadata)
         assertEquals(uuid, pnuuidMetadata.id)
-        assertEquals(name, pnuuidMetadata.name)
-        assertEquals(externalId, pnuuidMetadata.externalId)
-        assertEquals(profileUrl, pnuuidMetadata.profileUrl)
-        assertEquals(email, pnuuidMetadata.email)
-        assertEquals(status, pnuuidMetadata.status)
-        assertEquals(customData, pnuuidMetadata.custom)
-        assertEquals(type, pnuuidMetadata.type)
+        assertEquals(name, pnuuidMetadata.name?.value)
+        assertEquals(externalId, pnuuidMetadata.externalId?.value)
+        assertEquals(profileUrl, pnuuidMetadata.profileUrl?.value)
+        assertEquals(email, pnuuidMetadata.email?.value)
+        assertEquals(status, pnuuidMetadata.status?.value)
+        assertEquals(customData, pnuuidMetadata.custom?.value)
+        assertEquals(type, pnuuidMetadata.type?.value)
     }
 
     @Test
@@ -219,13 +219,13 @@ class UserMetadataTest : BaseIntegrationTest() {
         repeat(6) {
             val pnuuidMetadata = allUsers.firstOrNull { user -> user.id == uuid + it }
             assertNotNull(pnuuidMetadata)
-            assertEquals(name, pnuuidMetadata.name)
-            assertEquals(externalId, pnuuidMetadata.externalId)
-            assertEquals(profileUrl, pnuuidMetadata.profileUrl)
-            assertEquals(email, pnuuidMetadata.email)
-            assertEquals(status, pnuuidMetadata.status)
-            assertEquals(customData, pnuuidMetadata.custom)
-            assertEquals(type, pnuuidMetadata.type)
+            assertEquals(name, pnuuidMetadata.name?.value)
+            assertEquals(externalId, pnuuidMetadata.externalId?.value)
+            assertEquals(profileUrl, pnuuidMetadata.profileUrl?.value)
+            assertEquals(email, pnuuidMetadata.email?.value)
+            assertEquals(status, pnuuidMetadata.status?.value)
+            assertEquals(customData, pnuuidMetadata.custom?.value)
+            assertEquals(type, pnuuidMetadata.type?.value)
         }
     }
 }

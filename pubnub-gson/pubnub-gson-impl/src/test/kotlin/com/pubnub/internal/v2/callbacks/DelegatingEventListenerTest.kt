@@ -82,7 +82,13 @@ internal class DelegatingEventListenerTest {
             pn,
             PNObjectEventResult(
                 BasePubSubResult("a", "b", 0L, null, null),
-                PNSetUUIDMetadataEventMessage("a", "b", "c", "d", PNUUIDMetadata("a", "b", null, "c", "d", null, null, null, null, null)),
+                PNSetUUIDMetadataEventMessage(
+                    "a",
+                    "b",
+                    "c",
+                    "d",
+                    PNUUIDMetadata("a", PatchValue.of("b"), null, PatchValue.of("c"), PatchValue.of("d"), null, null, null, null, null)
+                ),
             ),
         )
         delegating.objects(
@@ -138,7 +144,18 @@ internal class DelegatingEventListenerTest {
 
     @Test
     fun getSetUuidMetadataResult() {
-        val metadata = PNUUIDMetadata(id, name, externalId, profileUrl, email, custom, updated, eTag, type, status)
+        val metadata = PNUUIDMetadata(
+            id,
+            PatchValue.of(name),
+            PatchValue.of(externalId),
+            PatchValue.of(profileUrl),
+            PatchValue.of(email),
+            PatchValue.of(custom),
+            PatchValue.of(updated),
+            PatchValue.of(eTag),
+            PatchValue.of(type),
+            PatchValue.of(status)
+        )
         val message = PNSetUUIDMetadataEventMessage(source, version, event, type, metadata)
         val objectEvent = PNObjectEventResult(BasePubSubResult(channel, subscription, timetoken, userMetadata, publisher), message)
 

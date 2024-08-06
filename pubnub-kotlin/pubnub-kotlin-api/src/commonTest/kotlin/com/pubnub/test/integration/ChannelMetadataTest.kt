@@ -44,7 +44,6 @@ class ChannelMetadataTest : BaseIntegrationTest() {
 
         // then
         val pnuuidMetadata = result.data
-        requireNotNull(pnuuidMetadata)
         assertEquals(channel, pnuuidMetadata.id)
         assertEquals(name, pnuuidMetadata.name?.value)
         assertEquals(status, pnuuidMetadata.status?.value)
