@@ -12,6 +12,9 @@ data class PNChannelMetadata(
     val type: PatchValue<String?>?,
     val status: PatchValue<String?>?,
 ) {
+    /**
+     * Merge information from this `PNChannelMetadata` with new data from `update`, returning a new `PNChannelMetadata` instance.
+     */
     operator fun plus(update: PNChannelMetadata): PNChannelMetadata {
         return copy(
             name = update.name ?: name,
