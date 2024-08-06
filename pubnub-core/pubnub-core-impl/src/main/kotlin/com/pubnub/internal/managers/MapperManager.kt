@@ -93,14 +93,15 @@ class MapperManager {
                     override fun read(reader: JsonReader): T {
                         val token = reader.peek()
                         if (token == JsonToken.NULL) {
-                            @Suppress("UNCHECKED_CAST")
                             reader.nextNull()
+                            @Suppress("UNCHECKED_CAST")
                             return PatchValue.of(null) as T
                         } else {
                             val delegate = gson.getDelegateAdapter(
                                 factory,
                                 TypeToken.get((type.type as ParameterizedType).actualTypeArguments.first())
                             )
+                            @Suppress("UNCHECKED_CAST")
                             return PatchValue.of(delegate.read(reader)) as T
                         }
                     }
