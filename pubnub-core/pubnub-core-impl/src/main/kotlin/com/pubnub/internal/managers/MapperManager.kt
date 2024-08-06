@@ -116,24 +116,6 @@ class MapperManager {
                 .registerTypeAdapter(JSONObject::class.java, JSONObjectAdapter())
                 .registerTypeAdapter(JSONArray::class.java, JSONArrayAdapter())
                 .registerTypeAdapterFactory(patchValueTypeFactory)
-//                .registerTypeAdapter(PartialPNChannelMetadata::class.java, object :
-//                    TypeAdapter<PartialPNChannelMetadata>() {
-//
-//                    override fun write(out: JsonWriter?, value: PartialPNChannelMetadata?) {
-//                        TODO("Not yet implemented")
-//                    }
-//
-//                    /**
-//                     * Reads one JSON value (an array, object, string, number, boolean or null)
-//                     * and converts it to a Java object. Returns the converted object.
-//                     *
-//                     * @return the converted Java object. May be null.
-//                     */
-//                    override fun read(`in`: JsonReader?): PartialPNChannelMetadata {
-//                        ReflectiveTypeAdapterFactory.
-//                    }
-//
-//                })
                 .disableHtmlEscaping()
                 .setObjectToNumberStrategy(ToNumberPolicy.LAZILY_PARSED_NUMBER)
                 .create()
