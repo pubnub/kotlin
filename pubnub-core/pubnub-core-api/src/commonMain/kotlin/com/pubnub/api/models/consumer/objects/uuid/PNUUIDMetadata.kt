@@ -5,15 +5,15 @@ import com.pubnub.api.utils.PatchValue
 // TODO add a test that checks sending patch values to server and reading them back when we have the "sending" part
 data class PNUUIDMetadata(
     val id: String,
-    val name: PatchValue<String?>?,
-    val externalId: PatchValue<String?>?,
-    val profileUrl: PatchValue<String?>?,
-    val email: PatchValue<String?>?,
-    val custom: PatchValue<Map<String, Any?>?>?,
-    val updated: PatchValue<String>?,
-    val eTag: PatchValue<String>?,
-    val type: PatchValue<String?>?,
-    val status: PatchValue<String?>?,
+    val name: PatchValue<String?>? = null,
+    val externalId: PatchValue<String?>? = null,
+    val profileUrl: PatchValue<String?>? = null,
+    val email: PatchValue<String?>? = null,
+    val custom: PatchValue<Map<String, Any?>?>? = null,
+    val updated: PatchValue<String>? = null,
+    val eTag: PatchValue<String>? = null,
+    val type: PatchValue<String?>? = null,
+    val status: PatchValue<String?>? = null,
 ) {
     /**
      * Merge information from this `PNUUIDMetadata` with new data from `update`, returning a new `PNUUIDMetadata` instance.

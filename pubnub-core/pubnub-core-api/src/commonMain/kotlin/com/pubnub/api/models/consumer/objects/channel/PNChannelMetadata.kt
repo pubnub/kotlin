@@ -4,13 +4,13 @@ import com.pubnub.api.utils.PatchValue
 
 data class PNChannelMetadata(
     val id: String,
-    val name: PatchValue<String?>?,
-    val description: PatchValue<String?>?,
-    val custom: PatchValue<Map<String, Any?>?>?,
-    val updated: PatchValue<String>?,
-    val eTag: PatchValue<String>?,
-    val type: PatchValue<String?>?,
-    val status: PatchValue<String?>?,
+    val name: PatchValue<String?>? = null,
+    val description: PatchValue<String?>? = null,
+    val custom: PatchValue<Map<String, Any?>?>? = null,
+    val updated: PatchValue<String>? = null,
+    val eTag: PatchValue<String>? = null,
+    val type: PatchValue<String?>? = null,
+    val status: PatchValue<String?>? = null,
 ) {
     /**
      * Merge information from this `PNChannelMetadata` with new data from `update`, returning a new `PNChannelMetadata` instance.

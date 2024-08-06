@@ -283,23 +283,28 @@ class PubNubImpl(
         )
     }
 
-    override fun fire(
-        channel: String,
-        message: Any,
-        meta: Any?,
-        usePost: Boolean,
-        ttl: Int?,
-    ): Publish {
+    override fun fire(channel: String, message: Any, meta: Any?, usePost: Boolean): Publish {
         return com.pubnub.internal.endpoints.pubsub.PublishImpl(
             pubNubCore.fire(
                 channel,
                 message,
                 meta,
                 usePost,
-                ttl,
             ),
         )
     }
+
+    @Deprecated(
+        "`fire()` never used the `ttl` parameter, please use the version without `ttl`.",
+        replaceWith = ReplaceWith("fire(channel, message, meta, usePost)")
+    )
+    override fun fire(
+        channel: String,
+        message: Any,
+        meta: Any?,
+        usePost: Boolean,
+        ttl: Int?,
+    ): Publish = fire(channel, message, meta, usePost)
 
     override fun signal(
         channel: String,
