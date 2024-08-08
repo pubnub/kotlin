@@ -164,8 +164,8 @@ public class DelegatingEventListener implements EventListenerCore {
                 new PNChannelMetadata(data.getChannel(), null)
         );
         membership.setUuid(data.getUuid());
-        membership.setCustom(data.getCustom());
-        membership.setStatus(data.getStatus());
+        membership.setCustom(data.getCustom() != null ? data.getCustom().getValue() : null);
+        membership.setStatus(data.getStatus() != null ? data.getStatus().getValue() : null);
         membership.setUpdated(data.getUpdated());
         membership.setETag(data.getETag());
         return new PNMembershipResult(

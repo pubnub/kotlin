@@ -36,10 +36,10 @@ public class PNMembers {
         }
         return new PNMembers()
                 .setUuid(PNUUIDMetadata.from(member.getUuid()))
-                .setCustom(member.getCustom())
+                .setCustom(member.getCustom() != null ? member.getCustom().getValue() : null)
                 .setUpdated(member.getUpdated())
                 .setETag(member.getETag())
-                .setStatus(member.getStatus());
+                .setStatus(member.getStatus() != null ? member.getStatus().getValue() : null);
     }
 
     public static List<PNMembers> from(Collection<PNMember> members) {

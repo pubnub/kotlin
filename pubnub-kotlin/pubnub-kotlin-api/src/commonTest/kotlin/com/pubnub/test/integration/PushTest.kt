@@ -94,6 +94,10 @@ class PushTest : BaseIntegrationTest() {
                 PNPushEnvironment.PRODUCTION
             ).await()
 
+            withContext(Dispatchers.Default) {
+                delay(1000)
+            }
+
             val result =
                 pubnub.auditPushChannelProvisions(PNPushType.APNS2, deviceId, topic, PNPushEnvironment.PRODUCTION)
                     .await()
@@ -106,6 +110,10 @@ class PushTest : BaseIntegrationTest() {
                 topic,
                 PNPushEnvironment.PRODUCTION
             ).await()
+
+            withContext(Dispatchers.Default) {
+                delay(1000)
+            }
 
             assertTrue {
                 pubnub.auditPushChannelProvisions(PNPushType.APNS2, deviceId, topic, PNPushEnvironment.PRODUCTION)
@@ -126,6 +134,10 @@ class PushTest : BaseIntegrationTest() {
                 PNPushType.FCM,
                 deviceId,
             ).await()
+
+            withContext(Dispatchers.Default) {
+                delay(1000)
+            }
 
             assertEquals(emptyList(), pubnub.auditPushChannelProvisions(PNPushType.FCM, deviceId).await().channels)
         }

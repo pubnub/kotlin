@@ -4,6 +4,7 @@ import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.api.models.consumer.pubsub.PubSubResult
+import com.pubnub.api.utils.PatchValue
 
 data class PNObjectEventResult(
     private val result: BasePubSubResult,
@@ -68,10 +69,10 @@ data class PNDeleteUUIDMetadataEventMessage(
 data class PNSetMembershipEvent(
     val channel: String,
     val uuid: String,
-    val custom: Map<String, Any?>?,
+    val custom: PatchValue<Map<String, Any?>?>?,
     val eTag: String,
     val updated: String,
-    val status: String?,
+    val status: PatchValue<String?>?,
 )
 
 data class PNDeleteMembershipEvent(

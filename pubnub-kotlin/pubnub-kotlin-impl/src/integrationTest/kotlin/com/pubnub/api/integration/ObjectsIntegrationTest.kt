@@ -12,6 +12,7 @@ import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
+import com.pubnub.api.utils.PatchValue
 import com.pubnub.test.CommonUtils.randomValue
 import com.pubnub.test.subscribeToBlocking
 import org.hamcrest.MatcherAssert.assertThat
@@ -296,7 +297,7 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
             PNMember(
                 uuidMetadata(id = otherTestUuid),
                 custom = null,
-                status = status,
+                status = PatchValue.of(status),
                 eTag = noEtag,
                 updated = noUpdated,
             )
@@ -304,7 +305,7 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
             PNMember(
                 uuidMetadata(id = testUuid),
                 custom = null,
-                status = status,
+                status = PatchValue.of(status),
                 eTag = noEtag,
                 updated = noUpdated,
             )
@@ -344,7 +345,7 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
             PNChannelMembership(
                 channelMetadata(id = channel),
                 custom = null,
-                status = status,
+                status = PatchValue.of(status),
                 eTag = noEtag,
                 updated = noUpdated,
             )
@@ -352,7 +353,7 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
             PNChannelMembership(
                 channelMetadata(id = otherChannel),
                 custom = null,
-                status = status,
+                status = PatchValue.of(status),
                 eTag = noEtag,
                 updated = noUpdated,
             )
