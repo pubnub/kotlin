@@ -43,9 +43,9 @@ class WhenSteps(
         val channels =
             membershipState.memberships.map {
                 PNChannelMembership.Partial(
-                    channelId = it.channel!!.id,
-                    custom = it.custom,
-                    status = it.status,
+                    channelId = it.channel.id,
+                    custom = it.custom?.value,
+                    status = it.status?.value,
                 )
             }
 
@@ -63,9 +63,9 @@ class WhenSteps(
         val channels =
             membershipState.memberships.map {
                 PNChannelMembership.Partial(
-                    channelId = it.channel!!.id,
-                    custom = it.custom,
-                    status = it.status,
+                    channelId = it.channel.id,
+                    custom = it.custom?.value,
+                    status = it.status?.value,
                 )
             }
 
@@ -79,7 +79,7 @@ class WhenSteps(
 
     @When("I remove the membership")
     fun i_remove_the_membership() {
-        val channels = membershipState.memberships.map { it.channel!!.id }
+        val channels = membershipState.memberships.map { it.channel.id }
         world.pubnub.pubNubCore.removeMemberships(
             uuid = membershipState.uuid(),
             channels = channels,
@@ -91,7 +91,7 @@ class WhenSteps(
 
     @When("I remove the membership for current user")
     fun i_remove_the_membership_for_current_user() {
-        val channels = membershipState.memberships.map { it.channel!!.id }
+        val channels = membershipState.memberships.map { it.channel.id }
         world.pubnub.pubNubCore.removeMemberships(
             channels = channels,
         ).sync().let {
@@ -105,12 +105,12 @@ class WhenSteps(
         val channelsToSet =
             membershipState.memberships.map {
                 PNChannelMembership.Partial(
-                    channelId = it.channel!!.id,
-                    custom = it.custom,
-                    status = it.status,
+                    channelId = it.channel.id,
+                    custom = it.custom?.value,
+                    status = it.status?.value,
                 )
             }
-        val channelsToRemove = membershipState.membershipsToRemove.map { it.channel!!.id }
+        val channelsToRemove = membershipState.membershipsToRemove.map { it.channel.id }
         world.pubnub.pubNubCore.manageMemberships(
             channelsToSet = channelsToSet,
             channelsToRemove = channelsToRemove,

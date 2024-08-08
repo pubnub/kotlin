@@ -35,8 +35,8 @@ class MembersTest : BaseIntegrationTest() {
         ).await()
 
         // then
-        val pnChannelDetails = result.data.single { it.uuid?.id == pubnub.configuration.userId.value }
-        assertEquals(customData, pnChannelDetails.custom)
+        val pnChannelDetails = result.data.single { it.uuid.id == pubnub.configuration.userId.value }
+        assertEquals(customData, pnChannelDetails.custom?.value)
     }
 
     @Test
@@ -50,8 +50,8 @@ class MembersTest : BaseIntegrationTest() {
         ).await()
 
         // then
-        val pnChannelDetails = result.data.single { it.uuid?.id == pubnub.configuration.userId.value }
-        assertEquals(status, pnChannelDetails.status)
+        val pnChannelDetails = result.data.single { it.uuid.id == pubnub.configuration.userId.value }
+        assertEquals(status, pnChannelDetails.status?.value)
     }
 
     @Test
@@ -71,7 +71,7 @@ class MembersTest : BaseIntegrationTest() {
             yield()
             val result = pubnub.getMemberships(pubnub.configuration.userId.value, page = next).await()
             next = result.next
-            assertFalse { result.data.any { it.channel?.id == channel } }
+            assertFalse { result.data.any { it.channel.id == channel } }
             if (next == null || result.data.isEmpty()) {
                 break
             }

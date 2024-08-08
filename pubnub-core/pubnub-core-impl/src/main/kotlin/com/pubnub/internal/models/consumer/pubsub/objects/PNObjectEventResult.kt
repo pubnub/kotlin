@@ -7,6 +7,7 @@ import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.api.models.consumer.pubsub.PubSubResult
+import com.pubnub.api.utils.PatchValue
 import com.pubnub.internal.utils.PolymorphicDeserializer
 import com.pubnub.internal.utils.UnwrapSingleField
 
@@ -95,10 +96,10 @@ data class PNSetMembershipEvent(
     val channel: String,
     @JsonAdapter(UnwrapSingleField::class)
     val uuid: String,
-    val custom: Map<String, Any?>?,
+    val custom: PatchValue<Map<String, Any?>?>?,
     val eTag: String,
     val updated: String,
-    val status: String?,
+    val status: PatchValue<String?>?,
 )
 
 data class PNDeleteMembershipEvent(

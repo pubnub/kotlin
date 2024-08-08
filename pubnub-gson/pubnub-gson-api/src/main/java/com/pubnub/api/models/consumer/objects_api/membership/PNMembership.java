@@ -39,11 +39,11 @@ public class PNMembership {
         }
         PNChannelMetadata metadata = PNChannelMetadata.from(data.getChannel());
         PNMembership newData = new PNMembership(metadata);
-        newData.setCustom(data.getCustom());
+        newData.setCustom(data.getCustom() != null ? data.getCustom().getValue() : null);
 //        newData.setUuid(data.get) //TODO where to get this? does it even exist in server responses?
         newData.setUpdated(data.getUpdated());
         newData.setETag(data.getETag());
-        newData.setStatus(data.getStatus());
+        newData.setStatus(data.getStatus() != null ? data.getStatus().getValue() : null);
         return newData;
     }
 }
