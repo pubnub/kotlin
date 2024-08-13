@@ -29,7 +29,7 @@ class GetChannelMetadataImpl(
             onSuccess = callback.onSuccessHandler {
                 PNChannelMetadataResult(
                     status = 200,
-                    data = it?.let { rawValue -> createPNChannelMetadata(from = rawValue) }
+                    data = createPNChannelMetadata(it)
                 )
             },
             onFailure = callback.onFailureHandler()

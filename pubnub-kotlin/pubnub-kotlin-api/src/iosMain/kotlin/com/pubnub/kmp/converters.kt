@@ -12,6 +12,7 @@ import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.objects.member.PNMember
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
+import com.pubnub.api.utils.PatchValue
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSData
 import platform.Foundation.NSString
@@ -39,33 +40,35 @@ internal fun createPubNubHashedPage(from: PNPage?): PubNubHashedPageObjC {
     )
 }
 
+// TODO: PatchValue should consider cases where there is no response for a given field
 @OptIn(ExperimentalForeignApi::class)
-internal fun createPNUUIDMetadata(from: PubNubUUIDMetadataObjC): PNUUIDMetadata {
+internal fun createPNUUIDMetadata(from: PubNubUUIDMetadataObjC?): PNUUIDMetadata {
     return PNUUIDMetadata(
-        id = from.id(),
-        name = from.name(),
-        externalId = from.externalId(),
-        profileUrl = from.profileUrl(),
-        email = from.email(),
-        custom = from.custom()?.safeCast(),
-        updated = from.updated(),
-        eTag = from.eTag(),
-        type = from.type(),
-        status = from.status()
+        id = from!!.id(),
+        name = PatchValue.of(from.name()),
+        externalId = PatchValue.of(from.externalId()),
+        profileUrl = PatchValue.of(from.profileUrl()),
+        email = PatchValue.of(from.email()),
+        custom = PatchValue.of(from.custom()?.safeCast()),
+        updated = PatchValue.of(from.updated().orEmpty()),
+        eTag = PatchValue.of(from.eTag().orEmpty()),
+        type = PatchValue.of(from.type()),
+        status = PatchValue.of(from.status())
     )
 }
 
+// TODO: PatchValue should consider cases where there is no response for a given field
 @OptIn(ExperimentalForeignApi::class)
-internal fun createPNChannelMetadata(from: PubNubChannelMetadataObjC): PNChannelMetadata {
+internal fun createPNChannelMetadata(from: PubNubChannelMetadataObjC?): PNChannelMetadata {
     return PNChannelMetadata(
-        id = from.id(),
-        name = from.name(),
-        description = from.descr(),
-        custom = from.custom()?.safeCast(),
-        updated = from.updated(),
-        eTag = from.eTag(),
-        type = from.type(),
-        status = from.status()
+        id = from!!.id(),
+        name = PatchValue.of(from.name()),
+        description = PatchValue.of(from.descr()),
+        custom = PatchValue.of(from.custom()?.safeCast()),
+        updated = PatchValue.of(from.updated().orEmpty()),
+        eTag = PatchValue.of(from.eTag().orEmpty()),
+        type = PatchValue.of(from.type()),
+        status = PatchValue.of(from.status())
     )
 }
 
@@ -79,34 +82,36 @@ internal fun createObjectSortProperties(from: Collection<PNSortKey<PNKey>>): Lis
     }
 }
 
+// TODO: PatchValue should consider cases where there is no response for a given field
 @OptIn(ExperimentalForeignApi::class)
 internal fun createPNChannelMembership(from: PubNubMembershipMetadataObjC): PNChannelMembership {
     return PNChannelMembership(
         channel = PNChannelMetadata(
             id = from.channelMetadataId(),
-            name = from.channel()?.name(),
-            description = from.channel()?.descr(),
-            custom = from.channel()?.custom()?.safeCast(),
-            updated = from.channel()?.updated(),
-            eTag = from.channel()?.eTag(),
-            type = from.channel()?.type(),
-            status = from.channel()?.status()
+            name = PatchValue.of(from.channel()?.name()),
+            description = PatchValue.of(from.channel()?.descr()),
+            custom = PatchValue.of(from.channel()?.custom()?.safeCast()),
+            updated = PatchValue.of(from.channel()?.updated().orEmpty()),
+            eTag = PatchValue.of(from.channel()?.eTag().orEmpty()),
+            type = PatchValue.of(from.channel()?.type()),
+            status = PatchValue.of(from.channel()?.status())
         ),
-        custom = from.custom()?.safeCast(),
+        custom = PatchValue.of(from.custom()?.safeCast()),
         updated = from.updated().orEmpty(),
         eTag = from.eTag().orEmpty(),
-        status = from.status()
+        status = PatchValue.of(from.status())
     )
 }
 
+// TODO: PatchValue should consider cases where there is no response for a given field
 @OptIn(ExperimentalForeignApi::class)
-internal fun createPNMember(from: PubNubMembershipMetadataObjC): PNMember {
+internal fun createPNMember(from: PubNubMembershipMetadataObjC?): PNMember {
     return PNMember(
-        uuid = from.uuid()?.let { createPNUUIDMetadata(from = it) },
-        custom = from.custom()?.safeCast(),
+        uuid = createPNUUIDMetadata(from = from!!.uuid()),
+        custom = PatchValue.of(from.custom()?.safeCast()),
         updated = from.updated().orEmpty(),
         eTag = from.eTag().orEmpty(),
-        status = from.status()
+        status = PatchValue.of(from.status())
     )
 }
 

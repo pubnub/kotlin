@@ -1,4 +1,5 @@
 package com.pubnub.api.utils
+import kotlin.jvm.JvmStatic
 
 /**
  * An optional that accepts nullable values. Thus, it can represent two (`PatchValue<T>`) or three (`PatchValue<T>?`) states:

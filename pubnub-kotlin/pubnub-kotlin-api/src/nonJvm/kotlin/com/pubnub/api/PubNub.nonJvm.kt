@@ -98,8 +98,7 @@ actual interface PubNub {
         channel: String,
         message: Any,
         meta: Any?,
-        usePost: Boolean,
-        ttl: Int?
+        usePost: Boolean
     ): Publish
 
     actual fun signal(channel: String, message: Any): Signal

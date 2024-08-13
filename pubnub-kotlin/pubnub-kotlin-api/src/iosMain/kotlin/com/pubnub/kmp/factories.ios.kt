@@ -47,6 +47,7 @@ import com.pubnub.api.models.consumer.pubsub.objects.PNSetChannelMetadataEventMe
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetMembershipEvent
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetMembershipEventMessage
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetUUIDMetadataEventMessage
+import com.pubnub.api.utils.PatchValue
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.EventListenerImpl
@@ -192,6 +193,7 @@ private fun createObjectEvent(from: PubNubAppContextEventObjC?): PNObjectEventRe
     }
 }
 
+// TODO: PatchValue should consider cases where there is no response for a given field
 @OptIn(ExperimentalForeignApi::class)
 private fun mapAppContextEvent(from: PubNubAppContextEventObjC?): PNObjectEventMessage? {
     when (from) {
@@ -203,15 +205,15 @@ private fun mapAppContextEvent(from: PubNubAppContextEventObjC?): PNObjectEventM
                 type = from.type(),
                 data = PNUUIDMetadata(
                     id = from.metadata().id(),
-                    name = from.metadata().name(),
-                    externalId = from.metadata().externalId(),
-                    profileUrl = from.metadata().profileUrl(),
-                    email = from.metadata().email(),
-                    custom = from.metadata().custom()?.safeCast(),
-                    updated = from.metadata().updated(),
-                    eTag = from.metadata().eTag(),
-                    type = from.metadata().type(),
-                    status = from.metadata().status()
+                    name = PatchValue.of(from.metadata().name()),
+                    externalId = PatchValue.of(from.metadata().externalId()),
+                    profileUrl = PatchValue.of(from.metadata().profileUrl()),
+                    email = PatchValue.of(from.metadata().email()),
+                    custom = PatchValue.of(from.metadata().custom()?.safeCast()),
+                    updated = PatchValue.of(from.metadata().updated().orEmpty()),
+                    eTag = PatchValue.of(from.metadata().eTag().orEmpty()),
+                    type = PatchValue.of(from.metadata().type()),
+                    status = PatchValue.of(from.metadata().status())
                 )
             )
         is PubNubRemoveUUIDMetadataResultObjC ->
@@ -230,13 +232,13 @@ private fun mapAppContextEvent(from: PubNubAppContextEventObjC?): PNObjectEventM
                 type = from.type(),
                 data = PNChannelMetadata(
                     id = from.metadata().id(),
-                    name = from.metadata().name(),
-                    description = from.metadata().descr(),
-                    custom = from.metadata().custom()?.safeCast(),
-                    updated = from.metadata().updated(),
-                    eTag = from.metadata().eTag(),
-                    type = from.metadata().type(),
-                    status = from.metadata().status()
+                    name = PatchValue.of(from.metadata().name()),
+                    description = PatchValue.of(from.metadata().descr()),
+                    custom = PatchValue.of(from.metadata().custom()?.safeCast()),
+                    updated = PatchValue.of(from.metadata().updated().orEmpty()),
+                    eTag = PatchValue.of(from.metadata().eTag().orEmpty()),
+                    type = PatchValue.of(from.metadata().type()),
+                    status = PatchValue.of(from.metadata().status())
                 )
             )
         is PubNubRemoveChannelMetadataResultObjC ->
@@ -256,10 +258,10 @@ private fun mapAppContextEvent(from: PubNubAppContextEventObjC?): PNObjectEventM
                 data = PNSetMembershipEvent(
                     channel = from.metadata().channelMetadataId(),
                     uuid = from.metadata().uuidMetadataId(),
-                    custom = from.metadata().custom()?.safeCast(),
+                    custom = PatchValue.of(from.metadata().custom()?.safeCast()),
                     eTag = from.metadata().eTag().orEmpty(),
                     updated = from.metadata().updated().orEmpty(),
-                    status = from.metadata().status().orEmpty()
+                    status = PatchValue.of(from.metadata().status().orEmpty())
                 )
             )
         is PubNubRemoveMembershipResultObjC ->
