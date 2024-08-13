@@ -10,7 +10,7 @@ import com.pubnub.kmp.createPNChannelMetadata
 import com.pubnub.kmp.onFailureHandler
 import com.pubnub.kmp.onSuccessHandler
 import kotlinx.cinterop.ExperimentalForeignApi
-
+import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 /**
  * @see [PubNub.getChannelMetadata]
  */
@@ -29,7 +29,7 @@ class GetChannelMetadataImpl(
             onSuccess = callback.onSuccessHandler {
                 PNChannelMetadataResult(
                     status = 200,
-                    data = it?.let { rawValue -> createPNChannelMetadata(from = rawValue) }
+                    data = createPNChannelMetadata(it)
                 )
             },
             onFailure = callback.onFailureHandler()

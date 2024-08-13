@@ -105,7 +105,7 @@ abstract class FakePubNub(
         TODO("Not yet implemented")
     }
 
-    override fun fire(channel: String, message: Any, meta: Any?, usePost: Boolean, ttl: Int?): Publish {
+    override fun fire(channel: String, message: Any, meta: Any?, usePost: Boolean): Publish {
         TODO("Not yet implemented")
     }
 
