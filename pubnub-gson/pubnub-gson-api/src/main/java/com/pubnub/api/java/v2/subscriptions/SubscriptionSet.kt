@@ -47,7 +47,7 @@ interface SubscriptionSet : EventEmitter, SubscribeCapable, AutoCloseable {
     /**
      * Returns an immutable copy of the set of subscriptions contained in this [BaseSubscriptionSet].
      */
-    val subscriptions: Set<com.pubnub.api.v2.subscriptions.Subscription>
+    val subscriptions: Set<Subscription>
 
     /**
      * Add the [subscription] to this SubscriptionSet. Equivalent to calling [add].

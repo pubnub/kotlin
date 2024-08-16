@@ -14,7 +14,7 @@ import com.pubnub.api.v2.subscriptions.SubscribeCapable
  * This class implements the [AutoCloseable] interface to help you release resources by calling [unsubscribe]
  * and removing all listeners on [close]. Remember to always call [close] when you no longer need this Subscription.
  */
-interface Subscription : com.pubnub.api.java.v2.callbacks.EventEmitter, SubscribeCapable, AutoCloseable, com.pubnub.api.v2.subscriptions.Subscription {
+interface Subscription : com.pubnub.api.java.v2.callbacks.EventEmitter, SubscribeCapable, AutoCloseable {
     /**
      * Create a [SubscriptionSet] containing this [Subscription] and the added [subscription].
      */
