@@ -201,7 +201,7 @@ class PubNubImpl(private val pubNubObjC: PubNubObjC) : PubNub {
     }
 
     // TODO: usePost parameter is not present in Swift SDK
-    override fun fire(channel: String, message: Any, meta: Any?, usePost: Boolean, ttl: Int?): Publish {
+    override fun fire(channel: String, message: Any, meta: Any?, usePost: Boolean): Publish {
         return PublishImpl(
             pubnub = pubNubObjC,
             channel = channel,

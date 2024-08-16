@@ -45,7 +45,7 @@ class SetUUIDMetadataImpl(
             onSuccess = callback.onSuccessHandler {
                 PNUUIDMetadataResult(
                     status = 200,
-                    data = it?.let { createPNUUIDMetadata(from = it) }
+                    data = createPNUUIDMetadata(it)
                 )
             },
             onFailure = callback.onFailureHandler()
