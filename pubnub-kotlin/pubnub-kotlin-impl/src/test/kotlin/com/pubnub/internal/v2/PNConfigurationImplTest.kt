@@ -1,12 +1,14 @@
 package com.pubnub.internal.v2
 
+import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.v2.PNConfiguration
-import com.pubnub.internal.BasePubNubImpl
+import com.pubnub.api.v2.PNConfigurationOverride
+import com.pubnub.internal.PubNubImpl
 import io.mockk.mockk
 import okhttp3.Authenticator
 import okhttp3.CertificatePinner
@@ -22,16 +24,46 @@ import java.net.Proxy
 import javax.net.ssl.X509ExtendedTrustManager
 
 class PNConfigurationImplTest {
+    @Test(expected = PubNubException::class)
+    fun setUUIDToEmptyString() {
+        PNConfiguration.builder(UserId(""), "")
+    }
+
+    @Test(expected = PubNubException::class)
+    fun resetUUIDToEmptyString() {
+        val config = PNConfiguration.builder(UserId(PubNubImpl.generateUUID()), "")
+        config.userId = UserId("")
+    }
+
+    @Test
+    fun resetUUIDToNonEmptyString() {
+        val config = PNConfiguration.builder(UserId(PubNubImpl.generateUUID()), "")
+        val newUUID = PubNubImpl.generateUUID()
+        config.userId = UserId(newUUID)
+
+        assertEquals(newUUID, config.userId.value)
+    }
+
+    @Test
+    fun `create config override from existing config`() {
+        val config = PNConfiguration.builder(UserId(PubNubImpl.generateUUID()), "expectedSubscribe").build()
+        val override = PNConfigurationOverride.from(config).apply {
+            userId = UserId("override")
+        }.build()
+        assertEquals("override", override.userId.value)
+        assertEquals("expectedSubscribe", override.subscribeKey)
+    }
+
     @Test
     fun testDefaultTimeoutValues() {
-        val config = PNConfiguration.builder(UserId(BasePubNubImpl.generateUUID()), "demo")
+        val config = PNConfiguration.builder(UserId(PubNubImpl.generateUUID()), "demo")
         assertEquals(300, config.presenceTimeout)
         assertEquals(0, config.heartbeatInterval)
     }
 
     @Test
     fun testCustomTimeoutValues1() {
-        val config = PNConfiguration.builder(UserId(BasePubNubImpl.generateUUID()), "demo")
+        val config = PNConfiguration.builder(UserId(PubNubImpl.generateUUID()), "demo")
         config.presenceTimeout = 100
         assertEquals(100, config.presenceTimeout)
         assertEquals(49, config.heartbeatInterval)
@@ -39,7 +71,7 @@ class PNConfigurationImplTest {
 
     @Test
     fun testCustomTimeoutValues2() {
-        val config = PNConfiguration.builder(UserId(BasePubNubImpl.generateUUID()), "demo")
+        val config = PNConfiguration.builder(UserId(PubNubImpl.generateUUID()), "demo")
         config.heartbeatInterval = 100
         assertEquals(300, config.presenceTimeout)
         assertEquals(100, config.heartbeatInterval)
@@ -47,7 +79,7 @@ class PNConfigurationImplTest {
 
     @Test
     fun testCustomTimeoutValues3() {
-        val config = PNConfiguration.builder(UserId(BasePubNubImpl.generateUUID()), "demo")
+        val config = PNConfiguration.builder(UserId(PubNubImpl.generateUUID()), "demo")
         config.heartbeatInterval = 40
         config.presenceTimeout = 50
         assertEquals(50, config.presenceTimeout)
@@ -56,7 +88,7 @@ class PNConfigurationImplTest {
 
     @Test
     fun `build uses all values from Builder`() {
-        val expectedUserId = UserId(BasePubNubImpl.generateUUID())
+        val expectedUserId = UserId(PubNubImpl.generateUUID())
         val expectedCryptoModule = CryptoModule.createAesCbcCryptoModule("cipher")
         val expectedProxy = Proxy(Proxy.Type.HTTP, InetSocketAddress(80))
         val expectedProxySelector = DefaultProxySelector()
@@ -150,10 +182,10 @@ class PNConfigurationImplTest {
     }
 
     @Test
-    fun `builder has all default values from BasePNConfiguration`() {
-        val expectedUserId = UserId(BasePubNubImpl.generateUUID())
+    fun `builder has all default values from PNConfiguration`() {
+        val expectedUserId = UserId(PubNubImpl.generateUUID())
         val builder = PNConfiguration.builder(expectedUserId, "subKey")
-        val expectedDefaults = BasePNConfigurationImpl(expectedUserId)
+        val expectedDefaults = PNConfigurationImpl(expectedUserId)
 
         assertEquals(expectedUserId, builder.userId)
         assertEquals("subKey", builder.subscribeKey)
@@ -197,7 +229,7 @@ class PNConfigurationImplTest {
 
     @Test
     fun `can reset userId and subscribeKey`() {
-        val expectedUserId = UserId(BasePubNubImpl.generateUUID())
+        val expectedUserId = UserId(PubNubImpl.generateUUID())
         val expectedSubKey = "expectedSubKey"
 
         val config = PNConfiguration.builder(UserId("aaa"), "subKey") {

@@ -1,15 +1,47 @@
 package com.pubnub.internal.v2.entities
 
-import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.entities.ChannelMetadata
-import com.pubnub.api.v2.subscriptions.Subscription
+import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.v2.subscription.SubscriptionImpl
 
-class ChannelMetadataImpl(pubnub: PubNubImpl, channelName: ChannelName) :
-    BaseChannelMetadataImpl<EventListener, Subscription>(
-        pubnub.pubNubCore,
-        channelName,
-        { channels, channelGroups, options -> SubscriptionImpl(pubnub, channels, channelGroups, options) },
-    ),
-    ChannelMetadata
+open class ChannelMetadataImpl(val pubnub: PubNubImpl, val channelName: ChannelName) : ChannelMetadata {
+    override val id: String = channelName.id
+
+    override fun subscription(options: SubscriptionOptions): SubscriptionImpl {
+        val channels = setOf(channelName)
+        return SubscriptionImpl(
+            pubnub,
+            channels,
+            emptySet(),
+            SubscriptionOptions.filter { result ->
+                // simple channel name or presence channel
+                channels.any { it.id == result.channel }
+            } + options,
+        )
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
+        }
+        if (other !is ChannelMetadataImpl) {
+            return false
+        }
+
+        if (pubnub != other.pubnub) {
+            return false
+        }
+        if (id != other.id) {
+            return false
+        }
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = pubnub.hashCode()
+        result = 31 * result + id.hashCode()
+        return result
+    }
+}

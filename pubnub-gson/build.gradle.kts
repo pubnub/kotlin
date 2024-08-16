@@ -7,10 +7,10 @@ plugins {
 }
 
 dependencies {
-    api(project(":pubnub-core:pubnub-core-api"))
+//    api(project(":pubnub-core:pubnub-kotlin-api"))
     api(project(":pubnub-gson:pubnub-gson-api"))
-    implementation(project(":pubnub-core:pubnub-core-impl"))
     implementation(project(":pubnub-gson:pubnub-gson-impl"))
+//    implementation(project(":pubnub-core:pubnub-core-impl"))
 }
 
 checkstyle {

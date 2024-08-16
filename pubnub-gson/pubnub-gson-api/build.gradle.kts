@@ -8,8 +8,8 @@ plugins {
 }
 
 dependencies {
-    api(project(":pubnub-core:pubnub-core-api"))
-    implementation(project(":pubnub-core:pubnub-core-impl"))
+    api(project(":pubnub-kotlin:pubnub-kotlin-api"))
+//    implementation(project(":pubnub-core:pubnub-core-impl"))
 
     implementation(libs.slf4j)
     implementation(libs.jetbrains.annotations)

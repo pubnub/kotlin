@@ -1,15 +1,15 @@
 package com.pubnub.api.integration.pam;
 
-import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.SpaceId;
 import com.pubnub.api.UserId;
 import com.pubnub.api.enums.PNLogVerbosity;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
-import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions;
-import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions;
-import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant;
-import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant;
+import com.pubnub.api.java.PubNubForJava;
+import com.pubnub.api.java.SpaceId;
+import com.pubnub.api.java.models.consumer.access_manager.sum.SpacePermissions;
+import com.pubnub.api.java.models.consumer.access_manager.sum.UserPermissions;
+import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGrant;
+import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGroupGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult;
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken;
 import org.junit.Test;
@@ -23,7 +23,7 @@ public class GrantTokenIT extends BaseIntegrationTest {
 
     @Test
     public void happyPath_SUM() throws PubNubException {
-        PubNub pubNubUnderTest = getServer();
+        PubNubForJava pubNubUnderTest = getServer();
         final int expectedTTL = 1337;
         String expectedSpaceIdValue = "space01";
         String expectedUser01Value = "user01";
@@ -54,7 +54,7 @@ public class GrantTokenIT extends BaseIntegrationTest {
     @Test
     public void happyPath() throws PubNubException {
         //given
-        PubNub pubNubUnderTest = getServer(builder -> builder.logVerbosity(PNLogVerbosity.BODY));
+        PubNubForJava pubNubUnderTest = getServer(builder -> builder.logVerbosity(PNLogVerbosity.BODY));
         final int expectedTTL = 1337;
         final String expectedChannelResourceName = "channelResource";
         final String expectedChannelPattern = "channel.*";

@@ -37,7 +37,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(project(":pubnub-kotlin:pubnub-kotlin-api"))
-                api(project(":pubnub-core:pubnub-core-api"))
+//                api(project(":pubnub-core:pubnub-core-api"))
                 api(kotlin("test"))
                 api(libs.coroutines.test)
             }

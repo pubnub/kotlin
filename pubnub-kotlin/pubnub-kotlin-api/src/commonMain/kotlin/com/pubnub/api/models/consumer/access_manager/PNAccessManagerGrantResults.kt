@@ -1,5 +1,7 @@
 package com.pubnub.api.models.consumer.access_manager
 
+import com.pubnub.api.utils.SerializedName
+
 /**
  * Result of the [PubNubCore.grant] operation
  *
@@ -16,33 +18,45 @@ class PNAccessManagerGrantResult(
     val subscribeKey: String,
     val channels: Map<String, Map<String, PNAccessManagerKeyData>?>,
     val channelGroups: Map<String, Map<String, PNAccessManagerKeyData>?>,
+    val uuids: Map<String, Map<String, PNAccessManagerKeyData>?>,
 )
 
 open class PNAccessManagerKeyData {
     /**
      * Is `true` if *read* rights are granted.
      */
+    @field:SerializedName("r")
     var readEnabled: Boolean = false
 
     /**
      * Is `true` if *write* rights are granted.
      */
+    @field:SerializedName("w")
     var writeEnabled: Boolean = false
 
     /**
      * Is `true` if *manage* rights are granted.
      */
+    @field:SerializedName("m")
     var manageEnabled: Boolean = false
 
     /**
      * Is `true` if *delete* rights are granted.
      */
+    @field:SerializedName("d")
     var deleteEnabled: Boolean = false
+
+    @field:SerializedName("g")
     var getEnabled: Boolean = false
+
+    @field:SerializedName("u")
     var updateEnabled: Boolean = false
+
+    @field:SerializedName("j")
     var joinEnabled: Boolean = false
 }
 
 class PNAccessManagerKeysData {
+    @field:SerializedName("auths")
     val authKeys: Map<String, PNAccessManagerKeyData>? = null
 }

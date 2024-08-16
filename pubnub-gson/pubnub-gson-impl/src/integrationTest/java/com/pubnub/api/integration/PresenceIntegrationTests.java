@@ -2,7 +2,8 @@ package com.pubnub.api.integration;
 
 import com.google.gson.JsonObject;
 import com.pubnub.api.PubNub;
-import com.pubnub.api.callbacks.SubscribeCallback;
+import com.pubnub.api.java.PubNubForJava;
+import com.pubnub.api.java.callbacks.SubscribeCallback;
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions;
 import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
@@ -11,7 +12,7 @@ import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.presence.PNHereNowChannelData;
 import com.pubnub.api.models.consumer.presence.PNHereNowOccupantData;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
-import com.pubnub.api.v2.callbacks.EventListener;
+import com.pubnub.api.java.v2.callbacks.EventListener;
 import org.awaitility.Awaitility;
 import org.awaitility.Durations;
 import org.hamcrest.core.IsEqual;
@@ -75,7 +76,7 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
             expectedChannels.add(RandomGenerator.get());
         }
 
-        final List<PubNub> clients = new ArrayList<PubNub>(expectedClientsCount) {{
+        final List<PubNubForJava> clients = new ArrayList<PubNubForJava>(expectedClientsCount) {{
             add(pubNub);
         }};
 
@@ -83,13 +84,13 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
             clients.add(getPubNub());
         }
 
-        for (PubNub client : clients) {
+        for (PubNubForJava client : clients) {
             subscribeToChannel(client, expectedChannels);
         }
 
         assertEquals(expectedClientsCount, clients.size());
 
-        for (PubNub client : clients) {
+        for (PubNubForJava client : clients) {
             assertEquals(expectedChannelsCount, client.getSubscribedChannels().size());
         }
 
@@ -122,7 +123,7 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
                                         }
 
                                         final List<String> expectedUuidList = new ArrayList<>();
-                                        for (PubNub client : clients) {
+                                        for (PubNubForJava client : clients) {
                                             expectedUuidList.add(client.getConfiguration().getUserId().getValue());
                                         }
 
@@ -154,14 +155,14 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
             expectedChannels.add(RandomGenerator.get());
         }
 
-        final List<PubNub> clients = new ArrayList<PubNub>() {{
+        final List<PubNubForJava> clients = new ArrayList<PubNubForJava>() {{
             add(pubNub);
         }};
         for (int i = 1; i < expectedClientsCount; i++) {
             clients.add(getPubNub());
         }
 
-        for (PubNub client : clients) {
+        for (PubNubForJava client : clients) {
             subscribeToChannel(client, expectedChannels);
         }
 
@@ -188,7 +189,7 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
                             for (PNHereNowOccupantData occupant : entry.getValue().getOccupants()) {
                                 final String uuid = occupant.getUuid();
                                 boolean contains = false;
-                                for (PubNub client : clients) {
+                                for (PubNubForJava client : clients) {
                                     if (client.getConfiguration().getUserId().getValue().equals(uuid)) {
                                         contains = true;
                                         break;
@@ -220,7 +221,7 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
         pubNub.addListener(new SubscribeCallback.BaseSubscribeCallback() {
 
             @Override
-            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult presence) {
+            public void presence(@NotNull PubNubForJava pubnub, @NotNull PNPresenceEventResult presence) {
                 System.out.println("---" + presence.getEvent());
                 if (presence.getEvent().equals(STATE_CHANGE_EVENT)
                         && presence.getChannel().equals(expectedChannel)
@@ -269,7 +270,7 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
 
         pubNub.addListener(new EventListener() {
             @Override
-            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult presence) {
+            public void presence(@NotNull PubNubForJava pubnub, @NotNull PNPresenceEventResult presence) {
                 if (presence.getEvent().equals(STATE_CHANGE_EVENT)
                         && presence.getChannel().equals(expectedChannel)
                         && presence.getUuid().equals(pubNub.getConfiguration().getUserId().getValue())) {
@@ -321,7 +322,7 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
 
         pubNub.addListener(new SubscribeCallback.BaseSubscribeCallback() {
             @Override
-            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
+            public void status(@NotNull PubNubForJava pubnub, @NotNull PNStatus status) {
                 if (!status.isError()) {
                     if (status.getCategory() == PNStatusCategory.PNConnectedCategory) {
                         if (status.getAffectedChannels().contains(expectedChannel)) {
@@ -359,7 +360,7 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
 
         pubNub.addListener(new SubscribeCallback.BaseSubscribeCallback() {
             @Override
-            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
+            public void status(@NotNull PubNubForJava pubnub, @NotNull PNStatus status) {
                 if (!status.isError()) {
                     if (status.getCategory() == PNStatusCategory.PNConnectedCategory) {
                         if (status.getAffectedChannels().contains(expectedChannel)) {

@@ -1,11 +1,12 @@
 package com.pubnub.api.integration.objects;
 
-import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
 import com.pubnub.api.enums.PNLogVerbosity;
 import com.pubnub.api.integration.util.ITTestConfig;
+import com.pubnub.api.java.PubNubForJava;
+import com.pubnub.api.java.v2.PNConfiguration;
 import org.aeonbits.owner.ConfigFactory;
 import org.junit.Before;
 
@@ -19,19 +20,19 @@ public abstract class ObjectsApiBaseIT {
     //See README.md in integrationTest directory for more info on running integration tests
     private ITTestConfig itTestConfig = ConfigFactory.create(ITTestConfig.class, System.getenv());
 
-    protected final PubNub pubNubUnderTest = pubNub();
+    protected final PubNubForJava pubNubUnderTest = pubNub();
 
-    private PubNub pubNub() {
-        PNConfiguration pnConfiguration;
+    private PubNubForJava pubNub() {
+        PNConfiguration.Builder pnConfiguration;
         try {
-            pnConfiguration = new PNConfiguration(new UserId("pn-" + UUID.randomUUID()));
+            pnConfiguration = PNConfiguration.builder(new UserId("pn-" + UUID.randomUUID()), "");
         } catch (PubNubException e) {
             throw new RuntimeException(e);
         }
-        pnConfiguration.setSubscribeKey(itTestConfig.subscribeKey());
-        pnConfiguration.setLogVerbosity(PNLogVerbosity.BODY);
+        pnConfiguration.subscribeKey(itTestConfig.subscribeKey());
+        pnConfiguration.logVerbosity(PNLogVerbosity.BODY);
 
-        return PubNub.create(pnConfiguration);
+        return PubNubForJava.create(pnConfiguration.build());
     }
 
     @Before

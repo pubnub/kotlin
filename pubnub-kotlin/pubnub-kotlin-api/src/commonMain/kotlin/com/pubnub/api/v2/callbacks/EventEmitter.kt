@@ -1,5 +1,6 @@
 package com.pubnub.api.v2.callbacks
 
+import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
@@ -10,7 +11,26 @@ import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 /**
  * Interface implemented by objects that are the source of real time events from the PubNub network.
  */
-interface EventEmitter : BaseEventEmitter<EventListener> {
+interface EventEmitter {
+    /**
+     * Add a listener.
+     *
+     * @param listener The listener to be added.
+     */
+    fun addListener(listener: EventListener)
+
+    /**
+     * Remove a listener.
+     *
+     * @param listener The listener to be removed, previously added with [addListener].
+     */
+    fun removeListener(listener: Listener)
+
+    /**
+     * Removes all listeners.
+     */
+    fun removeAllListeners()
+
     /**
      * A nullable property that can be set to a function (or lambda expression) to handle incoming message events.
      * This function is invoked whenever a new message is received, providing a convenient way to process or react to messages.
@@ -33,6 +53,8 @@ interface EventEmitter : BaseEventEmitter<EventListener> {
      * ```
      */
     var onMessage: ((PNMessageResult) -> Unit)?
+        get() = error("Not supported")
+        set(value) = error("Not supported")
 
     /**
      * A nullable property designed to set a function or lambda expression for handling incoming presence events.
@@ -56,6 +78,8 @@ interface EventEmitter : BaseEventEmitter<EventListener> {
      * ```
      */
     var onPresence: ((PNPresenceEventResult) -> Unit)?
+        get() = error("Not supported")
+        set(value) = error("Not supported")
 
     /**
      * A nullable property for assigning a function or lambda expression to handle incoming signal events.
@@ -79,6 +103,8 @@ interface EventEmitter : BaseEventEmitter<EventListener> {
      * ```
      */
     var onSignal: ((PNSignalResult) -> Unit)?
+        get() = error("Not supported")
+        set(value) = error("Not supported")
 
     /**
      * A nullable property that allows setting a function or lambda to react to message action events.
@@ -102,6 +128,8 @@ interface EventEmitter : BaseEventEmitter<EventListener> {
      * ```
      */
     var onMessageAction: ((PNMessageActionResult) -> Unit)?
+        get() = error("Not supported")
+        set(value) = error("Not supported")
 
     /**
      * A nullable property for assigning a function or lambda to handle object events.
@@ -125,6 +153,8 @@ interface EventEmitter : BaseEventEmitter<EventListener> {
      * ```
      */
     var onObjects: ((PNObjectEventResult) -> Unit)?
+        get() = error("Not supported")
+        set(value) = error("Not supported")
 
     /**
      * A nullable property to set a function or lambda for responding to file events.
@@ -148,4 +178,6 @@ interface EventEmitter : BaseEventEmitter<EventListener> {
      * ```
      */
     var onFile: ((PNFileEventResult) -> Unit)?
+        get() = error("Not supported")
+        set(value) = error("Not supported")
 }

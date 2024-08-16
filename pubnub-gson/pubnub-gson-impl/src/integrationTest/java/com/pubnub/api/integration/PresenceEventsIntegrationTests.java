@@ -2,12 +2,13 @@ package com.pubnub.api.integration;
 
 import com.google.gson.JsonObject;
 import com.pubnub.api.PubNub;
-import com.pubnub.api.callbacks.SubscribeCallback;
+import com.pubnub.api.java.PubNubForJava;
+import com.pubnub.api.java.callbacks.SubscribeCallback;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
 import com.pubnub.api.models.consumer.PNStatus;
-import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadataResult;
-import com.pubnub.api.models.consumer.objects_api.membership.PNMembershipResult;
-import com.pubnub.api.models.consumer.objects_api.uuid.PNUUIDMetadataResult;
+import com.pubnub.api.java.models.consumer.objects_api.channel.PNChannelMetadataResult;
+import com.pubnub.api.java.models.consumer.objects_api.membership.PNMembershipResult;
+import com.pubnub.api.java.models.consumer.objects_api.uuid.PNUUIDMetadataResult;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
@@ -33,23 +34,14 @@ public class PresenceEventsIntegrationTests extends BaseIntegrationTest {
         final AtomicBoolean success = new AtomicBoolean(false);
 
         pubNub.addListener(new SubscribeCallback() {
+
             @Override
-            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+            public void status(@NotNull PubNubForJava pubnub, @NotNull PNStatus status) {
 
             }
 
             @Override
-            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
-
-            }
-
-            @Override
-            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult message) {
-
-            }
-
-            @Override
-            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult presence) {
+            public void presence(@NotNull PubNubForJava pubnub, @NotNull PNPresenceEventResult presence) {
                 if (presence.getEvent().equals("join")) {
                     assertEquals(channel, presence.getChannel());
                     pubNub.removeListener(this);
@@ -57,30 +49,7 @@ public class PresenceEventsIntegrationTests extends BaseIntegrationTest {
                 }
             }
 
-            @Override
-            public void signal(@NotNull PubNub pubNub, @NotNull PNSignalResult pnSignalResult) {
-
-            }
-
-            @Override
-            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
-
-            }
-
-            @Override
-            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
-
-            }
-
-            @Override
-            public void membership(@NotNull final PubNub pubnub, @NotNull final PNMembershipResult pnMembershipResult) {
-
-            }
-
-            @Override
-            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnActionResult) {
-
-            }
+            
         });
 
         subscribeToChannel(pubNub, channel);
@@ -93,55 +62,20 @@ public class PresenceEventsIntegrationTests extends BaseIntegrationTest {
         final AtomicBoolean success = new AtomicBoolean(false);
         final String channel = randomChannel();
 
-        final PubNub guestClient = getPubNub();
+        final PubNubForJava guestClient = getPubNub();
 
         this.pubNub.addListener(new SubscribeCallback() {
             @Override
-            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+            public void status(@NotNull PubNubForJava pubnub, @NotNull PNStatus status) {
 
             }
 
             @Override
-            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
-
-            }
-
-            @Override
-            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult message) {
-
-            }
-
-            @Override
-            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult presence) {
+            public void presence(@NotNull PubNubForJava pubnub, @NotNull PNPresenceEventResult presence) {
                 if (presence.getEvent().equals("leave")) {
                     assertEquals(channel, presence.getChannel());
                     success.set(true);
                 }
-            }
-
-            @Override
-            public void signal(@NotNull PubNub pubNub, @NotNull PNSignalResult pnSignalResult) {
-
-            }
-
-            @Override
-            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
-
-            }
-
-            @Override
-            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
-
-            }
-
-            @Override
-            public void membership(@NotNull PubNub pubNub, @NotNull PNMembershipResult pnMembershipResult) {
-
-            }
-
-            @Override
-            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnActionResult) {
-
             }
         });
 
@@ -168,52 +102,18 @@ public class PresenceEventsIntegrationTests extends BaseIntegrationTest {
         final int waitTime = 21;
 
         pubNub.addListener(new SubscribeCallback() {
+
             @Override
-            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+            public void status(@NotNull PubNubForJava pubnub, @NotNull PNStatus status) {
 
             }
 
             @Override
-            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
-
-            }
-
-            @Override
-            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult message) {
-
-            }
-
-            @Override
-            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult presence) {
+            public void presence(@NotNull PubNubForJava pubnub, @NotNull PNPresenceEventResult presence) {
                 if (presence.getEvent().equals("timeout")) {
                     assertEquals(channel, presence.getChannel());
                     success.set(true);
                 }
-            }
-
-            @Override
-            public void signal(@NotNull PubNub pubNub, @NotNull PNSignalResult pnSignalResult) {
-
-            }
-
-            @Override
-            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
-
-            }
-
-            @Override
-            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
-
-            }
-
-            @Override
-            public void membership(@NotNull PubNub pubNub, @NotNull PNMembershipResult pnMembershipResult) {
-
-            }
-
-            @Override
-            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnActionResult) {
-
             }
         });
 
@@ -236,54 +136,20 @@ public class PresenceEventsIntegrationTests extends BaseIntegrationTest {
         subscribeToChannel(pubNub, channel);
 
         pubNub.addListener(new SubscribeCallback() {
+
             @Override
-            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+            public void status(@NotNull PubNubForJava pubnub, @NotNull PNStatus status) {
 
             }
 
             @Override
-            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
-
-            }
-
-            @Override
-            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult message) {
-
-            }
-
-            @Override
-            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult presence) {
+            public void presence(@NotNull PubNubForJava pubnub, @NotNull PNPresenceEventResult presence) {
                 if (presence.getEvent().equals("state-change") && presence.getUuid()
                         .equals(pubNub.getConfiguration().getUserId().getValue())) {
                     assertEquals("state-change", presence.getEvent());
                     pubNub.removeListener(this);
                     success.set(true);
                 }
-
-            }
-
-            @Override
-            public void signal(@NotNull PubNub pubNub, @NotNull PNSignalResult pnSignalResult) {
-
-            }
-
-            @Override
-            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
-
-            }
-
-            @Override
-            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
-
-            }
-
-            @Override
-            public void membership(@NotNull PubNub pubNub, @NotNull PNMembershipResult pnMembershipResult) {
-
-            }
-
-            @Override
-            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnActionResult) {
 
             }
         });

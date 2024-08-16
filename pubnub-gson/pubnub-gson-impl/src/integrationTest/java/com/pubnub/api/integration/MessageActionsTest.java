@@ -2,8 +2,9 @@ package com.pubnub.api.integration;
 
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.callbacks.SubscribeCallback;
-import com.pubnub.api.endpoints.message_actions.GetMessageActions;
+import com.pubnub.api.java.PubNubForJava;
+import com.pubnub.api.java.callbacks.SubscribeCallback;
+import com.pubnub.api.java.endpoints.message_actions.GetMessageActions;
 import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
 import com.pubnub.api.integration.util.RandomGenerator;
@@ -13,9 +14,9 @@ import com.pubnub.api.models.consumer.history.PNFetchMessagesResult;
 import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult;
 import com.pubnub.api.models.consumer.message_actions.PNGetMessageActionsResult;
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction;
-import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadataResult;
-import com.pubnub.api.models.consumer.objects_api.membership.PNMembershipResult;
-import com.pubnub.api.models.consumer.objects_api.uuid.PNUUIDMetadataResult;
+import com.pubnub.api.java.models.consumer.objects_api.channel.PNChannelMetadataResult;
+import com.pubnub.api.java.models.consumer.objects_api.membership.PNMembershipResult;
+import com.pubnub.api.java.models.consumer.objects_api.uuid.PNUUIDMetadataResult;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
@@ -34,12 +35,12 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.pubnub.api.builder.PubNubErrorBuilder.PNERROBJ_CHANNEL_MISSING;
-import static com.pubnub.api.builder.PubNubErrorBuilder.PNERROBJ_MESSAGE_ACTION_MISSING;
-import static com.pubnub.api.builder.PubNubErrorBuilder.PNERROBJ_MESSAGE_ACTION_TIMETOKEN_MISSING;
-import static com.pubnub.api.builder.PubNubErrorBuilder.PNERROBJ_MESSAGE_ACTION_TYPE_MISSING;
-import static com.pubnub.api.builder.PubNubErrorBuilder.PNERROBJ_MESSAGE_ACTION_VALUE_MISSING;
-import static com.pubnub.api.builder.PubNubErrorBuilder.PNERROBJ_MESSAGE_TIMETOKEN_MISSING;
+import static com.pubnub.api.java.builder.PubNubErrorBuilder.PNERROBJ_CHANNEL_MISSING;
+import static com.pubnub.api.java.builder.PubNubErrorBuilder.PNERROBJ_MESSAGE_ACTION_MISSING;
+import static com.pubnub.api.java.builder.PubNubErrorBuilder.PNERROBJ_MESSAGE_ACTION_TIMETOKEN_MISSING;
+import static com.pubnub.api.java.builder.PubNubErrorBuilder.PNERROBJ_MESSAGE_ACTION_TYPE_MISSING;
+import static com.pubnub.api.java.builder.PubNubErrorBuilder.PNERROBJ_MESSAGE_ACTION_VALUE_MISSING;
+import static com.pubnub.api.java.builder.PubNubErrorBuilder.PNERROBJ_MESSAGE_TIMETOKEN_MISSING;
 import static com.pubnub.api.integration.util.Utils.isSorted;
 import static com.pubnub.api.integration.util.Utils.parseDate;
 import static com.pubnub.api.integration.util.Utils.publish;
@@ -486,12 +487,7 @@ public class MessageActionsTest extends BaseIntegrationTest {
 
         pubNub.addListener(new SubscribeCallback() {
             @Override
-            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
-
-            }
-
-            @Override
-            public void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus) {
+            public void status(@NotNull PubNubForJava pubnub, @NotNull PNStatus pnStatus) {
                 if (pnStatus.getCategory() == PNStatusCategory.PNConnectedCategory) {
                     for (PNPublishResult pnPublishResult : publishResultList) {
                         try {
@@ -510,37 +506,22 @@ public class MessageActionsTest extends BaseIntegrationTest {
             }
 
             @Override
-            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult pnMessageResult) {
+            public void uuid(@NotNull final PubNubForJava pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
                 fail();
             }
 
             @Override
-            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult pnPresenceEventResult) {
-
-            }
-
-            @Override
-            public void signal(@NotNull PubNub pubnub, @NotNull PNSignalResult pnSignalResult) {
+            public void channel(@NotNull final PubNubForJava pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
                 fail();
             }
 
             @Override
-            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
+            public void membership(@NotNull final PubNubForJava pubnub, @NotNull final PNMembershipResult pnMembershipResult) {
                 fail();
             }
 
             @Override
-            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
-                fail();
-            }
-
-            @Override
-            public void membership(@NotNull final PubNub pubnub, @NotNull final PNMembershipResult pnMembershipResult) {
-                fail();
-            }
-
-            @Override
-            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnActionResult) {
+            public void messageAction(@NotNull PubNubForJava pubnub, @NotNull PNMessageActionResult pnActionResult) {
                 assertEquals(expectedChannelName, pnActionResult.getChannel());
                 actionsCount.incrementAndGet();
             }

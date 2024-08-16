@@ -10,9 +10,9 @@ plugins {
 }
 
 dependencies {
-    api(project(":pubnub-core:pubnub-core-api"))
+//    api(project(":pubnub-kotlin:pubnub-kotlin-api"))
     api(project(":pubnub-gson:pubnub-gson-api"))
-    implementation(project(":pubnub-core:pubnub-core-impl"))
+    implementation(project(":pubnub-kotlin:pubnub-kotlin-impl"))
 
     implementation(libs.slf4j)
     implementation(libs.jetbrains.annotations)

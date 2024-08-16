@@ -14,13 +14,20 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(project(":pubnub-core:pubnub-core-api"))
+//                api(project(":pubnub-core:pubnub-core-api"))
+                implementation(libs.kotlinx.atomicfu)
             }
         }
 
         val jvmMain by getting {
             dependencies {
-                implementation(project(":pubnub-core:pubnub-core-impl"))
+//                implementation(project(":pubnub-core:pubnub-core-impl"))
+                api(libs.retrofit2)
+                api(libs.okhttp)
+                api(libs.okhttp.logging)
+                api(libs.json)
+                api(libs.gson)
+                implementation(libs.slf4j)
                 implementation(libs.slf4j)
             }
         }
@@ -50,7 +57,7 @@ kotlin {
     if (enableAnyIosTarget) {
         (this as ExtensionAware).extensions.configure<CocoapodsExtension> {
             framework {
-                export(project(":pubnub-core:pubnub-core-api"))
+//                export(project(":pubnub-core:pubnub-core-api"))
             }
         }
     }

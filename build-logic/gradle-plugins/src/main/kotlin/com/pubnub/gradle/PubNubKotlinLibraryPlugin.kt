@@ -4,13 +4,9 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
-import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.project
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
-import org.jlleitschuh.gradle.ktlint.KtlintExtension
-import org.jlleitschuh.gradle.ktlint.KtlintPlugin
 
 class PubNubKotlinLibraryPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -26,6 +22,7 @@ class PubNubKotlinLibraryPlugin : Plugin<Project> {
             tasks.named("compileKotlin", KotlinJvmCompile::class.java) {
                 it.compilerOptions {
                     javaParameters.set(true)
+                    freeCompilerArgs.add("-Xjvm-default=all")
                 }
             }
 

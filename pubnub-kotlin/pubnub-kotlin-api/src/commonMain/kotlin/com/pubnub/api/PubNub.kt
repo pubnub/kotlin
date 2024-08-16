@@ -89,7 +89,7 @@ expect interface PubNub {
         channel: String,
         message: Any,
         meta: Any? = null,
-        shouldStore: Boolean = true,
+        shouldStore: Boolean? = null,
         usePost: Boolean = false,
         replicate: Boolean = true,
         ttl: Int? = null,

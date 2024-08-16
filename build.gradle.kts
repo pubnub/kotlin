@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.dokka)
     alias(libs.plugins.gradle.nexus.publish)
     alias(libs.plugins.kotlinx.atomicfu) apply false
+    kotlin("plugin.lombok") version "2.0.0" apply false
 }
 
 nexusPublishing {

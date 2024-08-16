@@ -5,28 +5,31 @@ import com.google.gson.JsonObject;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
-import com.pubnub.api.builder.PubNubErrorBuilder;
-import com.pubnub.api.callbacks.SubscribeCallback;
+import com.pubnub.api.java.PubNubForJava;
+import com.pubnub.api.java.builder.PubNubErrorBuilder;
+import com.pubnub.api.java.callbacks.SubscribeCallback;
 import com.pubnub.api.crypto.CryptoModule;
 import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
+import com.pubnub.api.java.v2.callbacks.handlers.OnMessageHandler;
+import com.pubnub.api.java.v2.callbacks.handlers.OnSignalHandler;
 import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult;
 import com.pubnub.api.models.consumer.history.PNHistoryResult;
-import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadataResult;
-import com.pubnub.api.models.consumer.objects_api.membership.PNMembershipResult;
-import com.pubnub.api.models.consumer.objects_api.uuid.PNUUIDMetadataResult;
+import com.pubnub.api.java.models.consumer.objects_api.channel.PNChannelMetadataResult;
+import com.pubnub.api.java.models.consumer.objects_api.membership.PNMembershipResult;
+import com.pubnub.api.java.models.consumer.objects_api.uuid.PNUUIDMetadataResult;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult;
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
-import com.pubnub.api.v2.PNConfiguration;
-import com.pubnub.api.v2.PNConfigurationOverride;
+import com.pubnub.api.java.v2.PNConfiguration;
+import com.pubnub.api.java.v2.PNConfigurationOverride;
 import com.pubnub.api.v2.callbacks.Result;
-import com.pubnub.api.v2.entities.Channel;
-import com.pubnub.api.v2.subscriptions.Subscription;
+import com.pubnub.api.java.v2.entities.Channel;
+import com.pubnub.api.java.v2.subscriptions.Subscription;
 import org.awaitility.Awaitility;
 import org.awaitility.Durations;
 import org.hamcrest.Matchers;
@@ -93,8 +96,8 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
         Channel channel = pubNub.channel(channelName);
 
         Subscription subscription = channel.subscription();
-        subscription.setOnMessage(message -> messageReceived.set(true));
-        subscription.setOnSignal(pnSignalResult -> signalReceived.set(true));
+        subscription.setOnMessage((OnMessageHandler) message -> messageReceived.set(true));
+        subscription.setOnSignal((OnSignalHandler) pnSignalResult -> signalReceived.set(true));
         subscription.subscribe();
         Thread.sleep(1000);
 
@@ -264,16 +267,12 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
         final String expectedChannel = randomChannel();
         final JsonObject messagePayload = generateMessage(pubNub);
 
-        final PubNub observer = getPubNub();
+        final PubNubForJava observer = getPubNub();
 
         this.pubNub.addListener(new SubscribeCallback() {
-            @Override
-            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
-
-            }
 
             @Override
-            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
+            public void status(@NotNull PubNubForJava pubnub, @NotNull PNStatus status) {
                 if (status.getCategory() == PNStatusCategory.PNConnectedCategory) {
                     if (status.getAffectedChannels().contains(expectedChannel)) {
                         observer.publish()
@@ -285,42 +284,13 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
             }
 
             @Override
-            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult message) {
+            public void message(@NotNull PubNubForJava pubnub, @NotNull PNMessageResult message) {
                 assertEquals(expectedChannel, message.getChannel());
                 assertEquals(observer.getConfiguration().getUserId().getValue(), message.getPublisher());
                 assertEquals(messagePayload, message.getMessage());
                 success.set(true);
             }
 
-            @Override
-            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult presence) {
-
-            }
-
-            @Override
-            public void signal(@NotNull PubNub pubNub, @NotNull PNSignalResult pnSignalResult) {
-
-            }
-
-            @Override
-            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
-
-            }
-
-            @Override
-            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
-
-            }
-
-            @Override
-            public void membership(@NotNull PubNub pubNub, @NotNull PNMembershipResult pnMembershipResult) {
-
-            }
-
-            @Override
-            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnActionResult) {
-
-            }
         });
 
         subscribeToChannel(pubNub, expectedChannel);
@@ -334,17 +304,12 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
         final String expectedChannel = randomChannel();
         final JsonObject messagePayload = generateMessage(pubNub);
 
-        final PubNub sender = getPubNub();
-        final PubNub observer = getPubNub(builder -> builder.cryptoModule(CryptoModule.createAesCbcCryptoModule("test", false)));
+        final PubNubForJava sender = getPubNub();
+        final PubNubForJava observer = getPubNub(builder -> builder.cryptoModule(CryptoModule.createAesCbcCryptoModule("test", false)));
 
         observer.addListener(new SubscribeCallback() {
             @Override
-            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
-
-            }
-
-            @Override
-            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
+            public void status(@NotNull PubNubForJava pubnub, @NotNull PNStatus status) {
                 if (status.getCategory() == PNStatusCategory.PNConnectedCategory) {
                     if (status.getAffectedChannels().contains(expectedChannel)) {
                         // send an unencrypted message first to try to crash the SubscribeMessageProcessor
@@ -365,7 +330,7 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
             }
 
             @Override
-            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult message) {
+            public void message(@NotNull PubNubForJava pubnub, @NotNull PNMessageResult message) {
                 if (success.get() == 0) {
                     assertEquals(expectedChannel, message.getChannel());
                     assertEquals(sender.getConfiguration().getUserId().getValue(), message.getPublisher());
@@ -381,35 +346,6 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
                 }
             }
 
-            @Override
-            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult presence) {
-
-            }
-
-            @Override
-            public void signal(@NotNull PubNub pubNub, @NotNull PNSignalResult pnSignalResult) {
-
-            }
-
-            @Override
-            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
-
-            }
-
-            @Override
-            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
-
-            }
-
-            @Override
-            public void membership(@NotNull PubNub pubNub, @NotNull PNMembershipResult pnMembershipResult) {
-
-            }
-
-            @Override
-            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnActionResult) {
-
-            }
         });
 
         subscribeToChannel(observer, expectedChannel);
@@ -477,18 +413,15 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
         final AtomicBoolean success = new AtomicBoolean();
 
         pubNub.addListener(new SubscribeCallback() {
+
+
             @Override
-            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+            public void status(@NotNull PubNubForJava pubnub, @NotNull PNStatus pnStatus) {
 
             }
 
             @Override
-            public void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus) {
-
-            }
-
-            @Override
-            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult pnMessageResult) {
+            public void message(@NotNull PubNubForJava pubnub, @NotNull PNMessageResult pnMessageResult) {
                 final JsonElement receivedMessage = pnMessageResult.getMessage();
                 try {
                     final JSONObject receivedObject = new JSONObject(receivedMessage.toString());
@@ -497,37 +430,6 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            }
-
-            @Override
-            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult pnPresenceEventResult) {
-
-            }
-
-            @Override
-            public void signal(@NotNull PubNub pubnub, @NotNull PNSignalResult pnSignalResult) {
-
-            }
-
-            @Override
-            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
-
-            }
-
-            @Override
-            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
-
-            }
-
-
-            @Override
-            public void membership(@NotNull PubNub pubnub, @NotNull PNMembershipResult pnMembershipResult) {
-
-            }
-
-            @Override
-            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
-
             }
         });
 
@@ -552,18 +454,15 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
         final AtomicBoolean success = new AtomicBoolean();
 
         pubNub.addListener(new SubscribeCallback() {
+
+
             @Override
-            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+            public void status(@NotNull PubNubForJava pubnub, @NotNull PNStatus pnStatus) {
 
             }
 
             @Override
-            public void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus) {
-
-            }
-
-            @Override
-            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult pnMessageResult) {
+            public void message(@NotNull PubNubForJava pubnub, @NotNull PNMessageResult pnMessageResult) {
                 final JsonElement receivedMessage = pnMessageResult.getMessage();
                 try {
                     final JSONObject receivedObject = new JSONObject(receivedMessage.toString());
@@ -572,37 +471,6 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            }
-
-            @Override
-            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult pnPresenceEventResult) {
-
-            }
-
-            @Override
-            public void signal(@NotNull PubNub pubnub, @NotNull PNSignalResult pnSignalResult) {
-
-            }
-
-            @Override
-            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
-
-            }
-
-            @Override
-            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
-
-            }
-
-
-            @Override
-            public void membership(@NotNull PubNub pubnub, @NotNull PNMembershipResult pnMembershipResult) {
-
-            }
-
-            @Override
-            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
-
             }
         });
 
@@ -691,18 +559,15 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
         final AtomicBoolean success = new AtomicBoolean();
 
         pubNub.addListener(new SubscribeCallback() {
+
+
             @Override
-            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+            public void status(@NotNull PubNubForJava pubnub, @NotNull PNStatus pnStatus) {
 
             }
 
             @Override
-            public void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus) {
-
-            }
-
-            @Override
-            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult pnMessageResult) {
+            public void message(@NotNull PubNubForJava pubnub, @NotNull PNMessageResult pnMessageResult) {
                 final JsonElement receivedMessage = pnMessageResult.getMessage();
                 try {
                     final JSONArray receivedArray = new JSONArray(receivedMessage.toString());
@@ -711,37 +576,6 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            }
-
-            @Override
-            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult pnPresenceEventResult) {
-
-            }
-
-            @Override
-            public void signal(@NotNull PubNub pubnub, @NotNull PNSignalResult pnSignalResult) {
-
-            }
-
-            @Override
-            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
-
-            }
-
-            @Override
-            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
-
-            }
-
-
-            @Override
-            public void membership(@NotNull PubNub pubnub, @NotNull PNMembershipResult pnMembershipResult) {
-
-            }
-
-            @Override
-            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
-
             }
         });
 
@@ -771,18 +605,15 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
         final AtomicBoolean success = new AtomicBoolean();
 
         pubNub.addListener(new SubscribeCallback() {
+
+
             @Override
-            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+            public void status(@NotNull PubNubForJava pubnub, @NotNull PNStatus pnStatus) {
 
             }
 
             @Override
-            public void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus) {
-
-            }
-
-            @Override
-            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult pnMessageResult) {
+            public void message(@NotNull PubNubForJava pubnub, @NotNull PNMessageResult pnMessageResult) {
                 final JsonElement receivedMessage = pnMessageResult.getMessage();
                 try {
                     final JSONArray receivedArray = new JSONArray(receivedMessage.toString());
@@ -791,36 +622,6 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            }
-
-            @Override
-            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult pnPresenceEventResult) {
-
-            }
-
-            @Override
-            public void signal(@NotNull PubNub pubnub, @NotNull PNSignalResult pnSignalResult) {
-
-            }
-
-            @Override
-            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
-
-            }
-
-            @Override
-            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
-
-            }
-
-            @Override
-            public void membership(@NotNull final PubNub pubnub, @NotNull final PNMembershipResult pnMembershipResult) {
-
-            }
-
-            @Override
-            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
-
             }
         });
 
@@ -860,18 +661,15 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
         final AtomicInteger count = new AtomicInteger();
 
         pubNub.addListener(new SubscribeCallback() {
+
+
             @Override
-            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+            public void status(@NotNull PubNubForJava pubnub, @NotNull PNStatus pnStatus) {
 
             }
 
             @Override
-            public void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus) {
-
-            }
-
-            @Override
-            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult pnMessageResult) {
+            public void message(@NotNull PubNubForJava pubnub, @NotNull PNMessageResult pnMessageResult) {
                 final JsonElement receivedMessage = pnMessageResult.getMessage();
                 try {
                     final JSONObject receivedObject = new JSONObject(receivedMessage.toString());
@@ -880,36 +678,6 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            }
-
-            @Override
-            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult pnPresenceEventResult) {
-
-            }
-
-            @Override
-            public void signal(@NotNull PubNub pubnub, @NotNull PNSignalResult pnSignalResult) {
-
-            }
-
-            @Override
-            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
-
-            }
-
-            @Override
-            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
-
-            }
-
-            @Override
-            public void membership(@NotNull PubNub pubnub, @NotNull PNMembershipResult pnMembershipResult) {
-
-            }
-
-            @Override
-            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
-
             }
         });
 

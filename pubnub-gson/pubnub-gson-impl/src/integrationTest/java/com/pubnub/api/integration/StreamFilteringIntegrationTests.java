@@ -1,12 +1,13 @@
 package com.pubnub.api.integration;
 
 import com.pubnub.api.PubNub;
-import com.pubnub.api.callbacks.SubscribeCallback;
+import com.pubnub.api.java.PubNubForJava;
+import com.pubnub.api.java.callbacks.SubscribeCallback;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
 import com.pubnub.api.models.consumer.PNStatus;
-import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadataResult;
-import com.pubnub.api.models.consumer.objects_api.membership.PNMembershipResult;
-import com.pubnub.api.models.consumer.objects_api.uuid.PNUUIDMetadataResult;
+import com.pubnub.api.java.models.consumer.objects_api.channel.PNChannelMetadataResult;
+import com.pubnub.api.java.models.consumer.objects_api.membership.PNMembershipResult;
+import com.pubnub.api.java.models.consumer.objects_api.uuid.PNUUIDMetadataResult;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
@@ -67,49 +68,14 @@ public class StreamFilteringIntegrationTests extends BaseIntegrationTest {
 
         pubNub.addListener(new SubscribeCallback() {
             @Override
-            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+            public void status(@NotNull PubNubForJava pubnub, @NotNull PNStatus status) {
 
             }
 
             @Override
-            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
-
-            }
-
-            @Override
-            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult message) {
+            public void message(@NotNull PubNubForJava pubnub, @NotNull PNMessageResult message) {
                 assertTrue(message.getMessage().toString().contains(messageEnglish));
                 success.set(true);
-            }
-
-            @Override
-            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult presence) {
-
-            }
-
-            @Override
-            public void signal(@NotNull PubNub pubNub, @NotNull PNSignalResult pnSignalResult) {
-
-            }
-
-            @Override
-            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
-
-            }
-
-            @Override
-            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
-
-            }
-
-            @Override
-            public void membership(@NotNull final PubNub pubnub, @NotNull final PNMembershipResult pnMembershipResult) {
-
-            }
-
-            @Override
-            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnActionResult) {
-
             }
         });
 
@@ -129,52 +95,20 @@ public class StreamFilteringIntegrationTests extends BaseIntegrationTest {
         subscribeToChannel(pubNub, channel);
 
         pubNub.addListener(new SubscribeCallback() {
+
+
             @Override
-            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+            public void status(@NotNull PubNubForJava pubnub, @NotNull PNStatus status) {
 
             }
 
             @Override
-            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
-
-            }
-
-            @Override
-            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult message) {
+            public void message(@NotNull PubNubForJava pubnub, @NotNull PNMessageResult message) {
                 success.incrementAndGet();
                 assertFalse(message.getMessage().toString().contains("italian"));
                 assertFalse(message.getMessage().toString().contains("spanish"));
             }
 
-            @Override
-            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult presence) {
-
-            }
-
-            @Override
-            public void signal(@NotNull PubNub pubNub, @NotNull PNSignalResult pnSignalResult) {
-
-            }
-
-            @Override
-            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
-
-            }
-
-            @Override
-            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
-
-            }
-
-            @Override
-            public void membership(@NotNull PubNub pubNub, @NotNull PNMembershipResult pnMembershipResult) {
-
-            }
-
-            @Override
-            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnActionResult) {
-
-            }
         });
 
         publishMessage(pubNub, channel, messageFrench, metaFrench);
@@ -196,51 +130,18 @@ public class StreamFilteringIntegrationTests extends BaseIntegrationTest {
         subscribeToChannel(pubNub, channel);
 
         pubNub.addListener(new SubscribeCallback() {
+
             @Override
-            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+            public void status(@NotNull PubNubForJava pubnub, @NotNull PNStatus status) {
 
             }
 
             @Override
-            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
-
-            }
-
-            @Override
-            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult message) {
+            public void message(@NotNull PubNubForJava pubnub, @NotNull PNMessageResult message) {
                 success.incrementAndGet();
                 assertFalse(message.getMessage().toString().contains("english"));
             }
 
-            @Override
-            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult presence) {
-
-            }
-
-            @Override
-            public void signal(@NotNull PubNub pubNub, @NotNull PNSignalResult pnSignalResult) {
-
-            }
-
-            @Override
-            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
-
-            }
-
-            @Override
-            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
-
-            }
-
-            @Override
-            public void membership(@NotNull PubNub pubNub, @NotNull PNMembershipResult pnMembershipResult) {
-
-            }
-
-            @Override
-            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnActionResult) {
-
-            }
         });
 
         publishMessage(pubNub, channel, messageFrench, metaFrench);
@@ -262,52 +163,19 @@ public class StreamFilteringIntegrationTests extends BaseIntegrationTest {
         subscribeToChannel(pubNub, channel);
 
         pubNub.addListener(new SubscribeCallback() {
+
             @Override
-            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+            public void status(@NotNull PubNubForJava pubnub, @NotNull PNStatus status) {
 
             }
 
             @Override
-            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
-
-            }
-
-            @Override
-            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult message) {
+            public void message(@NotNull PubNubForJava pubnub, @NotNull PNMessageResult message) {
                 success.incrementAndGet();
                 assertFalse(message.getMessage().toString().contains("25"));
                 assertFalse(message.getMessage().toString().contains("35"));
             }
 
-            @Override
-            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult presence) {
-
-            }
-
-            @Override
-            public void signal(@NotNull PubNub pubNub, @NotNull PNSignalResult pnSignalResult) {
-
-            }
-
-            @Override
-            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
-
-            }
-
-            @Override
-            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
-
-            }
-
-            @Override
-            public void membership(@NotNull PubNub pubNub, @NotNull PNMembershipResult pnMembershipResult) {
-
-            }
-
-            @Override
-            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnActionResult) {
-
-            }
         });
 
         final String messageTemp25 = "This is just message for today temperature : 25";
@@ -335,18 +203,15 @@ public class StreamFilteringIntegrationTests extends BaseIntegrationTest {
         final Map<String, Object> metaMessage_2_Part = getMetaLikeFilter(messageSuccess);
 
         pubNub.addListener(new SubscribeCallback() {
+
+
             @Override
-            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+            public void status(@NotNull PubNubForJava pubnub, @NotNull PNStatus status) {
 
             }
 
             @Override
-            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
-
-            }
-
-            @Override
-            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult message) {
+            public void message(@NotNull PubNubForJava pubnub, @NotNull PNMessageResult message) {
                 boolean correctMessage = false;
                 if (message.getMessage().toString().contains("success")) {
                     correctMessage = true;
@@ -355,35 +220,6 @@ public class StreamFilteringIntegrationTests extends BaseIntegrationTest {
                 success.set(true);
             }
 
-            @Override
-            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult presence) {
-
-            }
-
-            @Override
-            public void signal(@NotNull PubNub pubNub, @NotNull PNSignalResult pnSignalResult) {
-
-            }
-
-            @Override
-            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
-
-            }
-
-            @Override
-            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
-
-            }
-
-            @Override
-            public void membership(@NotNull PubNub pubNub, @NotNull PNMembershipResult pnMembershipResult) {
-
-            }
-
-            @Override
-            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnActionResult) {
-
-            }
         });
 
         publishMessage(pubNub, channel, messageBoring, metaMessage_1_Part);

@@ -2,11 +2,11 @@ package com.pubnub.api.integration.objects.channel;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.integration.objects.ObjectsApiBaseIT;
-import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadata;
-import com.pubnub.api.models.consumer.objects_api.channel.PNGetAllChannelsMetadataResult;
-import com.pubnub.api.models.consumer.objects_api.channel.PNGetChannelMetadataResult;
-import com.pubnub.api.models.consumer.objects_api.channel.PNRemoveChannelMetadataResult;
-import com.pubnub.api.models.consumer.objects_api.channel.PNSetChannelMetadataResult;
+import com.pubnub.api.java.models.consumer.objects_api.channel.PNChannelMetadata;
+import com.pubnub.api.java.models.consumer.objects_api.channel.PNGetAllChannelsMetadataResult;
+import com.pubnub.api.java.models.consumer.objects_api.channel.PNGetChannelMetadataResult;
+import com.pubnub.api.java.models.consumer.objects_api.channel.PNRemoveChannelMetadataResult;
+import com.pubnub.api.java.models.consumer.objects_api.channel.PNSetChannelMetadataResult;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.HttpStatus;
 import org.jetbrains.annotations.NotNull;
