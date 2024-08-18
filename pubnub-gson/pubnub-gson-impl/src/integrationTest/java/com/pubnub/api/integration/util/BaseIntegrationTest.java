@@ -1,16 +1,15 @@
 package com.pubnub.api.integration.util;
 
 import com.google.gson.JsonObject;
-import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
-import com.pubnub.api.java.PubNubForJava;
-import com.pubnub.api.java.callbacks.SubscribeCallback;
 import com.pubnub.api.enums.PNLogVerbosity;
 import com.pubnub.api.enums.PNStatusCategory;
-import com.pubnub.api.models.consumer.PNStatus;
+import com.pubnub.api.java.PubNub;
+import com.pubnub.api.java.callbacks.SubscribeCallback;
 import com.pubnub.api.java.v2.PNConfiguration;
+import com.pubnub.api.models.consumer.PNStatus;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.aeonbits.owner.ConfigFactory;
 import org.awaitility.Awaitility;
@@ -50,13 +49,13 @@ public abstract class BaseIntegrationTest {
     private static String PAM_PUB_KEY;
     private static String PAM_SEC_KEY;
 
-    public PubNubForJava pubNub;
-    public PubNubForJava server;
+    public com.pubnub.api.java.PubNub pubNub;
+    public com.pubnub.api.java.PubNub server;
 
     public int TIMEOUT_MEDIUM = 5;
     public int TIMEOUT_LOW = 2;
 
-    private List<PubNubForJava> mGuestClients = new ArrayList<>();
+    private List<com.pubnub.api.java.PubNub> mGuestClients = new ArrayList<>();
 
     @BeforeClass
     public static void onlyOnce() {
@@ -83,34 +82,34 @@ public abstract class BaseIntegrationTest {
         onAfter();
         destroyClient(pubNub);
         if (mGuestClients != null) {
-            for (PubNubForJava guestClient : mGuestClients) {
+            for (com.pubnub.api.java.PubNub guestClient : mGuestClients) {
                 destroyClient(guestClient);
             }
         }
         // properties.clear();
     }
 
-    public PubNubForJava getPubNub(@Nullable Consumer<PNConfiguration.Builder> action) {
+    public com.pubnub.api.java.PubNub getPubNub(@Nullable Consumer<PNConfiguration.Builder> action) {
         PNConfiguration pnConfiguration = provideStagingConfiguration(action);
         if (pnConfiguration == null) {
             pnConfiguration = getBasicPnConfiguration(action);
         }
-        final PubNubForJava pubNub = PubNubForJava.create(pnConfiguration);
+        final com.pubnub.api.java.PubNub pubNub = com.pubnub.api.java.PubNub.create(pnConfiguration);
         registerGuestClient(pubNub);
         return pubNub;
     }
 
-    public PubNubForJava getPubNub() {
+    public com.pubnub.api.java.PubNub getPubNub() {
         return getPubNub(null);
     }
 
-    protected PubNubForJava getServer(@Nullable Consumer<PNConfiguration.Builder> action) {
-        final PubNubForJava pubNub = PubNubForJava.create(getServerPnConfiguration(action));
+    protected com.pubnub.api.java.PubNub getServer(@Nullable Consumer<PNConfiguration.Builder> action) {
+        final com.pubnub.api.java.PubNub pubNub = com.pubnub.api.java.PubNub.create(getServerPnConfiguration(action));
         registerGuestClient(pubNub);
         return pubNub;
     }
 
-    public PubNubForJava getServer() {
+    public com.pubnub.api.java.PubNub getServer() {
         return getServer(null);
     }
 
@@ -120,14 +119,14 @@ public abstract class BaseIntegrationTest {
 //        return pubNub;
 //    }
 
-    protected void registerGuestClient(PubNubForJava guestClient) {
+    protected void registerGuestClient(com.pubnub.api.java.PubNub guestClient) {
         if (mGuestClients == null) {
             mGuestClients = new ArrayList<>();
         }
         mGuestClients.add(guestClient);
     }
 
-    protected void destroyClient(PubNubForJava client) {
+    protected void destroyClient(com.pubnub.api.java.PubNub client) {
         client.unsubscribeAll();
         client.forceDestroy();
     }
@@ -177,7 +176,7 @@ public abstract class BaseIntegrationTest {
         return interceptor;
     }
 
-    protected void subscribeToChannel(@NotNull PubNubForJava pubnub, @NotNull String... channels) {
+    protected void subscribeToChannel(@NotNull com.pubnub.api.java.PubNub pubnub, @NotNull String... channels) {
         pubnub.subscribe()
                 .channels(Arrays.asList(channels))
                 .withPresence()
@@ -185,13 +184,13 @@ public abstract class BaseIntegrationTest {
         pause(1);
     }
 
-    protected void subscribeToChannel(final PubNubForJava pubnub, final List<String> channels) {
+    protected void subscribeToChannel(final com.pubnub.api.java.PubNub pubnub, final List<String> channels) {
 
         final AtomicBoolean subscribeSuccess = new AtomicBoolean();
 
         pubnub.addListener(new SubscribeCallback() {
             @Override
-            public void status(@NotNull PubNubForJava pubnub, @NotNull PNStatus status) {
+            public void status(@NotNull com.pubnub.api.java.PubNub pubnub, @NotNull PNStatus status) {
                 if (status.getCategory() == PNStatusCategory.PNConnectedCategory) {
                     if (status.getAffectedChannels().containsAll(channels)) {
                         subscribeSuccess.set(true);
@@ -212,7 +211,7 @@ public abstract class BaseIntegrationTest {
         Awaitility.await().atMost(Durations.TEN_SECONDS).untilTrue(subscribeSuccess);
     }
 
-    protected void subscribeToChannelGroup(@NotNull PubNubForJava pubnub, @NotNull String group) {
+    protected void subscribeToChannelGroup(@NotNull com.pubnub.api.java.PubNub pubnub, @NotNull String group) {
         pubnub.subscribe()
                 .channelGroups(Collections.singletonList(group))
                 .withPresence()
@@ -220,19 +219,19 @@ public abstract class BaseIntegrationTest {
         pause(1);
     }
 
-    protected void unsubscribeFromChannel(PubNubForJava pubNub, String channel) {
+    protected void unsubscribeFromChannel(com.pubnub.api.java.PubNub pubNub, String channel) {
         pubNub.unsubscribe()
                 .channels(Collections.singletonList(channel))
                 .execute();
         pause(1);
     }
 
-    protected void unsubscribeFromAllChannels(PubNubForJava pubNub) {
+    protected void unsubscribeFromAllChannels(com.pubnub.api.java.PubNub pubNub) {
         pubNub.unsubscribeAll();
         pause(1);
     }
 
-    protected Map<String, String> generateMessage(PubNubForJava pubNub, String message) {
+    protected Map<String, String> generateMessage(com.pubnub.api.java.PubNub pubNub, String message) {
         final Map<String, String> map = new HashMap<>();
         map.put("publisher", pubNub.getConfiguration().getUserId().getValue());
         map.put("text", "mymsg" + RandomGenerator.newValue(5) + "+" + RandomGenerator.newValue(5));
@@ -241,7 +240,7 @@ public abstract class BaseIntegrationTest {
         return map;
     }
 
-    protected JsonObject generateMessage(PubNubForJava pubNub) {
+    protected JsonObject generateMessage(PubNub pubNub) {
         final JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("publisher", pubNub.getConfiguration().getUserId().getValue());
         jsonObject.addProperty("text", RandomGenerator.newValue(8));
@@ -277,7 +276,7 @@ public abstract class BaseIntegrationTest {
         return map;
     }
 
-    protected void publishMessage(PubNubForJava pubNub, String channel, String message) {
+    protected void publishMessage(com.pubnub.api.java.PubNub pubNub, String channel, String message) {
         pubNub.publish()
                 .message(generateMessage(pubNub, message))
                 .channel(channel)
@@ -287,7 +286,7 @@ public abstract class BaseIntegrationTest {
                 });
     }
 
-    protected void publishMessage(PubNubForJava pubNub, String channel, String message, Map<String, Object> meta) {
+    protected void publishMessage(com.pubnub.api.java.PubNub pubNub, String channel, String message, Map<String, Object> meta) {
         pubNub.publish()
                 .message(generateMessage(pubNub, message))
                 .channel(channel)
@@ -300,7 +299,7 @@ public abstract class BaseIntegrationTest {
 
     protected void pause(int seconds) {
         try {
-            Thread.sleep(seconds * 1_000);
+            Thread.sleep(seconds * 1_000L);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

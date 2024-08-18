@@ -1,8 +1,7 @@
 package com.pubnub.api.integration.util;
 
-import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.java.PubNubForJava;
+import com.pubnub.api.java.PubNub;
 import com.pubnub.api.java.endpoints.pubsub.Publish;
 import com.pubnub.api.models.consumer.PNPublishResult;
 
@@ -37,7 +36,7 @@ public class Utils {
         return list.equals(sorted) || list.equals(reversed);
     }
 
-    public static PNPublishResult publish(PubNubForJava pubnub, String channel, int indicator) {
+    public static PNPublishResult publish(com.pubnub.api.java.PubNub pubnub, String channel, int indicator) {
         try {
             return pubnub.publish()
                     .channel(channel)
@@ -63,7 +62,7 @@ public class Utils {
 //        return request.url().queryParameter(param);
 //    }
 
-    public static List<PNPublishResult> publishMixed(PubNubForJava pubnub, int count, String channel) {
+    public static List<PNPublishResult> publishMixed(PubNub pubnub, int count, String channel) {
         final List<PNPublishResult> list = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             final Publish publishBuilder = pubnub.publish()

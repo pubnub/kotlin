@@ -15,7 +15,7 @@ public interface GrantTokenBuilder extends Endpoint<PNGrantTokenResult> {
     /**
      * @param ttl
      * @return instance of this builder
-     * @deprecated Use {@link PubNubForJava#grantToken(Integer)} instead.
+     * @deprecated Use {@link com.pubnub.api.java.PubNub#grantToken(int)} instead.
      */
     @Deprecated
     GrantTokenBuilder ttl(Integer ttl);

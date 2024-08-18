@@ -1,7 +1,7 @@
 package com.pubnub.internal.java
 
 import com.pubnub.api.callbacks.Listener
-import com.pubnub.api.java.PubNubForJava
+import com.pubnub.api.java.PubNub
 import com.pubnub.api.java.builder.PresenceBuilder
 import com.pubnub.api.java.builder.SubscribeBuilder
 import com.pubnub.api.java.builder.UnsubscribeBuilder
@@ -120,7 +120,7 @@ class PubNubForJavaImpl(configuration: PNConfiguration) :
         configuration,
         PNSDK_PUBNUB_JAVA
     ),
-    PubNubForJava,
+    PubNub,
     EventEmitterInternal {
     override fun subscribe(): SubscribeBuilder {
         return SubscribeBuilder(this)

@@ -1,11 +1,10 @@
 package com.pubnub.api.integration;
 
-import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
 import com.pubnub.api.integration.util.ITTestConfig;
 import com.pubnub.api.integration.util.Utils;
-import com.pubnub.api.java.PubNubForJava;
+import com.pubnub.api.java.PubNub;
 import com.pubnub.api.java.v2.PNConfiguration;
 import com.pubnub.api.java.v2.PNConfigurationOverride;
 import org.aeonbits.owner.ConfigFactory;
@@ -70,7 +69,7 @@ public class PNConfigurationIntegrationTests {
         PNConfiguration.Builder configBuilder = PNConfiguration.builder(new UserId(expectedUuid), itTestConfig.subscribeKey())
                 .publishKey("rubbishKey");
         PNConfiguration config = configBuilder.build();
-        PubNubForJava pubnub = PubNubForJava.create(config);
+        PubNub pubnub = PubNub.create(config);
 
         PNConfiguration overrideConfig = PNConfigurationOverride.from(config).publishKey(itTestConfig.publishKey()).build();
 

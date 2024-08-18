@@ -6,7 +6,7 @@ import com.pubnub.api.v2.subscriptions.SubscribeCapable
 /**
  * A helper class that manages multiple [Subscription]s that can be added to it.
  *
- * Use the [com.pubnub.api.java.PubNubForJava.subscriptionSetOf] factory methods to create instances of this interface.
+ * Use the [com.pubnub.api.java.PubNub.subscriptionSetOf] factory methods to create instances of this interface.
  *
  * Adding multiple `Subscription`s to the set, then calling [subscribe] or [unsubscribe] on the set is more efficient
  * than calling [Subscription.subscribe] on each `Subscription` object separately, as the PubNub client can minimize

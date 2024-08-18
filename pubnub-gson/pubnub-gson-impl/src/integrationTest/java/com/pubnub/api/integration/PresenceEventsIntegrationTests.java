@@ -1,19 +1,11 @@
 package com.pubnub.api.integration;
 
 import com.google.gson.JsonObject;
-import com.pubnub.api.PubNub;
-import com.pubnub.api.java.PubNubForJava;
-import com.pubnub.api.java.callbacks.SubscribeCallback;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
+import com.pubnub.api.java.PubNub;
+import com.pubnub.api.java.callbacks.SubscribeCallback;
 import com.pubnub.api.models.consumer.PNStatus;
-import com.pubnub.api.java.models.consumer.objects_api.channel.PNChannelMetadataResult;
-import com.pubnub.api.java.models.consumer.objects_api.membership.PNMembershipResult;
-import com.pubnub.api.java.models.consumer.objects_api.uuid.PNUUIDMetadataResult;
-import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
-import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
-import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult;
-import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
 import org.awaitility.Awaitility;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
@@ -36,12 +28,12 @@ public class PresenceEventsIntegrationTests extends BaseIntegrationTest {
         pubNub.addListener(new SubscribeCallback() {
 
             @Override
-            public void status(@NotNull PubNubForJava pubnub, @NotNull PNStatus status) {
+            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
 
             }
 
             @Override
-            public void presence(@NotNull PubNubForJava pubnub, @NotNull PNPresenceEventResult presence) {
+            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult presence) {
                 if (presence.getEvent().equals("join")) {
                     assertEquals(channel, presence.getChannel());
                     pubNub.removeListener(this);
@@ -62,16 +54,16 @@ public class PresenceEventsIntegrationTests extends BaseIntegrationTest {
         final AtomicBoolean success = new AtomicBoolean(false);
         final String channel = randomChannel();
 
-        final PubNubForJava guestClient = getPubNub();
+        final PubNub guestClient = getPubNub();
 
         this.pubNub.addListener(new SubscribeCallback() {
             @Override
-            public void status(@NotNull PubNubForJava pubnub, @NotNull PNStatus status) {
+            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
 
             }
 
             @Override
-            public void presence(@NotNull PubNubForJava pubnub, @NotNull PNPresenceEventResult presence) {
+            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult presence) {
                 if (presence.getEvent().equals("leave")) {
                     assertEquals(channel, presence.getChannel());
                     success.set(true);
@@ -104,12 +96,12 @@ public class PresenceEventsIntegrationTests extends BaseIntegrationTest {
         pubNub.addListener(new SubscribeCallback() {
 
             @Override
-            public void status(@NotNull PubNubForJava pubnub, @NotNull PNStatus status) {
+            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
 
             }
 
             @Override
-            public void presence(@NotNull PubNubForJava pubnub, @NotNull PNPresenceEventResult presence) {
+            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult presence) {
                 if (presence.getEvent().equals("timeout")) {
                     assertEquals(channel, presence.getChannel());
                     success.set(true);
@@ -138,12 +130,12 @@ public class PresenceEventsIntegrationTests extends BaseIntegrationTest {
         pubNub.addListener(new SubscribeCallback() {
 
             @Override
-            public void status(@NotNull PubNubForJava pubnub, @NotNull PNStatus status) {
+            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
 
             }
 
             @Override
-            public void presence(@NotNull PubNubForJava pubnub, @NotNull PNPresenceEventResult presence) {
+            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult presence) {
                 if (presence.getEvent().equals("state-change") && presence.getUuid()
                         .equals(pubNub.getConfiguration().getUserId().getValue())) {
                     assertEquals("state-change", presence.getEvent());

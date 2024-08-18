@@ -1,7 +1,6 @@
 package com.pubnub.internal.java.v2.callbacks
 
 import com.pubnub.api.PubNub
-import com.pubnub.api.java.PubNubForJava
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
@@ -16,7 +15,7 @@ import com.pubnub.api.v2.callbacks.EventListener
  */
 data class DelegatingEventListener(
     private val listener: com.pubnub.api.java.v2.callbacks.EventListener,
-    private val pubnubJava: PubNubForJava,
+    private val pubnubJava: com.pubnub.api.java.PubNub,
 ) : EventListener {
     override fun message(pubnub: PubNub, result: PNMessageResult) {
         listener.message(pubnubJava, result)

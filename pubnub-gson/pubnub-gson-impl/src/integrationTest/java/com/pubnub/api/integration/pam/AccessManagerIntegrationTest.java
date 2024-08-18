@@ -2,26 +2,18 @@ package com.pubnub.api.integration.pam;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.java.PubNubForJava;
-import com.pubnub.api.java.callbacks.SubscribeCallback;
-import com.pubnub.api.java.endpoints.access.Grant;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
 import com.pubnub.api.integration.util.RandomGenerator;
+import com.pubnub.api.java.PubNub;
+import com.pubnub.api.java.callbacks.SubscribeCallback;
+import com.pubnub.api.java.endpoints.access.Grant;
+import com.pubnub.api.java.models.consumer.access_manager.PNAccessManagerGrantResult;
 import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.api.models.consumer.PNStatus;
-import com.pubnub.api.java.models.consumer.access_manager.PNAccessManagerGrantResult;
 import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult;
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction;
-import com.pubnub.api.java.models.consumer.objects_api.channel.PNChannelMetadataResult;
-import com.pubnub.api.java.models.consumer.objects_api.membership.PNMembershipResult;
-import com.pubnub.api.java.models.consumer.objects_api.uuid.PNUUIDMetadataResult;
-import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
-import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
-import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult;
-import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
 import org.awaitility.Awaitility;
 import org.awaitility.Durations;
 import org.awaitility.pollinterval.FibonacciPollInterval;
@@ -559,12 +551,12 @@ abstract class AccessManagerIntegrationTest extends BaseIntegrationTest {
 
 
             @Override
-            public void status(@NotNull PubNubForJava pubNub, @NotNull PNStatus pnStatus) {
+            public void status(@NotNull PubNub pubNub, @NotNull PNStatus pnStatus) {
 
             }
 
             @Override
-            public void presence(@NotNull PubNubForJava pubnub, @NotNull PNPresenceEventResult pnPresenceEventResult) {
+            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult pnPresenceEventResult) {
                 if ((pnPresenceEventResult.getEvent().equals("join"))
                         && (pnPresenceEventResult.getChannel().equals(expectedChannel))) {
                     if (pnPresenceEventResult.getUuid().equals(server.getConfiguration().getUserId().getValue())) {

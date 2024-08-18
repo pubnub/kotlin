@@ -4,7 +4,6 @@ import com.google.common.reflect.ClassPath
 import org.junit.Test
 
 class MigrationGeneratorTest {
-
     /**
      * Use this test to generate the content of the <root_project>/migration_utils/replacements.txt file
      */

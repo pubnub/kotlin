@@ -4,7 +4,7 @@ import com.pubnub.api.UserId
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNLogVerbosity
-import com.pubnub.api.java.PubNubForJava
+import com.pubnub.api.java.PubNub
 import com.pubnub.api.java.v2.PNConfiguration
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.internal.java.v2.PNConfigurationImpl
@@ -25,14 +25,14 @@ import javax.net.ssl.X509ExtendedTrustManager
 class PNConfigurationImplTest {
     @Test
     fun testDefaultTimeoutValues() {
-        val config = PNConfiguration.builder(UserId(PubNubForJava.generateUUID()), "demo")
+        val config = PNConfiguration.builder(UserId(PubNub.generateUUID()), "demo")
         assertEquals(300, config.presenceTimeout)
         assertEquals(0, config.heartbeatInterval)
     }
 
     @Test
     fun testCustomTimeoutValues1() {
-        val config = PNConfiguration.builder(UserId(PubNubForJava.generateUUID()), "demo")
+        val config = PNConfiguration.builder(UserId(PubNub.generateUUID()), "demo")
         config.presenceTimeout(100)
         assertEquals(100, config.presenceTimeout)
         assertEquals(49, config.heartbeatInterval)
@@ -40,7 +40,7 @@ class PNConfigurationImplTest {
 
     @Test
     fun testCustomTimeoutValues2() {
-        val config = PNConfiguration.builder(UserId(PubNubForJava.generateUUID()), "demo")
+        val config = PNConfiguration.builder(UserId(PubNub.generateUUID()), "demo")
         config.heartbeatInterval(100)
         assertEquals(300, config.presenceTimeout)
         assertEquals(100, config.heartbeatInterval)
@@ -48,7 +48,7 @@ class PNConfigurationImplTest {
 
     @Test
     fun testCustomTimeoutValues3() {
-        val config = PNConfiguration.builder(UserId(PubNubForJava.generateUUID()), "demo")
+        val config = PNConfiguration.builder(UserId(PubNub.generateUUID()), "demo")
         config.heartbeatInterval(40)
         config.presenceTimeout(50)
         assertEquals(50, config.presenceTimeout)
@@ -57,7 +57,7 @@ class PNConfigurationImplTest {
 
     @Test
     fun `build uses all values from Builder`() {
-        val expectedUserId = UserId(PubNubForJava.generateUUID())
+        val expectedUserId = UserId(PubNub.generateUUID())
         val expectedCryptoModule = CryptoModule.createAesCbcCryptoModule("cipher")
         val expectedProxy = Proxy(Proxy.Type.HTTP, InetSocketAddress(80))
         val expectedProxySelector = DefaultProxySelector()
@@ -151,7 +151,7 @@ class PNConfigurationImplTest {
 
     @Test
     fun `builder has all default values from PNConfiguration`() {
-        val expectedUserId = UserId(PubNubForJava.generateUUID())
+        val expectedUserId = UserId(PubNub.generateUUID())
         val builder = PNConfiguration.builder(expectedUserId, "subKey")
         val expectedDefaults = PNConfigurationImpl(expectedUserId)
 
@@ -197,7 +197,7 @@ class PNConfigurationImplTest {
 
     @Test
     fun `can reset userId and subscribeKey`() {
-        val expectedUserId = UserId(PubNubForJava.generateUUID())
+        val expectedUserId = UserId(PubNub.generateUUID())
         val expectedSubKey = "expectedSubKey"
 
         val config = PNConfiguration.builder(UserId("aaa"), "subKey")

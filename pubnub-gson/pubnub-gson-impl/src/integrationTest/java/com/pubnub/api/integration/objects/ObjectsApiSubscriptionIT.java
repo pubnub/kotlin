@@ -1,6 +1,6 @@
 package com.pubnub.api.integration.objects;
 
-import com.pubnub.api.java.PubNubForJava;
+import com.pubnub.api.java.PubNub;
 import com.pubnub.api.java.callbacks.SubscribeCallback;
 import com.pubnub.api.java.models.consumer.objects_api.channel.PNChannelMetadataResult;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership;
@@ -29,7 +29,7 @@ public class ObjectsApiSubscriptionIT extends ObjectsApiBaseIT {
 
     class TestSubscribeCallbackAdapter extends SubscribeCallback {
         @Override
-        public void status(@NotNull PubNubForJava pubnub, @NotNull PNStatus pnStatus) {
+        public void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus) {
         }
     }
 
@@ -42,17 +42,17 @@ public class ObjectsApiSubscriptionIT extends ObjectsApiBaseIT {
 
         pubNubUnderTest.addListener(new TestSubscribeCallbackAdapter() {
             @Override
-            public void uuid(@NotNull PubNubForJava pubnub, @NotNull PNUUIDMetadataResult pnUUIDMetadataResult) {
+            public void uuid(@NotNull PubNub pubnub, @NotNull PNUUIDMetadataResult pnUUIDMetadataResult) {
                 uuidMetadataResultHolder.set(pnUUIDMetadataResult);
             }
 
             @Override
-            public void channel(@NotNull PubNubForJava pubnub, @NotNull PNChannelMetadataResult pnChannelMetadataResult) {
+            public void channel(@NotNull PubNub pubnub, @NotNull PNChannelMetadataResult pnChannelMetadataResult) {
                 channelMetadataResultHolder.set(pnChannelMetadataResult);
             }
 
             @Override
-            public void membership(@NotNull PubNubForJava pubnub, @NotNull PNMembershipResult pnMembershipResult) {
+            public void membership(@NotNull PubNub pubnub, @NotNull PNMembershipResult pnMembershipResult) {
                 membershipResultHolder.set(pnMembershipResult);
             }
         });
@@ -102,17 +102,17 @@ public class ObjectsApiSubscriptionIT extends ObjectsApiBaseIT {
 
         pubNubUnderTest.addListener(new TestSubscribeCallbackAdapter() {
             @Override
-            public void uuid(@NotNull PubNubForJava pubnub, @NotNull PNUUIDMetadataResult pnUUIDMetadataResult) {
+            public void uuid(@NotNull PubNub pubnub, @NotNull PNUUIDMetadataResult pnUUIDMetadataResult) {
                 uuidMetadataResultHolder.set(pnUUIDMetadataResult);
             }
 
             @Override
-            public void channel(@NotNull PubNubForJava pubnub, @NotNull PNChannelMetadataResult pnChannelMetadataResult) {
+            public void channel(@NotNull PubNub pubnub, @NotNull PNChannelMetadataResult pnChannelMetadataResult) {
                 channelMetadataResultHolder.set(pnChannelMetadataResult);
             }
 
             @Override
-            public void membership(@NotNull PubNubForJava pubnub, @NotNull PNMembershipResult pnMembershipResult) {
+            public void membership(@NotNull PubNub pubnub, @NotNull PNMembershipResult pnMembershipResult) {
                 membershipResultHolder.set(pnMembershipResult);
             }
         });

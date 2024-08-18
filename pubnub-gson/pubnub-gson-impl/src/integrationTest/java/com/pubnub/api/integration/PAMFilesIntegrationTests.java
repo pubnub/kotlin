@@ -1,10 +1,9 @@
 package com.pubnub.api.integration;
 
-import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
 import com.pubnub.api.integration.util.ITTestConfig;
-import com.pubnub.api.java.PubNubForJava;
+import com.pubnub.api.java.PubNub;
 import com.pubnub.api.models.consumer.files.PNDownloadFileResult;
 import com.pubnub.api.models.consumer.files.PNFileUploadResult;
 import org.aeonbits.owner.ConfigFactory;
@@ -22,7 +21,7 @@ import static org.junit.Assume.assumeNotNull;
 
 public class PAMFilesIntegrationTests extends BaseIntegrationTest {
     //See README.md in integrationTest directory for more info on running integration tests
-    private static ITTestConfig IT_TEST_CONFIG = ConfigFactory.create(ITTestConfig.class, System.getenv());
+    private static final ITTestConfig IT_TEST_CONFIG = ConfigFactory.create(ITTestConfig.class, System.getenv());
 
     private static final String FILENAME = "file.txt";
 
@@ -36,8 +35,8 @@ public class PAMFilesIntegrationTests extends BaseIntegrationTest {
     public void canSendAndDownloadFileWithPAM() throws PubNubException, IOException {
         assumeNotNull(getServer().getConfiguration().getSecretKey());
 
-        final PubNubForJava adminPubnub = getServer();
-        final PubNubForJava pubnub = getPubNub();
+        final PubNub adminPubnub = getServer();
+        final PubNub pubnub = getPubNub();
 
         try {
             adminPubnub.grant()

@@ -9,7 +9,7 @@ import com.pubnub.api.v2.subscriptions.SubscriptionOptions
  *
  * You can get a [Subscription] to this channel group through [Subscribable.subscription].
  *
- * Use the [com.pubnub.api.java.PubNubForJava.channelGroup] factory method to create instances of this interface.
+ * Use the [com.pubnub.api.java.PubNub.channelGroup] factory method to create instances of this interface.
  */
 interface ChannelGroup : com.pubnub.api.java.v2.entities.Subscribable {
     /**

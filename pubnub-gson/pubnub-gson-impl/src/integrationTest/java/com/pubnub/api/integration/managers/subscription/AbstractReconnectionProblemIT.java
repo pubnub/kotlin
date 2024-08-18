@@ -1,11 +1,10 @@
 package com.pubnub.api.integration.managers.subscription;
 
-import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
 import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.integration.util.ITTestConfig;
-import com.pubnub.api.java.PubNubForJava;
+import com.pubnub.api.java.PubNub;
 import com.pubnub.api.java.callbacks.SubscribeCallback;
 import com.pubnub.api.java.v2.PNConfiguration;
 import com.pubnub.api.models.consumer.PNStatus;
@@ -38,7 +37,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 class AssumingProperConfig implements TestRule {
-    private ITTestConfig itPamTestConfig = ConfigFactory.create(ITTestConfig.class, System.getenv());
+    private final ITTestConfig itPamTestConfig = ConfigFactory.create(ITTestConfig.class, System.getenv());
 
     @NotNull
     @Override
@@ -64,7 +63,7 @@ public abstract class AbstractReconnectionProblemIT {
 
     protected static final int SUBSCRIBE_TIMEOUT = 5;
     protected final List<CollectedStatus> collectedStatuses = Collections.synchronizedList(new ArrayList<>());
-    protected PubNubForJava pn;
+    protected com.pubnub.api.java.PubNub pn;
 
     protected String authKey = randomId();
 
@@ -73,7 +72,7 @@ public abstract class AbstractReconnectionProblemIT {
     }
 
     private void grantAccess(final String... protectedChannelNames) throws PubNubException {
-        final PubNubForJava pnAdmin = adminPubNub();
+        final com.pubnub.api.java.PubNub pnAdmin = adminPubNub();
         pnAdmin.grant()
                 .authKeys(singletonList(authKey))
                 .channels(asList(protectedChannelNames))
@@ -82,7 +81,7 @@ public abstract class AbstractReconnectionProblemIT {
     }
 
     private void grantAccessToChannelGroup(final String... protectedChannelGroupNames) throws PubNubException {
-        final PubNubForJava pnAdmin = adminPubNub();
+        final com.pubnub.api.java.PubNub pnAdmin = adminPubNub();
         pnAdmin.grant()
                 .authKeys(singletonList(authKey))
                 .channelGroups(asList(protectedChannelGroupNames))
@@ -101,22 +100,22 @@ public abstract class AbstractReconnectionProblemIT {
         pn = null;
     }
 
-    protected void subscribe(final PubNubForJava pnClient, final boolean reportCallStack, final String... channels) {
+    protected void subscribe(final com.pubnub.api.java.PubNub pnClient, final boolean reportCallStack, final String... channels) {
         subscribe(pnClient, reportCallStack, null, channels);
     }
 
-    protected void subscribe(final PubNubForJava pnClient, final String... channelNames) {
+    protected void subscribe(final com.pubnub.api.java.PubNub pnClient, final String... channelNames) {
         subscribe(pnClient, false, null, channelNames);
     }
 
-    protected void subscribe(final PubNubForJava pnClient, final BiConsumer<PubNubForJava, PNStatus> block, final String... channels) {
+    protected void subscribe(final com.pubnub.api.java.PubNub pnClient, final BiConsumer<com.pubnub.api.java.PubNub, PNStatus> block, final String... channels) {
         subscribe(pnClient, false, block, channels);
     }
 
-    protected void subscribe(final PubNubForJava pnClient, boolean reportCallStack, final BiConsumer<PubNubForJava, PNStatus> block, final String... channels) {
+    protected void subscribe(final com.pubnub.api.java.PubNub pnClient, boolean reportCallStack, final BiConsumer<com.pubnub.api.java.PubNub, PNStatus> block, final String... channels) {
         pnClient.addListener(new SubscribeCallback() {
             @Override
-            public void status(final PubNubForJava pubnub, final PNStatus pnStatus) {
+            public void status(final com.pubnub.api.java.PubNub pubnub, final PNStatus pnStatus) {
                 final Exception exception = new Exception();
                 synchronized (collectedStatuses) {
                     collectedStatuses.add(new CollectedStatus(pnStatus, exception));
@@ -137,22 +136,22 @@ public abstract class AbstractReconnectionProblemIT {
         pnClient.subscribe().channels(asList(channels)).execute();
     }
 
-    protected void subscribeToGroup(final PubNubForJava pnClient, final boolean reportCallStack, final String... channelGroups) {
+    protected void subscribeToGroup(final com.pubnub.api.java.PubNub pnClient, final boolean reportCallStack, final String... channelGroups) {
         subscribeToGroup(pnClient, reportCallStack, null, channelGroups);
     }
 
-    protected void subscribeToGroup(final PubNubForJava pnClient, final String... channelGroups) {
+    protected void subscribeToGroup(final com.pubnub.api.java.PubNub pnClient, final String... channelGroups) {
         subscribeToGroup(pnClient, false, null, channelGroups);
     }
 
-    protected void subscribeToGroup(final PubNubForJava pnClient, final BiConsumer<PubNubForJava, PNStatus> block, final String... channelGroups) {
+    protected void subscribeToGroup(final com.pubnub.api.java.PubNub pnClient, final BiConsumer<PubNub, PNStatus> block, final String... channelGroups) {
         subscribeToGroup(pnClient, false, block, channelGroups);
     }
 
-    protected void subscribeToGroup(final PubNubForJava pnClient, boolean reportCallStack, final BiConsumer<PubNubForJava, PNStatus> block, final String... channelGroups) {
+    protected void subscribeToGroup(final com.pubnub.api.java.PubNub pnClient, boolean reportCallStack, final BiConsumer<PubNub, PNStatus> block, final String... channelGroups) {
         pnClient.addListener(new SubscribeCallback() {
             @Override
-            public void status(final PubNubForJava pubnub, final PNStatus pnStatus) {
+            public void status(final PubNub pubnub, final PNStatus pnStatus) {
                 final Exception exception = new Exception();
                 synchronized (collectedStatuses) {
                     collectedStatuses.add(new CollectedStatus(pnStatus, exception));
@@ -177,14 +176,14 @@ public abstract class AbstractReconnectionProblemIT {
     }
 
 
-    protected void createChannelGroup(final PubNubForJava pnClient, final String channelGroup, final String... channelNames) throws PubNubException {
+    protected void createChannelGroup(final com.pubnub.api.java.PubNub pnClient, final String channelGroup, final String... channelNames) throws PubNubException {
         pnClient.addChannelsToChannelGroup()
                 .channelGroup(channelGroup)
                 .channels(asList(channelNames))
                 .sync();
     }
 
-    protected abstract @NotNull PubNubForJava privilegedClientPubNub();
+    protected abstract @NotNull com.pubnub.api.java.PubNub privilegedClientPubNub();
 
     PNConfiguration.Builder getPNConfiguration() {
         PNConfiguration.Builder pnConfiguration = null;
@@ -196,12 +195,12 @@ public abstract class AbstractReconnectionProblemIT {
         return pnConfiguration;
     }
 
-    private PubNubForJava adminPubNub() {
+    private com.pubnub.api.java.PubNub adminPubNub() {
         PNConfiguration.Builder pnConfiguration = getPNConfiguration();
         pnConfiguration.subscribeKey(itPamTestConfig.pamSubKey());
         pnConfiguration.publishKey(itPamTestConfig.pamPubKey());
         pnConfiguration.secretKey(itPamTestConfig.pamSecKey());
-        return PubNubForJava.create(pnConfiguration.build());
+        return com.pubnub.api.java.PubNub.create(pnConfiguration.build());
     }
 
     @Test
@@ -250,9 +249,9 @@ public abstract class AbstractReconnectionProblemIT {
 
         grantAccess(channel1);
 
-        subscribe(pn, true, new BiConsumer<PubNubForJava, PNStatus>() {
+        subscribe(pn, true, new BiConsumer<PubNub, PNStatus>() {
             @Override
-            public void accept(final PubNubForJava pubNub, final PNStatus status) {
+            public void accept(final PubNub pubNub, final PNStatus status) {
                 if (status.getCategory() == PNStatusCategory.PNConnectionError) {
                     if (status.getException().getStatusCode() == 403) {
                         final List<String> channelsToUnsubscribe = status.getException().getAffectedChannels();
@@ -357,7 +356,7 @@ public abstract class AbstractReconnectionProblemIT {
     public void stopSubscriptionToChannelGroupWhenRequestedToDisconnectOnAccessDenied() throws InterruptedException {
         final String channelGroup = "chg-" + randomId();
 
-        subscribeToGroup(pn, true, (BiConsumer<PubNubForJava, PNStatus>) (pubNub, status) -> {
+        subscribeToGroup(pn, true, (pubNub, status) -> {
             if (status.getCategory() == PNStatusCategory.PNConnectionError) {
                 if (status.getException().getStatusCode() == 403) {
                     pn.disconnect();
@@ -382,9 +381,9 @@ public abstract class AbstractReconnectionProblemIT {
     public void stopSubscriptionWhenRequestedToForceDestroyOnAccessDenied() throws InterruptedException {
         final String channel = "ch-" + randomId();
 
-        subscribe(pn, true, new BiConsumer<PubNubForJava, PNStatus>() {
+        subscribe(pn, true, new BiConsumer<PubNub, PNStatus>() {
             @Override
-            public void accept(final PubNubForJava pubNub, final PNStatus status) {
+            public void accept(final PubNub pubNub, final PNStatus status) {
                 if (status.getCategory() == PNStatusCategory.PNConnectionError) {
                     if (status.getException().getStatusCode() == 403) {
                         pn.forceDestroy();
@@ -409,9 +408,9 @@ public abstract class AbstractReconnectionProblemIT {
     public void stopSubscriptionToChannelGroupWhenRequestedToForceDestroyOnAccessDenied() throws InterruptedException {
         final String channelGroup = "chg-" + randomId();
 
-        subscribeToGroup(pn, true, new BiConsumer<PubNubForJava, PNStatus>() {
+        subscribeToGroup(pn, true, new BiConsumer<PubNub, PNStatus>() {
             @Override
-            public void accept(final PubNubForJava pubNub, final PNStatus status) {
+            public void accept(final PubNub pubNub, final PNStatus status) {
                 if (status.getCategory() == PNStatusCategory.PNConnectionError) {
                     if (status.getException().getStatusCode() == 403) {
                         pn.forceDestroy();

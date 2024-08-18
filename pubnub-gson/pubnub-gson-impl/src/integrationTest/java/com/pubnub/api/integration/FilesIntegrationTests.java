@@ -1,12 +1,11 @@
 package com.pubnub.api.integration;
 
-import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.java.PubNubForJava;
-import com.pubnub.api.java.callbacks.SubscribeCallback;
 import com.pubnub.api.crypto.CryptoModule;
 import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
+import com.pubnub.api.java.PubNub;
+import com.pubnub.api.java.callbacks.SubscribeCallback;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.files.PNDownloadFileResult;
 import com.pubnub.api.models.consumer.files.PNFileUploadResult;
@@ -54,14 +53,14 @@ public class FilesIntegrationTests extends BaseIntegrationTest {
 
         pubNub.addListener(new SubscribeCallback() {
             @Override
-            public void status(@NotNull PubNubForJava pubnub, @NotNull PNStatus pnStatus) {
+            public void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus) {
                 if (pnStatus.getCategory() == PNStatusCategory.PNConnectedCategory) {
                     connectedLatch.countDown();
                 }
             }
 
             @Override
-            public void file(@NotNull PubNubForJava pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
                 if (pnFileEventResult.getFile().getName().equals(fileName)) {
                     fileEventReceived.countDown();
                 }

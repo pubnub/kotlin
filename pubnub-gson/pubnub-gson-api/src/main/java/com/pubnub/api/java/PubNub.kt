@@ -66,7 +66,7 @@ import com.pubnub.api.java.v2.subscriptions.SubscriptionSet
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import java.io.InputStream
 
-interface PubNubForJava : EventEmitter, StatusEmitter {
+interface PubNub : EventEmitter, StatusEmitter {
     val timestamp: Int
     val baseUrl: String
 
@@ -743,10 +743,10 @@ interface PubNubForJava : EventEmitter, StatusEmitter {
          * @return the PubNub client
          */
         @JvmStatic
-        fun create(configuration: PNConfiguration): PubNubForJava {
+        fun create(configuration: PNConfiguration): PubNub {
             return Class.forName(
                 "com.pubnub.internal.java.PubNubForJavaImpl",
-            ).getConstructor(PNConfiguration::class.java).newInstance(configuration) as PubNubForJava
+            ).getConstructor(PNConfiguration::class.java).newInstance(configuration) as PubNub
         }
 
         /**

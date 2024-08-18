@@ -1,9 +1,8 @@
 package com.pubnub.api.integration.objects.memberships;
 
-import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.integration.objects.ObjectsApiBaseIT;
-import com.pubnub.api.java.PubNubForJava;
+import com.pubnub.api.java.PubNub;
 import com.pubnub.api.java.callbacks.SubscribeCallback;
 import com.pubnub.api.java.models.consumer.objects_api.channel.PNSetChannelMetadataResult;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership;
@@ -51,18 +50,18 @@ public class CustomMetadataInMembershipPropagationIT extends ObjectsApiBaseIT {
     private PNSetMembershipResult setMembershipResult;
 
 
-    private CopyOnWriteArrayList<PNMembershipResult> pnMembershipResults = new CopyOnWriteArrayList<>();
+    private final CopyOnWriteArrayList<PNMembershipResult> pnMembershipResults = new CopyOnWriteArrayList<>();
 
     @Before
     public void setCallbackListener() {
         pubNubUnderTest.addListener(new SubscribeCallback() {
             @Override
-            public void status(@NotNull PubNubForJava pubnub, @NotNull PNStatus status) {
+            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
 
             }
 
             @Override
-            public void membership(final PubNubForJava pubnub, final PNMembershipResult pnMembershipResult) {
+            public void membership(final PubNub pubnub, final PNMembershipResult pnMembershipResult) {
                 pnMembershipResults.add(pnMembershipResult);
             }
         });

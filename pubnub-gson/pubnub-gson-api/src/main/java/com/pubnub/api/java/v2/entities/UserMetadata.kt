@@ -9,7 +9,7 @@ import com.pubnub.api.v2.subscriptions.SubscriptionOptions
  *
  * You can get a [Subscription] to listen for metadata events through [Subscribable.subscription].
  *
- * Use the [com.pubnub.api.java.PubNubForJava.userMetadata] factory method to create instances of this interface.
+ * Use the [com.pubnub.api.java.PubNub.userMetadata] factory method to create instances of this interface.
  */
 interface UserMetadata : com.pubnub.api.java.v2.entities.Subscribable {
     /**

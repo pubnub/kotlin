@@ -1,11 +1,10 @@
 package com.pubnub.api.integration;
 
 import com.google.gson.JsonObject;
-import com.pubnub.api.PubNub;
-import com.pubnub.api.java.PubNubForJava;
-import com.pubnub.api.java.callbacks.SubscribeCallback;
 import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
+import com.pubnub.api.java.PubNub;
+import com.pubnub.api.java.callbacks.SubscribeCallback;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import org.awaitility.Awaitility;
@@ -41,7 +40,7 @@ public class HeartbeatIntegrationTest extends BaseIntegrationTest {
     public void testStateWithHeartbeat() {
         final AtomicInteger hits = new AtomicInteger();
         final JsonObject expectedStatePayload = generatePayload();
-        final PubNubForJava observer = getPubNub();
+        final com.pubnub.api.java.PubNub observer = getPubNub();
 
         pubNub = getPubNub(builder -> {
             builder.presenceTimeout(20);
@@ -49,7 +48,7 @@ public class HeartbeatIntegrationTest extends BaseIntegrationTest {
         });
         observer.addListener(new SubscribeCallback.BaseSubscribeCallback() {
             @Override
-            public void status(@NotNull PubNubForJava pn, @NotNull PNStatus status) {
+            public void status(@NotNull com.pubnub.api.java.PubNub pn, @NotNull PNStatus status) {
                 if (status.getCategory() == PNStatusCategory.PNConnectedCategory) {
                     if (status.getAffectedChannels().contains(expectedChannel)) {
                         pubNub.subscribe()
@@ -61,7 +60,7 @@ public class HeartbeatIntegrationTest extends BaseIntegrationTest {
             }
 
             @Override
-            public void presence(@NotNull PubNubForJava p, @NotNull PNPresenceEventResult presence) {
+            public void presence(@NotNull PubNub p, @NotNull PNPresenceEventResult presence) {
                 if (presence.getUuid().equals(pubNub.getConfiguration().getUserId().getValue())
                         && presence.getChannel().equals(expectedChannel)) {
                     switch (presence.getEvent()) {

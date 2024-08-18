@@ -1,6 +1,6 @@
 package com.pubnub.internal.java.v2.callbacks;
 
-import com.pubnub.api.java.PubNubForJava;
+import com.pubnub.api.java.PubNub;
 import com.pubnub.api.java.models.consumer.objects_api.channel.PNChannelMetadata;
 import com.pubnub.api.java.models.consumer.objects_api.channel.PNChannelMetadataResult;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNMembership;
@@ -42,7 +42,7 @@ class Converters {
         return null;
     }
 
-    static void objects(@NotNull PNObjectEventResult objectEvent, @NotNull EventListener emitter, @NotNull PubNubForJava pubnub) {
+    static void objects(@NotNull PNObjectEventResult objectEvent, @NotNull EventListener emitter, @NotNull PubNub pubnub) {
         PNObjectEventMessage message = objectEvent.getExtractedMessage();
         if (message instanceof PNDeleteMembershipEventMessage) {
             PNMembershipResult result = getDeleteMembershipResult(objectEvent, (PNDeleteMembershipEventMessage) message);

@@ -1,7 +1,7 @@
 package com.pubnub.api.java.v2.callbacks
 
 import com.pubnub.api.callbacks.Listener
-import com.pubnub.api.java.PubNubForJava
+import com.pubnub.api.java.PubNub
 import com.pubnub.api.models.consumer.PNStatus
 
 interface StatusListener : Listener {
@@ -18,5 +18,5 @@ interface StatusListener : Listener {
      * @param pubnub The client instance which has this listener attached.
      * @param status Wrapper around the actual message content.
      */
-    fun status(pubnub: PubNubForJava, status: PNStatus)
+    fun status(pubnub: PubNub, status: PNStatus)
 }

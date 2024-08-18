@@ -1,37 +1,24 @@
 package com.pubnub.api.integration;
 
 import com.google.gson.JsonObject;
-import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.java.PubNubForJava;
-import com.pubnub.api.java.callbacks.SubscribeCallback;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
 import com.pubnub.api.integration.util.RandomGenerator;
-import com.pubnub.api.java.v2.callbacks.handlers.OnFileHandler;
-import com.pubnub.api.java.v2.callbacks.handlers.OnMessageActionHandler;
-import com.pubnub.api.java.v2.callbacks.handlers.OnPresenceHandler;
-import com.pubnub.api.java.v2.callbacks.handlers.OnSignalHandler;
-import com.pubnub.api.models.consumer.PNPublishResult;
-import com.pubnub.api.models.consumer.PNStatus;
-import com.pubnub.api.models.consumer.message_actions.PNMessageAction;
-import com.pubnub.api.java.models.consumer.objects_api.channel.PNChannelMetadataResult;
+import com.pubnub.api.java.PubNub;
+import com.pubnub.api.java.callbacks.SubscribeCallback;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership;
-import com.pubnub.api.java.models.consumer.objects_api.membership.PNMembershipResult;
-import com.pubnub.api.java.models.consumer.objects_api.uuid.PNUUIDMetadataResult;
-import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
-import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
-import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
-import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult;
-import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
 import com.pubnub.api.java.v2.callbacks.handlers.OnMessageHandler;
 import com.pubnub.api.java.v2.entities.Channel;
 import com.pubnub.api.java.v2.entities.ChannelMetadata;
 import com.pubnub.api.java.v2.entities.UserMetadata;
 import com.pubnub.api.java.v2.subscriptions.Subscription;
-import com.pubnub.api.v2.subscriptions.SubscriptionOptions;
 import com.pubnub.api.java.v2.subscriptions.SubscriptionSet;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
+import com.pubnub.api.models.consumer.PNPublishResult;
+import com.pubnub.api.models.consumer.PNStatus;
+import com.pubnub.api.models.consumer.message_actions.PNMessageAction;
+import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
+import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
+import com.pubnub.api.v2.subscriptions.SubscriptionOptions;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
@@ -51,7 +38,7 @@ import static org.junit.Assert.assertTrue;
 
 public class SubscribeIntegrationTests extends BaseIntegrationTest {
 
-    private PubNubForJava mGuestClient;
+    private PubNub mGuestClient;
 
     @Override
     protected void onBefore() {
@@ -107,12 +94,12 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
 
         pubNub.addListener(new SubscribeCallback() {
             @Override
-            public void status(@NotNull PubNubForJava pubnub, @NotNull PNStatus status) {
+            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
 
             }
 
             @Override
-            public void message(@NotNull PubNubForJava pubnub, @NotNull PNMessageResult message) {
+            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult message) {
                 assertTrue(message.getMessage().toString().contains("Cool message"));
                 success.set(true);
             }
@@ -136,7 +123,7 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
 
 
             @Override
-            public void status(@NotNull PubNubForJava pubnub, @NotNull PNStatus status) {
+            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
                 boolean channelSubscribed = false;
                 for (int i = 0; i < pubnub.getSubscribedChannels().size(); i++) {
                     if (pubnub.getSubscribedChannels().get(i).contains(expectedChannel)) {
@@ -150,12 +137,12 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
             }
 
             @Override
-            public void message(@NotNull PubNubForJava pubnub, @NotNull PNMessageResult message) {
+            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult message) {
                 success.set(true);
             }
 
             @Override
-            public void presence(@NotNull PubNubForJava pubnub, @NotNull PNPresenceEventResult presence) {
+            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult presence) {
                 success.set(true);
             }
         });
@@ -172,7 +159,7 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
 
         pubNub.addListener(new SubscribeCallback.BaseSubscribeCallback() {
             @Override
-            public void status(@NotNull PubNubForJava pubnub, @NotNull PNStatus status) {
+            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
                 assertEquals(0, pubNub.getSubscribedChannels().size());
                 success.set(true);
             }
@@ -192,7 +179,7 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
         pubNub.addChannelsToChannelGroup().channelGroup(channelGroupName).channels(Arrays.asList(channel01, channel02)).sync();
 
         Subscription channelGroupSubscription = pubNub.channelGroup(channelGroupName).subscription();
-        channelGroupSubscription.setOnMessage((OnMessageHandler) pnMessageResult -> numberOfReceivedMessages.incrementAndGet());
+        channelGroupSubscription.setOnMessage(pnMessageResult -> numberOfReceivedMessages.incrementAndGet());
 
         channelGroupSubscription.subscribe();
         Thread.sleep(2000);
@@ -201,7 +188,7 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
         Thread.sleep(1000);
         assertEquals(1, numberOfReceivedMessages.get());
 
-        channelGroupSubscription.setOnMessage((OnMessageHandler) null);
+        channelGroupSubscription.setOnMessage(null);
 
         pubNub.publish().message(expectedMessage).channel(channel01).sync();
         Thread.sleep(1000);
@@ -247,7 +234,7 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
         Thread.sleep(2000);
 
         // to get event related to uuidMetadata changes we need to add this uuid to channel that we subscribed to.
-        pubNub.setMemberships().channelMemberships(Arrays.asList(PNChannelMembership.channel(channel.getName()))).sync();
+        pubNub.setMemberships().channelMemberships(Collections.singletonList(PNChannelMembership.channel(channel.getName()))).sync();
         pubNub.setUUIDMetadata().name("uuid name").sync();
         Thread.sleep(1000);
 
@@ -275,7 +262,7 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
         Thread.sleep(2000);
 
         // to get event related to uuidMetadata changes we need to add this uuid to channel that we subscribed to.
-        pubNub.setMemberships().channelMemberships(Arrays.asList(PNChannelMembership.channel(channelName))).sync();
+        pubNub.setMemberships().channelMemberships(Collections.singletonList(PNChannelMembership.channel(channelName))).sync();
         pubNub.setUUIDMetadata().name("uuid name").sync();
         Thread.sleep(1000);
 
@@ -310,7 +297,7 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
             System.out.println("-=pnMessageResult: " + pnMessageResult.getMessage());
         };
 
-        subscription.setOnMessage((OnMessageHandler) pnMessageResult -> System.out.println("Received message: " + pnMessageResult.getMessage()));
+        subscription.setOnMessage(pnMessageResult -> System.out.println("Received message: " + pnMessageResult.getMessage()));
 
         subscription.setOnMessage(onMessageHandler);
         subscription.setOnPresence(pnPresenceEventResult -> {
@@ -318,11 +305,11 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
             System.out.println("-=pnPresenceEventResult: " + pnPresenceEventResult.getEvent());
 
         });
-        subscription.setOnSignal((OnSignalHandler) pnSignalResult -> numberOfReceivedSignal.incrementAndGet());
-        subscription.setOnMessageAction((OnMessageActionHandler) pnMessageActionResult -> numberOfReceivedMessageAction.incrementAndGet());
+        subscription.setOnSignal(pnSignalResult -> numberOfReceivedSignal.incrementAndGet());
+        subscription.setOnMessageAction(pnMessageActionResult -> numberOfReceivedMessageAction.incrementAndGet());
         subscription.setOnChannelMetadata(pnChannelMetadataResult -> numberOfReceivedChannelMetadataEvents.incrementAndGet());
         subscription.setOnMembership(pnMembershipResult -> numberOfReceivedMembershipEvent.incrementAndGet());
-        subscription.setOnFile((OnFileHandler) pnFileEventResult -> numberOfReceivedFileMessages.incrementAndGet());
+        subscription.setOnFile(pnFileEventResult -> numberOfReceivedFileMessages.incrementAndGet());
         subscription.subscribe();
         Thread.sleep(2000);
 
@@ -331,7 +318,7 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
         PNMessageAction pnMessageAction = new PNMessageAction().setType("reaction").setValue(RandomGenerator.emoji()).setMessageTimetoken(pnPublishResult01.getTimetoken());
         pubNub.addMessageAction().messageAction(pnMessageAction).channel(chan01.getName()).sync();
         pubNub.setChannelMetadata().channel(chan01.getName()).name("Channel name").description("-=desc").status("active").type("Chat").sync();
-        pubNub.setMemberships().channelMemberships(Arrays.asList(PNChannelMembership.channel(chan01.getName()))).sync();
+        pubNub.setMemberships().channelMemberships(Collections.singletonList(PNChannelMembership.channel(chan01.getName()))).sync();
         pubNub.sendFile().channel(chan01.getName()).fileName(random()).inputStream(inputStream).message("message").sync();
 
         Thread.sleep(1000);
@@ -358,7 +345,7 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
         pnMessageAction = new PNMessageAction().setType("reaction02").setValue(RandomGenerator.emoji()).setMessageTimetoken(pnPublishResult02.getTimetoken());
         pubNub.addMessageAction().messageAction(pnMessageAction).channel(chan01.getName()).sync();
         pubNub.setChannelMetadata().channel(chan01.getName()).name("Channel name").description("desc").status("active").type("Chat").sync();
-        pubNub.setMemberships().channelMemberships(Arrays.asList(PNChannelMembership.channel(chan01.getName()))).uuid("differentUUID").sync();
+        pubNub.setMemberships().channelMemberships(Collections.singletonList(PNChannelMembership.channel(chan01.getName()))).uuid("differentUUID").sync();
         pubNub.sendFile().channel(chan01.getName()).fileName(random()).inputStream(inputStream).message("message").sync();
         Thread.sleep(1000);
 
@@ -386,10 +373,10 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
         Subscription subscription02 = channel02.subscription();
 
         SubscriptionSet subscriptionSet = subscription01.plus(subscription02);
-        subscriptionSet.setOnMessage((OnMessageHandler) pnMessageResult -> numberOfMessagesReceived.incrementAndGet());
-        subscriptionSet.setOnSignal((OnSignalHandler) pnSignalResult -> numberOfSignalsReceived.incrementAndGet());
-        subscriptionSet.setOnPresence((OnPresenceHandler) pnPresenceEventResult -> numberOfPresenceEventsReceived.incrementAndGet());
-        subscriptionSet.setOnMessageAction((OnMessageActionHandler) pnMessageActionResult -> numberOfMessageActionsReceived.incrementAndGet());
+        subscriptionSet.setOnMessage(pnMessageResult -> numberOfMessagesReceived.incrementAndGet());
+        subscriptionSet.setOnSignal(pnSignalResult -> numberOfSignalsReceived.incrementAndGet());
+        subscriptionSet.setOnPresence(pnPresenceEventResult -> numberOfPresenceEventsReceived.incrementAndGet());
+        subscriptionSet.setOnMessageAction(pnMessageActionResult -> numberOfMessageActionsReceived.incrementAndGet());
 
         subscriptionSet.subscribe();
         Thread.sleep(2000);
@@ -409,10 +396,10 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
         assertEquals(1, numberOfPresenceEventsReceived.get()); // first presence event is join generated automatically
         assertEquals(2, numberOfMessageActionsReceived.get());
 
-        subscriptionSet.setOnMessage((OnMessageHandler) null);
-        subscriptionSet.setOnSignal((OnSignalHandler) null);
-        subscriptionSet.setOnPresence((OnPresenceHandler) null);
-        subscriptionSet.setOnMessageAction((OnMessageActionHandler) null);
+        subscriptionSet.setOnMessage(null);
+        subscriptionSet.setOnSignal(null);
+        subscriptionSet.setOnPresence(null);
+        subscriptionSet.setOnMessageAction(null);
 
         pubNub.publish().channel(channel01.getName()).message("anything").sync();
         pubNub.publish().channel(channel02.getName()).message("anything").sync();

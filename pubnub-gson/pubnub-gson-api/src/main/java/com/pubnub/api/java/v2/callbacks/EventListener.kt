@@ -1,7 +1,7 @@
 package com.pubnub.api.java.v2.callbacks
 
 import com.pubnub.api.callbacks.Listener
-import com.pubnub.api.java.PubNubForJava
+import com.pubnub.api.java.PubNub
 import com.pubnub.api.java.models.consumer.objects_api.channel.PNChannelMetadataResult
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNMembershipResult
 import com.pubnub.api.java.models.consumer.objects_api.uuid.PNUUIDMetadataResult
@@ -16,31 +16,31 @@ import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResu
  * network.
  */
 interface EventListener : Listener {
-    fun message(pubnub: PubNubForJava, result: PNMessageResult) {}
+    fun message(pubnub: PubNub, result: PNMessageResult) {}
 
     fun presence(
-        pubnub: PubNubForJava,
+        pubnub: PubNub,
         result: PNPresenceEventResult,
     ) {}
 
-    fun signal(pubnub: PubNubForJava, result: PNSignalResult) {}
+    fun signal(pubnub: PubNub, result: PNSignalResult) {}
 
     fun messageAction(
-        pubNub: PubNubForJava,
+        pubNub: PubNub,
         result: PNMessageActionResult,
     ) {}
 
     fun file(
-        pubnub: PubNubForJava,
+        pubnub: PubNub,
         result: PNFileEventResult,
     ) {}
 
-    fun uuid(pubnub: PubNubForJava, pnUUIDMetadataResult: PNUUIDMetadataResult) {
+    fun uuid(pubnub: PubNub, pnUUIDMetadataResult: PNUUIDMetadataResult) {
     }
 
-    fun channel(pubnub: PubNubForJava, pnChannelMetadataResult: PNChannelMetadataResult) {
+    fun channel(pubnub: PubNub, pnChannelMetadataResult: PNChannelMetadataResult) {
     }
 
-    fun membership(pubnub: PubNubForJava, pnMembershipResult: PNMembershipResult) {
+    fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {
     }
 }

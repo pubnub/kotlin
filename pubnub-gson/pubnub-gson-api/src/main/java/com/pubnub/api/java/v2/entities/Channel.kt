@@ -11,7 +11,7 @@ import com.pubnub.api.v2.subscriptions.SubscriptionOptions
  *
  * You can get a [Subscription] to this channel through [Subscribable.subscription].
  *
- * Use the [com.pubnub.api.java.PubNubForJava.channel] factory method to create instances of this interface.
+ * Use the [com.pubnub.api.java.PubNub.channel] factory method to create instances of this interface.
  */
 interface Channel : com.pubnub.api.java.v2.entities.Subscribable {
     /**

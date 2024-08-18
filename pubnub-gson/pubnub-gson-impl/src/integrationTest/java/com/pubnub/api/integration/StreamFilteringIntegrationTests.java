@@ -1,18 +1,10 @@
 package com.pubnub.api.integration;
 
-import com.pubnub.api.PubNub;
-import com.pubnub.api.java.PubNubForJava;
-import com.pubnub.api.java.callbacks.SubscribeCallback;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
+import com.pubnub.api.java.PubNub;
+import com.pubnub.api.java.callbacks.SubscribeCallback;
 import com.pubnub.api.models.consumer.PNStatus;
-import com.pubnub.api.java.models.consumer.objects_api.channel.PNChannelMetadataResult;
-import com.pubnub.api.java.models.consumer.objects_api.membership.PNMembershipResult;
-import com.pubnub.api.java.models.consumer.objects_api.uuid.PNUUIDMetadataResult;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
-import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
-import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
-import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult;
-import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
 import org.awaitility.Awaitility;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
@@ -68,12 +60,12 @@ public class StreamFilteringIntegrationTests extends BaseIntegrationTest {
 
         pubNub.addListener(new SubscribeCallback() {
             @Override
-            public void status(@NotNull PubNubForJava pubnub, @NotNull PNStatus status) {
+            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
 
             }
 
             @Override
-            public void message(@NotNull PubNubForJava pubnub, @NotNull PNMessageResult message) {
+            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult message) {
                 assertTrue(message.getMessage().toString().contains(messageEnglish));
                 success.set(true);
             }
@@ -98,12 +90,12 @@ public class StreamFilteringIntegrationTests extends BaseIntegrationTest {
 
 
             @Override
-            public void status(@NotNull PubNubForJava pubnub, @NotNull PNStatus status) {
+            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
 
             }
 
             @Override
-            public void message(@NotNull PubNubForJava pubnub, @NotNull PNMessageResult message) {
+            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult message) {
                 success.incrementAndGet();
                 assertFalse(message.getMessage().toString().contains("italian"));
                 assertFalse(message.getMessage().toString().contains("spanish"));
@@ -132,12 +124,12 @@ public class StreamFilteringIntegrationTests extends BaseIntegrationTest {
         pubNub.addListener(new SubscribeCallback() {
 
             @Override
-            public void status(@NotNull PubNubForJava pubnub, @NotNull PNStatus status) {
+            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
 
             }
 
             @Override
-            public void message(@NotNull PubNubForJava pubnub, @NotNull PNMessageResult message) {
+            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult message) {
                 success.incrementAndGet();
                 assertFalse(message.getMessage().toString().contains("english"));
             }
@@ -165,12 +157,12 @@ public class StreamFilteringIntegrationTests extends BaseIntegrationTest {
         pubNub.addListener(new SubscribeCallback() {
 
             @Override
-            public void status(@NotNull PubNubForJava pubnub, @NotNull PNStatus status) {
+            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
 
             }
 
             @Override
-            public void message(@NotNull PubNubForJava pubnub, @NotNull PNMessageResult message) {
+            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult message) {
                 success.incrementAndGet();
                 assertFalse(message.getMessage().toString().contains("25"));
                 assertFalse(message.getMessage().toString().contains("35"));
@@ -206,16 +198,13 @@ public class StreamFilteringIntegrationTests extends BaseIntegrationTest {
 
 
             @Override
-            public void status(@NotNull PubNubForJava pubnub, @NotNull PNStatus status) {
+            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
 
             }
 
             @Override
-            public void message(@NotNull PubNubForJava pubnub, @NotNull PNMessageResult message) {
-                boolean correctMessage = false;
-                if (message.getMessage().toString().contains("success")) {
-                    correctMessage = true;
-                }
+            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult message) {
+                boolean correctMessage = message.getMessage().toString().contains("success");
                 assertTrue(correctMessage);
                 success.set(true);
             }
