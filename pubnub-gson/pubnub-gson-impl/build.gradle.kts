@@ -29,7 +29,7 @@ dependencies {
     testImplementation(libs.junit.vintage.engine)
     testImplementation(libs.awaitility)
     testImplementation(libs.mockk)
-
+    testImplementation("com.google.guava:guava:33.3.0-jre")
     "integrationTestImplementation"(libs.owner)
 }
 

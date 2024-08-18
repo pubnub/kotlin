@@ -45,7 +45,7 @@ interface SubscriptionSet : EventEmitter, SubscribeCapable, AutoCloseable {
     fun remove(subscription: Subscription)
 
     /**
-     * Returns an immutable copy of the set of subscriptions contained in this [BaseSubscriptionSet].
+     * Returns an immutable copy of the set of subscriptions contained in this [SubscriptionSet].
      */
     val subscriptions: Set<Subscription>
 

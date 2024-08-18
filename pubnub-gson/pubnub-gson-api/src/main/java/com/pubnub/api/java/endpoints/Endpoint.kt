@@ -8,7 +8,7 @@ interface Endpoint<T> : ExtendedRemoteAction<T> {
      * Allows to override certain configuration options (see [com.pubnub.api.v2.PNConfigurationOverride.Builder]) for this request only.
      *
      *
-     * [PNConfigurationOverride.from] should be used to obtain a `PNConfigurationOverride.Builder`.
+     * [com.pubnub.api.java.v2.PNConfigurationOverride.from] should be used to obtain a `PNConfigurationOverride.Builder`.
      * Only options present in `PNConfigurationOverride.Builder` will be used for the override.
      *
      *

@@ -1,5 +1,6 @@
 
-import com.pubnub.api.v2.subscriptions.Subscription
+import com.pubnub.api.java.v2.subscriptions.Subscription
+import com.pubnub.api.java.v2.subscriptions.SubscriptionSet
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.internal.java.PubNubForJavaImpl
 import com.pubnub.internal.java.v2.subscription.SubscriptionImpl
@@ -153,7 +154,7 @@ import org.junit.jupiter.api.Test
 // }
 
 class SubscriptionImplTest {
-    private lateinit var objectUnderTest: com.pubnub.api.java.v2.subscriptions.Subscription
+    private lateinit var objectUnderTest: Subscription
 
     private val pubNubImpl: PubNubForJavaImpl = mockk(relaxed = true)
     private val subscriptionSetImpl: SubscriptionSetImpl = mockk()
@@ -171,13 +172,13 @@ class SubscriptionImplTest {
     @Test
     fun `should add subscription to subscription creating subscriptionSet when using plus method`() {
         // given
-        val subscriptionToBeAdded: com.pubnub.api.java.v2.subscriptions.Subscription =
+        val subscriptionToBeAdded: Subscription =
             SubscriptionImpl(pubNubImpl, channels02, channelGroups02, SubscriptionOptions.receivePresenceEvents())
         every { pubNubImpl.subscriptionSetOf(any<Set<Subscription>>()) } returns subscriptionSetImpl
         every { subscriptionSetImpl.subscriptions } returns setOf(objectUnderTest, subscriptionToBeAdded)
 
         // when
-        val subscriptionSet: com.pubnub.api.java.v2.subscriptions.SubscriptionSet = objectUnderTest + subscriptionToBeAdded
+        val subscriptionSet: SubscriptionSet = objectUnderTest + subscriptionToBeAdded
 
         // then
         assertEquals(2, subscriptionSet.subscriptions.size)

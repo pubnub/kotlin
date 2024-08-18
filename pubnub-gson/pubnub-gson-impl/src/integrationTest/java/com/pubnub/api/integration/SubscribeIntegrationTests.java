@@ -344,13 +344,13 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
         assertEquals(1, numberOfReceivedMembershipEvent.get());
         assertEquals(1, numberOfReceivedFileMessages.get());
 
-        subscription.setOnMessage((OnMessageHandler) null);
-        subscription.setOnPresence((OnPresenceHandler) null);
-        subscription.setOnSignal((OnSignalHandler) null);
-        subscription.setOnMessageAction((OnMessageActionHandler) null);
+        subscription.setOnMessage(null);
+        subscription.setOnPresence(null);
+        subscription.setOnSignal(null);
+        subscription.setOnMessageAction(null);
         subscription.setOnChannelMetadata(null);
         subscription.setOnMembership(null);
-        subscription.setOnFile((Function1<? super PNFileEventResult, Unit>) null);
+        subscription.setOnFile(null);
 
         PNPublishResult pnPublishResult02 = pubNub.publish().message(expectedMessage).channel(chan01.getName()).sync();
         pubNub.setPresenceState().state(expectedStatePayload).channels(Collections.singletonList(chan01.getName())).sync();

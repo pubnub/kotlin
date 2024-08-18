@@ -247,9 +247,6 @@ open class PubNubImpl(
     override var onObjects: ((PNObjectEventResult) -> Unit)? by emitterHelper::onObjects
     override var onFile: ((PNFileEventResult) -> Unit)? by emitterHelper::onFile
 
-    /**
-     * The current version of the Kotlin SDK.
-     */
     override val version: String
         get() = SDK_VERSION
 
@@ -289,9 +286,6 @@ open class PubNubImpl(
         return subscriptionSet
     }
 
-    /**
-     * Removes all status and event listeners.
-     */
     override fun removeAllListeners() {
         listenerManager.removeAllListeners()
     }
@@ -312,80 +306,22 @@ open class PubNubImpl(
         listenerManager.removeListener(listener)
     }
 
-    /**
-     * Create a handle to a [BaseChannel] that can be used to obtain a [BaseSubscription].
-     *
-     * The function is cheap to call, and the returned object is lightweight, as it doesn't change any client or server
-     * state. It is therefore permitted to use this method whenever a representation of a channel is required.
-     *
-     * The returned [BaseChannel] holds a reference to this [PubNubImpl] instance internally.
-     *
-     * @param name the name of the channel to return. Supports wildcards by ending it with ".*". See more in the
-     * [documentation](https://www.pubnub.com/docs/general/channels/overview)
-     *
-     * @return a [BaseChannel] instance representing the channel with the given [name]
-     */
     override fun channel(name: String): ChannelImpl {
         return ChannelImpl(this, ChannelName(name))
     }
 
-    /**
-     * Create a handle to a [BaseChannelGroup] that can be used to obtain a [BaseSubscription].
-     *
-     * The function is cheap to call, and the returned object is lightweight, as it doesn't change any client or server
-     * state. It is therefore permitted to use this method whenever a representation of a channel group is required.
-     *
-     * The returned [BaseChannelGroup] holds a reference to this [PubNubImpl] instance internally.
-     *
-     * @param name the name of the channel group to return. See more in the
-     * [documentation](https://www.pubnub.com/docs/general/channels/subscribe#channel-groups)
-     *
-     * @return a [BaseChannelGroup] instance representing the channel group with the given [name]
-     */
     override fun channelGroup(name: String): ChannelGroup {
         return ChannelGroupImpl(this, ChannelGroupName(name))
     }
 
-    /**
-     * Create a handle to a [BaseChannelMetadata] object that can be used to obtain a [BaseSubscription] to metadata events.
-     *
-     * The function is cheap to call, and the returned object is lightweight, as it doesn't change any client or server
-     * state. It is therefore permitted to use this method whenever a representation of a metadata channel is required.
-     *
-     * The returned [BaseChannelMetadata] holds a reference to this [PubNubImpl] instance internally.
-     *
-     * @param id the id of the channel metadata to return. See more in the
-     * [documentation](https://www.pubnub.com/docs/general/metadata/channel-metadata)
-     *
-     * @return a [BaseChannelMetadata] instance representing the channel metadata with the given [id]
-     */
     override fun channelMetadata(id: String): ChannelMetadata {
         return ChannelMetadataImpl(this, ChannelName(id))
     }
 
-    /**
-     * Create a handle to a [BaseUserMetadata] object that can be used to obtain a [BaseSubscription] to user metadata events.
-     *
-     * The function is cheap to call, and the returned object is lightweight, as it doesn't change any client or server
-     * state. It is therefore permitted to use this method whenever a representation of a user metadata is required.
-     *
-     * The returned [BaseUserMetadata] holds a reference to this [PubNubImpl] instance internally.
-     *
-     * @param id the id of the user. See more in the
-     * [documentation](https://www.pubnub.com/docs/general/metadata/users-metadata)
-     *
-     * @return a [BaseUserMetadata] instance representing the channel metadata with the given [id]
-     */
     override fun userMetadata(id: String): UserMetadata {
         return UserMetadataImpl(this, ChannelName(id))
     }
 
-    /**
-     * Create a [BaseSubscriptionSet] from the given [subscriptions].
-     *
-     * @param subscriptions the subscriptions that will be added to the returned [BaseSubscriptionSet]
-     * @return a [BaseSubscriptionSet] containing all [subscriptions]
-     */
     override fun subscriptionSetOf(subscriptions: Set<Subscription>): SubscriptionSet {
         return SubscriptionSetImpl(this, subscriptions as Set<SubscriptionInternal>)
     }
@@ -1518,9 +1454,6 @@ open class PubNubImpl(
         executorService.shutdown()
     }
 
-    /**
-     * Same as [destroy] but immediately.
-     */
     override fun forceDestroy() {
         subscribe.destroy()
         presence.destroy()
@@ -1630,26 +1563,6 @@ open class PubNubImpl(
     private val channelGroupSubscriptionMap = mutableMapOf<ChannelGroupName, SubscriptionImpl>()
 
     //region Subscribe
-
-    /**
-     * Causes the client to create an open TCP socket to the PubNub Real-Time Network and begin listening for messages
-     * on a specified channel.
-     *
-     * To subscribe to a channel the client must send the appropriate [PNConfiguration.subscribeKey] at initialization.
-     *
-     * By default, a newly subscribed client will only receive messages published to the channel
-     * after the `subscribe()` call completes.
-     *
-     * If a client gets disconnected from a channel, it can automatically attempt to reconnect to that channel
-     * and retrieve any available messages that were missed during that period.
-     * This can be achieved by setting [PNConfiguration.retryConfiguration] when
-     * initializing the client.
-     *
-     * @param channels Channels to subscribe/unsubscribe. Either `channel` or [channelGroups] are required.
-     * @param channelGroups Channel groups to subscribe/unsubscribe. Either `channelGroups` or [channels] are required.
-     * @param withPresence Also subscribe to related presence channel.
-     * @param withTimetoken A timetoken to start the subscribe loop from.
-     */
     @Synchronized
     override fun subscribe(
         channels: List<String>,
@@ -1725,23 +1638,6 @@ open class PubNubImpl(
         subscribe(*toSubscribe.toTypedArray(), cursor = SubscriptionCursor(withTimetoken))
     }
 
-    /**
-     * When subscribed to a single channel, this function causes the client to issue a leave from the channel
-     * and close any open socket to the PubNub Network.
-     *
-     * For multiplexed channels, the specified channel(s) will be removed and the socket remains open
-     * until there are no more channels remaining in the list.
-     *
-     * * **WARNING**
-     * Unsubscribing from all the channel(s) and then subscribing to a new channel Y isn't the same as
-     * Subscribing to channel Y and then unsubscribing from the previously subscribed channel(s).
-     *
-     * Unsubscribing from all the channels resets the timetoken and thus,
-     * there could be some gaps in the subscriptions that may lead to a message loss.
-     *
-     * @param channels Channels to subscribe/unsubscribe. Either `channel` or [channelGroups] are required.
-     * @param channelGroups Channel groups to subscribe/unsubscribe. Either `channelGroups` or [channels] are required.
-     */
     @Synchronized
     override fun unsubscribe(
         channels: List<String>,
@@ -1767,9 +1663,6 @@ open class PubNubImpl(
         unsubscribe(*toUnsubscribe.toTypedArray())
     }
 
-    /**
-     * Unsubscribe from all channels and all channel groups
-     */
     @Synchronized
     override fun unsubscribeAll() {
         synchronized(lockChannelsAndGroups) {

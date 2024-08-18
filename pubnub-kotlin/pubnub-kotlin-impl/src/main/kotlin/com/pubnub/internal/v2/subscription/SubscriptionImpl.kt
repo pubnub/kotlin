@@ -133,11 +133,6 @@ open class SubscriptionImpl(
     override var onObjects: ((PNObjectEventResult) -> Unit)? by emitterHelper::onObjects
     override var onFile: ((PNFileEventResult) -> Unit)? by emitterHelper::onFile
 
-    /**
-     * Create a [BaseSubscriptionSet] that contains both subscriptions.
-     *
-     * @param subscription the other [BaseSubscription] to add to the [BaseSubscriptionSet]
-     */
     override fun plus(subscription: Subscription): SubscriptionSet {
         return pubnub.subscriptionSetOf(setOf(this, subscription))
     }

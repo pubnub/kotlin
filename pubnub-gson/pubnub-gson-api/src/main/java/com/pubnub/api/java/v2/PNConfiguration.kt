@@ -192,14 +192,14 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
         val filterExpression: String
 
         /**
-         * Whether to include a [PubNubCore.instanceId] with every request.
+         * Whether to include a `instanceId` with every request.
          *
          * Defaults to `false`.
          */
         val includeInstanceIdentifier: Boolean
 
         /**
-         * Whether to include a [PubNubCore.requestId] with every request.
+         * Whether to include a `requestId` with every request.
          *
          * Defaults to `true`.
          */
