@@ -20,4 +20,4 @@ endpoint.overrideConfiguration(configOverride.build()).sync()
 
 #### Return
 
-Returns the same instance for convenience, so [sync](../../com.pubnub.api.endpoints.presence/-where-now/index.md#40193115%2FFunctions%2F126356644) or [async](../../com.pubnub.api.endpoints.presence/-where-now/index.md#1418965989%2FFunctions%2F126356644) can be called next.
+Returns the same instance for convenience, so [sync](../../com.pubnub.api.endpoints.access.builder/-grant-token-entities-builder/index.md#40193115%2FFunctions%2F126356644) or [async](../../com.pubnub.api.endpoints.access.builder/-grant-token-entities-builder/index.md#1418965989%2FFunctions%2F126356644) can be called next.

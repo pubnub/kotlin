@@ -8,8 +8,8 @@ interface [BuilderSteps](index.md)
 
 | |
 |---|
-| [ObjectsBuilderSteps](../../com.pubnub.api.endpoints.objects_api.utils/-objects-builder-steps/index.md) |
 | [FilesBuilderSteps](../../com.pubnub.api.endpoints.files.requiredparambuilder/-files-builder-steps/index.md) |
+| [ObjectsBuilderSteps](../../com.pubnub.api.endpoints.objects_api.utils/-objects-builder-steps/index.md) |
 
 ## Types
 

@@ -8,11 +8,11 @@ abstract class [PNResource](index.md)&lt;[T](index.md)&gt;
 
 | |
 |---|
-| [ChannelGroupGrant](../-channel-group-grant/index.md) |
 | [ChannelGrant](../-channel-grant/index.md) |
 | [UUIDGrant](../-u-u-i-d-grant/index.md) |
-| [SpacePermissions](../../com.pubnub.api.models.consumer.access_manager.sum/-space-permissions/index.md) |
+| [ChannelGroupGrant](../-channel-group-grant/index.md) |
 | [UserPermissions](../../com.pubnub.api.models.consumer.access_manager.sum/-user-permissions/index.md) |
+| [SpacePermissions](../../com.pubnub.api.models.consumer.access_manager.sum/-space-permissions/index.md) |
 
 ## Constructors
 
