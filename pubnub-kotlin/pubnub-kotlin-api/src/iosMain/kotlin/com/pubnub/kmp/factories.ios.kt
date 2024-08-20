@@ -205,15 +205,15 @@ private fun mapAppContextEvent(from: PubNubAppContextEventObjC?): PNObjectEventM
                 type = from.type(),
                 data = PNUUIDMetadata(
                     id = from.metadata().id(),
-                    name = PatchValue.of(from.metadata().name()),
-                    externalId = PatchValue.of(from.metadata().externalId()),
-                    profileUrl = PatchValue.of(from.metadata().profileUrl()),
-                    email = PatchValue.of(from.metadata().email()),
-                    custom = PatchValue.of(from.metadata().custom()?.safeCast()),
-                    updated = PatchValue.of(from.metadata().updated().orEmpty()),
-                    eTag = PatchValue.of(from.metadata().eTag().orEmpty()),
-                    type = PatchValue.of(from.metadata().type()),
-                    status = PatchValue.of(from.metadata().status())
+                    name = from.metadata().name()?.let { PatchValue.of(it) },
+                    externalId = from.metadata().externalId()?.let { PatchValue.of(it) },
+                    profileUrl = from.metadata().profileUrl()?.let { PatchValue.of(it) },
+                    email = from.metadata().email()?.let { PatchValue.of(it) },
+                    custom = from.metadata().custom()?.safeCast<String, Any?>()?.let { PatchValue.of(it) },
+                    updated = from.metadata().updated()?.let { PatchValue.of(it) },
+                    eTag = from.metadata().eTag()?.let { PatchValue.of(it) },
+                    type = from.metadata().type()?.let { PatchValue.of(it) },
+                    status = from.metadata().status()?.let { PatchValue.of(it) }
                 )
             )
         is PubNubRemoveUUIDMetadataResultObjC ->
@@ -232,13 +232,13 @@ private fun mapAppContextEvent(from: PubNubAppContextEventObjC?): PNObjectEventM
                 type = from.type(),
                 data = PNChannelMetadata(
                     id = from.metadata().id(),
-                    name = PatchValue.of(from.metadata().name()),
-                    description = PatchValue.of(from.metadata().descr()),
-                    custom = PatchValue.of(from.metadata().custom()?.safeCast()),
-                    updated = PatchValue.of(from.metadata().updated().orEmpty()),
-                    eTag = PatchValue.of(from.metadata().eTag().orEmpty()),
-                    type = PatchValue.of(from.metadata().type()),
-                    status = PatchValue.of(from.metadata().status())
+                    name = from.metadata().name()?.let { PatchValue.of(it) },
+                    description = from.metadata().descr()?.let { PatchValue.of(it) },
+                    custom = from.metadata().custom()?.safeCast<String, Any?>()?.let { PatchValue.of(it) },
+                    updated = from.metadata().updated()?.let { PatchValue.of(it) },
+                    eTag = from.metadata().eTag()?.let { PatchValue.of(it) },
+                    type = from.metadata().type()?.let { PatchValue.of(it) },
+                    status = from.metadata().status()?.let { PatchValue.of(it) }
                 )
             )
         is PubNubRemoveChannelMetadataResultObjC ->
