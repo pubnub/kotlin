@@ -4,7 +4,7 @@ import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.java.PubNub
 import com.pubnub.api.models.consumer.PNStatus
 
-interface StatusListener : Listener {
+fun interface StatusListener : Listener {
     /**
      * Receive status updates from the PubNub client, such as:
      * * [com.pubnub.api.enums.PNStatusCategory.PNConnectedCategory],
