@@ -5,6 +5,7 @@ import com.pubnub.internal.eventengine.Sink
 import com.pubnub.internal.extension.scheduleWithDelay
 import com.pubnub.internal.presence.eventengine.event.PresenceEvent
 import org.slf4j.LoggerFactory
+import java.util.concurrent.RejectedExecutionException
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
 import kotlin.time.Duration
@@ -29,10 +30,14 @@ internal class WaitEffect(
             return
         }
 
-        scheduled =
-            executorService.scheduleWithDelay(heartbeatInterval) {
-                presenceEventSink.add(PresenceEvent.TimesUp)
-            }
+        try {
+            scheduled =
+                executorService.scheduleWithDelay(heartbeatInterval) {
+                    presenceEventSink.add(PresenceEvent.TimesUp)
+                }
+        } catch (_: RejectedExecutionException) {
+            log.trace("Unable to schedule retry, PubNub was likely already destroyed.")
+        }
     }
 
     @Synchronized

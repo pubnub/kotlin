@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.concurrent.RejectedExecutionException
 import java.util.concurrent.ScheduledExecutorService
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
@@ -82,8 +83,12 @@ internal abstract class RetryableCallback<T>(
         val effectiveDelay: Duration = delay + randomDelayInMillis.milliseconds
         log.trace("Added random delay so effective retry delay is ${effectiveDelay.inWholeMilliseconds} millis")
         // don't want to block the main thread in case of Android so using executorService
-        executorService.scheduleWithDelay(effectiveDelay) {
-            call.clone().enqueue(this)
+        try {
+            executorService.scheduleWithDelay(effectiveDelay) {
+                call.clone().enqueue(this)
+            }
+        } catch (_: RejectedExecutionException) {
+            log.trace("Unable to schedule retry, PubNub was likely already destroyed.")
         }
     }
 
