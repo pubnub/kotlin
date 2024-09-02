@@ -1,3 +1,9 @@
+## v9.2.4
+August 19 2024
+
+#### Fixed
+- Fixes a crash on Android after `PubNub.destroy` is called and there are requests running.
+
 ## v9.2.3
 July 29 2024
 
