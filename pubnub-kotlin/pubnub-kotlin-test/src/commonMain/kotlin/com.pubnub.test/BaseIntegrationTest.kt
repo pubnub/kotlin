@@ -180,6 +180,9 @@ class PubNubTest(
         }
     ) = suspendCancellableCoroutine { cont ->
         val statusListener = createStatusListener(pubNub) { _, pnStatus ->
+            if (cont.isCompleted) {
+                return@createStatusListener
+            }
             if (pnStatus.category == PNStatusCategory.PNDisconnectedCategory || pnStatus.category == PNStatusCategory.PNSubscriptionChanged &&
                 pnStatus.affectedChannels.containsAll(channels) && pnStatus.affectedChannelGroups.containsAll(
                     channelGroups
