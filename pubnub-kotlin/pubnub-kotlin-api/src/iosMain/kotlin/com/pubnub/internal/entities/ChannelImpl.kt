@@ -7,6 +7,7 @@ import com.pubnub.api.endpoints.files.SendFile
 import com.pubnub.api.endpoints.pubsub.Publish
 import com.pubnub.api.endpoints.pubsub.Signal
 import com.pubnub.api.v2.entities.Channel
+import com.pubnub.api.v2.subscriptions.ReceivePresenceEventsImpl
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.internal.subscription.SubscriptionImpl
@@ -55,8 +56,11 @@ class ChannelImpl(
     override val name: String
         get() = channel.name()
 
+    // TODO: Add support for handling SubscriptionOptions
     override fun subscription(options: SubscriptionOptions): Subscription {
-        // TODO: Add support for handling SubscriptionOptions
-        return SubscriptionImpl(objCSubscription = PubNubSubscriptionObjC(entity = channel))
+        val presenceOptions = options.allOptions.filterIsInstance<ReceivePresenceEventsImpl>()
+        val objcSubscription = PubNubSubscriptionObjC(channel, presenceOptions.isNotEmpty())
+
+        return SubscriptionImpl(objcSubscription)
     }
 }
