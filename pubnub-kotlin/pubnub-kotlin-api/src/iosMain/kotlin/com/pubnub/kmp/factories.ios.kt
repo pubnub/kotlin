@@ -205,15 +205,15 @@ private fun mapAppContextEvent(from: PubNubAppContextEventObjC?): PNObjectEventM
                 type = from.type(),
                 data = PNUUIDMetadata(
                     id = from.metadata().id(),
-                    name = PatchValue.of(from.metadata().name()),
-                    externalId = PatchValue.of(from.metadata().externalId()),
-                    profileUrl = PatchValue.of(from.metadata().profileUrl()),
-                    email = PatchValue.of(from.metadata().email()),
-                    custom = PatchValue.of(from.metadata().custom()?.safeCast()),
-                    updated = PatchValue.of(from.metadata().updated().orEmpty()),
-                    eTag = PatchValue.of(from.metadata().eTag().orEmpty()),
-                    type = PatchValue.of(from.metadata().type()),
-                    status = PatchValue.of(from.metadata().status())
+                    name = if (from.metadata().hasName()) { PatchValue.of(from.metadata().name()) } else { null },
+                    externalId = if (from.metadata().hasExternalId()) { PatchValue.of(from.metadata().externalId()) } else { null },
+                    profileUrl = if (from.metadata().hasProfileUrl()) { PatchValue.of(from.metadata().profileUrl()) } else { null },
+                    email = if (from.metadata().hasEmail()) { PatchValue.of(from.metadata().email()) } else { null },
+                    custom = if (from.metadata().hasCustom()) { PatchValue.of(from.metadata().custom()?.safeCast<String, Any?>()) } else { null },
+                    updated = from.metadata().updated()?.let { PatchValue.of(it) },
+                    eTag = from.metadata().eTag()?.let { PatchValue.of(it) },
+                    type = if (from.metadata().hasType()) { PatchValue.of(from.metadata().type()) } else { null },
+                    status = if (from.metadata().hasStatus()) { PatchValue.of(from.metadata().status()) } else { null }
                 )
             )
         is PubNubRemoveUUIDMetadataResultObjC ->
@@ -232,13 +232,13 @@ private fun mapAppContextEvent(from: PubNubAppContextEventObjC?): PNObjectEventM
                 type = from.type(),
                 data = PNChannelMetadata(
                     id = from.metadata().id(),
-                    name = PatchValue.of(from.metadata().name()),
-                    description = PatchValue.of(from.metadata().descr()),
-                    custom = PatchValue.of(from.metadata().custom()?.safeCast()),
-                    updated = PatchValue.of(from.metadata().updated().orEmpty()),
-                    eTag = PatchValue.of(from.metadata().eTag().orEmpty()),
-                    type = PatchValue.of(from.metadata().type()),
-                    status = PatchValue.of(from.metadata().status())
+                    name = if (from.metadata().hasName()) { PatchValue.of(from.metadata().name()) } else { null },
+                    description = if (from.metadata().hasDescr()) { PatchValue.of(from.metadata().descr()) } else { null },
+                    custom = if (from.metadata().hasCustom()) { PatchValue.of(from.metadata().custom()?.safeCast<String, Any?>()) } else { null },
+                    updated = from.metadata().updated()?.let { PatchValue.of(it) },
+                    eTag = from.metadata().eTag()?.let { PatchValue.of(it) },
+                    type = if (from.metadata().hasType()) { PatchValue.of(from.metadata().type()) } else { null },
+                    status = if (from.metadata().hasStatus()) { PatchValue.of(from.metadata().status()) } else { null }
                 )
             )
         is PubNubRemoveChannelMetadataResultObjC ->
