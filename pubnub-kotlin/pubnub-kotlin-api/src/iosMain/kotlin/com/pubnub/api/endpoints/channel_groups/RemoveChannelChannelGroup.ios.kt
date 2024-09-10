@@ -1,6 +1,6 @@
 package com.pubnub.api.endpoints.channel_groups
 
-import cocoapods.PubNubSwift.PubNubObjC
+import cocoapods.PubNubSwift.KMPPubNub
 import cocoapods.PubNubSwift.removeWithChannels
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsRemoveChannelResult
 import com.pubnub.api.v2.callbacks.Consumer
@@ -17,7 +17,7 @@ actual interface RemoveChannelChannelGroup : PNFuture<PNChannelGroupsRemoveChann
 
 @OptIn(ExperimentalForeignApi::class)
 class RemoveChannelChannelGroupImpl(
-    private val pubnub: PubNubObjC,
+    private val pubnub: KMPPubNub,
     private val channels: List<String>,
     private val channelGroup: String
 ) : RemoveChannelChannelGroup {

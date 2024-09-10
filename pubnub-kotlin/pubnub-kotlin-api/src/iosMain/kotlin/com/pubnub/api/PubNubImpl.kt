@@ -1,8 +1,8 @@
 package com.pubnub.api
 
-import cocoapods.PubNubSwift.PubNubObjC
-import cocoapods.PubNubSwift.PubNubSubscriptionObjC
-import cocoapods.PubNubSwift.PubNubSubscriptionSetObjC
+import cocoapods.PubNubSwift.KMPPubNub
+import cocoapods.PubNubSwift.KMPSubscription
+import cocoapods.PubNubSwift.KMPSubscriptionSet
 import cocoapods.PubNubSwift.addEventListenerWithListener
 import cocoapods.PubNubSwift.addStatusListenerWithListener
 import cocoapods.PubNubSwift.channelGroupWith
@@ -143,9 +143,9 @@ import com.pubnub.kmp.Uploadable
 import kotlinx.cinterop.ExperimentalForeignApi
 
 @OptIn(ExperimentalForeignApi::class)
-class PubNubImpl(private val pubNubObjC: PubNubObjC) : PubNub {
+class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
     constructor(configuration: PNConfiguration) : this(
-        PubNubObjC(
+        KMPPubNub(
             user = configuration.userId.value,
             subKey = configuration.subscribeKey,
             pubKey = configuration.publishKey
@@ -833,7 +833,7 @@ class PubNubImpl(private val pubNubObjC: PubNubObjC) : PubNub {
 
     override fun subscriptionSetOf(subscriptions: Set<Subscription>): SubscriptionSet {
         return SubscriptionSetImpl(
-            PubNubSubscriptionSetObjC(subscriptions.filterIsInstance<SubscriptionImpl>().map { it.objCSubscription })
+            KMPSubscriptionSet(subscriptions.filterIsInstance<SubscriptionImpl>().map { it.objCSubscription })
         )
     }
 
@@ -842,14 +842,14 @@ class PubNubImpl(private val pubNubObjC: PubNubObjC) : PubNub {
         channelGroups: Set<String>,
         options: SubscriptionOptions
     ): SubscriptionSet {
-        val channelSubscriptions = channels.map { pubNubObjC.channelWith(it) }.map { entity -> PubNubSubscriptionObjC(entity) }
+        val channelSubscriptions = channels.map { pubNubObjC.channelWith(it) }.map { entity -> KMPSubscription(entity) }
         val channelGroupSubscriptions = channelGroups.map { pubNubObjC.channelGroupWith(it) }.map {
                 entity ->
-            PubNubSubscriptionObjC(entity)
+            KMPSubscription(entity)
         }
 
         return SubscriptionSetImpl(
-            PubNubSubscriptionSetObjC(channelGroupSubscriptions + channelSubscriptions)
+            KMPSubscriptionSet(channelGroupSubscriptions + channelSubscriptions)
         )
     }
 

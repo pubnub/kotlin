@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints.objects.uuid
 
-import cocoapods.PubNubSwift.PubNubObjC
-import cocoapods.PubNubSwift.PubNubUUIDMetadataObjC
+import cocoapods.PubNubSwift.KMPPubNub
+import cocoapods.PubNubSwift.KMPUUIDMetadata
 import cocoapods.PubNubSwift.getAllUUIDMetadataWithLimit
 import com.pubnub.api.models.consumer.objects.PNKey
 import com.pubnub.api.models.consumer.objects.PNPage
@@ -26,7 +26,7 @@ actual interface GetAllUUIDMetadata : PNFuture<PNUUIDMetadataArrayResult>
 
 @OptIn(ExperimentalForeignApi::class)
 class GetAllUUIDMetadataImpl(
-    private val pubnub: PubNubObjC,
+    private val pubnub: KMPPubNub,
     private val limit: Int?,
     private val page: PNPage?,
     private val filter: String?,
@@ -45,7 +45,7 @@ class GetAllUUIDMetadataImpl(
             onSuccess = callback.onSuccessHandler3 { uuids, totalCount, next ->
                 PNUUIDMetadataArrayResult(
                     status = 200,
-                    data = uuids.filterAndMap { rawValue: PubNubUUIDMetadataObjC -> createPNUUIDMetadata(from = rawValue) },
+                    data = uuids.filterAndMap { rawValue: KMPUUIDMetadata -> createPNUUIDMetadata(from = rawValue) },
                     totalCount = totalCount?.intValue ?: 0,
                     next = next?.start()?.let { hash -> PNPage.PNNext(pageHash = hash) },
                     prev = next?.end()?.let { hash -> PNPage.PNPrev(pageHash = hash) }

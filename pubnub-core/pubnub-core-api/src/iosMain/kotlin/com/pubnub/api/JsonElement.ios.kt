@@ -2,7 +2,7 @@
 
 package com.pubnub.api
 
-import cocoapods.PubNubSwift.AnyJSONObjC
+import cocoapods.PubNubSwift.KMPAnyJSON
 import kotlinx.cinterop.ExperimentalForeignApi
 
 actual abstract class JsonElement(val value: Any?) {
@@ -43,7 +43,7 @@ class JsonElementImpl(value: Any?) : JsonElement(value)
 
 actual fun JsonElement.asString(): String? {
     return when (value) {
-        is AnyJSONObjC -> value.asString()
+        is KMPAnyJSON -> value.asString()
         is String -> value
         else -> null
     }
@@ -51,7 +51,7 @@ actual fun JsonElement.asString(): String? {
 
 actual fun JsonElement.asMap(): Map<String, JsonElement>? {
     return when (value) {
-        is AnyJSONObjC -> (value.asMap() as? Map<String, Any>)?.mapValues {
+        is KMPAnyJSON -> (value.asMap() as? Map<String, Any>)?.mapValues {
             JsonElementImpl(it.value)
         }
         is Map<*, *> -> (value as Map<String, *>)?.mapValues { JsonElementImpl(it.value) }
@@ -60,12 +60,12 @@ actual fun JsonElement.asMap(): Map<String, JsonElement>? {
 }
 
 actual fun JsonElement.isNull(): Boolean {
-    return value == null || (value as? AnyJSONObjC)?.isNull() == true
+    return value == null || (value as? KMPAnyJSON)?.isNull() == true
 }
 
 actual fun JsonElement.asList(): List<JsonElement>? {
     return when (value) {
-        is AnyJSONObjC -> value.asList()?.map {
+        is KMPAnyJSON -> value.asList()?.map {
             JsonElementImpl(it)
         }
         is List<*> -> value.map { JsonElementImpl(it) }
@@ -75,7 +75,7 @@ actual fun JsonElement.asList(): List<JsonElement>? {
 
 actual fun JsonElement.asLong(): Long? {
     return when (value) {
-        is AnyJSONObjC -> value.asInt()?.longValue
+        is KMPAnyJSON -> value.asInt()?.longValue
         is Long -> value
         is Int -> value.toLong()
         is Boolean -> if (value) {
@@ -89,7 +89,7 @@ actual fun JsonElement.asLong(): Long? {
 
 actual fun JsonElement.asBoolean(): Boolean? {
     return when (value) {
-        is AnyJSONObjC -> value.asBool()?.boolValue
+        is KMPAnyJSON -> value.asBool()?.boolValue
         is Boolean -> value
         else -> null
     }
@@ -97,7 +97,7 @@ actual fun JsonElement.asBoolean(): Boolean? {
 
 actual fun JsonElement.asDouble(): Double? {
     return when (value) {
-        is AnyJSONObjC -> value.asDouble()?.doubleValue
+        is KMPAnyJSON -> value.asDouble()?.doubleValue
         is Number -> value.toDouble()
         is Boolean -> if (value) {
             1.0
@@ -110,7 +110,7 @@ actual fun JsonElement.asDouble(): Double? {
 
 actual fun JsonElement.asNumber(): Number? {
     return when (value) {
-        is AnyJSONObjC -> value.asNumber() as? Number
+        is KMPAnyJSON -> value.asNumber() as? Number
         is Number -> value
         is Boolean -> if (value) {
             1
@@ -122,5 +122,5 @@ actual fun JsonElement.asNumber(): Number? {
 }
 
 actual fun createJsonElement(any: Any?): JsonElement {
-    return JsonElementImpl(AnyJSONObjC(any))
+    return JsonElementImpl(KMPAnyJSON(any))
 }

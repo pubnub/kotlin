@@ -1,6 +1,6 @@
 package com.pubnub.api.endpoints.presence
 
-import cocoapods.PubNubSwift.PubNubObjC
+import cocoapods.PubNubSwift.KMPPubNub
 import cocoapods.PubNubSwift.whereNowWithUuid
 import com.pubnub.api.models.consumer.presence.PNWhereNowResult
 import com.pubnub.api.v2.callbacks.Consumer
@@ -17,7 +17,7 @@ actual interface WhereNow : PNFuture<PNWhereNowResult>
 
 @OptIn(ExperimentalForeignApi::class)
 class WhereNowImpl(
-    private val pubnub: PubNubObjC,
+    private val pubnub: KMPPubNub,
     private val uuid: String
 ) : WhereNow {
     override fun async(callback: Consumer<Result<PNWhereNowResult>>) {

@@ -1,6 +1,6 @@
 package com.pubnub.api.endpoints.presence
 
-import cocoapods.PubNubSwift.PubNubObjC
+import cocoapods.PubNubSwift.KMPPubNub
 import cocoapods.PubNubSwift.getPresenceStateWithChannels
 import com.pubnub.api.models.consumer.presence.PNGetStateResult
 import com.pubnub.api.v2.callbacks.Consumer
@@ -18,7 +18,7 @@ actual interface GetState : PNFuture<PNGetStateResult>
 
 @OptIn(ExperimentalForeignApi::class)
 class GetStateImpl(
-    private val pubnub: PubNubObjC,
+    private val pubnub: KMPPubNub,
     private val channels: List<String>,
     private val channelGroups: List<String>,
     private val uuid: String

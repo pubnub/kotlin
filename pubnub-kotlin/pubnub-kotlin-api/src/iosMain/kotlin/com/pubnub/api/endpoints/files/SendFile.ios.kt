@@ -1,10 +1,10 @@
 package com.pubnub.api.endpoints.files
 
-import cocoapods.PubNubSwift.PubNubDataContentObjC
-import cocoapods.PubNubSwift.PubNubFileContentObjC
-import cocoapods.PubNubSwift.PubNubInputStreamContentObjC
-import cocoapods.PubNubSwift.PubNubObjC
-import cocoapods.PubNubSwift.PubNubUploadableObjC
+import cocoapods.PubNubSwift.KMPDataUploadContent
+import cocoapods.PubNubSwift.KMPFileUploadContent
+import cocoapods.PubNubSwift.KMPInputStreamUploadContent
+import cocoapods.PubNubSwift.KMPPubNub
+import cocoapods.PubNubSwift.KMPUploadable
 import cocoapods.PubNubSwift.sendFileWithChannel
 import com.pubnub.api.PubNubException
 import com.pubnub.api.models.consumer.files.PNBaseFile
@@ -28,7 +28,7 @@ actual interface SendFile : PNFuture<PNFileUploadResult>
 
 @OptIn(ExperimentalForeignApi::class)
 class SendFileImpl(
-    private val pubnub: PubNubObjC,
+    private val pubnub: KMPPubNub,
     private val channel: String,
     private val fileName: String,
     private val inputStream: Uploadable,
@@ -62,16 +62,16 @@ class SendFileImpl(
         } ?: callback.accept(Result.failure(PubNubException("Invalid argument $inputStream")))
     }
 
-    private fun mapContent(content: Uploadable): PubNubUploadableObjC? {
+    private fun mapContent(content: Uploadable): KMPUploadable? {
         return when (content) {
-            is DataUploadContent -> return PubNubDataContentObjC(
+            is DataUploadContent -> return KMPDataUploadContent(
                 data = content.data,
                 contentType = content.contentType
             )
-            is FileUploadContent -> PubNubFileContentObjC(
+            is FileUploadContent -> KMPFileUploadContent(
                 fileURL = content.url
             )
-            is StreamUploadContent -> PubNubInputStreamContentObjC(
+            is StreamUploadContent -> KMPInputStreamUploadContent(
                 stream = content.stream,
                 contentType = content.contentType,
                 contentLength = content.contentLength.toLong()

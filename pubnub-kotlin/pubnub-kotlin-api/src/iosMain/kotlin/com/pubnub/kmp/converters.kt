@@ -1,10 +1,10 @@
 package com.pubnub.kmp
 
-import cocoapods.PubNubSwift.PubNubChannelMetadataObjC
-import cocoapods.PubNubSwift.PubNubHashedPageObjC
-import cocoapods.PubNubSwift.PubNubMembershipMetadataObjC
-import cocoapods.PubNubSwift.PubNubObjectSortPropertyObjC
-import cocoapods.PubNubSwift.PubNubUUIDMetadataObjC
+import cocoapods.PubNubSwift.KMPChannelMetadata
+import cocoapods.PubNubSwift.KMPHashedPage
+import cocoapods.PubNubSwift.KMPMembershipMetadata
+import cocoapods.PubNubSwift.KMPObjectSortProperty
+import cocoapods.PubNubSwift.KMPUUIDMetadata
 import com.pubnub.api.models.consumer.objects.PNKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
@@ -24,8 +24,8 @@ internal fun String.toNSData(): NSData? {
 }
 
 @OptIn(ExperimentalForeignApi::class)
-internal fun createPubNubHashedPage(from: PNPage?): PubNubHashedPageObjC {
-    return PubNubHashedPageObjC(
+internal fun createPubNubHashedPage(from: PNPage?): KMPHashedPage {
+    return KMPHashedPage(
         start = if (from is PNPage.PNNext) {
             from.pageHash
         } else {
@@ -42,7 +42,7 @@ internal fun createPubNubHashedPage(from: PNPage?): PubNubHashedPageObjC {
 
 // TODO: PatchValue should consider cases where there is no response for a given field
 @OptIn(ExperimentalForeignApi::class)
-internal fun createPNUUIDMetadata(from: PubNubUUIDMetadataObjC?): PNUUIDMetadata {
+internal fun createPNUUIDMetadata(from: KMPUUIDMetadata?): PNUUIDMetadata {
     return PNUUIDMetadata(
         id = from!!.id(),
         name = PatchValue.of(from.name()),
@@ -59,7 +59,7 @@ internal fun createPNUUIDMetadata(from: PubNubUUIDMetadataObjC?): PNUUIDMetadata
 
 // TODO: PatchValue should consider cases where there is no response for a given field
 @OptIn(ExperimentalForeignApi::class)
-internal fun createPNChannelMetadata(from: PubNubChannelMetadataObjC?): PNChannelMetadata {
+internal fun createPNChannelMetadata(from: KMPChannelMetadata?): PNChannelMetadata {
     return PNChannelMetadata(
         id = from!!.id(),
         name = PatchValue.of(from.name()),
@@ -73,9 +73,9 @@ internal fun createPNChannelMetadata(from: PubNubChannelMetadataObjC?): PNChanne
 }
 
 @OptIn(ExperimentalForeignApi::class)
-internal fun createObjectSortProperties(from: Collection<PNSortKey<PNKey>>): List<PubNubObjectSortPropertyObjC> {
+internal fun createObjectSortProperties(from: Collection<PNSortKey<PNKey>>): List<KMPObjectSortProperty> {
     return from.map {
-        PubNubObjectSortPropertyObjC(
+        KMPObjectSortProperty(
             key = it.key.fieldName,
             direction = it.dir
         )
@@ -84,7 +84,7 @@ internal fun createObjectSortProperties(from: Collection<PNSortKey<PNKey>>): Lis
 
 // TODO: PatchValue should consider cases where there is no response for a given field
 @OptIn(ExperimentalForeignApi::class)
-internal fun createPNChannelMembership(from: PubNubMembershipMetadataObjC): PNChannelMembership {
+internal fun createPNChannelMembership(from: KMPMembershipMetadata): PNChannelMembership {
     return PNChannelMembership(
         channel = PNChannelMetadata(
             id = from.channelMetadataId(),
@@ -105,7 +105,7 @@ internal fun createPNChannelMembership(from: PubNubMembershipMetadataObjC): PNCh
 
 // TODO: PatchValue should consider cases where there is no response for a given field
 @OptIn(ExperimentalForeignApi::class)
-internal fun createPNMember(from: PubNubMembershipMetadataObjC?): PNMember {
+internal fun createPNMember(from: KMPMembershipMetadata?): PNMember {
     return PNMember(
         uuid = createPNUUIDMetadata(from = from!!.uuid()),
         custom = PatchValue.of(from.custom()?.safeCast()),

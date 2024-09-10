@@ -1,6 +1,6 @@
 package com.pubnub.api.endpoints.pubsub
 
-import cocoapods.PubNubSwift.PubNubObjC
+import cocoapods.PubNubSwift.KMPPubNub
 import cocoapods.PubNubSwift.publishWithChannel
 import com.pubnub.api.models.consumer.PNPublishResult
 import com.pubnub.api.v2.callbacks.Consumer
@@ -18,7 +18,7 @@ actual interface Publish : PNFuture<PNPublishResult>
 
 @OptIn(ExperimentalForeignApi::class)
 class PublishImpl(
-    private val pubnub: PubNubObjC,
+    private val pubnub: KMPPubNub,
     private val channel: String,
     private val message: Any,
     private val meta: Any?,

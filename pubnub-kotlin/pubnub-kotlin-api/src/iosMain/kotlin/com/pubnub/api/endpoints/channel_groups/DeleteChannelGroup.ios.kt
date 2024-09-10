@@ -1,6 +1,6 @@
 package com.pubnub.api.endpoints.channel_groups
 
-import cocoapods.PubNubSwift.PubNubObjC
+import cocoapods.PubNubSwift.KMPPubNub
 import cocoapods.PubNubSwift.deleteWithChannelGroup
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsDeleteGroupResult
 import com.pubnub.api.v2.callbacks.Consumer
@@ -17,7 +17,7 @@ actual interface DeleteChannelGroup : PNFuture<PNChannelGroupsDeleteGroupResult>
 
 @OptIn(ExperimentalForeignApi::class)
 class DeleteChannelGroupImpl(
-    private val pubnub: PubNubObjC,
+    private val pubnub: KMPPubNub,
     private val channelGroup: String
 ) : DeleteChannelGroup {
     override fun async(callback: Consumer<Result<PNChannelGroupsDeleteGroupResult>>) {

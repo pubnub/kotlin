@@ -1,6 +1,6 @@
 package com.pubnub.api.endpoints.message_actions
 
-import cocoapods.PubNubSwift.PubNubObjC
+import cocoapods.PubNubSwift.KMPPubNub
 import cocoapods.PubNubSwift.addMessageActionWithChannel
 import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
@@ -18,7 +18,7 @@ actual interface AddMessageAction : PNFuture<PNAddMessageActionResult>
 
 @OptIn(ExperimentalForeignApi::class)
 class AddMessageActionImpl(
-    private val pubnub: PubNubObjC,
+    private val pubnub: KMPPubNub,
     private val channel: String,
     private val actionType: String,
     private val actionValue: String,
