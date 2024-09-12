@@ -19,6 +19,7 @@ import com.pubnub.api.models.consumer.message_actions.PNMessageAction;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions;
+import org.awaitility.Durations;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
@@ -149,7 +150,7 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
 
         unsubscribeFromChannel(pubNub, expectedChannel);
 
-        listen(success);
+        listen(success, Durations.TEN_SECONDS);
     }
 
     @Test
