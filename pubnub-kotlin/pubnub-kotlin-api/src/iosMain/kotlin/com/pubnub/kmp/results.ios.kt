@@ -1,6 +1,6 @@
 package com.pubnub.kmp
 
-import cocoapods.PubNubSwift.PubNubErrorObjC
+import cocoapods.PubNubSwift.KMPError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
@@ -52,7 +52,7 @@ fun <T> Consumer<Result<T>>.onSuccessReturnValue(value: T): () -> Unit {
 @OptIn(ExperimentalForeignApi::class)
 fun <T> Consumer<Result<T>>.onFailureHandler(
     mapper: (NSError?) -> Throwable = { error: NSError? ->
-        if (error is PubNubErrorObjC) {
+        if (error is KMPError) {
             PubNubException(error.statusCode().toInt(), error.localizedDescription, null)
         } else {
             PubNubException(errorMessage = error?.localizedDescription)

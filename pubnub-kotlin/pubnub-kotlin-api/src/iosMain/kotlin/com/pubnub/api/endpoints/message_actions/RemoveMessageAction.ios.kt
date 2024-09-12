@@ -1,6 +1,6 @@
 package com.pubnub.api.endpoints.message_actions
 
-import cocoapods.PubNubSwift.PubNubObjC
+import cocoapods.PubNubSwift.KMPPubNub
 import cocoapods.PubNubSwift.removeMessageActionWithChannel
 import com.pubnub.api.models.consumer.message_actions.PNRemoveMessageActionResult
 import com.pubnub.api.v2.callbacks.Consumer
@@ -17,7 +17,7 @@ actual interface RemoveMessageAction : PNFuture<PNRemoveMessageActionResult>
 
 @OptIn(ExperimentalForeignApi::class)
 class RemoveMessageActionImpl(
-    private val pubnub: PubNubObjC,
+    private val pubnub: KMPPubNub,
     private val channel: String,
     private val messageTimetoken: Long,
     private val actionTimetoken: Long

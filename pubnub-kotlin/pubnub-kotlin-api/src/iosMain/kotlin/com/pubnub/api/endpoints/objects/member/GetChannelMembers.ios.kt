@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints.objects.member
 
-import cocoapods.PubNubSwift.PubNubMembershipMetadataObjC
-import cocoapods.PubNubSwift.PubNubObjC
+import cocoapods.PubNubSwift.KMPMembershipMetadata
+import cocoapods.PubNubSwift.KMPPubNub
 import cocoapods.PubNubSwift.getChannelMembersWithChannel
 import com.pubnub.api.models.consumer.objects.PNMemberKey
 import com.pubnub.api.models.consumer.objects.PNPage
@@ -26,7 +26,7 @@ actual interface GetChannelMembers : PNFuture<PNMemberArrayResult>
 
 @OptIn(ExperimentalForeignApi::class)
 class GetChannelMembersImpl(
-    private val pubnub: PubNubObjC,
+    private val pubnub: KMPPubNub,
     private val channel: String,
     private val limit: Int?,
     private val page: PNPage?,
@@ -52,7 +52,7 @@ class GetChannelMembersImpl(
             onSuccess = callback.onSuccessHandler3 { memberships, totalCount, page ->
                 PNMemberArrayResult(
                     status = 200,
-                    data = memberships.filterAndMap { rawValue: PubNubMembershipMetadataObjC -> createPNMember(rawValue) },
+                    data = memberships.filterAndMap { rawValue: KMPMembershipMetadata -> createPNMember(rawValue) },
                     totalCount = totalCount?.intValue,
                     next = page?.start()?.let { hash -> PNPage.PNNext(pageHash = hash) },
                     prev = page?.end()?.let { hash -> PNPage.PNPrev(pageHash = hash) }

@@ -1,6 +1,6 @@
 package com.pubnub.api.endpoints.objects.uuid
 
-import cocoapods.PubNubSwift.PubNubObjC
+import cocoapods.PubNubSwift.KMPPubNub
 import cocoapods.PubNubSwift.getUUIDMetadataWithUuid
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult
 import com.pubnub.api.v2.callbacks.Consumer
@@ -18,7 +18,7 @@ actual interface GetUUIDMetadata : PNFuture<PNUUIDMetadataResult>
 
 @OptIn(ExperimentalForeignApi::class)
 class GetUUIDMetadataImpl(
-    private val pubnub: PubNubObjC,
+    private val pubnub: KMPPubNub,
     private val uuid: String?,
     private val includeCustom: Boolean
 ) : GetUUIDMetadata {

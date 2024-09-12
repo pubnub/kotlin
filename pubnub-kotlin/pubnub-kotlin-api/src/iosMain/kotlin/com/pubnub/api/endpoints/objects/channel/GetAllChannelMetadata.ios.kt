@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints.objects.channel
 
-import cocoapods.PubNubSwift.PubNubChannelMetadataObjC
-import cocoapods.PubNubSwift.PubNubObjC
+import cocoapods.PubNubSwift.KMPChannelMetadata
+import cocoapods.PubNubSwift.KMPPubNub
 import cocoapods.PubNubSwift.getAllChannelMetadataWithLimit
 import com.pubnub.api.models.consumer.objects.PNKey
 import com.pubnub.api.models.consumer.objects.PNPage
@@ -26,7 +26,7 @@ actual interface GetAllChannelMetadata : PNFuture<PNChannelMetadataArrayResult>
 
 @OptIn(ExperimentalForeignApi::class)
 class GetAllChannelMetadataImpl(
-    private val pubnub: PubNubObjC,
+    private val pubnub: KMPPubNub,
     private val limit: Int?,
     private val page: PNPage?,
     private val filter: String?,
@@ -45,7 +45,7 @@ class GetAllChannelMetadataImpl(
             onSuccess = callback.onSuccessHandler3 { channels, totalCount, page ->
                 PNChannelMetadataArrayResult(
                     status = 200,
-                    data = channels.filterAndMap { rawValue: PubNubChannelMetadataObjC -> createPNChannelMetadata(rawValue) },
+                    data = channels.filterAndMap { rawValue: KMPChannelMetadata -> createPNChannelMetadata(rawValue) },
                     totalCount = totalCount?.intValue,
                     next = page?.start()?.let { hash -> PNPage.PNNext(pageHash = hash) },
                     prev = page?.end()?.let { hash -> PNPage.PNPrev(pageHash = hash) }

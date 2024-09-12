@@ -1,6 +1,6 @@
 package com.pubnub.api.endpoints.push
 
-import cocoapods.PubNubSwift.PubNubObjC
+import cocoapods.PubNubSwift.KMPPubNub
 import cocoapods.PubNubSwift.removeChannelsFromPushWithChannels
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNPushEnvironment
@@ -22,7 +22,7 @@ actual interface RemoveChannelsFromPush : PNFuture<PNPushRemoveChannelResult>
 
 @OptIn(ExperimentalForeignApi::class)
 class RemoveChannelsFromPushImpl(
-    private val pubnub: PubNubObjC,
+    private val pubnub: KMPPubNub,
     private val channels: List<String>,
     private val deviceId: String,
     private val pushType: PNPushType,

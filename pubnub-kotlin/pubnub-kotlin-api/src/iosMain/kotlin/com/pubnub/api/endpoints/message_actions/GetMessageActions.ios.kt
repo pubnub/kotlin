@@ -1,8 +1,8 @@
 package com.pubnub.api.endpoints.message_actions
 
-import cocoapods.PubNubSwift.PubNubBoundedPageObjC
-import cocoapods.PubNubSwift.PubNubMessageActionObjC
-import cocoapods.PubNubSwift.PubNubObjC
+import cocoapods.PubNubSwift.KMPBoundedPage
+import cocoapods.PubNubSwift.KMPMessageAction
+import cocoapods.PubNubSwift.KMPPubNub
 import cocoapods.PubNubSwift.getMessageActionsFrom
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.message_actions.PNGetMessageActionsResult
@@ -24,20 +24,20 @@ actual interface GetMessageActions : PNFuture<PNGetMessageActionsResult>
 @OptIn(ExperimentalForeignApi::class)
 class GetMessageActionsImpl(
     private val channel: String,
-    private val pubnub: PubNubObjC,
+    private val pubnub: KMPPubNub,
     private val page: PNBoundedPage
 ) : GetMessageActions {
     override fun async(callback: Consumer<Result<PNGetMessageActionsResult>>) {
         pubnub.getMessageActionsFrom(
             channel = channel,
-            page = PubNubBoundedPageObjC(
+            page = KMPBoundedPage(
                 start = page.start?.let { NSNumber(long = it) },
                 end = page.end?.let { NSNumber(long = it) },
                 limit = page.limit?.let { NSNumber(it) }
             ),
             onSuccess = callback.onSuccessHandler2 { messageActions, next ->
                 PNGetMessageActionsResult(
-                    actions = messageActions.filterAndMap { rawValue: PubNubMessageActionObjC -> createMessageAction(rawValue) }.toList(),
+                    actions = messageActions.filterAndMap { rawValue: KMPMessageAction -> createMessageAction(rawValue) }.toList(),
                     page = PNBoundedPage(
                         start = next?.start()?.longValue(),
                         end = next?.end()?.longValue(),
@@ -49,7 +49,7 @@ class GetMessageActionsImpl(
         )
     }
 
-    private fun createMessageAction(rawValue: PubNubMessageActionObjC): PNMessageAction {
+    private fun createMessageAction(rawValue: KMPMessageAction): PNMessageAction {
         return PNMessageAction(
             type = rawValue.actionType(),
             value = rawValue.actionValue(),

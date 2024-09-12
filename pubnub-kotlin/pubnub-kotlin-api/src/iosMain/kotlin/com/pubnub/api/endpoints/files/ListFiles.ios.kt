@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints.files
 
-import cocoapods.PubNubSwift.PubNubFileObjC
-import cocoapods.PubNubSwift.PubNubObjC
+import cocoapods.PubNubSwift.KMPFile
+import cocoapods.PubNubSwift.KMPPubNub
 import cocoapods.PubNubSwift.listFilesWithChannel
 import com.pubnub.api.models.consumer.files.PNListFilesResult
 import com.pubnub.api.models.consumer.files.PNUploadedFile
@@ -23,7 +23,7 @@ actual interface ListFiles : PNFuture<PNListFilesResult>
 
 @OptIn(ExperimentalForeignApi::class)
 class ListFilesImpl(
-    private val pubnub: PubNubObjC,
+    private val pubnub: KMPPubNub,
     private val channel: String,
     private val limit: Int?,
     private val next: PNPage.PNNext?
@@ -38,7 +38,7 @@ class ListFilesImpl(
                     count = files?.size ?: 0, // TODO: count property is not retrieved from ListFilesSuccessResponse in Swift SDK
                     next = nextPageHash?.let { PNPage.PNNext(pageHash = it) },
                     status = 200,
-                    data = files.filterAndMap { rawValue: PubNubFileObjC ->
+                    data = files.filterAndMap { rawValue: KMPFile ->
                         PNUploadedFile(
                             id = rawValue.id(),
                             name = rawValue.name(),

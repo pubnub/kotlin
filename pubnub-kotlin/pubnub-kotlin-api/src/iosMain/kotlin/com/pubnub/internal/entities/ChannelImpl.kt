@@ -1,7 +1,7 @@
 package com.pubnub.internal.entities
 
-import cocoapods.PubNubSwift.PubNubChannelEntityObjC
-import cocoapods.PubNubSwift.PubNubSubscriptionObjC
+import cocoapods.PubNubSwift.KMPChannelEntity
+import cocoapods.PubNubSwift.KMPSubscription
 import com.pubnub.api.endpoints.files.DeleteFile
 import com.pubnub.api.endpoints.files.SendFile
 import com.pubnub.api.endpoints.pubsub.Publish
@@ -16,7 +16,7 @@ import kotlinx.cinterop.ExperimentalForeignApi
 
 @OptIn(ExperimentalForeignApi::class)
 class ChannelImpl(
-    private val channel: PubNubChannelEntityObjC
+    private val channel: KMPChannelEntity
 ) : Channel {
     override fun publish(
         message: Any,
@@ -59,7 +59,7 @@ class ChannelImpl(
     // TODO: Add support for handling SubscriptionOptions
     override fun subscription(options: SubscriptionOptions): Subscription {
         val presenceOptions = options.allOptions.filterIsInstance<ReceivePresenceEventsImpl>()
-        val objcSubscription = PubNubSubscriptionObjC(channel, presenceOptions.isNotEmpty())
+        val objcSubscription = KMPSubscription(channel, presenceOptions.isNotEmpty())
 
         return SubscriptionImpl(objcSubscription)
     }

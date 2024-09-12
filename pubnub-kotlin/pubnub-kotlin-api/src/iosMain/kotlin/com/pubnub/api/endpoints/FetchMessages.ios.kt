@@ -1,9 +1,9 @@
 package com.pubnub.api.endpoints
 
-import cocoapods.PubNubSwift.PubNubBoundedPageObjC
-import cocoapods.PubNubSwift.PubNubMessageActionObjC
-import cocoapods.PubNubSwift.PubNubMessageObjC
-import cocoapods.PubNubSwift.PubNubObjC
+import cocoapods.PubNubSwift.KMPBoundedPage
+import cocoapods.PubNubSwift.KMPMessage
+import cocoapods.PubNubSwift.KMPMessageAction
+import cocoapods.PubNubSwift.KMPPubNub
 import cocoapods.PubNubSwift.fetchMessagesFrom
 import com.pubnub.api.JsonElementImpl
 import com.pubnub.api.models.consumer.PNBoundedPage
@@ -26,7 +26,7 @@ actual interface FetchMessages : PNFuture<PNFetchMessagesResult>
 
 @OptIn(ExperimentalForeignApi::class)
 open class FetchMessagesImpl(
-    private val pubnub: PubNubObjC,
+    private val pubnub: KMPPubNub,
     private val channels: List<String>,
     private val page: PNBoundedPage,
     private val includeUUID: Boolean,
@@ -41,7 +41,7 @@ open class FetchMessagesImpl(
             includeMeta = includeMeta,
             includeMessageActions = includeMessageActions,
             includeMessageType = includeMessageType,
-            page = PubNubBoundedPageObjC(
+            page = KMPBoundedPage(
                 start = page.start?.let { NSNumber(long = it) },
                 end = page.end?.let { NSNumber(long = it) },
                 limit = page.limit?.let { NSNumber(int = it) }
@@ -61,7 +61,7 @@ open class FetchMessagesImpl(
     }
 
     private fun mapMessages(rawValue: Map<Any?, *>?): Map<String, List<PNFetchMessageItem>> {
-        return (rawValue?.safeCast<String, List<PubNubMessageObjC>>())?.mapValues { entry ->
+        return (rawValue?.safeCast<String, List<KMPMessage>>())?.mapValues { entry ->
             entry.value.map {
                 PNFetchMessageItem(
                     uuid = it.publisher(),
@@ -77,7 +77,7 @@ open class FetchMessagesImpl(
     }
 
     private fun mapMessageActions(rawValue: List<*>): Map<String, Map<String, List<PNFetchMessageItem.Action>>>? {
-        return rawValue.filterIsInstance<PubNubMessageActionObjC>().groupBy { messageAction ->
+        return rawValue.filterIsInstance<KMPMessageAction>().groupBy { messageAction ->
             messageAction.actionType()
         }.mapValues { entry ->
             entry.value.groupBy { groupedMessageAction ->

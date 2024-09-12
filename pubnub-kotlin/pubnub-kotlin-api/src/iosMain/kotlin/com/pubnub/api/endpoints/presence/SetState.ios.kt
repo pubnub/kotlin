@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints.presence
 
-import cocoapods.PubNubSwift.AnyJSONObjC
-import cocoapods.PubNubSwift.PubNubObjC
+import cocoapods.PubNubSwift.KMPAnyJSON
+import cocoapods.PubNubSwift.KMPPubNub
 import cocoapods.PubNubSwift.setPresenceStateWithChannels
 import com.pubnub.api.JsonElementImpl
 import com.pubnub.api.models.consumer.presence.PNSetStateResult
@@ -19,7 +19,7 @@ actual interface SetState : PNFuture<PNSetStateResult>
 
 @OptIn(ExperimentalForeignApi::class)
 class SetStateImpl(
-    private val pubnub: PubNubObjC,
+    private val pubnub: KMPPubNub,
     private val channels: List<String>,
     private val channelGroups: List<String>,
     private val state: Any,
@@ -28,7 +28,7 @@ class SetStateImpl(
         pubnub.setPresenceStateWithChannels(
             channels = channels,
             channelGroups = channelGroups,
-            state = AnyJSONObjC(value = state),
+            state = KMPAnyJSON(value = state),
             onSuccess = callback.onSuccessHandler { PNSetStateResult(state = JsonElementImpl(it)) },
             onFailure = callback.onFailureHandler()
         )
