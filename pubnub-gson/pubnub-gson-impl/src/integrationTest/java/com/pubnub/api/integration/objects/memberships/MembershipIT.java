@@ -2,12 +2,12 @@ package com.pubnub.api.integration.objects.memberships;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.integration.objects.ObjectsApiBaseIT;
-import com.pubnub.api.models.consumer.objects_api.membership.PNChannelMembership;
-import com.pubnub.api.models.consumer.objects_api.membership.PNGetMembershipsResult;
-import com.pubnub.api.models.consumer.objects_api.membership.PNManageMembershipResult;
-import com.pubnub.api.models.consumer.objects_api.membership.PNMembership;
-import com.pubnub.api.models.consumer.objects_api.membership.PNRemoveMembershipResult;
-import com.pubnub.api.models.consumer.objects_api.membership.PNSetMembershipResult;
+import com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership;
+import com.pubnub.api.java.models.consumer.objects_api.membership.PNGetMembershipsResult;
+import com.pubnub.api.java.models.consumer.objects_api.membership.PNManageMembershipResult;
+import com.pubnub.api.java.models.consumer.objects_api.membership.PNMembership;
+import com.pubnub.api.java.models.consumer.objects_api.membership.PNRemoveMembershipResult;
+import com.pubnub.api.java.models.consumer.objects_api.membership.PNSetMembershipResult;
 import org.apache.http.HttpStatus;
 import org.junit.After;
 import org.junit.Test;
@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static com.pubnub.api.endpoints.objects_api.utils.Include.PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM;
+import static com.pubnub.api.java.endpoints.objects_api.utils.Include.PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.hasItem;

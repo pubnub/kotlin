@@ -4,8 +4,8 @@ import com.pubnub.api.endpoints.files.DeleteFile
 import com.pubnub.api.endpoints.files.SendFile
 import com.pubnub.api.endpoints.pubsub.Publish
 import com.pubnub.api.endpoints.pubsub.Signal
-import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.subscriptions.Subscription
+import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.kmp.Uploadable
 
 /**
@@ -15,7 +15,32 @@ import com.pubnub.kmp.Uploadable
  *
  * Use the [com.pubnub.api.PubNub.channel] factory method to create instances of this interface.
  */
-interface Channel : BaseChannel<EventListener, Subscription> {
+interface Channel : Subscribable {
+    /**
+     * The name of this channel. Supports wildcards by ending it with ".*"
+     *
+     * See more in the [documentation](https://www.pubnub.com/docs/general/channels/overview)
+     */
+    val name: String
+
+    /**
+     * Returns a [Subscription] that can be used to subscribe to this channel.
+     *
+     * Channel subscriptions support passing [com.pubnub.api.v2.subscriptions.SubscriptionOptions.receivePresenceEvents] in
+     * [options] to enable receiving presence events.
+     *
+     * [com.pubnub.api.v2.subscriptions.SubscriptionOptions.filter] can be used to filter events delivered to the subscription.
+     *
+     * For example, to create a subscription that only listens to presence events:
+     * ```
+     * channel.subscription(SubscriptionOptions.receivePresenceEvents() + SubscriptionOptions.filter { it is PNPresenceEventResult } )
+     * ```
+     *
+     * @param options optional [SubscriptionOptions].
+     * @return an inactive [Subscription] to this channel. You must call [Subscription.subscribe] to start receiving events.
+     */
+    override fun subscription(options: SubscriptionOptions): Subscription
+
     /**
      * Send a message to all subscribers of the channel.
      *

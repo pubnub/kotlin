@@ -1,31 +1,31 @@
 package com.pubnub.api.integration.managers.subscription;
 
-import com.pubnub.api.PNConfiguration;
-import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
+import com.pubnub.api.java.PubNub;
+import com.pubnub.api.retry.RetryConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
 import static com.pubnub.api.enums.PNLogVerbosity.BODY;
-import static com.pubnub.api.enums.PNReconnectionPolicy.NONE;
 
 
 public class ReconnectionProblemWithoutReconnectionPolicyIT extends AbstractReconnectionProblemIT {
     @Override
-    protected PubNub privilegedClientPubNub() {
-        PNConfiguration pnConfiguration;
+    protected @NotNull PubNub privilegedClientPubNub() {
+        com.pubnub.api.java.v2.PNConfiguration.Builder pnConfiguration;
         try {
-            pnConfiguration = new PNConfiguration(new UserId("pn-" + UUID.randomUUID()));
+            pnConfiguration = com.pubnub.api.java.v2.PNConfiguration.builder(new UserId("pn-" + UUID.randomUUID()), "");
         } catch (PubNubException e) {
             throw new RuntimeException(e);
         }
-        pnConfiguration.setSubscribeKey(itPamTestConfig.pamSubKey());
-        pnConfiguration.setPublishKey(itPamTestConfig.pamPubKey());
-        pnConfiguration.setSubscribeTimeout(SUBSCRIBE_TIMEOUT);
-        pnConfiguration.setLogVerbosity(BODY);
-        pnConfiguration.setAuthKey(authKey);
-        pnConfiguration.setReconnectionPolicy(NONE);
-        return PubNub.create(pnConfiguration);
+        pnConfiguration.subscribeKey(itPamTestConfig.pamSubKey());
+        pnConfiguration.publishKey(itPamTestConfig.pamPubKey());
+        pnConfiguration.subscribeTimeout(SUBSCRIBE_TIMEOUT);
+        pnConfiguration.logVerbosity(BODY);
+        pnConfiguration.authKey(authKey);
+        pnConfiguration.retryConfiguration(RetryConfiguration.None.INSTANCE);
+        return PubNub.create(pnConfiguration.build());
     }
 }

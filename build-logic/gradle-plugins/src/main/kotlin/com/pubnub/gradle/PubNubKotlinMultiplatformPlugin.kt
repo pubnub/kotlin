@@ -54,6 +54,7 @@ class PubNubKotlinMultiplatformPlugin : Plugin<Project> {
                         compilation.compileTaskProvider.configure { task ->
                             task.compilerOptions {
                                 javaParameters.set(true)
+                                freeCompilerArgs.add("-Xjvm-default=all")
                             }
                         }
                     }

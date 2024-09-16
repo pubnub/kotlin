@@ -2,31 +2,24 @@ package com.pubnub.api.integration;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
-import com.pubnub.api.builder.PubNubErrorBuilder;
-import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.crypto.CryptoModule;
 import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
+import com.pubnub.api.java.PubNub;
+import com.pubnub.api.java.builder.PubNubErrorBuilder;
+import com.pubnub.api.java.callbacks.SubscribeCallback;
+import com.pubnub.api.java.v2.PNConfiguration;
+import com.pubnub.api.java.v2.PNConfigurationOverride;
+import com.pubnub.api.java.v2.entities.Channel;
+import com.pubnub.api.java.v2.subscriptions.Subscription;
 import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult;
 import com.pubnub.api.models.consumer.history.PNHistoryResult;
-import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadataResult;
-import com.pubnub.api.models.consumer.objects_api.membership.PNMembershipResult;
-import com.pubnub.api.models.consumer.objects_api.uuid.PNUUIDMetadataResult;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
-import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
-import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
-import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult;
-import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
-import com.pubnub.api.v2.PNConfiguration;
-import com.pubnub.api.v2.PNConfigurationOverride;
 import com.pubnub.api.v2.callbacks.Result;
-import com.pubnub.api.v2.entities.Channel;
-import com.pubnub.api.v2.subscriptions.Subscription;
 import org.awaitility.Awaitility;
 import org.awaitility.Durations;
 import org.hamcrest.Matchers;
@@ -267,10 +260,6 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
         final PubNub observer = getPubNub();
 
         this.pubNub.addListener(new SubscribeCallback() {
-            @Override
-            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
-
-            }
 
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
@@ -292,35 +281,6 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
                 success.set(true);
             }
 
-            @Override
-            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult presence) {
-
-            }
-
-            @Override
-            public void signal(@NotNull PubNub pubNub, @NotNull PNSignalResult pnSignalResult) {
-
-            }
-
-            @Override
-            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
-
-            }
-
-            @Override
-            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
-
-            }
-
-            @Override
-            public void membership(@NotNull PubNub pubNub, @NotNull PNMembershipResult pnMembershipResult) {
-
-            }
-
-            @Override
-            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnActionResult) {
-
-            }
         });
 
         subscribeToChannel(pubNub, expectedChannel);
@@ -338,11 +298,6 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
         final PubNub observer = getPubNub(builder -> builder.cryptoModule(CryptoModule.createAesCbcCryptoModule("test", false)));
 
         observer.addListener(new SubscribeCallback() {
-            @Override
-            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
-
-            }
-
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
                 if (status.getCategory() == PNStatusCategory.PNConnectedCategory) {
@@ -381,35 +336,6 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
                 }
             }
 
-            @Override
-            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult presence) {
-
-            }
-
-            @Override
-            public void signal(@NotNull PubNub pubNub, @NotNull PNSignalResult pnSignalResult) {
-
-            }
-
-            @Override
-            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
-
-            }
-
-            @Override
-            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
-
-            }
-
-            @Override
-            public void membership(@NotNull PubNub pubNub, @NotNull PNMembershipResult pnMembershipResult) {
-
-            }
-
-            @Override
-            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnActionResult) {
-
-            }
         });
 
         subscribeToChannel(observer, expectedChannel);
@@ -477,10 +403,7 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
         final AtomicBoolean success = new AtomicBoolean();
 
         pubNub.addListener(new SubscribeCallback() {
-            @Override
-            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
 
-            }
 
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus) {
@@ -497,37 +420,6 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            }
-
-            @Override
-            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult pnPresenceEventResult) {
-
-            }
-
-            @Override
-            public void signal(@NotNull PubNub pubnub, @NotNull PNSignalResult pnSignalResult) {
-
-            }
-
-            @Override
-            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
-
-            }
-
-            @Override
-            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
-
-            }
-
-
-            @Override
-            public void membership(@NotNull PubNub pubnub, @NotNull PNMembershipResult pnMembershipResult) {
-
-            }
-
-            @Override
-            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
-
             }
         });
 
@@ -552,10 +444,7 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
         final AtomicBoolean success = new AtomicBoolean();
 
         pubNub.addListener(new SubscribeCallback() {
-            @Override
-            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
 
-            }
 
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus) {
@@ -572,37 +461,6 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            }
-
-            @Override
-            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult pnPresenceEventResult) {
-
-            }
-
-            @Override
-            public void signal(@NotNull PubNub pubnub, @NotNull PNSignalResult pnSignalResult) {
-
-            }
-
-            @Override
-            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
-
-            }
-
-            @Override
-            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
-
-            }
-
-
-            @Override
-            public void membership(@NotNull PubNub pubnub, @NotNull PNMembershipResult pnMembershipResult) {
-
-            }
-
-            @Override
-            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
-
             }
         });
 
@@ -691,10 +549,7 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
         final AtomicBoolean success = new AtomicBoolean();
 
         pubNub.addListener(new SubscribeCallback() {
-            @Override
-            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
 
-            }
 
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus) {
@@ -711,37 +566,6 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            }
-
-            @Override
-            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult pnPresenceEventResult) {
-
-            }
-
-            @Override
-            public void signal(@NotNull PubNub pubnub, @NotNull PNSignalResult pnSignalResult) {
-
-            }
-
-            @Override
-            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
-
-            }
-
-            @Override
-            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
-
-            }
-
-
-            @Override
-            public void membership(@NotNull PubNub pubnub, @NotNull PNMembershipResult pnMembershipResult) {
-
-            }
-
-            @Override
-            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
-
             }
         });
 
@@ -771,10 +595,7 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
         final AtomicBoolean success = new AtomicBoolean();
 
         pubNub.addListener(new SubscribeCallback() {
-            @Override
-            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
 
-            }
 
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus) {
@@ -791,36 +612,6 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            }
-
-            @Override
-            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult pnPresenceEventResult) {
-
-            }
-
-            @Override
-            public void signal(@NotNull PubNub pubnub, @NotNull PNSignalResult pnSignalResult) {
-
-            }
-
-            @Override
-            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
-
-            }
-
-            @Override
-            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
-
-            }
-
-            @Override
-            public void membership(@NotNull final PubNub pubnub, @NotNull final PNMembershipResult pnMembershipResult) {
-
-            }
-
-            @Override
-            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
-
             }
         });
 
@@ -860,10 +651,7 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
         final AtomicInteger count = new AtomicInteger();
 
         pubNub.addListener(new SubscribeCallback() {
-            @Override
-            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
 
-            }
 
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus) {
@@ -880,36 +668,6 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            }
-
-            @Override
-            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult pnPresenceEventResult) {
-
-            }
-
-            @Override
-            public void signal(@NotNull PubNub pubnub, @NotNull PNSignalResult pnSignalResult) {
-
-            }
-
-            @Override
-            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
-
-            }
-
-            @Override
-            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
-
-            }
-
-            @Override
-            public void membership(@NotNull PubNub pubnub, @NotNull PNMembershipResult pnMembershipResult) {
-
-            }
-
-            @Override
-            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
-
             }
         });
 

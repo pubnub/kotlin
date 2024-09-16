@@ -13,7 +13,7 @@ import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
  * Implement this interface and pass it into [EventEmitter.addListener] to listen for events from the PubNub real-time
  * network.
  */
-actual interface EventListener : BaseEventListener, Listener {
+actual interface EventListener : Listener {
     /**
      * Receive messages at subscribed channels.
      *

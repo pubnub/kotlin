@@ -1,23 +1,15 @@
 package com.pubnub.api.integration.util;
 
 import com.google.gson.JsonObject;
-import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
-import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.enums.PNLogVerbosity;
 import com.pubnub.api.enums.PNStatusCategory;
+import com.pubnub.api.java.PubNub;
+import com.pubnub.api.java.callbacks.SubscribeCallback;
+import com.pubnub.api.java.v2.PNConfiguration;
 import com.pubnub.api.models.consumer.PNStatus;
-import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadataResult;
-import com.pubnub.api.models.consumer.objects_api.membership.PNMembershipResult;
-import com.pubnub.api.models.consumer.objects_api.uuid.PNUUIDMetadataResult;
-import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
-import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
-import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
-import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult;
-import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
-import com.pubnub.api.v2.PNConfiguration;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.aeonbits.owner.ConfigFactory;
 import org.awaitility.Awaitility;
@@ -33,6 +25,7 @@ import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -57,13 +50,13 @@ public abstract class BaseIntegrationTest {
     private static String PAM_PUB_KEY;
     private static String PAM_SEC_KEY;
 
-    public PubNub pubNub;
-    public PubNub server;
+    public com.pubnub.api.java.PubNub pubNub;
+    public com.pubnub.api.java.PubNub server;
 
     public int TIMEOUT_MEDIUM = 5;
     public int TIMEOUT_LOW = 2;
 
-    private List<PubNub> mGuestClients = new ArrayList<>();
+    private List<com.pubnub.api.java.PubNub> mGuestClients = new ArrayList<>();
 
     @BeforeClass
     public static void onlyOnce() {
@@ -90,34 +83,34 @@ public abstract class BaseIntegrationTest {
         onAfter();
         destroyClient(pubNub);
         if (mGuestClients != null) {
-            for (PubNub guestClient : mGuestClients) {
+            for (com.pubnub.api.java.PubNub guestClient : mGuestClients) {
                 destroyClient(guestClient);
             }
         }
         // properties.clear();
     }
 
-    public PubNub getPubNub(@Nullable Consumer<PNConfiguration.Builder> action) {
+    public com.pubnub.api.java.PubNub getPubNub(@Nullable Consumer<PNConfiguration.Builder> action) {
         PNConfiguration pnConfiguration = provideStagingConfiguration(action);
         if (pnConfiguration == null) {
             pnConfiguration = getBasicPnConfiguration(action);
         }
-        final PubNub pubNub = PubNub.create(pnConfiguration);
+        final com.pubnub.api.java.PubNub pubNub = com.pubnub.api.java.PubNub.create(pnConfiguration);
         registerGuestClient(pubNub);
         return pubNub;
     }
 
-    public PubNub getPubNub() {
+    public com.pubnub.api.java.PubNub getPubNub() {
         return getPubNub(null);
     }
 
-    protected PubNub getServer(@Nullable Consumer<PNConfiguration.Builder> action) {
-        final PubNub pubNub = PubNub.create(getServerPnConfiguration(action));
+    protected com.pubnub.api.java.PubNub getServer(@Nullable Consumer<PNConfiguration.Builder> action) {
+        final com.pubnub.api.java.PubNub pubNub = com.pubnub.api.java.PubNub.create(getServerPnConfiguration(action));
         registerGuestClient(pubNub);
         return pubNub;
     }
 
-    public PubNub getServer() {
+    public com.pubnub.api.java.PubNub getServer() {
         return getServer(null);
     }
 
@@ -127,26 +120,26 @@ public abstract class BaseIntegrationTest {
 //        return pubNub;
 //    }
 
-    protected void registerGuestClient(PubNub guestClient) {
+    protected void registerGuestClient(com.pubnub.api.java.PubNub guestClient) {
         if (mGuestClients == null) {
             mGuestClients = new ArrayList<>();
         }
         mGuestClients.add(guestClient);
     }
 
-    protected void destroyClient(PubNub client) {
+    protected void destroyClient(com.pubnub.api.java.PubNub client) {
         client.unsubscribeAll();
         client.forceDestroy();
     }
 
     private PNConfiguration getBasicPnConfiguration(@Nullable Consumer<PNConfiguration.Builder> action) {
-        final com.pubnub.api.v2.PNConfiguration.Builder pnConfiguration;
+        final com.pubnub.api.java.v2.PNConfiguration.Builder pnConfiguration;
         try {
         if (!needsServer()) {
-            pnConfiguration = com.pubnub.api.v2.PNConfiguration.builder(new UserId("client-".concat(UUID.randomUUID().toString())), SUB_KEY);
+            pnConfiguration = com.pubnub.api.java.v2.PNConfiguration.builder(new UserId("client-".concat(UUID.randomUUID().toString())), SUB_KEY);
             pnConfiguration.publishKey(PUB_KEY);
         } else {
-            pnConfiguration = com.pubnub.api.v2.PNConfiguration.builder(new UserId("client-".concat(UUID.randomUUID().toString())), PAM_SUB_KEY);
+            pnConfiguration = com.pubnub.api.java.v2.PNConfiguration.builder(new UserId("client-".concat(UUID.randomUUID().toString())), PAM_SUB_KEY);
             pnConfiguration.publishKey(PAM_PUB_KEY);
             pnConfiguration.authKey(provideAuthKey());
         }
@@ -184,7 +177,7 @@ public abstract class BaseIntegrationTest {
         return interceptor;
     }
 
-    protected void subscribeToChannel(@NotNull PubNub pubnub, @NotNull String... channels) {
+    protected void subscribeToChannel(@NotNull com.pubnub.api.java.PubNub pubnub, @NotNull String... channels) {
         pubnub.subscribe()
                 .channels(Arrays.asList(channels))
                 .withPresence()
@@ -192,18 +185,13 @@ public abstract class BaseIntegrationTest {
         pause(1);
     }
 
-    protected void subscribeToChannel(final PubNub pubnub, final List<String> channels) {
+    protected void subscribeToChannel(final com.pubnub.api.java.PubNub pubnub, final List<String> channels) {
 
         final AtomicBoolean subscribeSuccess = new AtomicBoolean();
 
         pubnub.addListener(new SubscribeCallback() {
             @Override
-            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
-
-            }
-
-            @Override
-            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
+            public void status(@NotNull com.pubnub.api.java.PubNub pubnub, @NotNull PNStatus status) {
                 if (status.getCategory() == PNStatusCategory.PNConnectedCategory) {
                     if (status.getAffectedChannels().containsAll(channels)) {
                         subscribeSuccess.set(true);
@@ -214,42 +202,6 @@ public abstract class BaseIntegrationTest {
                     }
                 }
             }
-
-            @Override
-            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult message) {
-
-            }
-
-            @Override
-            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult presence) {
-
-            }
-
-            @Override
-            public void signal(@NotNull PubNub pubNub, @NotNull PNSignalResult pnSignalResult) {
-
-            }
-
-            @Override
-            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
-
-            }
-
-            @Override
-            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
-
-            }
-
-            @Override
-            public void membership(@NotNull final PubNub pubnub, @NotNull final PNMembershipResult pnMembershipResult) {
-
-            }
-
-            @Override
-            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnActionResult) {
-
-            }
-
         });
 
         pubnub.subscribe()
@@ -260,7 +212,7 @@ public abstract class BaseIntegrationTest {
         Awaitility.await().atMost(Durations.TEN_SECONDS).untilTrue(subscribeSuccess);
     }
 
-    protected void subscribeToChannelGroup(@NotNull PubNub pubnub, @NotNull String group) {
+    protected void subscribeToChannelGroup(@NotNull com.pubnub.api.java.PubNub pubnub, @NotNull String group) {
         pubnub.subscribe()
                 .channelGroups(Collections.singletonList(group))
                 .withPresence()
@@ -268,19 +220,19 @@ public abstract class BaseIntegrationTest {
         pause(1);
     }
 
-    protected void unsubscribeFromChannel(PubNub pubNub, String channel) {
+    protected void unsubscribeFromChannel(com.pubnub.api.java.PubNub pubNub, String channel) {
         pubNub.unsubscribe()
                 .channels(Collections.singletonList(channel))
                 .execute();
         pause(1);
     }
 
-    protected void unsubscribeFromAllChannels(PubNub pubNub) {
+    protected void unsubscribeFromAllChannels(com.pubnub.api.java.PubNub pubNub) {
         pubNub.unsubscribeAll();
         pause(1);
     }
 
-    protected Map<String, String> generateMessage(PubNub pubNub, String message) {
+    protected Map<String, String> generateMessage(com.pubnub.api.java.PubNub pubNub, String message) {
         final Map<String, String> map = new HashMap<>();
         map.put("publisher", pubNub.getConfiguration().getUserId().getValue());
         map.put("text", "mymsg" + RandomGenerator.newValue(5) + "+" + RandomGenerator.newValue(5));
@@ -325,7 +277,7 @@ public abstract class BaseIntegrationTest {
         return map;
     }
 
-    protected void publishMessage(PubNub pubNub, String channel, String message) {
+    protected void publishMessage(com.pubnub.api.java.PubNub pubNub, String channel, String message) {
         pubNub.publish()
                 .message(generateMessage(pubNub, message))
                 .channel(channel)
@@ -335,7 +287,7 @@ public abstract class BaseIntegrationTest {
                 });
     }
 
-    protected void publishMessage(PubNub pubNub, String channel, String message, Map<String, Object> meta) {
+    protected void publishMessage(com.pubnub.api.java.PubNub pubNub, String channel, String message, Map<String, Object> meta) {
         pubNub.publish()
                 .message(generateMessage(pubNub, message))
                 .channel(channel)
@@ -348,7 +300,7 @@ public abstract class BaseIntegrationTest {
 
     protected void pause(int seconds) {
         try {
-            Thread.sleep(seconds * 1_000);
+            Thread.sleep(seconds * 1_000L);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -361,6 +313,12 @@ public abstract class BaseIntegrationTest {
     protected void listen(AtomicBoolean success) {
         Awaitility.await()
                 .atMost(Durations.FIVE_SECONDS)
+                .with()
+                .untilTrue(success);
+    }
+    protected void listen(AtomicBoolean success, Duration timeout) {
+        Awaitility.await()
+                .atMost(timeout)
                 .with()
                 .untilTrue(success);
     }

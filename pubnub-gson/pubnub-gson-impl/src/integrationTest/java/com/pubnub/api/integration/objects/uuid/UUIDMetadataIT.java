@@ -2,10 +2,10 @@ package com.pubnub.api.integration.objects.uuid;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.integration.objects.ObjectsApiBaseIT;
-import com.pubnub.api.models.consumer.objects_api.uuid.PNGetAllUUIDMetadataResult;
-import com.pubnub.api.models.consumer.objects_api.uuid.PNGetUUIDMetadataResult;
-import com.pubnub.api.models.consumer.objects_api.uuid.PNRemoveUUIDMetadataResult;
-import com.pubnub.api.models.consumer.objects_api.uuid.PNSetUUIDMetadataResult;
+import com.pubnub.api.java.models.consumer.objects_api.uuid.PNGetAllUUIDMetadataResult;
+import com.pubnub.api.java.models.consumer.objects_api.uuid.PNGetUUIDMetadataResult;
+import com.pubnub.api.java.models.consumer.objects_api.uuid.PNRemoveUUIDMetadataResult;
+import com.pubnub.api.java.models.consumer.objects_api.uuid.PNSetUUIDMetadataResult;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.HttpStatus;
 import org.junit.After;

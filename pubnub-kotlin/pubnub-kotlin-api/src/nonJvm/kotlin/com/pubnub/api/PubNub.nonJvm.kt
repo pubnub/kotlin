@@ -84,16 +84,6 @@ actual interface PubNub {
 
     actual fun removeAllListeners()
 
-    actual fun publish(
-        channel: String,
-        message: Any,
-        meta: Any?,
-        shouldStore: Boolean,
-        usePost: Boolean,
-        replicate: Boolean,
-        ttl: Int?
-    ): Publish
-
     actual fun fire(
         channel: String,
         message: Any,
@@ -440,4 +430,14 @@ actual interface PubNub {
     ): SubscriptionSet
 
     actual fun parseToken(token: String): PNToken
+
+    actual fun publish(
+        channel: String,
+        message: Any,
+        meta: Any?,
+        shouldStore: Boolean?,
+        usePost: Boolean,
+        replicate: Boolean,
+        ttl: Int?,
+    ): Publish
 }

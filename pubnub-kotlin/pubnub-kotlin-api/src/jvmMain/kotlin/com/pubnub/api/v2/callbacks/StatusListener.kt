@@ -8,7 +8,7 @@ import com.pubnub.api.models.consumer.PNStatus
  * Implement this interface and pass it into [com.pubnub.api.v2.callbacks.StatusEmitter.addListener] to listen for
  * PubNub connection status changes.
  */
-actual interface StatusListener : BaseStatusListener, Listener {
+actual interface StatusListener : Listener {
     /**
      * Receive status updates from the PubNub client, such as:
      * * [PNStatusCategory.PNConnectedCategory],
@@ -16,7 +16,6 @@ actual interface StatusListener : BaseStatusListener, Listener {
      * * [PNStatusCategory.PNSubscriptionChanged]
      * * [PNStatusCategory.PNConnectionError],
      * * [PNStatusCategory.PNUnexpectedDisconnectCategory],
-     * * [PNStatusCategory.PNAcknowledgmentCategory]
      *
      * @see [PNStatus]
      *

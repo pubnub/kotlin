@@ -1,8 +1,8 @@
 package com.pubnub.api.integration.util;
 
-import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.endpoints.pubsub.Publish;
+import com.pubnub.api.java.PubNub;
+import com.pubnub.api.java.endpoints.pubsub.Publish;
 import com.pubnub.api.models.consumer.PNPublishResult;
 
 import java.text.SimpleDateFormat;
@@ -36,7 +36,7 @@ public class Utils {
         return list.equals(sorted) || list.equals(reversed);
     }
 
-    public static PNPublishResult publish(PubNub pubnub, String channel, int indicator) {
+    public static PNPublishResult publish(com.pubnub.api.java.PubNub pubnub, String channel, int indicator) {
         try {
             return pubnub.publish()
                     .channel(channel)

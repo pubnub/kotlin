@@ -15,7 +15,7 @@ interface PNGrant {
     val id: String
 }
 
-internal sealed class PNAbstractGrant(
+sealed class PNAbstractGrant protected constructor(
     override val read: Boolean = false,
     override val write: Boolean = false,
     override val manage: Boolean = false,
@@ -26,9 +26,9 @@ internal sealed class PNAbstractGrant(
     override val update: Boolean = false,
 ) : PNGrant
 
-internal sealed class PNResourceGrant : PNAbstractGrant()
+sealed class PNResourceGrant : PNAbstractGrant()
 
-internal sealed class PNPatternGrant : PNAbstractGrant()
+sealed class PNPatternGrant : PNAbstractGrant()
 
 internal data class PNChannelResourceGrant(
     override val id: String,

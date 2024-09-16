@@ -2,8 +2,8 @@ package com.pubnub.api.integration.pam;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
-import com.pubnub.api.models.consumer.access_manager.PNAccessManagerGrantResult;
-import com.pubnub.api.models.consumer.access_manager.PNAccessManagerKeyData;
+import com.pubnub.api.java.models.consumer.access_manager.PNAccessManagerGrantResult;
+import com.pubnub.api.java.models.consumer.access_manager.PNAccessManagerKeyData;
 import org.junit.Test;
 
 import java.util.Collections;

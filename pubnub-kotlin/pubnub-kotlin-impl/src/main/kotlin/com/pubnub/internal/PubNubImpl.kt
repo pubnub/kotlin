@@ -1,6 +1,5 @@
 package com.pubnub.internal
 
-import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
@@ -56,8 +55,11 @@ import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions
 import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions
+import com.pubnub.api.models.consumer.access_manager.sum.toChannelGrant
+import com.pubnub.api.models.consumer.access_manager.sum.toUuidGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
+import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.objects.PNKey
@@ -75,33 +77,82 @@ import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
+import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
-import com.pubnub.api.v2.entities.BaseChannel
-import com.pubnub.api.v2.entities.BaseChannelGroup
-import com.pubnub.api.v2.entities.BaseChannelMetadata
-import com.pubnub.api.v2.entities.BaseUserMetadata
-import com.pubnub.api.v2.entities.Channel
 import com.pubnub.api.v2.entities.ChannelGroup
 import com.pubnub.api.v2.entities.ChannelMetadata
 import com.pubnub.api.v2.entities.UserMetadata
-import com.pubnub.api.v2.subscriptions.BaseSubscription
-import com.pubnub.api.v2.subscriptions.BaseSubscriptionSet
+import com.pubnub.api.v2.subscriptions.EmptyOptions
 import com.pubnub.api.v2.subscriptions.Subscription
+import com.pubnub.api.v2.subscriptions.SubscriptionCursor
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
-import com.pubnub.internal.models.toInternal
-import com.pubnub.internal.models.toInternalChannelGrants
-import com.pubnub.internal.models.toInternalChannelGroupGrants
-import com.pubnub.internal.models.toInternalChannelMemberships
-import com.pubnub.internal.models.toInternalMemberInputs
-import com.pubnub.internal.models.toInternalSortKeys
-import com.pubnub.internal.models.toInternalSpacePermissions
-import com.pubnub.internal.models.toInternalUserPermissions
-import com.pubnub.internal.models.toInternalUuidGrants
-import com.pubnub.internal.v2.callbacks.DelegatingEventListener
-import com.pubnub.internal.v2.callbacks.DelegatingStatusListener
-import com.pubnub.internal.v2.callbacks.DelegatingSubscribeCallback
+import com.pubnub.internal.crypto.decryptString
+import com.pubnub.internal.crypto.encryptString
+import com.pubnub.internal.endpoints.DeleteMessagesEndpoint
+import com.pubnub.internal.endpoints.FetchMessagesEndpoint
+import com.pubnub.internal.endpoints.HistoryEndpoint
+import com.pubnub.internal.endpoints.MessageCountsEndpoint
+import com.pubnub.internal.endpoints.TimeEndpoint
+import com.pubnub.internal.endpoints.access.GrantEndpoint
+import com.pubnub.internal.endpoints.access.GrantTokenEndpoint
+import com.pubnub.internal.endpoints.access.RevokeTokenEndpoint
+import com.pubnub.internal.endpoints.channel_groups.AddChannelChannelGroupEndpoint
+import com.pubnub.internal.endpoints.channel_groups.AllChannelsChannelGroupEndpoint
+import com.pubnub.internal.endpoints.channel_groups.DeleteChannelGroupEndpoint
+import com.pubnub.internal.endpoints.channel_groups.ListAllChannelGroupEndpoint
+import com.pubnub.internal.endpoints.channel_groups.RemoveChannelChannelGroupEndpoint
+import com.pubnub.internal.endpoints.files.DeleteFileEndpoint
+import com.pubnub.internal.endpoints.files.DownloadFileEndpoint
+import com.pubnub.internal.endpoints.files.GenerateUploadUrlEndpoint
+import com.pubnub.internal.endpoints.files.GetFileUrlEndpoint
+import com.pubnub.internal.endpoints.files.ListFilesEndpoint
+import com.pubnub.internal.endpoints.files.PublishFileMessageEndpoint
+import com.pubnub.internal.endpoints.files.SendFileEndpoint
+import com.pubnub.internal.endpoints.files.UploadFileEndpoint
+import com.pubnub.internal.endpoints.message_actions.AddMessageActionEndpoint
+import com.pubnub.internal.endpoints.message_actions.GetMessageActionsEndpoint
+import com.pubnub.internal.endpoints.message_actions.RemoveMessageActionEndpoint
+import com.pubnub.internal.endpoints.objects.channel.GetAllChannelMetadataEndpoint
+import com.pubnub.internal.endpoints.objects.channel.GetChannelMetadataEndpoint
+import com.pubnub.internal.endpoints.objects.channel.RemoveChannelMetadataEndpoint
+import com.pubnub.internal.endpoints.objects.channel.SetChannelMetadataEndpoint
+import com.pubnub.internal.endpoints.objects.internal.CollectionQueryParameters
+import com.pubnub.internal.endpoints.objects.internal.IncludeQueryParam
+import com.pubnub.internal.endpoints.objects.member.GetChannelMembersEndpoint
+import com.pubnub.internal.endpoints.objects.member.ManageChannelMembersEndpoint
+import com.pubnub.internal.endpoints.objects.membership.GetMembershipsEndpoint
+import com.pubnub.internal.endpoints.objects.membership.ManageMembershipsEndpoint
+import com.pubnub.internal.endpoints.objects.uuid.GetAllUUIDMetadataEndpoint
+import com.pubnub.internal.endpoints.objects.uuid.GetUUIDMetadataEndpoint
+import com.pubnub.internal.endpoints.objects.uuid.RemoveUUIDMetadataEndpoint
+import com.pubnub.internal.endpoints.objects.uuid.SetUUIDMetadataEndpoint
+import com.pubnub.internal.endpoints.presence.GetStateEndpoint
+import com.pubnub.internal.endpoints.presence.HereNowEndpoint
+import com.pubnub.internal.endpoints.presence.SetStateEndpoint
+import com.pubnub.internal.endpoints.presence.WhereNowEndpoint
+import com.pubnub.internal.endpoints.pubsub.PublishEndpoint
+import com.pubnub.internal.endpoints.pubsub.SignalEndpoint
+import com.pubnub.internal.endpoints.push.AddChannelsToPushEndpoint
+import com.pubnub.internal.endpoints.push.ListPushProvisionsEndpoint
+import com.pubnub.internal.endpoints.push.RemoveAllPushChannelsForDeviceEndpoint
+import com.pubnub.internal.endpoints.push.RemoveChannelsFromPushEndpoint
+import com.pubnub.internal.managers.BasePathManager
+import com.pubnub.internal.managers.DuplicationManager
+import com.pubnub.internal.managers.ListenerManager
+import com.pubnub.internal.managers.MapperManager
+import com.pubnub.internal.managers.PublishSequenceManager
+import com.pubnub.internal.managers.RetrofitManager
+import com.pubnub.internal.managers.TokenManager
+import com.pubnub.internal.managers.TokenParser
+import com.pubnub.internal.presence.Presence
+import com.pubnub.internal.presence.eventengine.data.PresenceData
+import com.pubnub.internal.presence.eventengine.effect.effectprovider.HeartbeatProviderImpl
+import com.pubnub.internal.presence.eventengine.effect.effectprovider.LeaveProviderImpl
+import com.pubnub.internal.subscribe.PRESENCE_CHANNEL_SUFFIX
+import com.pubnub.internal.subscribe.Subscribe
+import com.pubnub.internal.subscribe.eventengine.configuration.EventEnginesConf
 import com.pubnub.internal.v2.entities.ChannelGroupImpl
 import com.pubnub.internal.v2.entities.ChannelGroupName
 import com.pubnub.internal.v2.entities.ChannelImpl
@@ -110,19 +161,84 @@ import com.pubnub.internal.v2.entities.ChannelName
 import com.pubnub.internal.v2.entities.UserMetadataImpl
 import com.pubnub.internal.v2.subscription.EmitterHelper
 import com.pubnub.internal.v2.subscription.SubscriptionImpl
+import com.pubnub.internal.v2.subscription.SubscriptionInternal
 import com.pubnub.internal.v2.subscription.SubscriptionSetImpl
+import com.pubnub.internal.workers.SubscribeMessageProcessor
 import com.pubnub.kmp.CustomObject
 import java.io.InputStream
+import java.util.Date
+import java.util.UUID
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
+import kotlin.time.Duration.Companion.seconds
 
 private const val PNSDK_PUBNUB_KOTLIN = "PubNub-Kotlin"
 
-class PubNubImpl(
-    override val configuration: com.pubnub.api.v2.PNConfiguration,
-) : BasePubNubImpl<EventListener, Subscription, Channel, ChannelGroup, ChannelMetadata, UserMetadata, SubscriptionSet, StatusListener>(
-        configuration,
-        PNSDK_PUBNUB_KOTLIN,
-    ),
-    PubNub {
+open class PubNubImpl(
+    override val configuration: PNConfiguration,
+    val pnsdkName: String = PNSDK_PUBNUB_KOTLIN,
+    eventEnginesConf: EventEnginesConf = EventEnginesConf()
+) : PubNub {
+    constructor(configuration: PNConfiguration) : this(configuration, PNSDK_PUBNUB_KOTLIN)
+
+    val mapper = MapperManager()
+
+    private val numberOfThreadsInPool = Integer.min(Runtime.getRuntime().availableProcessors(), 8)
+    internal val executorService: ScheduledExecutorService = Executors.newScheduledThreadPool(numberOfThreadsInPool)
+    val listenerManager: ListenerManager = ListenerManager(this)
+    private val basePathManager = BasePathManager(configuration)
+    internal val retrofitManager = RetrofitManager(this, configuration)
+    internal val publishSequenceManager = PublishSequenceManager(MAX_SEQUENCE)
+    internal val tokenManager: TokenManager = TokenManager()
+    private val tokenParser: TokenParser = TokenParser()
+    private val presenceData = PresenceData()
+    private val subscribe =
+        Subscribe.create(
+            this,
+            listenerManager,
+            eventEnginesConf,
+            SubscribeMessageProcessor(this, DuplicationManager(configuration)),
+            presenceData,
+            configuration.maintainPresenceState,
+        )
+
+    private val presence =
+        Presence.create(
+            heartbeatProvider = HeartbeatProviderImpl(this),
+            leaveProvider = LeaveProviderImpl(this),
+            heartbeatInterval = configuration.heartbeatInterval.seconds,
+            suppressLeaveEvents = configuration.suppressLeaveEvents,
+            heartbeatNotificationOptions = configuration.heartbeatNotificationOptions,
+            listenerManager = listenerManager,
+            eventEngineConf = eventEnginesConf.presence,
+            presenceData = presenceData,
+            sendStateWithHeartbeat = configuration.maintainPresenceState,
+            executorService = executorService,
+        )
+
+    /**
+     * Unique id of this PubNub instance.
+     *
+     * @see [PNConfiguration.includeInstanceIdentifier]
+     */
+    val instanceId = UUID.randomUUID().toString()
+
+    //region Internal
+    internal fun baseUrl() = basePathManager.basePath()
+
+    internal fun requestId() = UUID.randomUUID().toString()
+    //endregion
+
+    fun generatePnsdk(): String {
+        val joinedSuffixes = configuration.pnsdkSuffixes.toSortedMap().values.joinToString(" ")
+        return "$pnsdkName/$SDK_VERSION" +
+            if (joinedSuffixes.isNotBlank()) {
+                " $joinedSuffixes"
+            } else {
+                ""
+            }
+    }
+
     private val emitterHelper = EmitterHelper(listenerManager)
     override var onMessage: ((PNMessageResult) -> Unit)? by emitterHelper::onMessage
     override var onPresence: ((PNPresenceEventResult) -> Unit)? by emitterHelper::onPresence
@@ -131,168 +247,113 @@ class PubNubImpl(
     override var onObjects: ((PNObjectEventResult) -> Unit)? by emitterHelper::onObjects
     override var onFile: ((PNFileEventResult) -> Unit)? by emitterHelper::onFile
 
-    override fun addListener(listener: SubscribeCallback) {
-        listenerManager.addListener(DelegatingSubscribeCallback(listener))
+    override val version: String
+        get() = SDK_VERSION
+
+    override val timestamp: Int
+        get() = timestamp()
+
+    override val baseUrl: String
+        get() = baseUrl()
+
+    companion object {
+        internal const val TIMESTAMP_DIVIDER = 1000
+        internal const val SDK_VERSION = PUBNUB_VERSION
+        internal const val MAX_SEQUENCE = 65535
+
+        @JvmStatic
+        fun timestamp() = (Date().time / TIMESTAMP_DIVIDER).toInt()
+
+        /**
+         * Generates random UUID to use. You should set a unique UUID to identify the user or the device that connects to PubNub.
+         */
+        @JvmStatic
+        fun generateUUID() = "pn-${UUID.randomUUID()}"
     }
 
-    override fun addListener(listener: StatusListener) {
-        listenerManager.addListener(DelegatingStatusListener(listener))
-    }
-
-    override fun addListener(listener: EventListener) {
-        listenerManager.addListener(DelegatingEventListener(listener))
-    }
-
-    override fun removeListener(listener: Listener) {
-        when (listener) {
-            is SubscribeCallback -> {
-                super.removeListener(DelegatingSubscribeCallback(listener))
-            }
-
-            is EventListener -> {
-                super.removeListener(DelegatingEventListener(listener))
-            }
-
-            else -> {
-                super.removeListener(listener)
-            }
-        }
-    }
-
-    /**
-     * Create a handle to a [BaseChannel] that can be used to obtain a [BaseSubscription].
-     *
-     * The function is cheap to call, and the returned object is lightweight, as it doesn't change any client or server
-     * state. It is therefore permitted to use this method whenever a representation of a channel is required.
-     *
-     * The returned [BaseChannel] holds a reference to this [PubNubImpl] instance internally.
-     *
-     * @param name the name of the channel to return. Supports wildcards by ending it with ".*". See more in the
-     * [documentation](https://www.pubnub.com/docs/general/channels/overview)
-     *
-     * @return a [BaseChannel] instance representing the channel with the given [name]
-     */
-    override fun channel(name: String): Channel {
-        return ChannelImpl(this, ChannelName(name))
-    }
-
-    /**
-     * Create a handle to a [BaseChannelGroup] that can be used to obtain a [BaseSubscription].
-     *
-     * The function is cheap to call, and the returned object is lightweight, as it doesn't change any client or server
-     * state. It is therefore permitted to use this method whenever a representation of a channel group is required.
-     *
-     * The returned [BaseChannelGroup] holds a reference to this [PubNubImpl] instance internally.
-     *
-     * @param name the name of the channel group to return. See more in the
-     * [documentation](https://www.pubnub.com/docs/general/channels/subscribe#channel-groups)
-     *
-     * @return a [BaseChannelGroup] instance representing the channel group with the given [name]
-     */
-    override fun channelGroup(name: String): ChannelGroup {
-        return ChannelGroupImpl(this, ChannelGroupName(name))
-    }
-
-    /**
-     * Create a handle to a [BaseChannelMetadata] object that can be used to obtain a [BaseSubscription] to metadata events.
-     *
-     * The function is cheap to call, and the returned object is lightweight, as it doesn't change any client or server
-     * state. It is therefore permitted to use this method whenever a representation of a metadata channel is required.
-     *
-     * The returned [BaseChannelMetadata] holds a reference to this [PubNubImpl] instance internally.
-     *
-     * @param id the id of the channel metadata to return. See more in the
-     * [documentation](https://www.pubnub.com/docs/general/metadata/channel-metadata)
-     *
-     * @return a [BaseChannelMetadata] instance representing the channel metadata with the given [id]
-     */
-    override fun channelMetadata(id: String): ChannelMetadata {
-        return ChannelMetadataImpl(this, ChannelName(id))
-    }
-
-    /**
-     * Create a handle to a [BaseUserMetadata] object that can be used to obtain a [BaseSubscription] to user metadata events.
-     *
-     * The function is cheap to call, and the returned object is lightweight, as it doesn't change any client or server
-     * state. It is therefore permitted to use this method whenever a representation of a user metadata is required.
-     *
-     * The returned [BaseUserMetadata] holds a reference to this [PubNubImpl] instance internally.
-     *
-     * @param id the id of the user. See more in the
-     * [documentation](https://www.pubnub.com/docs/general/metadata/users-metadata)
-     *
-     * @return a [BaseUserMetadata] instance representing the channel metadata with the given [id]
-     */
-    override fun userMetadata(id: String): UserMetadata {
-        return UserMetadataImpl(this, ChannelName(id))
-    }
-
-    /**
-     * Create a [BaseSubscriptionSet] from the given [subscriptions].
-     *
-     * @param subscriptions the subscriptions that will be added to the returned [BaseSubscriptionSet]
-     * @return a [BaseSubscriptionSet] containing all [subscriptions]
-     */
-    override fun subscriptionSetOf(subscriptions: Set<Subscription>): SubscriptionSet {
-        return SubscriptionSetImpl(pubNubCore, subscriptions as Set<SubscriptionImpl>)
-    }
-
-    /**
-     * Create a [BaseSubscriptionSet] containing [BaseSubscription] objects for the given sets of [channels] and
-     * [channelGroups].
-     *
-     * Please note that the subscriptions are not active until you call [BaseSubscriptionSet.subscribe].
-     *
-     * This is a convenience method, and it is equal to calling [PubNubImpl.channel] followed by [BaseChannel.subscription] for
-     * each channel, then creating a [subscriptionSetOf] using the returned [BaseSubscription] objects (and similarly for
-     * channel groups).
-     *
-     * @param channels the channels to create subscriptions for
-     * @param channelGroups the channel groups to create subscriptions for
-     * @param options the [SubscriptionOptions] to pass for each subscriptions. Refer to supported options in [BaseChannel] and
-     * [BaseChannelGroup] documentation.
-     * @return a [BaseSubscriptionSet] containing subscriptions for the given [channels] and [channelGroups]
-     */
     override fun subscriptionSetOf(
         channels: Set<String>,
         channelGroups: Set<String>,
         options: SubscriptionOptions,
     ): SubscriptionSet {
-        return super.subscriptionSetOf(channels, channelGroups, options) as SubscriptionSet
+        val subscriptionSet = subscriptionSetOf(subscriptions = emptySet())
+        channels.forEach {
+            subscriptionSet.add(channel(it).subscription(options))
+        }
+        channelGroups.forEach {
+            subscriptionSet.add(channelGroup(it).subscription(options))
+        }
+        return subscriptionSet
+    }
+
+    override fun removeAllListeners() {
+        listenerManager.removeAllListeners()
+    }
+
+    override fun addListener(listener: SubscribeCallback) {
+        listenerManager.addListener(listener)
+    }
+
+    override fun addListener(listener: StatusListener) {
+        listenerManager.addListener(listener)
+    }
+
+    override fun addListener(listener: EventListener) {
+        listenerManager.addListener(listener)
+    }
+
+    override fun removeListener(listener: Listener) {
+        listenerManager.removeListener(listener)
+    }
+
+    override fun channel(name: String): ChannelImpl {
+        return ChannelImpl(this, ChannelName(name))
+    }
+
+    override fun channelGroup(name: String): ChannelGroup {
+        return ChannelGroupImpl(this, ChannelGroupName(name))
+    }
+
+    override fun channelMetadata(id: String): ChannelMetadata {
+        return ChannelMetadataImpl(this, ChannelName(id))
+    }
+
+    override fun userMetadata(id: String): UserMetadata {
+        return UserMetadataImpl(this, ChannelName(id))
+    }
+
+    override fun subscriptionSetOf(subscriptions: Set<Subscription>): SubscriptionSet {
+        return SubscriptionSetImpl(this, subscriptions as Set<SubscriptionInternal>)
     }
 
     override fun publish(
         channel: String,
         message: Any,
         meta: Any?,
-        shouldStore: Boolean,
+        shouldStore: Boolean?,
         usePost: Boolean,
         replicate: Boolean,
         ttl: Int?,
-    ): Publish {
-        return com.pubnub.internal.endpoints.pubsub.PublishImpl(
-            pubNubCore.publish(
-                channel,
-                message,
-                meta,
-                shouldStore,
-                usePost,
-                replicate,
-                ttl,
-            ),
+    ): Publish =
+        PublishEndpoint(
+            pubnub = this,
+            channel = channel,
+            message = message,
+            meta = meta,
+            shouldStore = shouldStore,
+            usePost = usePost,
+            replicate = replicate,
+            ttl = ttl,
         )
-    }
 
-    override fun fire(channel: String, message: Any, meta: Any?, usePost: Boolean): Publish {
-        return com.pubnub.internal.endpoints.pubsub.PublishImpl(
-            pubNubCore.fire(
-                channel,
-                message,
-                meta,
-                usePost,
-            ),
-        )
-    }
+    override fun fire(channel: String, message: Any, meta: Any?, usePost: Boolean): Publish = publish(
+        channel = channel,
+        message = message,
+        meta = meta,
+        shouldStore = false,
+        usePost = usePost,
+        replicate = false,
+    )
 
     @Deprecated(
         "`fire()` never used the `ttl` parameter, please use the version without `ttl`.",
@@ -309,49 +370,7 @@ class PubNubImpl(
     override fun signal(
         channel: String,
         message: Any,
-    ): Signal {
-        return com.pubnub.internal.endpoints.pubsub.SignalImpl(pubNubCore.signal(channel, message))
-    }
-
-    /**
-     * Unsubscribe from all channels and all channel groups
-     */
-    override fun unsubscribeAll() {
-        pubNubCore.unsubscribeAll()
-    }
-
-    override fun subscribe(
-        channels: List<String>,
-        channelGroups: List<String>,
-        withPresence: Boolean,
-        withTimetoken: Long,
-    ) {
-        pubNubCore.subscribe(channels, channelGroups, withPresence, withTimetoken)
-    }
-
-    /**
-     * When subscribed to a single channel, this function causes the client to issue a leave from the channel
-     * and close any open socket to the PubNub Network.
-     *
-     * For multiplexed channels, the specified channel(s) will be removed and the socket remains open
-     * until there are no more channels remaining in the list.
-     *
-     * * **WARNING**
-     * Unsubscribing from all the channel(s) and then subscribing to a new channel Y isn't the same as
-     * Subscribing to channel Y and then unsubscribing from the previously subscribed channel(s).
-     *
-     * Unsubscribing from all the channels resets the timetoken and thus,
-     * there could be some gaps in the subscriptions that may lead to a message loss.
-     *
-     * @param channels Channels to subscribe/unsubscribe. Either `channel` or [channelGroups] are required.
-     * @param channelGroups Channel groups to subscribe/unsubscribe. Either `channelGroups` or [channels] are required.
-     */
-    override fun unsubscribe(
-        channels: List<String>,
-        channelGroups: List<String>,
-    ) {
-        pubNubCore.unsubscribe(channels, channelGroups)
-    }
+    ): Signal = SignalEndpoint(pubnub = this, channel = channel, message = message)
 
     override fun addPushNotificationsOnChannels(
         pushType: PNPushType,
@@ -360,14 +379,13 @@ class PubNubImpl(
         topic: String?,
         environment: PNPushEnvironment,
     ): AddChannelsToPush {
-        return com.pubnub.internal.endpoints.push.AddChannelsToPushImpl(
-            pubNubCore.addPushNotificationsOnChannels(
-                pushType,
-                channels,
-                deviceId,
-                topic,
-                environment,
-            ),
+        return AddChannelsToPushEndpoint(
+            pubnub = this,
+            pushType = pushType,
+            channels = channels,
+            deviceId = deviceId,
+            topic = topic,
+            environment = environment,
         )
     }
 
@@ -377,13 +395,12 @@ class PubNubImpl(
         topic: String?,
         environment: PNPushEnvironment,
     ): ListPushProvisions {
-        return com.pubnub.internal.endpoints.push.ListPushProvisionsImpl(
-            pubNubCore.auditPushChannelProvisions(
-                pushType,
-                deviceId,
-                topic,
-                environment,
-            ),
+        return ListPushProvisionsEndpoint(
+            pubnub = this,
+            pushType = pushType,
+            deviceId = deviceId,
+            topic = topic,
+            environment = environment,
         )
     }
 
@@ -394,14 +411,13 @@ class PubNubImpl(
         topic: String?,
         environment: PNPushEnvironment,
     ): RemoveChannelsFromPush {
-        return com.pubnub.internal.endpoints.push.RemoveChannelsFromPushImpl(
-            pubNubCore.removePushNotificationsFromChannels(
-                pushType,
-                channels,
-                deviceId,
-                topic,
-                environment,
-            ),
+        return RemoveChannelsFromPushEndpoint(
+            pubnub = this,
+            pushType = pushType,
+            channels = channels,
+            deviceId = deviceId,
+            topic = topic,
+            environment = environment,
         )
     }
 
@@ -411,13 +427,12 @@ class PubNubImpl(
         topic: String?,
         environment: PNPushEnvironment,
     ): RemoveAllPushChannelsForDevice {
-        return com.pubnub.internal.endpoints.push.RemoveAllPushChannelsForDeviceImpl(
-            pubNubCore.removeAllPushNotificationsFromDeviceWithPushToken(
-                pushType,
-                deviceId,
-                topic,
-                environment,
-            ),
+        return RemoveAllPushChannelsForDeviceEndpoint(
+            pubnub = this,
+            pushType = pushType,
+            deviceId = deviceId,
+            topic = topic,
+            environment = environment,
         )
     }
 
@@ -430,16 +445,15 @@ class PubNubImpl(
         includeTimetoken: Boolean,
         includeMeta: Boolean,
     ): History {
-        return com.pubnub.internal.endpoints.HistoryImpl(
-            pubNubCore.history(
-                channel,
-                start,
-                end,
-                count,
-                reverse,
-                includeTimetoken,
-                includeMeta,
-            ),
+        return HistoryEndpoint(
+            pubnub = this,
+            channel = channel,
+            start = start,
+            end = end,
+            count = count,
+            reverse = reverse,
+            includeTimetoken = includeTimetoken,
+            includeMeta = includeMeta,
         )
     }
 
@@ -451,15 +465,14 @@ class PubNubImpl(
         includeMessageActions: Boolean,
         includeMessageType: Boolean,
     ): FetchMessages {
-        return com.pubnub.internal.endpoints.FetchMessagesImpl(
-            pubNubCore.fetchMessages(
-                channels,
-                page,
-                includeUUID,
-                includeMeta,
-                includeMessageActions,
-                includeMessageType,
-            ),
+        return FetchMessagesEndpoint(
+            pubnub = this,
+            channels = channels,
+            page = page,
+            includeUUID = includeUUID,
+            includeMeta = includeMeta,
+            includeMessageActions = includeMessageActions,
+            includeMessageType = includeMessageType,
         )
     }
 
@@ -468,25 +481,14 @@ class PubNubImpl(
         start: Long?,
         end: Long?,
     ): DeleteMessages {
-        return com.pubnub.internal.endpoints.DeleteMessagesImpl(
-            pubNubCore.deleteMessages(
-                channels,
-                start,
-                end,
-            ),
-        )
+        return DeleteMessagesEndpoint(pubnub = this, channels = channels, start = start, end = end)
     }
 
     override fun messageCounts(
         channels: List<String>,
         channelsTimetoken: List<Long>,
     ): MessageCounts {
-        return com.pubnub.internal.endpoints.MessageCountsImpl(
-            pubNubCore.messageCounts(
-                channels,
-                channelsTimetoken,
-            ),
-        )
+        return MessageCountsEndpoint(pubnub = this, channels = channels, channelsTimetoken = channelsTimetoken)
     }
 
     override fun hereNow(
@@ -495,18 +497,17 @@ class PubNubImpl(
         includeState: Boolean,
         includeUUIDs: Boolean,
     ): HereNow {
-        return com.pubnub.internal.endpoints.presence.HereNowImpl(
-            pubNubCore.hereNow(
-                channels,
-                channelGroups,
-                includeState,
-                includeUUIDs,
-            ),
+        return HereNowEndpoint(
+            pubnub = this,
+            channels = channels,
+            channelGroups = channelGroups,
+            includeState = includeState,
+            includeUUIDs = includeUUIDs,
         )
     }
 
     override fun whereNow(uuid: String): WhereNow {
-        return com.pubnub.internal.endpoints.presence.WhereNowImpl(pubNubCore.whereNow(uuid))
+        return WhereNowEndpoint(pubnub = this, uuid = uuid)
     }
 
     override fun setPresenceState(
@@ -515,13 +516,13 @@ class PubNubImpl(
         state: Any,
         uuid: String,
     ): SetState {
-        return com.pubnub.internal.endpoints.presence.SetStateImpl(
-            pubNubCore.setPresenceState(
-                channels,
-                channelGroups,
-                state,
-                uuid,
-            ),
+        return SetStateEndpoint(
+            pubnub = this,
+            channels = channels,
+            channelGroups = channelGroups,
+            state = state,
+            uuid = uuid,
+            presenceData = presenceData,
         )
     }
 
@@ -530,13 +531,13 @@ class PubNubImpl(
         channelGroups: List<String>,
         state: Any
     ): SetState {
-        return com.pubnub.internal.endpoints.presence.SetStateImpl(
-            pubNubCore.setPresenceState(
-                channels,
-                channelGroups,
-                state,
-                configuration.userId.value,
-            ),
+        return SetStateEndpoint(
+            pubnub = this,
+            channels = channels,
+            channelGroups = channelGroups,
+            state = state,
+            uuid = configuration.userId.value,
+            presenceData = presenceData,
         )
     }
 
@@ -545,25 +546,14 @@ class PubNubImpl(
         channelGroups: List<String>,
         uuid: String,
     ): GetState {
-        return com.pubnub.internal.endpoints.presence.GetStateImpl(
-            pubNubCore.getPresenceState(
-                channels,
-                channelGroups,
-                uuid,
-            ),
-        )
+        return GetStateEndpoint(pubnub = this, channels = channels, channelGroups = channelGroups, uuid = uuid)
     }
 
     override fun addMessageAction(
         channel: String,
         messageAction: PNMessageAction,
     ): AddMessageAction {
-        return com.pubnub.internal.endpoints.message_actions.AddMessageActionImpl(
-            pubNubCore.addMessageAction(
-                channel,
-                messageAction,
-            ),
-        )
+        return AddMessageActionEndpoint(pubnub = this, channel = channel, messageAction = messageAction)
     }
 
     override fun removeMessageAction(
@@ -571,12 +561,11 @@ class PubNubImpl(
         messageTimetoken: Long,
         actionTimetoken: Long,
     ): RemoveMessageAction {
-        return com.pubnub.internal.endpoints.message_actions.RemoveMessageActionImpl(
-            pubNubCore.removeMessageAction(
-                channel,
-                messageTimetoken,
-                actionTimetoken,
-            ),
+        return RemoveMessageActionEndpoint(
+            pubnub = this,
+            channel = channel,
+            messageTimetoken = messageTimetoken,
+            actionTimetoken = actionTimetoken,
         )
     }
 
@@ -584,48 +573,33 @@ class PubNubImpl(
         channel: String,
         page: PNBoundedPage,
     ): GetMessageActions {
-        return com.pubnub.internal.endpoints.message_actions.GetMessageActionsImpl(
-            pubNubCore.getMessageActions(
-                channel,
-                page,
-            ),
-        )
+        return GetMessageActionsEndpoint(pubnub = this, channel = channel, page = page)
     }
 
     override fun addChannelsToChannelGroup(
         channels: List<String>,
         channelGroup: String,
     ): AddChannelChannelGroup {
-        return com.pubnub.internal.endpoints.channel_groups.AddChannelChannelGroupImpl(
-            pubNubCore.addChannelsToChannelGroup(channels, channelGroup),
-        )
+        return AddChannelChannelGroupEndpoint(pubnub = this, channels = channels, channelGroup = channelGroup)
     }
 
     override fun listChannelsForChannelGroup(channelGroup: String): AllChannelsChannelGroup {
-        return com.pubnub.internal.endpoints.channel_groups.AllChannelsChannelGroupImpl(
-            pubNubCore.listChannelsForChannelGroup(channelGroup),
-        )
+        return AllChannelsChannelGroupEndpoint(pubnub = this, channelGroup = channelGroup)
     }
 
     override fun removeChannelsFromChannelGroup(
         channels: List<String>,
         channelGroup: String,
     ): RemoveChannelChannelGroup {
-        return com.pubnub.internal.endpoints.channel_groups.RemoveChannelChannelGroupImpl(
-            pubNubCore.removeChannelsFromChannelGroup(channels, channelGroup),
-        )
+        return RemoveChannelChannelGroupEndpoint(pubnub = this, channels = channels, channelGroup = channelGroup)
     }
 
     override fun listAllChannelGroups(): ListAllChannelGroup {
-        return com.pubnub.internal.endpoints.channel_groups.ListAllChannelGroupImpl(pubNubCore.listAllChannelGroups())
+        return ListAllChannelGroupEndpoint(this)
     }
 
     override fun deleteChannelGroup(channelGroup: String): DeleteChannelGroup {
-        return com.pubnub.internal.endpoints.channel_groups.DeleteChannelGroupImpl(
-            pubNubCore.deleteChannelGroup(
-                channelGroup,
-            ),
-        )
+        return DeleteChannelGroupEndpoint(pubnub = this, channelGroup = channelGroup)
     }
 
     override fun grant(
@@ -642,21 +616,20 @@ class PubNubImpl(
         channelGroups: List<String>,
         uuids: List<String>,
     ): Grant =
-        com.pubnub.internal.endpoints.access.GrantImpl(
-            pubNubCore.grant(
-                read,
-                write,
-                manage,
-                delete,
-                get,
-                update,
-                join,
-                ttl,
-                authKeys,
-                channels,
-                channelGroups,
-                uuids,
-            ),
+        GrantEndpoint(
+            pubnub = this,
+            read = read,
+            write = write,
+            manage = manage,
+            delete = delete,
+            get = get,
+            update = update,
+            join = join,
+            ttl = ttl,
+            authKeys = authKeys,
+            channels = channels,
+            channelGroups = channelGroups,
+            uuids = uuids,
         )
 
     override fun grant(
@@ -670,18 +643,17 @@ class PubNubImpl(
         channelGroups: List<String>,
         uuids: List<String>,
     ): Grant =
-        com.pubnub.internal.endpoints.access.GrantImpl(
-            pubNubCore.grant(
-                read,
-                write,
-                manage,
-                delete,
-                ttl,
-                authKeys,
-                channels,
-                channelGroups,
-                uuids,
-            ),
+        GrantEndpoint(
+            pubnub = this,
+            read = read,
+            write = write,
+            manage = manage,
+            delete = delete,
+            ttl = ttl,
+            authKeys = authKeys,
+            channels = channels,
+            channelGroups = channelGroups,
+            uuids = uuids,
         )
 
     override fun grantToken(
@@ -692,15 +664,14 @@ class PubNubImpl(
         channelGroups: List<ChannelGroupGrant>,
         uuids: List<UUIDGrant>,
     ): GrantToken {
-        return com.pubnub.internal.endpoints.access.GrantTokenImpl(
-            pubNubCore.grantToken(
-                ttl,
-                meta,
-                authorizedUUID,
-                channels.toInternalChannelGrants(),
-                channelGroups.toInternalChannelGroupGrants(),
-                uuids.toInternalUuidGrants(),
-            ),
+        return GrantTokenEndpoint(
+            pubnub = this,
+            ttl = ttl,
+            meta = meta,
+            authorizedUUID = authorizedUUID,
+            channels = channels,
+            channelGroups = channelGroups,
+            uuids = uuids,
         )
     }
 
@@ -711,25 +682,26 @@ class PubNubImpl(
         spacesPermissions: List<SpacePermissions>,
         usersPermissions: List<UserPermissions>,
     ): GrantToken {
-        return com.pubnub.internal.endpoints.access.GrantTokenImpl(
-            pubNubCore.grantToken(
-                ttl,
-                meta,
-                authorizedUserId,
-                spacesPermissions.toInternalSpacePermissions(),
-                usersPermissions.toInternalUserPermissions(),
-            ),
+        return GrantTokenEndpoint(
+            pubnub = this,
+            ttl = ttl,
+            meta = meta,
+            authorizedUUID = authorizedUserId?.value,
+            channels = spacesPermissions.map { spacePermissions -> spacePermissions.toChannelGrant() },
+            channelGroups = emptyList(),
+            uuids = usersPermissions.map { userPermissions -> userPermissions.toUuidGrant() },
         )
     }
 
     override fun revokeToken(token: String): RevokeToken {
-        return com.pubnub.internal.endpoints.access.RevokeTokenImpl(
-            pubNubCore.revokeToken(token),
+        return RevokeTokenEndpoint(
+            pubnub = this,
+            token = token,
         )
     }
 
     override fun time(): Time {
-        return com.pubnub.internal.endpoints.TimeImpl(pubNubCore.time())
+        return TimeEndpoint(this)
     }
 
     override fun getAllChannelMetadata(
@@ -740,15 +712,17 @@ class PubNubImpl(
         includeCount: Boolean,
         includeCustom: Boolean,
     ): GetAllChannelMetadata {
-        return com.pubnub.internal.endpoints.objects.channel.GetAllChannelMetadataImpl(
-            pubNubCore.getAllChannelMetadata(
-                limit,
-                page,
-                filter,
-                sort.toInternalSortKeys(),
-                includeCount,
-                includeCustom,
-            ),
+        return GetAllChannelMetadataEndpoint(
+            pubnub = this,
+            collectionQueryParameters =
+                CollectionQueryParameters(
+                    limit = limit,
+                    page = page,
+                    filter = filter,
+                    sort = sort,
+                    includeCount = includeCount,
+                ),
+            includeQueryParam = IncludeQueryParam(includeCustom = includeCustom),
         )
     }
 
@@ -756,8 +730,10 @@ class PubNubImpl(
         channel: String,
         includeCustom: Boolean,
     ): GetChannelMetadata {
-        return com.pubnub.internal.endpoints.objects.channel.GetChannelMetadataImpl(
-            pubNubCore.getChannelMetadata(channel, includeCustom),
+        return GetChannelMetadataEndpoint(
+            pubnub = this,
+            channel = channel,
+            includeQueryParam = IncludeQueryParam(includeCustom = includeCustom),
         )
     }
 
@@ -770,15 +746,20 @@ class PubNubImpl(
         type: String?,
         status: String?,
     ): SetChannelMetadata {
-        return com.pubnub.internal.endpoints.objects.channel.SetChannelMetadataImpl(
-            pubNubCore.setChannelMetadata(channel, name, description, custom, includeCustom, type, status),
+        return SetChannelMetadataEndpoint(
+            pubnub = this,
+            channel = channel,
+            name = name,
+            description = description,
+            custom = custom,
+            includeQueryParam = IncludeQueryParam(includeCustom = includeCustom),
+            type = type,
+            status = status,
         )
     }
 
     override fun removeChannelMetadata(channel: String): RemoveChannelMetadata {
-        return com.pubnub.internal.endpoints.objects.channel.RemoveChannelMetadataImpl(
-            pubNubCore.removeChannelMetadata(channel),
-        )
+        return RemoveChannelMetadataEndpoint(this, channel = channel)
     }
 
     override fun getAllUUIDMetadata(
@@ -789,15 +770,17 @@ class PubNubImpl(
         includeCount: Boolean,
         includeCustom: Boolean,
     ): GetAllUUIDMetadata {
-        return com.pubnub.internal.endpoints.objects.uuid.GetAllUUIDMetadataImpl(
-            pubNubCore.getAllUUIDMetadata(
-                limit,
-                page,
-                filter,
-                sort.toInternalSortKeys(),
-                includeCount,
-                includeCustom,
-            ),
+        return GetAllUUIDMetadataEndpoint(
+            pubnub = this,
+            collectionQueryParameters =
+                CollectionQueryParameters(
+                    limit = limit,
+                    page = page,
+                    filter = filter,
+                    sort = sort,
+                    includeCount = includeCount,
+                ),
+            withInclude = IncludeQueryParam(includeCustom = includeCustom),
         )
     }
 
@@ -805,8 +788,10 @@ class PubNubImpl(
         uuid: String?,
         includeCustom: Boolean,
     ): GetUUIDMetadata {
-        return com.pubnub.internal.endpoints.objects.uuid.GetUUIDMetadataImpl(
-            pubNubCore.getUUIDMetadata(uuid, includeCustom),
+        return GetUUIDMetadataEndpoint(
+            pubnub = this,
+            uuid = uuid ?: configuration.userId.value,
+            includeQueryParam = IncludeQueryParam(includeCustom = includeCustom),
         )
     }
 
@@ -821,25 +806,22 @@ class PubNubImpl(
         type: String?,
         status: String?,
     ): SetUUIDMetadata {
-        return com.pubnub.internal.endpoints.objects.uuid.SetUUIDMetadataImpl(
-            pubNubCore.setUUIDMetadata(
-                uuid,
-                name,
-                externalId,
-                profileUrl,
-                email,
-                custom,
-                includeCustom,
-                type,
-                status,
-            ),
+        return SetUUIDMetadataEndpoint(
+            pubnub = this,
+            uuid = uuid,
+            name = name,
+            externalId = externalId,
+            profileUrl = profileUrl,
+            email = email,
+            custom = custom,
+            withInclude = IncludeQueryParam(includeCustom = includeCustom),
+            type = type,
+            status = status,
         )
     }
 
     override fun removeUUIDMetadata(uuid: String?): RemoveUUIDMetadata {
-        return com.pubnub.internal.endpoints.objects.uuid.RemoveUUIDMetadataImpl(
-            pubNubCore.removeUUIDMetadata(uuid),
-        )
+        return RemoveUUIDMetadataEndpoint(pubnub = this, uuid = uuid)
     }
 
     override fun getMemberships(
@@ -853,18 +835,23 @@ class PubNubImpl(
         includeChannelDetails: PNChannelDetailsLevel?,
         includeType: Boolean,
     ): GetMemberships {
-        return com.pubnub.internal.endpoints.objects.membership.GetMembershipsImpl(
-            pubNubCore.getMemberships(
-                uuid,
-                limit,
-                page,
-                filter,
-                sort.toInternalSortKeys(),
-                includeCount,
-                includeCustom,
-                includeChannelDetails.toInternal(),
-                includeType
-            ),
+        return GetMembershipsEndpoint(
+            pubnub = this,
+            uuid = uuid ?: configuration.userId.value,
+            collectionQueryParameters =
+                CollectionQueryParameters(
+                    limit = limit,
+                    page = page,
+                    filter = filter,
+                    sort = sort,
+                    includeCount = includeCount,
+                ),
+            includeQueryParam =
+                IncludeQueryParam(
+                    includeCustom = includeCustom,
+                    includeChannelDetails = includeChannelDetails,
+                    includeChannelType = includeType,
+                ),
         )
     }
 
@@ -879,22 +866,19 @@ class PubNubImpl(
         includeCustom: Boolean,
         includeChannelDetails: PNChannelDetailsLevel?,
         includeType: Boolean,
-    ): ManageMemberships {
-        return com.pubnub.internal.endpoints.objects.membership.ManageMembershipsImpl(
-            pubNubCore.setMemberships(
-                channels.toInternalChannelMemberships(),
-                uuid,
-                limit,
-                page,
-                filter,
-                sort.toInternalSortKeys(),
-                includeCount,
-                includeCustom,
-                includeChannelDetails.toInternal(),
-                includeType
-            ),
-        )
-    }
+    ): ManageMemberships = manageMemberships(
+        channelsToSet = channels,
+        channelsToRemove = listOf(),
+        uuid = uuid,
+        limit = limit,
+        page = page,
+        filter = filter,
+        sort = sort,
+        includeCount = includeCount,
+        includeCustom = includeCustom,
+        includeChannelDetails = includeChannelDetails,
+        includeType = includeType
+    )
 
     override fun removeMemberships(
         channels: List<String>,
@@ -907,22 +891,19 @@ class PubNubImpl(
         includeCustom: Boolean,
         includeChannelDetails: PNChannelDetailsLevel?,
         includeType: Boolean,
-    ): ManageMemberships {
-        return com.pubnub.internal.endpoints.objects.membership.ManageMembershipsImpl(
-            pubNubCore.removeMemberships(
-                channels,
-                uuid,
-                limit,
-                page,
-                filter,
-                sort.toInternalSortKeys(),
-                includeCount,
-                includeCustom,
-                includeChannelDetails.toInternal(),
-                includeType
-            ),
-        )
-    }
+    ): ManageMemberships = manageMemberships(
+        channelsToSet = listOf(),
+        channelsToRemove = channels,
+        uuid = uuid,
+        limit = limit,
+        page = page,
+        filter = filter,
+        sort = sort,
+        includeCount = includeCount,
+        includeCustom = includeCustom,
+        includeChannelDetails = includeChannelDetails,
+        includeType = includeType,
+    )
 
     override fun manageMemberships(
         channelsToSet: List<ChannelMembershipInput>,
@@ -937,20 +918,25 @@ class PubNubImpl(
         includeChannelDetails: PNChannelDetailsLevel?,
         includeType: Boolean,
     ): ManageMemberships {
-        return com.pubnub.internal.endpoints.objects.membership.ManageMembershipsImpl(
-            pubNubCore.manageMemberships(
-                channelsToSet.toInternalChannelMemberships(),
-                channelsToRemove,
-                uuid,
-                limit,
-                page,
-                filter,
-                sort.toInternalSortKeys(),
-                includeCount,
-                includeCustom,
-                includeChannelDetails.toInternal(),
-                includeType
-            ),
+        return ManageMembershipsEndpoint(
+            pubnub = this,
+            channelsToSet = channelsToSet,
+            channelsToRemove = channelsToRemove,
+            uuid = uuid ?: configuration.userId.value,
+            collectionQueryParameters =
+                CollectionQueryParameters(
+                    limit = limit,
+                    page = page,
+                    filter = filter,
+                    sort = sort,
+                    includeCount = includeCount,
+                ),
+            includeQueryParam =
+                IncludeQueryParam(
+                    includeCustom = includeCustom,
+                    includeChannelDetails = includeChannelDetails,
+                    includeChannelType = includeType,
+                ),
         )
     }
 
@@ -965,18 +951,23 @@ class PubNubImpl(
         includeUUIDDetails: PNUUIDDetailsLevel?,
         includeType: Boolean,
     ): GetChannelMembers {
-        return com.pubnub.internal.endpoints.objects.member.GetChannelMembersImpl(
-            pubNubCore.getChannelMembers(
-                channel,
-                limit,
-                page,
-                filter,
-                sort.toInternalSortKeys(),
-                includeCount,
-                includeCustom,
-                includeUUIDDetails.toInternal(),
-                includeType
-            ),
+        return GetChannelMembersEndpoint(
+            pubnub = this,
+            channel = channel,
+            collectionQueryParameters =
+                CollectionQueryParameters(
+                    limit = limit,
+                    page = page,
+                    filter = filter,
+                    sort = sort,
+                    includeCount = includeCount,
+                ),
+            includeQueryParam =
+                IncludeQueryParam(
+                    includeCustom = includeCustom,
+                    includeUUIDDetails = includeUUIDDetails,
+                    includeUuidType = includeType,
+                ),
         )
     }
 
@@ -999,19 +990,14 @@ class PubNubImpl(
         includeMeta: Boolean,
         includeMessageActions: Boolean,
         includeMessageType: Boolean,
-    ): FetchMessages {
-        return com.pubnub.internal.endpoints.FetchMessagesImpl(
-            pubNubCore.fetchMessages(
-                channels,
-                maximumPerChannel,
-                start,
-                end,
-                includeMeta,
-                includeMessageActions,
-                includeMessageType,
-            ),
-        )
-    }
+    ): FetchMessages = fetchMessages(
+        channels = channels,
+        page = PNBoundedPage(start = start, end = end, limit = maximumPerChannel),
+        includeUUID = true,
+        includeMeta = includeMeta,
+        includeMessageActions = includeMessageActions,
+        includeMessageType = includeMessageType
+    )
 
     @Deprecated(
         replaceWith =
@@ -1028,9 +1014,7 @@ class PubNubImpl(
         end: Long?,
         limit: Int?,
     ): GetMessageActions {
-        return com.pubnub.internal.endpoints.message_actions.GetMessageActionsImpl(
-            pubNubCore.getMessageActions(channel, start, end, limit),
-        )
+        return getMessageActions(channel = channel, page = PNBoundedPage(start = start, end = end, limit = limit))
     }
 
     @Deprecated(
@@ -1053,21 +1037,17 @@ class PubNubImpl(
         includeCount: Boolean,
         includeCustom: Boolean,
         includeChannelDetails: PNChannelDetailsLevel?,
-    ): ManageMemberships {
-        return com.pubnub.internal.endpoints.objects.membership.ManageMembershipsImpl(
-            pubNubCore.addMemberships(
-                channels.toInternalChannelMemberships(),
-                uuid,
-                limit,
-                page,
-                filter,
-                sort.toInternalSortKeys(),
-                includeCount,
-                includeCustom,
-                includeChannelDetails.toInternal(),
-            ),
-        )
-    }
+    ): ManageMemberships = setMemberships(
+        channels = channels,
+        uuid = uuid ?: configuration.userId.value,
+        limit = limit,
+        page = page,
+        filter = filter,
+        sort = sort,
+        includeCount = includeCount,
+        includeCustom = includeCustom,
+        includeChannelDetails = includeChannelDetails,
+    )
 
     @Deprecated(
         "Use getChannelMembers instead",
@@ -1088,20 +1068,16 @@ class PubNubImpl(
         includeCount: Boolean,
         includeCustom: Boolean,
         includeUUIDDetails: PNUUIDDetailsLevel?,
-    ): GetChannelMembers {
-        return com.pubnub.internal.endpoints.objects.member.GetChannelMembersImpl(
-            pubNubCore.getMembers(
-                channel,
-                limit,
-                page,
-                filter,
-                sort.toInternalSortKeys(),
-                includeCount,
-                includeCustom,
-                includeUUIDDetails.toInternal(),
-            ),
-        )
-    }
+    ): GetChannelMembers = getChannelMembers(
+        channel = channel,
+        limit = limit,
+        page = page,
+        filter = filter,
+        sort = sort,
+        includeCount = includeCount,
+        includeCustom = includeCustom,
+        includeUUIDDetails = includeUUIDDetails,
+    )
 
     @Deprecated(
         "Use setChannelMembers instead",
@@ -1123,21 +1099,17 @@ class PubNubImpl(
         includeCount: Boolean,
         includeCustom: Boolean,
         includeUUIDDetails: PNUUIDDetailsLevel?,
-    ): ManageChannelMembers {
-        return com.pubnub.internal.endpoints.objects.member.ManageChannelMembersImpl(
-            pubNubCore.addMembers(
-                channel,
-                uuids.toInternalMemberInputs(),
-                limit,
-                page,
-                filter,
-                sort.toInternalSortKeys(),
-                includeCount,
-                includeCustom,
-                includeUUIDDetails.toInternal(),
-            ),
-        )
-    }
+    ): ManageChannelMembers = setChannelMembers(
+        channel = channel,
+        uuids = uuids,
+        limit = limit,
+        page = page,
+        filter = filter,
+        sort = sort,
+        includeCount = includeCount,
+        includeCustom = includeCustom,
+        includeUUIDDetails = includeUUIDDetails,
+    )
 
     override fun setChannelMembers(
         channel: String,
@@ -1150,22 +1122,19 @@ class PubNubImpl(
         includeCustom: Boolean,
         includeUUIDDetails: PNUUIDDetailsLevel?,
         includeType: Boolean,
-    ): ManageChannelMembers {
-        return com.pubnub.internal.endpoints.objects.member.ManageChannelMembersImpl(
-            pubNubCore.setChannelMembers(
-                channel,
-                uuids.toInternalMemberInputs(),
-                limit,
-                page,
-                filter,
-                sort.toInternalSortKeys(),
-                includeCount,
-                includeCustom,
-                includeUUIDDetails.toInternal(),
-                includeType
-            ),
-        )
-    }
+    ): ManageChannelMembers = manageChannelMembers(
+        channel = channel,
+        uuidsToSet = uuids,
+        uuidsToRemove = listOf(),
+        limit = limit,
+        page = page,
+        filter = filter,
+        sort = sort,
+        includeCount = includeCount,
+        includeCustom = includeCustom,
+        includeUUIDDetails = includeUUIDDetails,
+        includeUUIDType = includeType
+    )
 
     @Deprecated(
         "Use removeChannelMembers instead",
@@ -1187,21 +1156,17 @@ class PubNubImpl(
         includeCount: Boolean,
         includeCustom: Boolean,
         includeUUIDDetails: PNUUIDDetailsLevel?,
-    ): ManageChannelMembers {
-        return com.pubnub.internal.endpoints.objects.member.ManageChannelMembersImpl(
-            pubNubCore.removeMembers(
-                channel,
-                uuids,
-                limit,
-                page,
-                filter,
-                sort.toInternalSortKeys(),
-                includeCount,
-                includeCustom,
-                includeUUIDDetails.toInternal(),
-            ),
-        )
-    }
+    ): ManageChannelMembers = removeChannelMembers(
+        channel = channel,
+        uuids = uuids,
+        limit = limit,
+        page = page,
+        filter = filter,
+        sort = sort,
+        includeCount = includeCount,
+        includeCustom = includeCustom,
+        includeUUIDDetails = includeUUIDDetails,
+    )
 
     override fun removeChannelMembers(
         channel: String,
@@ -1214,21 +1179,19 @@ class PubNubImpl(
         includeCustom: Boolean,
         includeUUIDDetails: PNUUIDDetailsLevel?,
         includeType: Boolean,
-    ): ManageChannelMembers {
-        return com.pubnub.internal.endpoints.objects.member.ManageChannelMembersImpl(
-            pubNubCore.removeChannelMembers(
-                channel,
-                uuids,
-                limit,
-                page,
-                filter,
-                sort.toInternalSortKeys(),
-                includeCount,
-                includeCustom,
-                includeUUIDDetails.toInternal(),
-            ),
-        )
-    }
+    ): ManageChannelMembers = manageChannelMembers(
+        channel = channel,
+        uuidsToSet = listOf(),
+        uuidsToRemove = uuids,
+        limit = limit,
+        page = page,
+        filter = filter,
+        sort = sort,
+        includeCount = includeCount,
+        includeCustom = includeCustom,
+        includeUUIDDetails = includeUUIDDetails,
+        includeUUIDType = includeType,
+    )
 
     override fun manageChannelMembers(
         channel: String,
@@ -1241,20 +1204,27 @@ class PubNubImpl(
         includeCount: Boolean,
         includeCustom: Boolean,
         includeUUIDDetails: PNUUIDDetailsLevel?,
+        includeUUIDType: Boolean,
     ): ManageChannelMembers {
-        return com.pubnub.internal.endpoints.objects.member.ManageChannelMembersImpl(
-            pubNubCore.manageChannelMembers(
-                channel,
-                uuidsToSet.toInternalMemberInputs(),
-                uuidsToRemove,
-                limit,
-                page,
-                filter,
-                sort.toInternalSortKeys(),
-                includeCount,
-                includeCustom,
-                includeUUIDDetails.toInternal(),
-            ),
+        return ManageChannelMembersEndpoint(
+            pubnub = this,
+            channel = channel,
+            uuidsToSet = uuidsToSet,
+            uuidsToRemove = uuidsToRemove,
+            collectionQueryParameters =
+                CollectionQueryParameters(
+                    limit = limit,
+                    page = page,
+                    filter = filter,
+                    sort = sort,
+                    includeCount = includeCount,
+                ),
+            includeQueryParam =
+                IncludeQueryParam(
+                    includeCustom = includeCustom,
+                    includeUUIDDetails = includeUUIDDetails,
+                    includeUuidType = includeUUIDType,
+                ),
         )
     }
 
@@ -1268,17 +1238,28 @@ class PubNubImpl(
         shouldStore: Boolean?,
         cipherKey: String?,
     ): SendFile {
-        return com.pubnub.internal.endpoints.files.SendFileImpl(
-            pubNubCore.sendFile(
-                channel,
-                fileName,
-                inputStream,
-                message,
-                meta,
-                ttl,
-                shouldStore,
-                cipherKey,
-            ),
+        val cryptoModule =
+            if (cipherKey != null) {
+                CryptoModule.createLegacyCryptoModule(cipherKey)
+            } else {
+                configuration.cryptoModule
+            }
+        return SendFileEndpoint(
+            channel = channel,
+            fileName = fileName,
+            inputStream = inputStream,
+            message = message,
+            meta = meta,
+            ttl = ttl,
+            shouldStore = shouldStore,
+            executorService =
+                retrofitManager.getTransactionClientExecutorService()
+                    ?: Executors.newSingleThreadExecutor(),
+            fileMessagePublishRetryLimit = configuration.fileMessagePublishRetryLimit,
+            generateUploadUrlFactory = GenerateUploadUrlEndpoint.Factory(this),
+            publishFileMessageFactory = PublishFileMessageEndpoint.Factory(this),
+            sendFileToS3Factory = UploadFileEndpoint.Factory(this),
+            cryptoModule = cryptoModule,
         )
     }
 
@@ -1287,8 +1268,11 @@ class PubNubImpl(
         limit: Int?,
         next: PNPage.PNNext?,
     ): ListFiles {
-        return com.pubnub.internal.endpoints.files.ListFilesImpl(
-            pubNubCore.listFiles(channel, limit, next),
+        return ListFilesEndpoint(
+            pubNub = this,
+            channel = channel,
+            limit = limit,
+            next = next,
         )
     }
 
@@ -1297,8 +1281,11 @@ class PubNubImpl(
         fileName: String,
         fileId: String,
     ): GetFileUrl {
-        return com.pubnub.internal.endpoints.files.GetFileUrlImpl(
-            pubNubCore.getFileUrl(channel, fileName, fileId),
+        return GetFileUrlEndpoint(
+            pubNub = this,
+            channel = channel,
+            fileName = fileName,
+            fileId = fileId,
         )
     }
 
@@ -1308,8 +1295,18 @@ class PubNubImpl(
         fileId: String,
         cipherKey: String?,
     ): DownloadFile {
-        return com.pubnub.internal.endpoints.files.DownloadFileImpl(
-            pubNubCore.downloadFile(channel, fileName, fileId, cipherKey),
+        val cryptoModule =
+            if (cipherKey != null) {
+                CryptoModule.createLegacyCryptoModule(cipherKey)
+            } else {
+                configuration.cryptoModule
+            }
+        return DownloadFileEndpoint(
+            pubNub = this,
+            channel = channel,
+            fileName = fileName,
+            fileId = fileId,
+            cryptoModule = cryptoModule,
         )
     }
 
@@ -1318,8 +1315,11 @@ class PubNubImpl(
         fileName: String,
         fileId: String,
     ): DeleteFile {
-        return com.pubnub.internal.endpoints.files.DeleteFileImpl(
-            pubNubCore.deleteFile(channel, fileName, fileId),
+        return DeleteFileEndpoint(
+            pubNub = this,
+            channel = channel,
+            fileName = fileName,
+            fileId = fileId,
         )
     }
 
@@ -1332,111 +1332,349 @@ class PubNubImpl(
         ttl: Int?,
         shouldStore: Boolean?,
     ): PublishFileMessage {
-        return com.pubnub.internal.endpoints.files.PublishFileMessageImpl(
-            pubNubCore.publishFileMessage(channel, fileName, fileId, message, meta, ttl, shouldStore),
+        return PublishFileMessageEndpoint(
+            pubNub = this,
+            channel = channel,
+            fileName = fileName,
+            fileId = fileId,
+            message = message,
+            meta = meta,
+            ttl = ttl,
+            shouldStore = shouldStore,
         )
     }
 
-    /**
-     * Queries the local subscribe loop for channels currently in the mix.
-     *
-     * @return A list of channels the client is currently subscribed to.
-     */
-    override fun getSubscribedChannels(): List<String> = pubNubCore.getSubscribedChannels()
+    override fun getSubscribedChannels() = subscribe.getSubscribedChannels()
 
-    /**
-     * Queries the local subscribe loop for channel groups currently in the mix.
-     *
-     * @return A list of channel groups the client is currently subscribed to.
-     */
-    override fun getSubscribedChannelGroups(): List<String> = pubNubCore.getSubscribedChannelGroups()
+    override fun getSubscribedChannelGroups() = subscribe.getSubscribedChannelGroups()
 
-    /**
-     * Track the online and offline status of users and devices in real time and store custom state information.
-     * When you have Presence enabled, PubNub automatically creates a presence channel for each channel.
-     *
-     * Subscribing to a presence channel or presence channel group will only return presence events
-     *
-     * @param channels Channels to subscribe/unsubscribe. Either `channel` or [channelGroups] are required.
-     * @param channelGroups Channel groups to subscribe/unsubscribe. Either `channelGroups` or [channels] are required.
-     */
     override fun presence(
         channels: List<String>,
         channelGroups: List<String>,
         connected: Boolean,
-    ) = pubNubCore.presence(channels, channelGroups, connected)
+    ) = presence.presence(
+        channels = channels.toSet(),
+        channelGroups = channelGroups.toSet(),
+        connected = connected,
+    )
 
     private fun getCryptoModuleOrThrow(cipherKey: String? = null): CryptoModule {
-        return cipherKey?.let { cipherKeyNotNull ->
-            (configuration as? PNConfiguration)?.let {
-                CryptoModule.createLegacyCryptoModule(cipherKeyNotNull, it.useRandomInitializationVector)
-            } ?: CryptoModule.createLegacyCryptoModule(cipherKeyNotNull)
-        } ?: configuration.cryptoModule ?: throw PubNubException("Crypto module is not initialized")
+        return cipherKey?.let { cipherKeyNotNull -> CryptoModule.createLegacyCryptoModule(cipherKeyNotNull) }
+            ?: configuration.cryptoModule ?: throw PubNubException("Crypto module is not initialized")
     }
 
-    /**
-     * Perform Cryptographic decryption of an input string using cipher key provided by [PNConfiguration.cipherKey].
-     *
-     * @param inputString String to be decrypted.
-     *
-     * @return String containing the decryption of `inputString` using `cipherKey`.
-     * @throws PubNubException throws exception in case of failed decryption.
-     */
-    override fun decrypt(inputString: String): String = pubNubCore.decrypt(inputString)
+    @Throws(PubNubException::class)
+    fun decrypt(
+        inputString: String,
+        cryptoModule: CryptoModule? = null,
+    ): String = getCryptoModuleOrThrow(cryptoModule).decryptString(inputString)
 
-    /**
-     * Perform Cryptographic decryption of an input string using a cipher key.
-     *
-     * @param inputString String to be decrypted.
-     * @param cipherKey cipher key to be used for decryption. Default is [PNConfiguration.cipherKey]
-     *
-     * @return String containing the decryption of `inputString` using `cipherKey`.
-     * @throws PubNubException throws exception in case of failed decryption.
-     */
+    @Throws(PubNubException::class)
+    override fun decrypt(inputString: String): String = decrypt(inputString, cipherKey = null)
+
     override fun decrypt(
         inputString: String,
         cipherKey: String?,
-    ): String = pubNubCore.decrypt(inputString, getCryptoModuleOrThrow(cipherKey))
+    ): String = decrypt(inputString, getCryptoModuleOrThrow(cipherKey))
 
-    /**
-     * Perform Cryptographic decryption of an input stream using provided cipher key.
-     *
-     * @param inputStream InputStream to be encrypted.
-     * @param cipherKey Cipher key to be used for decryption.
-     *
-     * @return InputStream containing the encryption of `inputStream` using `cipherKey`.
-     * @throws PubNubException Throws exception in case of failed decryption.
-     */
     override fun decryptInputStream(
         inputStream: InputStream,
         cipherKey: String?,
-    ): InputStream = pubNubCore.decryptInputStream(inputStream, getCryptoModuleOrThrow(cipherKey))
+    ): InputStream = decryptInputStream(inputStream, getCryptoModuleOrThrow(cipherKey))
 
-    /**
-     * Perform Cryptographic encryption of an input string and a cipher key.
-     *
-     * @param inputString String to be encrypted.
-     * @param cipherKey Cipher key to be used for encryption. Default is [PNConfiguration.cipherKey]
-     *
-     * @return String containing the encryption of `inputString` using `cipherKey`.
-     * @throws PubNubException Throws exception in case of failed encryption.
-     */
+    private fun decryptInputStream(
+        inputStream: InputStream,
+        cryptoModule: CryptoModule? = null,
+    ): InputStream = getCryptoModuleOrThrow(cryptoModule).decryptStream(inputStream)
+
     override fun encrypt(
         inputString: String,
         cipherKey: String?,
-    ): String = pubNubCore.encrypt(inputString, getCryptoModuleOrThrow(cipherKey))
+    ): String = encrypt(inputString, getCryptoModuleOrThrow(cipherKey))
 
-    /**
-     * Perform Cryptographic encryption of an input stream using provided cipher key.
-     *
-     * @param inputStream InputStream to be encrypted.
-     * @param cipherKey Cipher key to be used for encryption.
-     *
-     * @return InputStream containing the encryption of `inputStream` using `cipherKey`.
-     * @throws PubNubException Throws exception in case of failed encryption.
-     */
+    @Throws(PubNubException::class)
+    private fun encrypt(
+        inputString: String,
+        cryptoModule: CryptoModule? = null,
+    ): String = getCryptoModuleOrThrow(cryptoModule).encryptString(inputString)
+
     override fun encryptInputStream(
         inputStream: InputStream,
         cipherKey: String?,
-    ): InputStream = pubNubCore.encryptInputStream(inputStream, getCryptoModuleOrThrow(cipherKey))
+    ): InputStream = encryptInputStream(inputStream, getCryptoModuleOrThrow(cipherKey))
+
+    @Throws(PubNubException::class)
+    private fun encryptInputStream(
+        inputStream: InputStream,
+        cryptoModule: CryptoModule? = null,
+    ): InputStream = getCryptoModuleOrThrow(cryptoModule).encryptStream(inputStream)
+
+    private fun subscribeInternal(
+        channels: List<String> = emptyList(),
+        channelGroups: List<String> = emptyList(),
+        withPresence: Boolean = false,
+        withTimetoken: Long = 0L,
+    ) {
+        subscribe.subscribe(channels.toSet(), channelGroups.toSet(), withPresence, withTimetoken)
+        if (!configuration.managePresenceListManually) {
+            presence.joined(
+                channels.filterNot { it.endsWith(PRESENCE_CHANNEL_SUFFIX) }.toSet(),
+                channelGroups.filterNot { it.endsWith(PRESENCE_CHANNEL_SUFFIX) }.toSet(),
+            )
+        }
+    }
+
+    private fun unsubscribeInternal(
+        channels: List<String> = emptyList(),
+        channelGroups: List<String> = emptyList(),
+    ) {
+        val channelSetWithoutPresence = channels.filter { !it.endsWith(PRESENCE_CHANNEL_SUFFIX) }.toSet()
+        val groupSetWithoutPresence = channelGroups.filter { !it.endsWith(PRESENCE_CHANNEL_SUFFIX) }.toSet()
+        subscribe.unsubscribe(channelSetWithoutPresence, groupSetWithoutPresence)
+        if (!configuration.managePresenceListManually) {
+            presence.left(channelSetWithoutPresence, groupSetWithoutPresence)
+        }
+    }
+
+    override fun reconnect(timetoken: Long) {
+        subscribe.reconnect(timetoken)
+        presence.reconnect()
+    }
+
+    override fun disconnect() {
+        subscribe.disconnect()
+        presence.disconnect()
+    }
+
+    override fun destroy() {
+        subscribe.destroy()
+        presence.destroy()
+
+        retrofitManager.destroy()
+        executorService.shutdown()
+    }
+
+    override fun forceDestroy() {
+        subscribe.destroy()
+        presence.destroy()
+
+        retrofitManager.destroy(true)
+        executorService.shutdownNow()
+    }
+
+    override fun parseToken(token: String): PNToken {
+        return tokenParser.unwrapToken(token)
+    }
+
+    override fun setToken(token: String?) {
+        return tokenManager.setToken(token)
+    }
+
+    // internal
+    private val lockChannelsAndGroups = Any()
+    private val channelSubscriptions = mutableMapOf<ChannelName, MutableSet<Subscription>>()
+    private val channelGroupSubscriptions = mutableMapOf<ChannelGroupName, MutableSet<Subscription>>()
+
+    internal fun subscribe(
+        vararg subscriptions: SubscriptionInternal,
+        cursor: SubscriptionCursor,
+    ) {
+        synchronized(lockChannelsAndGroups) {
+            val channelsToSubscribe = mutableSetOf<ChannelName>()
+            subscriptions.forEach { subscription ->
+                subscription.channels.forEach { channelName ->
+                    channelSubscriptions.computeIfAbsent(channelName) { mutableSetOf() }
+                        .also { set -> set.add(subscription) }
+                    channelsToSubscribe.add(channelName)
+                }
+            }
+            val groupsToSubscribe = mutableSetOf<ChannelGroupName>()
+            subscriptions.forEach { subscription ->
+                subscription.channelGroups.forEach { channelGroupName ->
+                    channelGroupSubscriptions.computeIfAbsent(channelGroupName) { mutableSetOf() }
+                        .also { set -> set.add(subscription) }
+                    groupsToSubscribe.add(channelGroupName)
+                }
+            }
+
+            val (channelsWithPresence, channelsNoPresence) =
+                channelsToSubscribe.filter { !it.isPresence }
+                    .partition {
+                        channelsToSubscribe.contains(it.withPresence)
+                    }
+            val (groupsWithPresence, groupsNoPresence) =
+                groupsToSubscribe.filter { !it.isPresence }.partition {
+                    groupsToSubscribe.contains(it.withPresence)
+                }
+            if (channelsWithPresence.isNotEmpty() || groupsWithPresence.isNotEmpty()) {
+                subscribeInternal(
+                    channels = channelsWithPresence.map(ChannelName::id),
+                    channelGroups = groupsWithPresence.map(ChannelGroupName::id),
+                    withPresence = true,
+                    withTimetoken = cursor.timetoken,
+                )
+            }
+            if (channelsNoPresence.isNotEmpty() || groupsNoPresence.isNotEmpty()) {
+                subscribeInternal(
+                    channels = channelsNoPresence.map(ChannelName::id),
+                    channelGroups = groupsNoPresence.map(ChannelGroupName::id),
+                    withPresence = false,
+                    withTimetoken = cursor.timetoken,
+                )
+            }
+        }
+    }
+
+    internal fun unsubscribe(vararg subscriptions: SubscriptionInternal) {
+        synchronized(lockChannelsAndGroups) {
+            val channelsToUnsubscribe = mutableSetOf<ChannelName>()
+            subscriptions.forEach { subscription ->
+                subscription.channels.forEach { channelName ->
+                    val set = channelSubscriptions[channelName]
+                    set?.remove(subscription)
+                    if (set != null && set.isEmpty()) { // there were mappings but there none now
+                        channelsToUnsubscribe += channelName
+                        channelSubscriptions.remove(channelName)
+                    }
+                }
+            }
+
+            val groupsToUnsubscribe = mutableSetOf<ChannelGroupName>()
+            subscriptions.forEach { subscription ->
+                subscription.channelGroups.forEach { channelGroupName ->
+                    val set = channelGroupSubscriptions[channelGroupName]
+                    set?.remove(subscription)
+                    if (set != null && set.isEmpty()) {
+                        groupsToUnsubscribe += channelGroupName
+                        channelGroupSubscriptions.remove(channelGroupName)
+                    }
+                }
+            }
+            if (channelsToUnsubscribe.isNotEmpty() || groupsToUnsubscribe.isNotEmpty()) {
+                unsubscribeInternal(
+                    channels = channelsToUnsubscribe.map(ChannelName::id),
+                    channelGroups = groupsToUnsubscribe.map(ChannelGroupName::id),
+                )
+            }
+        }
+    }
+
+    private val channelSubscriptionMap = mutableMapOf<ChannelName, SubscriptionImpl>()
+    private val channelGroupSubscriptionMap = mutableMapOf<ChannelGroupName, SubscriptionImpl>()
+
+    //region Subscribe
+    @Synchronized
+    override fun subscribe(
+        channels: List<String>,
+        channelGroups: List<String>,
+        withPresence: Boolean,
+        withTimetoken: Long,
+    ) {
+        val toSubscribe = mutableSetOf<SubscriptionImpl>()
+        channels.filter { it.isNotEmpty() }.map { ChannelName(it) }.forEach { channelName ->
+            // if we are adding a NEW subscriptions in this step, this var will contain it:
+            var subscription: SubscriptionImpl? = null
+            channelSubscriptionMap.computeIfAbsent(channelName) { newChannelName ->
+                val channel =
+                    ChannelImpl(
+                        this,
+                        newChannelName
+                    )
+                val options =
+                    if (withPresence) {
+                        SubscriptionOptions.receivePresenceEvents()
+                    } else {
+                        EmptyOptions
+                    }
+                channel.subscription(options).also { sub ->
+                    toSubscribe.add(sub)
+                    subscription = sub
+                }
+            }
+            // make sure we are also subscribed and tracking the -pnpres channel if withPresence==true
+            if (withPresence) {
+                channelSubscriptionMap.computeIfAbsent(channelName.withPresence) { presenceChannelName ->
+                    // this will either be the subscriptions we just created in the previous step,
+                    // or if we were already subscribed to the channel WITHOUT presence, we need to create a new one
+                    subscription ?: ChannelImpl(
+                        this,
+                        presenceChannelName
+                    ).subscription().also { sub ->
+                        toSubscribe.add(sub)
+                    }
+                }
+            }
+        }
+        channelGroups.filter { it.isNotEmpty() }.map { ChannelGroupName(it) }.forEach { channelGroupName ->
+            var subscription: SubscriptionImpl? = null
+
+            channelGroupSubscriptionMap.computeIfAbsent(channelGroupName) { newChannelGroupName ->
+                val channelGroup = ChannelGroupImpl(this, newChannelGroupName)
+                val options =
+                    if (withPresence) {
+                        SubscriptionOptions.receivePresenceEvents()
+                    } else {
+                        EmptyOptions
+                    }
+                channelGroup.subscription(options).also { sub ->
+                    toSubscribe.add(sub)
+                    subscription = sub
+                }
+            }
+            // make sure we are also subscribed and tracking the -pnpres channel if withPresence==true
+            if (withPresence) {
+                channelGroupSubscriptionMap.computeIfAbsent(channelGroupName.withPresence) { presenceGroupName ->
+                    // this will either be the subscriptions we just created in the previous step,
+                    // or if we were already subscribed to the channel WITHOUT presence, we need to create a new one
+                    subscription ?: ChannelGroupImpl(this, presenceGroupName)
+                        .subscription().also { sub ->
+                            toSubscribe.add(sub)
+                        }
+                }
+            }
+        }
+
+        // actually subscribe to all subscriptions created in this function and added to the set
+        subscribe(*toSubscribe.toTypedArray(), cursor = SubscriptionCursor(withTimetoken))
+    }
+
+    @Synchronized
+    override fun unsubscribe(
+        channels: List<String>,
+        channelGroups: List<String>,
+    ) {
+        val toUnsubscribe: MutableSet<SubscriptionImpl> = mutableSetOf()
+        channels.filter { it.isNotEmpty() }.map { ChannelName(it) }.forEach { channelName ->
+            channelSubscriptionMap.remove(channelName)?.let { sub ->
+                toUnsubscribe.add(sub)
+            }
+            channelSubscriptionMap.remove(channelName.withPresence)?.let { sub ->
+                toUnsubscribe.add(sub)
+            }
+        }
+        channelGroups.filter { it.isNotEmpty() }.map { ChannelGroupName(it) }.forEach { groupName ->
+            channelGroupSubscriptionMap.remove(groupName)?.let { sub ->
+                toUnsubscribe.add(sub)
+            }
+            channelGroupSubscriptionMap.remove(groupName.withPresence)?.let { sub ->
+                toUnsubscribe.add(sub)
+            }
+        }
+        unsubscribe(*toUnsubscribe.toTypedArray())
+    }
+
+    @Synchronized
+    override fun unsubscribeAll() {
+        synchronized(lockChannelsAndGroups) {
+            channelSubscriptions.clear()
+            channelGroupSubscriptions.clear()
+            subscribe.unsubscribeAll()
+            presence.leftAll()
+        }
+    }
+
+    @Throws(PubNubException::class)
+    private fun getCryptoModuleOrThrow(cryptoModule: CryptoModule? = null): CryptoModule {
+        return cryptoModule ?: configuration.cryptoModule ?: throw PubNubException("Crypto module is not initialized")
+    }
 }

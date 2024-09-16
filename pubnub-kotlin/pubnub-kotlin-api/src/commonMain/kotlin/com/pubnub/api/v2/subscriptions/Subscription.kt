@@ -1,7 +1,6 @@
 package com.pubnub.api.v2.subscriptions
 
 import com.pubnub.api.v2.callbacks.EventEmitter
-import com.pubnub.api.v2.callbacks.EventListener
 
 /**
  * Represents a potential subscription to the PubNub real-time network.
@@ -15,7 +14,7 @@ import com.pubnub.api.v2.callbacks.EventListener
  * This class implements the [AutoCloseable] interface to help you release resources by calling [unsubscribe]
  * and removing all listeners on [close]. Remember to always call [close] when you no longer need this Subscription.
  */
-interface Subscription : BaseSubscription<EventListener>, EventEmitter {
+interface Subscription : EventEmitter, SubscribeCapable, AutoCloseable {
     /**
      * Create a [SubscriptionSet] containing this [Subscription] and the added [subscription].
      */
