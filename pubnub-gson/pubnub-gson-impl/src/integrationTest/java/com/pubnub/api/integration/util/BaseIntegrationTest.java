@@ -25,6 +25,7 @@ import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -312,6 +313,12 @@ public abstract class BaseIntegrationTest {
     protected void listen(AtomicBoolean success) {
         Awaitility.await()
                 .atMost(Durations.FIVE_SECONDS)
+                .with()
+                .untilTrue(success);
+    }
+    protected void listen(AtomicBoolean success, Duration timeout) {
+        Awaitility.await()
+                .atMost(timeout)
                 .with()
                 .untilTrue(success);
     }

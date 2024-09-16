@@ -115,7 +115,8 @@ import com.pubnub.internal.v2.entities.ChannelName
 import com.pubnub.internal.v2.subscription.SubscriptionInternal
 import java.io.InputStream
 
-class PubNubForJavaImpl(configuration: PNConfiguration) :
+// open to that it can be mocked in tests
+open class PubNubForJavaImpl(configuration: PNConfiguration) :
     PubNubImpl(
         configuration,
         PNSDK_PUBNUB_JAVA
