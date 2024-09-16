@@ -430,6 +430,7 @@ actual interface PubNub {
     ): SubscriptionSet
 
     actual fun parseToken(token: String): PNToken
+
     actual fun publish(
         channel: String,
         message: Any,
