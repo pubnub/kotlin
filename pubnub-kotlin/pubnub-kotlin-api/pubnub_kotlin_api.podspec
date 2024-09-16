@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
     spec.name                     = 'pubnub_kotlin_api'
-    spec.version                  = '9.2.3'
+    spec.version                  = '9.2.4'
     spec.homepage                 = ''
     spec.source                   = { :http=> ''}
     spec.authors                  = ''
