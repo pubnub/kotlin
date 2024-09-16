@@ -1,6 +1,6 @@
 package com.pubnub.api.endpoints
 
-import cocoapods.PubNubSwift.PubNubObjC
+import cocoapods.PubNubSwift.KMPPubNub
 import cocoapods.PubNubSwift.timeOnSuccess
 import com.pubnub.api.models.consumer.PNTimeResult
 import com.pubnub.api.v2.callbacks.Consumer
@@ -17,7 +17,7 @@ actual interface Time : PNFuture<PNTimeResult>
 
 @OptIn(ExperimentalForeignApi::class)
 class TimeImpl(
-    private val pubnub: PubNubObjC
+    private val pubnub: KMPPubNub
 ) : Time {
     override fun async(callback: Consumer<Result<PNTimeResult>>) {
         pubnub.timeOnSuccess(

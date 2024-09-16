@@ -1,26 +1,26 @@
 package com.pubnub.kmp
 
-import cocoapods.PubNubSwift.PubNubAppContextEventObjC
-import cocoapods.PubNubSwift.PubNubConnectionStatusCategoryObjCConnected
-import cocoapods.PubNubSwift.PubNubConnectionStatusCategoryObjCConnectionError
-import cocoapods.PubNubSwift.PubNubConnectionStatusCategoryObjCDisconnected
-import cocoapods.PubNubSwift.PubNubConnectionStatusCategoryObjCDisconnectedUnexpectedly
-import cocoapods.PubNubSwift.PubNubConnectionStatusCategoryObjCHeartbeatFailed
-import cocoapods.PubNubSwift.PubNubConnectionStatusCategoryObjCHeartbeatSuccess
-import cocoapods.PubNubSwift.PubNubConnectionStatusCategoryObjCMalformedResponseCategory
-import cocoapods.PubNubSwift.PubNubConnectionStatusCategoryObjCSubscriptionChanged
-import cocoapods.PubNubSwift.PubNubEventListenerObjC
-import cocoapods.PubNubSwift.PubNubFileChangeEventObjC
-import cocoapods.PubNubSwift.PubNubMessageActionObjC
-import cocoapods.PubNubSwift.PubNubMessageObjC
-import cocoapods.PubNubSwift.PubNubPresenceChangeObjC
-import cocoapods.PubNubSwift.PubNubRemoveChannelMetadataResultObjC
-import cocoapods.PubNubSwift.PubNubRemoveMembershipResultObjC
-import cocoapods.PubNubSwift.PubNubRemoveUUIDMetadataResultObjC
-import cocoapods.PubNubSwift.PubNubSetChannelMetadataResultObjC
-import cocoapods.PubNubSwift.PubNubSetMembershipResultObjC
-import cocoapods.PubNubSwift.PubNubSetUUIDMetadataResultObjC
-import cocoapods.PubNubSwift.PubNubStatusListenerObjC
+import cocoapods.PubNubSwift.KMPAppContextEventResult
+import cocoapods.PubNubSwift.KMPConnectionStatusCategoryConnected
+import cocoapods.PubNubSwift.KMPConnectionStatusCategoryConnectionError
+import cocoapods.PubNubSwift.KMPConnectionStatusCategoryDisconnected
+import cocoapods.PubNubSwift.KMPConnectionStatusCategoryDisconnectedUnexpectedly
+import cocoapods.PubNubSwift.KMPConnectionStatusCategoryHeartbeatFailed
+import cocoapods.PubNubSwift.KMPConnectionStatusCategoryHeartbeatSuccess
+import cocoapods.PubNubSwift.KMPConnectionStatusCategoryMalformedResponseCategory
+import cocoapods.PubNubSwift.KMPConnectionStatusCategorySubscriptionChanged
+import cocoapods.PubNubSwift.KMPEventListener
+import cocoapods.PubNubSwift.KMPFileChangeEvent
+import cocoapods.PubNubSwift.KMPMessage
+import cocoapods.PubNubSwift.KMPMessageAction
+import cocoapods.PubNubSwift.KMPPresenceChange
+import cocoapods.PubNubSwift.KMPRemoveChannelMetadataResult
+import cocoapods.PubNubSwift.KMPRemoveMembershipResult
+import cocoapods.PubNubSwift.KMPRemoveUUIDMetadataResult
+import cocoapods.PubNubSwift.KMPSetChannelMetadataResult
+import cocoapods.PubNubSwift.KMPSetMembershipResult
+import cocoapods.PubNubSwift.KMPSetUUIDMetadataResult
+import cocoapods.PubNubSwift.KMPStatusListener
 import com.pubnub.api.JsonElementImpl
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
@@ -70,7 +70,7 @@ actual fun createEventListener(
     onFile: (PubNub, PNFileEventResult) -> Unit
 ): EventListener {
     return EventListenerImpl(
-        underlying = PubNubEventListenerObjC(
+        underlying = KMPEventListener(
             onMessage = { onMessage(pubnub, createMessageResult(it)) },
             onPresence = { presenceEvents -> createPresenceEventResults(presenceEvents).forEach { onPresence(pubnub, it) } },
             onSignal = { onSignal(pubnub, createSignalResult(it)) },
@@ -88,7 +88,7 @@ actual fun createEventListener(
 }
 
 @OptIn(ExperimentalForeignApi::class)
-private fun createMessageResult(from: PubNubMessageObjC?): PNMessageResult {
+private fun createMessageResult(from: KMPMessage?): PNMessageResult {
     return PNMessageResult(
         basePubSubResult = BasePubSubResult(
             channel = from!!.channel(),
@@ -103,7 +103,7 @@ private fun createMessageResult(from: PubNubMessageObjC?): PNMessageResult {
 }
 
 @OptIn(ExperimentalForeignApi::class)
-private fun createSignalResult(from: PubNubMessageObjC?): PNSignalResult {
+private fun createSignalResult(from: KMPMessage?): PNSignalResult {
     return PNSignalResult(
         basePubSubResult = BasePubSubResult(
             channel = from!!.channel(),
@@ -117,7 +117,7 @@ private fun createSignalResult(from: PubNubMessageObjC?): PNSignalResult {
 }
 
 @OptIn(ExperimentalForeignApi::class)
-private fun createMessageActionResult(from: PubNubMessageActionObjC?): PNMessageActionResult {
+private fun createMessageActionResult(from: KMPMessageAction?): PNMessageActionResult {
     val messageAction = PNMessageAction(
         type = from!!.actionType(),
         value = from.actionValue(),
@@ -142,7 +142,7 @@ private fun createMessageActionResult(from: PubNubMessageActionObjC?): PNMessage
 
 @OptIn(ExperimentalForeignApi::class)
 private fun createPresenceEventResults(from: List<*>?): List<PNPresenceEventResult> {
-    return from.filterAndMap { rawValue: PubNubPresenceChangeObjC ->
+    return from.filterAndMap { rawValue: KMPPresenceChange ->
         PNPresenceEventResult(
             event = rawValue.event(),
             uuid = rawValue.uuid(),
@@ -162,7 +162,7 @@ private fun createPresenceEventResults(from: List<*>?): List<PNPresenceEventResu
 }
 
 @OptIn(ExperimentalForeignApi::class)
-private fun createFileEventResult(from: PubNubFileChangeEventObjC?): PNFileEventResult {
+private fun createFileEventResult(from: KMPFileChangeEvent?): PNFileEventResult {
     return PNFileEventResult(
         channel = from!!.channel(),
         timetoken = from.timetoken()?.longValue,
@@ -178,7 +178,7 @@ private fun createFileEventResult(from: PubNubFileChangeEventObjC?): PNFileEvent
 }
 
 @OptIn(ExperimentalForeignApi::class)
-private fun createObjectEvent(from: PubNubAppContextEventObjC?): PNObjectEventResult? {
+private fun createObjectEvent(from: KMPAppContextEventResult?): PNObjectEventResult? {
     return mapAppContextEvent(from)?.let {
         PNObjectEventResult(
             result = BasePubSubResult(
@@ -195,9 +195,9 @@ private fun createObjectEvent(from: PubNubAppContextEventObjC?): PNObjectEventRe
 
 // TODO: PatchValue should consider cases where there is no response for a given field
 @OptIn(ExperimentalForeignApi::class)
-private fun mapAppContextEvent(from: PubNubAppContextEventObjC?): PNObjectEventMessage? {
+private fun mapAppContextEvent(from: KMPAppContextEventResult?): PNObjectEventMessage? {
     when (from) {
-        is PubNubSetUUIDMetadataResultObjC ->
+        is KMPSetUUIDMetadataResult ->
             return PNSetUUIDMetadataEventMessage(
                 source = from.source(),
                 version = from.version(),
@@ -205,18 +205,46 @@ private fun mapAppContextEvent(from: PubNubAppContextEventObjC?): PNObjectEventM
                 type = from.type(),
                 data = PNUUIDMetadata(
                     id = from.metadata().id(),
-                    name = PatchValue.of(from.metadata().name()),
-                    externalId = PatchValue.of(from.metadata().externalId()),
-                    profileUrl = PatchValue.of(from.metadata().profileUrl()),
-                    email = PatchValue.of(from.metadata().email()),
-                    custom = PatchValue.of(from.metadata().custom()?.safeCast()),
-                    updated = PatchValue.of(from.metadata().updated().orEmpty()),
-                    eTag = PatchValue.of(from.metadata().eTag().orEmpty()),
-                    type = PatchValue.of(from.metadata().type()),
-                    status = PatchValue.of(from.metadata().status())
+                    name = if (from.metadata().hasName()) {
+                        PatchValue.of(from.metadata().name())
+                    } else {
+                        null
+                    },
+                    externalId = if (from.metadata().hasExternalId()) {
+                        PatchValue.of(from.metadata().externalId())
+                    } else {
+                        null
+                    },
+                    profileUrl = if (from.metadata().hasProfileUrl()) {
+                        PatchValue.of(from.metadata().profileUrl())
+                    } else {
+                        null
+                    },
+                    email = if (from.metadata().hasEmail()) {
+                        PatchValue.of(from.metadata().email())
+                    } else {
+                        null
+                    },
+                    custom = if (from.metadata().hasCustom()) {
+                        PatchValue.of(from.metadata().custom()?.safeCast<String, Any?>())
+                    } else {
+                        null
+                    },
+                    updated = from.metadata().updated()?.let { PatchValue.of(it) },
+                    eTag = from.metadata().eTag()?.let { PatchValue.of(it) },
+                    type = if (from.metadata().hasType()) {
+                        PatchValue.of(from.metadata().type())
+                    } else {
+                        null
+                    },
+                    status = if (from.metadata().hasStatus()) {
+                        PatchValue.of(from.metadata().status())
+                    } else {
+                        null
+                    }
                 )
             )
-        is PubNubRemoveUUIDMetadataResultObjC ->
+        is KMPRemoveUUIDMetadataResult ->
             return PNDeleteUUIDMetadataEventMessage(
                 source = from.source(),
                 version = from.version(),
@@ -224,7 +252,7 @@ private fun mapAppContextEvent(from: PubNubAppContextEventObjC?): PNObjectEventM
                 type = from.type(),
                 uuid = from.uuid()
             )
-        is PubNubSetChannelMetadataResultObjC ->
+        is KMPSetChannelMetadataResult ->
             return PNSetChannelMetadataEventMessage(
                 source = from.source(),
                 version = from.version(),
@@ -232,16 +260,36 @@ private fun mapAppContextEvent(from: PubNubAppContextEventObjC?): PNObjectEventM
                 type = from.type(),
                 data = PNChannelMetadata(
                     id = from.metadata().id(),
-                    name = PatchValue.of(from.metadata().name()),
-                    description = PatchValue.of(from.metadata().descr()),
-                    custom = PatchValue.of(from.metadata().custom()?.safeCast()),
-                    updated = PatchValue.of(from.metadata().updated().orEmpty()),
-                    eTag = PatchValue.of(from.metadata().eTag().orEmpty()),
-                    type = PatchValue.of(from.metadata().type()),
-                    status = PatchValue.of(from.metadata().status())
+                    name = if (from.metadata().hasName()) {
+                        PatchValue.of(from.metadata().name())
+                    } else {
+                        null
+                    },
+                    description = if (from.metadata().hasDescr()) {
+                        PatchValue.of(from.metadata().descr())
+                    } else {
+                        null
+                    },
+                    custom = if (from.metadata().hasCustom()) {
+                        PatchValue.of(from.metadata().custom()?.safeCast<String, Any?>())
+                    } else {
+                        null
+                    },
+                    updated = from.metadata().updated()?.let { PatchValue.of(it) },
+                    eTag = from.metadata().eTag()?.let { PatchValue.of(it) },
+                    type = if (from.metadata().hasType()) {
+                        PatchValue.of(from.metadata().type())
+                    } else {
+                        null
+                    },
+                    status = if (from.metadata().hasStatus()) {
+                        PatchValue.of(from.metadata().status())
+                    } else {
+                        null
+                    }
                 )
             )
-        is PubNubRemoveChannelMetadataResultObjC ->
+        is KMPRemoveChannelMetadataResult ->
             return PNDeleteChannelMetadataEventMessage(
                 source = from.source(),
                 version = from.version(),
@@ -249,7 +297,7 @@ private fun mapAppContextEvent(from: PubNubAppContextEventObjC?): PNObjectEventM
                 type = from.type(),
                 channel = from.channel()
             )
-        is PubNubSetMembershipResultObjC ->
+        is KMPSetMembershipResult ->
             return PNSetMembershipEventMessage(
                 source = from.source(),
                 version = from.version(),
@@ -264,7 +312,7 @@ private fun mapAppContextEvent(from: PubNubAppContextEventObjC?): PNObjectEventM
                     status = PatchValue.of(from.metadata().status().orEmpty())
                 )
             )
-        is PubNubRemoveMembershipResultObjC ->
+        is KMPRemoveMembershipResult ->
             return PNDeleteMembershipEventMessage(
                 source = from.source(),
                 version = from.version(),
@@ -285,23 +333,23 @@ actual fun createStatusListener(
     onStatus: (PubNub, PNStatus) -> Unit
 ): StatusListener {
     return StatusListenerImpl(
-        underlying = PubNubStatusListenerObjC(onStatusChange = { status ->
+        underlying = KMPStatusListener(onStatusChange = { status ->
             when (status?.category()) {
-                PubNubConnectionStatusCategoryObjCConnected ->
+                KMPConnectionStatusCategoryConnected ->
                     PNStatusCategory.PNConnectedCategory
-                PubNubConnectionStatusCategoryObjCDisconnected ->
+                KMPConnectionStatusCategoryDisconnected ->
                     PNStatusCategory.PNDisconnectedCategory
-                PubNubConnectionStatusCategoryObjCDisconnectedUnexpectedly ->
+                KMPConnectionStatusCategoryDisconnectedUnexpectedly ->
                     PNStatusCategory.PNUnexpectedDisconnectCategory
-                PubNubConnectionStatusCategoryObjCConnectionError ->
+                KMPConnectionStatusCategoryConnectionError ->
                     PNStatusCategory.PNConnectionError
-                PubNubConnectionStatusCategoryObjCMalformedResponseCategory ->
+                KMPConnectionStatusCategoryMalformedResponseCategory ->
                     PNStatusCategory.PNMalformedResponseCategory
-                PubNubConnectionStatusCategoryObjCHeartbeatFailed ->
+                KMPConnectionStatusCategoryHeartbeatFailed ->
                     PNStatusCategory.PNHeartbeatFailed
-                PubNubConnectionStatusCategoryObjCHeartbeatSuccess ->
+                KMPConnectionStatusCategoryHeartbeatSuccess ->
                     PNStatusCategory.PNHeartbeatSuccess
-                PubNubConnectionStatusCategoryObjCSubscriptionChanged ->
+                KMPConnectionStatusCategorySubscriptionChanged ->
                     PNStatusCategory.PNSubscriptionChanged
                 else -> null
             }?.let { category ->

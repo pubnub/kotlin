@@ -1,6 +1,6 @@
 package com.pubnub.api.endpoints.channel_groups
 
-import cocoapods.PubNubSwift.PubNubObjC
+import cocoapods.PubNubSwift.KMPPubNub
 import cocoapods.PubNubSwift.listChannelsFor
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsAllChannelsResult
 import com.pubnub.api.v2.callbacks.Consumer
@@ -17,7 +17,7 @@ actual interface AllChannelsChannelGroup : PNFuture<PNChannelGroupsAllChannelsRe
 
 @OptIn(ExperimentalForeignApi::class)
 class AllChannelsChannelGroupImpl(
-    private val pubnub: PubNubObjC,
+    private val pubnub: KMPPubNub,
     private val channelGroup: String
 ) : AllChannelsChannelGroup {
     override fun async(callback: Consumer<Result<PNChannelGroupsAllChannelsResult>>) {

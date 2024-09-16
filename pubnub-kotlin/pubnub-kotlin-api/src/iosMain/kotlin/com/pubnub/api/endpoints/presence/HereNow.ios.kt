@@ -1,8 +1,8 @@
 package com.pubnub.api.endpoints.presence
 
-import cocoapods.PubNubSwift.PubNubHereNowChannelDataObjC
-import cocoapods.PubNubSwift.PubNubHereNowOccupantDataObjC
-import cocoapods.PubNubSwift.PubNubObjC
+import cocoapods.PubNubSwift.KMPHereNowChannelData
+import cocoapods.PubNubSwift.KMPHereNowOccupantData
+import cocoapods.PubNubSwift.KMPPubNub
 import cocoapods.PubNubSwift.hereNowWithChannels
 import com.pubnub.api.JsonElementImpl
 import com.pubnub.api.models.consumer.presence.PNHereNowChannelData
@@ -23,7 +23,7 @@ actual interface HereNow : PNFuture<PNHereNowResult>
 
 @OptIn(ExperimentalForeignApi::class)
 class HereNowImpl(
-    private val pubnub: PubNubObjC,
+    private val pubnub: KMPPubNub,
     private val channels: List<String>,
     private val channelGroups: List<String>,
     private val includeState: Boolean,
@@ -39,11 +39,11 @@ class HereNowImpl(
                 PNHereNowResult(
                     totalChannels = it?.totalChannels()?.toInt() ?: 0,
                     totalOccupancy = it?.totalOccupancy()?.toInt() ?: 0,
-                    channels = (it?.channels()?.safeCast<String, PubNubHereNowChannelDataObjC>())?.mapValues { entry ->
+                    channels = (it?.channels()?.safeCast<String, KMPHereNowChannelData>())?.mapValues { entry ->
                         PNHereNowChannelData(
                             channelName = entry.value.channelName(),
                             occupancy = entry.value.occupancy().toInt(),
-                            occupants = (entry.value.occupants().filterIsInstance<PubNubHereNowOccupantDataObjC>()).map { occupant ->
+                            occupants = (entry.value.occupants().filterIsInstance<KMPHereNowOccupantData>()).map { occupant ->
                                 PNHereNowOccupantData(
                                     uuid = occupant.uuid(),
                                     state = JsonElementImpl(occupant.state())

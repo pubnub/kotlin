@@ -1,6 +1,6 @@
 package com.pubnub.api.endpoints
 
-import cocoapods.PubNubSwift.PubNubObjC
+import cocoapods.PubNubSwift.KMPPubNub
 import cocoapods.PubNubSwift.messageCountsFor
 import com.pubnub.api.models.consumer.history.PNMessageCountResult
 import com.pubnub.api.v2.callbacks.Consumer
@@ -18,7 +18,7 @@ actual interface MessageCounts : PNFuture<PNMessageCountResult>
 
 @OptIn(ExperimentalForeignApi::class)
 class MessageCountsImpl(
-    private val pubnub: PubNubObjC,
+    private val pubnub: KMPPubNub,
     private val channels: List<String>,
     private val channelsTimetoken: List<Long>
 ) : MessageCounts {

@@ -1,12 +1,13 @@
 package com.pubnub.internal.entities
 
-import cocoapods.PubNubSwift.PubNubChannelEntityObjC
-import cocoapods.PubNubSwift.PubNubSubscriptionObjC
+import cocoapods.PubNubSwift.KMPChannelEntity
+import cocoapods.PubNubSwift.KMPSubscription
 import com.pubnub.api.endpoints.files.DeleteFile
 import com.pubnub.api.endpoints.files.SendFile
 import com.pubnub.api.endpoints.pubsub.Publish
 import com.pubnub.api.endpoints.pubsub.Signal
 import com.pubnub.api.v2.entities.Channel
+import com.pubnub.api.v2.subscriptions.ReceivePresenceEventsImpl
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.internal.subscription.SubscriptionImpl
@@ -15,7 +16,7 @@ import kotlinx.cinterop.ExperimentalForeignApi
 
 @OptIn(ExperimentalForeignApi::class)
 class ChannelImpl(
-    private val channel: PubNubChannelEntityObjC
+    private val channel: KMPChannelEntity
 ) : Channel {
     override fun publish(
         message: Any,
@@ -55,8 +56,11 @@ class ChannelImpl(
     override val name: String
         get() = channel.name()
 
+    // TODO: Add support for handling SubscriptionOptions
     override fun subscription(options: SubscriptionOptions): Subscription {
-        // TODO: Add support for handling SubscriptionOptions
-        return SubscriptionImpl(objCSubscription = PubNubSubscriptionObjC(entity = channel))
+        val presenceOptions = options.allOptions.filterIsInstance<ReceivePresenceEventsImpl>()
+        val objcSubscription = KMPSubscription(channel, presenceOptions.isNotEmpty())
+
+        return SubscriptionImpl(objcSubscription)
     }
 }

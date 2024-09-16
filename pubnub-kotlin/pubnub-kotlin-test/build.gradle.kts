@@ -11,7 +11,6 @@ plugins {
     id("pubnub.shared")
     id("pubnub.ios-simulator-test")
     kotlin("multiplatform")
-
 }
 
 kotlin {

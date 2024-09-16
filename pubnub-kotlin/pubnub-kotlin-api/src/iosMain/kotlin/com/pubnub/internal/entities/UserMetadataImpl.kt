@@ -1,7 +1,7 @@
 package com.pubnub.internal.entities
 
-import cocoapods.PubNubSwift.PubNubSubscriptionObjC
-import cocoapods.PubNubSwift.PubNubUserMetadataEntityObjC
+import cocoapods.PubNubSwift.KMPSubscription
+import cocoapods.PubNubSwift.KMPUserMetadataEntity
 import com.pubnub.api.v2.entities.UserMetadata
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
@@ -10,13 +10,13 @@ import kotlinx.cinterop.ExperimentalForeignApi
 
 @OptIn(ExperimentalForeignApi::class)
 class UserMetadataImpl(
-    private val userMetadata: PubNubUserMetadataEntityObjC
+    private val userMetadata: KMPUserMetadataEntity
 ) : UserMetadata {
     override val id: String
         get() = userMetadata.name()
 
     override fun subscription(options: SubscriptionOptions): Subscription {
         // TODO: Add support for handling SubscriptionOptions
-        return SubscriptionImpl(objCSubscription = PubNubSubscriptionObjC(entity = userMetadata))
+        return SubscriptionImpl(objCSubscription = KMPSubscription(entity = userMetadata))
     }
 }

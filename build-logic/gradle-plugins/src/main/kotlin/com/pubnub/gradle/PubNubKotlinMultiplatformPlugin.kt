@@ -112,7 +112,7 @@ class PubNubKotlinMultiplatformPlugin : Plugin<Project> {
 //                        }
 //                        version = "7.1.0"
                             source = path(rootProject.file(swiftPath))
-                            moduleName = "PubNub"
+                            moduleName = "PubNubSDK"
                             extraOpts += listOf("-compiler-option", "-fmodules")
                         }
                     }

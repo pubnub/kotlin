@@ -1,6 +1,6 @@
 package com.pubnub.api.endpoints.files
 
-import cocoapods.PubNubSwift.PubNubObjC
+import cocoapods.PubNubSwift.KMPPubNub
 import cocoapods.PubNubSwift.deleteFileWithChannel
 import com.pubnub.api.models.consumer.files.PNDeleteFileResult
 import com.pubnub.api.v2.callbacks.Consumer
@@ -17,7 +17,7 @@ actual interface DeleteFile : PNFuture<PNDeleteFileResult>
 
 @OptIn(ExperimentalForeignApi::class)
 class DeleteFileImpl(
-    private val pubnub: PubNubObjC,
+    private val pubnub: KMPPubNub,
     private val channel: String,
     private val fileName: String,
     private val fileId: String

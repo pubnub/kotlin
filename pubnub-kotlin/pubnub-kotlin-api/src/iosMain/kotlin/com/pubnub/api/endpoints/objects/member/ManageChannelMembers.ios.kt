@@ -1,9 +1,9 @@
 package com.pubnub.api.endpoints.objects.member
 
-import cocoapods.PubNubSwift.AnyJSONObjC
-import cocoapods.PubNubSwift.PubNubMembershipMetadataObjC
-import cocoapods.PubNubSwift.PubNubObjC
-import cocoapods.PubNubSwift.PubNubUUIDMetadataObjC
+import cocoapods.PubNubSwift.KMPAnyJSON
+import cocoapods.PubNubSwift.KMPMembershipMetadata
+import cocoapods.PubNubSwift.KMPPubNub
+import cocoapods.PubNubSwift.KMPUUIDMetadata
 import cocoapods.PubNubSwift.removeChannelMembersWithChannel
 import cocoapods.PubNubSwift.setChannelMembersWithChannel
 import com.pubnub.api.models.consumer.objects.PNMemberKey
@@ -30,7 +30,7 @@ actual interface ManageChannelMembers : PNFuture<PNMemberArrayResult>
 
 @OptIn(ExperimentalForeignApi::class)
 class SetChannelMembersImpl(
-    private val pubnub: PubNubObjC,
+    private val pubnub: KMPPubNub,
     private val channel: String,
     private val uuids: List<MemberInput>,
     private val limit: Int?,
@@ -45,7 +45,7 @@ class SetChannelMembersImpl(
     override fun async(callback: Consumer<Result<PNMemberArrayResult>>) {
         pubnub.setChannelMembersWithChannel(
             channel = channel,
-            uuids = uuids.map { PubNubUUIDMetadataObjC(id = it.uuid, custom = AnyJSONObjC(it.custom?.value), status = it.status) },
+            uuids = uuids.map { KMPUUIDMetadata(id = it.uuid, custom = KMPAnyJSON(it.custom?.value), status = it.status) },
             limit = limit?.let { NSNumber(it) },
             page = createPubNubHashedPage(from = page),
             filter = filter,
@@ -58,7 +58,7 @@ class SetChannelMembersImpl(
             onSuccess = callback.onSuccessHandler3 { memberships, totalCount, page ->
                 PNMemberArrayResult(
                     status = 200,
-                    data = memberships.filterAndMap { rawValue: PubNubMembershipMetadataObjC -> createPNMember(rawValue) },
+                    data = memberships.filterAndMap { rawValue: KMPMembershipMetadata -> createPNMember(rawValue) },
                     totalCount = totalCount?.intValue,
                     next = page?.start()?.let { hash -> PNPage.PNNext(pageHash = hash) },
                     prev = page?.end()?.let { hash -> PNPage.PNPrev(pageHash = hash) }
@@ -71,7 +71,7 @@ class SetChannelMembersImpl(
 
 @OptIn(ExperimentalForeignApi::class)
 class RemoveChannelMembersImpl(
-    private val pubnub: PubNubObjC,
+    private val pubnub: KMPPubNub,
     private val channel: String,
     private val uuids: List<String>,
     private val limit: Int?,
@@ -99,7 +99,7 @@ class RemoveChannelMembersImpl(
             onSuccess = callback.onSuccessHandler3 { memberships, totalCount, next ->
                 PNMemberArrayResult(
                     status = 200,
-                    data = memberships.filterAndMap { rawValue: PubNubMembershipMetadataObjC -> createPNMember(rawValue) },
+                    data = memberships.filterAndMap { rawValue: KMPMembershipMetadata -> createPNMember(rawValue) },
                     totalCount = totalCount?.intValue,
                     next = next?.end()?.let { hash -> PNPage.PNNext(pageHash = hash) },
                     prev = next?.start()?.let { hash -> PNPage.PNPrev(pageHash = hash) }

@@ -1,6 +1,6 @@
 package com.pubnub.api.endpoints.objects.channel
 
-import cocoapods.PubNubSwift.PubNubObjC
+import cocoapods.PubNubSwift.KMPPubNub
 import cocoapods.PubNubSwift.getChannelMetadataWithChannel
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataResult
 import com.pubnub.api.v2.callbacks.Consumer
@@ -18,7 +18,7 @@ actual interface GetChannelMetadata : PNFuture<PNChannelMetadataResult>
 
 @OptIn(ExperimentalForeignApi::class)
 class GetChannelMetadataImpl(
-    private val pubnub: PubNubObjC,
+    private val pubnub: KMPPubNub,
     private val channel: String,
     private val includeCustom: Boolean
 ) : GetChannelMetadata {
