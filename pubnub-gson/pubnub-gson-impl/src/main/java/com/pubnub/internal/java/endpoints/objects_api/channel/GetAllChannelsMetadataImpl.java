@@ -38,7 +38,7 @@ public class GetAllChannelsMetadataImpl
 
     @Override
     @NotNull
-    protected Endpoint<PNChannelMetadataArrayResult> createAction() {
+    protected Endpoint<PNChannelMetadataArrayResult> createRemoteAction() {
         return pubnub.getAllChannelMetadata(
                 limit,
                 page,

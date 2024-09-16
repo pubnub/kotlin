@@ -15,7 +15,7 @@ import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGroupGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.UUIDGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult;
-import com.pubnub.internal.java.endpoints.IdentityMappingEndpoint;
+import com.pubnub.internal.java.endpoints.PassthroughEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +26,7 @@ import java.util.List;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class GrantTokenImpl extends IdentityMappingEndpoint<PNGrantTokenResult> implements GrantToken, GrantTokenBuilder, GrantTokenEntitiesBuilder, GrantTokenObjectsBuilder {
+public class GrantTokenImpl extends PassthroughEndpoint<PNGrantTokenResult> implements GrantToken, GrantTokenBuilder, GrantTokenEntitiesBuilder, GrantTokenObjectsBuilder {
 
     private Integer ttl;
     private Object meta;
@@ -48,7 +48,7 @@ public class GrantTokenImpl extends IdentityMappingEndpoint<PNGrantTokenResult> 
 
     @Override
     @NotNull
-    protected Endpoint<PNGrantTokenResult> createAction() {
+    protected Endpoint<PNGrantTokenResult> createRemoteAction() {
         return pubnub.grantToken(
                 ttl,
                 meta,

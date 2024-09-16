@@ -18,7 +18,7 @@ import java.util.List;
 @Setter
 @Slf4j
 @Accessors(chain = true, fluent = true)
-public class FetchMessagesImpl extends IdentityMappingEndpoint<PNFetchMessagesResult> implements FetchMessages {
+public class FetchMessagesImpl extends PassthroughEndpoint<PNFetchMessagesResult> implements FetchMessages {
     private static final int SINGLE_CHANNEL_DEFAULT_MESSAGES = 100;
     private static final int SINGLE_CHANNEL_MAX_MESSAGES = 100;
     private static final int MULTIPLE_CHANNEL_DEFAULT_MESSAGES = 25;
@@ -42,7 +42,7 @@ public class FetchMessagesImpl extends IdentityMappingEndpoint<PNFetchMessagesRe
 
     @Override
     @NotNull
-    protected Endpoint<PNFetchMessagesResult> createAction() {
+    protected Endpoint<PNFetchMessagesResult> createRemoteAction() {
         return pubnub.fetchMessages(
                 channels,
                 new PNBoundedPage(start, end, maximumPerChannel),

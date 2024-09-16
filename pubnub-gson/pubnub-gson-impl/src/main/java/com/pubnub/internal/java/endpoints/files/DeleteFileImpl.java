@@ -9,13 +9,13 @@ import com.pubnub.api.java.endpoints.files.DeleteFile;
 import com.pubnub.api.java.endpoints.files.requiredparambuilder.FilesBuilderSteps.FileIdStep;
 import com.pubnub.api.java.endpoints.files.requiredparambuilder.FilesBuilderSteps.FileNameStep;
 import com.pubnub.api.models.consumer.files.PNDeleteFileResult;
-import com.pubnub.internal.java.endpoints.IdentityMappingEndpoint;
+import com.pubnub.internal.java.endpoints.PassthroughEndpoint;
 import com.pubnub.internal.java.endpoints.files.requiredparambuilder.ChannelFileNameFileIdBuilder;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 
 @Accessors(chain = true, fluent = true)
-public class DeleteFileImpl extends IdentityMappingEndpoint<PNDeleteFileResult> implements DeleteFile {
+public class DeleteFileImpl extends PassthroughEndpoint<PNDeleteFileResult> implements DeleteFile {
 
     private final String channel;
     private final String fileId;
@@ -30,7 +30,7 @@ public class DeleteFileImpl extends IdentityMappingEndpoint<PNDeleteFileResult> 
 
     @Override
     @NotNull
-    protected Endpoint<PNDeleteFileResult> createAction() {
+    protected Endpoint<PNDeleteFileResult> createRemoteAction() {
         return pubnub.deleteFile(
                 channel,
                 fileName,

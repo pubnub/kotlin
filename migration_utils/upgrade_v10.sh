@@ -1,19 +1,18 @@
 #!/bin/bash
 set -e
-# Function to check if a file contains a search string
 
 # Main script
-if [ $# -lt 2 ]; then
-  echo "Usage: $0 <replacements_file> <directory> [-d]"
+if [ $# -lt 1 ]; then
+  echo "Usage: $0 <project_directory> [-d]"
   exit 1
 fi
 
 dry_run=false
-replacements_file="$1"
-directory="$2"
+replacements_file="replacements.txt"
+directory="$1"
 
 # Check for dry run flag
-shift 2
+shift 1
 while [[ $# -gt 0 ]]; do
   case "$1" in
     -d|--dry-run)

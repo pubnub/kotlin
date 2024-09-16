@@ -60,3 +60,4 @@ benmanes-versions = { id = "com.github.ben-manes.versions", version = "0.42.0" }
 vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "vanniktech" }
 lombok = { id = "io.freefair.lombok", version = "8.6" }
 gradle-nexus-publish = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "nexus" }
+codingfeline-buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.15.1" }

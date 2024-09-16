@@ -7,14 +7,14 @@ import com.pubnub.api.java.builder.PubNubErrorBuilder;
 import com.pubnub.api.java.endpoints.pubsub.Signal;
 import com.pubnub.api.java.v2.endpoints.pubsub.SignalBuilder;
 import com.pubnub.api.models.consumer.PNPublishResult;
-import com.pubnub.internal.java.endpoints.IdentityMappingEndpoint;
+import com.pubnub.internal.java.endpoints.PassthroughEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class SignalImpl extends IdentityMappingEndpoint<PNPublishResult> implements Signal, SignalBuilder {
+public class SignalImpl extends PassthroughEndpoint<PNPublishResult> implements Signal, SignalBuilder {
 
     private Object message;
     private String channel;
@@ -25,7 +25,7 @@ public class SignalImpl extends IdentityMappingEndpoint<PNPublishResult> impleme
 
     @Override
     @NotNull
-    protected Endpoint<PNPublishResult> createAction() {
+    protected Endpoint<PNPublishResult> createRemoteAction() {
         return pubnub.signal(channel, message);
     }
 

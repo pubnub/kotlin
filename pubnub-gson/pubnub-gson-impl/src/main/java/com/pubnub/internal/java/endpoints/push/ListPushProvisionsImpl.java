@@ -8,14 +8,14 @@ import com.pubnub.api.enums.PNPushType;
 import com.pubnub.api.java.builder.PubNubErrorBuilder;
 import com.pubnub.api.java.endpoints.push.ListPushProvisions;
 import com.pubnub.api.models.consumer.push.PNPushListProvisionsResult;
-import com.pubnub.internal.java.endpoints.IdentityMappingEndpoint;
+import com.pubnub.internal.java.endpoints.PassthroughEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class ListPushProvisionsImpl extends IdentityMappingEndpoint<PNPushListProvisionsResult> implements ListPushProvisions {
+public class ListPushProvisionsImpl extends PassthroughEndpoint<PNPushListProvisionsResult> implements ListPushProvisions {
 
     private PNPushType pushType;
     private String deviceId;
@@ -28,7 +28,7 @@ public class ListPushProvisionsImpl extends IdentityMappingEndpoint<PNPushListPr
 
     @Override
     @NotNull
-    protected Endpoint<PNPushListProvisionsResult> createAction() {
+    protected Endpoint<PNPushListProvisionsResult> createRemoteAction() {
         return pubnub.auditPushChannelProvisions(
                 pushType,
                 deviceId,

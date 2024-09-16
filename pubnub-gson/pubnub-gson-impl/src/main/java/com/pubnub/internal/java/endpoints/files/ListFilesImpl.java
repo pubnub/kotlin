@@ -7,13 +7,13 @@ import com.pubnub.api.java.builder.PubNubErrorBuilder;
 import com.pubnub.api.java.endpoints.files.ListFiles;
 import com.pubnub.api.models.consumer.files.PNListFilesResult;
 import com.pubnub.api.models.consumer.objects.PNPage;
-import com.pubnub.internal.java.endpoints.IdentityMappingEndpoint;
+import com.pubnub.internal.java.endpoints.PassthroughEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 
 @Accessors(chain = true, fluent = true)
-public class ListFilesImpl extends IdentityMappingEndpoint<PNListFilesResult> implements ListFiles {
+public class ListFilesImpl extends PassthroughEndpoint<PNListFilesResult> implements ListFiles {
 
     private final String channel;
 
@@ -29,7 +29,7 @@ public class ListFilesImpl extends IdentityMappingEndpoint<PNListFilesResult> im
 
     @Override
     @NotNull
-    protected Endpoint<PNListFilesResult> createAction() {
+    protected Endpoint<PNListFilesResult> createRemoteAction() {
         return pubnub.listFiles(
                 channel,
                 limit,

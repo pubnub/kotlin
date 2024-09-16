@@ -46,7 +46,7 @@ public class SetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipAr
 
     @Override
     @NotNull
-    protected Endpoint<PNChannelMembershipArrayResult> createAction() {
+    protected Endpoint<PNChannelMembershipArrayResult> createRemoteAction() {
         ArrayList<ChannelMembershipInput> channelList = new ArrayList<>(channels.size());
         for (PNChannelMembership channel : channels) {
             channelList.add(new Partial(

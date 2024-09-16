@@ -50,7 +50,7 @@ public class ManageMembershipsImpl extends DelegatingEndpoint<PNChannelMembershi
 
     @Override
     @NotNull
-    protected Endpoint<PNChannelMembershipArrayResult> createAction() {
+    protected Endpoint<PNChannelMembershipArrayResult> createRemoteAction() {
         ArrayList<ChannelMembershipInput> toSet = new ArrayList<>(set.size());
         for (PNChannelMembership channel : set) {
             toSet.add(new com.pubnub.api.models.consumer.objects.membership.PNChannelMembership.Partial(

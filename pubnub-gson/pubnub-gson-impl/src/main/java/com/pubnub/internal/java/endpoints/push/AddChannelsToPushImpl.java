@@ -8,7 +8,7 @@ import com.pubnub.api.enums.PNPushType;
 import com.pubnub.api.java.builder.PubNubErrorBuilder;
 import com.pubnub.api.java.endpoints.push.AddChannelsToPush;
 import com.pubnub.api.models.consumer.push.PNPushAddChannelResult;
-import com.pubnub.internal.java.endpoints.IdentityMappingEndpoint;
+import com.pubnub.internal.java.endpoints.PassthroughEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
@@ -17,7 +17,7 @@ import java.util.List;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class AddChannelsToPushImpl extends IdentityMappingEndpoint<PNPushAddChannelResult> implements AddChannelsToPush {
+public class AddChannelsToPushImpl extends PassthroughEndpoint<PNPushAddChannelResult> implements AddChannelsToPush {
 
     private PNPushType pushType;
     private List<String> channels;
@@ -31,7 +31,7 @@ public class AddChannelsToPushImpl extends IdentityMappingEndpoint<PNPushAddChan
 
     @Override
     @NotNull
-    protected Endpoint<PNPushAddChannelResult> createAction() {
+    protected Endpoint<PNPushAddChannelResult> createRemoteAction() {
         return pubnub.addPushNotificationsOnChannels(
                 pushType,
                 channels,

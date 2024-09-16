@@ -54,7 +54,7 @@ public class RemoveChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayRe
 
     @Override
     @NotNull
-    protected Endpoint<PNMemberArrayResult> createAction() {
+    protected Endpoint<PNMemberArrayResult> createRemoteAction() {
         return pubnub.removeChannelMembers(
                 channel,
                 uuids,

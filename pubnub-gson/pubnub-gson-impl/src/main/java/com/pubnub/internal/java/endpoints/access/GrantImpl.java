@@ -40,7 +40,7 @@ public class GrantImpl extends DelegatingEndpoint<com.pubnub.api.models.consumer
 
     @Override
     @NotNull
-    protected Endpoint<com.pubnub.api.models.consumer.access_manager.PNAccessManagerGrantResult> createAction() {
+    protected Endpoint<com.pubnub.api.models.consumer.access_manager.PNAccessManagerGrantResult> createRemoteAction() {
         return pubnub.grant(
                 read,
                 write,

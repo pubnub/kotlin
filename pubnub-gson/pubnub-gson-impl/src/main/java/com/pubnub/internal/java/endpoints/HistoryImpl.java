@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 @Setter
 @Slf4j
 @Accessors(chain = true, fluent = true)
-public class HistoryImpl extends IdentityMappingEndpoint<PNHistoryResult> implements com.pubnub.api.java.endpoints.History {
+public class HistoryImpl extends PassthroughEndpoint<PNHistoryResult> implements com.pubnub.api.java.endpoints.History {
     private String channel;
     private Long start;
     private Long end;
@@ -28,7 +28,7 @@ public class HistoryImpl extends IdentityMappingEndpoint<PNHistoryResult> implem
 
     @Override
     @NotNull
-    protected Endpoint<PNHistoryResult> createAction() {
+    protected Endpoint<PNHistoryResult> createRemoteAction() {
         return pubnub.history(channel, start, end, count, reverse, includeTimetoken, includeMeta);
     }
 

@@ -8,7 +8,7 @@ import com.pubnub.api.java.endpoints.BuilderSteps;
 import com.pubnub.api.java.endpoints.files.PublishFileMessage;
 import com.pubnub.api.java.endpoints.files.requiredparambuilder.FilesBuilderSteps;
 import com.pubnub.api.models.consumer.files.PNPublishFileMessageResult;
-import com.pubnub.internal.java.endpoints.IdentityMappingEndpoint;
+import com.pubnub.internal.java.endpoints.PassthroughEndpoint;
 import com.pubnub.internal.java.endpoints.files.requiredparambuilder.ChannelFileNameFileIdBuilder;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class PublishFileMessageImpl extends IdentityMappingEndpoint<PNPublishFileMessageResult> implements PublishFileMessage {
+public class PublishFileMessageImpl extends PassthroughEndpoint<PNPublishFileMessageResult> implements PublishFileMessage {
 
     @Setter
     private Object message;
@@ -40,7 +40,7 @@ public class PublishFileMessageImpl extends IdentityMappingEndpoint<PNPublishFil
 
     @Override
     @NotNull
-    protected Endpoint<PNPublishFileMessageResult> createAction() {
+    protected Endpoint<PNPublishFileMessageResult> createRemoteAction() {
         return pubnub.publishFileMessage(
                 channel,
                 fileName,

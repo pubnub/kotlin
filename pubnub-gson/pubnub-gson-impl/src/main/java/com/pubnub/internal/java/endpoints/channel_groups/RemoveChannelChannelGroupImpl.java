@@ -6,7 +6,7 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.java.builder.PubNubErrorBuilder;
 import com.pubnub.api.java.endpoints.channel_groups.RemoveChannelChannelGroup;
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsRemoveChannelResult;
-import com.pubnub.internal.java.endpoints.IdentityMappingEndpoint;
+import com.pubnub.internal.java.endpoints.PassthroughEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +16,7 @@ import java.util.List;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class RemoveChannelChannelGroupImpl extends IdentityMappingEndpoint<PNChannelGroupsRemoveChannelResult> implements RemoveChannelChannelGroup {
+public class RemoveChannelChannelGroupImpl extends PassthroughEndpoint<PNChannelGroupsRemoveChannelResult> implements RemoveChannelChannelGroup {
     private String channelGroup;
     @NotNull
     private List<String> channels = new ArrayList<>();
@@ -27,7 +27,7 @@ public class RemoveChannelChannelGroupImpl extends IdentityMappingEndpoint<PNCha
 
     @Override
     @NotNull
-    protected Endpoint<PNChannelGroupsRemoveChannelResult> createAction() {
+    protected Endpoint<PNChannelGroupsRemoveChannelResult> createRemoteAction() {
         return pubnub.removeChannelsFromChannelGroup(channels, channelGroup);
     }
 

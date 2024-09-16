@@ -8,14 +8,14 @@ import com.pubnub.api.java.endpoints.BuilderSteps;
 import com.pubnub.api.java.endpoints.files.DownloadFile;
 import com.pubnub.api.java.endpoints.files.requiredparambuilder.FilesBuilderSteps;
 import com.pubnub.api.models.consumer.files.PNDownloadFileResult;
-import com.pubnub.internal.java.endpoints.IdentityMappingEndpoint;
+import com.pubnub.internal.java.endpoints.PassthroughEndpoint;
 import com.pubnub.internal.java.endpoints.files.requiredparambuilder.ChannelFileNameFileIdBuilder;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 
 @Accessors(chain = true, fluent = true)
-public class DownloadFileImpl extends IdentityMappingEndpoint<PNDownloadFileResult> implements DownloadFile {
+public class DownloadFileImpl extends PassthroughEndpoint<PNDownloadFileResult> implements DownloadFile {
 
     private final String channel;
     private final String fileId;
@@ -33,7 +33,7 @@ public class DownloadFileImpl extends IdentityMappingEndpoint<PNDownloadFileResu
 
     @Override
     @NotNull
-    protected Endpoint<PNDownloadFileResult> createAction() {
+    protected Endpoint<PNDownloadFileResult> createRemoteAction() {
         return pubnub.downloadFile(
                 channel,
                 fileName,

@@ -6,7 +6,7 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.java.endpoints.message_actions.AddMessageAction;
 import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult;
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction;
-import com.pubnub.internal.java.endpoints.IdentityMappingEndpoint;
+import com.pubnub.internal.java.endpoints.PassthroughEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +18,7 @@ import static com.pubnub.api.java.builder.PubNubErrorBuilder.PNERROBJ_MESSAGE_TI
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class AddMessageActionImpl extends IdentityMappingEndpoint<PNAddMessageActionResult> implements AddMessageAction {
+public class AddMessageActionImpl extends PassthroughEndpoint<PNAddMessageActionResult> implements AddMessageAction {
 
     private String channel;
     private PNMessageAction messageAction;
@@ -29,7 +29,7 @@ public class AddMessageActionImpl extends IdentityMappingEndpoint<PNAddMessageAc
 
     @Override
     @NotNull
-    protected Endpoint<PNAddMessageActionResult> createAction() {
+    protected Endpoint<PNAddMessageActionResult> createRemoteAction() {
         return pubnub.addMessageAction(channel, messageAction);
     }
 

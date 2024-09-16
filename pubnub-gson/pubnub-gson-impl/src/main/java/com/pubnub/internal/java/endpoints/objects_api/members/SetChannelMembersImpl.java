@@ -56,7 +56,7 @@ public class SetChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayResul
 
     @Override
     @NotNull
-    protected Endpoint<PNMemberArrayResult> createAction() {
+    protected Endpoint<PNMemberArrayResult> createRemoteAction() {
         List<MemberInput> memberInputs = new ArrayList<>(uuids.size());
         for (PNUUID uuid : uuids) {
             memberInputs.add(new PNMember.Partial(uuid.getUuid().getId(), (uuid instanceof PNUUID.UUIDWithCustom) ? ((PNUUID.UUIDWithCustom) uuid).getCustom() : null, uuid.getStatus()));

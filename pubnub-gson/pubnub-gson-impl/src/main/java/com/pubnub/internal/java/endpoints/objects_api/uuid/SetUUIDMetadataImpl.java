@@ -53,7 +53,7 @@ public class SetUUIDMetadataImpl extends DelegatingEndpoint<PNUUIDMetadataResult
 
     @Override
     @NotNull
-    protected Endpoint<PNUUIDMetadataResult> createAction() {
+    protected Endpoint<PNUUIDMetadataResult> createRemoteAction() {
         return pubnub.setUUIDMetadata(
                 uuid,
                 name,

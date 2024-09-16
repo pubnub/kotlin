@@ -49,7 +49,7 @@ internal class DelegatingRemoteActionTest {
 
         delegatingRemoteAction =
             object : DelegatingRemoteAction<Boolean, Boolean>(mockk()) {
-                override fun createAction(): ExtendedRemoteAction<Boolean> {
+                override fun createRemoteAction(): ExtendedRemoteAction<Boolean> {
                     return action
                 }
 
@@ -104,8 +104,8 @@ internal class DelegatingRemoteActionTest {
 
     @Test
     fun `IdentityMappingEndpoint returns the same remote action`() {
-        delegatingRemoteAction = object : IdentityMappingAction<Boolean>(mockk()) {
-            override fun createAction(): ExtendedRemoteAction<Boolean> = action
+        delegatingRemoteAction = object : PassthroughRemoteAction<Boolean>(mockk()) {
+            override fun createRemoteAction(): ExtendedRemoteAction<Boolean> = action
         }
         assertEquals(action, delegatingRemoteAction.remoteAction)
     }

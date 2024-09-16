@@ -55,7 +55,7 @@ public class ManageChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayRe
 
     @Override
     @NotNull
-    protected Endpoint<PNMemberArrayResult> createAction() {
+    protected Endpoint<PNMemberArrayResult> createRemoteAction() {
         List<String> toRemove = new ArrayList<String>(uuidsToRemove.size());
         for (PNUUID pnuuid : uuidsToRemove) {
             toRemove.add(pnuuid.getUuid().getId());

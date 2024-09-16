@@ -5,7 +5,7 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.java.builder.PubNubErrorBuilder;
 import com.pubnub.api.java.endpoints.access.RevokeToken;
-import com.pubnub.internal.java.endpoints.IdentityMappingEndpoint;
+import com.pubnub.internal.java.endpoints.PassthroughEndpoint;
 import kotlin.Unit;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class RevokeTokenImpl extends IdentityMappingEndpoint<Unit> implements RevokeToken {
+public class RevokeTokenImpl extends PassthroughEndpoint<Unit> implements RevokeToken {
 
     private String token;
 
@@ -23,7 +23,7 @@ public class RevokeTokenImpl extends IdentityMappingEndpoint<Unit> implements Re
 
     @Override
     @NotNull
-    protected Endpoint<Unit> createAction() {
+    protected Endpoint<Unit> createRemoteAction() {
         return pubnub.revokeToken(token);
     }
 

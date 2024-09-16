@@ -6,7 +6,7 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.java.builder.PubNubErrorBuilder;
 import com.pubnub.api.java.endpoints.channel_groups.AddChannelChannelGroup;
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsAddChannelResult;
-import com.pubnub.internal.java.endpoints.IdentityMappingEndpoint;
+import com.pubnub.internal.java.endpoints.PassthroughEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +16,7 @@ import java.util.List;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class AddChannelChannelGroupImpl extends IdentityMappingEndpoint<PNChannelGroupsAddChannelResult> implements AddChannelChannelGroup {
+public class AddChannelChannelGroupImpl extends PassthroughEndpoint<PNChannelGroupsAddChannelResult> implements AddChannelChannelGroup {
     private String channelGroup;
     private List<String> channels = new ArrayList<>();
 
@@ -26,7 +26,7 @@ public class AddChannelChannelGroupImpl extends IdentityMappingEndpoint<PNChanne
 
     @Override
     @NotNull
-    protected Endpoint<PNChannelGroupsAddChannelResult> createAction() {
+    protected Endpoint<PNChannelGroupsAddChannelResult> createRemoteAction() {
         return pubnub.addChannelsToChannelGroup(channels, channelGroup);
     }
 

@@ -36,7 +36,7 @@ class FetchMessagesImplTest {
         objectUnderTest.includeUUID(includeUUID)
 
         // when
-        val action = objectUnderTest.createAction()
+        val action = objectUnderTest.createRemoteAction()
 
         // then
         verify {

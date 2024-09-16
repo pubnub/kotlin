@@ -53,7 +53,7 @@ class GrantTokenImplTest {
         } returns grantTokenEndpoint
 
         // when
-        val action = objectUnderTest.createAction()
+        val action = objectUnderTest.createRemoteAction()
 
         // then
         verify { pubNubCore.grantToken(ttl, meta, authorizedUUID, any(), any(), any()) }

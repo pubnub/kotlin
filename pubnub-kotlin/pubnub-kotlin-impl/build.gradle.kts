@@ -21,9 +21,7 @@ val generateVersion =
 kotlin.sourceSets.getByName("main").kotlin.srcDir(generateVersion)
 
 dependencies {
-//    api(project(":pubnub-core:pubnub-core-api"))
     api(project(":pubnub-kotlin:pubnub-kotlin-api"))
-//    implementation(project(":pubnub-core:pubnub-core-impl"))
     implementation(libs.slf4j)
 
     testImplementation(libs.wiremock)

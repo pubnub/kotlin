@@ -15,7 +15,7 @@ import java.util.List;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class DeleteMessagesImpl extends IdentityMappingEndpoint<PNDeleteMessagesResult> implements DeleteMessages {
+public class DeleteMessagesImpl extends PassthroughEndpoint<PNDeleteMessagesResult> implements DeleteMessages {
     private List<String> channels = new ArrayList<>();
     private Long start;
     private Long end;
@@ -25,7 +25,7 @@ public class DeleteMessagesImpl extends IdentityMappingEndpoint<PNDeleteMessages
     }
 
     @Override
-    protected @NotNull Endpoint<PNDeleteMessagesResult> createAction() {
+    protected @NotNull Endpoint<PNDeleteMessagesResult> createRemoteAction() {
         return pubnub.deleteMessages(channels, start, end);
     }
 

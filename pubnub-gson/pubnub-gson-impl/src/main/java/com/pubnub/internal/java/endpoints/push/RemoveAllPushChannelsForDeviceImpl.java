@@ -8,14 +8,14 @@ import com.pubnub.api.enums.PNPushType;
 import com.pubnub.api.java.builder.PubNubErrorBuilder;
 import com.pubnub.api.java.endpoints.push.RemoveAllPushChannelsForDevice;
 import com.pubnub.api.models.consumer.push.PNPushRemoveAllChannelsResult;
-import com.pubnub.internal.java.endpoints.IdentityMappingEndpoint;
+import com.pubnub.internal.java.endpoints.PassthroughEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class RemoveAllPushChannelsForDeviceImpl extends IdentityMappingEndpoint<PNPushRemoveAllChannelsResult> implements RemoveAllPushChannelsForDevice {
+public class RemoveAllPushChannelsForDeviceImpl extends PassthroughEndpoint<PNPushRemoveAllChannelsResult> implements RemoveAllPushChannelsForDevice {
     private PNPushType pushType;
     private String deviceId;
     private PNPushEnvironment environment = PNPushEnvironment.DEVELOPMENT;
@@ -27,7 +27,7 @@ public class RemoveAllPushChannelsForDeviceImpl extends IdentityMappingEndpoint<
 
     @Override
     @NotNull
-    protected Endpoint<PNPushRemoveAllChannelsResult> createAction() {
+    protected Endpoint<PNPushRemoveAllChannelsResult> createRemoteAction() {
         return pubnub.removeAllPushNotificationsFromDeviceWithPushToken(
                 pushType,
                 deviceId,

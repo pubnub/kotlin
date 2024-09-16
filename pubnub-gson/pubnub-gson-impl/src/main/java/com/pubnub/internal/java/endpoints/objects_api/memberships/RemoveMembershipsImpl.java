@@ -47,7 +47,7 @@ public class RemoveMembershipsImpl extends DelegatingEndpoint<PNChannelMembershi
 
     @Override
     @NotNull
-    protected Endpoint<PNChannelMembershipArrayResult> createAction() {
+    protected Endpoint<PNChannelMembershipArrayResult> createRemoteAction() {
         ArrayList<String> channelList = new ArrayList<>(channelMemberships.size());
         for (PNChannelMembership channel : channelMemberships) {
             channelList.add(channel.getChannel().getId());

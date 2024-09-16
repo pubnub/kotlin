@@ -44,7 +44,7 @@ public class GetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipAr
 
     @Override
     @NotNull
-    protected Endpoint<PNChannelMembershipArrayResult> createAction() {
+    protected Endpoint<PNChannelMembershipArrayResult> createRemoteAction() {
         return pubnub.getMemberships(uuid,
                 limit,
                 page,

@@ -37,7 +37,7 @@ public class GetAllUUIDMetadataImpl
 
     @Override
     @NotNull
-    protected Endpoint<PNUUIDMetadataArrayResult> createAction() {
+    protected Endpoint<PNUUIDMetadataArrayResult> createRemoteAction() {
         return pubnub.getAllUUIDMetadata(
                 limit,
                 page,

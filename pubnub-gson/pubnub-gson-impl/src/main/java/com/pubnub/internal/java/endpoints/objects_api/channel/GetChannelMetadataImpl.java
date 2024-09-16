@@ -38,7 +38,7 @@ public class GetChannelMetadataImpl extends DelegatingEndpoint<PNChannelMetadata
 
     @Override
     @NotNull
-    protected Endpoint<PNChannelMetadataResult> createAction() {
+    protected Endpoint<PNChannelMetadataResult> createRemoteAction() {
         return pubnub.getChannelMetadata(channel, includeCustom);
     }
 

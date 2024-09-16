@@ -7,7 +7,7 @@ import com.pubnub.api.v2.PNConfiguration
 
 abstract class DelegatingEndpoint<U, T>(pubnub: PubNub) : DelegatingRemoteAction<U, T>(pubnub), Endpoint<T> {
     override val remoteAction: ExtendedRemoteAction<T> by lazy {
-        val newAction = createAction()
+        val newAction = createRemoteAction()
         overrideConfiguration?.let { overrideConfigNonNull ->
             newAction.overrideConfiguration(overrideConfigNonNull)
         }
@@ -20,10 +20,10 @@ abstract class DelegatingEndpoint<U, T>(pubnub: PubNub) : DelegatingRemoteAction
         return this
     }
 
-    abstract override fun createAction(): com.pubnub.api.Endpoint<U>
+    abstract override fun createRemoteAction(): com.pubnub.api.Endpoint<U>
 }
 
-abstract class IdentityMappingEndpoint<T>(pubnub: PubNub) : DelegatingEndpoint<T, T>(pubnub) {
+abstract class PassthroughEndpoint<T>(pubnub: PubNub) : DelegatingEndpoint<T, T>(pubnub) {
     final override fun mapResult(action: ExtendedRemoteAction<T>): ExtendedRemoteAction<T> {
         return action
     }

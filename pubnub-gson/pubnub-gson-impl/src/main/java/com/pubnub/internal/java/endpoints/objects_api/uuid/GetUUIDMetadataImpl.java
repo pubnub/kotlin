@@ -26,7 +26,7 @@ public class GetUUIDMetadataImpl extends DelegatingEndpoint<PNUUIDMetadataResult
 
     @Override
     @NotNull
-    protected Endpoint<PNUUIDMetadataResult> createAction() {
+    protected Endpoint<PNUUIDMetadataResult> createRemoteAction() {
         return pubnub.getUUIDMetadata(
                 uuid,
                 includeCustom

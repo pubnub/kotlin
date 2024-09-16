@@ -77,7 +77,7 @@ public class SetStateImpl extends DelegatingEndpoint<Object, PNSetStateResult> i
 
     @Override
     @NotNull
-    protected Endpoint<Object> createAction() {
+    protected Endpoint<Object> createRemoteAction() {
         if (!withHeartbeat) {
             // Regular way of setting presence explicitly is through SetPresenceState:
             return (Endpoint<Object>) (Object) pubnub.setPresenceState(

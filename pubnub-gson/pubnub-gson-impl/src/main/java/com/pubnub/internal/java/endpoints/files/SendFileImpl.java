@@ -6,7 +6,7 @@ import com.pubnub.api.java.endpoints.BuilderSteps;
 import com.pubnub.api.java.endpoints.files.SendFile;
 import com.pubnub.api.java.endpoints.files.requiredparambuilder.FilesBuilderSteps;
 import com.pubnub.api.models.consumer.files.PNFileUploadResult;
-import com.pubnub.internal.java.endpoints.IdentityMappingAction;
+import com.pubnub.internal.java.endpoints.PassthroughRemoteAction;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +15,7 @@ import java.io.InputStream;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class SendFileImpl extends IdentityMappingAction<PNFileUploadResult> implements SendFile {
+public class SendFileImpl extends PassthroughRemoteAction<PNFileUploadResult> implements SendFile {
 
     private final String channel;
     private final String fileName;
@@ -41,7 +41,7 @@ public class SendFileImpl extends IdentityMappingAction<PNFileUploadResult> impl
 
     @Override
     @NotNull
-    protected ExtendedRemoteAction<PNFileUploadResult> createAction() {
+    protected ExtendedRemoteAction<PNFileUploadResult> createRemoteAction() {
         return pubnub.sendFile(
                 channel,
                 fileName,

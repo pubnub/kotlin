@@ -38,7 +38,7 @@ public class SetChannelMetadataImpl
 
     @Override
     @NotNull
-    protected Endpoint<PNChannelMetadataResult> createAction() {
+    protected Endpoint<PNChannelMetadataResult> createRemoteAction() {
         return pubnub.setChannelMetadata(
                 channel,
                 name,

@@ -5,7 +5,7 @@ import com.pubnub.api.Endpoint;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.java.endpoints.presence.HereNow;
 import com.pubnub.api.models.consumer.presence.PNHereNowResult;
-import com.pubnub.internal.java.endpoints.IdentityMappingEndpoint;
+import com.pubnub.internal.java.endpoints.PassthroughEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class HereNowImpl extends IdentityMappingEndpoint<PNHereNowResult> implements HereNow {
+public class HereNowImpl extends PassthroughEndpoint<PNHereNowResult> implements HereNow {
     private List<String> channels = new ArrayList<>();
     private List<String> channelGroups = new ArrayList<>();
     private boolean includeState = false;
@@ -27,7 +27,7 @@ public class HereNowImpl extends IdentityMappingEndpoint<PNHereNowResult> implem
 
     @Override
     @NotNull
-    protected Endpoint<PNHereNowResult> createAction() {
+    protected Endpoint<PNHereNowResult> createRemoteAction() {
         return pubnub.hereNow(
                 channels,
                 channelGroups,

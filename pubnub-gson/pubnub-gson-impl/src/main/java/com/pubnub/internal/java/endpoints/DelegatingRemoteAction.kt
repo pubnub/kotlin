@@ -13,10 +13,10 @@ abstract class DelegatingRemoteAction<U, T>(
 ) : ExtendedRemoteAction<T> {
     @get:TestOnly
     internal open val remoteAction: ExtendedRemoteAction<T> by lazy {
-        mapResult(createAction())
+        mapResult(createRemoteAction())
     }
 
-    protected abstract fun createAction(): ExtendedRemoteAction<U>
+    protected abstract fun createRemoteAction(): ExtendedRemoteAction<U>
 
     protected abstract fun mapResult(action: ExtendedRemoteAction<U>): ExtendedRemoteAction<T>
 
@@ -56,7 +56,7 @@ abstract class DelegatingRemoteAction<U, T>(
         get() = operationType()
 }
 
-abstract class IdentityMappingAction<T>(pubnub: PubNub) : DelegatingRemoteAction<T, T>(pubnub) {
+abstract class PassthroughRemoteAction<T>(pubnub: PubNub) : DelegatingRemoteAction<T, T>(pubnub) {
     final override fun mapResult(action: ExtendedRemoteAction<T>): ExtendedRemoteAction<T> {
         return action
     }

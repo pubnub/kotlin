@@ -44,7 +44,7 @@ public class GetChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayResul
     }
 
     @Override
-    protected Endpoint<PNMemberArrayResult> createAction() {
+    protected Endpoint<PNMemberArrayResult> createRemoteAction() {
         return pubnub.getChannelMembers(
                 channel,
                 limit,

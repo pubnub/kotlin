@@ -24,7 +24,7 @@ public class RemoveUUIDMetadataImpl extends DelegatingEndpoint<PNRemoveMetadataR
 
     @Override
     @NotNull
-    protected Endpoint<PNRemoveMetadataResult> createAction() {
+    protected Endpoint<PNRemoveMetadataResult> createRemoteAction() {
         return pubnub.removeUUIDMetadata(uuid);
     }
 

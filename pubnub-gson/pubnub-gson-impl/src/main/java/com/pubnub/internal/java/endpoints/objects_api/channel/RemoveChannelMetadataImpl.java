@@ -31,7 +31,7 @@ public class RemoveChannelMetadataImpl extends DelegatingEndpoint<PNRemoveMetada
 
     @Override
     @NotNull
-    protected Endpoint<PNRemoveMetadataResult> createAction() {
+    protected Endpoint<PNRemoveMetadataResult> createRemoteAction() {
         return pubnub.removeChannelMetadata(channel);
     }
 

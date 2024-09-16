@@ -7,14 +7,14 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.java.endpoints.message_actions.GetMessageActions;
 import com.pubnub.api.models.consumer.PNBoundedPage;
 import com.pubnub.api.models.consumer.message_actions.PNGetMessageActionsResult;
-import com.pubnub.internal.java.endpoints.IdentityMappingEndpoint;
+import com.pubnub.internal.java.endpoints.PassthroughEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class GetMessageActionsImpl extends IdentityMappingEndpoint<PNGetMessageActionsResult> implements GetMessageActions {
+public class GetMessageActionsImpl extends PassthroughEndpoint<PNGetMessageActionsResult> implements GetMessageActions {
 
     private String channel;
     private Long start;
@@ -34,7 +34,7 @@ public class GetMessageActionsImpl extends IdentityMappingEndpoint<PNGetMessageA
 
     @Override
     @NotNull
-    protected Endpoint<PNGetMessageActionsResult> createAction() {
+    protected Endpoint<PNGetMessageActionsResult> createRemoteAction() {
         return pubnub.getMessageActions(channel, new PNBoundedPage(start, end, limit));
     }
 }

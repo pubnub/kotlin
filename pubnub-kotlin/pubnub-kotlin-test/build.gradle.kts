@@ -7,12 +7,11 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.benmanes.versions)
+    alias(libs.plugins.codingfeline.buildkonfig)
     id("pubnub.shared")
     id("pubnub.ios-simulator-test")
-//    id("pubnub.multiplatform")
     kotlin("multiplatform")
 
-    id("com.codingfeline.buildkonfig") version "0.15.1"
 }
 
 kotlin {
@@ -37,7 +36,6 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(project(":pubnub-kotlin:pubnub-kotlin-api"))
-//                api(project(":pubnub-core:pubnub-core-api"))
                 api(kotlin("test"))
                 api(libs.coroutines.test)
             }

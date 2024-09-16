@@ -14,7 +14,7 @@ import java.util.List;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class MessageCountsImpl extends IdentityMappingEndpoint<PNMessageCountResult> implements MessageCounts {
+public class MessageCountsImpl extends PassthroughEndpoint<PNMessageCountResult> implements MessageCounts {
 
     /**
      * The channel name you wish to pull history from. May be a single channel, or multiple channels, separated by
@@ -34,7 +34,7 @@ public class MessageCountsImpl extends IdentityMappingEndpoint<PNMessageCountRes
 
     @Override
     @NotNull
-    protected Endpoint<PNMessageCountResult> createAction() {
+    protected Endpoint<PNMessageCountResult> createRemoteAction() {
         return pubnub.messageCounts(channels, channelsTimetoken);
     }
 

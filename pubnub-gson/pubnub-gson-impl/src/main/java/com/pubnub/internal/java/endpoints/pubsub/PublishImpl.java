@@ -7,14 +7,14 @@ import com.pubnub.api.java.builder.PubNubErrorBuilder;
 import com.pubnub.api.java.endpoints.pubsub.Publish;
 import com.pubnub.api.java.v2.endpoints.pubsub.PublishBuilder;
 import com.pubnub.api.models.consumer.PNPublishResult;
-import com.pubnub.internal.java.endpoints.IdentityMappingEndpoint;
+import com.pubnub.internal.java.endpoints.PassthroughEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class PublishImpl extends IdentityMappingEndpoint<PNPublishResult> implements Publish, PublishBuilder {
+public class PublishImpl extends PassthroughEndpoint<PNPublishResult> implements Publish, PublishBuilder {
 
     private Object message;
     private String channel;
@@ -31,7 +31,7 @@ public class PublishImpl extends IdentityMappingEndpoint<PNPublishResult> implem
 
     @Override
     @NotNull
-    protected Endpoint<PNPublishResult> createAction() {
+    protected Endpoint<PNPublishResult> createRemoteAction() {
         return pubnub.publish(
                 channel,
                 message,
