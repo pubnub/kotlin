@@ -90,7 +90,8 @@ interface Channel : Subscribable {
         shouldStore: Boolean = true,
         usePost: Boolean = false,
         replicate: Boolean = true,
-        ttl: Int? = null
+        ttl: Int? = null,
+        type: String? = null //todo messageType
     ): Publish
 
     /**

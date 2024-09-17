@@ -24,6 +24,7 @@ class PublishImpl(
     private val meta: Any?,
     private val shouldStore: Boolean?,
     private val ttl: Int?
+    private val type: String? //todo messageType
 ) : Publish {
     override fun async(callback: Consumer<Result<PNPublishResult>>) {
         pubnub.publishWithChannel(
@@ -32,6 +33,7 @@ class PublishImpl(
             meta = meta,
             shouldStore = shouldStore?.let { NSNumber(bool = it) },
             ttl = ttl?.let { NSNumber(it) },
+            type = type, //todo messageType
             onSuccess = callback.onSuccessHandler { PNPublishResult(it.toLong()) },
             onFailure = callback.onFailureHandler()
         )

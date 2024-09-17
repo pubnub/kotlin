@@ -93,6 +93,7 @@ expect interface PubNub {
         usePost: Boolean = false,
         replicate: Boolean = true,
         ttl: Int? = null,
+        type: String? = null, //todo messageType
     ): Publish
 
     fun fire(

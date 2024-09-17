@@ -20,7 +20,8 @@ class ChannelImpl(private val jsChannel: dynamic) : Channel {
         shouldStore: Boolean,
         usePost: Boolean,
         replicate: Boolean,
-        ttl: Int?
+        ttl: Int?,
+        type: Stirng?, //todo messageType
     ): Publish {
         TODO("Not yet implemented")
     }

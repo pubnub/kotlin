@@ -23,6 +23,7 @@ public class PublishImpl extends IdentityMappingEndpoint<PNPublishResult> implem
     private Object meta;
     private boolean replicate;
     private Integer ttl;
+    private String type; //todo messageType
 
     public PublishImpl(PubNub pubnub) {
         super(pubnub);
@@ -39,7 +40,8 @@ public class PublishImpl extends IdentityMappingEndpoint<PNPublishResult> implem
                 shouldStore,
                 usePOST,
                 replicate,
-                ttl
+                ttl,
+                type //todo messageType
         );
     }
 

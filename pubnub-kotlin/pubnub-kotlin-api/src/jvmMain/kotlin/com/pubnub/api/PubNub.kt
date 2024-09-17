@@ -387,6 +387,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
         usePost: Boolean,
         replicate: Boolean,
         ttl: Int?,
+        type: String?, //todo messageType
     ): Publish
 
     /**

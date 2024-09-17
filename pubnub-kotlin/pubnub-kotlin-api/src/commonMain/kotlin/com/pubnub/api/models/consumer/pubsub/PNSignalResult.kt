@@ -8,4 +8,5 @@ import com.pubnub.api.JsonElement
 data class PNSignalResult(
     private val basePubSubResult: PubSubResult,
     override val message: JsonElement,
+    override val type: String? = null, //todo messageType do we want to have type in signal
 ) : MessageResult, PubSubResult by basePubSubResult

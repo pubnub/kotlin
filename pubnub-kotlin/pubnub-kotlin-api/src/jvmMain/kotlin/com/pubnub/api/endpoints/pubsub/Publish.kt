@@ -14,4 +14,5 @@ actual interface Publish : Endpoint<PNPublishResult> {
     val usePost: Boolean
     val replicate: Boolean
     val ttl: Int?
+    val type: String? //todo messageType
 }

@@ -334,6 +334,7 @@ open class PubNubImpl(
         usePost: Boolean,
         replicate: Boolean,
         ttl: Int?,
+        type: String?, //todo messageType
     ): Publish =
         PublishEndpoint(
             pubnub = this,

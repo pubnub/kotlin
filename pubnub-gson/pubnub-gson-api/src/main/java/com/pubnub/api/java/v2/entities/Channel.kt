@@ -91,6 +91,7 @@ interface Channel : com.pubnub.api.java.v2.entities.Subscribable {
      *            - If `shouldStore = false`, the `ttl` parameter is ignored.
      *            - If ttl isn't specified, then expiration of the message defaults
      *              back to the expiry value for the key.
+     * @param type The type associated with the message.
      */
     fun publish(message: Any): PublishBuilder
 

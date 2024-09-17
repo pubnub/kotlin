@@ -77,9 +77,10 @@ open class ChannelImpl(val pubNubImpl: PubNubImpl, val channelName: ChannelName)
         shouldStore: Boolean,
         usePost: Boolean,
         replicate: Boolean,
-        ttl: Int?
+        ttl: Int?,
+        type: String? //todo messageType
     ): Publish {
-        return pubNubImpl.publish(channelName.id, message, meta, shouldStore, usePost, replicate, ttl)
+        return pubNubImpl.publish(channelName.id, message, meta, shouldStore, usePost, replicate, ttl, type)
     }
 
     override fun signal(message: Any): Signal {

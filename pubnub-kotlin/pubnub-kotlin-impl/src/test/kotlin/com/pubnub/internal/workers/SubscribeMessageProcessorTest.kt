@@ -16,9 +16,11 @@ import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.crypto.encryptString
 import com.pubnub.internal.managers.DuplicationManager
+import com.pubnub.internal.models.server.PublishMetaData
 import com.pubnub.internal.models.server.SubscribeMessage
 import com.pubnub.internal.v2.PNConfigurationImpl
 import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers
 import org.hamcrest.Matchers.isA
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -180,6 +182,20 @@ class SubscribeMessageProcessorTest(
         assertThat((result as PNMessageResult).message, iz(expectedObject))
     }
 
+    @Test
+    fun pnMessageResultWillContainTypeIfItsSetInSubscribeMessage() {
+        val expectedType = "type"
+        val configuration = config()
+        val subscribeMessage = subscribeMessage().copy(
+            type = expectedType
+        )
+
+        val result = messageProcessor(configuration).processIncomingPayload(subscribeMessage)
+        assertThat(result, Matchers.instanceOf(PNMessageResult::class.java))
+        assertThat((result as PNMessageResult).type, iz(expectedType))
+    }
+
+
     private fun config(
         action: PNConfigurationImpl.Builder.() -> Unit = {
         },
@@ -197,4 +213,19 @@ class SubscribeMessageProcessorTest(
 
     private fun fileMessage(messageJson: String) =
         """{"a":"0","f":0,"e":4,"i":"client-52774e6f-2f4e-4915-aefd-e8bb75cd2e7d","p":{"t":"16632349939765880","r":43},"k":"sub-c-4b1dbfef-2fa9-495f-a316-2b634063083d","c":"ch_1663234993171_F4FC4F460F","u":"This is meta","d":{"message":$messageJson,"file":{"id":"30ce0095-3c50-4cdc-a626-bf402d233731","name":"fileNamech_1663234993171_F4FC4F460F.txt"}}}"""
+
+    private fun subscribeMessage() = SubscribeMessage(
+        shard = "4",
+        flags = "0",
+        publishMetaData = PublishMetaData(16710463855524468, 21),
+        channel = "testChannel",
+        type = null,
+        messageTypeInt = null,
+        subscriptionMatch = null,
+        issuingClientId = null,
+        subscribeKey = "demo",
+        originationMetadata = null,
+        payload = JsonPrimitive("message"),
+        userMetadata = null
+    )
 }

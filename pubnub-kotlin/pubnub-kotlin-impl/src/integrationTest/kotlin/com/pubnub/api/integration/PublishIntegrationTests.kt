@@ -8,10 +8,13 @@ import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNBoundedPage
+import com.pubnub.api.models.consumer.PNPublishResult
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.v2.PNConfigurationOverride
 import com.pubnub.api.v2.callbacks.EventListener
+import com.pubnub.api.v2.callbacks.Result
+import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.api.v2.callbacks.getOrThrow
 import com.pubnub.api.v2.entities.Channel
 import com.pubnub.api.v2.subscriptions.SubscriptionCursor
@@ -39,6 +42,8 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -84,9 +89,9 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         pubnub.fetchMessages(
             channels = listOf(expectedChannel),
             page =
-                PNBoundedPage(
-                    limit = 1,
-                ),
+            PNBoundedPage(
+                limit = 1,
+            ),
         ).asyncRetry { result ->
             assertFalse(result.isFailure)
             result.onSuccess {
@@ -366,7 +371,8 @@ class PublishIntegrationTests : BaseIntegrationTest() {
                 override fun status(
                     pubnub: PubNub,
                     pnStatus: PNStatus,
-                ) {}
+                ) {
+                }
 
                 override fun message(
                     pubnub: PubNub,
@@ -398,7 +404,8 @@ class PublishIntegrationTests : BaseIntegrationTest() {
                 override fun status(
                     pubnub: PubNub,
                     pnStatus: PNStatus,
-                ) {}
+                ) {
+                }
 
                 override fun message(
                     pubnub: PubNub,
@@ -488,7 +495,8 @@ class PublishIntegrationTests : BaseIntegrationTest() {
                 override fun status(
                     pubnub: PubNub,
                     pnStatus: PNStatus,
-                ) {}
+                ) {
+                }
 
                 override fun message(
                     pubnub: PubNub,
@@ -524,7 +532,8 @@ class PublishIntegrationTests : BaseIntegrationTest() {
                 override fun status(
                     pubnub: PubNub,
                     pnStatus: PNStatus,
-                ) {}
+                ) {
+                }
 
                 override fun message(
                     pubnub: PubNub,
@@ -567,7 +576,8 @@ class PublishIntegrationTests : BaseIntegrationTest() {
                 override fun status(
                     pubnub: PubNub,
                     pnStatus: PNStatus,
-                ) {}
+                ) {
+                }
 
                 override fun message(
                     pubnub: PubNub,
@@ -595,9 +605,9 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         pubnub.fetchMessages(
             channels = listOf(expectedChannel),
             page =
-                PNBoundedPage(
-                    limit = 1,
-                ),
+            PNBoundedPage(
+                limit = 1,
+            ),
         ).sync().run {
             assertEquals(
                 expectedPayload.toString(),
@@ -832,7 +842,8 @@ class PublishIntegrationTests : BaseIntegrationTest() {
 
         channel.publish(message = "My message").sync()
         channel.signal(message = "My signal").sync()
-        channel.fire(message = "My Fire").sync() // fire will not be delivered to listener only to PubNub Functions Event Handlers
+        channel.fire(message = "My Fire")
+            .sync() // fire will not be delivered to listener only to PubNub Functions Event Handlers
 
         Awaitility.await()
             .atMost(DEFAULT_LISTEN_DURATION.toLong(), TimeUnit.SECONDS)
@@ -840,5 +851,40 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         Awaitility.await()
             .atMost(DEFAULT_LISTEN_DURATION.toLong(), TimeUnit.SECONDS)
             .untilAtomic(signalReceived, Matchers.equalTo(true))
+    }
+
+    @Test
+    fun testPublishMessageWithType() {
+        val expectedChannelName = randomChannel()
+        val channel = pubnub.channel(expectedChannelName)
+        val expectedType = "thisIsType"
+        val connected = CountDownLatch(1)
+        val messageFuture = CompletableFuture<PNMessageResult>()
+
+        val subscription = channel.subscription()
+        subscription.onMessage = { pnMessageResult: PNMessageResult ->
+            messageFuture.complete(pnMessageResult)
+        }
+        pubnub.addListener(object : StatusListener {
+            override fun status(pubnub: PubNub, status: PNStatus) {
+                connected.countDown()
+            }
+
+        })
+
+        subscription.subscribe()
+        assertTrue(connected.await(10, TimeUnit.SECONDS))
+
+        channel.publish(
+            message = generatePayload(),
+            type = expectedType
+        ).await { resutl: Result<PNPublishResult> ->
+            assertTrue(resutl.isSuccess)
+        }
+
+        val message = messageFuture.get(10, TimeUnit.SECONDS)
+
+        assertEquals(expectedType, message.type)
+
     }
 }

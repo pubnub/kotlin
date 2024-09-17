@@ -13,4 +13,6 @@ public interface PublishBuilder extends Endpoint<PNPublishResult> {
     PublishBuilder replicate(boolean replicate);
 
     PublishBuilder ttl(Integer ttl);
+
+    PublishBuilder type(String type); //todo messageType
 }

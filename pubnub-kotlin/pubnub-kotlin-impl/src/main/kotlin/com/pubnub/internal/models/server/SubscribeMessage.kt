@@ -2,10 +2,9 @@ package com.pubnub.internal.models.server
 
 import com.google.gson.JsonElement
 import com.google.gson.annotations.SerializedName
-import com.pubnub.internal.workers.SubscribeMessageProcessor.Companion.TYPE_FILES
-import com.pubnub.internal.workers.SubscribeMessageProcessor.Companion.TYPE_MESSAGE
+import com.pubnub.internal.models.server.pubsub.MessageType
 
-class SubscribeMessage(
+data class SubscribeMessage(
     @SerializedName("a")
     internal val shard: String?,
     @SerializedName("b")
@@ -27,7 +26,11 @@ class SubscribeMessage(
     @SerializedName("u")
     internal val userMetadata: JsonElement?,
     @SerializedName("e")
-    internal val type: Int?,
+    internal val messageTypeInt: Int?,
+    @SerializedName("mt")
+    internal val type: String?,
 ) {
-    fun supportsEncryption() = type in arrayOf(null, TYPE_MESSAGE, TYPE_FILES)
+//    fun supportsEncryption() = type in arrayOf(null, TYPE_MESSAGE, TYPE_FILES)
+    fun supportsEncryption() =
+        MessageType.of(messageTypeInt).let { it == MessageType.Message || it == MessageType.File }
 }

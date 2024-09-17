@@ -188,7 +188,8 @@ class PubNubImpl(private val pubNubObjC: PubNubObjC) : PubNub {
         shouldStore: Boolean,
         usePost: Boolean,
         replicate: Boolean,
-        ttl: Int?
+        ttl: Int?,
+        type: String?, //todo messageType
     ): Publish {
         return PublishImpl(
             pubnub = pubNubObjC,

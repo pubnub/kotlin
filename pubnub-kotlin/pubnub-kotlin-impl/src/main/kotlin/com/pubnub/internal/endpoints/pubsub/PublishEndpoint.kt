@@ -27,7 +27,13 @@ class PublishEndpoint internal constructor(
     override val usePost: Boolean = false,
     override val replicate: Boolean = true,
     override val ttl: Int? = null,
+    override val type: String? = null //todo messageType
+
 ) : EndpointCore<List<Any>, PNPublishResult>(pubnub), Publish {
+     companion object{
+         internal const val MESSAGE_TYPE_QUERY_PARAM = "type" //todo messageType
+     }
+
     override fun validateParams() {
         super.validateParams()
         if (channel.isBlank()) {
@@ -92,6 +98,8 @@ class PublishEndpoint internal constructor(
         if (!replicate) {
             queryParams["norep"] = true.valueString
         }
+
+        type?.run { queryParams[MESSAGE_TYPE_QUERY_PARAM] = this }
 
         queryParams["seqn"] = pubnub.publishSequenceManager.nextSequence().toString()
     }

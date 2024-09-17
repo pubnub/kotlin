@@ -15,6 +15,7 @@ class PNFileEventResult(
     val jsonMessage: JsonElement,
     override val subscription: String? = null,
     val error: PubNubError? = null,
+    val type: String? = null
 ) : PNEvent {
     override fun equals(other: Any?): Boolean {
         if (this === other) {
