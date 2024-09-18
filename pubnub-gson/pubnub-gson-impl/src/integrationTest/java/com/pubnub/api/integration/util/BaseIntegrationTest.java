@@ -17,6 +17,7 @@ import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult;
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
+import com.pubnub.api.retry.RetryConfiguration;
 import com.pubnub.api.v2.PNConfiguration;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.aeonbits.owner.ConfigFactory;
@@ -153,6 +154,7 @@ public abstract class BaseIntegrationTest {
         } catch (PubNubException e) {
             throw new RuntimeException(e);
         }
+        pnConfiguration.retryConfiguration(RetryConfiguration.None.INSTANCE);
         pnConfiguration.logVerbosity(PNLogVerbosity.NONE);
         pnConfiguration.httpLoggingInterceptor(createInterceptor());
         if (action != null) {

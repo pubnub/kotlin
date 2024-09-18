@@ -268,7 +268,7 @@ interface BasePNConfiguration : BasePNConfigurationOverride {
      *
      *  Use [RetryConfiguration.Linear] to set retry with linear delay interval
      *  Use [RetryConfiguration.Exponential] to set retry with exponential delay interval
-     *  Delay will valy from provided value by random value.
+     *  Delay will vary from provided value by random value.
      */
     val retryConfiguration: RetryConfiguration
 

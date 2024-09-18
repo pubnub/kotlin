@@ -142,5 +142,37 @@ sealed class RetryConfiguration {
 
             const val MAX_RETRIES = 6
         }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+            if (other !is Exponential) {
+                return false
+            }
+
+            if (minDelayInSec != other.minDelayInSec) {
+                return false
+            }
+            if (maxDelayInSec != other.maxDelayInSec) {
+                return false
+            }
+            if (maxRetryNumber != other.maxRetryNumber) {
+                return false
+            }
+            if (excludedOperations != other.excludedOperations) {
+                return false
+            }
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = minDelayInSec.hashCode()
+            result = 31 * result + maxDelayInSec.hashCode()
+            result = 31 * result + maxRetryNumber
+            result = 31 * result + excludedOperations.hashCode()
+            return result
+        }
     }
 }
