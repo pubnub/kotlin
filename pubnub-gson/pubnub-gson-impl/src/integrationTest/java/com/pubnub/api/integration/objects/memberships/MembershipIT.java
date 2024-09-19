@@ -8,6 +8,7 @@ import com.pubnub.api.java.models.consumer.objects_api.membership.PNManageMember
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNMembership;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNRemoveMembershipResult;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNSetMembershipResult;
+import com.pubnub.api.utils.PatchValue;
 import org.apache.http.HttpStatus;
 import org.junit.After;
 import org.junit.Test;
@@ -30,7 +31,6 @@ import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
 
 public class MembershipIT extends ObjectsApiBaseIT {
     private static final Logger LOG = LoggerFactory.getLogger(MembershipIT.class);
@@ -70,7 +70,7 @@ public class MembershipIT extends ObjectsApiBaseIT {
                                 allOf(
                                         hasProperty(CHANNEL,
                                                 hasProperty("id", is(testChannelId1))),
-                                        hasProperty("custom", nullValue())))),
+                                        hasProperty("custom", is(PatchValue.of(null)))))),
                 hasProperty("data",
                         hasItem(
                                 allOf(

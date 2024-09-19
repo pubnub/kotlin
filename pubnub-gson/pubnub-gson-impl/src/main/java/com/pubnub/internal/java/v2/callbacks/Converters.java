@@ -18,6 +18,7 @@ import com.pubnub.api.models.consumer.pubsub.objects.PNSetChannelMetadataEventMe
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetMembershipEvent;
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetMembershipEventMessage;
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetUUIDMetadataEventMessage;
+import com.pubnub.api.utils.PatchValue;
 import org.jetbrains.annotations.NotNull;
 
 class Converters {
@@ -150,8 +151,8 @@ class Converters {
                 new PNChannelMetadata(data.getChannel(), null)
         );
         membership.setUuid(data.getUuid());
-        membership.setCustom(data.getCustom() != null ? data.getCustom().getValue() : null);
-        membership.setStatus(data.getStatus() != null ? data.getStatus().getValue() : null);
+        membership.setCustom(data.getCustom() != null ? PatchValue.of(data.getCustom().getValue()) : null);
+        membership.setStatus(data.getStatus() != null ? PatchValue.of(data.getStatus().getValue()) : null);
         membership.setUpdated(data.getUpdated());
         membership.setETag(data.getETag());
         return new PNMembershipResult(

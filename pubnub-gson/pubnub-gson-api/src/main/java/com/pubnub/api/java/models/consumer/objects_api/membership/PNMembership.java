@@ -2,6 +2,7 @@ package com.pubnub.api.java.models.consumer.objects_api.membership;
 
 import com.pubnub.api.java.models.consumer.objects_api.channel.PNChannelMetadata;
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership;
+import com.pubnub.api.utils.PatchValue;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.experimental.Accessors;
@@ -20,11 +21,11 @@ public class PNMembership {
     }
     @NonNull
     private PNChannelMetadata channel;
-    private Object custom;
+    private PatchValue<@Nullable Object> custom;
     private String uuid;
     private String updated;
     private String eTag;
-    private String status;
+    private PatchValue<@Nullable String> status;
 
     public static List<PNMembership> from(Collection<PNChannelMembership> members) {
         ArrayList<PNMembership> list = new ArrayList<>(members.size());
@@ -41,11 +42,11 @@ public class PNMembership {
         }
         PNChannelMetadata metadata = PNChannelMetadata.from(data.getChannel());
         PNMembership newData = new PNMembership(metadata);
-        newData.setCustom(data.getCustom() != null ? data.getCustom().getValue() : null);
+        newData.setCustom(data.getCustom() != null ? PatchValue.of(data.getCustom().getValue()) : null);
 //        newData.setUuid(data.get) //TODO where to get this? does it even exist in server responses?
         newData.setUpdated(data.getUpdated());
         newData.setETag(data.getETag());
-        newData.setStatus(data.getStatus() != null ? data.getStatus().getValue() : null);
+        newData.setStatus(data.getStatus());
         return newData;
     }
 }

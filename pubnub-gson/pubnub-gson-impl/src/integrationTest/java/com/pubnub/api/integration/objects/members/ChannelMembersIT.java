@@ -9,6 +9,7 @@ import com.pubnub.api.java.models.consumer.objects_api.member.PNRemoveChannelMem
 import com.pubnub.api.java.models.consumer.objects_api.member.PNSetChannelMembersResult;
 import com.pubnub.api.java.models.consumer.objects_api.member.PNUUID;
 import com.pubnub.api.java.models.consumer.objects_api.uuid.PNUUIDMetadata;
+import com.pubnub.api.utils.PatchValue;
 import org.apache.http.HttpStatus;
 import org.junit.After;
 import org.junit.Test;
@@ -87,8 +88,8 @@ public class ChannelMembersIT extends ObjectsApiBaseIT {
 
         final List<Object> receivedCustomObjects = new ArrayList<>();
         for (final PNMembers it : setChannelMembersResult.getData()) {
-            final Object custom = it.getCustom();
-            if (custom != null) {
+            PatchValue<Object> custom = it.getCustom();
+            if (custom != null && custom.getValue() != null) {
                 receivedCustomObjects.add(custom);
             }
         }
@@ -96,6 +97,7 @@ public class ChannelMembersIT extends ObjectsApiBaseIT {
         List<String> actualStatusList = setChannelMembersResult.getData()
                 .stream()
                 .map(PNMembers::getStatus)
+                .map(PatchValue::getValue)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
@@ -146,8 +148,8 @@ public class ChannelMembersIT extends ObjectsApiBaseIT {
         }
         final List<Object> receivedCustomObjects = new ArrayList<>();
         for (final PNMembers it : setChannelMembersResult.getData()) {
-            final Object custom = it.getCustom();
-            if (custom != null) {
+            PatchValue<Object> custom = it.getCustom();
+            if (custom != null && custom.getValue() != null) {
                 receivedCustomObjects.add(custom);
             }
         }
@@ -155,6 +157,7 @@ public class ChannelMembersIT extends ObjectsApiBaseIT {
         List<String> actualStatusList = setChannelMembersResult.getData()
                 .stream()
                 .map(PNMembers::getStatus)
+                .map(PatchValue::getValue)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 

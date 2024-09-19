@@ -2,6 +2,7 @@ package com.pubnub.api.java.models.consumer.objects_api.member;
 
 import com.pubnub.api.java.models.consumer.objects_api.uuid.PNUUIDMetadata;
 import com.pubnub.api.models.consumer.objects.member.PNMember;
+import com.pubnub.api.utils.PatchValue;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -23,11 +24,11 @@ import java.util.List;
 public class PNMembers {
     private PNUUIDMetadata uuid;
 
-    protected Object custom;
+    protected PatchValue<@Nullable Object> custom;
 
     protected String updated;
     protected String eTag;
-    protected String status;
+    protected PatchValue<@Nullable String> status;
 
     @Nullable
     public static PNMembers from(@Nullable PNMember member) {
@@ -36,10 +37,10 @@ public class PNMembers {
         }
         return new PNMembers()
                 .setUuid(PNUUIDMetadata.from(member.getUuid()))
-                .setCustom(member.getCustom() != null ? member.getCustom().getValue() : null)
+                .setCustom(member.getCustom() != null ? PatchValue.of(member.getCustom().getValue()) : null)
                 .setUpdated(member.getUpdated())
                 .setETag(member.getETag())
-                .setStatus(member.getStatus() != null ? member.getStatus().getValue() : null);
+                .setStatus(member.getStatus());
     }
 
     public static List<PNMembers> from(Collection<PNMember> members) {

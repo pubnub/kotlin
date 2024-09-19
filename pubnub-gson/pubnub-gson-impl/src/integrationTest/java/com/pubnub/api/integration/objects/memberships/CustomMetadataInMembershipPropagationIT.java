@@ -10,6 +10,7 @@ import com.pubnub.api.java.models.consumer.objects_api.membership.PNGetMembershi
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNMembershipResult;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNSetMembershipResult;
 import com.pubnub.api.models.consumer.PNStatus;
+import com.pubnub.api.utils.PatchValue;
 import org.awaitility.core.ThrowingRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.junit.After;
@@ -106,8 +107,8 @@ public class CustomMetadataInMembershipPropagationIT extends ObjectsApiBaseIT {
                                 hasProperty("channel", allOf(
                                         allOf(
                                                 hasProperty("id", is(testChannelMetadataId)),
-                                                hasProperty("name", is(testChannelName)),
-                                                hasProperty("description", is(testDescription)),
+                                                hasProperty("name", is(PatchValue.of(testChannelName))),
+                                                hasProperty("description", is(PatchValue.of(testDescription))),
                                                 hasProperty("custom", notNullValue()))))))));
         assertThat(getMembershipsResult, hasProperty("data",
                 hasItem(
@@ -116,8 +117,8 @@ public class CustomMetadataInMembershipPropagationIT extends ObjectsApiBaseIT {
                                 hasProperty("channel", allOf(
                                         allOf(
                                                 hasProperty("id", is(testChannelMetadataId)),
-                                                hasProperty("name", is(testChannelName)),
-                                                hasProperty("description", is(testDescription)),
+                                                hasProperty("name", is(PatchValue.of(testChannelName))),
+                                                hasProperty("description", is(PatchValue.of(testDescription))),
                                                 hasProperty("custom", nullValue()))))))));
 
         String userIdValue = pubNubUnderTest.getConfiguration().getUserId().getValue();

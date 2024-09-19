@@ -1,10 +1,12 @@
 package com.pubnub.api.java.models.consumer.objects_api;
 
+import com.pubnub.api.utils.PatchValue;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.Nullable;
 
 @Getter
 @Accessors(chain = true)
@@ -16,13 +18,13 @@ public class PNObject {
     protected String id;
 
     @Setter
-    protected Object custom;
+    protected PatchValue<@Nullable Object> custom;
 
     @Setter
-    protected String updated;
+    protected PatchValue<@Nullable String> updated;
 
     @Setter
-    protected String eTag;
+    protected PatchValue<@Nullable String> eTag;
 
     protected PNObject(String id) {
         this.id = id;
