@@ -152,6 +152,12 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         )
     )
 
+    companion object {
+        fun create(kmpPubNub: Any): PubNubImpl {
+            return PubNubImpl(kmpPubNub as KMPPubNub)
+        }
+    }
+
     override val configuration: PNConfiguration = createPNConfiguration(
         UserId(pubNubObjC.configObjC().userId()),
         "", // todo
