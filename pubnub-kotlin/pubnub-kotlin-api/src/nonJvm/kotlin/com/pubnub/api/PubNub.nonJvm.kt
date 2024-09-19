@@ -72,7 +72,10 @@ import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.kmp.CustomObject
 import com.pubnub.kmp.Uploadable
+import kotlin.experimental.ExperimentalObjCName
 
+@OptIn(ExperimentalObjCName::class)
+@ObjCName("PubNubInterface")
 actual interface PubNub {
     actual val configuration: PNConfiguration
 
