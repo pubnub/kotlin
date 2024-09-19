@@ -50,7 +50,9 @@ public class RetryConfigurationIntegrationTest extends BaseIntegrationTest {
         int maxRetryNumber = 2;
         List<RetryableEndpointGroup> excludedOperations = new ArrayList<>();
 
-        RetryConfiguration linearRetryConfigurationWithNoParams = new RetryConfiguration.Linear();
+        RetryConfiguration noneRetryConfiguration = RetryConfiguration.None.INSTANCE;
+
+        RetryConfiguration linearRetryConfigurationWithNoParamsa = new RetryConfiguration.Linear();
         RetryConfiguration linearRetryConfigurationWithDelay = new RetryConfiguration.Linear(delayInSec);
         RetryConfiguration linearRetryConfigurationWithDelayAndMaxRetry = new RetryConfiguration.Linear(delayInSec, maxRetryNumber);
         RetryConfiguration linearRetryConfigurationWithAllParams = new RetryConfiguration.Linear(delayInSec, maxRetryNumber, excludedOperations);

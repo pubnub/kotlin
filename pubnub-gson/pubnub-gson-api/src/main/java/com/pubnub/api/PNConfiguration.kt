@@ -587,7 +587,7 @@ class PNConfiguration(userId: UserId) : BasePNConfiguration {
      *
      *  Use [RetryConfiguration.Linear] to set retry with linear delay interval
      *  Use [RetryConfiguration.Exponential] to set retry with exponential delay interval
-     *  Delay will valy from provided value by random value.
+     *  Delay will vary from provided value by random value.
      */
     fun setRetryConfiguration(retryConfiguration: RetryConfiguration): PNConfiguration {
         this.retryConfiguration = retryConfiguration

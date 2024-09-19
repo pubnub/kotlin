@@ -244,7 +244,7 @@ interface PNConfiguration : BasePNConfiguration, PNConfigurationOverride {
          *
          *  Use [RetryConfiguration.Linear] to set retry with linear delay interval
          *  Use [RetryConfiguration.Exponential] to set retry with exponential delay interval
-         *  Delay will valy from provided value by random value.
+         *  Delay will vary from provided value by random value.
          */
         override fun retryConfiguration(retryConfiguration: RetryConfiguration): Builder
 
@@ -286,7 +286,7 @@ interface PNConfigurationOverride : BasePNConfigurationOverride {
          *
          *  Use [RetryConfiguration.Linear] to set retry with linear delay interval
          *  Use [RetryConfiguration.Exponential] to set retry with exponential delay interval
-         *  Delay will valy from provided value by random value.
+         *  Delay will vary from provided value by random value.
          */
         fun retryConfiguration(retryConfiguration: RetryConfiguration): Builder
 
