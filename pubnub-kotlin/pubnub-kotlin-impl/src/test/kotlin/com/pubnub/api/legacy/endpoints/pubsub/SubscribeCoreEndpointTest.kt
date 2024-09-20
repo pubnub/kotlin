@@ -11,6 +11,7 @@ import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.legacy.BaseTest
+import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.internal.endpoints.pubsub.SubscribeEndpoint
 import com.pubnub.internal.models.server.SubscribeMessage
 import com.pubnub.test.CommonUtils.assertPnException
@@ -528,6 +529,7 @@ class SubscribeCoreEndpointTest : BaseTest() {
     @Test
     fun testSuccessIncludeState() {
         config.presenceTimeout = 123
+        config.retryConfiguration = RetryConfiguration.None
 
         stubFor(
             get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch1,ch2/0"))
