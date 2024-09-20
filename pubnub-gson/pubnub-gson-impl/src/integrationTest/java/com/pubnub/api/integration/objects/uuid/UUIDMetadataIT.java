@@ -2,10 +2,10 @@ package com.pubnub.api.integration.objects.uuid;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.integration.objects.ObjectsApiBaseIT;
-import com.pubnub.api.models.consumer.objects_api.uuid.PNGetAllUUIDMetadataResult;
-import com.pubnub.api.models.consumer.objects_api.uuid.PNGetUUIDMetadataResult;
-import com.pubnub.api.models.consumer.objects_api.uuid.PNRemoveUUIDMetadataResult;
-import com.pubnub.api.models.consumer.objects_api.uuid.PNSetUUIDMetadataResult;
+import com.pubnub.api.java.models.consumer.objects_api.uuid.PNGetAllUUIDMetadataResult;
+import com.pubnub.api.java.models.consumer.objects_api.uuid.PNGetUUIDMetadataResult;
+import com.pubnub.api.java.models.consumer.objects_api.uuid.PNRemoveUUIDMetadataResult;
+import com.pubnub.api.java.models.consumer.objects_api.uuid.PNSetUUIDMetadataResult;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.HttpStatus;
 import org.junit.After;
@@ -70,13 +70,13 @@ public class UUIDMetadataIT extends ObjectsApiBaseIT {
         assertEquals(HttpStatus.SC_OK, setUUIDMetadataResult.getStatus());
         createdUUIDMetadataList.add(setUUIDMetadataResult);
         assertEquals(randomTestUUID, setUUIDMetadataResult.getData().getId());
-        assertEquals(randomName, setUUIDMetadataResult.getData().getName());
-        assertEquals(randomEmail, setUUIDMetadataResult.getData().getEmail());
-        assertEquals(randomProfileUrl, setUUIDMetadataResult.getData().getProfileUrl());
-        assertEquals(randomExternalId, setUUIDMetadataResult.getData().getExternalId());
-        assertNotNull(setUUIDMetadataResult.getData().getCustom());
-        assertEquals(statusValue, setUUIDMetadataResult.getData().getStatus());
-        assertEquals(typeValue, setUUIDMetadataResult.getData().getType());
+        assertEquals(randomName, setUUIDMetadataResult.getData().getName().getValue());
+        assertEquals(randomEmail, setUUIDMetadataResult.getData().getEmail().getValue());
+        assertEquals(randomProfileUrl, setUUIDMetadataResult.getData().getProfileUrl().getValue());
+        assertEquals(randomExternalId, setUUIDMetadataResult.getData().getExternalId().getValue());
+        assertNotNull(setUUIDMetadataResult.getData().getCustom().getValue());
+        assertEquals(statusValue, setUUIDMetadataResult.getData().getStatus().getValue());
+        assertEquals(typeValue, setUUIDMetadataResult.getData().getType().getValue());
     }
 
     @Test
@@ -111,8 +111,8 @@ public class UUIDMetadataIT extends ObjectsApiBaseIT {
         assertEquals(setUUIDMetadataResult.getData().getProfileUrl(), getUUIDMetadataResult.getData().getProfileUrl());
         assertEquals(setUUIDMetadataResult.getData().getExternalId(), getUUIDMetadataResult.getData().getExternalId());
         assertNotNull(getUUIDMetadataResult.getData().getCustom());
-        assertEquals(statusValue, getUUIDMetadataResult.getData().getStatus());
-        assertEquals(typeValue, getUUIDMetadataResult.getData().getType());
+        assertEquals(statusValue, getUUIDMetadataResult.getData().getStatus().getValue());
+        assertEquals(typeValue, getUUIDMetadataResult.getData().getType().getValue());
     }
 
     @Test

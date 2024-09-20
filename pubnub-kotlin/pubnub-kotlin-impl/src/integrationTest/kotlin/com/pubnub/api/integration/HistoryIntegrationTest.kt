@@ -176,7 +176,7 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
                                 expectedActionValue to
                                     listOf(
                                         PNFetchMessageItem.Action(
-                                            actionTimetoken = actionResult.actionTimetoken.toString(),
+                                            actionTimetoken = actionResult.actionTimetoken!!,
                                             uuid = pubnub.configuration.userId.value,
                                         ),
                                     ),

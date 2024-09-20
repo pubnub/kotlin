@@ -1,25 +1,17 @@
 package com.pubnub.api.integration;
 
 import com.google.gson.Gson;
-import com.pubnub.api.PNConfiguration;
-import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
-import com.pubnub.api.builder.PubNubErrorBuilder;
-import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
 import com.pubnub.api.integration.util.RandomGenerator;
+import com.pubnub.api.java.PubNub;
+import com.pubnub.api.java.builder.PubNubErrorBuilder;
+import com.pubnub.api.java.callbacks.SubscribeCallback;
 import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.api.models.consumer.PNStatus;
-import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadataResult;
-import com.pubnub.api.models.consumer.objects_api.membership.PNMembershipResult;
-import com.pubnub.api.models.consumer.objects_api.uuid.PNUUIDMetadataResult;
-import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
-import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
-import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult;
-import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
 import org.awaitility.Awaitility;
 import org.awaitility.Durations;
 import org.jetbrains.annotations.NotNull;
@@ -77,16 +69,13 @@ public class SignalIntegrationTests extends BaseIntegrationTest {
         final String expectedChannel = randomChannel();
         final String expectedPayload = RandomGenerator.newValue(5);
 
-        final PubNub observerClient = getPubNub();
+        final com.pubnub.api.java.PubNub observerClient = getPubNub();
 
         observerClient.addListener(new SubscribeCallback() {
-            @Override
-            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
 
-            }
 
             @Override
-            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
+            public void status(@NotNull com.pubnub.api.java.PubNub pubnub, @NotNull PNStatus status) {
                 if (status.getCategory() == PNStatusCategory.PNConnectedCategory) {
                     if (status.getAffectedChannels().contains(expectedChannel)) {
                         pubNub.signal()
@@ -101,41 +90,11 @@ public class SignalIntegrationTests extends BaseIntegrationTest {
             }
 
             @Override
-            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult message) {
-
-            }
-
-            @Override
-            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult presence) {
-
-            }
-
-            @Override
-            public void signal(@NotNull PubNub pubnub, @NotNull PNSignalResult signal) {
+            public void signal(@NotNull com.pubnub.api.java.PubNub pubnub, @NotNull PNSignalResult signal) {
                 assertEquals(pubNub.getConfiguration().getUserId().getValue(), signal.getPublisher());
                 assertEquals(expectedChannel, signal.getChannel());
                 assertEquals(expectedPayload, new Gson().fromJson(signal.getMessage(), String.class));
                 success.set(true);
-            }
-
-            @Override
-            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
-
-            }
-
-            @Override
-            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
-
-            }
-
-            @Override
-            public void membership(@NotNull final PubNub pubnub, @NotNull final PNMembershipResult pnMembershipResult) {
-
-            }
-
-            @Override
-            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnActionResult) {
-
             }
         });
 
@@ -174,11 +133,9 @@ public class SignalIntegrationTests extends BaseIntegrationTest {
     public void testPublishSignalMessageSyncWithoutSubKey() {
         try {
 //            pubNub.getConfiguration().setSubscribeKey(null);
-            PubNub pubNub1 = PubNub.create(new PNConfiguration(new UserId(random())));
+            PubNub pubNub1 = PubNub.create(com.pubnub.api.java.v2.PNConfiguration.builder(new UserId(random()), "").build());
 
-            pubNub1.signal()
-                    .channel(randomChannel())
-                    .message(random())
+            pubNub1.signal(randomChannel(), random())
                     .sync();
         } catch (PubNubException e) {
             assertEquals(PubNubErrorBuilder.PNERROBJ_SUBSCRIBE_KEY_MISSING.getMessage(), e.getPubnubError()

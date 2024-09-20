@@ -14,6 +14,7 @@ import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
+import com.pubnub.api.utils.PatchValue
 import com.pubnub.test.CommonUtils.randomValue
 import com.pubnub.test.subscribeToBlocking
 import org.hamcrest.MatcherAssert.assertThat
@@ -45,14 +46,14 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
                 type = type,
             ).sync()
 
-        val getAllResult = pubnub.getAllChannelMetadata().sync()
+        val getAllResult = pubnub.getAllChannelMetadata(filter = "id == \"$channel\"").sync()
         val getSingleResult = pubnub.getChannelMetadata(channel = channel).sync()
         pubnub.removeChannelMetadata(channel = channel).sync()
 
         assertTrue(getAllResult.data.any { it.id == channel })
         assertEquals(setResult, getSingleResult)
 
-        val getAllAfterRemovalResult = pubnub.getAllChannelMetadata().sync()
+        val getAllAfterRemovalResult = pubnub.getAllChannelMetadata(filter = "id == \"$channel\"").sync()
 
         assertTrue(getAllAfterRemovalResult.data.none { it.id == channel })
     }
@@ -70,17 +71,17 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
                 type = type,
             ).sync()
 
-        assertEquals(status, setResult.data?.status)
-        assertEquals(type, setResult.data?.type)
+        assertEquals(status, setResult.data?.status?.value)
+        assertEquals(type, setResult.data?.type?.value)
 
-        val getAllResult: PNUUIDMetadataArrayResult = pubnub.getAllUUIDMetadata().sync()
+        val getAllResult = pubnub.getAllUUIDMetadata(filter = "id == \"$testUuid\"").sync()
         val getSingleResult = pubnub.getUUIDMetadata(uuid = testUuid).sync()
         pubnub.removeUUIDMetadata(uuid = testUuid).sync()
 
         assertTrue(getAllResult.data.any { it.id == testUuid })
         assertEquals(setResult, getSingleResult)
 
-        val getAllAfterRemovalResult = pubnub.getAllUUIDMetadata().sync()
+        val getAllAfterRemovalResult = pubnub.getAllUUIDMetadata(filter = "id == \"$testUuid\"").sync()
 
         assertTrue(getAllAfterRemovalResult.data.none { it.id == testUuid })
     }
@@ -272,12 +273,12 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
             custom = expectedCustom,
             includeCustom = true,
         ).sync().apply {
-            assertEquals(this.data?.id, expectedUUID)
-            assertEquals(this.data?.name, expectedName)
-            assertEquals(this.data?.email, expectedEmail)
-            assertEquals(this.data?.externalId, expectedExternalId)
-            assertEquals(this.data?.profileUrl, expectedProfileUrl)
-            assertEquals(this.data?.custom, expectedCustom)
+            assertEquals(expectedUUID, this.data?.id)
+            assertEquals(expectedName, this.data?.name?.value)
+            assertEquals(expectedEmail, this.data?.email?.value)
+            assertEquals(expectedExternalId, this.data?.externalId?.value)
+            assertEquals(expectedProfileUrl, this.data?.profileUrl?.value)
+            assertEquals(expectedCustom, this.data?.custom?.value)
         }
     }
 
@@ -301,7 +302,7 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
             PNMember(
                 uuidMetadata(id = otherTestUuid),
                 custom = null,
-                status = status,
+                status = PatchValue.of(status),
                 eTag = noEtag,
                 updated = noUpdated,
             )
@@ -309,7 +310,7 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
             PNMember(
                 uuidMetadata(id = testUuid),
                 custom = null,
-                status = status,
+                status = PatchValue.of(status),
                 eTag = noEtag,
                 updated = noUpdated,
             )
@@ -337,9 +338,9 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
         ).sync()
 
         pubnub.manageMemberships(
-            uuid = testUuid,
             channelsToSet = listOf(PNChannelMembership.Partial(channelId = otherChannel, status = status)),
             channelsToRemove = listOf(),
+            uuid = testUuid,
         ).sync()
 
         val getAllResult =
@@ -349,7 +350,7 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
             PNChannelMembership(
                 channelMetadata(id = channel),
                 custom = null,
-                status = status,
+                status = PatchValue.of(status),
                 eTag = noEtag,
                 updated = noUpdated,
             )
@@ -357,7 +358,7 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
             PNChannelMembership(
                 channelMetadata(id = otherChannel),
                 custom = null,
-                status = status,
+                status = PatchValue.of(status),
                 eTag = noEtag,
                 updated = noUpdated,
             )
@@ -369,9 +370,9 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
 
         val removeResult =
             pubnub.manageMemberships(
-                uuid = testUuid,
                 channelsToSet = listOf(),
                 channelsToRemove = listOf(channel, otherChannel),
+                uuid = testUuid,
             ).sync().data
 
         assertThat(

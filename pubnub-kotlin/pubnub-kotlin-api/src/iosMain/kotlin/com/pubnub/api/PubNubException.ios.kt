@@ -1,0 +1,32 @@
+package com.pubnub.api
+
+/**
+ * Custom exception wrapper for errors occurred during execution or processing of a PubNub API operation.
+ *
+ * @property errorMessage The error message received from the server, if any.
+ * @property pubnubError The appropriate matching PubNub error.
+ * @property jso The error json received from the server, if any.
+ * @property statusCode HTTP status code.
+ * @property affectedCall A reference to the affected call. Useful for calling [retry][Endpoint.retry].
+ */
+actual class PubNubException(
+    actual val statusCode: Int = 0,
+    errorMessage: String?,
+    cause: Throwable?
+) : Exception(errorMessage, cause) {
+    actual constructor(errorMessage: String?, cause: Throwable?) : this(statusCode = 0, errorMessage, cause)
+    actual constructor(pubnubError: PubNubError, cause: Throwable?) : this(statusCode = 0, pubnubError.message, cause)
+
+    // test only
+    actual constructor(errorMessage: String?, statusCode: Int, cause: Throwable?) : this(statusCode, errorMessage, cause)
+
+    actual companion object {
+        actual fun from(e: Throwable): PubNubException {
+            return if (e is PubNubException) {
+                e
+            } else {
+                PubNubException(e.message, e)
+            }
+        }
+    }
+}

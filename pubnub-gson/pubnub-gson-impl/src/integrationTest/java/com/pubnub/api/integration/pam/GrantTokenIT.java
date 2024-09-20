@@ -1,15 +1,15 @@
 package com.pubnub.api.integration.pam;
 
-import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.SpaceId;
 import com.pubnub.api.UserId;
 import com.pubnub.api.enums.PNLogVerbosity;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
-import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions;
-import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions;
-import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant;
-import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant;
+import com.pubnub.api.java.PubNub;
+import com.pubnub.api.java.SpaceId;
+import com.pubnub.api.java.models.consumer.access_manager.sum.SpacePermissions;
+import com.pubnub.api.java.models.consumer.access_manager.sum.UserPermissions;
+import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGrant;
+import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGroupGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult;
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken;
 import org.junit.Test;

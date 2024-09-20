@@ -68,7 +68,7 @@ abstract class BaseIntegrationTest {
 //        return pubNub
 //    }
 
-    private fun createServer(action: PNConfiguration.Builder.() -> Unit = {}): PubNub {
+    protected fun createServer(action: PNConfiguration.Builder.() -> Unit = {}): PubNub {
         val pubNub = PubNub.create(getServerPnConfiguration(action))
         registerGuestClient(pubNub)
         return pubNub

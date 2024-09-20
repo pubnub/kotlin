@@ -134,7 +134,7 @@ public class RandomGenerator {
         emojiSet.add("🙀");
         emojiSet.add("😿");
         emojiSet.add("😾");
-        return emojiSet.get(random.nextInt(emojiSet.size())) + "";
+        return emojiSet.get(random.nextInt(emojiSet.size()));
     }
 
     public static String unicode(int length) {

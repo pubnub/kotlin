@@ -1,15 +1,18 @@
 package com.pubnub.api.integration.objects.memberships;
 
-import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.integration.managers.subscription.SubscribeCallbackAdapter;
 import com.pubnub.api.integration.objects.ObjectsApiBaseIT;
-import com.pubnub.api.models.consumer.objects_api.channel.PNSetChannelMetadataResult;
-import com.pubnub.api.models.consumer.objects_api.membership.PNChannelMembership;
-import com.pubnub.api.models.consumer.objects_api.membership.PNGetMembershipsResult;
-import com.pubnub.api.models.consumer.objects_api.membership.PNMembershipResult;
-import com.pubnub.api.models.consumer.objects_api.membership.PNSetMembershipResult;
+import com.pubnub.api.java.PubNub;
+import com.pubnub.api.java.callbacks.SubscribeCallback;
+import com.pubnub.api.java.models.consumer.objects_api.channel.PNSetChannelMetadataResult;
+import com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership;
+import com.pubnub.api.java.models.consumer.objects_api.membership.PNGetMembershipsResult;
+import com.pubnub.api.java.models.consumer.objects_api.membership.PNMembershipResult;
+import com.pubnub.api.java.models.consumer.objects_api.membership.PNSetMembershipResult;
+import com.pubnub.api.models.consumer.PNStatus;
+import com.pubnub.api.utils.PatchValue;
 import org.awaitility.core.ThrowingRunnable;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,8 +24,8 @@ import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
-import static com.pubnub.api.endpoints.objects_api.utils.Include.PNChannelDetailsLevel.CHANNEL;
-import static com.pubnub.api.endpoints.objects_api.utils.Include.PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM;
+import static com.pubnub.api.java.endpoints.objects_api.utils.Include.PNChannelDetailsLevel.CHANNEL;
+import static com.pubnub.api.java.endpoints.objects_api.utils.Include.PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM;
 import static org.awaitility.Awaitility.await;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
@@ -48,11 +51,16 @@ public class CustomMetadataInMembershipPropagationIT extends ObjectsApiBaseIT {
     private PNSetMembershipResult setMembershipResult;
 
 
-    private CopyOnWriteArrayList<PNMembershipResult> pnMembershipResults = new CopyOnWriteArrayList<>();
+    private final CopyOnWriteArrayList<PNMembershipResult> pnMembershipResults = new CopyOnWriteArrayList<>();
 
     @Before
     public void setCallbackListener() {
-        pubNubUnderTest.addListener(new SubscribeCallbackAdapter() {
+        pubNubUnderTest.addListener(new SubscribeCallback() {
+            @Override
+            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
+
+            }
+
             @Override
             public void membership(final PubNub pubnub, final PNMembershipResult pnMembershipResult) {
                 pnMembershipResults.add(pnMembershipResult);
@@ -99,8 +107,8 @@ public class CustomMetadataInMembershipPropagationIT extends ObjectsApiBaseIT {
                                 hasProperty("channel", allOf(
                                         allOf(
                                                 hasProperty("id", is(testChannelMetadataId)),
-                                                hasProperty("name", is(testChannelName)),
-                                                hasProperty("description", is(testDescription)),
+                                                hasProperty("name", is(PatchValue.of(testChannelName))),
+                                                hasProperty("description", is(PatchValue.of(testDescription))),
                                                 hasProperty("custom", notNullValue()))))))));
         assertThat(getMembershipsResult, hasProperty("data",
                 hasItem(
@@ -109,8 +117,8 @@ public class CustomMetadataInMembershipPropagationIT extends ObjectsApiBaseIT {
                                 hasProperty("channel", allOf(
                                         allOf(
                                                 hasProperty("id", is(testChannelMetadataId)),
-                                                hasProperty("name", is(testChannelName)),
-                                                hasProperty("description", is(testDescription)),
+                                                hasProperty("name", is(PatchValue.of(testChannelName))),
+                                                hasProperty("description", is(PatchValue.of(testDescription))),
                                                 hasProperty("custom", nullValue()))))))));
 
         String userIdValue = pubNubUnderTest.getConfiguration().getUserId().getValue();

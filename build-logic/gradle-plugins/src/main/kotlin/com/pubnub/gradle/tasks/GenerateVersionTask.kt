@@ -13,10 +13,25 @@ import java.io.File
 abstract class GenerateVersionTask : DefaultTask() {
 
     @get:Input
+    abstract val fileName: Property<String>
+
+    @get:Input
+    abstract val packageName: Property<String>
+
+    @get:Input
+    abstract val constName: Property<String>
+
+    @get:Input
     abstract val version: Property<String>
 
     @get:OutputDirectory
     abstract val outputDirectory: DirectoryProperty
+
+    init {
+        fileName.convention("PubNubVersion")
+        packageName.convention("com.pubnub.internal")
+        constName.convention("PUBNUB_VERSION")
+    }
 
     @TaskAction
     fun run() {
@@ -29,10 +44,10 @@ abstract class GenerateVersionTask : DefaultTask() {
             throw IllegalStateException("Version can't be blank. Check gradle.properties VERSION_NAME= property")
         }
 
-        File(outputDir, "PubNubVersion.kt").writeText("""
-            package com.pubnub.internal
+        File(outputDir, "${fileName.get()}.kt").writeText("""
+            package ${packageName.get()}
             
-            internal const val PUBNUB_VERSION = "$versionString"
+            internal const val ${constName.get()} = "$versionString"
 
         """.trimIndent())
     }

@@ -2,10 +2,11 @@ package com.pubnub.api.integration.objects.members;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.integration.objects.ObjectsApiBaseIT;
-import com.pubnub.api.models.consumer.objects_api.member.PNGetChannelMembersResult;
-import com.pubnub.api.models.consumer.objects_api.member.PNSetChannelMembersResult;
-import com.pubnub.api.models.consumer.objects_api.member.PNUUID;
-import com.pubnub.api.models.consumer.objects_api.uuid.PNSetUUIDMetadataResult;
+import com.pubnub.api.java.models.consumer.objects_api.member.PNGetChannelMembersResult;
+import com.pubnub.api.java.models.consumer.objects_api.member.PNSetChannelMembersResult;
+import com.pubnub.api.java.models.consumer.objects_api.member.PNUUID;
+import com.pubnub.api.java.models.consumer.objects_api.uuid.PNSetUUIDMetadataResult;
+import com.pubnub.api.utils.PatchValue;
 import org.junit.After;
 import org.junit.Test;
 
@@ -14,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static com.pubnub.api.endpoints.objects_api.utils.Include.PNUUIDDetailsLevel;
+import static com.pubnub.api.java.endpoints.objects_api.utils.Include.PNUUIDDetailsLevel;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.hasItem;
@@ -84,10 +85,10 @@ public class CustomMetadataInMembersPropagationIT extends ObjectsApiBaseIT {
                                 hasProperty("uuid", allOf(
                                         allOf(
                                                 hasProperty("id", is(testUUID)),
-                                                hasProperty("name", is(testName)),
-                                                hasProperty("email", is(testEmail)),
-                                                hasProperty("externalId", is(testExternalId)),
-                                                hasProperty("profileUrl", is(testProfileUrl)),
+                                                hasProperty("name", is(PatchValue.of(testName))),
+                                                hasProperty("email", is(PatchValue.of(testEmail))),
+                                                hasProperty("externalId", is(PatchValue.of(testExternalId))),
+                                                hasProperty("profileUrl", is(PatchValue.of(testProfileUrl))),
                                                 hasProperty("custom", notNullValue()))))))));
         assertThat(getChannelMembersResult, hasProperty("data",
                 hasItem(
@@ -96,10 +97,10 @@ public class CustomMetadataInMembersPropagationIT extends ObjectsApiBaseIT {
                                 hasProperty("uuid", allOf(
                                         allOf(
                                                 hasProperty("id", is(testUUID)),
-                                                hasProperty("name", is(testName)),
-                                                hasProperty("email", is(testEmail)),
-                                                hasProperty("externalId", is(testExternalId)),
-                                                hasProperty("profileUrl", is(testProfileUrl)),
+                                                hasProperty("name", is(PatchValue.of(testName))),
+                                                hasProperty("email", is(PatchValue.of(testEmail))),
+                                                hasProperty("externalId", is(PatchValue.of(testExternalId))),
+                                                hasProperty("profileUrl", is(PatchValue.of(testProfileUrl))),
                                                 hasProperty("custom", nullValue()))))))));
     }
 

@@ -3,10 +3,6 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
 }
 
-kotlin {
-    jvmToolchain(8)
-}
-
 dependencies {
     compileOnly(gradleKotlinDsl())
     compileOnly(libs.nexus.gradlePlugin)
@@ -29,6 +25,26 @@ gradlePlugin {
         register("pubnubInteg") {
             id = "pubnub.integration-test"
             implementationClass = "com.pubnub.gradle.PubNubIntegrationTestPlugin"
+        }
+        register("pubnubTest") {
+            id = "pubnub.test"
+            implementationClass = "com.pubnub.gradle.PubNubTestPlugin"
+        }
+        register("pubnubJavaLibrary") {
+            id = "pubnub.java-library"
+            implementationClass = "com.pubnub.gradle.PubNubJavaLibraryPlugin"
+        }
+        register("pubnubKotlinLibrary") {
+            id = "pubnub.kotlin-library"
+            implementationClass = "com.pubnub.gradle.PubNubKotlinLibraryPlugin"
+        }
+        register("pubnubIosSimulatorTest") {
+            id = "pubnub.ios-simulator-test"
+            implementationClass = "com.pubnub.gradle.PubNubIosSimulatorTestPlugin"
+        }
+        register("pubnubMultiplatform") {
+            id = "pubnub.multiplatform"
+            implementationClass = "com.pubnub.gradle.PubNubKotlinMultiplatformPlugin"
         }
     }
 }

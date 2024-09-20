@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.vanniktech.maven.publish) apply false
     alias(libs.plugins.dokka)
     alias(libs.plugins.gradle.nexus.publish)
+    alias(libs.plugins.kotlinx.atomicfu) apply false
 }
 
 nexusPublishing {

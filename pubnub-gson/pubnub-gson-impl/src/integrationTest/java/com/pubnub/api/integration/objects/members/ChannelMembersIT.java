@@ -2,14 +2,16 @@ package com.pubnub.api.integration.objects.members;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.integration.objects.ObjectsApiBaseIT;
-import com.pubnub.api.models.consumer.objects_api.member.PNGetChannelMembersResult;
-import com.pubnub.api.models.consumer.objects_api.member.PNManageChannelMembersResult;
-import com.pubnub.api.models.consumer.objects_api.member.PNMembers;
-import com.pubnub.api.models.consumer.objects_api.member.PNRemoveChannelMembersResult;
-import com.pubnub.api.models.consumer.objects_api.member.PNSetChannelMembersResult;
-import com.pubnub.api.models.consumer.objects_api.member.PNUUID;
-import com.pubnub.api.models.consumer.objects_api.uuid.PNUUIDMetadata;
+import com.pubnub.api.java.models.consumer.objects_api.member.PNGetChannelMembersResult;
+import com.pubnub.api.java.models.consumer.objects_api.member.PNManageChannelMembersResult;
+import com.pubnub.api.java.models.consumer.objects_api.member.PNMembers;
+import com.pubnub.api.java.models.consumer.objects_api.member.PNRemoveChannelMembersResult;
+import com.pubnub.api.java.models.consumer.objects_api.member.PNSetChannelMembersResult;
+import com.pubnub.api.java.models.consumer.objects_api.member.PNUUID;
+import com.pubnub.api.java.models.consumer.objects_api.uuid.PNUUIDMetadata;
+import com.pubnub.api.utils.PatchValue;
 import org.apache.http.HttpStatus;
+import org.jetbrains.annotations.Nullable;
 import org.junit.After;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -26,7 +28,7 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static com.pubnub.api.endpoints.objects_api.utils.Include.PNUUIDDetailsLevel.UUID_WITH_CUSTOM;
+import static com.pubnub.api.java.endpoints.objects_api.utils.Include.PNUUIDDetailsLevel.UUID_WITH_CUSTOM;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -87,8 +89,8 @@ public class ChannelMembersIT extends ObjectsApiBaseIT {
 
         final List<Object> receivedCustomObjects = new ArrayList<>();
         for (final PNMembers it : setChannelMembersResult.getData()) {
-            final Object custom = it.getCustom();
-            if (custom != null) {
+            PatchValue<@Nullable Map<String, Object>> custom = it.getCustom();
+            if (custom != null && custom.getValue() != null) {
                 receivedCustomObjects.add(custom);
             }
         }
@@ -96,6 +98,7 @@ public class ChannelMembersIT extends ObjectsApiBaseIT {
         List<String> actualStatusList = setChannelMembersResult.getData()
                 .stream()
                 .map(PNMembers::getStatus)
+                .map(PatchValue::getValue)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
@@ -146,8 +149,8 @@ public class ChannelMembersIT extends ObjectsApiBaseIT {
         }
         final List<Object> receivedCustomObjects = new ArrayList<>();
         for (final PNMembers it : setChannelMembersResult.getData()) {
-            final Object custom = it.getCustom();
-            if (custom != null) {
+            PatchValue<@Nullable Map<String, Object>> custom = it.getCustom();
+            if (custom != null && custom.getValue() != null) {
                 receivedCustomObjects.add(custom);
             }
         }
@@ -155,6 +158,7 @@ public class ChannelMembersIT extends ObjectsApiBaseIT {
         List<String> actualStatusList = setChannelMembersResult.getData()
                 .stream()
                 .map(PNMembers::getStatus)
+                .map(PatchValue::getValue)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 

@@ -1,12 +1,12 @@
 package com.pubnub.api.integration;
 
-import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
 import com.pubnub.api.integration.util.ITTestConfig;
 import com.pubnub.api.integration.util.Utils;
-import com.pubnub.api.v2.PNConfiguration;
-import com.pubnub.api.v2.PNConfigurationOverride;
+import com.pubnub.api.java.PubNub;
+import com.pubnub.api.java.v2.PNConfiguration;
+import com.pubnub.api.java.v2.PNConfigurationOverride;
 import org.aeonbits.owner.ConfigFactory;
 import org.junit.Assert;
 import org.junit.Test;

@@ -1,23 +1,23 @@
 package com.pubnub.api.integration;
 
-import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
+import com.pubnub.api.java.PubNub;
+import com.pubnub.api.java.v2.callbacks.StatusListener;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.retry.RetryConfiguration;
 import com.pubnub.api.retry.RetryableEndpointGroup;
-import com.pubnub.api.v2.callbacks.StatusListener;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.pubnub.api.integration.util.Utils.randomChannel;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertSame;
 
 public class RetryConfigurationIntegrationTest extends BaseIntegrationTest {
     @Test
@@ -33,12 +33,12 @@ public class RetryConfigurationIntegrationTest extends BaseIntegrationTest {
         pubNub.addListener(new StatusListener() {
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus) {
-                assertTrue(pnStatus.getCategory() == PNStatusCategory.PNConnectionError);
+                assertSame(pnStatus.getCategory(), PNStatusCategory.PNConnectionError);
                 success.set(true);
             }
         });
 
-        pubNub.subscribe().channels(Arrays.asList(randomChannel())).execute();
+        pubNub.subscribe().channels(Collections.singletonList(randomChannel())).execute();
         Thread.sleep(10000);
     }
 

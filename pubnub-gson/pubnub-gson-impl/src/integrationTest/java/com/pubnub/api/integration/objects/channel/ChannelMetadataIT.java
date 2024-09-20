@@ -2,11 +2,11 @@ package com.pubnub.api.integration.objects.channel;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.integration.objects.ObjectsApiBaseIT;
-import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadata;
-import com.pubnub.api.models.consumer.objects_api.channel.PNGetAllChannelsMetadataResult;
-import com.pubnub.api.models.consumer.objects_api.channel.PNGetChannelMetadataResult;
-import com.pubnub.api.models.consumer.objects_api.channel.PNRemoveChannelMetadataResult;
-import com.pubnub.api.models.consumer.objects_api.channel.PNSetChannelMetadataResult;
+import com.pubnub.api.java.models.consumer.objects_api.channel.PNChannelMetadata;
+import com.pubnub.api.java.models.consumer.objects_api.channel.PNGetAllChannelsMetadataResult;
+import com.pubnub.api.java.models.consumer.objects_api.channel.PNGetChannelMetadataResult;
+import com.pubnub.api.java.models.consumer.objects_api.channel.PNRemoveChannelMetadataResult;
+import com.pubnub.api.java.models.consumer.objects_api.channel.PNSetChannelMetadataResult;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.HttpStatus;
 import org.jetbrains.annotations.NotNull;
@@ -67,11 +67,11 @@ public class ChannelMetadataIT extends ObjectsApiBaseIT {
         assertEquals(HttpStatus.SC_OK, setChannelMetadataResult.getStatus());
         createdChannelMetadataList.add(setChannelMetadataResult);
         assertEquals(randomChannelMetadataId, setChannelMetadataResult.getData().getId());
-        assertEquals(setChannelMetadataResult.getData().getDescription(),
-                setChannelMetadataResult.getData().getDescription());
-        assertNotNull(setChannelMetadataResult.getData().getCustom());
-        assertEquals(statusValue, setChannelMetadataResult.getData().getStatus());
-        assertEquals(typeValue, setChannelMetadataResult.getData().getType());
+        assertEquals(randomDescription,
+                setChannelMetadataResult.getData().getDescription().getValue());
+        assertNotNull(setChannelMetadataResult.getData().getCustom().getValue());
+        assertEquals(statusValue, setChannelMetadataResult.getData().getStatus().getValue());
+        assertEquals(typeValue, setChannelMetadataResult.getData().getType().getValue());
     }
 
     @Test
@@ -102,10 +102,10 @@ public class ChannelMetadataIT extends ObjectsApiBaseIT {
         assertEquals(setChannelMetadataResult.getData().getDescription(),
                 getChannelMetadataResult.getData().getDescription());
         assertNotNull(setChannelMetadataResult.getData().getCustom());
-        assertEquals(statusValue, setChannelMetadataResult.getData().getStatus());
-        assertEquals(typeValue, setChannelMetadataResult.getData().getType());
-        assertEquals(statusValue, getChannelMetadataResult.getData().getStatus());
-        assertEquals(typeValue, getChannelMetadataResult.getData().getType());
+        assertEquals(statusValue, setChannelMetadataResult.getData().getStatus().getValue());
+        assertEquals(typeValue, setChannelMetadataResult.getData().getType().getValue());
+        assertEquals(statusValue, getChannelMetadataResult.getData().getStatus().getValue());
+        assertEquals(typeValue, getChannelMetadataResult.getData().getType().getValue());
     }
 
     @Test

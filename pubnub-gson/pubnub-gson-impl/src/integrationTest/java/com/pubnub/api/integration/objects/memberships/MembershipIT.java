@@ -2,12 +2,13 @@ package com.pubnub.api.integration.objects.memberships;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.integration.objects.ObjectsApiBaseIT;
-import com.pubnub.api.models.consumer.objects_api.membership.PNChannelMembership;
-import com.pubnub.api.models.consumer.objects_api.membership.PNGetMembershipsResult;
-import com.pubnub.api.models.consumer.objects_api.membership.PNManageMembershipResult;
-import com.pubnub.api.models.consumer.objects_api.membership.PNMembership;
-import com.pubnub.api.models.consumer.objects_api.membership.PNRemoveMembershipResult;
-import com.pubnub.api.models.consumer.objects_api.membership.PNSetMembershipResult;
+import com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership;
+import com.pubnub.api.java.models.consumer.objects_api.membership.PNGetMembershipsResult;
+import com.pubnub.api.java.models.consumer.objects_api.membership.PNManageMembershipResult;
+import com.pubnub.api.java.models.consumer.objects_api.membership.PNMembership;
+import com.pubnub.api.java.models.consumer.objects_api.membership.PNRemoveMembershipResult;
+import com.pubnub.api.java.models.consumer.objects_api.membership.PNSetMembershipResult;
+import com.pubnub.api.utils.PatchValue;
 import org.apache.http.HttpStatus;
 import org.junit.After;
 import org.junit.Test;
@@ -22,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static com.pubnub.api.endpoints.objects_api.utils.Include.PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM;
+import static com.pubnub.api.java.endpoints.objects_api.utils.Include.PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.hasItem;
@@ -30,7 +31,6 @@ import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
 
 public class MembershipIT extends ObjectsApiBaseIT {
     private static final Logger LOG = LoggerFactory.getLogger(MembershipIT.class);
@@ -70,7 +70,7 @@ public class MembershipIT extends ObjectsApiBaseIT {
                                 allOf(
                                         hasProperty(CHANNEL,
                                                 hasProperty("id", is(testChannelId1))),
-                                        hasProperty("custom", nullValue())))),
+                                        hasProperty("custom", is(PatchValue.of(null)))))),
                 hasProperty("data",
                         hasItem(
                                 allOf(

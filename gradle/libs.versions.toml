@@ -4,11 +4,13 @@ cucumber = "6.10.4"
 logback = "1.2.11"
 okhttp = "4.12.0"
 retrofit2 = "2.9.0"
-nexus = "2.0.0-rc-2"
-kotlin = "1.8.22"
-vanniktech = "0.22.0"
+nexus = "2.0.0"
+kotlin = "2.0.20"
+vanniktech = "0.29.0"
 ktlint = "12.1.0"
-dokka = "1.8.20"
+dokka = "1.9.20"
+kotlinx_datetime = "0.6.0"
+kotlinx_coroutines = "1.8.1"
 
 [libraries]
 retrofit2 = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit2" }
@@ -20,6 +22,7 @@ gson = { module = "com.google.code.gson:gson", version = "2.10.1" }
 slf4j = { module = "org.slf4j:slf4j-api", version = "1.7.36" }
 cbor = { module = "co.nstant.in:cbor", version = "0.9" }
 jetbrains-annotations = { module = "org.jetbrains:annotations", version = "24.1.0" }
+kotlinx-atomicfu = { module = "org.jetbrains.kotlinx:atomicfu", version = "0.24.0" }
 
 # tests
 wiremock = { module = "com.github.tomakehurst:wiremock", version = "2.27.2" }
@@ -37,6 +40,8 @@ mockk = { module = "io.mockk:mockk", version = "1.11.0" }
 owner = { module = "org.aeonbits.owner:owner", version = "1.0.12" }
 mockito = { module = "org.mockito:mockito-core", version = "4.8.1" }
 hamcrest = { module = "org.hamcrest:hamcrest-all", version = "1.3" }
+datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx_datetime"}
+coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx_coroutines"}
 
 # plugins for included build
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
@@ -47,6 +52,7 @@ dokka-gradlePlugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", versi
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlinx-atomicfu = { id = "org.jetbrains.kotlin.plugin.atomicfu", version.ref = "kotlin" }
 # shadow = { id = "com.github.johnrengelman.shadow", version = "7.1.2" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint"  }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
@@ -54,3 +60,4 @@ benmanes-versions = { id = "com.github.ben-manes.versions", version = "0.42.0" }
 vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "vanniktech" }
 lombok = { id = "io.freefair.lombok", version = "8.6" }
 gradle-nexus-publish = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "nexus" }
+codingfeline-buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.15.1" }
