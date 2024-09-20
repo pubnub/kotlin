@@ -18,7 +18,6 @@ import com.pubnub.api.models.consumer.pubsub.objects.PNSetChannelMetadataEventMe
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetMembershipEvent;
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetMembershipEventMessage;
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetUUIDMetadataEventMessage;
-import com.pubnub.api.utils.PatchValue;
 import org.jetbrains.annotations.NotNull;
 
 class Converters {
