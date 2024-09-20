@@ -59,7 +59,7 @@ public class PNUUIDMetadata extends PNObject {
                 .setExternalId(data.getExternalId())
                 .setStatus(data.getStatus())
                 .setType(data.getType())
-                .setCustom(data.getCustom() != null ? PatchValue.of(data.getCustom().getValue()) : null);
+                .setCustom(data.getCustom());
 
         newData.setETag(data.getETag());
         newData.setUpdated(data.getUpdated());
