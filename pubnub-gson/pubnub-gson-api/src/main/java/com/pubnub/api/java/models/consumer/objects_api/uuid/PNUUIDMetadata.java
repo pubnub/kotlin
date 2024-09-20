@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -34,7 +35,7 @@ public class PNUUIDMetadata extends PNObject {
     }
 
     @Override
-    public PNUUIDMetadata setCustom(PatchValue<@Nullable Object> custom) {
+    public PNUUIDMetadata setCustom(PatchValue<@Nullable Map<String, Object>> custom) {
         super.setCustom(custom);
         return this;
     }

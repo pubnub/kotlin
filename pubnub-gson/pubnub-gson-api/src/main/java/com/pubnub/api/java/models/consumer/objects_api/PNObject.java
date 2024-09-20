@@ -8,6 +8,8 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
+
 @Getter
 @Accessors(chain = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -18,7 +20,7 @@ public class PNObject {
     protected String id;
 
     @Setter
-    protected PatchValue<@Nullable Object> custom;
+    protected PatchValue<@Nullable Map<String, Object>> custom;
 
     @Setter
     protected PatchValue<@Nullable String> updated;

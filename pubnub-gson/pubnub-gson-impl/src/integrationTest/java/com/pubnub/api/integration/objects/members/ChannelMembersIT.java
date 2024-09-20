@@ -11,6 +11,7 @@ import com.pubnub.api.java.models.consumer.objects_api.member.PNUUID;
 import com.pubnub.api.java.models.consumer.objects_api.uuid.PNUUIDMetadata;
 import com.pubnub.api.utils.PatchValue;
 import org.apache.http.HttpStatus;
+import org.jetbrains.annotations.Nullable;
 import org.junit.After;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -88,7 +89,7 @@ public class ChannelMembersIT extends ObjectsApiBaseIT {
 
         final List<Object> receivedCustomObjects = new ArrayList<>();
         for (final PNMembers it : setChannelMembersResult.getData()) {
-            PatchValue<Object> custom = it.getCustom();
+            PatchValue<@Nullable Map<String, Object>> custom = it.getCustom();
             if (custom != null && custom.getValue() != null) {
                 receivedCustomObjects.add(custom);
             }
@@ -148,7 +149,7 @@ public class ChannelMembersIT extends ObjectsApiBaseIT {
         }
         final List<Object> receivedCustomObjects = new ArrayList<>();
         for (final PNMembers it : setChannelMembersResult.getData()) {
-            PatchValue<Object> custom = it.getCustom();
+            PatchValue<@Nullable Map<String, Object>> custom = it.getCustom();
             if (custom != null && custom.getValue() != null) {
                 receivedCustomObjects.add(custom);
             }

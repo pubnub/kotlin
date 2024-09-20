@@ -151,8 +151,8 @@ class Converters {
                 new PNChannelMetadata(data.getChannel(), null)
         );
         membership.setUuid(data.getUuid());
-        membership.setCustom(data.getCustom() != null ? PatchValue.of(data.getCustom().getValue()) : null);
-        membership.setStatus(data.getStatus() != null ? PatchValue.of(data.getStatus().getValue()) : null);
+        membership.setCustom(data.getCustom());
+        membership.setStatus(data.getStatus());
         membership.setUpdated(data.getUpdated());
         membership.setETag(data.getETag());
         return new PNMembershipResult(

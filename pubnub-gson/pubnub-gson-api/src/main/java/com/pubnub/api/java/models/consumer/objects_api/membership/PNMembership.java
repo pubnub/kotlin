@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @Accessors(chain = true)
@@ -21,7 +22,7 @@ public class PNMembership {
     }
     @NonNull
     private PNChannelMetadata channel;
-    private PatchValue<@Nullable Object> custom;
+    private PatchValue<@Nullable Map<String, Object>> custom;
     private String uuid;
     private String updated;
     private String eTag;
@@ -42,7 +43,7 @@ public class PNMembership {
         }
         PNChannelMetadata metadata = PNChannelMetadata.from(data.getChannel());
         PNMembership newData = new PNMembership(metadata);
-        newData.setCustom(data.getCustom() != null ? PatchValue.of(data.getCustom().getValue()) : null);
+        newData.setCustom(data.getCustom());
 //        newData.setUuid(data.get) //TODO where to get this? does it even exist in server responses?
         newData.setUpdated(data.getUpdated());
         newData.setETag(data.getETag());

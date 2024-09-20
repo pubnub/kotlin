@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -36,7 +37,7 @@ public class PNChannelMetadata extends PNObject {
     }
 
     @Override
-    public PNChannelMetadata setCustom(PatchValue<@Nullable Object> custom) {
+    public PNChannelMetadata setCustom(PatchValue<@Nullable Map<String, Object>> custom) {
         super.setCustom(custom);
         return this;
     }
@@ -51,7 +52,7 @@ public class PNChannelMetadata extends PNObject {
         newData.setETag(data.getETag());
         newData.setType(data.getType());
         newData.setStatus(data.getStatus());
-        newData.setCustom(data.getCustom() != null ? PatchValue.of(data.getCustom().getValue()) : null);
+        newData.setCustom(data.getCustom());
         newData.setUpdated(data.getUpdated());
         return newData;
     }
