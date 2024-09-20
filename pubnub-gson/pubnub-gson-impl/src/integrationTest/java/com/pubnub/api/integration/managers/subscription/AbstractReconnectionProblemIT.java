@@ -203,6 +203,7 @@ public abstract class AbstractReconnectionProblemIT {
         return com.pubnub.api.java.PubNub.create(pnConfiguration.build());
     }
 
+    @Ignore("This test should be fixed")// To SubscribeEffectInvocation.EmitStatus in is SubscribeEvent.HandshakeFailure add affectedChannels and affectedChannelGroups
     @Test
     @Ignore
     public void alwaysContinueSubscriptionToChannelGroupIfNoActionTaken() throws PubNubException, InterruptedException {
@@ -224,6 +225,7 @@ public abstract class AbstractReconnectionProblemIT {
     }
 
 
+    @Ignore("This test should be fixed")// 1. To SubscribeEffectInvocation.EmitStatus in is SubscribeEvent.HandshakeFailure add affectedChannels and affectedChannelGroups
     @Test
     @Ignore
     public void alwaysContinueSubscriptionIfNoActionTaken() throws InterruptedException {
@@ -239,7 +241,7 @@ public abstract class AbstractReconnectionProblemIT {
                                 && collectedStatus.getPnStatus().getException().getAffectedChannels().contains(channel))
                 .count();
 
-        assertThat(countAccessDenied, greaterThan(1L));
+        assertThat(countAccessDenied, greaterThan(1L)); //Change this condition to equalTo(1L)
     }
 
     @Test

@@ -4,6 +4,7 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.objects.PNMembershipKey
+import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.objects.member.PNMember
@@ -11,6 +12,7 @@ import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
+import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.utils.PatchValue
 import com.pubnub.test.CommonUtils.randomValue
@@ -58,6 +60,9 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun setGetAndRemoveUUIDMetadata() {
+        // maintenance task: remove all UserMetadata
+        // removeAllUserMetadataWithPaging() // this is not finished yet
+
         val setResult =
             pubnub.setUUIDMetadata(
                 uuid = testUuid,
@@ -402,5 +407,20 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
             type = null,
             status = null,
         )
+    }
+
+    fun removeAllUserMetadataWithPaging() { // should be fixed
+        var hasMore = true
+        var page: PNPage? = null
+        while (hasMore) {
+            println("-=page")
+            val allMetadataPage: PNUUIDMetadataArrayResult = pubnub.getAllUUIDMetadata(page = page).sync()
+
+            allMetadataPage.data.forEach { pnUUIDMetadata: PNUUIDMetadata ->
+                pubnub.removeUUIDMetadata(uuid = pnUUIDMetadata.id).sync()
+            }
+            page = allMetadataPage.next
+            hasMore = page != null
+        }
     }
 }

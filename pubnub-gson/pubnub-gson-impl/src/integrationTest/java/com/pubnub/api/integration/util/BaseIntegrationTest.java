@@ -10,6 +10,7 @@ import com.pubnub.api.java.PubNub;
 import com.pubnub.api.java.callbacks.SubscribeCallback;
 import com.pubnub.api.java.v2.PNConfiguration;
 import com.pubnub.api.models.consumer.PNStatus;
+import com.pubnub.api.retry.RetryConfiguration;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.aeonbits.owner.ConfigFactory;
 import org.awaitility.Awaitility;
@@ -146,6 +147,7 @@ public abstract class BaseIntegrationTest {
         } catch (PubNubException e) {
             throw new RuntimeException(e);
         }
+        pnConfiguration.retryConfiguration(RetryConfiguration.None.INSTANCE);
         pnConfiguration.logVerbosity(PNLogVerbosity.NONE);
         pnConfiguration.httpLoggingInterceptor(createInterceptor());
         if (action != null) {

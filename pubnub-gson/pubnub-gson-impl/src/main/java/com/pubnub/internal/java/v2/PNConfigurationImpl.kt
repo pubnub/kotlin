@@ -7,6 +7,7 @@ import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.java.v2.PNConfiguration
 import com.pubnub.api.java.v2.PNConfigurationOverride
 import com.pubnub.api.retry.RetryConfiguration
+import com.pubnub.api.retry.RetryableEndpointGroup
 import okhttp3.Authenticator
 import okhttp3.CertificatePinner
 import okhttp3.ConnectionSpec
@@ -55,7 +56,19 @@ class PNConfigurationImpl(
     override val dedupOnSubscribe: Boolean = false,
     override val maximumMessagesCacheSize: Int = DEFAULT_DEDUPE_SIZE,
     override val pnsdkSuffixes: Map<String, String> = emptyMap(),
-    override val retryConfiguration: RetryConfiguration = RetryConfiguration.None,
+    override val retryConfiguration: RetryConfiguration = RetryConfiguration.Exponential(
+        excludedOperations = listOf(
+            RetryableEndpointGroup.PUBLISH,
+            RetryableEndpointGroup.PRESENCE,
+            RetryableEndpointGroup.FILE_PERSISTENCE,
+            RetryableEndpointGroup.MESSAGE_PERSISTENCE,
+            RetryableEndpointGroup.CHANNEL_GROUP,
+            RetryableEndpointGroup.PUSH_NOTIFICATION,
+            RetryableEndpointGroup.APP_CONTEXT,
+            RetryableEndpointGroup.MESSAGE_REACTION,
+            RetryableEndpointGroup.ACCESS_MANAGER,
+        )
+    ),
     override val managePresenceListManually: Boolean = false,
 ) : PNConfiguration {
     companion object {
