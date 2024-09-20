@@ -279,11 +279,11 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
 
         /**
          * Retry configuration for requests.
-         *  Defaults to [RetryConfiguration.None].
+         *  Defaults to [RetryConfiguration.Exponential] enabled only for subscription endpoint (other endpoints are excluded).
          *
          *  Use [RetryConfiguration.Linear] to set retry with linear delay interval
          *  Use [RetryConfiguration.Exponential] to set retry with exponential delay interval
-         *  Delay will valy from provided value by random value.
+         *  Delay will vary from provided value by random value.
          */
         val retryConfiguration: RetryConfiguration
 
@@ -507,11 +507,11 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
 
         /**
          * Retry configuration for requests.
-         *  Defaults to [RetryConfiguration.None].
+         *  Defaults to [RetryConfiguration.Exponential] enabled only for subscription endpoint (other endpoints are excluded).
          *
          *  Use [RetryConfiguration.Linear] to set retry with linear delay interval
          *  Use [RetryConfiguration.Exponential] to set retry with exponential delay interval
-         *  Delay will valy from provided value by random value.
+         *  Delay will vary from provided value by random value.
          */
         override fun retryConfiguration(retryConfiguration: RetryConfiguration): Builder
 
@@ -549,11 +549,11 @@ interface PNConfigurationOverride : com.pubnub.api.v2.PNConfigurationOverride {
 
         /**
          * Retry configuration for requests.
-         *  Defaults to [RetryConfiguration.None].
+         *  Defaults to [RetryConfiguration.Exponential] enabled only for subscription endpoint (other endpoints are excluded).
          *
          *  Use [RetryConfiguration.Linear] to set retry with linear delay interval
          *  Use [RetryConfiguration.Exponential] to set retry with exponential delay interval
-         *  Delay will valy from provided value by random value.
+         *  Delay will vary from provided value by random value.
          */
         fun retryConfiguration(retryConfiguration: RetryConfiguration): Builder
 

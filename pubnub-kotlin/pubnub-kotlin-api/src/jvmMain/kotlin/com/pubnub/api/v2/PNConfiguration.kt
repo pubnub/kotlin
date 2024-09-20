@@ -258,11 +258,11 @@ actual interface PNConfiguration {
 
     /**
      * Retry configuration for requests.
-     *  Defaults to [RetryConfiguration.None].
+     *  Defaults to [RetryConfiguration.Exponential] enabled only for subscription endpoint (other endpoints are excluded).
      *
      *  Use [RetryConfiguration.Linear] to set retry with linear delay interval
      *  Use [RetryConfiguration.Exponential] to set retry with exponential delay interval
-     *  Delay will valy from provided value by random value.
+     *  Delay will vary from provided value by random value.
      */
     val retryConfiguration: RetryConfiguration
 
@@ -554,7 +554,7 @@ actual interface PNConfiguration {
 
         /**
          * Retry configuration for requests.
-         *  Defaults to [RetryConfiguration.None].
+         *  Defaults to [RetryConfiguration.Exponential] enabled only for subscription endpoint (other endpoints are excluded).
          *
          *  Use [RetryConfiguration.Linear] to set retry with linear delay intervar
          *  Use [RetryConfiguration.Exponential] to set retry with exponential delay interval
@@ -609,11 +609,11 @@ interface PNConfigurationOverride {
 
         /**
          * Retry configuration for requests.
-         *  Defaults to [RetryConfiguration.None].
+         *  Defaults to [RetryConfiguration.Exponential] enabled only for subscription endpoint (other endpoints are excluded).
          *
          *  Use [RetryConfiguration.Linear] to set retry with linear delay interval
          *  Use [RetryConfiguration.Exponential] to set retry with exponential delay interval
-         *  Delay will valy from provided value by random value.
+         *  Delay will vary from provided value by random value.
          */
         var retryConfiguration: RetryConfiguration
 
