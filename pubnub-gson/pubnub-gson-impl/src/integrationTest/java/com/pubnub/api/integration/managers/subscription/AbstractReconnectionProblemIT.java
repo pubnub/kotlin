@@ -205,7 +205,6 @@ public abstract class AbstractReconnectionProblemIT {
 
     @Ignore("This test should be fixed")// To SubscribeEffectInvocation.EmitStatus in is SubscribeEvent.HandshakeFailure add affectedChannels and affectedChannelGroups
     @Test
-    @Ignore
     public void alwaysContinueSubscriptionToChannelGroupIfNoActionTaken() throws PubNubException, InterruptedException {
         final String channelGroup = "chg-1-" + randomId();
 
@@ -227,7 +226,6 @@ public abstract class AbstractReconnectionProblemIT {
 
     @Ignore("This test should be fixed")// 1. To SubscribeEffectInvocation.EmitStatus in is SubscribeEvent.HandshakeFailure add affectedChannels and affectedChannelGroups
     @Test
-    @Ignore
     public void alwaysContinueSubscriptionIfNoActionTaken() throws InterruptedException {
         final String channel = "ch-" + randomId();
 
