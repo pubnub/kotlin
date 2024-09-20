@@ -1,6 +1,7 @@
 package com.pubnub.api.java.models.consumer.objects_api.uuid;
 
 import com.pubnub.api.java.models.consumer.objects_api.PNObject;
+import com.pubnub.api.utils.PatchValue;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -20,20 +22,20 @@ import java.util.List;
 @ToString(callSuper = true)
 @NoArgsConstructor
 public class PNUUIDMetadata extends PNObject {
-    private String name;
-    private String email;
-    private String externalId;
-    private String profileUrl;
-    private String type;
-    private String status;
+    private PatchValue<@Nullable String> name;
+    private PatchValue<@Nullable String> email;
+    private PatchValue<@Nullable String> externalId;
+    private PatchValue<@Nullable String> profileUrl;
+    private PatchValue<@Nullable String> type;
+    private PatchValue<@Nullable String> status;
 
-    public PNUUIDMetadata(String id, String name) {
+    public PNUUIDMetadata(String id, PatchValue<@Nullable String> name) {
         super(id);
         this.name = name;
     }
 
     @Override
-    public PNUUIDMetadata setCustom(Object custom) {
+    public PNUUIDMetadata setCustom(PatchValue<@Nullable Map<String, Object>> custom) {
         super.setCustom(custom);
         return this;
     }
@@ -51,16 +53,16 @@ public class PNUUIDMetadata extends PNObject {
         if (data == null) {
             return null;
         }
-        PNUUIDMetadata newData = new PNUUIDMetadata(data.getId(), data.getName() != null ? data.getName().getValue() : null)
-                .setProfileUrl(data.getProfileUrl() != null ? data.getProfileUrl().getValue() : null)
-                .setEmail(data.getEmail() != null ? data.getEmail().getValue() : null)
-                .setExternalId(data.getExternalId() != null ? data.getExternalId().getValue() : null)
-                .setStatus(data.getStatus() != null ? data.getStatus().getValue() : null)
-                .setType(data.getType() != null ? data.getType().getValue() : null)
-                .setCustom(data.getCustom() != null ? data.getCustom().getValue() : null);
+        PNUUIDMetadata newData = new PNUUIDMetadata(data.getId(), data.getName())
+                .setProfileUrl(data.getProfileUrl())
+                .setEmail(data.getEmail())
+                .setExternalId(data.getExternalId())
+                .setStatus(data.getStatus())
+                .setType(data.getType())
+                .setCustom(data.getCustom());
 
-        newData.setETag(data.getETag() != null ? data.getETag().getValue() : null);
-        newData.setUpdated(data.getUpdated() != null ? data.getUpdated().getValue() : null);
+        newData.setETag(data.getETag());
+        newData.setUpdated(data.getUpdated());
         return newData;
     }
 }

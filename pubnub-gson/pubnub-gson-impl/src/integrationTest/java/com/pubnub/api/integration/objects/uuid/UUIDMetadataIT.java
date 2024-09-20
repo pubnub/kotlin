@@ -70,13 +70,13 @@ public class UUIDMetadataIT extends ObjectsApiBaseIT {
         assertEquals(HttpStatus.SC_OK, setUUIDMetadataResult.getStatus());
         createdUUIDMetadataList.add(setUUIDMetadataResult);
         assertEquals(randomTestUUID, setUUIDMetadataResult.getData().getId());
-        assertEquals(randomName, setUUIDMetadataResult.getData().getName());
-        assertEquals(randomEmail, setUUIDMetadataResult.getData().getEmail());
-        assertEquals(randomProfileUrl, setUUIDMetadataResult.getData().getProfileUrl());
-        assertEquals(randomExternalId, setUUIDMetadataResult.getData().getExternalId());
-        assertNotNull(setUUIDMetadataResult.getData().getCustom());
-        assertEquals(statusValue, setUUIDMetadataResult.getData().getStatus());
-        assertEquals(typeValue, setUUIDMetadataResult.getData().getType());
+        assertEquals(randomName, setUUIDMetadataResult.getData().getName().getValue());
+        assertEquals(randomEmail, setUUIDMetadataResult.getData().getEmail().getValue());
+        assertEquals(randomProfileUrl, setUUIDMetadataResult.getData().getProfileUrl().getValue());
+        assertEquals(randomExternalId, setUUIDMetadataResult.getData().getExternalId().getValue());
+        assertNotNull(setUUIDMetadataResult.getData().getCustom().getValue());
+        assertEquals(statusValue, setUUIDMetadataResult.getData().getStatus().getValue());
+        assertEquals(typeValue, setUUIDMetadataResult.getData().getType().getValue());
     }
 
     @Test
@@ -111,8 +111,8 @@ public class UUIDMetadataIT extends ObjectsApiBaseIT {
         assertEquals(setUUIDMetadataResult.getData().getProfileUrl(), getUUIDMetadataResult.getData().getProfileUrl());
         assertEquals(setUUIDMetadataResult.getData().getExternalId(), getUUIDMetadataResult.getData().getExternalId());
         assertNotNull(getUUIDMetadataResult.getData().getCustom());
-        assertEquals(statusValue, getUUIDMetadataResult.getData().getStatus());
-        assertEquals(typeValue, getUUIDMetadataResult.getData().getType());
+        assertEquals(statusValue, getUUIDMetadataResult.getData().getStatus().getValue());
+        assertEquals(typeValue, getUUIDMetadataResult.getData().getType().getValue());
     }
 
     @Test

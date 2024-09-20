@@ -67,11 +67,11 @@ public class ChannelMetadataIT extends ObjectsApiBaseIT {
         assertEquals(HttpStatus.SC_OK, setChannelMetadataResult.getStatus());
         createdChannelMetadataList.add(setChannelMetadataResult);
         assertEquals(randomChannelMetadataId, setChannelMetadataResult.getData().getId());
-        assertEquals(setChannelMetadataResult.getData().getDescription(),
-                setChannelMetadataResult.getData().getDescription());
-        assertNotNull(setChannelMetadataResult.getData().getCustom());
-        assertEquals(statusValue, setChannelMetadataResult.getData().getStatus());
-        assertEquals(typeValue, setChannelMetadataResult.getData().getType());
+        assertEquals(randomDescription,
+                setChannelMetadataResult.getData().getDescription().getValue());
+        assertNotNull(setChannelMetadataResult.getData().getCustom().getValue());
+        assertEquals(statusValue, setChannelMetadataResult.getData().getStatus().getValue());
+        assertEquals(typeValue, setChannelMetadataResult.getData().getType().getValue());
     }
 
     @Test
@@ -102,10 +102,10 @@ public class ChannelMetadataIT extends ObjectsApiBaseIT {
         assertEquals(setChannelMetadataResult.getData().getDescription(),
                 getChannelMetadataResult.getData().getDescription());
         assertNotNull(setChannelMetadataResult.getData().getCustom());
-        assertEquals(statusValue, setChannelMetadataResult.getData().getStatus());
-        assertEquals(typeValue, setChannelMetadataResult.getData().getType());
-        assertEquals(statusValue, getChannelMetadataResult.getData().getStatus());
-        assertEquals(typeValue, getChannelMetadataResult.getData().getType());
+        assertEquals(statusValue, setChannelMetadataResult.getData().getStatus().getValue());
+        assertEquals(typeValue, setChannelMetadataResult.getData().getType().getValue());
+        assertEquals(statusValue, getChannelMetadataResult.getData().getStatus().getValue());
+        assertEquals(typeValue, getChannelMetadataResult.getData().getType().getValue());
     }
 
     @Test

@@ -6,6 +6,7 @@ import com.pubnub.api.java.models.consumer.objects_api.member.PNGetChannelMember
 import com.pubnub.api.java.models.consumer.objects_api.member.PNSetChannelMembersResult;
 import com.pubnub.api.java.models.consumer.objects_api.member.PNUUID;
 import com.pubnub.api.java.models.consumer.objects_api.uuid.PNSetUUIDMetadataResult;
+import com.pubnub.api.utils.PatchValue;
 import org.junit.After;
 import org.junit.Test;
 
@@ -84,10 +85,10 @@ public class CustomMetadataInMembersPropagationIT extends ObjectsApiBaseIT {
                                 hasProperty("uuid", allOf(
                                         allOf(
                                                 hasProperty("id", is(testUUID)),
-                                                hasProperty("name", is(testName)),
-                                                hasProperty("email", is(testEmail)),
-                                                hasProperty("externalId", is(testExternalId)),
-                                                hasProperty("profileUrl", is(testProfileUrl)),
+                                                hasProperty("name", is(PatchValue.of(testName))),
+                                                hasProperty("email", is(PatchValue.of(testEmail))),
+                                                hasProperty("externalId", is(PatchValue.of(testExternalId))),
+                                                hasProperty("profileUrl", is(PatchValue.of(testProfileUrl))),
                                                 hasProperty("custom", notNullValue()))))))));
         assertThat(getChannelMembersResult, hasProperty("data",
                 hasItem(
@@ -96,10 +97,10 @@ public class CustomMetadataInMembersPropagationIT extends ObjectsApiBaseIT {
                                 hasProperty("uuid", allOf(
                                         allOf(
                                                 hasProperty("id", is(testUUID)),
-                                                hasProperty("name", is(testName)),
-                                                hasProperty("email", is(testEmail)),
-                                                hasProperty("externalId", is(testExternalId)),
-                                                hasProperty("profileUrl", is(testProfileUrl)),
+                                                hasProperty("name", is(PatchValue.of(testName))),
+                                                hasProperty("email", is(PatchValue.of(testEmail))),
+                                                hasProperty("externalId", is(PatchValue.of(testExternalId))),
+                                                hasProperty("profileUrl", is(PatchValue.of(testProfileUrl))),
                                                 hasProperty("custom", nullValue()))))))));
     }
 
