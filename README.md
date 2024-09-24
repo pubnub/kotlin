@@ -20,13 +20,13 @@ You will need the publish and subscribe keys to authenticate your app. Get your 
      <dependency>
         <groupId>com.pubnub</groupId>
         <artifactId>pubnub-kotlin</artifactId>
-        <version>9.2.4</version>
+        <version>10.0.0</version>
      </dependency>
      ```
 
    * for Gradle, add the following dependency in your `gradle.build`:
      ```groovy
-     implementation 'com.pubnub:pubnub-kotlin:9.2.4'
+     implementation 'com.pubnub:pubnub-kotlin:10.0.0'
      ```
 
 2. Configure your keys and create PubNub instance:

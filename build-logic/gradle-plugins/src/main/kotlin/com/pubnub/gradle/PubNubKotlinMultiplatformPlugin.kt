@@ -106,12 +106,9 @@ class PubNubKotlinMultiplatformPlugin : Plugin<Project> {
                         }
 
                         pod("PubNubSwift") {
-                            val swiftPath = project.findProperty("SWIFT_PATH") as? String ?: "swift"
-//                        source = git("https://github.com/pubnub/swift") {
-//                            branch = "feat/kmp"
-//                        }
-//                        version = "7.1.0"
-                            source = path(rootProject.file(swiftPath))
+//                            val swiftPath = project.findProperty("SWIFT_PATH") as? String ?: "swift"
+//                            source = path(rootProject.file(swiftPath))
+                            version = "8.0.0"
                             moduleName = "PubNubSDK"
                             extraOpts += listOf("-compiler-option", "-fmodules")
                         }

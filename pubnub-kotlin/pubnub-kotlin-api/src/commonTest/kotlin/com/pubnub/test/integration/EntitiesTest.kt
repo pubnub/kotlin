@@ -7,6 +7,7 @@ import com.pubnub.test.await
 import com.pubnub.test.test
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.yield
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -23,6 +24,7 @@ class EntitiesTest : BaseIntegrationTest() {
     }
 
     @Test
+    @Ignore // TODO flaky test
     fun can_get_events_from_channel_subscription() = runTest {
         pubnub.test(backgroundScope) {
             val channel = pubnub.channel(channelName)

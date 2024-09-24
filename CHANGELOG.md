@@ -1,3 +1,16 @@
+## v10.0.0
+September 24 2024
+
+#### Added
+- `PatchValue` is now used in objects returning optional data from the server, such as `PNChannelMetadata`, `PNUUIDMetadata` for example.
+- Removed mutable `PNConfiguration` classes which were deprecated in previous releases.
+
+#### Fixed
+- A migration script is provided with this release to help with package name changes.
+
+#### Modified
+- Please consult the migration guide for JVM SDKs version 10.0.0 for required changes to your code.
+
 ## v9.2.4
 August 19 2024
 
