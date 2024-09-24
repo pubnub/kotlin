@@ -2,5 +2,5 @@
 
 # channel
 
-[jvm]\
+[common]\
 abstract val [channel](channel.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)

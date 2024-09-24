@@ -2,14 +2,14 @@
 
 # publish
 
-[jvm]\
-abstract fun [publish](publish.md)(message: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html), meta: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)? = null, shouldStore: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)? = null, usePost: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false, replicate: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = true, ttl: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)? = null): [Publish](../../com.pubnub.api.endpoints.pubsub/-publish/index.md)
+[common]\
+abstract fun [publish](publish.md)(message: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html), meta: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)? = null, shouldStore: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = true, usePost: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false, replicate: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = true, ttl: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)? = null): [Publish](../../com.pubnub.api.endpoints.pubsub/-publish/index.md)
 
 Send a message to all subscribers of the channel.
 
-To publish a message you must first specify a valid [PNConfiguration.publishKey](../../com.pubnub.api/-p-n-configuration/publish-key.md). A successfully published message is replicated across the PubNub Real-Time Network and sent simultaneously to all subscribed clients on the channel.
+To publish a message you must first specify a valid PNConfiguration.publishKey. A successfully published message is replicated across the PubNub Real-Time Network and sent simultaneously to all subscribed clients on the channel.
 
-Messages in transit can be secured from potential eavesdroppers with SSL/TLS by setting [PNConfiguration.secure](../../com.pubnub.api/-p-n-configuration/secure.md) to `true` during initialization.
+Messages in transit can be secured from potential eavesdroppers with SSL/TLS by setting PNConfiguration.secure to `true` during initialization.
 
 **Publish Anytime**
 
@@ -21,7 +21,7 @@ The message argument can contain any JSON serializable data, including: Objects,
 
 #### Parameters
 
-jvm
+common
 
 | | |
 |---|---|

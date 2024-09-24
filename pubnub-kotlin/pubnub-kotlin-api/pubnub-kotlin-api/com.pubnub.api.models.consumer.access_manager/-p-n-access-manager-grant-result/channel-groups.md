@@ -2,5 +2,5 @@
 
 # channelGroups
 
-[jvm]\
+[common]\
 val [channelGroups](channel-groups.md): [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), [PNAccessManagerKeyData](../-p-n-access-manager-key-data/index.md)&gt;?&gt;

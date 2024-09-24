@@ -2,5 +2,5 @@
 
 # Partial
 
-[jvm]\
-constructor(channelId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), custom: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)? = null, status: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null)
+[common]\
+constructor(channelId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), custom: [CustomObject](../../../com.pubnub.kmp/-custom-object/index.md)? = null, status: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null)

@@ -3,4 +3,10 @@
 # hostnameVerifier
 
 [jvm]\
-abstract override var [hostnameVerifier](hostname-verifier.md): [HostnameVerifier](https://docs.oracle.com/javase/8/docs/api/javax/net/ssl/HostnameVerifier.html)?
+abstract var [hostnameVerifier](hostname-verifier.md): [HostnameVerifier](https://docs.oracle.com/javase/8/docs/api/javax/net/ssl/HostnameVerifier.html)?
+
+#### See also
+
+| |
+|---|
+| [HostnameVerifier](https://docs.oracle.com/javase/8/docs/api/javax/net/ssl/HostnameVerifier.html) |

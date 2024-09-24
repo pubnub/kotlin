@@ -2,5 +2,5 @@
 
 # event
 
-[jvm]\
+[common]\
 open override val [event](event.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)

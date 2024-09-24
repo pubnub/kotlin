@@ -2,29 +2,23 @@
 
 # PNAccessManagerKeyData
 
-[jvm]\
+[common]\
 open class [PNAccessManagerKeyData](index.md)
 
 ## Constructors
 
 | | |
 |---|---|
-| [PNAccessManagerKeyData](-p-n-access-manager-key-data.md) | [jvm]<br>constructor() |
-
-## Types
-
-| Name | Summary |
-|---|---|
-| [Companion](-companion/index.md) | [jvm]<br>object [Companion](-companion/index.md) |
+| [PNAccessManagerKeyData](-p-n-access-manager-key-data.md) | [common]<br>constructor() |
 
 ## Properties
 
 | Name | Summary |
 |---|---|
-| [deleteEnabled](delete-enabled.md) | [jvm]<br>var [deleteEnabled](delete-enabled.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)<br>Is `true` if *delete* rights are granted. |
-| [getEnabled](get-enabled.md) | [jvm]<br>var [getEnabled](get-enabled.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
-| [joinEnabled](join-enabled.md) | [jvm]<br>var [joinEnabled](join-enabled.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
-| [manageEnabled](manage-enabled.md) | [jvm]<br>var [manageEnabled](manage-enabled.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)<br>Is `true` if *manage* rights are granted. |
-| [readEnabled](read-enabled.md) | [jvm]<br>var [readEnabled](read-enabled.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)<br>Is `true` if *read* rights are granted. |
-| [updateEnabled](update-enabled.md) | [jvm]<br>var [updateEnabled](update-enabled.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
-| [writeEnabled](write-enabled.md) | [jvm]<br>var [writeEnabled](write-enabled.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)<br>Is `true` if *write* rights are granted. |
+| [deleteEnabled](delete-enabled.md) | [common]<br>var [deleteEnabled](delete-enabled.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)<br>Is `true` if *delete* rights are granted. |
+| [getEnabled](get-enabled.md) | [common]<br>var [getEnabled](get-enabled.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
+| [joinEnabled](join-enabled.md) | [common]<br>var [joinEnabled](join-enabled.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
+| [manageEnabled](manage-enabled.md) | [common]<br>var [manageEnabled](manage-enabled.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)<br>Is `true` if *manage* rights are granted. |
+| [readEnabled](read-enabled.md) | [common]<br>var [readEnabled](read-enabled.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)<br>Is `true` if *read* rights are granted. |
+| [updateEnabled](update-enabled.md) | [common]<br>var [updateEnabled](update-enabled.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
+| [writeEnabled](write-enabled.md) | [common]<br>var [writeEnabled](write-enabled.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)<br>Is `true` if *write* rights are granted. |

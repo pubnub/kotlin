@@ -1,0 +1,6 @@
+//[pubnub-gson-api](../../../index.md)/[com.pubnub.api.java.models.consumer.objects_api.member](../index.md)/[PNUUID](index.md)/[PNUUID](-p-n-u-u-i-d.md)
+
+# PNUUID
+
+[jvm]\
+constructor()

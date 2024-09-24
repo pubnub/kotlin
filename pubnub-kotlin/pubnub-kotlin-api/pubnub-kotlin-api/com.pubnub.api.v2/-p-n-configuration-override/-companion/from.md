@@ -6,4 +6,4 @@
 
 @[JvmStatic](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-static/index.html)
 
-fun [from](from.md)(configuration: [BasePNConfiguration](../../../../../../pubnub-core/pubnub-core-api/pubnub-core-api/com.pubnub.api.v2/-base-p-n-configuration/index.md)): [PNConfigurationOverride.Builder](../-builder/index.md)
+fun [from](from.md)(configuration: [PNConfiguration](../../-p-n-configuration/index.md)): [PNConfigurationOverride.Builder](../-builder/index.md)

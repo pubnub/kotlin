@@ -3,4 +3,4 @@
 # dedupOnSubscribe
 
 [jvm]\
-abstract override var [dedupOnSubscribe](dedup-on-subscribe.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+abstract var [dedupOnSubscribe](dedup-on-subscribe.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)

@@ -2,17 +2,17 @@
 
 # PNDesc
 
-[jvm]\
+[common]\
 class [PNDesc](index.md)&lt;[T](index.md) : [SortField](../../-sort-field/index.md)&gt;(key: [T](index.md)) : [PNSortKey](../index.md)&lt;[T](index.md)&gt;
 
 ## Constructors
 
 | | |
 |---|---|
-| [PNDesc](-p-n-desc.md) | [jvm]<br>constructor(key: [T](index.md)) |
+| [PNDesc](-p-n-desc.md) | [common]<br>constructor(key: [T](index.md)) |
 
 ## Functions
 
 | Name | Summary |
 |---|---|
-| [toSortParameter](../to-sort-parameter.md) | [jvm]<br>fun [toSortParameter](../to-sort-parameter.md)(): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [toSortParameter](../to-sort-parameter.md) | [common]<br>fun [toSortParameter](../to-sort-parameter.md)(): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |

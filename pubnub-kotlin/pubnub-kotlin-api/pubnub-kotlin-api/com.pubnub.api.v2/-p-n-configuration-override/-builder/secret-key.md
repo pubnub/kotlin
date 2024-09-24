@@ -3,4 +3,8 @@
 # secretKey
 
 [jvm]\
-abstract override var [secretKey](secret-key.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+abstract var [secretKey](secret-key.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+
+The secret key from the admin panel (only required for modifying/revealing access permissions).
+
+Keep away from Android.

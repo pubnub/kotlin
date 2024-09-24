@@ -3,4 +3,8 @@
 # suppressLeaveEvents
 
 [jvm]\
-abstract override var [suppressLeaveEvents](suppress-leave-events.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+abstract var [suppressLeaveEvents](suppress-leave-events.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+
+When `true` the SDK doesn't send out the leave requests.
+
+Defaults to `false`.

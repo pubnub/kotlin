@@ -2,5 +2,5 @@
 
 # asc
 
-[jvm]\
+[common]\
 fun [asc](asc.md)(key: [PNKey](../../-p-n-key/index.md)): [PNSortKey](../index.md)&lt;[PNKey](../../-p-n-key/index.md)&gt;

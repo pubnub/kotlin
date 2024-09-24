@@ -1,0 +1,8 @@
+//[pubnub-gson-api](../../../index.md)/[com.pubnub.api.java](../index.md)/[PubNub](index.md)/[removeMessageAction](remove-message-action.md)
+
+# removeMessageAction
+
+[jvm]\
+abstract fun [removeMessageAction](remove-message-action.md)(): [RemoveMessageAction](../../com.pubnub.api.java.endpoints.message_actions/-remove-message-action/index.md)
+
+Remove a previously added action on a published message. Returns an empty response.

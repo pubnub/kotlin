@@ -2,20 +2,20 @@
 
 # Partial
 
-[jvm]\
-data class [Partial](index.md)(val uuidId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), val custom: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)? = null, val status: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null) : [MemberInput](../../-member-input/index.md)
+[common]\
+data class [Partial](index.md)(val uuidId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), val custom: [CustomObject](../../../com.pubnub.kmp/-custom-object/index.md)? = null, val status: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null) : [MemberInput](../../-member-input/index.md)
 
 ## Constructors
 
 | | |
 |---|---|
-| [Partial](-partial.md) | [jvm]<br>constructor(uuidId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), custom: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)? = null, status: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null) |
+| [Partial](-partial.md) | [common]<br>constructor(uuidId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), custom: [CustomObject](../../../com.pubnub.kmp/-custom-object/index.md)? = null, status: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null) |
 
 ## Properties
 
 | Name | Summary |
 |---|---|
-| [custom](custom.md) | [jvm]<br>open override val [custom](custom.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)? = null |
-| [status](status.md) | [jvm]<br>open override val [status](status.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null |
-| [uuid](uuid.md) | [jvm]<br>open override val [uuid](uuid.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
-| [uuidId](uuid-id.md) | [jvm]<br>val [uuidId](uuid-id.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [custom](custom.md) | [common]<br>open override val [custom](custom.md): [CustomObject](../../../com.pubnub.kmp/-custom-object/index.md)? = null |
+| [status](status.md) | [common]<br>open override val [status](status.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null |
+| [uuid](uuid.md) | [common]<br>open override val [uuid](uuid.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [uuidId](uuid-id.md) | [common]<br>val [uuidId](uuid-id.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |

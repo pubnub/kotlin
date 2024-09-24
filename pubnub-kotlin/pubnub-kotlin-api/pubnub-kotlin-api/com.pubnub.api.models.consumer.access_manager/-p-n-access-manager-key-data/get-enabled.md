@@ -2,5 +2,5 @@
 
 # getEnabled
 
-[jvm]\
+[common]\
 var [getEnabled](get-enabled.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)

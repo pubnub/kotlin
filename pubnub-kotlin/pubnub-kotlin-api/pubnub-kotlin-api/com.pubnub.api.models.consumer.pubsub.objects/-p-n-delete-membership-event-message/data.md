@@ -2,5 +2,5 @@
 
 # data
 
-[jvm]\
+[common]\
 val [data](data.md): [PNDeleteMembershipEvent](../-p-n-delete-membership-event/index.md)

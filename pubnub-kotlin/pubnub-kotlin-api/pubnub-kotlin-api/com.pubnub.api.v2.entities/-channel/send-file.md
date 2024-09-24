@@ -2,14 +2,14 @@
 
 # sendFile
 
-[jvm]\
-abstract fun [sendFile](send-file.md)(fileName: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), inputStream: [InputStream](https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html), message: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)? = null, meta: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)? = null, ttl: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)? = null, shouldStore: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)? = null, cipherKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null): [SendFile](../../com.pubnub.api.endpoints.files/-send-file/index.md)
+[common]\
+abstract fun [sendFile](send-file.md)(fileName: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), inputStream: [Uploadable](../../com.pubnub.kmp/-uploadable/index.md), message: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)? = null, meta: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)? = null, ttl: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)? = null, shouldStore: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)? = null, cipherKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null): [SendFile](../../com.pubnub.api.endpoints.files/-send-file/index.md)
 
 Upload file / data to the Channel.
 
 #### Parameters
 
-jvm
+common
 
 | | |
 |---|---|

@@ -1,6 +1,0 @@
-//[pubnub-gson-api](../../../index.md)/[com.pubnub.api.builder](../index.md)/[SubscribeBuilder](index.md)/[channels](channels.md)
-
-# channels
-
-[jvm]\
-open fun [channels](channels.md)(channels: [List](https://docs.oracle.com/javase/8/docs/api/java/util/List.html)&lt;[String](https://docs.oracle.com/javase/8/docs/api/java/lang/String.html)&gt;): [SubscribeBuilder](index.md)

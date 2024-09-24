@@ -2,5 +2,5 @@
 
 # prev
 
-[jvm]\
-val [prev](prev.md): [PNPage.PNPrev](../../../../../pubnub-core/pubnub-core-api/pubnub-core-api/com.pubnub.api.models.consumer.objects/-p-n-page/-p-n-prev/index.md)?
+[common]\
+val [prev](prev.md): [PNPage.PNPrev](../../com.pubnub.api.models.consumer.objects/-p-n-page/-p-n-prev/index.md)?

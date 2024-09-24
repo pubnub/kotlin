@@ -2,5 +2,5 @@
 
 # data
 
-[jvm]\
-val [data](data.md): [PNUUIDMetadata](../../../../../pubnub-core/pubnub-core-api/pubnub-core-api/com.pubnub.api.models.consumer.objects.uuid/-p-n-u-u-i-d-metadata/index.md)?
+[common]\
+val [data](data.md): [PNUUIDMetadata](../-p-n-u-u-i-d-metadata/index.md)

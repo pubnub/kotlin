@@ -2,7 +2,7 @@
 
 # readEnabled
 
-[jvm]\
+[common]\
 var [readEnabled](read-enabled.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
 
 Is `true` if *read* rights are granted.

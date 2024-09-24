@@ -2,5 +2,5 @@
 
 # uuid
 
-[jvm]\
+[common]\
 open override val [uuid](uuid.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)

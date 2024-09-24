@@ -3,4 +3,8 @@
 # heartbeatInterval
 
 [jvm]\
-abstract override var [heartbeatInterval](heartbeat-interval.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)
+abstract var [heartbeatInterval](heartbeat-interval.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)
+
+How often the client will announce itself to server.
+
+The value is in seconds.

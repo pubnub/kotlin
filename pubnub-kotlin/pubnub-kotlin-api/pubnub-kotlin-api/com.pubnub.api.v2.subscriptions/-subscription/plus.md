@@ -2,7 +2,7 @@
 
 # plus
 
-[jvm]\
+[common]\
 abstract operator fun [plus](plus.md)(subscription: [Subscription](index.md)): [SubscriptionSet](../-subscription-set/index.md)
 
 Create a [SubscriptionSet](../-subscription-set/index.md) containing this [Subscription](index.md) and the added [subscription](plus.md).

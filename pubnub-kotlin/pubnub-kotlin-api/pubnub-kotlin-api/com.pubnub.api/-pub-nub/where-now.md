@@ -2,8 +2,15 @@
 
 # whereNow
 
+[common, native]\
+[common]\
+expect abstract fun [whereNow](where-now.md)(uuid: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) = configuration.userId.value): [WhereNow](../../com.pubnub.api.endpoints.presence/-where-now/index.md)
+
+[native]\
+actual abstract fun [whereNow](where-now.md)(uuid: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [WhereNow](../../com.pubnub.api.endpoints.presence/-where-now/index.md)
+
 [jvm]\
-abstract fun [whereNow](where-now.md)(uuid: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) = configuration.userId.value): [WhereNow](../../com.pubnub.api.endpoints.presence/-where-now/index.md)
+actual abstract fun [whereNow](where-now.md)(uuid: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [WhereNow](../../com.pubnub.api.endpoints.presence/-where-now/index.md)
 
 Obtain information about the current list of channels to which a UUID is subscribed to.
 
@@ -19,4 +26,4 @@ jvm
 
 | |
 |---|
-| [PNConfiguration.uuid](../-p-n-configuration/uuid.md) |
+| [PNConfiguration.uuid](../../com.pubnub.api.v2/-p-n-configuration/uuid.md) |

@@ -2,5 +2,5 @@
 
 # desc
 
-[jvm]\
+[common]\
 fun [desc](desc.md)(key: [PNKey](../../-p-n-key/index.md)): [PNSortKey](../index.md)&lt;[PNKey](../../-p-n-key/index.md)&gt;

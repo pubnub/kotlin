@@ -3,4 +3,10 @@
 # maximumConnections
 
 [jvm]\
-abstract override var [maximumConnections](maximum-connections.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)?
+abstract var [maximumConnections](maximum-connections.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)?
+
+#### See also
+
+| |
+|---|
+| okhttp3.Dispatcher.setMaxRequestsPerHost |

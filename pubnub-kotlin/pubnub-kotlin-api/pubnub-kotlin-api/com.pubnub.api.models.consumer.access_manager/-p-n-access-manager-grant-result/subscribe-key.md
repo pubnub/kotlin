@@ -2,5 +2,5 @@
 
 # subscribeKey
 
-[jvm]\
+[common]\
 val [subscribeKey](subscribe-key.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)

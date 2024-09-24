@@ -2,5 +2,5 @@
 
 # uuid
 
-[jvm]\
+[common]\
 val [uuid](uuid.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)

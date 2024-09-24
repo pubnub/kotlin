@@ -2,5 +2,5 @@
 
 # PNDeleteMembershipEvent
 
-[jvm]\
+[common]\
 constructor(channelId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), uuid: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html))

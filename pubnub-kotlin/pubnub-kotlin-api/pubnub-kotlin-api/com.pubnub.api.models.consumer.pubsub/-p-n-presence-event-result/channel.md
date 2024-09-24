@@ -1,0 +1,6 @@
+//[pubnub-kotlin-api](../../../index.md)/[com.pubnub.api.models.consumer.pubsub](../index.md)/[PNPresenceEventResult](index.md)/[channel](channel.md)
+
+# channel
+
+[common]\
+open override val [channel](channel.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)

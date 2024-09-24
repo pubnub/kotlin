@@ -2,5 +2,5 @@
 
 # get
 
-[jvm]\
+[common]\
 abstract val [get](get.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)

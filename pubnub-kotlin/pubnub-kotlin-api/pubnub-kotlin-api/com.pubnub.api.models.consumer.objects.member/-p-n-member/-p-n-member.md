@@ -2,5 +2,5 @@
 
 # PNMember
 
-[jvm]\
-constructor(uuid: [PNUUIDMetadata](../../../../../pubnub-core/pubnub-core-api/pubnub-core-api/com.pubnub.api.models.consumer.objects.uuid/-p-n-u-u-i-d-metadata/index.md)?, custom: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)? = null, updated: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), eTag: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), status: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?)
+[common]\
+constructor(uuid: [PNUUIDMetadata](../../com.pubnub.api.models.consumer.objects.uuid/-p-n-u-u-i-d-metadata/index.md), custom: [PatchValue](../../com.pubnub.api.utils/-patch-value/index.md)&lt;[Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?&gt;?&gt;? = null, updated: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), eTag: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), status: [PatchValue](../../com.pubnub.api.utils/-patch-value/index.md)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?&gt;?)

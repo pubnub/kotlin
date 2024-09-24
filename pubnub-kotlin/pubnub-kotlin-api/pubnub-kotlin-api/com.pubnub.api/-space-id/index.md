@@ -2,17 +2,17 @@
 
 # SpaceId
 
-[jvm]\
+[common]\
 data class [SpaceId](index.md)(val value: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html))
 
 ## Constructors
 
 | | |
 |---|---|
-| [SpaceId](-space-id.md) | [jvm]<br>constructor(value: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)) |
+| [SpaceId](-space-id.md) | [common]<br>constructor(value: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)) |
 
 ## Properties
 
 | Name | Summary |
 |---|---|
-| [value](value.md) | [jvm]<br>val [value](value.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [value](value.md) | [common]<br>val [value](value.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |

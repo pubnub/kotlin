@@ -2,5 +2,5 @@
 
 # pattern
 
-[jvm]\
+[common]\
 fun [pattern](pattern.md)(pattern: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), read: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false, manage: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false): [ChannelGroupGrant](../index.md)

@@ -2,28 +2,33 @@
 
 # PNChannelMembership
 
-[jvm]\
-data class [PNChannelMembership](index.md)(val channel: [PNChannelMetadata](../../../../../pubnub-core/pubnub-core-api/pubnub-core-api/com.pubnub.api.models.consumer.objects.channel/-p-n-channel-metadata/index.md)?, val custom: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?, val updated: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), val eTag: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), val status: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?)
+[common]\
+data class [PNChannelMembership](index.md)(val channel: [PNChannelMetadata](../../com.pubnub.api.models.consumer.objects.channel/-p-n-channel-metadata/index.md), val custom: [PatchValue](../../com.pubnub.api.utils/-patch-value/index.md)&lt;[Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?&gt;?&gt;? = null, val updated: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), val eTag: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), val status: [PatchValue](../../com.pubnub.api.utils/-patch-value/index.md)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?&gt;? = null)
 
 ## Constructors
 
 | | |
 |---|---|
-| [PNChannelMembership](-p-n-channel-membership.md) | [jvm]<br>constructor(channel: [PNChannelMetadata](../../../../../pubnub-core/pubnub-core-api/pubnub-core-api/com.pubnub.api.models.consumer.objects.channel/-p-n-channel-metadata/index.md)?, custom: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?, updated: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), eTag: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), status: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?) |
+| [PNChannelMembership](-p-n-channel-membership.md) | [common]<br>constructor(channel: [PNChannelMetadata](../../com.pubnub.api.models.consumer.objects.channel/-p-n-channel-metadata/index.md), custom: [PatchValue](../../com.pubnub.api.utils/-patch-value/index.md)&lt;[Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?&gt;?&gt;? = null, updated: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), eTag: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), status: [PatchValue](../../com.pubnub.api.utils/-patch-value/index.md)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?&gt;? = null) |
 
 ## Types
 
 | Name | Summary |
 |---|---|
-| [Companion](-companion/index.md) | [jvm]<br>object [Companion](-companion/index.md) |
-| [Partial](-partial/index.md) | [jvm]<br>data class [Partial](-partial/index.md)(val channelId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), val custom: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)? = null, val status: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null) : [ChannelMembershipInput](../-channel-membership-input/index.md) |
+| [Partial](-partial/index.md) | [common]<br>data class [Partial](-partial/index.md)(val channelId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), val custom: [CustomObject](../../com.pubnub.kmp/-custom-object/index.md)? = null, val status: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null) : [ChannelMembershipInput](../-channel-membership-input/index.md) |
 
 ## Properties
 
 | Name | Summary |
 |---|---|
-| [channel](channel.md) | [jvm]<br>val [channel](channel.md): [PNChannelMetadata](../../../../../pubnub-core/pubnub-core-api/pubnub-core-api/com.pubnub.api.models.consumer.objects.channel/-p-n-channel-metadata/index.md)? |
-| [custom](custom.md) | [jvm]<br>val [custom](custom.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)? |
-| [eTag](e-tag.md) | [jvm]<br>val [eTag](e-tag.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
-| [status](status.md) | [jvm]<br>val [status](status.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? |
-| [updated](updated.md) | [jvm]<br>val [updated](updated.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [channel](channel.md) | [common]<br>val [channel](channel.md): [PNChannelMetadata](../../com.pubnub.api.models.consumer.objects.channel/-p-n-channel-metadata/index.md) |
+| [custom](custom.md) | [common]<br>val [custom](custom.md): [PatchValue](../../com.pubnub.api.utils/-patch-value/index.md)&lt;[Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?&gt;?&gt;? = null |
+| [eTag](e-tag.md) | [common]<br>val [eTag](e-tag.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [status](status.md) | [common]<br>val [status](status.md): [PatchValue](../../com.pubnub.api.utils/-patch-value/index.md)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?&gt;? = null |
+| [updated](updated.md) | [common]<br>val [updated](updated.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+
+## Functions
+
+| Name | Summary |
+|---|---|
+| [plus](plus.md) | [common]<br>operator fun [plus](plus.md)(update: [PNSetMembershipEvent](../../com.pubnub.api.models.consumer.pubsub.objects/-p-n-set-membership-event/index.md)): [PNChannelMembership](index.md)<br>Merge information from this `PNChannelMembership` with new data from `update`, returning a new `PNChannelMembership` instance. |

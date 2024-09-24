@@ -14,6 +14,6 @@ interface [ChannelMembershipInput](index.md)
 
 | Name | Summary |
 |---|---|
-| [channel](channel.md) | [jvm]<br>abstract val [channel](channel.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
-| [custom](custom.md) | [jvm]<br>abstract val [custom](custom.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)? |
-| [status](status.md) | [jvm]<br>abstract val [status](status.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? |
+| [channel](channel.md) | [common]<br>abstract val [channel](channel.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [custom](custom.md) | [common]<br>abstract val [custom](custom.md): [CustomObject](../../com.pubnub.kmp/-custom-object/index.md)? |
+| [status](status.md) | [common]<br>abstract val [status](status.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? |

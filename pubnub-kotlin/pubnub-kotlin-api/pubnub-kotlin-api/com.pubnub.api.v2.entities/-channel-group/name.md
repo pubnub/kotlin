@@ -1,0 +1,10 @@
+//[pubnub-kotlin-api](../../../index.md)/[com.pubnub.api.v2.entities](../index.md)/[ChannelGroup](index.md)/[name](name.md)
+
+# name
+
+[common]\
+abstract val [name](name.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+
+The name of this channel group.
+
+See more in the [documentation](https://www.pubnub.com/docs/general/channels/subscribe#channel-groups)

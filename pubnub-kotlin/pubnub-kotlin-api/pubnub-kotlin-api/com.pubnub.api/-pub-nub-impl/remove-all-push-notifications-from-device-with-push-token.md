@@ -1,0 +1,6 @@
+//[pubnub-kotlin-api](../../../index.md)/[com.pubnub.api](../index.md)/[PubNubImpl](index.md)/[removeAllPushNotificationsFromDeviceWithPushToken](remove-all-push-notifications-from-device-with-push-token.md)
+
+# removeAllPushNotificationsFromDeviceWithPushToken
+
+[ios]\
+open override fun [removeAllPushNotificationsFromDeviceWithPushToken](remove-all-push-notifications-from-device-with-push-token.md)(pushType: <!---  GfmCommand {"@class":"org.jetbrains.dokka.gfm.ResolveLinkGfmCommand","dri":{"packageName":"","classNames":"<Error class: unknown class>","callable":null,"target":{"@class":"org.jetbrains.dokka.links.PointingToDeclaration"},"extra":null}} --->&lt;Error class: unknown class&gt;<!--- --->, deviceId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), topic: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, environment: <!---  GfmCommand {"@class":"org.jetbrains.dokka.gfm.ResolveLinkGfmCommand","dri":{"packageName":"","classNames":"<Error class: unknown class>","callable":null,"target":{"@class":"org.jetbrains.dokka.links.PointingToDeclaration"},"extra":null}} --->&lt;Error class: unknown class&gt;<!--- --->): [RemoveAllPushChannelsForDevice](../../com.pubnub.api.endpoints.push/-remove-all-push-channels-for-device/index.md)

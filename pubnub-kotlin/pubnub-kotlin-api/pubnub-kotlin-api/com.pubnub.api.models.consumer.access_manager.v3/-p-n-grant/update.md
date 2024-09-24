@@ -2,5 +2,5 @@
 
 # update
 
-[jvm]\
+[common]\
 abstract val [update](update.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)

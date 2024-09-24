@@ -2,5 +2,5 @@
 
 # write
 
-[jvm]\
+[common]\
 abstract val [write](write.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)

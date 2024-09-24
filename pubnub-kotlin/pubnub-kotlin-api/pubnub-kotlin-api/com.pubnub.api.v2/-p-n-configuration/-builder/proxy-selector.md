@@ -3,4 +3,10 @@
 # proxySelector
 
 [jvm]\
-abstract override var [proxySelector](proxy-selector.md): [ProxySelector](https://docs.oracle.com/javase/8/docs/api/java/net/ProxySelector.html)?
+abstract var [proxySelector](proxy-selector.md): [ProxySelector](https://docs.oracle.com/javase/8/docs/api/java/net/ProxySelector.html)?
+
+#### See also
+
+| |
+|---|
+| [ProxySelector](https://docs.oracle.com/javase/8/docs/api/java/net/ProxySelector.html) |

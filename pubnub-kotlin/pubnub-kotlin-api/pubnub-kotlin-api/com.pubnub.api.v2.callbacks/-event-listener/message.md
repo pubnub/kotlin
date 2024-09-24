@@ -3,7 +3,7 @@
 # message
 
 [jvm]\
-open fun [message](message.md)(pubnub: [PubNub](../../com.pubnub.api/-pub-nub/index.md), result: [PNMessageResult](../../../../../pubnub-core/pubnub-core-api/pubnub-core-api/com.pubnub.api.models.consumer.pubsub/-p-n-message-result/index.md))
+open fun [message](message.md)(pubnub: [PubNub](../../com.pubnub.api/-pub-nub/index.md), result: [PNMessageResult](../../com.pubnub.api.models.consumer.pubsub/-p-n-message-result/index.md))
 
 Receive messages at subscribed channels.
 

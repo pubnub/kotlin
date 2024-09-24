@@ -3,4 +3,13 @@
 # managePresenceListManually
 
 [jvm]\
-abstract override var [managePresenceListManually](manage-presence-list-manually.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+abstract var [managePresenceListManually](manage-presence-list-manually.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+
+Enables explicit presence control. When set to true heartbeat calls will contain only channels and groups added explicitly using PubNubCore.presence. Should be used only with ACL set on the server side. For more information please contact PubNub support
+
+#### See also
+
+| |
+|---|
+| PubNubCore.presence |
+| [PNConfiguration.heartbeatInterval](../heartbeat-interval.md) |

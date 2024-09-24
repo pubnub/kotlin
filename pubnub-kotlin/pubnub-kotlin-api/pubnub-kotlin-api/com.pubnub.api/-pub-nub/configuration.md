@@ -2,7 +2,14 @@
 
 # configuration
 
+[common, native]\
+[common]\
+expect abstract val [configuration](configuration.md): [PNConfiguration](../../com.pubnub.api.v2/-p-n-configuration/index.md)
+
+[native]\
+actual abstract val [configuration](configuration.md): [PNConfiguration](../../com.pubnub.api.v2/-p-n-configuration/index.md)
+
 [jvm]\
-abstract val [configuration](configuration.md): [BasePNConfiguration](../../../../../pubnub-core/pubnub-core-api/pubnub-core-api/com.pubnub.api.v2/-base-p-n-configuration/index.md)
+actual abstract val [configuration](configuration.md): [PNConfiguration](../../com.pubnub.api.v2/-p-n-configuration/index.md)
 
 The configuration that was used to initialize this PubNub instance. Modifying the values in this configuration is not advised, as it may lead to undefined behavior.

@@ -3,4 +3,6 @@
 # cryptoModule
 
 [jvm]\
-abstract override var [cryptoModule](crypto-module.md): [CryptoModule](../../../../../../pubnub-core/pubnub-core-api/pubnub-core-api/com.pubnub.api.crypto/-crypto-module/index.md)?
+abstract var [cryptoModule](crypto-module.md): [CryptoModule](../../../com.pubnub.api.crypto/-crypto-module/index.md)?
+
+CryptoModule is responsible for handling encryption and decryption. If set, all communications to and from PubNub will be encrypted.

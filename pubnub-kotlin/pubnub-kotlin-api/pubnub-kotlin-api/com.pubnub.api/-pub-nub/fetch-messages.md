@@ -2,8 +2,15 @@
 
 # fetchMessages
 
+[common, native]\
+[common]\
+expect abstract fun [fetchMessages](fetch-messages.md)(channels: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;, page: [PNBoundedPage](../../com.pubnub.api.models.consumer/-p-n-bounded-page/index.md) = PNBoundedPage(), includeUUID: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = true, includeMeta: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false, includeMessageActions: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false, includeMessageType: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = true): [FetchMessages](../../com.pubnub.api.endpoints/-fetch-messages/index.md)
+
+[native]\
+actual abstract fun [fetchMessages](fetch-messages.md)(channels: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;, page: [PNBoundedPage](../../com.pubnub.api.models.consumer/-p-n-bounded-page/index.md), includeUUID: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html), includeMeta: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html), includeMessageActions: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html), includeMessageType: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)): [FetchMessages](../../com.pubnub.api.endpoints/-fetch-messages/index.md)
+
 [jvm]\
-abstract fun [fetchMessages](fetch-messages.md)(channels: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;, page: [PNBoundedPage](../../../../../pubnub-core/pubnub-core-api/pubnub-core-api/com.pubnub.api.models.consumer/-p-n-bounded-page/index.md) = PNBoundedPage(), includeUUID: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = true, includeMeta: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false, includeMessageActions: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false, includeMessageType: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = true): [FetchMessages](../../com.pubnub.api.endpoints/-fetch-messages/index.md)
+actual abstract fun [fetchMessages](fetch-messages.md)(channels: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;, page: [PNBoundedPage](../../com.pubnub.api.models.consumer/-p-n-bounded-page/index.md), includeUUID: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html), includeMeta: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html), includeMessageActions: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html), includeMessageType: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)): [FetchMessages](../../com.pubnub.api.endpoints/-fetch-messages/index.md)
 
 Fetch historical messages from multiple channels. The `includeMessageActions` flag also allows you to fetch message actions along with the messages.
 
@@ -42,7 +49,7 @@ jvm
 | | |
 |---|---|
 | channels | Channels to return history messages from. |
-| page | The paging object used for pagination. @see [PNBoundedPage](../../../../../pubnub-core/pubnub-core-api/pubnub-core-api/com.pubnub.api.models.consumer/-p-n-bounded-page/index.md) |
+| page | The paging object used for pagination. @see [PNBoundedPage](../../com.pubnub.api.models.consumer/-p-n-bounded-page/index.md) |
 | includeUUID | Whether to include publisher uuid with each history message. Defaults to `true`. |
 | includeMeta | Whether to include message metadata in response.     Defaults to `false`. |
 | includeMessageActions | Whether to include message actions in response.     Defaults to `false`. |

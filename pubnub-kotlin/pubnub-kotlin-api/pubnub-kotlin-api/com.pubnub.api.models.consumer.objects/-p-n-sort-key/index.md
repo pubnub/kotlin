@@ -15,12 +15,12 @@ sealed class [PNSortKey](index.md)&lt;[T](index.md) : [SortField](../-sort-field
 
 | Name | Summary |
 |---|---|
-| [Companion](-companion/index.md) | [jvm]<br>object [Companion](-companion/index.md) |
-| [PNAsc](-p-n-asc/index.md) | [jvm]<br>class [PNAsc](-p-n-asc/index.md)&lt;[T](-p-n-asc/index.md) : [SortField](../-sort-field/index.md)&gt;(key: [T](-p-n-asc/index.md)) : [PNSortKey](index.md)&lt;[T](-p-n-asc/index.md)&gt; |
-| [PNDesc](-p-n-desc/index.md) | [jvm]<br>class [PNDesc](-p-n-desc/index.md)&lt;[T](-p-n-desc/index.md) : [SortField](../-sort-field/index.md)&gt;(key: [T](-p-n-desc/index.md)) : [PNSortKey](index.md)&lt;[T](-p-n-desc/index.md)&gt; |
+| [Companion](-companion/index.md) | [common]<br>object [Companion](-companion/index.md) |
+| [PNAsc](-p-n-asc/index.md) | [common]<br>class [PNAsc](-p-n-asc/index.md)&lt;[T](-p-n-asc/index.md) : [SortField](../-sort-field/index.md)&gt;(key: [T](-p-n-asc/index.md)) : [PNSortKey](index.md)&lt;[T](-p-n-asc/index.md)&gt; |
+| [PNDesc](-p-n-desc/index.md) | [common]<br>class [PNDesc](-p-n-desc/index.md)&lt;[T](-p-n-desc/index.md) : [SortField](../-sort-field/index.md)&gt;(key: [T](-p-n-desc/index.md)) : [PNSortKey](index.md)&lt;[T](-p-n-desc/index.md)&gt; |
 
 ## Functions
 
 | Name | Summary |
 |---|---|
-| [toSortParameter](to-sort-parameter.md) | [jvm]<br>fun [toSortParameter](to-sort-parameter.md)(): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [toSortParameter](to-sort-parameter.md) | [common]<br>fun [toSortParameter](to-sort-parameter.md)(): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |

@@ -2,12 +2,12 @@
 
 # Companion
 
-[jvm]\
+[common]\
 object [Companion](index.md)
 
 ## Functions
 
 | Name | Summary |
 |---|---|
-| [id](id.md) | [jvm]<br>fun [id](id.md)(id: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), read: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false, manage: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false): [ChannelGroupGrant](../index.md) |
-| [pattern](pattern.md) | [jvm]<br>fun [pattern](pattern.md)(pattern: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), read: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false, manage: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false): [ChannelGroupGrant](../index.md) |
+| [id](id.md) | [common]<br>fun [id](id.md)(id: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), read: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false, manage: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false): [ChannelGroupGrant](../index.md) |
+| [pattern](pattern.md) | [common]<br>fun [pattern](pattern.md)(pattern: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), read: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false, manage: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false): [ChannelGroupGrant](../index.md) |

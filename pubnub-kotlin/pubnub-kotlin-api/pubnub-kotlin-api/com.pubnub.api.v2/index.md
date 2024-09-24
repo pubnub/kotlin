@@ -6,5 +6,11 @@
 
 | Name | Summary |
 |---|---|
-| [PNConfiguration](-p-n-configuration/index.md) | [jvm]<br>interface [PNConfiguration](-p-n-configuration/index.md) : [BasePNConfiguration](../../../../pubnub-core/pubnub-core-api/pubnub-core-api/com.pubnub.api.v2/-base-p-n-configuration/index.md) |
-| [PNConfigurationOverride](-p-n-configuration-override/index.md) | [jvm]<br>interface [PNConfigurationOverride](-p-n-configuration-override/index.md) : [BasePNConfigurationOverride](../../../../pubnub-core/pubnub-core-api/pubnub-core-api/com.pubnub.api.v2/-base-p-n-configuration-override/index.md) |
+| [PNConfiguration](-p-n-configuration/index.md) | [common, ios, jvm]<br>[common]<br>expect interface [PNConfiguration](-p-n-configuration/index.md)<br>[ios, jvm]<br>actual interface [PNConfiguration](-p-n-configuration/index.md) |
+| [PNConfigurationOverride](-p-n-configuration-override/index.md) | [jvm]<br>interface [PNConfigurationOverride](-p-n-configuration-override/index.md) |
+
+## Functions
+
+| Name | Summary |
+|---|---|
+| [createPNConfiguration](create-p-n-configuration.md) | [common, jvm]<br>[common]<br>expect fun [createPNConfiguration](create-p-n-configuration.md)(userId: [UserId](../com.pubnub.api/-user-id/index.md), subscribeKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), publishKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), secretKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null, authKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null, logVerbosity: [PNLogVerbosity](../com.pubnub.api.enums/-p-n-log-verbosity/index.md) = PNLogVerbosity.NONE): [PNConfiguration](-p-n-configuration/index.md)<br>[jvm]<br>actual fun [createPNConfiguration](create-p-n-configuration.md)(userId: [UserId](../com.pubnub.api/-user-id/index.md), subscribeKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), publishKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), secretKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, authKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, logVerbosity: [PNLogVerbosity](../com.pubnub.api.enums/-p-n-log-verbosity/index.md)): [PNConfiguration](-p-n-configuration/index.md) |

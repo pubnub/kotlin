@@ -3,4 +3,8 @@
 # origin
 
 [jvm]\
-abstract override var [origin](origin.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+abstract var [origin](origin.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+
+Custom origin if needed.
+
+Defaults to `ps.pndsn.com`

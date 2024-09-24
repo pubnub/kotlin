@@ -2,5 +2,5 @@
 
 # eTag
 
-[jvm]\
+[common]\
 val [eTag](e-tag.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)

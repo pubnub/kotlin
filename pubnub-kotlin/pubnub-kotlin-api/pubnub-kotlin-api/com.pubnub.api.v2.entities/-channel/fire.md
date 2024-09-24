@@ -2,7 +2,7 @@
 
 # fire
 
-[jvm]\
+[common]\
 abstract fun [fire](fire.md)(message: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html), meta: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)? = null, usePost: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false, ttl: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)? = null): [Publish](../../com.pubnub.api.endpoints.pubsub/-publish/index.md)
 
 Send a message to PubNub Functions Event Handlers.
@@ -13,7 +13,7 @@ The message sent via `fire()` isn't replicated, and so won't be received by any 
 
 #### Parameters
 
-jvm
+common
 
 | | |
 |---|---|

@@ -2,7 +2,14 @@
 
 # listAllChannelGroups
 
+[common, native]\
+[common]\
+expect abstract fun [listAllChannelGroups](list-all-channel-groups.md)(): [ListAllChannelGroup](../../com.pubnub.api.endpoints.channel_groups/-list-all-channel-group/index.md)
+
+[native]\
+actual abstract fun [listAllChannelGroups](list-all-channel-groups.md)(): [ListAllChannelGroup](../../com.pubnub.api.endpoints.channel_groups/-list-all-channel-group/index.md)
+
 [jvm]\
-abstract fun [listAllChannelGroups](list-all-channel-groups.md)(): [ListAllChannelGroup](../../com.pubnub.api.endpoints.channel_groups/-list-all-channel-group/index.md)
+actual abstract fun [listAllChannelGroups](list-all-channel-groups.md)(): [ListAllChannelGroup](../../com.pubnub.api.endpoints.channel_groups/-list-all-channel-group/index.md)
 
 Lists all registered channel groups for the subscribe key.

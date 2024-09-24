@@ -3,4 +3,6 @@
 # userId
 
 [jvm]\
-abstract override var [userId](user-id.md): [UserId](../../../../../../pubnub-core/pubnub-core-api/pubnub-core-api/com.pubnub.api/-user-id/index.md)
+abstract var [userId](user-id.md): [UserId](../../../com.pubnub.api/-user-id/index.md)
+
+The user ID that the PubNub client will use.

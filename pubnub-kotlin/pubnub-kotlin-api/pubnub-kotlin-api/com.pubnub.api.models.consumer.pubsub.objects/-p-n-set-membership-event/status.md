@@ -2,5 +2,5 @@
 
 # status
 
-[jvm]\
-val [status](status.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?
+[common]\
+val [status](status.md): [PatchValue](../../com.pubnub.api.utils/-patch-value/index.md)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?&gt;?

@@ -2,7 +2,7 @@
 
 # signal
 
-[jvm]\
+[common]\
 abstract fun [signal](signal.md)(message: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)): [Signal](../../com.pubnub.api.endpoints.pubsub/-signal/index.md)
 
 Send a signal to all subscribers of the channel.
@@ -11,7 +11,7 @@ By default, signals are limited to a message payload size of 30 bytes. This limi
 
 #### Parameters
 
-jvm
+common
 
 | | |
 |---|---|

@@ -2,5 +2,5 @@
 
 # PNAccessManagerKeyData
 
-[jvm]\
+[common]\
 constructor()

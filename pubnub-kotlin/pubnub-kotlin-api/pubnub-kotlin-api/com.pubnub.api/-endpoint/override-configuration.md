@@ -9,7 +9,7 @@ Allows to override certain configuration options (see [PNConfigurationOverride.B
 
 #### Return
 
-Returns the same instance for convenience, so [sync](../../../../../pubnub-core/pubnub-core-api/com.pubnub.api/-endpoint/sync.md) or [async](../../../../../pubnub-core/pubnub-core-api/com.pubnub.api/-endpoint/async.md) can be called next.
+Returns the same instance for convenience, so [sync](../../../../../pubnub-kotlin/pubnub-kotlin-api/com.pubnub.api/-endpoint/sync.md) or [async](../../../../../pubnub-kotlin/pubnub-kotlin-api/com.pubnub.api/-endpoint/async.md) can be called next.
 
 [jvm]\
 abstract fun [overrideConfiguration](override-configuration.md)(configuration: [PNConfiguration](../../com.pubnub.api.v2/-p-n-configuration/index.md)): [Endpoint](index.md)&lt;[OUTPUT](index.md)&gt;
@@ -30,4 +30,4 @@ val result = endpoint.overrideConfiguration(configOverride).sync()
 
 #### Return
 
-Returns the same instance for convenience, so [sync](../../../../../pubnub-core/pubnub-core-api/com.pubnub.api/-endpoint/sync.md) or [async](../../../../../pubnub-core/pubnub-core-api/com.pubnub.api/-endpoint/async.md) can be called next.
+Returns the same instance for convenience, so [sync](../../../../../pubnub-kotlin/pubnub-kotlin-api/com.pubnub.api/-endpoint/sync.md) or [async](../../../../../pubnub-kotlin/pubnub-kotlin-api/com.pubnub.api/-endpoint/async.md) can be called next.

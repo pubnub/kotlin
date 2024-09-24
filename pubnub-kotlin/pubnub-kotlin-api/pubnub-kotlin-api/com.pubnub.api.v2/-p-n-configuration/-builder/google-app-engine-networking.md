@@ -3,4 +3,8 @@
 # googleAppEngineNetworking
 
 [jvm]\
-abstract override var [googleAppEngineNetworking](google-app-engine-networking.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+abstract var [googleAppEngineNetworking](google-app-engine-networking.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+
+Enable Google App Engine networking.
+
+Defaults to `false`.

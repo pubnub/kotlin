@@ -2,5 +2,5 @@
 
 # level
 
-[jvm]\
+[common]\
 val [level](level.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)

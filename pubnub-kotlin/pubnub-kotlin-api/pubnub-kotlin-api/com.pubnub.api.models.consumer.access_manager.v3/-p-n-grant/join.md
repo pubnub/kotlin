@@ -2,5 +2,5 @@
 
 # join
 
-[jvm]\
+[common]\
 abstract val [join](join.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)

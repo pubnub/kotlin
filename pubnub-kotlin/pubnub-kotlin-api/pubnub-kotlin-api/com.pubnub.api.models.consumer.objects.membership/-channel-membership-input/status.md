@@ -2,5 +2,5 @@
 
 # status
 
-[jvm]\
+[common]\
 abstract val [status](status.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?

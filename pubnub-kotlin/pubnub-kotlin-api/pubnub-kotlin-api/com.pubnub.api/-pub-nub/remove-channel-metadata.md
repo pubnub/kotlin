@@ -2,8 +2,15 @@
 
 # removeChannelMetadata
 
+[common, native]\
+[common]\
+expect abstract fun [removeChannelMetadata](remove-channel-metadata.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [RemoveChannelMetadata](../../com.pubnub.api.endpoints.objects.channel/-remove-channel-metadata/index.md)
+
+[native]\
+actual abstract fun [removeChannelMetadata](remove-channel-metadata.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [RemoveChannelMetadata](../../com.pubnub.api.endpoints.objects.channel/-remove-channel-metadata/index.md)
+
 [jvm]\
-abstract fun [removeChannelMetadata](remove-channel-metadata.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [RemoveChannelMetadata](../../com.pubnub.api.endpoints.objects.channel/-remove-channel-metadata/index.md)
+actual abstract fun [removeChannelMetadata](remove-channel-metadata.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [RemoveChannelMetadata](../../com.pubnub.api.endpoints.objects.channel/-remove-channel-metadata/index.md)
 
 Removes the metadata from a specified channel.
 

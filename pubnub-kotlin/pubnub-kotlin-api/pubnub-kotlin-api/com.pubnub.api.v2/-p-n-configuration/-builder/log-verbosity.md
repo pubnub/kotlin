@@ -3,4 +3,6 @@
 # logVerbosity
 
 [jvm]\
-abstract override var [logVerbosity](log-verbosity.md): [PNLogVerbosity](../../../../../../pubnub-core/pubnub-core-api/pubnub-core-api/com.pubnub.api.enums/-p-n-log-verbosity/index.md)
+abstract var [logVerbosity](log-verbosity.md): [PNLogVerbosity](../../../com.pubnub.api.enums/-p-n-log-verbosity/index.md)
+
+Set to [PNLogVerbosity.BODY](../../../com.pubnub.api.enums/-p-n-log-verbosity/-b-o-d-y/index.md) to enable logging of network traffic, otherwise se to [PNLogVerbosity.NONE](../../../com.pubnub.api.enums/-p-n-log-verbosity/-n-o-n-e/index.md).

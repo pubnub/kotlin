@@ -2,5 +2,5 @@
 
 # extractedMessage
 
-[jvm]\
+[common]\
 val [extractedMessage](extracted-message.md): [PNObjectEventMessage](../-p-n-object-event-message/index.md)

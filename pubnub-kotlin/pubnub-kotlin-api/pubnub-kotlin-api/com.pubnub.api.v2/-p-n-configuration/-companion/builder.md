@@ -6,4 +6,8 @@
 
 @[JvmStatic](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-static/index.html)
 
-fun [builder](builder.md)(userId: [UserId](../../../../../../pubnub-core/pubnub-core-api/pubnub-core-api/com.pubnub.api/-user-id/index.md), subscribeKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), action: [PNConfiguration.Builder](../-builder/index.md).() -&gt; [Unit](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html) = {}): [PNConfiguration.Builder](../-builder/index.md)
+fun [builder](builder.md)(userId: [UserId](../../../com.pubnub.api/-user-id/index.md), subscribeKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), action: [PNConfiguration.Builder](../-builder/index.md).() -&gt; [Unit](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html) = {}): [PNConfiguration.Builder](../-builder/index.md)
+
+@[JvmStatic](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-static/index.html)
+
+fun [builder](builder.md)(initialConfiguration: [PNConfiguration](../index.md)): [PNConfiguration.Builder](../-builder/index.md)

@@ -2,8 +2,15 @@
 
 # signal
 
+[common, native]\
+[common]\
+expect abstract fun [signal](signal.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), message: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)): [Signal](../../com.pubnub.api.endpoints.pubsub/-signal/index.md)
+
+[native]\
+actual abstract fun [signal](signal.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), message: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)): [Signal](../../com.pubnub.api.endpoints.pubsub/-signal/index.md)
+
 [jvm]\
-abstract fun [signal](signal.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), message: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)): [Signal](../../com.pubnub.api.endpoints.pubsub/-signal/index.md)
+actual abstract fun [signal](signal.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), message: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)): [Signal](../../com.pubnub.api.endpoints.pubsub/-signal/index.md)
 
 Send a signal to all subscribers of a channel.
 

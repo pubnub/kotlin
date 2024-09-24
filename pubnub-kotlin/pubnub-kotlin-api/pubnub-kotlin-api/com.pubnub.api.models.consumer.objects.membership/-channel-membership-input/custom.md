@@ -2,5 +2,5 @@
 
 # custom
 
-[jvm]\
-abstract val [custom](custom.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?
+[common]\
+abstract val [custom](custom.md): [CustomObject](../../com.pubnub.kmp/-custom-object/index.md)?

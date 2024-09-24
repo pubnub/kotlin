@@ -2,7 +2,7 @@
 
 # SortField
 
-interface [SortField](index.md)
+sealed interface [SortField](index.md)
 
 #### Inheritors
 
@@ -16,4 +16,4 @@ interface [SortField](index.md)
 
 | Name | Summary |
 |---|---|
-| [fieldName](field-name.md) | [jvm]<br>abstract val [fieldName](field-name.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [fieldName](field-name.md) | [common]<br>abstract val [fieldName](field-name.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |

@@ -2,5 +2,5 @@
 
 # channelId
 
-[jvm]\
+[common]\
 val [channelId](channel-id.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)

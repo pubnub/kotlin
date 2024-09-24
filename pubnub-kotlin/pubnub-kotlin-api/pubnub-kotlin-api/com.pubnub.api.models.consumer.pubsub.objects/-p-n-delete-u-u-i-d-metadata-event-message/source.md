@@ -2,5 +2,5 @@
 
 # source
 
-[jvm]\
+[common]\
 open override val [source](source.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)

@@ -2,5 +2,5 @@
 
 # data
 
-[jvm]\
-val [data](data.md): [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/index.html)&lt;[PNUUIDMetadata](../../../../../pubnub-core/pubnub-core-api/pubnub-core-api/com.pubnub.api.models.consumer.objects.uuid/-p-n-u-u-i-d-metadata/index.md)&gt;
+[common]\
+val [data](data.md): [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/index.html)&lt;[PNUUIDMetadata](../-p-n-u-u-i-d-metadata/index.md)&gt;

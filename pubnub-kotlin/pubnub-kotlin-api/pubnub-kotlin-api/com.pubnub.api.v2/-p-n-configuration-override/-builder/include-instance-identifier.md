@@ -3,4 +3,8 @@
 # includeInstanceIdentifier
 
 [jvm]\
-abstract override var [includeInstanceIdentifier](include-instance-identifier.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+abstract var [includeInstanceIdentifier](include-instance-identifier.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+
+Whether to include a PubNub.instanceId with every request.
+
+Defaults to `false`.

@@ -3,4 +3,6 @@
 # authKey
 
 [jvm]\
-abstract override var [authKey](auth-key.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+abstract var [authKey](auth-key.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+
+If Access Manager is utilized, client will use this authKey in all restricted requests.

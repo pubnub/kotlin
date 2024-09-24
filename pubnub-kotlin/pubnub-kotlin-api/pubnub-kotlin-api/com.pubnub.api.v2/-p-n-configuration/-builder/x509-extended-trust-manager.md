@@ -3,4 +3,10 @@
 # x509ExtendedTrustManager
 
 [jvm]\
-abstract override var [x509ExtendedTrustManager](x509-extended-trust-manager.md): [X509ExtendedTrustManager](https://docs.oracle.com/javase/8/docs/api/javax/net/ssl/X509ExtendedTrustManager.html)?
+abstract var [x509ExtendedTrustManager](x509-extended-trust-manager.md): [X509ExtendedTrustManager](https://docs.oracle.com/javase/8/docs/api/javax/net/ssl/X509ExtendedTrustManager.html)?
+
+#### See also
+
+| |
+|---|
+| [X509ExtendedTrustManager](https://docs.oracle.com/javase/8/docs/api/javax/net/ssl/X509ExtendedTrustManager.html) |

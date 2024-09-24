@@ -3,4 +3,4 @@
 # maximumMessagesCacheSize
 
 [jvm]\
-abstract override var [maximumMessagesCacheSize](maximum-messages-cache-size.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)
+abstract var [maximumMessagesCacheSize](maximum-messages-cache-size.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)

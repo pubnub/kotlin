@@ -3,4 +3,10 @@
 # connectionSpec
 
 [jvm]\
-abstract override var [connectionSpec](connection-spec.md): ConnectionSpec?
+abstract var [connectionSpec](connection-spec.md): ConnectionSpec?
+
+#### See also
+
+| |
+|---|
+| ConnectionSpec |

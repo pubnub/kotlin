@@ -2,5 +2,5 @@
 
 # PNSetMembershipEventMessage
 
-[jvm]\
+[common]\
 constructor(source: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), version: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), event: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), type: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), data: [PNSetMembershipEvent](../-p-n-set-membership-event/index.md))

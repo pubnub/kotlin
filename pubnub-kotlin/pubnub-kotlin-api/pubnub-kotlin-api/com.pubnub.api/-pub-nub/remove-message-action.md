@@ -2,8 +2,15 @@
 
 # removeMessageAction
 
+[common, native]\
+[common]\
+expect abstract fun [removeMessageAction](remove-message-action.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), messageTimetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html), actionTimetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)): [RemoveMessageAction](../../com.pubnub.api.endpoints.message_actions/-remove-message-action/index.md)
+
+[native]\
+actual abstract fun [removeMessageAction](remove-message-action.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), messageTimetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html), actionTimetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)): [RemoveMessageAction](../../com.pubnub.api.endpoints.message_actions/-remove-message-action/index.md)
+
 [jvm]\
-abstract fun [removeMessageAction](remove-message-action.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), messageTimetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html), actionTimetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)): [RemoveMessageAction](../../com.pubnub.api.endpoints.message_actions/-remove-message-action/index.md)
+actual abstract fun [removeMessageAction](remove-message-action.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), messageTimetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html), actionTimetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)): [RemoveMessageAction](../../com.pubnub.api.endpoints.message_actions/-remove-message-action/index.md)
 
 Remove a previously added action on a published message. Returns an empty response.
 

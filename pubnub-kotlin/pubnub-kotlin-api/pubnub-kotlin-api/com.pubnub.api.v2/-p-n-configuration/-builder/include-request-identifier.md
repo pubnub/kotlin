@@ -3,4 +3,8 @@
 # includeRequestIdentifier
 
 [jvm]\
-abstract override var [includeRequestIdentifier](include-request-identifier.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+abstract var [includeRequestIdentifier](include-request-identifier.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+
+Whether to include a PubNubCore.requestId with every request.
+
+Defaults to `true`.

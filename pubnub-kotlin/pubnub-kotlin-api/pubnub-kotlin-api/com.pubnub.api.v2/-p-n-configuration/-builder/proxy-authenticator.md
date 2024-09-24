@@ -3,4 +3,10 @@
 # proxyAuthenticator
 
 [jvm]\
-abstract override var [proxyAuthenticator](proxy-authenticator.md): Authenticator?
+abstract var [proxyAuthenticator](proxy-authenticator.md): Authenticator?
+
+#### See also
+
+| |
+|---|
+| Authenticator |

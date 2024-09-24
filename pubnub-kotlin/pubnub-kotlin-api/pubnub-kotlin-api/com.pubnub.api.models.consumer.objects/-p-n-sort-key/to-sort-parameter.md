@@ -2,5 +2,5 @@
 
 # toSortParameter
 
-[jvm]\
+[common]\
 fun [toSortParameter](to-sort-parameter.md)(): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)

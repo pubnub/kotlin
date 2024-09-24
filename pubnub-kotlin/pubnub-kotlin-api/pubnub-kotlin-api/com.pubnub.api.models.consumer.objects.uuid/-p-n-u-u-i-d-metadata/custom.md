@@ -1,0 +1,6 @@
+//[pubnub-kotlin-api](../../../index.md)/[com.pubnub.api.models.consumer.objects.uuid](../index.md)/[PNUUIDMetadata](index.md)/[custom](custom.md)
+
+# custom
+
+[common]\
+val [custom](custom.md): [PatchValue](../../com.pubnub.api.utils/-patch-value/index.md)&lt;[Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?&gt;?&gt;? = null

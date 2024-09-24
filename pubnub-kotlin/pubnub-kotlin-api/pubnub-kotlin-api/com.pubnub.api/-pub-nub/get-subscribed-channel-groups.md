@@ -2,8 +2,15 @@
 
 # getSubscribedChannelGroups
 
+[common, native]\
+[common]\
+expect abstract fun [getSubscribedChannelGroups](get-subscribed-channel-groups.md)(): [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;
+
+[native]\
+actual abstract fun [getSubscribedChannelGroups](get-subscribed-channel-groups.md)(): [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;
+
 [jvm]\
-abstract fun [getSubscribedChannelGroups](get-subscribed-channel-groups.md)(): [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;
+actual abstract fun [getSubscribedChannelGroups](get-subscribed-channel-groups.md)(): [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;
 
 Queries the local subscribe loop for channel groups currently in the mix.
 

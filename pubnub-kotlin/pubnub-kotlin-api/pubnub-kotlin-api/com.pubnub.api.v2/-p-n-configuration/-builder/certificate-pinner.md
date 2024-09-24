@@ -3,4 +3,10 @@
 # certificatePinner
 
 [jvm]\
-abstract override var [certificatePinner](certificate-pinner.md): CertificatePinner?
+abstract var [certificatePinner](certificate-pinner.md): CertificatePinner?
+
+#### See also
+
+| |
+|---|
+| CertificatePinner |

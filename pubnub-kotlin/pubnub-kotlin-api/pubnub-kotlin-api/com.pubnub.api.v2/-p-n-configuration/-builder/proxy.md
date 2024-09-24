@@ -3,4 +3,12 @@
 # proxy
 
 [jvm]\
-abstract override var [proxy](proxy.md): [Proxy](https://docs.oracle.com/javase/8/docs/api/java/net/Proxy.html)?
+abstract var [proxy](proxy.md): [Proxy](https://docs.oracle.com/javase/8/docs/api/java/net/Proxy.html)?
+
+Instructs the SDK to use a proxy configuration when communicating with PubNub servers.
+
+#### See also
+
+| |
+|---|
+| [Proxy](https://docs.oracle.com/javase/8/docs/api/java/net/Proxy.html) |

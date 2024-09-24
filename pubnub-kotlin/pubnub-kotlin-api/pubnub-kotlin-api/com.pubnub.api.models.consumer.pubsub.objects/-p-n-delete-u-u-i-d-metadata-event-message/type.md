@@ -2,5 +2,5 @@
 
 # type
 
-[jvm]\
+[common]\
 open override val [type](type.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)

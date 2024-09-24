@@ -2,5 +2,5 @@
 
 # PNAsc
 
-[jvm]\
+[common]\
 constructor(key: [T](index.md))

@@ -2,8 +2,15 @@
 
 # listChannelsForChannelGroup
 
+[common, native]\
+[common]\
+expect abstract fun [listChannelsForChannelGroup](list-channels-for-channel-group.md)(channelGroup: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [AllChannelsChannelGroup](../../com.pubnub.api.endpoints.channel_groups/-all-channels-channel-group/index.md)
+
+[native]\
+actual abstract fun [listChannelsForChannelGroup](list-channels-for-channel-group.md)(channelGroup: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [AllChannelsChannelGroup](../../com.pubnub.api.endpoints.channel_groups/-all-channels-channel-group/index.md)
+
 [jvm]\
-abstract fun [listChannelsForChannelGroup](list-channels-for-channel-group.md)(channelGroup: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [AllChannelsChannelGroup](../../com.pubnub.api.endpoints.channel_groups/-all-channels-channel-group/index.md)
+actual abstract fun [listChannelsForChannelGroup](list-channels-for-channel-group.md)(channelGroup: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [AllChannelsChannelGroup](../../com.pubnub.api.endpoints.channel_groups/-all-channels-channel-group/index.md)
 
 Lists all the channels of the channel group.
 

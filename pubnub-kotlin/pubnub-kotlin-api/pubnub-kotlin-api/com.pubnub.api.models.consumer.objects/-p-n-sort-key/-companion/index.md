@@ -2,12 +2,12 @@
 
 # Companion
 
-[jvm]\
+[common]\
 object [Companion](index.md)
 
 ## Functions
 
 | Name | Summary |
 |---|---|
-| [asc](asc.md) | [jvm]<br>fun [asc](asc.md)(key: [PNKey](../../-p-n-key/index.md)): [PNSortKey](../index.md)&lt;[PNKey](../../-p-n-key/index.md)&gt; |
-| [desc](desc.md) | [jvm]<br>fun [desc](desc.md)(key: [PNKey](../../-p-n-key/index.md)): [PNSortKey](../index.md)&lt;[PNKey](../../-p-n-key/index.md)&gt; |
+| [asc](asc.md) | [common]<br>fun [asc](asc.md)(key: [PNKey](../../-p-n-key/index.md)): [PNSortKey](../index.md)&lt;[PNKey](../../-p-n-key/index.md)&gt; |
+| [desc](desc.md) | [common]<br>fun [desc](desc.md)(key: [PNKey](../../-p-n-key/index.md)): [PNSortKey](../index.md)&lt;[PNKey](../../-p-n-key/index.md)&gt; |

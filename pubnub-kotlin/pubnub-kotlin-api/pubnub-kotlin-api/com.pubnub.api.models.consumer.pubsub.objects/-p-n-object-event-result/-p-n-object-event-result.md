@@ -2,5 +2,5 @@
 
 # PNObjectEventResult
 
-[jvm]\
-constructor(result: [BasePubSubResult](../../../../../pubnub-core/pubnub-core-api/pubnub-core-api/com.pubnub.api.models.consumer.pubsub/-base-pub-sub-result/index.md), extractedMessage: [PNObjectEventMessage](../-p-n-object-event-message/index.md))
+[common]\
+constructor(result: [BasePubSubResult](../../com.pubnub.api.models.consumer.pubsub/-base-pub-sub-result/index.md), extractedMessage: [PNObjectEventMessage](../-p-n-object-event-message/index.md))

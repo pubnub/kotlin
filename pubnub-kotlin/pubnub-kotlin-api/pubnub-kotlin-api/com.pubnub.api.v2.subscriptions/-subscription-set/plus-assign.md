@@ -2,13 +2,13 @@
 
 # plusAssign
 
-[jvm]\
+[common]\
 abstract operator fun [plusAssign](plus-assign.md)(subscription: [Subscription](../-subscription/index.md))
 
-Add the [subscription](plus-assign.md) to this SubscriptionSet. Equivalent to calling [add](../../../../../pubnub-core/pubnub-core-api/com.pubnub.api.v2.subscriptions/-subscription-set/add.md).
+Add the [subscription](plus-assign.md) to this SubscriptionSet. Equivalent to calling [add](add.md).
 
 #### See also
 
 | |
 |---|
-| [SubscriptionSet.add](../../../../../pubnub-core/pubnub-core-api/com.pubnub.api.v2.subscriptions/-subscription-set/add.md) |
+| [SubscriptionSet.add](add.md) |

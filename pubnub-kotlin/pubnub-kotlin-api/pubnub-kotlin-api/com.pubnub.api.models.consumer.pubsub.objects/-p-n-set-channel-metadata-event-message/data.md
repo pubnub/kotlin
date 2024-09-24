@@ -2,5 +2,5 @@
 
 # data
 
-[jvm]\
-val [data](data.md): [PNChannelMetadata](../../../../../pubnub-core/pubnub-core-api/pubnub-core-api/com.pubnub.api.models.consumer.objects.channel/-p-n-channel-metadata/index.md)
+[common]\
+val [data](data.md): [PNChannelMetadata](../../com.pubnub.api.models.consumer.objects.channel/-p-n-channel-metadata/index.md)

@@ -1,0 +1,12 @@
+//[pubnub-kotlin-api](../../../index.md)/[com.pubnub.api.models.consumer.push](../index.md)/[PNPushRemoveChannelResult](index.md)
+
+# PNPushRemoveChannelResult
+
+[common]\
+class [PNPushRemoveChannelResult](index.md)
+
+## Constructors
+
+| | |
+|---|---|
+| [PNPushRemoveChannelResult](-p-n-push-remove-channel-result.md) | [common]<br>constructor() |
