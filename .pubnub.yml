@@ -121,6 +121,8 @@ changelog:
         text: "`PatchValue` is now used in objects returning optional data from the server, such as `PNChannelMetadata`, `PNUUIDMetadata` for example."
       - type: feature
         text: "Removed mutable `PNConfiguration` classes which were deprecated in previous releases."
+      - type: feature
+        text: "PNConfiguration.retryConfiguration is now enabled by default only for Subscribe requests and set to Exponential."
       - type: bug
         text: "A migration script is provided with this release to help with package name changes."
       - type: improvement
