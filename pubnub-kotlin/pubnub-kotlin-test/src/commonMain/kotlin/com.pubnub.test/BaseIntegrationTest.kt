@@ -30,14 +30,18 @@ import kotlin.test.assertTrue
 
 abstract class BaseIntegrationTest {
     lateinit var config: PNConfiguration
+    lateinit var config02: PNConfiguration
     lateinit var configPam: PNConfiguration
     lateinit var pubnub: PubNub
+    lateinit var pubnub02: PubNub
     lateinit var pubnubPam: PubNub
 
     @BeforeTest
     open fun before() {
         config = createPNConfiguration(UserId(randomString()), Keys.subKey, Keys.pubKey, logVerbosity = PNLogVerbosity.BODY)
+        config02 = createPNConfiguration(UserId(randomString()), Keys.subKey, Keys.pubKey, logVerbosity = PNLogVerbosity.BODY)
         pubnub = createPubNub(config)
+        pubnub02 = createPubNub(config02)
         configPam = createPNConfiguration(
             UserId(randomString()),
             Keys.pamSubKey,
@@ -52,6 +56,8 @@ abstract class BaseIntegrationTest {
     open fun after() {
         pubnub.unsubscribeAll()
         pubnub.destroy()
+        pubnub02.unsubscribeAll()
+        pubnub02.destroy()
         pubnubPam.unsubscribeAll()
         pubnubPam.destroy()
     }
