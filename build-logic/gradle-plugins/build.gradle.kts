@@ -46,5 +46,9 @@ gradlePlugin {
             id = "pubnub.multiplatform"
             implementationClass = "com.pubnub.gradle.PubNubKotlinMultiplatformPlugin"
         }
+        register("pubnubBaseMultiplatform") {
+            id = "pubnub.base.multiplatform"
+            implementationClass = "com.pubnub.gradle.PubNubBaseKotlinMultiplatformPlugin"
+        }
     }
 }
