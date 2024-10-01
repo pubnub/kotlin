@@ -1,0 +1,94 @@
+package com.pubnub.api.utils
+
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.toInstant
+
+private const val MINIMA_TIMETOKE_VALUE = 10_000_000_000_000_000
+
+private const val MAXIMUM_TIMETOKEN_VALUE = 99_999_999_999_999_999
+
+/**
+ * Utility object for converting PubNub timetokens to various date-time representations and vice versa.
+ *
+ * This utility provides methods for converting between PubNub timetokens, Unix timestamps, and date-time objects.
+ * A PubNub timetoken is a 17-digit number that represents the number of 100-nanosecond intervals since
+ * January 1, 1970 (UTC). These methods allow for easy conversion between different time representations
+ * used in PubNub, Unix, and standard date-time formats.
+ */
+object TimetokenUtil {
+
+    /**
+     * Converts a PubNub timetoken (a unique identifier for each message sent and received in a PubNub channel that is
+     * a number of 100-nanosecond intervals since January 1, 1970) to LocalDateTime object representing
+     * the corresponding date and time.
+     *
+     * @param timetoken PubNub timetoken
+     * @return [LocalDateTime] representing the corresponding data and time in UTC.
+     * @throws IllegalArgumentException if the timetoken does not have 17 digits.
+     */
+    fun timetokenToDateTimeUTC(timetoken: Long): LocalDateTime {
+        if (isLengthDifferentThan17Digits(timetoken)) {
+            throw IllegalArgumentException("Timetoken should have 17 digits")
+        }
+        // Convert timetoken to seconds and nanoseconds components
+        val epochSeconds = timetoken / 10_000_000 // Divide by 10^7 to get seconds
+        val epochNanoseconds =
+            ((timetoken % 10_000_000) * 100).toInt() // The remainder, multiplied by 100 to get nanoseconds
+
+        val instant = Instant.fromEpochSeconds(epochSeconds, epochNanoseconds)
+        return instant.toLocalDateTime(TimeZone.UTC)
+    }
+
+    /**
+     * Converts [LocalDateTime] in UTC to a PubNub timetoken
+     *
+     * A PubNub timetoken is a 17-digit number representing the number of 100-nanosecond intervals since January 1, 1970.
+     *
+     * @param dateTime The [LocalDateTime] object in UTC to be converted to a PubNub timetoken.
+     * @return A 17-digit [Long] representing the PubNub timetoken for the given [LocalDateTime].
+     */
+    fun dateTimeUTCToTimetoken(dataTime: LocalDateTime): Long {
+        val instant = dataTime.toInstant(TimeZone.UTC)
+        val epochSeconds: Long = instant.epochSeconds
+        val epochNanoseconds: Int = instant.nanosecondsOfSecond
+
+        val pnTimetokenInNanosecondsWithoutNanoPrecision = epochSeconds * 10_000_000
+        val nanosecondsForPubNubTimetoken =
+            epochNanoseconds / 100 // PubNub timetoken for nanoseconds store only 7 digits instead of 9
+        return pnTimetokenInNanosecondsWithoutNanoPrecision + nanosecondsForPubNubTimetoken
+    }
+
+    /**
+     * Converts a Unix timestamp (in seconds)to a PubNub timetoken
+     *
+     * A Unix timestamp represents the number of seconds that have elapsed since January 1, 1970 (midnight UTC/GMT).
+     * This function converts the Unix timestamp, which must be provided in seconds, to a PubNub timetoken.
+     *
+     * @param unixTime The Unix timestamp in seconds to be converted to a PubNub timetoken.
+     * @return A 17-digit [Long] representing the PubNub timetoken corresponding to the given Unix timestamp.
+     */
+    fun unixToTimetoken(unixTime: Long): Long {
+        return (unixTime * 10_000_000)
+    }
+
+    /**
+     * Converts a PubNub timetoken to a Unix timestamp (in seconds).
+     *
+     * A PubNub timetoken is a 17-digit number representing the number of 100-nanosecond intervals since January 1, 1970.
+     * This function converts the PubNub timetoken to a Unix timestamp by reducing the precision to seconds.
+     * Note that precision finer than seconds is lost in this conversion.
+     *
+     * @param timetoken The PubNub timetoken to be converted to a Unix timestamp.
+     * @return A [Long] representing the Unix timestamp in seconds corresponding to the given timetoken.
+     */
+    fun timetokenToUnix(timetoken: Long): Long {
+        return (timetoken/10_000_000)
+    }
+
+    private fun isLengthDifferentThan17Digits(timetoken: Long): Boolean {
+        return timetoken !in MINIMA_TIMETOKE_VALUE..MAXIMUM_TIMETOKEN_VALUE
+    }
+}

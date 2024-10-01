@@ -14,6 +14,7 @@ kotlin {
             dependencies {
                 api(project(":pubnub-kotlin:pubnub-kotlin-core-api"))
                 implementation(libs.kotlinx.atomicfu)
+                implementation(libs.kotlinx.datetime)
             }
         }
 
