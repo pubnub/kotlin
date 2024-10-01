@@ -3,8 +3,8 @@ package com.pubnub.api.utils
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 
 private const val MINIMA_TIMETOKE_VALUE = 10_000_000_000_000_000
 
@@ -19,7 +19,6 @@ private const val MAXIMUM_TIMETOKEN_VALUE = 99_999_999_999_999_999
  * used in PubNub, Unix, and standard date-time formats.
  */
 object TimetokenUtil {
-
     /**
      * Converts a PubNub timetoken (a unique identifier for each message sent and received in a PubNub channel that is
      * a number of 100-nanosecond intervals since January 1, 1970) to LocalDateTime object representing
@@ -85,7 +84,7 @@ object TimetokenUtil {
      * @return A [Long] representing the Unix timestamp in seconds corresponding to the given timetoken.
      */
     fun timetokenToUnix(timetoken: Long): Long {
-        return (timetoken/10_000_000)
+        return (timetoken / 10_000_000)
     }
 
     private fun isLengthDifferentThan17Digits(timetoken: Long): Boolean {

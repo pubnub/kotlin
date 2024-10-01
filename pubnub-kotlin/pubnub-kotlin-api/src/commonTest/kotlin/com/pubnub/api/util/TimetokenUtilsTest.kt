@@ -9,7 +9,6 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class TimetokenUtilsTest {
-
     @Test
     fun can_convert_timestamp_to_DateTime_then_from_DateTime_to_timestamp() {
         // given 2024-09-30 11:24:20.623211800
