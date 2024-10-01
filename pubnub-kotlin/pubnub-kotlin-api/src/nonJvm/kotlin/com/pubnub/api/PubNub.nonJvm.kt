@@ -73,6 +73,7 @@ import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.kmp.CustomObject
 import com.pubnub.kmp.Uploadable
 import kotlin.experimental.ExperimentalObjCName
+import kotlin.native.ObjCName
 
 @OptIn(ExperimentalObjCName::class)
 @ObjCName("PubNubInterface")

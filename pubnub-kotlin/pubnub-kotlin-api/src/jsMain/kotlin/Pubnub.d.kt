@@ -20,7 +20,6 @@ import PubNub.SetChannelMetadataParameters
 import PubNub.SetMembershipsParameters
 import PubNub.SetUUIDMetadataParameters
 import com.pubnub.kmp.JsMap
-import com.pubnub.kmp.Optional
 import org.khronos.webgl.ArrayBuffer
 import org.w3c.files.Blob
 import org.w3c.files.File
@@ -1097,10 +1096,10 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     }
 
     interface ChannelMetadataFieldsPartial {
-        var name: Optional<String>
-        var description: Optional<String>
-        var status: Optional<String>
-        var type: Optional<String>
+//        var name: Optional<String>
+//        var description: Optional<String>
+//        var status: Optional<String>
+//        var type: Optional<String>
     }
 
     interface ChannelMetadataFieldsNullable {
@@ -1143,7 +1142,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     }
 
     interface ChannelMembershipObject : v2ObjectDataOmitId {
-        var channel: ChannelMetadataObject?
+        var channel: ChannelMetadataObject
 
         var status: String?
     }
