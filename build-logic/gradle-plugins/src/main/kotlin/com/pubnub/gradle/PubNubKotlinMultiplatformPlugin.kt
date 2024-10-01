@@ -19,10 +19,43 @@ import org.jetbrains.kotlin.gradle.targets.js.yarn.yarn
 class PubNubKotlinMultiplatformPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
-            apply<KotlinMultiplatformPluginWrapper>()
+            apply<PubNubBaseKotlinMultiplatformPlugin>()
             if (enableAnyIosTarget) {
                 apply<KotlinCocoapodsPlugin>()
+                extensions.configure<KotlinMultiplatformExtension> {
+                    (this as? ExtensionAware)?.extensions?.configure<CocoapodsExtension> {
+                        ios.deploymentTarget = "14"
+//
+//                    summary = "Some description for a Kotlin/Native module"
+//                    homepage = "Link to a Kotlin/Native module homepage"
+
+                        // Maps custom Xcode configuration to NativeBuildType
+                        xcodeConfigurationToNativeBuildType["CUSTOM_DEBUG"] = NativeBuildType.DEBUG
+                        xcodeConfigurationToNativeBuildType["CUSTOM_RELEASE"] = NativeBuildType.RELEASE
+
+                        framework {
+                            isStatic = true
+                            transitiveExport = true
+                        }
+
+                        pod("PubNubSwift") {
+//                            val swiftPath = project.findProperty("SWIFT_PATH") as? String ?: "swift"
+//                            source = path(rootProject.file(swiftPath))
+                            version = "8.0.0"
+                            moduleName = "PubNubSDK"
+                            extraOpts += listOf("-compiler-option", "-fmodules")
+                        }
+                    }
+                }
             }
+        }
+    }
+}
+
+class PubNubBaseKotlinMultiplatformPlugin : Plugin<Project> {
+    override fun apply(target: Project) {
+        with(target) {
+            apply<KotlinMultiplatformPluginWrapper>()
 
             // Kotlin
             extensions.configure<KotlinMultiplatformExtension> {
@@ -85,32 +118,6 @@ class PubNubKotlinMultiplatformPlugin : Plugin<Project> {
                     if (enableAnyIosTarget) {
                         getByName("iosMain") {
                             it.dependsOn(nonJvm)
-                        }
-                    }
-                }
-
-                if (enableAnyIosTarget) {
-                    (this as? ExtensionAware)?.extensions?.configure<CocoapodsExtension> {
-                        ios.deploymentTarget = "14"
-//
-//                    summary = "Some description for a Kotlin/Native module"
-//                    homepage = "Link to a Kotlin/Native module homepage"
-
-                        // Maps custom Xcode configuration to NativeBuildType
-                        xcodeConfigurationToNativeBuildType["CUSTOM_DEBUG"] = NativeBuildType.DEBUG
-                        xcodeConfigurationToNativeBuildType["CUSTOM_RELEASE"] = NativeBuildType.RELEASE
-
-                        framework {
-                            isStatic = true
-                            transitiveExport = true
-                        }
-
-                        pod("PubNubSwift") {
-//                            val swiftPath = project.findProperty("SWIFT_PATH") as? String ?: "swift"
-//                            source = path(rootProject.file(swiftPath))
-                            version = "8.0.0"
-                            moduleName = "PubNubSDK"
-                            extraOpts += listOf("-compiler-option", "-fmodules")
                         }
                     }
                 }
