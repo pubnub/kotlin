@@ -15,9 +15,6 @@ class MigrationTest {
     @Test
     fun loadReplacements() {
         assertTrue { replacements.size == 2 }
-//        replacements.forEach {
-//            assertEquals(it.first, it.second.replace(".java", ""))
-//        }
     }
 
     @Test
