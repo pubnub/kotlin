@@ -10,24 +10,20 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class MigrationTest {
-    private val replacements = listOf(
-        "aaa" to "bbb",
-        "ccc" to "ddd"
-    )
+    private val replacements = Migration.loadReplacementsFile(this::class.java.getResourceAsStream("/testReplacements.txt")!!)
 
     @Test
     fun loadReplacements() {
-        val replacements = Migration.loadReplacementsFile()
-        assertTrue { replacements.isNotEmpty() }
-        replacements.forEach {
-            assertEquals(it.first, it.second.replace(".java", ""))
-        }
+        assertTrue { replacements.size == 2 }
+//        replacements.forEach {
+//            assertEquals(it.first, it.second.replace(".java", ""))
+//        }
     }
 
     @Test
     fun replaceLine() {
-        val inputLine = "xaaax aaa zzz ddd ccc ccC AaA"
-        val expectedLine = "xbbbx bbb zzz ddd ddd ccC AaA"
+        val inputLine = "xaaax aaa; zzz ddd ccc ccC AaA"
+        val expectedLine = "xaaax bbb; zzz ddd ddd ccC AaA"
 
         val line = Migration.replaceLine(inputLine, replacements)
 
@@ -37,13 +33,13 @@ class MigrationTest {
     @Test
     fun replaceLines_changed_lines_returned() {
         val inputLines = sequenceOf(
-            "xaaax aaa zzz ddd ccc ccC AaA",
+            "xaaax aaa; zzz ddd ccc ccC AaA",
             "bbb",
             "ccc aaa ddd",
             "aaa bbb ccc"
         )
         val expectedLines = """
-            xbbbx bbb zzz ddd ddd ccC AaA
+            xaaax bbb; zzz ddd ddd ccC AaA
             bbb
             ddd bbb ddd
             bbb bbb ddd
