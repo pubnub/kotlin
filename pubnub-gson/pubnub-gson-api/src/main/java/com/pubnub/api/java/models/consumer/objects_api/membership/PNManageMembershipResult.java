@@ -1,7 +1,6 @@
 package com.pubnub.api.java.models.consumer.objects_api.membership;
 
 import com.pubnub.api.java.models.consumer.objects_api.EntityArrayEnvelope;
-import com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @ToString(callSuper = true)
 public class PNManageMembershipResult extends EntityArrayEnvelope<PNMembership> {
-    private PNManageMembershipResult(Integer status, Integer totalCount, String prev, String next, List<PNMembership> data) {
+    protected PNManageMembershipResult(Integer status, Integer totalCount, String prev, String next, List<PNMembership> data) {
         this.status = status;
         this.totalCount = totalCount;
         this.prev = prev;
@@ -29,15 +28,5 @@ public class PNManageMembershipResult extends EntityArrayEnvelope<PNMembership> 
         this.prev = body.getPrev();
         this.status = body.getStatus();
         this.totalCount = body.getTotalCount();
-    }
-
-    public static PNManageMembershipResult from(PNChannelMembershipArrayResult result) {
-        return new PNManageMembershipResult(
-                result.getStatus(),
-                result.getTotalCount(),
-                result.getPrev() != null ? result.getPrev().getPageHash() : null,
-                result.getNext() != null ? result.getNext().getPageHash() : null,
-                PNMembership.from(result.getData())
-        );
     }
 }

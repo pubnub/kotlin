@@ -1,5 +1,6 @@
 package com.pubnub.internal.java
 
+import com.pubnub.api.PubNubException
 import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.java.PubNub
 import com.pubnub.api.java.builder.PresenceBuilder
@@ -57,6 +58,9 @@ import com.pubnub.api.java.v2.callbacks.EventListener
 import com.pubnub.api.java.v2.callbacks.StatusListener
 import com.pubnub.api.java.v2.endpoints.pubsub.PublishBuilder
 import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.java.builder.PresenceBuilderImpl
+import com.pubnub.internal.java.builder.SubscribeBuilderImpl
+import com.pubnub.internal.java.builder.UnsubscribeBuilderImpl
 import com.pubnub.internal.java.endpoints.DeleteMessagesImpl
 import com.pubnub.internal.java.endpoints.FetchMessagesImpl
 import com.pubnub.internal.java.endpoints.HistoryImpl
@@ -124,15 +128,15 @@ open class PubNubForJavaImpl(configuration: PNConfiguration) :
     PubNub,
     EventEmitterInternal {
     override fun subscribe(): SubscribeBuilder {
-        return SubscribeBuilder(this)
+        return SubscribeBuilderImpl(this)
     }
 
     override fun unsubscribe(): UnsubscribeBuilder {
-        return UnsubscribeBuilder(this)
+        return UnsubscribeBuilderImpl(this)
     }
 
     override fun presence(): PresenceBuilder {
-        return PresenceBuilder(this)
+        return PresenceBuilderImpl(this)
     }
 
     // start push
@@ -346,7 +350,7 @@ open class PubNubForJavaImpl(configuration: PNConfiguration) :
         return super.decrypt(inputString)
     }
 
-    @Throws(com.pubnub.api.PubNubException::class)
+    @Throws(PubNubException::class)
     override fun decryptInputStream(inputStream: InputStream): InputStream {
         return this.decryptInputStream(inputStream, null)
     }
@@ -357,12 +361,12 @@ open class PubNubForJavaImpl(configuration: PNConfiguration) :
      * @param inputString String to be encrypted
      * @return String containing the encryption of inputString using cipherKey
      */
-    @Throws(com.pubnub.api.PubNubException::class)
+    @Throws(PubNubException::class)
     override fun encrypt(inputString: String): String {
         return this.encrypt(inputString, null)
     }
 
-    @Throws(com.pubnub.api.PubNubException::class)
+    @Throws(PubNubException::class)
     override fun encryptInputStream(inputStream: InputStream): InputStream {
         return this.encryptInputStream(inputStream, null)
     }

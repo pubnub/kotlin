@@ -14,6 +14,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "pubnub"
 include("pubnub-kotlin")
+include("pubnub-kotlin:pubnub-kotlin-core-api")
 include("pubnub-kotlin:pubnub-kotlin-api")
 include("pubnub-kotlin:pubnub-kotlin-impl")
 include("pubnub-kotlin:pubnub-kotlin-test")

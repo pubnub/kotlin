@@ -3,11 +3,13 @@ package com.pubnub.gradle
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaLibraryPlugin
+import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.plugins.quality.Checkstyle
 import org.gradle.api.plugins.quality.CheckstyleExtension
 import org.gradle.api.plugins.quality.CheckstylePlugin
 import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.api.tasks.compile.JavaCompile
+import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.getByType
@@ -22,6 +24,12 @@ class PubNubJavaLibraryPlugin : Plugin<Project> {
 
             tasks.withType<JavaCompile>().configureEach {
                 it.options.compilerArgs.add("-parameters")
+            }
+
+            extensions.configure<JavaPluginExtension> {
+                toolchain {
+                    it.languageVersion.set(JavaLanguageVersion.of(8))
+                }
             }
 
             extensions.configure<CheckstyleExtension> {

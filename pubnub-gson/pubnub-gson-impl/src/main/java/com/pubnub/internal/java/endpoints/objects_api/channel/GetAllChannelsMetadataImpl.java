@@ -7,6 +7,7 @@ import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.java.endpoints.objects_api.channel.GetAllChannelsMetadata;
 import com.pubnub.api.java.endpoints.objects_api.utils.PNSortKey;
 import com.pubnub.api.java.models.consumer.objects_api.channel.PNGetAllChannelsMetadataResult;
+import com.pubnub.api.java.models.consumer.objects_api.channel.PNGetAllChannelsMetadataResultConverter;
 import com.pubnub.api.models.consumer.objects.PNKey;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataArrayResult;
@@ -52,7 +53,7 @@ public class GetAllChannelsMetadataImpl
     @NotNull
     @Override
     protected ExtendedRemoteAction<PNGetAllChannelsMetadataResult> mapResult(@NotNull ExtendedRemoteAction<PNChannelMetadataArrayResult> action) {
-        return new MappingRemoteAction<>(action, PNGetAllChannelsMetadataResult::from);
+        return new MappingRemoteAction<>(action, PNGetAllChannelsMetadataResultConverter::from);
     }
 
     public static Collection<? extends com.pubnub.api.models.consumer.objects.PNSortKey<PNKey>> toInternal(Collection<PNSortKey> sort) {

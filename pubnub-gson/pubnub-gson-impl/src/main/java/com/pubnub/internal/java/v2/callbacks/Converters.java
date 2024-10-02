@@ -2,10 +2,12 @@ package com.pubnub.internal.java.v2.callbacks;
 
 import com.pubnub.api.java.PubNub;
 import com.pubnub.api.java.models.consumer.objects_api.channel.PNChannelMetadata;
+import com.pubnub.api.java.models.consumer.objects_api.channel.PNChannelMetadataConverter;
 import com.pubnub.api.java.models.consumer.objects_api.channel.PNChannelMetadataResult;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNMembership;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNMembershipResult;
 import com.pubnub.api.java.models.consumer.objects_api.uuid.PNUUIDMetadata;
+import com.pubnub.api.java.models.consumer.objects_api.uuid.PNUUIDMetadataConverter;
 import com.pubnub.api.java.models.consumer.objects_api.uuid.PNUUIDMetadataResult;
 import com.pubnub.api.java.v2.callbacks.EventListener;
 import com.pubnub.api.models.consumer.pubsub.objects.ObjectResult;
@@ -68,7 +70,7 @@ class Converters {
     @NotNull
     static PNUUIDMetadataResult getSetUuidMetadataResult(PNObjectEventResult objectEvent, PNSetUUIDMetadataEventMessage message) {
         com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata data = message.getData();
-        PNUUIDMetadata newData = PNUUIDMetadata.from(data);
+        PNUUIDMetadata newData = PNUUIDMetadataConverter.from(data);
 
         return new PNUUIDMetadataResult(
                 message.getEvent(),
@@ -99,7 +101,7 @@ class Converters {
     @NotNull
     static PNChannelMetadataResult getSetChannelMetadataResult(PNObjectEventResult objectEvent, PNSetChannelMetadataEventMessage message) {
         com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata data = message.getData();
-        PNChannelMetadata newData = PNChannelMetadata.from(data);
+        PNChannelMetadata newData = PNChannelMetadataConverter.from(data);
         return new PNChannelMetadataResult(
                 message.getEvent(),
                 objectEvent.getChannel(),

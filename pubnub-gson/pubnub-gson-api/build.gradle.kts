@@ -7,7 +7,7 @@ plugins {
 }
 
 dependencies {
-    api(project(":pubnub-kotlin:pubnub-kotlin-api"))
+    api(project(":pubnub-kotlin:pubnub-kotlin-core-api"))
     implementation(libs.slf4j)
     implementation(libs.jetbrains.annotations)
 }

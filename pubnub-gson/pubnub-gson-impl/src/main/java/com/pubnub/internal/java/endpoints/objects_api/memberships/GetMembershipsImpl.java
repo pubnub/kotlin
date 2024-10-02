@@ -8,6 +8,7 @@ import com.pubnub.api.java.endpoints.objects_api.memberships.GetMemberships;
 import com.pubnub.api.java.endpoints.objects_api.utils.Include;
 import com.pubnub.api.java.endpoints.objects_api.utils.PNSortKey;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNGetMembershipsResult;
+import com.pubnub.api.java.models.consumer.objects_api.membership.PNGetMembershipsResultConverter;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult;
 import com.pubnub.internal.java.endpoints.DelegatingEndpoint;
@@ -39,7 +40,7 @@ public class GetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipAr
     @NotNull
     @Override
     protected ExtendedRemoteAction<PNGetMembershipsResult> mapResult(@NotNull ExtendedRemoteAction<PNChannelMembershipArrayResult> action) {
-        return new MappingRemoteAction<>(action, PNGetMembershipsResult::from);
+        return new MappingRemoteAction<>(action, PNGetMembershipsResultConverter::from);
     }
 
     @Override

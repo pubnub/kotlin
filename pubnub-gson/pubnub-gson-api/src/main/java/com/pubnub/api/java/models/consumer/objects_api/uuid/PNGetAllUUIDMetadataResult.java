@@ -1,7 +1,6 @@
 package com.pubnub.api.java.models.consumer.objects_api.uuid;
 
 import com.pubnub.api.java.models.consumer.objects_api.EntityArrayEnvelope;
-import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,21 +23,11 @@ public class PNGetAllUUIDMetadataResult extends EntityArrayEnvelope<PNUUIDMetada
         this.data = envelope.getData();
     }
 
-    private PNGetAllUUIDMetadataResult(Integer status, Integer totalCount, String prev, String next, List<PNUUIDMetadata> data) {
+    protected PNGetAllUUIDMetadataResult(Integer status, Integer totalCount, String prev, String next, List<PNUUIDMetadata> data) {
         this.status = status;
         this.totalCount = totalCount;
         this.prev = prev;
         this.next = next;
         this.data = data;
-    }
-
-    public static PNGetAllUUIDMetadataResult from(PNUUIDMetadataArrayResult result) {
-        return new PNGetAllUUIDMetadataResult(
-                result.getStatus(),
-                result.getTotalCount(),
-                result.getPrev() != null ? result.getPrev().getPageHash() : null,
-                result.getNext() != null ? result.getNext().getPageHash() : null,
-                PNUUIDMetadata.from(result.getData())
-        );
     }
 }

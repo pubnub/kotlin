@@ -7,6 +7,7 @@ import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.java.endpoints.objects_api.utils.PNSortKey;
 import com.pubnub.api.java.endpoints.objects_api.uuid.GetAllUUIDMetadata;
 import com.pubnub.api.java.models.consumer.objects_api.uuid.PNGetAllUUIDMetadataResult;
+import com.pubnub.api.java.models.consumer.objects_api.uuid.PNGetAllUUIDMetadataResultConverter;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult;
 import com.pubnub.internal.java.endpoints.DelegatingEndpoint;
@@ -51,6 +52,6 @@ public class GetAllUUIDMetadataImpl
     @NotNull
     @Override
     protected ExtendedRemoteAction<PNGetAllUUIDMetadataResult> mapResult(@NotNull ExtendedRemoteAction<PNUUIDMetadataArrayResult> action) {
-        return new MappingRemoteAction<>(action, PNGetAllUUIDMetadataResult::from);
+        return new MappingRemoteAction<>(action, PNGetAllUUIDMetadataResultConverter::from);
     }
 }

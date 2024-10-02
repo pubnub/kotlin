@@ -1,7 +1,6 @@
 package com.pubnub.api.java.v2.entities
 
 import com.pubnub.api.java.v2.subscriptions.Subscription
-import com.pubnub.api.v2.entities.Subscribable
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 
 /**
@@ -11,7 +10,7 @@ import com.pubnub.api.v2.subscriptions.SubscriptionOptions
  *
  * Use the [com.pubnub.api.java.PubNub.channelGroup] factory method to create instances of this interface.
  */
-interface ChannelGroup : com.pubnub.api.java.v2.entities.Subscribable {
+interface ChannelGroup : Subscribable {
     /**
      * The name of this channel group.
      *

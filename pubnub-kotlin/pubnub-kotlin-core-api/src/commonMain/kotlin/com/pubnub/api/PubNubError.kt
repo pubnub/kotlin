@@ -1,7 +1,5 @@
 package com.pubnub.api
 
-import com.pubnub.api.models.consumer.PNStatus
-
 /**
  * List of known PubNub errors. Observe them in [PubNubException.pubnubError] in [PNStatus.exception].
  *

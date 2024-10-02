@@ -8,6 +8,7 @@ import com.pubnub.api.java.endpoints.objects_api.members.GetChannelMembers;
 import com.pubnub.api.java.endpoints.objects_api.utils.Include;
 import com.pubnub.api.java.endpoints.objects_api.utils.PNSortKey;
 import com.pubnub.api.java.models.consumer.objects_api.member.PNGetChannelMembersResult;
+import com.pubnub.api.java.models.consumer.objects_api.member.PNGetChannelMembersResultConverter;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult;
 import com.pubnub.internal.java.endpoints.DelegatingEndpoint;
@@ -40,7 +41,7 @@ public class GetChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayResul
     @NotNull
     @Override
     protected ExtendedRemoteAction<PNGetChannelMembersResult> mapResult(@NotNull ExtendedRemoteAction<PNMemberArrayResult> action) {
-        return new MappingRemoteAction<>(action, PNGetChannelMembersResult::from);
+        return new MappingRemoteAction<>(action, PNGetChannelMembersResultConverter::from);
     }
 
     @Override

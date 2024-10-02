@@ -4,7 +4,6 @@ import com.pubnub.api.UserId
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNLogVerbosity
-import com.pubnub.api.java.v2.PNConfiguration.Builder
 import com.pubnub.api.retry.RetryConfiguration
 import okhttp3.Authenticator
 import okhttp3.CertificatePinner

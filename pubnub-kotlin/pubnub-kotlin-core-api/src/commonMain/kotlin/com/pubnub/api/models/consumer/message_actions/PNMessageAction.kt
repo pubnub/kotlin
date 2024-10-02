@@ -23,7 +23,7 @@ open class PNMessageAction(
 ) {
     constructor() : this("", "", 0L)
 
-    internal constructor(pnMessageAction: PNMessageAction) : this(
+    constructor(pnMessageAction: PNMessageAction) : this(
         pnMessageAction.type,
         pnMessageAction.value,
         pnMessageAction.messageTimetoken,
