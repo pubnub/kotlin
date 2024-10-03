@@ -5,6 +5,7 @@ import com.pubnub.kmp.createEventListener
 import com.pubnub.test.BaseIntegrationTest
 import com.pubnub.test.await
 import com.pubnub.test.test
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.yield
 import kotlin.test.Ignore
@@ -66,18 +67,18 @@ class EntitiesTest : BaseIntegrationTest() {
             }
             assertEquals(channelSet, pubnub.getSubscribedChannels().toSet())
 
-            var messageFromSetSubscription: PNMessageResult? = null
+            var messageFromSetSubscription: CompletableDeferred<PNMessageResult> = CompletableDeferred()
             set.addListener(
                 createEventListener(pubnub, onMessage = { pubNub, pnMessageResult ->
-                    messageFromSetSubscription = pnMessageResult
+                    if (!messageFromSetSubscription.isCompleted) {
+                        messageFromSetSubscription.complete(pnMessageResult)
+                    }
                 })
             )
 
             pubnub.publish(channelName, "some message", shouldStore = false).await()
             val receivedMessage = nextMessage()
-            yield()
-
-            assertEquals(receivedMessage, messageFromSetSubscription)
+            assertEquals(receivedMessage, messageFromSetSubscription.await())
         }
     }
 }
