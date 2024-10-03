@@ -111,6 +111,7 @@ import com.pubnub.api.models.consumer.objects.member.MemberInput
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
+import com.pubnub.api.utils.PatchValue
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
@@ -126,11 +127,9 @@ import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.internal.v2.entities.ChannelImpl
 import com.pubnub.internal.v2.subscriptions.SubscriptionSetImpl
 import com.pubnub.kmp.CustomObject
-import com.pubnub.kmp.Optional
 import com.pubnub.kmp.Uploadable
 import com.pubnub.kmp.createJsObject
 import com.pubnub.kmp.toJsMap
-import com.pubnub.kmp.toOptional
 import kotlin.js.json
 import PubNub as PubNubJs
 
@@ -171,7 +170,7 @@ class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
         channel: String,
         message: Any,
         meta: Any?,
-        shouldStore: Boolean,
+        shouldStore: Boolean?,
         usePost: Boolean,
         replicate: Boolean,
         ttl: Int?
@@ -181,7 +180,7 @@ class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
             createJsObject {
                 this.message = message.adjustCollectionTypes()
                 this.channel = channel
-                this.storeInHistory = shouldStore
+                shouldStore?.let { this.storeInHistory = it }
                 this.meta = meta?.adjustCollectionTypes()
                 this.sendByPost = usePost
                 this.ttl = ttl
@@ -189,7 +188,7 @@ class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
         )
     }
 
-    override fun fire(channel: String, message: Any, meta: Any?, usePost: Boolean, ttl: Int?): Publish {
+    override fun fire(channel: String, message: Any, meta: Any?, usePost: Boolean): Publish {
         return FireImpl(
             jsPubNub,
             createJsObject {
@@ -562,11 +561,11 @@ class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
             createJsObject {
                 this.channel = channel
                 this.data = ChannelMetadata(
-                    name.toOptional(),
-                    description.toOptional(),
-                    status.toOptional(),
-                    type.toOptional(),
-                    custom.toOptional()
+                    PatchValue.of(name),
+                    PatchValue.of(description),
+                    PatchValue.of(status),
+                    PatchValue.of(type),
+                    PatchValue.of(custom),
                 )
 
                 this.include = createJsObject<PubNubJs.UuidIncludeCustom> {
@@ -635,13 +634,13 @@ class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
             jsPubNub,
             createJsObject {
                 data = UUIDMetadata(
-                    name.toOptional(),
-                    externalId.toOptional(),
-                    profileUrl.toOptional(),
-                    email.toOptional(),
-                    status.toOptional(),
-                    type.toOptional(),
-                    custom.toOptional()
+                    PatchValue.of(name),
+                    PatchValue.of(externalId),
+                    PatchValue.of(profileUrl),
+                    PatchValue.of(email),
+                    PatchValue.of(status),
+                    PatchValue.of(type),
+                    PatchValue.of(custom),
                 )
                 this.uuid = uuid
 
@@ -1114,38 +1113,38 @@ private fun Any.adjustCollectionTypes(): Any {
 }
 
 fun UUIDMetadata(
-    name: Optional<String?>,
-    externalId: Optional<String?>,
-    profileUrl: Optional<String?>,
-    email: Optional<String?>,
-    status: Optional<String?>,
-    type: Optional<String?>,
-    custom: Optional<Map<String, Any?>?>
+    name: PatchValue<String?>,
+    externalId: PatchValue<String?>,
+    profileUrl: PatchValue<String?>,
+    email: PatchValue<String?>,
+    status: PatchValue<String?>,
+    type: PatchValue<String?>,
+    custom: PatchValue<Map<String, Any?>?>
 ): PubNubJs.UUIDMetadata {
     val result: PubNubJs.UUIDMetadata = createJsObject()
-    name.onValue { result.name = it }
-    externalId.onValue { result.externalId = it }
-    profileUrl.onValue { result.profileUrl = it }
-    email.onValue { result.email = it }
-    status.onValue { result.status = it }
-    type.onValue { result.type = it }
-    custom.onValue { result.custom = it?.adjustCollectionTypes()?.unsafeCast<PubNubJs.CustomObject>() }
+    name.value?.let { result.name = it }
+    externalId.value?.let { result.externalId = it }
+    profileUrl.value?.let { result.profileUrl = it }
+    email.value?.let { result.email = it }
+    status.value?.let { result.status = it }
+    type.value?.let { result.type = it }
+    custom.value?.let { result.custom = it.adjustCollectionTypes().unsafeCast<PubNubJs.CustomObject>() }
     return result
 }
 
 fun ChannelMetadata(
-    name: Optional<String?>,
-    description: Optional<String?>,
-    status: Optional<String?>,
-    type: Optional<String?>,
-    custom: Optional<Map<String, Any?>?>
+    name: PatchValue<String?>,
+    description: PatchValue<String?>,
+    status: PatchValue<String?>,
+    type: PatchValue<String?>,
+    custom: PatchValue<Map<String, Any?>?>
 ): PubNubJs.ChannelMetadata {
     val result: PubNubJs.ChannelMetadata = createJsObject()
-    name.onValue { result.name = it }
-    description.onValue { result.description = it }
-    status.onValue { result.status = it }
-    type.onValue { result.type = it }
-    custom.onValue { result.custom = it?.adjustCollectionTypes()?.unsafeCast<PubNubJs.CustomObject>() }
+    name.value?.let { result.name = it }
+    description.value?.let { result.description = it }
+    status.value?.let { result.status = it }
+    type.value?.let { result.type = it }
+    custom.value?.let { result.custom = it.adjustCollectionTypes().unsafeCast<PubNubJs.CustomObject>() }
     return result
 }
 //

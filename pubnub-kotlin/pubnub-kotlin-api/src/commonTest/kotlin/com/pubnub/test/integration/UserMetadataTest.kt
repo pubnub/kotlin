@@ -83,7 +83,7 @@ class UserMetadataTest : BaseIntegrationTest() {
             val message = result.extractedMessage
             message as PNSetUUIDMetadataEventMessage
             assertEquals(uuid, message.data.id)
-            assertNull(message.data.name)
+            assertNull(message.data.name?.value)
             assertEquals(externalId, message.data.externalId?.value)
             assertEquals(profileUrl, message.data.profileUrl?.value)
             assertEquals(email, message.data.email?.value)

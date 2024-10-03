@@ -15,6 +15,7 @@ import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult
+import com.pubnub.api.utils.PatchValue
 
 internal fun SetChannelMetadataResponse.toChannelMetadataResult(): PNChannelMetadataResult {
     return PNChannelMetadataResult(
@@ -26,33 +27,33 @@ internal fun SetChannelMetadataResponse.toChannelMetadataResult(): PNChannelMeta
 internal fun PubNub.ChannelMetadataObject.toChannelMetadata(): PNChannelMetadata {
     return PNChannelMetadata(
         id,
-        name,
-        description,
-        custom?.toMap(),
-        updated,
-        eTag,
-        type,
-        status
+        PatchValue.of(name), // TODO support optionals
+        PatchValue.of(description),
+        PatchValue.of(custom?.toMap()),
+        PatchValue.of(updated),
+        PatchValue.of(eTag),
+        PatchValue.of(type),
+        PatchValue.of(status),
     )
 }
 
 internal fun PubNub.UUIDMembershipObject.toPNMember() = PNMember(
     PNUUIDMetadata(
         uuid.id,
-        uuid.name,
-        uuid.externalId,
-        uuid.profileUrl,
-        uuid.email,
-        uuid.custom?.toMap(),
-        uuid.updated,
-        uuid.eTag,
-        uuid.type,
-        uuid.status
+        PatchValue.of(uuid.name), // TODO support optionals
+        PatchValue.of(uuid.externalId),
+        PatchValue.of(uuid.profileUrl),
+        PatchValue.of(uuid.email),
+        PatchValue.of(uuid.custom?.toMap()),
+        PatchValue.of(uuid.updated),
+        PatchValue.of(uuid.eTag),
+        PatchValue.of(uuid.type),
+        PatchValue.of(uuid.status),
     ),
-    custom?.toMap(),
+    PatchValue.of(custom?.toMap()),
     updated,
     eTag,
-    status
+    PatchValue.of(status),
 )
 
 internal fun ManageChannelMembersResponse.toPNMemberArrayResult() = PNMemberArrayResult(
@@ -67,11 +68,11 @@ internal fun ManageMembershipsResponse.toPNChannelMembershipArrayResult() = PNCh
     status.toInt(),
     data.map {
         PNChannelMembership(
-            it.channel?.toChannelMetadata(),
-            it.custom?.toMap(),
+            it.channel.toChannelMetadata(),
+            PatchValue.of(it.custom?.toMap()),
             it.updated,
             it.eTag,
-            it.status
+            PatchValue.of(it.status),
         )
     },
     totalCount?.toInt(),
@@ -83,7 +84,16 @@ internal fun ObjectsResponse<PubNub.UUIDMetadataObject>.toPNUUIDMetadataResult()
     PNUUIDMetadataResult(status.toInt(), data.toPNUUIDMetadata())
 
 internal fun PubNub.UUIDMetadataObject.toPNUUIDMetadata() = PNUUIDMetadata(
-    id, name, externalId, profileUrl, email, custom?.toMap(), updated, eTag, type, status
+    id,
+    PatchValue.of(name),
+    PatchValue.of(externalId),
+    PatchValue.of(profileUrl),
+    PatchValue.of(email),
+    PatchValue.of(custom?.toMap()),
+    PatchValue.of(updated),
+    PatchValue.of(eTag),
+    PatchValue.of(type),
+    PatchValue.of(status),
 )
 
 internal fun PubNub.MessageAction.toMessageAction() =

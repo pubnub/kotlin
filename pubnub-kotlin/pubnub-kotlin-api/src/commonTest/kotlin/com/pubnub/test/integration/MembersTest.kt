@@ -3,6 +3,7 @@ package com.pubnub.test.integration
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.member.PNMember
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
+import com.pubnub.kmp.PLATFORM
 import com.pubnub.kmp.createCustomObject
 import com.pubnub.test.BaseIntegrationTest
 import com.pubnub.test.await
@@ -41,6 +42,10 @@ class MembersTest : BaseIntegrationTest() {
 
     @Test
     fun can_set_members_with_status() = runTest(timeout = 10.seconds) {
+        if (PLATFORM == "JS") {
+            // TODO JS doesn't have membership status
+            return@runTest
+        }
         // when
         val result = pubnub.setChannelMembers(
             channel,

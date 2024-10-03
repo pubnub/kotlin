@@ -22,6 +22,7 @@ import com.pubnub.api.models.consumer.pubsub.objects.PNSetChannelMetadataEventMe
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetMembershipEvent
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetMembershipEventMessage
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetUUIDMetadataEventMessage
+import com.pubnub.api.utils.PatchValue
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
@@ -165,10 +166,10 @@ actual fun createEventListener(
                                 PNSetMembershipEvent(
                                     it.channel.id,
                                     it.uuid.id,
-                                    it.custom?.toMap(),
+                                    PatchValue.of(it.custom?.toMap()),
                                     it.eTag,
                                     it.updated,
-                                    null // todo missing
+                                    PatchValue.of(it.asDynamic().status) // todo missing
                                 )
                             )
                         }
