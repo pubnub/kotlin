@@ -6,6 +6,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 class TimetokenUtilsTest {
     @Test
@@ -52,6 +53,15 @@ class TimetokenUtilsTest {
         val localDateTimeInUTC = instant.toLocalDateTime(TimeZone.UTC)
         assertEquals("2024-10-02", localDateTimeInUTC.date.toString())
         assertEquals("11:02:15.316", localDateTimeInUTC.time.toString())
+    }
+
+    @Test
+    fun can_convert_unixTime_in_not_having_10_or_13_digits() {
+        val unixTime4Digits = 1_000L
+        val exception = assertFailsWith<IllegalArgumentException> {
+            TimetokenUtil.unixToTimetoken(unixTime4Digits)
+        }
+        assertEquals("Unix timetoken should have 10 or 13 digits", exception.message)
     }
 
     @Test

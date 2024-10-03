@@ -58,13 +58,18 @@ object TimetokenUtil {
     }
 
     /**
-     * Converts a Unix timestamp to a PubNub timetoken
+     * Converts a Unix timestamp (in seconds or millis)to a PubNub timetoken
      *
      * @param unixTime The Unix timestamp to be converted to a PubNub timetoken.
      * @return A 17-digit [Long] representing the PubNub timetoken corresponding to the given Unix timestamp.
+     * @throws IllegalArgumentException if the unixTime does not have 10 or 13 digits.
      */
     fun unixToTimetoken(unixTime: Long): Long {
-        val numberOfDigits = unixTime.toString().length
+        val unixTimetokenLength = unixTime.toString().length
+        if (unixTimetokenLength != 10 && unixTimetokenLength != 13) {
+            throw IllegalArgumentException("Unix timetoken should have 10 or 13 digits")
+        }
+        val numberOfDigits = unixTimetokenLength
         val zerosToBeAdded = NUMBER_OF_DIGITS_IN_TIMETOKEN - numberOfDigits
         return unixTime * 10.toDouble().pow(zerosToBeAdded).toLong()
     }
