@@ -7,19 +7,23 @@ import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.Context
 import com.github.ajalt.clikt.core.main
 import com.github.ajalt.clikt.parameters.arguments.argument
+import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
+import com.github.ajalt.clikt.parameters.options.split
 import com.github.ajalt.clikt.parameters.types.path
+import java.io.InputStream
 
-class Migration(private val replacements: List<Pair<String, String>>) : CliktCommand("migration_utils") {
+class Migration(private val replacements: List<Pair<Regex, String>>) : CliktCommand("migration_utils") {
     val dryRun by option(help = "Perform a dry run (without changing any files)").flag()
     val noBackups by option(help = "Do not save backups of changed files as '<filename>.bck'").flag()
-    val directory by argument(name = "project directory").path(mustExist = true, canBeDir = true, canBeFile = false)
-
-    val supportedExtensions = setOf("java", "kt")
+    val directory by argument(name = "project directory").path(mustExist = true, canBeDir = true, canBeFile = true)
+    val extensions by option(help = "Provide a list of file extensions to consider. Default: java, kt").split(",").default(
+        listOf("kt", "java")
+    )
 
     override fun help(context: Context): String {
-        return "This command will scan all files ending with ${supportedExtensions.map { "'.$it'" }.joinToString(", ")}" +
+        return "This command will scan all files ending with extensions specified in `--extensions=kt,java`" +
                 " in <project directory>, and replace package names of classes that have been moved to " +
                 "com.pubnub.api.java.* in PubNub Java SDK v10.\n\n" +
                 "Perform a --dry-run to print a list of files that will be changed.\n\n" +
@@ -30,7 +34,7 @@ class Migration(private val replacements: List<Pair<String, String>>) : CliktCom
 
     override fun run() {
         directory.toFile().walk().forEach { file ->
-            if (file.extension.lowercase() !in supportedExtensions) {
+            if (file.extension.lowercase() !in this.extensions) {
                 return@forEach
             }
             val newFileContent = file.useLines { lines ->
@@ -51,7 +55,7 @@ class Migration(private val replacements: List<Pair<String, String>>) : CliktCom
     companion object {
         fun replaceLines(
             lines: Sequence<String>,
-            replacements: List<Pair<String, String>>,
+            replacements: List<Pair<Regex, String>>,
         ): String? {
             var fileChanged = false
             val newFileContent = lines.fold(StringBuilder()) { acc: StringBuilder, line: String ->
@@ -70,7 +74,7 @@ class Migration(private val replacements: List<Pair<String, String>>) : CliktCom
 
         fun replaceLine(
             line: String,
-            replacements: List<Pair<String, String>>,
+            replacements: List<Pair<Regex, String>>,
         ): String {
             return replacements.fold(line) { lineUnderReplacement, replacement ->
                 lineUnderReplacement
@@ -78,16 +82,16 @@ class Migration(private val replacements: List<Pair<String, String>>) : CliktCom
             }
         }
 
-        fun loadReplacementsFile(): List<Pair<String, String>> =
-            this::class.java.getResourceAsStream("/replacements.txt")!!
+        fun loadReplacementsFile(inputStream: InputStream): List<Pair<Regex, String>> =
+            inputStream
                 .bufferedReader()
                 .readLines()
                 .map {
                     val split = it.split(':')
                     require(split.size == 2)
-                    split[0] to split[1]
+                    Regex("(?u)" + split[0].replace(".", "\\.") + "(?!\\p{Alnum})") to split[1]
                 }
     }
 }
 
-fun main(args: Array<String>) = Migration(Migration.loadReplacementsFile()).main(args)
+fun main(args: Array<String>) = Migration(Migration.loadReplacementsFile(Migration::class.java.getResourceAsStream("/replacements.txt")!!)).main(args)
