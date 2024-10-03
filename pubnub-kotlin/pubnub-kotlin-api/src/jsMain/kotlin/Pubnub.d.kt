@@ -1095,13 +1095,6 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var include: UuidIncludeCustom?
     }
 
-    interface ChannelMetadataFieldsPartial {
-//        var name: Optional<String>
-//        var description: Optional<String>
-//        var status: Optional<String>
-//        var type: Optional<String>
-    }
-
     interface ChannelMetadataFieldsNullable {
         var name: String?
         var description: String?
