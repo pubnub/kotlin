@@ -99,6 +99,7 @@ class PubNubBaseKotlinMultiplatformPlugin : Plugin<Project> {
                 }
                 if (enableIosSimulatorTarget) {
                     iosSimulatorArm64()
+                    iosX64()
                 }
 
                 applyDefaultHierarchyTemplate()
