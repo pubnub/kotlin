@@ -1,13 +1,11 @@
 package com.pubnub.api.utils
 
 import kotlinx.datetime.Instant
-import kotlin.math.pow
 
 private const val MINIMA_TIMETOKE_VALUE = 10_000_000_000_000_000
-
 private const val MAXIMUM_TIMETOKEN_VALUE = 99_999_999_999_999_999
-
-private const val NUMBER_OF_DIGITS_IN_TIMETOKEN = 17
+private const val UNIX_TIME_IN_SECONDS = 10
+private const val UNIX_TIME_IN_MILLISECONDS = 13
 
 /**
  * Utility object for converting PubNub timetokens to various date-time representations and vice versa.
@@ -65,13 +63,21 @@ object TimetokenUtil {
      * @throws IllegalArgumentException if the unixTime does not have 10 or 13 digits.
      */
     fun unixToTimetoken(unixTime: Long): Long {
-        val unixTimetokenLength = unixTime.toString().length
-        if (unixTimetokenLength != 10 && unixTimetokenLength != 13) {
-            throw IllegalArgumentException("Unix timetoken should have 10 or 13 digits")
+        val unixTimeLength = unixTime.toString().length
+
+        return when (unixTimeLength) {
+            UNIX_TIME_IN_SECONDS -> {
+                unixTime * 10_000_000
+            }
+
+            UNIX_TIME_IN_MILLISECONDS -> {
+                unixTime * 10_000
+            }
+
+            else -> {
+                throw IllegalArgumentException("Unix timetoken should have $UNIX_TIME_IN_SECONDS or $UNIX_TIME_IN_MILLISECONDS digits")
+            }
         }
-        val numberOfDigits = unixTimetokenLength
-        val zerosToBeAdded = NUMBER_OF_DIGITS_IN_TIMETOKEN - numberOfDigits
-        return unixTime * 10.toDouble().pow(zerosToBeAdded).toLong()
     }
 
     /**
