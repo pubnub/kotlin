@@ -2,10 +2,11 @@ package com.pubnub.api.utils
 
 import kotlinx.datetime.Instant
 
-private const val MINIMA_TIMETOKE_VALUE = 10_000_000_000_000_000
+private const val MINIMAL_TIMETOKE_VALUE = 10_000_000_000_000_000
 private const val MAXIMUM_TIMETOKEN_VALUE = 99_999_999_999_999_999
-private const val UNIX_TIME_IN_SECONDS = 10
-private const val UNIX_TIME_IN_MILLISECONDS = 13
+private const val MINIMAL_UNIX_TIME_VALUE = 1_000_000_000_000
+private const val MAXIMUM_UNIX_TIME_VALUE = 9_999_999_999_999
+private const val UNIX_TIME_LENGHT_WHEN_IN_MILLISECONDS = 13
 
 /**
  * Utility object for converting PubNub timetokens to various date-time representations and vice versa.
@@ -56,28 +57,17 @@ object TimetokenUtil {
     }
 
     /**
-     * Converts a Unix timestamp (in seconds or millis)to a PubNub timetoken
+     * Converts a Unix timestamp (in millis) to a PubNub timetoken
      *
      * @param unixTime The Unix timestamp to be converted to a PubNub timetoken.
      * @return A 17-digit [Long] representing the PubNub timetoken corresponding to the given Unix timestamp.
-     * @throws IllegalArgumentException if the unixTime does not have 10 or 13 digits.
+     * @throws IllegalArgumentException if the unixTime does not have 13 digits.
      */
     fun unixToTimetoken(unixTime: Long): Long {
-        val unixTimeLength = unixTime.toString().length
-
-        return when (unixTimeLength) {
-            UNIX_TIME_IN_SECONDS -> {
-                unixTime * 10_000_000
-            }
-
-            UNIX_TIME_IN_MILLISECONDS -> {
-                unixTime * 10_000
-            }
-
-            else -> {
-                throw IllegalArgumentException("Unix timetoken should have $UNIX_TIME_IN_SECONDS or $UNIX_TIME_IN_MILLISECONDS digits")
-            }
+        if (isLengthDifferentThan13Digits(unixTime)) {
+            throw IllegalArgumentException("Unix timetoken should have $UNIX_TIME_LENGHT_WHEN_IN_MILLISECONDS digits.")
         }
+        return unixTime * 10_000 // PubNub timetoken has 17 digits
     }
 
     /**
@@ -91,10 +81,14 @@ object TimetokenUtil {
      * @return A [Long] representing the Unix timestamp in millis corresponding to the given timetoken.
      */
     fun timetokenToUnix(timetoken: Long): Long {
-        return (timetoken / 10_000)
+        return (timetoken / 10_000) // PubNub timetoken has 17 digits
     }
 
     private fun isLengthDifferentThan17Digits(timetoken: Long): Boolean {
-        return timetoken !in MINIMA_TIMETOKE_VALUE..MAXIMUM_TIMETOKEN_VALUE
+        return timetoken !in MINIMAL_TIMETOKE_VALUE..MAXIMUM_TIMETOKEN_VALUE
+    }
+
+    private fun isLengthDifferentThan13Digits(unixTime: Long): Boolean {
+        return unixTime !in MINIMAL_UNIX_TIME_VALUE..MAXIMUM_UNIX_TIME_VALUE
     }
 }

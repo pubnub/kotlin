@@ -26,21 +26,6 @@ class TimetokenUtilsTest {
     }
 
     @Test
-    fun can_convert_unixTime_in_seconds_to_timetoken() {
-        // given 2024-09-30 20:00:12
-        val unixTime = 1727726412L
-
-        // when
-        val timetoken: Long = TimetokenUtil.unixToTimetoken(unixTime)
-
-        // then
-        val instant: Instant = TimetokenUtil.timetokenToInstant(timetoken)
-        val localDateTimeInUTC = instant.toLocalDateTime(TimeZone.UTC)
-        assertEquals("2024-09-30", localDateTimeInUTC.date.toString())
-        assertEquals("20:00:12", localDateTimeInUTC.time.toString())
-    }
-
-    @Test
     fun can_convert_unixTime_in_milliseconds_to_timetoken() {
         // given 2024-10-02 11:02:15.316
         val unixTime = 1727866935316
@@ -57,11 +42,11 @@ class TimetokenUtilsTest {
 
     @Test
     fun can_convert_unixTime_in_not_having_10_or_13_digits() {
-        val unixTime4Digits = 1_000L
+        val unixTime4Digits = 1_000_000_000L
         val exception = assertFailsWith<IllegalArgumentException> {
             TimetokenUtil.unixToTimetoken(unixTime4Digits)
         }
-        assertEquals("Unix timetoken should have 10 or 13 digits", exception.message)
+        assertEquals("Unix timetoken should have 13 digits.", exception.message)
     }
 
     @Test
