@@ -10,9 +10,6 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -38,32 +35,6 @@ public class PNUUIDMetadata extends PNObject {
     public PNUUIDMetadata setCustom(PatchValue<@Nullable Map<String, Object>> custom) {
         super.setCustom(custom);
         return this;
-    }
-
-    public static List<PNUUIDMetadata> from(Collection<com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata> data) {
-        ArrayList<PNUUIDMetadata> list = new ArrayList<>(data.size());
-        for (com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata datum : data) {
-            list.add(from(datum));
-        }
-        return list;
-    }
-
-    @Nullable
-    public static PNUUIDMetadata from(com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata data) {
-        if (data == null) {
-            return null;
-        }
-        PNUUIDMetadata newData = new PNUUIDMetadata(data.getId(), data.getName())
-                .setProfileUrl(data.getProfileUrl())
-                .setEmail(data.getEmail())
-                .setExternalId(data.getExternalId())
-                .setStatus(data.getStatus())
-                .setType(data.getType())
-                .setCustom(data.getCustom());
-
-        newData.setETag(data.getETag());
-        newData.setUpdated(data.getUpdated());
-        return newData;
     }
 }
 

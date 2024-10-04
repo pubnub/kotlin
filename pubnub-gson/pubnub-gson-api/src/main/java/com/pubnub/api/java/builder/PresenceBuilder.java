@@ -1,37 +1,12 @@
 package com.pubnub.api.java.builder;
 
-import com.pubnub.api.PubNub;
-import lombok.AccessLevel;
-import lombok.Setter;
-import lombok.experimental.Accessors;
-
 import java.util.List;
 
-@Setter
-@Accessors(chain = true, fluent = true)
-public class PresenceBuilder extends PubSubBuilder {
+public interface PresenceBuilder extends PubSubBuilder {
 
-    @Setter(AccessLevel.PUBLIC)
-    private boolean connected;
+    PresenceBuilder connected(boolean connected);
 
-    public PresenceBuilder(PubNub pubnub) {
-        super(pubnub);
-    }
+    PresenceBuilder channels(List<String> channels);
 
-    public void execute() {
-        this.getPubnub().presence(
-                getChannelSubscriptions(),
-                getChannelGroupSubscriptions(),
-                connected
-        );
-    }
-
-    public PresenceBuilder channels(List<String> channels) {
-        return (PresenceBuilder) super.channels(channels);
-    }
-
-    public PresenceBuilder channelGroups(List<String> channelGroups) {
-        return (PresenceBuilder) super.channelGroups(channelGroups);
-    }
-
+    PresenceBuilder channelGroups(List<String> channelGroups);
 }

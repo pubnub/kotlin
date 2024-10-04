@@ -9,6 +9,7 @@ import com.pubnub.api.java.endpoints.objects_api.utils.Include;
 import com.pubnub.api.java.endpoints.objects_api.utils.PNSortKey;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNSetMembershipResult;
+import com.pubnub.api.java.models.consumer.objects_api.membership.PNSetMembershipResultConverter;
 import com.pubnub.api.models.consumer.objects.PNMembershipKey;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput;
@@ -74,7 +75,7 @@ public class SetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipAr
     @NotNull
     @Override
     protected ExtendedRemoteAction<PNSetMembershipResult> mapResult(@NotNull ExtendedRemoteAction<PNChannelMembershipArrayResult> action) {
-        return new MappingRemoteAction<>(action, PNSetMembershipResult::from);
+        return new MappingRemoteAction<>(action, PNSetMembershipResultConverter::from);
     }
 
     public static class Builder implements SetMemberships.Builder {

@@ -1,45 +1,14 @@
 package com.pubnub.api.java.builder;
 
 
-import com.pubnub.api.PubNub;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.ArrayList;
 import java.util.List;
 
-public abstract class PubSubBuilder {
+public interface PubSubBuilder {
 
-    @Getter(AccessLevel.PROTECTED)
-    @Setter(AccessLevel.PROTECTED)
-    private List<String> channelSubscriptions;
+    PubSubBuilder channels(List<String> channel);
 
-    @Getter(AccessLevel.PROTECTED)
-    @Setter(AccessLevel.PROTECTED)
-    private List<String> channelGroupSubscriptions;
+    PubSubBuilder channelGroups(List<String> channelGroup);
 
-    @Getter(AccessLevel.PROTECTED)
-    @Setter(AccessLevel.PROTECTED)
-    private PubNub pubnub;
-
-    public PubSubBuilder(PubNub pubnub) {
-        this.pubnub = pubnub;
-        this.channelSubscriptions = new ArrayList<>();
-        this.channelGroupSubscriptions = new ArrayList<>();
-    }
-
-
-    public PubSubBuilder channels(List<String> channel) {
-        channelSubscriptions.addAll(channel);
-        return this;
-    }
-
-    public PubSubBuilder channelGroups(List<String> channelGroup) {
-        channelGroupSubscriptions.addAll(channelGroup);
-        return this;
-    }
-
-    public abstract void execute();
+    void execute();
 
 }

@@ -6,7 +6,7 @@ import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.java.endpoints.objects_api.uuid.SetUUIDMetadata;
 import com.pubnub.api.java.models.consumer.objects_api.uuid.PNSetUUIDMetadataResult;
-import com.pubnub.api.java.models.consumer.objects_api.uuid.PNUUIDMetadata;
+import com.pubnub.api.java.models.consumer.objects_api.uuid.PNUUIDMetadataConverter;
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult;
 import com.pubnub.internal.java.endpoints.DelegatingEndpoint;
 import lombok.Setter;
@@ -74,7 +74,7 @@ public class SetUUIDMetadataImpl extends DelegatingEndpoint<PNUUIDMetadataResult
                 action,
                 result -> new PNSetUUIDMetadataResult(
                         result.getStatus(),
-                        PNUUIDMetadata.from(result.getData())
+                        PNUUIDMetadataConverter.from(result.getData())
                 )
         );
     }

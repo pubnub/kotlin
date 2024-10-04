@@ -65,6 +65,7 @@ import com.pubnub.api.java.v2.subscriptions.Subscription
 import com.pubnub.api.java.v2.subscriptions.SubscriptionSet
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import java.io.InputStream
+import java.util.UUID
 
 interface PubNub : EventEmitter, StatusEmitter {
     val timestamp: Int
@@ -754,6 +755,6 @@ interface PubNub : EventEmitter, StatusEmitter {
          * that connects to PubNub.
          */
         @JvmStatic
-        fun generateUUID(): String = com.pubnub.api.PubNub.generateUUID()
+        fun generateUUID(): String = "pn-${UUID.randomUUID()}"
     }
 }

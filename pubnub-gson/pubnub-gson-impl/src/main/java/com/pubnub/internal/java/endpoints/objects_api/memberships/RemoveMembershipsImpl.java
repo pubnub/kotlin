@@ -9,6 +9,7 @@ import com.pubnub.api.java.endpoints.objects_api.utils.Include;
 import com.pubnub.api.java.endpoints.objects_api.utils.PNSortKey;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNRemoveMembershipResult;
+import com.pubnub.api.java.models.consumer.objects_api.membership.PNRemoveMembershipResultConverter;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult;
 import com.pubnub.internal.java.endpoints.DelegatingEndpoint;
@@ -42,7 +43,7 @@ public class RemoveMembershipsImpl extends DelegatingEndpoint<PNChannelMembershi
     @NotNull
     @Override
     protected ExtendedRemoteAction<PNRemoveMembershipResult> mapResult(@NotNull ExtendedRemoteAction<PNChannelMembershipArrayResult> action) {
-        return new MappingRemoteAction<>(action, PNRemoveMembershipResult::from);
+        return new MappingRemoteAction<>(action, PNRemoveMembershipResultConverter::from);
     }
 
     @Override

@@ -5,15 +5,9 @@ import cocoapods.PubNubSwift.signalWithChannel
 import com.pubnub.api.models.consumer.PNPublishResult
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
-import com.pubnub.kmp.PNFuture
 import com.pubnub.kmp.onFailureHandler
 import com.pubnub.kmp.onSuccessHandler
 import kotlinx.cinterop.ExperimentalForeignApi
-
-/**
- * @see [PubNub.signal]
- */
-actual interface Signal : PNFuture<PNPublishResult>
 
 @OptIn(ExperimentalForeignApi::class)
 class SignalImpl(

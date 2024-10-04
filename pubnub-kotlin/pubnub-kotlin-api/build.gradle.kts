@@ -12,6 +12,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
+                api(project(":pubnub-kotlin:pubnub-kotlin-core-api"))
                 implementation(libs.kotlinx.atomicfu)
             }
         }
@@ -23,7 +24,6 @@ kotlin {
                 api(libs.okhttp.logging)
                 api(libs.json)
                 api(libs.gson)
-                implementation(libs.slf4j)
                 implementation(libs.slf4j)
             }
         }

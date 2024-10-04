@@ -5,15 +5,9 @@ import cocoapods.PubNubSwift.listChannelGroupsOnSuccess
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsListAllResult
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
-import com.pubnub.kmp.PNFuture
 import com.pubnub.kmp.onFailureHandler
 import com.pubnub.kmp.onSuccessHandler
 import kotlinx.cinterop.ExperimentalForeignApi
-
-/**
- * @see [PubNub.listAllChannelGroups]
- */
-actual interface ListAllChannelGroup : PNFuture<PNChannelGroupsListAllResult>
 
 @OptIn(ExperimentalForeignApi::class)
 class ListAllChannelGroupImpl(

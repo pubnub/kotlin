@@ -1,7 +1,9 @@
 package com.pubnub.api
 
+import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
+@OptIn(ExperimentalJsExport::class)
 @JsExport
 data class UserId
     @Throws(PubNubException::class)
