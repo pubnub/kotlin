@@ -3,11 +3,19 @@ package com.pubnub.api.java.util;
 import java.time.Instant;
 
 public class TimetokenUtil {
+
     private static final long MINIMAL_TIMETOKEN_VALUE = 10_000_000_000_000_000L;
     private static final long MAXIMUM_TIMETOKEN_VALUE = 99_999_999_999_999_999L;
     private static final long MINIMAL_UNIX_TIME_VALUE = 1_000_000_000_000L;
     private static final long MAXIMUM_UNIX_TIME_VALUE = 9_999_999_999_999L;
     private static final int UNIX_TIME_LENGTH_WHEN_IN_MILLISECONDS = 13;
+    private static final int SECONDS_CONVERSION_FACTOR = 10_000_000;
+    private static final int NANOSECONDS_CONVERSION_FACTOR = 100;
+    private static final int UNIX_TO_TIMETOKEN_CONVERSION_FACTOR = 10_000;
+
+    private TimetokenUtil() {
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+    }
 
     /**
      * Converts a PubNub timetoken (a unique identifier for each message sent and received in a PubNub channel that is
@@ -24,8 +32,8 @@ public class TimetokenUtil {
         }
 
         // Convert timetoken to seconds and nanoseconds components
-        long epochSeconds = timetoken / 10_000_000; // Divide by 10^7 to get seconds
-        int epochNanoseconds = (int) ((timetoken % 10_000_000) * 100); // The remainder, multiplied by 100 to get nanoseconds
+        long epochSeconds = timetoken / SECONDS_CONVERSION_FACTOR; // Divide by 10^7 to get seconds
+        int epochNanoseconds = (int) ((timetoken % SECONDS_CONVERSION_FACTOR) * NANOSECONDS_CONVERSION_FACTOR); // The remainder, multiplied by 100 to get nanoseconds
 
         return Instant.ofEpochSecond(epochSeconds, epochNanoseconds);
     }
@@ -42,8 +50,8 @@ public class TimetokenUtil {
         long epochSeconds = instant.getEpochSecond();
         int epochNanoseconds = instant.getNano();
 
-        long pnTimetokenInNanosecondsWithoutNanoPrecision = epochSeconds * 10_000_000;
-        long nanosecondsForPubNubTimetoken = epochNanoseconds / 100; // PubNub timetoken for nanoseconds store only 7 digits instead of 9
+        long pnTimetokenInNanosecondsWithoutNanoPrecision = epochSeconds * SECONDS_CONVERSION_FACTOR;
+        long nanosecondsForPubNubTimetoken = epochNanoseconds / NANOSECONDS_CONVERSION_FACTOR; // PubNub timetoken for nanoseconds store only 7 digits instead of 9
 
         return pnTimetokenInNanosecondsWithoutNanoPrecision + nanosecondsForPubNubTimetoken;
     }
@@ -60,7 +68,7 @@ public class TimetokenUtil {
             throw new IllegalArgumentException("Unix timetoken should have " + UNIX_TIME_LENGTH_WHEN_IN_MILLISECONDS + " digits.");
         }
 
-        return unixTime * 10_000; // PubNub timetoken has 17 digits
+        return unixTime * UNIX_TO_TIMETOKEN_CONVERSION_FACTOR; // PubNub timetoken has 17 digits
     }
 
     /**
@@ -74,7 +82,7 @@ public class TimetokenUtil {
      * @return A long representing the Unix timestamp in millis corresponding to the given timetoken.
      */
     public static long timetokenToUnix(long timetoken) {
-        return timetoken / 10_000; // PubNub timetoken has 17 digits
+        return timetoken / UNIX_TO_TIMETOKEN_CONVERSION_FACTOR; // PubNub timetoken has 17 digits
     }
 
     private static boolean isLengthDifferentThan17Digits(long timetoken) {
