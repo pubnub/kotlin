@@ -80,6 +80,7 @@ class TimetokenUtil {
          *
          * @param timetoken The PubNub timetoken to be converted to a Unix timestamp.
          * @return A [Long] representing the Unix timestamp in millis corresponding to the given timetoken.
+         * @throws IllegalArgumentException if the timetoken does not have 17 digits.
          */
         fun timetokenToUnix(timetoken: Long): Long {
             if (isLengthDifferentThan17Digits(timetoken)) {
