@@ -23,7 +23,7 @@ public class TimetokenUtil {
      * the corresponding date and time.
      *
      * @param timetoken PubNub timetoken
-     * @return Instant representing the corresponding date and time.
+     * @return Instant representing the corresponding moment in time.
      * @throws IllegalArgumentException if the timetoken does not have 17 digits.
      */
     public static Instant timetokenToInstant(long timetoken) {
