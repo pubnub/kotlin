@@ -1,7 +1,6 @@
 package com.pubnub.api.utils
 
 import kotlinx.datetime.Instant
-import kotlin.jvm.JvmStatic
 
 /**
  * Utility object for converting PubNub timetokens to various date-time representations and vice versa.
@@ -22,13 +21,12 @@ class TimetokenUtil {
         /**
          * Converts a PubNub timetoken (a unique identifier for each message sent and received in a PubNub channel that is
          * a number of 100-nanosecond intervals since January 1, 1970) to LocalDateTime object representing
-         * the corresponding date and time.
+         * the corresponding moment in time.
          *
          * @param timetoken PubNub timetoken
          * @return [Instant] representing the corresponding moment in time.
          * @throws IllegalArgumentException if the timetoken does not have 17 digits.
          */
-        @JvmStatic
         fun timetokenToInstant(timetoken: Long): Instant {
             if (isLengthDifferentThan17Digits(timetoken)) {
                 throw IllegalArgumentException("Timetoken should have 17 digits")
@@ -49,7 +47,6 @@ class TimetokenUtil {
          * @param instant The [Instant] object to be converted to a PubNub timetoken.
          * @return A 17-digit [Long] representing the PubNub timetoken for the given [Instant].
          */
-        @JvmStatic
         fun instantToTimetoken(instant: Instant): Long {
             val epochSeconds: Long = instant.epochSeconds
             val epochNanoseconds: Int = instant.nanosecondsOfSecond
@@ -67,7 +64,6 @@ class TimetokenUtil {
          * @return A 17-digit [Long] representing the PubNub timetoken corresponding to the given Unix timestamp.
          * @throws IllegalArgumentException if the unixTime does not have 13 digits.
          */
-        @JvmStatic
         fun unixToTimetoken(unixTime: Long): Long {
             if (isLengthDifferentThan13Digits(unixTime)) {
                 throw IllegalArgumentException("Unix timetoken should have $UNIX_TIME_LENGHT_WHEN_IN_MILLISECONDS digits.")
@@ -85,8 +81,10 @@ class TimetokenUtil {
          * @param timetoken The PubNub timetoken to be converted to a Unix timestamp.
          * @return A [Long] representing the Unix timestamp in millis corresponding to the given timetoken.
          */
-        @JvmStatic
         fun timetokenToUnix(timetoken: Long): Long {
+            if (isLengthDifferentThan17Digits(timetoken)) {
+                throw IllegalArgumentException("Timetoken should have 17 digits")
+            }
             return (timetoken / 10_000) // PubNub timetoken has 17 digits
         }
 
