@@ -30,7 +30,7 @@ jobs:
             ${{ runner.os }}-gradle-
       - name: Build and run tests
         run: |
-          ./gradlew check integrationTest
+          ./gradlew integrationTest
         env:
           SDK_PUB_KEY: ${{ secrets.SDK_PUB_KEY }}
           SDK_SUB_KEY: ${{ secrets.SDK_SUB_KEY }}

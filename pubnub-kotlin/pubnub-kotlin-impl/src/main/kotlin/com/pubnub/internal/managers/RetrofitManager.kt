@@ -105,13 +105,13 @@ class RetrofitManager(
         val okHttpBuilder = parentOkHttpClient?.newBuilder() ?: OkHttpClient.Builder()
 
         okHttpBuilder
-            .dns(object : Dns {
-                override fun lookup(hostname: String): List<InetAddress> {
-                    return Dns.SYSTEM.lookup(hostname).filter {
-                        it is Inet6Address
-                    }
-                }
-            })
+//            .dns(object : Dns {
+//                override fun lookup(hostname: String): List<InetAddress> {
+//                    return Dns.SYSTEM.lookup(hostname).filter {
+//                        it is Inet6Address
+//                    }
+//                }
+//            })
             .protocols(listOf(Protocol.HTTP_2, Protocol.HTTP_1_1))
             .retryOnConnectionFailure(false)
             .readTimeout(readTimeout.toLong(), TimeUnit.SECONDS)
