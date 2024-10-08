@@ -94,12 +94,12 @@ class PubNubBaseKotlinMultiplatformPlugin : Plugin<Project> {
                 }
 
 
-                if (enableIosTarget) {
+                if (enableIosTargetOther) {
                     iosArm64()
-                }
-                if (enableIosSimulatorTarget) {
-                    iosSimulatorArm64()
                     iosX64()
+                }
+                if (enableIosSimulatorArm64) {
+                    iosSimulatorArm64()
                 }
 
                 applyDefaultHierarchyTemplate()
@@ -143,6 +143,6 @@ class PubNubBaseKotlinMultiplatformPlugin : Plugin<Project> {
 }
 
 val Project.enableJsTarget get() = project.findProperty("ENABLE_TARGET_JS") == "true"
-val Project.enableIosTarget get() = project.findProperty("ENABLE_TARGET_IOS") == "true"
-val Project.enableIosSimulatorTarget get() = project.findProperty("ENABLE_TARGET_IOS_SIMULATOR") == "true"
-val Project.enableAnyIosTarget get() = enableIosTarget || enableIosSimulatorTarget
+val Project.enableIosTargetOther get() = project.findProperty("ENABLE_TARGET_IOS_OTHER") == "true" || project.findProperty("ENABLE_TARGET_IOS_ALL") == "true"
+val Project.enableIosSimulatorArm64 get() = project.findProperty("ENABLE_TARGET_IOS_SIMULATOR_ARM64") == "true" || project.findProperty("ENABLE_TARGET_IOS_ALL") == "true"
+val Project.enableAnyIosTarget get() = enableIosTargetOther || enableIosSimulatorArm64
