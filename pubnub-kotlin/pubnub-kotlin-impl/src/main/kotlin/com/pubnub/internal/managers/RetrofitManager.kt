@@ -19,14 +19,11 @@ import com.pubnub.internal.services.SubscribeService
 import com.pubnub.internal.services.TimeService
 import com.pubnub.internal.vendor.AppEngineFactory.Factory
 import okhttp3.Call
-import okhttp3.Dns
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
 import okhttp3.logging.HttpLoggingInterceptor
 import org.jetbrains.annotations.TestOnly
 import retrofit2.Retrofit
-import java.net.Inet6Address
-import java.net.InetAddress
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.TimeUnit
 
