@@ -112,7 +112,7 @@ class RetrofitManager(
                     }
                 }
             })
-            .protocols(listOf(Protocol.HTTP_2))
+            .protocols(listOf(Protocol.HTTP_2, Protocol.HTTP_1_1))
             .retryOnConnectionFailure(false)
             .readTimeout(readTimeout.toLong(), TimeUnit.SECONDS)
             .connectTimeout(configuration.connectTimeout.toLong(), TimeUnit.SECONDS)
