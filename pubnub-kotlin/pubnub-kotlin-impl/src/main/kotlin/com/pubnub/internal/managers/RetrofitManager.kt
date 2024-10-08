@@ -19,10 +19,14 @@ import com.pubnub.internal.services.SubscribeService
 import com.pubnub.internal.services.TimeService
 import com.pubnub.internal.vendor.AppEngineFactory.Factory
 import okhttp3.Call
+import okhttp3.Dns
 import okhttp3.OkHttpClient
+import okhttp3.Protocol
 import okhttp3.logging.HttpLoggingInterceptor
 import org.jetbrains.annotations.TestOnly
 import retrofit2.Retrofit
+import java.net.Inet6Address
+import java.net.InetAddress
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.TimeUnit
 
@@ -101,6 +105,14 @@ class RetrofitManager(
         val okHttpBuilder = parentOkHttpClient?.newBuilder() ?: OkHttpClient.Builder()
 
         okHttpBuilder
+            .dns(object : Dns {
+                override fun lookup(hostname: String): List<InetAddress> {
+                    return Dns.SYSTEM.lookup(hostname).filter {
+                        it is Inet6Address
+                    }
+                }
+            })
+            .protocols(listOf(Protocol.HTTP_2))
             .retryOnConnectionFailure(false)
             .readTimeout(readTimeout.toLong(), TimeUnit.SECONDS)
             .connectTimeout(configuration.connectTimeout.toLong(), TimeUnit.SECONDS)
