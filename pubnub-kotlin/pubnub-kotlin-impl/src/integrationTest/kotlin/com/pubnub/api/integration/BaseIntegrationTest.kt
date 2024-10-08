@@ -57,6 +57,7 @@ abstract class BaseIntegrationTest {
         if (pnConfiguration == null) {
             pnConfiguration = getBasicPnConfiguration().apply(clientConfig).build()
         }
+
         val pubNub = PubNub.create(pnConfiguration)
         registerGuestClient(pubNub)
         return pubNub
@@ -96,7 +97,7 @@ abstract class BaseIntegrationTest {
         clientConfig.retryConfiguration = RetryConfiguration.None
         clientConfig.logVerbosity = PNLogVerbosity.NONE
         clientConfig.httpLoggingInterceptor = createInterceptor(logger)
-
+        clientConfig.origin = "h2.pubnubapi.com"
         return clientConfig
     }
 
@@ -107,7 +108,7 @@ abstract class BaseIntegrationTest {
         serverConfig.logVerbosity = PNLogVerbosity.NONE
         serverConfig.httpLoggingInterceptor = createInterceptor(logger)
         serverConfig.action()
-
+        serverConfig.origin = "h2.pubnubapi.com"
         return serverConfig.build()
     }
 

@@ -147,6 +147,7 @@ public abstract class BaseIntegrationTest {
         } catch (PubNubException e) {
             throw new RuntimeException(e);
         }
+        pnConfiguration.origin("h2.pubnubapi.com");
         pnConfiguration.retryConfiguration(RetryConfiguration.None.INSTANCE);
         pnConfiguration.logVerbosity(PNLogVerbosity.NONE);
         pnConfiguration.httpLoggingInterceptor(createInterceptor());
@@ -163,6 +164,7 @@ public abstract class BaseIntegrationTest {
         } catch (PubNubException e) {
             throw new RuntimeException(e);
         }
+        pnConfiguration.origin("h2.pubnubapi.com");
         pnConfiguration.publishKey(PAM_PUB_KEY);
         pnConfiguration.secretKey(PAM_SEC_KEY);
         pnConfiguration.logVerbosity(PNLogVerbosity.NONE);

@@ -29,6 +29,7 @@ kotlin {
     }
     if (enableIosSimulatorTarget) {
         iosSimulatorArm64()
+        iosX64()
     }
 
     sourceSets {

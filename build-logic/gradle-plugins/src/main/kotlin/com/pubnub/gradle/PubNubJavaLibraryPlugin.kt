@@ -9,6 +9,8 @@ import org.gradle.api.plugins.quality.CheckstyleExtension
 import org.gradle.api.plugins.quality.CheckstylePlugin
 import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.api.tasks.compile.JavaCompile
+import org.gradle.api.tasks.testing.AbstractTestTask
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
@@ -45,6 +47,18 @@ class PubNubJavaLibraryPlugin : Plugin<Project> {
                     report.xml.required.set(true)
                     report.html.required.set(true)
                 }
+            }
+
+            tasks.withType<AbstractTestTask> {
+                testLogging {
+                    it.showStackTraces = true
+                    it.showCauses = true
+                    it.showExceptions = true
+                    it.exceptionFormat = TestExceptionFormat.FULL
+                }
+//                if (providers.environmentVariable("CI").isPresent && !providers.environmentVariable("CI_FORCE_RUN_INTEGRATION_TESTS").isPresent) {
+//                    filter.excludeTestsMatching("com.pubnub.test.integration.*")
+//                }
             }
 
         }
