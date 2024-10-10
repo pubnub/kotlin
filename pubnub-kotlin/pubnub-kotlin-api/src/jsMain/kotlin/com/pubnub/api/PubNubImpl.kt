@@ -133,7 +133,7 @@ import com.pubnub.kmp.toJsMap
 import kotlin.js.json
 import PubNub as PubNubJs
 
-class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
+class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
     constructor(configuration: PNConfiguration) : this(PubNubJs(configuration.toJs()))
 
     override val configuration: PNConfiguration
@@ -676,6 +676,7 @@ class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
             createJsObject {
                 this.sort = sort.toJsMap()
                 this.filter = filter
+                this.page = page.toMetadataPage()
                 this.include = createJsObject<PubNubJs.MembershipIncludeOptions> {
                     this.customFields = includeCustom
                     this.totalCount = includeCount

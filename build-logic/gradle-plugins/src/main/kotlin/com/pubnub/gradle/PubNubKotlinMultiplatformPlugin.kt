@@ -72,6 +72,10 @@ class PubNubBaseKotlinMultiplatformPlugin : Plugin<Project> {
                                 }
                             }
                         }
+//                        binaries.executable()
+                        binaries.library()
+                        generateTypeScriptDefinitions()
+
 //                    nodejs {
 //                        testTask {
 //                            it.useMocha {

@@ -10,6 +10,9 @@ import kotlinx.atomicfu.atomic
 import kotlinx.atomicfu.locks.ReentrantLock
 import kotlinx.atomicfu.locks.reentrantLock
 import kotlinx.atomicfu.locks.withLock
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 import kotlin.jvm.JvmName
 
 private class CompletablePNFuture<T> : PNFuture<T> {
@@ -146,4 +149,15 @@ fun <T, U, X> awaitAll(
 ): PNFuture<Triple<T, U, X>> = listOf(future1 as PNFuture<Any?>, future2 as PNFuture<Any?>, future3 as PNFuture<Any?>).awaitAll().then {
         it: List<Any?> ->
     Triple(it[0] as T, it[1] as U, it[2] as X)
+}
+
+
+suspend fun <T> PNFuture<T>.await(): T = suspendCancellableCoroutine { cont ->
+    async { result ->
+        result.onSuccess {
+            cont.resume(it)
+        }.onFailure {
+            cont.resumeWithException(it)
+        }
+    }
 }

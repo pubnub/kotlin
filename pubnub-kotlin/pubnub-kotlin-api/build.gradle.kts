@@ -13,6 +13,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(project(":pubnub-kotlin:pubnub-kotlin-core-api"))
+                api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
                 implementation(libs.kotlinx.atomicfu)
             }
         }
