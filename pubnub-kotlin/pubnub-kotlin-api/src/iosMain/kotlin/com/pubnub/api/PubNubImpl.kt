@@ -817,6 +817,11 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         }
     }
 
+    override fun getToken() : String? {
+        // TODO:
+        return null
+    }
+
     override fun destroy() {
         pubNubObjC.disconnect()
     }

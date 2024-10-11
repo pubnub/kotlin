@@ -460,6 +460,8 @@ expect interface PubNub {
 
     fun setToken(token: String?)
 
+    fun getToken(): String?
+
     fun destroy()
 
     fun channel(name: String): Channel

@@ -95,6 +95,9 @@ class PNConfigurationImpl(
 
         override var secretKey: String = defaultConfiguration.secretKey
 
+        @Deprecated(
+            "This setting is deprecated because it relates to deprecated Access Manager (PAM V2). Use method pubnub.setToken(token) instead.",
+        )
         override var authKey: String = defaultConfiguration.authKey
 
         override var cryptoModule: CryptoModule? = defaultConfiguration.cryptoModule

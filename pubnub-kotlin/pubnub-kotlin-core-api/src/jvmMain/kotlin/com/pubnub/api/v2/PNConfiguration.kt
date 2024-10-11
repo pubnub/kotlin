@@ -39,8 +39,11 @@ actual interface PNConfiguration {
     actual val secretKey: String
 
     /**
-     * If Access Manager is utilized, client will use this authKey in all restricted requests.
+     * If Access Manager (deprecated PAM v2) is utilized, client will use this authKey in all restricted requests.
      */
+    @Deprecated(
+        "This setting is deprecated because it relates to deprecated Access Manager (PAM V2). Use method pubnub.setToken(token) instead.",
+    )
     actual val authKey: String
 
     /**
@@ -332,8 +335,11 @@ actual interface PNConfiguration {
         var secretKey: String
 
         /**
-         * If Access Manager is utilized, client will use this authKey in all restricted requests.
+         * If Access Manager (deprecated PAM v2) is utilized, client will use this authKey in all restricted requests.
          */
+        @Deprecated(
+            "This setting is deprecated because it relates to deprecated Access Manager (PAM V2). Use method pubnub.setToken(token) instead.",
+        )
         var authKey: String
 
         /**
@@ -637,8 +643,11 @@ interface PNConfigurationOverride {
         var includeRequestIdentifier: Boolean
 
         /**
-         * If Access Manager is utilized, client will use this authKey in all restricted requests.
+         * If Access Manager (deprecated PAM v2) is utilized, client will use this authKey in all restricted requests.
          */
+        @Deprecated(
+            "This setting is deprecated because it relates to deprecated Access Manager (PAM V2). Use method pubnub.setToken(token) instead.",
+        )
         var authKey: String
 
         /**

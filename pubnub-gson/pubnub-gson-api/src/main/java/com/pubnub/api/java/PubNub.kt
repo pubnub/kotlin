@@ -713,6 +713,9 @@ interface PubNub : EventEmitter, StatusEmitter {
     @Throws(PubNubException::class)
     fun parseToken(token: String): PNToken
 
+    /**
+     * Method use in client devices to update the authenticated token granted by the server.
+     */
     fun setToken(token: String?)
 
     /**

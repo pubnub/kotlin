@@ -254,6 +254,8 @@ actual interface PubNub : StatusEmitter, EventEmitter {
 
     actual fun setToken(token: String?)
 
+    actual fun getToken(): String?
+
     /**
      * Force the SDK to try and reach out PubNub. Monitor the results in [SubscribeCallback.status]
      *

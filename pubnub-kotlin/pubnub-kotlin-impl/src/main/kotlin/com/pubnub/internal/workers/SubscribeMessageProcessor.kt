@@ -192,8 +192,10 @@ internal class SubscribeMessageProcessor(
                 fileName,
             )
         val queryParams = ArrayList<String>()
-        val authKey =
-            if (pubnub.configuration.authKey.isValid()) {
+        val authToken =
+            if (pubnub.tokenManager.getToken() != null){
+                pubnub.tokenManager.getToken()
+            } else if (pubnub.configuration.authKey.isValid()) {
                 pubnub.configuration.authKey
             } else {
                 null
@@ -201,12 +203,12 @@ internal class SubscribeMessageProcessor(
 
         if (PubNubUtil.shouldSignRequest(pubnub.configuration)) {
             val timestamp: Int = PubNubImpl.timestamp()
-            val signature: String = generateSignature(pubnub.configuration, basePath, authKey, timestamp)
+            val signature: String = generateSignature(pubnub.configuration, basePath, authToken, timestamp)
             queryParams.add(PubNubUtil.TIMESTAMP_QUERY_PARAM_NAME + "=" + timestamp)
             queryParams.add(PubNubUtil.SIGNATURE_QUERY_PARAM_NAME + "=" + signature)
         }
 
-        authKey?.run { queryParams.add(PubNubUtil.AUTH_QUERY_PARAM_NAME + "=" + authKey) }
+        authToken?.run { queryParams.add(PubNubUtil.AUTH_QUERY_PARAM_NAME + "=" + authToken) }
 
         return if (queryParams.isEmpty()) {
             basePath
@@ -218,13 +220,14 @@ internal class SubscribeMessageProcessor(
     private fun generateSignature(
         configuration: PNConfiguration,
         url: String,
-        authKey: String?,
+        authToken: String?,
         timestamp: Int,
     ): String {
         val queryParams = mutableMapOf<String, String>()
-        if (authKey != null) {
-            queryParams["auth"] = authKey
+        if (authToken != null) {
+            queryParams["auth"] = authToken
         }
+
         return PubNubUtil.generateSignature(
             url,
             queryParams,
