@@ -31,10 +31,12 @@ import kotlin.test.assertTrue
 abstract class BaseIntegrationTest {
     lateinit var config: PNConfiguration
     lateinit var config02: PNConfiguration
-    lateinit var configPam: PNConfiguration
+    lateinit var configPamServer: PNConfiguration
+    lateinit var configPamClient: PNConfiguration
     lateinit var pubnub: PubNub
     lateinit var pubnub02: PubNub
-    lateinit var pubnubPam: PubNub
+    lateinit var pubnubPamServer: PubNub
+    lateinit var pubnubPamClient: PubNub
 
     @BeforeTest
     open fun before() {
@@ -42,14 +44,21 @@ abstract class BaseIntegrationTest {
         config02 = createPNConfiguration(UserId(randomString()), Keys.subKey, Keys.pubKey, logVerbosity = PNLogVerbosity.BODY)
         pubnub = createPubNub(config)
         pubnub02 = createPubNub(config02)
-        configPam = createPNConfiguration(
+        configPamServer = createPNConfiguration(
             UserId(randomString()),
             Keys.pamSubKey,
             Keys.pamPubKey,
             Keys.pamSecKey,
             logVerbosity = PNLogVerbosity.BODY
         )
-        pubnubPam = createPubNub(configPam)
+        configPamClient = createPNConfiguration(
+            UserId(randomString()),
+            Keys.pamSubKey,
+            Keys.pamPubKey,
+            logVerbosity = PNLogVerbosity.BODY
+        )
+        pubnubPamServer = createPubNub(configPamServer)
+        pubnubPamClient = createPubNub(configPamClient)
     }
 
     @AfterTest
@@ -58,8 +67,10 @@ abstract class BaseIntegrationTest {
         pubnub.destroy()
         pubnub02.unsubscribeAll()
         pubnub02.destroy()
-        pubnubPam.unsubscribeAll()
-        pubnubPam.destroy()
+        pubnubPamServer.unsubscribeAll()
+        pubnubPamServer.destroy()
+        pubnubPamClient.unsubscribeAll()
+        pubnubPamClient.destroy()
     }
 }
 
