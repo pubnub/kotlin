@@ -14,6 +14,11 @@ jobs:
     outputs:
       release: ${{ steps.check.outputs.ready }}
     steps:
+      - name: Install JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu' # See 'Supported distributions' for available options
+          java-version: '21'
       - name: Checkout actions
         uses: actions/checkout@v4
         with:
@@ -33,6 +38,11 @@ jobs:
     runs-on:
       group: macos-gh
     steps:
+      - name: Install JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu' # See 'Supported distributions' for available options
+          java-version: '21'
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
