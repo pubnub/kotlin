@@ -1010,10 +1010,11 @@ class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
     }
 
     override fun getToken(): String? {
-        TODO("Not yet implemented")
+        return jsPubNub.getToken()
     }
 
     override fun destroy() {
+        jsPubNub.unsubscribeAll() // todo check if there is destroy in JavaScript SDK
     }
 
     override fun channel(name: String): Channel {
