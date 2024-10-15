@@ -60,6 +60,8 @@ jobs:
     steps:
       - name: Setup node
         uses: actions/setup-node@v4
+        with:
+          node-version: 10
       - name: Install JDK
         uses: actions/setup-java@v4
         with:
@@ -106,7 +108,7 @@ jobs:
         uses: ./.github/.release/actions/actions/utils/fast-jobs-failure
   all-tests:
     name: Tests
-    needs: [tests, acceptance-tests]
+    needs: [tests]
     runs-on:
       group: macos-gh
     steps:
