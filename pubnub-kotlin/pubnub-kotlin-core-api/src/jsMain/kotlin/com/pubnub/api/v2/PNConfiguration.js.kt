@@ -10,17 +10,25 @@ actual interface PNConfiguration {
     actual val subscribeKey: String
     actual val publishKey: String
     actual val secretKey: String
-    @Deprecated(message = "To set auth token use method pubnub.setToken(token)")
-    actual val authKey: String
     actual val logVerbosity: PNLogVerbosity
     val enableEventEngine: Boolean
+
+    @Deprecated(
+        message = "This setting is deprecated because it relates to deprecated Access Manager (PAM V2) and will be remove in the future. " +
+            "Please, migrate to new Access Manager (PAM V3) https://www.pubnub.com/docs/general/resources/migration-guides/pam-v3-migration ",
+        level = DeprecationLevel.WARNING
+    )
+    actual val authKey: String
 }
 
 @Deprecated(
-    message = "The authKey parameter is deprecated. Use createPNConfiguration without authKey instead.",
+    message = "The authKey parameter is deprecated because it relates to deprecated Access Manager (PAM V2) and will be remove in the future." +
+        "Please, use createPNConfiguration without authKey instead and migrate to new Access Manager " +
+        "(PAM V3) https://www.pubnub.com/docs/general/resources/migration-guides/pam-v3-migration ",
+    level = DeprecationLevel.WARNING,
     replaceWith = ReplaceWith(
         "createPNConfiguration(userId, subscribeKey, publishKey, secretKey, logVerbosity)"
-    )
+    ),
 )
 actual fun createPNConfiguration(
     userId: UserId,

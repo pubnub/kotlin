@@ -62,7 +62,9 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
          * If Access Manager (deprecated PAM v2) is utilized, client will use this authKey in all restricted requests.
          */
         @Deprecated(
-            "This setting is deprecated because it relates to deprecated Access Manager (PAM V2). Use method pubnub.setToken(token) instead.",
+            message = "The authKey parameter is deprecated because it relates to deprecated Access Manager (PAM V2) and will be remove in the future. " +
+                "Please, migrate to new Access Manager (PAM V3) https://www.pubnub.com/docs/general/resources/migration-guides/pam-v3-migration ",
+            level = DeprecationLevel.WARNING
         )
         val authKey: String
 
@@ -310,7 +312,9 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
         override fun secretKey(secretKey: String): Builder
 
         @Deprecated(
-            message = "To set auth token use method pubnub.setToken(token)",
+            message = "This setting is deprecated because it relates to deprecated Access Manager (PAM V2) and will be remove in the future. " +
+                "Please, migrate to new Access Manager (PAM V3) https://www.pubnub.com/docs/general/resources/migration-guides/pam-v3-migration",
+            level = DeprecationLevel.WARNING
         )
         override fun authKey(authKey: String): Builder
 
@@ -580,7 +584,9 @@ interface PNConfigurationOverride : com.pubnub.api.v2.PNConfigurationOverride {
          * If Access Manager (deprecated PAM v2) is utilized, client will use this authKey in all restricted requests.
          */
         @Deprecated(
-            "This setting is deprecated because it relates to deprecated Access Manager (PAM V2). Use method pubnub.setToken(token) instead.",
+            message = "This setting is deprecated because it relates to deprecated Access Manager (PAM V2) and will be remove in the future. " +
+                "Please, migrate to new Access Manager (PAM V3) [migration guide available here](https://www.pubnub.com/docs/general/resources/migration-guides/pam-v3-migration)",
+            level = DeprecationLevel.WARNING
         )
         fun authKey(authKey: String): Builder
 

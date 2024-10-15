@@ -1009,6 +1009,10 @@ class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
         jsPubNub.setToken(token)
     }
 
+    override fun getToken(): String? {
+        TODO("Not yet implemented")
+    }
+
     override fun destroy() {
     }
 

@@ -42,7 +42,9 @@ actual interface PNConfiguration {
      * If Access Manager (deprecated PAM v2) is utilized, client will use this authKey in all restricted requests.
      */
     @Deprecated(
-        "This setting is deprecated because it relates to deprecated Access Manager (PAM V2). Use method pubnub.setToken(token) instead.",
+        message = "This setting is deprecated because it relates to deprecated Access Manager (PAM V2) and will be remove in the future. " +
+            "Please, migrate to new Access Manager (PAM V3) https://www.pubnub.com/docs/general/resources/migration-guides/pam-v3-migration",
+        level = DeprecationLevel.WARNING
     )
     actual val authKey: String
 
@@ -338,7 +340,9 @@ actual interface PNConfiguration {
          * If Access Manager (deprecated PAM v2) is utilized, client will use this authKey in all restricted requests.
          */
         @Deprecated(
-            "This setting is deprecated because it relates to deprecated Access Manager (PAM V2). Use method pubnub.setToken(token) instead.",
+            message = "This setting is deprecated because it relates to deprecated Access Manager (PAM V2) and will be remove in the future. " +
+                "Please, migrate to new Access Manager (PAM V3) https://www.pubnub.com/docs/general/resources/migration-guides/pam-v3-migration",
+            level = DeprecationLevel.WARNING
         )
         var authKey: String
 
@@ -646,7 +650,9 @@ interface PNConfigurationOverride {
          * If Access Manager (deprecated PAM v2) is utilized, client will use this authKey in all restricted requests.
          */
         @Deprecated(
-            "This setting is deprecated because it relates to deprecated Access Manager (PAM V2). Use method pubnub.setToken(token) instead.",
+            message = "This setting is deprecated because it relates to deprecated Access Manager (PAM V2) and will be remove in the future. " +
+                "Please, migrate to new Access Manager (PAM V3) https://www.pubnub.com/docs/general/resources/migration-guides/pam-v3-migration",
+            level = DeprecationLevel.WARNING
         )
         var authKey: String
 
