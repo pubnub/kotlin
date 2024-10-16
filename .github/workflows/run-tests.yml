@@ -91,7 +91,8 @@ jobs:
             ${{ runner.os }}-gradle-
       - name: Run acceptance tests (optional)
         run: |
-          ln -s /home/runner/work/kotlin/kotlin/sdk-specifications pubnub-kotlin/pubnub-kotlin-impl/src/test/resources/sdk-specifications
+          pwd
+          ln -s /Users/github/actions-runner/_work/kotlin/kotlin/sdk-specifications pubnub-kotlin/pubnub-kotlin-impl/src/test/resources/sdk-specifications
           ./gradlew cucumber --tests RunBetaCucumberTest -Dcucumber.features="../../sdk-specifications/features/" -i
         continue-on-error: true
       - name: Run acceptance tests (required)
