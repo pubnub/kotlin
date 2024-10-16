@@ -25,7 +25,7 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
           path: .github/.release/actions
       - name: Cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches
@@ -81,7 +81,7 @@ jobs:
         with:
           token: ${{ secrets.GH_TOKEN }}
       - name: Cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches
