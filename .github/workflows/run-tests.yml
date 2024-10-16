@@ -61,7 +61,7 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v4
         with:
-          node-version: 10
+          node-version: latest
       - name: Install JDK
         uses: actions/setup-java@v4
         with:
@@ -91,7 +91,7 @@ jobs:
             ${{ runner.os }}-gradle-
       - name: Run acceptance tests (optional)
         run: |
-          ln -s /home/runner/work/kotlin/kotlin/sdk-specifications pubnub-kotlin-core/core-impl/src/test/resources/sdk-specifications
+          ln -s /home/runner/work/kotlin/kotlin/sdk-specifications pubnub-kotlin/pubnub-kotlin-impl/src/test/resources/sdk-specifications
           ./gradlew cucumber --tests RunBetaCucumberTest -Dcucumber.features="../../sdk-specifications/features/" -i
         continue-on-error: true
       - name: Run acceptance tests (required)
