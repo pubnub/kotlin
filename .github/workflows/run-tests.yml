@@ -13,8 +13,8 @@ jobs:
       - name: Install JDK
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu' # See 'Supported distributions' for available options
-          java-version: '21'
+          distribution: "zulu" # See 'Supported distributions' for available options
+          java-version: "21"
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Checkout actions
@@ -25,7 +25,7 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
           path: .github/.release/actions
       - name: Cache
-        uses: actions/cache@v4
+        uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
@@ -65,8 +65,8 @@ jobs:
       - name: Install JDK
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu' # See 'Supported distributions' for available options
-          java-version: '21'
+          distribution: "zulu" # See 'Supported distributions' for available options
+          java-version: "21"
       - name: Checkout project
         uses: actions/checkout@v4
       - name: Checkout mock-server action
@@ -81,7 +81,7 @@ jobs:
         with:
           token: ${{ secrets.GH_TOKEN }}
       - name: Cache
-        uses: actions/cache@v4
+        uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches

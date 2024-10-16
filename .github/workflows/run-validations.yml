@@ -40,12 +40,12 @@ jobs:
       - name: Install JDK
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu' # See 'Supported distributions' for available options
-          java-version: '21'
+          distribution: "zulu" # See 'Supported distributions' for available options
+          java-version: "21"
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Cache
-        uses: actions/cache@v4
+        uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
