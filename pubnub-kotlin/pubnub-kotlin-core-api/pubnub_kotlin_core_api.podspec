@@ -9,7 +9,7 @@ Pod::Spec.new do |spec|
     spec.vendored_frameworks      = 'build/cocoapods/framework/pubnub_kotlin_core_api.framework'
     spec.libraries                = 'c++'
     spec.ios.deployment_target    = '14'
-    spec.dependency 'PubNubSwift', '8.0.0'
+    spec.dependency 'PubNubSwift'
                 
     if !Dir.exist?('build/cocoapods/framework/pubnub_kotlin_core_api.framework') || Dir.empty?('build/cocoapods/framework/pubnub_kotlin_core_api.framework')
         raise "
