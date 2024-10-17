@@ -312,7 +312,7 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
         override fun secretKey(secretKey: String): Builder
 
         @Deprecated(
-            message = "This setting is deprecated because it relates to deprecated Access Manager (PAM V2) and will be remove in the future. " +
+            message = "This setting is deprecated because it relates to deprecated Access Manager (PAM V2) and will be removed in the future. " +
                 "Please, migrate to new Access Manager (PAM V3) https://www.pubnub.com/docs/general/resources/migration-guides/pam-v3-migration",
             level = DeprecationLevel.WARNING
         )
