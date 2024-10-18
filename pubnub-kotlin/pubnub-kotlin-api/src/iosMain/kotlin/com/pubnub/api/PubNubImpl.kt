@@ -9,6 +9,7 @@ import cocoapods.PubNubSwift.channelGroupWith
 import cocoapods.PubNubSwift.channelMetadataWith
 import cocoapods.PubNubSwift.channelWith
 import cocoapods.PubNubSwift.disconnect
+import cocoapods.PubNubSwift.getToken
 import cocoapods.PubNubSwift.removeAllListeners
 import cocoapods.PubNubSwift.removeEventListenerWithListener
 import cocoapods.PubNubSwift.removeStatusListenerWithListener
@@ -818,8 +819,7 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
     }
 
     override fun getToken(): String? {
-        // TODO:
-        return null
+        return pubNubObjC.getToken()
     }
 
     override fun destroy() {
