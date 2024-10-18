@@ -54,7 +54,6 @@ class PublishIntegrationTests : BaseIntegrationTest() {
     @Test
     fun testPublishMessage() {
         val expectedChannel = randomChannel()
-
         pubnub.publish(
             channel = expectedChannel,
             message = generatePayload(),

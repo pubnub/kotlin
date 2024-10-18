@@ -59,8 +59,13 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
         val secretKey: String
 
         /**
-         * If Access Manager is utilized, client will use this authKey in all restricted requests.
+         * If Access Manager (deprecated PAM v2) is utilized, client will use this authKey in all restricted requests.
          */
+        @Deprecated(
+            message = "The authKey parameter is deprecated because it relates to deprecated Access Manager (PAM V2) and will be removed in the future. " +
+                "Please, migrate to new Access Manager (PAM V3) https://www.pubnub.com/docs/general/resources/migration-guides/pam-v3-migration ",
+            level = DeprecationLevel.WARNING
+        )
         val authKey: String
 
         /**
@@ -306,6 +311,11 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
 
         override fun secretKey(secretKey: String): Builder
 
+        @Deprecated(
+            message = "This setting is deprecated because it relates to deprecated Access Manager (PAM V2) and will be removed in the future. " +
+                "Please, migrate to new Access Manager (PAM V3) https://www.pubnub.com/docs/general/resources/migration-guides/pam-v3-migration",
+            level = DeprecationLevel.WARNING
+        )
         override fun authKey(authKey: String): Builder
 
         override fun cryptoModule(cryptoModule: CryptoModule?): Builder
@@ -571,8 +581,13 @@ interface PNConfigurationOverride : com.pubnub.api.v2.PNConfigurationOverride {
         fun includeRequestIdentifier(includeRequestIdentifier: Boolean): Builder
 
         /**
-         * If Access Manager is utilized, client will use this authKey in all restricted requests.
+         * If Access Manager (deprecated PAM v2) is utilized, client will use this authKey in all restricted requests.
          */
+        @Deprecated(
+            message = "This setting is deprecated because it relates to deprecated Access Manager (PAM V2) and will be removed in the future. " +
+                "Please, migrate to new Access Manager (PAM V3) [migration guide available here](https://www.pubnub.com/docs/general/resources/migration-guides/pam-v3-migration)",
+            level = DeprecationLevel.WARNING
+        )
         fun authKey(authKey: String): Builder
 
         /**

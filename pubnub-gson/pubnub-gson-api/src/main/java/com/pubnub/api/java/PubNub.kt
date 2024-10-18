@@ -713,6 +713,9 @@ interface PubNub : EventEmitter, StatusEmitter {
     @Throws(PubNubException::class)
     fun parseToken(token: String): PNToken
 
+    /**
+     * Update the authorization token granted by the server.
+     */
     fun setToken(token: String?)
 
     /**
