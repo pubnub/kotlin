@@ -1470,6 +1470,10 @@ open class PubNubImpl(
         return tokenManager.setToken(token)
     }
 
+    override fun getToken(): String? {
+        return tokenManager.getToken()
+    }
+
     // internal
     private val lockChannelsAndGroups = Any()
     private val channelSubscriptions = mutableMapOf<ChannelName, MutableSet<Subscription>>()

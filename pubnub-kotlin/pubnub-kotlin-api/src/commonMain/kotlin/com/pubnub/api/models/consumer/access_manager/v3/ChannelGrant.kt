@@ -3,7 +3,7 @@ package com.pubnub.api.models.consumer.access_manager.v3
 interface ChannelGrant : PNGrant {
     companion object {
         fun name(
-            name: String,
+            name: String, // this is channelId :|
             read: Boolean = false,
             write: Boolean = false,
             manage: Boolean = false,

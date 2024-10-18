@@ -415,6 +415,8 @@ actual interface PubNub {
 
     actual fun setToken(token: String?)
 
+    actual fun getToken(): String?
+
     actual fun destroy()
 
     actual fun channel(name: String): Channel

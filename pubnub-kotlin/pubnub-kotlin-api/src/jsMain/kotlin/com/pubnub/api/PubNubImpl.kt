@@ -1009,7 +1009,12 @@ class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
         jsPubNub.setToken(token)
     }
 
+    override fun getToken(): String? {
+        return jsPubNub.getToken()
+    }
+
     override fun destroy() {
+        jsPubNub.unsubscribeAll() // todo check if there is destroy in JavaScript SDK
     }
 
     override fun channel(name: String): Channel {
