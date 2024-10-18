@@ -96,7 +96,7 @@ class PNConfigurationImpl(
         override var secretKey: String = defaultConfiguration.secretKey
 
         @Deprecated(
-            message = "The authKey parameter is deprecated because it relates to deprecated Access Manager (PAM V2) and will be remove in the future." +
+            message = "The authKey parameter is deprecated because it relates to deprecated Access Manager (PAM V2) and will be removed in the future." +
                     "Please, use createPNConfiguration without authKey instead and migrate to new Access Manager " +
                     "(PAM V3) https://www.pubnub.com/docs/general/resources/migration-guides/pam-v3-migration ",
             level = DeprecationLevel.WARNING,
