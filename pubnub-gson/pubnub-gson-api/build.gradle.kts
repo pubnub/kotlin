@@ -10,4 +10,8 @@ dependencies {
     api(project(":pubnub-kotlin:pubnub-kotlin-core-api"))
     implementation(libs.slf4j)
     implementation(libs.jetbrains.annotations)
+
+    testImplementation(libs.mockito)
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.junit.vintage.engine)
 }
