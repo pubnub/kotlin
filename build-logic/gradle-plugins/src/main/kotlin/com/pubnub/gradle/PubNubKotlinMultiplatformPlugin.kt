@@ -64,21 +64,28 @@ class PubNubBaseKotlinMultiplatformPlugin : Plugin<Project> {
 
                 if (enableJsTarget) {
                     js { ->
-                        useEsModules()
-                        browser {
+                        project.findProperty("JS_MODULE_NAME")?.toString()?.let { jsModuleName ->
+                            moduleName = jsModuleName
+                        }
+//                        useEsModules()
+//                        browser {
+//                            testTask {
+//                                it.useMocha {
+//                                    timeout = "10s"
+//                                }
+//                            }
+//                        }
+//                        binaries.executable()
+                        binaries.library()
+                        generateTypeScriptDefinitions()
+
+                        nodejs {
                             testTask {
                                 it.useMocha {
-                                    timeout = "10s"
+                                    timeout = "5s"
                                 }
                             }
                         }
-//                    nodejs {
-//                        testTask {
-//                            it.useMocha {
-//                                timeout = "5s"
-//                            }
-//                        }
-//                    }
                     }
                 }
 
