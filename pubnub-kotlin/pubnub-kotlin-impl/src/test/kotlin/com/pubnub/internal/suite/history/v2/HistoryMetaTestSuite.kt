@@ -22,8 +22,8 @@ class HistoryMetaTestSuite : com.pubnub.internal.suite.CoreEndpointTestSuite<His
     override fun snippet(): History =
         pubnub.history(
             channel = "ch1",
-            includeMeta = true,
             includeTimetoken = true,
+            includeMeta = true,
         )
 
     override fun verifyResultExpectations(result: PNHistoryResult) {

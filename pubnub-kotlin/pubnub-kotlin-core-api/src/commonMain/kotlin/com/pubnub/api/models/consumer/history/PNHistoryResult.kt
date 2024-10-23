@@ -36,4 +36,5 @@ data class PNHistoryItemResult(
     val timetoken: Long? = null,
     val meta: JsonElement? = null,
     val error: PubNubError? = null,
+    val customMessageType: String? = null
 )

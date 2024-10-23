@@ -35,6 +35,7 @@ public class FetchMessagesImpl extends PassthroughEndpoint<PNFetchMessagesResult
     private boolean includeMessageActions;
     private boolean includeMessageType = true;
     private boolean includeUUID = true;
+    private boolean includeCustomMessageType = false;
 
     public FetchMessagesImpl(PubNub pubnub) {
         super(pubnub);
@@ -49,7 +50,8 @@ public class FetchMessagesImpl extends PassthroughEndpoint<PNFetchMessagesResult
                 includeUUID,
                 includeMeta,
                 includeMessageActions,
-                includeMessageType
+                includeMessageType,
+                includeCustomMessageType
         );
     }
 

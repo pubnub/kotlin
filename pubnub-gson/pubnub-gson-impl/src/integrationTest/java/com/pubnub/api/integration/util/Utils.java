@@ -63,12 +63,21 @@ public class Utils {
 //    }
 
     public static List<PNPublishResult> publishMixed(PubNub pubnub, int count, String channel) {
+        String customMessageType = null;
+        return publishMixed(pubnub, count, channel, customMessageType);
+    }
+
+    public static List<PNPublishResult> publishMixed(PubNub pubnub, int count, String channel, String customMessageType) {
         final List<PNPublishResult> list = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             final Publish publishBuilder = pubnub.publish()
                     .channel(channel)
                     .message(String.valueOf(i).concat("_msg"))
                     .shouldStore(true);
+            if(customMessageType != null){
+                publishBuilder.customMessageType(customMessageType);
+            }
+
             if (i % 2 == 0) {
                 publishBuilder.meta(generateMap());
             } else if (i % 3 == 0) {

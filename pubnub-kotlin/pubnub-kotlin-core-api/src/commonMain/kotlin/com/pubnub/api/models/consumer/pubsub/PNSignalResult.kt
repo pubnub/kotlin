@@ -8,4 +8,5 @@ import com.pubnub.api.JsonElement
 data class PNSignalResult(
     private val basePubSubResult: PubSubResult,
     override val message: JsonElement,
+    override val customMessageType: String? = null,
 ) : MessageResult, PubSubResult by basePubSubResult

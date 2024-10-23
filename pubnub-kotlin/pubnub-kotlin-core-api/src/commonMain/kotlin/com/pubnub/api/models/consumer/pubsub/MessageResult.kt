@@ -7,4 +7,5 @@ import com.pubnub.api.JsonElement
  */
 interface MessageResult : PubSubResult {
     val message: JsonElement
+    val customMessageType: String?
 }

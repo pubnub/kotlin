@@ -9,6 +9,7 @@ import com.pubnub.api.PubNubError
 class PNMessageResult(
     private val basePubSubResult: PubSubResult,
     override val message: JsonElement,
+    override val customMessageType: String? = null,
     val error: PubNubError? = null,
 ) : MessageResult, PubSubResult by basePubSubResult {
     override fun equals(other: Any?): Boolean {

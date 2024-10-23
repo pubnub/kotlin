@@ -42,6 +42,7 @@ data class PNFetchMessageItem(
     val actions: Map<String, Map<String, List<Action>>>? = null,
     val messageType: HistoryMessageType?,
     val error: PubNubError? = null,
+    val customMessageType: String? = null
 ) {
     // for compatibility with legacy Java SDK
     class Action(uuid: String, actionTimetoken: Long) :

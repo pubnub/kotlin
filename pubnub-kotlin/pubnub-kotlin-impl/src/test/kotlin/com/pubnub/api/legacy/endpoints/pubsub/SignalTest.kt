@@ -12,10 +12,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.models.consumer.PNStatus
-import com.pubnub.api.models.consumer.pubsub.PNMessageResult
-import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
-import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.test.CommonUtils.assertPnException
 import com.pubnub.test.listen
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
@@ -102,6 +99,10 @@ class SignalTest : BaseTest() {
 
     @Test
     fun testSignalSuccessReceive() {
+        val channelName = "coolChannel"
+        val message = "hello"
+        val uuid = "uuid"
+        val customMessageType = "myCustomMessageType"
         stubFor(
             get(urlMatching("/v2/subscribe/mySubscribeKey/coolChannel/0.*"))
                 .willReturn(
@@ -110,17 +111,18 @@ class SignalTest : BaseTest() {
                         {
                           "m": [
                             {
-                              "c": "coolChannel",
+                              "c": "$channelName",
                               "f": "0",
-                              "i": "uuid",
-                              "d": "hello",
+                              "i": "$uuid",
+                              "d": "$message",
                               "e": 1,
                               "p": {
                                 "t": 1000,
                                 "r": 1
                               },
                               "k": "mySubscribeKey",
-                              "b": "coolChannel"
+                              "b": "$channelName",
+                              "cmt" : "$customMessageType"
                             }
                           ],
                           "t": {
@@ -141,30 +143,16 @@ class SignalTest : BaseTest() {
                     pubnub: PubNub,
                     pnSignalResult: PNSignalResult,
                 ) {
-                    assertEquals("coolChannel", pnSignalResult.channel)
-                    assertEquals("hello", pnSignalResult.message.asString)
-                    assertEquals("uuid", pnSignalResult.publisher)
+                    assertEquals(channelName, pnSignalResult.channel)
+                    assertEquals(message, pnSignalResult.message.asString)
+                    assertEquals(uuid, pnSignalResult.publisher)
+                    assertEquals(customMessageType, pnSignalResult.customMessageType)
                     success.set(true)
                 }
 
                 override fun status(
                     pubnub: PubNub,
                     pnStatus: PNStatus,
-                ) {}
-
-                override fun message(
-                    pubnub: PubNub,
-                    pnMessageResult: PNMessageResult,
-                ) {}
-
-                override fun presence(
-                    pubnub: PubNub,
-                    pnPresenceEventResult: PNPresenceEventResult,
-                ) {}
-
-                override fun messageAction(
-                    pubnub: PubNub,
-                    pnMessageActionResult: PNMessageActionResult,
                 ) {}
             },
         )
@@ -182,6 +170,7 @@ class SignalTest : BaseTest() {
             pubnub.signal(
                 channel = " ",
                 message = UUID.randomUUID().toString(),
+                customMessageType = "myType"
             ).sync()
             throw RuntimeException()
         } catch (e: PubNubException) {

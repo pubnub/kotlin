@@ -11,12 +11,17 @@ import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
+import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.legacy.BaseTest
+import com.pubnub.api.models.consumer.PNStatus
+import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.test.CommonUtils.assertPnException
 import com.pubnub.test.CommonUtils.failTest
+import com.pubnub.test.listen
 import org.awaitility.Awaitility
 import org.hamcrest.core.IsEqual
 import org.json.JSONArray
@@ -26,6 +31,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Test
 import java.nio.charset.Charset
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
 class PublishTest : BaseTest() {
@@ -59,6 +65,7 @@ class PublishTest : BaseTest() {
             channel = "coolChannel",
             message = "hi",
             replicate = false,
+            customMessageType = "myCustomType"
         ).sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
@@ -97,6 +104,7 @@ class PublishTest : BaseTest() {
             channel = "coolChannel",
             message = "hi",
             replicate = false,
+            customMessageType = "myCustomType"
         ).sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
@@ -536,5 +544,72 @@ class PublishTest : BaseTest() {
         assertEquals(1, requests.size)
         assertEquals("0", requests[0].queryParameter("store").firstValue())
         assertFalse(requests[0].queryParameter("ttl").isPresent)
+    }
+
+    @Test
+    fun testPublishSuccessReceive() {
+        val channelName = "coolChannel"
+        val message = "hello"
+        val uuid = "uuid"
+        val customMessageType = "myCustomMessageType"
+        stubFor(
+            get(urlMatching("/v2/subscribe/mySubscribeKey/coolChannel/0.*"))
+                .willReturn(
+                    aResponse().withBody(
+                        """
+                        {
+                          "m": [
+                            {
+                              "c": "$channelName",
+                              "f": "0",
+                              "i": "$uuid",
+                              "d": "$message",
+                              "e": 0,
+                              "p": {
+                                "t": 1000,
+                                "r": 1
+                              },
+                              "k": "mySubscribeKey",
+                              "b": "$channelName",
+                              "cmt" : "$customMessageType"
+                            }
+                          ],
+                          "t": {
+                            "r": "56",
+                            "t": 1000
+                          }
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
+        )
+
+        val success = AtomicBoolean()
+
+        pubnub.addListener(
+            object : SubscribeCallback() {
+                override fun message(
+                    pubnub: PubNub,
+                    pnMessageResult: PNMessageResult,
+                ) {
+                    assertEquals(channelName, pnMessageResult.channel)
+                    assertEquals(message, pnMessageResult.message.asString)
+                    assertEquals(uuid, pnMessageResult.publisher)
+                    assertEquals(customMessageType, pnMessageResult.customMessageType)
+                    success.set(true)
+                }
+
+                override fun status(
+                    pubnub: PubNub,
+                    pnStatus: PNStatus,
+                ) {}
+            },
+        )
+
+        pubnub.subscribe(
+            channels = listOf("coolChannel"),
+        )
+
+        success.listen()
     }
 }

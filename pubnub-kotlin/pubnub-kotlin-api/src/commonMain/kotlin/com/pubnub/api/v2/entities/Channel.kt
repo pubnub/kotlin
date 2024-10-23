@@ -83,6 +83,7 @@ interface Channel : Subscribable {
      *            - If `shouldStore = false`, the `ttl` parameter is ignored.
      *            - If ttl isn't specified, then expiration of the message defaults
      *              back to the expiry value for the key.
+     * @param customMessageType The custom type associated with the message.
      */
     fun publish(
         message: Any,
@@ -90,7 +91,8 @@ interface Channel : Subscribable {
         shouldStore: Boolean = true,
         usePost: Boolean = false,
         replicate: Boolean = true,
-        ttl: Int? = null
+        ttl: Int? = null,
+        customMessageType: String? = null
     ): Publish
 
     /**
@@ -101,8 +103,9 @@ interface Channel : Subscribable {
      * If you require a larger payload size, please [contact support](mailto:support@pubnub.com).
      *
      * @param message The payload which will be serialized and sent.
+     * @param customMessageType The custom type associated with the message.
      */
-    fun signal(message: Any): Signal
+    fun signal(message: Any, customMessageType: String? = null): Signal
 
     /**
      * Send a message to PubNub Functions Event Handlers.

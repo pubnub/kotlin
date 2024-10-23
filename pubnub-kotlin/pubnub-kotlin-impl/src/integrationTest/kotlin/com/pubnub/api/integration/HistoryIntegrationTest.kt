@@ -13,6 +13,7 @@ import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.test.CommonUtils
 import com.pubnub.test.CommonUtils.emoji
 import com.pubnub.test.CommonUtils.randomChannel
+import com.pubnub.test.CommonUtils.randomNumeric
 import org.awaitility.kotlin.await
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.aMapWithSize
@@ -94,8 +95,8 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
                 historyResult =
                     pubNubWithCrypto.history(
                         channel = channel,
-                        includeMeta = true,
                         includeTimetoken = true,
+                        includeMeta = true,
                     ).sync()
 
                 assertNotNull(historyResult)
@@ -122,6 +123,7 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
         val expectedMessage = CommonUtils.generatePayload()
         val expectedAction = "reaction"
         val expectedActionValue = emoji()
+        val expectedCustomMessageType = "customType_${randomNumeric()}"
 
         val result =
             pubnub.publish(
@@ -130,6 +132,7 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
                 meta = expectedMeta,
                 shouldStore = true,
                 ttl = 60,
+                customMessageType = expectedCustomMessageType
             ).sync()
 
         val actionResult =
@@ -157,6 +160,7 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
                         includeMessageType = true,
                         includeUUID = true,
                         channels = listOf(channel),
+                        includeCustomMessageType = true
                     ).sync()
                 assertNotNull(fetchResult)
                 assertThat(fetchResult?.channels, aMapWithSize(not(0)))
@@ -182,6 +186,7 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
                                     ),
                             ),
                     ),
+                customMessageType = expectedCustomMessageType
             )
 
         val expectedChannelsResponse: Map<String, List<PNFetchMessageItem>> =
@@ -202,6 +207,7 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
                 includeMessageType = true,
                 includeUUID = true,
                 channels = listOf(channel),
+                includeCustomMessageType = true
             ).sync()
 
         assertEquals(
