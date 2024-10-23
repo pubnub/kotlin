@@ -93,6 +93,7 @@ expect interface PubNub {
         usePost: Boolean = false,
         replicate: Boolean = true,
         ttl: Int? = null,
+        customMessageType: String? = null,
     ): Publish
 
     fun fire(
@@ -105,6 +106,7 @@ expect interface PubNub {
     fun signal(
         channel: String,
         message: Any,
+        customMessageType: String? = null,
     ): Signal
 
     fun getSubscribedChannels(): List<String>
@@ -148,6 +150,7 @@ expect interface PubNub {
         includeMeta: Boolean = false,
         includeMessageActions: Boolean = false,
         includeMessageType: Boolean = true,
+        includeCustomMessageType: Boolean = false
     ): FetchMessages
 
     fun deleteMessages(

@@ -19,6 +19,8 @@ import org.awaitility.kotlin.await
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import java.util.concurrent.TimeUnit
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -45,6 +47,7 @@ class EventEngineSteps(private val state: EventEngineState) {
                     pubnub: PubNub,
                     pnMessageResult: PNMessageResult,
                 ) {
+                    println("-=message: ${pnMessageResult.customMessageType}")
                     state.messagesList.add(pnMessageResult)
                 }
 
@@ -86,6 +89,11 @@ class EventEngineSteps(private val state: EventEngineState) {
         )
 
         state.pubnub.subscribe(channels = listOf(state.channelName))
+    }
+
+    @When("I subscribe to {string} channel")
+    fun i_subscribe_to_channel(channelId: String){
+        i_subscribe()
     }
 
     @When("I subscribe with timetoken {long}")
@@ -156,6 +164,27 @@ class EventEngineSteps(private val state: EventEngineState) {
                 state.messagesList.map { it::class.java },
                 CoreMatchers.hasItems(PNMessageResult::class.java),
             )
+            println("-=size: ${state.messagesList.size}")
+        }
+    }
+
+    @Then("I receive 2 messages in my subscribe response")
+    fun i_receive_2_messages_in_my_subscribe_response(){
+        println("-=I receive 2 messages in my subscribe ")
+        await.pollInterval(50, TimeUnit.MILLISECONDS).atMost(2, TimeUnit.SECONDS).untilAsserted {
+            MatcherAssert.assertThat(
+                state.messagesList.size, Matchers.`is`(2)
+            )
+        }
+    }
+
+    @Then("response contains messages with {string} and {string} types")
+    fun response_contains_messages_with_customMessageType(customMessageType01: String, customMessageType02: String){
+        await.pollInterval(50, TimeUnit.MILLISECONDS).atMost(500, TimeUnit.MILLISECONDS).untilAsserted {
+            val messageList  = state.messagesList as List<PNMessageResult>
+            val customMessageTypeList = messageList.map { message -> message.customMessageType }.toList()
+            assertTrue(customMessageTypeList.contains(customMessageType01))
+            assertTrue(customMessageTypeList.contains(customMessageType02))
         }
     }
 

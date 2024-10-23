@@ -57,6 +57,7 @@ import com.pubnub.api.java.v2.PNConfiguration
 import com.pubnub.api.java.v2.callbacks.EventListener
 import com.pubnub.api.java.v2.callbacks.StatusListener
 import com.pubnub.api.java.v2.endpoints.pubsub.PublishBuilder
+import com.pubnub.api.java.v2.endpoints.pubsub.SignalBuilder
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.java.builder.PresenceBuilderImpl
 import com.pubnub.internal.java.builder.SubscribeBuilderImpl
@@ -218,8 +219,8 @@ open class PubNubForJavaImpl(configuration: PNConfiguration) :
         return SignalImpl(this)
     }
 
-    override fun signal(message: Any, channel: String): com.pubnub.api.endpoints.pubsub.Signal {
-        return super.signal(channel, message)
+    override fun signal(message: Any, channel: String): SignalBuilder {
+        return SignalImpl(this).message(message).channel(channel) as SignalBuilder
     }
 
     override fun listChannelsForChannelGroup(): AllChannelsChannelGroup {

@@ -18,7 +18,12 @@ class SignalEndpoint internal constructor(
     pubnub: PubNubImpl,
     override val channel: String,
     override val message: Any,
+    override val customMessageType: String? = null
 ) : EndpointCore<List<Any>, PNPublishResult>(pubnub), Signal {
+    companion object {
+        private const val CUSTOM_MESSAGE_TYPE_QUERY_PARAM = "custom_message_type"
+    }
+
     override fun validateParams() {
         super.validateParams()
         if (channel.isBlank()) {
@@ -29,6 +34,10 @@ class SignalEndpoint internal constructor(
     override fun getAffectedChannels() = listOf(channel)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<List<Any>> {
+        customMessageType?.let { customMessageTypeNotNull ->
+            queryParams[CUSTOM_MESSAGE_TYPE_QUERY_PARAM] = customMessageTypeNotNull
+        }
+
         return retrofitManager.signalService.signal(
             pubKey = configuration.publishKey,
             subKey = configuration.subscribeKey,

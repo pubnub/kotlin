@@ -23,6 +23,7 @@ public class PublishImpl extends PassthroughEndpoint<PNPublishResult> implements
     private Object meta;
     private boolean replicate;
     private Integer ttl;
+    private String customMessageType;
 
     public PublishImpl(PubNub pubnub) {
         super(pubnub);
@@ -39,7 +40,8 @@ public class PublishImpl extends PassthroughEndpoint<PNPublishResult> implements
                 shouldStore,
                 usePOST,
                 replicate,
-                ttl
+                ttl,
+                customMessageType
         );
     }
 

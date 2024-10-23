@@ -7,6 +7,8 @@ import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
+import com.github.tomakehurst.wiremock.matching.EqualToPattern
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.models.consumer.PNBoundedPage
@@ -452,6 +454,7 @@ class FetchMessagesCoreEndpointTest : BaseTest() {
 
         pubnub.fetchMessages(
             channels = listOf(channel),
+            page = PNBoundedPage(limit = 25),
             includeMessageType = true,
         ).sync()
 
@@ -477,6 +480,7 @@ class FetchMessagesCoreEndpointTest : BaseTest() {
 
         pubnub.fetchMessages(
             channels = listOf(channel),
+            page = PNBoundedPage(limit = 25),
         ).sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
@@ -502,12 +506,46 @@ class FetchMessagesCoreEndpointTest : BaseTest() {
         val response =
             pubnub.fetchMessages(
                 channels = listOf(channel),
+                page = PNBoundedPage(limit = 25),
                 includeMessageType = true,
             ).sync()
 
         assertThat(
             response.channels.values.flatMap { items -> items.map { it.messageType } },
             contains(HistoryMessageType.Message, HistoryMessageType.File),
+        )
+    }
+
+    @Test
+    fun testCustomMessageTypesAreProperlyDeserialized() {
+        val customMessageType01 = "myCustomType01"
+        val customMessageType02 = "myCustomType02"
+        stubFor(
+            get(
+                urlPathMatching("/v3/history/sub-key/mySubscribeKey/channel/$channel.*")
+            ).withQueryParam("include_custom_message_type", EqualToPattern("true"))
+                .willReturn(
+                    aResponse().withBody(
+                        responseWithMessagesForChannelWithCustomMessageType(channel, customMessageType01, customMessageType02),
+                    )
+                )
+        )
+
+        val response =
+            pubnub.fetchMessages(
+                channels = listOf(channel),
+                page = PNBoundedPage(limit = 25),
+                includeMessageType = true,
+                includeCustomMessageType = true
+            ).sync()
+
+        assertThat(
+            response.channels.values.flatMap { items -> items.map { it.messageType } },
+            contains(HistoryMessageType.Message, HistoryMessageType.File),
+        )
+        assertThat(
+            response.channels.values.flatMap { items -> items.map { it.customMessageType } },
+            contains(customMessageType01, customMessageType02),
         )
     }
 
@@ -548,6 +586,32 @@ class FetchMessagesCoreEndpointTest : BaseTest() {
                     "message": "thisIsMessage2",
                     "timetoken": "14797423056306676",
                     "message_type": 4
+                  }
+                ]
+              }
+            }
+            """.trimIndent()
+    }
+
+    private fun responseWithMessagesForChannelWithCustomMessageType(channel: String, customMessageType01: String, customMessageType02: String): String {
+        return """
+            {
+              "status": 200,
+              "error": false,
+              "error_message": "",
+              "channels": {
+                "$channel": [
+                  {
+                    "message": "thisIsMessage1",
+                    "timetoken": "14797423056306675",
+                    "message_type": 0,
+                    "custom_message_type":"myCustomType01"
+                  },
+                  {
+                    "message": "thisIsMessage2",
+                    "timetoken": "14797423056306676",
+                    "message_type": 4,
+                    "custom_message_type":"myCustomType02"
                   }
                 ]
               }

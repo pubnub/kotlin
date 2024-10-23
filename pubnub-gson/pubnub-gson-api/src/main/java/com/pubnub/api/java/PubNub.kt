@@ -57,6 +57,7 @@ import com.pubnub.api.java.v2.PNConfiguration
 import com.pubnub.api.java.v2.callbacks.EventEmitter
 import com.pubnub.api.java.v2.callbacks.StatusEmitter
 import com.pubnub.api.java.v2.endpoints.pubsub.PublishBuilder
+import com.pubnub.api.java.v2.endpoints.pubsub.SignalBuilder
 import com.pubnub.api.java.v2.entities.Channel
 import com.pubnub.api.java.v2.entities.ChannelGroup
 import com.pubnub.api.java.v2.entities.ChannelMetadata
@@ -183,6 +184,10 @@ interface PubNub : EventEmitter, StatusEmitter {
      * if more than 100 messages meet the timetoken values.
      *
      */
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = "Use fetchMessages() instead",
+    )
     fun history(): History
 
     /**
@@ -319,6 +324,11 @@ interface PubNub : EventEmitter, StatusEmitter {
      * The message argument can contain any JSON serializable data, including: Objects, Arrays, Integers and Strings.
      * Data should not contain special Java/Kotlin classes or functions as these will not serialize.
      * String content can include any single-byte or multi-byte UTF-8 character.
+     *
+     * @param message The payload
+     * @param channel The channel to publish message to.
+     *
+     * @return [PublishBuilder]
      */
     fun publish(message: Any, channel: String): PublishBuilder
 
@@ -360,8 +370,13 @@ interface PubNub : EventEmitter, StatusEmitter {
      * By default, signals are limited to a message payload size of 30 bytes.
      * This limit applies only to the payload, and not to the URI or headers.
      * If you require a larger payload size, please [contact support](mailto:support@pubnub.com).
+     *
+     * @param message The payload
+     * @param channel The channel to signal message to.
+     *
+     * @return [SignalBuilder]
      */
-    fun signal(message: Any, channel: String): com.pubnub.api.endpoints.pubsub.Signal
+    fun signal(message: Any, channel: String): SignalBuilder
 
     /**
      * Send a signal to all subscribers of a channel.

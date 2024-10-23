@@ -18,4 +18,6 @@ public interface FetchMessages extends Endpoint<PNFetchMessagesResult> {
     FetchMessages includeMessageType(boolean includeMessageType);
 
     FetchMessages includeUUID(boolean includeUUID);
+
+    FetchMessages includeCustomMessageType(boolean includeCustomMessageType);
 }

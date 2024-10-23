@@ -13,12 +13,14 @@ import kotlinx.cinterop.ExperimentalForeignApi
 class SignalImpl(
     private val pubnub: KMPPubNub,
     private val channel: String,
-    private val message: Any
+    private val message: Any,
+    private val customMessageType: String?,
 ) : Signal {
     override fun async(callback: Consumer<Result<PNPublishResult>>) {
         pubnub.signalWithChannel(
             channel = channel,
             message = message,
+//            customeMessageType = customMessageType, //todo, ask Kuba
             onSuccess = callback.onSuccessHandler { PNPublishResult(it.toLong()) },
             onFailure = callback.onFailureHandler()
         )

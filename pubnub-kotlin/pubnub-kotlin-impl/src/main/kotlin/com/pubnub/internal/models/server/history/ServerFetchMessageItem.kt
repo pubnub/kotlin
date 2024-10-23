@@ -12,4 +12,6 @@ data class ServerFetchMessageItem(
     val actions: Map<String, Map<String, List<PNFetchMessageItem.Action>>>? = null,
     @SerializedName("message_type")
     val messageType: Int?,
+    @SerializedName("custom_message_type")
+    val customMessageType: String?
 )

@@ -9,4 +9,5 @@ import com.pubnub.api.models.consumer.PNPublishResult
 actual interface Signal : Endpoint<PNPublishResult> {
     val channel: String
     val message: Any
+    val customMessageType: String?
 }
