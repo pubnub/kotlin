@@ -193,7 +193,7 @@ internal class SubscribeMessageProcessor(
             )
         val queryParams = ArrayList<String>()
         val authToken =
-            if (pubnub.tokenManager.getToken() != null){
+            if (pubnub.tokenManager.getToken() != null) {
                 pubnub.tokenManager.getToken()
             } else if (pubnub.configuration.authKey.isValid()) {
                 pubnub.configuration.authKey

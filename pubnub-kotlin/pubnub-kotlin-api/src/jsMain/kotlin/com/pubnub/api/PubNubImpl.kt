@@ -133,7 +133,7 @@ import com.pubnub.kmp.toJsMap
 import kotlin.js.json
 import PubNub as PubNubJs
 
-class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
+class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
     constructor(configuration: PNConfiguration) : this(PubNubJs(configuration.toJs()))
 
     override val configuration: PNConfiguration
@@ -560,7 +560,7 @@ class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
             jsPubNub,
             createJsObject {
                 this.channel = channel
-                this.data = ChannelMetadata(
+                this.data = createChannelMetadata(
                     PatchValue.of(name),
                     PatchValue.of(description),
                     PatchValue.of(status),
@@ -633,7 +633,7 @@ class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
         return SetUUIDMetadataImpl(
             jsPubNub,
             createJsObject {
-                data = UUIDMetadata(
+                data = createUuidMetadata(
                     PatchValue.of(name),
                     PatchValue.of(externalId),
                     PatchValue.of(profileUrl),
@@ -676,6 +676,7 @@ class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
             createJsObject {
                 this.sort = sort.toJsMap()
                 this.filter = filter
+                this.page = page.toMetadataPage()
                 this.include = createJsObject<PubNubJs.MembershipIncludeOptions> {
                     this.customFields = includeCustom
                     this.totalCount = includeCount
@@ -1117,7 +1118,7 @@ private fun Any.adjustCollectionTypes(): Any {
     }
 }
 
-fun UUIDMetadata(
+private fun createUuidMetadata(
     name: PatchValue<String?>,
     externalId: PatchValue<String?>,
     profileUrl: PatchValue<String?>,
@@ -1137,7 +1138,7 @@ fun UUIDMetadata(
     return result
 }
 
-fun ChannelMetadata(
+private fun createChannelMetadata(
     name: PatchValue<String?>,
     description: PatchValue<String?>,
     status: PatchValue<String?>,
