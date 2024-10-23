@@ -16,17 +16,20 @@ import org.junit.Test
 class SignalIntegrationTests : BaseIntegrationTest() {
     lateinit var expectedChannel: String
     lateinit var expectedPayload: String
+    lateinit var expectedCustomMessageType: String
 
     override fun onBefore() {
         expectedChannel = randomChannel()
         expectedPayload = randomValue(5)
+        expectedCustomMessageType = randomValue(5)
     }
 
     @Test
     fun testPublishSignalMessageAsync() {
         pubnub.signal(
-            message = expectedPayload,
             channel = expectedChannel,
+            message = expectedPayload,
+            customMessageType = expectedCustomMessageType,
         ).await { result ->
             assertFalse(result.isFailure)
             assertTrue(result.getOrThrow().timetoken > 0)
@@ -36,8 +39,9 @@ class SignalIntegrationTests : BaseIntegrationTest() {
     @Test
     fun testPublishSignalMessageSync() {
         pubnub.signal(
-            message = expectedPayload,
             channel = expectedChannel,
+            message = expectedPayload,
+            customMessageType = expectedCustomMessageType,
         ).sync()
     }
 
@@ -47,13 +51,15 @@ class SignalIntegrationTests : BaseIntegrationTest() {
         pubnub.test {
             subscribe(expectedChannel)
             observerClient.signal(
-                message = expectedPayload,
                 channel = expectedChannel,
+                message = expectedPayload,
+                customMessageType = expectedCustomMessageType,
             ).sync()
             val pnSignalResult = nextEvent<PNSignalResult>()
             assertEquals(observerClient.configuration.userId.value, pnSignalResult.publisher)
             assertEquals(expectedChannel, pnSignalResult.channel)
             assertEquals(expectedPayload, Gson().fromJson(pnSignalResult.message, String::class.java))
+            assertEquals(expectedCustomMessageType, pnSignalResult.customMessageType)
         }
     }
 

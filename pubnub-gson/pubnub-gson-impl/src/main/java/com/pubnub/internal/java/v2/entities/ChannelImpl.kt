@@ -1,7 +1,7 @@
 package com.pubnub.internal.java.v2.entities
 
-import com.pubnub.api.endpoints.pubsub.Signal
 import com.pubnub.api.java.v2.endpoints.pubsub.PublishBuilder
+import com.pubnub.api.java.v2.endpoints.pubsub.SignalBuilder
 import com.pubnub.api.v2.subscriptions.EmptyOptions
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.internal.java.PubNubForJavaImpl
@@ -23,7 +23,7 @@ class ChannelImpl(private val pubnub: PubNubForJavaImpl, channelName: ChannelNam
         return pubnub.publish(message, name)
     }
 
-    override fun signal(message: Any): Signal {
+    override fun signal(message: Any): SignalBuilder {
         return pubnub.signal(message, name)
     }
 

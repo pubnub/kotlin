@@ -380,6 +380,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
         val fetchMessagesResultWithActions: PNFetchMessagesResult =
             pubnub.fetchMessages(
                 channels = Collections.singletonList(expectedChannel),
+                page = PNBoundedPage(limit = 25),
                 includeMeta = true,
                 includeMessageActions = true,
             ).sync()
@@ -423,6 +424,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
         val fetchMessagesResultNoActions: PNFetchMessagesResult =
             pubnub.fetchMessages(
                 channels = listOf(expectedChannel),
+                page = PNBoundedPage(limit = 25),
             ).sync()
         fetchMessagesResultNoActions.channels.forEach { (_: String?, pnFetchMessageItems: List<PNFetchMessageItem>) ->
             pnFetchMessageItems.forEach(

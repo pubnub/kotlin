@@ -12,6 +12,7 @@ import com.pubnub.api.java.builder.PubNubErrorBuilder;
 import com.pubnub.api.java.callbacks.SubscribeCallback;
 import com.pubnub.api.java.v2.PNConfiguration;
 import com.pubnub.api.java.v2.PNConfigurationOverride;
+import com.pubnub.api.java.v2.callbacks.StatusListener;
 import com.pubnub.api.java.v2.entities.Channel;
 import com.pubnub.api.java.v2.subscriptions.Subscription;
 import com.pubnub.api.models.consumer.PNPublishResult;
@@ -31,6 +32,11 @@ import org.json.JSONObject;
 import org.junit.Test;
 
 import java.util.Collections;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -58,8 +64,9 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
         final AtomicBoolean success = new AtomicBoolean();
         final String expectedChannel = randomChannel();
         final JsonObject messagePayload = generateMessage(pubNub);
+        final String customMessageType = "myType";
 
-        pubNub.publish(messagePayload, expectedChannel).shouldStore(true).usePOST(true).async((result) -> {
+        pubNub.publish(messagePayload, expectedChannel).shouldStore(true).usePOST(true).customMessageType(customMessageType).async((result) -> {
             assertFalse(result.isFailure());
             success.set(true);
         });
@@ -70,6 +77,7 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
         pubNub.publish()
                 .message(messagePayload)
                 .channel(expectedChannel)
+                .customMessageType(customMessageType)
                 .async((result) -> {
                     assertFalse(result.isFailure());
                     success.set(true);
@@ -701,5 +709,36 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
                 .atMost(Durations.FIVE_SECONDS)
                 .with()
                 .untilAtomic(count, IsEqual.equalTo(2));
+    }
+
+    @Test
+    public void testPublishMessageWithCustomMessageType() throws InterruptedException, ExecutionException, TimeoutException, PubNubException {
+        String expectedChannelName = randomChannel();
+        Channel channel = pubNub.channel(expectedChannelName);
+        String expectedCustomMessageType = "thisIsType";
+        CountDownLatch connected = new CountDownLatch(1);
+        CompletableFuture receivedMessageFuture = new CompletableFuture<PNMessageResult>();
+
+        Subscription subscription = channel.subscription();
+        subscription.setOnMessage(pnMessageResult -> receivedMessageFuture.complete(pnMessageResult));
+        pubNub.addListener(new StatusListener() {
+            @Override
+            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
+                if (status.getCategory() == PNStatusCategory.PNConnectedCategory &&
+                        status.getAffectedChannels().contains(expectedChannelName)
+                ) {
+                    connected.countDown();
+                }
+            }
+        });
+
+        subscription.subscribe();
+        assertTrue(connected.await(10, TimeUnit.SECONDS));
+
+        channel.publish("message").customMessageType(expectedCustomMessageType).sync();
+
+        PNMessageResult message = (PNMessageResult) receivedMessageFuture.get(10, TimeUnit.SECONDS);
+
+        assertEquals(expectedCustomMessageType, message.getCustomMessageType());
     }
 }

@@ -338,6 +338,7 @@ open class PubNubImpl(
         usePost: Boolean,
         replicate: Boolean,
         ttl: Int?,
+        customMessageType: String?,
     ): Publish =
         PublishEndpoint(
             pubnub = this,
@@ -348,6 +349,7 @@ open class PubNubImpl(
             usePost = usePost,
             replicate = replicate,
             ttl = ttl,
+            customMessageType = customMessageType
         )
 
     override fun fire(channel: String, message: Any, meta: Any?, usePost: Boolean): Publish = publish(
@@ -374,7 +376,8 @@ open class PubNubImpl(
     override fun signal(
         channel: String,
         message: Any,
-    ): Signal = SignalEndpoint(pubnub = this, channel = channel, message = message)
+        customMessageType: String?,
+    ): Signal = SignalEndpoint(pubnub = this, channel = channel, message = message, customMessageType = customMessageType)
 
     override fun addPushNotificationsOnChannels(
         pushType: PNPushType,
@@ -468,6 +471,7 @@ open class PubNubImpl(
         includeMeta: Boolean,
         includeMessageActions: Boolean,
         includeMessageType: Boolean,
+        includeCustomMessageType: Boolean
     ): FetchMessages {
         return FetchMessagesEndpoint(
             pubnub = this,
@@ -477,6 +481,7 @@ open class PubNubImpl(
             includeMeta = includeMeta,
             includeMessageActions = includeMessageActions,
             includeMessageType = includeMessageType,
+            includeCustomMessageType = includeCustomMessageType
         )
     }
 
@@ -994,13 +999,15 @@ open class PubNubImpl(
         includeMeta: Boolean,
         includeMessageActions: Boolean,
         includeMessageType: Boolean,
+        includeCustomMessageType: Boolean
     ): FetchMessages = fetchMessages(
         channels = channels,
         page = PNBoundedPage(start = start, end = end, limit = maximumPerChannel),
         includeUUID = true,
         includeMeta = includeMeta,
         includeMessageActions = includeMessageActions,
-        includeMessageType = includeMessageType
+        includeMessageType = includeMessageType,
+        includeCustomMessageType = includeCustomMessageType
     )
 
     @Deprecated(

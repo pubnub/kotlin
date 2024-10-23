@@ -175,7 +175,8 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
         shouldStore: Boolean?,
         usePost: Boolean,
         replicate: Boolean,
-        ttl: Int?
+        ttl: Int?,
+        customMessageType: String?,
     ): Publish {
         return PublishImpl(
             jsPubNub,
@@ -202,12 +203,13 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
         )
     }
 
-    override fun signal(channel: String, message: Any): Signal {
+    override fun signal(channel: String, message: Any, customMessageType: String?): Signal {
         return SignalImpl(
             jsPubNub,
             createJsObject {
                 this.message = message.adjustCollectionTypes()
                 this.channel = channel
+//                this.customMessageType = customMessageType // todo
             }
         )
     }

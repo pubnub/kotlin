@@ -33,14 +33,14 @@ class PublishTest : BaseIntegrationTest() {
     @Test
     fun can_publish_message_string() =
         runTest {
-            val result = pubnub.publish(channel, "some message").await()
+            val result = pubnub.publish(channel = channel, message = "some message", customMessageType = "myCustomType").await()
             assertTrue { result.timetoken > 0 }
         }
 
     @Test
     fun can_signal() =
         runTest {
-            val result = pubnub.signal(channel, "some message").await()
+            val result = pubnub.signal(channel = channel, message = "some message", customMessageType = "myCustomType").await()
             assertTrue { result.timetoken > 0 }
         }
 

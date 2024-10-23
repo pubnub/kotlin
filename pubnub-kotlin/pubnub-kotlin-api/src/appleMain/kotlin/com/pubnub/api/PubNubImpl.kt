@@ -195,7 +195,8 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         shouldStore: Boolean?,
         usePost: Boolean,
         replicate: Boolean,
-        ttl: Int?
+        ttl: Int?,
+        customMessageType: String?,
     ): Publish {
         return PublishImpl(
             pubnub = pubNubObjC,
@@ -203,7 +204,8 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
             message = message,
             meta = meta,
             shouldStore = shouldStore,
-            ttl = ttl
+            ttl = ttl,
+            customMessageType = customMessageType
         )
     }
 
@@ -215,15 +217,17 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
             message = message,
             meta = meta,
             shouldStore = false,
-            ttl = 0
+            ttl = 0,
+            customMessageType = null
         )
     }
 
-    override fun signal(channel: String, message: Any): Signal {
+    override fun signal(channel: String, message: Any, customMessageType: String?): Signal {
         return SignalImpl(
             pubnub = pubNubObjC,
             channel = channel,
-            message = message
+            message = message,
+            customMessageType = customMessageType
         )
     }
 

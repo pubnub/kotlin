@@ -47,4 +47,20 @@ class KeysetStep(private val world: World) {
     fun the_demo_keyset_with_Presence_EE_enabled() {
         the_demo_keyset_with_event_engine_enabled()
     }
+
+    @Given("the demo keyset")
+    fun the_demo_keyset() {
+        MatcherAssert.assertThat(ContractTestConfig.pubKey, Matchers.notNullValue())
+        MatcherAssert.assertThat(ContractTestConfig.subKey, Matchers.notNullValue())
+
+        world.configuration.apply {
+            subscribeKey = ContractTestConfig.subKey
+            publishKey = ContractTestConfig.pubKey
+        }
+    }
+
+    @Given("the demo keyset with enabled storage")
+    fun the_demo_keyset_with_enabled_storage(){
+        the_demo_keyset()
+    }
 }

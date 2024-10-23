@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <baseline version="1.0">
+    <file name="src/main/kotlin/com/pubnub/internal/endpoints/FetchMessagesEndpoint.kt">
+        <error line="47" column="1" source="standard:no-consecutive-blank-lines" />
+        <error line="155" column="11" source="standard:keyword-spacing" />
+        <error line="155" column="37" source="standard:curly-spacing" />
+    </file>
     <file name="src/main/kotlin/com/pubnub/internal/managers/BasePathManager.kt">
         <error line="15" column="17" source="standard:property-naming" />
         <error line="21" column="17" source="standard:property-naming" />
@@ -7,6 +12,10 @@
     </file>
     <file name="src/main/kotlin/com/pubnub/internal/subscribe/eventengine/effect/ReconnectionPolicy.kt">
         <error line="1" column="1" source="standard:no-empty-file" />
+    </file>
+    <file name="src/main/kotlin/com/pubnub/internal/v2/PNConfigurationImpl.kt">
+        <error line="100" column="1" source="standard:indent" />
+        <error line="101" column="1" source="standard:indent" />
     </file>
     <file name="src/test/kotlin/com/pubnub/api/legacy/endpoints/files/TestsWithFiles.kt">
         <error line="17" column="30" source="standard:property-naming" />
@@ -65,6 +74,23 @@
         <error line="112" column="9" source="standard:function-naming" />
         <error line="181" column="9" source="standard:function-naming" />
     </file>
+    <file name="src/test/kotlin/com/pubnub/contract/history/state/HistoryState.kt">
+        <error line="1" column="1" source="standard:final-newline" />
+    </file>
+    <file name="src/test/kotlin/com/pubnub/contract/history/step/WhenSteps.kt">
+        <error line="1" column="1" source="standard:final-newline" />
+        <error line="13" column="1" source="standard:no-empty-first-line-in-class-body" />
+        <error line="15" column="9" source="standard:function-naming" />
+        <error line="28" column="105" source="standard:comment-spacing" />
+        <error line="29" column="9" source="standard:function-naming" />
+        <error line="43" column="9" source="standard:function-naming" />
+        <error line="43" column="71" source="standard:curly-spacing" />
+        <error line="43" column="71" source="standard:function-start-of-body-spacing" />
+        <error line="49" column="1" source="standard:no-consecutive-blank-lines" />
+        <error line="51" column="9" source="standard:function-naming" />
+        <error line="68" column="9" source="standard:function-naming" />
+        <error line="80" column="1" source="standard:no-blank-line-before-rbrace" />
+    </file>
     <file name="src/test/kotlin/com/pubnub/contract/member/step/GivenSteps.kt">
         <error line="11" column="9" source="standard:function-naming" />
         <error line="16" column="9" source="standard:function-naming" />
@@ -111,6 +137,31 @@
         <error line="101" column="9" source="standard:function-naming" />
         <error line="131" column="9" source="standard:function-naming" />
     </file>
+    <file name="src/test/kotlin/com/pubnub/contract/publish/WhenSteps.kt">
+        <error line="1" column="1" source="standard:final-newline" />
+        <error line="9" column="9" source="standard:function-naming" />
+        <error line="9" column="78" source="standard:curly-spacing" />
+        <error line="9" column="78" source="standard:function-start-of-body-spacing" />
+        <error line="10" column="1" source="standard:indent" />
+        <error line="11" column="1" source="standard:indent" />
+        <error line="12" column="1" source="standard:indent" />
+        <error line="13" column="1" source="standard:indent" />
+        <error line="14" column="1" source="standard:indent" />
+        <error line="15" column="1" source="standard:indent" />
+        <error line="16" column="1" source="standard:indent" />
+        <error line="17" column="1" source="standard:indent" />
+        <error line="18" column="1" source="standard:indent" />
+        <error line="18" column="37" source="standard:curly-spacing" />
+        <error line="19" column="1" source="standard:indent" />
+        <error line="20" column="1" source="standard:indent" />
+        <error line="21" column="1" source="standard:indent" />
+    </file>
+    <file name="src/test/kotlin/com/pubnub/contract/signal/WhenSteps.kt">
+        <error line="1" column="1" source="standard:final-newline" />
+        <error line="9" column="9" source="standard:function-naming" />
+        <error line="16" column="1" source="standard:indent" />
+        <error line="17" column="1" source="standard:indent" />
+    </file>
     <file name="src/test/kotlin/com/pubnub/contract/step/ErrorMessageAndDetailsStep.kt">
         <error line="10" column="9" source="standard:function-naming" />
     </file>
@@ -120,14 +171,25 @@
         <error line="34" column="9" source="standard:function-naming" />
         <error line="42" column="9" source="standard:function-naming" />
         <error line="47" column="9" source="standard:function-naming" />
+        <error line="52" column="9" source="standard:function-naming" />
+        <error line="63" column="9" source="standard:function-naming" />
+        <error line="63" column="47" source="standard:curly-spacing" />
+        <error line="63" column="47" source="standard:function-start-of-body-spacing" />
+    </file>
+    <file name="src/test/kotlin/com/pubnub/contract/step/ThenSteps.kt">
+        <error line="23" column="38" source="standard:curly-spacing" />
+        <error line="23" column="38" source="standard:function-start-of-body-spacing" />
     </file>
     <file name="src/test/kotlin/com/pubnub/contract/subscribe/eventEngine/step/EventEngineSteps.kt">
-        <error line="27" column="9" source="standard:function-naming" />
-        <error line="34" column="9" source="standard:function-naming" />
-        <error line="92" column="9" source="standard:function-naming" />
-        <error line="153" column="9" source="standard:function-naming" />
-        <error line="163" column="9" source="standard:function-naming" />
-        <error line="171" column="9" source="standard:function-naming" />
+        <error line="22" column="1" source="standard:no-unused-imports" />
+        <error line="95" column="50" source="standard:curly-spacing" />
+        <error line="95" column="50" source="standard:function-start-of-body-spacing" />
+        <error line="172" column="56" source="standard:curly-spacing" />
+        <error line="172" column="56" source="standard:function-start-of-body-spacing" />
+        <error line="176" column="42" source="standard:argument-list-wrapping" />
+        <error line="182" column="116" source="standard:curly-spacing" />
+        <error line="182" column="116" source="standard:function-start-of-body-spacing" />
+        <error line="184" column="29" source="standard:no-multi-spaces" />
     </file>
     <file name="src/test/kotlin/com/pubnub/contract/uuidmetadata/step/GivenSteps.kt">
         <error line="15" column="9" source="standard:function-naming" />
