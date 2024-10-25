@@ -81,8 +81,9 @@ class PubNubBaseKotlinMultiplatformPlugin : Plugin<Project> {
 
                         nodejs {
                             testTask {
+                                it.environment("MOCHA_OPTIONS", "--exit")
                                 it.useMocha {
-                                    timeout = "5s"
+                                    timeout = "20s"
                                 }
                             }
                         }

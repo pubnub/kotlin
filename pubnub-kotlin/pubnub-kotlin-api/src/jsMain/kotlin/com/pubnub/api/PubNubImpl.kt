@@ -127,9 +127,11 @@ import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.internal.v2.entities.ChannelImpl
 import com.pubnub.internal.v2.subscriptions.SubscriptionSetImpl
 import com.pubnub.kmp.CustomObject
+import com.pubnub.kmp.JsMap
 import com.pubnub.kmp.Uploadable
 import com.pubnub.kmp.createJsObject
 import com.pubnub.kmp.toJsMap
+import com.pubnub.kmp.toMap
 import kotlin.js.json
 import PubNub as PubNubJs
 
@@ -1056,8 +1058,36 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
     }
 
     override fun parseToken(token: String): PNToken {
-        TODO("Not yet implemented")
+        val jsToken = jsPubNub.parseToken(token)
+        return PNToken(
+            jsToken.version.toInt(),
+            jsToken.timestamp.toLong(),
+            jsToken.ttl.toLong(),
+            jsToken.authorized_uuid,
+            jsToken.resources?.let {
+                PNToken.PNTokenResources(
+                    it.channels.toKmp(),
+                    it.groups.toKmp(),
+                    it.uuids.toKmp(),
+                )
+            } ?: PNToken.PNTokenResources(),
+            jsToken.patterns?.let {
+                PNToken.PNTokenResources()
+            } ?: PNToken.PNTokenResources()
+        )
     }
+
+    private fun JsMap<PubNubJs.GrantTokenPermissions>?.toKmp() = this?.toMap()?.mapValues { entry ->
+        PNToken.PNResourcePermissions(
+            entry.value.read ?: false,
+            entry.value.write ?: false,
+            entry.value.manage ?: false,
+            entry.value.delete ?: false,
+            entry.value.get ?: false,
+            entry.value.update ?: false,
+            entry.value.join ?: false
+        )
+    } ?: emptyMap()
 
     override fun sendFile(
         channel: String,
