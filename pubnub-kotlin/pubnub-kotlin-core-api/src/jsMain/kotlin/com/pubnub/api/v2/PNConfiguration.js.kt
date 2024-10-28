@@ -75,7 +75,7 @@ actual fun createPNConfiguration(
         override val authKey: String
             get() = NO_AUTH_KEY
         override val enableEventEngine: Boolean
-            get() = true
+            get() = false
         override val logVerbosity: PNLogVerbosity
             get() = logVerbosity
     }
