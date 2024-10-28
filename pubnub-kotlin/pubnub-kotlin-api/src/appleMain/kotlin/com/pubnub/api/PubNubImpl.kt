@@ -309,7 +309,8 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         includeUUID: Boolean,
         includeMeta: Boolean,
         includeMessageActions: Boolean,
-        includeMessageType: Boolean
+        includeMessageType: Boolean,
+        includeCustomMessageType: Boolean
     ): FetchMessages {
         return FetchMessagesImpl(
             pubnub = pubNubObjC,
@@ -318,7 +319,8 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
             includeUUID = includeUUID,
             includeMeta = includeMeta,
             includeMessageActions = includeMessageActions,
-            includeMessageType = includeMessageType
+            includeMessageType = includeMessageType,
+            includeCustomMessageType = includeCustomMessageType
         )
     }
 

@@ -296,7 +296,8 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
         includeUUID: Boolean,
         includeMeta: Boolean,
         includeMessageActions: Boolean,
-        includeMessageType: Boolean
+        includeMessageType: Boolean,
+        includeCustomMessageType: Boolean
     ): FetchMessages {
         return FetchMessagesImpl(
             jsPubNub,
@@ -311,6 +312,7 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
                 this.includeMessageActions = includeMessageActions
                 this.includeMessageType = includeMessageType
                 this.stringifiedTimeToken = true
+                this.includeCustomMessageType = includeCustomMessageType
             }
         )
     }

@@ -17,9 +17,8 @@ import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
 import org.awaitility.kotlin.await
 import org.hamcrest.CoreMatchers
+import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert
-import org.hamcrest.Matchers
-import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import java.util.concurrent.TimeUnit
 import kotlin.time.Duration.Companion.milliseconds
@@ -91,7 +90,7 @@ class EventEngineSteps(private val state: EventEngineState) {
     }
 
     @When("I subscribe to {string} channel")
-    fun i_subscribe_to_channel(channelId: String){
+    fun i_subscribe_to_channel(channelId: String) {
         i_subscribe()
     }
 
@@ -167,18 +166,19 @@ class EventEngineSteps(private val state: EventEngineState) {
     }
 
     @Then("I receive 2 messages in my subscribe response")
-    fun i_receive_2_messages_in_my_subscribe_response(){
+    fun i_receive_2_messages_in_my_subscribe_response() {
         await.pollInterval(50, TimeUnit.MILLISECONDS).atMost(2, TimeUnit.SECONDS).untilAsserted {
             MatcherAssert.assertThat(
-                state.messagesList.size, Matchers.`is`(2)
+                state.messagesList.size,
+                `is`(2)
             )
         }
     }
 
     @Then("response contains messages with {string} and {string} types")
-    fun response_contains_messages_with_customMessageType(customMessageType01: String, customMessageType02: String){
+    fun response_contains_messages_with_customMessageType(customMessageType01: String, customMessageType02: String) {
         await.pollInterval(50, TimeUnit.MILLISECONDS).atMost(500, TimeUnit.MILLISECONDS).untilAsserted {
-            val messageList  = state.messagesList as List<PNMessageResult>
+            val messageList = state.messagesList as List<PNMessageResult>
             val customMessageTypeList = messageList.map { message -> message.customMessageType }.toList()
             assertTrue(customMessageTypeList.contains(customMessageType01))
             assertTrue(customMessageTypeList.contains(customMessageType02))
@@ -189,7 +189,7 @@ class EventEngineSteps(private val state: EventEngineState) {
     fun i_observe_the_following(dataTable: DataTable) {
         await.pollInterval(50, TimeUnit.MILLISECONDS).atMost(500, TimeUnit.MILLISECONDS).untilAsserted {
             val expectedNames = dataTable.asMaps().map { it["type"] to it["name"] }.toList()
-            MatcherAssert.assertThat(state.subscribeQueuedElements, Matchers.`is`(expectedNames))
+            MatcherAssert.assertThat(state.subscribeQueuedElements, `is`(expectedNames))
         }
     }
 

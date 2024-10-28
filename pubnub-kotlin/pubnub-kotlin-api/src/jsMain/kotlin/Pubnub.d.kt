@@ -559,6 +559,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var includeUUID: Boolean?
         var includeMeta: Boolean?
         var includeMessageActions: Boolean?
+        var includeCustomMessageType: Boolean?
     }
 
     interface Action {
