@@ -31,6 +31,8 @@ public class SendFileImpl extends PassthroughRemoteAction<PNFileUploadResult> im
     private Boolean shouldStore;
     @Setter
     private String cipherKey;
+    @Setter
+    private String customMessageType;
 
     public SendFileImpl(PubNub pubnub, String channel, String fileName, InputStream inputStream) {
         super(pubnub);
@@ -50,7 +52,8 @@ public class SendFileImpl extends PassthroughRemoteAction<PNFileUploadResult> im
                 meta,
                 ttl,
                 shouldStore,
-                cipherKey
+                cipherKey,
+                customMessageType
         );
     }
 

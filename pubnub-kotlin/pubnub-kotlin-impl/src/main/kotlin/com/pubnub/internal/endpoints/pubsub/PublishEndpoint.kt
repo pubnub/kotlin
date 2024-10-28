@@ -30,7 +30,7 @@ class PublishEndpoint internal constructor(
     override val customMessageType: String? = null
 ) : EndpointCore<List<Any>, PNPublishResult>(pubnub), Publish {
     companion object {
-        private const val CUSTOM_MESSAGE_TYPE_QUERY_PARAM = "custom_message_type"
+        internal const val CUSTOM_MESSAGE_TYPE_QUERY_PARAM = "custom_message_type"
     }
 
     override fun validateParams() {

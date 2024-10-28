@@ -28,11 +28,11 @@ class FetchMessagesEndpoint internal constructor(
     pubnub: PubNubImpl,
     override val channels: List<String>,
     override val page: PNBoundedPage,
-    override val includeUUID: Boolean,
-    override val includeMeta: Boolean,
-    override val includeMessageActions: Boolean,
-    override val includeMessageType: Boolean,
-    override val includeCustomMessageType: Boolean
+    override val includeUUID: Boolean = false,
+    override val includeMeta: Boolean = false,
+    override val includeMessageActions: Boolean = false,
+    override val includeMessageType: Boolean = false,
+    override val includeCustomMessageType: Boolean = false
 ) : EndpointCore<FetchMessagesEnvelope, PNFetchMessagesResult>(pubnub), FetchMessages {
     internal companion object {
         private const val SINGLE_CHANNEL_DEFAULT_MESSAGES = 100
@@ -152,8 +152,6 @@ class FetchMessagesEndpoint internal constructor(
         if (includeMeta) {
             queryParams["include_meta"] = "true"
         }
-        if(includeCustomMessageType){ // todo is includeCustomMessageType optional?
-            queryParams[INCLUDE_CUSTOM_MESSAGE_TYPE] = includeCustomMessageType.toString()
-        }
+        queryParams[INCLUDE_CUSTOM_MESSAGE_TYPE] = includeCustomMessageType.toString()
     }
 }

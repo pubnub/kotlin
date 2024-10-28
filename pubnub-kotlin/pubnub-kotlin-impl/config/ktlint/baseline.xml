@@ -6,8 +6,6 @@
     </file>
     <file name="src/main/kotlin/com/pubnub/internal/endpoints/FetchMessagesEndpoint.kt">
         <error line="47" column="1" source="standard:no-consecutive-blank-lines" />
-        <error line="155" column="11" source="standard:keyword-spacing" />
-        <error line="155" column="37" source="standard:curly-spacing" />
     </file>
     <file name="src/main/kotlin/com/pubnub/internal/endpoints/pubsub/PublishEndpoint.kt">
         <error line="91" column="21" source="standard:no-multi-spaces" />
@@ -77,12 +75,8 @@
         <error line="112" column="9" source="standard:function-naming" />
         <error line="181" column="9" source="standard:function-naming" />
     </file>
-    <file name="src/test/kotlin/com/pubnub/contract/history/step/WhenSteps.kt">
-        <error line="14" column="9" source="standard:function-naming" />
-        <error line="28" column="9" source="standard:function-naming" />
-        <error line="42" column="9" source="standard:function-naming" />
-        <error line="49" column="9" source="standard:function-naming" />
-        <error line="66" column="9" source="standard:function-naming" />
+    <file name="src/test/kotlin/com/pubnub/contract/file/WhenSteps.kt">
+        <error line="11" column="9" source="standard:function-naming" />
     </file>
     <file name="src/test/kotlin/com/pubnub/contract/member/step/GivenSteps.kt">
         <error line="11" column="9" source="standard:function-naming" />

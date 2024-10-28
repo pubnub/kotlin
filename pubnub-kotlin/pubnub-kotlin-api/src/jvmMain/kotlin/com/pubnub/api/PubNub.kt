@@ -1626,6 +1626,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      *                    If not specified, then the history configuration of the key is used.
      * @param cipherKey Key to be used to encrypt uploaded data. If not provided,
      *                  cipherKey in @see [PNConfiguration] will be used, if provided.
+     * @param customMessageType The custom type associated with the message.
      */
     actual fun sendFile(
         channel: String,
@@ -1636,6 +1637,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
         ttl: Int?,
         shouldStore: Boolean?,
         cipherKey: String?,
+        customMessageType: String?,
     ): SendFile
 
     /**
@@ -1715,7 +1717,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      *              back to the expiry value for the key.
      * @param shouldStore Store in history.
      *                    If not specified, then the history configuration of the key is used.
-     *
+     * @param customMessageType The custom type associated with the message.
      */
     actual fun publishFileMessage(
         channel: String,
@@ -1725,6 +1727,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
         meta: Any?,
         ttl: Int?,
         shouldStore: Boolean?,
+        customMessageType: String?,
     ): PublishFileMessage
 
     /**

@@ -45,6 +45,9 @@ class PNFileEventResult(
         if (file != other.file) {
             return false
         }
+        if (customMessageType != other.customMessageType) {
+            return false
+        }
         if (jsonMessage != other.jsonMessage) {
             return false
         }

@@ -1248,6 +1248,7 @@ open class PubNubImpl(
         ttl: Int?,
         shouldStore: Boolean?,
         cipherKey: String?,
+        customMessageType: String?,
     ): SendFile {
         val cryptoModule =
             if (cipherKey != null) {
@@ -1263,6 +1264,7 @@ open class PubNubImpl(
             meta = meta,
             ttl = ttl,
             shouldStore = shouldStore,
+            customMessageType = customMessageType,
             executorService =
                 retrofitManager.getTransactionClientExecutorService()
                     ?: Executors.newSingleThreadExecutor(),
@@ -1342,6 +1344,7 @@ open class PubNubImpl(
         meta: Any?,
         ttl: Int?,
         shouldStore: Boolean?,
+        customMessageType: String?,
     ): PublishFileMessage {
         return PublishFileMessageEndpoint(
             pubNub = this,
@@ -1352,6 +1355,7 @@ open class PubNubImpl(
             meta = meta,
             ttl = ttl,
             shouldStore = shouldStore,
+            customMessageType = customMessageType
         )
     }
 

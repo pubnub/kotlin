@@ -17,6 +17,8 @@ public interface SendFile extends ExtendedRemoteAction<PNFileUploadResult> {
 
     SendFile cipherKey(String cipherKey);
 
+    SendFile customMessageType(String customMessageType);
+
     interface Builder extends BuilderSteps.ChannelStep<FilesBuilderSteps.FileNameStep<FilesBuilderSteps.InputStreamStep<SendFile>>> {
 
     }

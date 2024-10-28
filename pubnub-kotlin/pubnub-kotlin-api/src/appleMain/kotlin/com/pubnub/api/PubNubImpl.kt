@@ -782,7 +782,8 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         message: Any?,
         meta: Any?,
         ttl: Int?,
-        shouldStore: Boolean?
+        shouldStore: Boolean?,
+        customMessageType: String?
     ): PublishFileMessage {
         return PublishFileMessageImpl(
             pubnub = pubNubObjC,
@@ -792,7 +793,8 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
             message = message,
             meta = meta,
             ttl = ttl,
-            shouldStore = shouldStore
+            shouldStore = shouldStore,
+            customMessageType = customMessageType
         )
     }
 
@@ -887,7 +889,8 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         meta: Any?,
         ttl: Int?,
         shouldStore: Boolean?,
-        cipherKey: String?
+        cipherKey: String?,
+        customMessageType: String?
     ): SendFile {
         return SendFileImpl(
             pubnub = pubNubObjC,
@@ -897,7 +900,8 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
             message = message,
             meta = meta,
             ttl = ttl,
-            shouldStore = shouldStore
+            shouldStore = shouldStore,
+            customMessageType = customMessageType
         )
     }
 

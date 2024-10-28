@@ -374,7 +374,8 @@ actual interface PubNub {
         meta: Any?,
         ttl: Int?,
         shouldStore: Boolean?,
-        cipherKey: String?
+        cipherKey: String?,
+        customMessageType: String?
     ): SendFile
 
     actual fun downloadFile(
@@ -397,7 +398,8 @@ actual interface PubNub {
         message: Any?,
         meta: Any?,
         ttl: Int?,
-        shouldStore: Boolean?
+        shouldStore: Boolean?,
+        customMessageType: String?
     ): PublishFileMessage
 
     actual fun subscribe(

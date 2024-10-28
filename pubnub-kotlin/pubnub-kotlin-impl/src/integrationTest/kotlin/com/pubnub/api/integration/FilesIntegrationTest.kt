@@ -77,6 +77,7 @@ class FilesIntegrationTest : BaseIntegrationTest() {
         val content = "This is content"
         val message = "This is message"
         val meta = "This is meta"
+        val customMessageType = "MyCustomType"
         val fileName = "fileName$channel.txt"
         val fileSent = CountDownLatch(1)
         pubnub.subscribe(channels = listOf(channel))
@@ -88,6 +89,7 @@ class FilesIntegrationTest : BaseIntegrationTest() {
                 inputStream = it,
                 message = message,
                 meta = meta,
+                customMessageType = customMessageType
             ).async { result ->
                 result.onSuccess {
                     sendResultReference.set(it)
@@ -123,6 +125,7 @@ class FilesIntegrationTest : BaseIntegrationTest() {
         val message = "This is message"
         val meta = "This is meta"
         val fileName = "fileName$channel.txt"
+        val customMessageType = "myCustomType"
         val connectedLatch = CountDownLatch(1)
         val fileEventReceived = CountDownLatch(1)
         pubnub.addListener(
@@ -140,7 +143,7 @@ class FilesIntegrationTest : BaseIntegrationTest() {
                     pubnub: PubNub,
                     result: PNFileEventResult,
                 ) {
-                    if (result.file.name == fileName) {
+                    if (result.file.name == fileName && result.customMessageType == customMessageType) {
                         fileEventReceived.countDown()
                     }
                 }
@@ -156,6 +159,7 @@ class FilesIntegrationTest : BaseIntegrationTest() {
                     inputStream = it,
                     message = message,
                     meta = meta,
+                    customMessageType = customMessageType
                 ).sync()
             }
 

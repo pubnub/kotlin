@@ -8,6 +8,7 @@ import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.contains
+import org.junit.jupiter.api.Assertions.assertEquals
 
 class WhenSteps(private val world: World, private val historyState: HistoryState) {
     @When("I fetch message history for {string} channel")
@@ -24,12 +25,16 @@ class WhenSteps(private val world: World, private val historyState: HistoryState
         }
     }
 
-    @When("I fetch message history with include_custom_message_type set to false for {string} channel") // todo fix it
-    fun i_fetch_message_history_with_includeCustomMessageType_set_to_false_for_channel(channelName: String) {
+    @When("I fetch message history with {string} set to {string} for {string} channel") // todo fix it
+    fun i_fetch_message_history_with_includeCustomMessageType_set_to_false_for_channel(
+        customMessageTypeName: String,
+        customMessageTypeValue: String,
+        channelName: String
+    ) {
         try {
             historyState.messages = world.pubnub.fetchMessages(
                 channels = listOf(channelName),
-                includeCustomMessageType = false
+                includeCustomMessageType = customMessageTypeValue.toBoolean()
             ).sync()
             world.responseStatus = 200
         } catch (ex: PubNubException) {
@@ -40,9 +45,10 @@ class WhenSteps(private val world: World, private val historyState: HistoryState
 
     @Then("history response contains messages without customMessageType")
     fun history_response_contains_messages_without_customMessageType() {
-        val customMessageTypesInResponse: List<String?> =
-            historyState.messages!!.channels.values.flatMap { message -> message.map { it.customMessageType } }
-        println()
+        val messagesWithoutCustomMessageType =
+            historyState.messages!!.channels["some-channel"]?.filter { message -> message.customMessageType == null }
+                ?.toList()!!
+        assertEquals(2, messagesWithoutCustomMessageType.size)
     }
 
     @Then("history response contains messages with {string} and {string} message types")

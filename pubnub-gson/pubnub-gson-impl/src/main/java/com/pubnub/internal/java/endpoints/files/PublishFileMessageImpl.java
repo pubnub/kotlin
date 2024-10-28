@@ -26,6 +26,8 @@ public class PublishFileMessageImpl extends PassthroughEndpoint<PNPublishFileMes
     private Integer ttl;
     @Setter
     private Boolean shouldStore;
+    @Setter
+    private String customMessageType;
 
     private final String channel;
     private final String fileName;
@@ -48,7 +50,8 @@ public class PublishFileMessageImpl extends PassthroughEndpoint<PNPublishFileMes
                 message,
                 meta,
                 ttl,
-                shouldStore
+                shouldStore,
+                customMessageType
         );
     }
 

@@ -187,6 +187,7 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
                 this.meta = meta?.adjustCollectionTypes()
                 this.sendByPost = usePost
                 this.ttl = ttl
+                this.customMessageType = customMessageType
             }
         )
     }
@@ -209,7 +210,7 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
             createJsObject {
                 this.message = message.adjustCollectionTypes()
                 this.channel = channel
-//                this.customMessageType = customMessageType // todo
+                this.customMessageType = customMessageType
             }
         )
     }
@@ -976,7 +977,8 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
         message: Any?,
         meta: Any?,
         ttl: Int?,
-        shouldStore: Boolean?
+        shouldStore: Boolean?,
+        customMessageType: String?
     ): PublishFileMessage {
         return PublishFileMessageImpl(
             jsPubNub,
@@ -988,6 +990,7 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
                 this.meta = meta?.adjustCollectionTypes()
                 this.ttl = ttl
                 this.storeInHistory = shouldStore
+                this.customMessageType = customMessageType
             }
         )
     }
@@ -1110,7 +1113,8 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
         meta: Any?,
         ttl: Int?,
         shouldStore: Boolean?,
-        cipherKey: String?
+        cipherKey: String?,
+        customMessageType: String?
     ): SendFile {
         return SendFileImpl(
             jsPubNub,
@@ -1122,6 +1126,7 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
                 this.ttl = ttl
                 this.storeInHistory = shouldStore
                 this.cipherKey = cipherKey
+                this.customMessageType = customMessageType
             }
         )
     }

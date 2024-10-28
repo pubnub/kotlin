@@ -422,6 +422,7 @@ expect interface PubNub {
         ttl: Int? = null,
         shouldStore: Boolean? = null,
         cipherKey: String? = null,
+        customMessageType: String? = null
     ): SendFile
 
     fun downloadFile(
@@ -445,6 +446,7 @@ expect interface PubNub {
         meta: Any? = null,
         ttl: Int? = null,
         shouldStore: Boolean? = null,
+        customMessageType: String? = null
     ): PublishFileMessage
 
     fun subscribe(
