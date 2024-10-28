@@ -47,7 +47,6 @@ class EventEngineSteps(private val state: EventEngineState) {
                     pubnub: PubNub,
                     pnMessageResult: PNMessageResult,
                 ) {
-                    println("-=message: ${pnMessageResult.customMessageType}")
                     state.messagesList.add(pnMessageResult)
                 }
 
@@ -164,13 +163,11 @@ class EventEngineSteps(private val state: EventEngineState) {
                 state.messagesList.map { it::class.java },
                 CoreMatchers.hasItems(PNMessageResult::class.java),
             )
-            println("-=size: ${state.messagesList.size}")
         }
     }
 
     @Then("I receive 2 messages in my subscribe response")
     fun i_receive_2_messages_in_my_subscribe_response(){
-        println("-=I receive 2 messages in my subscribe ")
         await.pollInterval(50, TimeUnit.MILLISECONDS).atMost(2, TimeUnit.SECONDS).untilAsserted {
             MatcherAssert.assertThat(
                 state.messagesList.size, Matchers.`is`(2)

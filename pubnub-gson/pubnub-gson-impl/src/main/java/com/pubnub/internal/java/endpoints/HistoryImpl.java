@@ -29,7 +29,7 @@ public class HistoryImpl extends PassthroughEndpoint<PNHistoryResult> implements
     @Override
     @NotNull
     protected Endpoint<PNHistoryResult> createRemoteAction() {
-        return pubnub.history(channel, start, end, count, reverse, includeTimetoken, includeMeta, false);
+        return pubnub.history(channel, start, end, count, reverse, includeTimetoken, includeMeta);
     }
 
     @Override
