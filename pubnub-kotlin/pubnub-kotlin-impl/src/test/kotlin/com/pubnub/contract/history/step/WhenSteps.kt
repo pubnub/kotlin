@@ -10,7 +10,6 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.contains
 
 class WhenSteps(private val world: World, private val historyState: HistoryState) {
-
     @When("I fetch message history for {string} channel")
     fun i_fetch_message_history_for_channel(channelName: String) {
         try {
@@ -25,7 +24,7 @@ class WhenSteps(private val world: World, private val historyState: HistoryState
         }
     }
 
-    @When("I fetch message history with include_custom_message_type set to false for {string} channel") //todo fix it
+    @When("I fetch message history with include_custom_message_type set to false for {string} channel") // todo fix it
     fun i_fetch_message_history_with_includeCustomMessageType_set_to_false_for_channel(channelName: String) {
         try {
             historyState.messages = world.pubnub.fetchMessages(
@@ -40,12 +39,11 @@ class WhenSteps(private val world: World, private val historyState: HistoryState
     }
 
     @Then("history response contains messages without customMessageType")
-    fun history_response_contains_messages_without_customMessageType(){
+    fun history_response_contains_messages_without_customMessageType() {
         val customMessageTypesInResponse: List<String?> =
             historyState.messages!!.channels.values.flatMap { message -> message.map { it.customMessageType } }
         println()
     }
-
 
     @Then("history response contains messages with {string} and {string} message types")
     fun history_response_contains_messages_with_message_type(
@@ -77,5 +75,4 @@ class WhenSteps(private val world: World, private val historyState: HistoryState
             contains(customMessageTypeOfFirstMessage, customMessageTypeOfSecondMessage),
         )
     }
-
 }

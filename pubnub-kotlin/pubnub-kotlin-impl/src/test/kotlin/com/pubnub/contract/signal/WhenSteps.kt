@@ -13,8 +13,8 @@ class WhenSteps(private val world: World) {
                 message = "whatever",
                 customMessageType = customMessageType
             ).sync().let {
-                    world.responseStatus = 200
-                }
+                world.responseStatus = 200
+            }
         } catch (ex: PubNubException) {
             world.responseStatus = ex.statusCode
             world.pnException = ex

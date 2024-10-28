@@ -60,7 +60,7 @@ class KeysetStep(private val world: World) {
     }
 
     @Given("the demo keyset with enabled storage")
-    fun the_demo_keyset_with_enabled_storage(){
+    fun the_demo_keyset_with_enabled_storage() {
         the_demo_keyset()
     }
 }

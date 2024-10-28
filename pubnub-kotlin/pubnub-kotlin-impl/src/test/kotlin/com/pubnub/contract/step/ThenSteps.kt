@@ -20,7 +20,7 @@ class ThenSteps(private val world: World) {
     }
 
     @Then("I receive an error response")
-    fun i_receive_an_error_response(){
+    fun i_receive_an_error_response() {
         an_error_is_returned()
     }
 
