@@ -881,9 +881,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         channel.publish(
             message = generatePayload(),
             customMessageType = expectedCustomMessageType
-        ).await { resutl: Result<PNPublishResult> ->
-            assertTrue(resutl.isSuccess)
-        }
+        ).sync()
 
         val message: PNMessageResult = receivedMessageFuture.get(10, TimeUnit.SECONDS)
 

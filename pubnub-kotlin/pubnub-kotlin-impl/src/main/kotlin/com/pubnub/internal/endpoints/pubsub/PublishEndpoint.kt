@@ -88,18 +88,13 @@ class PublishEndpoint internal constructor(
      * @param queryParams hashMap to add parameters
      */
     private fun addQueryParams(queryParams: MutableMap<String, String>) {
-        meta?.run { queryParams["meta"] = pubnub.mapper.toJson(this) }
-
-        shouldStore?.run { queryParams["store"] = this.numericString }
-
-        ttl?.run { queryParams["ttl"] = this.toString() }
-
+        meta?.let {  queryParams["meta"] = pubnub.mapper.toJson(it) }
+        shouldStore?.let { queryParams["store"] = it.numericString }
+        ttl?.let { queryParams["ttl"] = it.toString() }
         if (!replicate) {
             queryParams["norep"] = true.valueString
         }
-
-        customMessageType?.run { queryParams[CUSTOM_MESSAGE_TYPE_QUERY_PARAM] = this }
-
+        customMessageType?.let { queryParams[CUSTOM_MESSAGE_TYPE_QUERY_PARAM] = it }
         queryParams["seqn"] = pubnub.publishSequenceManager.nextSequence().toString()
     }
     // endregion
