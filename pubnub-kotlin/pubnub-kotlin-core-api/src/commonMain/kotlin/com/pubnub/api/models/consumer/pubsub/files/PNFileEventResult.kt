@@ -70,6 +70,7 @@ class PNFileEventResult(
         result = 31 * result + jsonMessage.hashCode()
         result = 31 * result + (subscription?.hashCode() ?: 0)
         result = 31 * result + (error?.hashCode() ?: 0)
+        result = 31 * result + (customMessageType?.hashCode() ?: 0)
         return result
     }
 }
