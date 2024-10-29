@@ -264,6 +264,7 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
         final AtomicBoolean success = new AtomicBoolean();
         final String expectedChannel = randomChannel();
         final JsonObject messagePayload = generateMessage(pubNub);
+        final String customMessageType = "myCustomType01";
 
         final PubNub observer = getPubNub();
 
@@ -276,6 +277,7 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
                         observer.publish()
                                 .message(messagePayload)
                                 .channel(expectedChannel)
+                                .customMessageType(customMessageType)
                                 .async((result) -> assertFalse(result.isFailure()));
                     }
                 }
@@ -286,6 +288,7 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
                 assertEquals(expectedChannel, message.getChannel());
                 assertEquals(observer.getConfiguration().getUserId().getValue(), message.getPublisher());
                 assertEquals(messagePayload, message.getMessage());
+                assertEquals(customMessageType, message.getCustomMessageType());
                 success.set(true);
             }
 

@@ -232,6 +232,7 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
         val channel = randomChannel()
         val expectedMeta = JsonObject().also { it.add("thisIsMeta", JsonPrimitive("thisIsMetaValue")) }
         val expectedMessage = CommonUtils.generatePayload()
+        val expectedCustomMessageType = "customType_${randomNumeric()}"
 
         val result =
             pubnub.publish(
@@ -240,6 +241,7 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
                 meta = expectedMeta,
                 shouldStore = true,
                 ttl = 60,
+                customMessageType = expectedCustomMessageType
             ).sync()
 
         var fetchResult: PNFetchMessagesResult? = null
@@ -256,6 +258,7 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
                         includeMessageType = true,
                         includeUUID = true,
                         channels = listOf(channel),
+                        includeCustomMessageType = true
                     ).sync()
                 assertNotNull(fetchResult)
                 assertThat(fetchResult?.channels, aMapWithSize(not(0)))
@@ -270,6 +273,7 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
                 messageType = HistoryMessageType.Message,
                 actions = emptyMap<String, Map<String, List<PNFetchMessageItem.Action>>>(),
                 error = PubNubError.CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED,
+                customMessageType = expectedCustomMessageType
             )
 
         val expectedChannelsResponse: Map<String, List<PNFetchMessageItem>> =
