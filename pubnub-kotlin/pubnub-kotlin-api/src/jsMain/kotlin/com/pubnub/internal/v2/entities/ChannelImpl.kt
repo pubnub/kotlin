@@ -41,7 +41,8 @@ class ChannelImpl(private val jsChannel: dynamic) : Channel {
         meta: Any?,
         ttl: Int?,
         shouldStore: Boolean?,
-        cipherKey: String?
+        cipherKey: String?,
+        customMessageType: String?
     ): SendFile {
         TODO("Not yet implemented")
     }

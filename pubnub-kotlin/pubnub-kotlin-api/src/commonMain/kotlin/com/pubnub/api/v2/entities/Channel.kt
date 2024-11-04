@@ -166,6 +166,7 @@ interface Channel : Subscribable {
      * @param shouldStore Store in history.
      *                    If not specified, then the history configuration of the key is used.
      * @param cipherKey Key to be used to encrypt uploaded data.
+     * @param customMessageType The custom type associated with the message.
      */
     fun sendFile(
         fileName: String,
@@ -174,7 +175,8 @@ interface Channel : Subscribable {
         meta: Any? = null,
         ttl: Int? = null,
         shouldStore: Boolean? = null,
-        cipherKey: String? = null
+        cipherKey: String? = null,
+        customMessageType: String? = null
     ): SendFile
 
     /**

@@ -9,11 +9,13 @@ import com.pubnub.api.models.consumer.files.PNFileUploadResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.test.CommonUtils.randomChannel
 import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.io.ByteArrayInputStream
 import java.io.InputStream
 import java.nio.charset.StandardCharsets
 import java.util.Scanner
+import java.util.concurrent.CompletableFuture
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicReference
@@ -38,14 +40,25 @@ class FilesIntegrationTest : BaseIntegrationTest() {
         val message = "This is message"
         val meta = "This is meta"
         val content = "This is content"
+        val customMessageType = "MyCustomType"
+        val receiveFileEventFuture = CompletableFuture<PNFileEventResult>()
 
         val channel = pubnub.channel(channelName)
+
+        val subscription = channel.subscription()
+        subscription.onFile = { fileEvent: PNFileEventResult ->
+            receiveFileEventFuture.complete(fileEvent)
+        }
+        subscription.subscribe()
+        Thread.sleep(1000)
+
         ByteArrayInputStream(content.toByteArray(StandardCharsets.UTF_8)).use {
             channel.sendFile(
                 fileName = fileName,
                 inputStream = it,
                 message = message,
                 meta = meta,
+                customMessageType = customMessageType
             ).async { result ->
                 result.onSuccess {
                     sendFileResultReference.set(it)
@@ -58,6 +71,9 @@ class FilesIntegrationTest : BaseIntegrationTest() {
             Assert.fail()
             return
         }
+
+        val fileEvent = receiveFileEventFuture.get(10, TimeUnit.SECONDS)
+        assertEquals(customMessageType, fileEvent.customMessageType)
 
         val sendFileResult = sendFileResultReference.get()
         if (sendFileResult == null) {

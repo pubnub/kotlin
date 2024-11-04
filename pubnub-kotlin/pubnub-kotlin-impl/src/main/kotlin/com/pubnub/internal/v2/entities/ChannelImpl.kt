@@ -98,9 +98,10 @@ open class ChannelImpl(val pubNubImpl: PubNubImpl, val channelName: ChannelName)
         meta: Any?,
         ttl: Int?,
         shouldStore: Boolean?,
-        cipherKey: String?
+        cipherKey: String?,
+        customMessageType: String?
     ): SendFile {
-        return pubNubImpl.sendFile(channelName.id, fileName, inputStream, message, meta, ttl, shouldStore, cipherKey)
+        return pubNubImpl.sendFile(channelName.id, fileName, inputStream, message, meta, ttl, shouldStore, cipherKey, customMessageType)
     }
 
     override fun deleteFile(
