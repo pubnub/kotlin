@@ -52,7 +52,7 @@ actual interface PNConfiguration {
      * Authentication token for the PubNub client. This token is required on the client side when Access Manager (PAM) is enabled for PubNub keys.
      * It can be generated using the [PubNub.grantToken] method, which should be executed on the server side with a PubNub instance initialized using the secret key.
      */
-    actual val authToken: String
+    actual val authToken: String?
 
     /**
      * CryptoModule is responsible for handling encryption and decryption.
@@ -356,7 +356,7 @@ actual interface PNConfiguration {
          * Authentication token for the PubNub client. This token is required on the client side when Access Manager (PAM) is enabled for PubNub keys.
          * It can be generated using the [PubNub.grantToken] method, which should be executed on the server side with a PubNub instance initialized using the secret key.
          */
-        var authToken: String
+        var authToken: String?
 
         /**
          * CryptoModule is responsible for handling encryption and decryption.
@@ -672,7 +672,7 @@ interface PNConfigurationOverride {
          * Authentication token for the PubNub client. This token is required on the client side when Access Manager (PAM) is enabled for PubNub keys.
          * It can be generated using the [PubNub.grantToken] method, which should be executed on the server side with a PubNub instance initialized using the secret key.
          */
-        var authToken: String
+        var authToken: String?
 
         /**
          * CryptoModule is responsible for handling encryption and decryption.
