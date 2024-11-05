@@ -57,7 +57,6 @@ class EntitiesTest : BaseIntegrationTest() {
         }
     }
 
-
     @Test // todo flaky
     fun can_get_events_from_channel_subscriptionSet() = runTest {
         pubnub.test(backgroundScope) {
