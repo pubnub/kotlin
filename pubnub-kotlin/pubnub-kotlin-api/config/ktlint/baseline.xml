@@ -2,30 +2,28 @@
 <baseline version="1.0">
     <file name="src/jsMain/kotlin/Pubnub.d.kt">
         <error line="156" column="40" source="standard:comment-wrapping" />
-        <error line="407" column="15" source="standard:class-naming" />
-        <error line="423" column="15" source="standard:class-naming" />
-        <error line="439" column="15" source="standard:class-naming" />
-        <error line="451" column="15" source="standard:class-naming" />
-        <error line="459" column="15" source="standard:class-naming" />
-        <error line="467" column="15" source="standard:class-naming" />
-        <error line="483" column="15" source="standard:class-naming" />
-        <error line="496" column="15" source="standard:class-naming" />
-        <error line="840" column="13" source="standard:property-naming" />
-        <error line="1023" column="15" source="standard:class-naming" />
-        <error line="1029" column="15" source="standard:class-naming" />
-        <error line="1148" column="13" source="standard:property-naming" />
-        <error line="1154" column="13" source="standard:property-naming" />
+        <error line="409" column="15" source="standard:class-naming" />
+        <error line="425" column="15" source="standard:class-naming" />
+        <error line="441" column="15" source="standard:class-naming" />
+        <error line="453" column="15" source="standard:class-naming" />
+        <error line="461" column="15" source="standard:class-naming" />
+        <error line="469" column="15" source="standard:class-naming" />
+        <error line="485" column="15" source="standard:class-naming" />
+        <error line="498" column="15" source="standard:class-naming" />
+        <error line="842" column="13" source="standard:property-naming" />
+        <error line="1025" column="15" source="standard:class-naming" />
+        <error line="1031" column="15" source="standard:class-naming" />
+        <error line="1150" column="13" source="standard:property-naming" />
         <error line="1156" column="13" source="standard:property-naming" />
-        <error line="1216" column="39" source="standard:comment-wrapping" />
-        <error line="1301" column="15" source="standard:class-naming" />
-        <error line="1329" column="42" source="standard:comment-wrapping" />
-        <error line="1379" column="37" source="standard:comment-wrapping" />
-        <error line="1400" column="13" source="standard:property-naming" />
-        <error line="1401" column="13" source="standard:property-naming" />
-        <error line="1405" column="13" source="standard:property-naming" />
-        <error line="1406" column="13" source="standard:property-naming" />
-        <error line="1425" column="9" source="standard:property-naming" />
-        <error line="1426" column="9" source="standard:property-naming" />
+        <error line="1158" column="13" source="standard:property-naming" />
+        <error line="1218" column="39" source="standard:comment-wrapping" />
+        <error line="1303" column="15" source="standard:class-naming" />
+        <error line="1331" column="42" source="standard:comment-wrapping" />
+        <error line="1381" column="37" source="standard:comment-wrapping" />
+        <error line="1402" column="13" source="standard:property-naming" />
+        <error line="1403" column="13" source="standard:property-naming" />
+        <error line="1407" column="13" source="standard:property-naming" />
+        <error line="1408" column="13" source="standard:property-naming" />
         <error line="1427" column="9" source="standard:property-naming" />
         <error line="1428" column="9" source="standard:property-naming" />
         <error line="1429" column="9" source="standard:property-naming" />
@@ -37,8 +35,8 @@
         <error line="1435" column="9" source="standard:property-naming" />
         <error line="1436" column="9" source="standard:property-naming" />
         <error line="1437" column="9" source="standard:property-naming" />
-        <error line="1441" column="9" source="standard:property-naming" />
-        <error line="1442" column="9" source="standard:property-naming" />
+        <error line="1438" column="9" source="standard:property-naming" />
+        <error line="1439" column="9" source="standard:property-naming" />
         <error line="1443" column="9" source="standard:property-naming" />
         <error line="1444" column="9" source="standard:property-naming" />
         <error line="1445" column="9" source="standard:property-naming" />
@@ -73,9 +71,7 @@
         <error line="1474" column="9" source="standard:property-naming" />
         <error line="1475" column="9" source="standard:property-naming" />
         <error line="1476" column="9" source="standard:property-naming" />
-    </file>
-    <file name="src/jsMain/kotlin/com/pubnub/api/PubNubImpl.kt">
-        <error line="1120" column="5" source="standard:function-naming" />
-        <error line="1140" column="5" source="standard:function-naming" />
+        <error line="1477" column="9" source="standard:property-naming" />
+        <error line="1478" column="9" source="standard:property-naming" />
     </file>
 </baseline>

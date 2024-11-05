@@ -8,13 +8,6 @@
     <file name="src/main/kotlin/com/pubnub/internal/subscribe/eventengine/effect/ReconnectionPolicy.kt">
         <error line="1" column="1" source="standard:no-empty-file" />
     </file>
-    <file name="src/main/kotlin/com/pubnub/internal/v2/PNConfigurationImpl.kt">
-        <error line="100" column="1" source="standard:indent" />
-        <error line="101" column="1" source="standard:indent" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/workers/SubscribeMessageProcessor.kt">
-        <error line="196" column="56" source="standard:curly-spacing" />
-    </file>
     <file name="src/test/kotlin/com/pubnub/api/legacy/endpoints/files/TestsWithFiles.kt">
         <error line="17" column="30" source="standard:property-naming" />
     </file>
