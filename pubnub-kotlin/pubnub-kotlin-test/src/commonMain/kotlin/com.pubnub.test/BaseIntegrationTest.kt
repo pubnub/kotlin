@@ -43,8 +43,20 @@ abstract class BaseIntegrationTest {
 
     @BeforeTest
     open fun before() {
-        config = createPNConfiguration(UserId(randomString()), Keys.subKey, Keys.pubKey, logVerbosity = PNLogVerbosity.BODY)
-        config02 = createPNConfiguration(UserId(randomString()), Keys.subKey, Keys.pubKey, logVerbosity = PNLogVerbosity.BODY)
+        config = createPNConfiguration(
+            UserId(randomString()),
+            Keys.subKey,
+            Keys.pubKey,
+            logVerbosity = PNLogVerbosity.BODY,
+            authToken = null
+        )
+        config02 = createPNConfiguration(
+            UserId(randomString()),
+            Keys.subKey,
+            Keys.pubKey,
+            logVerbosity = PNLogVerbosity.BODY,
+            authToken = null
+        )
         pubnub = createPubNub(config)
         pubnub02 = createPubNub(config02)
         configPamServer = createPNConfiguration(
@@ -52,13 +64,14 @@ abstract class BaseIntegrationTest {
             Keys.pamSubKey,
             Keys.pamPubKey,
             Keys.pamSecKey,
-            logVerbosity = PNLogVerbosity.BODY
+            PNLogVerbosity.BODY
         )
         configPamClient = createPNConfiguration(
             UserId(randomString()),
             Keys.pamSubKey,
             Keys.pamPubKey,
-            logVerbosity = PNLogVerbosity.BODY
+            logVerbosity = PNLogVerbosity.BODY,
+            authToken = null
         )
         pubnubPamServer = createPubNub(configPamServer)
         pubnubPamClient = createPubNub(configPamClient)

@@ -4,6 +4,7 @@ import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNLogVerbosity
 
 private const val NO_AUTH_KEY = ""
+private const val NO_AUTH_TOKEN = ""
 
 actual interface PNConfiguration {
     actual val userId: UserId
@@ -19,6 +20,12 @@ actual interface PNConfiguration {
         level = DeprecationLevel.WARNING
     )
     actual val authKey: String
+
+    /**
+     * Authentication token for the PubNub client. This token is required on the client side when Access Manager (PAM) is enabled for PubNub keys.
+     * It can be generated using the [PubNub.grantToken] method, which should be executed on the server side with a PubNub instance initialized using the secret key.
+     */
+    actual val authToken: String
 }
 
 @Deprecated(
@@ -49,6 +56,8 @@ actual fun createPNConfiguration(
             get() = secretKey.orEmpty()
         override val authKey: String
             get() = authKey.orEmpty()
+        override val authToken: String
+            get() = NO_AUTH_TOKEN
         override val enableEventEngine: Boolean
             get() = false
         override val logVerbosity: PNLogVerbosity
@@ -61,7 +70,8 @@ actual fun createPNConfiguration(
     subscribeKey: String,
     publishKey: String,
     secretKey: String?,
-    logVerbosity: PNLogVerbosity
+    logVerbosity: PNLogVerbosity,
+    authToken: String?
 ): PNConfiguration {
     return object : PNConfiguration {
         override val userId: UserId
@@ -74,6 +84,8 @@ actual fun createPNConfiguration(
             get() = secretKey.orEmpty()
         override val authKey: String
             get() = NO_AUTH_KEY
+        override val authToken: String
+            get() = authToken.orEmpty()
         override val enableEventEngine: Boolean
             get() = false
         override val logVerbosity: PNLogVerbosity

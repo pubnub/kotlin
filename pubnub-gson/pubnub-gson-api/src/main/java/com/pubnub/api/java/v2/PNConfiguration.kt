@@ -59,7 +59,7 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
         val secretKey: String
 
         /**
-         * If Access Manager (deprecated PAM v2) is utilized, client will use this authKey in all restricted requests.
+         * If Access Manager V2(deprecated PAM v2) is utilized, client will use this authKey in all restricted requests.
          */
         @Deprecated(
             message = "The authKey parameter is deprecated because it relates to deprecated Access Manager (PAM V2) and will be removed in the future. " +

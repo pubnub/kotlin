@@ -213,7 +213,7 @@ abstract class EndpointCore<Input, Output> protected constructor(protected val p
         }
 
         if (isAuthRequired()) {
-            val token = pubnub.tokenManager.getToken()
+            val token = configOverride?.authToken?.takeIf { it.isNotEmpty() } ?: pubnub.tokenManager.getToken()
             if (token != null) {
                 map["auth"] = token
             } else if (configuration.authKey.isValid()) {
