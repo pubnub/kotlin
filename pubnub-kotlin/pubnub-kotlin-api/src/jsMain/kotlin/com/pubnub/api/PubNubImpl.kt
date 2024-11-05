@@ -676,6 +676,7 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
         return GetMembershipsImpl(
             jsPubNub,
             createJsObject {
+                uuid?.let { this.uuid = it }
                 this.sort = sort.toJsMap()
                 this.filter = filter
                 this.page = page.toMetadataPage()
