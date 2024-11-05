@@ -24,6 +24,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.Clock
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.test.AfterTest
@@ -183,9 +184,10 @@ class PubNubTest(
                     )
                 )
             ) {
-                cont.resume(Unit)
-            }
-            if (pnStatus.category == PNStatusCategory.PNUnexpectedDisconnectCategory || pnStatus.category == PNStatusCategory.PNConnectionError) {
+                if (!cont.isCompleted) {
+                    cont.resume(Unit)
+                }
+            } else if (pnStatus.category == PNStatusCategory.PNUnexpectedDisconnectCategory || pnStatus.category == PNStatusCategory.PNConnectionError) {
                 cont.resumeWithException(pnStatus.exception ?: RuntimeException(pnStatus.category.toString()))
             }
         }
@@ -210,10 +212,10 @@ class PubNubTest(
                         if (cont.isCompleted) {
                             return@createStatusListener
                         }
-                        if (pnStatus.category == PNStatusCategory.PNDisconnectedCategory || pnStatus.category == PNStatusCategory.PNSubscriptionChanged &&
-                            pnStatus.affectedChannels.containsAll(channels) && pnStatus.affectedChannelGroups.containsAll(
+                        if ((pnStatus.category == PNStatusCategory.PNDisconnectedCategory || pnStatus.category == PNStatusCategory.PNSubscriptionChanged) &&
+                            (pnStatus.affectedChannels.containsAll(channels) && pnStatus.affectedChannelGroups.containsAll(
                                 channelGroups
-                            )
+                            ))
                         ) {
                             cont.resume(Unit)
                         }

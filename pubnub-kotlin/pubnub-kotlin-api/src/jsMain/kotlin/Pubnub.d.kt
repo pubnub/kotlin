@@ -201,6 +201,8 @@ open external class PubNub(config: Any /* UUID | UserId */) {
 
     open fun unsubscribeAll()
 
+    open fun destroy()
+
     open fun stop()
 
     open fun reconnect()

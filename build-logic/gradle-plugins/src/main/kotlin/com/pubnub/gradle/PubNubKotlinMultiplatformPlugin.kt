@@ -25,9 +25,6 @@ class PubNubKotlinMultiplatformPlugin : Plugin<Project> {
                 extensions.configure<KotlinMultiplatformExtension> {
                     (this as? ExtensionAware)?.extensions?.configure<CocoapodsExtension> {
                         ios.deploymentTarget = "14"
-//
-//                    summary = "Some description for a Kotlin/Native module"
-//                    homepage = "Link to a Kotlin/Native module homepage"
 
                         // Maps custom Xcode configuration to NativeBuildType
                         xcodeConfigurationToNativeBuildType["CUSTOM_DEBUG"] = NativeBuildType.DEBUG
@@ -67,18 +64,6 @@ class PubNubBaseKotlinMultiplatformPlugin : Plugin<Project> {
                         project.findProperty("JS_MODULE_NAME")?.toString()?.let { jsModuleName ->
                             moduleName = jsModuleName
                         }
-//                        useEsModules()
-//                        browser {
-//                            testTask {
-//                                it.useMocha {
-//                                    timeout = "10s"
-//                                }
-//                            }
-//                        }
-//                        binaries.executable()
-                        binaries.library()
-                        generateTypeScriptDefinitions()
-
                         nodejs {
                             testTask {
                                 it.environment("MOCHA_OPTIONS", "--exit")

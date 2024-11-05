@@ -1017,7 +1017,7 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
     }
 
     override fun destroy() {
-        jsPubNub.unsubscribeAll() // todo check if there is destroy in JavaScript SDK
+        jsPubNub.destroy()
     }
 
     override fun channel(name: String): Channel {
