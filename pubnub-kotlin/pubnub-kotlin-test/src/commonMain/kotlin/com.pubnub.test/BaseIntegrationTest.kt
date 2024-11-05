@@ -24,7 +24,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
-import kotlinx.datetime.Clock
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.test.AfterTest
@@ -213,9 +212,11 @@ class PubNubTest(
                             return@createStatusListener
                         }
                         if ((pnStatus.category == PNStatusCategory.PNDisconnectedCategory || pnStatus.category == PNStatusCategory.PNSubscriptionChanged) &&
-                            (pnStatus.affectedChannels.containsAll(channels) && pnStatus.affectedChannelGroups.containsAll(
-                                channelGroups
-                            ))
+                            (
+                                pnStatus.affectedChannels.containsAll(channels) && pnStatus.affectedChannelGroups.containsAll(
+                                    channelGroups
+                                )
+                            )
                         ) {
                             cont.resume(Unit)
                         }
