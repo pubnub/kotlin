@@ -25,6 +25,7 @@ class PNConfigurationImpl(
     override val publishKey: String = "",
     override val secretKey: String = "",
     override val authKey: String = "",
+    override val authToken: String? = null,
     override val cryptoModule: CryptoModule? = null,
     override val origin: String = "",
     override val secure: Boolean = true,
@@ -95,16 +96,9 @@ class PNConfigurationImpl(
 
         override var secretKey: String = defaultConfiguration.secretKey
 
-        @Deprecated(
-            message = "The authKey parameter is deprecated because it relates to deprecated Access Manager (PAM V2) and will be removed in the future." +
-                "Please, use createPNConfiguration without authKey instead and migrate to new Access Manager " +
-                "(PAM V3) https://www.pubnub.com/docs/general/resources/migration-guides/pam-v3-migration ",
-            level = DeprecationLevel.WARNING,
-            replaceWith = ReplaceWith(
-                "createPNConfiguration(userId, subscribeKey, publishKey, secretKey, logVerbosity)"
-            ),
-        )
         override var authKey: String = defaultConfiguration.authKey
+
+        override var authToken: String? = defaultConfiguration.authToken
 
         override var cryptoModule: CryptoModule? = defaultConfiguration.cryptoModule
 
@@ -196,6 +190,7 @@ class PNConfigurationImpl(
                 publishKey = publishKey,
                 secretKey = secretKey,
                 authKey = authKey,
+                authToken = authToken,
                 cryptoModule = cryptoModule,
                 origin = origin,
                 secure = secure,

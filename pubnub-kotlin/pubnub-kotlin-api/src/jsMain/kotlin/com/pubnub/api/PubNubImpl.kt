@@ -144,8 +144,8 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
             jsPubNub.asDynamic().configuration.subscribeKey,
             jsPubNub.asDynamic().configuration.publishKey,
             jsPubNub.asDynamic().configuration.secretKey,
-            jsPubNub.asDynamic().configuration.authKey,
-            jsPubNub.asDynamic().configuration.logVerbosity
+            jsPubNub.asDynamic().configuration.logVerbosity,
+            authToken = jsPubNub.asDynamic().configuration.authToken
         )
 
     override fun addListener(listener: EventListener) {

@@ -25,6 +25,7 @@ class PNConfigurationImpl(
     override val publishKey: String = "",
     override val secretKey: String = "",
     override val authKey: String = "",
+    override val authToken: String? = null, // this property is not used, user can't create configuration with authToken
     override val cryptoModule: CryptoModule? = null,
     override val origin: String = "",
     override val secure: Boolean = true,

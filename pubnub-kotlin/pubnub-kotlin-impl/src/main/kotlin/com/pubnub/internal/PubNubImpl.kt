@@ -179,6 +179,11 @@ open class PubNubImpl(
     val pnsdkName: String = PNSDK_PUBNUB_KOTLIN,
     eventEnginesConf: EventEnginesConf = EventEnginesConf()
 ) : PubNub {
+    internal val tokenManager: TokenManager = TokenManager()
+
+    init {
+        this.setToken(configuration.authToken)
+    }
     constructor(configuration: PNConfiguration) : this(configuration, PNSDK_PUBNUB_KOTLIN)
 
     val mapper = MapperManager()
@@ -189,7 +194,6 @@ open class PubNubImpl(
     private val basePathManager = BasePathManager(configuration)
     internal val retrofitManager = RetrofitManager(this, configuration)
     internal val publishSequenceManager = PublishSequenceManager(MAX_SEQUENCE)
-    internal val tokenManager: TokenManager = TokenManager()
     private val tokenParser: TokenParser = TokenParser()
     private val presenceData = PresenceData()
     private val subscribe =
