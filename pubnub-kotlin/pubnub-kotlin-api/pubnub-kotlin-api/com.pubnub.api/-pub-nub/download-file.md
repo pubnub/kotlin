@@ -2,12 +2,8 @@
 
 # downloadFile
 
-[common, native]\
 [common]\
-expect abstract fun [downloadFile](download-file.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), fileName: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), fileId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), cipherKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null): [DownloadFile](../../com.pubnub.api.endpoints.files/-download-file/index.md)
-
-[native]\
-actual abstract fun [downloadFile](download-file.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), fileName: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), fileId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), cipherKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?): [DownloadFile](../../com.pubnub.api.endpoints.files/-download-file/index.md)
+expect abstract fun [downloadFile](download-file.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), fileName: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), fileId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), cipherKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null): [DownloadFile](../../com.pubnub.api.endpoints.files/-download-file/index.md)actual abstract fun [downloadFile](download-file.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), fileName: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), fileId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), cipherKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?): [DownloadFile](../../com.pubnub.api.endpoints.files/-download-file/index.md)
 
 [jvm]\
 actual abstract fun [downloadFile](download-file.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), fileName: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), fileId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), cipherKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?): [DownloadFile](../../com.pubnub.api.endpoints.files/-download-file/index.md)
@@ -23,4 +19,4 @@ jvm
 | channel | Name of channel to which the file has been uploaded. |
 | fileName | Name under which the uploaded file is stored. |
 | fileId | Unique identifier for the file, assigned during upload. |
-| cipherKey | Key to be used to decrypt downloaded data. If a key is not provided,     the SDK uses the cipherKey from the @see [PNConfiguration](../../com.pubnub.api.v2/-p-n-configuration/index.md). |
+| cipherKey | Key to be used to decrypt downloaded data. If a key is not provided,     the SDK uses the cipherKey from the @see [PNConfiguration](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.v2/-p-n-configuration/index.md). |

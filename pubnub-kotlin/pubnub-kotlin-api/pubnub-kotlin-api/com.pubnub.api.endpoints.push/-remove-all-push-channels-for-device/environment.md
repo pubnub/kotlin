@@ -3,4 +3,4 @@
 # environment
 
 [jvm]\
-abstract val [environment](environment.md): [PNPushEnvironment](../../com.pubnub.api.enums/-p-n-push-environment/index.md)
+abstract val [environment](environment.md): [PNPushEnvironment](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.enums/-p-n-push-environment/index.md)

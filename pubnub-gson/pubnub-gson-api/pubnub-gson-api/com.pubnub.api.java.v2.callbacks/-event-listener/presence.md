@@ -3,4 +3,4 @@
 # presence
 
 [jvm]\
-open fun [presence](presence.md)(pubnub: [PubNub](../../com.pubnub.api.java/-pub-nub/index.md), result: [PNPresenceEventResult](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.models.consumer.pubsub/-p-n-presence-event-result/index.md))
+open fun [presence](presence.md)(pubnub: [PubNub](../../com.pubnub.api.java/-pub-nub/index.md), result: [PNPresenceEventResult](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.pubsub/-p-n-presence-event-result/index.md))

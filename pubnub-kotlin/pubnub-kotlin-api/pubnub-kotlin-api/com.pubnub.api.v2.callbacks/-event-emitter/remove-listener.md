@@ -3,7 +3,7 @@
 # removeListener
 
 [common]\
-abstract fun [removeListener](remove-listener.md)(listener: [Listener](../../com.pubnub.api.callbacks/-listener/index.md))
+abstract fun [removeListener](remove-listener.md)(listener: [Listener](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.callbacks/-listener/index.md))
 
 Remove a listener.
 

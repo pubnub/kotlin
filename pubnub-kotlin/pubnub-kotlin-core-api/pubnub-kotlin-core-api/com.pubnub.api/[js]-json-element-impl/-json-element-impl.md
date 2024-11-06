@@ -1,0 +1,6 @@
+//[pubnub-kotlin-core-api](../../../index.md)/[com.pubnub.api](../index.md)/[[js]JsonElementImpl](index.md)/[JsonElementImpl](-json-element-impl.md)
+
+# JsonElementImpl
+
+[js]\
+constructor(value: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?)

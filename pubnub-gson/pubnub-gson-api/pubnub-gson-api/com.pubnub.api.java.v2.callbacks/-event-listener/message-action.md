@@ -3,4 +3,4 @@
 # messageAction
 
 [jvm]\
-open fun [messageAction](message-action.md)(pubNub: [PubNub](../../com.pubnub.api.java/-pub-nub/index.md), result: [PNMessageActionResult](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.models.consumer.pubsub.message_actions/-p-n-message-action-result/index.md))
+open fun [messageAction](message-action.md)(pubNub: [PubNub](../../com.pubnub.api.java/-pub-nub/index.md), result: [PNMessageActionResult](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.pubsub.message_actions/-p-n-message-action-result/index.md))

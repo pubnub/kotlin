@@ -11,4 +11,4 @@ interface [OnSignalHandler](index.md)
 
 | Name | Summary |
 |---|---|
-| [handle](handle.md) | [jvm]<br>abstract fun [handle](handle.md)(pnSignalResult: [PNSignalResult](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.models.consumer.pubsub/-p-n-signal-result/index.md))<br> This interface is designed for implementing custom handlers that respond to message retrieval operations. |
+| [handle](handle.md) | [jvm]<br>abstract fun [handle](handle.md)(pnSignalResult: [PNSignalResult](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.pubsub/-p-n-signal-result/index.md))<br> This interface is designed for implementing custom handlers that respond to message retrieval operations. |

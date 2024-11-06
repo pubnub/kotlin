@@ -3,4 +3,4 @@
 # PNERROBJ_JSON_ERROR
 
 [jvm]\
-val [PNERROBJ_JSON_ERROR](-p-n-e-r-r-o-b-j_-j-s-o-n_-e-r-r-o-r.md): [PubNubError](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api/-pub-nub-error/index.md)
+val [PNERROBJ_JSON_ERROR](-p-n-e-r-r-o-b-j_-j-s-o-n_-e-r-r-o-r.md): [PubNubError](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api/-pub-nub-error/index.md)

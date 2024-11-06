@@ -7,7 +7,7 @@ abstract fun [remove](remove.md)(subscription: [Subscription](../-subscription/i
 
 Remove the [subscription](remove.md) from this set.
 
-Please note that removing a subscription from the set does not automatically [unsubscribe](../../../../../pubnub-kotlin/pubnub-kotlin-api/com.pubnub.api.v2.subscriptions/-subscription-set/unsubscribe.md) or [close](../../../../../pubnub-kotlin/pubnub-kotlin-api/com.pubnub.api.v2.subscriptions/-subscription-set/close.md) it.
+Please note that removing a subscription from the set does not automatically unsubscribe or close it.
 
 #### Parameters
 

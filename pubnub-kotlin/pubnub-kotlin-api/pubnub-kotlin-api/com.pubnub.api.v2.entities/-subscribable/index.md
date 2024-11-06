@@ -19,4 +19,4 @@ This interface is implemented by entities that can be subscribed to, such as cha
 
 | Name | Summary |
 |---|---|
-| [subscription](subscription.md) | [common]<br>abstract fun [subscription](subscription.md)(options: [SubscriptionOptions](../../com.pubnub.api.v2.subscriptions/-subscription-options/index.md) = EmptyOptions): [Subscription](../../com.pubnub.api.v2.subscriptions/-subscription/index.md)<br>Returns a [com.pubnub.api.v2.subscriptions.Subscription](../../com.pubnub.api.v2.subscriptions/-subscription/index.md) that can be used to subscribe to this `Subscribable`. |
+| [subscription](subscription.md) | [common]<br>abstract fun [subscription](subscription.md)(options: [SubscriptionOptions](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.v2.subscriptions/-subscription-options/index.md) = EmptyOptions): [Subscription](../../com.pubnub.api.v2.subscriptions/-subscription/index.md)<br>Returns a [com.pubnub.api.v2.subscriptions.Subscription](../../com.pubnub.api.v2.subscriptions/-subscription/index.md) that can be used to subscribe to this `Subscribable`. |

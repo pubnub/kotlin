@@ -24,7 +24,7 @@ jvm
 
 | | |
 |---|---|
-| [PubNubException](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api/-pub-nub-exception/index.md) | Throws exception in case of failed encryption. |
+| [PubNubException](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api/-pub-nub-exception/index.md) | Throws exception in case of failed encryption. |
 
 [jvm]\
 abstract fun [encryptInputStream](encrypt-input-stream.md)(inputStream: [InputStream](https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html), cipherKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?): [InputStream](https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html)
@@ -48,4 +48,4 @@ jvm
 
 | | |
 |---|---|
-| [PubNubException](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api/-pub-nub-exception/index.md) | Throws exception in case of failed encryption. |
+| [PubNubException](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api/-pub-nub-exception/index.md) | Throws exception in case of failed encryption. |

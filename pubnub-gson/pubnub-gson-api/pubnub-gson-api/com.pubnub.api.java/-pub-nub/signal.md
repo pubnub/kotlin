@@ -3,7 +3,7 @@
 # signal
 
 [jvm]\
-abstract fun [signal](signal.md)(message: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html), channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [Signal](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.endpoints.pubsub/-signal/index.md)
+abstract fun [signal](signal.md)(message: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html), channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [Signal](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.endpoints.pubsub/-signal/index.md)
 
 Send a signal to all subscribers of a channel.
 

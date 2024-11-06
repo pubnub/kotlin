@@ -3,7 +3,7 @@
 # alsoAsync
 
 [common]\
-fun &lt;[T](also-async.md)&gt; [PNFuture](-p-n-future/index.md)&lt;[T](also-async.md)&gt;.[alsoAsync](also-async.md)(action: ([T](also-async.md)) -&gt; [PNFuture](-p-n-future/index.md)&lt;*&gt;): [PNFuture](-p-n-future/index.md)&lt;[T](also-async.md)&gt;
+fun &lt;[T](also-async.md)&gt; [PNFuture](../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.kmp/-p-n-future/index.md)&lt;[T](also-async.md)&gt;.[alsoAsync](also-async.md)(action: ([T](also-async.md)) -&gt; [PNFuture](../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.kmp/-p-n-future/index.md)&lt;*&gt;): [PNFuture](../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.kmp/-p-n-future/index.md)&lt;[T](also-async.md)&gt;
 
 Execute a second PNFuture after this PNFuture completes successfully, and return the *original* value of this PNFuture after the second PNFuture completes successfully.
 

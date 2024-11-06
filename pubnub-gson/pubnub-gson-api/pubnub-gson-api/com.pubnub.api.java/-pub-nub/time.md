@@ -3,6 +3,6 @@
 # time
 
 [jvm]\
-abstract fun [time](time.md)(): [Time](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.endpoints/-time/index.md)
+abstract fun [time](time.md)(): [Time](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.endpoints/-time/index.md)
 
 Returns a 17 digit precision Unix epoch from the server.

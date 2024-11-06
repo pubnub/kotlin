@@ -3,4 +3,4 @@
 # setUserId
 
 [jvm]\
-abstract fun [setUserId](set-user-id.md)(userId: [UserId](../../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api/-user-id/index.md)): [PNConfigurationOverride.Builder](index.md)
+abstract fun [setUserId](set-user-id.md)(userId: [UserId](../../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api/-user-id/index.md)): [PNConfigurationOverride.Builder](index.md)

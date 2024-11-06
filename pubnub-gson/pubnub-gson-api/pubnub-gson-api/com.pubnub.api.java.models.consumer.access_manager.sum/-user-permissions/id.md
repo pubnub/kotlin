@@ -3,4 +3,4 @@
 # id
 
 [jvm]\
-open fun [id](id.md)(userId: [UserId](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api/-user-id/index.md)): [UserPermissions](index.md)
+open fun [id](id.md)(userId: [UserId](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api/-user-id/index.md)): [UserPermissions](index.md)

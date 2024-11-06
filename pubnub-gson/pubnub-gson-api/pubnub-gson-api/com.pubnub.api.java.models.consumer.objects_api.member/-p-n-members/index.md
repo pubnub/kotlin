@@ -10,9 +10,3 @@ open class [PNMembers](index.md)
 | | |
 |---|---|
 | [PNMembers](-p-n-members.md) | [jvm]<br>constructor() |
-
-## Functions
-
-| Name | Summary |
-|---|---|
-| [from](from.md) | [jvm]<br>@Nullable<br>open fun [from](from.md)(@Nullablemember: @Nullable[PNMember](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.models.consumer.objects.member/-p-n-member/index.md)): @Nullable[PNMembers](index.md)<br>open fun [from](from.md)(members: [Collection](https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html)&lt;[PNMember](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.models.consumer.objects.member/-p-n-member/index.md)&gt;): [List](https://docs.oracle.com/javase/8/docs/api/java/util/List.html)&lt;[PNMembers](index.md)&gt; |

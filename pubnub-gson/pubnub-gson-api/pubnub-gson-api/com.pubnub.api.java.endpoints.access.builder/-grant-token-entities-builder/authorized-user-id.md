@@ -3,4 +3,4 @@
 # authorizedUserId
 
 [jvm]\
-abstract fun [authorizedUserId](authorized-user-id.md)(userId: [UserId](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api/-user-id/index.md)): [GrantTokenEntitiesBuilder](index.md)
+abstract fun [authorizedUserId](authorized-user-id.md)(userId: [UserId](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api/-user-id/index.md)): [GrantTokenEntitiesBuilder](index.md)

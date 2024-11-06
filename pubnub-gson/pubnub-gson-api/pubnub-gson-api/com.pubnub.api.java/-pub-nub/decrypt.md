@@ -23,7 +23,7 @@ jvm
 
 | | |
 |---|---|
-| [PubNubException](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api/-pub-nub-exception/index.md) | throws exception in case of failed decryption. |
+| [PubNubException](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api/-pub-nub-exception/index.md) | throws exception in case of failed decryption. |
 
 [jvm]\
 abstract fun [decrypt](decrypt.md)(inputString: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), cipherKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
@@ -47,4 +47,4 @@ jvm
 
 | | |
 |---|---|
-| [PubNubException](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api/-pub-nub-exception/index.md) | throws exception in case of failed decryption. |
+| [PubNubException](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api/-pub-nub-exception/index.md) | throws exception in case of failed decryption. |

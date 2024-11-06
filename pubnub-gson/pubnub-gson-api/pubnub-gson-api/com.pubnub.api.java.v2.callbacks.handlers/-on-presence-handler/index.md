@@ -11,4 +11,4 @@ interface [OnPresenceHandler](index.md)
 
 | Name | Summary |
 |---|---|
-| [handle](handle.md) | [jvm]<br>abstract fun [handle](handle.md)(pnPresenceEventResult: [PNPresenceEventResult](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.models.consumer.pubsub/-p-n-presence-event-result/index.md))<br> This interface is designed for implementing custom handlers that respond to presence event retrieval operations. |
+| [handle](handle.md) | [jvm]<br>abstract fun [handle](handle.md)(pnPresenceEventResult: [PNPresenceEventResult](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.pubsub/-p-n-presence-event-result/index.md))<br> This interface is designed for implementing custom handlers that respond to presence event retrieval operations. |

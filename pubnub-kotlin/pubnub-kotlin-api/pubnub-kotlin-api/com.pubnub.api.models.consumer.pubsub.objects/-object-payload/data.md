@@ -3,4 +3,4 @@
 # data
 
 [common]\
-val [data](data.md): [JsonElement](../../com.pubnub.api/-json-element/index.md)
+val [data](data.md): [JsonElement](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api/-json-element/index.md)

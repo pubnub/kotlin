@@ -3,7 +3,7 @@
 # status
 
 [jvm]\
-abstract fun [status](status.md)(pubnub: [PubNub](../../com.pubnub.api/-pub-nub/index.md), status: [PNStatus](../../com.pubnub.api.models.consumer/-p-n-status/index.md))
+abstract fun [status](status.md)(pubnub: [PubNub](../../com.pubnub.api/-pub-nub/index.md), status: [PNStatus](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.models.consumer/-p-n-status/index.md))
 
 Receive status updates from the PubNub client, such as:
 
@@ -31,4 +31,4 @@ jvm
 
 | |
 |---|
-| [PNStatus](../../com.pubnub.api.models.consumer/-p-n-status/index.md) |
+| [PNStatus](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.models.consumer/-p-n-status/index.md) |

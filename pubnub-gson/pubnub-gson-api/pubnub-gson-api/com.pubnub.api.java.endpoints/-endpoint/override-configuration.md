@@ -3,9 +3,9 @@
 # overrideConfiguration
 
 [jvm]\
-abstract fun [overrideConfiguration](override-configuration.md)(configuration: [PNConfiguration](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.v2/-p-n-configuration/index.md)): [Endpoint](index.md)&lt;[T](index.md)&gt;
+abstract fun [overrideConfiguration](override-configuration.md)(configuration: [PNConfiguration](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.v2/-p-n-configuration/index.md)): [Endpoint](index.md)&lt;[T](index.md)&gt;
 
-Allows to override certain configuration options (see [com.pubnub.api.v2.PNConfigurationOverride.Builder](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.v2/-p-n-configuration-override/-builder/index.md)) for this request only.
+Allows to override certain configuration options (see [com.pubnub.api.v2.PNConfigurationOverride.Builder](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.v2/-p-n-configuration-override/-builder/index.md)) for this request only.
 
 [com.pubnub.api.java.v2.PNConfigurationOverride.from](../../com.pubnub.api.java.v2/-p-n-configuration-override/-companion/from.md) should be used to obtain a `PNConfigurationOverride.Builder`. Only options present in `PNConfigurationOverride.Builder` will be used for the override.
 

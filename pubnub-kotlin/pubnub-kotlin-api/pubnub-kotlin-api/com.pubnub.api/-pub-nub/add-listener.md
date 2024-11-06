@@ -15,15 +15,7 @@ jvm
 |---|---|
 | listener | The listener to be added. |
 
-[common, native]\
 [common]\
-expect abstract fun [addListener](add-listener.md)(listener: [EventListener](../../com.pubnub.api.v2.callbacks/-event-listener/index.md))
+expect abstract fun [addListener](add-listener.md)(listener: [EventListener](../../com.pubnub.api.v2.callbacks/-event-listener/index.md))actual abstract fun [addListener](add-listener.md)(listener: [EventListener](../../com.pubnub.api.v2.callbacks/-event-listener/index.md))
 
-[native]\
-actual abstract fun [addListener](add-listener.md)(listener: [EventListener](../../com.pubnub.api.v2.callbacks/-event-listener/index.md))
-
-[common]\
-expect abstract fun [addListener](add-listener.md)(listener: [StatusListener](../../com.pubnub.api.v2.callbacks/-status-listener/index.md))
-
-[native]\
-actual abstract fun [addListener](add-listener.md)(listener: [StatusListener](../../com.pubnub.api.v2.callbacks/-status-listener/index.md))
+expect abstract fun [addListener](add-listener.md)(listener: [StatusListener](../../com.pubnub.api.v2.callbacks/-status-listener/index.md))actual abstract fun [addListener](add-listener.md)(listener: [StatusListener](../../com.pubnub.api.v2.callbacks/-status-listener/index.md))

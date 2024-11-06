@@ -3,8 +3,8 @@
 # cryptoModule
 
 [jvm]\
-abstract override fun [cryptoModule](crypto-module.md)(cryptoModule: [CryptoModule](../../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.crypto/-crypto-module/index.md)?): [PNConfiguration.Builder](index.md)
+abstract override fun [cryptoModule](crypto-module.md)(cryptoModule: [CryptoModule](../../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.crypto/-crypto-module/index.md)?): [PNConfiguration.Builder](index.md)
 
-abstract val [cryptoModule](crypto-module.md): [CryptoModule](../../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.crypto/-crypto-module/index.md)?
+abstract val [cryptoModule](crypto-module.md): [CryptoModule](../../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.crypto/-crypto-module/index.md)?
 
 CryptoModule is responsible for handling encryption and decryption. If set, all communications to and from PubNub will be encrypted.

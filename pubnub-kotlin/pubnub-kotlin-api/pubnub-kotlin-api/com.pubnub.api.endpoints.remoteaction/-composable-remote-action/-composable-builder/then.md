@@ -3,4 +3,4 @@
 # then
 
 [jvm]\
-fun &lt;[U](then.md)&gt; [then](then.md)(factory: ([T](index.md)) -&gt; [ExtendedRemoteAction](../../-extended-remote-action/index.md)&lt;[U](then.md)&gt;): [ComposableRemoteAction](../index.md)&lt;[T](index.md), [U](then.md)&gt;
+fun &lt;[U](then.md)&gt; [then](then.md)(factory: ([T](index.md)) -&gt; [ExtendedRemoteAction](../../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.endpoints.remoteaction/-extended-remote-action/index.md)&lt;[U](then.md)&gt;): [ComposableRemoteAction](../index.md)&lt;[T](index.md), [U](then.md)&gt;

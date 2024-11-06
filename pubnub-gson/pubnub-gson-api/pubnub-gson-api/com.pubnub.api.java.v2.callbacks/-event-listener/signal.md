@@ -3,4 +3,4 @@
 # signal
 
 [jvm]\
-open fun [signal](signal.md)(pubnub: [PubNub](../../com.pubnub.api.java/-pub-nub/index.md), result: [PNSignalResult](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.models.consumer.pubsub/-p-n-signal-result/index.md))
+open fun [signal](signal.md)(pubnub: [PubNub](../../com.pubnub.api.java/-pub-nub/index.md), result: [PNSignalResult](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.pubsub/-p-n-signal-result/index.md))

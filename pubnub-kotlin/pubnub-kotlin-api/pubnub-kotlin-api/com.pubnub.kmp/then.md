@@ -3,4 +3,4 @@
 # then
 
 [common]\
-fun &lt;[T](then.md), [U](then.md)&gt; [PNFuture](-p-n-future/index.md)&lt;[T](then.md)&gt;.[then](then.md)(action: ([T](then.md)) -&gt; [U](then.md)): [PNFuture](-p-n-future/index.md)&lt;[U](then.md)&gt;
+fun &lt;[T](then.md), [U](then.md)&gt; [PNFuture](../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.kmp/-p-n-future/index.md)&lt;[T](then.md)&gt;.[then](then.md)(action: ([T](then.md)) -&gt; [U](then.md)): [PNFuture](../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.kmp/-p-n-future/index.md)&lt;[U](then.md)&gt;

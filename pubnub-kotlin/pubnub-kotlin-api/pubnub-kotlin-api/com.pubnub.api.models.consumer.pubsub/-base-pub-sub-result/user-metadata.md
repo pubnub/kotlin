@@ -1,6 +1,0 @@
-//[pubnub-kotlin-api](../../../index.md)/[com.pubnub.api.models.consumer.pubsub](../index.md)/[BasePubSubResult](index.md)/[userMetadata](user-metadata.md)
-
-# userMetadata
-
-[common]\
-open override val [userMetadata](user-metadata.md): [JsonElement](../../com.pubnub.api/-json-element/index.md)?

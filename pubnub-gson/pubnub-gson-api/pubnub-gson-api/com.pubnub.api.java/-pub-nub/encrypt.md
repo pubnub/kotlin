@@ -24,7 +24,7 @@ jvm
 
 | | |
 |---|---|
-| [PubNubException](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api/-pub-nub-exception/index.md) | Throws exception in case of failed encryption. |
+| [PubNubException](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api/-pub-nub-exception/index.md) | Throws exception in case of failed encryption. |
 
 [jvm]\
 abstract fun [encrypt](encrypt.md)(inputString: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
@@ -47,4 +47,4 @@ jvm
 
 | | |
 |---|---|
-| [PubNubException](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api/-pub-nub-exception/index.md) | Throws exception in case of failed encryption. |
+| [PubNubException](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api/-pub-nub-exception/index.md) | Throws exception in case of failed encryption. |

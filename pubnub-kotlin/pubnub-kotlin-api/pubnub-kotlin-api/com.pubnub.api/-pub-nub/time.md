@@ -2,14 +2,10 @@
 
 # time
 
-[common, native]\
 [common]\
-expect abstract fun [time](time.md)(): [Time](../../com.pubnub.api.endpoints/-time/index.md)
-
-[native]\
-actual abstract fun [time](time.md)(): [Time](../../com.pubnub.api.endpoints/-time/index.md)
+expect abstract fun [time](time.md)(): [Time](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.endpoints/-time/index.md)actual abstract fun [time](time.md)(): [Time](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.endpoints/-time/index.md)
 
 [jvm]\
-actual abstract fun [time](time.md)(): [Time](../../com.pubnub.api.endpoints/-time/index.md)
+actual abstract fun [time](time.md)(): [Time](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.endpoints/-time/index.md)
 
 Returns a 17 digit precision Unix epoch from the server.

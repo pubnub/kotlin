@@ -1,0 +1,10 @@
+//[pubnub-kotlin-core-api](../../../index.md)/[com.pubnub.api.v2](../index.md)/[PNConfiguration](index.md)/[retryConfiguration](retry-configuration.md)
+
+# retryConfiguration
+
+[jvm]\
+abstract val [retryConfiguration](retry-configuration.md): [RetryConfiguration](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.retry/-retry-configuration/index.md)
+
+Retry configuration for requests. Defaults to [RetryConfiguration.Exponential](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.retry/-retry-configuration/-exponential/index.md) enabled only for subscription endpoint (other endpoints are excluded).
+
+Use [RetryConfiguration.Linear](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.retry/-retry-configuration/-linear/index.md) to set retry with linear delay interval Use [RetryConfiguration.Exponential](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.retry/-retry-configuration/-exponential/index.md) to set retry with exponential delay interval Delay will vary from provided value by random value.

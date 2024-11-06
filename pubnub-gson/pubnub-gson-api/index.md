@@ -33,6 +33,7 @@
 | [com.pubnub.api.java.models.consumer.objects_api.member](pubnub-gson-api/com.pubnub.api.java.models.consumer.objects_api.member/index.md) |
 | [com.pubnub.api.java.models.consumer.objects_api.membership](pubnub-gson-api/com.pubnub.api.java.models.consumer.objects_api.membership/index.md) |
 | [com.pubnub.api.java.models.consumer.objects_api.uuid](pubnub-gson-api/com.pubnub.api.java.models.consumer.objects_api.uuid/index.md) |
+| [com.pubnub.api.java.util](pubnub-gson-api/com.pubnub.api.java.util/index.md) |
 | [com.pubnub.api.java.v2](pubnub-gson-api/com.pubnub.api.java.v2/index.md) |
 | [com.pubnub.api.java.v2.callbacks](pubnub-gson-api/com.pubnub.api.java.v2.callbacks/index.md) |
 | [com.pubnub.api.java.v2.callbacks.handlers](pubnub-gson-api/com.pubnub.api.java.v2.callbacks.handlers/index.md) |

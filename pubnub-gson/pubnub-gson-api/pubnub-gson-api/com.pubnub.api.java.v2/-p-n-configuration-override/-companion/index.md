@@ -9,4 +9,4 @@ object [Companion](index.md)
 
 | Name | Summary |
 |---|---|
-| [from](from.md) | [jvm]<br>@[JvmStatic](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-static/index.html)<br>fun [from](from.md)(configuration: [PNConfiguration](../../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.v2/-p-n-configuration/index.md)): [PNConfigurationOverride.Builder](../-builder/index.md) |
+| [from](from.md) | [jvm]<br>@[JvmStatic](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-static/index.html)<br>fun [from](from.md)(configuration: [PNConfiguration](../../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.v2/-p-n-configuration/index.md)): [PNConfigurationOverride.Builder](../-builder/index.md) |

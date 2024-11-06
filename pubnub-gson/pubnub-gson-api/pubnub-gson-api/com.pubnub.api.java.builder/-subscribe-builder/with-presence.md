@@ -3,4 +3,4 @@
 # withPresence
 
 [jvm]\
-open fun [withPresence](with-presence.md)(): [SubscribeBuilder](index.md)
+abstract fun [withPresence](with-presence.md)(): [SubscribeBuilder](index.md)

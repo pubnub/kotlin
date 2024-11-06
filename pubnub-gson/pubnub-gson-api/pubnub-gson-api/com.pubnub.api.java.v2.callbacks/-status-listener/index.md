@@ -2,7 +2,7 @@
 
 # StatusListener
 
-fun interface [StatusListener](index.md) : [Listener](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.callbacks/-listener/index.md)
+fun interface [StatusListener](index.md) : [Listener](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.callbacks/-listener/index.md)
 
 #### Inheritors
 
@@ -14,4 +14,4 @@ fun interface [StatusListener](index.md) : [Listener](../../../../../pubnub-kotl
 
 | Name | Summary |
 |---|---|
-| [status](status.md) | [jvm]<br>abstract fun [status](status.md)(pubnub: [PubNub](../../com.pubnub.api.java/-pub-nub/index.md), status: [PNStatus](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.models.consumer/-p-n-status/index.md))<br>Receive status updates from the PubNub client, such as: |
+| [status](status.md) | [jvm]<br>abstract fun [status](status.md)(pubnub: [PubNub](../../com.pubnub.api.java/-pub-nub/index.md), status: [PNStatus](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.models.consumer/-p-n-status/index.md))<br>Receive status updates from the PubNub client, such as: |

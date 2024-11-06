@@ -2,25 +2,21 @@
 
 # channel
 
-[common, native]\
 [common]\
-expect abstract fun [channel](channel.md)(name: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [Channel](../../com.pubnub.api.v2.entities/-channel/index.md)
-
-[native]\
-actual abstract fun [channel](channel.md)(name: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [Channel](../../com.pubnub.api.v2.entities/-channel/index.md)
+expect abstract fun [channel](channel.md)(name: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [Channel](../../com.pubnub.api.v2.entities/-channel/index.md)actual abstract fun [channel](channel.md)(name: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [Channel](../../com.pubnub.api.v2.entities/-channel/index.md)
 
 [jvm]\
-actual abstract fun [channel](channel.md)(name: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [Channel](../../com.pubnub.api.v2.entities/-channel/index.md)
+actual abstract fun [channel](channel.md)(name: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [Channel](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.v2.entities/-channel/index.md)
 
-Create a handle to a [Channel](../../com.pubnub.api.v2.entities/-channel/index.md) that can be used to obtain a [Subscription](../../com.pubnub.api.v2.subscriptions/-subscription/index.md).
+Create a handle to a [Channel](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.v2.entities/-channel/index.md) that can be used to obtain a [Subscription](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.v2.subscriptions/-subscription/index.md).
 
 The function is cheap to call, and the returned object is lightweight, as it doesn't change any client or server state. It is therefore permitted to use this method whenever a representation of a channel is required.
 
-The returned [Channel](../../com.pubnub.api.v2.entities/-channel/index.md) holds a reference to this [PubNub](index.md) instance internally.
+The returned [Channel](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.v2.entities/-channel/index.md) holds a reference to this [PubNub](index.md) instance internally.
 
 #### Return
 
-a [Channel](../../com.pubnub.api.v2.entities/-channel/index.md) instance representing the channel with the given [name](channel.md)
+a [Channel](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.v2.entities/-channel/index.md) instance representing the channel with the given [name](channel.md)
 
 #### Parameters
 

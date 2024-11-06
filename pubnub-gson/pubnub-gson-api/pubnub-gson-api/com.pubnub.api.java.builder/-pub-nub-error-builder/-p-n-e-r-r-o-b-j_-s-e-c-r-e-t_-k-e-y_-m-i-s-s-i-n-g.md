@@ -3,4 +3,4 @@
 # PNERROBJ_SECRET_KEY_MISSING
 
 [jvm]\
-val [PNERROBJ_SECRET_KEY_MISSING](-p-n-e-r-r-o-b-j_-s-e-c-r-e-t_-k-e-y_-m-i-s-s-i-n-g.md): [PubNubError](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api/-pub-nub-error/index.md)
+val [PNERROBJ_SECRET_KEY_MISSING](-p-n-e-r-r-o-b-j_-s-e-c-r-e-t_-k-e-y_-m-i-s-s-i-n-g.md): [PubNubError](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api/-pub-nub-error/index.md)

@@ -11,4 +11,4 @@ interface [OnFileHandler](index.md)
 
 | Name | Summary |
 |---|---|
-| [handle](handle.md) | [jvm]<br>abstract fun [handle](handle.md)(pnFileEventResult: [PNFileEventResult](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.models.consumer.pubsub.files/-p-n-file-event-result/index.md))<br> This interface is designed for implementing custom handlers that respond to file event retrieval operations. |
+| [handle](handle.md) | [jvm]<br>abstract fun [handle](handle.md)(pnFileEventResult: [PNFileEventResult](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.pubsub.files/-p-n-file-event-result/index.md))<br> This interface is designed for implementing custom handlers that respond to file event retrieval operations. |

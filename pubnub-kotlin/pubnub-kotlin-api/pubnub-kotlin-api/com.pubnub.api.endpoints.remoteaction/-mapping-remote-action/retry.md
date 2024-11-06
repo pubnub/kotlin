@@ -4,5 +4,3 @@
 
 [jvm]\
 open override fun [retry](retry.md)()
-
-Attempt to retry the action and deliver the result to a callback registered with a previous call to [async](async.md).

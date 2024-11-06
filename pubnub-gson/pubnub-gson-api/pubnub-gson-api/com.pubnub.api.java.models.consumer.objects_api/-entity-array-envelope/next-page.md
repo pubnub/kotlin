@@ -3,4 +3,4 @@
 # nextPage
 
 [jvm]\
-open fun [nextPage](next-page.md)(): [PNPage](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.models.consumer.objects/-p-n-page/index.md)
+open fun [nextPage](next-page.md)(): [PNPage](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.objects/-p-n-page/index.md)

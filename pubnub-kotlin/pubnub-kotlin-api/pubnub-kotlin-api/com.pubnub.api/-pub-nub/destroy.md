@@ -2,12 +2,8 @@
 
 # destroy
 
-[common, native]\
 [common]\
-expect abstract fun [destroy](destroy.md)()
-
-[native]\
-actual abstract fun [destroy](destroy.md)()
+expect abstract fun [destroy](destroy.md)()actual abstract fun [destroy](destroy.md)()
 
 [jvm]\
 actual abstract fun [destroy](destroy.md)()

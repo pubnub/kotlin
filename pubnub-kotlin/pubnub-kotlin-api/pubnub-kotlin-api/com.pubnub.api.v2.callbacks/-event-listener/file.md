@@ -3,7 +3,7 @@
 # file
 
 [jvm]\
-open fun [file](file.md)(pubnub: [PubNub](../../com.pubnub.api/-pub-nub/index.md), result: [PNFileEventResult](../../com.pubnub.api.models.consumer.pubsub.files/-p-n-file-event-result/index.md))
+open fun [file](file.md)(pubnub: [PubNub](../../com.pubnub.api/-pub-nub/index.md), result: [PNFileEventResult](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.pubsub.files/-p-n-file-event-result/index.md))
 
 Receive file events in subscribed channels.
 

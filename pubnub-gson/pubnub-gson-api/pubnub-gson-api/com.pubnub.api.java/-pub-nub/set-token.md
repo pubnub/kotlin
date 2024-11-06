@@ -4,3 +4,5 @@
 
 [jvm]\
 abstract fun [setToken](set-token.md)(token: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?)
+
+Update the authorization token granted by the server.

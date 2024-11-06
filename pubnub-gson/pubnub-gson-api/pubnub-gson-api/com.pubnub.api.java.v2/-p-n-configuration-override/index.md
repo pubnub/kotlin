@@ -3,7 +3,7 @@
 # PNConfigurationOverride
 
 [jvm]\
-interface [PNConfigurationOverride](index.md) : [PNConfigurationOverride](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.v2/-p-n-configuration-override/index.md)
+interface [PNConfigurationOverride](index.md) : [PNConfigurationOverride](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.v2/-p-n-configuration-override/index.md)
 
 ## Types
 

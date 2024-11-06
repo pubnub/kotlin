@@ -2,9 +2,9 @@
 
 # createStatusListener
 
-[common, jvm]\
+[common, ios, js, jvm]\
 [common]\
-expect fun [createStatusListener](create-status-listener.md)(pubnub: [PubNub](../com.pubnub.api/-pub-nub/index.md), onStatus: ([PubNub](../com.pubnub.api/-pub-nub/index.md), [PNStatus](../com.pubnub.api.models.consumer/-p-n-status/index.md)) -&gt; [Unit](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html) = { _, _ -&gt; }): [StatusListener](../com.pubnub.api.v2.callbacks/-status-listener/index.md)
+expect fun [createStatusListener](create-status-listener.md)(pubnub: [PubNub](../com.pubnub.api/-pub-nub/index.md), onStatus: ([PubNub](../com.pubnub.api/-pub-nub/index.md), [PNStatus](../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.models.consumer/-p-n-status/index.md)) -&gt; [Unit](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html) = { _, _ -&gt; }): [StatusListener](../com.pubnub.api.v2.callbacks/-status-listener/index.md)
 
-[jvm]\
-actual fun [createStatusListener](create-status-listener.md)(pubnub: [PubNub](../com.pubnub.api/-pub-nub/index.md), onStatus: ([PubNub](../com.pubnub.api/-pub-nub/index.md), [PNStatus](../com.pubnub.api.models.consumer/-p-n-status/index.md)) -&gt; [Unit](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)): [StatusListener](../com.pubnub.api.v2.callbacks/-status-listener/index.md)
+[ios, js, jvm]\
+actual fun [createStatusListener](create-status-listener.md)(pubnub: [PubNub](../com.pubnub.api/-pub-nub/index.md), onStatus: ([PubNub](../com.pubnub.api/-pub-nub/index.md), [PNStatus](../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.models.consumer/-p-n-status/index.md)) -&gt; [Unit](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)): [StatusListener](../com.pubnub.api.v2.callbacks/-status-listener/index.md)

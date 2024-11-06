@@ -3,7 +3,7 @@
 # PNUUIDMetadataResult
 
 [jvm]\
-open class [PNUUIDMetadataResult](index.md) : [ObjectResult](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.models.consumer.pubsub.objects/-object-result/index.md)&lt;[T](../../../../../pubnub-kotlin/pubnub-kotlin-api/com.pubnub.api.models.consumer.pubsub.objects/-object-result/index.md)&gt; , [PubSubResult](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.models.consumer.pubsub/-pub-sub-result/index.md)
+open class [PNUUIDMetadataResult](index.md) : [ObjectResult](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.pubsub.objects/-object-result/index.md)&lt;T&gt; , [PubSubResult](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.pubsub/-pub-sub-result/index.md)
 
 ## Constructors
 
@@ -15,10 +15,10 @@ open class [PNUUIDMetadataResult](index.md) : [ObjectResult](../../../../../pubn
 
 | Name | Summary |
 |---|---|
-| [getChannel](../../com.pubnub.api.java.models.consumer.objects_api.channel/-p-n-channel-metadata-result/index.md#745826242%2FFunctions%2F126356644) | [jvm]<br>abstract fun [getChannel](../../com.pubnub.api.java.models.consumer.objects_api.channel/-p-n-channel-metadata-result/index.md#745826242%2FFunctions%2F126356644)(): [String](https://docs.oracle.com/javase/8/docs/api/java/lang/String.html) |
-| [getData](../../com.pubnub.api.java.models.consumer.objects_api.channel/-p-n-channel-metadata-result/index.md#1079843989%2FFunctions%2F126356644) | [jvm]<br>abstract fun [getData](../../com.pubnub.api.java.models.consumer.objects_api.channel/-p-n-channel-metadata-result/index.md#1079843989%2FFunctions%2F126356644)(): [T](../../../../../pubnub-kotlin/pubnub-kotlin-api/com.pubnub.api.models.consumer.pubsub.objects/-object-result/index.md) |
-| [getEvent](../../com.pubnub.api.java.models.consumer.objects_api.channel/-p-n-channel-metadata-result/index.md#1536410977%2FFunctions%2F126356644) | [jvm]<br>abstract fun [getEvent](../../com.pubnub.api.java.models.consumer.objects_api.channel/-p-n-channel-metadata-result/index.md#1536410977%2FFunctions%2F126356644)(): [String](https://docs.oracle.com/javase/8/docs/api/java/lang/String.html) |
-| [getPublisher](../../com.pubnub.api.java.models.consumer.objects_api.channel/-p-n-channel-metadata-result/index.md#-1061072151%2FFunctions%2F126356644) | [jvm]<br>abstract fun [getPublisher](../../com.pubnub.api.java.models.consumer.objects_api.channel/-p-n-channel-metadata-result/index.md#-1061072151%2FFunctions%2F126356644)(): [String](https://docs.oracle.com/javase/8/docs/api/java/lang/String.html) |
-| [getSubscription](../../com.pubnub.api.java.models.consumer.objects_api.channel/-p-n-channel-metadata-result/index.md#-1010911592%2FFunctions%2F126356644) | [jvm]<br>abstract fun [getSubscription](../../com.pubnub.api.java.models.consumer.objects_api.channel/-p-n-channel-metadata-result/index.md#-1010911592%2FFunctions%2F126356644)(): [String](https://docs.oracle.com/javase/8/docs/api/java/lang/String.html) |
-| [getTimetoken](../../com.pubnub.api.java.models.consumer.objects_api.channel/-p-n-channel-metadata-result/index.md#1142058905%2FFunctions%2F126356644) | [jvm]<br>abstract fun [getTimetoken](../../com.pubnub.api.java.models.consumer.objects_api.channel/-p-n-channel-metadata-result/index.md#1142058905%2FFunctions%2F126356644)(): [Long](https://docs.oracle.com/javase/8/docs/api/java/lang/Long.html) |
-| [getUserMetadata](../../com.pubnub.api.java.models.consumer.objects_api.channel/-p-n-channel-metadata-result/index.md#98903611%2FFunctions%2F126356644) | [jvm]<br>abstract fun [getUserMetadata](../../com.pubnub.api.java.models.consumer.objects_api.channel/-p-n-channel-metadata-result/index.md#98903611%2FFunctions%2F126356644)(): JsonElement |
+| [getChannel](index.md#745826242%2FFunctions%2F126356644) | [jvm]<br>abstract fun [getChannel](index.md#745826242%2FFunctions%2F126356644)(): [String](https://docs.oracle.com/javase/8/docs/api/java/lang/String.html) |
+| [getData](index.md#1079843989%2FFunctions%2F126356644) | [jvm]<br>abstract fun [getData](index.md#1079843989%2FFunctions%2F126356644)(): T |
+| [getEvent](index.md#1536410977%2FFunctions%2F126356644) | [jvm]<br>abstract fun [getEvent](index.md#1536410977%2FFunctions%2F126356644)(): [String](https://docs.oracle.com/javase/8/docs/api/java/lang/String.html) |
+| [getPublisher](index.md#-1061072151%2FFunctions%2F126356644) | [jvm]<br>abstract fun [getPublisher](index.md#-1061072151%2FFunctions%2F126356644)(): [String](https://docs.oracle.com/javase/8/docs/api/java/lang/String.html) |
+| [getSubscription](index.md#-1010911592%2FFunctions%2F126356644) | [jvm]<br>abstract fun [getSubscription](index.md#-1010911592%2FFunctions%2F126356644)(): [String](https://docs.oracle.com/javase/8/docs/api/java/lang/String.html) |
+| [getTimetoken](index.md#1142058905%2FFunctions%2F126356644) | [jvm]<br>abstract fun [getTimetoken](index.md#1142058905%2FFunctions%2F126356644)(): [Long](https://docs.oracle.com/javase/8/docs/api/java/lang/Long.html) |
+| [getUserMetadata](index.md#98903611%2FFunctions%2F126356644) | [jvm]<br>abstract fun [getUserMetadata](index.md#98903611%2FFunctions%2F126356644)(): JsonElement |

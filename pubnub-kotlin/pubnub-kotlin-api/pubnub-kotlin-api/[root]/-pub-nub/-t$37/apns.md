@@ -1,0 +1,6 @@
+//[pubnub-kotlin-api](../../../../index.md)/[[root]](../../index.md)/[PubNub](../index.md)/[T$37](index.md)/[apns](apns.md)
+
+# apns
+
+[js]\
+abstract var [apns](apns.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?

@@ -1,0 +1,6 @@
+//[pubnub-kotlin-api](../../../../index.md)/[[root]](../../index.md)/[PubNub](../index.md)/[UploadedFile](index.md)/[created](created.md)
+
+# created
+
+[js]\
+abstract var [created](created.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)

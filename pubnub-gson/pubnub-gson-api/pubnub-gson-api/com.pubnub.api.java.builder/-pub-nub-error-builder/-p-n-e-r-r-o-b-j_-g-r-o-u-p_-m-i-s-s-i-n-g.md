@@ -3,4 +3,4 @@
 # PNERROBJ_GROUP_MISSING
 
 [jvm]\
-val [PNERROBJ_GROUP_MISSING](-p-n-e-r-r-o-b-j_-g-r-o-u-p_-m-i-s-s-i-n-g.md): [PubNubError](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api/-pub-nub-error/index.md)
+val [PNERROBJ_GROUP_MISSING](-p-n-e-r-r-o-b-j_-g-r-o-u-p_-m-i-s-s-i-n-g.md): [PubNubError](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api/-pub-nub-error/index.md)

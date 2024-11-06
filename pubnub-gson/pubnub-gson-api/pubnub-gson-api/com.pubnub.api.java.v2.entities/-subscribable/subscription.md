@@ -3,9 +3,9 @@
 # subscription
 
 [jvm]\
-abstract fun [subscription](subscription.md)(options: [SubscriptionOptions](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.v2.subscriptions/-subscription-options/index.md) = EmptyOptions): [Subscription](../../com.pubnub.api.java.v2.subscriptions/-subscription/index.md)
+abstract fun [subscription](subscription.md)(options: [SubscriptionOptions](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.v2.subscriptions/-subscription-options/index.md) = EmptyOptions): [Subscription](../../com.pubnub.api.java.v2.subscriptions/-subscription/index.md)
 
-Returns a [com.pubnub.api.v2.subscriptions.Subscription](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.v2.subscriptions/-subscription/index.md) that can be used to subscribe to this `Subscribable`.
+Returns a com.pubnub.api.v2.subscriptions.Subscription that can be used to subscribe to this `Subscribable`.
 
 #### Return
 
@@ -17,4 +17,4 @@ jvm
 
 | | |
 |---|---|
-| options | optional [SubscriptionOptions](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.v2.subscriptions/-subscription-options/index.md). |
+| options | optional [SubscriptionOptions](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.v2.subscriptions/-subscription-options/index.md). |

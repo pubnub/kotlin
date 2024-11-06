@@ -5,7 +5,7 @@
 [jvm]\
 abstract fun [reconnect](reconnect.md)(timetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html) = 0)
 
-Force the SDK to try and reach out PubNub. Monitor the results in [SubscribeCallback.status](../../../../../pubnub-kotlin/pubnub-kotlin-api/com.pubnub.api.callbacks/-subscribe-callback/status.md)
+Force the SDK to try and reach out PubNub. Monitor the results in SubscribeCallback.status
 
 #### Parameters
 

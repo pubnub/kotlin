@@ -3,9 +3,9 @@
 # handle
 
 [jvm]\
-abstract fun [handle](handle.md)(pnMessageActionResult: [PNMessageActionResult](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.models.consumer.pubsub.message_actions/-p-n-message-action-result/index.md))
+abstract fun [handle](handle.md)(pnMessageActionResult: [PNMessageActionResult](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.pubsub.message_actions/-p-n-message-action-result/index.md))
 
- This interface is designed for implementing custom handlers that respond to messageAction event retrieval operations. It defines a single `handle` method that is called with a [PNMessageActionResult](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.models.consumer.pubsub.message_actions/-p-n-message-action-result/index.md) instance, which contains the messageAction. 
+ This interface is designed for implementing custom handlers that respond to messageAction event retrieval operations. It defines a single `handle` method that is called with a [PNMessageActionResult](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.pubsub.message_actions/-p-n-message-action-result/index.md) instance, which contains the messageAction. 
 
  Usage example: 
 
@@ -21,4 +21,4 @@ OnMessageActionHandler handler = pnMessageActionResult -> {
 
 | | |
 |---|---|
-| [PNMessageActionResult](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.models.consumer.pubsub.message_actions/-p-n-message-action-result/index.md) | for more information about the message result provided to this handler. |
+| [PNMessageActionResult](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.pubsub.message_actions/-p-n-message-action-result/index.md) | for more information about the message result provided to this handler. |

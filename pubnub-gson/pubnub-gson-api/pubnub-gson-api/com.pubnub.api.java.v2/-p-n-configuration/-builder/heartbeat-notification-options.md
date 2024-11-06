@@ -3,10 +3,10 @@
 # heartbeatNotificationOptions
 
 [jvm]\
-abstract fun [heartbeatNotificationOptions](heartbeat-notification-options.md)(heartbeatNotificationOptions: [PNHeartbeatNotificationOptions](../../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.enums/-p-n-heartbeat-notification-options/index.md)): [PNConfiguration.Builder](index.md)
+abstract fun [heartbeatNotificationOptions](heartbeat-notification-options.md)(heartbeatNotificationOptions: [PNHeartbeatNotificationOptions](../../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.enums/-p-n-heartbeat-notification-options/index.md)): [PNConfiguration.Builder](index.md)
 
-abstract val [heartbeatNotificationOptions](heartbeat-notification-options.md): [PNHeartbeatNotificationOptions](../../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.enums/-p-n-heartbeat-notification-options/index.md)
+abstract val [heartbeatNotificationOptions](heartbeat-notification-options.md): [PNHeartbeatNotificationOptions](../../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.enums/-p-n-heartbeat-notification-options/index.md)
 
 Set Heartbeat notification options.
 
-By default, the SDK alerts on failed heartbeats (equivalent to [PNHeartbeatNotificationOptions.FAILURES](../../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.enums/-p-n-heartbeat-notification-options/-f-a-i-l-u-r-e-s/index.md)).
+By default, the SDK alerts on failed heartbeats (equivalent to [PNHeartbeatNotificationOptions.FAILURES](../../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.enums/-p-n-heartbeat-notification-options/-f-a-i-l-u-r-e-s/index.md)).

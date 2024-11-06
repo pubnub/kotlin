@@ -7,5 +7,3 @@
 @[Synchronized](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-synchronized/index.html)
 
 open override fun [silentCancel](silent-cancel.md)()
-
-Cancel the action without reporting any further results.

@@ -2,9 +2,5 @@
 
 # removeAllListeners
 
-[common, native]\
 [common]\
-expect abstract fun [removeAllListeners](remove-all-listeners.md)()
-
-[native]\
-actual abstract fun [removeAllListeners](remove-all-listeners.md)()
+expect abstract fun [removeAllListeners](remove-all-listeners.md)()actual abstract fun [removeAllListeners](remove-all-listeners.md)()

@@ -2,12 +2,8 @@
 
 # getSubscribedChannelGroups
 
-[common, native]\
 [common]\
-expect abstract fun [getSubscribedChannelGroups](get-subscribed-channel-groups.md)(): [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;
-
-[native]\
-actual abstract fun [getSubscribedChannelGroups](get-subscribed-channel-groups.md)(): [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;
+expect abstract fun [getSubscribedChannelGroups](get-subscribed-channel-groups.md)(): [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;actual abstract fun [getSubscribedChannelGroups](get-subscribed-channel-groups.md)(): [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;
 
 [jvm]\
 actual abstract fun [getSubscribedChannelGroups](get-subscribed-channel-groups.md)(): [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;

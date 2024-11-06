@@ -18,4 +18,4 @@ Interface implemented by objects that manage the subscription connection to the 
 |---|---|
 | [addListener](add-listener.md) | [jvm]<br>abstract fun [addListener](add-listener.md)(listener: [StatusListener](../-status-listener/index.md))<br>Add a listener. |
 | [removeAllListeners](remove-all-listeners.md) | [jvm]<br>abstract fun [removeAllListeners](remove-all-listeners.md)()<br>Removes all listeners. |
-| [removeListener](remove-listener.md) | [jvm]<br>abstract fun [removeListener](remove-listener.md)(listener: [Listener](../../com.pubnub.api.callbacks/-listener/index.md))<br>Remove a listener. |
+| [removeListener](remove-listener.md) | [jvm]<br>abstract fun [removeListener](remove-listener.md)(listener: [Listener](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.callbacks/-listener/index.md))<br>Remove a listener. |

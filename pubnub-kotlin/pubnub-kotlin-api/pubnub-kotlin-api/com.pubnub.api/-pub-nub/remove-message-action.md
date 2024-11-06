@@ -2,12 +2,8 @@
 
 # removeMessageAction
 
-[common, native]\
 [common]\
-expect abstract fun [removeMessageAction](remove-message-action.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), messageTimetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html), actionTimetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)): [RemoveMessageAction](../../com.pubnub.api.endpoints.message_actions/-remove-message-action/index.md)
-
-[native]\
-actual abstract fun [removeMessageAction](remove-message-action.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), messageTimetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html), actionTimetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)): [RemoveMessageAction](../../com.pubnub.api.endpoints.message_actions/-remove-message-action/index.md)
+expect abstract fun [removeMessageAction](remove-message-action.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), messageTimetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html), actionTimetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)): [RemoveMessageAction](../../com.pubnub.api.endpoints.message_actions/-remove-message-action/index.md)actual abstract fun [removeMessageAction](remove-message-action.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), messageTimetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html), actionTimetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)): [RemoveMessageAction](../../com.pubnub.api.endpoints.message_actions/-remove-message-action/index.md)
 
 [jvm]\
 actual abstract fun [removeMessageAction](remove-message-action.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), messageTimetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html), actionTimetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)): [RemoveMessageAction](../../com.pubnub.api.endpoints.message_actions/-remove-message-action/index.md)

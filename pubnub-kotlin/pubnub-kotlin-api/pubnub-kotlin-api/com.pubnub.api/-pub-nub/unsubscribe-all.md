@@ -2,14 +2,10 @@
 
 # unsubscribeAll
 
-[common, native]\
 [common]\
-expect abstract fun [unsubscribeAll](unsubscribe-all.md)()
-
-[native]\
-actual abstract fun [unsubscribeAll](unsubscribe-all.md)()
+expect abstract fun [unsubscribeAll](unsubscribe-all.md)()actual abstract fun [unsubscribeAll](unsubscribe-all.md)()
 
 [jvm]\
 actual abstract fun [unsubscribeAll](unsubscribe-all.md)()
 
-Unsubscribe from all channels and all channel groups
+Unsubscribe from all channels and all channel groups.

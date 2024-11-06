@@ -3,4 +3,4 @@
 # ComposableBuilder
 
 [jvm]\
-constructor(remoteAction: [ExtendedRemoteAction](../../-extended-remote-action/index.md)&lt;[T](index.md)&gt;)
+constructor(remoteAction: [ExtendedRemoteAction](../../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.endpoints.remoteaction/-extended-remote-action/index.md)&lt;[T](index.md)&gt;)

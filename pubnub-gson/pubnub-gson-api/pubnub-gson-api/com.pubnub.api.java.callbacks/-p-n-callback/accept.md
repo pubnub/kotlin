@@ -3,4 +3,4 @@
 # accept
 
 [jvm]\
-open fun [accept](accept.md)(xResult: [Result](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.v2.callbacks/-result/index.md)&lt;[X](index.md)&gt;)
+open fun [accept](accept.md)(xResult: [Result](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.v2.callbacks/-result/index.md)&lt;[X](index.md)&gt;)

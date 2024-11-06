@@ -3,4 +3,4 @@
 # withTimetoken
 
 [jvm]\
-open fun [withTimetoken](with-timetoken.md)(timetokenInstance: [Long](https://docs.oracle.com/javase/8/docs/api/java/lang/Long.html)): [SubscribeBuilder](index.md)
+abstract fun [withTimetoken](with-timetoken.md)(timetokenInstance: [Long](https://docs.oracle.com/javase/8/docs/api/java/lang/Long.html)): [SubscribeBuilder](index.md)

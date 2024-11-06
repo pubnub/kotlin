@@ -2,12 +2,8 @@
 
 # whereNow
 
-[common, native]\
 [common]\
-expect abstract fun [whereNow](where-now.md)(uuid: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) = configuration.userId.value): [WhereNow](../../com.pubnub.api.endpoints.presence/-where-now/index.md)
-
-[native]\
-actual abstract fun [whereNow](where-now.md)(uuid: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [WhereNow](../../com.pubnub.api.endpoints.presence/-where-now/index.md)
+expect abstract fun [whereNow](where-now.md)(uuid: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) = configuration.userId.value): [WhereNow](../../com.pubnub.api.endpoints.presence/-where-now/index.md)actual abstract fun [whereNow](where-now.md)(uuid: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [WhereNow](../../com.pubnub.api.endpoints.presence/-where-now/index.md)
 
 [jvm]\
 actual abstract fun [whereNow](where-now.md)(uuid: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [WhereNow](../../com.pubnub.api.endpoints.presence/-where-now/index.md)
@@ -26,4 +22,4 @@ jvm
 
 | |
 |---|
-| [PNConfiguration.uuid](../../com.pubnub.api.v2/-p-n-configuration/uuid.md) |
+| [PNConfiguration.uuid](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.v2/-p-n-configuration/uuid.md) |

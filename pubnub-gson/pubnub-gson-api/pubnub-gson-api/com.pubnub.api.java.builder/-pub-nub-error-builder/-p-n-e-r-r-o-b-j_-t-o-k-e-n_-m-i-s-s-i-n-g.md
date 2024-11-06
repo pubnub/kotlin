@@ -3,4 +3,4 @@
 # PNERROBJ_TOKEN_MISSING
 
 [jvm]\
-val [PNERROBJ_TOKEN_MISSING](-p-n-e-r-r-o-b-j_-t-o-k-e-n_-m-i-s-s-i-n-g.md): [PubNubError](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api/-pub-nub-error/index.md)
+val [PNERROBJ_TOKEN_MISSING](-p-n-e-r-r-o-b-j_-t-o-k-e-n_-m-i-s-s-i-n-g.md): [PubNubError](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api/-pub-nub-error/index.md)

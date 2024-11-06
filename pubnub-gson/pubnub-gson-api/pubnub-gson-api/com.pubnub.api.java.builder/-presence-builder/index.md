@@ -3,18 +3,13 @@
 # PresenceBuilder
 
 [jvm]\
-open class [PresenceBuilder](index.md) : [PubSubBuilder](../-pub-sub-builder/index.md)
-
-## Constructors
-
-| | |
-|---|---|
-| [PresenceBuilder](-presence-builder.md) | [jvm]<br>constructor(pubnub: [PubNub](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api/-pub-nub/index.md)) |
+interface [PresenceBuilder](index.md) : [PubSubBuilder](../-pub-sub-builder/index.md)
 
 ## Functions
 
 | Name | Summary |
 |---|---|
-| [channelGroups](channel-groups.md) | [jvm]<br>open fun [channelGroups](channel-groups.md)(channelGroups: [List](https://docs.oracle.com/javase/8/docs/api/java/util/List.html)&lt;[String](https://docs.oracle.com/javase/8/docs/api/java/lang/String.html)&gt;): [PresenceBuilder](index.md) |
-| [channels](channels.md) | [jvm]<br>open fun [channels](channels.md)(channels: [List](https://docs.oracle.com/javase/8/docs/api/java/util/List.html)&lt;[String](https://docs.oracle.com/javase/8/docs/api/java/lang/String.html)&gt;): [PresenceBuilder](index.md) |
-| [execute](execute.md) | [jvm]<br>open fun [execute](execute.md)() |
+| [channelGroups](channel-groups.md) | [jvm]<br>abstract fun [channelGroups](channel-groups.md)(channelGroups: [List](https://docs.oracle.com/javase/8/docs/api/java/util/List.html)&lt;[String](https://docs.oracle.com/javase/8/docs/api/java/lang/String.html)&gt;): [PresenceBuilder](index.md) |
+| [channels](channels.md) | [jvm]<br>abstract fun [channels](channels.md)(channels: [List](https://docs.oracle.com/javase/8/docs/api/java/util/List.html)&lt;[String](https://docs.oracle.com/javase/8/docs/api/java/lang/String.html)&gt;): [PresenceBuilder](index.md) |
+| [connected](connected.md) | [jvm]<br>abstract fun [connected](connected.md)(connected: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)): [PresenceBuilder](index.md) |
+| [execute](../-pub-sub-builder/execute.md) | [jvm]<br>abstract fun [execute](../-pub-sub-builder/execute.md)() |

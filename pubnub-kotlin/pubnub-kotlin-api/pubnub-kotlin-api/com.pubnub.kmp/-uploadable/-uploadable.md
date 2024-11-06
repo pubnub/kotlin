@@ -2,5 +2,9 @@
 
 # Uploadable
 
+[ios, js]\
 [ios]\
 constructor()
+
+[js]\
+constructor(fileInput: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html))

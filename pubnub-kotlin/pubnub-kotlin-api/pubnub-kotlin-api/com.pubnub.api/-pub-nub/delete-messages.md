@@ -2,12 +2,8 @@
 
 # deleteMessages
 
-[common, native]\
 [common]\
-expect abstract fun [deleteMessages](delete-messages.md)(channels: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;, start: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)? = null, end: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)? = null): [DeleteMessages](../../com.pubnub.api.endpoints/-delete-messages/index.md)
-
-[native]\
-actual abstract fun [deleteMessages](delete-messages.md)(channels: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;, start: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)?, end: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)?): [DeleteMessages](../../com.pubnub.api.endpoints/-delete-messages/index.md)
+expect abstract fun [deleteMessages](delete-messages.md)(channels: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;, start: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)? = null, end: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)? = null): [DeleteMessages](../../com.pubnub.api.endpoints/-delete-messages/index.md)actual abstract fun [deleteMessages](delete-messages.md)(channels: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;, start: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)?, end: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)?): [DeleteMessages](../../com.pubnub.api.endpoints/-delete-messages/index.md)
 
 [jvm]\
 actual abstract fun [deleteMessages](delete-messages.md)(channels: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;, start: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)?, end: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)?): [DeleteMessages](../../com.pubnub.api.endpoints/-delete-messages/index.md)

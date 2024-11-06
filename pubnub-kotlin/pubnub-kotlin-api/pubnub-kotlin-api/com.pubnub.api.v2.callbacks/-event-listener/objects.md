@@ -3,7 +3,7 @@
 # objects
 
 [jvm]\
-open fun [objects](objects.md)(pubnub: [PubNub](../../com.pubnub.api/-pub-nub/index.md), result: [PNObjectEventResult](../../com.pubnub.api.models.consumer.pubsub.objects/-p-n-object-event-result/index.md))
+open fun [objects](objects.md)(pubnub: [PubNub](../../com.pubnub.api/-pub-nub/index.md), result: [PNObjectEventResult](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.models.consumer.pubsub.objects/-p-n-object-event-result/index.md))
 
 Receive channel metadata and UUID metadata events in subscribed channels.
 

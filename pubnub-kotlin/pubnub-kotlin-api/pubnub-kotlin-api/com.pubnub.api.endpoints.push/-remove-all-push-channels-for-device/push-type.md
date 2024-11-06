@@ -3,4 +3,4 @@
 # pushType
 
 [jvm]\
-abstract val [pushType](push-type.md): [PNPushType](../../com.pubnub.api.enums/-p-n-push-type/index.md)
+abstract val [pushType](push-type.md): [PNPushType](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.enums/-p-n-push-type/index.md)

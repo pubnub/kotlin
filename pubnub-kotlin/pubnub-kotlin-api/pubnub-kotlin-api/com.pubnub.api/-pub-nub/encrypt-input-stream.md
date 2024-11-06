@@ -24,4 +24,4 @@ jvm
 
 | | |
 |---|---|
-| [PubNubException](../-pub-nub-exception/index.md) | Throws exception in case of failed encryption. |
+| [PubNubException](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api/-pub-nub-exception/index.md) | Throws exception in case of failed encryption. |

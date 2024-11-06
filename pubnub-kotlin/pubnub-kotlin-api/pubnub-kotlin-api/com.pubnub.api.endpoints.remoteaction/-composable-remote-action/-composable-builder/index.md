@@ -3,17 +3,17 @@
 # ComposableBuilder
 
 [jvm]\
-class [ComposableBuilder](index.md)&lt;[T](index.md)&gt;(remoteAction: [ExtendedRemoteAction](../../-extended-remote-action/index.md)&lt;[T](index.md)&gt;)
+class [ComposableBuilder](index.md)&lt;[T](index.md)&gt;(remoteAction: [ExtendedRemoteAction](../../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.endpoints.remoteaction/-extended-remote-action/index.md)&lt;[T](index.md)&gt;)
 
 ## Constructors
 
 | | |
 |---|---|
-| [ComposableBuilder](-composable-builder.md) | [jvm]<br>constructor(remoteAction: [ExtendedRemoteAction](../../-extended-remote-action/index.md)&lt;[T](index.md)&gt;) |
+| [ComposableBuilder](-composable-builder.md) | [jvm]<br>constructor(remoteAction: [ExtendedRemoteAction](../../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.endpoints.remoteaction/-extended-remote-action/index.md)&lt;[T](index.md)&gt;) |
 
 ## Functions
 
 | Name | Summary |
 |---|---|
 | [checkpoint](checkpoint.md) | [jvm]<br>fun [checkpoint](checkpoint.md)(): [ComposableRemoteAction.ComposableBuilder](index.md)&lt;[T](index.md)&gt; |
-| [then](then.md) | [jvm]<br>fun &lt;[U](then.md)&gt; [then](then.md)(factory: ([T](index.md)) -&gt; [ExtendedRemoteAction](../../-extended-remote-action/index.md)&lt;[U](then.md)&gt;): [ComposableRemoteAction](../index.md)&lt;[T](index.md), [U](then.md)&gt; |
+| [then](then.md) | [jvm]<br>fun &lt;[U](then.md)&gt; [then](then.md)(factory: ([T](index.md)) -&gt; [ExtendedRemoteAction](../../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.endpoints.remoteaction/-extended-remote-action/index.md)&lt;[U](then.md)&gt;): [ComposableRemoteAction](../index.md)&lt;[T](index.md), [U](then.md)&gt; |

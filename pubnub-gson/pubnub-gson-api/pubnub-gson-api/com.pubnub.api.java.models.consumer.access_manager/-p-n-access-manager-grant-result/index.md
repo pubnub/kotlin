@@ -15,4 +15,4 @@ open class [PNAccessManagerGrantResult](index.md)
 
 | Name | Summary |
 |---|---|
-| [from](from.md) | [jvm]<br>open fun [from](from.md)(data: [PNAccessManagerGrantResult](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.models.consumer.access_manager/-p-n-access-manager-grant-result/index.md)): [PNAccessManagerGrantResult](index.md) |
+| [from](from.md) | [jvm]<br>open fun [from](from.md)(data: [PNAccessManagerGrantResult](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.access_manager/-p-n-access-manager-grant-result/index.md)): [PNAccessManagerGrantResult](index.md) |

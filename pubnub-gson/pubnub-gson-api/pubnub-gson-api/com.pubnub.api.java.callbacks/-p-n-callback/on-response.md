@@ -3,4 +3,4 @@
 # onResponse
 
 [jvm]\
-abstract fun [onResponse](on-response.md)(@Nullableresult: @Nullable[X](index.md), @Nullableexception: @Nullable[PubNubException](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api/-pub-nub-exception/index.md))
+abstract fun [onResponse](on-response.md)(@Nullableresult: @Nullable[X](index.md), @Nullableexception: @Nullable[PubNubException](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api/-pub-nub-exception/index.md))
