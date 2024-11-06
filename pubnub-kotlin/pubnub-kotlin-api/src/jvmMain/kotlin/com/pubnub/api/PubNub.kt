@@ -271,7 +271,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
     fun disconnect()
 
     /**
-     * Unsubscribe from all channels and all channel groups
+     * Unsubscribe from all channels and all channel groups.
      */
     actual fun unsubscribeAll()
 

@@ -1,3 +1,16 @@
+## v10.1.0
+November 06 2024
+
+#### Added
+- Add extension selection and support for single file in migration_tool.
+- Move shared java/kotlin APIs to a shared module.
+- Added timetoken utils methods.
+- Added getToken to Kotlin SDK.
+- Added authToken (PAM v3) to Kotlin SDK PNConfiguration.
+
+#### Fixed
+- Fix for NullPointerException in `pubnub-gson` when grant() is called without authKeys.
+
 ## v10.0.0
 September 24 2024
 
