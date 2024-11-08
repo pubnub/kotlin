@@ -1,3 +1,4 @@
+import com.pubnub.gradle.enableAnyIosTarget
 import com.pubnub.gradle.enableJsTarget
 
 plugins {
@@ -17,7 +18,15 @@ kotlin {
             }
         }
 
+        val nonJs = create("nonJs") {
+            dependsOn(commonMain)
+            dependencies {
+                api(libs.kotlinx.datetime)
+            }
+        }
+
         val jvmMain by getting {
+            dependsOn(nonJs)
             dependencies {
                 api(libs.retrofit2)
                 api(libs.okhttp)
@@ -25,6 +34,15 @@ kotlin {
                 api(libs.json)
                 api(libs.gson)
                 implementation(libs.slf4j)
+            }
+        }
+
+        if (enableAnyIosTarget) {
+            val appleMain by getting {
+                dependsOn(nonJs)
+                dependencies {
+                    api(libs.kotlinx.datetime)
+                }
             }
         }
 

@@ -5,11 +5,11 @@ logback = "1.2.11"
 okhttp = "4.12.0"
 retrofit2 = "2.9.0"
 nexus = "2.0.0"
-kotlin = "2.0.20"
+kotlin = "2.0.21"
 vanniktech = "0.29.0"
 ktlint = "12.1.0"
 dokka = "1.9.20"
-kotlinx_datetime = "0.6.0"
+kotlinx_datetime = "0.6.1"
 kotlinx_coroutines = "1.8.1"
 
 [libraries]
