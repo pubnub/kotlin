@@ -46,14 +46,14 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
                 type = type,
             ).sync()
 
-        val getAllResult = pubnub.getAllChannelMetadata(filter = "id == \"$channel\"").sync()
+        val getAllResult = pubnub.getAllChannelMetadata2(filter = "id == \"$channel\"").sync()
         val getSingleResult = pubnub.getChannelMetadata(channel = channel).sync()
         pubnub.removeChannelMetadata(channel = channel).sync()
 
         assertTrue(getAllResult.data.any { it.id == channel })
         assertEquals(setResult, getSingleResult)
 
-        val getAllAfterRemovalResult = pubnub.getAllChannelMetadata(filter = "id == \"$channel\"").sync()
+        val getAllAfterRemovalResult = pubnub.getAllChannelMetadata2(filter = "id == \"$channel\"").sync()
 
         assertTrue(getAllAfterRemovalResult.data.none { it.id == channel })
     }

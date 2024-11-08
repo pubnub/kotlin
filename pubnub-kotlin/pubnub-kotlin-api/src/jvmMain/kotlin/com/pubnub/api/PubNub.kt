@@ -23,6 +23,7 @@ import com.pubnub.api.endpoints.files.SendFile
 import com.pubnub.api.endpoints.message_actions.AddMessageAction
 import com.pubnub.api.endpoints.message_actions.GetMessageActions
 import com.pubnub.api.endpoints.message_actions.RemoveMessageAction
+import com.pubnub.api.endpoints.objects.IncludeQueryParam2
 import com.pubnub.api.endpoints.objects.channel.GetAllChannelMetadata
 import com.pubnub.api.endpoints.objects.channel.GetChannelMetadata
 import com.pubnub.api.endpoints.objects.channel.RemoveChannelMetadata
@@ -1108,6 +1109,15 @@ actual interface PubNub : StatusEmitter, EventEmitter {
         sort: Collection<PNSortKey<PNKey>>,
         includeCount: Boolean,
         includeCustom: Boolean,
+    ): GetAllChannelMetadata
+
+    fun getAllChannelMetadata2(
+        limit: Int? = null,
+        page: PNPage? = null,
+        filter: String? = null,
+        sort: Collection<PNSortKey<PNKey>> = listOf(),
+        includeCount: Boolean = false,
+        includes: IncludeQueryParam2 = IncludeQueryParam2.Empty,
     ): GetAllChannelMetadata
 
     /**

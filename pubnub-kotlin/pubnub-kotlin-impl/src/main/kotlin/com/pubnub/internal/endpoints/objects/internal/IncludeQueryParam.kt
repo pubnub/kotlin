@@ -3,7 +3,7 @@ package com.pubnub.internal.endpoints.objects.internal
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 
-data class IncludeQueryParam(
+class IncludeQueryParam(
     private val includeCustom: Boolean = false,
     private val includeChannelDetails: PNChannelDetailsLevel? = null,
     private val includeUUIDDetails: PNUUIDDetailsLevel? = null,

@@ -28,6 +28,7 @@ import com.pubnub.api.endpoints.files.SendFile
 import com.pubnub.api.endpoints.message_actions.AddMessageAction
 import com.pubnub.api.endpoints.message_actions.GetMessageActions
 import com.pubnub.api.endpoints.message_actions.RemoveMessageAction
+import com.pubnub.api.endpoints.objects.IncludeQueryParam2
 import com.pubnub.api.endpoints.objects.channel.GetAllChannelMetadata
 import com.pubnub.api.endpoints.objects.channel.GetChannelMetadata
 import com.pubnub.api.endpoints.objects.channel.RemoveChannelMetadata
@@ -716,6 +717,28 @@ open class PubNubImpl(
         includeCount: Boolean,
         includeCustom: Boolean,
     ): GetAllChannelMetadata {
+        return getAllChannelMetadata2(
+            limit,
+            page,
+            filter,
+            sort,
+            includeCount,
+            if (includeCustom) {
+                IncludeQueryParam2.Custom
+            } else {
+                IncludeQueryParam2.Empty
+            }
+        )
+    }
+
+    override fun getAllChannelMetadata2(
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNKey>>,
+        includeCount: Boolean,
+        includes: IncludeQueryParam2,
+    ): GetAllChannelMetadata {
         return GetAllChannelMetadataEndpoint(
             pubnub = this,
             collectionQueryParameters =
@@ -726,7 +749,7 @@ open class PubNubImpl(
                     sort = sort,
                     includeCount = includeCount,
                 ),
-            includeQueryParam = IncludeQueryParam(includeCustom = includeCustom),
+            includeQueryParam = includes,
         )
     }
 

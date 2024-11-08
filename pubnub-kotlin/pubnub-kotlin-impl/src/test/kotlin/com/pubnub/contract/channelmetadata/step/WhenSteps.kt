@@ -53,7 +53,7 @@ class WhenSteps(
 
     @When("I get all channel metadata")
     fun i_get_all_channel_metadata() {
-        world.pubnub.getAllChannelMetadata().sync().let {
+        world.pubnub.getAllChannelMetadata2().sync().let {
             channelMetadataState.channelMetadatas = it.data
             world.responseStatus = it.status
         }
