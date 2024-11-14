@@ -522,7 +522,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     }
 
     interface SignalResponse {
-        var timetoken: Number
+        var timetoken: String
     }
 
     interface HistoryParameters {

@@ -677,9 +677,9 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
             jsPubNub,
             createJsObject {
                 uuid?.let { this.uuid = it }
-                this.sort = sort.toJsMap()
+                sort.takeIf { it.isNotEmpty() }?.toJsMap()?.let { this.sort = it }
                 this.filter = filter
-                this.page = page.toMetadataPage()
+                page.toMetadataPage()?.let { this.page = it }
                 this.include = createJsObject<PubNubJs.MembershipIncludeOptions> {
                     this.customFields = includeCustom
                     this.totalCount = includeCount
@@ -689,6 +689,7 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
                     }
                     this.channelTypeField = includeType
                     this.channelStatusField = true
+                    this.statusField = true
                     // todo we don't have parameters for all fields here?
                 }
             }
@@ -722,6 +723,7 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
                     }
                     this.channelTypeField = includeType
                     this.channelStatusField = true
+                    this.statusField = true
                     // todo we don't have parameters for all fields here?
                 }
                 this.uuid = uuid
@@ -764,6 +766,7 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
                     }
                     this.channelTypeField = includeType
                     this.channelStatusField = true
+                    this.statusField = true
                     // todo we don't have parameters for all fields here?
                 }
                 this.uuid = uuid
@@ -817,6 +820,8 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
                     this.customFields = includeCustom
                     this.totalCount = includeCount
                     this.UUIDTypeField = includeType
+                    this.UUIDStatusField = true
+                    this.statusField = true
                     // todo we don't have parameters for all fields here
                 }
                 this.sort = sort.toJsMap()
@@ -861,8 +866,9 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
                     if (includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM) {
                         this.customUUIDFields = true
                     }
-//                this.UUIDStatusField = true
                     this.UUIDTypeField = includeType
+                    this.UUIDStatusField = true
+                    this.statusField = true
                     // todo we don't have parameters for all fields here
                 }
             }
@@ -901,6 +907,8 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
                         this.customUUIDFields = true
                     }
                     this.UUIDTypeField = includeType
+                    this.UUIDStatusField = true
+                    this.statusField = true
                     // todo we don't have parameters for all fields here
                 }
             }
