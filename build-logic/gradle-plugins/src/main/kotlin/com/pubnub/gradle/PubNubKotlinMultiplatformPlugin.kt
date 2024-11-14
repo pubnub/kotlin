@@ -97,8 +97,6 @@ class PubNubBaseKotlinMultiplatformPlugin : Plugin<Project> {
                     macosX64()
                     tvosArm64()
                     tvosSimulatorArm64()
-                    watchosArm64()
-                    watchosSimulatorArm64()
                 }
                 if (enableIosSimulatorArm64) {
                     iosSimulatorArm64()
