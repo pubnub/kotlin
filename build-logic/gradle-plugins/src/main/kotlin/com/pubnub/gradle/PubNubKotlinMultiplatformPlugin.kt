@@ -27,7 +27,6 @@ class PubNubKotlinMultiplatformPlugin : Plugin<Project> {
                         ios.deploymentTarget = "14.0"
                         osx.deploymentTarget = "11.0"
                         tvos.deploymentTarget = "14.0"
-                        watchos.deploymentTarget = "7.0"
 
                         // Maps custom Xcode configuration to NativeBuildType
                         xcodeConfigurationToNativeBuildType["CUSTOM_DEBUG"] = NativeBuildType.DEBUG
