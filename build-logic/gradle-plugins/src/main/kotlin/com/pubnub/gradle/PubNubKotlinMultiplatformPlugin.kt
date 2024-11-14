@@ -24,7 +24,9 @@ class PubNubKotlinMultiplatformPlugin : Plugin<Project> {
                 apply<KotlinCocoapodsPlugin>()
                 extensions.configure<KotlinMultiplatformExtension> {
                     (this as? ExtensionAware)?.extensions?.configure<CocoapodsExtension> {
-                        ios.deploymentTarget = "14"
+                        ios.deploymentTarget = "14.0"
+                        osx.deploymentTarget = "11.0"
+                        tvos.deploymentTarget = "14.0"
 
                         // Maps custom Xcode configuration to NativeBuildType
                         xcodeConfigurationToNativeBuildType["CUSTOM_DEBUG"] = NativeBuildType.DEBUG
@@ -90,6 +92,10 @@ class PubNubBaseKotlinMultiplatformPlugin : Plugin<Project> {
                 if (enableIosTargetOther) {
                     iosArm64()
                     iosX64()
+                    macosArm64()
+                    macosX64()
+                    tvosArm64()
+                    tvosSimulatorArm64()
                 }
                 if (enableIosSimulatorArm64) {
                     iosSimulatorArm64()
@@ -110,7 +116,7 @@ class PubNubBaseKotlinMultiplatformPlugin : Plugin<Project> {
                     }
 
                     if (enableAnyIosTarget) {
-                        getByName("iosMain") {
+                        getByName("appleMain") {
                             it.dependsOn(nonJvm)
                         }
                     }
