@@ -123,7 +123,7 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
         val expectedMessage = CommonUtils.generatePayload()
         val expectedAction = "reaction"
         val expectedActionValue = emoji()
-        val expectedCustomMessageType = "customType_${randomNumeric()}"
+        val expectedCustomMessageType = "pncustom-_Type_${randomNumeric()}"
 
         val result =
             pubnub.publish(

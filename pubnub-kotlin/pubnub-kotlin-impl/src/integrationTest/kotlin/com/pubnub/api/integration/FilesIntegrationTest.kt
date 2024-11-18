@@ -40,7 +40,7 @@ class FilesIntegrationTest : BaseIntegrationTest() {
         val message = "This is message"
         val meta = "This is meta"
         val content = "This is content"
-        val customMessageType = "MyCustomType"
+        val customMessageType = "MyCustom-Type_"
         val receiveFileEventFuture = CompletableFuture<PNFileEventResult>()
 
         val channel = pubnub.channel(channelName)

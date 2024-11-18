@@ -16,7 +16,7 @@ public class PublishFileMessageIntegrationTest extends BaseIntegrationTest {
                 .fileName("whatever")
                 .fileId("whatever")
                 .message("whatever")
-                .customMessageType("myCustom")
+                .customMessageType("my-Custom")
                 .sync();
 
         assertNotNull(publishFileMessageResult.getTimetoken());

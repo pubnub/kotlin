@@ -56,7 +56,7 @@ public class SignalIntegrationTests extends BaseIntegrationTest {
     public void testPublishSignalMessageSync() throws PubNubException {
         final String expectedChannel = randomChannel();
         final String expectedPayload = RandomGenerator.newValue(5);
-        final String customMessageType = "mytype";
+        final String customMessageType = "myt_ype-";
 
         final PNPublishResult signalResult = pubNub.signal(expectedPayload, expectedChannel).customMessageType(customMessageType).sync();
 

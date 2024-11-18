@@ -46,7 +46,7 @@ public class FilesIntegrationTests extends BaseIntegrationTest {
         String channel = randomChannel();
         String content = "This is content";
         String message = "This is message";
-        String customMessageType = "myType01";
+        String customMessageType = "myType01-_";
         String meta = "This is meta";
         String fileName = "fileName" + channel + ".txt";
         CountDownLatch connectedLatch = new CountDownLatch(1);

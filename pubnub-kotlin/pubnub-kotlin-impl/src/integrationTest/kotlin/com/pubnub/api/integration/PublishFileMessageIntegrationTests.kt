@@ -15,7 +15,7 @@ class PublishFileMessageIntegrationTests : BaseIntegrationTest() {
             meta = "whatever",
             ttl = 1,
             shouldStore = true,
-            customMessageType = "myCustomMessage"
+            customMessageType = "myCustom-Messag_e"
         ).sync()
         assertNotNull(publishFileMessageResult.timetoken)
     }
