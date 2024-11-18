@@ -2,9 +2,9 @@
 
 # createPubNub
 
-[common, ios, js, jvm]\
+[common, apple, js, jvm]\
 [common]\
 expect fun [createPubNub](create-pub-nub.md)(config: [PNConfiguration](../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.v2/-p-n-configuration/index.md)): [PubNub](../com.pubnub.api/-pub-nub/index.md)
 
-[ios, js, jvm]\
+[apple, js, jvm]\
 actual fun [createPubNub](create-pub-nub.md)(config: [PNConfiguration](../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.v2/-p-n-configuration/index.md)): [PubNub](../com.pubnub.api/-pub-nub/index.md)

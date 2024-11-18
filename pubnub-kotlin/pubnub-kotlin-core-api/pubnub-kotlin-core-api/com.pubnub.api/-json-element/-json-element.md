@@ -2,6 +2,6 @@
 
 # JsonElement
 
-[ios, js]\
-[ios, js]\
+[apple, js]\
+[apple, js]\
 constructor(value: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?)

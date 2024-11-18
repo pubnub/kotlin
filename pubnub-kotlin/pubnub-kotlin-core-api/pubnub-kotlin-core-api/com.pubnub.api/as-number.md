@@ -2,9 +2,9 @@
 
 # asNumber
 
-[common, ios, js]\
+[common, apple, js]\
 [common]\
 expect fun [JsonElement](-json-element/index.md).[asNumber](as-number.md)(): [Number](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html)?
 
-[ios, js]\
+[apple, js]\
 actual fun [JsonElement](-json-element/index.md).[asNumber](as-number.md)(): [Number](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html)?

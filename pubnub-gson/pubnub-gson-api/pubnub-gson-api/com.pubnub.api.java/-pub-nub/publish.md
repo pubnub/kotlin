@@ -19,6 +19,19 @@ It is not required to be subscribed to a channel in order to publish to that cha
 
 The message argument can contain any JSON serializable data, including: Objects, Arrays, Integers and Strings. Data should not contain special Java/Kotlin classes or functions as these will not serialize. String content can include any single-byte or multi-byte UTF-8 character.
 
+#### Return
+
+[PublishBuilder](../../com.pubnub.api.java.v2.endpoints.pubsub/-publish-builder/index.md)
+
+#### Parameters
+
+jvm
+
+| | |
+|---|---|
+| message | The payload |
+| channel | The channel to publish message to. |
+
 [jvm]\
 abstract fun [~~publish~~](publish.md)(): [Publish](../../com.pubnub.api.java.endpoints.pubsub/-publish/index.md)
 

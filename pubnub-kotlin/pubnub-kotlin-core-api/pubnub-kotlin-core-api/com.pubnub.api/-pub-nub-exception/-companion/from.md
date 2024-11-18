@@ -2,9 +2,9 @@
 
 # from
 
-[common, ios, js, jvm]\
+[common, apple, js, jvm]\
 [common]\
 expect fun [from](from.md)(e: [Throwable](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html)): [PubNubException](../index.md)
 
-[ios, js, jvm]\
+[apple, js, jvm]\
 actual fun [from](from.md)(e: [Throwable](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html)): [PubNubException](../index.md)

@@ -8,14 +8,14 @@ expect abstract class [Downloadable](index.md)actual abstract class [Downloadabl
 
 | |
 |---|
-| [DownloadableImpl](../[ios]-downloadable-impl/index.md) |
+| [DownloadableImpl](../[apple]-downloadable-impl/index.md) |
 | [DownloadableImpl](../[js]-downloadable-impl/index.md) |
 
 ## Constructors
 
 | | |
 |---|---|
-| [Downloadable](-downloadable.md) | [ios]<br>constructor()<br>[js]<br>constructor(pubnubFile: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)) |
+| [Downloadable](-downloadable.md) | [apple]<br>constructor()<br>[js]<br>constructor(pubnubFile: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)) |
 
 ## Properties
 

@@ -2,11 +2,11 @@
 
 # userId
 
-[common, ios, js]\
+[common, apple, js]\
 [common]\
 expect abstract val [userId](user-id.md): [UserId](../../com.pubnub.api/-user-id/index.md)
 
-[ios, js]\
+[apple, js]\
 actual abstract val [userId](user-id.md): [UserId](../../com.pubnub.api/-user-id/index.md)
 
 [jvm]\

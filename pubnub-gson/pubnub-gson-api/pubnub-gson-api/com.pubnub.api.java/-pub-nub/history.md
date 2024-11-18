@@ -3,7 +3,15 @@
 # history
 
 [jvm]\
-abstract fun [history](history.md)(): [History](../../com.pubnub.api.java.endpoints/-history/index.md)
+abstract fun [~~history~~](history.md)(): [History](../../com.pubnub.api.java.endpoints/-history/index.md)
+
+---
+
+### Deprecated
+
+Use fetchMessages() instead
+
+---
 
 Fetch historical messages of a channel.
 

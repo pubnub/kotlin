@@ -2,9 +2,9 @@
 
 # asBoolean
 
-[common, ios, js]\
+[common, apple, js]\
 [common]\
 expect fun [JsonElement](-json-element/index.md).[asBoolean](as-boolean.md)(): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)?
 
-[ios, js]\
+[apple, js]\
 actual fun [JsonElement](-json-element/index.md).[asBoolean](as-boolean.md)(): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)?

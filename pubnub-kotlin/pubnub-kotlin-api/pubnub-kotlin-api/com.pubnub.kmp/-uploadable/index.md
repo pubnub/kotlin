@@ -17,7 +17,7 @@ expect abstract class [Uploadable](index.md)actual abstract class [Uploadable](i
 
 | | |
 |---|---|
-| [Uploadable](-uploadable.md) | [ios]<br>constructor()<br>[js]<br>constructor(fileInput: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)) |
+| [Uploadable](-uploadable.md) | [apple]<br>constructor()<br>[js]<br>constructor(fileInput: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)) |
 
 ## Properties
 

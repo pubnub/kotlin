@@ -2,8 +2,8 @@
 
 # PubNubException
 
-[ios, js, jvm, common]\
-[ios, js]\
+[apple, js, jvm, common]\
+[apple, js]\
 constructor(statusCode: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) = 0, errorMessage: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, cause: [Throwable](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html)?)
 
 [jvm]\
@@ -15,7 +15,7 @@ constructor(errorMessage: [String](https://kotlinlang.org/api/latest/jvm/stdlib/
 [common]\
 expect constructor(pubnubError: [PubNubError](../-pub-nub-error/index.md), cause: [Throwable](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html)? = null)
 
-[ios, js]\
+[apple, js]\
 actual constructor(pubnubError: [PubNubError](../-pub-nub-error/index.md), cause: [Throwable](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html)?)
 
 [jvm]\
@@ -27,13 +27,13 @@ actual constructor(pubnubError: [PubNubError](../../../../../pubnub-kotlin/pubnu
 [common]\
 expect constructor(errorMessage: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, statusCode: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), cause: [Throwable](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html)? = null)
 
-[ios, js, jvm]\
+[apple, js, jvm]\
 actual constructor(errorMessage: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, statusCode: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), cause: [Throwable](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html)?)
 
 [common]\
 expect constructor(errorMessage: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, cause: [Throwable](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html)? = null)
 
-[ios, js]\
+[apple, js]\
 actual constructor(errorMessage: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, cause: [Throwable](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html)?)
 
 [jvm]\

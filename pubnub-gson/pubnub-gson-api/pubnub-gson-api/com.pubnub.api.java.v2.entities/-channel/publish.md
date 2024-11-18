@@ -31,3 +31,4 @@ jvm
 | usePost | Use HTTP POST to publish. Default is `false` |
 | replicate | Replicate the message. Is set to `true` by default. |
 | ttl | Set a per message time to live in storage.     - If `shouldStore = true`, and `ttl = 0`, the message is stored       with no expiry time.     - If `shouldStore = true` and `ttl = X` (`X` is an Integer value),       the message is stored with an expiry time of `X` hours.     - If `shouldStore = false`, the `ttl` parameter is ignored.     - If ttl isn't specified, then expiration of the message defaults       back to the expiry value for the key. |
+| customMessageType | The custom type associated with the message. |

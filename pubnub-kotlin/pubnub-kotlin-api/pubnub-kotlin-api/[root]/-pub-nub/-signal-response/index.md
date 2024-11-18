@@ -9,4 +9,4 @@ interface [SignalResponse](index.md)
 
 | Name | Summary |
 |---|---|
-| [timetoken](timetoken.md) | [js]<br>abstract var [timetoken](timetoken.md): [Number](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html) |
+| [timetoken](timetoken.md) | [js]<br>abstract var [timetoken](timetoken.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |

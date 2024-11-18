@@ -2,5 +2,5 @@
 
 # value
 
-[ios]\
+[apple]\
 val [value](value.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)

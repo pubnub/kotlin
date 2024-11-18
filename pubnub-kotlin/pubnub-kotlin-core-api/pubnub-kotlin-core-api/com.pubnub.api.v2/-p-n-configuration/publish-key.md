@@ -2,11 +2,11 @@
 
 # publishKey
 
-[common, ios, js]\
+[common, apple, js]\
 [common]\
 expect abstract val [publishKey](publish-key.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
 
-[ios, js]\
+[apple, js]\
 actual abstract val [publishKey](publish-key.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
 
 [jvm]\

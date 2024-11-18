@@ -2,5 +2,5 @@
 
 # contentLength
 
-[ios]\
+[apple]\
 val [contentLength](content-length.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)

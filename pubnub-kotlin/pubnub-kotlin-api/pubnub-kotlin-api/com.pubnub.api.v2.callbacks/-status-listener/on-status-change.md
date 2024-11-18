@@ -2,5 +2,5 @@
 
 # onStatusChange
 
-[ios]\
+[apple]\
 abstract val [onStatusChange](on-status-change.md): ([PubNub](../../com.pubnub.api/-pub-nub/index.md), [PNStatus](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.models.consumer/-p-n-status/index.md)) -&gt; [Unit](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)

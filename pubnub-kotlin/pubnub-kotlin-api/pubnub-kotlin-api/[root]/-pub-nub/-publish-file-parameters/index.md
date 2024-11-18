@@ -10,6 +10,7 @@ interface [PublishFileParameters](index.md)
 | Name | Summary |
 |---|---|
 | [channel](channel.md) | [js]<br>abstract var [channel](channel.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [customMessageType](custom-message-type.md) | [js]<br>abstract var [customMessageType](custom-message-type.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? |
 | [fileId](file-id.md) | [js]<br>abstract var [fileId](file-id.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
 | [fileName](file-name.md) | [js]<br>abstract var [fileName](file-name.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
 | [message](message.md) | [js]<br>abstract var [message](message.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)? |

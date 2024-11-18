@@ -3,19 +3,20 @@
 # PNFileEventResult
 
 [common]\
-class [PNFileEventResult](index.md)(val channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), val timetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)?, val publisher: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, val message: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?, val file: [PNDownloadableFile](../../com.pubnub.api.models.consumer.files/-p-n-downloadable-file/index.md), val jsonMessage: [JsonElement](../../com.pubnub.api/-json-element/index.md), val subscription: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null, val error: [PubNubError](../../com.pubnub.api/-pub-nub-error/index.md)? = null) : [PNEvent](../../com.pubnub.api.models.consumer.pubsub/-p-n-event/index.md)
+class [PNFileEventResult](index.md)(val channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), val timetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)?, val publisher: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, val message: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?, val file: [PNDownloadableFile](../../com.pubnub.api.models.consumer.files/-p-n-downloadable-file/index.md), val jsonMessage: [JsonElement](../../com.pubnub.api/-json-element/index.md), val subscription: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null, val error: [PubNubError](../../com.pubnub.api/-pub-nub-error/index.md)? = null, val customMessageType: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null) : [PNEvent](../../com.pubnub.api.models.consumer.pubsub/-p-n-event/index.md)
 
 ## Constructors
 
 | | |
 |---|---|
-| [PNFileEventResult](-p-n-file-event-result.md) | [common]<br>constructor(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), timetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)?, publisher: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, message: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?, file: [PNDownloadableFile](../../com.pubnub.api.models.consumer.files/-p-n-downloadable-file/index.md), jsonMessage: [JsonElement](../../com.pubnub.api/-json-element/index.md), subscription: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null, error: [PubNubError](../../com.pubnub.api/-pub-nub-error/index.md)? = null) |
+| [PNFileEventResult](-p-n-file-event-result.md) | [common]<br>constructor(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), timetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)?, publisher: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, message: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?, file: [PNDownloadableFile](../../com.pubnub.api.models.consumer.files/-p-n-downloadable-file/index.md), jsonMessage: [JsonElement](../../com.pubnub.api/-json-element/index.md), subscription: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null, error: [PubNubError](../../com.pubnub.api/-pub-nub-error/index.md)? = null, customMessageType: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null) |
 
 ## Properties
 
 | Name | Summary |
 |---|---|
 | [channel](channel.md) | [common]<br>open override val [channel](channel.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [customMessageType](custom-message-type.md) | [common]<br>val [customMessageType](custom-message-type.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null |
 | [error](error.md) | [common]<br>val [error](error.md): [PubNubError](../../com.pubnub.api/-pub-nub-error/index.md)? = null |
 | [file](file.md) | [common]<br>val [file](file.md): [PNDownloadableFile](../../com.pubnub.api.models.consumer.files/-p-n-downloadable-file/index.md) |
 | [jsonMessage](json-message.md) | [common]<br>val [jsonMessage](json-message.md): [JsonElement](../../com.pubnub.api/-json-element/index.md) |

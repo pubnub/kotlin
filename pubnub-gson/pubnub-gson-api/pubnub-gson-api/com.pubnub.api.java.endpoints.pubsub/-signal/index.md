@@ -2,13 +2,8 @@
 
 # Signal
 
-interface [Signal](index.md) : [Endpoint](../../com.pubnub.api.java.endpoints/-endpoint/index.md)&lt;[T](../../com.pubnub.api.java.endpoints/-endpoint/index.md)&gt; 
-
-#### Inheritors
-
-| |
-|---|
-| [SignalBuilder](../../com.pubnub.api.java.v2.endpoints.pubsub/-signal-builder/index.md) |
+[jvm]\
+interface [Signal](index.md) : [Endpoint](../../com.pubnub.api.java.endpoints/-endpoint/index.md)&lt;[T](../../com.pubnub.api.java.endpoints/-endpoint/index.md)&gt;
 
 ## Functions
 

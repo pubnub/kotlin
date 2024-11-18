@@ -2,11 +2,11 @@
 
 # logVerbosity
 
-[common, ios, js]\
+[common, apple, js]\
 [common]\
 expect abstract val [logVerbosity](log-verbosity.md): [PNLogVerbosity](../../com.pubnub.api.enums/-p-n-log-verbosity/index.md)
 
-[ios, js]\
+[apple, js]\
 actual abstract val [logVerbosity](log-verbosity.md): [PNLogVerbosity](../../com.pubnub.api.enums/-p-n-log-verbosity/index.md)
 
 [jvm]\

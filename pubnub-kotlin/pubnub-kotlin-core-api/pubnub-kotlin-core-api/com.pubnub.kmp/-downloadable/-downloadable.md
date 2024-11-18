@@ -2,8 +2,8 @@
 
 # Downloadable
 
-[ios, js]\
-[ios]\
+[apple, js]\
+[apple]\
 constructor()
 
 [js]\

@@ -5,7 +5,7 @@
 [common]\
 expect class [CustomObject](index.md)
 
-[ios]\
+[apple]\
 actual class [CustomObject](index.md)(val value: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html))
 
 [js]\
@@ -18,10 +18,10 @@ actual typealias [CustomObject](index.md) = [Any](https://kotlinlang.org/api/lat
 
 | | |
 |---|---|
-| [CustomObject](-custom-object.md) | [ios]<br>constructor(value: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)) |
+| [CustomObject](-custom-object.md) | [apple]<br>constructor(value: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)) |
 
 ## Properties
 
 | Name | Summary |
 |---|---|
-| [value](value.md) | [ios]<br>val [value](value.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html) |
+| [value](value.md) | [apple]<br>val [value](value.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html) |

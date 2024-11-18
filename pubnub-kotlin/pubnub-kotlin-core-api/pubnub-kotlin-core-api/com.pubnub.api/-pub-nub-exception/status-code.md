@@ -2,9 +2,9 @@
 
 # statusCode
 
-[common, ios, js, jvm]\
+[common, apple, js, jvm]\
 [common]\
 expect val [statusCode](status-code.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)
 
-[ios, js, jvm]\
+[apple, js, jvm]\
 actual val [statusCode](status-code.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) = 0

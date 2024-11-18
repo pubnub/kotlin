@@ -6,5 +6,5 @@
 
 | Name | Summary |
 |---|---|
-| [PublishBuilder](-publish-builder/index.md) | [jvm]<br>interface [PublishBuilder](-publish-builder/index.md) : [Endpoint](../com.pubnub.api.java.endpoints/-endpoint/index.md)&lt;[T](../com.pubnub.api.java.endpoints/-endpoint/index.md)&gt; |
-| [SignalBuilder](-signal-builder/index.md) | [jvm]<br>interface [SignalBuilder](-signal-builder/index.md) : [Signal](../com.pubnub.api.java.endpoints.pubsub/-signal/index.md) |
+| [PublishBuilder](-publish-builder/index.md) | [jvm]<br>interface [PublishBuilder](-publish-builder/index.md) : [Endpoint](../com.pubnub.api.java.endpoints/-endpoint/index.md)&lt;[T](../com.pubnub.api.java.endpoints/-endpoint/index.md)&gt; <br>Interface representing a builder for configuring a publish operation. |
+| [SignalBuilder](-signal-builder/index.md) | [jvm]<br>interface [SignalBuilder](-signal-builder/index.md) : [Endpoint](../com.pubnub.api.java.endpoints/-endpoint/index.md)&lt;[T](../com.pubnub.api.java.endpoints/-endpoint/index.md)&gt; <br>Interface representing a builder for configuring a signal operation. |

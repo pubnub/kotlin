@@ -59,6 +59,7 @@ interface [Endpoint](index.md)&lt;[T](index.md)&gt; : [ExtendedRemoteAction](../
 | [AddMessageAction](../../com.pubnub.api.java.endpoints.message_actions/-add-message-action/index.md) |
 | [GetMessageActions](../../com.pubnub.api.java.endpoints.message_actions/-get-message-actions/index.md) |
 | [RemoveMessageAction](../../com.pubnub.api.java.endpoints.message_actions/-remove-message-action/index.md) |
+| [SignalBuilder](../../com.pubnub.api.java.v2.endpoints.pubsub/-signal-builder/index.md) |
 | [PublishBuilder](../../com.pubnub.api.java.v2.endpoints.pubsub/-publish-builder/index.md) |
 
 ## Functions

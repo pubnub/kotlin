@@ -7,8 +7,8 @@ expect abstract val [secretKey](secret-key.md): [String](https://kotlinlang.org/
 
 The secretKey should only be used within a server side and never exposed to client devices.
 
-[ios, js]\
-[ios, js]\
+[apple, js]\
+[apple, js]\
 actual abstract val [secretKey](secret-key.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
 
 [jvm]\

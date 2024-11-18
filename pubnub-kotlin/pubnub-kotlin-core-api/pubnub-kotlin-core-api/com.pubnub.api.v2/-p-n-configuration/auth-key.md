@@ -2,11 +2,11 @@
 
 # authKey
 
-[common, ios]\
+[common, apple]\
 [common]\
 expect abstract val [~~authKey~~](auth-key.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
 
-[ios]\
+[apple]\
 actual abstract val [~~authKey~~](auth-key.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
 
 ---
