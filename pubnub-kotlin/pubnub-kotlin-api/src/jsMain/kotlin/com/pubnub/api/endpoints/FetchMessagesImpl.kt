@@ -2,6 +2,7 @@ package com.pubnub.api.endpoints
 
 import PubNub
 import com.pubnub.api.EndpointImpl
+import com.pubnub.api.PubNubError
 import com.pubnub.api.createJsonElement
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.history.HistoryMessageType
@@ -29,7 +30,11 @@ class FetchMessagesImpl(pubnub: PubNub, params: PubNub.FetchMessagesParameters) 
                                 }
                             },
                             HistoryMessageType.of(item.messageType?.toString()?.toInt()),
-                            null, // TODO item.error
+                            if (item.error?.startsWith("Error while decrypting message content") ?: false) {
+                                PubNubError.CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED
+                            } else {
+                                null
+                            }
                         )
                     }
                 },
