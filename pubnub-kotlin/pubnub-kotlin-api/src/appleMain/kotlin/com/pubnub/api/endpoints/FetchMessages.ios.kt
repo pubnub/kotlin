@@ -32,7 +32,8 @@ open class FetchMessagesImpl(
     private val includeUUID: Boolean,
     private val includeMeta: Boolean,
     private val includeMessageActions: Boolean,
-    private val includeMessageType: Boolean
+    private val includeMessageType: Boolean,
+    private val includeCustomMessageType: Boolean
 ) : FetchMessages {
     override fun async(callback: Consumer<Result<PNFetchMessagesResult>>) {
         pubnub.fetchMessagesFrom(
@@ -41,6 +42,7 @@ open class FetchMessagesImpl(
             includeMeta = includeMeta,
             includeMessageActions = includeMessageActions,
             includeMessageType = includeMessageType,
+//            includeCustomMessageType = includeCustomMessageType, // todo
             page = KMPBoundedPage(
                 start = page.start?.let { NSNumber(long = it) },
                 end = page.end?.let { NSNumber(long = it) },

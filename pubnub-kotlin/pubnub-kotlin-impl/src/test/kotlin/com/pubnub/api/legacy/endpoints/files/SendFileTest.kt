@@ -49,7 +49,7 @@ class SendFileTest : TestsWithFiles {
         every { sendFileToS3Factory.create(any(), any(), any()) } returns TestRemoteAction.successful(Unit)
         val publishFileMessage: PublishFileMessageEndpoint =
             AlwaysSuccessfulPublishFileMessage.create(publishFileMessageResult, getPubNubMock())
-        every { publishFileMessageFactory.create(any(), any(), any()) } returns publishFileMessage
+        every { publishFileMessageFactory.create(any(), any(), any(), any(), any(), any(), any(), any()) } returns publishFileMessage
 
         // when
         val result: PNFileUploadResult? =
@@ -76,7 +76,7 @@ class SendFileTest : TestsWithFiles {
         every { sendFileToS3Factory.create(any(), any(), any()) } returns TestRemoteAction.successful(Unit)
         val publishFileMessage: PublishFileMessageEndpoint =
             AlwaysSuccessfulPublishFileMessage.create(publishFileMessageResult, getPubNubMock())
-        every { publishFileMessageFactory.create(any(), any(), any()) } returns publishFileMessage
+        every { publishFileMessageFactory.create(any(), any(), any(), any(), any(), any(), any(), any()) } returns publishFileMessage
         inputStream().use { inputStream ->
             sendFile(
                 channel,
@@ -114,7 +114,7 @@ class SendFileTest : TestsWithFiles {
                     getPubNubMock(),
                 ),
             )
-        every { publishFileMessageFactory.create(any(), any(), any()) } returns publishFileMessage
+        every { publishFileMessageFactory.create(any(), any(), any(), any(), any(), any(), any(), any()) } returns publishFileMessage
         inputStream().use { inputStream ->
             sendFile(
                 channel,
@@ -155,7 +155,7 @@ class SendFileTest : TestsWithFiles {
                     getPubNubMock(),
                 ),
             )
-        every { publishFileMessageFactory.create(any(), any(), any()) } returns publishFileMessage
+        every { publishFileMessageFactory.create(any(), any(), any(), any(), any(), any(), any(), any()) } returns publishFileMessage
 
         // when
         val result: PNFileUploadResult? =
@@ -193,6 +193,7 @@ class SendFileTest : TestsWithFiles {
         return SendFileEndpoint(
             channel = channel,
             fileName = fileName,
+            customMessageType = "myCustomMessageType01a",
             inputStream = inputStream,
             generateUploadUrlFactory = generateUploadUrlFactory,
             publishFileMessageFactory = publishFileMessageFactory,
@@ -263,6 +264,7 @@ class SendFileTest : TestsWithFiles {
                 channel = "channel",
                 fileName = "fileName",
                 fileId = "fileId",
+                customMessageType = "myCustomType",
                 pubNub = pubNub,
             ) {
         @Throws(PubNubException::class)

@@ -15,6 +15,7 @@ import com.pubnub.internal.extension.limit
 import com.pubnub.internal.extension.nonPositiveToNull
 import com.pubnub.internal.extension.tryDecryptMessage
 import com.pubnub.internal.models.server.FetchMessagesEnvelope
+import com.pubnub.internal.models.server.history.ServerFetchMessageItem
 import com.pubnub.internal.toCsv
 import retrofit2.Call
 import retrofit2.Response
@@ -27,10 +28,11 @@ class FetchMessagesEndpoint internal constructor(
     pubnub: PubNubImpl,
     override val channels: List<String>,
     override val page: PNBoundedPage,
-    override val includeUUID: Boolean,
-    override val includeMeta: Boolean,
-    override val includeMessageActions: Boolean,
-    override val includeMessageType: Boolean,
+    override val includeUUID: Boolean = false,
+    override val includeMeta: Boolean = false,
+    override val includeMessageActions: Boolean = false,
+    override val includeMessageType: Boolean = false,
+    override val includeCustomMessageType: Boolean = false
 ) : EndpointCore<FetchMessagesEnvelope, PNFetchMessagesResult>(pubnub), FetchMessages {
     internal companion object {
         private const val SINGLE_CHANNEL_DEFAULT_MESSAGES = 100
@@ -40,6 +42,8 @@ class FetchMessagesEndpoint internal constructor(
         private const val DEFAULT_MESSAGES_WITH_ACTIONS = 25
         private const val MAX_MESSAGES_WITH_ACTIONS = 25
         internal const val INCLUDE_MESSAGE_TYPE_QUERY_PARAM = "include_message_type"
+        private const val INCLUDE_CUSTOM_MESSAGE_TYPE = "include_custom_message_type"
+
 
         internal fun effectiveMax(
             maximumPerChannel: Int?,
@@ -95,7 +99,7 @@ class FetchMessagesEndpoint internal constructor(
         val body = input.body()!!
         val channelsMap =
             body.channels.mapValues { (_, value) ->
-                value.map { serverMessageItem ->
+                value.map { serverMessageItem: ServerFetchMessageItem ->
                     val (newMessage, error) =
                         serverMessageItem.message.tryDecryptMessage(
                             configuration.cryptoModule,
@@ -119,6 +123,7 @@ class FetchMessagesEndpoint internal constructor(
                             } else {
                                 null
                             },
+                        customMessageType = serverMessageItem.customMessageType,
                         error = error,
                     )
                 }
@@ -147,5 +152,6 @@ class FetchMessagesEndpoint internal constructor(
         if (includeMeta) {
             queryParams["include_meta"] = "true"
         }
+        queryParams[INCLUDE_CUSTOM_MESSAGE_TYPE] = includeCustomMessageType.toString()
     }
 }

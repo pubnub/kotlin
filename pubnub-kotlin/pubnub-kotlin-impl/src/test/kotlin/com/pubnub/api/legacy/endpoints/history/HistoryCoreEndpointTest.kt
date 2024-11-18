@@ -468,10 +468,10 @@ class HistoryCoreEndpointTest : BaseTest() {
         val result =
             pubnub.history(
                 channel = "niceChannel",
-                count = 5,
-                reverse = true,
                 start = 1L,
                 end = 2L,
+                count = 5,
+                reverse = true,
                 includeTimetoken = true,
             ).sync()
 

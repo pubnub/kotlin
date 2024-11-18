@@ -77,13 +77,14 @@ open class ChannelImpl(val pubNubImpl: PubNubImpl, val channelName: ChannelName)
         shouldStore: Boolean,
         usePost: Boolean,
         replicate: Boolean,
-        ttl: Int?
+        ttl: Int?,
+        customMessageType: String?
     ): Publish {
-        return pubNubImpl.publish(channelName.id, message, meta, shouldStore, usePost, replicate, ttl)
+        return pubNubImpl.publish(channelName.id, message, meta, shouldStore, usePost, replicate, ttl, customMessageType)
     }
 
-    override fun signal(message: Any): Signal {
-        return pubNubImpl.signal(channelName.id, message)
+    override fun signal(message: Any, customMessageType: String?): Signal {
+        return pubNubImpl.signal(channelName.id, message, customMessageType)
     }
 
     override fun fire(message: Any, meta: Any?, usePost: Boolean, ttl: Int?): Publish {
@@ -97,9 +98,10 @@ open class ChannelImpl(val pubNubImpl: PubNubImpl, val channelName: ChannelName)
         meta: Any?,
         ttl: Int?,
         shouldStore: Boolean?,
-        cipherKey: String?
+        cipherKey: String?,
+        customMessageType: String?
     ): SendFile {
-        return pubNubImpl.sendFile(channelName.id, fileName, inputStream, message, meta, ttl, shouldStore, cipherKey)
+        return pubNubImpl.sendFile(channelName.id, fileName, inputStream, message, meta, ttl, shouldStore, cipherKey, customMessageType)
     }
 
     override fun deleteFile(

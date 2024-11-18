@@ -46,6 +46,7 @@ public class FilesIntegrationTests extends BaseIntegrationTest {
         String channel = randomChannel();
         String content = "This is content";
         String message = "This is message";
+        String customMessageType = "myType01-_";
         String meta = "This is meta";
         String fileName = "fileName" + channel + ".txt";
         CountDownLatch connectedLatch = new CountDownLatch(1);
@@ -61,7 +62,7 @@ public class FilesIntegrationTests extends BaseIntegrationTest {
 
             @Override
             public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
-                if (pnFileEventResult.getFile().getName().equals(fileName)) {
+                if (pnFileEventResult.getFile().getName().equals(fileName) && pnFileEventResult.getCustomMessageType().equals(customMessageType)) {
                     fileEventReceived.countDown();
                 }
             }
@@ -79,6 +80,7 @@ public class FilesIntegrationTests extends BaseIntegrationTest {
                     .fileName(fileName)
                     .inputStream(is)
                     .message(message)
+                    .customMessageType(customMessageType)
                     .meta(meta)
                     .sync();
         }

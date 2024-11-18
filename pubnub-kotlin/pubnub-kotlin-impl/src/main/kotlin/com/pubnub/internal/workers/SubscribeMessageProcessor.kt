@@ -95,6 +95,7 @@ internal class SubscribeMessageProcessor(
             if (extractedMessage == null) {
                 log.debug("unable to parse payload on #processIncomingMessages")
             }
+            val customMessageType = message.customMessageType
 
             val result =
                 BasePubSubResult(
@@ -107,15 +108,15 @@ internal class SubscribeMessageProcessor(
 
             return when (message.type) {
                 null -> {
-                    PNMessageResult(result, extractedMessage!!, error)
+                    PNMessageResult(result, extractedMessage!!, customMessageType, error)
                 }
 
                 TYPE_MESSAGE -> {
-                    PNMessageResult(result, extractedMessage!!, error)
+                    PNMessageResult(result, extractedMessage!!, customMessageType, error)
                 }
 
                 TYPE_SIGNAL -> {
-                    PNSignalResult(result, extractedMessage!!)
+                    PNSignalResult(result, extractedMessage!!, customMessageType)
                 }
 
                 TYPE_OBJECT -> {
@@ -167,6 +168,7 @@ internal class SubscribeMessageProcessor(
                             fileUploadNotification.message?.let { pubnub.mapper.toJsonTree(it) }
                                 ?: JsonNull.INSTANCE,
                         error = error,
+                        customMessageType = customMessageType,
                     )
                 }
 

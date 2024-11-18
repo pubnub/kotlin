@@ -95,7 +95,7 @@ actual interface PubNub {
         usePost: Boolean
     ): Publish
 
-    actual fun signal(channel: String, message: Any): Signal
+    actual fun signal(channel: String, message: Any, customMessageType: String?): Signal
 
     actual fun getSubscribedChannels(): List<String>
 
@@ -137,7 +137,8 @@ actual interface PubNub {
         includeUUID: Boolean,
         includeMeta: Boolean,
         includeMessageActions: Boolean,
-        includeMessageType: Boolean
+        includeMessageType: Boolean,
+        includeCustomMessageType: Boolean
     ): FetchMessages
 
     actual fun deleteMessages(
@@ -373,7 +374,8 @@ actual interface PubNub {
         meta: Any?,
         ttl: Int?,
         shouldStore: Boolean?,
-        cipherKey: String?
+        cipherKey: String?,
+        customMessageType: String?
     ): SendFile
 
     actual fun downloadFile(
@@ -396,7 +398,8 @@ actual interface PubNub {
         message: Any?,
         meta: Any?,
         ttl: Int?,
-        shouldStore: Boolean?
+        shouldStore: Boolean?,
+        customMessageType: String?
     ): PublishFileMessage
 
     actual fun subscribe(
@@ -445,5 +448,6 @@ actual interface PubNub {
         usePost: Boolean,
         replicate: Boolean,
         ttl: Int?,
+        customMessageType: String?
     ): Publish
 }

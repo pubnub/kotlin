@@ -36,6 +36,7 @@ class SendFileImpl(
     private val meta: Any?,
     private val ttl: Int?,
     private val shouldStore: Boolean?,
+    private val customMessageType: String?
 ) : SendFile {
     override fun async(callback: Consumer<Result<PNFileUploadResult>>) {
         mapContent(inputStream)?.let { content ->
@@ -47,6 +48,7 @@ class SendFileImpl(
                 meta = meta,
                 ttl = ttl?.let { NSNumber(it) },
                 shouldStore = shouldStore?.let { NSNumber(it) },
+//                customMessageType = customMessageType, // todo ask Kuba
                 onSuccess = callback.onSuccessHandler2 { uploadedFile, timetoken ->
                     PNFileUploadResult(
                         status = 200,

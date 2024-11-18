@@ -510,6 +510,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var sendByPost: Boolean?
         var meta: Any?
         var ttl: Number?
+        var customMessageType: String?
     }
 
     interface PublishResponse {
@@ -519,6 +520,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     interface SignalParameters {
         var message: Any
         var channel: String
+        var customMessageType: String?
     }
 
     interface SignalResponse {
@@ -559,6 +561,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var includeUUID: Boolean?
         var includeMeta: Boolean?
         var includeMessageActions: Boolean?
+        var includeCustomMessageType: Boolean?
     }
 
     interface Action {
@@ -936,6 +939,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var ttl: Number?
 
         var meta: Any?
+        var customMessageType: String?
     }
 
     interface StreamFileInput {
@@ -980,6 +984,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var ttl: Number?
 
         var meta: Any?
+        var customMessageType: String?
     }
 
     interface UploadedFile {

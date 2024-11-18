@@ -56,8 +56,9 @@ public class SignalIntegrationTests extends BaseIntegrationTest {
     public void testPublishSignalMessageSync() throws PubNubException {
         final String expectedChannel = randomChannel();
         final String expectedPayload = RandomGenerator.newValue(5);
+        final String customMessageType = "myt_ype-";
 
-        final PNPublishResult signalResult = pubNub.signal(expectedPayload, expectedChannel).sync();
+        final PNPublishResult signalResult = pubNub.signal(expectedPayload, expectedChannel).customMessageType(customMessageType).sync();
 
         assertNotNull(signalResult);
     }
@@ -68,6 +69,7 @@ public class SignalIntegrationTests extends BaseIntegrationTest {
 
         final String expectedChannel = randomChannel();
         final String expectedPayload = RandomGenerator.newValue(5);
+        final String expectedCustomMessageType = "myCustomType";
 
         final com.pubnub.api.java.PubNub observerClient = getPubNub();
 
@@ -78,9 +80,8 @@ public class SignalIntegrationTests extends BaseIntegrationTest {
             public void status(@NotNull com.pubnub.api.java.PubNub pubnub, @NotNull PNStatus status) {
                 if (status.getCategory() == PNStatusCategory.PNConnectedCategory) {
                     if (status.getAffectedChannels().contains(expectedChannel)) {
-                        pubNub.signal()
-                                .message(expectedPayload)
-                                .channel(expectedChannel)
+                        pubNub.signal(expectedPayload, expectedChannel)
+                                .customMessageType(expectedCustomMessageType)
                                 .async((result) -> {
                                     assertFalse(result.isFailure());
                                     assertNotNull(result);
@@ -94,6 +95,7 @@ public class SignalIntegrationTests extends BaseIntegrationTest {
                 assertEquals(pubNub.getConfiguration().getUserId().getValue(), signal.getPublisher());
                 assertEquals(expectedChannel, signal.getChannel());
                 assertEquals(expectedPayload, new Gson().fromJson(signal.getMessage(), String.class));
+                assertEquals(expectedCustomMessageType, signal.getCustomMessageType());
                 success.set(true);
             }
         });

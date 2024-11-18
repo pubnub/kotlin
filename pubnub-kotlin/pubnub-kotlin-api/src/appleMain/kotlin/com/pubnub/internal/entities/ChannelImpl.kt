@@ -24,12 +24,13 @@ class ChannelImpl(
         shouldStore: Boolean,
         usePost: Boolean,
         replicate: Boolean,
-        ttl: Int?
+        ttl: Int?,
+        customMessageType: String?
     ): Publish {
         TODO("Not yet implemented")
     }
 
-    override fun signal(message: Any): Signal {
+    override fun signal(message: Any, customMessageType: String?): Signal {
         TODO("Not yet implemented")
     }
 
@@ -44,7 +45,8 @@ class ChannelImpl(
         meta: Any?,
         ttl: Int?,
         shouldStore: Boolean?,
-        cipherKey: String?
+        cipherKey: String?,
+        customMessageType: String?
     ): SendFile {
         TODO("Not yet implemented")
     }

@@ -14,4 +14,5 @@ actual interface FetchMessages : Endpoint<PNFetchMessagesResult> {
     val includeMeta: Boolean
     val includeMessageActions: Boolean
     val includeMessageType: Boolean
+    val includeCustomMessageType: Boolean
 }

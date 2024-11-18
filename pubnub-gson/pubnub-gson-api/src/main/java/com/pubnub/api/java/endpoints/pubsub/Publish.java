@@ -17,4 +17,6 @@ public interface Publish extends Endpoint<PNPublishResult> {
     Publish replicate(boolean replicate);
 
     Publish ttl(Integer ttl);
+
+    Publish customMessageType(String type);
 }

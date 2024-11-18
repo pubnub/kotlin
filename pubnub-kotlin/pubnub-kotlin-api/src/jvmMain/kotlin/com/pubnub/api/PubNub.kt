@@ -380,6 +380,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      *            - If `shouldStore = false`, the `ttl` parameter is ignored.
      *            - If ttl isn't specified, then expiration of the message defaults
      *              back to the expiry value for the key.
+     * @param customMessageType The custom type associated with the message.
      */
     actual fun publish(
         channel: String,
@@ -389,6 +390,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
         usePost: Boolean,
         replicate: Boolean,
         ttl: Int?,
+        customMessageType: String?,
     ): Publish
 
     /**
@@ -463,10 +465,12 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      *
      * @param channel The channel which the signal will be sent to.
      * @param message The payload which will be serialized and sent.
+     * @param customMessageType The custom type associated with the message.
      */
     actual fun signal(
         channel: String,
         message: Any,
+        customMessageType: String?,
     ): Signal
 
     /**
@@ -590,6 +594,10 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      * @param includeMeta Whether to include message metadata in response.
      *                    Defaults to `false`.
      */
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = "Use fetchMessages(List<String>, PNBoundedPage, Boolean, Boolean, Boolean, Boolean, Boolean) instead",
+    )
     fun history(
         channel: String,
         start: Long? = null,
@@ -645,7 +653,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
                 "com.pubnub.api.models.consumer.PNBoundedPage",
             ),
         level = DeprecationLevel.WARNING,
-        message = "Use fetchMessages(String, PNBoundedPage, Boolean, Boolean, Boolean) instead",
+        message = "Use fetchMessages(List<String>, PNBoundedPage, Boolean, Boolean, Boolean, Boolean, Boolean) instead",
     )
     fun fetchMessages(
         channels: List<String>,
@@ -655,6 +663,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
         includeMeta: Boolean = false,
         includeMessageActions: Boolean = false,
         includeMessageType: Boolean = true,
+        includeCustomMessageType: Boolean = false
     ): FetchMessages
 
     /**
@@ -691,6 +700,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      *                              Defaults to `false`.
      * @param includeMessageType Whether to include message type in response.
      *                              Defaults to `false`.
+     * @param includeCustomMessageType Whether to include custom message type in response. Default to `false`
      */
     actual fun fetchMessages(
         channels: List<String>,
@@ -699,6 +709,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
         includeMeta: Boolean,
         includeMessageActions: Boolean,
         includeMessageType: Boolean,
+        includeCustomMessageType: Boolean
     ): FetchMessages
 
     /**
@@ -1615,6 +1626,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      *                    If not specified, then the history configuration of the key is used.
      * @param cipherKey Key to be used to encrypt uploaded data. If not provided,
      *                  cipherKey in @see [PNConfiguration] will be used, if provided.
+     * @param customMessageType The custom type associated with the message.
      */
     actual fun sendFile(
         channel: String,
@@ -1625,6 +1637,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
         ttl: Int?,
         shouldStore: Boolean?,
         cipherKey: String?,
+        customMessageType: String?,
     ): SendFile
 
     /**
@@ -1704,7 +1717,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      *              back to the expiry value for the key.
      * @param shouldStore Store in history.
      *                    If not specified, then the history configuration of the key is used.
-     *
+     * @param customMessageType The custom type associated with the message.
      */
     actual fun publishFileMessage(
         channel: String,
@@ -1714,6 +1727,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
         meta: Any?,
         ttl: Int?,
         shouldStore: Boolean?,
+        customMessageType: String?,
     ): PublishFileMessage
 
     /**

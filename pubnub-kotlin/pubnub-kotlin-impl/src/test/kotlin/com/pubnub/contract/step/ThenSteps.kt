@@ -4,6 +4,7 @@ import com.pubnub.contract.state.World
 import io.cucumber.java.en.Then
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
@@ -15,6 +16,12 @@ class ThenSteps(private val world: World) {
     )
     fun an_error_is_returned() {
         assertNotNull(world.pnException)
+        assertNotEquals(200, world.responseStatus)
+    }
+
+    @Then("I receive an error response")
+    fun i_receive_an_error_response() {
+        an_error_is_returned()
     }
 
     @Then("the result is successful")

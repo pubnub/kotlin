@@ -18,6 +18,7 @@ public class SignalImpl extends PassthroughEndpoint<PNPublishResult> implements 
 
     private Object message;
     private String channel;
+    private String customMessageType;
 
     public SignalImpl(PubNub pubnub) {
         super(pubnub);
@@ -26,7 +27,7 @@ public class SignalImpl extends PassthroughEndpoint<PNPublishResult> implements 
     @Override
     @NotNull
     protected Endpoint<PNPublishResult> createRemoteAction() {
-        return pubnub.signal(channel, message);
+        return pubnub.signal(channel, message, customMessageType);
     }
 
     @Override

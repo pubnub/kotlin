@@ -1,3 +1,9 @@
+## v10.2.0
+November 18 2024
+
+#### Added
+- Publish, signal, share file, subscribe, and history.
+
 ## v10.1.0
 November 06 2024
 
