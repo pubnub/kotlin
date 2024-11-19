@@ -1144,7 +1144,7 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
     }
 }
 
-private fun Any.adjustCollectionTypes(): Any {
+fun Any.adjustCollectionTypes(): Any {
     return when (this) {
         is Map<*, *> -> {
             val json = json()

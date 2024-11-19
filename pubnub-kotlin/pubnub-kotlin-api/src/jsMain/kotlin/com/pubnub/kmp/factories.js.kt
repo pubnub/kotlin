@@ -55,7 +55,7 @@ actual fun createEventListener(
                         messageEvent.publisher
                     ),
                     JsonElementImpl(messageEvent.message),
-                    if (messageEvent.error?.startsWith("Error while decrypting message content") ?: false) {
+                    error = if (messageEvent.error?.startsWith("Error while decrypting message content") ?: false) {
                         PubNubError.CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED
                     } else {
                         null
