@@ -8,8 +8,13 @@ jobs:
   tests:
     name: Integration and Unit tests
     runs-on:
-      group: organization/Default
+      group: macos-gh
     steps:
+      - name: Install JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: "zulu" # See 'Supported distributions' for available options
+          java-version: "21"
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Checkout actions
@@ -43,7 +48,7 @@ jobs:
   acceptance-tests:
     name: Acceptance tests
     runs-on:
-      group: organization/Default
+      group: macos-gh
     env:
       pubKey: somePubKey
       subKey: someSubKey
@@ -53,6 +58,15 @@ jobs:
       serverHostPort: "localhost:8090"
       serverMock: true
     steps:
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: latest
+      - name: Install JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: "zulu" # See 'Supported distributions' for available options
+          java-version: "21"
       - name: Checkout project
         uses: actions/checkout@v4
       - name: Checkout mock-server action
@@ -77,7 +91,8 @@ jobs:
             ${{ runner.os }}-gradle-
       - name: Run acceptance tests (optional)
         run: |
-          ln -s /home/runner/work/kotlin/kotlin/sdk-specifications pubnub-kotlin-core/core-impl/src/test/resources/sdk-specifications
+          pwd
+          ln -s /Users/github/actions-runner/_work/kotlin/kotlin/sdk-specifications pubnub-kotlin/pubnub-kotlin-impl/src/test/resources/sdk-specifications
           ./gradlew cucumber --tests RunBetaCucumberTest -Dcucumber.features="../../sdk-specifications/features/" -i
         continue-on-error: true
       - name: Run acceptance tests (required)
@@ -96,7 +111,7 @@ jobs:
     name: Tests
     needs: [tests, acceptance-tests]
     runs-on:
-      group: organization/Default
+      group: macos-gh
     steps:
       - name: Tests summary
         run: echo -e "\033[38;2;95;215;0m\033[1mAll tests successfully passed"
