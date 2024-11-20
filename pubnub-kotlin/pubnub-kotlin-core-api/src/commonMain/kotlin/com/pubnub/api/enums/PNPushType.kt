@@ -12,6 +12,12 @@ enum class PNPushType(private val value: String) {
         return value.lowercase()
     }
 
+    companion object {
+        fun fromParamString(paramString: String): PNPushType {
+            return entries.first { it.toParamString() == paramString }
+        }
+    }
+
     override fun toString(): String {
         return value
     }

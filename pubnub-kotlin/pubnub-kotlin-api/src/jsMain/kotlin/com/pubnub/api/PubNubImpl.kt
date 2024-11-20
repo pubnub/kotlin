@@ -127,13 +127,15 @@ import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.internal.v2.entities.ChannelImpl
 import com.pubnub.internal.v2.subscriptions.SubscriptionSetImpl
 import com.pubnub.kmp.CustomObject
+import com.pubnub.kmp.JsMap
 import com.pubnub.kmp.Uploadable
 import com.pubnub.kmp.createJsObject
 import com.pubnub.kmp.toJsMap
+import com.pubnub.kmp.toMap
 import kotlin.js.json
 import PubNub as PubNubJs
 
-class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
+class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
     constructor(configuration: PNConfiguration) : this(PubNubJs(configuration.toJs()))
 
     override val configuration: PNConfiguration
@@ -142,8 +144,8 @@ class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
             jsPubNub.asDynamic().configuration.subscribeKey,
             jsPubNub.asDynamic().configuration.publishKey,
             jsPubNub.asDynamic().configuration.secretKey,
-            jsPubNub.asDynamic().configuration.authKey,
-            jsPubNub.asDynamic().configuration.logVerbosity
+            jsPubNub.asDynamic().configuration.logVerbosity,
+            authToken = jsPubNub.asDynamic().configuration.authToken
         )
 
     override fun addListener(listener: EventListener) {
@@ -173,7 +175,8 @@ class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
         shouldStore: Boolean?,
         usePost: Boolean,
         replicate: Boolean,
-        ttl: Int?
+        ttl: Int?,
+        customMessageType: String?,
     ): Publish {
         return PublishImpl(
             jsPubNub,
@@ -184,6 +187,7 @@ class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
                 this.meta = meta?.adjustCollectionTypes()
                 this.sendByPost = usePost
                 this.ttl = ttl
+                this.customMessageType = customMessageType
             }
         )
     }
@@ -200,12 +204,13 @@ class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
         )
     }
 
-    override fun signal(channel: String, message: Any): Signal {
+    override fun signal(channel: String, message: Any, customMessageType: String?): Signal {
         return SignalImpl(
             jsPubNub,
             createJsObject {
                 this.message = message.adjustCollectionTypes()
                 this.channel = channel
+                this.customMessageType = customMessageType
             }
         )
     }
@@ -292,7 +297,8 @@ class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
         includeUUID: Boolean,
         includeMeta: Boolean,
         includeMessageActions: Boolean,
-        includeMessageType: Boolean
+        includeMessageType: Boolean,
+        includeCustomMessageType: Boolean
     ): FetchMessages {
         return FetchMessagesImpl(
             jsPubNub,
@@ -307,6 +313,7 @@ class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
                 this.includeMessageActions = includeMessageActions
                 this.includeMessageType = includeMessageType
                 this.stringifiedTimeToken = true
+                this.includeCustomMessageType = includeCustomMessageType
             }
         )
     }
@@ -560,7 +567,7 @@ class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
             jsPubNub,
             createJsObject {
                 this.channel = channel
-                this.data = ChannelMetadata(
+                this.data = createChannelMetadata(
                     PatchValue.of(name),
                     PatchValue.of(description),
                     PatchValue.of(status),
@@ -633,7 +640,7 @@ class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
         return SetUUIDMetadataImpl(
             jsPubNub,
             createJsObject {
-                data = UUIDMetadata(
+                data = createUuidMetadata(
                     PatchValue.of(name),
                     PatchValue.of(externalId),
                     PatchValue.of(profileUrl),
@@ -674,8 +681,10 @@ class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
         return GetMembershipsImpl(
             jsPubNub,
             createJsObject {
-                this.sort = sort.toJsMap()
+                uuid?.let { this.uuid = it }
+                sort.takeIf { it.isNotEmpty() }?.toJsMap()?.let { this.sort = it }
                 this.filter = filter
+                page.toMetadataPage()?.let { this.page = it }
                 this.include = createJsObject<PubNubJs.MembershipIncludeOptions> {
                     this.customFields = includeCustom
                     this.totalCount = includeCount
@@ -685,6 +694,7 @@ class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
                     }
                     this.channelTypeField = includeType
                     this.channelStatusField = true
+                    this.statusField = true
                     // todo we don't have parameters for all fields here?
                 }
             }
@@ -718,6 +728,7 @@ class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
                     }
                     this.channelTypeField = includeType
                     this.channelStatusField = true
+                    this.statusField = true
                     // todo we don't have parameters for all fields here?
                 }
                 this.uuid = uuid
@@ -760,6 +771,7 @@ class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
                     }
                     this.channelTypeField = includeType
                     this.channelStatusField = true
+                    this.statusField = true
                     // todo we don't have parameters for all fields here?
                 }
                 this.uuid = uuid
@@ -813,6 +825,8 @@ class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
                     this.customFields = includeCustom
                     this.totalCount = includeCount
                     this.UUIDTypeField = includeType
+                    this.UUIDStatusField = true
+                    this.statusField = true
                     // todo we don't have parameters for all fields here
                 }
                 this.sort = sort.toJsMap()
@@ -857,8 +871,9 @@ class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
                     if (includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM) {
                         this.customUUIDFields = true
                     }
-//                this.UUIDStatusField = true
                     this.UUIDTypeField = includeType
+                    this.UUIDStatusField = true
+                    this.statusField = true
                     // todo we don't have parameters for all fields here
                 }
             }
@@ -897,6 +912,8 @@ class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
                         this.customUUIDFields = true
                     }
                     this.UUIDTypeField = includeType
+                    this.UUIDStatusField = true
+                    this.statusField = true
                     // todo we don't have parameters for all fields here
                 }
             }
@@ -960,7 +977,8 @@ class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
         message: Any?,
         meta: Any?,
         ttl: Int?,
-        shouldStore: Boolean?
+        shouldStore: Boolean?,
+        customMessageType: String?
     ): PublishFileMessage {
         return PublishFileMessageImpl(
             jsPubNub,
@@ -972,6 +990,7 @@ class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
                 this.meta = meta?.adjustCollectionTypes()
                 this.ttl = ttl
                 this.storeInHistory = shouldStore
+                this.customMessageType = customMessageType
             }
         )
     }
@@ -1014,7 +1033,7 @@ class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
     }
 
     override fun destroy() {
-        jsPubNub.unsubscribeAll() // todo check if there is destroy in JavaScript SDK
+        jsPubNub.destroy()
     }
 
     override fun channel(name: String): Channel {
@@ -1055,8 +1074,36 @@ class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
     }
 
     override fun parseToken(token: String): PNToken {
-        TODO("Not yet implemented")
+        val jsToken = jsPubNub.parseToken(token)
+        return PNToken(
+            jsToken.version.toInt(),
+            jsToken.timestamp.toLong(),
+            jsToken.ttl.toLong(),
+            jsToken.authorized_uuid,
+            jsToken.resources?.let {
+                PNToken.PNTokenResources(
+                    it.channels.toKmp(),
+                    it.groups.toKmp(),
+                    it.uuids.toKmp(),
+                )
+            } ?: PNToken.PNTokenResources(),
+            jsToken.patterns?.let {
+                PNToken.PNTokenResources()
+            } ?: PNToken.PNTokenResources()
+        )
     }
+
+    private fun JsMap<PubNubJs.GrantTokenPermissions>?.toKmp() = this?.toMap()?.mapValues { entry ->
+        PNToken.PNResourcePermissions(
+            entry.value.read ?: false,
+            entry.value.write ?: false,
+            entry.value.manage ?: false,
+            entry.value.delete ?: false,
+            entry.value.get ?: false,
+            entry.value.update ?: false,
+            entry.value.join ?: false
+        )
+    } ?: emptyMap()
 
     override fun sendFile(
         channel: String,
@@ -1066,7 +1113,8 @@ class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
         meta: Any?,
         ttl: Int?,
         shouldStore: Boolean?,
-        cipherKey: String?
+        cipherKey: String?,
+        customMessageType: String?
     ): SendFile {
         return SendFileImpl(
             jsPubNub,
@@ -1078,6 +1126,7 @@ class PubNubImpl(private val jsPubNub: PubNubJs) : PubNub {
                 this.ttl = ttl
                 this.storeInHistory = shouldStore
                 this.cipherKey = cipherKey
+                this.customMessageType = customMessageType
             }
         )
     }
@@ -1117,7 +1166,7 @@ private fun Any.adjustCollectionTypes(): Any {
     }
 }
 
-fun UUIDMetadata(
+private fun createUuidMetadata(
     name: PatchValue<String?>,
     externalId: PatchValue<String?>,
     profileUrl: PatchValue<String?>,
@@ -1137,7 +1186,7 @@ fun UUIDMetadata(
     return result
 }
 
-fun ChannelMetadata(
+private fun createChannelMetadata(
     name: PatchValue<String?>,
     description: PatchValue<String?>,
     status: PatchValue<String?>,

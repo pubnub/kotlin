@@ -17,7 +17,9 @@ import com.pubnub.kmp.createPubNub
 import com.pubnub.kmp.createStatusListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -27,6 +29,7 @@ import kotlin.coroutines.resumeWithException
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.assertTrue
+import kotlin.time.Duration.Companion.milliseconds
 
 abstract class BaseIntegrationTest {
     lateinit var config: PNConfiguration
@@ -40,8 +43,20 @@ abstract class BaseIntegrationTest {
 
     @BeforeTest
     open fun before() {
-        config = createPNConfiguration(UserId(randomString()), Keys.subKey, Keys.pubKey, logVerbosity = PNLogVerbosity.BODY)
-        config02 = createPNConfiguration(UserId(randomString()), Keys.subKey, Keys.pubKey, logVerbosity = PNLogVerbosity.BODY)
+        config = createPNConfiguration(
+            UserId(randomString()),
+            Keys.subKey,
+            Keys.pubKey,
+            logVerbosity = PNLogVerbosity.BODY,
+            authToken = null
+        )
+        config02 = createPNConfiguration(
+            UserId(randomString()),
+            Keys.subKey,
+            Keys.pubKey,
+            logVerbosity = PNLogVerbosity.BODY,
+            authToken = null
+        )
         pubnub = createPubNub(config)
         pubnub02 = createPubNub(config02)
         configPamServer = createPNConfiguration(
@@ -49,13 +64,14 @@ abstract class BaseIntegrationTest {
             Keys.pamSubKey,
             Keys.pamPubKey,
             Keys.pamSecKey,
-            logVerbosity = PNLogVerbosity.BODY
+            PNLogVerbosity.BODY
         )
         configPamClient = createPNConfiguration(
             UserId(randomString()),
             Keys.pamSubKey,
             Keys.pamPubKey,
-            logVerbosity = PNLogVerbosity.BODY
+            logVerbosity = PNLogVerbosity.BODY,
+            authToken = null
         )
         pubnubPamServer = createPubNub(configPamServer)
         pubnubPamClient = createPubNub(configPamClient)
@@ -174,11 +190,16 @@ class PubNubTest(
             if ((pnStatus.category == PNStatusCategory.PNConnectedCategory || pnStatus.category == PNStatusCategory.PNSubscriptionChanged) &&
                 pnStatus.affectedChannels.containsAll(channels) && pnStatus.affectedChannelGroups.containsAll(
                     channelGroups
+                ) || (
+                    getSubscribedChannels().containsAll(channels) && getSubscribedChannelGroups().containsAll(
+                        channelGroups
+                    )
                 )
             ) {
-                cont.resume(Unit)
-            }
-            if (pnStatus.category == PNStatusCategory.PNUnexpectedDisconnectCategory || pnStatus.category == PNStatusCategory.PNConnectionError) {
+                if (!cont.isCompleted) {
+                    cont.resume(Unit)
+                }
+            } else if (pnStatus.category == PNStatusCategory.PNUnexpectedDisconnectCategory || pnStatus.category == PNStatusCategory.PNConnectionError) {
                 cont.resumeWithException(pnStatus.exception ?: RuntimeException(pnStatus.category.toString()))
             }
         }
@@ -195,27 +216,42 @@ class PubNubTest(
         customUnsubscribeBlock: () -> Unit = {
             unsubscribe(channels.toList(), channelGroups.toList())
         }
-    ) = suspendCancellableCoroutine { cont ->
-        val statusListener = createStatusListener(pubNub) { _, pnStatus ->
-            if (cont.isCompleted) {
-                return@createStatusListener
+    ) {
+        coroutineScope {
+            val job = launch {
+                suspendCancellableCoroutine { cont ->
+                    val statusListener = createStatusListener(pubNub) { _, pnStatus ->
+                        if (cont.isCompleted) {
+                            return@createStatusListener
+                        }
+                        if ((pnStatus.category == PNStatusCategory.PNDisconnectedCategory || pnStatus.category == PNStatusCategory.PNSubscriptionChanged) &&
+                            (
+                                pnStatus.affectedChannels.containsAll(channels) && pnStatus.affectedChannelGroups.containsAll(
+                                    channelGroups
+                                )
+                            )
+                        ) {
+                            cont.resume(Unit)
+                        }
+                        if (pnStatus.category == PNStatusCategory.PNUnexpectedDisconnectCategory || pnStatus.category == PNStatusCategory.PNConnectionError) {
+                            cont.resumeWithException(pnStatus.exception ?: RuntimeException(pnStatus.category.toString()))
+                        }
+                    }
+                    pubNub.addListener(statusListener)
+                    cont.invokeOnCancellation {
+                        pubNub.removeListener(statusListener)
+                    }
+                    customUnsubscribeBlock()
+                }
             }
-            if (pnStatus.category == PNStatusCategory.PNDisconnectedCategory || pnStatus.category == PNStatusCategory.PNSubscriptionChanged &&
-                pnStatus.affectedChannels.containsAll(channels) && pnStatus.affectedChannelGroups.containsAll(
-                    channelGroups
-                )
-            ) {
-                cont.resume(Unit)
+            withContext(Dispatchers.Default) {
+                delay(500.milliseconds)
             }
-            if (pnStatus.category == PNStatusCategory.PNUnexpectedDisconnectCategory || pnStatus.category == PNStatusCategory.PNConnectionError) {
-                cont.resumeWithException(pnStatus.exception ?: RuntimeException(pnStatus.category.toString()))
+            job.cancelAndJoin()
+            if (getSubscribedChannels().any { it in channels } || getSubscribedChannelGroups().any { it in channelGroups }) {
+                error("Didn't unsubscribe on time")
             }
         }
-        pubNub.addListener(statusListener)
-        cont.invokeOnCancellation {
-            pubNub.removeListener(statusListener)
-        }
-        customUnsubscribeBlock()
     }
 
 //    fun unsubscribeAll() {

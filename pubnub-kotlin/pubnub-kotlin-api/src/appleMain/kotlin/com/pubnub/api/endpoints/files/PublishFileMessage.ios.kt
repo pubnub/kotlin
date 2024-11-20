@@ -25,7 +25,8 @@ class PublishFileMessageImpl(
     private val message: Any?,
     private val meta: Any?,
     private val ttl: Int?,
-    private val shouldStore: Boolean?
+    private val shouldStore: Boolean?,
+    private val customMessageType: String?
 ) : PublishFileMessage {
     override fun async(callback: Consumer<Result<PNPublishFileMessageResult>>) {
         pubnub.publishFileMessageWithChannel(
@@ -36,6 +37,7 @@ class PublishFileMessageImpl(
             meta = meta,
             ttl = ttl?.let { NSNumber(it) },
             shouldStore = shouldStore?.let { NSNumber(bool = it) },
+//            customMessageType = customMessageType, // todo ask Kuba
             onSuccess = callback.onSuccessHandler { PNPublishFileMessageResult(it.toLong()) },
             onFailure = callback.onFailureHandler()
         )

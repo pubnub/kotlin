@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 import com.pubnub.internal.workers.SubscribeMessageProcessor.Companion.TYPE_FILES
 import com.pubnub.internal.workers.SubscribeMessageProcessor.Companion.TYPE_MESSAGE
 
-class SubscribeMessage(
+data class SubscribeMessage(
     @SerializedName("a")
     internal val shard: String?,
     @SerializedName("b")
@@ -28,6 +28,8 @@ class SubscribeMessage(
     internal val userMetadata: JsonElement?,
     @SerializedName("e")
     internal val type: Int?,
+    @SerializedName("cmt")
+    internal val customMessageType: String?,
 ) {
     fun supportsEncryption() = type in arrayOf(null, TYPE_MESSAGE, TYPE_FILES)
 }

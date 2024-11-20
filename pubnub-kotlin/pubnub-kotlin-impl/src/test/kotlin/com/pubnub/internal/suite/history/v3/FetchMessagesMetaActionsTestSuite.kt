@@ -8,6 +8,7 @@ import com.google.gson.JsonObject
 import com.pubnub.api.PubNubError
 import com.pubnub.api.endpoints.FetchMessages
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -21,6 +22,7 @@ class FetchMessagesMetaActionsTestSuite :
     override fun snippet(): FetchMessages =
         pubnub.fetchMessages(
             channels = listOf("ch1"),
+            page = PNBoundedPage(limit = 25),
             includeMeta = true,
             includeMessageActions = true,
         )

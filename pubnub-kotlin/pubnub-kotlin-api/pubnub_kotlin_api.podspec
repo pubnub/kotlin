@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
     spec.name                     = 'pubnub_kotlin_api'
-    spec.version                  = '10.0.0'
+    spec.version                  = '10.1.0'
     spec.homepage                 = ''
     spec.source                   = { :http=> ''}
     spec.authors                  = ''
@@ -8,7 +8,9 @@ Pod::Spec.new do |spec|
     spec.summary                  = ''
     spec.vendored_frameworks      = 'build/cocoapods/framework/pubnub_kotlin_api.framework'
     spec.libraries                = 'c++'
-    spec.ios.deployment_target    = '14'
+    spec.ios.deployment_target    = '14.0'
+    spec.osx.deployment_target    = '11.0'
+    spec.tvos.deployment_target    = '14.0'
     spec.dependency 'PubNubSwift', '8.0.1'
                 
     if !Dir.exist?('build/cocoapods/framework/pubnub_kotlin_api.framework') || Dir.empty?('build/cocoapods/framework/pubnub_kotlin_api.framework')

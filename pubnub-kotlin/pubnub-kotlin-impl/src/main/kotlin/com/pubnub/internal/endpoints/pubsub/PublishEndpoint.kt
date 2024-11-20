@@ -27,7 +27,12 @@ class PublishEndpoint internal constructor(
     override val usePost: Boolean = false,
     override val replicate: Boolean = true,
     override val ttl: Int? = null,
+    override val customMessageType: String? = null
 ) : EndpointCore<List<Any>, PNPublishResult>(pubnub), Publish {
+    companion object {
+        internal const val CUSTOM_MESSAGE_TYPE_QUERY_PARAM = "custom_message_type"
+    }
+
     override fun validateParams() {
         super.validateParams()
         if (channel.isBlank()) {
@@ -83,16 +88,13 @@ class PublishEndpoint internal constructor(
      * @param queryParams hashMap to add parameters
      */
     private fun addQueryParams(queryParams: MutableMap<String, String>) {
-        meta?.run { queryParams["meta"] = pubnub.mapper.toJson(this) }
-
-        shouldStore?.run { queryParams["store"] = this.numericString }
-
-        ttl?.run { queryParams["ttl"] = this.toString() }
-
+        meta?.let {  queryParams["meta"] = pubnub.mapper.toJson(it) }
+        shouldStore?.let { queryParams["store"] = it.numericString }
+        ttl?.let { queryParams["ttl"] = it.toString() }
         if (!replicate) {
             queryParams["norep"] = true.valueString
         }
-
+        customMessageType?.let { queryParams[CUSTOM_MESSAGE_TYPE_QUERY_PARAM] = it }
         queryParams["seqn"] = pubnub.publishSequenceManager.nextSequence().toString()
     }
     // endregion

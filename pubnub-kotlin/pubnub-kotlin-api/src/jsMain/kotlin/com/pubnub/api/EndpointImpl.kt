@@ -9,7 +9,10 @@ open class EndpointImpl<T, U>(private val promiseFactory: () -> Promise<T>, priv
     PNFuture<U> {
     override fun async(callback: Consumer<Result<U>>) {
         try {
-            promiseFactory().then(
+            promiseFactory().let {
+                @Suppress("USELESS_CAST") // for some reason, sometimes we don't get a promise from JS SDK!
+                it as? Promise ?: Promise.resolve(it)
+            }.then(
                 onFulfilled = { response: T ->
                     try {
                         callback.accept(Result.success(responseMapping(response)))

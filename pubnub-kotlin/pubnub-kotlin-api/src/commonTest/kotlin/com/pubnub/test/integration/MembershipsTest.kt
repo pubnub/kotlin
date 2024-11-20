@@ -42,6 +42,25 @@ class MembershipsTest : BaseIntegrationTest() {
     }
 
     @Test
+    fun can_set_and_get_memberships_for_other_uuid() = runTest {
+        // when
+        val userId = "some-user-" + randomString()
+        pubnub.setMemberships(
+            channels = listOf(PNChannelMembership.Partial(channel, custom, status)),
+            uuid = userId,
+            includeCustom = includeCustom,
+            includeChannelDetails = PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM,
+        ).await()
+
+        val result = pubnub.getMemberships(uuid = userId, filter = "channel.id == '$channel'", includeCustom = true).await()
+
+        // then
+        val pnChannelDetails = result.data.single { it.channel.id == channel }
+        assertEquals(channel, pnChannelDetails.channel.id)
+        assertEquals(customData, pnChannelDetails.custom?.value)
+    }
+
+    @Test
     fun can_receive_set_membership_event() = runTest {
         pubnub.test(backgroundScope) {
             // given

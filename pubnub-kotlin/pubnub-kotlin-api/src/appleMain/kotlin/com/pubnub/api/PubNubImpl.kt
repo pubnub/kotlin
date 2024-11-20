@@ -195,7 +195,8 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         shouldStore: Boolean?,
         usePost: Boolean,
         replicate: Boolean,
-        ttl: Int?
+        ttl: Int?,
+        customMessageType: String?,
     ): Publish {
         return PublishImpl(
             pubnub = pubNubObjC,
@@ -203,7 +204,8 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
             message = message,
             meta = meta,
             shouldStore = shouldStore,
-            ttl = ttl
+            ttl = ttl,
+            customMessageType = customMessageType
         )
     }
 
@@ -215,15 +217,17 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
             message = message,
             meta = meta,
             shouldStore = false,
-            ttl = 0
+            ttl = 0,
+            customMessageType = null
         )
     }
 
-    override fun signal(channel: String, message: Any): Signal {
+    override fun signal(channel: String, message: Any, customMessageType: String?): Signal {
         return SignalImpl(
             pubnub = pubNubObjC,
             channel = channel,
-            message = message
+            message = message,
+            customMessageType = customMessageType
         )
     }
 
@@ -305,7 +309,8 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         includeUUID: Boolean,
         includeMeta: Boolean,
         includeMessageActions: Boolean,
-        includeMessageType: Boolean
+        includeMessageType: Boolean,
+        includeCustomMessageType: Boolean
     ): FetchMessages {
         return FetchMessagesImpl(
             pubnub = pubNubObjC,
@@ -314,7 +319,8 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
             includeUUID = includeUUID,
             includeMeta = includeMeta,
             includeMessageActions = includeMessageActions,
-            includeMessageType = includeMessageType
+            includeMessageType = includeMessageType,
+            includeCustomMessageType = includeCustomMessageType
         )
     }
 
@@ -776,7 +782,8 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         message: Any?,
         meta: Any?,
         ttl: Int?,
-        shouldStore: Boolean?
+        shouldStore: Boolean?,
+        customMessageType: String?
     ): PublishFileMessage {
         return PublishFileMessageImpl(
             pubnub = pubNubObjC,
@@ -786,7 +793,8 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
             message = message,
             meta = meta,
             ttl = ttl,
-            shouldStore = shouldStore
+            shouldStore = shouldStore,
+            customMessageType = customMessageType
         )
     }
 
@@ -881,7 +889,8 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         meta: Any?,
         ttl: Int?,
         shouldStore: Boolean?,
-        cipherKey: String?
+        cipherKey: String?,
+        customMessageType: String?
     ): SendFile {
         return SendFileImpl(
             pubnub = pubNubObjC,
@@ -891,7 +900,8 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
             message = message,
             meta = meta,
             ttl = ttl,
-            shouldStore = shouldStore
+            shouldStore = shouldStore,
+            customMessageType = customMessageType
         )
     }
 

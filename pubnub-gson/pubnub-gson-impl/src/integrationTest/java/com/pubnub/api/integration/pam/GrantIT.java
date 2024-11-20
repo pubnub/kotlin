@@ -6,6 +6,7 @@ import com.pubnub.api.java.models.consumer.access_manager.PNAccessManagerGrantRe
 import com.pubnub.api.java.models.consumer.access_manager.PNAccessManagerKeyData;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
@@ -13,11 +14,15 @@ import static org.junit.Assert.assertEquals;
 public class GrantIT extends BaseIntegrationTest {
 
     @Test
+    public void grantWithoutAuthKeyDoesntCrash() throws PubNubException {
+        getServer().grant().channels(Arrays.asList("abc")).write(true).read(false).ttl(0).sync();
+    }
+
+    @Test
     public void grantAllForUUID() throws PubNubException {
         String uuid = "uuid123";
         String authKey = "authKey123";
         int ttl = 120;
-
         PNAccessManagerGrantResult expectedResult = PNAccessManagerGrantResult.builder()
                 .channelGroups(Collections.emptyMap())
                 .channels(Collections.emptyMap())
@@ -35,7 +40,7 @@ public class GrantIT extends BaseIntegrationTest {
                         .build())))
                 .build();
 
-        PNAccessManagerGrantResult result = getServer()
+        PNAccessManagerGrantResult result2 = getServer()
                 .grant()
                 .uuids(Collections.singletonList(uuid))
                 .authKeys(Collections.singletonList(authKey))
@@ -44,7 +49,6 @@ public class GrantIT extends BaseIntegrationTest {
                 .update(true)
                 .delete(true)
                 .sync();
-        System.out.println(result);
-        assertEquals(expectedResult, result);
+        assertEquals(expectedResult, result2);
     }
 }

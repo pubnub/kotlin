@@ -15,6 +15,8 @@ public interface PublishFileMessage extends Endpoint<PNPublishFileMessageResult>
 
     PublishFileMessage shouldStore(Boolean shouldStore);
 
+    PublishFileMessage customMessageType(String customMessageType);
+
     interface Builder extends BuilderSteps.ChannelStep<FilesBuilderSteps.FileNameStep<FilesBuilderSteps.FileIdStep<PublishFileMessage>>> {
 
     }

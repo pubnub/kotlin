@@ -1,7 +1,7 @@
 package com.pubnub.api.java.v2.entities
 
-import com.pubnub.api.endpoints.pubsub.Signal
 import com.pubnub.api.java.v2.endpoints.pubsub.PublishBuilder
+import com.pubnub.api.java.v2.endpoints.pubsub.SignalBuilder
 import com.pubnub.api.java.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 
@@ -90,6 +90,7 @@ interface Channel : Subscribable {
      *            - If `shouldStore = false`, the `ttl` parameter is ignored.
      *            - If ttl isn't specified, then expiration of the message defaults
      *              back to the expiry value for the key.
+     * @param customMessageType The custom type associated with the message.
      */
     fun publish(message: Any): PublishBuilder
 
@@ -101,8 +102,9 @@ interface Channel : Subscribable {
      * If you require a larger payload size, please [contact support](mailto:support@pubnub.com).
      *
      * @param message The payload which will be serialized and sent.
+     * @param customMessageType The custom type associated with the message.
      */
-    fun signal(message: Any): Signal
+    fun signal(message: Any): SignalBuilder
 
     /**
      * Send a message to PubNub Functions Event Handlers.

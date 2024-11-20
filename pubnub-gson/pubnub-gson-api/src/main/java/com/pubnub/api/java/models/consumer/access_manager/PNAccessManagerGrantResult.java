@@ -39,8 +39,14 @@ public class PNAccessManagerGrantResult {
     private static Map<String, Map<String, PNAccessManagerKeyData>> from(Map<String, Map<String, com.pubnub.api.models.consumer.access_manager.PNAccessManagerKeyData>> data) {
         Map<String, Map<String, PNAccessManagerKeyData>> newMap = new HashMap<>(data.size());
         for (Map.Entry<String, Map<String, com.pubnub.api.models.consumer.access_manager.PNAccessManagerKeyData>> stringMapEntry : data.entrySet()) {
+            if (stringMapEntry.getValue() == null) {
+                continue;
+            }
             Map<String, PNAccessManagerKeyData> innerMap = new HashMap<>(stringMapEntry.getValue().size());
             for (Map.Entry<String, com.pubnub.api.models.consumer.access_manager.PNAccessManagerKeyData> innerEntry : stringMapEntry.getValue().entrySet()) {
+                if (innerEntry.getValue() == null) {
+                    continue;
+                }
                 innerMap.put(innerEntry.getKey(), PNAccessManagerKeyData.from(innerEntry.getValue()));
             }
             newMap.put(stringMapEntry.getKey(), innerMap);

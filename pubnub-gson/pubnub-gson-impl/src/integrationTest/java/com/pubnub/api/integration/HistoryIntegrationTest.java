@@ -121,12 +121,14 @@ public class HistoryIntegrationTest extends BaseIntegrationTest {
     @Test
     public void testFetchSingleChannel() throws PubNubException {
         final String expectedChannelName = random();
+        final String customMessageType = "myType_" + random();
 
-        publishMixed(pubNub, 10, expectedChannelName);
+        publishMixed(pubNub, 10, expectedChannelName, customMessageType);
 
         final PNFetchMessagesResult fetchMessagesResult = pubNub.fetchMessages()
                 .channels(Collections.singletonList(expectedChannelName))
                 .maximumPerChannel(25)
+                .includeCustomMessageType(true)
                 .sync();
 
         pause(3);
@@ -137,6 +139,7 @@ public class HistoryIntegrationTest extends BaseIntegrationTest {
             assertNotNull(messageItem.getTimetoken());
             assertNull(messageItem.getMeta());
             assertNull(messageItem.getActions());
+            assertEquals(customMessageType, messageItem.getCustomMessageType());
         }
 
     }
@@ -168,8 +171,9 @@ public class HistoryIntegrationTest extends BaseIntegrationTest {
     @Test
     public void testFetchSingleChannel_Actions() throws PubNubException {
         final String expectedChannelName = random();
+        final String customMessageType = "myType_" + random();
 
-        final List<PNPublishResult> results = publishMixed(pubNub, 120, expectedChannelName);
+        final List<PNPublishResult> results = publishMixed(pubNub, 120, expectedChannelName, customMessageType);
 
         pubNub.addMessageAction()
                 .channel(expectedChannelName)
@@ -184,6 +188,7 @@ public class HistoryIntegrationTest extends BaseIntegrationTest {
                 .maximumPerChannel(25)
                 .includeMessageActions(true)
                 .includeMeta(false)
+                .includeCustomMessageType(true)
                 .sync();
 
         assert fetchMessagesResult != null;
@@ -196,6 +201,7 @@ public class HistoryIntegrationTest extends BaseIntegrationTest {
             } else {
                 assertTrue(messageItem.getActions().isEmpty());
             }
+            assertEquals(customMessageType, messageItem.getCustomMessageType());
         }
     }
 

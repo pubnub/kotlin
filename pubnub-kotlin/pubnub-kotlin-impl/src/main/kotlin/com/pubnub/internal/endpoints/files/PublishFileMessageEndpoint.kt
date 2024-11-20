@@ -11,6 +11,7 @@ import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.crypto.encryptString
+import com.pubnub.internal.endpoints.pubsub.PublishEndpoint.Companion.CUSTOM_MESSAGE_TYPE_QUERY_PARAM
 import com.pubnub.internal.extension.numericString
 import com.pubnub.internal.extension.quoted
 import com.pubnub.internal.models.server.files.FileUploadNotification
@@ -28,6 +29,7 @@ open class PublishFileMessageEndpoint(
     private val meta: Any? = null,
     private val ttl: Int? = null,
     private val shouldStore: Boolean? = null,
+    private val customMessageType: String? = null,
     pubNub: PubNubImpl,
 ) : EndpointCore<List<Any>, PNPublishFileMessageResult>(pubNub), PublishFileMessage {
     private val pnFile = PNBaseFile(fileId, fileName)
@@ -49,6 +51,7 @@ open class PublishFileMessageEndpoint(
         }
         shouldStore?.numericString?.let { queryParams["store"] = it }
         ttl?.let { queryParams["ttl"] = it.toString() }
+        customMessageType?.let { queryParams[CUSTOM_MESSAGE_TYPE_QUERY_PARAM] = it }
 
         return retrofitManager.filesService.notifyAboutFileUpload(
             configuration.publishKey,
@@ -88,6 +91,7 @@ open class PublishFileMessageEndpoint(
             meta: Any? = null,
             ttl: Int? = null,
             shouldStore: Boolean? = null,
+            customMessageType: String? = null
         ): ExtendedRemoteAction<PNPublishFileMessageResult> {
             return PublishFileMessageEndpoint(
                 channel = channel,
@@ -97,6 +101,7 @@ open class PublishFileMessageEndpoint(
                 meta = meta,
                 ttl = ttl,
                 shouldStore = shouldStore,
+                customMessageType = customMessageType,
                 pubNub = pubNub,
             )
         }

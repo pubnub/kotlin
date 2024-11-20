@@ -24,10 +24,9 @@ class PubNubKotlinMultiplatformPlugin : Plugin<Project> {
                 apply<KotlinCocoapodsPlugin>()
                 extensions.configure<KotlinMultiplatformExtension> {
                     (this as? ExtensionAware)?.extensions?.configure<CocoapodsExtension> {
-                        ios.deploymentTarget = "14"
-//
-//                    summary = "Some description for a Kotlin/Native module"
-//                    homepage = "Link to a Kotlin/Native module homepage"
+                        ios.deploymentTarget = "14.0"
+                        osx.deploymentTarget = "11.0"
+                        tvos.deploymentTarget = "14.0"
 
                         // Maps custom Xcode configuration to NativeBuildType
                         xcodeConfigurationToNativeBuildType["CUSTOM_DEBUG"] = NativeBuildType.DEBUG
@@ -64,21 +63,17 @@ class PubNubBaseKotlinMultiplatformPlugin : Plugin<Project> {
 
                 if (enableJsTarget) {
                     js { ->
-                        useEsModules()
-                        browser {
+                        project.findProperty("JS_MODULE_NAME")?.toString()?.let { jsModuleName ->
+                            moduleName = jsModuleName
+                        }
+                        nodejs {
                             testTask {
+                                it.environment("MOCHA_OPTIONS", "--exit")
                                 it.useMocha {
-                                    timeout = "10s"
+                                    timeout = "20s"
                                 }
                             }
                         }
-//                    nodejs {
-//                        testTask {
-//                            it.useMocha {
-//                                timeout = "5s"
-//                            }
-//                        }
-//                    }
                     }
                 }
 
@@ -97,6 +92,10 @@ class PubNubBaseKotlinMultiplatformPlugin : Plugin<Project> {
                 if (enableIosTargetOther) {
                     iosArm64()
                     iosX64()
+                    macosArm64()
+                    macosX64()
+                    tvosArm64()
+                    tvosSimulatorArm64()
                 }
                 if (enableIosSimulatorArm64) {
                     iosSimulatorArm64()
@@ -117,7 +116,7 @@ class PubNubBaseKotlinMultiplatformPlugin : Plugin<Project> {
                     }
 
                     if (enableAnyIosTarget) {
-                        getByName("iosMain") {
+                        getByName("appleMain") {
                             it.dependsOn(nonJvm)
                         }
                     }

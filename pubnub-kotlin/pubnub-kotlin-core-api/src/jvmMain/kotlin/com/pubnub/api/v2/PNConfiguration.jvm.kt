@@ -36,7 +36,8 @@ actual fun createPNConfiguration(
     subscribeKey: String,
     publishKey: String,
     secretKey: String?,
-    logVerbosity: PNLogVerbosity
+    logVerbosity: PNLogVerbosity,
+    authToken: String?
 ): PNConfiguration {
     return PNConfiguration.builder(userId, subscribeKey) {
         this.publishKey = publishKey
@@ -44,5 +45,6 @@ actual fun createPNConfiguration(
         this.authKey = NO_AUTH_KEY
         this.secretKey = secretKey.orEmpty()
         this.logVerbosity = logVerbosity
+        this.authToken = authToken.orEmpty()
     }.build()
 }

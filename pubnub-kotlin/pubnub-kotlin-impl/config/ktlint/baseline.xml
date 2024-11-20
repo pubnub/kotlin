@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <baseline version="1.0">
+    <file name="src/integrationTest/kotlin/com/pubnub/api/integration/PublishIntegrationTests.kt">
+        <error line="11" column="1" source="standard:no-unused-imports" />
+        <error line="16" column="1" source="standard:no-unused-imports" />
+    </file>
+    <file name="src/main/kotlin/com/pubnub/internal/endpoints/FetchMessagesEndpoint.kt">
+        <error line="47" column="1" source="standard:no-consecutive-blank-lines" />
+    </file>
+    <file name="src/main/kotlin/com/pubnub/internal/endpoints/pubsub/PublishEndpoint.kt">
+        <error line="91" column="21" source="standard:no-multi-spaces" />
+    </file>
     <file name="src/main/kotlin/com/pubnub/internal/managers/BasePathManager.kt">
         <error line="15" column="17" source="standard:property-naming" />
         <error line="21" column="17" source="standard:property-naming" />
@@ -7,13 +17,6 @@
     </file>
     <file name="src/main/kotlin/com/pubnub/internal/subscribe/eventengine/effect/ReconnectionPolicy.kt">
         <error line="1" column="1" source="standard:no-empty-file" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/v2/PNConfigurationImpl.kt">
-        <error line="100" column="1" source="standard:indent" />
-        <error line="101" column="1" source="standard:indent" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/internal/workers/SubscribeMessageProcessor.kt">
-        <error line="196" column="56" source="standard:curly-spacing" />
     </file>
     <file name="src/test/kotlin/com/pubnub/api/legacy/endpoints/files/TestsWithFiles.kt">
         <error line="17" column="30" source="standard:property-naming" />
@@ -72,6 +75,9 @@
         <error line="112" column="9" source="standard:function-naming" />
         <error line="181" column="9" source="standard:function-naming" />
     </file>
+    <file name="src/test/kotlin/com/pubnub/contract/file/WhenSteps.kt">
+        <error line="11" column="9" source="standard:function-naming" />
+    </file>
     <file name="src/test/kotlin/com/pubnub/contract/member/step/GivenSteps.kt">
         <error line="11" column="9" source="standard:function-naming" />
         <error line="16" column="9" source="standard:function-naming" />
@@ -118,6 +124,12 @@
         <error line="101" column="9" source="standard:function-naming" />
         <error line="131" column="9" source="standard:function-naming" />
     </file>
+    <file name="src/test/kotlin/com/pubnub/contract/publish/WhenSteps.kt">
+        <error line="9" column="9" source="standard:function-naming" />
+    </file>
+    <file name="src/test/kotlin/com/pubnub/contract/signal/WhenSteps.kt">
+        <error line="9" column="9" source="standard:function-naming" />
+    </file>
     <file name="src/test/kotlin/com/pubnub/contract/step/ErrorMessageAndDetailsStep.kt">
         <error line="10" column="9" source="standard:function-naming" />
     </file>
@@ -127,14 +139,8 @@
         <error line="34" column="9" source="standard:function-naming" />
         <error line="42" column="9" source="standard:function-naming" />
         <error line="47" column="9" source="standard:function-naming" />
-    </file>
-    <file name="src/test/kotlin/com/pubnub/contract/subscribe/eventEngine/step/EventEngineSteps.kt">
-        <error line="27" column="9" source="standard:function-naming" />
-        <error line="34" column="9" source="standard:function-naming" />
-        <error line="92" column="9" source="standard:function-naming" />
-        <error line="153" column="9" source="standard:function-naming" />
-        <error line="163" column="9" source="standard:function-naming" />
-        <error line="171" column="9" source="standard:function-naming" />
+        <error line="52" column="9" source="standard:function-naming" />
+        <error line="63" column="9" source="standard:function-naming" />
     </file>
     <file name="src/test/kotlin/com/pubnub/contract/uuidmetadata/step/GivenSteps.kt">
         <error line="15" column="9" source="standard:function-naming" />

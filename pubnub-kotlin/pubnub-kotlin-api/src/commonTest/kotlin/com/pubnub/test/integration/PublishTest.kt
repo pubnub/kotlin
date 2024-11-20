@@ -11,6 +11,7 @@ import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.kmp.PLATFORM
 import com.pubnub.test.BaseIntegrationTest
 import com.pubnub.test.await
+import com.pubnub.test.randomString
 import com.pubnub.test.test
 import kotlinx.coroutines.test.runTest
 import kotlin.js.JsExport
@@ -27,19 +28,19 @@ data class ABC(
 )
 
 class PublishTest : BaseIntegrationTest() {
-    private val channel = "myChannel"
+    private val channel = "myChannel" + randomString()
 
     @Test
     fun can_publish_message_string() =
         runTest {
-            val result = pubnub.publish(channel, "some message").await()
+            val result = pubnub.publish(channel = channel, message = "some message", customMessageType = "myCustomType").await()
             assertTrue { result.timetoken > 0 }
         }
 
     @Test
     fun can_signal() =
         runTest {
-            val result = pubnub.signal(channel, "some message").await()
+            val result = pubnub.signal(channel = channel, message = "some message", customMessageType = "myCustomType").await()
             assertTrue { result.timetoken > 0 }
         }
 
