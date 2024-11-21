@@ -2,6 +2,7 @@ package com.pubnub.kmp
 
 import com.pubnub.api.JsonElementImpl
 import com.pubnub.api.PubNub
+import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubImpl
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
@@ -54,7 +55,11 @@ actual fun createEventListener(
                         messageEvent.publisher
                     ),
                     JsonElementImpl(messageEvent.message),
-                    null // TODO kmp error
+                    error = if (messageEvent.error?.startsWith("Error while decrypting message content") ?: false) {
+                        PubNubError.CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED
+                    } else {
+                        null
+                    }
                 )
             )
         }

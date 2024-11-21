@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
     spec.name                     = 'pubnub_kotlin_core_api'
-    spec.version                  = '10.1.0'
+    spec.version                  = '10.2.0'
     spec.homepage                 = ''
     spec.source                   = { :http=> ''}
     spec.authors                  = ''
@@ -11,7 +11,7 @@ Pod::Spec.new do |spec|
     spec.ios.deployment_target    = '14.0'
     spec.osx.deployment_target    = '11.0'
     spec.tvos.deployment_target    = '14.0'
-    spec.dependency 'PubNubSwift', '8.0.1'
+    spec.dependency 'PubNubSwift', '8.1.0'
                 
     if !Dir.exist?('build/cocoapods/framework/pubnub_kotlin_core_api.framework') || Dir.empty?('build/cocoapods/framework/pubnub_kotlin_core_api.framework')
         raise "

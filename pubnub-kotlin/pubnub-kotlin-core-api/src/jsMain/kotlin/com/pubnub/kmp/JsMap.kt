@@ -16,4 +16,17 @@ fun <V> Map<String, V>.toJsMap(): JsMap<V> = createJsObject<dynamic> {
     }
 }.unsafeCast<JsMap<V>>()
 
+fun <T, R> T.combine(map: JsMap<R>?): T {
+    return createJsObject<dynamic> {
+        entriesOf(this@combine.unsafeCast<JsMap<Any>>()).forEach {
+            this[it.first] = it.second
+        }
+        if (map != null) {
+            entriesOf(map).forEach {
+                this[it.first] = it.second
+            }
+        }
+    }.unsafeCast<T>()
+}
+
 fun <T> createJsObject(configure: T.() -> Unit = {}): T = (js("({})") as T).apply(configure)

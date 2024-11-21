@@ -1,1 +1,1 @@
-./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository
+./gradlew -PENABLE_TARGET_IOS_ALL=true publishToSonatype closeAndReleaseSonatypeStagingRepository
