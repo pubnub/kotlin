@@ -46,6 +46,7 @@ class ManageMembershipsEndpoint internal constructor(
                                 channel = ChannelId(id = it.channel),
                                 custom = it.custom,
                                 status = it.status,
+                                type = it.type
                             )
                         },
                     delete = channelsToRemove.map { ServerMembershipInput(channel = ChannelId(id = it)) },

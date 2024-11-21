@@ -121,6 +121,7 @@ import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.member.MemberInput
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
+import com.pubnub.api.models.consumer.objects.membership.MembershipInclude
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
@@ -590,6 +591,7 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         )
     }
 
+    // deprecated
     override fun getMemberships(
         uuid: String?,
         limit: Int?,
@@ -615,6 +617,18 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         )
     }
 
+    override fun getMemberships(
+        userId: String?,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMembershipKey>>,
+        include: MembershipInclude
+    ): GetMemberships {
+        TODO("Not yet implemented")
+    }
+
+    // deprecated
     override fun setMemberships(
         channels: List<ChannelMembershipInput>,
         uuid: String?,
@@ -642,6 +656,19 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         )
     }
 
+    override fun setMemberships(
+        channels: List<ChannelMembershipInput>,
+        userId: String?,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMembershipKey>>,
+        include: MembershipInclude
+    ): ManageMemberships {
+        TODO("Not yet implemented")
+    }
+
+    // deprecated
     override fun removeMemberships(
         channels: List<String>,
         uuid: String?,
@@ -667,6 +694,18 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
             includeChannelDetails = includeChannelDetails,
             includeChannelType = includeType
         )
+    }
+
+    override fun removeMemberships(
+        channels: List<String>,
+        userId: String?,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMembershipKey>>,
+        include: MembershipInclude,
+    ): ManageMemberships {
+        TODO("Not yet implemented")
     }
 
     override fun getChannelMembers(

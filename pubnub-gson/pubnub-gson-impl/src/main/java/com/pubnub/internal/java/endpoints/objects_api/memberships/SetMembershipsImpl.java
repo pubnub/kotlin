@@ -5,6 +5,7 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.java.endpoints.objects_api.memberships.SetMemberships;
+import com.pubnub.api.java.endpoints.objects_api.memberships.SetMembershipsBuilder;
 import com.pubnub.api.java.endpoints.objects_api.utils.Include;
 import com.pubnub.api.java.endpoints.objects_api.utils.PNSortKey;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership;
@@ -13,6 +14,7 @@ import com.pubnub.api.java.models.consumer.objects_api.membership.PNSetMembershi
 import com.pubnub.api.models.consumer.objects.PNMembershipKey;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput;
+import com.pubnub.api.models.consumer.objects.membership.MembershipInclude;
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership.Partial;
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult;
 import com.pubnub.internal.java.endpoints.DelegatingEndpoint;
@@ -28,9 +30,10 @@ import java.util.List;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class SetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipArrayResult, PNSetMembershipResult> implements SetMemberships {
+public class SetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipArrayResult, PNSetMembershipResult> implements SetMemberships, SetMembershipsBuilder {
     private final Collection<PNChannelMembership> channels;
-    private String uuid;
+    private String uuid; // deprecated
+    private String userId;
     private Integer limit;
     private PNPage page;
     private String filter;
@@ -39,6 +42,7 @@ public class SetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipAr
     private boolean includeCustom;
     private boolean includeType;
     private Include.PNChannelDetailsLevel includeChannel;
+    private MembershipInclude include;
 
     public SetMembershipsImpl(@NotNull Collection<PNChannelMembership> channelMemberships, final PubNub pubnubInstance) {
         super(pubnubInstance);
@@ -55,20 +59,18 @@ public class SetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipAr
                     (channel instanceof PNChannelMembership.ChannelWithCustom)
                             ? ((PNChannelMembership.ChannelWithCustom) channel).getCustom()
                             : null,
-                    null
+                    channel.getStatus(),
+                    channel.getType()
             ));
         }
         return pubnub.setMemberships(
                 channelList,
-                uuid,
+                getUserId(),
                 limit,
                 page,
                 filter,
                 toInternal(sort),
-                includeTotalCount,
-                includeCustom,
-                toInternal(includeChannel),
-                includeType
+                getMembershipInclude()
         );
     }
 
@@ -78,10 +80,10 @@ public class SetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipAr
         return new MappingRemoteAction<>(action, PNSetMembershipResultConverter::from);
     }
 
-    public static class Builder implements SetMemberships.Builder {
+    public static class BuilderDeprecated implements SetMemberships.Builder {
         private final PubNub pubnubInstance;
 
-        public Builder(PubNub pubnubInstance) {
+        public BuilderDeprecated(PubNub pubnubInstance) {
             this.pubnubInstance = pubnubInstance;
         }
 
@@ -129,5 +131,18 @@ public class SetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipAr
             }
         }
         return list;
+    }
+
+    private String getUserId() {
+        return userId != null ? userId : uuid;
+    }
+
+    private MembershipInclude getMembershipInclude() {
+        if (includeTotalCount || includeCustom || includeType) {
+            // if deprecated setMembership API used
+            return MembershipInclude.includeTotalCount(includeTotalCount).includeCustom(includeCustom).includeType(includeType).build();
+        } else {
+            return include;
+        }
     }
 }

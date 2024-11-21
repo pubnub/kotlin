@@ -81,7 +81,7 @@ class WhenSteps(
     fun i_remove_the_membership() {
         val channels = membershipState.memberships.map { it.channel.id }
         world.pubnub.removeMemberships(
-            uuid = membershipState.uuid(),
+            userId = membershipState.uuid(),
             channels = channels,
         ).sync().let {
             world.responseStatus = it.status
@@ -114,7 +114,7 @@ class WhenSteps(
         world.pubnub.manageMemberships(
             channelsToSet = channelsToSet,
             channelsToRemove = channelsToRemove,
-            uuid = membershipState.uuid(),
+            userId = membershipState.uuid(),
         ).sync().let {
             world.responseStatus = it.status
             membershipState.returnedMemberships = it.data

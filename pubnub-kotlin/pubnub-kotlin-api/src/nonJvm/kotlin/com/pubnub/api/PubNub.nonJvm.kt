@@ -59,6 +59,7 @@ import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.member.MemberInput
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
+import com.pubnub.api.models.consumer.objects.membership.MembershipInclude
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
@@ -278,6 +279,7 @@ actual interface PubNub {
 
     actual fun removeUUIDMetadata(uuid: String?): RemoveUUIDMetadata
 
+    // deprecated
     actual fun getMemberships(
         uuid: String?,
         limit: Int?,
@@ -290,6 +292,16 @@ actual interface PubNub {
         includeType: Boolean
     ): GetMemberships
 
+    actual fun getMemberships(
+        userId: String?,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMembershipKey>>,
+        include: MembershipInclude,
+    ): GetMemberships
+
+    // deprecated
     actual fun setMemberships(
         channels: List<ChannelMembershipInput>,
         uuid: String?,
@@ -303,6 +315,17 @@ actual interface PubNub {
         includeType: Boolean
     ): ManageMemberships
 
+    actual fun setMemberships(
+        channels: List<ChannelMembershipInput>,
+        userId: String?,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMembershipKey>>,
+        include: MembershipInclude,
+    ): ManageMemberships
+
+    // deprecated
     actual fun removeMemberships(
         channels: List<String>,
         uuid: String?,
@@ -314,6 +337,16 @@ actual interface PubNub {
         includeCustom: Boolean,
         includeChannelDetails: PNChannelDetailsLevel?,
         includeType: Boolean
+    ): ManageMemberships
+
+    actual fun removeMemberships(
+        channels: List<String>,
+        userId: String?,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMembershipKey>>,
+        include: MembershipInclude
     ): ManageMemberships
 
     actual fun getChannelMembers(

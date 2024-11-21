@@ -59,7 +59,8 @@ public class ManageMembershipsImpl extends DelegatingEndpoint<PNChannelMembershi
                     (channel instanceof PNChannelMembership.ChannelWithCustom)
                             ? ((PNChannelMembership.ChannelWithCustom) channel).getCustom()
                             : null,
-                    null
+                    channel.getStatus(),
+                    channel.getType()
             ));
         }
         ArrayList<String> toRemove = new ArrayList<>(remove.size());

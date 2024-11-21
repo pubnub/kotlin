@@ -6,4 +6,5 @@ interface ChannelMembershipInput {
     val channel: String
     val custom: CustomObject?
     val status: String?
+    val type: String?
 }

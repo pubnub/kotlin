@@ -2,12 +2,14 @@ package com.pubnub.api.integration.objects.memberships;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.integration.objects.ObjectsApiBaseIT;
+import com.pubnub.api.java.endpoints.objects_api.memberships.SetMemberships;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNGetMembershipsResult;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNManageMembershipResult;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNMembership;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNRemoveMembershipResult;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNSetMembershipResult;
+import com.pubnub.api.models.consumer.objects.membership.MembershipInclude;
 import com.pubnub.api.utils.PatchValue;
 import org.apache.http.HttpStatus;
 import org.junit.After;
@@ -24,6 +26,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static com.pubnub.api.java.endpoints.objects_api.utils.Include.PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM;
+import static com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership.PNChannelMembership;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.hasItem;
@@ -31,6 +34,8 @@ import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class MembershipIT extends ObjectsApiBaseIT {
     private static final Logger LOG = LoggerFactory.getLogger(MembershipIT.class);
@@ -43,7 +48,65 @@ public class MembershipIT extends ObjectsApiBaseIT {
     private final List<PNSetMembershipResult> createdMembershipsList = new ArrayList<>();
 
     @Test
-    public void setMembershipsHappyPath() throws PubNubException {
+    public void setMembershipsHappyPath() throws PubNubException  {
+        String membership01ChannelId = "testChannelId1";
+        String membership01Status = "active";
+        String membership01Type = "admin";
+        String membership02ChannelId = "testChannelId2";
+        String membership02Status = "inactive";
+        String membership02Type = "member";
+        String membership03ChannelId = "testChannelId3";
+        String userId = UUID.randomUUID().toString();
+        final List<PNChannelMembership> channelMemberships = Arrays.asList(
+                PNChannelMembership.PNChannelMembership(membership01ChannelId) // todo PNChannelMembership.can be imported. Do we like this?
+                        .status(membership01Status)
+                        .type(membership01Type)
+                        .build(),
+                PNChannelMembership(membership02ChannelId)
+                        .custom(customChannelMembershipObject())
+                        .status(membership02Status)
+                        .type(membership02Type)
+                        .build(),
+                PNChannelMembership.channel(membership03ChannelId) // this is deprecated usage
+        );
+
+
+        PNSetMembershipResult setMembershipResult = pubNubUnderTest
+                .setMemberships(channelMemberships)
+                .userId(userId).limit(10)
+                .include(MembershipInclude
+                        .includeCustom(true)
+                        .includeStatus(true)
+                        .includeType(true)
+                        .includeTotalCount(true)
+                        .includeChannel(true)
+                        .includeChannelCustom(true)
+                        .includeChannelType(true)
+                        .includeChannelStatus(true)
+                        .build())
+                .sync();
+
+        createdMembershipsList.add(setMembershipResult);
+
+        PNMembership pnMembership01 = setMembershipResult.getData().get(0);
+        assertEquals(membership01ChannelId, pnMembership01.getChannel().getId());
+        assertEquals(membership01Status, pnMembership01.getStatus().getValue());
+        assertEquals(membership01Type, pnMembership01.getType().getValue());
+
+        PNMembership pnMembership02 = setMembershipResult.getData().get(1);
+        assertEquals(membership02ChannelId, pnMembership02.getChannel().getId());
+        assertEquals(membership02Status, pnMembership02.getStatus().getValue());
+        assertEquals(membership02Type, pnMembership02.getType().getValue());
+
+        PNMembership pnMembership03 = setMembershipResult.getData().get(2);
+        assertEquals(membership03ChannelId, pnMembership03.getChannel().getId());
+        assertNull(pnMembership03.getStatus().getValue());
+        assertNull(pnMembership03.getType().getValue());
+    }
+
+
+    @Test
+    public void setMembershipsHappyPath_deprecated() throws PubNubException {
         //given
         final List<PNChannelMembership> channelMemberships = Arrays.asList(
                 PNChannelMembership.channel(testChannelId1),

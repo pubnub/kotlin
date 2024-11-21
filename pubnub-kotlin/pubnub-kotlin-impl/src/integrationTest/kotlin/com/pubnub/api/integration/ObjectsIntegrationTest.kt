@@ -8,9 +8,12 @@ import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.objects.member.PNMember
+import com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
+import com.pubnub.api.models.consumer.objects.membership.MembershipInclude
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
+import com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
@@ -21,8 +24,11 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.containsInAnyOrder
 import org.hamcrest.Matchers.not
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter.ISO_ZONED_DATE_TIME
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
@@ -30,6 +36,7 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
     private val testUuid = "ThisIsMyId" + randomValue()
     private val otherTestUuid = "OtherTestId" + randomValue()
     val channel = "ThisIsMyChannel" + randomValue()
+    val channel02 = "ThisIsMyChannel02" + randomValue()
     val otherChannel = "OtherChannel" + randomValue()
     val status = "Status" + randomValue()
     val type = "Type" + randomValue()
@@ -121,10 +128,127 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
     }
 
     @Test
+    fun addGetAndRemoveMembershipWithStatusAndType() {
+        val status01 = "status01${randomValue(15)}"
+        val status02 = "status02${randomValue(15)}"
+        val type01 = "type01${randomValue(15)}"
+        val type02 = "type02${randomValue(15)}"
+        val customKey = randomValue()
+        val customValue = randomValue()
+        val custom = mapOf(customKey to customValue)
+        val channel01 = PNChannelMembership.Partial(channel, custom = custom, status = status01, type = type01)
+        val channel02 = PNChannelMembership.Partial(channel02, custom = custom, status = status02, type = type02)
+
+        val channels = listOf(channel01, channel02)
+
+        MembershipInclude.includeStatus(true).includeType(true).build()
+
+        val setResult: PNChannelMembershipArrayResult =
+            pubnub.setMemberships(
+                channels = channels,
+                userId = testUuid,
+                // it can be defined also like this: MembershipInclude.includeStatus(true).includeType(true).build() as in java.
+                include = MembershipInclude(
+                    includeCustom = true,
+                    includeStatus = true,
+                    includeType = true,
+                    includeChannel = true,
+                    includeChannelCustom = true,
+                    includeChannelType = true,
+                    includeChannelStatus = true,
+                    includeTotalCount = true
+                )
+            ).sync()
+
+        val sortedMembership = sortPNChannelMembershipsByUpdatedValue(setResult.data)
+
+        assertEquals(status01, sortedMembership[0].status?.value)
+        assertEquals(status02, sortedMembership[1].status?.value)
+        assertEquals(type01, sortedMembership[0].type?.value)
+        assertEquals(type02, sortedMembership[1].type?.value)
+        assertEquals(custom, sortedMembership[1].custom?.value)
+
+        val getAllResult: PNChannelMembershipArrayResult =
+            pubnub.getMemberships(
+                userId = testUuid,
+                include = MembershipInclude(includeType = true, includeStatus = true)
+            ).sync()
+
+        val sortedGetAllResult: List<PNChannelMembership> = sortPNChannelMembershipsByUpdatedValue(getAllResult.data)
+
+        assertEquals(status01, sortedGetAllResult[0].status?.value)
+        assertEquals(status02, sortedGetAllResult[1].status?.value)
+        assertEquals(type01, sortedGetAllResult[0].type?.value)
+        assertEquals(type02, sortedGetAllResult[1].type?.value)
+
+        pubnub.removeMemberships(
+            channels = channels.map { it.channel },
+            userId = testUuid,
+        ).sync()
+
+        val getAllAfterRemovalResult =
+            pubnub.getMemberships(
+                userId = testUuid,
+                include = MembershipInclude(includeChannel = true)
+            ).sync()
+
+        assertTrue(getAllAfterRemovalResult.data.filter { it.channel != null }.none { it.channel!!.id == channel })
+    }
+
+    @Test
+    fun addGetAndRemoveMembershipWithStatusAndType_includeTypeFalse_includeStatusFalse() {
+        val status01 = "status01${randomValue(15)}"
+        val status02 = "status02${randomValue(15)}"
+        val type01 = "type01${randomValue(15)}"
+        val type02 = "type02${randomValue(15)}"
+        val channel01 = PNChannelMembership.Partial(channelId = channel, status = status01, type = type01)
+        val channel02 = PNChannelMembership.Partial(channelId = channel02, status = status02, type = type02)
+        val channels = listOf(channel01, channel02)
+
+        val setResult: PNChannelMembershipArrayResult =
+            pubnub.setMemberships(
+                channels = channels,
+                userId = testUuid,
+            ).sync()
+
+        val sortedMembership = sortPNChannelMembershipsByUpdatedValue(setResult.data)
+
+        assertNull(status01, sortedMembership[0].status?.value)
+        assertNull(status02, sortedMembership[1].status?.value)
+        assertNull(type01, sortedMembership[0].type?.value)
+        assertNull(type02, sortedMembership[1].type?.value)
+
+        val getAllResult: PNChannelMembershipArrayResult =
+            pubnub.getMemberships(
+                userId = testUuid,
+            ).sync()
+
+        val sortedGetAllResult: List<PNChannelMembership> = sortPNChannelMembershipsByUpdatedValue(getAllResult.data)
+
+        assertNull(status01, sortedGetAllResult[0].status?.value)
+        assertNull(status02, sortedGetAllResult[1].status?.value)
+        assertNull(type01, sortedGetAllResult[0].type?.value)
+        assertNull(type02, sortedGetAllResult[1].type?.value)
+
+        pubnub.removeMemberships(
+            channels = channels.map { it.channel },
+            userId = testUuid,
+        ).sync()
+
+        val getAllAfterRemovalResult =
+            pubnub.getMemberships(
+                userId = testUuid,
+                include = MembershipInclude(includeChannel = true)
+            ).sync()
+
+        assertTrue(getAllAfterRemovalResult.data.filter { it.channel != null }.none { it.channel!!.id == channel })
+    }
+
+    @Test
     fun addGetAndRemoveMember() {
         val uuids = listOf(PNMember.Partial(uuidId = testUuid, custom = null, null))
 
-        val setResult =
+        val setResult: PNMemberArrayResult =
             pubnub.setChannelMembers(
                 channel = channel,
                 uuids = uuids,
@@ -340,7 +464,7 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
         pubnub.manageMemberships(
             channelsToSet = listOf(PNChannelMembership.Partial(channelId = otherChannel, status = status)),
             channelsToRemove = listOf(),
-            uuid = testUuid,
+            userId = testUuid,
         ).sync()
 
         val getAllResult =
@@ -351,6 +475,7 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
                 channelMetadata(id = channel),
                 custom = null,
                 status = PatchValue.of(status),
+                type = PatchValue.of(null),
                 eTag = noEtag,
                 updated = noUpdated,
             )
@@ -359,6 +484,7 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
                 channelMetadata(id = otherChannel),
                 custom = null,
                 status = PatchValue.of(status),
+                type = PatchValue.of(null),
                 eTag = noEtag,
                 updated = noUpdated,
             )
@@ -372,7 +498,7 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
             pubnub.manageMemberships(
                 channelsToSet = listOf(),
                 channelsToRemove = listOf(channel, otherChannel),
-                uuid = testUuid,
+                userId = testUuid,
             ).sync().data
 
         assertThat(
@@ -422,5 +548,9 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
             page = allMetadataPage.next
             hasMore = page != null
         }
+    }
+
+    private fun sortPNChannelMembershipsByUpdatedValue(channelMemberships: Collection<PNChannelMembership>): List<PNChannelMembership> {
+        return channelMemberships.sortedWith(compareBy { ZonedDateTime.parse(it.updated, ISO_ZONED_DATE_TIME) })
     }
 }

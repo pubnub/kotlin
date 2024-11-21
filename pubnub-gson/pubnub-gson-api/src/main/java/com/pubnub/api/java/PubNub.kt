@@ -39,6 +39,7 @@ import com.pubnub.api.java.endpoints.objects_api.memberships.GetMemberships
 import com.pubnub.api.java.endpoints.objects_api.memberships.ManageMemberships
 import com.pubnub.api.java.endpoints.objects_api.memberships.RemoveMemberships
 import com.pubnub.api.java.endpoints.objects_api.memberships.SetMemberships
+import com.pubnub.api.java.endpoints.objects_api.memberships.SetMembershipsBuilder
 import com.pubnub.api.java.endpoints.objects_api.uuid.GetAllUUIDMetadata
 import com.pubnub.api.java.endpoints.objects_api.uuid.GetUUIDMetadata
 import com.pubnub.api.java.endpoints.objects_api.uuid.RemoveUUIDMetadata
@@ -53,6 +54,7 @@ import com.pubnub.api.java.endpoints.push.AddChannelsToPush
 import com.pubnub.api.java.endpoints.push.ListPushProvisions
 import com.pubnub.api.java.endpoints.push.RemoveAllPushChannelsForDevice
 import com.pubnub.api.java.endpoints.push.RemoveChannelsFromPush
+import com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership
 import com.pubnub.api.java.v2.PNConfiguration
 import com.pubnub.api.java.v2.callbacks.EventEmitter
 import com.pubnub.api.java.v2.callbacks.StatusEmitter
@@ -468,7 +470,10 @@ interface PubNub : EventEmitter, StatusEmitter {
     /**
      * Set channel memberships for a UUID.
      */
-    fun setMemberships(): SetMemberships.Builder
+    fun setMemberships(): SetMemberships.Builder // add deprecation
+
+    // todo add kDoc
+    fun setMemberships(channelMemberships: Collection<PNChannelMembership>): SetMembershipsBuilder
 
     /**
      * Remove channel memberships for a UUID.

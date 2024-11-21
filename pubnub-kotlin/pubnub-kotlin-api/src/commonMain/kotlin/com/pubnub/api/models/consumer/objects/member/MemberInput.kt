@@ -6,4 +6,5 @@ interface MemberInput {
     val uuid: String
     val custom: CustomObject?
     val status: String?
+    // type
 }

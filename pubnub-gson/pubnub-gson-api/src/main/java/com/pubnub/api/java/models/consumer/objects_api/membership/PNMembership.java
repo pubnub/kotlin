@@ -23,4 +23,5 @@ public class PNMembership {
     private String updated;
     private String eTag;
     private PatchValue<@Nullable String> status;
+    private PatchValue<@Nullable String> type;
 }

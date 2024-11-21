@@ -64,6 +64,7 @@ import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.member.MemberInput
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
+import com.pubnub.api.models.consumer.objects.membership.MembershipInclude
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventEmitter
@@ -1247,6 +1248,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      * @param includeChannelDetails Include custom fields for channels metadata.
      */
     actual fun getMemberships(
+// todo deprecate
         uuid: String?,
         limit: Int?,
         page: PNPage?,
@@ -1256,6 +1258,16 @@ actual interface PubNub : StatusEmitter, EventEmitter {
         includeCustom: Boolean,
         includeChannelDetails: PNChannelDetailsLevel?,
         includeType: Boolean,
+    ): GetMemberships
+
+    // todo add kDoc
+    actual fun getMemberships(
+        userId: String?,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMembershipKey>>,
+        include: MembershipInclude
     ): GetMemberships
 
     /**
@@ -1306,6 +1318,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      * @param includeChannelDetails Include custom fields for channels metadata.
      */
     actual fun setMemberships(
+        // todo deprecate
         channels: List<ChannelMembershipInput>,
         uuid: String?,
         limit: Int?,
@@ -1316,6 +1329,17 @@ actual interface PubNub : StatusEmitter, EventEmitter {
         includeCustom: Boolean,
         includeChannelDetails: PNChannelDetailsLevel?,
         includeType: Boolean,
+    ): ManageMemberships
+
+    // todo add kDoc
+    actual fun setMemberships(
+        channels: List<ChannelMembershipInput>,
+        userId: String?,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMembershipKey>>,
+        include: MembershipInclude,
     ): ManageMemberships
 
     /**
@@ -1339,7 +1363,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      * @param includeCustom Include respective additional fields in the response.
      * @param includeChannelDetails Include custom fields for channels metadata.
      */
-    actual fun removeMemberships(
+    actual fun removeMemberships( // todo deprecate
         channels: List<String>,
         uuid: String?,
         limit: Int?,
@@ -1350,6 +1374,17 @@ actual interface PubNub : StatusEmitter, EventEmitter {
         includeCustom: Boolean,
         includeChannelDetails: PNChannelDetailsLevel?,
         includeType: Boolean,
+    ): ManageMemberships
+
+    // todo add kDoc
+    actual fun removeMemberships(
+        channels: List<String>,
+        userId: String?,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMembershipKey>>,
+        include: MembershipInclude
     ): ManageMemberships
 
     /**
@@ -1375,6 +1410,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      * @param includeChannelDetails Include custom fields for channels metadata.
      */
     fun manageMemberships(
+// todo deprecate
         channelsToSet: List<ChannelMembershipInput>,
         channelsToRemove: List<String>,
         uuid: String? = null,
@@ -1386,6 +1422,18 @@ actual interface PubNub : StatusEmitter, EventEmitter {
         includeCustom: Boolean = false,
         includeChannelDetails: PNChannelDetailsLevel? = null,
         includeType: Boolean = false,
+    ): ManageMemberships
+
+    // todo add Kdoc
+    fun manageMemberships(
+        channelsToSet: List<ChannelMembershipInput>,
+        channelsToRemove: List<String>,
+        userId: String? = null,
+        limit: Int? = null,
+        page: PNPage? = null,
+        filter: String? = null,
+        sort: Collection<PNSortKey<PNMembershipKey>> = listOf(),
+        include: MembershipInclude = MembershipInclude()
     ): ManageMemberships
 
     /**
@@ -1503,6 +1551,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
         includeCustom: Boolean,
         includeUUIDDetails: PNUUIDDetailsLevel?,
         includeType: Boolean,
+//        type
     ): ManageChannelMembers
 
     /**
