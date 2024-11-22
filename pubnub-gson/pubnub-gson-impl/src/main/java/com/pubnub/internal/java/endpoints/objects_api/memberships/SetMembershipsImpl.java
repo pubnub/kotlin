@@ -8,13 +8,13 @@ import com.pubnub.api.java.endpoints.objects_api.memberships.SetMemberships;
 import com.pubnub.api.java.endpoints.objects_api.memberships.SetMembershipsBuilder;
 import com.pubnub.api.java.endpoints.objects_api.utils.Include;
 import com.pubnub.api.java.endpoints.objects_api.utils.PNSortKey;
+import com.pubnub.api.java.models.consumer.objects_api.membership.MembershipInclude;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNSetMembershipResult;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNSetMembershipResultConverter;
 import com.pubnub.api.models.consumer.objects.PNMembershipKey;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput;
-import com.pubnub.api.models.consumer.objects.membership.MembershipInclude;
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership.Partial;
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult;
 import com.pubnub.internal.java.endpoints.DelegatingEndpoint;
@@ -56,9 +56,7 @@ public class SetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipAr
         for (PNChannelMembership channel : channels) {
             channelList.add(new Partial(
                     channel.getChannel().getId(),
-                    (channel instanceof PNChannelMembership.ChannelWithCustom)
-                            ? ((PNChannelMembership.ChannelWithCustom) channel).getCustom()
-                            : null,
+                    channel.getCustom(), //despite IDE error this works
                     channel.getStatus(),
                     channel.getType()
             ));
@@ -138,11 +136,32 @@ public class SetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipAr
     }
 
     private MembershipInclude getMembershipInclude() {
-        if (includeTotalCount || includeCustom || includeType) {
-            // if deprecated setMembership API used
-            return MembershipInclude.includeTotalCount(includeTotalCount).includeCustom(includeCustom).includeType(includeType).build();
-        } else {
+        if (include != null) {
             return include;
+        } else {
+            // if deprecated setMembership API used
+            if (includeChannel == Include.PNChannelDetailsLevel.CHANNEL) {
+                return MembershipInclude.builder()
+                        .includeTotalCount(includeTotalCount)
+                        .includeCustom(includeCustom)
+                        .includeType(includeType)
+                        .includeChannel(true)
+                        .build();
+            } else if (includeChannel == Include.PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM) {
+                return MembershipInclude.builder()
+                        .includeTotalCount(includeTotalCount)
+                        .includeCustom(includeCustom)
+                        .includeType(includeType)
+                        .includeChannel(true)
+                        .includeChannelCustom(true)
+                        .build();
+            } else {
+                return MembershipInclude.builder()
+                        .includeTotalCount(includeTotalCount)
+                        .includeCustom(includeCustom)
+                        .includeType(includeType)
+                        .build();
+            }
         }
     }
 }

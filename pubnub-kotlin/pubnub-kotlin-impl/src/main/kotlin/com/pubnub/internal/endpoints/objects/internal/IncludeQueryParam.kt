@@ -28,7 +28,7 @@ data class IncludeQueryParam(
         const val QUERY_PARAM_UUID_CUSTOM = "uuid.custom"
         const val QUERY_PARAM_UUID_STATUS = "uuid.status"
         const val QUERY_PARAM_UUID_TYPE = "uuid.type"
-        const val QUERY_PARAM_INCLUDE = "include"
+        const val QUERY_KEY_INCLUDE = "include"
     }
 
     internal fun createIncludeQueryParams(): Map<String, String> {
@@ -49,7 +49,7 @@ data class IncludeQueryParam(
         val includeList = includeMapping.filter { it.first }.map { it.second }
 
         return if (includeList.isNotEmpty()) {
-            mapOf(QUERY_PARAM_INCLUDE to includeList.joinToString(","))
+            mapOf(QUERY_KEY_INCLUDE to includeList.joinToString(","))
         } else {
             mapOf()
         }

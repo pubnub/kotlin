@@ -6,56 +6,45 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @RequiredArgsConstructor
-public abstract class PNChannelMembership {
-    @AllArgsConstructor
-    @EqualsAndHashCode
-    @Getter
-    public static class ChannelId {
-        private String id;
-    }
-
+@EqualsAndHashCode
+public class PNChannelMembership {
     @Getter
     private final ChannelId channel;
     @Getter
-    private final Map<String, Object> custom;
+    private Object custom;
     @Getter
-    private final String status;
+    private String status;
     @Getter
-    private final String type;
+    private String type;
 
-    @Deprecated
-    public static PNChannelMembership channel(final String channelId) {
-        return new JustChannel(new ChannelId(channelId));
+    public static Builder builder(String channelId){
+        return new Builder(channelId);
     }
 
-    @Deprecated
-    public static PNChannelMembership channelWithCustom(final String channelId, final Map<String, Object> custom) {
-        return new ChannelWithCustom(new ChannelId(channelId), new HashMap<>(custom), null, null);
+    private PNChannelMembership(Builder builder){
+        this.channel = new ChannelId(builder.channelId);
+        this.custom = builder.custom;
+        this.status = builder.status;
+        this.type = builder.type;
     }
 
-    // PNChannelMembership.PNChannelMembership(membership01ChannelId).type("t").status("s").custom(custom).build()
-    // add static import to get PNChannelMembership(membership01ChannelId).type("t").status("s").custom(custom).build()
-    @SuppressWarnings("checkstyle:MethodName")
-    public static Builder PNChannelMembership(final String channelId) {
-        return new Builder(new ChannelId(channelId));
-    }
 
-    public static class Builder {
-        private final ChannelId channelId;
-        private Map<String, Object> custom = new HashMap<>();
+    public static class Builder{
+        private final String channelId;
+        private Object custom;
         private String status;
         private String type;
 
-        private Builder(ChannelId channelId) {
+        public Builder(String channelId) {
+            if (channelId == null || channelId.isEmpty()) {
+                throw new IllegalArgumentException("channelId cannot be null or empty");
+            }
             this.channelId = channelId;
         }
 
-        public Builder custom(Map<String, Object> custom) {
-            this.custom = new HashMap<>(custom);
+        public Builder custom(Object custom) {
+            this.custom = custom;
             return this;
         }
 
@@ -70,30 +59,49 @@ public abstract class PNChannelMembership {
         }
 
         public PNChannelMembership build() {
-            if (custom.isEmpty() && status == null && type == null) {
-                return new JustChannel(channelId);
-            } else {
-                return new ChannelWithCustom(channelId, custom, status, type);
-            }
+            return new PNChannelMembership(this);
         }
     }
 
+    @AllArgsConstructor
+    @EqualsAndHashCode
+    @Getter
+    public static class ChannelId {
+        private final String id;
+    }
+
+    // Factory method for creating a membership with only a channel ID.
+    public static PNChannelMembership channel(final String channelId) {
+        return new JustChannel(new ChannelId(channelId));
+    }
+
+    // Factory method for creating a membership with a channel ID and custom data.
+    public static PNChannelMembership channelWithCustom(final String channelId, final Object custom) {
+        return new ChannelWithCustom(new ChannelId(channelId), custom);
+    }
+
+    /**
+     * Represents a membership with only a channel ID.
+     */
     @Getter
     @EqualsAndHashCode(callSuper = true)
     public static class JustChannel extends PNChannelMembership {
-        JustChannel(@NonNull final ChannelId channelId) {
-            super(channelId, null, null, null);
+        public JustChannel(@NonNull final ChannelId channelId) {
+            super(channelId);
         }
     }
 
+    /**
+     * Represents a membership with a channel ID and custom data.
+     */
     @Getter
     @EqualsAndHashCode(callSuper = true)
     public static class ChannelWithCustom extends PNChannelMembership {
-        ChannelWithCustom(@NonNull final ChannelId channelId,
-                          @NonNull Map<String, Object> custom,
-                          String status,
-                          String type) {
-            super(channelId, custom, status, type);
+        private final Object custom;
+
+        public ChannelWithCustom(@NonNull final ChannelId channelId, @NonNull Object custom) {
+            super(channelId);
+            this.custom = custom;
         }
     }
 }

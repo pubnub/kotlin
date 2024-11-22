@@ -1,5 +1,6 @@
 package com.pubnub.internal.endpoints.objects.internal
 
+import com.pubnub.internal.endpoints.objects.internal.IncludeQueryParam.Companion.QUERY_KEY_INCLUDE
 import com.pubnub.internal.endpoints.objects.internal.IncludeQueryParam.Companion.QUERY_PARAM_CHANNEL
 import com.pubnub.internal.endpoints.objects.internal.IncludeQueryParam.Companion.QUERY_PARAM_CHANNEL_CUSTOM
 import com.pubnub.internal.endpoints.objects.internal.IncludeQueryParam.Companion.QUERY_PARAM_CHANNEL_STATUS
@@ -35,7 +36,7 @@ class IncludeQueryParamTest {
 
         val createIncludeQueryParams = objectUnderTest.createIncludeQueryParams()
 
-        val stringWithQueryParams: String = createIncludeQueryParams["include"]!!
+        val stringWithQueryParams: String = createIncludeQueryParams[QUERY_KEY_INCLUDE]!!
         val set = stringWithQueryParams.split(",").toSet()
 
         assertTrue(set.contains(QUERY_PARAM_CUSTOM))

@@ -141,13 +141,10 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
 
         val channels = listOf(channel01, channel02)
 
-        MembershipInclude.includeStatus(true).includeType(true).build()
-
         val setResult: PNChannelMembershipArrayResult =
             pubnub.setMemberships(
                 channels = channels,
                 userId = testUuid,
-                // it can be defined also like this: MembershipInclude.includeStatus(true).includeType(true).build() as in java.
                 include = MembershipInclude(
                     includeCustom = true,
                     includeStatus = true,

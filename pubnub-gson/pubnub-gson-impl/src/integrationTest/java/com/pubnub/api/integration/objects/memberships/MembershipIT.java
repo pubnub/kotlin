@@ -2,14 +2,13 @@ package com.pubnub.api.integration.objects.memberships;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.integration.objects.ObjectsApiBaseIT;
-import com.pubnub.api.java.endpoints.objects_api.memberships.SetMemberships;
+import com.pubnub.api.java.models.consumer.objects_api.membership.MembershipInclude;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNGetMembershipsResult;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNManageMembershipResult;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNMembership;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNRemoveMembershipResult;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNSetMembershipResult;
-import com.pubnub.api.models.consumer.objects.membership.MembershipInclude;
 import com.pubnub.api.utils.PatchValue;
 import org.apache.http.HttpStatus;
 import org.junit.After;
@@ -26,7 +25,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import static com.pubnub.api.java.endpoints.objects_api.utils.Include.PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM;
-import static com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership.PNChannelMembership;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.hasItem;
@@ -35,6 +33,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 public class MembershipIT extends ObjectsApiBaseIT {
@@ -56,25 +55,31 @@ public class MembershipIT extends ObjectsApiBaseIT {
         String membership02Status = "inactive";
         String membership02Type = "member";
         String membership03ChannelId = "testChannelId3";
+        String membership04ChannelId = "testChannelId4";
+        String membership05ChannelId = "testChannelId5";
+        String membership06ChannelId = "testChannelId6";
         String userId = UUID.randomUUID().toString();
+
         final List<PNChannelMembership> channelMemberships = Arrays.asList(
-                PNChannelMembership.PNChannelMembership(membership01ChannelId) // todo PNChannelMembership.can be imported. Do we like this?
+                PNChannelMembership.builder(membership01ChannelId)
                         .status(membership01Status)
                         .type(membership01Type)
                         .build(),
-                PNChannelMembership(membership02ChannelId)
+                PNChannelMembership.builder(membership02ChannelId)
                         .custom(customChannelMembershipObject())
                         .status(membership02Status)
                         .type(membership02Type)
                         .build(),
-                PNChannelMembership.channel(membership03ChannelId) // this is deprecated usage
+                PNChannelMembership.channel(membership03ChannelId), // this is deprecated usage
+                PNChannelMembership.channelWithCustom(membership04ChannelId, customChannelMembershipObject()), // this is deprecated usage
+                new PNChannelMembership.JustChannel(new PNChannelMembership.ChannelId(membership05ChannelId)), // this is deprecated usage
+                new PNChannelMembership.ChannelWithCustom(new PNChannelMembership.ChannelId(membership06ChannelId), customChannelMembershipObject()) // this is deprecated usage
         );
-
 
         PNSetMembershipResult setMembershipResult = pubNubUnderTest
                 .setMemberships(channelMemberships)
                 .userId(userId).limit(10)
-                .include(MembershipInclude
+                .include(MembershipInclude.builder()
                         .includeCustom(true)
                         .includeStatus(true)
                         .includeType(true)
@@ -97,11 +102,30 @@ public class MembershipIT extends ObjectsApiBaseIT {
         assertEquals(membership02ChannelId, pnMembership02.getChannel().getId());
         assertEquals(membership02Status, pnMembership02.getStatus().getValue());
         assertEquals(membership02Type, pnMembership02.getType().getValue());
+        assertNotNull(pnMembership02.getCustom().getValue());
 
         PNMembership pnMembership03 = setMembershipResult.getData().get(2);
         assertEquals(membership03ChannelId, pnMembership03.getChannel().getId());
         assertNull(pnMembership03.getStatus().getValue());
         assertNull(pnMembership03.getType().getValue());
+
+        PNMembership pnMembership04 = setMembershipResult.getData().get(3);
+        assertEquals(membership04ChannelId, pnMembership04.getChannel().getId());
+        assertNull(pnMembership04.getStatus().getValue());
+        assertNull(pnMembership04.getType().getValue());
+        assertNotNull(pnMembership04.getCustom().getValue());
+
+        PNMembership pnMembership05= setMembershipResult.getData().get(4);
+        assertEquals(membership05ChannelId, pnMembership05.getChannel().getId());
+        assertNull(pnMembership05.getStatus().getValue());
+        assertNull(pnMembership05.getType().getValue());
+        assertNull(pnMembership05.getCustom().getValue());
+
+        PNMembership pnMembership06 = setMembershipResult.getData().get(5);
+        assertEquals(membership06ChannelId, pnMembership06.getChannel().getId());
+        assertNull(pnMembership06.getStatus().getValue());
+        assertNull(pnMembership06.getType().getValue());
+        assertNotNull(pnMembership06.getCustom().getValue());
     }
 
 
