@@ -18,11 +18,11 @@ public class PNChannelMembership {
     @Getter
     private String type;
 
-    public static Builder builder(String channelId){
+    public static Builder builder(String channelId) {
         return new Builder(channelId);
     }
 
-    private PNChannelMembership(Builder builder){
+    private PNChannelMembership(Builder builder) {
         this.channel = new ChannelId(builder.channelId);
         this.custom = builder.custom;
         this.status = builder.status;
@@ -30,7 +30,7 @@ public class PNChannelMembership {
     }
 
 
-    public static class Builder{
+    public static class Builder {
         private final String channelId;
         private Object custom;
         private String status;
