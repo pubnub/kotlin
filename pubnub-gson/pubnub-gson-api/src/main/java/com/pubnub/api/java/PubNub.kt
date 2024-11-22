@@ -36,6 +36,7 @@ import com.pubnub.api.java.endpoints.objects_api.members.ManageChannelMembers
 import com.pubnub.api.java.endpoints.objects_api.members.RemoveChannelMembers
 import com.pubnub.api.java.endpoints.objects_api.members.SetChannelMembers
 import com.pubnub.api.java.endpoints.objects_api.memberships.GetMemberships
+import com.pubnub.api.java.endpoints.objects_api.memberships.GetMembershipsBuilder
 import com.pubnub.api.java.endpoints.objects_api.memberships.ManageMemberships
 import com.pubnub.api.java.endpoints.objects_api.memberships.RemoveMemberships
 import com.pubnub.api.java.endpoints.objects_api.memberships.SetMemberships
@@ -465,16 +466,25 @@ interface PubNub : EventEmitter, StatusEmitter {
     /**
      * The method returns a list of channel memberships for a user. This method doesn't return a user's subscriptions.
      */
+    @Deprecated(
+        message = "This function is deprecated. Use getMemberships(userId: String) for better functionality.",
+        replaceWith = ReplaceWith(
+            "getMemberships(userId)"
+        )
+    )
     fun getMemberships(): GetMemberships
+
+    /**
+     * The method returns a list of channel memberships for a user. This method doesn't return a user's subscriptions.
+     */
+    fun getMemberships(userId: String): GetMembershipsBuilder
 
     /**
      * Set channel memberships for a UUID.
      */
     @Deprecated(
-        message = "This function is deprecated. Use setMemberships(channelMemberships: Collection<PNChannelMembership>) for better functionality.",
-        replaceWith = ReplaceWith(
-            "setMemberships(channelMemberships)"
-        )
+        message = "Use setMemberships(Collection<PNChannelMembership>) instead.",
+        replaceWith = ReplaceWith("setMemberships(channelMemberships)")
     )
     fun setMemberships(): SetMemberships.Builder // add deprecation
 
