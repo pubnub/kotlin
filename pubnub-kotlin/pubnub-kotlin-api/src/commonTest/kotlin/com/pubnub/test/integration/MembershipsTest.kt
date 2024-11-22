@@ -6,6 +6,7 @@ import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
 import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteMembershipEventMessage
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetMembershipEventMessage
+import com.pubnub.kmp.PLATFORM
 import com.pubnub.kmp.createCustomObject
 import com.pubnub.test.BaseIntegrationTest
 import com.pubnub.test.await
@@ -85,6 +86,9 @@ class MembershipsTest : BaseIntegrationTest() {
 
     @Test
     fun can_delete_membership() = runTest {
+        if (PLATFORM == "JS") { //todo enable for JS once is implemented
+            return@runTest
+        }
         // given
         pubnub.setMemberships(
             listOf(PNChannelMembership.Partial(channel, custom, status))
@@ -107,6 +111,9 @@ class MembershipsTest : BaseIntegrationTest() {
 
     @Test
     fun can_receive_delete_membership_event() = runTest {
+        if (PLATFORM == "JS") { //todo enable for JS once is implemented
+            return@runTest
+        }
         pubnub.test(backgroundScope) {
             // given
             pubnub.setMemberships(

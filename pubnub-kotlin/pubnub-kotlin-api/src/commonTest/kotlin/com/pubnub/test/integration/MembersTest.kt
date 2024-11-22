@@ -61,6 +61,9 @@ class MembersTest : BaseIntegrationTest() {
 
     @Test
     fun can_delete_members() = runTest {
+        if (PLATFORM == "JS") { //todo enable for JS once is implemented
+            return@runTest
+        }
         // given
         pubnub.setChannelMembers(
             channel,

@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
+@Deprecated
 public interface SetMemberships extends Endpoint<PNSetMembershipResult> {
     SetMemberships uuid(String uuid);
 
@@ -26,6 +27,7 @@ public interface SetMemberships extends Endpoint<PNSetMembershipResult> {
 
     SetMemberships includeChannel(Include.PNChannelDetailsLevel includeChannel);
 
+    @Deprecated
     interface Builder {
         SetMemberships channelMemberships(@NotNull Collection<PNChannelMembership> channelMemberships);
     }

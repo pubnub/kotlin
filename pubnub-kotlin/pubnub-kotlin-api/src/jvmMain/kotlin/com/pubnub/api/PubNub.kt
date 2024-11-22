@@ -1247,8 +1247,14 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      * @param includeCustom Include respective additional fields in the response.
      * @param includeChannelDetails Include custom fields for channels metadata.
      */
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = "This function is deprecated. Use the new getMemberships(userId, limit, page, filter, sort, MembershipInclude(...))",
+        replaceWith = ReplaceWith(
+            "getMemberships(userId, limit, page, filter, sort, com.pubnub.api.models.consumer.objects.membership.MembershipInclude(includeTotalCount = includeCount, includeCustom = includeCustom, includeChannel = true, includeChannelCustom = true, includeType = includeType))"
+        )
+    )
     actual fun getMemberships(
-// todo deprecate
         uuid: String?,
         limit: Int?,
         page: PNPage?,
@@ -1260,7 +1266,24 @@ actual interface PubNub : StatusEmitter, EventEmitter {
         includeType: Boolean,
     ): GetMemberships
 
-    // todo add kDoc
+    /**
+     * The method returns a list of channel memberships for a user. This method doesn't return a user's subscriptions.
+     *
+     * @param userId Unique user identifier. If not supplied then current user’s id is used.
+     * @param limit Number of objects to return in the response.
+     *              Default is 100, which is also the maximum value.
+     *              Set limit to 0 (zero) and includeCount to true if you want to retrieve only a result count.
+     * @param page Use for pagination.
+     *              - [PNNext] : Previously-returned cursor bookmark for fetching the next page.
+     *              - [PNPrev] : Previously-returned cursor bookmark for fetching the previous page.
+     *                           Ignored if you also supply the start parameter.
+     * @param filter Expression used to filter the results. Only objects whose properties satisfy the given
+     *               expression are returned.
+     * @param sort List of properties to sort by. Available options are id, name, and updated.
+     *             @see [PNAsc], [PNDesc]
+     * @param include Request specific elements to be available in response.
+     * Use [com.pubnub.api.models.consumer.objects.membership.MembershipInclude] to easily create the desired configuration
+     */
     actual fun getMemberships(
         userId: String?,
         limit: Int?,

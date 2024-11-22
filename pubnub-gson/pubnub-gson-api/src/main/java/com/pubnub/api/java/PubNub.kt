@@ -470,9 +470,17 @@ interface PubNub : EventEmitter, StatusEmitter {
     /**
      * Set channel memberships for a UUID.
      */
+    @Deprecated(
+        message = "This function is deprecated. Use setMemberships(channelMemberships: Collection<PNChannelMembership>) for better functionality.",
+        replaceWith = ReplaceWith(
+            "setMemberships(channelMemberships)"
+        )
+    )
     fun setMemberships(): SetMemberships.Builder // add deprecation
 
-    // todo add kDoc
+    /**
+     * Set channel memberships for a User.
+     */
     fun setMemberships(channelMemberships: Collection<PNChannelMembership>): SetMembershipsBuilder
 
     /**
