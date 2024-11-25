@@ -21,6 +21,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 import java.util.Collections;
 
+import static com.pubnub.internal.java.endpoints.objects_api.memberships.SetMembershipsImpl.getMembershipInclude;
+
 @Setter
 @Accessors(chain = true, fluent = true)
 public class GetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipArrayResult, PNGetMembershipsResult> implements GetMemberships, GetMembershipsBuilder {
@@ -61,42 +63,12 @@ public class GetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipAr
                 page,
                 filter,
                 SetMembershipsImpl.toInternal(sort),
-                getMembershipInclude()
+                getMembershipInclude(include, includeChannel, includeTotalCount, includeCustom, includeType)
         );
     }
 
     private String getUserId() {
         return userId != null ? userId : uuid;
-    }
-
-    private MembershipInclude getMembershipInclude() {
-        if (include != null) {
-            return include;
-        } else {
-            // if deprecated setMembership API used
-            if (includeChannel == Include.PNChannelDetailsLevel.CHANNEL) {
-                return MembershipInclude.builder()
-                        .includeTotalCount(includeTotalCount)
-                        .includeCustom(includeCustom)
-                        .includeType(includeType)
-                        .includeChannel(true)
-                        .build();
-            } else if (includeChannel == Include.PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM) {
-                return MembershipInclude.builder()
-                        .includeTotalCount(includeTotalCount)
-                        .includeCustom(includeCustom)
-                        .includeType(includeType)
-                        .includeChannel(true)
-                        .includeChannelCustom(true)
-                        .build();
-            } else {
-                return MembershipInclude.builder()
-                        .includeTotalCount(includeTotalCount)
-                        .includeCustom(includeCustom)
-                        .includeType(includeType)
-                        .build();
-            }
-        }
     }
 }
 

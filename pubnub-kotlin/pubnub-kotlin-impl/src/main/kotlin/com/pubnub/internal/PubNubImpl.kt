@@ -997,16 +997,7 @@ open class PubNubImpl(
         page = page,
         filter = filter,
         sort = sort,
-        include = MembershipInclude(
-            includeCustom = include.includeCustom,
-            includeStatus = include.includeStatus,
-            includeType = include.includeType,
-            includeTotalCount = include.includeTotalCount,
-            includeChannel = include.includeChannel,
-            includeChannelCustom = include.includeChannelCustom,
-            includeChannelType = include.includeChannelType,
-            includeChannelStatus = include.includeChannelStatus
-        )
+        include = include
     )
 
     // deprecated

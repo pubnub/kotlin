@@ -136,10 +136,10 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
         val customKey = randomValue()
         val customValue = randomValue()
         val custom = mapOf(customKey to customValue)
-        val channel01 = PNChannelMembership.Partial(channel, custom = custom, status = status01, type = type01)
-        val channel02 = PNChannelMembership.Partial(channel02, custom = custom, status = status02, type = type02)
+        val channelMembership01 = PNChannelMembership.Partial(channel, custom = custom, status = status01, type = type01)
+        val channelMembership02 = PNChannelMembership.Partial(channel02, custom = custom, status = status02, type = type02)
 
-        val channels = listOf(channel01, channel02)
+        val channels = listOf(channelMembership01, channelMembership02)
 
         val setResult: PNChannelMembershipArrayResult =
             pubnub.setMemberships(
@@ -178,10 +178,24 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
         assertEquals(type01, sortedGetAllResult[0].type?.value)
         assertEquals(type02, sortedGetAllResult[1].type?.value)
 
-        pubnub.removeMemberships(
-            channels = channels.map { it.channel },
+        // returns remaining memberships
+        val removeMembershipResult = pubnub.removeMemberships(
+            channels = listOf(channel),
             userId = testUuid,
+            include = MembershipInclude(
+                includeCustom = true,
+                includeStatus = true,
+                includeType = true,
+                includeChannel = true,
+                includeChannelCustom = true,
+                includeChannelType = true,
+                includeChannelStatus = true,
+                includeTotalCount = true
+            )
         ).sync()
+        assertEquals(channel02, removeMembershipResult.data.first().channel.id)
+        assertEquals(status02, removeMembershipResult.data.first().status?.value)
+        assertEquals(type02, removeMembershipResult.data.first().type?.value)
 
         val getAllAfterRemovalResult =
             pubnub.getMemberships(

@@ -68,7 +68,7 @@ public class SetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipAr
                 page,
                 filter,
                 toInternal(sort),
-                getMembershipInclude()
+                getMembershipInclude(include, includeChannel, includeTotalCount, includeCustom, includeType)
         );
     }
 
@@ -135,7 +135,13 @@ public class SetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipAr
         return userId != null ? userId : uuid;
     }
 
-    private MembershipInclude getMembershipInclude() {
+    static MembershipInclude getMembershipInclude(
+            MembershipInclude include,
+            Include.PNChannelDetailsLevel includeChannel,
+            boolean includeTotalCount,
+            boolean includeCustom,
+            boolean includeType
+    ) {
         if (include != null) {
             return include;
         } else {
@@ -144,14 +150,14 @@ public class SetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipAr
                 return MembershipInclude.builder()
                         .includeTotalCount(includeTotalCount)
                         .includeCustom(includeCustom)
-                        .includeType(includeType)
+                        .includeChannelType(includeType)
                         .includeChannel(true)
                         .build();
             } else if (includeChannel == Include.PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM) {
                 return MembershipInclude.builder()
                         .includeTotalCount(includeTotalCount)
                         .includeCustom(includeCustom)
-                        .includeType(includeType)
+                        .includeChannelType(includeType)
                         .includeChannel(true)
                         .includeChannelCustom(true)
                         .build();
@@ -159,7 +165,7 @@ public class SetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipAr
                 return MembershipInclude.builder()
                         .includeTotalCount(includeTotalCount)
                         .includeCustom(includeCustom)
-                        .includeType(includeType)
+                        .includeChannelType(includeType)
                         .build();
             }
         }

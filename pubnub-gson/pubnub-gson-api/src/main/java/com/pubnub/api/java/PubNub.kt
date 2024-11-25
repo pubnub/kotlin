@@ -39,6 +39,7 @@ import com.pubnub.api.java.endpoints.objects_api.memberships.GetMemberships
 import com.pubnub.api.java.endpoints.objects_api.memberships.GetMembershipsBuilder
 import com.pubnub.api.java.endpoints.objects_api.memberships.ManageMemberships
 import com.pubnub.api.java.endpoints.objects_api.memberships.RemoveMemberships
+import com.pubnub.api.java.endpoints.objects_api.memberships.RemoveMembershipsBuilder
 import com.pubnub.api.java.endpoints.objects_api.memberships.SetMemberships
 import com.pubnub.api.java.endpoints.objects_api.memberships.SetMembershipsBuilder
 import com.pubnub.api.java.endpoints.objects_api.uuid.GetAllUUIDMetadata
@@ -496,7 +497,16 @@ interface PubNub : EventEmitter, StatusEmitter {
     /**
      * Remove channel memberships for a UUID.
      */
+    @Deprecated(
+        message = "Use removeMemberships(Collection<PNChannelMembership>) instead.",
+        replaceWith = ReplaceWith("removeMemberships(channelMemberships)")
+    )
     fun removeMemberships(): RemoveMemberships.Builder
+
+    /**
+     * Remove channel memberships for a UUID.
+     */
+    fun removeMemberships(channelMemberships: Collection<PNChannelMembership>): RemoveMembershipsBuilder
 
     /**
      * Add and remove channel memberships for a UUID.

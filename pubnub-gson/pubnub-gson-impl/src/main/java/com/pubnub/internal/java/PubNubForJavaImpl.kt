@@ -39,6 +39,7 @@ import com.pubnub.api.java.endpoints.objects_api.memberships.GetMemberships
 import com.pubnub.api.java.endpoints.objects_api.memberships.GetMembershipsBuilder
 import com.pubnub.api.java.endpoints.objects_api.memberships.ManageMemberships
 import com.pubnub.api.java.endpoints.objects_api.memberships.RemoveMemberships
+import com.pubnub.api.java.endpoints.objects_api.memberships.RemoveMembershipsBuilder
 import com.pubnub.api.java.endpoints.objects_api.memberships.SetMemberships
 import com.pubnub.api.java.endpoints.objects_api.memberships.SetMembershipsBuilder
 import com.pubnub.api.java.endpoints.objects_api.uuid.GetAllUUIDMetadata
@@ -293,6 +294,10 @@ open class PubNubForJavaImpl(configuration: PNConfiguration) :
 
     override fun removeMemberships(): RemoveMemberships.Builder {
         return RemoveMembershipsImpl.Builder(this)
+    }
+
+    override fun removeMemberships(channelMemberships: Collection<PNChannelMembership>): RemoveMembershipsBuilder {
+        return RemoveMembershipsImpl(channelMemberships, this)
     }
 
     override fun manageMemberships(): ManageMemberships.Builder {
