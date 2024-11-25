@@ -38,6 +38,7 @@ import com.pubnub.api.java.endpoints.objects_api.members.SetChannelMembers
 import com.pubnub.api.java.endpoints.objects_api.memberships.GetMemberships
 import com.pubnub.api.java.endpoints.objects_api.memberships.GetMembershipsBuilder
 import com.pubnub.api.java.endpoints.objects_api.memberships.ManageMemberships
+import com.pubnub.api.java.endpoints.objects_api.memberships.ManageMembershipsBuilder
 import com.pubnub.api.java.endpoints.objects_api.memberships.RemoveMemberships
 import com.pubnub.api.java.endpoints.objects_api.memberships.RemoveMembershipsBuilder
 import com.pubnub.api.java.endpoints.objects_api.memberships.SetMemberships
@@ -509,9 +510,21 @@ interface PubNub : EventEmitter, StatusEmitter {
     fun removeMemberships(channelMemberships: Collection<PNChannelMembership>): RemoveMembershipsBuilder
 
     /**
-     * Add and remove channel memberships for a UUID.
+     * Add and/or remove channel memberships for a UUID.
      */
+    @Deprecated(
+        message = "Use manageMemberships(Collection<PNChannelMembership>) instead.",
+        replaceWith = ReplaceWith("manageMemberships(channelMembershipsToAdd, channelMembershipsToRemove)")
+    )
     fun manageMemberships(): ManageMemberships.Builder
+
+    /**
+     * Add and/or remove channel memberships for a UUID.
+     */
+    fun manageMemberships(
+        channelsToSet: Collection<PNChannelMembership>,
+        channelsToDelete: Collection<PNChannelMembership>
+    ): ManageMembershipsBuilder
 
     /**
      * The method returns a list of members in a channel. The list will include user metadata for members

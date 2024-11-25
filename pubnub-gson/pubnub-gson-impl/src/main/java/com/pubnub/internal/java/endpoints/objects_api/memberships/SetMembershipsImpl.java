@@ -38,10 +38,10 @@ public class SetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipAr
     private PNPage page;
     private String filter;
     private Collection<PNSortKey> sort = Collections.emptyList();
-    private boolean includeTotalCount;
-    private boolean includeCustom;
-    private boolean includeType;
-    private Include.PNChannelDetailsLevel includeChannel;
+    private boolean includeTotalCount; // deprecated
+    private boolean includeCustom; // deprecated
+    private boolean includeType; // deprecated
+    private Include.PNChannelDetailsLevel includeChannel; // deprecated
     private MembershipInclude include;
 
     public SetMembershipsImpl(@NotNull Collection<PNChannelMembership> channelMemberships, final PubNub pubnubInstance) {
@@ -56,7 +56,7 @@ public class SetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipAr
         for (PNChannelMembership channel : channels) {
             channelList.add(new Partial(
                     channel.getChannel().getId(),
-                    channel.getCustom(), //despite IDE error this works
+                    channel.getCustom(), // despite IDE error this works ¯\_(ツ)_/¯
                     channel.getStatus(),
                     channel.getType()
             ));

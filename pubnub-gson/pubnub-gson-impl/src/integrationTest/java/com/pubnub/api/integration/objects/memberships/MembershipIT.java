@@ -356,6 +356,46 @@ public class MembershipIT extends ObjectsApiBaseIT {
         final List<PNChannelMembership> channelMembershipsToRemove = Collections.singletonList(
                 PNChannelMembership.channelWithCustom(testChannelId1, customChannelMembershipObject()));
 
+        final PNSetMembershipResult setMembershipResult = pubNubUnderTest.setMemberships(channelMembershipsToRemove).sync();
+        createdMembershipsList.add(setMembershipResult);
+
+        final List<PNChannelMembership> channelMembershipsToSet = Collections.singletonList(
+                PNChannelMembership.builder(testChannelId2)
+                        .custom(customChannelMembershipObject())
+                        .status(membership01Status)
+                        .type(membership01Type)
+                        .build());
+
+        //when
+        final PNManageMembershipResult manageMembershipResult = pubNubUnderTest.manageMemberships(channelMembershipsToSet, channelMembershipsToRemove)
+                .userId(pubNubUnderTest.getConfiguration().getUserId().getValue())
+                .include(MembershipInclude.builder()
+                        .includeTotalCount(true)
+                        .includeCustom(true)
+                        .includeChannel(true)
+                        .includeChannelCustom(true)
+                        .includeStatus(true)
+                        .includeType(true)
+                        .build())
+                .sync();
+
+        createdMembershipsList.add(new PNSetMembershipResult(manageMembershipResult));
+
+        //then
+        assertEquals(HttpStatus.SC_OK, manageMembershipResult.getStatus());
+        assertEquals(1, manageMembershipResult.getData().size());
+        PNMembership pnMembership = manageMembershipResult.getData().get(0);
+        assertEquals(testChannelId2, pnMembership.getChannel().getId());
+        assertEquals(membership01Status, pnMembership.getStatus().getValue());
+        assertEquals(membership01Type, pnMembership.getType().getValue());
+    }
+
+    @Test
+    public void manageMembershipsHappyPathDeprecated() throws PubNubException {
+        //given
+        final List<PNChannelMembership> channelMembershipsToRemove = Collections.singletonList(
+                PNChannelMembership.channelWithCustom(testChannelId1, customChannelMembershipObject()));
+
         final PNSetMembershipResult setMembershipResult = pubNubUnderTest.setMemberships()
                 .channelMemberships(channelMembershipsToRemove)
                 .includeTotalCount(true)

@@ -32,10 +32,10 @@ public class GetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipAr
     private PNPage page;
     private String filter;
     private Collection<PNSortKey> sort = Collections.emptyList();
-    private boolean includeTotalCount;
-    private boolean includeCustom;
-    private boolean includeType;
-    private Include.PNChannelDetailsLevel includeChannel;
+    private boolean includeTotalCount; // deprecated
+    private boolean includeCustom; // deprecated
+    private boolean includeType; // deprecated
+    private Include.PNChannelDetailsLevel includeChannel; // deprecated
     private MembershipInclude include;
 
     @Deprecated

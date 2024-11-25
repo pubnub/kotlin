@@ -94,7 +94,7 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun addGetAndRemoveMembership() {
+    fun addGetAndRemoveMembershipDeprecated() {
         val channels = listOf(PNChannelMembership.Partial(channelId = channel))
         val setResult =
             pubnub.setMemberships(
@@ -468,15 +468,23 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
     @Test
     fun testManageMembership() {
         pubnub.setMemberships(
-            uuid = testUuid,
             channels = listOf(PNChannelMembership.Partial(channelId = channel, status = status)),
+            userId = testUuid
         ).sync()
 
-        pubnub.manageMemberships(
-            channelsToSet = listOf(PNChannelMembership.Partial(channelId = otherChannel, status = status)),
+        val manageMembershipsResult = pubnub.manageMemberships(
+            channelsToSet = listOf(PNChannelMembership.Partial(channelId = otherChannel, status = status, type = type)),
             channelsToRemove = listOf(),
             userId = testUuid,
+            include = MembershipInclude(includeStatus = true, includeType = true)
         ).sync()
+
+        val sortedGetAllResult: List<PNChannelMembership> = sortPNChannelMembershipsByUpdatedValue(manageMembershipsResult.data)
+
+        assertEquals(status, sortedGetAllResult[0].status?.value)
+        assertEquals(status, sortedGetAllResult[1].status?.value)
+        assertNull(null, sortedGetAllResult[0].type?.value)
+        assertEquals(type, sortedGetAllResult[1].type?.value)
 
         val getAllResult =
             pubnub.getMemberships(uuid = testUuid, includeChannelDetails = PNChannelDetailsLevel.CHANNEL).sync().data
@@ -495,7 +503,7 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
                 channelMetadata(id = otherChannel),
                 custom = null,
                 status = PatchValue.of(status),
-                type = PatchValue.of(null),
+                type = PatchValue.of(type),
                 eTag = noEtag,
                 updated = noUpdated,
             )
