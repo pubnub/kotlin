@@ -41,7 +41,7 @@ public class GetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipAr
         super(pubnub);
     }
 
-    public GetMembershipsImpl(PubNub pubnub, String userId){
+    public GetMembershipsImpl(PubNub pubnub, String userId) {
         super(pubnub);
         this.uuid = userId;
     }
