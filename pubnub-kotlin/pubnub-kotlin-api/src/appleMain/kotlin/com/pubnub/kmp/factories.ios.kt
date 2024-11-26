@@ -368,7 +368,3 @@ actual fun createStatusListener(
         onStatusChange = onStatus
     )
 }
-
-actual fun createCustomObject(map: Map<String, Any?>): CustomObject {
-    return CustomObject(map)
-}

@@ -44,7 +44,6 @@ class FetchMessagesEndpoint internal constructor(
         internal const val INCLUDE_MESSAGE_TYPE_QUERY_PARAM = "include_message_type"
         private const val INCLUDE_CUSTOM_MESSAGE_TYPE = "include_custom_message_type"
 
-
         internal fun effectiveMax(
             maximumPerChannel: Int?,
             includeMessageActions: Boolean,
