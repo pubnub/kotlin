@@ -88,7 +88,7 @@ class PublishEndpoint internal constructor(
      * @param queryParams hashMap to add parameters
      */
     private fun addQueryParams(queryParams: MutableMap<String, String>) {
-        meta?.let {  queryParams["meta"] = pubnub.mapper.toJson(it) }
+        meta?.let { queryParams["meta"] = pubnub.mapper.toJson(it) }
         shouldStore?.let { queryParams["store"] = it.numericString }
         ttl?.let { queryParams["ttl"] = it.toString() }
         if (!replicate) {

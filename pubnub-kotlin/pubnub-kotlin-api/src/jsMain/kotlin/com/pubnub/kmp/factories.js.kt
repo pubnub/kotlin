@@ -244,7 +244,3 @@ actual fun createStatusListener(
     }
     return listener
 }
-
-actual fun createCustomObject(map: Map<String, Any?>): CustomObject {
-    return CustomObjectImpl(map)
-}

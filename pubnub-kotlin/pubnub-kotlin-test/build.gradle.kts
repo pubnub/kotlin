@@ -40,9 +40,8 @@ kotlin {
         defaultConfigs {
             val testProps = Properties()
             try {
-                rootProject.file("test.properties").inputStream().use {
-                    testProps.load(it)
-                }
+                val bytes = providers.fileContents(rootProject.layout.projectDirectory.file("test.properties")).asBytes.get()
+                testProps.load(bytes.inputStream())
             } catch (e: Exception) {
                 println("No test.properties found in root project. Trying to get keys from env")
                 try {

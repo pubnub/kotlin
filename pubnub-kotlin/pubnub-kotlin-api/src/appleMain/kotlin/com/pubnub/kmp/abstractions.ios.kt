@@ -4,8 +4,6 @@ import platform.Foundation.NSData
 import platform.Foundation.NSInputStream
 import platform.Foundation.NSURL
 
-actual class CustomObject(val value: Any)
-
 actual abstract class Uploadable
 
 data class DataUploadContent(

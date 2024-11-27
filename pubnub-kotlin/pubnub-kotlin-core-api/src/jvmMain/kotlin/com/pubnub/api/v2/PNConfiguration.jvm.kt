@@ -45,6 +45,6 @@ actual fun createPNConfiguration(
         this.authKey = NO_AUTH_KEY
         this.secretKey = secretKey.orEmpty()
         this.logVerbosity = logVerbosity
-        this.authToken = authToken.orEmpty()
+        this.authToken = authToken
     }.build()
 }
