@@ -18,6 +18,7 @@ import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.internal.subscribe.eventengine.effect.MessagesConsumer
 import com.pubnub.internal.subscribe.eventengine.effect.StatusConsumer
+import org.slf4j.LoggerFactory
 import java.util.concurrent.CopyOnWriteArrayList
 
 class ListenerManager(val pubnub: PubNub) : MessagesConsumer, StatusConsumer, EventEmitter, StatusEmitter {
@@ -25,6 +26,8 @@ class ListenerManager(val pubnub: PubNub) : MessagesConsumer, StatusConsumer, Ev
 
     private val statusListeners get() = listeners.filterIsInstance<StatusListener>()
     private val eventListeners get() = listeners.filterIsInstance<EventListener>()
+
+    private val log = LoggerFactory.getLogger(this.javaClass.simpleName)
 
     /**
      * Add a listener.
@@ -65,49 +68,59 @@ class ListenerManager(val pubnub: PubNub) : MessagesConsumer, StatusConsumer, Ev
     }
 
     override fun announce(status: PNStatus) {
-        statusListeners.forEach { it.status(pubnub, status) }
+        statusListeners.safeForEach { it.status(pubnub, status) }
     }
 
     override fun announce(message: PNMessageResult) {
-        eventListeners.forEach { it.message(pubnub, message) }
+        eventListeners.safeForEach { it.message(pubnub, message) }
         val envelope = AnnouncementEnvelope(message)
-        subscriptionCallbacks.forEach { it.message(pubnub, envelope) }
-        setCallbacks.forEach { it.message(pubnub, envelope) }
+        subscriptionCallbacks.safeForEach { it.message(pubnub, envelope) }
+        setCallbacks.safeForEach { it.message(pubnub, envelope) }
     }
 
     override fun announce(presence: PNPresenceEventResult) {
-        eventListeners.forEach { it.presence(pubnub, presence) }
+        eventListeners.safeForEach { it.presence(pubnub, presence) }
         val envelope = AnnouncementEnvelope(presence)
-        subscriptionCallbacks.forEach { it.presence(pubnub, envelope) }
-        setCallbacks.forEach { it.presence(pubnub, envelope) }
+        subscriptionCallbacks.safeForEach { it.presence(pubnub, envelope) }
+        setCallbacks.safeForEach { it.presence(pubnub, envelope) }
     }
 
     override fun announce(signal: PNSignalResult) {
-        eventListeners.forEach { it.signal(pubnub, signal) }
+        eventListeners.safeForEach { it.signal(pubnub, signal) }
         val envelope = AnnouncementEnvelope(signal)
-        subscriptionCallbacks.forEach { it.signal(pubnub, envelope) }
-        setCallbacks.forEach { it.signal(pubnub, envelope) }
+        subscriptionCallbacks.safeForEach { it.signal(pubnub, envelope) }
+        setCallbacks.safeForEach { it.signal(pubnub, envelope) }
     }
 
     override fun announce(messageAction: PNMessageActionResult) {
-        eventListeners.forEach { it.messageAction(pubnub, messageAction) }
+        eventListeners.safeForEach { it.messageAction(pubnub, messageAction) }
         val envelope = AnnouncementEnvelope(messageAction)
-        subscriptionCallbacks.forEach { it.messageAction(pubnub, envelope) }
-        setCallbacks.forEach { it.messageAction(pubnub, envelope) }
+        subscriptionCallbacks.safeForEach { it.messageAction(pubnub, envelope) }
+        setCallbacks.safeForEach { it.messageAction(pubnub, envelope) }
     }
 
     override fun announce(pnObjectEventResult: PNObjectEventResult) {
-        eventListeners.forEach { it.objects(pubnub, pnObjectEventResult) }
+        eventListeners.safeForEach { it.objects(pubnub, pnObjectEventResult) }
         val envelope = AnnouncementEnvelope(pnObjectEventResult)
-        subscriptionCallbacks.forEach { it.objects(pubnub, envelope) }
-        setCallbacks.forEach { it.objects(pubnub, envelope) }
+        subscriptionCallbacks.safeForEach { it.objects(pubnub, envelope) }
+        setCallbacks.safeForEach { it.objects(pubnub, envelope) }
     }
 
     override fun announce(pnFileEventResult: PNFileEventResult) {
-        eventListeners.forEach { it.file(pubnub, pnFileEventResult) }
+        eventListeners.safeForEach { it.file(pubnub, pnFileEventResult) }
         val envelope = AnnouncementEnvelope(pnFileEventResult)
-        subscriptionCallbacks.forEach { it.file(pubnub, envelope) }
-        setCallbacks.forEach { it.file(pubnub, envelope) }
+        subscriptionCallbacks.safeForEach { it.file(pubnub, envelope) }
+        setCallbacks.safeForEach { it.file(pubnub, envelope) }
+    }
+
+    private inline fun <T> Iterable<T>.safeForEach(action: (T) -> Unit) {
+        for (element in this) {
+            try {
+                action(element)
+            } catch (e: Throwable) {
+                log.warn("Uncaught exception in listener.", e)
+            }
+        }
     }
 }
 

@@ -19,13 +19,17 @@ internal class EmitMessagesEffect(
     override fun runEffect() {
         log.trace("Running EmitMessagesEffect")
         for (message in messages) {
-            when (message) {
-                is PNMessageResult -> messagesConsumer.announce(message)
-                is PNPresenceEventResult -> messagesConsumer.announce(message)
-                is PNSignalResult -> messagesConsumer.announce(message)
-                is PNMessageActionResult -> messagesConsumer.announce(message)
-                is PNObjectEventResult -> messagesConsumer.announce(message)
-                is PNFileEventResult -> messagesConsumer.announce(message)
+            try {
+                when (message) {
+                    is PNMessageResult -> messagesConsumer.announce(message)
+                    is PNPresenceEventResult -> messagesConsumer.announce(message)
+                    is PNSignalResult -> messagesConsumer.announce(message)
+                    is PNMessageActionResult -> messagesConsumer.announce(message)
+                    is PNObjectEventResult -> messagesConsumer.announce(message)
+                    is PNFileEventResult -> messagesConsumer.announce(message)
+                }
+            } catch (_: Throwable) {
+                // ignore
             }
         }
     }
