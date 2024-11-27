@@ -18,6 +18,7 @@ import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.internal.subscribe.eventengine.effect.MessagesConsumer
 import com.pubnub.internal.subscribe.eventengine.effect.StatusConsumer
+import org.slf4j.LoggerFactory
 import java.util.concurrent.CopyOnWriteArrayList
 
 class ListenerManager(val pubnub: PubNub) : MessagesConsumer, StatusConsumer, EventEmitter, StatusEmitter {
@@ -25,6 +26,8 @@ class ListenerManager(val pubnub: PubNub) : MessagesConsumer, StatusConsumer, Ev
 
     private val statusListeners get() = listeners.filterIsInstance<StatusListener>()
     private val eventListeners get() = listeners.filterIsInstance<EventListener>()
+
+    private val log = LoggerFactory.getLogger(this.javaClass.simpleName)
 
     /**
      * Add a listener.
@@ -115,7 +118,7 @@ class ListenerManager(val pubnub: PubNub) : MessagesConsumer, StatusConsumer, Ev
             try {
                 action(element)
             } catch (e: Throwable) {
-                e.printStackTrace()
+                log.warn("Uncaught exception in listener.", e)
             }
         }
     }
