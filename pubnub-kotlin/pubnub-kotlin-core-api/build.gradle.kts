@@ -12,7 +12,6 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(libs.kotlinx.atomicfu)
-                api(libs.kotlinx.datetime)
             }
         }
 

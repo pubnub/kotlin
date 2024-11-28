@@ -1,9 +1,7 @@
 package com.pubnub.api.util
 
+import com.pubnub.api.utils.Instant
 import com.pubnub.api.utils.TimetokenUtil
-import kotlinx.datetime.Instant
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -19,9 +17,6 @@ class TimetokenUtilsTest {
         val timetokenResult = TimetokenUtil.instantToTimetoken(instant)
 
         // then
-        val localDateTimeInUTC = instant.toLocalDateTime(TimeZone.UTC)
-        assertEquals("2024-09-30", localDateTimeInUTC.date.toString())
-        assertEquals("11:24:20.623211800", localDateTimeInUTC.time.toString())
         assertEquals(timetoken, timetokenResult)
     }
 
@@ -35,9 +30,7 @@ class TimetokenUtilsTest {
 
         // then
         val instant: Instant = TimetokenUtil.timetokenToInstant(timetoken)
-        val localDateTimeInUTC = instant.toLocalDateTime(TimeZone.UTC)
-        assertEquals("2024-10-02", localDateTimeInUTC.date.toString())
-        assertEquals("11:02:15.316", localDateTimeInUTC.time.toString())
+        assertEquals(unixTime, instant.toEpochMilliseconds())
     }
 
     @Test
@@ -59,8 +52,6 @@ class TimetokenUtilsTest {
 
         // then
         val instant = Instant.fromEpochMilliseconds(unixTime)
-        val toLocalDateTime = instant.toLocalDateTime(TimeZone.UTC)
-        assertEquals("2024-09-30", toLocalDateTime.date.toString())
-        assertEquals("11:24:20.623", toLocalDateTime.time.toString())
+        assertEquals(timetoken / 10000 * 10000, TimetokenUtil.instantToTimetoken(instant))
     }
 }

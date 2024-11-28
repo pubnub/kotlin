@@ -3,9 +3,13 @@ package com.pubnub.test.integration
 import com.pubnub.test.BaseIntegrationTest
 import com.pubnub.test.await
 import com.pubnub.test.randomString
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.withContext
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.time.Duration.Companion.seconds
 
 class MessageCountsTest : BaseIntegrationTest() {
     private val channel = randomString()
@@ -35,6 +39,9 @@ class MessageCountsTest : BaseIntegrationTest() {
             ).await().timetoken
         }
 
+        withContext(Dispatchers.Default) {
+            delay(2.seconds)
+        }
         val counts = pubnub.messageCounts(
             listOf(channel, otherChannel),
             listOf(timetokens.first() - 1, timetokensOther.first() - 1)
