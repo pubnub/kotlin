@@ -362,8 +362,8 @@ public class MembershipIT extends ObjectsApiBaseIT {
         final List<PNChannelMembership> channelMembershipsToSet = Collections.singletonList(
                 PNChannelMembership.builder(testChannelId2)
                         .custom(customChannelMembershipObject())
-                        .status(membership01Status)
-                        .type(membership01Type)
+                        .status(membership02Status)
+                        .type(membership02Type)
                         .build());
 
         //when
@@ -386,8 +386,8 @@ public class MembershipIT extends ObjectsApiBaseIT {
         assertEquals(1, manageMembershipResult.getData().size());
         PNMembership pnMembership = manageMembershipResult.getData().get(0);
         assertEquals(testChannelId2, pnMembership.getChannel().getId());
-        assertEquals(membership01Status, pnMembership.getStatus().getValue());
-        assertEquals(membership01Type, pnMembership.getType().getValue());
+        assertEquals(membership02Status, pnMembership.getStatus().getValue());
+        assertEquals(membership02Type, pnMembership.getType().getValue());
     }
 
     @Test

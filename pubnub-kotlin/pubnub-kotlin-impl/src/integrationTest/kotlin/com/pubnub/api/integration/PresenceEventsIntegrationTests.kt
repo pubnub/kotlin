@@ -18,6 +18,7 @@ import org.hamcrest.core.IsEqual
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -78,25 +79,29 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
 
     @Test
     fun testJoinChannelUsingSubscription() {
-        val successPresenceEventCont = AtomicInteger()
         val expectedChannel = randomChannel()
         val subscription = pubnub.channel(expectedChannel).subscription(SubscriptionOptions.receivePresenceEvents())
+        val capturePresenceEvent = mutableListOf<PNPresenceEventResult>()
+        val countDownLatch = CountDownLatch(1)
 
         subscription.onPresence = { pnPresenceEventResult: PNPresenceEventResult ->
-            assertEquals("join", pnPresenceEventResult.event)
-            assertEquals(expectedChannel, pnPresenceEventResult.channel)
-            successPresenceEventCont.incrementAndGet()
+            capturePresenceEvent.add(pnPresenceEventResult)
+            countDownLatch.countDown()
         }
 
         subscription.subscribe()
 
-        Thread.sleep(2000)
-        assertEquals(1, successPresenceEventCont.get())
+        assertTrue(countDownLatch.await(5000, TimeUnit.MILLISECONDS))
+        assertEquals(1, capturePresenceEvent.size)
+        assertEquals("join", capturePresenceEvent.first().event)
+        assertEquals(expectedChannel, capturePresenceEvent.first().channel)
+
     }
 
     @Test
     fun testJoinChannelUsingSubscriptionSet() {
-        val successPresenceEventCont = AtomicInteger()
+        val countDownLatch = CountDownLatch(2)
+        val capturePresenceEvent = mutableListOf<PNPresenceEventResult>()
         val expectedChannel01 = randomChannel()
         val expectedChannel02 = randomChannel()
         val subscriptionSetOf =
@@ -106,15 +111,19 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
             )
 
         subscriptionSetOf.onPresence = { pnPresenceEventResult: PNPresenceEventResult ->
-            assertEquals("join", pnPresenceEventResult.event)
-            assertTrue(pnPresenceEventResult.channel == expectedChannel01 || pnPresenceEventResult.channel == expectedChannel02)
-            successPresenceEventCont.incrementAndGet()
+            capturePresenceEvent.add(pnPresenceEventResult)
+            countDownLatch.countDown()
         }
 
         subscriptionSetOf.subscribe()
 
-        Thread.sleep(2000)
-        assertEquals(2, successPresenceEventCont.get())
+        assertTrue(countDownLatch.await(5000, TimeUnit.MILLISECONDS))
+        assertEquals(2, capturePresenceEvent.size)
+        assertEquals("join", capturePresenceEvent.first().event)
+        assertEquals("join", capturePresenceEvent[1].event)
+        val subscribedChannels = capturePresenceEvent.map { pnPresenceEvent -> pnPresenceEvent.channel }.toSet()
+        assertTrue(subscribedChannels.contains(expectedChannel01))
+        assertTrue(subscribedChannels.contains(expectedChannel02))
     }
 
     @Test

@@ -93,6 +93,7 @@ data class PNSetMembershipEvent(
     val eTag: String,
     val updated: String,
     val status: PatchValue<String?>?,
+    val type: PatchValue<String?>?,
 )
 
 data class PNDeleteMembershipEvent(
@@ -175,6 +176,7 @@ private fun PNSetMembershipEvent.toApi(): com.pubnub.api.models.consumer.pubsub.
         eTag = this.eTag,
         updated = this.updated,
         status = this.status,
+        type = this.type
     )
 }
 

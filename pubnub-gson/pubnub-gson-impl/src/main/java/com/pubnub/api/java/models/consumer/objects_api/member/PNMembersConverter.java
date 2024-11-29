@@ -19,7 +19,8 @@ public interface PNMembersConverter {
                 .setCustom(member.getCustom())
                 .setUpdated(member.getUpdated())
                 .setETag(member.getETag())
-                .setStatus(member.getStatus());
+                .setStatus(member.getStatus())
+                .setType(member.getType());
     }
 
     static List<PNMembers> from(Collection<PNMember> members) {

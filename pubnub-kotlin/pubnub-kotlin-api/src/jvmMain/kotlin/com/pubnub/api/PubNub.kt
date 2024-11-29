@@ -61,6 +61,7 @@ import com.pubnub.api.models.consumer.objects.PNMemberKey
 import com.pubnub.api.models.consumer.objects.PNMembershipKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
+import com.pubnub.api.models.consumer.objects.member.MemberInclude
 import com.pubnub.api.models.consumer.objects.member.MemberInput
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
@@ -1579,6 +1580,13 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      * @param includeCustom Include respective additional fields in the response.
      * @param includeUUIDDetails Include custom fields for UUIDs metadata.
      */
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = "This function is deprecated. Use the new getChannelMembers(channel, limit, page, filter, sort, MembershipInclude(...))",
+        replaceWith = ReplaceWith(
+            "getChannelMembers(channel, limit, page, filter, sort, com.pubnub.api.models.consumer.objects.member.MemberInclude(includeTotalCount = includeCount, includeCustom = includeCustom, includeUser = true, includeUserCustom = true, includeUserType = includeUUIDType)"
+        )
+    )
     actual fun getChannelMembers(
         channel: String,
         limit: Int?,
@@ -1589,6 +1597,34 @@ actual interface PubNub : StatusEmitter, EventEmitter {
         includeCustom: Boolean,
         includeUUIDDetails: PNUUIDDetailsLevel?,
         includeType: Boolean,
+    ): GetChannelMembers
+
+    /**
+     * The method returns a list of members in a channel. The list will include user metadata for members
+     * that have additional metadata stored in the database.
+     *
+     * @param channel Channel name
+     * @param limit Number of objects to return in the response.
+     *              Default is 100, which is also the maximum value.
+     *              Set limit to 0 (zero) and includeCount to true if you want to retrieve only a result count.
+     * @param page Use for pagination.
+     *              - [PNNext] : Previously-returned cursor bookmark for fetching the next page.
+     *              - [PNPrev] : Previously-returned cursor bookmark for fetching the previous page.
+     *                           Ignored if you also supply the start parameter.
+     * @param filter Expression used to filter the results. Only objects whose properties satisfy the given
+     *               expression are returned.
+     * @param sort List of properties to sort by. Available options are id, name, and updated.
+     *             @see [PNAsc], [PNDesc]
+     * @param include Request specific elements to be available in response.
+     * Use [com.pubnub.api.models.consumer.objects.member.MemberInclude] to easily create the desired configuration.
+     */
+    actual fun getChannelMembers(
+        channel: String,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMemberKey>>,
+        include: MemberInclude
     ): GetChannelMembers
 
     /**
@@ -1638,6 +1674,13 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      * @param includeCustom Include respective additional fields in the response.
      * @param includeUUIDDetails Include custom fields for UUIDs metadata.
      */
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = "This function is deprecated. Use the new setChannelMembers(channel, userIds, limit, page, filter, sort, MembershipInclude(...))",
+        replaceWith = ReplaceWith(
+            "setChannelMembers(channel, userIds, limit, page, filter, sort, com.pubnub.api.models.consumer.objects.member.MemberInclude(includeTotalCount = includeCount, includeCustom = includeCustom, includeUser = true, includeUserCustom = true, includeUserType = includeUUIDType)"
+        )
+    )
     actual fun setChannelMembers(
         channel: String,
         uuids: List<MemberInput>,
@@ -1649,7 +1692,36 @@ actual interface PubNub : StatusEmitter, EventEmitter {
         includeCustom: Boolean,
         includeUUIDDetails: PNUUIDDetailsLevel?,
         includeType: Boolean,
-//        type
+    ): ManageChannelMembers
+
+    /**
+     * This method sets members in a channel.
+     *
+     * @param channel Channel name
+     * @param uuids List of members to add to the channel. List can contain strings (uuid only)
+     *              or objects (which can include custom data). @see [PNMember.Partial]
+     * @param limit Number of objects to return in the response.
+     *              Default is 100, which is also the maximum value.
+     *              Set limit to 0 (zero) and includeCount to true if you want to retrieve only a result count.
+     * @param page Use for pagination.
+     *              - [PNNext] : Previously-returned cursor bookmark for fetching the next page.
+     *              - [PNPrev] : Previously-returned cursor bookmark for fetching the previous page.
+     *                           Ignored if you also supply the start parameter.
+     * @param filter Expression used to filter the results. Only objects whose properties satisfy the given
+     *               expression are returned.
+     * @param sort List of properties to sort by. Available options are id, name, and updated.
+     *             @see [PNAsc], [PNDesc]
+     * @param include Request specific elements to be available in response.
+     * Use [com.pubnub.api.models.consumer.objects.member.MemberInclude] to easily create the desired configuration.
+     */
+    actual fun setChannelMembers(
+        channel: String,
+        users: List<MemberInput>,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMemberKey>>,
+        include: MemberInclude
     ): ManageChannelMembers
 
     /**
@@ -1698,6 +1770,13 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      * @param includeCustom Include respective additional fields in the response.
      * @param includeUUIDDetails Include custom fields for UUIDs metadata.
      */
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = "This function is deprecated. Use the new removeChannelMembers(channel, userIds, limit, page, filter, sort, MembershipInclude(...))",
+        replaceWith = ReplaceWith(
+            "removeChannelMembers(channel, userIds, limit, page, filter, sort, com.pubnub.api.models.consumer.objects.member.MemberInclude(includeTotalCount = includeCount, includeCustom = includeCustom, includeUser = true, includeUserCustom = true, includeUserType = includeUUIDType)"
+        )
+    )
     actual fun removeChannelMembers(
         channel: String,
         uuids: List<String>,
@@ -1709,6 +1788,35 @@ actual interface PubNub : StatusEmitter, EventEmitter {
         includeCustom: Boolean,
         includeUUIDDetails: PNUUIDDetailsLevel?,
         includeType: Boolean,
+    ): ManageChannelMembers
+
+    /**
+     * Remove members from a Channel.
+     *
+     * @param channel Channel name
+     * @param userIds Members to remove from channel.
+     * @param limit Number of objects to return in the response.
+     *              Default is 100, which is also the maximum value.
+     *              Set limit to 0 (zero) and includeCount to true if you want to retrieve only a result count.
+     * @param page Use for pagination.
+     *              - [PNNext] : Previously-returned cursor bookmark for fetching the next page.
+     *              - [PNPrev] : Previously-returned cursor bookmark for fetching the previous page.
+     *                           Ignored if you also supply the start parameter.
+     * @param filter Expression used to filter the results. Only objects whose properties satisfy the given
+     *               expression are returned.
+     * @param sort List of properties to sort by. Available options are id, name, and updated.
+     *             @see [PNAsc], [PNDesc]
+     * @param include Request specific elements to be available in response.
+     * Use [com.pubnub.api.models.consumer.objects.member.MemberInclude] to easily create the desired configuration.
+     */
+    actual fun removeChannelMembers(
+        channel: String,
+        userIds: List<String>,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMemberKey>>,
+        include: MemberInclude
     ): ManageChannelMembers
 
     /**
@@ -1734,6 +1842,13 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      * @param includeUUIDDetails Include custom fields for UUIDs metadata.
      * @param includeType Include the type field for UUID metadata
      */
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = "This function is deprecated. Use the new manageChannelMembers(channels, uuidsToSet, uuidsToRemove, limit, page, filter, sort, MemberInclude(...))",
+        replaceWith = ReplaceWith(
+            "manageChannelMembers(channels, uuidsToSet, uuidsToRemove, limit, page, filter, sort, com.pubnub.api.models.consumer.objects.member.MemberInclude(includeTotalCount = includeCount, includeCustom = includeCustom, includeUser = true, includeUserCustom = true, includeUserType = includeUUIDType)"
+        )
+    )
     fun manageChannelMembers(
         channel: String,
         uuidsToSet: Collection<MemberInput>,
@@ -1746,6 +1861,37 @@ actual interface PubNub : StatusEmitter, EventEmitter {
         includeCustom: Boolean = false,
         includeUUIDDetails: PNUUIDDetailsLevel? = null,
         includeUUIDType: Boolean = false,
+    ): ManageChannelMembers
+
+    /**
+     * Set or remove members in a channel.
+     *
+     * @param channel Channel name
+     * @param usersToSet Collection of members to add to the channel. @see [com.pubnub.api.models.consumer.objects.member.PNMember.Partial]
+     * @param usersToRemove Members to remove from channel.
+     * @param limit Number of objects to return in the response.
+     *              Default is 100, which is also the maximum value.
+     *              Set limit to 0 (zero) and includeCount to true if you want to retrieve only a result count.
+     * @param page Use for pagination.
+     *              - [PNNext] : Previously-returned cursor bookmark for fetching the next page.
+     *              - [PNPrev] : Previously-returned cursor bookmark for fetching the previous page.
+     *                           Ignored if you also supply the start parameter.
+     * @param filter Expression used to filter the results. Only objects whose properties satisfy the given
+     *               expression are returned.
+     * @param sort List of properties to sort by. Available options are id, name, and updated.
+     *             @see [PNAsc], [PNDesc]
+     * @param include Request specific elements to be available in response.
+     * Use [com.pubnub.api.models.consumer.objects.member.MemberInclude] to easily create the desired configuration.
+     */
+    fun manageChannelMembers(
+        channel: String,
+        usersToSet: Collection<MemberInput>,
+        usersToRemove: Collection<String>,
+        limit: Int? = null,
+        page: PNPage? = null,
+        filter: String? = null,
+        sort: Collection<PNSortKey<PNMemberKey>> = listOf(),
+        include: MemberInclude = MemberInclude()
     ): ManageChannelMembers
 
     /**

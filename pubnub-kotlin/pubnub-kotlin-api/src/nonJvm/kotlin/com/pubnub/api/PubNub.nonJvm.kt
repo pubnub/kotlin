@@ -56,6 +56,7 @@ import com.pubnub.api.models.consumer.objects.PNMemberKey
 import com.pubnub.api.models.consumer.objects.PNMembershipKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
+import com.pubnub.api.models.consumer.objects.member.MemberInclude
 import com.pubnub.api.models.consumer.objects.member.MemberInput
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
@@ -349,6 +350,7 @@ actual interface PubNub {
         include: MembershipInclude
     ): ManageMemberships
 
+    // deprecated
     actual fun getChannelMembers(
         channel: String,
         limit: Int?,
@@ -361,6 +363,16 @@ actual interface PubNub {
         includeType: Boolean
     ): GetChannelMembers
 
+    actual fun getChannelMembers(
+        channel: String,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMemberKey>>,
+        include: MemberInclude
+    ): GetChannelMembers
+
+    // deprecated
     actual fun setChannelMembers(
         channel: String,
         uuids: List<MemberInput>,
@@ -374,6 +386,18 @@ actual interface PubNub {
         includeType: Boolean
     ): ManageChannelMembers
 
+
+    actual fun setChannelMembers(
+        channel: String,
+        users: List<MemberInput>,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMemberKey>>,
+        include: MemberInclude
+    ): ManageChannelMembers
+
+    // deprecated
     actual fun removeChannelMembers(
         channel: String,
         uuids: List<String>,
@@ -385,6 +409,17 @@ actual interface PubNub {
         includeCustom: Boolean,
         includeUUIDDetails: PNUUIDDetailsLevel?,
         includeType: Boolean
+    ): ManageChannelMembers
+
+
+    actual fun removeChannelMembers(
+        channel: String,
+        userIds: List<String>,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMemberKey>>,
+        include: MemberInclude
     ): ManageChannelMembers
 
     actual fun listFiles(

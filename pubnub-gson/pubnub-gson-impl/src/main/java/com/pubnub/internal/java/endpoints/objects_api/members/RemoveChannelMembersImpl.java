@@ -5,12 +5,15 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.java.endpoints.objects_api.members.RemoveChannelMembers;
+import com.pubnub.api.java.endpoints.objects_api.members.RemoveChannelMembersBuilder;
 import com.pubnub.api.java.endpoints.objects_api.utils.Include;
 import com.pubnub.api.java.endpoints.objects_api.utils.ObjectsBuilderSteps;
 import com.pubnub.api.java.endpoints.objects_api.utils.PNSortKey;
+import com.pubnub.api.java.models.consumer.objects_api.member.MemberInclude;
 import com.pubnub.api.java.models.consumer.objects_api.member.PNRemoveChannelMembersResult;
 import com.pubnub.api.java.models.consumer.objects_api.member.PNRemoveChannelMembersResultConverter;
 import com.pubnub.api.java.models.consumer.objects_api.member.PNUUID;
+import com.pubnub.api.java.models.consumer.objects_api.member.PNUser;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult;
 import com.pubnub.internal.java.endpoints.DelegatingEndpoint;
@@ -23,27 +26,40 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import static com.pubnub.internal.java.endpoints.objects_api.members.SetChannelMembersImpl.getMemberInclude;
+
 @Setter
 @Accessors(chain = true, fluent = true)
-public class RemoveChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayResult, PNRemoveChannelMembersResult> implements RemoveChannelMembers {
+public class RemoveChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayResult, PNRemoveChannelMembersResult> implements RemoveChannelMembers, RemoveChannelMembersBuilder {
 
     private Integer limit = null;
     private PNPage page;
     private String filter;
     private Collection<PNSortKey> sort = Collections.emptyList();
-    private boolean includeTotalCount;
-    private boolean includeCustom;
-    private boolean includeType;
+    private boolean includeTotalCount; // deprecated
+    private boolean includeCustom; // deprecated
+    private boolean includeType; // deprecated
     private final String channel;
-    private final List<String> uuids;
-    private Include.PNUUIDDetailsLevel includeUUID;
+    private final List<String> userIds; // deprecated
+    private Include.PNUUIDDetailsLevel includeUUID; // deprecated
+    private MemberInclude include;
 
-    public RemoveChannelMembersImpl(String channel, Collection<PNUUID> uuids, final PubNub pubnubInstance) {
+    @Deprecated
+    private RemoveChannelMembersImpl(String channel, Collection<PNUUID> uuids, final PubNub pubnubInstance) {
         super(pubnubInstance);
         this.channel = channel;
-        this.uuids = new ArrayList<>(uuids.size());
+        this.userIds = new ArrayList<>(uuids.size());
         for (PNUUID uuid : uuids) {
-            this.uuids.add(uuid.getUuid().getId());
+            this.userIds.add(uuid.getUuid().getId());
+        }
+    }
+
+    public RemoveChannelMembersImpl(final PubNub pubnubInstance, String channel, Collection<PNUser> users) {
+        super(pubnubInstance);
+        this.channel = channel;
+        this.userIds = new ArrayList<>(users.size());
+        for (PNUser user : users) {
+            this.userIds.add(user.getUserId());
         }
     }
 
@@ -58,15 +74,12 @@ public class RemoveChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayRe
     protected Endpoint<PNMemberArrayResult> createRemoteAction() {
         return pubnub.removeChannelMembers(
                 channel,
-                uuids,
+                userIds,
                 limit,
                 page,
                 filter,
                 SetChannelMembersImpl.toInternal(sort),
-                includeTotalCount,
-                includeCustom,
-                SetChannelMembersImpl.toInternal(includeUUID),
-                includeType
+                getMemberInclude(include, includeUUID, includeTotalCount, includeCustom, includeType)
         );
     }
 

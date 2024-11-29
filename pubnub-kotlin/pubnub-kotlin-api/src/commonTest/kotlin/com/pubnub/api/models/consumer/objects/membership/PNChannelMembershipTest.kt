@@ -29,7 +29,8 @@ class PNChannelMembershipTest {
         val expectedMembership = originalMembership.copy(
             updated = updateMembership.updated,
             eTag = updateMembership.eTag,
-            status = updateMembership.status
+            status = updateMembership.status,
+            type = updateMembership.ty
         )
 
         val actualMembership = originalMembership + updateMembership

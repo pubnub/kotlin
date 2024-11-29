@@ -56,6 +56,7 @@ import com.pubnub.api.models.consumer.objects.PNMemberKey
 import com.pubnub.api.models.consumer.objects.PNMembershipKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
+import com.pubnub.api.models.consumer.objects.member.MemberInclude
 import com.pubnub.api.models.consumer.objects.member.MemberInput
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
@@ -382,6 +383,7 @@ expect interface PubNub {
 //        includeChannelDetails: PNChannelDetailsLevel? = null,
 //    ): ManageMemberships
 
+    // deprecated
     fun getChannelMembers(
         channel: String,
         limit: Int? = null,
@@ -394,6 +396,16 @@ expect interface PubNub {
         includeType: Boolean = false,
     ): GetChannelMembers
 
+    fun getChannelMembers(
+        channel: String,
+        limit: Int? = null,
+        page: PNPage? = null,
+        filter: String? = null,
+        sort: Collection<PNSortKey<PNMemberKey>> = listOf(),
+        include: MemberInclude = MemberInclude()
+    ): GetChannelMembers
+
+    // deprecated
     fun setChannelMembers(
         channel: String,
         uuids: List<MemberInput>,
@@ -407,6 +419,17 @@ expect interface PubNub {
         includeType: Boolean = false,
     ): ManageChannelMembers
 
+    fun setChannelMembers(
+        channel: String,
+        users: List<MemberInput>,
+        limit: Int? = null,
+        page: PNPage? = null,
+        filter: String? = null,
+        sort: Collection<PNSortKey<PNMemberKey>> = listOf(),
+        include: MemberInclude = MemberInclude()
+    ): ManageChannelMembers
+
+    // deprecated
     fun removeChannelMembers(
         channel: String,
         uuids: List<String>,
@@ -418,6 +441,16 @@ expect interface PubNub {
         includeCustom: Boolean = false,
         includeUUIDDetails: PNUUIDDetailsLevel? = null,
         includeType: Boolean = false,
+    ): ManageChannelMembers
+
+    fun removeChannelMembers(
+        channel: String,
+        userIds: List<String>,
+        limit: Int? = null,
+        page: PNPage? = null,
+        filter: String? = null,
+        sort: Collection<PNSortKey<PNMemberKey>> = listOf(),
+        include: MemberInclude = MemberInclude()
     ): ManageChannelMembers
 
 //    fun manageChannelMembers(

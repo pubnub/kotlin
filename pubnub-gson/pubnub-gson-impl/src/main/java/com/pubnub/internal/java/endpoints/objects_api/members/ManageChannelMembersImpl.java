@@ -5,12 +5,15 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.java.endpoints.objects_api.members.ManageChannelMembers;
+import com.pubnub.api.java.endpoints.objects_api.members.ManageChannelMembersBuilder;
 import com.pubnub.api.java.endpoints.objects_api.utils.Include;
 import com.pubnub.api.java.endpoints.objects_api.utils.ObjectsBuilderSteps;
 import com.pubnub.api.java.endpoints.objects_api.utils.PNSortKey;
+import com.pubnub.api.java.models.consumer.objects_api.member.MemberInclude;
 import com.pubnub.api.java.models.consumer.objects_api.member.PNManageChannelMembersResult;
 import com.pubnub.api.java.models.consumer.objects_api.member.PNManageChannelMembersResultConverter;
 import com.pubnub.api.java.models.consumer.objects_api.member.PNUUID;
+import com.pubnub.api.java.models.consumer.objects_api.member.PNUser;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects.member.MemberInput;
 import com.pubnub.api.models.consumer.objects.member.PNMember;
@@ -25,27 +28,40 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import static com.pubnub.internal.java.endpoints.objects_api.members.SetChannelMembersImpl.getMemberInclude;
+
 @Setter
 @Accessors(chain = true, fluent = true)
-public class ManageChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayResult, PNManageChannelMembersResult> implements ManageChannelMembers {
+public class ManageChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayResult, PNManageChannelMembersResult> implements ManageChannelMembers, ManageChannelMembersBuilder {
 
+    private final String channel;
     private Integer limit = null;
     private PNPage page;
     private String filter;
     private Collection<PNSortKey> sort = Collections.emptyList();
-    private boolean includeTotalCount;
-    private boolean includeCustom;
-    private boolean includeType;
-    private final String channel;
-    private Include.PNUUIDDetailsLevel includeUUID;
-    private final Collection<PNUUID> uuidsToSet;
-    private final Collection<PNUUID> uuidsToRemove;
+    private boolean includeTotalCount; // deprecated
+    private boolean includeCustom; // deprecated
+    private boolean includeType; // deprecated
+    private Include.PNUUIDDetailsLevel includeUUID; // deprecated
+    private Collection<PNUUID> uuidsToSet; // deprecated
+    private Collection<PNUUID> uuidsToRemove; // deprecated
+    private Collection<PNUser> usersToSet;
+    private Collection<PNUser> usersToRemove;
+    private MemberInclude include;
 
+    @Deprecated
     public ManageChannelMembersImpl(String channel, Collection<PNUUID> uuidsToSet, Collection<PNUUID> uuidsToRemove, final PubNub pubnubInstance) {
         super(pubnubInstance);
         this.channel = channel;
         this.uuidsToSet = uuidsToSet;
         this.uuidsToRemove = uuidsToRemove;
+    }
+
+    public ManageChannelMembersImpl(final PubNub pubnubInstance, String channel, Collection<PNUser> usersToSet, Collection<PNUser> usersToRemove) {
+        super(pubnubInstance);
+        this.channel = channel;
+        this.usersToSet = usersToSet;
+        this.usersToRemove = usersToRemove;
     }
 
     @NotNull
@@ -57,17 +73,16 @@ public class ManageChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayRe
     @Override
     @NotNull
     protected Endpoint<PNMemberArrayResult> createRemoteAction() {
-        List<String> toRemove = new ArrayList<String>(uuidsToRemove.size());
-        for (PNUUID pnuuid : uuidsToRemove) {
-            toRemove.add(pnuuid.getUuid().getId());
-        }
-        List<MemberInput> toSet = new ArrayList<MemberInput>(uuidsToSet.size());
-        for (PNUUID pnuuid : uuidsToSet) {
-            toSet.add(new PNMember.Partial(
-                    pnuuid.getUuid().getId(),
-                    (pnuuid instanceof PNUUID.UUIDWithCustom) ? ((PNUUID.UUIDWithCustom) pnuuid).getCustom() : null,
-                    pnuuid.getStatus()
-            ));
+        List<MemberInput> toSet;
+        List<String> toRemove;
+
+        // new API use
+        if (usersToSet != null || usersToRemove != null) {
+            toSet = createMemberInputFromUserToSet();
+            toRemove = createUserIdsFromUserToRemove();
+        } else { // old API used
+            toSet = createMemberInputFromUUIDToSet();
+            toRemove = createUserIdsFromUUIDToRemove();
         }
 
         return pubnub.manageChannelMembers(
@@ -78,10 +93,7 @@ public class ManageChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayRe
                 page,
                 filter,
                 SetChannelMembersImpl.toInternal(sort),
-                includeTotalCount,
-                includeCustom,
-                SetChannelMembersImpl.toInternal(includeUUID),
-                includeType
+                getMemberInclude(include, includeUUID, includeTotalCount, includeCustom, includeType)
         );
     }
 
@@ -126,5 +138,59 @@ public class ManageChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayRe
                 }
             };
         }
+    }
+
+    private List<MemberInput> createMemberInputFromUserToSet() {
+        if (usersToSet == null) {
+            return Collections.emptyList();
+        }
+        List<MemberInput> memberInputs = new ArrayList<>();
+        for (PNUser user : usersToSet) {
+            memberInputs.add(new PNMember.Partial(
+                    user.getUserId(),
+                    user.getCustom(), // despite IDE error this works ¯\_(ツ)_/¯
+                    user.getStatus(),
+                    user.getType()
+            ));
+        }
+        return memberInputs;
+    }
+    private List<MemberInput> createMemberInputFromUUIDToSet() {
+        if (uuidsToSet == null) {
+            return Collections.emptyList();
+        }
+        List<MemberInput> memberInputs = new ArrayList<>();
+        for (PNUUID uuid : uuidsToSet) {
+            memberInputs.add(new PNMember.Partial(
+                    uuid.getUuid().getId(),
+                    (uuid instanceof PNUUID.UUIDWithCustom) ? ((PNUUID.UUIDWithCustom) uuid).getCustom() : null, // despite IDE error this works ¯\_(ツ)_/¯
+                    uuid.getStatus(),
+                    null
+            ));
+        }
+        return memberInputs;
+    }
+
+    private List<String> createUserIdsFromUserToRemove() {
+        if (usersToRemove == null) {
+            return Collections.emptyList();
+        }
+
+        List<String> toRemove = new ArrayList<>();
+        for (PNUser user: usersToRemove) {
+            toRemove.add(user.getUserId());
+        }
+        return toRemove;
+    }
+
+    private List<String> createUserIdsFromUUIDToRemove() {
+        if (uuidsToRemove == null) {
+            return Collections.emptyList();
+        }
+        List<String> toRemove = new ArrayList<>();
+        for (PNUUID uuid : uuidsToRemove) {
+            toRemove.add(uuid.getUuid().getId());
+        }
+        return toRemove;
     }
 }

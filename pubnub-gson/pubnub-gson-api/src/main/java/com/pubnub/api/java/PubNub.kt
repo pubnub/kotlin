@@ -32,9 +32,13 @@ import com.pubnub.api.java.endpoints.objects_api.channel.GetChannelMetadata
 import com.pubnub.api.java.endpoints.objects_api.channel.RemoveChannelMetadata
 import com.pubnub.api.java.endpoints.objects_api.channel.SetChannelMetadata
 import com.pubnub.api.java.endpoints.objects_api.members.GetChannelMembers
+import com.pubnub.api.java.endpoints.objects_api.members.GetChannelMembersBuilder
 import com.pubnub.api.java.endpoints.objects_api.members.ManageChannelMembers
+import com.pubnub.api.java.endpoints.objects_api.members.ManageChannelMembersBuilder
 import com.pubnub.api.java.endpoints.objects_api.members.RemoveChannelMembers
+import com.pubnub.api.java.endpoints.objects_api.members.RemoveChannelMembersBuilder
 import com.pubnub.api.java.endpoints.objects_api.members.SetChannelMembers
+import com.pubnub.api.java.endpoints.objects_api.members.SetChannelMembersBuilder
 import com.pubnub.api.java.endpoints.objects_api.memberships.GetMemberships
 import com.pubnub.api.java.endpoints.objects_api.memberships.GetMembershipsBuilder
 import com.pubnub.api.java.endpoints.objects_api.memberships.ManageMemberships
@@ -57,6 +61,7 @@ import com.pubnub.api.java.endpoints.push.AddChannelsToPush
 import com.pubnub.api.java.endpoints.push.ListPushProvisions
 import com.pubnub.api.java.endpoints.push.RemoveAllPushChannelsForDevice
 import com.pubnub.api.java.endpoints.push.RemoveChannelsFromPush
+import com.pubnub.api.java.models.consumer.objects_api.member.PNUser
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership
 import com.pubnub.api.java.v2.PNConfiguration
 import com.pubnub.api.java.v2.callbacks.EventEmitter
@@ -513,7 +518,7 @@ interface PubNub : EventEmitter, StatusEmitter {
      * Add and/or remove channel memberships for a UUID.
      */
     @Deprecated(
-        message = "Use manageMemberships(Collection<PNChannelMembership>) instead.",
+        message = "Use manageMemberships(Collection<PNChannelMembership>, Collection<PNChannelMembership>) instead.",
         replaceWith = ReplaceWith("manageMemberships(channelMembershipsToAdd, channelMembershipsToRemove)")
     )
     fun manageMemberships(): ManageMemberships.Builder
@@ -530,22 +535,58 @@ interface PubNub : EventEmitter, StatusEmitter {
      * The method returns a list of members in a channel. The list will include user metadata for members
      * that have additional metadata stored in the database.
      */
+    @Deprecated(
+        message = "Use getChannelMembers(String) instead.",
+        replaceWith = ReplaceWith("getChannelMembers(channelId)")
+    )
     fun getChannelMembers(): GetChannelMembers.Builder
+
+    /**
+     * The method returns a list of members in a channel. The list will include user metadata for members
+     * that have additional metadata stored in the database.
+     */
+    fun getChannelMembers(channelId: String): GetChannelMembersBuilder
 
     /**
      * This method sets members in a channel.
      */
+    @Deprecated(
+        message = "Use setChannelMembers(String, Collection<PNUUID>) instead.",
+        replaceWith = ReplaceWith("setChannelMembers(channelId, channelMembers)")
+    )
     fun setChannelMembers(): SetChannelMembers.Builder
+
+    /**
+     * This method sets members in a channel.
+     */
+    fun setChannelMembers(channelId: String, channelMembers: Collection<PNUser>): SetChannelMembersBuilder
 
     /**
      * Remove members from a Channel.
      */
+    @Deprecated(
+        message = "Use removeChannelMembers(String, Collection<PNUUID>) instead.",
+        replaceWith = ReplaceWith("removeChannelMembers(channelId, channelMembers)")
+    )
     fun removeChannelMembers(): RemoveChannelMembers.Builder
+
+    /**
+     * Remove members from a Channel.
+     */
+    fun removeChannelMembers(channelId: String, channelMembers: Collection<PNUser>): RemoveChannelMembersBuilder
+    /**
+     * Set or remove members in a channel.
+     */
+    @Deprecated(
+        message = "Use manageChannelMembers(String, Collection<PNUUID>, Collection<PNUUID>) instead.",
+        replaceWith = ReplaceWith("manageChannelMembers(channelId, channelMembersToSet, channelMembersToRemove)")
+    )
+    fun manageChannelMembers(): ManageChannelMembers.Builder
 
     /**
      * Set or remove members in a channel.
      */
-    fun manageChannelMembers(): ManageChannelMembers.Builder
+    fun manageChannelMembers(channelId: String, set: Collection<PNUser>, remove: Collection<PNUser>): ManageChannelMembersBuilder
 
     /**
      * Add an action on a published message. Returns the added action in the response.

@@ -107,6 +107,7 @@ import com.pubnub.api.models.consumer.objects.PNMembershipKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.SortField
+import com.pubnub.api.models.consumer.objects.member.MemberInclude
 import com.pubnub.api.models.consumer.objects.member.MemberInput
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
@@ -836,6 +837,7 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
 //        TODO("Not yet implemented")
 //    }
 
+    // deprecated
     override fun getChannelMembers(
         channel: String,
         limit: Int?,
@@ -873,6 +875,18 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
         )
     }
 
+    override fun getChannelMembers(
+        channel: String,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMemberKey>>,
+        include: MemberInclude
+    ): GetChannelMembers {
+        TODO("Not yet implemented")
+    }
+
+    // deprecated
     override fun setChannelMembers(
         channel: String,
         uuids: List<MemberInput>,
@@ -919,6 +933,18 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
         )
     }
 
+    override fun setChannelMembers(
+        channel: String,
+        users: List<MemberInput>,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMemberKey>>,
+        include: MemberInclude
+    ): ManageChannelMembers {
+        TODO("Not yet implemented")
+    }
+
     override fun removeChannelMembers(
         channel: String,
         uuids: List<String>,
@@ -957,6 +983,18 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
                 }
             }
         )
+    }
+
+    override fun removeChannelMembers(
+        channel: String,
+        userIds: List<String>,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMemberKey>>,
+        include: MemberInclude
+    ): ManageChannelMembers {
+        TODO("Not yet implemented")
     }
 
 //    override fun manageChannelMembers(

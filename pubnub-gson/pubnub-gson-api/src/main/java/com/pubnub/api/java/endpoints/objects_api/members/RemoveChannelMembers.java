@@ -9,6 +9,7 @@ import com.pubnub.api.java.models.consumer.objects_api.member.PNRemoveChannelMem
 
 import java.util.Collection;
 
+@Deprecated
 public interface RemoveChannelMembers extends Endpoint<PNRemoveChannelMembersResult> {
 
     RemoveChannelMembers limit(Integer limit);
@@ -25,6 +26,7 @@ public interface RemoveChannelMembers extends Endpoint<PNRemoveChannelMembersRes
 
     RemoveChannelMembers includeUUID(Include.PNUUIDDetailsLevel includeUUID);
 
+    @Deprecated
     interface Builder extends BuilderSteps.ChannelStep<ObjectsBuilderSteps.UUIDsStep<RemoveChannelMembers>> {
         @Override
         ObjectsBuilderSteps.UUIDsStep<RemoveChannelMembers> channel(String channel);

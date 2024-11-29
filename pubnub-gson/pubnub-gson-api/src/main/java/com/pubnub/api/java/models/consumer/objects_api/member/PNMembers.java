@@ -18,7 +18,7 @@ import java.util.Map;
 @EqualsAndHashCode
 @ToString
 @RequiredArgsConstructor
-public class PNMembers {
+public class PNMembers { // todo dlaczego tu jest liczba mnoga a moe PNMember? Może zrobić PNMember bez uuid?
     private PNUUIDMetadata uuid;
 
     protected PatchValue<@Nullable Map<String, Object>> custom;
@@ -26,4 +26,5 @@ public class PNMembers {
     protected String updated;
     protected String eTag;
     protected PatchValue<@Nullable String> status;
+    protected PatchValue<@Nullable String> type;
 }

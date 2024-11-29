@@ -29,7 +29,8 @@ data class PNChannelMembership(
             update.custom ?: custom,
             update.updated,
             update.eTag,
-            update.status ?: status
+            update.status ?: status,
+            update.type ?: type
         )
     }
 
@@ -42,7 +43,8 @@ data class PNChannelMembership(
             update.custom ?: custom,
             update.updated,
             update.eTag,
-            update.status ?: status
+            update.status ?: status,
+            update.type ?: type
         )
     }
 }

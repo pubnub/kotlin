@@ -118,6 +118,7 @@ import com.pubnub.api.models.consumer.objects.PNMemberKey
 import com.pubnub.api.models.consumer.objects.PNMembershipKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
+import com.pubnub.api.models.consumer.objects.member.MemberInclude
 import com.pubnub.api.models.consumer.objects.member.MemberInput
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
@@ -733,6 +734,18 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         )
     }
 
+    override fun getChannelMembers(
+        channel: String,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMemberKey>>,
+        include: MemberInclude
+    ): GetChannelMembers {
+        TODO("Not yet implemented")
+    }
+
+    // deprecated
     override fun setChannelMembers(
         channel: String,
         uuids: List<MemberInput>,
@@ -760,6 +773,18 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         )
     }
 
+    override fun setChannelMembers(
+        channel: String,
+        users: List<MemberInput>,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMemberKey>>,
+        include: MemberInclude
+    ): ManageChannelMembers {
+        TODO("Not yet implemented")
+    }
+
     override fun removeChannelMembers(
         channel: String,
         uuids: List<String>,
@@ -785,6 +810,18 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
             includeUUIDDetails = includeUUIDDetails,
             includeUUIDType = includeType
         )
+    }
+
+    override fun removeChannelMembers(
+        channel: String,
+        userIds: List<String>,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMemberKey>>,
+        include: MemberInclude
+    ): ManageChannelMembers {
+        TODO("Not yet implemented")
     }
 
     override fun listFiles(channel: String, limit: Int?, next: PNPage.PNNext?): ListFiles {

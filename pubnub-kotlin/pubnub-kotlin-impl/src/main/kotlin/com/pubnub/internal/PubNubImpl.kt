@@ -67,6 +67,7 @@ import com.pubnub.api.models.consumer.objects.PNMemberKey
 import com.pubnub.api.models.consumer.objects.PNMembershipKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
+import com.pubnub.api.models.consumer.objects.member.MemberInclude
 import com.pubnub.api.models.consumer.objects.member.MemberInput
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
@@ -1129,6 +1130,36 @@ open class PubNubImpl(
         )
     }
 
+    override fun getChannelMembers(
+        channel: String,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMemberKey>>,
+        include: MemberInclude
+    ): GetChannelMembers {
+        return GetChannelMembersEndpoint(
+            pubnub = this,
+            channel = channel,
+            collectionQueryParameters = CollectionQueryParameters(
+                limit = limit,
+                page = page,
+                filter = filter,
+                sort = sort,
+                includeCount = include.includeTotalCount,
+            ),
+            includeQueryParam = IncludeQueryParam(
+                includeCustom = include.includeCustom,
+                includeType = include.includeType,
+                includeStatus = include.includeStatus,
+                includeUser = include.includeUser,
+                includeUserCustom = include.includeUserCustom,
+                includeUserStatus = include.includeUserStatus,
+                includeUserType = include.includeUserType
+            )
+        )
+    }
+
     @Deprecated(
         replaceWith =
             ReplaceWith(
@@ -1271,6 +1302,7 @@ open class PubNubImpl(
         includeUUIDDetails = includeUUIDDetails,
     )
 
+    // deprecated
     override fun setChannelMembers(
         channel: String,
         uuids: List<MemberInput>,
@@ -1294,6 +1326,25 @@ open class PubNubImpl(
         includeCustom = includeCustom,
         includeUUIDDetails = includeUUIDDetails,
         includeUUIDType = includeType
+    )
+
+    override fun setChannelMembers(
+        channel: String,
+        users: List<MemberInput>,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMemberKey>>,
+        include: MemberInclude
+    ): ManageChannelMembers = manageChannelMembers(
+        channel = channel,
+        userToSet = users,
+        userIdsToRemove = listOf(),
+        limit = limit,
+        page = page,
+        filter = filter,
+        sort = sort,
+        include = include
     )
 
     @Deprecated(
@@ -1328,6 +1379,7 @@ open class PubNubImpl(
         includeUUIDDetails = includeUUIDDetails,
     )
 
+    // deprecated
     override fun removeChannelMembers(
         channel: String,
         uuids: List<String>,
@@ -1353,6 +1405,26 @@ open class PubNubImpl(
         includeUUIDType = includeType,
     )
 
+    override fun removeChannelMembers(
+        channel: String,
+        userIds: List<String>,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMemberKey>>,
+        include: MemberInclude
+    ): ManageChannelMembers = manageChannelMembers(
+        channel = channel,
+        userToSet = listOf(),
+        userIdsToRemove = userIds,
+        limit = limit,
+        page = page,
+        filter = filter,
+        sort = sort,
+        include = include
+    )
+
+    // deprecated
     override fun manageChannelMembers(
         channel: String,
         uuidsToSet: Collection<MemberInput>,
@@ -1387,8 +1459,8 @@ open class PubNubImpl(
         return ManageChannelMembersEndpoint(
             pubnub = this,
             channel = channel,
-            uuidsToSet = uuidsToSet,
-            uuidsToRemove = uuidsToRemove,
+            userToSet = uuidsToSet,
+            userIdsRemove = uuidsToRemove,
             collectionQueryParameters = CollectionQueryParameters(
                 limit = limit,
                 page = page,
@@ -1397,6 +1469,40 @@ open class PubNubImpl(
                 includeCount = includeCount,
             ),
             includeQueryParam = includeQueryParamValue
+        )
+    }
+
+    override fun manageChannelMembers(
+        channel: String,
+        userToSet: Collection<MemberInput>,
+        userIdsToRemove: Collection<String>,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMemberKey>>,
+        include: MemberInclude
+    ): ManageChannelMembers {
+        return ManageChannelMembersEndpoint(
+            pubnub = this,
+            channel = channel,
+            userToSet = userToSet,
+            userIdsRemove = userIdsToRemove,
+            collectionQueryParameters = CollectionQueryParameters(
+                limit = limit,
+                page = page,
+                filter = filter,
+                sort = sort,
+                includeCount = include.includeTotalCount,
+            ),
+            includeQueryParam = IncludeQueryParam(
+                includeCustom = include.includeCustom,
+                includeType = include.includeType,
+                includeStatus = include.includeStatus,
+                includeUser = include.includeUser,
+                includeUserCustom = include.includeUserCustom,
+                includeUserStatus = include.includeUserStatus,
+                includeUserType = include.includeUserType
+            )
         )
     }
 
