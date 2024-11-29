@@ -16,16 +16,17 @@ import org.jlleitschuh.gradle.ktlint.KtlintPlugin
 class PubNubSharedPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
-            apply<MavenPublishPlugin>()
-            apply<KtlintPlugin>()
-
-            extensions.configure<PublishingExtension> {
-                repositories {
-                    it.maven(uri(rootProject.layout.buildDirectory.dir("repo"))) { ->
-                        name = "repo"
+            if (!target.name.endsWith("-test")) {
+                apply<MavenPublishPlugin>()
+                extensions.configure<PublishingExtension> {
+                    repositories {
+                        it.maven(uri(rootProject.layout.buildDirectory.dir("repo"))) { ->
+                            name = "repo"
+                        }
                     }
                 }
             }
+            apply<KtlintPlugin>()
 
             group = providers.gradleProperty("GROUP").get()
             version = providers.gradleProperty("VERSION_NAME").get()
