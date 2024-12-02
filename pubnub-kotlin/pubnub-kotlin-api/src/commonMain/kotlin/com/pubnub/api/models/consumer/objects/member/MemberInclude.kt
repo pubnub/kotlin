@@ -10,7 +10,7 @@ fun MemberInclude(
     includeUserType: Boolean = false,
     includeUserStatus: Boolean = false,
 ) = object : MemberInclude {
-    override val includeCustom: Boolean =  includeCustom
+    override val includeCustom: Boolean = includeCustom
     override val includeStatus: Boolean = includeStatus
     override val includeType: Boolean = includeType
     override val includeTotalCount: Boolean = includeTotalCount

@@ -174,7 +174,8 @@ actual fun createEventListener(
                                     PatchValue.of(it.custom?.toMap()),
                                     it.eTag,
                                     it.updated,
-                                    PatchValue.of(it.asDynamic().status) // todo missing
+                                    PatchValue.of(it.asDynamic().status), // todo missing
+                                    null // todo add type when available
                                 )
                             )
                         }

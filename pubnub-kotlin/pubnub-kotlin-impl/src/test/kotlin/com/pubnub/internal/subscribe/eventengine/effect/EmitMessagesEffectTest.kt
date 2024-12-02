@@ -169,6 +169,7 @@ class EmitMessagesEffectTest {
                 "AZO/t53al7m8fw",
                 "2023-05-05T14:26:55.824848794Z",
                 null,
+                null,
             )
         val pnSetMembershipEventMessage =
             PNSetMembershipEventMessage("objects", "2.0", "set", objectEventType, pnSetMembershipEvent)

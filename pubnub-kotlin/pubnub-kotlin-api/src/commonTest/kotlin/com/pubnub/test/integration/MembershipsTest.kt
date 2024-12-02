@@ -86,7 +86,7 @@ class MembershipsTest : BaseIntegrationTest() {
 
     @Test
     fun can_delete_membership() = runTest {
-        if (PLATFORM == "JS") { // todo enable for JS once is implemented
+        if (PLATFORM == "JS" || PLATFORM == "iOS") { // todo enable for JS/iOS once is implemented
             return@runTest
         }
         // given
@@ -111,7 +111,7 @@ class MembershipsTest : BaseIntegrationTest() {
 
     @Test
     fun can_receive_delete_membership_event() = runTest {
-        if (PLATFORM == "JS") { // todo enable for JS once is implemented
+        if (PLATFORM == "JS" || PLATFORM == "iOS") { // todo enable for JS/iOS once is implemented
             return@runTest
         }
         pubnub.test(backgroundScope) {

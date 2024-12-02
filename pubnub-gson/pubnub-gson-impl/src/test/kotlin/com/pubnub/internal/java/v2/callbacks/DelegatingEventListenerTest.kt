@@ -78,7 +78,7 @@ internal class DelegatingEventListenerTest {
             pn,
             PNObjectEventResult(
                 BasePubSubResult("a", "b", 0L, null, null),
-                PNSetMembershipEventMessage("a", "b", "c", "d", PNSetMembershipEvent("a", "b", null, "c", "d", null)),
+                PNSetMembershipEventMessage("a", "b", "c", "d", PNSetMembershipEvent("a", "b", null, "c", "d", null, null)),
             ),
         )
         delegating.objects(
@@ -297,7 +297,7 @@ internal class DelegatingEventListenerTest {
 
     @Test
     fun getSetMembershipResult() {
-        val metadata = PNSetMembershipEvent(channel, uuid, PatchValue.of(custom), eTag, updated, PatchValue.of(status))
+        val metadata = PNSetMembershipEvent(channel, uuid, PatchValue.of(custom), eTag, updated, PatchValue.of(status), PatchValue.of(type))
         val message = PNSetMembershipEventMessage(source, version, event, type, metadata)
         val objectEvent = PNObjectEventResult(BasePubSubResult(channel, subscription, timetoken, userMetadata, publisher), message)
 

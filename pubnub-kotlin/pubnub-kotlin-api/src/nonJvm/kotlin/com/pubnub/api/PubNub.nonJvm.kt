@@ -386,7 +386,6 @@ actual interface PubNub {
         includeType: Boolean
     ): ManageChannelMembers
 
-
     actual fun setChannelMembers(
         channel: String,
         users: List<MemberInput>,
@@ -410,7 +409,6 @@ actual interface PubNub {
         includeUUIDDetails: PNUUIDDetailsLevel?,
         includeType: Boolean
     ): ManageChannelMembers
-
 
     actual fun removeChannelMembers(
         channel: String,
