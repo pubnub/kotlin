@@ -40,15 +40,14 @@ class ManageChannelMembersEndpoint(
             body =
                 ChangeMemberInput(
                     delete = userIdsRemove.map { ServerMemberInput(UUIDId(id = it)) },
-                    set =
-                    userToSet.map {
-                            ServerMemberInput(
-                                uuid = UUIDId(id = it.uuid),
-                                custom = it.custom,
-                                status = it.status,
-                                type = it.type,
-                            )
-                        },
+                    set = userToSet.map {
+                        ServerMemberInput(
+                            uuid = UUIDId(id = it.uuid),
+                            custom = it.custom,
+                            status = it.status,
+                            type = it.type,
+                        )
+                    },
                 ),
         )
     }
