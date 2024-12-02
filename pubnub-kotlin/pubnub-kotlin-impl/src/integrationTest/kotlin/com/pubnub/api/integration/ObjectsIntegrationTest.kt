@@ -325,19 +325,21 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun testListeningToSetChannelMembersAndRemoveChannelMembersEventsWithStatusAndType(){
+    fun testListeningToSetChannelMembersAndRemoveChannelMembersEventsWithStatusAndType() {
         val countDownLatch = CountDownLatch(2)
         val capturedPNObjectEventResult = mutableListOf<PNObjectEventResult>()
         val uuids = listOf(PNMember.Partial(uuidId = testUuid, custom = null, status = status, type = type))
-        pubnub.addListener( listener = object : SubscribeCallback() {
-            override fun status(pubnub: PubNub, status: PNStatus) {
-            }
+        pubnub.addListener(
+            listener = object : SubscribeCallback() {
+                override fun status(pubnub: PubNub, status: PNStatus) {
+                }
 
-            override fun objects(pubnub: PubNub, result: PNObjectEventResult) {
-                capturedPNObjectEventResult.add(result)
-                countDownLatch.countDown()
+                override fun objects(pubnub: PubNub, result: PNObjectEventResult) {
+                    capturedPNObjectEventResult.add(result)
+                    countDownLatch.countDown()
+                }
             }
-        })
+        )
 
         pubnub.subscribeToBlocking(channel)
 
@@ -355,19 +357,21 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun testListeningToSetMembershipAndRemoveMembershipEventsWithStatusAndType(){
+    fun testListeningToSetMembershipAndRemoveMembershipEventsWithStatusAndType() {
         val countDownLatch = CountDownLatch(2)
         val capturedPNObjectEventResult = mutableListOf<PNObjectEventResult>()
         val channels = listOf(PNChannelMembership.Partial(channelId = channel, status = status, type = type))
-        pubnub.addListener( listener = object : SubscribeCallback() {
-            override fun status(pubnub: PubNub, status: PNStatus) {
-            }
+        pubnub.addListener(
+            listener = object : SubscribeCallback() {
+                override fun status(pubnub: PubNub, status: PNStatus) {
+                }
 
-            override fun objects(pubnub: PubNub, result: PNObjectEventResult) {
-                capturedPNObjectEventResult.add(result)
-                countDownLatch.countDown()
+                override fun objects(pubnub: PubNub, result: PNObjectEventResult) {
+                    capturedPNObjectEventResult.add(result)
+                    countDownLatch.countDown()
+                }
             }
-        })
+        )
 
         pubnub.subscribeToBlocking(channel)
 
@@ -530,7 +534,14 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
         ).sync()
 
         val getAllResult =
-            pubnub.getChannelMembers(channel = channel, include = MemberInclude(includeUser = true, includeType = true, includeStatus = true)).sync().data
+            pubnub.getChannelMembers(
+                channel = channel,
+                include = MemberInclude(
+                    includeUser = true,
+                    includeType = true,
+                    includeStatus = true
+                )
+            ).sync().data
 
         val otherTestUuidMatcher =
             PNMember(

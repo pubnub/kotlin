@@ -95,7 +95,6 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
         assertEquals(1, capturePresenceEvent.size)
         assertEquals("join", capturePresenceEvent.first().event)
         assertEquals(expectedChannel, capturePresenceEvent.first().channel)
-
     }
 
     @Test

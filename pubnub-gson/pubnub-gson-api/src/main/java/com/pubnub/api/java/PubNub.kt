@@ -574,6 +574,7 @@ interface PubNub : EventEmitter, StatusEmitter {
      * Remove members from a Channel.
      */
     fun removeChannelMembers(channelId: String, channelMembers: Collection<PNUser>): RemoveChannelMembersBuilder
+
     /**
      * Set or remove members in a channel.
      */
