@@ -78,5 +78,5 @@ data class PNSetMembershipEvent(
 
 data class PNDeleteMembershipEvent(
     val channelId: String,
-    val uuid: String, // todo do we want to change to userId?
+    val uuid: String, // todo change to userId?
 )

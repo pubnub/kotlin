@@ -18,7 +18,7 @@ import java.util.Map;
 @EqualsAndHashCode
 @ToString
 @RequiredArgsConstructor
-public class PNMembers { // todo dlaczego tu jest liczba mnoga a moe PNMember? Może zrobić PNMember bez uuid?
+public class PNMembers { // todo why this is plural? Shouldn't be PNMember?
     private PNUUIDMetadata uuid;
 
     protected PatchValue<@Nullable Map<String, Object>> custom;

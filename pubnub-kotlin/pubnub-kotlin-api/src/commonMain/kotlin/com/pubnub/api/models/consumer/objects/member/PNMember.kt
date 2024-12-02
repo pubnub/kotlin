@@ -4,8 +4,8 @@ import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.utils.PatchValue
 import com.pubnub.kmp.CustomObject
 
-data class PNMember( // todo introduce new PNMember with user instead of uuid, maybe in different package
-    val uuid: PNUUIDMetadata,
+data class PNMember(
+    val uuid: PNUUIDMetadata, // todo change to userId?
     val custom: PatchValue<Map<String, Any?>?>? = null,
     val updated: String,
     val eTag: String,
