@@ -36,6 +36,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import static com.pubnub.api.integration.util.Utils.random;
 import static com.pubnub.api.integration.util.Utils.randomChannel;
@@ -301,8 +302,9 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
         Thread.sleep(2000);
 
         List<PNUser> channelMembers = Arrays.asList(PNUser.builder(pubNub.getConfiguration().getUserId().getValue()).status(status).type(type).build());
+        List<String> channelMembersIds = channelMembers.stream().map(pnUser -> pnUser.getUserId()).collect(Collectors.toList());
         pubNub.setChannelMembers(chan01.getName(), channelMembers).sync();
-        pubNub.removeChannelMembers(chan01.getName(), channelMembers).sync();
+        pubNub.removeChannelMembers(chan01.getName(), channelMembersIds).sync();
 
         countDownLatch.await(5, TimeUnit.SECONDS);
 
@@ -337,7 +339,7 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
         Thread.sleep(2000);
 
         pubNub.setMemberships(Collections.singletonList(PNChannelMembership.builder(chan01.getName()).status(status).type(type).build())).sync();
-        pubNub.removeMemberships(Arrays.asList(PNChannelMembership.builder(chan01.getName()).build())).sync();
+        pubNub.removeMemberships(Arrays.asList(chan01.getName())).sync();
 
         countDownLatch.await(5, TimeUnit.SECONDS);
 

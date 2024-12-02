@@ -46,7 +46,7 @@ public class ManageChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayRe
     private Collection<PNUUID> uuidsToSet; // deprecated
     private Collection<PNUUID> uuidsToRemove; // deprecated
     private Collection<PNUser> usersToSet;
-    private Collection<PNUser> usersToRemove;
+    private List<String> usersIdsToRemove;
     private MemberInclude include;
 
     @Deprecated
@@ -57,11 +57,11 @@ public class ManageChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayRe
         this.uuidsToRemove = uuidsToRemove;
     }
 
-    public ManageChannelMembersImpl(final PubNub pubnubInstance, String channel, Collection<PNUser> usersToSet, Collection<PNUser> usersToRemove) {
+    public ManageChannelMembersImpl(final PubNub pubnubInstance, String channel, Collection<PNUser> usersToSet, Collection<String> usersIdsToRemove) {
         super(pubnubInstance);
         this.channel = channel;
         this.usersToSet = usersToSet;
-        this.usersToRemove = usersToRemove;
+        this.usersIdsToRemove = new ArrayList<>(usersIdsToRemove);
     }
 
     @NotNull
@@ -77,9 +77,9 @@ public class ManageChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayRe
         List<String> toRemove;
 
         // new API use
-        if (usersToSet != null || usersToRemove != null) {
+        if (usersToSet != null || usersIdsToRemove != null) {
             toSet = createMemberInputFromUserToSet();
-            toRemove = createUserIdsFromUserToRemove();
+            toRemove = usersIdsToRemove;
         } else { // old API used
             toSet = createMemberInputFromUUIDToSet();
             toRemove = createUserIdsFromUUIDToRemove();
@@ -169,18 +169,6 @@ public class ManageChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayRe
             ));
         }
         return memberInputs;
-    }
-
-    private List<String> createUserIdsFromUserToRemove() {
-        if (usersToRemove == null) {
-            return Collections.emptyList();
-        }
-
-        List<String> toRemove = new ArrayList<>();
-        for (PNUser user: usersToRemove) {
-            toRemove.add(user.getUserId());
-        }
-        return toRemove;
     }
 
     private List<String> createUserIdsFromUUIDToRemove() {

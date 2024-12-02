@@ -277,7 +277,7 @@ public class ChannelMembersIT extends ObjectsApiBaseIT {
 
         //when
         final PNRemoveChannelMembersResult removeMembersResult = pubNubUnderTest
-                .removeChannelMembers(testChannelId, Collections.singletonList(PNUser.builder(TEST_UUID2).build()))
+                .removeChannelMembers(testChannelId, Collections.singletonList(TEST_UUID2))
                 .include(MemberInclude.builder()
                         .includeTotalCount(true)
                         .includeStatus(true)
@@ -359,6 +359,7 @@ public class ChannelMembersIT extends ObjectsApiBaseIT {
     @Test
     public void manageChannelMembersHappyPath() throws PubNubException {
         //given
+        final List<String> channelMembersIdsToRemove = Collections.singletonList(TEST_UUID1);
         final List<PNUser> channelMembersToRemove = Collections.singletonList(
                 PNUser.builder(TEST_UUID1)
                         .custom(customChannelMembershipObject())
@@ -377,7 +378,7 @@ public class ChannelMembersIT extends ObjectsApiBaseIT {
 
         //when
         final PNManageChannelMembersResult manageChannelMembersResult = pubNubUnderTest
-                .manageChannelMembers(testChannelId, channelMembersToSet, channelMembersToRemove)
+                .manageChannelMembers(testChannelId, channelMembersToSet, channelMembersIdsToRemove)
                 .include(MemberInclude.builder()
                         .includeCustom(true)
                         .includeStatus(true)

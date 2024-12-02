@@ -40,7 +40,6 @@ import com.pubnub.api.java.endpoints.objects_api.members.RemoveChannelMembersBui
 import com.pubnub.api.java.endpoints.objects_api.members.SetChannelMembers
 import com.pubnub.api.java.endpoints.objects_api.members.SetChannelMembersBuilder
 import com.pubnub.api.java.endpoints.objects_api.memberships.GetMemberships
-import com.pubnub.api.java.endpoints.objects_api.memberships.GetMembershipsBuilder
 import com.pubnub.api.java.endpoints.objects_api.memberships.ManageMemberships
 import com.pubnub.api.java.endpoints.objects_api.memberships.ManageMembershipsBuilder
 import com.pubnub.api.java.endpoints.objects_api.memberships.RemoveMemberships
@@ -286,10 +285,6 @@ open class PubNubForJavaImpl(configuration: PNConfiguration) :
         return GetMembershipsImpl(this)
     }
 
-    override fun getMemberships(userId: String): GetMembershipsBuilder {
-        return GetMembershipsImpl(this, userId)
-    }
-
     override fun setMemberships(): SetMemberships.Builder {
         return SetMembershipsImpl.BuilderDeprecated(this)
     }
@@ -302,7 +297,7 @@ open class PubNubForJavaImpl(configuration: PNConfiguration) :
         return RemoveMembershipsImpl.Builder(this)
     }
 
-    override fun removeMemberships(channelMemberships: Collection<PNChannelMembership>): RemoveMembershipsBuilder {
+    override fun removeMemberships(channelMemberships: Collection<String>): RemoveMembershipsBuilder {
         return RemoveMembershipsImpl(channelMemberships, this)
     }
 
@@ -312,7 +307,7 @@ open class PubNubForJavaImpl(configuration: PNConfiguration) :
 
     override fun manageMemberships(
         channelsToSet: Collection<PNChannelMembership>,
-        channelsToDelete: Collection<PNChannelMembership>
+        channelsToDelete: Collection<String>
     ): ManageMembershipsBuilder {
         return ManageMembershipsImpl(channelsToSet, channelsToDelete, this)
     }
@@ -339,7 +334,7 @@ open class PubNubForJavaImpl(configuration: PNConfiguration) :
 
     override fun removeChannelMembers(
         channelId: String,
-        channelMembers: Collection<PNUser>
+        channelMembers: Collection<String>
     ): RemoveChannelMembersBuilder {
         return RemoveChannelMembersImpl(this, channelId, channelMembers)
     }
@@ -351,7 +346,7 @@ open class PubNubForJavaImpl(configuration: PNConfiguration) :
     override fun manageChannelMembers(
         channelId: String,
         set: Collection<PNUser>,
-        remove: Collection<PNUser>
+        remove: Collection<String>
     ): ManageChannelMembersBuilder {
         return ManageChannelMembersImpl(this, channelId, set, remove)
     }

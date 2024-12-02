@@ -181,7 +181,8 @@ public class MembershipIT extends ObjectsApiBaseIT {
         createdMembershipsList.add(setMembershipResult);
 
         //when
-        final PNGetMembershipsResult getMembershipsResult = pubNubUnderTest.getMemberships(userId)
+        final PNGetMembershipsResult getMembershipsResult = pubNubUnderTest.getMemberships()
+                .userId(userId)
                 .limit(10)
                 .include(MembershipInclude.builder()
                         .includeCustom(true)
@@ -298,7 +299,7 @@ public class MembershipIT extends ObjectsApiBaseIT {
         createdMembershipsList.add(setMembershipResult);
 
         //when
-        List<PNChannelMembership> channelMembershipsToRemove = Collections.singletonList(PNChannelMembership.builder(testChannelId2).build());
+        List<String> channelMembershipsToRemove = Collections.singletonList(testChannelId2);
         final PNRemoveMembershipResult removeMembershipResult = pubNubUnderTest.removeMemberships(channelMembershipsToRemove)
                 .include(MembershipInclude.builder()
                         .includeTotalCount(true)
@@ -353,6 +354,7 @@ public class MembershipIT extends ObjectsApiBaseIT {
     @Test
     public void manageMembershipsHappyPath() throws PubNubException {
         //given
+        final List<String> channelIdsToRemove = Collections.singletonList(testChannelId1);
         final List<PNChannelMembership> channelMembershipsToRemove = Collections.singletonList(
                 PNChannelMembership.channelWithCustom(testChannelId1, customChannelMembershipObject()));
 
@@ -367,7 +369,7 @@ public class MembershipIT extends ObjectsApiBaseIT {
                         .build());
 
         //when
-        final PNManageMembershipResult manageMembershipResult = pubNubUnderTest.manageMemberships(channelMembershipsToSet, channelMembershipsToRemove)
+        final PNManageMembershipResult manageMembershipResult = pubNubUnderTest.manageMemberships(channelMembershipsToSet, channelIdsToRemove)
                 .userId(pubNubUnderTest.getConfiguration().getUserId().getValue())
                 .include(MembershipInclude.builder()
                         .includeTotalCount(true)
@@ -433,14 +435,13 @@ public class MembershipIT extends ObjectsApiBaseIT {
     public void cleanUp() {
         for (final PNSetMembershipResult createdMembership : createdMembershipsList) {
             try {
-                final List<PNChannelMembership> channelMemberships = new ArrayList<>();
+                final List<String> channelIds = new ArrayList<>();
                 for (final PNMembership it : createdMembership.getData()) {
                     final String id = it.getChannel().getId();
-                    final PNChannelMembership pnChannelMembership = PNChannelMembership.channel(id);
-                    channelMemberships.add(pnChannelMembership);
+                    channelIds.add(id);
                 }
 
-                pubNubUnderTest.removeMemberships(channelMemberships).sync();
+                pubNubUnderTest.removeMemberships(channelIds).sync();
 
             } catch (Exception e) {
                 LOG.warn("Could not cleanup {}", createdMembership, e);

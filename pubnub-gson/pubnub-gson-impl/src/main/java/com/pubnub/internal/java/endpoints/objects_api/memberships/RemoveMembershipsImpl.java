@@ -19,16 +19,17 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.pubnub.internal.java.endpoints.objects_api.memberships.SetMembershipsImpl.getMembershipInclude;
 
 @Setter
 @Accessors(chain = true, fluent = true)
 public class RemoveMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipArrayResult, PNRemoveMembershipResult> implements RemoveMemberships, RemoveMembershipsBuilder {
-    private final Collection<PNChannelMembership> channelMemberships;
+    private List<String> channelIds;
     private String uuid; // deprecated
     private String userId;
     private Integer limit;
@@ -41,9 +42,9 @@ public class RemoveMembershipsImpl extends DelegatingEndpoint<PNChannelMembershi
     private Include.PNChannelDetailsLevel includeChannel; // deprecated
     private MembershipInclude include;
 
-    public RemoveMembershipsImpl(@NotNull Collection<PNChannelMembership> channelMemberships, final PubNub pubnubInstance) {
+    public RemoveMembershipsImpl(@NotNull Collection<String> channelIds, final PubNub pubnubInstance) {
         super(pubnubInstance);
-        this.channelMemberships = channelMemberships;
+        this.channelIds = (List<String>) channelIds;
     }
 
     @NotNull
@@ -55,12 +56,9 @@ public class RemoveMembershipsImpl extends DelegatingEndpoint<PNChannelMembershi
     @Override
     @NotNull
     protected Endpoint<PNChannelMembershipArrayResult> createRemoteAction() {
-        ArrayList<String> channelList = new ArrayList<>(channelMemberships.size());
-        for (PNChannelMembership channel : channelMemberships) {
-            channelList.add(channel.getChannel().getId());
-        }
+
         return pubnub.removeMemberships(
-                channelList,
+                channelIds,
                 getUserId(),
                 limit,
                 page,
@@ -79,7 +77,9 @@ public class RemoveMembershipsImpl extends DelegatingEndpoint<PNChannelMembershi
 
         @Override
         public RemoveMemberships channelMemberships(@NotNull final Collection<PNChannelMembership> channelMemberships) {
-            return new RemoveMembershipsImpl(channelMemberships, pubnubInstance);
+            List<String> channelIds = channelMemberships.stream().map(pnChannelMembership ->
+                    pnChannelMembership.getChannel().getId()).collect(Collectors.toList());
+            return new RemoveMembershipsImpl(channelIds, pubnubInstance);
         }
     }
 

@@ -13,7 +13,6 @@ import com.pubnub.api.java.models.consumer.objects_api.member.MemberInclude;
 import com.pubnub.api.java.models.consumer.objects_api.member.PNRemoveChannelMembersResult;
 import com.pubnub.api.java.models.consumer.objects_api.member.PNRemoveChannelMembersResultConverter;
 import com.pubnub.api.java.models.consumer.objects_api.member.PNUUID;
-import com.pubnub.api.java.models.consumer.objects_api.member.PNUser;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult;
 import com.pubnub.internal.java.endpoints.DelegatingEndpoint;
@@ -40,7 +39,7 @@ public class RemoveChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayRe
     private boolean includeCustom; // deprecated
     private boolean includeType; // deprecated
     private final String channel;
-    private final List<String> userIds; // deprecated
+    private final List<String> userIds;
     private Include.PNUUIDDetailsLevel includeUUID; // deprecated
     private MemberInclude include;
 
@@ -54,13 +53,10 @@ public class RemoveChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayRe
         }
     }
 
-    public RemoveChannelMembersImpl(final PubNub pubnubInstance, String channel, Collection<PNUser> users) {
+    public RemoveChannelMembersImpl(final PubNub pubnubInstance, String channel, Collection<String> userIds) {
         super(pubnubInstance);
         this.channel = channel;
-        this.userIds = new ArrayList<>(users.size());
-        for (PNUser user : users) {
-            this.userIds.add(user.getUserId());
-        }
+        this.userIds = new ArrayList<>(userIds);
     }
 
     @NotNull

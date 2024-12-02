@@ -23,6 +23,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.pubnub.internal.java.endpoints.objects_api.memberships.SetMembershipsImpl.getMembershipInclude;
 
@@ -43,10 +45,10 @@ public class ManageMembershipsImpl extends DelegatingEndpoint<PNChannelMembershi
     private Include.PNChannelDetailsLevel includeChannel; // deprecated
     private MembershipInclude include;
 
-    public ManageMembershipsImpl(Collection<PNChannelMembership> channelsToSet, Collection<PNChannelMembership> channelsToRemove, final PubNub pubnubInstance) {
+    public ManageMembershipsImpl(Collection<PNChannelMembership> channelsToSet, Collection<String> channelsToRemove, final PubNub pubnubInstance) {
         super(pubnubInstance);
         set = channelsToSet;
-        remove = channelsToRemove;
+        remove = getChannelMembershipsToRemove(channelsToRemove);
     }
 
     @NotNull
@@ -67,15 +69,11 @@ public class ManageMembershipsImpl extends DelegatingEndpoint<PNChannelMembershi
                     channel.getType()
             ));
         }
-        ArrayList<String> toRemove = new ArrayList<>(remove.size());
-        for (PNChannelMembership channel : remove) {
-            toRemove.add(channel.getChannel().getId());
-        }
+        List<String> channelIdsToRemove = remove.stream().map(membership -> membership.getChannel().getId()).collect(Collectors.toList());
 
-        return
-                pubnub.manageMemberships(
+        return pubnub.manageMemberships(
                         toSet,
-                        toRemove,
+                        channelIdsToRemove,
                         getUserId(),
                         limit,
                         page,
@@ -97,8 +95,9 @@ public class ManageMembershipsImpl extends DelegatingEndpoint<PNChannelMembershi
             return new RemoveStep<ManageMemberships, PNChannelMembership>() {
                 @Override
                 public ManageMemberships remove(final Collection<PNChannelMembership> channelsToRemove) {
+                    List<String> channelIdsToRemove = channelsToRemove.stream().map(membership -> membership.getChannel().getId()).collect(Collectors.toList());
                     return new ManageMembershipsImpl(channelsToSet,
-                            channelsToRemove,
+                            channelIdsToRemove,
                             pubnubInstance);
                 }
             };
@@ -106,11 +105,12 @@ public class ManageMembershipsImpl extends DelegatingEndpoint<PNChannelMembershi
 
         @Override
         public SetStep<ManageMemberships, PNChannelMembership> remove(final Collection<PNChannelMembership> channelsToRemove) {
+            List<String> channelIdsToRemove = channelsToRemove.stream().map(membership -> membership.getChannel().getId()).collect(Collectors.toList());
             return new SetStep<ManageMemberships, PNChannelMembership>() {
                 @Override
                 public ManageMemberships set(final Collection<PNChannelMembership> channelsToSet) {
                     return new ManageMembershipsImpl(channelsToSet,
-                            channelsToRemove,
+                            channelIdsToRemove,
                             pubnubInstance);
                 }
             };
@@ -119,5 +119,13 @@ public class ManageMembershipsImpl extends DelegatingEndpoint<PNChannelMembershi
 
     private String getUserId() {
         return userId != null ? userId : uuid;
+    }
+
+    private Collection<PNChannelMembership> getChannelMembershipsToRemove(Collection<String> channelsToRemove) {
+        Collection<PNChannelMembership> channelMembershipsToRemove = new ArrayList<>();
+        for (String channelIdToRemove : channelsToRemove) {
+            channelMembershipsToRemove.add(PNChannelMembership.channel(channelIdToRemove));
+        }
+        return channelMembershipsToRemove;
     }
 }

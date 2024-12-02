@@ -5,7 +5,6 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.java.endpoints.objects_api.memberships.GetMemberships;
-import com.pubnub.api.java.endpoints.objects_api.memberships.GetMembershipsBuilder;
 import com.pubnub.api.java.endpoints.objects_api.utils.Include;
 import com.pubnub.api.java.endpoints.objects_api.utils.PNSortKey;
 import com.pubnub.api.java.models.consumer.objects_api.membership.MembershipInclude;
@@ -25,7 +24,7 @@ import static com.pubnub.internal.java.endpoints.objects_api.memberships.SetMemb
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class GetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipArrayResult, PNGetMembershipsResult> implements GetMemberships, GetMembershipsBuilder {
+public class GetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipArrayResult, PNGetMembershipsResult> implements GetMemberships {
     private String uuid; // deprecated
     private String userId;
     private Integer limit;
@@ -38,14 +37,8 @@ public class GetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipAr
     private Include.PNChannelDetailsLevel includeChannel; // deprecated
     private MembershipInclude include;
 
-    @Deprecated
     public GetMembershipsImpl(PubNub pubnub) {
         super(pubnub);
-    }
-
-    public GetMembershipsImpl(PubNub pubnub, String userId) {
-        super(pubnub);
-        this.uuid = userId;
     }
 
     @NotNull

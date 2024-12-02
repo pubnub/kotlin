@@ -40,7 +40,6 @@ import com.pubnub.api.java.endpoints.objects_api.members.RemoveChannelMembersBui
 import com.pubnub.api.java.endpoints.objects_api.members.SetChannelMembers
 import com.pubnub.api.java.endpoints.objects_api.members.SetChannelMembersBuilder
 import com.pubnub.api.java.endpoints.objects_api.memberships.GetMemberships
-import com.pubnub.api.java.endpoints.objects_api.memberships.GetMembershipsBuilder
 import com.pubnub.api.java.endpoints.objects_api.memberships.ManageMemberships
 import com.pubnub.api.java.endpoints.objects_api.memberships.ManageMembershipsBuilder
 import com.pubnub.api.java.endpoints.objects_api.memberships.RemoveMemberships
@@ -473,18 +472,7 @@ interface PubNub : EventEmitter, StatusEmitter {
     /**
      * The method returns a list of channel memberships for a user. This method doesn't return a user's subscriptions.
      */
-    @Deprecated(
-        message = "This function is deprecated. Use getMemberships(userId: String) for better functionality.",
-        replaceWith = ReplaceWith(
-            "getMemberships(userId)"
-        )
-    )
     fun getMemberships(): GetMemberships
-
-    /**
-     * The method returns a list of channel memberships for a user. This method doesn't return a user's subscriptions.
-     */
-    fun getMemberships(userId: String): GetMembershipsBuilder
 
     /**
      * Set channel memberships for a UUID.
@@ -512,7 +500,7 @@ interface PubNub : EventEmitter, StatusEmitter {
     /**
      * Remove channel memberships for a UUID.
      */
-    fun removeMemberships(channelMemberships: Collection<PNChannelMembership>): RemoveMembershipsBuilder
+    fun removeMemberships(channelMemberships: Collection<String>): RemoveMembershipsBuilder
 
     /**
      * Add and/or remove channel memberships for a UUID.
@@ -528,7 +516,7 @@ interface PubNub : EventEmitter, StatusEmitter {
      */
     fun manageMemberships(
         channelsToSet: Collection<PNChannelMembership>,
-        channelsToDelete: Collection<PNChannelMembership>
+        channelsToDelete: Collection<String>
     ): ManageMembershipsBuilder
 
     /**
@@ -573,7 +561,7 @@ interface PubNub : EventEmitter, StatusEmitter {
     /**
      * Remove members from a Channel.
      */
-    fun removeChannelMembers(channelId: String, channelMembers: Collection<PNUser>): RemoveChannelMembersBuilder
+    fun removeChannelMembers(channelId: String, channelMembers: Collection<String>): RemoveChannelMembersBuilder
 
     /**
      * Set or remove members in a channel.
@@ -587,7 +575,7 @@ interface PubNub : EventEmitter, StatusEmitter {
     /**
      * Set or remove members in a channel.
      */
-    fun manageChannelMembers(channelId: String, set: Collection<PNUser>, remove: Collection<PNUser>): ManageChannelMembersBuilder
+    fun manageChannelMembers(channelId: String, set: Collection<PNUser>, remove: Collection<String>): ManageChannelMembersBuilder
 
     /**
      * Add an action on a published message. Returns the added action in the response.
