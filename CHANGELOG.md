@@ -1,3 +1,9 @@
+## v10.2.1
+December 03 2024
+
+#### Modified
+- Internal changes in preparation for other releases.
+
 ## v10.2.0
 November 18 2024
 
