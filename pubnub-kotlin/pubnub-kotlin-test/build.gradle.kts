@@ -4,10 +4,10 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.benmanes.versions)
-    alias(libs.plugins.codingfeline.buildkonfig)
     id("pubnub.shared")
     id("pubnub.ios-simulator-test")
     id("pubnub.base.multiplatform")
+    alias(libs.plugins.codingfeline.buildkonfig)
 }
 
 kotlin {
