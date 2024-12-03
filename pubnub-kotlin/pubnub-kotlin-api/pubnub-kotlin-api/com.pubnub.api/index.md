@@ -15,4 +15,5 @@
 
 | Name | Summary |
 |---|---|
+| [adjustCollectionTypes](adjust-collection-types.md) | [js]<br>fun [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html).[adjustCollectionTypes](adjust-collection-types.md)(): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html) |
 | [toJs](to-js.md) | [js]<br>fun [PNConfiguration](../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.v2/-p-n-configuration/index.md).[toJs](to-js.md)(): [PubNub.PNConfiguration](../[root]/-pub-nub/-p-n-configuration/index.md) |

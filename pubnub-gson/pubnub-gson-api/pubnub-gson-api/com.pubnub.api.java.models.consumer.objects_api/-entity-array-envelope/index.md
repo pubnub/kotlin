@@ -8,16 +8,16 @@ open class [EntityArrayEnvelope](index.md)&lt;[T](index.md)&gt; : [EntityEnvelop
 
 | |
 |---|
+| [PNGetChannelMembersResult](../../com.pubnub.api.java.models.consumer.objects_api.member/-p-n-get-channel-members-result/index.md) |
+| [PNRemoveChannelMembersResult](../../com.pubnub.api.java.models.consumer.objects_api.member/-p-n-remove-channel-members-result/index.md) |
 | [PNManageChannelMembersResult](../../com.pubnub.api.java.models.consumer.objects_api.member/-p-n-manage-channel-members-result/index.md) |
 | [PNSetChannelMembersResult](../../com.pubnub.api.java.models.consumer.objects_api.member/-p-n-set-channel-members-result/index.md) |
-| [PNRemoveChannelMembersResult](../../com.pubnub.api.java.models.consumer.objects_api.member/-p-n-remove-channel-members-result/index.md) |
-| [PNGetChannelMembersResult](../../com.pubnub.api.java.models.consumer.objects_api.member/-p-n-get-channel-members-result/index.md) |
-| [PNSetMembershipResult](../../com.pubnub.api.java.models.consumer.objects_api.membership/-p-n-set-membership-result/index.md) |
-| [PNRemoveMembershipResult](../../com.pubnub.api.java.models.consumer.objects_api.membership/-p-n-remove-membership-result/index.md) |
-| [PNManageMembershipResult](../../com.pubnub.api.java.models.consumer.objects_api.membership/-p-n-manage-membership-result/index.md) |
-| [PNGetMembershipsResult](../../com.pubnub.api.java.models.consumer.objects_api.membership/-p-n-get-memberships-result/index.md) |
 | [PNGetAllChannelsMetadataResult](../../com.pubnub.api.java.models.consumer.objects_api.channel/-p-n-get-all-channels-metadata-result/index.md) |
 | [PNGetAllUUIDMetadataResult](../../com.pubnub.api.java.models.consumer.objects_api.uuid/-p-n-get-all-u-u-i-d-metadata-result/index.md) |
+| [PNGetMembershipsResult](../../com.pubnub.api.java.models.consumer.objects_api.membership/-p-n-get-memberships-result/index.md) |
+| [PNManageMembershipResult](../../com.pubnub.api.java.models.consumer.objects_api.membership/-p-n-manage-membership-result/index.md) |
+| [PNSetMembershipResult](../../com.pubnub.api.java.models.consumer.objects_api.membership/-p-n-set-membership-result/index.md) |
+| [PNRemoveMembershipResult](../../com.pubnub.api.java.models.consumer.objects_api.membership/-p-n-remove-membership-result/index.md) |
 
 ## Constructors
 

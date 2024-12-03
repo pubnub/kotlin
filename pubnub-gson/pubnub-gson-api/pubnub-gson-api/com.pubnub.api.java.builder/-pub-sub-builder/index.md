@@ -9,8 +9,8 @@ interface [PubSubBuilder](index.md)
 | |
 |---|
 | [UnsubscribeBuilder](../-unsubscribe-builder/index.md) |
-| [PresenceBuilder](../-presence-builder/index.md) |
 | [SubscribeBuilder](../-subscribe-builder/index.md) |
+| [PresenceBuilder](../-presence-builder/index.md) |
 
 ## Functions
 

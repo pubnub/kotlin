@@ -10,13 +10,13 @@ interface [PubSubOperation](index.md)
 |---|
 | [ChangeTemporaryUnavailableOperation](../-change-temporary-unavailable-operation/index.md) |
 | [UnsubscribeOperation](../-unsubscribe-operation/index.md) |
-| [PresenceOperation](../-presence-operation/index.md) |
 | [TimetokenAndRegionOperation](../-timetoken-and-region-operation/index.md) |
+| [StateOperation](../-state-operation/index.md) |
+| [PresenceOperation](../-presence-operation/index.md) |
 | [NoOpOperation](-no-op-operation/index.md) |
 | [DisconnectOperation](-disconnect-operation/index.md) |
 | [ConnectedStatusAnnouncedOperation](-connected-status-announced-operation/index.md) |
 | [ReconnectOperation](-reconnect-operation/index.md) |
-| [StateOperation](../-state-operation/index.md) |
 
 ## Types
 

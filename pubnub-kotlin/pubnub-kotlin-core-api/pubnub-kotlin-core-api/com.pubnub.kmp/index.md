@@ -15,6 +15,7 @@
 
 | Name | Summary |
 |---|---|
+| [combine](combine.md) | [js]<br>fun &lt;[T](combine.md), [R](combine.md)&gt; [T](combine.md).[combine](combine.md)(map: [JsMap](-js-map/index.md)&lt;[R](combine.md)&gt;?): [T](combine.md) |
 | [createJsObject](create-js-object.md) | [js]<br>fun &lt;[T](create-js-object.md)&gt; [createJsObject](create-js-object.md)(configure: [T](create-js-object.md).() -&gt; [Unit](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html) = {}): [T](create-js-object.md) |
 | [entriesOf](entries-of.md) | [js]<br>fun &lt;[V](entries-of.md)&gt; [entriesOf](entries-of.md)(jsObject: [JsMap](-js-map/index.md)&lt;[V](entries-of.md)&gt;): [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[Pair](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-pair/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), [V](entries-of.md)&gt;&gt; |
 | [toJsMap](to-js-map.md) | [js]<br>fun &lt;[V](to-js-map.md)&gt; [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), [V](to-js-map.md)&gt;.[toJsMap](to-js-map.md)(): [JsMap](-js-map/index.md)&lt;[V](to-js-map.md)&gt; |

@@ -3,13 +3,13 @@
 # timetokenToInstant
 
 [common]\
-fun [timetokenToInstant](timetoken-to-instant.md)(timetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)): Instant
+fun [timetokenToInstant](timetoken-to-instant.md)(timetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)): [Instant](../../-instant/index.md)
 
 Converts a PubNub timetoken (a unique identifier for each message sent and received in a PubNub channel that is a number of 100-nanosecond intervals since January 1, 1970) to LocalDateTime object representing the corresponding moment in time.
 
 #### Return
 
-Instant representing the corresponding moment in time.
+[Instant](../../-instant/index.md) representing the corresponding moment in time.
 
 #### Parameters
 

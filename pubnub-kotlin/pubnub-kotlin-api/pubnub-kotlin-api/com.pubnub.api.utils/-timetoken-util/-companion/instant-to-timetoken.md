@@ -3,15 +3,15 @@
 # instantToTimetoken
 
 [common]\
-fun [instantToTimetoken](instant-to-timetoken.md)(instant: Instant): [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)
+fun [instantToTimetoken](instant-to-timetoken.md)(instant: [Instant](../../-instant/index.md)): [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)
 
-Converts Instant to a PubNub timetoken
+Converts [Instant](../../-instant/index.md) to a PubNub timetoken
 
 A PubNub timetoken is a 17-digit number representing the number of 100-nanosecond intervals since January 1, 1970.
 
 #### Return
 
-A 17-digit [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html) representing the PubNub timetoken for the given Instant.
+A 17-digit [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html) representing the PubNub timetoken for the given [Instant](../../-instant/index.md).
 
 #### Parameters
 
@@ -19,4 +19,4 @@ common
 
 | | |
 |---|---|
-| instant | The Instant object to be converted to a PubNub timetoken. |
+| instant | The [Instant](../../-instant/index.md) object to be converted to a PubNub timetoken. |
