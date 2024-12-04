@@ -16,14 +16,22 @@ enum class PNMembershipKey(override val fieldName: String) : SortField {
     CHANNEL_ID("channel.id"),
     CHANNEL_NAME("channel.name"),
     CHANNEL_UPDATED("channel.updated"),
+    CHANNEL_STATUS("channel.status"),
+    CHANNEL_TYPE("channel.type"),
     UPDATED("updated"),
+    STATUS("status"),
+    TYPE("type"),
 }
 
 enum class PNMemberKey(override val fieldName: String) : SortField {
     UUID_ID("uuid.id"),
     UUID_NAME("uuid.name"),
     UUID_UPDATED("uuid.updated"),
+    UUID_STATUS("uuid.status"),
+    UUID_TYPE("uuid.type"),
     UPDATED("updated"),
+    STATUS("status"),
+    TYPE("type"),
 }
 
 sealed class PNSortKey<T : SortField>(

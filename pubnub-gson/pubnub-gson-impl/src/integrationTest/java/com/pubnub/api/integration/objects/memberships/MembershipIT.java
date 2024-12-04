@@ -2,6 +2,7 @@ package com.pubnub.api.integration.objects.memberships;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.integration.objects.ObjectsApiBaseIT;
+import com.pubnub.api.java.endpoints.objects_api.utils.PNSortKey;
 import com.pubnub.api.java.models.consumer.objects_api.membership.MembershipInclude;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNGetMembershipsResult;
@@ -88,7 +89,11 @@ public class MembershipIT extends ObjectsApiBaseIT {
                         .includeChannelType(true)
                         .includeChannelStatus(true)
                         .build())
+                .sort(Arrays.asList(PNSortKey.asc(PNSortKey.Key.STATUS)))
                 .sync();
+
+        assertEquals(membership01Status, setMembershipResult.getData().get(0).getStatus().getValue());
+        assertEquals(membership02Status, setMembershipResult.getData().get(1).getStatus().getValue());
 
         createdMembershipsList.add(setMembershipResult);
 
@@ -194,7 +199,11 @@ public class MembershipIT extends ObjectsApiBaseIT {
                         .includeChannelType(true)
                         .includeChannelStatus(true)
                         .build())
+                .sort(Arrays.asList(PNSortKey.asc(PNSortKey.Key.TYPE)))
                 .sync();
+
+        assertEquals(membership01Type, getMembershipsResult.getData().get(0).getType().getValue());
+        assertEquals(membership02Type, getMembershipsResult.getData().get(1).getType().getValue());
 
         PNMembership pnMembership01 = getMembershipByChannelId(getMembershipsResult, membership01ChannelId);
         assertEquals(membership01Status, pnMembership01.getStatus().getValue());
@@ -467,9 +476,9 @@ public class MembershipIT extends ObjectsApiBaseIT {
                         .status(membership02Status)
                         .type(membership02Type)
                         .build(),
-                PNChannelMembership.channel(membership03ChannelId), // this is deprecated usage
-                PNChannelMembership.channelWithCustom(membership04ChannelId, customChannelMembershipObject()), // this is deprecated usage
-                new PNChannelMembership.JustChannel(new PNChannelMembership.ChannelId(membership05ChannelId)), // this is deprecated usage
+                PNChannelMembership.channel(membership03ChannelId), // this old usage
+                PNChannelMembership.channelWithCustom(membership04ChannelId, customChannelMembershipObject()), // this old usage
+                new PNChannelMembership.JustChannel(new PNChannelMembership.ChannelId(membership05ChannelId)), // this old usage
                 new PNChannelMembership.ChannelWithCustom(new PNChannelMembership.ChannelId(membership06ChannelId), customChannelMembershipObject()) // this is deprecated usage
         );
     }

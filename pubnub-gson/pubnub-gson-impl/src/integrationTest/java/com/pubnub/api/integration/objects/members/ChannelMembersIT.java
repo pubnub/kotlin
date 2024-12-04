@@ -2,6 +2,7 @@ package com.pubnub.api.integration.objects.members;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.integration.objects.ObjectsApiBaseIT;
+import com.pubnub.api.java.endpoints.objects_api.utils.PNSortKey;
 import com.pubnub.api.java.models.consumer.objects_api.member.MemberInclude;
 import com.pubnub.api.java.models.consumer.objects_api.member.PNGetChannelMembersResult;
 import com.pubnub.api.java.models.consumer.objects_api.member.PNManageChannelMembersResult;
@@ -80,9 +81,13 @@ public class ChannelMembersIT extends ObjectsApiBaseIT {
                         .includeUserStatus(true)
                         .includeUserType(true)
                         .build())
+                .sort(Arrays.asList(PNSortKey.asc(PNSortKey.Key.STATUS)))
                 .sync();
 
         //then
+        assertEquals(STATUS_01, setChannelMembersResult.getData().get(0).getStatus().getValue());
+        assertEquals(STATUS_02, setChannelMembersResult.getData().get(1).getStatus().getValue());
+
         assertNotNull(setChannelMembersResult);
         assertEquals(HttpStatus.SC_OK, setChannelMembersResult.getStatus());
         createdMembersList.add(setChannelMembersResult);
@@ -181,10 +186,13 @@ public class ChannelMembersIT extends ObjectsApiBaseIT {
                         .includeUser(true)
                         .includeUserCustom(true)
                         .build())
+                .sort(Arrays.asList(PNSortKey.desc(PNSortKey.Key.STATUS)))
                 .sync();
 
 
         //then
+        assertEquals(TYPE_01, getMembersResult.getData().get(1).getType().getValue());
+        assertEquals(TYPE_02, getMembersResult.getData().get(0).getType().getValue());
         assertNotNull(getMembersResult);
         assertEquals(HttpStatus.SC_OK, getMembersResult.getStatus());
         PNMembers pnMember01 = getChannelMemberByUserId(getMembersResult, TEST_UUID1);

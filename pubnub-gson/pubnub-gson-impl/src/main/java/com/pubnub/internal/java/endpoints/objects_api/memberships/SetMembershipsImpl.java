@@ -119,6 +119,12 @@ public class SetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipAr
                 case UPDATED:
                     key = PNMembershipKey.CHANNEL_UPDATED;
                     break;
+                case STATUS:
+                    key = PNMembershipKey.STATUS;
+                    break;
+                case TYPE:
+                    key = PNMembershipKey.TYPE;
+                    break;
                 default:
                     throw new IllegalStateException("Should never happen");
             }
@@ -146,27 +152,21 @@ public class SetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipAr
             return include;
         } else {
             // if deprecated setMembership API used
+            MembershipInclude.Builder builderWithCommonParams = MembershipInclude.builder()
+                    .includeTotalCount(includeTotalCount)
+                    .includeCustom(includeCustom)
+                    .includeChannelType(includeType);
             if (includeChannel == Include.PNChannelDetailsLevel.CHANNEL) {
-                return MembershipInclude.builder()
-                        .includeTotalCount(includeTotalCount)
-                        .includeCustom(includeCustom)
-                        .includeChannelType(includeType)
+                return builderWithCommonParams
                         .includeChannel(true)
                         .build();
             } else if (includeChannel == Include.PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM) {
-                return MembershipInclude.builder()
-                        .includeTotalCount(includeTotalCount)
-                        .includeCustom(includeCustom)
-                        .includeChannelType(includeType)
+                return builderWithCommonParams
                         .includeChannel(true)
                         .includeChannelCustom(true)
                         .build();
             } else {
-                return MembershipInclude.builder()
-                        .includeTotalCount(includeTotalCount)
-                        .includeCustom(includeCustom)
-                        .includeChannelType(includeType)
-                        .build();
+                return builderWithCommonParams.build();
             }
         }
     }

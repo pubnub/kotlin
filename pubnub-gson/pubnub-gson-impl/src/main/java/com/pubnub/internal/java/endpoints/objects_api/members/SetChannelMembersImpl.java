@@ -96,6 +96,12 @@ public class SetChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayResul
                 case UPDATED:
                     key = PNMemberKey.UUID_UPDATED;
                     break;
+                case STATUS:
+                    key = PNMemberKey.STATUS;
+                    break;
+                case TYPE:
+                    key = PNMemberKey.TYPE;
+                    break;
                 default:
                     throw new IllegalStateException("Should never happen");
             }
@@ -177,31 +183,23 @@ public class SetChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayResul
             return include;
         } else {
             // if deprecated setChannelMembership API use
+            MemberInclude.Builder builderWithCommonParams = MemberInclude.builder()
+                    .includeTotalCount(includeTotalCount)
+                    .includeCustom(includeCustom)
+                    .includeUserType(includeType);
             if (includeUser == Include.PNUUIDDetailsLevel.UUID) {
-                return MemberInclude.builder()
-                        .includeTotalCount(includeTotalCount)
-                        .includeCustom(includeCustom)
-                        .includeUserType(includeType)
+                return builderWithCommonParams
                         .includeStatus(true)
                         .includeUser(true)
                         .build();
-
-
             } else if (includeUser == Include.PNUUIDDetailsLevel.UUID_WITH_CUSTOM) {
-                return MemberInclude.builder()
-                        .includeTotalCount(includeTotalCount)
-                        .includeCustom(includeCustom)
-                        .includeUserType(includeType)
+                return builderWithCommonParams
                         .includeStatus(true)
                         .includeUser(true)
                         .includeUserCustom(true)
                         .build();
             } else {
-                return MemberInclude.builder()
-                        .includeTotalCount(includeTotalCount)
-                        .includeCustom(includeCustom)
-                        .includeUserType(includeType)
-                        .build();
+                return builderWithCommonParams.build();
             }
         }
     }

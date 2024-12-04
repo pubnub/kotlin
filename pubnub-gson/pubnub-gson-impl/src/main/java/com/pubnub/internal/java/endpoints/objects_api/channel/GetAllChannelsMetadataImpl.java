@@ -70,6 +70,12 @@ public class GetAllChannelsMetadataImpl
                 case UPDATED:
                     key = PNKey.UPDATED;
                     break;
+                case STATUS:
+                    key = PNKey.STATUS;
+                    break;
+                case TYPE:
+                    key = PNKey.TYPE;
+                    break;
                 default:
                     throw new IllegalStateException("Should never happen");
             }
