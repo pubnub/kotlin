@@ -1,3 +1,9 @@
+## v10.3.1
+December 05 2024
+
+#### Added
+- Added also a way to specify optional data being added to the response for Membership and ChannelMembers APIs.
+
 ## v10.2.1
 December 03 2024
 
