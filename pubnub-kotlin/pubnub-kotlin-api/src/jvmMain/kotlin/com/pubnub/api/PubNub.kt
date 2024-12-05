@@ -1868,7 +1868,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      *
      * @param channel Channel name
      * @param usersToSet Collection of members to add to the channel. @see [com.pubnub.api.models.consumer.objects.member.PNMember.Partial]
-     * @param usersToRemove Members to remove from channel.
+     * @param usersIdsToRemove Members to remove from channel.
      * @param limit Number of objects to return in the response.
      *              Default is 100, which is also the maximum value.
      *              Set limit to 0 (zero) and includeCount to true if you want to retrieve only a result count.
@@ -1886,7 +1886,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
     fun manageChannelMembers(
         channel: String,
         usersToSet: Collection<MemberInput>,
-        usersToRemove: Collection<String>,
+        usersIdsToRemove: Collection<String>,
         limit: Int? = null,
         page: PNPage? = null,
         filter: String? = null,

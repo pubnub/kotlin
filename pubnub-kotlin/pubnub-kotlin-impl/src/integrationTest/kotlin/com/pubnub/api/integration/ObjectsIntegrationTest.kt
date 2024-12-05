@@ -540,11 +540,8 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
         pubnub.manageChannelMembers(
             channel = channel,
             usersToSet = listOf(PNMember.Partial(uuidId = testUserId01, status = status01, type = type01)),
-            usersToRemove = listOf(),
-            include = MemberInclude(
-                includeStatus = true,
-                includeType = true,
-            )
+            usersIdsToRemove = listOf(),
+            include = MemberInclude(includeStatus = true, includeType = true)
         ).sync()
 
         val getAllResult =
@@ -585,7 +582,7 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
             pubnub.manageChannelMembers(
                 channel = channel,
                 usersToSet = listOf(),
-                usersToRemove = listOf(testUserId01, testUserId02),
+                usersIdsToRemove = listOf(testUserId01, testUserId02),
             ).sync().data
 
         assertThat(removeResult, not(containsInAnyOrder(testUuidMatcher, otherTestUuidMatcher)))
@@ -601,7 +598,7 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
         pubnub.manageChannelMembers(
             channel = channel,
             usersToSet = listOf(PNMember.Partial(uuidId = testUserId01, status = status01)),
-            usersToRemove = listOf(),
+            usersIdsToRemove = listOf(),
         ).sync()
 
         val getAllResult =
@@ -635,7 +632,7 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
             pubnub.manageChannelMembers(
                 channel = channel,
                 usersToSet = listOf(),
-                usersToRemove = listOf(testUserId01, testUserId02),
+                usersIdsToRemove = listOf(testUserId01, testUserId02),
             ).sync().data
 
         assertThat(removeResult, not(containsInAnyOrder(testUuidMatcher, otherTestUuidMatcher)))
