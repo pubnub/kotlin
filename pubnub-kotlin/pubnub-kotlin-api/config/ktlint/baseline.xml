@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <baseline version="1.0">
     <file name="src/commonMain/kotlin/com/pubnub/api/models/consumer/objects/member/MemberInclude.kt">
-        <error line="3" column="5" source="standard:function-naming" />
+        <error line="20" column="5" source="standard:function-naming" />
     </file>
     <file name="src/commonMain/kotlin/com/pubnub/api/models/consumer/objects/membership/MembershipInclude.kt">
-        <error line="3" column="5" source="standard:function-naming" />
+        <error line="20" column="5" source="standard:function-naming" />
     </file>
     <file name="src/jsMain/kotlin/Pubnub.d.kt">
         <error line="156" column="40" source="standard:comment-wrapping" />
