@@ -111,7 +111,8 @@ internal fun createPNMember(from: KMPMembershipMetadata?): PNMember {
         custom = PatchValue.of(from.custom()?.safeCast()),
         updated = from.updated().orEmpty(),
         eTag = from.eTag().orEmpty(),
-        status = PatchValue.of(from.status())
+        status = PatchValue.of(from.status()),
+        type = PatchValue.of(null) // todo add when available
     )
 }
 

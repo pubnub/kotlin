@@ -9,6 +9,7 @@ import com.pubnub.api.java.models.consumer.objects_api.membership.PNManageMember
 
 import java.util.Collection;
 
+@Deprecated
 public interface ManageMemberships extends Endpoint<PNManageMembershipResult> {
 
     ManageMemberships set(Collection<PNChannelMembership> set);
@@ -31,6 +32,7 @@ public interface ManageMemberships extends Endpoint<PNManageMembershipResult> {
 
     ManageMemberships includeChannel(Include.PNChannelDetailsLevel includeChannel);
 
+    @Deprecated
     interface Builder extends ObjectsBuilderSteps.RemoveOrSetStep<ManageMemberships, PNChannelMembership> {
         @Override
         RemoveStep<ManageMemberships, PNChannelMembership> set(Collection<PNChannelMembership> channelsToSet);

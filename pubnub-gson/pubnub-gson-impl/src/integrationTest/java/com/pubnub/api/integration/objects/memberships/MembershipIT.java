@@ -2,6 +2,8 @@ package com.pubnub.api.integration.objects.memberships;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.integration.objects.ObjectsApiBaseIT;
+import com.pubnub.api.java.endpoints.objects_api.utils.PNSortKey;
+import com.pubnub.api.java.models.consumer.objects_api.membership.MembershipInclude;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNGetMembershipsResult;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNManageMembershipResult;
@@ -22,7 +24,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+import static com.pubnub.api.integration.util.Utils.random;
 import static com.pubnub.api.java.endpoints.objects_api.utils.Include.PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
@@ -31,19 +35,99 @@ import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class MembershipIT extends ObjectsApiBaseIT {
     private static final Logger LOG = LoggerFactory.getLogger(MembershipIT.class);
     private static final String STATUS = "status";
     private static final String CHANNEL = "channel";
 
-    public final String testChannelId1 = UUID.randomUUID().toString();
-    public final String testChannelId2 = UUID.randomUUID().toString();
+    private final String testChannelId1 = UUID.randomUUID().toString();
+    private final String testChannelId2 = UUID.randomUUID().toString();
+
+    private final String membership01ChannelId = random();
+    private final String membership01Status = "active";
+    private final String membership01Type = "admin";
+    private final String membership02ChannelId = random();
+    private final String membership02Status = "inactive";
+    private final String membership02Type = "member";
+    private final String membership03ChannelId = random();
+    private final String membership04ChannelId = random();
+    private final String membership05ChannelId = random();
+    private final String membership06ChannelId = random();
+    private final String userId = random().toString();
 
     private final List<PNSetMembershipResult> createdMembershipsList = new ArrayList<>();
 
     @Test
-    public void setMembershipsHappyPath() throws PubNubException {
+    public void setMembershipsHappyPath() throws PubNubException  {
+        final List<PNChannelMembership> channelMemberships = buildChannelMemberships(
+                membership01ChannelId,
+                membership01Status,
+                membership01Type,
+                membership02ChannelId,
+                membership02Status,
+                membership02Type,
+                membership03ChannelId,
+                membership04ChannelId,
+                membership05ChannelId,
+                membership06ChannelId
+        );
+
+        PNSetMembershipResult setMembershipResult = pubNubUnderTest
+                .setMemberships(channelMemberships)
+                .userId(userId).limit(10)
+                .include(MembershipInclude.builder()
+                        .includeCustom(true)
+                        .includeStatus(true)
+                        .includeType(true)
+                        .includeTotalCount(true)
+                        .includeChannel(true)
+                        .includeChannelCustom(true)
+                        .includeChannelType(true)
+                        .includeChannelStatus(true)
+                        .build())
+                .sort(Arrays.asList(PNSortKey.asc(PNSortKey.Key.STATUS)))
+                .sync();
+
+        assertEquals(membership01Status, setMembershipResult.getData().get(0).getStatus().getValue());
+        assertEquals(membership02Status, setMembershipResult.getData().get(1).getStatus().getValue());
+
+        createdMembershipsList.add(setMembershipResult);
+
+        PNMembership pnMembership01 = getMembershipByChannelId(setMembershipResult, membership01ChannelId);
+        assertEquals(membership01Status, pnMembership01.getStatus().getValue());
+        assertEquals(membership01Type, pnMembership01.getType().getValue());
+
+        PNMembership pnMembership02 = getMembershipByChannelId(setMembershipResult, membership02ChannelId);
+        assertEquals(membership02Status, pnMembership02.getStatus().getValue());
+        assertEquals(membership02Type, pnMembership02.getType().getValue());
+        assertNotNull(pnMembership02.getCustom().getValue());
+
+        PNMembership pnMembership03 = getMembershipByChannelId(setMembershipResult, membership03ChannelId);
+        assertNull(pnMembership03.getStatus().getValue());
+        assertNull(pnMembership03.getType().getValue());
+
+        PNMembership pnMembership04 = getMembershipByChannelId(setMembershipResult, membership04ChannelId);
+        assertNull(pnMembership04.getStatus().getValue());
+        assertNull(pnMembership04.getType().getValue());
+        assertNotNull(pnMembership04.getCustom().getValue());
+
+        PNMembership pnMembership05 = getMembershipByChannelId(setMembershipResult, membership05ChannelId);
+        assertNull(pnMembership05.getStatus().getValue());
+        assertNull(pnMembership05.getType().getValue());
+        assertNull(pnMembership05.getCustom().getValue());
+
+        PNMembership pnMembership06 = getMembershipByChannelId(setMembershipResult, membership06ChannelId);
+        assertNull(pnMembership06.getStatus().getValue());
+        assertNull(pnMembership06.getType().getValue());
+        assertNotNull(pnMembership06.getCustom().getValue());
+    }
+
+    @Test
+    public void setMembershipsHappyPath_deprecated() throws PubNubException {
         //given
         final List<PNChannelMembership> channelMemberships = Arrays.asList(
                 PNChannelMembership.channel(testChannelId1),
@@ -81,6 +165,90 @@ public class MembershipIT extends ObjectsApiBaseIT {
 
     @Test
     public void getMembershipsHappyPath() throws PubNubException {
+        final List<PNChannelMembership> channelMemberships = buildChannelMemberships(
+                membership01ChannelId,
+                membership01Status,
+                membership01Type,
+                membership02ChannelId,
+                membership02Status,
+                membership02Type,
+                membership03ChannelId,
+                membership04ChannelId,
+                membership05ChannelId,
+                membership06ChannelId
+        );
+
+        PNSetMembershipResult setMembershipResult = pubNubUnderTest
+                .setMemberships(channelMemberships)
+                .userId(userId).limit(10)
+                .sync();
+
+        createdMembershipsList.add(setMembershipResult);
+
+        //when
+        final PNGetMembershipsResult getMembershipsResult = pubNubUnderTest.getMemberships()
+                .userId(userId)
+                .limit(10)
+                .include(MembershipInclude.builder()
+                        .includeCustom(true)
+                        .includeStatus(true)
+                        .includeType(true)
+                        .includeTotalCount(true)
+                        .includeChannel(true)
+                        .includeChannelCustom(true)
+                        .includeChannelType(true)
+                        .includeChannelStatus(true)
+                        .build())
+                .sort(Arrays.asList(PNSortKey.asc(PNSortKey.Key.TYPE)))
+                .sync();
+
+        assertEquals(membership01Type, getMembershipsResult.getData().get(0).getType().getValue());
+        assertEquals(membership02Type, getMembershipsResult.getData().get(1).getType().getValue());
+
+        PNMembership pnMembership01 = getMembershipByChannelId(getMembershipsResult, membership01ChannelId);
+        assertEquals(membership01Status, pnMembership01.getStatus().getValue());
+        assertEquals(membership01Type, pnMembership01.getType().getValue());
+
+        PNMembership pnMembership02 = getMembershipByChannelId(getMembershipsResult, membership02ChannelId);
+        assertEquals(membership02Status, pnMembership02.getStatus().getValue());
+        assertEquals(membership02Type, pnMembership02.getType().getValue());
+        assertNotNull(pnMembership02.getCustom().getValue());
+
+        PNMembership pnMembership03 = getMembershipByChannelId(getMembershipsResult, membership03ChannelId);
+        assertNull(pnMembership03.getStatus().getValue());
+        assertNull(pnMembership03.getType().getValue());
+
+        PNMembership pnMembership04 = getMembershipByChannelId(getMembershipsResult, membership04ChannelId);
+        assertNull(pnMembership04.getStatus().getValue());
+        assertNull(pnMembership04.getType().getValue());
+        assertNotNull(pnMembership04.getCustom().getValue());
+
+        PNMembership pnMembership05 = getMembershipByChannelId(getMembershipsResult, membership05ChannelId);
+        assertNull(pnMembership05.getStatus().getValue());
+        assertNull(pnMembership05.getType().getValue());
+        assertNull(pnMembership05.getCustom().getValue());
+
+        PNMembership pnMembership06 = getMembershipByChannelId(getMembershipsResult, membership06ChannelId);
+        assertEquals(membership06ChannelId, pnMembership06.getChannel().getId());
+        assertNull(pnMembership06.getStatus().getValue());
+        assertNull(pnMembership06.getType().getValue());
+        assertNotNull(pnMembership06.getCustom().getValue());
+    }
+
+    private PNMembership getMembershipByChannelId(PNGetMembershipsResult getMembershipsResult, String membershipId) {
+        return getMembershipsResult.getData().stream().filter(membership -> membershipId.equals(membership.getChannel().getId())).collect(Collectors.toList()).get(0);
+    }
+
+    private PNMembership getMembershipByChannelId(PNSetMembershipResult setMembershipResult, String membershipId) {
+        return setMembershipResult.getData().stream().filter(membership -> membershipId.equals(membership.getChannel().getId())).collect(Collectors.toList()).get(0);
+    }
+
+    private PNMembership getMembershipByChannelId(PNRemoveMembershipResult removeMembershipsResult, String membershipId) {
+        return removeMembershipsResult.getData().stream().filter(membership -> membershipId.equals(membership.getChannel().getId())).collect(Collectors.toList()).get(0);
+    }
+
+    @Test
+    public void getMembershipsHappyPathDeprecated() throws PubNubException {
         //given
         final List<PNChannelMembership> channelMemberships = Arrays.asList(
                 PNChannelMembership.channel(testChannelId1),
@@ -116,6 +284,50 @@ public class MembershipIT extends ObjectsApiBaseIT {
     @Test
     public void removeMembershipsHappyPath() throws PubNubException {
         //given
+        final List<PNChannelMembership> channelMemberships = buildChannelMemberships(
+                membership01ChannelId,
+                membership01Status,
+                membership01Type,
+                membership02ChannelId,
+                membership02Status,
+                membership02Type,
+                membership03ChannelId,
+                membership04ChannelId,
+                membership05ChannelId,
+                membership06ChannelId
+        );
+
+        final PNSetMembershipResult setMembershipResult = pubNubUnderTest.setMemberships(channelMemberships)
+                .include(MembershipInclude.builder()
+                        .includeTotalCount(true)
+                        .includeCustom(true)
+                        .includeChannel(true)
+                        .includeChannelCustom(true)
+                        .build())
+                .sync();
+        createdMembershipsList.add(setMembershipResult);
+
+        //when
+        List<String> channelMembershipsToRemove = Collections.singletonList(testChannelId2);
+        final PNRemoveMembershipResult removeMembershipResult = pubNubUnderTest.removeMemberships(channelMembershipsToRemove)
+                .include(MembershipInclude.builder()
+                        .includeTotalCount(true)
+                        .includeCustom(true)
+                        .includeChannel(true)
+                        .includeType(true)
+                        .includeStatus(true)
+                        .build())
+                .sync();
+
+        //then
+        PNMembership pnMembership01 = getMembershipByChannelId(removeMembershipResult, membership01ChannelId);
+        assertEquals(membership01Status, pnMembership01.getStatus().getValue());
+        assertEquals(membership01Type, pnMembership01.getType().getValue());
+    }
+
+    @Test
+    public void removeMembershipsHappyPathDeprecated() throws PubNubException {
+        //given
         final List<PNChannelMembership> channelMemberships = Arrays.asList(PNChannelMembership.channel(testChannelId1),
                 PNChannelMembership.channelWithCustom(testChannelId2, customChannelMembershipObject()));
 
@@ -150,6 +362,47 @@ public class MembershipIT extends ObjectsApiBaseIT {
 
     @Test
     public void manageMembershipsHappyPath() throws PubNubException {
+        //given
+        final List<String> channelIdsToRemove = Collections.singletonList(testChannelId1);
+        final List<PNChannelMembership> channelMembershipsToRemove = Collections.singletonList(
+                PNChannelMembership.channelWithCustom(testChannelId1, customChannelMembershipObject()));
+
+        final PNSetMembershipResult setMembershipResult = pubNubUnderTest.setMemberships(channelMembershipsToRemove).sync();
+        createdMembershipsList.add(setMembershipResult);
+
+        final List<PNChannelMembership> channelMembershipsToSet = Collections.singletonList(
+                PNChannelMembership.builder(testChannelId2)
+                        .custom(customChannelMembershipObject())
+                        .status(membership02Status)
+                        .type(membership02Type)
+                        .build());
+
+        //when
+        final PNManageMembershipResult manageMembershipResult = pubNubUnderTest.manageMemberships(channelMembershipsToSet, channelIdsToRemove)
+                .userId(pubNubUnderTest.getConfiguration().getUserId().getValue())
+                .include(MembershipInclude.builder()
+                        .includeTotalCount(true)
+                        .includeCustom(true)
+                        .includeChannel(true)
+                        .includeChannelCustom(true)
+                        .includeStatus(true)
+                        .includeType(true)
+                        .build())
+                .sync();
+
+        createdMembershipsList.add(new PNSetMembershipResult(manageMembershipResult));
+
+        //then
+        assertEquals(HttpStatus.SC_OK, manageMembershipResult.getStatus());
+        assertEquals(1, manageMembershipResult.getData().size());
+        PNMembership pnMembership = manageMembershipResult.getData().get(0);
+        assertEquals(testChannelId2, pnMembership.getChannel().getId());
+        assertEquals(membership02Status, pnMembership.getStatus().getValue());
+        assertEquals(membership02Type, pnMembership.getType().getValue());
+    }
+
+    @Test
+    public void manageMembershipsHappyPathDeprecated() throws PubNubException {
         //given
         final List<PNChannelMembership> channelMembershipsToRemove = Collections.singletonList(
                 PNChannelMembership.channelWithCustom(testChannelId1, customChannelMembershipObject()));
@@ -191,16 +444,13 @@ public class MembershipIT extends ObjectsApiBaseIT {
     public void cleanUp() {
         for (final PNSetMembershipResult createdMembership : createdMembershipsList) {
             try {
-                final List<PNChannelMembership> channelMemberships = new ArrayList<>();
+                final List<String> channelIds = new ArrayList<>();
                 for (final PNMembership it : createdMembership.getData()) {
                     final String id = it.getChannel().getId();
-                    final PNChannelMembership pnChannelMembership = PNChannelMembership.channel(id);
-                    channelMemberships.add(pnChannelMembership);
+                    channelIds.add(id);
                 }
 
-                pubNubUnderTest.removeMemberships()
-                        .channelMemberships(channelMemberships)
-                        .sync();
+                pubNubUnderTest.removeMemberships(channelIds).sync();
 
             } catch (Exception e) {
                 LOG.warn("Could not cleanup {}", createdMembership, e);
@@ -213,5 +463,23 @@ public class MembershipIT extends ObjectsApiBaseIT {
         customMap.putIfAbsent("membership_param1", "val1");
         customMap.putIfAbsent("membership_param2", "val2");
         return customMap;
+    }
+
+    private  List<PNChannelMembership> buildChannelMemberships(String membership01ChannelId, String membership01Status, String membership01Type, String membership02ChannelId, String membership02Status, String membership02Type, String membership03ChannelId, String membership04ChannelId, String membership05ChannelId, String membership06ChannelId) {
+        return Arrays.asList(
+                PNChannelMembership.builder(membership01ChannelId)
+                        .status(membership01Status)
+                        .type(membership01Type)
+                        .build(),
+                PNChannelMembership.builder(membership02ChannelId)
+                        .custom(customChannelMembershipObject())
+                        .status(membership02Status)
+                        .type(membership02Type)
+                        .build(),
+                PNChannelMembership.channel(membership03ChannelId), // this old usage
+                PNChannelMembership.channelWithCustom(membership04ChannelId, customChannelMembershipObject()), // this old usage
+                new PNChannelMembership.JustChannel(new PNChannelMembership.ChannelId(membership05ChannelId)), // this old usage
+                new PNChannelMembership.ChannelWithCustom(new PNChannelMembership.ChannelId(membership06ChannelId), customChannelMembershipObject()) // this is deprecated usage
+        );
     }
 }

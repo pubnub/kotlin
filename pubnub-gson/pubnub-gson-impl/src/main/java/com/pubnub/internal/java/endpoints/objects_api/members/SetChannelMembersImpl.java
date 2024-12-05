@@ -5,12 +5,15 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.java.endpoints.objects_api.members.SetChannelMembers;
+import com.pubnub.api.java.endpoints.objects_api.members.SetChannelMembersBuilder;
 import com.pubnub.api.java.endpoints.objects_api.utils.Include;
 import com.pubnub.api.java.endpoints.objects_api.utils.ObjectsBuilderSteps;
 import com.pubnub.api.java.endpoints.objects_api.utils.PNSortKey;
+import com.pubnub.api.java.models.consumer.objects_api.member.MemberInclude;
 import com.pubnub.api.java.models.consumer.objects_api.member.PNSetChannelMembersResult;
 import com.pubnub.api.java.models.consumer.objects_api.member.PNSetChannelMembersResultConverter;
 import com.pubnub.api.java.models.consumer.objects_api.member.PNUUID;
+import com.pubnub.api.java.models.consumer.objects_api.member.PNUser;
 import com.pubnub.api.models.consumer.objects.PNMemberKey;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects.member.MemberInput;
@@ -30,39 +33,53 @@ import java.util.List;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class SetChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayResult, PNSetChannelMembersResult> implements SetChannelMembers {
+public class SetChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayResult, PNSetChannelMembersResult> implements SetChannelMembers, SetChannelMembersBuilder {
 
     private Integer limit = null;
     private PNPage page;
     private String filter;
     private Collection<PNSortKey> sort = Collections.emptyList();
-    private boolean includeTotalCount;
-    private boolean includeCustom;
-    private boolean includeType;
-    private Include.PNUUIDDetailsLevel includeUUID;
+    private boolean includeTotalCount;  // deprecated
+    private boolean includeCustom;  // deprecated
+    private boolean includeType;  // deprecated
+    private Include.PNUUIDDetailsLevel includeUUID;  // deprecated
     private final String channel;
-    private final Collection<PNUUID> uuids;
+    private Collection<PNUUID> uuids; // deprecated
+    private Collection<PNUser> users;
+    private MemberInclude include;
 
-    public SetChannelMembersImpl(final PubNub pubnubInstance, String channel, Collection<PNUUID> uuids) {
+    @Deprecated
+    private SetChannelMembersImpl(final PubNub pubnubInstance, String channel, Collection<PNUUID> uuids) {
         super(pubnubInstance);
         this.channel = channel;
         this.uuids = uuids;
     }
 
+    public SetChannelMembersImpl(String channel, Collection<PNUser> users, final PubNub pubnubInstance) {
+        super(pubnubInstance);
+        this.channel = channel;
+        this.users = users;
+    }
+
     @NotNull
     @Override
     protected ExtendedRemoteAction<PNSetChannelMembersResult> mapResult(@NotNull ExtendedRemoteAction<PNMemberArrayResult> action) {
-        return new MappingRemoteAction<>(action, PNSetChannelMembersResultConverter::from);
+        MappingRemoteAction<PNMemberArrayResult, PNSetChannelMembersResult> pnMemberArrayResultPNSetChannelMembersResultMappingRemoteAction = new MappingRemoteAction<>(action, PNSetChannelMembersResultConverter::from);
+        return pnMemberArrayResultPNSetChannelMembersResultMappingRemoteAction;
     }
 
     @Override
     @NotNull
     protected Endpoint<PNMemberArrayResult> createRemoteAction() {
-        List<MemberInput> memberInputs = new ArrayList<>(uuids.size());
-        for (PNUUID uuid : uuids) {
-            memberInputs.add(new PNMember.Partial(uuid.getUuid().getId(), (uuid instanceof PNUUID.UUIDWithCustom) ? ((PNUUID.UUIDWithCustom) uuid).getCustom() : null, uuid.getStatus()));
-        }
-        return pubnub.setChannelMembers(channel, memberInputs, limit, page, filter, toInternal(sort), includeTotalCount, includeCustom, toInternal(includeUUID), includeType);
+        return pubnub.setChannelMembers(
+                channel,
+                createMemberInputs(),
+                limit,
+                page,
+                filter,
+                toInternal(sort),
+                getMemberInclude(include, includeUUID, includeTotalCount, includeCustom, includeType)
+        );
     }
 
     static Collection<? extends com.pubnub.api.models.consumer.objects.PNSortKey<PNMemberKey>> toInternal(Collection<PNSortKey> sort) {
@@ -78,6 +95,12 @@ public class SetChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayResul
                     break;
                 case UPDATED:
                     key = PNMemberKey.UUID_UPDATED;
+                    break;
+                case STATUS:
+                    key = PNMemberKey.STATUS;
+                    break;
+                case TYPE:
+                    key = PNMemberKey.TYPE;
                     break;
                 default:
                     throw new IllegalStateException("Should never happen");
@@ -121,6 +144,63 @@ public class SetChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayResul
                     return new SetChannelMembersImpl(pubnubInstance, channel, uuids);
                 }
             };
+        }
+    }
+
+
+    private List<MemberInput> createMemberInputs() {
+        List<MemberInput> memberInputs = new ArrayList<>();
+        if (users != null) {
+            for (PNUser user: users) {
+                memberInputs.add(new PNMember.Partial(
+                        user.getUserId(),
+                        user.getCustom(), // despite IDE error this works ¯\_(ツ)_/¯
+                        user.getStatus(),
+                        user.getType()
+                ));
+            }
+        } else if (uuids != null) {
+            for (PNUUID uuid : uuids) {
+                memberInputs.add(new PNMember.Partial(
+                        uuid.getUuid().getId(),
+                        (uuid instanceof PNUUID.UUIDWithCustom) ? ((PNUUID.UUIDWithCustom) uuid).getCustom() : null,
+                        uuid.getStatus(),
+                        null
+                ));
+            }
+        }
+        return memberInputs;
+    }
+
+    static MemberInclude getMemberInclude(
+            MemberInclude include,
+            Include.PNUUIDDetailsLevel includeUser,
+            boolean includeTotalCount,
+            boolean includeCustom,
+            boolean includeType
+    ) {
+        if (include != null) {
+            return include;
+        } else {
+            // if deprecated setChannelMembership API use
+            MemberInclude.Builder builderWithCommonParams = MemberInclude.builder()
+                    .includeTotalCount(includeTotalCount)
+                    .includeCustom(includeCustom)
+                    .includeUserType(includeType);
+            if (includeUser == Include.PNUUIDDetailsLevel.UUID) {
+                return builderWithCommonParams
+                        .includeStatus(true)
+                        .includeUser(true)
+                        .build();
+            } else if (includeUser == Include.PNUUIDDetailsLevel.UUID_WITH_CUSTOM) {
+                return builderWithCommonParams
+                        .includeStatus(true)
+                        .includeUser(true)
+                        .includeUserCustom(true)
+                        .build();
+            } else {
+                return builderWithCommonParams.build();
+            }
         }
     }
 }

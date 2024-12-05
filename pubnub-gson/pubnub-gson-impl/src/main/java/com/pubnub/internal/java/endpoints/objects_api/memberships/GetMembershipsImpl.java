@@ -7,6 +7,7 @@ import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.java.endpoints.objects_api.memberships.GetMemberships;
 import com.pubnub.api.java.endpoints.objects_api.utils.Include;
 import com.pubnub.api.java.endpoints.objects_api.utils.PNSortKey;
+import com.pubnub.api.java.models.consumer.objects_api.membership.MembershipInclude;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNGetMembershipsResult;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNGetMembershipsResultConverter;
 import com.pubnub.api.models.consumer.objects.PNPage;
@@ -19,19 +20,22 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 import java.util.Collections;
 
+import static com.pubnub.internal.java.endpoints.objects_api.memberships.SetMembershipsImpl.getMembershipInclude;
+
 @Setter
 @Accessors(chain = true, fluent = true)
 public class GetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipArrayResult, PNGetMembershipsResult> implements GetMemberships {
-
-    private String uuid;
+    private String uuid; // deprecated
+    private String userId;
     private Integer limit;
     private PNPage page;
     private String filter;
     private Collection<PNSortKey> sort = Collections.emptyList();
-    private boolean includeTotalCount;
-    private boolean includeCustom;
-    private boolean includeType;
-    private Include.PNChannelDetailsLevel includeChannel;
+    private boolean includeTotalCount; // deprecated
+    private boolean includeCustom; // deprecated
+    private boolean includeType; // deprecated
+    private Include.PNChannelDetailsLevel includeChannel; // deprecated
+    private MembershipInclude include;
 
     public GetMembershipsImpl(PubNub pubnub) {
         super(pubnub);
@@ -46,15 +50,18 @@ public class GetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipAr
     @Override
     @NotNull
     protected Endpoint<PNChannelMembershipArrayResult> createRemoteAction() {
-        return pubnub.getMemberships(uuid,
+        return pubnub.getMemberships(
+                getUserId(),
                 limit,
                 page,
                 filter,
                 SetMembershipsImpl.toInternal(sort),
-                includeTotalCount,
-                includeCustom,
-                SetMembershipsImpl.toInternal(includeChannel),
-                includeType);
+                getMembershipInclude(include, includeChannel, includeTotalCount, includeCustom, includeType)
+        );
+    }
+
+    private String getUserId() {
+        return userId != null ? userId : uuid;
     }
 }
 

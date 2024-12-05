@@ -12,7 +12,7 @@ internal class PNMembersConverterTest {
     @Test
     fun from() {
         val member = PNMember(
-            PNUUIDMetadata(
+            uuid = PNUUIDMetadata(
                 randomString(),
                 PatchValue.of(randomString()),
                 PatchValue.of(randomString()),
@@ -21,10 +21,11 @@ internal class PNMembersConverterTest {
                 PatchValue.of(mapOf(randomString() to randomString())),
                 PatchValue.of(randomString()),
             ),
-            PatchValue.of(mapOf(randomString() to randomString())),
-            randomString(),
-            randomString(),
-            PatchValue.of(randomString())
+            custom = PatchValue.of(mapOf(randomString() to randomString())),
+            updated = randomString(),
+            eTag = randomString(),
+            status = PatchValue.of(randomString()),
+            type = PatchValue.of(randomString())
         )
         val actual = PNMembersConverter.from(member)
         assertEquals(member, actual!!)
@@ -46,7 +47,8 @@ internal class PNMembersConverterTest {
                 PatchValue.of(mapOf(randomString() to randomString())),
                 randomString(),
                 randomString(),
-                PatchValue.of(randomString())
+                status = PatchValue.of(randomString()),
+                type = PatchValue.of(randomString())
             )
         }
         val actualList = PNMembersConverter.from(items)

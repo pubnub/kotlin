@@ -31,6 +31,7 @@ public interface PNMembershipConverter {
         newData.setUpdated(data.getUpdated());
         newData.setETag(data.getETag());
         newData.setStatus(data.getStatus());
+        newData.setType(data.getType());
         return newData;
     }
 }

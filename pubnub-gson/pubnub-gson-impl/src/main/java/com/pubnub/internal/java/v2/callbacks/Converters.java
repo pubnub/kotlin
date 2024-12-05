@@ -154,6 +154,7 @@ class Converters {
         membership.setUuid(data.getUuid());
         membership.setCustom(data.getCustom());
         membership.setStatus(data.getStatus());
+        membership.setType(data.getType());
         membership.setUpdated(data.getUpdated());
         membership.setETag(data.getETag());
         return new PNMembershipResult(

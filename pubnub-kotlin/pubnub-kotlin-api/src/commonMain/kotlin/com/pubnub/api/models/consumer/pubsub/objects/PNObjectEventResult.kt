@@ -73,9 +73,10 @@ data class PNSetMembershipEvent(
     val eTag: String,
     val updated: String,
     val status: PatchValue<String?>?,
+    val type: PatchValue<String?>?,
 )
 
 data class PNDeleteMembershipEvent(
     val channelId: String,
-    val uuid: String,
+    val uuid: String, // todo change to userId?
 )

@@ -5,8 +5,10 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.java.endpoints.objects_api.members.GetChannelMembers;
+import com.pubnub.api.java.endpoints.objects_api.members.GetChannelMembersBuilder;
 import com.pubnub.api.java.endpoints.objects_api.utils.Include;
 import com.pubnub.api.java.endpoints.objects_api.utils.PNSortKey;
+import com.pubnub.api.java.models.consumer.objects_api.member.MemberInclude;
 import com.pubnub.api.java.models.consumer.objects_api.member.PNGetChannelMembersResult;
 import com.pubnub.api.java.models.consumer.objects_api.member.PNGetChannelMembersResultConverter;
 import com.pubnub.api.models.consumer.objects.PNPage;
@@ -19,19 +21,22 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 import java.util.Collections;
 
+import static com.pubnub.internal.java.endpoints.objects_api.members.SetChannelMembersImpl.getMemberInclude;
+
 @Setter
 @Accessors(chain = true, fluent = true)
-public class GetChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayResult, PNGetChannelMembersResult> implements GetChannelMembers {
+public class GetChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayResult, PNGetChannelMembersResult> implements GetChannelMembers, GetChannelMembersBuilder {
 
     private final String channel;
     private Integer limit = null;
     private PNPage page;
     private String filter;
     private Collection<PNSortKey> sort = Collections.emptyList();
-    private boolean includeTotalCount;
-    private boolean includeCustom;
-    private boolean includeType;
-    private Include.PNUUIDDetailsLevel includeUUID;
+    private boolean includeTotalCount; // deprecated
+    private boolean includeCustom; // deprecated
+    private boolean includeType; // deprecated
+    private Include.PNUUIDDetailsLevel includeUUID; // deprecated
+    private MemberInclude include;
 
     public GetChannelMembersImpl(String channel, final PubNub pubnubInstance) {
         super(pubnubInstance);
@@ -52,10 +57,7 @@ public class GetChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayResul
                 page,
                 filter,
                 SetChannelMembersImpl.toInternal(sort),
-                includeTotalCount,
-                includeCustom,
-                SetChannelMembersImpl.toInternal(includeUUID),
-                includeType
+                getMemberInclude(include, includeUUID, includeTotalCount, includeCustom, includeType)
         );
     }
 

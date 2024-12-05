@@ -32,13 +32,20 @@ import com.pubnub.api.java.endpoints.objects_api.channel.GetChannelMetadata
 import com.pubnub.api.java.endpoints.objects_api.channel.RemoveChannelMetadata
 import com.pubnub.api.java.endpoints.objects_api.channel.SetChannelMetadata
 import com.pubnub.api.java.endpoints.objects_api.members.GetChannelMembers
+import com.pubnub.api.java.endpoints.objects_api.members.GetChannelMembersBuilder
 import com.pubnub.api.java.endpoints.objects_api.members.ManageChannelMembers
+import com.pubnub.api.java.endpoints.objects_api.members.ManageChannelMembersBuilder
 import com.pubnub.api.java.endpoints.objects_api.members.RemoveChannelMembers
+import com.pubnub.api.java.endpoints.objects_api.members.RemoveChannelMembersBuilder
 import com.pubnub.api.java.endpoints.objects_api.members.SetChannelMembers
+import com.pubnub.api.java.endpoints.objects_api.members.SetChannelMembersBuilder
 import com.pubnub.api.java.endpoints.objects_api.memberships.GetMemberships
 import com.pubnub.api.java.endpoints.objects_api.memberships.ManageMemberships
+import com.pubnub.api.java.endpoints.objects_api.memberships.ManageMembershipsBuilder
 import com.pubnub.api.java.endpoints.objects_api.memberships.RemoveMemberships
+import com.pubnub.api.java.endpoints.objects_api.memberships.RemoveMembershipsBuilder
 import com.pubnub.api.java.endpoints.objects_api.memberships.SetMemberships
+import com.pubnub.api.java.endpoints.objects_api.memberships.SetMembershipsBuilder
 import com.pubnub.api.java.endpoints.objects_api.uuid.GetAllUUIDMetadata
 import com.pubnub.api.java.endpoints.objects_api.uuid.GetUUIDMetadata
 import com.pubnub.api.java.endpoints.objects_api.uuid.RemoveUUIDMetadata
@@ -53,6 +60,8 @@ import com.pubnub.api.java.endpoints.push.AddChannelsToPush
 import com.pubnub.api.java.endpoints.push.ListPushProvisions
 import com.pubnub.api.java.endpoints.push.RemoveAllPushChannelsForDevice
 import com.pubnub.api.java.endpoints.push.RemoveChannelsFromPush
+import com.pubnub.api.java.models.consumer.objects_api.member.PNUser
+import com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership
 import com.pubnub.api.java.v2.PNConfiguration
 import com.pubnub.api.java.v2.callbacks.EventListener
 import com.pubnub.api.java.v2.callbacks.StatusListener
@@ -277,31 +286,69 @@ open class PubNubForJavaImpl(configuration: PNConfiguration) :
     }
 
     override fun setMemberships(): SetMemberships.Builder {
-        return SetMembershipsImpl.Builder(this)
+        return SetMembershipsImpl.BuilderDeprecated(this)
+    }
+
+    override fun setMemberships(channelMemberships: Collection<PNChannelMembership>): SetMembershipsBuilder {
+        return SetMembershipsImpl(channelMemberships, this)
     }
 
     override fun removeMemberships(): RemoveMemberships.Builder {
         return RemoveMembershipsImpl.Builder(this)
     }
 
+    override fun removeMemberships(channelMemberships: Collection<String>): RemoveMembershipsBuilder {
+        return RemoveMembershipsImpl(channelMemberships, this)
+    }
+
     override fun manageMemberships(): ManageMemberships.Builder {
         return ManageMembershipsImpl.Builder(this)
+    }
+
+    override fun manageMemberships(
+        channelsToSet: Collection<PNChannelMembership>,
+        channelsToDelete: Collection<String>
+    ): ManageMembershipsBuilder {
+        return ManageMembershipsImpl(channelsToSet, channelsToDelete, this)
     }
 
     override fun getChannelMembers(): GetChannelMembers.Builder {
         return GetChannelMembersImpl.Builder(this)
     }
 
+    override fun getChannelMembers(channelId: String): GetChannelMembersBuilder {
+        return GetChannelMembersImpl(channelId, this)
+    }
+
     override fun setChannelMembers(): SetChannelMembers.Builder {
         return SetChannelMembersImpl.Builder(this)
+    }
+
+    override fun setChannelMembers(channelId: String, channelMembers: Collection<PNUser>): SetChannelMembersBuilder {
+        return SetChannelMembersImpl(channelId, channelMembers, this)
     }
 
     override fun removeChannelMembers(): RemoveChannelMembers.Builder {
         return RemoveChannelMembersImpl.Builder(this)
     }
 
+    override fun removeChannelMembers(
+        channelId: String,
+        channelMembers: Collection<String>
+    ): RemoveChannelMembersBuilder {
+        return RemoveChannelMembersImpl(this, channelId, channelMembers)
+    }
+
     override fun manageChannelMembers(): ManageChannelMembers.Builder {
         return ManageChannelMembersImpl.Builder(this)
+    }
+
+    override fun manageChannelMembers(
+        channelId: String,
+        set: Collection<PNUser>,
+        remove: Collection<String>
+    ): ManageChannelMembersBuilder {
+        return ManageChannelMembersImpl(this, channelId, set, remove)
     }
 
     // End Objects API

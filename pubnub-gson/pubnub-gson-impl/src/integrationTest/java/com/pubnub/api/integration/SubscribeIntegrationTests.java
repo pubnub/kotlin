@@ -6,7 +6,9 @@ import com.pubnub.api.integration.util.BaseIntegrationTest;
 import com.pubnub.api.integration.util.RandomGenerator;
 import com.pubnub.api.java.PubNub;
 import com.pubnub.api.java.callbacks.SubscribeCallback;
+import com.pubnub.api.java.models.consumer.objects_api.member.PNUser;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership;
+import com.pubnub.api.java.models.consumer.objects_api.membership.PNMembershipResult;
 import com.pubnub.api.java.v2.callbacks.handlers.OnMessageHandler;
 import com.pubnub.api.java.v2.entities.Channel;
 import com.pubnub.api.java.v2.entities.ChannelMetadata;
@@ -26,15 +28,21 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import static com.pubnub.api.integration.util.Utils.random;
 import static com.pubnub.api.integration.util.Utils.randomChannel;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class SubscribeIntegrationTests extends BaseIntegrationTest {
@@ -277,8 +285,82 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
     }
 
     @Test
+    public void testListeningToSetChannelMembersAndRemoveChannelMembersEventsWithStatusAndType() throws PubNubException, InterruptedException {
+        CountDownLatch countDownLatch = new CountDownLatch(2);
+        List<PNMembershipResult> capturedPNMembershipResult = new ArrayList<>();
+        String status = "Status" + random();
+        String type = "Type" + random();
+
+        Channel chan01 = pubNub.channel(randomChannel());
+        Subscription subscription = chan01.subscription(SubscriptionOptions.receivePresenceEvents());
+        subscription.setOnMembership(pnMembershipResult -> {
+            countDownLatch.countDown();
+            capturedPNMembershipResult.add(pnMembershipResult);
+        });
+
+        subscription.subscribe();
+        Thread.sleep(2000);
+
+        List<PNUser> channelMembers = Arrays.asList(PNUser.builder(pubNub.getConfiguration().getUserId().getValue()).status(status).type(type).build());
+        List<String> channelMembersIds = channelMembers.stream().map(pnUser -> pnUser.getUserId()).collect(Collectors.toList());
+        pubNub.setChannelMembers(chan01.getName(), channelMembers).sync();
+        pubNub.removeChannelMembers(chan01.getName(), channelMembersIds).sync();
+
+        countDownLatch.await(5, TimeUnit.SECONDS);
+
+        PNMembershipResult setChannelMembersEventMessage = capturedPNMembershipResult.get(0);
+        PNMembershipResult removeChannelMembersEventMessage = capturedPNMembershipResult.get(1);
+        assertEquals(chan01.getName(), setChannelMembersEventMessage.getData().getChannel().getId());
+        assertEquals(chan01.getName(), setChannelMembersEventMessage.getChannel());
+        assertEquals(status, setChannelMembersEventMessage.getData().getStatus().getValue());
+        assertEquals(type, setChannelMembersEventMessage.getData().getType().getValue());
+
+        assertEquals(chan01.getName(), removeChannelMembersEventMessage.getData().getChannel().getId());
+        assertEquals(chan01.getName(), removeChannelMembersEventMessage.getChannel());
+        assertNull(removeChannelMembersEventMessage.getData().getStatus());
+        assertNull(removeChannelMembersEventMessage.getData().getType());
+    }
+
+    @Test
+    public void testListeningToSetMembershipAndRemoveMembershipEventsWithStatusAndType() throws PubNubException, InterruptedException {
+        CountDownLatch countDownLatch = new CountDownLatch(2);
+        List<PNMembershipResult> capturedPNMembershipResult = new ArrayList<>();
+        String status = "Status" + random();
+        String type = "Type" + random();
+
+        Channel chan01 = pubNub.channel(randomChannel());
+        Subscription subscription = chan01.subscription(SubscriptionOptions.receivePresenceEvents());
+        subscription.setOnMembership(pnMembershipResult -> {
+            countDownLatch.countDown();
+            capturedPNMembershipResult.add(pnMembershipResult);
+        });
+
+        subscription.subscribe();
+        Thread.sleep(2000);
+
+        pubNub.setMemberships(Collections.singletonList(PNChannelMembership.builder(chan01.getName()).status(status).type(type).build())).sync();
+        pubNub.removeMemberships(Arrays.asList(chan01.getName())).sync();
+
+        countDownLatch.await(5, TimeUnit.SECONDS);
+
+        PNMembershipResult setMembershipEventMessage = capturedPNMembershipResult.get(0);
+        PNMembershipResult removeMembershipEventMessage = capturedPNMembershipResult.get(1);
+        assertEquals(chan01.getName(), setMembershipEventMessage.getData().getChannel().getId());
+        assertEquals(chan01.getName(), setMembershipEventMessage.getChannel());
+        assertEquals(status, setMembershipEventMessage.getData().getStatus().getValue());
+        assertEquals(type, setMembershipEventMessage.getData().getType().getValue());
+
+        assertEquals(chan01.getName(), removeMembershipEventMessage.getData().getChannel().getId());
+        assertEquals(chan01.getName(), removeMembershipEventMessage.getChannel());
+        assertNull(removeMembershipEventMessage.getData().getStatus());
+        assertNull(removeMembershipEventMessage.getData().getType());
+    }
+
+    @Test
     public void testAssigningEventBehaviourToSubscription() throws InterruptedException, PubNubException, IOException {
         String expectedMessage = random();
+        String status = "active";
+        String type = "admin";
         String fileContent = "This is content";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(fileContent.getBytes(StandardCharsets.UTF_8));
         final JsonObject expectedStatePayload = generatePayload();
@@ -295,7 +377,6 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
         Subscription subscription = chan01.subscription(SubscriptionOptions.receivePresenceEvents());
         OnMessageHandler onMessageHandler = pnMessageResult -> {
             numberOfReceivedMessage.incrementAndGet();
-            System.out.println("-=pnMessageResult: " + pnMessageResult.getMessage());
         };
 
         subscription.setOnMessage(pnMessageResult -> System.out.println("Received message: " + pnMessageResult.getMessage()));
@@ -303,7 +384,6 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
         subscription.setOnMessage(onMessageHandler);
         subscription.setOnPresence(pnPresenceEventResult -> {
             numberOfReceivedPresentEvent.incrementAndGet();
-            System.out.println("-=pnPresenceEventResult: " + pnPresenceEventResult.getEvent());
 
         });
         subscription.setOnSignal(pnSignalResult -> numberOfReceivedSignal.incrementAndGet());
@@ -319,7 +399,7 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
         PNMessageAction pnMessageAction = new PNMessageAction().setType("reaction").setValue(RandomGenerator.emoji()).setMessageTimetoken(pnPublishResult01.getTimetoken());
         pubNub.addMessageAction().messageAction(pnMessageAction).channel(chan01.getName()).sync();
         pubNub.setChannelMetadata().channel(chan01.getName()).name("Channel name").description("-=desc").status("active").type("Chat").sync();
-        pubNub.setMemberships().channelMemberships(Collections.singletonList(PNChannelMembership.channel(chan01.getName()))).sync();
+        pubNub.setMemberships().channelMemberships(Collections.singletonList(PNChannelMembership.builder(chan01.getName()).status(status).type(type).build())).sync();
         pubNub.sendFile().channel(chan01.getName()).fileName(random()).inputStream(inputStream).message("message").sync();
 
         Thread.sleep(1000);
@@ -348,7 +428,7 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
         pubNub.setChannelMetadata().channel(chan01.getName()).name("Channel name").description("desc").status("active").type("Chat").sync();
         pubNub.setMemberships().channelMemberships(Collections.singletonList(PNChannelMembership.channel(chan01.getName()))).uuid("differentUUID").sync();
         pubNub.sendFile().channel(chan01.getName()).fileName(random()).inputStream(inputStream).message("message").sync();
-        Thread.sleep(1000);
+        Thread.sleep(4000);
 
         // number of events received should remain 1
         assertEquals(1, numberOfReceivedMessage.get());

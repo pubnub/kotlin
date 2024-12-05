@@ -5,16 +5,18 @@ import com.pubnub.api.utils.PatchValue
 import com.pubnub.kmp.CustomObject
 
 data class PNMember(
-    val uuid: PNUUIDMetadata,
+    val uuid: PNUUIDMetadata, // todo change to userId?
     val custom: PatchValue<Map<String, Any?>?>? = null,
     val updated: String,
     val eTag: String,
     val status: PatchValue<String?>?,
+    val type: PatchValue<String?>?,
 ) {
     data class Partial(
         val uuidId: String,
         override val custom: CustomObject? = null,
         override val status: String? = null,
+        override val type: String? = null
     ) : MemberInput {
         override val uuid: String = uuidId
     }
@@ -26,7 +28,8 @@ data class PNMember(
             update.custom ?: custom,
             update.updated,
             update.eTag,
-            update.status ?: status
+            update.status ?: status,
+            update.type ?: type
         )
     }
 }

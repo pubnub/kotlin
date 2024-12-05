@@ -56,9 +56,11 @@ import com.pubnub.api.models.consumer.objects.PNMemberKey
 import com.pubnub.api.models.consumer.objects.PNMembershipKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
+import com.pubnub.api.models.consumer.objects.member.MemberInclude
 import com.pubnub.api.models.consumer.objects.member.MemberInput
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
+import com.pubnub.api.models.consumer.objects.membership.MembershipInclude
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
@@ -298,6 +300,7 @@ expect interface PubNub {
 
     fun removeUUIDMetadata(uuid: String? = null): RemoveUUIDMetadata
 
+    // deprecated
     fun getMemberships(
         uuid: String? = null,
         limit: Int? = null,
@@ -310,6 +313,16 @@ expect interface PubNub {
         includeType: Boolean = false,
     ): GetMemberships
 
+    fun getMemberships(
+        userId: String? = null,
+        limit: Int? = null,
+        page: PNPage? = null,
+        filter: String? = null,
+        sort: Collection<PNSortKey<PNMembershipKey>> = listOf(),
+        include: MembershipInclude = MembershipInclude(),
+    ): GetMemberships
+
+    // deprecated
     fun setMemberships(
         channels: List<ChannelMembershipInput>,
         uuid: String? = null,
@@ -323,6 +336,17 @@ expect interface PubNub {
         includeType: Boolean = false,
     ): ManageMemberships
 
+    fun setMemberships(
+        channels: List<ChannelMembershipInput>,
+        userId: String? = null,
+        limit: Int? = null,
+        page: PNPage? = null,
+        filter: String? = null,
+        sort: Collection<PNSortKey<PNMembershipKey>> = listOf(),
+        include: MembershipInclude = MembershipInclude(),
+    ): ManageMemberships
+
+    // deprecated
     fun removeMemberships(
         channels: List<String>,
         uuid: String? = null,
@@ -334,6 +358,16 @@ expect interface PubNub {
         includeCustom: Boolean = false,
         includeChannelDetails: PNChannelDetailsLevel? = null,
         includeType: Boolean = false,
+    ): ManageMemberships
+
+    fun removeMemberships(
+        channels: List<String>,
+        userId: String? = null,
+        limit: Int? = null,
+        page: PNPage? = null,
+        filter: String? = null,
+        sort: Collection<PNSortKey<PNMembershipKey>> = listOf(),
+        include: MembershipInclude = MembershipInclude(),
     ): ManageMemberships
 
 //    fun manageMemberships(
@@ -349,6 +383,7 @@ expect interface PubNub {
 //        includeChannelDetails: PNChannelDetailsLevel? = null,
 //    ): ManageMemberships
 
+    // deprecated
     fun getChannelMembers(
         channel: String,
         limit: Int? = null,
@@ -361,6 +396,16 @@ expect interface PubNub {
         includeType: Boolean = false,
     ): GetChannelMembers
 
+    fun getChannelMembers(
+        channel: String,
+        limit: Int? = null,
+        page: PNPage? = null,
+        filter: String? = null,
+        sort: Collection<PNSortKey<PNMemberKey>> = listOf(),
+        include: MemberInclude = MemberInclude()
+    ): GetChannelMembers
+
+    // deprecated
     fun setChannelMembers(
         channel: String,
         uuids: List<MemberInput>,
@@ -374,6 +419,17 @@ expect interface PubNub {
         includeType: Boolean = false,
     ): ManageChannelMembers
 
+    fun setChannelMembers(
+        channel: String,
+        users: List<MemberInput>,
+        limit: Int? = null,
+        page: PNPage? = null,
+        filter: String? = null,
+        sort: Collection<PNSortKey<PNMemberKey>> = listOf(),
+        include: MemberInclude = MemberInclude()
+    ): ManageChannelMembers
+
+    // deprecated
     fun removeChannelMembers(
         channel: String,
         uuids: List<String>,
@@ -385,6 +441,16 @@ expect interface PubNub {
         includeCustom: Boolean = false,
         includeUUIDDetails: PNUUIDDetailsLevel? = null,
         includeType: Boolean = false,
+    ): ManageChannelMembers
+
+    fun removeChannelMembers(
+        channel: String,
+        userIds: List<String>,
+        limit: Int? = null,
+        page: PNPage? = null,
+        filter: String? = null,
+        sort: Collection<PNSortKey<PNMemberKey>> = listOf(),
+        include: MemberInclude = MemberInclude()
     ): ManageChannelMembers
 
 //    fun manageChannelMembers(

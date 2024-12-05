@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
+@Deprecated
 public interface RemoveMemberships extends Endpoint<PNRemoveMembershipResult> {
 
     RemoveMemberships uuid(String uuid);
@@ -28,6 +29,7 @@ public interface RemoveMemberships extends Endpoint<PNRemoveMembershipResult> {
 
     RemoveMemberships includeChannel(Include.PNChannelDetailsLevel includeChannel);
 
+    @Deprecated
     interface Builder extends ObjectsBuilderSteps.ChannelMembershipsStep<RemoveMemberships> {
         @Override
         RemoveMemberships channelMemberships(@NotNull Collection<PNChannelMembership> channelMemberships);

@@ -5,8 +5,10 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.java.endpoints.objects_api.memberships.SetMemberships;
+import com.pubnub.api.java.endpoints.objects_api.memberships.SetMembershipsBuilder;
 import com.pubnub.api.java.endpoints.objects_api.utils.Include;
 import com.pubnub.api.java.endpoints.objects_api.utils.PNSortKey;
+import com.pubnub.api.java.models.consumer.objects_api.membership.MembershipInclude;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNChannelMembership;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNSetMembershipResult;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNSetMembershipResultConverter;
@@ -28,17 +30,19 @@ import java.util.List;
 
 @Setter
 @Accessors(chain = true, fluent = true)
-public class SetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipArrayResult, PNSetMembershipResult> implements SetMemberships {
+public class SetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipArrayResult, PNSetMembershipResult> implements SetMemberships, SetMembershipsBuilder {
     private final Collection<PNChannelMembership> channels;
-    private String uuid;
+    private String uuid; // deprecated
+    private String userId;
     private Integer limit;
     private PNPage page;
     private String filter;
     private Collection<PNSortKey> sort = Collections.emptyList();
-    private boolean includeTotalCount;
-    private boolean includeCustom;
-    private boolean includeType;
-    private Include.PNChannelDetailsLevel includeChannel;
+    private boolean includeTotalCount; // deprecated
+    private boolean includeCustom; // deprecated
+    private boolean includeType; // deprecated
+    private Include.PNChannelDetailsLevel includeChannel; // deprecated
+    private MembershipInclude include;
 
     public SetMembershipsImpl(@NotNull Collection<PNChannelMembership> channelMemberships, final PubNub pubnubInstance) {
         super(pubnubInstance);
@@ -52,23 +56,19 @@ public class SetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipAr
         for (PNChannelMembership channel : channels) {
             channelList.add(new Partial(
                     channel.getChannel().getId(),
-                    (channel instanceof PNChannelMembership.ChannelWithCustom)
-                            ? ((PNChannelMembership.ChannelWithCustom) channel).getCustom()
-                            : null,
-                    null
+                    channel.getCustom(), // despite IDE error this works ¯\_(ツ)_/¯
+                    channel.getStatus(),
+                    channel.getType()
             ));
         }
         return pubnub.setMemberships(
                 channelList,
-                uuid,
+                getUserId(),
                 limit,
                 page,
                 filter,
                 toInternal(sort),
-                includeTotalCount,
-                includeCustom,
-                toInternal(includeChannel),
-                includeType
+                getMembershipInclude(include, includeChannel, includeTotalCount, includeCustom, includeType)
         );
     }
 
@@ -78,10 +78,10 @@ public class SetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipAr
         return new MappingRemoteAction<>(action, PNSetMembershipResultConverter::from);
     }
 
-    public static class Builder implements SetMemberships.Builder {
+    public static class BuilderDeprecated implements SetMemberships.Builder {
         private final PubNub pubnubInstance;
 
-        public Builder(PubNub pubnubInstance) {
+        public BuilderDeprecated(PubNub pubnubInstance) {
             this.pubnubInstance = pubnubInstance;
         }
 
@@ -119,6 +119,12 @@ public class SetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipAr
                 case UPDATED:
                     key = PNMembershipKey.CHANNEL_UPDATED;
                     break;
+                case STATUS:
+                    key = PNMembershipKey.STATUS;
+                    break;
+                case TYPE:
+                    key = PNMembershipKey.TYPE;
+                    break;
                 default:
                     throw new IllegalStateException("Should never happen");
             }
@@ -129,5 +135,39 @@ public class SetMembershipsImpl extends DelegatingEndpoint<PNChannelMembershipAr
             }
         }
         return list;
+    }
+
+    private String getUserId() {
+        return userId != null ? userId : uuid;
+    }
+
+    static MembershipInclude getMembershipInclude(
+            MembershipInclude include,
+            Include.PNChannelDetailsLevel includeChannel,
+            boolean includeTotalCount,
+            boolean includeCustom,
+            boolean includeType
+    ) {
+        if (include != null) {
+            return include;
+        } else {
+            // if deprecated setMembership API used
+            MembershipInclude.Builder builderWithCommonParams = MembershipInclude.builder()
+                    .includeTotalCount(includeTotalCount)
+                    .includeCustom(includeCustom)
+                    .includeChannelType(includeType);
+            if (includeChannel == Include.PNChannelDetailsLevel.CHANNEL) {
+                return builderWithCommonParams
+                        .includeChannel(true)
+                        .build();
+            } else if (includeChannel == Include.PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM) {
+                return builderWithCommonParams
+                        .includeChannel(true)
+                        .includeChannelCustom(true)
+                        .build();
+            } else {
+                return builderWithCommonParams.build();
+            }
+        }
     }
 }

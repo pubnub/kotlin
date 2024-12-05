@@ -56,9 +56,11 @@ import com.pubnub.api.models.consumer.objects.PNMemberKey
 import com.pubnub.api.models.consumer.objects.PNMembershipKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
+import com.pubnub.api.models.consumer.objects.member.MemberInclude
 import com.pubnub.api.models.consumer.objects.member.MemberInput
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
+import com.pubnub.api.models.consumer.objects.membership.MembershipInclude
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
@@ -278,6 +280,7 @@ actual interface PubNub {
 
     actual fun removeUUIDMetadata(uuid: String?): RemoveUUIDMetadata
 
+    // deprecated
     actual fun getMemberships(
         uuid: String?,
         limit: Int?,
@@ -290,6 +293,16 @@ actual interface PubNub {
         includeType: Boolean
     ): GetMemberships
 
+    actual fun getMemberships(
+        userId: String?,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMembershipKey>>,
+        include: MembershipInclude,
+    ): GetMemberships
+
+    // deprecated
     actual fun setMemberships(
         channels: List<ChannelMembershipInput>,
         uuid: String?,
@@ -303,6 +316,17 @@ actual interface PubNub {
         includeType: Boolean
     ): ManageMemberships
 
+    actual fun setMemberships(
+        channels: List<ChannelMembershipInput>,
+        userId: String?,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMembershipKey>>,
+        include: MembershipInclude,
+    ): ManageMemberships
+
+    // deprecated
     actual fun removeMemberships(
         channels: List<String>,
         uuid: String?,
@@ -316,6 +340,17 @@ actual interface PubNub {
         includeType: Boolean
     ): ManageMemberships
 
+    actual fun removeMemberships(
+        channels: List<String>,
+        userId: String?,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMembershipKey>>,
+        include: MembershipInclude
+    ): ManageMemberships
+
+    // deprecated
     actual fun getChannelMembers(
         channel: String,
         limit: Int?,
@@ -328,6 +363,16 @@ actual interface PubNub {
         includeType: Boolean
     ): GetChannelMembers
 
+    actual fun getChannelMembers(
+        channel: String,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMemberKey>>,
+        include: MemberInclude
+    ): GetChannelMembers
+
+    // deprecated
     actual fun setChannelMembers(
         channel: String,
         uuids: List<MemberInput>,
@@ -341,6 +386,17 @@ actual interface PubNub {
         includeType: Boolean
     ): ManageChannelMembers
 
+    actual fun setChannelMembers(
+        channel: String,
+        users: List<MemberInput>,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMemberKey>>,
+        include: MemberInclude
+    ): ManageChannelMembers
+
+    // deprecated
     actual fun removeChannelMembers(
         channel: String,
         uuids: List<String>,
@@ -352,6 +408,16 @@ actual interface PubNub {
         includeCustom: Boolean,
         includeUUIDDetails: PNUUIDDetailsLevel?,
         includeType: Boolean
+    ): ManageChannelMembers
+
+    actual fun removeChannelMembers(
+        channel: String,
+        userIds: List<String>,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMemberKey>>,
+        include: MemberInclude
     ): ManageChannelMembers
 
     actual fun listFiles(

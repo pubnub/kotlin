@@ -8,7 +8,7 @@ December 03 2024
 November 18 2024
 
 #### Added
-- Publish, signal, share file, subscribe, and history.
+- Added customMessageType to publish, signal, file, subscribe and history.
 
 ## v10.1.0
 November 06 2024

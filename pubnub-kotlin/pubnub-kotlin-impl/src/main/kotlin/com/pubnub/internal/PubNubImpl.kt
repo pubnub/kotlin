@@ -67,9 +67,11 @@ import com.pubnub.api.models.consumer.objects.PNMemberKey
 import com.pubnub.api.models.consumer.objects.PNMembershipKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
+import com.pubnub.api.models.consumer.objects.member.MemberInclude
 import com.pubnub.api.models.consumer.objects.member.MemberInput
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
+import com.pubnub.api.models.consumer.objects.membership.MembershipInclude
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
@@ -833,6 +835,7 @@ open class PubNubImpl(
         return RemoveUUIDMetadataEndpoint(pubnub = this, uuid = uuid)
     }
 
+    // deprecated
     override fun getMemberships(
         uuid: String?,
         limit: Int?,
@@ -844,26 +847,71 @@ open class PubNubImpl(
         includeChannelDetails: PNChannelDetailsLevel?,
         includeType: Boolean,
     ): GetMemberships {
+        val includeQueryParamValue = when (includeChannelDetails) {
+            PNChannelDetailsLevel.CHANNEL -> {
+                IncludeQueryParam(
+                    includeCustom = includeCustom,
+                    includeChannel = true,
+                    includeChannelType = includeType,
+                )
+            }
+
+            PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM -> {
+                IncludeQueryParam(
+                    includeCustom = includeCustom,
+                    includeChannel = true,
+                    includeChannelCustom = true,
+                    includeChannelType = includeType,
+                )
+            }
+
+            else -> IncludeQueryParam(includeCustom = includeCustom, includeChannelType = includeType)
+        }
         return GetMembershipsEndpoint(
             pubnub = this,
             uuid = uuid ?: configuration.userId.value,
-            collectionQueryParameters =
-                CollectionQueryParameters(
-                    limit = limit,
-                    page = page,
-                    filter = filter,
-                    sort = sort,
-                    includeCount = includeCount,
-                ),
-            includeQueryParam =
-                IncludeQueryParam(
-                    includeCustom = includeCustom,
-                    includeChannelDetails = includeChannelDetails,
-                    includeChannelType = includeType,
-                ),
+            collectionQueryParameters = CollectionQueryParameters(
+                limit = limit,
+                page = page,
+                filter = filter,
+                sort = sort,
+                includeCount = includeCount,
+            ),
+            includeQueryParam = includeQueryParamValue
         )
     }
 
+    override fun getMemberships(
+        userId: String?,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMembershipKey>>,
+        include: MembershipInclude
+    ): GetMemberships {
+        return GetMembershipsEndpoint(
+            pubnub = this,
+            uuid = userId ?: configuration.userId.value,
+            collectionQueryParameters = CollectionQueryParameters(
+                limit = limit,
+                page = page,
+                filter = filter,
+                sort = sort,
+                includeCount = include.includeTotalCount,
+            ),
+            includeQueryParam = IncludeQueryParam(
+                includeCustom = include.includeCustom,
+                includeType = include.includeType,
+                includeStatus = include.includeStatus,
+                includeChannel = include.includeChannel,
+                includeChannelCustom = include.includeChannelCustom,
+                includeChannelStatus = include.includeChannelStatus,
+                includeChannelType = include.includeChannelType,
+            )
+        )
+    }
+
+    // deprecated
     override fun setMemberships(
         channels: List<ChannelMembershipInput>,
         uuid: String?,
@@ -889,6 +937,26 @@ open class PubNubImpl(
         includeType = includeType
     )
 
+    override fun setMemberships(
+        channels: List<ChannelMembershipInput>,
+        userId: String?,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMembershipKey>>,
+        include: MembershipInclude
+    ): ManageMemberships = manageMemberships(
+        channelsToSet = channels,
+        channelsToRemove = listOf(),
+        userId = userId,
+        limit = limit,
+        page = page,
+        filter = filter,
+        sort = sort,
+        include = include
+    )
+
+    // deprecated
     override fun removeMemberships(
         channels: List<String>,
         uuid: String?,
@@ -914,6 +982,26 @@ open class PubNubImpl(
         includeType = includeType,
     )
 
+    override fun removeMemberships(
+        channels: List<String>,
+        userId: String?,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMembershipKey>>,
+        include: MembershipInclude
+    ): ManageMemberships = manageMemberships(
+        channelsToSet = listOf(),
+        channelsToRemove = channels,
+        userId = userId,
+        limit = limit,
+        page = page,
+        filter = filter,
+        sort = sort,
+        include = include
+    )
+
+    // deprecated
     override fun manageMemberships(
         channelsToSet: List<ChannelMembershipInput>,
         channelsToRemove: List<String>,
@@ -927,25 +1015,73 @@ open class PubNubImpl(
         includeChannelDetails: PNChannelDetailsLevel?,
         includeType: Boolean,
     ): ManageMemberships {
+        val includeQueryParamValue = when (includeChannelDetails) {
+            PNChannelDetailsLevel.CHANNEL -> {
+                IncludeQueryParam(
+                    includeCustom = includeCustom,
+                    includeChannel = true,
+                    includeChannelType = includeType,
+                )
+            }
+
+            PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM -> {
+                IncludeQueryParam(
+                    includeCustom = includeCustom,
+                    includeChannel = true,
+                    includeChannelCustom = true,
+                    includeChannelType = includeType,
+                )
+            }
+
+            null -> IncludeQueryParam(includeCustom = includeCustom, includeChannelType = includeType)
+        }
         return ManageMembershipsEndpoint(
             pubnub = this,
             channelsToSet = channelsToSet,
             channelsToRemove = channelsToRemove,
             uuid = uuid ?: configuration.userId.value,
-            collectionQueryParameters =
-                CollectionQueryParameters(
-                    limit = limit,
-                    page = page,
-                    filter = filter,
-                    sort = sort,
-                    includeCount = includeCount,
-                ),
-            includeQueryParam =
-                IncludeQueryParam(
-                    includeCustom = includeCustom,
-                    includeChannelDetails = includeChannelDetails,
-                    includeChannelType = includeType,
-                ),
+            collectionQueryParameters = CollectionQueryParameters(
+                limit = limit,
+                page = page,
+                filter = filter,
+                sort = sort,
+                includeCount = includeCount,
+            ),
+            includeQueryParam = includeQueryParamValue
+        )
+    }
+
+    override fun manageMemberships(
+        channelsToSet: List<ChannelMembershipInput>,
+        channelsToRemove: List<String>,
+        userId: String?,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMembershipKey>>,
+        include: MembershipInclude
+    ): ManageMemberships {
+        return ManageMembershipsEndpoint(
+            pubnub = this,
+            channelsToSet = channelsToSet,
+            channelsToRemove = channelsToRemove,
+            uuid = userId ?: configuration.userId.value,
+            collectionQueryParameters = CollectionQueryParameters(
+                limit = limit,
+                page = page,
+                filter = filter,
+                sort = sort,
+                includeCount = include.includeTotalCount,
+            ),
+            includeQueryParam = IncludeQueryParam(
+                includeCustom = include.includeCustom,
+                includeType = include.includeType,
+                includeStatus = include.includeStatus,
+                includeChannel = include.includeChannel,
+                includeChannelCustom = include.includeChannelCustom,
+                includeChannelStatus = include.includeChannelStatus,
+                includeChannelType = include.includeChannelType,
+            ),
         )
     }
 
@@ -960,23 +1096,67 @@ open class PubNubImpl(
         includeUUIDDetails: PNUUIDDetailsLevel?,
         includeType: Boolean,
     ): GetChannelMembers {
+        val includeQueryParamValue = when (includeUUIDDetails) {
+            PNUUIDDetailsLevel.UUID -> {
+                IncludeQueryParam(
+                    includeCustom = includeCustom,
+                    includeUser = true,
+                    includeUserType = includeType,
+                )
+            }
+
+            PNUUIDDetailsLevel.UUID_WITH_CUSTOM -> {
+                IncludeQueryParam(
+                    includeCustom = includeCustom,
+                    includeUser = true,
+                    includeUserCustom = true,
+                    includeUserType = includeType,
+                )
+            }
+
+            null -> IncludeQueryParam(includeCustom = includeCustom, includeUserType = includeType)
+        }
         return GetChannelMembersEndpoint(
             pubnub = this,
             channel = channel,
-            collectionQueryParameters =
-                CollectionQueryParameters(
-                    limit = limit,
-                    page = page,
-                    filter = filter,
-                    sort = sort,
-                    includeCount = includeCount,
-                ),
-            includeQueryParam =
-                IncludeQueryParam(
-                    includeCustom = includeCustom,
-                    includeUUIDDetails = includeUUIDDetails,
-                    includeUuidType = includeType,
-                ),
+            collectionQueryParameters = CollectionQueryParameters(
+                limit = limit,
+                page = page,
+                filter = filter,
+                sort = sort,
+                includeCount = includeCount,
+            ),
+            includeQueryParam = includeQueryParamValue
+        )
+    }
+
+    override fun getChannelMembers(
+        channel: String,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMemberKey>>,
+        include: MemberInclude
+    ): GetChannelMembers {
+        return GetChannelMembersEndpoint(
+            pubnub = this,
+            channel = channel,
+            collectionQueryParameters = CollectionQueryParameters(
+                limit = limit,
+                page = page,
+                filter = filter,
+                sort = sort,
+                includeCount = include.includeTotalCount,
+            ),
+            includeQueryParam = IncludeQueryParam(
+                includeCustom = include.includeCustom,
+                includeType = include.includeType,
+                includeStatus = include.includeStatus,
+                includeUser = include.includeUser,
+                includeUserCustom = include.includeUserCustom,
+                includeUserStatus = include.includeUserStatus,
+                includeUserType = include.includeUserType
+            )
         )
     }
 
@@ -1122,6 +1302,7 @@ open class PubNubImpl(
         includeUUIDDetails = includeUUIDDetails,
     )
 
+    // deprecated
     override fun setChannelMembers(
         channel: String,
         uuids: List<MemberInput>,
@@ -1145,6 +1326,25 @@ open class PubNubImpl(
         includeCustom = includeCustom,
         includeUUIDDetails = includeUUIDDetails,
         includeUUIDType = includeType
+    )
+
+    override fun setChannelMembers(
+        channel: String,
+        users: List<MemberInput>,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMemberKey>>,
+        include: MemberInclude
+    ): ManageChannelMembers = manageChannelMembers(
+        channel = channel,
+        userToSet = users,
+        userIdsToRemove = listOf(),
+        limit = limit,
+        page = page,
+        filter = filter,
+        sort = sort,
+        include = include
     )
 
     @Deprecated(
@@ -1179,6 +1379,7 @@ open class PubNubImpl(
         includeUUIDDetails = includeUUIDDetails,
     )
 
+    // deprecated
     override fun removeChannelMembers(
         channel: String,
         uuids: List<String>,
@@ -1204,6 +1405,26 @@ open class PubNubImpl(
         includeUUIDType = includeType,
     )
 
+    override fun removeChannelMembers(
+        channel: String,
+        userIds: List<String>,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMemberKey>>,
+        include: MemberInclude
+    ): ManageChannelMembers = manageChannelMembers(
+        channel = channel,
+        userToSet = listOf(),
+        userIdsToRemove = userIds,
+        limit = limit,
+        page = page,
+        filter = filter,
+        sort = sort,
+        include = include
+    )
+
+    // deprecated
     override fun manageChannelMembers(
         channel: String,
         uuidsToSet: Collection<MemberInput>,
@@ -1217,25 +1438,71 @@ open class PubNubImpl(
         includeUUIDDetails: PNUUIDDetailsLevel?,
         includeUUIDType: Boolean,
     ): ManageChannelMembers {
+        val includeQueryParamValue = when (includeUUIDDetails) {
+            PNUUIDDetailsLevel.UUID -> {
+                IncludeQueryParam(
+                    includeCustom = includeCustom,
+                    includeUser = true,
+                    includeUserType = includeUUIDType,
+                )
+            }
+            PNUUIDDetailsLevel.UUID_WITH_CUSTOM -> {
+                IncludeQueryParam(
+                    includeCustom = includeCustom,
+                    includeUser = true,
+                    includeUserCustom = true,
+                    includeUserType = includeUUIDType,
+                )
+            }
+            null -> IncludeQueryParam(includeCustom = includeCustom, includeUserType = includeUUIDType)
+        }
         return ManageChannelMembersEndpoint(
             pubnub = this,
             channel = channel,
-            uuidsToSet = uuidsToSet,
-            uuidsToRemove = uuidsToRemove,
-            collectionQueryParameters =
-                CollectionQueryParameters(
-                    limit = limit,
-                    page = page,
-                    filter = filter,
-                    sort = sort,
-                    includeCount = includeCount,
-                ),
-            includeQueryParam =
-                IncludeQueryParam(
-                    includeCustom = includeCustom,
-                    includeUUIDDetails = includeUUIDDetails,
-                    includeUuidType = includeUUIDType,
-                ),
+            userToSet = uuidsToSet,
+            userIdsRemove = uuidsToRemove,
+            collectionQueryParameters = CollectionQueryParameters(
+                limit = limit,
+                page = page,
+                filter = filter,
+                sort = sort,
+                includeCount = includeCount,
+            ),
+            includeQueryParam = includeQueryParamValue
+        )
+    }
+
+    override fun manageChannelMembers(
+        channel: String,
+        userToSet: Collection<MemberInput>,
+        userIdsToRemove: Collection<String>,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMemberKey>>,
+        include: MemberInclude
+    ): ManageChannelMembers {
+        return ManageChannelMembersEndpoint(
+            pubnub = this,
+            channel = channel,
+            userToSet = userToSet,
+            userIdsRemove = userIdsToRemove,
+            collectionQueryParameters = CollectionQueryParameters(
+                limit = limit,
+                page = page,
+                filter = filter,
+                sort = sort,
+                includeCount = include.includeTotalCount,
+            ),
+            includeQueryParam = IncludeQueryParam(
+                includeCustom = include.includeCustom,
+                includeType = include.includeType,
+                includeStatus = include.includeStatus,
+                includeUser = include.includeUser,
+                includeUserCustom = include.includeUserCustom,
+                includeUserStatus = include.includeUserStatus,
+                includeUserType = include.includeUserType
+            )
         )
     }
 

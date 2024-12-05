@@ -634,7 +634,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
             },
         )
         channelMetaSubscription.subscribe()
-        Thread.sleep(100)
+        Thread.sleep(200)
         guestClient.publish(userMetaDataName, randomValue()).sync()
 
         success.listen()

@@ -309,7 +309,8 @@ private fun mapAppContextEvent(from: KMPAppContextEventResult?): PNObjectEventMe
                     custom = PatchValue.of(from.metadata().custom()?.safeCast()),
                     eTag = from.metadata().eTag().orEmpty(),
                     updated = from.metadata().updated().orEmpty(),
-                    status = PatchValue.of(from.metadata().status().orEmpty())
+                    status = PatchValue.of(from.metadata().status().orEmpty()),
+                    type = null // todo add when available
                 )
             )
         is KMPRemoveMembershipResult ->

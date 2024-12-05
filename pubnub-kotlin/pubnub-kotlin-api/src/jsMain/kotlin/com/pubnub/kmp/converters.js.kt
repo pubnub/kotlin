@@ -75,7 +75,8 @@ internal fun PubNub.UUIDMembershipObject.toPNMember() = PNMember(
     patchValueOf(custom.letIfDefined { it?.toMap() }),
     updated,
     eTag,
-    patchValueOf(status),
+    status = patchValueOf(status),
+    type = patchValueOf(type),
 )
 
 internal fun ManageChannelMembersResponse.toPNMemberArrayResult() = PNMemberArrayResult(

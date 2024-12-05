@@ -1139,6 +1139,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
     interface UUIDMembershipObject : v2ObjectDataOmitId {
         var uuid: UUIDMetadataObject // UUIDMetadataObject & HasStatus | HasId
         var status: String?
+        var type: String?
     }
 
     interface ChannelMembershipObject : v2ObjectDataOmitId {

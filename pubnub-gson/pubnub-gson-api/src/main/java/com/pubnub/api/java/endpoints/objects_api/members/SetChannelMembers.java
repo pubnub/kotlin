@@ -9,6 +9,7 @@ import com.pubnub.api.java.models.consumer.objects_api.member.PNSetChannelMember
 
 import java.util.Collection;
 
+@Deprecated
 public interface SetChannelMembers extends Endpoint<PNSetChannelMembersResult> {
 
     SetChannelMembers limit(Integer limit);
@@ -25,6 +26,7 @@ public interface SetChannelMembers extends Endpoint<PNSetChannelMembersResult> {
 
     SetChannelMembers includeUUID(Include.PNUUIDDetailsLevel includeUUID);
 
+    @Deprecated
     interface Builder extends BuilderSteps.ChannelStep<ObjectsBuilderSteps.UUIDsStep<SetChannelMembers>> {
         @Override
         ObjectsBuilderSteps.UUIDsStep<SetChannelMembers> channel(String channel);

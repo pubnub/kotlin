@@ -19,7 +19,11 @@ public final class PNSortKey {
     }
 
     public enum Key {
-        ID("id"), NAME("name"), UPDATED("updated");
+        ID("id"),
+        NAME("name"),
+        UPDATED("updated"),
+        STATUS("status"),
+        TYPE("type");
 
         @Getter(AccessLevel.PACKAGE)
         private final String fieldName;

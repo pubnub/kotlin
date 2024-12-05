@@ -24,12 +24,14 @@ class PNChannelMembershipTest {
             custom = null,
             updated = randomString(),
             eTag = randomString(),
-            status = PatchValue.of(randomString())
+            status = PatchValue.of(randomString()),
+            type = PatchValue.of(randomString())
         )
         val expectedMembership = originalMembership.copy(
             updated = updateMembership.updated,
             eTag = updateMembership.eTag,
-            status = updateMembership.status
+            status = updateMembership.status,
+            type = updateMembership.type
         )
 
         val actualMembership = originalMembership + updateMembership

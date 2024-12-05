@@ -123,7 +123,7 @@ changelog:
     version: v10.2.0
     changes:
       - type: feature
-        text: "Publish, signal, share file, subscribe, and history."
+        text: "Added custom messageType for publish, signal, file, subscribe and history."
   - date: 2024-11-06
     version: v10.1.0
     changes:

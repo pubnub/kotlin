@@ -23,8 +23,8 @@ import retrofit2.Response
  */
 class ManageChannelMembersEndpoint(
     pubnub: PubNubImpl,
-    private val uuidsToSet: Collection<MemberInput>,
-    private val uuidsToRemove: Collection<String>,
+    private val userToSet: Collection<MemberInput>,
+    private val userIdsRemove: Collection<String>,
     private val channel: String,
     private val collectionQueryParameters: CollectionQueryParameters,
     private val includeQueryParam: IncludeQueryParam,
@@ -39,15 +39,15 @@ class ManageChannelMembersEndpoint(
             options = params,
             body =
                 ChangeMemberInput(
-                    delete = uuidsToRemove.map { ServerMemberInput(UUIDId(id = it)) },
-                    set =
-                        uuidsToSet.map {
-                            ServerMemberInput(
-                                uuid = UUIDId(id = it.uuid),
-                                custom = it.custom,
-                                status = it.status,
-                            )
-                        },
+                    delete = userIdsRemove.map { ServerMemberInput(UUIDId(id = it)) },
+                    set = userToSet.map {
+                        ServerMemberInput(
+                            uuid = UUIDId(id = it.uuid),
+                            custom = it.custom,
+                            status = it.status,
+                            type = it.type,
+                        )
+                    },
                 ),
         )
     }

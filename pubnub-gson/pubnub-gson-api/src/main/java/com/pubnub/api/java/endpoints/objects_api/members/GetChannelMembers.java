@@ -6,6 +6,7 @@ import com.pubnub.api.java.endpoints.objects_api.utils.Include;
 import com.pubnub.api.java.endpoints.objects_api.utils.PNSortKey;
 import com.pubnub.api.java.models.consumer.objects_api.member.PNGetChannelMembersResult;
 
+@Deprecated
 public interface GetChannelMembers extends Endpoint<PNGetChannelMembersResult> {
     GetChannelMembers limit(Integer limit);
 
@@ -21,6 +22,7 @@ public interface GetChannelMembers extends Endpoint<PNGetChannelMembersResult> {
 
     GetChannelMembers includeUUID(Include.PNUUIDDetailsLevel includeUUID);
 
+    @Deprecated
     interface Builder extends BuilderSteps.ChannelStep<GetChannelMembers> {
         @Override
         GetChannelMembers channel(String channel);

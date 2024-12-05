@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <baseline version="1.0">
+    <file name="src/commonMain/kotlin/com/pubnub/api/models/consumer/objects/member/MemberInclude.kt">
+        <error line="3" column="5" source="standard:function-naming" />
+    </file>
+    <file name="src/commonMain/kotlin/com/pubnub/api/models/consumer/objects/membership/MembershipInclude.kt">
+        <error line="3" column="5" source="standard:function-naming" />
+    </file>
     <file name="src/jsMain/kotlin/Pubnub.d.kt">
         <error line="156" column="40" source="standard:comment-wrapping" />
         <error line="409" column="15" source="standard:class-naming" />
@@ -13,18 +19,17 @@
         <error line="845" column="13" source="standard:property-naming" />
         <error line="1030" column="15" source="standard:class-naming" />
         <error line="1036" column="15" source="standard:class-naming" />
-        <error line="1155" column="13" source="standard:property-naming" />
-        <error line="1161" column="13" source="standard:property-naming" />
-        <error line="1163" column="13" source="standard:property-naming" />
-        <error line="1223" column="39" source="standard:comment-wrapping" />
-        <error line="1308" column="15" source="standard:class-naming" />
-        <error line="1336" column="42" source="standard:comment-wrapping" />
-        <error line="1386" column="37" source="standard:comment-wrapping" />
-        <error line="1407" column="13" source="standard:property-naming" />
+        <error line="1156" column="13" source="standard:property-naming" />
+        <error line="1162" column="13" source="standard:property-naming" />
+        <error line="1164" column="13" source="standard:property-naming" />
+        <error line="1224" column="39" source="standard:comment-wrapping" />
+        <error line="1309" column="15" source="standard:class-naming" />
+        <error line="1337" column="42" source="standard:comment-wrapping" />
+        <error line="1387" column="37" source="standard:comment-wrapping" />
         <error line="1408" column="13" source="standard:property-naming" />
-        <error line="1412" column="13" source="standard:property-naming" />
+        <error line="1409" column="13" source="standard:property-naming" />
         <error line="1413" column="13" source="standard:property-naming" />
-        <error line="1432" column="9" source="standard:property-naming" />
+        <error line="1414" column="13" source="standard:property-naming" />
         <error line="1433" column="9" source="standard:property-naming" />
         <error line="1434" column="9" source="standard:property-naming" />
         <error line="1435" column="9" source="standard:property-naming" />
@@ -37,7 +42,7 @@
         <error line="1442" column="9" source="standard:property-naming" />
         <error line="1443" column="9" source="standard:property-naming" />
         <error line="1444" column="9" source="standard:property-naming" />
-        <error line="1448" column="9" source="standard:property-naming" />
+        <error line="1445" column="9" source="standard:property-naming" />
         <error line="1449" column="9" source="standard:property-naming" />
         <error line="1450" column="9" source="standard:property-naming" />
         <error line="1451" column="9" source="standard:property-naming" />
@@ -73,5 +78,6 @@
         <error line="1481" column="9" source="standard:property-naming" />
         <error line="1482" column="9" source="standard:property-naming" />
         <error line="1483" column="9" source="standard:property-naming" />
+        <error line="1484" column="9" source="standard:property-naming" />
     </file>
 </baseline>

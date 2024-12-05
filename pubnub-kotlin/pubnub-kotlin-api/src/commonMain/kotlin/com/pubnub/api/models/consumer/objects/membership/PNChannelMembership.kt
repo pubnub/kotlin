@@ -11,11 +11,13 @@ data class PNChannelMembership(
     val updated: String,
     val eTag: String,
     val status: PatchValue<String?>? = null,
+    val type: PatchValue<String?>? = null,
 ) {
     data class Partial(
         val channelId: String,
         override val custom: CustomObject? = null,
         override val status: String? = null,
+        override val type: String? = null
     ) : ChannelMembershipInput {
         override val channel: String = channelId
     }
@@ -27,7 +29,8 @@ data class PNChannelMembership(
             update.custom ?: custom,
             update.updated,
             update.eTag,
-            update.status ?: status
+            update.status ?: status,
+            update.type ?: type
         )
     }
 
@@ -40,7 +43,8 @@ data class PNChannelMembership(
             update.custom ?: custom,
             update.updated,
             update.eTag,
-            update.status ?: status
+            update.status ?: status,
+            update.type ?: type
         )
     }
 }
