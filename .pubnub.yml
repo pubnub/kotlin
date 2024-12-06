@@ -118,7 +118,7 @@ changelog:
     version: v10.3.0
     changes:
       - type: feature
-        text: "Added also a way to specify optional data being added to the response for Membership and ChannelMembers APIs."
+        text: "Added type aka. membershipType to Memberships and ChannelMembers APIs. Added also a way to specify optional data being added to the response for Membership and ChannelMembers APIs."
   - date: 2024-12-03
     version: v10.2.1
     changes:
