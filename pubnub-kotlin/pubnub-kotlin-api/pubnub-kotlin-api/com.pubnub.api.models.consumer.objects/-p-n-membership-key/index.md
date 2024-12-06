@@ -12,7 +12,11 @@ enum [PNMembershipKey](index.md) : [Enum](https://kotlinlang.org/api/latest/jvm/
 | [CHANNEL_ID](-c-h-a-n-n-e-l_-i-d/index.md) | [common]<br>[CHANNEL_ID](-c-h-a-n-n-e-l_-i-d/index.md) |
 | [CHANNEL_NAME](-c-h-a-n-n-e-l_-n-a-m-e/index.md) | [common]<br>[CHANNEL_NAME](-c-h-a-n-n-e-l_-n-a-m-e/index.md) |
 | [CHANNEL_UPDATED](-c-h-a-n-n-e-l_-u-p-d-a-t-e-d/index.md) | [common]<br>[CHANNEL_UPDATED](-c-h-a-n-n-e-l_-u-p-d-a-t-e-d/index.md) |
+| [CHANNEL_STATUS](-c-h-a-n-n-e-l_-s-t-a-t-u-s/index.md) | [common]<br>[CHANNEL_STATUS](-c-h-a-n-n-e-l_-s-t-a-t-u-s/index.md) |
+| [CHANNEL_TYPE](-c-h-a-n-n-e-l_-t-y-p-e/index.md) | [common]<br>[CHANNEL_TYPE](-c-h-a-n-n-e-l_-t-y-p-e/index.md) |
 | [UPDATED](-u-p-d-a-t-e-d/index.md) | [common]<br>[UPDATED](-u-p-d-a-t-e-d/index.md) |
+| [STATUS](-s-t-a-t-u-s/index.md) | [common]<br>[STATUS](-s-t-a-t-u-s/index.md) |
+| [TYPE](-t-y-p-e/index.md) | [common]<br>[TYPE](-t-y-p-e/index.md) |
 
 ## Properties
 

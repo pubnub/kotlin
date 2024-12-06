@@ -3,13 +3,17 @@
 # RemoveChannelMembers
 
 [jvm]\
-interface [RemoveChannelMembers](index.md) : [Endpoint](../../com.pubnub.api.java.endpoints/-endpoint/index.md)&lt;[T](../../com.pubnub.api.java.endpoints/-endpoint/index.md)&gt;
+interface [~~RemoveChannelMembers~~](index.md) : [Endpoint](../../com.pubnub.api.java.endpoints/-endpoint/index.md)&lt;[T](../../com.pubnub.api.java.endpoints/-endpoint/index.md)&gt; ---
+
+### Deprecated
+
+---
 
 ## Types
 
 | Name | Summary |
 |---|---|
-| [Builder](-builder/index.md) | [jvm]<br>interface [Builder](-builder/index.md) : [BuilderSteps.ChannelStep](../../com.pubnub.api.java.endpoints/-builder-steps/-channel-step/index.md)&lt;[T](../../com.pubnub.api.java.endpoints/-builder-steps/-channel-step/index.md)&gt; |
+| [Builder](-builder/index.md) | [jvm]<br>interface [~~Builder~~](-builder/index.md) : [BuilderSteps.ChannelStep](../../com.pubnub.api.java.endpoints/-builder-steps/-channel-step/index.md)&lt;[T](../../com.pubnub.api.java.endpoints/-builder-steps/-channel-step/index.md)&gt; |
 
 ## Functions
 

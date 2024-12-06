@@ -3,7 +3,11 @@
 # Builder
 
 [jvm]\
-interface [Builder](index.md) : [ObjectsBuilderSteps.ChannelMembershipsStep](../../../com.pubnub.api.java.endpoints.objects_api.utils/-objects-builder-steps/-channel-memberships-step/index.md)&lt;[T](../../../com.pubnub.api.java.endpoints.objects_api.utils/-objects-builder-steps/-channel-memberships-step/index.md)&gt;
+interface [~~Builder~~](index.md) : [ObjectsBuilderSteps.ChannelMembershipsStep](../../../com.pubnub.api.java.endpoints.objects_api.utils/-objects-builder-steps/-channel-memberships-step/index.md)&lt;[T](../../../com.pubnub.api.java.endpoints.objects_api.utils/-objects-builder-steps/-channel-memberships-step/index.md)&gt; ---
+
+### Deprecated
+
+---
 
 ## Functions
 

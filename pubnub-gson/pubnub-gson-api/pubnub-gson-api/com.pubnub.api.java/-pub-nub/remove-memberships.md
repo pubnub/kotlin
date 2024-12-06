@@ -3,6 +3,24 @@
 # removeMemberships
 
 [jvm]\
-abstract fun [removeMemberships](remove-memberships.md)(): [RemoveMemberships.Builder](../../com.pubnub.api.java.endpoints.objects_api.memberships/-remove-memberships/-builder/index.md)
+abstract fun [removeMemberships](remove-memberships.md)(channelMemberships: [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;): [RemoveMembershipsBuilder](../../com.pubnub.api.java.endpoints.objects_api.memberships/-remove-memberships-builder/index.md)
+
+Remove channel memberships for a UUID.
+
+[jvm]\
+abstract fun [~~removeMemberships~~](remove-memberships.md)(): [RemoveMemberships.Builder](../../com.pubnub.api.java.endpoints.objects_api.memberships/-remove-memberships/-builder/index.md)
+
+---
+
+### Deprecated
+
+Use removeMemberships(Collection&lt;PNChannelMembership&gt;) instead.
+
+#### Replace with
+
+```kotlin
+removeMemberships(channelMemberships)
+```
+---
 
 Remove channel memberships for a UUID.

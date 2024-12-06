@@ -1,0 +1,6 @@
+//[pubnub-kotlin-api](../../../../index.md)/[com.pubnub.api.models.consumer.objects.member](../../index.md)/[PNMember](../index.md)/[Partial](index.md)/[type](type.md)
+
+# type
+
+[common]\
+open override val [type](type.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null

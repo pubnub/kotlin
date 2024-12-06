@@ -12,6 +12,8 @@ enum [Key](index.md)
 | [ID](-i-d/index.md) | [jvm]<br>[ID](-i-d/index.md) |
 | [NAME](-n-a-m-e/index.md) | [jvm]<br>[NAME](-n-a-m-e/index.md) |
 | [UPDATED](-u-p-d-a-t-e-d/index.md) | [jvm]<br>[UPDATED](-u-p-d-a-t-e-d/index.md) |
+| [STATUS](-s-t-a-t-u-s/index.md) | [jvm]<br>[STATUS](-s-t-a-t-u-s/index.md) |
+| [TYPE](-t-y-p-e/index.md) | [jvm]<br>[TYPE](-t-y-p-e/index.md) |
 
 ## Functions
 

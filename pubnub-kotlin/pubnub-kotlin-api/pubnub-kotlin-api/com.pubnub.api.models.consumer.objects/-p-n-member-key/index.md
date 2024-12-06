@@ -12,7 +12,11 @@ enum [PNMemberKey](index.md) : [Enum](https://kotlinlang.org/api/latest/jvm/stdl
 | [UUID_ID](-u-u-i-d_-i-d/index.md) | [common]<br>[UUID_ID](-u-u-i-d_-i-d/index.md) |
 | [UUID_NAME](-u-u-i-d_-n-a-m-e/index.md) | [common]<br>[UUID_NAME](-u-u-i-d_-n-a-m-e/index.md) |
 | [UUID_UPDATED](-u-u-i-d_-u-p-d-a-t-e-d/index.md) | [common]<br>[UUID_UPDATED](-u-u-i-d_-u-p-d-a-t-e-d/index.md) |
+| [UUID_STATUS](-u-u-i-d_-s-t-a-t-u-s/index.md) | [common]<br>[UUID_STATUS](-u-u-i-d_-s-t-a-t-u-s/index.md) |
+| [UUID_TYPE](-u-u-i-d_-t-y-p-e/index.md) | [common]<br>[UUID_TYPE](-u-u-i-d_-t-y-p-e/index.md) |
 | [UPDATED](-u-p-d-a-t-e-d/index.md) | [common]<br>[UPDATED](-u-p-d-a-t-e-d/index.md) |
+| [STATUS](-s-t-a-t-u-s/index.md) | [common]<br>[STATUS](-s-t-a-t-u-s/index.md) |
+| [TYPE](-t-y-p-e/index.md) | [common]<br>[TYPE](-t-y-p-e/index.md) |
 
 ## Properties
 

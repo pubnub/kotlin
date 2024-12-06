@@ -3,13 +3,17 @@
 # RemoveMemberships
 
 [jvm]\
-interface [RemoveMemberships](index.md) : [Endpoint](../../com.pubnub.api.java.endpoints/-endpoint/index.md)&lt;[T](../../com.pubnub.api.java.endpoints/-endpoint/index.md)&gt;
+interface [~~RemoveMemberships~~](index.md) : [Endpoint](../../com.pubnub.api.java.endpoints/-endpoint/index.md)&lt;[T](../../com.pubnub.api.java.endpoints/-endpoint/index.md)&gt; ---
+
+### Deprecated
+
+---
 
 ## Types
 
 | Name | Summary |
 |---|---|
-| [Builder](-builder/index.md) | [jvm]<br>interface [Builder](-builder/index.md) : [ObjectsBuilderSteps.ChannelMembershipsStep](../../com.pubnub.api.java.endpoints.objects_api.utils/-objects-builder-steps/-channel-memberships-step/index.md)&lt;[T](../../com.pubnub.api.java.endpoints.objects_api.utils/-objects-builder-steps/-channel-memberships-step/index.md)&gt; |
+| [Builder](-builder/index.md) | [jvm]<br>interface [~~Builder~~](-builder/index.md) : [ObjectsBuilderSteps.ChannelMembershipsStep](../../com.pubnub.api.java.endpoints.objects_api.utils/-objects-builder-steps/-channel-memberships-step/index.md)&lt;[T](../../com.pubnub.api.java.endpoints.objects_api.utils/-objects-builder-steps/-channel-memberships-step/index.md)&gt; |
 
 ## Functions
 

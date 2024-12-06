@@ -3,7 +3,11 @@
 # Builder
 
 [jvm]\
-interface [Builder](index.md) : [BuilderSteps.ChannelStep](../../../com.pubnub.api.java.endpoints/-builder-steps/-channel-step/index.md)&lt;[T](../../../com.pubnub.api.java.endpoints/-builder-steps/-channel-step/index.md)&gt;
+interface [~~Builder~~](index.md) : [BuilderSteps.ChannelStep](../../../com.pubnub.api.java.endpoints/-builder-steps/-channel-step/index.md)&lt;[T](../../../com.pubnub.api.java.endpoints/-builder-steps/-channel-step/index.md)&gt; ---
+
+### Deprecated
+
+---
 
 ## Functions
 

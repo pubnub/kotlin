@@ -3,7 +3,11 @@
 # Builder
 
 [jvm]\
-interface [Builder](index.md)
+interface [~~Builder~~](index.md)---
+
+### Deprecated
+
+---
 
 ## Functions
 

@@ -3,4 +3,4 @@
 # channelWithCustom
 
 [jvm]\
-open fun [channelWithCustom](channel-with-custom.md)(channelId: [String](https://docs.oracle.com/javase/8/docs/api/java/lang/String.html), custom: [Map](https://docs.oracle.com/javase/8/docs/api/java/util/Map.html)&lt;[String](https://docs.oracle.com/javase/8/docs/api/java/lang/String.html), [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)&gt;): [PNChannelMembership](index.md)
+open fun [channelWithCustom](channel-with-custom.md)(channelId: [String](https://docs.oracle.com/javase/8/docs/api/java/lang/String.html), custom: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)): [PNChannelMembership](index.md)

@@ -25,6 +25,8 @@
 | [com.pubnub.api.models.consumer.history](pubnub-kotlin-core-api/com.pubnub.api.models.consumer.history/index.md) |
 | [com.pubnub.api.models.consumer.message_actions](pubnub-kotlin-core-api/com.pubnub.api.models.consumer.message_actions/index.md) |
 | [com.pubnub.api.models.consumer.objects](pubnub-kotlin-core-api/com.pubnub.api.models.consumer.objects/index.md) |
+| [com.pubnub.api.models.consumer.objects.member](pubnub-kotlin-core-api/com.pubnub.api.models.consumer.objects.member/index.md) |
+| [com.pubnub.api.models.consumer.objects.membership](pubnub-kotlin-core-api/com.pubnub.api.models.consumer.objects.membership/index.md) |
 | [com.pubnub.api.models.consumer.presence](pubnub-kotlin-core-api/com.pubnub.api.models.consumer.presence/index.md) |
 | [com.pubnub.api.models.consumer.pubsub](pubnub-kotlin-core-api/com.pubnub.api.models.consumer.pubsub/index.md) |
 | [com.pubnub.api.models.consumer.pubsub.files](pubnub-kotlin-core-api/com.pubnub.api.models.consumer.pubsub.files/index.md) |

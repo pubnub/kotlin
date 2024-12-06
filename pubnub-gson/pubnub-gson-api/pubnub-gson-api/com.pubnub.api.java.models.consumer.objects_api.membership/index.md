@@ -6,7 +6,8 @@
 
 | Name | Summary |
 |---|---|
-| [PNChannelMembership](-p-n-channel-membership/index.md) | [jvm]<br>abstract class [PNChannelMembership](-p-n-channel-membership/index.md) |
+| [MembershipInclude](-membership-include/index.md) | [jvm]<br>interface [MembershipInclude](-membership-include/index.md) : [MembershipInclude](../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.objects.membership/-membership-include/index.md)<br>Represents the options for including additional details in membership-related operations. |
+| [PNChannelMembership](-p-n-channel-membership/index.md) | [jvm]<br>open class [PNChannelMembership](-p-n-channel-membership/index.md) |
 | [PNGetMembershipsResult](-p-n-get-memberships-result/index.md) | [jvm]<br>open class [PNGetMembershipsResult](-p-n-get-memberships-result/index.md) : [EntityArrayEnvelope](../com.pubnub.api.java.models.consumer.objects_api/-entity-array-envelope/index.md)&lt;[T](../com.pubnub.api.java.models.consumer.objects_api/-entity-array-envelope/index.md)&gt; |
 | [PNManageMembershipResult](-p-n-manage-membership-result/index.md) | [jvm]<br>open class [PNManageMembershipResult](-p-n-manage-membership-result/index.md) : [EntityArrayEnvelope](../com.pubnub.api.java.models.consumer.objects_api/-entity-array-envelope/index.md)&lt;[T](../com.pubnub.api.java.models.consumer.objects_api/-entity-array-envelope/index.md)&gt; |
 | [PNMembership](-p-n-membership/index.md) | [jvm]<br>open class [PNMembership](-p-n-membership/index.md) |

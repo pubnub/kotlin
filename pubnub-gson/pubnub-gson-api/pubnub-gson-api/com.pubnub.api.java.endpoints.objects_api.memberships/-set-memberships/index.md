@@ -3,13 +3,17 @@
 # SetMemberships
 
 [jvm]\
-interface [SetMemberships](index.md) : [Endpoint](../../com.pubnub.api.java.endpoints/-endpoint/index.md)&lt;[T](../../com.pubnub.api.java.endpoints/-endpoint/index.md)&gt;
+interface [~~SetMemberships~~](index.md) : [Endpoint](../../com.pubnub.api.java.endpoints/-endpoint/index.md)&lt;[T](../../com.pubnub.api.java.endpoints/-endpoint/index.md)&gt; ---
+
+### Deprecated
+
+---
 
 ## Types
 
 | Name | Summary |
 |---|---|
-| [Builder](-builder/index.md) | [jvm]<br>interface [Builder](-builder/index.md) |
+| [Builder](-builder/index.md) | [jvm]<br>interface [~~Builder~~](-builder/index.md) |
 
 ## Functions
 

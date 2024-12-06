@@ -1,0 +1,23 @@
+//[pubnub-gson-api](../../../../index.md)/[com.pubnub.api.java.models.consumer.objects_api.membership](../../index.md)/[MembershipInclude](../index.md)/[Builder](index.md)/[includeChannel](include-channel.md)
+
+# includeChannel
+
+[jvm]\
+fun [includeChannel](include-channel.md)(includeChannel: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)): [MembershipInclude.Builder](index.md)
+
+Specifies whether to include channel information in the membership data.
+
+#### Return
+
+the current [Builder](index.md) instance.
+
+#### Parameters
+
+jvm
+
+| | |
+|---|---|
+| includeChannel | `true` to include channel information, `false` otherwise. |
+
+[jvm]\
+var [includeChannel](include-channel.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)

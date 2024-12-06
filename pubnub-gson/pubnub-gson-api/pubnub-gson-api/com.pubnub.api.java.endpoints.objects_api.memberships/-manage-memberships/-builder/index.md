@@ -3,7 +3,11 @@
 # Builder
 
 [jvm]\
-interface [Builder](index.md) : [ObjectsBuilderSteps.RemoveOrSetStep](../../../com.pubnub.api.java.endpoints.objects_api.utils/-objects-builder-steps/-remove-or-set-step/index.md)&lt;[T](../../../com.pubnub.api.java.endpoints.objects_api.utils/-objects-builder-steps/-remove-or-set-step/index.md), [E](../../../com.pubnub.api.java.endpoints.objects_api.utils/-objects-builder-steps/-remove-or-set-step/index.md)&gt;
+interface [~~Builder~~](index.md) : [ObjectsBuilderSteps.RemoveOrSetStep](../../../com.pubnub.api.java.endpoints.objects_api.utils/-objects-builder-steps/-remove-or-set-step/index.md)&lt;[T](../../../com.pubnub.api.java.endpoints.objects_api.utils/-objects-builder-steps/-remove-or-set-step/index.md), [E](../../../com.pubnub.api.java.endpoints.objects_api.utils/-objects-builder-steps/-remove-or-set-step/index.md)&gt; ---
+
+### Deprecated
+
+---
 
 ## Functions
 
