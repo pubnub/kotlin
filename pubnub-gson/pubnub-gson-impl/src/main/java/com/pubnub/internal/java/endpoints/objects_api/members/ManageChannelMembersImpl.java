@@ -46,7 +46,7 @@ public class ManageChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayRe
     private Collection<PNUUID> uuidsToSet; // deprecated
     private Collection<PNUUID> uuidsToRemove; // deprecated
     private Collection<PNUser> usersToSet;
-    private List<String> usersIdsToRemove;
+    private List<String> userIdsToRemove;
     private MemberInclude include;
 
     @Deprecated
@@ -57,11 +57,11 @@ public class ManageChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayRe
         this.uuidsToRemove = uuidsToRemove;
     }
 
-    public ManageChannelMembersImpl(final PubNub pubnubInstance, String channel, Collection<PNUser> usersToSet, Collection<String> usersIdsToRemove) {
+    public ManageChannelMembersImpl(final PubNub pubnubInstance, String channel, Collection<PNUser> usersToSet, Collection<String> userIdsToRemove) {
         super(pubnubInstance);
         this.channel = channel;
         this.usersToSet = usersToSet;
-        this.usersIdsToRemove = new ArrayList<>(usersIdsToRemove);
+        this.userIdsToRemove = new ArrayList<>(userIdsToRemove);
     }
 
     @NotNull
@@ -77,9 +77,9 @@ public class ManageChannelMembersImpl extends DelegatingEndpoint<PNMemberArrayRe
         List<String> toRemove;
 
         // new API use
-        if (usersToSet != null || usersIdsToRemove != null) {
+        if (usersToSet != null || userIdsToRemove != null) {
             toSet = createMemberInputFromUserToSet();
-            toRemove = usersIdsToRemove;
+            toRemove = userIdsToRemove;
         } else { // old API used
             toSet = createMemberInputFromUUIDToSet();
             toRemove = createUserIdsFromUUIDToRemove();
