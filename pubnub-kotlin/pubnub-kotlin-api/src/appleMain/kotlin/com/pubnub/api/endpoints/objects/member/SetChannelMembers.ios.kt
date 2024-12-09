@@ -1,12 +1,15 @@
 package com.pubnub.api.endpoints.objects.member
 
+import cocoapods.PubNubSwift.KMPAnyJSON
 import cocoapods.PubNubSwift.KMPMembershipMetadata
 import cocoapods.PubNubSwift.KMPPubNub
-import cocoapods.PubNubSwift.getChannelMembersWithChannel
+import cocoapods.PubNubSwift.KMPUserMetadata
+import cocoapods.PubNubSwift.setChannelMembersWithChannel
 import com.pubnub.api.models.consumer.objects.PNMemberKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.member.MemberInclude
+import com.pubnub.api.models.consumer.objects.member.MemberInput
 import com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
@@ -20,31 +23,33 @@ import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSNumber
 
 /**
- * @see [PubNub.getChannelMembers]
+ * @see [PubNub.manageChannelMembers]
  */
-actual interface GetChannelMembers : PNFuture<PNMemberArrayResult>
+actual interface ManageChannelMembers : PNFuture<PNMemberArrayResult>
 
 @OptIn(ExperimentalForeignApi::class)
-class GetChannelMembersImpl(
+class SetChannelMembersImpl(
     private val pubnub: KMPPubNub,
     private val channelId: String,
+    private val users: List<MemberInput>,
     private val limit: Int?,
     private val page: PNPage?,
     private val filter: String?,
     private val sort: Collection<PNSortKey<PNMemberKey>>,
     private val includeFields: MemberInclude
-) : GetChannelMembers {
+) : ManageChannelMembers {
     override fun async(callback: Consumer<Result<PNMemberArrayResult>>) {
-        pubnub.getChannelMembersWithChannel(
+        pubnub.setChannelMembersWithChannel(
             channel = channelId,
+            users = users.map { KMPUserMetadata(id = it.uuid, custom = KMPAnyJSON(it.custom?.value), status = it.status) },
             limit = limit?.let { NSNumber(it) },
             page = createPubNubHashedPage(from = page),
             filter = filter,
             sort = sort.map { it.key.fieldName },
             includeCount = includeFields.includeTotalCount,
             includeCustom = includeFields.includeCustom,
-            includeUserFields = includeFields.includeUser,
-            includeUserCustomFields = includeFields.includeUserCustom,
+            includeUser = includeFields.includeUser,
+            includeUserCustom = includeFields.includeUserCustom,
             includeUserType = includeFields.includeUserType,
             onSuccess = callback.onSuccessHandler3 { memberships, totalCount, page ->
                 PNMemberArrayResult(

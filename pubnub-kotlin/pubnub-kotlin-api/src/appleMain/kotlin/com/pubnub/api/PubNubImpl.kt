@@ -500,7 +500,7 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
     override fun getChannelMetadata(channel: String, includeCustom: Boolean): GetChannelMetadata {
         return GetChannelMetadataImpl(
             pubnub = pubNubObjC,
-            channel = channel,
+            channelId = channel,
             includeCustom = includeCustom
         )
     }
@@ -516,7 +516,7 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
     ): SetChannelMetadata {
         return SetChannelMetadataImpl(
             pubnub = pubNubObjC,
-            channel = channel,
+            metadataId = channel,
             name = name,
             description = description,
             custom = custom,
@@ -529,7 +529,7 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
     override fun removeChannelMetadata(channel: String): RemoveChannelMetadata {
         return RemoveChannelMetadataImpl(
             pubnub = pubNubObjC,
-            channel = channel
+            metadataId = channel
         )
     }
 
@@ -555,7 +555,7 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
     override fun getUUIDMetadata(uuid: String?, includeCustom: Boolean): GetUUIDMetadata {
         return GetUUIDMetadataImpl(
             pubnub = pubNubObjC,
-            uuid = uuid,
+            metadataId = uuid,
             includeCustom = includeCustom
         )
     }
@@ -573,7 +573,7 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
     ): SetUUIDMetadata {
         return SetUUIDMetadataImpl(
             pubnub = pubNubObjC,
-            uuid = uuid,
+            metadataId = uuid,
             name = name,
             externalId = externalId,
             profileUrl = profileUrl,
@@ -588,7 +588,7 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
     override fun removeUUIDMetadata(uuid: String?): RemoveUUIDMetadata {
         return RemoveUUIDMetadataImpl(
             pubnub = pubNubObjC,
-            uuid = uuid
+            metadataId = uuid
         )
     }
 
@@ -604,17 +604,19 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         includeChannelDetails: PNChannelDetailsLevel?,
         includeType: Boolean,
     ): GetMemberships {
-        return GetMembershipsImpl(
-            pubnub = pubNubObjC,
-            uuid = uuid,
+        return getMemberships(
+            userId = uuid,
             limit = limit,
             page = page,
             filter = filter,
             sort = sort,
-            includeCount = includeCount,
-            includeCustom = includeCustom,
-            includeChannelDetails = includeChannelDetails,
-            includeChannelType = includeType
+            include = MembershipInclude(
+                includeTotalCount = includeCount,
+                includeCustom = includeCustom,
+                includeType = includeType,
+                includeChannel = includeChannelDetails == PNChannelDetailsLevel.CHANNEL || includeChannelDetails == PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM,
+                includeChannelCustom = includeChannelDetails == PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM
+            )
         )
     }
 
@@ -626,7 +628,15 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         sort: Collection<PNSortKey<PNMembershipKey>>,
         include: MembershipInclude
     ): GetMemberships {
-        TODO("Not yet implemented")
+        return GetMembershipsImpl(
+            pubnub = pubNubObjC,
+            userId = userId,
+            limit = limit,
+            page = page,
+            filter = filter,
+            sort = sort,
+            includeFields = include
+        )
     }
 
     // deprecated
@@ -641,32 +651,43 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         includeCustom: Boolean,
         includeChannelDetails: PNChannelDetailsLevel?,
         includeType: Boolean,
+    ): ManageMemberships {
+        return setMemberships(
+            channels = channels,
+            userId = uuid,
+            limit = limit,
+            page = page,
+            filter = filter,
+            sort = sort,
+            include = MembershipInclude(
+                includeTotalCount = includeCount,
+                includeCustom = includeCustom,
+                includeChannel = includeChannelDetails == PNChannelDetailsLevel.CHANNEL || includeChannelDetails == PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM,
+                includeChannelType = includeType,
+                includeChannelCustom = includeChannelDetails == PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM
+            )
+        )
+    }
+
+    override fun setMemberships(
+        channels: List<ChannelMembershipInput>,
+        userId: String?,
+        limit: Int?,
+        page: PNPage?,
+        filter: String?,
+        sort: Collection<PNSortKey<PNMembershipKey>>,
+        include: MembershipInclude
     ): ManageMemberships {
         return AddMembershipsImpl(
             pubnub = pubNubObjC,
             channels = channels,
-            uuid = uuid,
+            userId = userId,
             limit = limit,
             page = page,
             filter = filter,
             sort = sort,
-            includeCount = includeCount,
-            includeCustom = includeCustom,
-            includeChannelDetails = includeChannelDetails,
-            includeChannelType = includeType
+            includeFields = include
         )
-    }
-
-    override fun setMemberships(
-        channels: List<ChannelMembershipInput>,
-        userId: String?,
-        limit: Int?,
-        page: PNPage?,
-        filter: String?,
-        sort: Collection<PNSortKey<PNMembershipKey>>,
-        include: MembershipInclude
-    ): ManageMemberships {
-        TODO("Not yet implemented")
     }
 
     // deprecated
@@ -682,18 +703,20 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         includeChannelDetails: PNChannelDetailsLevel?,
         includeType: Boolean,
     ): ManageMemberships {
-        return RemoveMembershipsImpl(
-            pubnub = pubNubObjC,
+        return removeMemberships(
             channels = channels,
-            uuid = uuid,
+            userId = uuid,
             limit = limit,
             page = page,
             filter = filter,
             sort = sort,
-            includeCount = includeCount,
-            includeCustom = includeCustom,
-            includeChannelDetails = includeChannelDetails,
-            includeChannelType = includeType
+            include = MembershipInclude(
+                includeTotalCount = includeCount,
+                includeCustom = includeCustom,
+                includeChannel = includeChannelDetails == PNChannelDetailsLevel.CHANNEL || includeChannelDetails == PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM,
+                includeChannelType = includeType,
+                includeChannelCustom = includeChannelDetails == PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM
+            )
         )
     }
 
@@ -706,7 +729,16 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         sort: Collection<PNSortKey<PNMembershipKey>>,
         include: MembershipInclude,
     ): ManageMemberships {
-        TODO("Not yet implemented")
+        return RemoveMembershipsImpl(
+            pubnub = pubNubObjC,
+            channels = channels,
+            userId = userId,
+            limit = limit,
+            page = page,
+            filter = filter,
+            sort = sort,
+            includeFields = include
+        )
     }
 
     override fun getChannelMembers(
@@ -720,17 +752,18 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         includeUUIDDetails: PNUUIDDetailsLevel?,
         includeType: Boolean,
     ): GetChannelMembers {
-        return GetChannelMembersImpl(
-            pubnub = pubNubObjC,
+        return getChannelMembers(
             channel = channel,
             limit = limit,
             page = page,
-            filter = filter,
             sort = sort,
-            includeCount = includeCount,
-            includeCustom = includeCustom,
-            includeUUIDDetails = includeUUIDDetails,
-            includeUUIDType = includeType
+            include = MemberInclude(
+                includeTotalCount = includeCount,
+                includeCustom = includeCustom,
+                includeType = includeType,
+                includeUser = includeUUIDDetails == PNUUIDDetailsLevel.UUID || includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM,
+                includeUserCustom = includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM,
+            )
         )
     }
 
@@ -742,7 +775,15 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         sort: Collection<PNSortKey<PNMemberKey>>,
         include: MemberInclude
     ): GetChannelMembers {
-        TODO("Not yet implemented")
+        return GetChannelMembersImpl(
+            pubnub = pubNubObjC,
+            channelId = channel,
+            limit = limit,
+            page = page,
+            filter = filter,
+            sort = sort,
+            includeFields = include
+        )
     }
 
     // deprecated
@@ -758,18 +799,20 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         includeUUIDDetails: PNUUIDDetailsLevel?,
         includeType: Boolean,
     ): ManageChannelMembers {
-        return SetChannelMembersImpl(
-            pubnub = pubNubObjC,
+        return setChannelMembers(
             channel = channel,
-            uuids = uuids,
+            users = uuids,
             limit = limit,
             page = page,
             filter = filter,
             sort = sort,
-            includeCount = includeCount,
-            includeCustom = includeCustom,
-            includeUUIDDetails = includeUUIDDetails,
-            includeUUIDType = includeType
+            include = MemberInclude(
+                includeTotalCount = includeCount,
+                includeCustom = includeCustom,
+                includeType = includeType,
+                includeUser = includeUUIDDetails == PNUUIDDetailsLevel.UUID || includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM,
+                includeUserCustom = includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM,
+            )
         )
     }
 
@@ -782,7 +825,16 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         sort: Collection<PNSortKey<PNMemberKey>>,
         include: MemberInclude
     ): ManageChannelMembers {
-        TODO("Not yet implemented")
+        return SetChannelMembersImpl(
+            pubnub = pubNubObjC,
+            channelId = channel,
+            users = users,
+            limit = limit,
+            page = page,
+            filter = filter,
+            sort = sort,
+            includeFields = include
+        )
     }
 
     override fun removeChannelMembers(
@@ -797,18 +849,20 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         includeUUIDDetails: PNUUIDDetailsLevel?,
         includeType: Boolean
     ): ManageChannelMembers {
-        return RemoveChannelMembersImpl(
-            pubnub = pubNubObjC,
+        return removeChannelMembers(
             channel = channel,
-            uuids = uuids,
+            userIds = uuids,
             limit = limit,
             page = page,
             filter = filter,
             sort = sort,
-            includeCount = includeCount,
-            includeCustom = includeCustom,
-            includeUUIDDetails = includeUUIDDetails,
-            includeUUIDType = includeType
+            include = MemberInclude(
+                includeTotalCount = includeCount,
+                includeCustom = includeCustom,
+                includeType = includeType,
+                includeUser = includeUUIDDetails == PNUUIDDetailsLevel.UUID || includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM,
+                includeUserCustom = includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM,
+            )
         )
     }
 
@@ -821,7 +875,16 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         sort: Collection<PNSortKey<PNMemberKey>>,
         include: MemberInclude
     ): ManageChannelMembers {
-        TODO("Not yet implemented")
+        return RemoveChannelMembersImpl(
+            pubnub = pubNubObjC,
+            channel = channel,
+            userIds = userIds,
+            limit = limit,
+            page = page,
+            filter = filter,
+            sort = sort,
+            includeFields = include
+        )
     }
 
     override fun listFiles(channel: String, limit: Int?, next: PNPage.PNNext?): ListFiles {

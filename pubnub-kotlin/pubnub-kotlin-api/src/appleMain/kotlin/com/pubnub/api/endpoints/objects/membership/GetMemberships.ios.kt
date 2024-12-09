@@ -2,11 +2,11 @@ package com.pubnub.api.endpoints.objects.membership
 
 import cocoapods.PubNubSwift.KMPMembershipMetadata
 import cocoapods.PubNubSwift.KMPPubNub
-import cocoapods.PubNubSwift.getMembershipsWithUuid
+import cocoapods.PubNubSwift.getMembershipsWithUserId
 import com.pubnub.api.models.consumer.objects.PNMembershipKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
-import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
+import com.pubnub.api.models.consumer.objects.membership.MembershipInclude
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
@@ -27,28 +27,25 @@ actual interface GetMemberships : PNFuture<PNChannelMembershipArrayResult>
 @OptIn(ExperimentalForeignApi::class)
 class GetMembershipsImpl(
     private val pubnub: KMPPubNub,
-    private val uuid: String?,
+    private val userId: String?,
     private val limit: Int?,
     private val page: PNPage?,
     private val filter: String?,
     private val sort: Collection<PNSortKey<PNMembershipKey>>,
-    private val includeCount: Boolean,
-    private val includeCustom: Boolean,
-    private val includeChannelDetails: PNChannelDetailsLevel?,
-    private val includeChannelType: Boolean
+    private val includeFields: MembershipInclude
 ) : GetMemberships {
     override fun async(callback: Consumer<Result<PNChannelMembershipArrayResult>>) {
-        pubnub.getMembershipsWithUuid(
-            uuid = uuid,
+        pubnub.getMembershipsWithUserId(
+            userId = userId,
             limit = limit?.let { NSNumber(it) },
             page = createPubNubHashedPage(from = page),
             filter = filter,
             sort = sort.map { it.key.fieldName },
-            includeCount = includeCount,
-            includeCustom = includeCustom,
-            includeChannelFields = includeChannelDetails == PNChannelDetailsLevel.CHANNEL || includeChannelDetails == PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM,
-            includeChannelCustomFields = includeChannelDetails == PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM,
-            includeChannelType = includeChannelType,
+            includeCount = includeFields.includeTotalCount,
+            includeCustom = includeFields.includeCustom,
+            includeChannelFields = includeFields.includeChannel,
+            includeChannelCustomFields = includeFields.includeChannelCustom,
+            includeChannelType = includeFields.includeChannelType,
             onSuccess = callback.onSuccessHandler3 { memberships, totalCount, page ->
                 PNChannelMembershipArrayResult(
                     status = 200,

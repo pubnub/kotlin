@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints.objects.channel
 
 import cocoapods.PubNubSwift.KMPPubNub
-import cocoapods.PubNubSwift.removeChannelMetadataWithChannel
+import cocoapods.PubNubSwift.removeChannelMetadataWithMetadataId
 import com.pubnub.api.models.consumer.objects.PNRemoveMetadataResult
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
@@ -15,11 +15,11 @@ actual interface RemoveChannelMetadata : PNFuture<PNRemoveMetadataResult>
 @OptIn(ExperimentalForeignApi::class)
 class RemoveChannelMetadataImpl(
     private val pubnub: KMPPubNub,
-    private val channel: String
+    private val metadataId: String
 ) : RemoveChannelMetadata {
     override fun async(callback: Consumer<Result<PNRemoveMetadataResult>>) {
-        pubnub.removeChannelMetadataWithChannel(
-            channel = channel,
+        pubnub.removeChannelMetadataWithMetadataId(
+            metadataId = metadataId,
             onSuccess = callback.onSuccessHandler { PNRemoveMetadataResult(200) },
             onFailure = callback.onFailureHandler()
         )

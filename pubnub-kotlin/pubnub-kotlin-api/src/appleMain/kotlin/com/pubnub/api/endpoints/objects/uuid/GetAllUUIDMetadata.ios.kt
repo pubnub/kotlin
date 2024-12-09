@@ -1,8 +1,8 @@
 package com.pubnub.api.endpoints.objects.uuid
 
 import cocoapods.PubNubSwift.KMPPubNub
-import cocoapods.PubNubSwift.KMPUUIDMetadata
-import cocoapods.PubNubSwift.getAllUUIDMetadataWithLimit
+import cocoapods.PubNubSwift.KMPUserMetadata
+import cocoapods.PubNubSwift.getAllUserMetadataWithLimit
 import com.pubnub.api.models.consumer.objects.PNKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
@@ -35,7 +35,7 @@ class GetAllUUIDMetadataImpl(
     private val includeCustom: Boolean
 ) : GetAllUUIDMetadata {
     override fun async(callback: Consumer<Result<PNUUIDMetadataArrayResult>>) {
-        pubnub.getAllUUIDMetadataWithLimit(
+        pubnub.getAllUserMetadataWithLimit(
             limit = limit?.let { NSNumber(it) },
             page = createPubNubHashedPage(from = page),
             filter = filter,
@@ -45,7 +45,7 @@ class GetAllUUIDMetadataImpl(
             onSuccess = callback.onSuccessHandler3 { uuids, totalCount, next ->
                 PNUUIDMetadataArrayResult(
                     status = 200,
-                    data = uuids.filterAndMap { rawValue: KMPUUIDMetadata -> createPNUUIDMetadata(from = rawValue) },
+                    data = uuids.filterAndMap { rawValue: KMPUserMetadata -> createPNUUIDMetadata(from = rawValue) },
                     totalCount = totalCount?.intValue ?: 0,
                     next = next?.start()?.let { hash -> PNPage.PNNext(pageHash = hash) },
                     prev = next?.end()?.let { hash -> PNPage.PNPrev(pageHash = hash) }

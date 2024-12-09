@@ -42,7 +42,7 @@ open class FetchMessagesImpl(
             includeMeta = includeMeta,
             includeMessageActions = includeMessageActions,
             includeMessageType = includeMessageType,
-//            includeCustomMessageType = includeCustomMessageType, // todo
+            includeCustomMessageType = includeCustomMessageType,
             page = KMPBoundedPage(
                 start = page.start?.let { NSNumber(long = it) },
                 end = page.end?.let { NSNumber(long = it) },
@@ -72,6 +72,7 @@ open class FetchMessagesImpl(
                     timetoken = it.published().toLong(),
                     actions = mapMessageActions(rawValue = it.actions()),
                     messageType = HistoryMessageType.of(it.messageType().toInt()),
+                    customMessageType = it.customMessageType(),
                     error = null // todo translate crypto errors
                 )
             }

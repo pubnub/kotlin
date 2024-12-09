@@ -20,7 +20,7 @@ class SignalImpl(
         pubnub.signalWithChannel(
             channel = channel,
             message = message,
-//            customeMessageType = customMessageType, //todo, ask Kuba
+            customMessageType = customMessageType,
             onSuccess = callback.onSuccessHandler { PNPublishResult(it.toLong()) },
             onFailure = callback.onFailureHandler()
         )

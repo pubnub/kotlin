@@ -4,7 +4,7 @@ import cocoapods.PubNubSwift.KMPChannelMetadata
 import cocoapods.PubNubSwift.KMPHashedPage
 import cocoapods.PubNubSwift.KMPMembershipMetadata
 import cocoapods.PubNubSwift.KMPObjectSortProperty
-import cocoapods.PubNubSwift.KMPUUIDMetadata
+import cocoapods.PubNubSwift.KMPUserMetadata
 import com.pubnub.api.models.consumer.objects.PNKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
@@ -42,7 +42,7 @@ internal fun createPubNubHashedPage(from: PNPage?): KMPHashedPage {
 
 // TODO: PatchValue should consider cases where there is no response for a given field
 @OptIn(ExperimentalForeignApi::class)
-internal fun createPNUUIDMetadata(from: KMPUUIDMetadata?): PNUUIDMetadata {
+internal fun createPNUUIDMetadata(from: KMPUserMetadata?): PNUUIDMetadata {
     return PNUUIDMetadata(
         id = from!!.id(),
         name = PatchValue.of(from.name()),
@@ -107,7 +107,7 @@ internal fun createPNChannelMembership(from: KMPMembershipMetadata): PNChannelMe
 @OptIn(ExperimentalForeignApi::class)
 internal fun createPNMember(from: KMPMembershipMetadata?): PNMember {
     return PNMember(
-        uuid = createPNUUIDMetadata(from = from!!.uuid()),
+        uuid = createPNUUIDMetadata(from = from!!.user()),
         custom = PatchValue.of(from.custom()?.safeCast()),
         updated = from.updated().orEmpty(),
         eTag = from.eTag().orEmpty(),
