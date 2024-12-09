@@ -286,7 +286,7 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
 
         val getPnMembers = getAllResult.data as ArrayList
         assertEquals(type01, getPnMembers[0].type?.value)
-        assertEquals(type02, getPnMembers[10].type?.value)
+        assertEquals(type02, getPnMembers[1].type?.value)
         assertEquals(setResult, getAllResult)
 
         pubnub.removeChannelMembers(
