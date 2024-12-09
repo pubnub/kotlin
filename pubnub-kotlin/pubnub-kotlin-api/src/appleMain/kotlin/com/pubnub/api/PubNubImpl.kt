@@ -500,7 +500,7 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
     override fun getChannelMetadata(channel: String, includeCustom: Boolean): GetChannelMetadata {
         return GetChannelMetadataImpl(
             pubnub = pubNubObjC,
-            channel = channel,
+            channelId = channel,
             includeCustom = includeCustom
         )
     }

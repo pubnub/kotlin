@@ -19,12 +19,12 @@ actual interface GetChannelMetadata : PNFuture<PNChannelMetadataResult>
 @OptIn(ExperimentalForeignApi::class)
 class GetChannelMetadataImpl(
     private val pubnub: KMPPubNub,
-    private val channel: String,
+    private val channelId: String,
     private val includeCustom: Boolean
 ) : GetChannelMetadata {
     override fun async(callback: Consumer<Result<PNChannelMetadataResult>>) {
         pubnub.getChannelMetadataWithMetadataId(
-            metadataId = channel,
+            metadataId = channelId,
             includeCustom = includeCustom,
             onSuccess = callback.onSuccessHandler {
                 PNChannelMetadataResult(
