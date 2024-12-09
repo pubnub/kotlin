@@ -3,15 +3,15 @@ package com.pubnub.api.endpoints.objects.member
 import cocoapods.PubNubSwift.KMPAnyJSON
 import cocoapods.PubNubSwift.KMPMembershipMetadata
 import cocoapods.PubNubSwift.KMPPubNub
-import cocoapods.PubNubSwift.KMPUUIDMetadata
+import cocoapods.PubNubSwift.KMPUserMetadata
 import cocoapods.PubNubSwift.removeChannelMembersWithChannel
 import cocoapods.PubNubSwift.setChannelMembersWithChannel
 import com.pubnub.api.models.consumer.objects.PNMemberKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
+import com.pubnub.api.models.consumer.objects.member.MemberInclude
 import com.pubnub.api.models.consumer.objects.member.MemberInput
 import com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult
-import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.kmp.PNFuture
@@ -31,30 +31,27 @@ actual interface ManageChannelMembers : PNFuture<PNMemberArrayResult>
 @OptIn(ExperimentalForeignApi::class)
 class SetChannelMembersImpl(
     private val pubnub: KMPPubNub,
-    private val channel: String,
-    private val uuids: List<MemberInput>,
+    private val channelId: String,
+    private val users: List<MemberInput>,
     private val limit: Int?,
     private val page: PNPage?,
     private val filter: String?,
     private val sort: Collection<PNSortKey<PNMemberKey>>,
-    private val includeCount: Boolean,
-    private val includeCustom: Boolean,
-    private val includeUUIDDetails: PNUUIDDetailsLevel?,
-    private val includeUUIDType: Boolean
+    private val includeFields: MemberInclude
 ) : ManageChannelMembers {
     override fun async(callback: Consumer<Result<PNMemberArrayResult>>) {
         pubnub.setChannelMembersWithChannel(
-            channel = channel,
-            uuids = uuids.map { KMPUUIDMetadata(id = it.uuid, custom = KMPAnyJSON(it.custom?.value), status = it.status) },
+            channel = channelId,
+            users = users.map { KMPUserMetadata(id = it.uuid, custom = KMPAnyJSON(it.custom?.value), status = it.status) },
             limit = limit?.let { NSNumber(it) },
             page = createPubNubHashedPage(from = page),
             filter = filter,
             sort = sort.map { it.key.fieldName },
-            includeCount = includeCount,
-            includeCustom = includeCustom,
-            includeUUIDFields = includeUUIDDetails == PNUUIDDetailsLevel.UUID || includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM,
-            includeUUIDCustomFields = includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM,
-            includeUUIDType = includeUUIDType,
+            includeCount = includeFields.includeTotalCount,
+            includeCustom = includeFields.includeCustom,
+            includeUser = includeFields.includeUser,
+            includeUserCustom = includeFields.includeUserCustom,
+            includeUserType = includeFields.includeUserType,
             onSuccess = callback.onSuccessHandler3 { memberships, totalCount, page ->
                 PNMemberArrayResult(
                     status = 200,
@@ -73,29 +70,26 @@ class SetChannelMembersImpl(
 class RemoveChannelMembersImpl(
     private val pubnub: KMPPubNub,
     private val channel: String,
-    private val uuids: List<String>,
+    private val userIds: List<String>,
     private val limit: Int?,
     private val page: PNPage?,
     private val filter: String?,
     private val sort: Collection<PNSortKey<PNMemberKey>>,
-    private val includeCount: Boolean,
-    private val includeCustom: Boolean,
-    private val includeUUIDDetails: PNUUIDDetailsLevel?,
-    private val includeUUIDType: Boolean
+    private val includeFields: MemberInclude
 ) : ManageChannelMembers {
     override fun async(callback: Consumer<Result<PNMemberArrayResult>>) {
         pubnub.removeChannelMembersWithChannel(
             channel = channel,
-            uuids = uuids,
+            users = userIds,
             limit = limit?.let { NSNumber(it) },
             page = createPubNubHashedPage(from = page),
             filter = filter,
             sort = sort.map { it.key.fieldName },
-            includeCount = includeCount,
-            includeCustom = includeCustom,
-            includeUUIDFields = includeUUIDDetails == PNUUIDDetailsLevel.UUID || includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM,
-            includeUUIDCustomFields = includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM,
-            includeUUIDType = includeUUIDType,
+            includeCount = includeFields.includeTotalCount,
+            includeCustom = includeFields.includeCustom,
+            includeUser = includeFields.includeUser,
+            includeUserCustom = includeFields.includeUserCustom,
+            includeUserType = includeFields.includeUserType,
             onSuccess = callback.onSuccessHandler3 { memberships, totalCount, next ->
                 PNMemberArrayResult(
                     status = 200,

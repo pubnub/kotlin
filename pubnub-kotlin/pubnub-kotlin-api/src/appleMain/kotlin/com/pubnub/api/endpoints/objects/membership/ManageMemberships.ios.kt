@@ -10,7 +10,7 @@ import com.pubnub.api.models.consumer.objects.PNMembershipKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
-import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
+import com.pubnub.api.models.consumer.objects.membership.MembershipInclude
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
@@ -32,29 +32,26 @@ actual interface ManageMemberships : PNFuture<PNChannelMembershipArrayResult>
 class AddMembershipsImpl(
     private val pubnub: KMPPubNub,
     private val channels: List<ChannelMembershipInput>,
-    private val uuid: String?,
+    private val userId: String?,
     private val limit: Int?,
     private val page: PNPage?,
     private val filter: String?,
     private val sort: Collection<PNSortKey<PNMembershipKey>>,
-    private val includeCount: Boolean,
-    private val includeCustom: Boolean,
-    private val includeChannelDetails: PNChannelDetailsLevel?,
-    private val includeChannelType: Boolean
+    private val includeFields: MembershipInclude
 ) : ManageMemberships {
     override fun async(callback: Consumer<Result<PNChannelMembershipArrayResult>>) {
         pubnub.setMembershipsWithChannels(
             channels = channels.map { KMPChannelMetadata(it.channel, KMPAnyJSON(it.custom?.value), it.status) },
-            uuid = uuid,
+            userId = userId,
             limit = limit?.let { NSNumber(it) },
             page = createPubNubHashedPage(from = page),
             filter = filter,
             sort = sort.map { it.key.fieldName },
-            includeCount = includeCount,
-            includeCustom = includeCustom,
-            includeChannelFields = includeChannelDetails == PNChannelDetailsLevel.CHANNEL || includeChannelDetails == PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM,
-            includeChannelCustomFields = includeChannelDetails == PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM,
-            includeChannelType = includeChannelType,
+            includeCount = includeFields.includeTotalCount,
+            includeCustom = includeFields.includeCustom,
+            includeChannelFields = includeFields.includeChannel,
+            includeChannelCustomFields = includeFields.includeChannelCustom,
+            includeChannelType = includeFields.includeChannelType,
             onSuccess = callback.onSuccessHandler3 { memberships, totalCount, page ->
                 PNChannelMembershipArrayResult(
                     status = 200,
@@ -73,29 +70,26 @@ class AddMembershipsImpl(
 class RemoveMembershipsImpl(
     private val pubnub: KMPPubNub,
     private val channels: List<String>,
-    private val uuid: String?,
+    private val userId: String?,
     private val limit: Int?,
     private val page: PNPage?,
     private val filter: String?,
     private val sort: Collection<PNSortKey<PNMembershipKey>>,
-    private val includeCount: Boolean,
-    private val includeCustom: Boolean,
-    private val includeChannelDetails: PNChannelDetailsLevel?,
-    private val includeChannelType: Boolean
+    private val includeFields: MembershipInclude
 ) : ManageMemberships {
     override fun async(callback: Consumer<Result<PNChannelMembershipArrayResult>>) {
         pubnub.removeMembershipsWithChannels(
             channels = channels,
-            uuid = uuid,
+            userId = userId,
             limit = limit?.let { NSNumber(it) },
             page = createPubNubHashedPage(from = page),
             filter = filter,
             sort = sort.map { it.key.fieldName },
-            includeCount = includeCount,
-            includeCustom = includeCustom,
-            includeChannelFields = includeChannelDetails == PNChannelDetailsLevel.CHANNEL || includeChannelDetails == PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM,
-            includeChannelCustomFields = includeChannelDetails == PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM,
-            includeChannelType = includeChannelType,
+            includeCount = includeFields.includeTotalCount,
+            includeCustom = includeFields.includeCustom,
+            includeChannelFields = includeFields.includeChannel,
+            includeChannelCustomFields = includeFields.includeChannelCustom,
+            includeChannelType = includeFields.includeChannelType,
             onSuccess = callback.onSuccessHandler3 { memberships, totalCount, next ->
                 PNChannelMembershipArrayResult(
                     status = 200,

@@ -98,6 +98,7 @@ private fun createMessageResult(from: KMPMessage?): PNMessageResult {
             publisher = from.publisher()
         ),
         message = JsonElementImpl(from.payload()),
+        customMessageType = from.customMessageType(),
         error = null // TODO: Map error from Swift SDK to PubNubError in Kotlin SDK
     )
 }
@@ -112,7 +113,8 @@ private fun createSignalResult(from: KMPMessage?): PNSignalResult {
             userMetadata = JsonElementImpl(from.metadata()),
             publisher = from.publisher()
         ),
-        message = JsonElementImpl(from.payload())
+        message = JsonElementImpl(from.payload()),
+        customMessageType = from.customMessageType()
     )
 }
 
@@ -310,7 +312,7 @@ private fun mapAppContextEvent(from: KMPAppContextEventResult?): PNObjectEventMe
                     eTag = from.metadata().eTag().orEmpty(),
                     updated = from.metadata().updated().orEmpty(),
                     status = PatchValue.of(from.metadata().status().orEmpty()),
-                    type = null // todo add when available
+                    type = PatchValue.of(from.metadata().type().orEmpty())
                 )
             )
         is KMPRemoveMembershipResult ->
@@ -321,7 +323,7 @@ private fun mapAppContextEvent(from: KMPAppContextEventResult?): PNObjectEventMe
                 type = from.type(),
                 data = PNDeleteMembershipEvent(
                     channelId = from.channelId(),
-                    uuid = from.uuid()
+                    uuid = from.userId()
                 )
             )
         else -> return null

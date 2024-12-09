@@ -2,7 +2,7 @@ package com.pubnub.api.endpoints.objects.uuid
 
 import cocoapods.PubNubSwift.KMPAnyJSON
 import cocoapods.PubNubSwift.KMPPubNub
-import cocoapods.PubNubSwift.setUUIDMetadataWithUuid
+import cocoapods.PubNubSwift.setUserMetadataWithMetadataId
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
@@ -21,7 +21,7 @@ actual interface SetUUIDMetadata : PNFuture<PNUUIDMetadataResult>
 @OptIn(ExperimentalForeignApi::class)
 class SetUUIDMetadataImpl(
     private val pubnub: KMPPubNub,
-    private val uuid: String?,
+    private val metadataId: String?,
     private val name: String?,
     private val externalId: String?,
     private val profileUrl: String?,
@@ -32,8 +32,8 @@ class SetUUIDMetadataImpl(
     private val status: String?
 ) : SetUUIDMetadata {
     override fun async(callback: Consumer<Result<PNUUIDMetadataResult>>) {
-        pubnub.setUUIDMetadataWithUuid(
-            uuid = uuid,
+        pubnub.setUserMetadataWithMetadataId(
+            metadataId = metadataId,
             name = name,
             externalId = externalId,
             profileUrl = profileUrl,

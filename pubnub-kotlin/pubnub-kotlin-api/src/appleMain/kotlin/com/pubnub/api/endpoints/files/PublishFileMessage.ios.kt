@@ -37,7 +37,7 @@ class PublishFileMessageImpl(
             meta = meta,
             ttl = ttl?.let { NSNumber(it) },
             shouldStore = shouldStore?.let { NSNumber(bool = it) },
-//            customMessageType = customMessageType, // todo ask Kuba
+            customMessageType = customMessageType,
             onSuccess = callback.onSuccessHandler { PNPublishFileMessageResult(it.toLong()) },
             onFailure = callback.onFailureHandler()
         )

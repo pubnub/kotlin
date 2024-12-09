@@ -48,7 +48,7 @@ class SendFileImpl(
                 meta = meta,
                 ttl = ttl?.let { NSNumber(it) },
                 shouldStore = shouldStore?.let { NSNumber(it) },
-//                customMessageType = customMessageType, // todo ask Kuba
+                customMessageType = customMessageType,
                 onSuccess = callback.onSuccessHandler2 { uploadedFile, timetoken ->
                     PNFileUploadResult(
                         status = 200,

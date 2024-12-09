@@ -6,7 +6,6 @@ import com.pubnub.api.models.consumer.objects.member.Include
  * Interface representing options to include additional data when using Memberships API.
  */
 interface MembershipInclude : Include {
-
     /**
      * Whether to include channel information in the result.
      */

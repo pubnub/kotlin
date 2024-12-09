@@ -33,7 +33,7 @@ class PublishImpl(
             meta = meta,
             shouldStore = shouldStore?.let { NSNumber(bool = it) },
             ttl = ttl?.let { NSNumber(it) },
-//            customMessageType = customMessageType, // todo, ask Kuba
+            customMessageType = customMessageType,
             onSuccess = callback.onSuccessHandler { PNPublishResult(it.toLong()) },
             onFailure = callback.onFailureHandler()
         )
