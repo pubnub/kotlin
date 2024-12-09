@@ -13,6 +13,7 @@ out/
 test.properties
 local.properties
 *.DS_STORE
+*.podspec
 
 # GitHub Actions #
 ##################

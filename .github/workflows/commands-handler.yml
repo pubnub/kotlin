@@ -12,7 +12,7 @@ jobs:
     name: Process command
     if: github.event.issue.pull_request && endsWith(github.repository, '-private') != true
     runs-on:
-      group: organization/Default
+      group: macos-gh
     steps:
       - name: Check referred user
         id: user-check

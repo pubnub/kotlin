@@ -176,7 +176,7 @@ private fun createFileEventResult(from: KMPFileChangeEvent?): PNFileEventResult 
             id = from.file().id(),
             name = from.file().name(),
             url = from.file().url()?.absoluteString.orEmpty()
-        )
+        ),
     )
 }
 

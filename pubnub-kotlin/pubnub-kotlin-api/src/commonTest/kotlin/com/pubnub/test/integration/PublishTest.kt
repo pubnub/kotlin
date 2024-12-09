@@ -185,6 +185,18 @@ class PublishTest : BaseIntegrationTest() {
             assertEquals("123", result2.userMetadata?.asString())
         }
     }
+
+    @Test
+    fun publish_with_custom_message_type() = runTest {
+        val customMessageType = randomString()
+        pubnub.test(backgroundScope) {
+            pubnub.awaitSubscribe(listOf(channel))
+            pubnub.publish(channel, "some message", customMessageType = customMessageType).await()
+            val result = nextMessage()
+            assertEquals("some message", result.message.asString())
+            assertEquals(customMessageType, result.customMessageType)
+        }
+    }
 }
 
 private fun deepCompare(expected: Any?, actual: JsonElement) {

@@ -2,6 +2,7 @@ package com.pubnub.gradle
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.api.tasks.testing.AbstractTestTask
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
@@ -38,9 +39,16 @@ class PubNubKotlinMultiplatformPlugin : Plugin<Project> {
                         }
 
                         pod("PubNubSwift") {
-//                            val swiftPath = project.findProperty("SWIFT_PATH") as? String ?: "swift"
-//                            source = path(rootProject.file(swiftPath))
-                            version = "8.2.2"
+                            val swiftPath = project.findProperty("SWIFT_PATH") as? String
+                            if (swiftPath != null) {
+                                source = path(rootProject.file(swiftPath))
+                            } else {
+                                version = project.rootProject
+                                    .extensions
+                                    .getByType(VersionCatalogsExtension::class.java)
+                                    .named("libs")
+                                    .findVersion("pubnub.swift").get().requiredVersion
+                            }
                             moduleName = "PubNubSDK"
                             extraOpts += listOf("-compiler-option", "-fmodules")
                         }
