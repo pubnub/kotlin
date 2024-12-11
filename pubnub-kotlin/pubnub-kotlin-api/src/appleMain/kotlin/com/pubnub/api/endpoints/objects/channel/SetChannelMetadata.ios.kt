@@ -2,7 +2,7 @@ package com.pubnub.api.endpoints.objects.channel
 
 import cocoapods.PubNubSwift.KMPAnyJSON
 import cocoapods.PubNubSwift.KMPPubNub
-import cocoapods.PubNubSwift.setChannelMetadataWithChannel
+import cocoapods.PubNubSwift.setChannelMetadataWithMetadataId
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataResult
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
@@ -21,7 +21,7 @@ actual interface SetChannelMetadata : PNFuture<PNChannelMetadataResult>
 @OptIn(ExperimentalForeignApi::class)
 class SetChannelMetadataImpl(
     private val pubnub: KMPPubNub,
-    private val channel: String,
+    private val metadataId: String,
     private val name: String?,
     private val description: String?,
     private val custom: CustomObject?,
@@ -30,8 +30,8 @@ class SetChannelMetadataImpl(
     private val status: String?
 ) : SetChannelMetadata {
     override fun async(callback: Consumer<Result<PNChannelMetadataResult>>) {
-        pubnub.setChannelMetadataWithChannel(
-            channel = channel,
+        pubnub.setChannelMetadataWithMetadataId(
+            metadataId = metadataId,
             name = name,
             description = description,
             custom = KMPAnyJSON(value = custom?.value),

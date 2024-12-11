@@ -98,6 +98,7 @@ private fun createMessageResult(from: KMPMessage?): PNMessageResult {
             publisher = from.publisher()
         ),
         message = JsonElementImpl(from.payload()),
+        customMessageType = from.customMessageType(),
         error = null // TODO: Map error from Swift SDK to PubNubError in Kotlin SDK
     )
 }
@@ -112,7 +113,8 @@ private fun createSignalResult(from: KMPMessage?): PNSignalResult {
             userMetadata = JsonElementImpl(from.metadata()),
             publisher = from.publisher()
         ),
-        message = JsonElementImpl(from.payload())
+        message = JsonElementImpl(from.payload()),
+        customMessageType = from.customMessageType()
     )
 }
 
@@ -168,6 +170,7 @@ private fun createFileEventResult(from: KMPFileChangeEvent?): PNFileEventResult 
         timetoken = from.timetoken()?.longValue,
         publisher = from.publisher(),
         message = from.message(),
+        customMessageType = from.customMessageType(),
         jsonMessage = JsonElementImpl(from.message()),
         file = PNDownloadableFile(
             id = from.file().id(),
@@ -309,8 +312,8 @@ private fun mapAppContextEvent(from: KMPAppContextEventResult?): PNObjectEventMe
                     custom = PatchValue.of(from.metadata().custom()?.safeCast()),
                     eTag = from.metadata().eTag().orEmpty(),
                     updated = from.metadata().updated().orEmpty(),
-                    status = PatchValue.of(from.metadata().status().orEmpty()),
-                    type = null // todo add when available
+                    status = PatchValue.of(from.metadata().status()),
+                    type = PatchValue.of(from.metadata().type())
                 )
             )
         is KMPRemoveMembershipResult ->
@@ -321,7 +324,7 @@ private fun mapAppContextEvent(from: KMPAppContextEventResult?): PNObjectEventMe
                 type = from.type(),
                 data = PNDeleteMembershipEvent(
                     channelId = from.channelId(),
-                    uuid = from.uuid()
+                    uuid = from.userId()
                 )
             )
         else -> return null

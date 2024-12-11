@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints.objects.uuid
 
 import cocoapods.PubNubSwift.KMPPubNub
-import cocoapods.PubNubSwift.removeUUIDMetadataWithUuid
+import cocoapods.PubNubSwift.removeUserMetadataWithMetadataId
 import com.pubnub.api.models.consumer.objects.PNRemoveMetadataResult
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
@@ -15,11 +15,11 @@ actual interface RemoveUUIDMetadata : PNFuture<PNRemoveMetadataResult>
 @OptIn(ExperimentalForeignApi::class)
 class RemoveUUIDMetadataImpl(
     private val pubnub: KMPPubNub,
-    private val uuid: String?
+    private val metadataId: String?
 ) : RemoveUUIDMetadata {
     override fun async(callback: Consumer<Result<PNRemoveMetadataResult>>) {
-        pubnub.removeUUIDMetadataWithUuid(
-            uuid = uuid,
+        pubnub.removeUserMetadataWithMetadataId(
+            metadataId = metadataId,
             onSuccess = callback.onSuccessHandler { PNRemoveMetadataResult(200) },
             onFailure = callback.onFailureHandler()
         )
