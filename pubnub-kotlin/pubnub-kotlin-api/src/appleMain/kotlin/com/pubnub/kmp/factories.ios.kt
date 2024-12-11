@@ -170,6 +170,7 @@ private fun createFileEventResult(from: KMPFileChangeEvent?): PNFileEventResult 
         timetoken = from.timetoken()?.longValue,
         publisher = from.publisher(),
         message = from.message(),
+        customMessageType = from.customMessageType(),
         jsonMessage = JsonElementImpl(from.message()),
         file = PNDownloadableFile(
             id = from.file().id(),

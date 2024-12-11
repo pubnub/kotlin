@@ -11,7 +11,7 @@ Pod::Spec.new do |spec|
     spec.ios.deployment_target    = '14.0'
     spec.osx.deployment_target    = '11.0'
     spec.tvos.deployment_target    = '14.0'
-    spec.dependency 'PubNubSwift', '8.2.1'
+    spec.dependency 'PubNubSwift', '8.2.2'
                 
     if !Dir.exist?('build/cocoapods/framework/pubnub_kotlin_core_api.framework') || Dir.empty?('build/cocoapods/framework/pubnub_kotlin_core_api.framework')
         raise "
