@@ -1,3 +1,9 @@
+## v10.3.1
+December 12 2024
+
+#### Modified
+- Internal changes for Chat SDK.
+
 ## v10.3.0
 December 05 2024
 

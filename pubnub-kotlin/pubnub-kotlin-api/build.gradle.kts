@@ -49,7 +49,7 @@ kotlin {
         if (enableJsTarget) {
             val jsMain by getting {
                 dependencies {
-                    implementation(npm("pubnub", "8.2.8"))
+                    implementation(npm("pubnub", libs.versions.pubnub.js.get()))
                 }
             }
         }

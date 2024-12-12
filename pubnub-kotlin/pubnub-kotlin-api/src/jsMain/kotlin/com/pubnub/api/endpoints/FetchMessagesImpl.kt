@@ -34,7 +34,8 @@ class FetchMessagesImpl(pubnub: PubNub, params: PubNub.FetchMessagesParameters) 
                                 PubNubError.CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED
                             } else {
                                 null
-                            }
+                            },
+                            item.customMessageType
                         )
                     }
                 },

@@ -363,6 +363,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var actualChannel: String
         var subscribedChannel: String
         var userMetadata: Any?
+        var customMessageType: String?
     }
 
     interface StatusEvent {
@@ -395,6 +396,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var timetoken: String
         var message: Any
         var publisher: String
+        var customMessageType: String?
     }
 
     interface MessageActionEvent {
@@ -420,6 +422,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var message: Any
         var file: `T$5`
         var userMetadata: Any?
+        var customMessageType: String?
     }
 
     interface `T$6` {
@@ -582,6 +585,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var error: String?
         var meta: Json?
         var actions: ActionTypeToActions?
+        var customMessageType: String?
     }
 
     interface ChannelsToFetchMessageItemsMap : JsMap<Array<FetchMessageItem>>

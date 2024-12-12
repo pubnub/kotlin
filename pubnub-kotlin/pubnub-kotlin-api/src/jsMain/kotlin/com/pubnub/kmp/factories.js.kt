@@ -55,11 +55,12 @@ actual fun createEventListener(
                         messageEvent.publisher
                     ),
                     JsonElementImpl(messageEvent.message),
-                    error = if (messageEvent.error?.startsWith("Error while decrypting message content") ?: false) {
+                    messageEvent.customMessageType,
+                    if (messageEvent.error?.startsWith("Error while decrypting message content") ?: false) {
                         PubNubError.CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED
                     } else {
                         null
-                    }
+                    },
                 )
             )
         }
@@ -90,6 +91,7 @@ actual fun createEventListener(
                         signalEvent.publisher
                     ),
                     JsonElementImpl(signalEvent.message),
+                    signalEvent.customMessageType
                 )
             )
         }
@@ -129,7 +131,8 @@ actual fun createEventListener(
                     PNDownloadableFile(fileEvent.file.id, fileEvent.file.name, fileEvent.file.url),
                     JsonElementImpl(fileEvent.message),
                     fileEvent.subscription,
-                    null // TODO kmp error
+                    null, // TODO kmp error
+                    fileEvent.customMessageType
                 )
             )
         }
