@@ -11,6 +11,7 @@ interface [FetchMessageItem](index.md)
 |---|---|
 | [actions](actions.md) | [js]<br>abstract var [actions](actions.md): [PubNub.ActionTypeToActions](../-action-type-to-actions/index.md)? |
 | [channel](channel.md) | [js]<br>abstract var [channel](channel.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [customMessageType](custom-message-type.md) | [js]<br>abstract var [customMessageType](custom-message-type.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? |
 | [error](error.md) | [js]<br>abstract var [error](error.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? |
 | [message](message.md) | [js]<br>abstract var [message](message.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html) |
 | [messageType](message-type.md) | [js]<br>abstract var [messageType](message-type.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? |

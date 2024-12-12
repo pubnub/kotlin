@@ -3,13 +3,13 @@
 # GetChannelMetadataImpl
 
 [apple]\
-class [GetChannelMetadataImpl](index.md)(pubnub: <!---  GfmCommand {"@class":"org.jetbrains.dokka.gfm.ResolveLinkGfmCommand","dri":{"packageName":"","classNames":"<Error class: unknown class>","callable":null,"target":{"@class":"org.jetbrains.dokka.links.PointingToDeclaration"},"extra":null}} --->&lt;Error class: unknown class&gt;<!--- --->, channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), includeCustom: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)) : [GetChannelMetadata](../-get-channel-metadata/index.md)
+class [GetChannelMetadataImpl](index.md)(pubnub: <!---  GfmCommand {"@class":"org.jetbrains.dokka.gfm.ResolveLinkGfmCommand","dri":{"packageName":"","classNames":"<Error class: unknown class>","callable":null,"target":{"@class":"org.jetbrains.dokka.links.PointingToDeclaration"},"extra":null}} --->&lt;Error class: unknown class&gt;<!--- --->, channelId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), includeCustom: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)) : [GetChannelMetadata](../-get-channel-metadata/index.md)
 
 ## Constructors
 
 | | |
 |---|---|
-| [GetChannelMetadataImpl](-get-channel-metadata-impl.md) | [apple]<br>constructor(pubnub: <!---  GfmCommand {"@class":"org.jetbrains.dokka.gfm.ResolveLinkGfmCommand","dri":{"packageName":"","classNames":"<Error class: unknown class>","callable":null,"target":{"@class":"org.jetbrains.dokka.links.PointingToDeclaration"},"extra":null}} --->&lt;Error class: unknown class&gt;<!--- --->, channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), includeCustom: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)) |
+| [GetChannelMetadataImpl](-get-channel-metadata-impl.md) | [apple]<br>constructor(pubnub: <!---  GfmCommand {"@class":"org.jetbrains.dokka.gfm.ResolveLinkGfmCommand","dri":{"packageName":"","classNames":"<Error class: unknown class>","callable":null,"target":{"@class":"org.jetbrains.dokka.links.PointingToDeclaration"},"extra":null}} --->&lt;Error class: unknown class&gt;<!--- --->, channelId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), includeCustom: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)) |
 
 ## Functions
 

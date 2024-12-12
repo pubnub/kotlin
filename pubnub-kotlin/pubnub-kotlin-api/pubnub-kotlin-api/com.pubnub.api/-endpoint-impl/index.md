@@ -33,8 +33,8 @@ open class [EndpointImpl](index.md)&lt;[T](index.md), [U](index.md)&gt;(promiseF
 | [RemoveChannelMetadataImpl](../../com.pubnub.api.endpoints.objects.channel/[js]-remove-channel-metadata-impl/index.md) |
 | [SetChannelMetadataImpl](../../com.pubnub.api.endpoints.objects.channel/[js]-set-channel-metadata-impl/index.md) |
 | [GetChannelMembersImpl](../../com.pubnub.api.endpoints.objects.member/[js]-get-channel-members-impl/index.md) |
-| [SetChannelMembersImpl](../../com.pubnub.api.endpoints.objects.member/[js]-set-channel-members-impl/index.md) |
 | [RemoveChannelMembersImpl](../../com.pubnub.api.endpoints.objects.member/[js]-remove-channel-members-impl/index.md) |
+| [SetChannelMembersImpl](../../com.pubnub.api.endpoints.objects.member/[js]-set-channel-members-impl/index.md) |
 | [GetMembershipsImpl](../../com.pubnub.api.endpoints.objects.membership/[js]-get-memberships-impl/index.md) |
 | [RemoveMembershipsImpl](../../com.pubnub.api.endpoints.objects.membership/[js]-remove-memberships-impl/index.md) |
 | [SetMembershipsImpl](../../com.pubnub.api.endpoints.objects.membership/-set-memberships-impl/index.md) |

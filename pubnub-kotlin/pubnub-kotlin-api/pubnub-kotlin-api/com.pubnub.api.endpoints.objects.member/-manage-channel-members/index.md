@@ -17,10 +17,10 @@ expect interface [ManageChannelMembers](index.md) : [PNFuture](../../../../../pu
 
 | |
 |---|
-| [SetChannelMembersImpl](../[apple]-set-channel-members-impl/index.md) |
 | [RemoveChannelMembersImpl](../[apple]-remove-channel-members-impl/index.md) |
-| [SetChannelMembersImpl](../[js]-set-channel-members-impl/index.md) |
+| [SetChannelMembersImpl](../[apple]-set-channel-members-impl/index.md) |
 | [RemoveChannelMembersImpl](../[js]-remove-channel-members-impl/index.md) |
+| [SetChannelMembersImpl](../[js]-set-channel-members-impl/index.md) |
 
 ## Functions
 

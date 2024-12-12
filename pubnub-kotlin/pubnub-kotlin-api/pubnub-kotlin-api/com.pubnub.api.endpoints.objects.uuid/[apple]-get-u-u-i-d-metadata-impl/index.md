@@ -3,13 +3,13 @@
 # GetUUIDMetadataImpl
 
 [apple]\
-class [GetUUIDMetadataImpl](index.md)(pubnub: <!---  GfmCommand {"@class":"org.jetbrains.dokka.gfm.ResolveLinkGfmCommand","dri":{"packageName":"","classNames":"<Error class: unknown class>","callable":null,"target":{"@class":"org.jetbrains.dokka.links.PointingToDeclaration"},"extra":null}} --->&lt;Error class: unknown class&gt;<!--- --->, uuid: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, includeCustom: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)) : [GetUUIDMetadata](../-get-u-u-i-d-metadata/index.md)
+class [GetUUIDMetadataImpl](index.md)(pubnub: <!---  GfmCommand {"@class":"org.jetbrains.dokka.gfm.ResolveLinkGfmCommand","dri":{"packageName":"","classNames":"<Error class: unknown class>","callable":null,"target":{"@class":"org.jetbrains.dokka.links.PointingToDeclaration"},"extra":null}} --->&lt;Error class: unknown class&gt;<!--- --->, metadataId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, includeCustom: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)) : [GetUUIDMetadata](../-get-u-u-i-d-metadata/index.md)
 
 ## Constructors
 
 | | |
 |---|---|
-| [GetUUIDMetadataImpl](-get-u-u-i-d-metadata-impl.md) | [apple]<br>constructor(pubnub: <!---  GfmCommand {"@class":"org.jetbrains.dokka.gfm.ResolveLinkGfmCommand","dri":{"packageName":"","classNames":"<Error class: unknown class>","callable":null,"target":{"@class":"org.jetbrains.dokka.links.PointingToDeclaration"},"extra":null}} --->&lt;Error class: unknown class&gt;<!--- --->, uuid: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, includeCustom: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)) |
+| [GetUUIDMetadataImpl](-get-u-u-i-d-metadata-impl.md) | [apple]<br>constructor(pubnub: <!---  GfmCommand {"@class":"org.jetbrains.dokka.gfm.ResolveLinkGfmCommand","dri":{"packageName":"","classNames":"<Error class: unknown class>","callable":null,"target":{"@class":"org.jetbrains.dokka.links.PointingToDeclaration"},"extra":null}} --->&lt;Error class: unknown class&gt;<!--- --->, metadataId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, includeCustom: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)) |
 
 ## Functions
 

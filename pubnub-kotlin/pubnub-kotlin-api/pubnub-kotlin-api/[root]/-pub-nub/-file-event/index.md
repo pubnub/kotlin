@@ -10,6 +10,7 @@ interface [FileEvent](index.md)
 | Name | Summary |
 |---|---|
 | [channel](channel.md) | [js]<br>abstract var [channel](channel.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [customMessageType](custom-message-type.md) | [js]<br>abstract var [customMessageType](custom-message-type.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? |
 | [file](file.md) | [js]<br>abstract var [file](file.md): [PubNub.T$5](../-t$5/index.md) |
 | [message](message.md) | [js]<br>abstract var [message](message.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html) |
 | [publisher](publisher.md) | [js]<br>abstract var [publisher](publisher.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
