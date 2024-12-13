@@ -57,7 +57,7 @@ sdks:
                     minimum-os-version:
                       - macOS 10.12
                     maximum-os-version:
-                      - macOS 15.2.0
+                      - macOS 15.0.1
                     target-architecture:
                       - x86-64
                   Windows:
