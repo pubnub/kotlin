@@ -47,7 +47,7 @@ sdks:
                     minimum-os-version:
                       - Ubuntu 12.04
                     maximum-os-version:
-                      - Ubuntu 20.04 LTS
+                      - Ubuntu 24.04 LTS
                     target-architecture:
                       - x86
                       - x86-64
@@ -57,7 +57,7 @@ sdks:
                     minimum-os-version:
                       - macOS 10.12
                     maximum-os-version:
-                      - macOS 11.0.1
+                      - macOS 15.0.1
                     target-architecture:
                       - x86-64
                   Windows:
@@ -66,45 +66,52 @@ sdks:
                     minimum-os-version:
                       - Windows Vista Ultimate
                     maximum-os-version:
-                      - Windows 10 Home
+                      - Windows 11 Home
                     target-architecture:
                       - x86
                       - x86-64
               requires:
                 -
-                  name: retrofit
-                  min-version: 2.9.0
-                  location: https://repo.maven.apache.org/maven2/com/squareup/retrofit2/retrofit/2.9.0/retrofit-2.9.0.jar
+                  name: kotlin-stdlib
+                  min-version: 1.8.0
+                  location: https://repo1.maven.org/maven2/org/jetbrains/kotlin/kotlin-stdlib/2.0.21/kotlin-stdlib-2.0.21.jar
                   license: Apache License, Version 2.0
-                  license-url: https://github.com/square/retrofit/blob/2.9.0/LICENSE.txt
+                  license-url: https://www.apache.org/licenses/LICENSE-2.0.txt
+                  is-required: Required
+                -
+                  name: retrofit
+                  min-version: 2.11.0
+                  location: https://repo.maven.apache.org/maven2/com/squareup/retrofit2/retrofit/2.11.0/retrofit-2.11.0.jar
+                  license: Apache License, Version 2.0
+                  license-url: https://github.com/square/retrofit/blob/2.11.0/LICENSE.txt
                   is-required: Required
                 -
                   name: okhttp
-                  min-version: 4.9.3
-                  location: https://repo.maven.apache.org/maven2/com/squareup/okhttp3/okhttp/4.9.3/okhttp-4.9.3.jar
+                  min-version: 4.12.0
+                  location: https://repo.maven.apache.org/maven2/com/squareup/okhttp3/okhttp/4.12.0/okhttp-4.12.0.jar
                   license: Apache License, Version 2.0
-                  license-url: https://github.com/square/okhttp/blob/parent-3.14.9/LICENSE.txt
+                  license-url: https://github.com/square/okhttp/blob/parent-4.12.0/LICENSE.txt
                   is-required: Required
                 -
                   name: converter-gson
-                  min-version: 2.9.0
-                  location: https://repo.maven.apache.org/maven2/com/squareup/retrofit2/converter-gson/2.9.0/converter-gson-2.9.0.jar
+                  min-version: 2.11.0
+                  location: https://repo.maven.apache.org/maven2/com/squareup/retrofit2/converter-gson/2.11.0/converter-gson-2.11.0.jar
                   license: Apache License, Version 2.0
-                  license-url: https://github.com/square/retrofit/blob/2.9.0/LICENSE.txt
+                  license-url: https://github.com/square/retrofit/blob/2.11.0/LICENSE.txt
                   is-required: Required
                 -
                   name: gson
-                  min-version: 2.9.0
-                  location: https://repo.maven.apache.org/maven2/com/google/code/gson/gson/2.9.0/gson-2.9.0.jar
+                  min-version: 2.11.0
+                  location: https://repo.maven.apache.org/maven2/com/google/code/gson/gson/2.11.0/gson-2.11.0.jar
                   license: Apache License, Version 2.0
-                  license-url: https://github.com/google/gson/blob/gson-parent-2.8.6/LICENSE
+                  license-url: https://github.com/google/gson/blob/gson-parent-2.11.0/LICENSE
                   is-required: Required
                 -
                   name: json
-                  min-version: "20231013"
-                  location: https://repo.maven.apache.org/maven2/org/json/json/20231013/json-20231013.jar
+                  min-version: "20240303"
+                  location: https://repo.maven.apache.org/maven2/org/json/json/20240303/json-20240303.jar
                   license: Public Domain
-                  license-url: https://github.com/stleary/JSON-java/blob/20210307/LICENSE
+                  license-url: https://github.com/stleary/JSON-java/blob/20240303/LICENSE
                   is-required: Required
                 -
                   name: cbor
