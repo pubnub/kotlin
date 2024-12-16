@@ -28,7 +28,7 @@ class SetStateImpl(
         pubnub.setPresenceStateWithChannels(
             channels = channels,
             channelGroups = channelGroups,
-            state = KMPAnyJSON(value = state),
+            state = KMPAnyJSON(state),
             onSuccess = callback.onSuccessHandler { PNSetStateResult(state = JsonElementImpl(it)) },
             onFailure = callback.onFailureHandler()
         )

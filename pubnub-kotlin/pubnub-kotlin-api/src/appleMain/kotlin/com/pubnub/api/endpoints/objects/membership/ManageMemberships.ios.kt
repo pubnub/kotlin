@@ -41,7 +41,7 @@ class AddMembershipsImpl(
 ) : ManageMemberships {
     override fun async(callback: Consumer<Result<PNChannelMembershipArrayResult>>) {
         pubnub.setMembershipsWithChannels(
-            channels = channels.map { KMPChannelMetadata(it.channel, KMPAnyJSON(it.custom?.value), it.status) },
+            channels = channels.map { KMPChannelMetadata(it.channel, KMPAnyJSON(it.custom), it.status) },
             userId = userId,
             limit = limit?.let { NSNumber(it) },
             page = createPubNubHashedPage(from = page),

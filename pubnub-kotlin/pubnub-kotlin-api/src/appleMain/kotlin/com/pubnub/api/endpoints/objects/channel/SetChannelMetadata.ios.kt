@@ -34,7 +34,7 @@ class SetChannelMetadataImpl(
             metadataId = metadataId,
             name = name,
             description = description,
-            custom = KMPAnyJSON(value = custom?.value),
+            custom = KMPAnyJSON(custom),
             includeCustom = includeCustom,
             type = type,
             status = status,

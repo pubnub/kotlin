@@ -756,6 +756,7 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
             channel = channel,
             limit = limit,
             page = page,
+            filter = filter,
             sort = sort,
             include = MemberInclude(
                 includeTotalCount = includeCount,

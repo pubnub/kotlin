@@ -41,7 +41,7 @@ class SetChannelMembersImpl(
     override fun async(callback: Consumer<Result<PNMemberArrayResult>>) {
         pubnub.setChannelMembersWithChannel(
             channel = channelId,
-            users = users.map { KMPUserMetadata(id = it.uuid, custom = KMPAnyJSON(it.custom?.value), status = it.status) },
+            users = users.map { KMPUserMetadata(id = it.uuid, custom = KMPAnyJSON(it.custom), status = it.status) },
             limit = limit?.let { NSNumber(it) },
             page = createPubNubHashedPage(from = page),
             filter = filter,
