@@ -72,8 +72,8 @@ sdks:
                       - x86-64
               requires:
                 -
-                  name: kotlin
-                  min-version: 2.0.21
+                  name: kotlin-stdlib
+                  min-version: 1.8.0
                   location: https://repo1.maven.org/maven2/org/jetbrains/kotlin/kotlin-stdlib/2.0.21/kotlin-stdlib-2.0.21.jar
                   license: Apache License, Version 2.0
                   license-url: https://www.apache.org/licenses/LICENSE-2.0.txt
