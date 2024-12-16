@@ -38,7 +38,7 @@ class SetUUIDMetadataImpl(
             externalId = externalId,
             profileUrl = profileUrl,
             email = email,
-            custom = KMPAnyJSON(value = custom?.value),
+            custom = KMPAnyJSON(custom),
             includeCustom = includeCustom,
             type = type,
             status = status,
