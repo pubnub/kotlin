@@ -700,6 +700,7 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
                     this.statusField = true
                     // todo we don't have parameters for all fields here?
                 }
+                this.limit = limit
             }
         )
     }
@@ -712,7 +713,26 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
         sort: Collection<PNSortKey<PNMembershipKey>>,
         include: MembershipInclude
     ): GetMemberships {
-        TODO("Not yet implemented")
+        return GetMembershipsImpl(
+            jsPubNub,
+            createJsObject {
+                userId?.let { this.uuid = it }
+                this.sort = sort.toJsMap()
+                this.filter = filter
+                this.page = page.toMetadataPage()
+                this.include = createJsObject<PubNubJs.MembershipIncludeOptions> {
+                    this.customFields = include.includeCustom
+                    this.totalCount = include.includeTotalCount
+                    this.channelFields = include.includeChannel
+                    this.customChannelFields = include.includeChannelCustom
+                    this.channelTypeField = include.includeChannelType
+                    this.channelStatusField = include.includeChannelStatus
+                    this.statusField = include.includeStatus
+                    this.typeField = include.includeType
+                }
+                this.limit = limit
+            }
+        )
     }
 
     // deprecated
@@ -768,7 +788,35 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
         sort: Collection<PNSortKey<PNMembershipKey>>,
         include: MembershipInclude
     ): ManageMemberships {
-        TODO("Not yet implemented")
+        return SetMembershipsImpl(
+            jsPubNub,
+            createJsObject {
+                this.sort = sort.toJsMap()
+                this.page = page.toMetadataPage()
+                this.filter = filter
+                this.include = createJsObject<PubNubJs.MembershipIncludeOptions> {
+                    this.customFields = include.includeCustom
+                    this.totalCount = include.includeTotalCount
+                    this.channelFields = include.includeChannel
+                    this.customChannelFields = include.includeChannelCustom
+                    this.channelTypeField = include.includeChannelType
+                    this.channelStatusField = include.includeChannelStatus
+                    this.statusField = include.includeStatus
+                    this.typeField = include.includeType
+                    // todo we don't have parameters for all fields here?
+                }
+                this.uuid = userId
+                this.channels = channels.map {
+                    createJsObject<PubNubJs.SetCustom> {
+                        this.id = it.channel
+                        this.custom = it.custom?.adjustCollectionTypes()?.unsafeCast<PubNubJs.CustomObject>()
+                        this.status = it.status // todo this doesn't seem to get to the server with JS, or cannot read it back
+                        this.type = it.type
+                    }
+                }.toTypedArray()
+                this.limit = limit
+            }
+        )
     }
 
     // deprecated
@@ -818,7 +866,27 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
         sort: Collection<PNSortKey<PNMembershipKey>>,
         include: MembershipInclude
     ): ManageMemberships {
-        TODO("Not yet implemented")
+        return RemoveMembershipsImpl(
+            jsPubNub,
+            createJsObject {
+                this.sort = sort.toJsMap()
+                this.page = page.toMetadataPage()
+                this.filter = filter
+                this.include = createJsObject<PubNubJs.MembershipIncludeOptions> {
+                    this.customFields = include.includeCustom
+                    this.totalCount = include.includeTotalCount
+                    this.channelFields = include.includeChannel
+                    this.customChannelFields = include.includeChannelCustom
+                    this.channelTypeField = include.includeChannelType
+                    this.channelStatusField = include.includeChannelStatus
+                    this.statusField = include.includeStatus
+                    this.typeField = include.includeType
+                }
+                this.uuid = userId
+                this.channels = channels.toTypedArray()
+                this.limit = limit
+            }
+        )
     }
 
 // TODO doesn't exist in JS
@@ -883,7 +951,26 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
         sort: Collection<PNSortKey<PNMemberKey>>,
         include: MemberInclude
     ): GetChannelMembers {
-        TODO("Not yet implemented")
+        return GetChannelMembersImpl(
+            jsPubNub,
+            createJsObject {
+                this.channel = channel
+                this.limit = limit
+                this.page = page.toMetadataPage()
+                this.filter = filter
+                this.include = createJsObject<PubNubJs.IncludeOptions> {
+                    this.UUIDFields = include.includeUser
+                    this.customUUIDFields = include.includeUserCustom
+                    this.customFields = include.includeCustom
+                    this.totalCount = include.includeTotalCount
+                    this.UUIDTypeField = include.includeUserType
+                    this.UUIDStatusField = include.includeUserStatus
+                    this.statusField = include.includeStatus
+                    this.typeField = include.includeType
+                }
+                this.sort = sort.toJsMap()
+            }
+        )
     }
 
     // deprecated
@@ -942,7 +1029,34 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
         sort: Collection<PNSortKey<PNMemberKey>>,
         include: MemberInclude
     ): ManageChannelMembers {
-        TODO("Not yet implemented")
+        return SetChannelMembersImpl(
+            jsPubNub,
+            createJsObject {
+                this.channel = channel
+                this.uuids = users.map {
+                    createJsObject<PubNubJs.SetCustom> {
+                        this.id = it.uuid
+                        this.custom = it.custom?.adjustCollectionTypes()?.unsafeCast<PubNubJs.CustomObject>()
+                        this.status = it.status
+                        this.type = it.type
+                    }
+                }.toTypedArray()
+                this.limit = limit
+                this.page = page.toMetadataPage()
+                this.filter = filter
+                this.sort = sort.toJsMap()
+                this.include = createJsObject<PubNubJs.IncludeOptions> {
+                    this.totalCount = include.includeTotalCount
+                    this.customFields = include.includeCustom
+                    this.UUIDFields = include.includeUser
+                    this.customUUIDFields = include.includeUserCustom
+                    this.UUIDTypeField = include.includeUserType
+                    this.UUIDStatusField = include.includeUserStatus
+                    this.statusField = include.includeStatus
+                    this.typeField = include.includeType
+                }
+            }
+        )
     }
 
     override fun removeChannelMembers(
@@ -994,7 +1108,27 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
         sort: Collection<PNSortKey<PNMemberKey>>,
         include: MemberInclude
     ): ManageChannelMembers {
-        TODO("Not yet implemented")
+        return RemoveChannelMembersImpl(
+            jsPubNub,
+            createJsObject {
+                this.channel = channel
+                this.uuids = userIds.toTypedArray()
+                this.limit = limit
+                this.page = page.toMetadataPage()
+                this.filter = filter
+                this.sort = sort.toJsMap()
+                this.include = createJsObject<PubNubJs.IncludeOptions> {
+                    this.totalCount = include.includeTotalCount
+                    this.customFields = include.includeCustom
+                    this.UUIDFields = include.includeUser
+                    this.customUUIDFields = include.includeUserCustom
+                    this.UUIDTypeField = include.includeUserType
+                    this.UUIDStatusField = include.includeUserStatus
+                    this.statusField = include.includeStatus
+                    this.typeField = include.includeType
+                }
+            }
+        )
     }
 
 //    override fun manageChannelMembers(

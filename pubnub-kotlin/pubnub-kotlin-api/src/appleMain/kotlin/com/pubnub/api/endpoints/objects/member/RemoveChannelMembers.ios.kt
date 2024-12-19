@@ -30,6 +30,7 @@ class RemoveChannelMembersImpl(
     private val includeFields: MemberInclude
 ) : ManageChannelMembers {
     override fun async(callback: Consumer<Result<PNMemberArrayResult>>) {
+        // todo use new method with include
         pubnub.removeChannelMembersWithChannel(
             channel = channel,
             users = userIds,

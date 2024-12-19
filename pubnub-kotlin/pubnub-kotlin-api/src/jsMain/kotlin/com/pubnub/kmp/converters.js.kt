@@ -96,6 +96,7 @@ internal fun ManageMembershipsResponse.toPNChannelMembershipArrayResult() = PNCh
             it.updated,
             it.eTag,
             patchValueOf(it.status),
+            patchValueOf(it.type),
         )
     },
     totalCount?.toInt(),

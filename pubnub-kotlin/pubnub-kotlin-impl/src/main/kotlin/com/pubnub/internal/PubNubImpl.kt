@@ -1085,6 +1085,7 @@ open class PubNubImpl(
         )
     }
 
+    // deprecated
     override fun getChannelMembers(
         channel: String,
         limit: Int?,

@@ -39,6 +39,7 @@ class SetChannelMembersImpl(
     private val includeFields: MemberInclude
 ) : ManageChannelMembers {
     override fun async(callback: Consumer<Result<PNMemberArrayResult>>) {
+        // todo use new method with include
         pubnub.setChannelMembersWithChannel(
             channel = channelId,
             users = users.map { KMPUserMetadata(id = it.uuid, custom = KMPAnyJSON(it.custom), status = it.status) },

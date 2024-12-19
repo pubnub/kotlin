@@ -1,6 +1,7 @@
 package com.pubnub.test.integration
 
 import com.pubnub.api.models.consumer.objects.PNPage
+import com.pubnub.api.models.consumer.objects.member.MemberInclude
 import com.pubnub.api.models.consumer.objects.member.PNMember
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.kmp.PLATFORM
@@ -26,7 +27,7 @@ class MembersTest : BaseIntegrationTest() {
     private val type = randomString()
 
     @Test
-    fun can_set_members() = runTest {
+    fun can_set_members_deprecated() = runTest {
         // when
         val result = pubnub.setChannelMembers(
             channel,
@@ -41,7 +42,50 @@ class MembersTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_set_members_with_status() = runTest(timeout = 10.seconds) {
+    fun can_set_members() = runTest {
+        // when
+        val result = pubnub.setChannelMembers(
+            channel,
+            listOf(PNMember.Partial(pubnub.configuration.userId.value, custom, status, type)),
+            include = MemberInclude(includeCustom = includeCustom, includeUser = true, includeUserCustom = true, includeStatus = true, includeType = true),
+        ).await()
+
+        // then
+        val pnChannelDetails = result.data.single { it.uuid.id == pubnub.configuration.userId.value }
+        assertEquals(customData, pnChannelDetails.custom?.value)
+        assertEquals(status, pnChannelDetails.status?.value)
+        assertEquals(type, pnChannelDetails.type?.value)
+    }
+
+    @Test
+    fun can_get_members() = runTest {
+        // when
+        pubnub.setChannelMembers(
+            channel,
+            listOf(PNMember.Partial(pubnub.configuration.userId.value, custom, status, type)),
+            include = MemberInclude(
+                includeCustom = includeCustom,
+                includeUser = true,
+                includeUserCustom = true,
+                includeStatus = true,
+                includeType = true
+            ),
+        ).await()
+
+        val result = pubnub.getChannelMembers(
+            channel,
+            include = MemberInclude(includeCustom = includeCustom, includeStatus = true, includeType = true)
+        ).await()
+
+        // then
+        val pnChannelDetails = result.data.single { it.uuid.id == pubnub.configuration.userId.value }
+        assertEquals(customData, pnChannelDetails.custom?.value)
+        assertEquals(status, pnChannelDetails.status?.value)
+        assertEquals(type, pnChannelDetails.type?.value)
+    }
+
+        @Test
+    fun can_set_members_with_status_deprecated() = runTest(timeout = 10.seconds) {
         if (PLATFORM == "JS") {
             // TODO JS doesn't have membership status
             return@runTest

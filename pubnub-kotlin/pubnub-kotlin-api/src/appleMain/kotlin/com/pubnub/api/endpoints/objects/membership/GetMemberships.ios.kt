@@ -35,6 +35,7 @@ class GetMembershipsImpl(
     private val includeFields: MembershipInclude
 ) : GetMemberships {
     override fun async(callback: Consumer<Result<PNChannelMembershipArrayResult>>) {
+        // todo use new method with include
         pubnub.getMembershipsWithUserId(
             userId = userId,
             limit = limit?.let { NSNumber(it) },

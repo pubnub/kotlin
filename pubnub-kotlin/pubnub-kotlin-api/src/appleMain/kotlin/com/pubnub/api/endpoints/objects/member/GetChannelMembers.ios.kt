@@ -35,6 +35,7 @@ class GetChannelMembersImpl(
     private val includeFields: MemberInclude
 ) : GetChannelMembers {
     override fun async(callback: Consumer<Result<PNMemberArrayResult>>) {
+        // todo use new method with include
         pubnub.getChannelMembersWithChannel(
             channel = channelId,
             limit = limit?.let { NSNumber(it) },
