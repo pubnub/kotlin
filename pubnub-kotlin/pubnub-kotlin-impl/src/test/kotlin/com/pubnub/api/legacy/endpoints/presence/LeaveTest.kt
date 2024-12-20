@@ -189,22 +189,6 @@ class LeaveTest : BaseTest() {
 
     @Test
     fun testMissingChannelAndGroupSync() {
-        stubFor(
-            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/coolChannel/leave"))
-                .willReturn(
-                    aResponse().withBody(
-                        """
-                        {
-                          "status": 200,
-                          "message": "OK",
-                          "service": "Presence",
-                          "action": "leave"
-                        }
-                        """.trimIndent(),
-                    ),
-                ),
-        )
-
         try {
             LeaveEndpoint(pubnub).apply {}.sync()
         } catch (e: Exception) {
@@ -214,22 +198,6 @@ class LeaveTest : BaseTest() {
 
     @Test
     fun testBlankSubKeySync() {
-        stubFor(
-            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/coolChannel/leave"))
-                .willReturn(
-                    aResponse().withBody(
-                        """
-                        {
-                          "status": 200,
-                          "message": "OK",
-                          "service": "Presence",
-                          "action": "leave"
-                        }
-                        """.trimIndent(),
-                    ),
-                ),
-        )
-
         config.subscribeKey = " "
 
         try {
@@ -241,22 +209,6 @@ class LeaveTest : BaseTest() {
 
     @Test
     fun testEmptySubKeySync() {
-        stubFor(
-            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/coolChannel/leave"))
-                .willReturn(
-                    aResponse().withBody(
-                        """
-                        {
-                          "status": 200,
-                          "message": "OK",
-                          "service": "Presence",
-                          "action": "leave"
-                        }
-                        """.trimIndent(),
-                    ),
-                ),
-        )
-
         config.subscribeKey = ""
 
         try {
@@ -293,5 +245,27 @@ class LeaveTest : BaseTest() {
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
         assertEquals("myKey", requests[0].queryParameter("auth").firstValue())
+    }
+
+    @Test
+    fun testChannelListContainsOnlyEmptyStringSync() {
+        try {
+            LeaveEndpoint(pubnub).apply {
+                channels = listOf("", "coolChannel2")
+            }.sync()
+        } catch (e: Exception) {
+            assertPnException(PubNubError.CHANNEL_AND_GROUP_CONTAINS_EMPTY_STRING, e)
+        }
+    }
+
+    @Test
+    fun testChannelGroupListContainsOnlyEmptyStringSync() {
+        try {
+            LeaveEndpoint(pubnub).apply {
+                channelGroups = listOf("", "group1")
+            }.sync()
+        } catch (e: Exception) {
+            assertPnException(PubNubError.CHANNEL_AND_GROUP_CONTAINS_EMPTY_STRING, e)
+        }
     }
 }
