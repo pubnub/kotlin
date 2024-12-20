@@ -142,27 +142,42 @@ class HeartbeatCoreEndpointTest : BaseTest() {
         config.presenceTimeout = 123
         // initPubNub()
 
-        stubFor(
-            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/heartbeat"))
-                .willReturn(
-                    aResponse().withBody(
-                        """
-                        {
-                          "status": 200,
-                          "message": "OK",
-                          "service": "Presence"
-                        }
-                        """.trimIndent(),
-                    ),
-                ),
-        )
-
         try {
             HeartbeatEndpoint(pubnub).sync()
             failTest()
         } catch (e: Exception) {
             assertPnException(
                 PubNubError.CHANNEL_AND_GROUP_MISSING,
+                e,
+            )
+        }
+    }
+
+    @Test
+    fun testChannelListContainsOnlyEmptyStringSync() {
+        config.presenceTimeout = 123
+
+        try {
+            HeartbeatEndpoint(pubnub, channels = listOf("", "channel1")).sync()
+            failTest()
+        } catch (e: Exception) {
+            assertPnException(
+                PubNubError.CHANNEL_AND_GROUP_CONTAINS_EMPTY_STRING,
+                e,
+            )
+        }
+    }
+
+    @Test
+    fun testChannelGroupListContainsOnlyEmptyStringSync() {
+        config.presenceTimeout = 123
+
+        try {
+            HeartbeatEndpoint(pubnub, channelGroups = listOf("", "channelGroup1")).sync()
+            failTest()
+        } catch (e: Exception) {
+            assertPnException(
+                PubNubError.CHANNEL_AND_GROUP_CONTAINS_EMPTY_STRING,
                 e,
             )
         }
@@ -198,23 +213,7 @@ class HeartbeatCoreEndpointTest : BaseTest() {
     @Test
     fun testBlankSubKeySync() {
         config.presenceTimeout = 123
-
-        stubFor(
-            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/heartbeat"))
-                .willReturn(
-                    aResponse().withBody(
-                        """
-                        {
-                          "status": 200,
-                          "message": "OK",
-                          "service": "Presence"
-                        }
-                        """.trimIndent(),
-                    ),
-                ),
-        )
         config.subscribeKey = " "
-        // initPubNub()
 
         try {
             HeartbeatEndpoint(pubnub, listOf("ch1")).sync()
@@ -230,23 +229,7 @@ class HeartbeatCoreEndpointTest : BaseTest() {
     @Test
     fun testEmptySubKeySync() {
         config.presenceTimeout = 123
-
-        stubFor(
-            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/heartbeat"))
-                .willReturn(
-                    aResponse().withBody(
-                        """
-                        {
-                          "status": 200,
-                          "message": "OK",
-                          "service": "Presence"
-                        }
-                        """.trimIndent(),
-                    ),
-                ),
-        )
         config.subscribeKey = ""
-        // initPubNub()
 
         try {
             HeartbeatEndpoint(pubnub, listOf("ch1")).sync()
