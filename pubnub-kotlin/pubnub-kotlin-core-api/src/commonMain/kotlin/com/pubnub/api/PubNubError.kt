@@ -234,6 +234,11 @@ enum class PubNubError(private val code: Int, val message: String) {
         180,
         "UserId can't be different from UserId in configuration when flag withHeartbeat is set to true",
     ),
+
+    CHANNEL_AND_GROUP_CONTAINS_EMPTY_STRING(
+        181,
+        "Channel and/or ChannelGroup contains empty string which is not allowed.",
+    ),
     ;
 
     override fun toString(): String {

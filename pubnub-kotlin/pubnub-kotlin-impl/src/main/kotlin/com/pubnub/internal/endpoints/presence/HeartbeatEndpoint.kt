@@ -22,8 +22,13 @@ class HeartbeatEndpoint internal constructor(
 
     override fun validateParams() {
         super.validateParams()
-        if (channels.isEmpty() && channelGroups.isEmpty()) {
-            throw PubNubException(PubNubError.CHANNEL_AND_GROUP_MISSING)
+        when {
+            channels.any { it.isEmpty() } || channelGroups.any { it.isEmpty() } -> {
+                throw PubNubException(PubNubError.CHANNEL_AND_GROUP_CONTAINS_EMPTY_STRING)
+            }
+            channels.isEmpty() && channelGroups.isEmpty() -> {
+                throw PubNubException(PubNubError.CHANNEL_AND_GROUP_MISSING)
+            }
         }
     }
 
