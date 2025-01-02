@@ -47,7 +47,13 @@ class MembersTest : BaseIntegrationTest() {
         val result = pubnub.setChannelMembers(
             channel,
             listOf(PNMember.Partial(pubnub.configuration.userId.value, custom, status, type)),
-            include = MemberInclude(includeCustom = includeCustom, includeUser = true, includeUserCustom = true, includeStatus = true, includeType = true),
+            include = MemberInclude(
+                includeCustom = includeCustom,
+                includeUser = true,
+                includeUserCustom = true,
+                includeStatus = true,
+                includeType = true
+            ),
         ).await()
 
         // then
@@ -84,7 +90,7 @@ class MembersTest : BaseIntegrationTest() {
         assertEquals(type, pnChannelDetails.type?.value)
     }
 
-        @Test
+    @Test
     fun can_set_members_with_status_deprecated() = runTest(timeout = 10.seconds) {
         if (PLATFORM == "JS") {
             // TODO JS doesn't have membership status
