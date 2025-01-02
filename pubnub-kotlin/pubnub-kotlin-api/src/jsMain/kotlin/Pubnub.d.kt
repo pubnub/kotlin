@@ -1152,6 +1152,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var type: String?
     }
 
+    // in kotlin equivalent class is called MemberInclude
     interface IncludeOptions {
         var totalCount: Boolean?
 

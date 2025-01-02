@@ -720,16 +720,7 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
                 this.sort = sort.toJsMap()
                 this.filter = filter
                 this.page = page.toMetadataPage()
-                this.include = createJsObject<PubNubJs.MembershipIncludeOptions> {
-                    this.customFields = include.includeCustom
-                    this.totalCount = include.includeTotalCount
-                    this.channelFields = include.includeChannel
-                    this.customChannelFields = include.includeChannelCustom
-                    this.channelTypeField = include.includeChannelType
-                    this.channelStatusField = include.includeChannelStatus
-                    this.statusField = include.includeStatus
-                    this.typeField = include.includeType
-                }
+                this.include = include.toMembershipIncludeOptions()
                 this.limit = limit
             }
         )
@@ -794,17 +785,7 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
                 this.sort = sort.toJsMap()
                 this.page = page.toMetadataPage()
                 this.filter = filter
-                this.include = createJsObject<PubNubJs.MembershipIncludeOptions> {
-                    this.customFields = include.includeCustom
-                    this.totalCount = include.includeTotalCount
-                    this.channelFields = include.includeChannel
-                    this.customChannelFields = include.includeChannelCustom
-                    this.channelTypeField = include.includeChannelType
-                    this.channelStatusField = include.includeChannelStatus
-                    this.statusField = include.includeStatus
-                    this.typeField = include.includeType
-                    // todo we don't have parameters for all fields here?
-                }
+                this.include = include.toMembershipIncludeOptions()
                 this.uuid = userId
                 this.channels = channels.map {
                     createJsObject<PubNubJs.SetCustom> {
@@ -872,16 +853,7 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
                 this.sort = sort.toJsMap()
                 this.page = page.toMetadataPage()
                 this.filter = filter
-                this.include = createJsObject<PubNubJs.MembershipIncludeOptions> {
-                    this.customFields = include.includeCustom
-                    this.totalCount = include.includeTotalCount
-                    this.channelFields = include.includeChannel
-                    this.customChannelFields = include.includeChannelCustom
-                    this.channelTypeField = include.includeChannelType
-                    this.channelStatusField = include.includeChannelStatus
-                    this.statusField = include.includeStatus
-                    this.typeField = include.includeType
-                }
+                this.include = include.toMembershipIncludeOptions()
                 this.uuid = userId
                 this.channels = channels.toTypedArray()
                 this.limit = limit
@@ -958,16 +930,7 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
                 this.limit = limit
                 this.page = page.toMetadataPage()
                 this.filter = filter
-                this.include = createJsObject<PubNubJs.IncludeOptions> {
-                    this.UUIDFields = include.includeUser
-                    this.customUUIDFields = include.includeUserCustom
-                    this.customFields = include.includeCustom
-                    this.totalCount = include.includeTotalCount
-                    this.UUIDTypeField = include.includeUserType
-                    this.UUIDStatusField = include.includeUserStatus
-                    this.statusField = include.includeStatus
-                    this.typeField = include.includeType
-                }
+                this.include = include.toMemberIncludeOptions()
                 this.sort = sort.toJsMap()
             }
         )
@@ -1045,20 +1008,12 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
                 this.page = page.toMetadataPage()
                 this.filter = filter
                 this.sort = sort.toJsMap()
-                this.include = createJsObject<PubNubJs.IncludeOptions> {
-                    this.totalCount = include.includeTotalCount
-                    this.customFields = include.includeCustom
-                    this.UUIDFields = include.includeUser
-                    this.customUUIDFields = include.includeUserCustom
-                    this.UUIDTypeField = include.includeUserType
-                    this.UUIDStatusField = include.includeUserStatus
-                    this.statusField = include.includeStatus
-                    this.typeField = include.includeType
-                }
+                this.include = include.toMemberIncludeOptions()
             }
         )
     }
 
+    // deprecated
     override fun removeChannelMembers(
         channel: String,
         uuids: List<String>,
@@ -1117,16 +1072,7 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
                 this.page = page.toMetadataPage()
                 this.filter = filter
                 this.sort = sort.toJsMap()
-                this.include = createJsObject<PubNubJs.IncludeOptions> {
-                    this.totalCount = include.includeTotalCount
-                    this.customFields = include.includeCustom
-                    this.UUIDFields = include.includeUser
-                    this.customUUIDFields = include.includeUserCustom
-                    this.UUIDTypeField = include.includeUserType
-                    this.UUIDStatusField = include.includeUserStatus
-                    this.statusField = include.includeStatus
-                    this.typeField = include.includeType
-                }
+                this.include = include.toMemberIncludeOptions()
             }
         )
     }
@@ -1482,3 +1428,29 @@ private fun PNPage?.toMetadataPage(): PubNubJs.MetadataPage? =
             }
         }
     }
+
+private fun MembershipInclude.toMembershipIncludeOptions(): PubNubJs.MembershipIncludeOptions {
+    return createJsObject<PubNubJs.MembershipIncludeOptions> {
+        this.customFields = this@toMembershipIncludeOptions.includeCustom
+        this.totalCount = this@toMembershipIncludeOptions.includeTotalCount
+        this.channelFields = this@toMembershipIncludeOptions.includeChannel
+        this.customChannelFields = this@toMembershipIncludeOptions.includeChannelCustom
+        this.channelTypeField = this@toMembershipIncludeOptions.includeChannelType
+        this.channelStatusField = this@toMembershipIncludeOptions.includeChannelStatus
+        this.statusField = this@toMembershipIncludeOptions.includeStatus
+        this.typeField = this@toMembershipIncludeOptions.includeType
+    }
+}
+
+private fun MemberInclude.toMemberIncludeOptions(): PubNubJs.IncludeOptions {
+    return   createJsObject<PubNubJs.IncludeOptions> {
+        this.totalCount = this@toMemberIncludeOptions.includeTotalCount
+        this.customFields = this@toMemberIncludeOptions.includeCustom
+        this.UUIDFields = this@toMemberIncludeOptions.includeUser
+        this.customUUIDFields = this@toMemberIncludeOptions.includeUserCustom
+        this.UUIDTypeField = this@toMemberIncludeOptions.includeUserType
+        this.UUIDStatusField = this@toMemberIncludeOptions.includeUserStatus
+        this.statusField = this@toMemberIncludeOptions.includeStatus
+        this.typeField = this@toMemberIncludeOptions.includeType
+    }
+}
