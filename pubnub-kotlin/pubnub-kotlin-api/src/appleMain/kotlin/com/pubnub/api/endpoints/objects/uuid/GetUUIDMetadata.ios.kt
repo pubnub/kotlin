@@ -1,6 +1,7 @@
 package com.pubnub.api.endpoints.objects.uuid
 
 import cocoapods.PubNubSwift.KMPPubNub
+import cocoapods.PubNubSwift.KMPUserIncludeFields
 import cocoapods.PubNubSwift.getUserMetadataWithMetadataId
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult
 import com.pubnub.api.v2.callbacks.Consumer
@@ -25,7 +26,11 @@ class GetUUIDMetadataImpl(
     override fun async(callback: Consumer<Result<PNUUIDMetadataResult>>) {
         pubnub.getUserMetadataWithMetadataId(
             metadataId = metadataId,
-            includeCustom = includeCustom,
+            include = KMPUserIncludeFields(
+                includeCustom = includeCustom,
+                includeType = true,
+                includeStatus = true
+            ),
             onSuccess = callback.onSuccessHandler {
                 PNUUIDMetadataResult(
                     status = 200,

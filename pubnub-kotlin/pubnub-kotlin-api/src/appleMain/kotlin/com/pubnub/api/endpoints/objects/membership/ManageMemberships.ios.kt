@@ -2,6 +2,7 @@ package com.pubnub.api.endpoints.objects.membership
 
 import cocoapods.PubNubSwift.KMPAnyJSON
 import cocoapods.PubNubSwift.KMPChannelMetadata
+import cocoapods.PubNubSwift.KMPMembershipIncludeFields
 import cocoapods.PubNubSwift.KMPMembershipMetadata
 import cocoapods.PubNubSwift.KMPPubNub
 import cocoapods.PubNubSwift.removeMembershipsWithChannels
@@ -41,17 +42,22 @@ class AddMembershipsImpl(
 ) : ManageMemberships {
     override fun async(callback: Consumer<Result<PNChannelMembershipArrayResult>>) {
         pubnub.setMembershipsWithChannels(
-            channels = channels.map { KMPChannelMetadata(it.channel, KMPAnyJSON(it.custom), it.status) },
+            channels = channels.map { KMPChannelMetadata(it.channel, KMPAnyJSON(it.custom), it.type, it.status) },
             userId = userId,
             limit = limit?.let { NSNumber(it) },
             page = createPubNubHashedPage(from = page),
             filter = filter,
             sort = sort.map { it.key.fieldName },
-            includeCount = includeFields.includeTotalCount,
-            includeCustom = includeFields.includeCustom,
-            includeChannelFields = includeFields.includeChannel,
-            includeChannelCustomFields = includeFields.includeChannelCustom,
-            includeChannelType = includeFields.includeChannelType,
+            include = KMPMembershipIncludeFields(
+                includeCustom = includeFields.includeCustom,
+                includeStatus = includeFields.includeStatus,
+                includeType = includeFields.includeType,
+                includeTotalCount = includeFields.includeTotalCount,
+                includeChannel = includeFields.includeChannel,
+                includeChannelCustom = includeFields.includeChannelCustom,
+                includeChannelType = includeFields.includeChannelType,
+                includeChannelStatus = includeFields.includeChannelStatus
+            ),
             onSuccess = callback.onSuccessHandler3 { memberships, totalCount, page ->
                 PNChannelMembershipArrayResult(
                     status = 200,
@@ -85,11 +91,16 @@ class RemoveMembershipsImpl(
             page = createPubNubHashedPage(from = page),
             filter = filter,
             sort = sort.map { it.key.fieldName },
-            includeCount = includeFields.includeTotalCount,
-            includeCustom = includeFields.includeCustom,
-            includeChannelFields = includeFields.includeChannel,
-            includeChannelCustomFields = includeFields.includeChannelCustom,
-            includeChannelType = includeFields.includeChannelType,
+            include = KMPMembershipIncludeFields(
+                includeCustom = includeFields.includeCustom,
+                includeStatus = includeFields.includeStatus,
+                includeType = includeFields.includeType,
+                includeTotalCount = includeFields.includeTotalCount,
+                includeChannel = includeFields.includeChannel,
+                includeChannelCustom = includeFields.includeChannelCustom,
+                includeChannelType = includeFields.includeChannelType,
+                includeChannelStatus = includeFields.includeChannelStatus
+            ),
             onSuccess = callback.onSuccessHandler3 { memberships, totalCount, next ->
                 PNChannelMembershipArrayResult(
                     status = 200,

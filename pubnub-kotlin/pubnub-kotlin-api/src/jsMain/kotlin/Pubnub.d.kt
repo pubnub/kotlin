@@ -1148,10 +1148,11 @@ open external class PubNub(config: Any /* UUID | UserId */) {
 
     interface ChannelMembershipObject : v2ObjectDataOmitId {
         var channel: ChannelMetadataObject
-
         var status: String?
+        var type: String?
     }
 
+    // in kotlin equivalent class is called MemberInclude
     interface IncludeOptions {
         var totalCount: Boolean?
 
@@ -1162,6 +1163,8 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var customUUIDFields: Boolean?
 
         var statusField: Boolean?
+
+        var typeField: Boolean?
 
         var UUIDStatusField: Boolean?
 
@@ -1190,6 +1193,8 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var customChannelFields: Boolean?
 
         var statusField: Boolean?
+
+        var typeField: Boolean?
 
         var channelStatusField: Boolean?
 
@@ -1220,6 +1225,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var id: String
         var custom: CustomObject?
         var status: String?
+        var type: String?
     }
 
     interface SetMembershipsParameters : ChannelMembersParameters {

@@ -1,5 +1,6 @@
 package com.pubnub.api.endpoints.objects.channel
 
+import cocoapods.PubNubSwift.KMPChannelIncludeFields
 import cocoapods.PubNubSwift.KMPPubNub
 import cocoapods.PubNubSwift.getChannelMetadataWithMetadataId
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataResult
@@ -25,7 +26,11 @@ class GetChannelMetadataImpl(
     override fun async(callback: Consumer<Result<PNChannelMetadataResult>>) {
         pubnub.getChannelMetadataWithMetadataId(
             metadataId = channelId,
-            includeCustom = includeCustom,
+            include = KMPChannelIncludeFields(
+                includeCustom = includeCustom,
+                includeType = true,
+                includeStatus = true
+            ),
             onSuccess = callback.onSuccessHandler {
                 PNChannelMetadataResult(
                     status = 200,

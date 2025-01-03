@@ -1,5 +1,6 @@
 package com.pubnub.api.endpoints.objects.channel
 
+import cocoapods.PubNubSwift.KMPChannelIncludeFields
 import cocoapods.PubNubSwift.KMPChannelMetadata
 import cocoapods.PubNubSwift.KMPPubNub
 import cocoapods.PubNubSwift.getAllChannelMetadataWithLimit
@@ -40,8 +41,12 @@ class GetAllChannelMetadataImpl(
             page = createPubNubHashedPage(from = page),
             filter = filter,
             sort = createObjectSortProperties(from = sort),
-            includeCount = includeCount,
-            includeCustom = includeCustom,
+            include = KMPChannelIncludeFields(
+                includeCustom = includeCustom,
+                includeTotalCount = includeCount,
+                includeType = true,
+                includeStatus = true
+            ),
             onSuccess = callback.onSuccessHandler3 { channels, totalCount, page ->
                 PNChannelMetadataArrayResult(
                     status = 200,

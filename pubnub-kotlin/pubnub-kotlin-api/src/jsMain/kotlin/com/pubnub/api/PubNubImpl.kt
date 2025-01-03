@@ -700,6 +700,7 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
                     this.statusField = true
                     // todo we don't have parameters for all fields here?
                 }
+                this.limit = limit
             }
         )
     }
@@ -712,7 +713,17 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
         sort: Collection<PNSortKey<PNMembershipKey>>,
         include: MembershipInclude
     ): GetMemberships {
-        TODO("Not yet implemented")
+        return GetMembershipsImpl(
+            jsPubNub,
+            createJsObject {
+                userId?.let { this.uuid = it }
+                this.sort = sort.toJsMap()
+                this.filter = filter
+                this.page = page.toMetadataPage()
+                this.include = include.toMembershipIncludeOptions()
+                this.limit = limit
+            }
+        )
     }
 
     // deprecated
@@ -768,7 +779,25 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
         sort: Collection<PNSortKey<PNMembershipKey>>,
         include: MembershipInclude
     ): ManageMemberships {
-        TODO("Not yet implemented")
+        return SetMembershipsImpl(
+            jsPubNub,
+            createJsObject {
+                this.sort = sort.toJsMap()
+                this.page = page.toMetadataPage()
+                this.filter = filter
+                this.include = include.toMembershipIncludeOptions()
+                this.uuid = userId
+                this.channels = channels.map {
+                    createJsObject<PubNubJs.SetCustom> {
+                        this.id = it.channel
+                        this.custom = it.custom?.adjustCollectionTypes()?.unsafeCast<PubNubJs.CustomObject>()
+                        this.status = it.status // todo this doesn't seem to get to the server with JS, or cannot read it back
+                        this.type = it.type
+                    }
+                }.toTypedArray()
+                this.limit = limit
+            }
+        )
     }
 
     // deprecated
@@ -818,7 +847,18 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
         sort: Collection<PNSortKey<PNMembershipKey>>,
         include: MembershipInclude
     ): ManageMemberships {
-        TODO("Not yet implemented")
+        return RemoveMembershipsImpl(
+            jsPubNub,
+            createJsObject {
+                this.sort = sort.toJsMap()
+                this.page = page.toMetadataPage()
+                this.filter = filter
+                this.include = include.toMembershipIncludeOptions()
+                this.uuid = userId
+                this.channels = channels.toTypedArray()
+                this.limit = limit
+            }
+        )
     }
 
 // TODO doesn't exist in JS
@@ -883,7 +923,17 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
         sort: Collection<PNSortKey<PNMemberKey>>,
         include: MemberInclude
     ): GetChannelMembers {
-        TODO("Not yet implemented")
+        return GetChannelMembersImpl(
+            jsPubNub,
+            createJsObject {
+                this.channel = channel
+                this.limit = limit
+                this.page = page.toMetadataPage()
+                this.filter = filter
+                this.include = include.toMemberIncludeOptions()
+                this.sort = sort.toJsMap()
+            }
+        )
     }
 
     // deprecated
@@ -942,9 +992,28 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
         sort: Collection<PNSortKey<PNMemberKey>>,
         include: MemberInclude
     ): ManageChannelMembers {
-        TODO("Not yet implemented")
+        return SetChannelMembersImpl(
+            jsPubNub,
+            createJsObject {
+                this.channel = channel
+                this.uuids = users.map {
+                    createJsObject<PubNubJs.SetCustom> {
+                        this.id = it.uuid
+                        this.custom = it.custom?.adjustCollectionTypes()?.unsafeCast<PubNubJs.CustomObject>()
+                        this.status = it.status
+                        this.type = it.type
+                    }
+                }.toTypedArray()
+                this.limit = limit
+                this.page = page.toMetadataPage()
+                this.filter = filter
+                this.sort = sort.toJsMap()
+                this.include = include.toMemberIncludeOptions()
+            }
+        )
     }
 
+    // deprecated
     override fun removeChannelMembers(
         channel: String,
         uuids: List<String>,
@@ -994,7 +1063,18 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
         sort: Collection<PNSortKey<PNMemberKey>>,
         include: MemberInclude
     ): ManageChannelMembers {
-        TODO("Not yet implemented")
+        return RemoveChannelMembersImpl(
+            jsPubNub,
+            createJsObject {
+                this.channel = channel
+                this.uuids = userIds.toTypedArray()
+                this.limit = limit
+                this.page = page.toMetadataPage()
+                this.filter = filter
+                this.sort = sort.toJsMap()
+                this.include = include.toMemberIncludeOptions()
+            }
+        )
     }
 
 //    override fun manageChannelMembers(
@@ -1348,3 +1428,29 @@ private fun PNPage?.toMetadataPage(): PubNubJs.MetadataPage? =
             }
         }
     }
+
+private fun MembershipInclude.toMembershipIncludeOptions(): PubNubJs.MembershipIncludeOptions {
+    return createJsObject<PubNubJs.MembershipIncludeOptions> {
+        this.customFields = this@toMembershipIncludeOptions.includeCustom
+        this.totalCount = this@toMembershipIncludeOptions.includeTotalCount
+        this.channelFields = this@toMembershipIncludeOptions.includeChannel
+        this.customChannelFields = this@toMembershipIncludeOptions.includeChannelCustom
+        this.channelTypeField = this@toMembershipIncludeOptions.includeChannelType
+        this.channelStatusField = this@toMembershipIncludeOptions.includeChannelStatus
+        this.statusField = this@toMembershipIncludeOptions.includeStatus
+        this.typeField = this@toMembershipIncludeOptions.includeType
+    }
+}
+
+private fun MemberInclude.toMemberIncludeOptions(): PubNubJs.IncludeOptions {
+    return   createJsObject<PubNubJs.IncludeOptions> {
+        this.totalCount = this@toMemberIncludeOptions.includeTotalCount
+        this.customFields = this@toMemberIncludeOptions.includeCustom
+        this.UUIDFields = this@toMemberIncludeOptions.includeUser
+        this.customUUIDFields = this@toMemberIncludeOptions.includeUserCustom
+        this.UUIDTypeField = this@toMemberIncludeOptions.includeUserType
+        this.UUIDStatusField = this@toMemberIncludeOptions.includeUserStatus
+        this.statusField = this@toMemberIncludeOptions.includeStatus
+        this.typeField = this@toMemberIncludeOptions.includeType
+    }
+}

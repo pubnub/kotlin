@@ -741,6 +741,7 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         )
     }
 
+    // deprecated
     override fun getChannelMembers(
         channel: String,
         limit: Int?,
@@ -811,6 +812,7 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
                 includeTotalCount = includeCount,
                 includeCustom = includeCustom,
                 includeType = includeType,
+                includeStatus = true,
                 includeUser = includeUUIDDetails == PNUUIDDetailsLevel.UUID || includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM,
                 includeUserCustom = includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM,
             )
@@ -838,6 +840,7 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         )
     }
 
+    // deprecated
     override fun removeChannelMembers(
         channel: String,
         uuids: List<String>,

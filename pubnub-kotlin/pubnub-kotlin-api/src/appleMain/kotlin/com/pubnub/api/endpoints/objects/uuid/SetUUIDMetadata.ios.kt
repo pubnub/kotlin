@@ -2,6 +2,7 @@ package com.pubnub.api.endpoints.objects.uuid
 
 import cocoapods.PubNubSwift.KMPAnyJSON
 import cocoapods.PubNubSwift.KMPPubNub
+import cocoapods.PubNubSwift.KMPUserIncludeFields
 import cocoapods.PubNubSwift.setUserMetadataWithMetadataId
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult
 import com.pubnub.api.v2.callbacks.Consumer
@@ -39,7 +40,11 @@ class SetUUIDMetadataImpl(
             profileUrl = profileUrl,
             email = email,
             custom = KMPAnyJSON(custom),
-            includeCustom = includeCustom,
+            include = KMPUserIncludeFields(
+                includeCustom = includeCustom,
+                includeType = true,
+                includeStatus = true
+            ),
             type = type,
             status = status,
             onSuccess = callback.onSuccessHandler {
