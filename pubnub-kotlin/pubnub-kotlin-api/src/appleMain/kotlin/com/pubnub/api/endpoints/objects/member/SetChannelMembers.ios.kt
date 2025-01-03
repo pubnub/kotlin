@@ -1,6 +1,7 @@
 package com.pubnub.api.endpoints.objects.member
 
 import cocoapods.PubNubSwift.KMPAnyJSON
+import cocoapods.PubNubSwift.KMPMemberIncludeFields
 import cocoapods.PubNubSwift.KMPMembershipMetadata
 import cocoapods.PubNubSwift.KMPPubNub
 import cocoapods.PubNubSwift.KMPUserMetadata
@@ -39,19 +40,23 @@ class SetChannelMembersImpl(
     private val includeFields: MemberInclude
 ) : ManageChannelMembers {
     override fun async(callback: Consumer<Result<PNMemberArrayResult>>) {
-        // todo use new method with include
         pubnub.setChannelMembersWithChannel(
             channel = channelId,
-            users = users.map { KMPUserMetadata(id = it.uuid, custom = KMPAnyJSON(it.custom), status = it.status) },
+            users = users.map { KMPUserMetadata(it.uuid, KMPAnyJSON(it.custom), it.type, it.status) },
             limit = limit?.let { NSNumber(it) },
             page = createPubNubHashedPage(from = page),
             filter = filter,
             sort = sort.map { it.key.fieldName },
-            includeCount = includeFields.includeTotalCount,
-            includeCustom = includeFields.includeCustom,
-            includeUser = includeFields.includeUser,
-            includeUserCustom = includeFields.includeUserCustom,
-            includeUserType = includeFields.includeUserType,
+            include = KMPMemberIncludeFields(
+                includeCustom = includeFields.includeCustom,
+                includeStatus = includeFields.includeStatus,
+                includeType = includeFields.includeType,
+                includeTotalCount = includeFields.includeTotalCount,
+                includeUser = includeFields.includeUser,
+                includeUserCustom = includeFields.includeUserCustom,
+                includeUserType = includeFields.includeUserType,
+                includeUserStatus = includeFields.includeUserStatus
+            ),
             onSuccess = callback.onSuccessHandler3 { memberships, totalCount, page ->
                 PNMemberArrayResult(
                     status = 200,

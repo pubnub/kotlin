@@ -1,5 +1,6 @@
 package com.pubnub.api.endpoints.objects.member
 
+import cocoapods.PubNubSwift.KMPMemberIncludeFields
 import cocoapods.PubNubSwift.KMPMembershipMetadata
 import cocoapods.PubNubSwift.KMPPubNub
 import cocoapods.PubNubSwift.removeChannelMembersWithChannel
@@ -30,7 +31,6 @@ class RemoveChannelMembersImpl(
     private val includeFields: MemberInclude
 ) : ManageChannelMembers {
     override fun async(callback: Consumer<Result<PNMemberArrayResult>>) {
-        // todo use new method with include
         pubnub.removeChannelMembersWithChannel(
             channel = channel,
             users = userIds,
@@ -38,11 +38,16 @@ class RemoveChannelMembersImpl(
             page = createPubNubHashedPage(from = page),
             filter = filter,
             sort = sort.map { it.key.fieldName },
-            includeCount = includeFields.includeTotalCount,
-            includeCustom = includeFields.includeCustom,
-            includeUser = includeFields.includeUser,
-            includeUserCustom = includeFields.includeUserCustom,
-            includeUserType = includeFields.includeUserType,
+            include = KMPMemberIncludeFields(
+                includeCustom = includeFields.includeCustom,
+                includeStatus = includeFields.includeStatus,
+                includeType = includeFields.includeType,
+                includeTotalCount = includeFields.includeTotalCount,
+                includeUser = includeFields.includeUser,
+                includeUserCustom = includeFields.includeUserCustom,
+                includeUserType = includeFields.includeUserType,
+                includeUserStatus = includeFields.includeUserStatus
+            ),
             onSuccess = callback.onSuccessHandler3 { memberships, totalCount, next ->
                 PNMemberArrayResult(
                     status = 200,

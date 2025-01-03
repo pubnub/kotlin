@@ -812,6 +812,7 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
                 includeTotalCount = includeCount,
                 includeCustom = includeCustom,
                 includeType = includeType,
+                includeStatus = true,
                 includeUser = includeUUIDDetails == PNUUIDDetailsLevel.UUID || includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM,
                 includeUserCustom = includeUUIDDetails == PNUUIDDetailsLevel.UUID_WITH_CUSTOM,
             )
