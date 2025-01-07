@@ -33,9 +33,6 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      - name: Update CocoaPods trunk
-        run: |
-          pod repo update
       - name: Build and run tests
         run: |
           ./gradlew check
