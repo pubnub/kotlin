@@ -12,3 +12,4 @@ interface [SetCustom](index.md)
 | [custom](custom.md) | [js]<br>abstract var [custom](custom.md): [PubNub.CustomObject](../-custom-object/index.md)? |
 | [id](id.md) | [js]<br>abstract var [id](id.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
 | [status](status.md) | [js]<br>abstract var [status](status.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? |
+| [type](type.md) | [js]<br>abstract var [type](type.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? |

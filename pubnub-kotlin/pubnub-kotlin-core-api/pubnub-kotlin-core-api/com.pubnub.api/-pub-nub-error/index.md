@@ -58,6 +58,7 @@ List of known PubNub errors. Observe them in PubNubException.pubnubError in PNSt
 | [TTL_MISSING](-t-t-l_-m-i-s-s-i-n-g/index.md) | [common]<br>[TTL_MISSING](-t-t-l_-m-i-s-s-i-n-g/index.md) |
 | [STATE_MUST_BE_JSON_OBJECT](-s-t-a-t-e_-m-u-s-t_-b-e_-j-s-o-n_-o-b-j-e-c-t/index.md) | [common]<br>[STATE_MUST_BE_JSON_OBJECT](-s-t-a-t-e_-m-u-s-t_-b-e_-j-s-o-n_-o-b-j-e-c-t/index.md) |
 | [USERID_CAN_NOT_BE_DIFFERENT_FROM_IN_CONFIGURATION_WHEN_WITHHEARTBEAT_TRUE](-u-s-e-r-i-d_-c-a-n_-n-o-t_-b-e_-d-i-f-f-e-r-e-n-t_-f-r-o-m_-i-n_-c-o-n-f-i-g-u-r-a-t-i-o-n_-w-h-e-n_-w-i-t-h-h-e-a-r-t-b-e-a-t_-t-r-u-e/index.md) | [common]<br>[USERID_CAN_NOT_BE_DIFFERENT_FROM_IN_CONFIGURATION_WHEN_WITHHEARTBEAT_TRUE](-u-s-e-r-i-d_-c-a-n_-n-o-t_-b-e_-d-i-f-f-e-r-e-n-t_-f-r-o-m_-i-n_-c-o-n-f-i-g-u-r-a-t-i-o-n_-w-h-e-n_-w-i-t-h-h-e-a-r-t-b-e-a-t_-t-r-u-e/index.md) |
+| [CHANNEL_AND_GROUP_CONTAINS_EMPTY_STRING](-c-h-a-n-n-e-l_-a-n-d_-g-r-o-u-p_-c-o-n-t-a-i-n-s_-e-m-p-t-y_-s-t-r-i-n-g/index.md) | [common]<br>[CHANNEL_AND_GROUP_CONTAINS_EMPTY_STRING](-c-h-a-n-n-e-l_-a-n-d_-g-r-o-u-p_-c-o-n-t-a-i-n-s_-e-m-p-t-y_-s-t-r-i-n-g/index.md) |
 
 ## Properties
 

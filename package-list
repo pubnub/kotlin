@@ -180,6 +180,7 @@ $dokka.location:/PubNub.ChannelMembersParameters/sort/#/PointingToDeclaration/p
 $dokka.location:/PubNub.ChannelMembershipObject///PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-channel-membership-object/index.md
 $dokka.location:/PubNub.ChannelMembershipObject/channel/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-channel-membership-object/channel.md
 $dokka.location:/PubNub.ChannelMembershipObject/status/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-channel-membership-object/status.md
+$dokka.location:/PubNub.ChannelMembershipObject/type/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-channel-membership-object/type.md
 $dokka.location:/PubNub.ChannelMetadata///PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-channel-metadata/index.md
 $dokka.location:/PubNub.ChannelMetadataFieldsNullable///PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-channel-metadata-fields-nullable/index.md
 $dokka.location:/PubNub.ChannelMetadataFieldsNullable/description/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-channel-metadata-fields-nullable/description.md
@@ -396,6 +397,7 @@ $dokka.location:/PubNub.IncludeOptions/customFields/#/PointingToDeclaration/pub
 $dokka.location:/PubNub.IncludeOptions/customUUIDFields/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-include-options/custom-u-u-i-d-fields.md
 $dokka.location:/PubNub.IncludeOptions/statusField/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-include-options/status-field.md
 $dokka.location:/PubNub.IncludeOptions/totalCount/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-include-options/total-count.md
+$dokka.location:/PubNub.IncludeOptions/typeField/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-include-options/type-field.md
 $dokka.location:/PubNub.KeepAliveSettings///PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-keep-alive-settings/index.md
 $dokka.location:/PubNub.KeepAliveSettings/freeSocketKeepAliveTimeout/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-keep-alive-settings/free-socket-keep-alive-timeout.md
 $dokka.location:/PubNub.KeepAliveSettings/keepAliveMsecs/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-keep-alive-settings/keep-alive-msecs.md
@@ -438,6 +440,7 @@ $dokka.location:/PubNub.MembershipIncludeOptions/customChannelFields/#/PointingT
 $dokka.location:/PubNub.MembershipIncludeOptions/customFields/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-membership-include-options/custom-fields.md
 $dokka.location:/PubNub.MembershipIncludeOptions/statusField/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-membership-include-options/status-field.md
 $dokka.location:/PubNub.MembershipIncludeOptions/totalCount/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-membership-include-options/total-count.md
+$dokka.location:/PubNub.MembershipIncludeOptions/typeField/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-membership-include-options/type-field.md
 $dokka.location:/PubNub.MessageAction///PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-message-action/index.md
 $dokka.location:/PubNub.MessageAction/actionTimetoken/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-message-action/action-timetoken.md
 $dokka.location:/PubNub.MessageAction/messageTimetoken/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-message-action/message-timetoken.md
@@ -642,6 +645,7 @@ $dokka.location:/PubNub.SetCustom///PointingToDeclaration/pubnub-kotlin-api/pub
 $dokka.location:/PubNub.SetCustom/custom/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-set-custom/custom.md
 $dokka.location:/PubNub.SetCustom/id/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-set-custom/id.md
 $dokka.location:/PubNub.SetCustom/status/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-set-custom/status.md
+$dokka.location:/PubNub.SetCustom/type/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-set-custom/type.md
 $dokka.location:/PubNub.SetMembershipEvent///PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-set-membership-event/index.md
 $dokka.location:/PubNub.SetMembershipObject///PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-set-membership-object/index.md
 $dokka.location:/PubNub.SetMembershipObject/channel/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-set-membership-object/channel.md
@@ -3661,6 +3665,7 @@ $dokka.location:com.pubnub.api/PubNub/userMetadata/#kotlin.String/PointingToDecl
 $dokka.location:com.pubnub.api/PubNub/version/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api/-pub-nub/version.md
 $dokka.location:com.pubnub.api/PubNub/whereNow/#kotlin.String/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api/-pub-nub/where-now.md
 $dokka.location:com.pubnub.api/PubNubError.CHANNELS_TIMETOKEN_MISMATCH///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api/-pub-nub-error/-c-h-a-n-n-e-l-s_-t-i-m-e-t-o-k-e-n_-m-i-s-m-a-t-c-h/index.md
+$dokka.location:com.pubnub.api/PubNubError.CHANNEL_AND_GROUP_CONTAINS_EMPTY_STRING///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api/-pub-nub-error/-c-h-a-n-n-e-l_-a-n-d_-g-r-o-u-p_-c-o-n-t-a-i-n-s_-e-m-p-t-y_-s-t-r-i-n-g/index.md
 $dokka.location:com.pubnub.api/PubNubError.CHANNEL_AND_GROUP_MISSING///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api/-pub-nub-error/-c-h-a-n-n-e-l_-a-n-d_-g-r-o-u-p_-m-i-s-s-i-n-g/index.md
 $dokka.location:com.pubnub.api/PubNubError.CHANNEL_MISSING///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api/-pub-nub-error/-c-h-a-n-n-e-l_-m-i-s-s-i-n-g/index.md
 $dokka.location:com.pubnub.api/PubNubError.CHANNEL_OR_CHANNEL_GROUP_MISSING///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api/-pub-nub-error/-c-h-a-n-n-e-l_-o-r_-c-h-a-n-n-e-l_-g-r-o-u-p_-m-i-s-s-i-n-g/index.md

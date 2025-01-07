@@ -1,0 +1,6 @@
+//[pubnub-kotlin-api](../../../../index.md)/[[root]](../../index.md)/[PubNub](../index.md)/[MembershipIncludeOptions](index.md)/[typeField](type-field.md)
+
+# typeField
+
+[js]\
+abstract var [typeField](type-field.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)?

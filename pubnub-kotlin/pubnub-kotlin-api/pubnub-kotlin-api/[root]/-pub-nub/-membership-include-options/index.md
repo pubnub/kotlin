@@ -16,3 +16,4 @@ interface [MembershipIncludeOptions](index.md)
 | [customFields](custom-fields.md) | [js]<br>abstract var [customFields](custom-fields.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)? |
 | [statusField](status-field.md) | [js]<br>abstract var [statusField](status-field.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)? |
 | [totalCount](total-count.md) | [js]<br>abstract var [totalCount](total-count.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)? |
+| [typeField](type-field.md) | [js]<br>abstract var [typeField](type-field.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)? |
