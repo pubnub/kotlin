@@ -124,7 +124,10 @@ changelog:
   - date: 2025-01-07
     version: v10.3.3
     changes:
-
+      - type: improvement
+        text: "Added validation for Leave and Heartbeat to ensure user receives an error when providing empty strings for channels or groups."
+      - type: improvement
+        text: "Internal changes for Chat SDK."
   - date: 2024-12-16
     version: v10.3.2
     changes:
