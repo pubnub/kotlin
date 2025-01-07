@@ -1,10 +1,3 @@
-## v10.3.3
-January 07 2025
-
-#### Modified
-- Added validation for Leave and Heartbeat to ensure user receives an error when providing empty strings for channels or groups.
-- Internal changes for Chat SDK.
-
 ## v10.3.2
 December 16 2024
 
