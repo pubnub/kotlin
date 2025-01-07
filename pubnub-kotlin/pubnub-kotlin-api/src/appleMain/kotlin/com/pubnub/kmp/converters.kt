@@ -99,7 +99,8 @@ internal fun createPNChannelMembership(from: KMPMembershipMetadata): PNChannelMe
         custom = PatchValue.of(from.custom()?.safeCast()),
         updated = from.updated().orEmpty(),
         eTag = from.eTag().orEmpty(),
-        status = PatchValue.of(from.status())
+        status = PatchValue.of(from.status()),
+        type = PatchValue.of(from.type())
     )
 }
 
@@ -112,7 +113,7 @@ internal fun createPNMember(from: KMPMembershipMetadata?): PNMember {
         updated = from.updated().orEmpty(),
         eTag = from.eTag().orEmpty(),
         status = PatchValue.of(from.status()),
-        type = PatchValue.of(null) // todo add when available
+        type = PatchValue.of(from.type())
     )
 }
 

@@ -1,6 +1,7 @@
 package com.pubnub.api.endpoints.objects.uuid
 
 import cocoapods.PubNubSwift.KMPPubNub
+import cocoapods.PubNubSwift.KMPUserIncludeFields
 import cocoapods.PubNubSwift.KMPUserMetadata
 import cocoapods.PubNubSwift.getAllUserMetadataWithLimit
 import com.pubnub.api.models.consumer.objects.PNKey
@@ -40,8 +41,12 @@ class GetAllUUIDMetadataImpl(
             page = createPubNubHashedPage(from = page),
             filter = filter,
             sort = createObjectSortProperties(from = sort),
-            includeCount = includeCount,
-            includeCustom = includeCustom,
+            include = KMPUserIncludeFields(
+                includeCustom = includeCustom,
+                includeTotalCount = includeCount,
+                includeType = true,
+                includeStatus = true
+            ),
             onSuccess = callback.onSuccessHandler3 { uuids, totalCount, next ->
                 PNUUIDMetadataArrayResult(
                     status = 200,

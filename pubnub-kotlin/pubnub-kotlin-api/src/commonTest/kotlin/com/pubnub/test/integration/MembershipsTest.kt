@@ -1,6 +1,7 @@
 package com.pubnub.test.integration
 
 import com.pubnub.api.models.consumer.objects.PNPage
+import com.pubnub.api.models.consumer.objects.membership.MembershipInclude
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
 import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteMembershipEventMessage
@@ -19,16 +20,16 @@ import kotlin.test.assertFalse
 
 class MembershipsTest : BaseIntegrationTest() {
     private val channel = "myChannel" + randomString()
-    private val name = randomString()
-    private val description = randomString()
     private val status = randomString()
     private val customData = mapOf("aa" to randomString())
     private val custom = createCustomObject(customData)
     private val includeCustom = true
+    private val includeChannel = true
+    private val includeChannelCustom = true
     private val type = randomString()
 
     @Test
-    fun can_set_memberships() = runTest {
+    fun can_set_memberships_deprecated() = runTest {
         // when
         val result = pubnub.setMemberships(
             listOf(PNChannelMembership.Partial(channel, custom, status)),
@@ -43,7 +44,29 @@ class MembershipsTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_set_and_get_memberships_for_other_uuid() = runTest {
+    fun can_set_memberships() = runTest {
+        // when
+        val result = pubnub.setMemberships(
+            listOf(PNChannelMembership.Partial(channel, custom, status, type)),
+            include = MembershipInclude(
+                includeCustom = includeCustom,
+                includeChannel = includeChannel,
+                includeChannelCustom = includeChannelCustom,
+                includeStatus = true,
+                includeType = true
+            ),
+        ).await()
+
+        // then
+        val pnChannelDetails = result.data.single { it.channel.id == channel }
+        assertEquals(channel, pnChannelDetails.channel.id)
+        assertEquals(customData, pnChannelDetails.custom?.value)
+        assertEquals(status, pnChannelDetails.status?.value)
+        assertEquals(type, pnChannelDetails.type?.value)
+    }
+
+    @Test
+    fun can_set_and_get_memberships_for_other_uuid_deprecated() = runTest {
         // when
         val userId = "some-user-" + randomString()
         pubnub.setMemberships(
@@ -53,12 +76,69 @@ class MembershipsTest : BaseIntegrationTest() {
             includeChannelDetails = PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM,
         ).await()
 
-        val result = pubnub.getMemberships(uuid = userId, filter = "channel.id == '$channel'", includeCustom = true).await()
+        val result =
+            pubnub.getMemberships(uuid = userId, filter = "channel.id == '$channel'", includeCustom = true).await()
 
         // then
         val pnChannelDetails = result.data.single { it.channel.id == channel }
         assertEquals(channel, pnChannelDetails.channel.id)
         assertEquals(customData, pnChannelDetails.custom?.value)
+    }
+
+    @Test
+    fun can_set_and_get_memberships_for_other_uuid() = runTest {
+        // when
+        val userId = "some-user-" + randomString()
+        pubnub.setMemberships(
+            channels = listOf(PNChannelMembership.Partial(channel, custom, status, type)),
+            userId = userId,
+            include = MembershipInclude(
+                includeCustom = includeCustom,
+                includeChannel = includeChannel,
+                includeChannelCustom = includeChannelCustom
+            ),
+        ).await()
+
+        val result =
+            pubnub.getMemberships(
+                userId = userId,
+                filter = "channel.id == '$channel'",
+                include = MembershipInclude(
+                    includeCustom = includeCustom,
+                    includeStatus = true,
+                    includeType = true
+                ),
+            ).await()
+
+        // then
+        val pnChannelDetails = result.data.single { it.channel.id == channel }
+        assertEquals(channel, pnChannelDetails.channel.id)
+        assertEquals(customData, pnChannelDetails.custom?.value)
+        assertEquals(status, pnChannelDetails.status?.value)
+        assertEquals(type, pnChannelDetails.type?.value)
+    }
+
+    @Test
+    fun can_receive_set_membership_event_deprecated() = runTest {
+        pubnub.test(backgroundScope) {
+            // given
+            pubnub.awaitSubscribe(listOf(channel))
+
+            // when
+            pubnub.setMemberships(
+                listOf(PNChannelMembership.Partial(channel, custom, status)),
+                includeCustom = includeCustom,
+                includeChannelDetails = PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM
+            ).await()
+
+            // then
+            val result = nextEvent<PNObjectEventResult>()
+            val message = result.extractedMessage
+            message as PNSetMembershipEventMessage
+            assertEquals(channel, message.data.channel)
+            assertEquals(pubnub.configuration.userId.value, message.data.uuid)
+            assertEquals(customData, message.data.custom?.value)
+        }
     }
 
     @Test
@@ -70,8 +150,11 @@ class MembershipsTest : BaseIntegrationTest() {
             // when
             pubnub.setMemberships(
                 listOf(PNChannelMembership.Partial(channel, custom, status)),
-                includeCustom = includeCustom,
-                includeChannelDetails = PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM
+                include = MembershipInclude(
+                    includeCustom = includeCustom,
+                    includeChannel = includeChannel,
+                    includeChannelCustom = includeChannelCustom
+                ),
             ).await()
 
             // then

@@ -1,5 +1,6 @@
 package com.pubnub.api.endpoints.objects.membership
 
+import cocoapods.PubNubSwift.KMPMembershipIncludeFields
 import cocoapods.PubNubSwift.KMPMembershipMetadata
 import cocoapods.PubNubSwift.KMPPubNub
 import cocoapods.PubNubSwift.getMembershipsWithUserId
@@ -41,11 +42,16 @@ class GetMembershipsImpl(
             page = createPubNubHashedPage(from = page),
             filter = filter,
             sort = sort.map { it.key.fieldName },
-            includeCount = includeFields.includeTotalCount,
-            includeCustom = includeFields.includeCustom,
-            includeChannelFields = includeFields.includeChannel,
-            includeChannelCustomFields = includeFields.includeChannelCustom,
-            includeChannelType = includeFields.includeChannelType,
+            include = KMPMembershipIncludeFields(
+                includeCustom = includeFields.includeCustom,
+                includeStatus = includeFields.includeStatus,
+                includeType = includeFields.includeType,
+                includeTotalCount = includeFields.includeTotalCount,
+                includeChannel = includeFields.includeChannel,
+                includeChannelCustom = includeFields.includeChannelCustom,
+                includeChannelType = includeFields.includeChannelType,
+                includeChannelStatus = includeFields.includeChannelStatus
+            ),
             onSuccess = callback.onSuccessHandler3 { memberships, totalCount, page ->
                 PNChannelMembershipArrayResult(
                     status = 200,
