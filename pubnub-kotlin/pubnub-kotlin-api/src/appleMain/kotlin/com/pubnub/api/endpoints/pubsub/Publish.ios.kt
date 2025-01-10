@@ -23,6 +23,7 @@ class PublishImpl(
     private val message: Any,
     private val meta: Any?,
     private val shouldStore: Boolean?,
+    private val usePost: Boolean?,
     private val ttl: Int?,
     private val customMessageType: String?
 ) : Publish {
@@ -32,6 +33,7 @@ class PublishImpl(
             message = message,
             meta = meta,
             shouldStore = shouldStore?.let { NSNumber(bool = it) },
+            usePost = usePost?.let { NSNumber(bool = it) },
             ttl = ttl?.let { NSNumber(it) },
             customMessageType = customMessageType,
             onSuccess = callback.onSuccessHandler { PNPublishResult(it.toLong()) },

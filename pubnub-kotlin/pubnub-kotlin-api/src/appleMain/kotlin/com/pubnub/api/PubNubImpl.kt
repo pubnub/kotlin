@@ -189,7 +189,7 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         pubNubObjC.removeAllListeners()
     }
 
-    // TODO: replicate and usePost parameters are not present in Swift SDK
+    // TODO: replicate is not present in Swift SDK
     override fun publish(
         channel: String,
         message: Any,
@@ -206,12 +206,12 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
             message = message,
             meta = meta,
             shouldStore = shouldStore,
+            usePost = usePost,
             ttl = ttl,
             customMessageType = customMessageType
         )
     }
 
-    // TODO: usePost parameter is not present in Swift SDK
     override fun fire(channel: String, message: Any, meta: Any?, usePost: Boolean): Publish {
         return PublishImpl(
             pubnub = pubNubObjC,
@@ -219,6 +219,7 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
             message = message,
             meta = meta,
             shouldStore = false,
+            usePost = usePost,
             ttl = 0,
             customMessageType = null
         )
