@@ -1443,7 +1443,7 @@ private fun MembershipInclude.toMembershipIncludeOptions(): PubNubJs.MembershipI
 }
 
 private fun MemberInclude.toMemberIncludeOptions(): PubNubJs.IncludeOptions {
-    return   createJsObject<PubNubJs.IncludeOptions> {
+    return createJsObject<PubNubJs.IncludeOptions> {
         this.totalCount = this@toMemberIncludeOptions.includeTotalCount
         this.customFields = this@toMemberIncludeOptions.includeCustom
         this.UUIDFields = this@toMemberIncludeOptions.includeUser
