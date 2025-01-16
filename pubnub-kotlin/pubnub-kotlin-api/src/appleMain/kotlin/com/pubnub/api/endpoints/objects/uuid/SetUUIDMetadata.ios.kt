@@ -30,7 +30,8 @@ class SetUUIDMetadataImpl(
     private val custom: CustomObject?,
     private val includeCustom: Boolean,
     private val type: String?,
-    private val status: String?
+    private val status: String?,
+    private val ifMatchesEtag: String? = null,
 ) : SetUUIDMetadata {
     override fun async(callback: Consumer<Result<PNUUIDMetadataResult>>) {
         pubnub.setUserMetadataWithMetadataId(
@@ -47,6 +48,7 @@ class SetUUIDMetadataImpl(
             ),
             type = type,
             status = status,
+            ifMatchesEtag = ifMatchesEtag,
             onSuccess = callback.onSuccessHandler {
                 PNUUIDMetadataResult(
                     status = 200,

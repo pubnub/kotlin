@@ -12,6 +12,7 @@ import com.pubnub.internal.java.endpoints.DelegatingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +37,10 @@ public class SetUUIDMetadataImpl extends DelegatingEndpoint<PNUUIDMetadataResult
     private String type;
     @Setter
     private String status;
+
+    @Setter
+    @Nullable
+    private String ifMatchesEtag;
 
     public SetUUIDMetadataImpl(final PubNub pubnub) {
         super(pubnub);
@@ -63,7 +68,8 @@ public class SetUUIDMetadataImpl extends DelegatingEndpoint<PNUUIDMetadataResult
                 custom,
                 includeCustom,
                 type,
-                status
+                status,
+                ifMatchesEtag
         );
     }
 

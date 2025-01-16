@@ -27,6 +27,7 @@ class SetUUIDMetadataEndpoint internal constructor(
     private val withInclude: IncludeQueryParam,
     private val type: String?,
     private val status: String?,
+    private val ifMatchesEtag: String?,
 ) : EndpointCore<EntityEnvelope<PNUUIDMetadata>, PNUUIDMetadataResult>(pubnub), SetUUIDMetadata {
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNUUIDMetadata>> {
         val params = queryParams + withInclude.createIncludeQueryParams()
@@ -44,6 +45,7 @@ class SetUUIDMetadataEndpoint internal constructor(
                 ),
             uuid = uuid ?: configuration.userId.value,
             options = params,
+            ifMatchesEtag = ifMatchesEtag
         )
     }
 

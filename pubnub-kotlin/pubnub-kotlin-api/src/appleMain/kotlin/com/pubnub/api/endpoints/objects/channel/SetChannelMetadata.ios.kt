@@ -28,7 +28,8 @@ class SetChannelMetadataImpl(
     private val custom: CustomObject?,
     private val includeCustom: Boolean,
     private val type: String?,
-    private val status: String?
+    private val status: String?,
+    private val ifMatchesEtag: String? = null,
 ) : SetChannelMetadata {
     override fun async(callback: Consumer<Result<PNChannelMetadataResult>>) {
         pubnub.setChannelMetadataWithMetadataId(
@@ -43,6 +44,7 @@ class SetChannelMetadataImpl(
             ),
             type = type,
             status = status,
+            ifMatchesEtag = ifMatchesEtag,
             onSuccess = callback.onSuccessHandler {
                 PNChannelMetadataResult(
                     status = 200,

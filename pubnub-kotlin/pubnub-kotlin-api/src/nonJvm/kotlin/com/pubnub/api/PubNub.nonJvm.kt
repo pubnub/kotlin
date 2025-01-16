@@ -247,7 +247,8 @@ actual interface PubNub {
         custom: CustomObject?,
         includeCustom: Boolean,
         type: String?,
-        status: String?
+        status: String?,
+        ifMatchesEtag: String?,
     ): SetChannelMetadata
 
     actual fun removeChannelMetadata(channel: String): RemoveChannelMetadata
@@ -275,7 +276,8 @@ actual interface PubNub {
         custom: CustomObject?,
         includeCustom: Boolean,
         type: String?,
-        status: String?
+        status: String?,
+        ifMatchesEtag: String?
     ): SetUUIDMetadata
 
     actual fun removeUUIDMetadata(uuid: String?): RemoveUUIDMetadata

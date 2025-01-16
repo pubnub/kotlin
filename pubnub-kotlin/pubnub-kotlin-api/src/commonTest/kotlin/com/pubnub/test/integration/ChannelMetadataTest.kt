@@ -53,6 +53,58 @@ class ChannelMetadataTest : BaseIntegrationTest() {
     }
 
     @Test
+    fun set_metadata_ifMatch_allows_change() = runTest {
+        // given
+        val result = pubnub.setChannelMetadata(
+            channel,
+            name = name,
+            status = status,
+            custom = custom,
+            includeCustom = includeCustom,
+            type = type,
+            description = description
+        ).await()
+
+        val pnChannelMetadata = result.data
+
+        // when
+        val newData = pubnub.setChannelMetadata(
+            channel,
+            status = "someNewStatus",
+            ifMatchesEtag = pnChannelMetadata.eTag?.value
+        ).await().data
+
+        // then
+        assertEquals("someNewStatus", newData.status?.value)
+    }
+
+    @Test
+    fun set_metadata_ifMatch_prohibits_change() = runTest {
+        // given
+        val result = pubnub.setChannelMetadata(
+            channel,
+            name = name,
+            status = status,
+            custom = custom,
+            includeCustom = includeCustom,
+            type = type,
+            description = description
+        ).await()
+
+        val pnChannelMetadata = result.data
+
+        pubnub.setChannelMetadata(channel, name = "someNewName").await()
+
+        // when
+        val ex = assertFailsWith<PubNubException> {
+            pubnub.setChannelMetadata(channel, status = "someNewStatus", ifMatchesEtag = pnChannelMetadata.eTag?.value).await()
+        }
+
+        // then
+        assertEquals(HTTP_PRECONDITION_FAILED, ex.statusCode)
+    }
+
+    @Test
     fun can_receive_set_metadata_event() = runTest {
         pubnub.test(backgroundScope) {
             // given

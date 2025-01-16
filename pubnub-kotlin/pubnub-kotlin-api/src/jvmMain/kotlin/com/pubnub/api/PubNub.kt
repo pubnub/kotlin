@@ -1142,6 +1142,8 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      * @param description Description of a channel.
      * @param custom Object with supported data types.
      * @param includeCustom Include respective additional fields in the response.
+     * @param ifMatchesEtag Optional entity tag from a previously received `PNChannelMetadata`. The request
+     * will fail if this parameter is specified and the ETag value on the server doesn't match.
      */
     actual fun setChannelMetadata(
         channel: String,
@@ -1151,6 +1153,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
         includeCustom: Boolean,
         type: String?,
         status: String?,
+        ifMatchesEtag: String?,
     ): SetChannelMetadata
 
     /**
@@ -1208,6 +1211,8 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      * @param email The user's email address. Maximum 80 characters.
      * @param custom Object with supported data types.
      * @param includeCustom Include respective additional fields in the response.
+     * @param ifMatchesEtag Optional entity tag from a previously received `PNUUIDMetadata`. The request
+     * will fail if this parameter is specified and the ETag value on the server doesn't match.
      */
     actual fun setUUIDMetadata(
         uuid: String?,
@@ -1219,6 +1224,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
         includeCustom: Boolean,
         type: String?,
         status: String?,
+        ifMatchesEtag: String?,
     ): SetUUIDMetadata
 
     /**

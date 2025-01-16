@@ -756,6 +756,7 @@ open class PubNubImpl(
         includeCustom: Boolean,
         type: String?,
         status: String?,
+        ifMatchesEtag: String?,
     ): SetChannelMetadata {
         return SetChannelMetadataEndpoint(
             pubnub = this,
@@ -766,6 +767,7 @@ open class PubNubImpl(
             includeQueryParam = IncludeQueryParam(includeCustom = includeCustom),
             type = type,
             status = status,
+            ifMatchesEtag = ifMatchesEtag,
         )
     }
 
@@ -816,6 +818,7 @@ open class PubNubImpl(
         includeCustom: Boolean,
         type: String?,
         status: String?,
+        ifMatchesEtag: String?,
     ): SetUUIDMetadata {
         return SetUUIDMetadataEndpoint(
             pubnub = this,
@@ -828,6 +831,7 @@ open class PubNubImpl(
             withInclude = IncludeQueryParam(includeCustom = includeCustom),
             type = type,
             status = status,
+            ifMatchesEtag = ifMatchesEtag,
         )
     }
 
