@@ -36,6 +36,7 @@ class PNConfigurationImpl(
     override val subscribeTimeout: Int = SUBSCRIBE_TIMEOUT,
     override val connectTimeout: Int = CONNECT_TIMEOUT,
     override val nonSubscribeReadTimeout: Int = NON_SUBSCRIBE_REQUEST_TIMEOUT,
+    override val fileRequestTimeout: Int = FILE_REQUEST_TIMEOUT,
     override val cacheBusting: Boolean = false,
     override val suppressLeaveEvents: Boolean = false,
     override val maintainPresenceState: Boolean = true,
@@ -79,6 +80,7 @@ class PNConfigurationImpl(
         const val NON_SUBSCRIBE_REQUEST_TIMEOUT = 10
         const val SUBSCRIBE_TIMEOUT = 310
         const val CONNECT_TIMEOUT = 5
+        const val FILE_REQUEST_TIMEOUT = 300
     }
 
     class Builder(defaultConfiguration: PNConfiguration) :
@@ -139,6 +141,8 @@ class PNConfigurationImpl(
             }
 
         override var nonSubscribeReadTimeout: Int = defaultConfiguration.nonSubscribeReadTimeout
+
+        override var fileRequestTimeout: Int = defaultConfiguration.fileRequestTimeout
 
         override var cacheBusting: Boolean = defaultConfiguration.cacheBusting
 
@@ -201,6 +205,7 @@ class PNConfigurationImpl(
                 subscribeTimeout = subscribeTimeout,
                 connectTimeout = connectTimeout,
                 nonSubscribeReadTimeout = nonSubscribeReadTimeout,
+                fileRequestTimeout = fileRequestTimeout,
                 cacheBusting = cacheBusting,
                 suppressLeaveEvents = suppressLeaveEvents,
                 maintainPresenceState = maintainPresenceState,

@@ -44,12 +44,14 @@ class PubNubImplTest : BaseTest() {
         config.connectTimeout = 4000
         config.nonSubscribeRequestTimeout = 5000
         config.retryConfiguration = RetryConfiguration.None
+        config.fileRequestTimeout = 400
         // initPubNub()
 
         assertEquals("https://ps.pndsn.com", pubnub.baseUrl())
         assertEquals(3000, config.subscribeTimeout)
         assertEquals(4000, config.connectTimeout)
         assertEquals(5000, config.nonSubscribeRequestTimeout)
+        assertEquals(400, config.fileRequestTimeout)
     }
 
     @Test

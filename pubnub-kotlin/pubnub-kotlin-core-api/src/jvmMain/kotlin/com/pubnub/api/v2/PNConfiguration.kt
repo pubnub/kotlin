@@ -150,6 +150,17 @@ actual interface PNConfiguration {
     val nonSubscribeReadTimeout: Int
 
     /**
+     * Timeout for file-related operations (e.g. sendFile, listChannelFiles, deleteFile, etc.)
+     * This timeout applies to the entire call which includes: resolving DNS, connecting, writing the request body,
+     * server processing and reading the response body.
+     *
+     * The value is in seconds.
+     *
+     * Defaults to 300 seconds
+     */
+    val fileRequestTimeout: Int
+
+    /**
      * If operating behind a misbehaving proxy, allow the client to shuffle the subdomains.
      *
      * Defaults to `false`.
@@ -457,6 +468,17 @@ actual interface PNConfiguration {
         var nonSubscribeReadTimeout: Int
 
         /**
+         * Timeout for file-related operations (e.g. sendFile, listChannelFiles, deleteFile, etc.)
+         * This timeout applies to the entire call which includes: resolving DNS, connecting, writing the request body,
+         * server processing and reading the response body.
+         *
+         * The value is in seconds.
+         *
+         * Defaults to 300 seconds
+         */
+        var fileRequestTimeout: Int
+
+        /**
          * If operating behind a misbehaving proxy, allow the client to shuffle the subdomains.
          *
          * Defaults to `false`.
@@ -700,6 +722,17 @@ interface PNConfigurationOverride {
          * Defaults to 10.
          */
         var nonSubscribeReadTimeout: Int
+
+        /**
+         * Timeout for file-related operations (e.g. sendFile, listChannelFiles, deleteFile, etc.)
+         * This timeout applies to the entire call which includes: resolving DNS, connecting, writing the request body,
+         * server processing and reading the response body.
+         *
+         * The value is in seconds.
+         *
+         * Defaults to 300 seconds
+         */
+        val fileRequestTimeout: Int
 
         /**
          * Create a [PNConfiguration] object with values from this builder.
