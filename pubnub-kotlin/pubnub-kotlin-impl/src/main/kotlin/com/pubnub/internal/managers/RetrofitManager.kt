@@ -31,7 +31,8 @@ class RetrofitManager(
     private val configuration: PNConfiguration,
     @get:TestOnly internal var transactionClientInstance: OkHttpClient? = null,
     @get:TestOnly internal var subscriptionClientInstance: OkHttpClient? = null,
-    @get:TestOnly internal var noSignatureClientInstance: OkHttpClient? = null,
+    @get:TestOnly internal var noSignatureClientInstanceForFiles: OkHttpClient? = null,
+    @get:TestOnly internal var signatureClientInstanceForFiles: OkHttpClient? = null
 ) {
     private var signatureInterceptor: SignatureInterceptor = SignatureInterceptor(configuration)
 
@@ -58,20 +59,21 @@ class RetrofitManager(
         configuration,
         retrofitManager.transactionClientInstance,
         retrofitManager.subscriptionClientInstance,
-        retrofitManager.noSignatureClientInstance,
+        retrofitManager.noSignatureClientInstanceForFiles,
+        retrofitManager.signatureClientInstanceForFiles
     )
 
     init {
         if (!configuration.googleAppEngineNetworking) {
-            transactionClientInstance = createOkHttpClient(configuration.nonSubscribeReadTimeout, parentOkHttpClient = transactionClientInstance)
-            subscriptionClientInstance = createOkHttpClient(configuration.subscribeTimeout, parentOkHttpClient = subscriptionClientInstance)
-            noSignatureClientInstance =
-                createOkHttpClient(configuration.nonSubscribeReadTimeout, withSignature = false, parentOkHttpClient = noSignatureClientInstance)
+            transactionClientInstance = createOkHttpClient(readTimeout = configuration.nonSubscribeReadTimeout, parentOkHttpClient = transactionClientInstance)
+            subscriptionClientInstance = createOkHttpClient(readTimeout = configuration.subscribeTimeout, parentOkHttpClient = subscriptionClientInstance)
+            noSignatureClientInstanceForFiles = createOkHttpClient(callTimeout = configuration.fileRequestTimeout, withSignature = false, parentOkHttpClient = noSignatureClientInstanceForFiles)
+            signatureClientInstanceForFiles = createOkHttpClient(callTimeout = configuration.fileRequestTimeout, parentOkHttpClient = signatureClientInstanceForFiles)
         }
 
         val transactionInstance = createRetrofit(transactionClientInstance)
         val subscriptionInstance = createRetrofit(subscriptionClientInstance)
-        val noSignatureInstance = createRetrofit(noSignatureClientInstance)
+        val noSignatureInstance = createRetrofit(noSignatureClientInstanceForFiles)
 
         timeService = transactionInstance.create(TimeService::class.java)
         publishService = transactionInstance.create(PublishService::class.java)
@@ -94,9 +96,10 @@ class RetrofitManager(
     }
 
     private fun createOkHttpClient(
-        readTimeout: Int,
+        readTimeout: Int = 0, // 0 means no timeout,
+        callTimeout: Int = 0, // 0 means no timeout,
         withSignature: Boolean = true,
-        parentOkHttpClient: OkHttpClient? = null,
+        parentOkHttpClient: OkHttpClient? = null
     ): OkHttpClient {
         val okHttpBuilder = parentOkHttpClient?.newBuilder() ?: OkHttpClient.Builder()
 
@@ -104,6 +107,7 @@ class RetrofitManager(
             .retryOnConnectionFailure(false)
             .readTimeout(readTimeout.toLong(), TimeUnit.SECONDS)
             .connectTimeout(configuration.connectTimeout.toLong(), TimeUnit.SECONDS)
+            .callTimeout(callTimeout.toLong(), TimeUnit.SECONDS)
 
         with(configuration) {
             if (logVerbosity == PNLogVerbosity.BODY) {
@@ -163,7 +167,8 @@ class RetrofitManager(
     fun destroy(force: Boolean = false) {
         closeExecutor(transactionClientInstance, force)
         closeExecutor(subscriptionClientInstance, force)
-        closeExecutor(noSignatureClientInstance, force)
+        closeExecutor(noSignatureClientInstanceForFiles, force)
+        closeExecutor(signatureClientInstanceForFiles, force)
     }
 
     private fun closeExecutor(

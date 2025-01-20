@@ -164,6 +164,17 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
         val nonSubscribeReadTimeout: Int
 
         /**
+         * Timeout for file-related operations (e.g. sendFile, listChannelFiles, deleteFile, etc.)
+         * This timeout applies to the entire call which includes: resolving DNS, connecting, writing the request body,
+         * server processing and reading the response body.
+         *
+         * The value is in seconds.
+         *
+         * Defaults to 300 seconds
+         */
+        val fileRequestTimeout: Int
+
+        /**
          * If operating behind a misbehaving proxy, allow the client to shuffle the subdomains.
          *
          * Defaults to `false`.
@@ -394,6 +405,8 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
 
         override fun nonSubscribeReadTimeout(nonSubscribeReadTimeout: Int): Builder
 
+        override fun fileRequestTimeout(fileRequestTimeout: Int): Builder
+
         /**
          * If operating behind a misbehaving proxy, allow the client to shuffle the subdomains.
          *
@@ -623,6 +636,17 @@ interface PNConfigurationOverride : com.pubnub.api.v2.PNConfigurationOverride {
          * Defaults to 10.
          */
         fun nonSubscribeReadTimeout(nonSubscribeReadTimeout: Int): Builder
+
+        /**
+         * Timeout for file-related operations (e.g. sendFile, listChannelFiles, deleteFile, etc.)
+         * This timeout applies to the entire call which includes: resolving DNS, connecting, writing the request body,
+         * server processing and reading the response body.
+         *
+         * The value is in seconds.
+         *
+         * Defaults to 300 seconds
+         */
+        fun fileRequestTimeout(fileRequestTimeout: Int): Builder
 
         /**
          * Create a [PNConfiguration] object with values from this builder.

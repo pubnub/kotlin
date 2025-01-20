@@ -115,6 +115,7 @@ class PNConfigurationImplTest {
             subscribeTimeout = 3
             connectTimeout = 4
             nonSubscribeRequestTimeout = 5
+            fileRequestTimeout = 10
             cacheBusting = true
             suppressLeaveEvents = true
             maintainPresenceState = false
@@ -156,6 +157,7 @@ class PNConfigurationImplTest {
         assertEquals(3, configuration.subscribeTimeout)
         assertEquals(4, configuration.connectTimeout)
         assertEquals(5, configuration.nonSubscribeRequestTimeout)
+        assertEquals(10, configuration.fileRequestTimeout)
         assertEquals(true, configuration.cacheBusting)
         assertEquals(true, configuration.suppressLeaveEvents)
         assertEquals(false, configuration.maintainPresenceState)
@@ -202,6 +204,7 @@ class PNConfigurationImplTest {
         assertEquals(expectedDefaults.subscribeTimeout, builder.subscribeTimeout)
         assertEquals(expectedDefaults.connectTimeout, builder.connectTimeout)
         assertEquals(expectedDefaults.nonSubscribeRequestTimeout, builder.nonSubscribeRequestTimeout)
+        assertEquals(expectedDefaults.fileRequestTimeout, builder.fileRequestTimeout)
         assertEquals(expectedDefaults.cacheBusting, builder.cacheBusting)
         assertEquals(expectedDefaults.suppressLeaveEvents, builder.suppressLeaveEvents)
         assertEquals(expectedDefaults.maintainPresenceState, builder.maintainPresenceState)

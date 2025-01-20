@@ -21,8 +21,12 @@ class RetrofitManagerTest : BaseTest() {
             clonedRetrofitManager.transactionClientInstance!!.dispatcher,
         )
         Assert.assertEquals(
-            retrofitManager.noSignatureClientInstance!!.dispatcher,
-            clonedRetrofitManager.noSignatureClientInstance!!.dispatcher,
+            retrofitManager.noSignatureClientInstanceForFiles!!.dispatcher,
+            clonedRetrofitManager.noSignatureClientInstanceForFiles!!.dispatcher,
+        )
+        Assert.assertEquals(
+            retrofitManager.signatureClientInstanceForFiles!!.dispatcher,
+            clonedRetrofitManager.signatureClientInstanceForFiles!!.dispatcher
         )
 
         Assert.assertEquals(
@@ -34,8 +38,12 @@ class RetrofitManagerTest : BaseTest() {
             clonedRetrofitManager.transactionClientInstance!!.connectionPool,
         )
         Assert.assertEquals(
-            retrofitManager.noSignatureClientInstance!!.connectionPool,
-            clonedRetrofitManager.noSignatureClientInstance!!.connectionPool,
+            retrofitManager.noSignatureClientInstanceForFiles!!.connectionPool,
+            clonedRetrofitManager.noSignatureClientInstanceForFiles!!.connectionPool,
+        )
+        Assert.assertEquals(
+            retrofitManager.signatureClientInstanceForFiles!!.connectionPool,
+            clonedRetrofitManager.signatureClientInstanceForFiles!!.connectionPool
         )
     }
 
