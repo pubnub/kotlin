@@ -11,6 +11,7 @@ import com.pubnub.api.v2.PNConfigurationOverride
 import okhttp3.Authenticator
 import okhttp3.CertificatePinner
 import okhttp3.ConnectionSpec
+import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.slf4j.LoggerFactory
 import java.net.Proxy
@@ -71,6 +72,10 @@ class PNConfigurationImpl(
         )
     ),
     override val managePresenceListManually: Boolean = false,
+    override val baseOkHttpClient: OkHttpClient? = null,
+    override val subscribeOkHttpConfigureAction: ((OkHttpClient.Builder) -> Unit)? = null,
+    override val nonSubscribeOkHttpConfigureAction: ((OkHttpClient.Builder) -> Unit)? = null,
+    override val filesOkHttpConfigureAction: ((OkHttpClient.Builder) -> Unit)? = null,
 ) : PNConfiguration, PNConfigurationOverride {
     companion object {
         const val DEFAULT_DEDUPE_SIZE = 100
@@ -183,6 +188,15 @@ class PNConfigurationImpl(
 
         override var managePresenceListManually: Boolean = defaultConfiguration.managePresenceListManually
 
+        override var baseOkHttpClient: OkHttpClient? = defaultConfiguration.baseOkHttpClient
+        override var subscribeOkHttpConfigureAction: ((OkHttpClient.Builder) -> Unit)? = defaultConfiguration.subscribeOkHttpConfigureAction
+        override var nonSubscribeOkHttpConfigureAction: (
+            (
+                OkHttpClient.Builder
+            ) -> Unit
+        )? = defaultConfiguration.nonSubscribeOkHttpConfigureAction
+        override var filesOkHttpConfigureAction: ((OkHttpClient.Builder) -> Unit)? = defaultConfiguration.filesOkHttpConfigureAction
+
         override fun build(): PNConfiguration {
             return PNConfigurationImpl(
                 userId = userId,
@@ -224,6 +238,10 @@ class PNConfigurationImpl(
                 pnsdkSuffixes = pnsdkSuffixes,
                 retryConfiguration = retryConfiguration,
                 managePresenceListManually = managePresenceListManually,
+                baseOkHttpClient = baseOkHttpClient,
+                subscribeOkHttpConfigureAction = subscribeOkHttpConfigureAction,
+                nonSubscribeOkHttpConfigureAction = nonSubscribeOkHttpConfigureAction,
+                filesOkHttpConfigureAction = filesOkHttpConfigureAction,
             )
         }
     }

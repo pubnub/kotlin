@@ -11,6 +11,7 @@ import com.pubnub.api.retry.RetryableEndpointGroup
 import okhttp3.Authenticator
 import okhttp3.CertificatePinner
 import okhttp3.ConnectionSpec
+import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.slf4j.LoggerFactory
 import java.net.Proxy
@@ -71,6 +72,10 @@ class PNConfigurationImpl(
         )
     ),
     override val managePresenceListManually: Boolean = false,
+    override val baseOkHttpClient: OkHttpClient? = null,
+    override val subscribeOkHttpConfigureAction: ((OkHttpClient.Builder) -> Unit)? = null,
+    override val nonSubscribeOkHttpConfigureAction: ((OkHttpClient.Builder) -> Unit)? = null,
+    override val filesOkHttpConfigureAction: ((OkHttpClient.Builder) -> Unit)? = null,
 ) : PNConfiguration {
     companion object {
         const val DEFAULT_DEDUPE_SIZE = 100
