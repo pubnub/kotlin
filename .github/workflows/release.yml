@@ -55,6 +55,9 @@ jobs:
           ref: v1
           token: ${{ secrets.GH_TOKEN }}
           path: .github/.release/actions
+      - name: Update CocoaPods trunk
+        run: |
+          pod repo update
       - name: Publish to Maven
         uses: ./.github/.release/actions/actions/services/maven
         with:
