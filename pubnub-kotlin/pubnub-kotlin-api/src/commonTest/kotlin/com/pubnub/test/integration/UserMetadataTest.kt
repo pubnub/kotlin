@@ -20,6 +20,8 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.time.Duration.Companion.seconds
 
+internal const val HTTP_PRECONDITION_FAILED = 412
+
 class UserMetadataTest : BaseIntegrationTest() {
     private val uuid = "myUser" + randomString()
     private val name = randomString()
@@ -58,6 +60,57 @@ class UserMetadataTest : BaseIntegrationTest() {
         assertEquals(status, pnuuidMetadata.status?.value)
         assertEquals(customData, pnuuidMetadata.custom?.value)
         assertEquals(type, pnuuidMetadata.type?.value)
+    }
+
+    @Test
+    fun set_metadata_ifMatch_allows_change() = runTest {
+        // given
+        val result = pubnub.setUUIDMetadata(
+            uuid,
+            name = name,
+            externalId = externalId,
+            profileUrl = profileUrl,
+            email = email,
+            status = status,
+            custom = custom,
+            includeCustom = includeCustom,
+            type = type
+        ).await()
+
+        val pnuuidMetadata = result.data
+
+        // when
+        val newData = pubnub.setUUIDMetadata(uuid, externalId = "someNewId", ifMatchesEtag = pnuuidMetadata.eTag?.value).await().data
+
+        // then
+        assertEquals("someNewId", newData.externalId?.value)
+    }
+
+    @Test
+    fun set_metadata_ifMatch_prohibits_change() = runTest {
+        // given
+        val result = pubnub.setUUIDMetadata(
+            uuid,
+            name = name,
+            externalId = externalId,
+            profileUrl = profileUrl,
+            email = email,
+            status = status,
+            custom = custom,
+            includeCustom = includeCustom,
+            type = type
+        ).await()
+
+        val pnuuidMetadata = result.data
+        pubnub.setUUIDMetadata(uuid, name = "someNewName").await()
+
+        // when
+        val ex = assertFailsWith<PubNubException> {
+            pubnub.setUUIDMetadata(uuid, externalId = "someNewId", ifMatchesEtag = pnuuidMetadata.eTag?.value).await()
+        }
+
+        // then
+        assertEquals(HTTP_PRECONDITION_FAILED, ex.statusCode)
     }
 
     @Test

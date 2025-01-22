@@ -12,6 +12,7 @@ import com.pubnub.internal.java.endpoints.DelegatingEndpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,7 +47,8 @@ public class SetChannelMetadataImpl
                 custom,
                 includeCustom,
                 type,
-                status
+                status,
+                ifMatchesEtag
         );
     }
 
@@ -68,6 +70,10 @@ public class SetChannelMetadataImpl
 
     @Setter
     private boolean includeCustom;
+
+    @Setter
+    @Nullable
+    private String ifMatchesEtag;
 
     @Override
     public SetChannelMetadata custom(Map<String, Object> custom) {

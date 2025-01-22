@@ -563,7 +563,8 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
         custom: CustomObject?,
         includeCustom: Boolean,
         type: String?,
-        status: String?
+        status: String?,
+        ifMatchesEtag: String?,
     ): SetChannelMetadata {
         return SetChannelMetadataImpl(
             jsPubNub,
@@ -576,6 +577,7 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
                     PatchValue.of(type),
                     PatchValue.of(custom),
                 )
+                this.ifMatchesEtag = ifMatchesEtag
 
                 this.include = createJsObject<PubNubJs.UuidIncludeCustom> {
                     this.customFields = includeCustom
@@ -637,7 +639,8 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
         custom: CustomObject?,
         includeCustom: Boolean,
         type: String?,
-        status: String?
+        status: String?,
+        ifMatchesEtag: String?,
     ): SetUUIDMetadata {
         return SetUUIDMetadataImpl(
             jsPubNub,
@@ -652,6 +655,7 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
                     PatchValue.of(custom),
                 )
                 this.uuid = uuid
+                this.ifMatchesEtag = ifMatchesEtag
 
                 include = createJsObject<PubNubJs.UuidIncludeCustom> {
                     this.customFields = includeCustom

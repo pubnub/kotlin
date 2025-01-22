@@ -1,9 +1,9 @@
 name: kotlin
-version: 10.3.4
+version: 10.4.0
 schema: 1
 scm: github.com/pubnub/kotlin
 files:
-  - build/libs/pubnub-kotlin-10.3.4-all.jar
+  - build/libs/pubnub-kotlin-10.4.0-all.jar
 sdks:
   - 
       type: library
@@ -23,8 +23,8 @@ sdks:
             -
               distribution-type: library
               distribution-repository: maven
-              package-name: pubnub-kotlin-10.3.4
-              location: https://repo.maven.apache.org/maven2/com/pubnub/pubnub-kotlin/10.3.4/pubnub-kotlin-10.3.4.jar
+              package-name: pubnub-kotlin-10.4.0
+              location: https://repo.maven.apache.org/maven2/com/pubnub/pubnub-kotlin/10.4.0/pubnub-kotlin-10.4.0.jar
               supported-platforms:
                 supported-operating-systems:
                   Android:
@@ -121,6 +121,11 @@ sdks:
                   license-url: https://www.apache.org/licenses/LICENSE-2.0.txt
                   is-required: Required
 changelog:
+  - date: 2025-01-21
+    version: v10.4.0
+    changes:
+      - type: feature
+        text: "A new optional parameter `ifMatchesEtag` is added to `setUUIDMetadata` and `setChannelMetadata`. When provided, the server compares the argument value with the ETag on the server and if they don't match a HTTP 412 error is returned."
   - date: 2025-01-13
     version: v10.3.4
     changes:

@@ -25,6 +25,7 @@ class SetChannelMetadataEndpoint internal constructor(
     private val includeQueryParam: IncludeQueryParam,
     private val type: String?,
     private val status: String?,
+    private val ifMatchesEtag: String?,
 ) : EndpointCore<EntityEnvelope<PNChannelMetadata>, PNChannelMetadataResult>(pubnub),
     SetChannelMetadata {
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNChannelMetadata>> {
@@ -41,6 +42,7 @@ class SetChannelMetadataEndpoint internal constructor(
                 ),
             channel = channel,
             options = params,
+            ifMatchesEtag = ifMatchesEtag
         )
     }
 

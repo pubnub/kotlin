@@ -268,6 +268,7 @@ expect interface PubNub {
         includeCustom: Boolean = false,
         type: String? = null,
         status: String? = null,
+        ifMatchesEtag: String? = null,
     ): SetChannelMetadata
 
     fun removeChannelMetadata(channel: String): RemoveChannelMetadata
@@ -296,6 +297,7 @@ expect interface PubNub {
         includeCustom: Boolean = false,
         type: String? = null,
         status: String? = null,
+        ifMatchesEtag: String? = null,
     ): SetUUIDMetadata
 
     fun removeUUIDMetadata(uuid: String? = null): RemoveUUIDMetadata

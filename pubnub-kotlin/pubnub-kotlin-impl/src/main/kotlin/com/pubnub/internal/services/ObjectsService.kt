@@ -14,6 +14,7 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.PATCH
 import retrofit2.http.Path
@@ -40,6 +41,7 @@ internal interface ObjectsService {
         @Path("uuid") uuid: String,
         @Body body: UUIDMetadataInput,
         @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+        @Header("If-Match") ifMatchesEtag: String? = null,
     ): Call<EntityEnvelope<PNUUIDMetadata>>
 
     @DELETE("v2/objects/{subKey}/uuids/{uuid}")
@@ -68,6 +70,7 @@ internal interface ObjectsService {
         @Path("channel") channel: String,
         @Body body: ChannelMetadataInput,
         @QueryMap(encoded = true) options: Map<String, String> = mapOf(),
+        @Header("If-Match") ifMatchesEtag: String? = null,
     ): Call<EntityEnvelope<PNChannelMetadata>>
 
     @DELETE("v2/objects/{subKey}/channels/{channel}")

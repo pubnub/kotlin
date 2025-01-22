@@ -513,7 +513,8 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         custom: CustomObject?,
         includeCustom: Boolean,
         type: String?,
-        status: String?
+        status: String?,
+        ifMatchesEtag: String?,
     ): SetChannelMetadata {
         return SetChannelMetadataImpl(
             pubnub = pubNubObjC,
@@ -523,7 +524,8 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
             custom = custom,
             includeCustom = includeCustom,
             type = type,
-            status = status
+            status = status,
+            ifMatchesEtag = ifMatchesEtag,
         )
     }
 
@@ -570,7 +572,8 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         custom: CustomObject?,
         includeCustom: Boolean,
         type: String?,
-        status: String?
+        status: String?,
+        ifMatchesEtag: String?,
     ): SetUUIDMetadata {
         return SetUUIDMetadataImpl(
             pubnub = pubNubObjC,
@@ -582,7 +585,8 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
             custom = custom,
             includeCustom = includeCustom,
             type = type,
-            status = status
+            status = status,
+            ifMatchesEtag = ifMatchesEtag,
         )
     }
 

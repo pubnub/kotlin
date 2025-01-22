@@ -1070,6 +1070,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
 
         var data: UUIDMetadata
         var include: UuidIncludeCustom?
+        var ifMatchesEtag: String?
     }
 
     interface RemoveUUIDMetadataParameters {
@@ -1121,6 +1122,7 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var channel: String
         var data: ChannelMetadata
         var include: UuidIncludeCustom?
+        var ifMatchesEtag: String?
     }
 
     interface RemoveChannelMetadataParameters {

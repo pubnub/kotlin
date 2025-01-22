@@ -53,6 +53,9 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
+      - name: Update CocoaPods trunk
+        run: |
+          pod repo update
       - name: Validate clean build
         run: ./gradlew ktlintFormat publishAllPublicationsToRepoRepository -PRELEASE_SIGNING_ENABLED=false
       - name: Cancel workflow runs for commit on error
