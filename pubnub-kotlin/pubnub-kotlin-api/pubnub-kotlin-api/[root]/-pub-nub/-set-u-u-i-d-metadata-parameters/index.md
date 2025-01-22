@@ -10,5 +10,6 @@ interface [SetUUIDMetadataParameters](index.md)
 | Name | Summary |
 |---|---|
 | [data](data.md) | [js]<br>abstract var [data](data.md): [PubNub.UUIDMetadata](../-u-u-i-d-metadata/index.md) |
+| [ifMatchesEtag](if-matches-etag.md) | [js]<br>abstract var [ifMatchesEtag](if-matches-etag.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? |
 | [include](include.md) | [js]<br>abstract var [include](include.md): [PubNub.UuidIncludeCustom](../-uuid-include-custom/index.md)? |
 | [uuid](uuid.md) | [js]<br>abstract var [uuid](uuid.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? |
