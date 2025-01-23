@@ -8,6 +8,7 @@ import com.pubnub.api.retry.RetryConfiguration
 import okhttp3.Authenticator
 import okhttp3.CertificatePinner
 import okhttp3.ConnectionSpec
+import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import java.net.Proxy
 import java.net.ProxySelector
@@ -16,6 +17,47 @@ import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.X509ExtendedTrustManager
 
 actual interface PNConfiguration {
+    /**
+     * The base [OkHttpClient] instance that will be used to preconfigure PubNub SDK's internal clients.
+     *
+     * Please note that the internal clients will share the dispatcher and connection pool with the provided client.
+     *
+     * @see [subscribeOkHttpConfigureAction]
+     * @see [nonSubscribeOkHttpConfigureAction]
+     * @see [filesOkHttpConfigureAction]
+     */
+    val baseOkHttpClient: OkHttpClient?
+
+    /**
+     * Use this callback to configure any options on the [OkHttpClient] instance that will be used for Subscribe requests.
+     *
+     * Setting this option disables reading values from [logVerbosity], [httpLoggingInterceptor], [sslSocketFactory],
+     * [connectionSpec], [hostnameVerifier], [proxy], [proxySelector], [proxyAuthenticator] and [certificatePinner] for
+     * the instance of `OkHttpClient` servicing Subscribe requests. Those options should be set using the
+     * [subscribeOkHttpConfigureAction] instead.
+     */
+    val subscribeOkHttpConfigureAction: ((OkHttpClient.Builder) -> Unit)?
+
+    /**
+     * Use this callback to configure any options on the [OkHttpClient] instance that will be used for requests other than Subscribe or File upload/download.
+     *
+     * Setting this option disables reading values from [logVerbosity], [httpLoggingInterceptor], [sslSocketFactory],
+     * [connectionSpec], [hostnameVerifier], [proxy], [proxySelector], [proxyAuthenticator] and [certificatePinner] for
+     * the instance of `OkHttpClient` servicing requests other than Subscribe and File upload/download. Those options
+     * should be set using the [nonSubscribeOkHttpConfigureAction] instead.
+     */
+    val nonSubscribeOkHttpConfigureAction: ((OkHttpClient.Builder) -> Unit)?
+
+    /**
+     * Use this callback to configure any options on the [OkHttpClient] instance that will be used for File upload/download requests.
+     *
+     * Setting this option disables reading values from [logVerbosity], [httpLoggingInterceptor], [sslSocketFactory],
+     * [connectionSpec], [hostnameVerifier], [proxy], [proxySelector], [proxyAuthenticator] and [certificatePinner] for
+     * the instance of `OkHttpClient` servicing File upload/download requests. Those options
+     * should be set using the [filesOkHttpConfigureAction] instead.
+     */
+    val filesOkHttpConfigureAction: ((OkHttpClient.Builder) -> Unit)?
+
     /**
      * The user ID that the PubNub client will use.
      */
@@ -77,6 +119,9 @@ actual interface PNConfiguration {
     /**
      * Set to [PNLogVerbosity.BODY] to enable logging of network traffic, otherwise se to [PNLogVerbosity.NONE].
      */
+    @Deprecated(
+        message = "Use `subscribeOkHttpConfigureAction`, `nonSubscribeOkHttpConfigureAction`, or `filesOkHttpConfigureAction` to configure the OkHttp client."
+    )
     actual val logVerbosity: PNLogVerbosity
 
     /**
@@ -103,7 +148,7 @@ actual interface PNConfiguration {
     val heartbeatInterval: Int
 
     /**
-     * The subscribe request timeout.
+     * The subscribe read timeout.
      *
      * The value is in seconds.
      *
@@ -147,6 +192,9 @@ actual interface PNConfiguration {
      *
      * Defaults to 10.
      */
+    @Deprecated(
+        message = "Use `subscribeOkHttpConfigureAction`, `nonSubscribeOkHttpConfigureAction`, or `filesOkHttpConfigureAction` to configure the OkHttp client."
+    )
     val nonSubscribeReadTimeout: Int
 
     /**
@@ -212,21 +260,33 @@ actual interface PNConfiguration {
      *
      * @see [Proxy]
      */
+    @Deprecated(
+        message = "Use `subscribeOkHttpConfigureAction`, `nonSubscribeOkHttpConfigureAction`, or `filesOkHttpConfigureAction` to configure the OkHttp client."
+    )
     val proxy: Proxy?
 
     /**
      * @see [ProxySelector]
      */
+    @Deprecated(
+        message = "Use `subscribeOkHttpConfigureAction`, `nonSubscribeOkHttpConfigureAction`, or `filesOkHttpConfigureAction` to configure the OkHttp client."
+    )
     val proxySelector: ProxySelector?
 
     /**
      * @see [Authenticator]
      */
+    @Deprecated(
+        message = "Use `subscribeOkHttpConfigureAction`, `nonSubscribeOkHttpConfigureAction`, or `filesOkHttpConfigureAction` to configure the OkHttp client."
+    )
     val proxyAuthenticator: Authenticator?
 
     /**
      * @see [CertificatePinner]
      */
+    @Deprecated(
+        message = "Use `subscribeOkHttpConfigureAction`, `nonSubscribeOkHttpConfigureAction`, or `filesOkHttpConfigureAction` to configure the OkHttp client."
+    )
     val certificatePinner: CertificatePinner?
 
     /**
@@ -234,26 +294,41 @@ actual interface PNConfiguration {
      *
      * @see [HttpLoggingInterceptor]
      */
+    @Deprecated(
+        message = "Use `subscribeOkHttpConfigureAction`, `nonSubscribeOkHttpConfigureAction`, or `filesOkHttpConfigureAction` to configure the OkHttp client."
+    )
     val httpLoggingInterceptor: HttpLoggingInterceptor?
 
     /**
      * @see [SSLSocketFactory]
      */
+    @Deprecated(
+        message = "Use `subscribeOkHttpConfigureAction`, `nonSubscribeOkHttpConfigureAction`, or `filesOkHttpConfigureAction` to configure the OkHttp client."
+    )
     val sslSocketFactory: SSLSocketFactory?
 
     /**
      * @see [X509ExtendedTrustManager]
      */
+    @Deprecated(
+        message = "Use `subscribeOkHttpConfigureAction`, `nonSubscribeOkHttpConfigureAction`, or `filesOkHttpConfigureAction` to configure the OkHttp client."
+    )
     val x509ExtendedTrustManager: X509ExtendedTrustManager?
 
     /**
      * @see [okhttp3.ConnectionSpec]
      */
+    @Deprecated(
+        message = "Use `subscribeOkHttpConfigureAction`, `nonSubscribeOkHttpConfigureAction`, or `filesOkHttpConfigureAction` to configure the OkHttp client."
+    )
     val connectionSpec: ConnectionSpec?
 
     /**
      * @see [javax.net.ssl.HostnameVerifier]
      */
+    @Deprecated(
+        message = "Use `subscribeOkHttpConfigureAction`, `nonSubscribeOkHttpConfigureAction`, or `filesOkHttpConfigureAction` to configure the OkHttp client."
+    )
     val hostnameVerifier: HostnameVerifier?
 
     /**
@@ -505,6 +580,9 @@ actual interface PNConfiguration {
         /**
          * @see [okhttp3.Dispatcher.setMaxRequestsPerHost]
          */
+        @Deprecated(
+            message = "Use `subscribeOkHttpConfigureAction`, `nonSubscribeOkHttpConfigureAction`, or `filesOkHttpConfigureAction` to configure the OkHttp client."
+        )
         var maximumConnections: Int?
 
         /**
@@ -593,6 +671,41 @@ actual interface PNConfiguration {
          * @see PNConfiguration.heartbeatInterval
          */
         var managePresenceListManually: Boolean
+
+        /**
+         * The base [OkHttpClient] instance that will be used to preconfigure PubNub SDK's internal `OKHttpClients`.
+         */
+        var baseOkHttpClient: OkHttpClient?
+
+        /**
+         * Use this callback to configure any options on the [OkHttpClient] instance that will be used for Subscribe requests.
+         *
+         * Setting this option disables reading values from [logVerbosity], [httpLoggingInterceptor], [sslSocketFactory],
+         * [connectionSpec], [hostnameVerifier], [proxy], [proxySelector], [proxyAuthenticator] and [certificatePinner] for
+         * the instance of `OkHttpClient` servicing Subscribe requests. Those options should be set using the
+         * [subscribeOkHttpConfigureAction] instead.
+         */
+        var subscribeOkHttpConfigureAction: ((OkHttpClient.Builder) -> Unit)?
+
+        /**
+         * Use this callback to configure any options on the [OkHttpClient] instance that will be used for requests other than Subscribe or File upload/download.
+         *
+         * Setting this option disables reading values from [logVerbosity], [httpLoggingInterceptor], [sslSocketFactory],
+         * [connectionSpec], [hostnameVerifier], [proxy], [proxySelector], [proxyAuthenticator] and [certificatePinner] for
+         * the instance of `OkHttpClient` servicing requests other than Subscribe and File upload/download. Those options
+         * should be set using the [nonSubscribeOkHttpConfigureAction] instead.
+         */
+        var nonSubscribeOkHttpConfigureAction: ((OkHttpClient.Builder) -> Unit)?
+
+        /**
+         * Use this callback to configure any options on the [OkHttpClient] instance that will be used for File upload/download requests.
+         *
+         * Setting this option disables reading values from [logVerbosity], [httpLoggingInterceptor], [sslSocketFactory],
+         * [connectionSpec], [hostnameVerifier], [proxy], [proxySelector], [proxyAuthenticator] and [certificatePinner] for
+         * the instance of `OkHttpClient` servicing File upload/download requests. Those options
+         * should be set using the [filesOkHttpConfigureAction] instead.
+         */
+        var filesOkHttpConfigureAction: ((OkHttpClient.Builder) -> Unit)?
 
         /**
          * Create a [PNConfiguration] object with values from this builder.
@@ -700,6 +813,36 @@ interface PNConfigurationOverride {
          * Defaults to 10.
          */
         var nonSubscribeReadTimeout: Int
+
+        /**
+         * Use this callback to configure any options on the [OkHttpClient] instance that will be used for Subscribe requests.
+         *
+         * Setting this option disables reading values from [logVerbosity], [httpLoggingInterceptor], [sslSocketFactory],
+         * [connectionSpec], [hostnameVerifier], [proxy], [proxySelector], [proxyAuthenticator] and [certificatePinner] for
+         * the instance of `OkHttpClient` servicing Subscribe requests. Those options should be set using the
+         * [subscribeOkHttpConfigureAction] instead.
+         */
+        var subscribeOkHttpConfigureAction: ((OkHttpClient.Builder) -> Unit)?
+
+        /**
+         * Use this callback to configure any options on the [OkHttpClient] instance that will be used for requests other than Subscribe or File upload/download.
+         *
+         * Setting this option disables reading values from [logVerbosity], [httpLoggingInterceptor], [sslSocketFactory],
+         * [connectionSpec], [hostnameVerifier], [proxy], [proxySelector], [proxyAuthenticator] and [certificatePinner] for
+         * the instance of `OkHttpClient` servicing requests other than Subscribe and File upload/download. Those options
+         * should be set using the [nonSubscribeOkHttpConfigureAction] instead.
+         */
+        var nonSubscribeOkHttpConfigureAction: ((OkHttpClient.Builder) -> Unit)?
+
+        /**
+         * Use this callback to configure any options on the [OkHttpClient] instance that will be used for File upload/download requests.
+         *
+         * Setting this option disables reading values from [logVerbosity], [httpLoggingInterceptor], [sslSocketFactory],
+         * [connectionSpec], [hostnameVerifier], [proxy], [proxySelector], [proxyAuthenticator] and [certificatePinner] for
+         * the instance of `OkHttpClient` servicing File upload/download requests. Those options
+         * should be set using the [filesOkHttpConfigureAction] instead.
+         */
+        var filesOkHttpConfigureAction: ((OkHttpClient.Builder) -> Unit)?
 
         /**
          * Create a [PNConfiguration] object with values from this builder.
