@@ -172,10 +172,17 @@ class RetrofitManager(
     ) {
         if (client != null) {
             client.dispatcher.cancelAll()
+            client.connectionPool.evictAll()
+            val executorService = client.dispatcher.executorService
+            executorService.shutdown()
             if (force) {
-                client.connectionPool.evictAll()
-                val executorService = client.dispatcher.executorService
-                executorService.shutdown()
+                try {
+                    if (!executorService.awaitTermination(100, TimeUnit.MILLISECONDS)) {
+                        executorService.shutdownNow()
+                    }
+                } catch (e: InterruptedException) {
+                    executorService.shutdownNow()
+                }
             }
         }
     }
