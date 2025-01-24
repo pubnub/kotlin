@@ -172,7 +172,7 @@ class RetrofitManager(
     ) {
         if (client != null) {
             client.dispatcher.cancelAll()
-            client.connectionPool.evictAll()
+
             val executorService = client.dispatcher.executorService
             executorService.shutdown()
             if (force) {
@@ -184,6 +184,7 @@ class RetrofitManager(
                     executorService.shutdownNow()
                 }
             }
+            client.connectionPool.evictAll()
         }
     }
 }
