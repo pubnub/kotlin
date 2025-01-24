@@ -1,3 +1,9 @@
+## v10.4.1
+January 24 2025
+
+#### Fixed
+- PubNub.forceDestroy should cause okHttpClient executor service to shutDown immediately.
+
 ## v10.4.0
 January 21 2025
 
