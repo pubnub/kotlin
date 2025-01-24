@@ -659,22 +659,6 @@ proxy-from-env@^1.1.0:
   resolved "https://registry.yarnpkg.com/proxy-from-env/-/proxy-from-env-1.1.0.tgz#e102f16ca355424865755d2c9e8ea4f24d58c3e2"
   integrity sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==
 
-pubnub@8.4.1:
-  version "8.4.1"
-  resolved "https://registry.yarnpkg.com/pubnub/-/pubnub-8.4.1.tgz#5f6f19e84d3187dc8aee0a458bd6b05e90d43e6a"
-  integrity sha512-mPlwVoHJDWPasZx52UfSMiPX5TATm5A+ficSogyqDqTQ4w5EQnwxH+PJdsWc0mPnlT051jM1vIISMeM0fQ30CQ==
-  dependencies:
-    agentkeepalive "^3.5.2"
-    buffer "^6.0.3"
-    cbor-js "^0.1.0"
-    cbor-sync "^1.0.4"
-    form-data "^4.0.0"
-    lil-uuid "^0.1.1"
-    node-fetch "^2.7.0"
-    proxy-agent "^6.3.0"
-    react-native-url-polyfill "^2.0.0"
-    text-encoding "^0.7.0"
-
 pubnub@8.6.0:
   version "8.6.0"
   resolved "https://registry.yarnpkg.com/pubnub/-/pubnub-8.6.0.tgz#75524e7ed3653090652d160ce83ac089362a0379"
