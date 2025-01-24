@@ -9,6 +9,6 @@ interface [BufferFileInput](index.md)
 
 | Name | Summary |
 |---|---|
-| [data](data.md) | [js]<br>abstract var [data](data.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html) |
-| [mimeType](mime-type.md) | [js]<br>abstract var [mimeType](mime-type.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? |
-| [name](name.md) | [js]<br>abstract var [name](name.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [data](data.md) | [js]<br>abstract var [data](data.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html) |
+| [mimeType](mime-type.md) | [js]<br>abstract var [mimeType](mime-type.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |
+| [name](name.md) | [js]<br>abstract var [name](name.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |

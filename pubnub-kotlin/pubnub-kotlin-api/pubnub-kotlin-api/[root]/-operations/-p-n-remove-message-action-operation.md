@@ -3,4 +3,4 @@
 # PNRemoveMessageActionOperation
 
 [js]\
-abstract var [PNRemoveMessageActionOperation](-p-n-remove-message-action-operation.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+abstract var [PNRemoveMessageActionOperation](-p-n-remove-message-action-operation.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)

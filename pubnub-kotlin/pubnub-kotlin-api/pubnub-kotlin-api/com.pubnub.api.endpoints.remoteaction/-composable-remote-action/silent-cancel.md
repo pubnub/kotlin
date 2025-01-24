@@ -4,6 +4,6 @@
 
 [jvm]\
 
-@[Synchronized](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-synchronized/index.html)
+@[Synchronized](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.jvm/-synchronized/index.html)
 
 open override fun [silentCancel](silent-cancel.md)()

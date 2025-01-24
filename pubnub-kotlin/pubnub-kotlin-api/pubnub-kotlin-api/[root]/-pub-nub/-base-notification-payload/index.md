@@ -16,9 +16,9 @@ interface [BaseNotificationPayload](index.md)
 
 | Name | Summary |
 |---|---|
-| [badge](badge.md) | [js]<br>abstract var [badge](badge.md): [Number](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html)? |
-| [body](body.md) | [js]<br>abstract var [body](body.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? |
-| [payload](payload.md) | [js]<br>abstract var [payload](payload.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)? |
-| [sound](sound.md) | [js]<br>abstract var [sound](sound.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? |
-| [subtitle](subtitle.md) | [js]<br>abstract var [subtitle](subtitle.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? |
-| [title](title.md) | [js]<br>abstract var [title](title.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? |
+| [badge](badge.md) | [js]<br>abstract var [badge](badge.md): [Number](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-number/index.html)? |
+| [body](body.md) | [js]<br>abstract var [body](body.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |
+| [payload](payload.md) | [js]<br>abstract var [payload](payload.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)? |
+| [sound](sound.md) | [js]<br>abstract var [sound](sound.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |
+| [subtitle](subtitle.md) | [js]<br>abstract var [subtitle](subtitle.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |
+| [title](title.md) | [js]<br>abstract var [title](title.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |

@@ -9,6 +9,6 @@ interface [StreamFileInput](index.md)
 
 | Name | Summary |
 |---|---|
-| [mimeType](mime-type.md) | [js]<br>abstract var [mimeType](mime-type.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? |
-| [name](name.md) | [js]<br>abstract var [name](name.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
-| [stream](stream.md) | [js]<br>abstract var [stream](stream.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html) |
+| [mimeType](mime-type.md) | [js]<br>abstract var [mimeType](mime-type.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |
+| [name](name.md) | [js]<br>abstract var [name](name.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |
+| [stream](stream.md) | [js]<br>abstract var [stream](stream.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html) |

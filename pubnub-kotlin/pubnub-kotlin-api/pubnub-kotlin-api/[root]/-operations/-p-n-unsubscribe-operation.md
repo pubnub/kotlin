@@ -3,4 +3,4 @@
 # PNUnsubscribeOperation
 
 [js]\
-abstract var [PNUnsubscribeOperation](-p-n-unsubscribe-operation.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+abstract var [PNUnsubscribeOperation](-p-n-unsubscribe-operation.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)

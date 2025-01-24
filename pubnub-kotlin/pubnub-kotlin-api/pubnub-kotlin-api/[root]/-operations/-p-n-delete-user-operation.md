@@ -3,4 +3,4 @@
 # PNDeleteUserOperation
 
 [js]\
-abstract var [PNDeleteUserOperation](-p-n-delete-user-operation.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+abstract var [PNDeleteUserOperation](-p-n-delete-user-operation.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)

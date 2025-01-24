@@ -3,4 +3,4 @@
 # profileUrl
 
 [js]\
-abstract var [profileUrl](profile-url.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?
+abstract var [profileUrl](profile-url.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)?

@@ -3,4 +3,4 @@
 # update
 
 [jvm]\
-abstract fun [update](update.md)(update: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)): [Grant](index.md)
+abstract fun [update](update.md)(update: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)): [Grant](index.md)

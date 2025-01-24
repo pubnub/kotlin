@@ -3,4 +3,4 @@
 # typeField
 
 [js]\
-abstract var [typeField](type-field.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)?
+abstract var [typeField](type-field.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)?

@@ -3,4 +3,4 @@
 # userMetadata
 
 [jvm]\
-abstract fun [userMetadata](user-metadata.md)(id: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [UserMetadata](../../com.pubnub.api.java.v2.entities/-user-metadata/index.md)
+abstract fun [userMetadata](user-metadata.md)(id: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)): [UserMetadata](../../com.pubnub.api.java.v2.entities/-user-metadata/index.md)

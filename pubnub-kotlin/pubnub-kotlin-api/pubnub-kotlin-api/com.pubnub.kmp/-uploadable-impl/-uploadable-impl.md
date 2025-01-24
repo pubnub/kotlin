@@ -3,4 +3,4 @@
 # UploadableImpl
 
 [js]\
-constructor(fileInput: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html))
+constructor(fileInput: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html))

@@ -3,4 +3,4 @@
 # payload
 
 [js]\
-abstract var [payload](payload.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?
+abstract var [payload](payload.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)?

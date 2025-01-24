@@ -3,4 +3,4 @@
 # pubnubFile
 
 [js]\
-val [pubnubFile](pubnub-file.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)
+val [pubnubFile](pubnub-file.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)

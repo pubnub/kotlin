@@ -3,4 +3,4 @@
 # PNReconnectedCategory
 
 [js]\
-abstract var [PNReconnectedCategory](-p-n-reconnected-category.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+abstract var [PNReconnectedCategory](-p-n-reconnected-category.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)

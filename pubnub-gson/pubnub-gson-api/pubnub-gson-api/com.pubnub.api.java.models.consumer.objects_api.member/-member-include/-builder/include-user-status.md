@@ -3,7 +3,7 @@
 # includeUserStatus
 
 [jvm]\
-fun [includeUserStatus](include-user-status.md)(includeUserStatus: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)): [MemberInclude.Builder](index.md)
+fun [includeUserStatus](include-user-status.md)(includeUserStatus: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)): [MemberInclude.Builder](index.md)
 
 Specifies whether to include the status of the user in the member data.
 
@@ -20,4 +20,4 @@ jvm
 | includeUserStatus | `true` to include user status, `false` otherwise. |
 
 [jvm]\
-var [includeUserStatus](include-user-status.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+var [includeUserStatus](include-user-status.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)

@@ -25,7 +25,7 @@ class [PushPayloadHelper](index.md)
 | Name | Summary |
 |---|---|
 | [apnsPayload](apns-payload.md) | [common]<br>var [apnsPayload](apns-payload.md): [PushPayloadHelper.APNSPayload](-a-p-n-s-payload/index.md)? |
-| [commonPayload](common-payload.md) | [common]<br>var [commonPayload](common-payload.md): [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)&gt;? |
+| [commonPayload](common-payload.md) | [common]<br>var [commonPayload](common-payload.md): [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)&gt;? |
 | [fcmPayload](fcm-payload.md) | [common]<br>var [~~fcmPayload~~](fcm-payload.md): [PushPayloadHelper.FCMPayload](-f-c-m-payload/index.md)? |
 | [fcmPayloadV2](fcm-payload-v2.md) | [common]<br>var [fcmPayloadV2](fcm-payload-v2.md): [PushPayloadHelper.FCMPayloadV2](-f-c-m-payload-v2/index.md)? |
 | [mpnsPayload](mpns-payload.md) | [common]<br>var [mpnsPayload](mpns-payload.md): [PushPayloadHelper.MPNSPayload](-m-p-n-s-payload/index.md)? |
@@ -34,4 +34,4 @@ class [PushPayloadHelper](index.md)
 
 | Name | Summary |
 |---|---|
-| [build](build.md) | [common]<br>fun [build](build.md)(): [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)&gt; |
+| [build](build.md) | [common]<br>fun [build](build.md)(): [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)&gt; |

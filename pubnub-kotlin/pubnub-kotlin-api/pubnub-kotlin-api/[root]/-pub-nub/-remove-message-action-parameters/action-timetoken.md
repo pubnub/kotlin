@@ -3,4 +3,4 @@
 # actionTimetoken
 
 [js]\
-abstract var [actionTimetoken](action-timetoken.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+abstract var [actionTimetoken](action-timetoken.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)

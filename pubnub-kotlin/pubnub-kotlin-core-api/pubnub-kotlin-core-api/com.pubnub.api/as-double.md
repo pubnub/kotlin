@@ -4,7 +4,7 @@
 
 [common, apple, js]\
 [common]\
-expect fun [JsonElement](-json-element/index.md).[asDouble](as-double.md)(): [Double](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html)?
+expect fun [JsonElement](-json-element/index.md).[asDouble](as-double.md)(): [Double](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-double/index.html)?
 
 [apple, js]\
-actual fun [JsonElement](-json-element/index.md).[asDouble](as-double.md)(): [Double](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html)?
+actual fun [JsonElement](-json-element/index.md).[asDouble](as-double.md)(): [Double](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-double/index.html)?

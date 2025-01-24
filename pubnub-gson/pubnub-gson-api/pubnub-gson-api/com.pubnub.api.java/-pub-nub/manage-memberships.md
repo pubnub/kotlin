@@ -3,7 +3,7 @@
 # manageMemberships
 
 [jvm]\
-abstract fun [manageMemberships](manage-memberships.md)(channelsToSet: [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/index.html)&lt;[PNChannelMembership](../../com.pubnub.api.java.models.consumer.objects_api.membership/-p-n-channel-membership/index.md)&gt;, channelsToDelete: [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;): [ManageMembershipsBuilder](../../com.pubnub.api.java.endpoints.objects_api.memberships/-manage-memberships-builder/index.md)
+abstract fun [manageMemberships](manage-memberships.md)(channelsToSet: [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-collection/index.html)&lt;[PNChannelMembership](../../com.pubnub.api.java.models.consumer.objects_api.membership/-p-n-channel-membership/index.md)&gt;, channelsToDelete: [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-collection/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)&gt;): [ManageMembershipsBuilder](../../com.pubnub.api.java.endpoints.objects_api.memberships/-manage-memberships-builder/index.md)
 
 Add and/or remove channel memberships for a UUID.
 

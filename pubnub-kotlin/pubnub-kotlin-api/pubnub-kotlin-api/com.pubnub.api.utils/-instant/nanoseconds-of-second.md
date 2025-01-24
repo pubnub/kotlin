@@ -4,7 +4,7 @@
 
 [common, js]\
 [common]\
-expect val [nanosecondsOfSecond](nanoseconds-of-second.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)
+expect val [nanosecondsOfSecond](nanoseconds-of-second.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)
 
 [js]\
-actual val [nanosecondsOfSecond](nanoseconds-of-second.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) = 0
+actual val [nanosecondsOfSecond](nanoseconds-of-second.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html) = 0

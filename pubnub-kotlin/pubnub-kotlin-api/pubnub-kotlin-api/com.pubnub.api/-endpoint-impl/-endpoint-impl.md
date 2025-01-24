@@ -3,4 +3,4 @@
 # EndpointImpl
 
 [js]\
-constructor(promiseFactory: () -&gt; [Promise](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.js/-promise/index.html)&lt;[T](index.md)&gt;, responseMapping: ([T](index.md)) -&gt; [U](index.md))
+constructor(promiseFactory: () -&gt; [Promise](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.js/-promise/index.html)&lt;[T](index.md)&gt;, responseMapping: ([T](index.md)) -&gt; [U](index.md))

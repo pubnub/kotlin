@@ -15,4 +15,4 @@ class [PNAccessManagerKeysData](index.md)
 
 | Name | Summary |
 |---|---|
-| [authKeys](auth-keys.md) | [common]<br>val [authKeys](auth-keys.md): [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), [PNAccessManagerKeyData](../-p-n-access-manager-key-data/index.md)&gt;? = null |
+| [authKeys](auth-keys.md) | [common]<br>val [authKeys](auth-keys.md): [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), [PNAccessManagerKeyData](../-p-n-access-manager-key-data/index.md)&gt;? = null |

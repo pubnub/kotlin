@@ -3,4 +3,4 @@
 # userMetadata
 
 [common]\
-val [userMetadata](user-metadata.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)? = null
+val [userMetadata](user-metadata.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)? = null

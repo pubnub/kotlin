@@ -3,4 +3,4 @@
 # PNRemoveChannelMetadataResult
 
 [jvm]\
-constructor(status: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), data: JsonElement)
+constructor(status: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html), data: JsonElement)

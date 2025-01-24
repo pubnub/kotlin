@@ -6,7 +6,7 @@
 abstract fun [reconnect](reconnect.md)()
 
 [jvm]\
-abstract fun [reconnect](reconnect.md)(timetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html) = 0)
+abstract fun [reconnect](reconnect.md)(timetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html) = 0)
 
 Force the SDK to try and reach out PubNub. Monitor the results in [SubscribeCallback.status](../../../../../pubnub-gson/pubnub-gson-api/com.pubnub.api.java.callbacks/-subscribe-callback/status.md)
 

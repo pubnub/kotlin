@@ -10,4 +10,4 @@ interface [GetUUIDMetadataParameters](index.md)
 | Name | Summary |
 |---|---|
 | [include](include.md) | [js]<br>abstract var [include](include.md): [PubNub.UuidIncludeCustom](../-uuid-include-custom/index.md)? |
-| [uuid](uuid.md) | [js]<br>abstract var [uuid](uuid.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? |
+| [uuid](uuid.md) | [js]<br>abstract var [uuid](uuid.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |

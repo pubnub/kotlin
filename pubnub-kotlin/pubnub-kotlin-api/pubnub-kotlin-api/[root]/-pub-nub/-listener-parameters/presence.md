@@ -3,4 +3,4 @@
 # presence
 
 [js]\
-abstract val [presence](presence.md): (presenceEvent: [PubNub.PresenceEvent](../-presence-event/index.md)) -&gt; [Unit](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)?
+abstract val [presence](presence.md): (presenceEvent: [PubNub.PresenceEvent](../-presence-event/index.md)) -&gt; [Unit](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-unit/index.html)?

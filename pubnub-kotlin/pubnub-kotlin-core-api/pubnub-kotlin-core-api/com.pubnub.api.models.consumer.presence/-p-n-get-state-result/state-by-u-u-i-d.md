@@ -3,4 +3,4 @@
 # stateByUUID
 
 [common]\
-val [stateByUUID](state-by-u-u-i-d.md): [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), [JsonElement](../../com.pubnub.api/-json-element/index.md)&gt;
+val [stateByUUID](state-by-u-u-i-d.md): [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), [JsonElement](../../com.pubnub.api/-json-element/index.md)&gt;

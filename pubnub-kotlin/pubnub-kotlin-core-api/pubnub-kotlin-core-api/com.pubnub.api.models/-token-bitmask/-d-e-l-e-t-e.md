@@ -3,4 +3,4 @@
 # DELETE
 
 [common]\
-const val [DELETE](-d-e-l-e-t-e.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) = 8
+const val [DELETE](-d-e-l-e-t-e.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html) = 8

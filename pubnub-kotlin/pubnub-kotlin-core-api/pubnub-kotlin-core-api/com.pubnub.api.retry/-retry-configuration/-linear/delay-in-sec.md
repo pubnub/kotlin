@@ -3,4 +3,4 @@
 # delayInSec
 
 [common]\
-var [delayInSec](delay-in-sec.md): [Duration](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/index.html)
+var [delayInSec](delay-in-sec.md): [Duration](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.time/-duration/index.html)

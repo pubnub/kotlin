@@ -3,4 +3,4 @@
 # fcm
 
 [js]\
-abstract var [fcm](fcm.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?
+abstract var [fcm](fcm.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)?

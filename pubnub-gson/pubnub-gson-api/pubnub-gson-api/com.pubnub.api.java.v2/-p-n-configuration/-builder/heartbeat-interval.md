@@ -3,9 +3,9 @@
 # heartbeatInterval
 
 [jvm]\
-abstract fun [heartbeatInterval](heartbeat-interval.md)(heartbeatInterval: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)): [PNConfiguration.Builder](index.md)
+abstract fun [heartbeatInterval](heartbeat-interval.md)(heartbeatInterval: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)): [PNConfiguration.Builder](index.md)
 
-abstract val [heartbeatInterval](heartbeat-interval.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)
+abstract val [heartbeatInterval](heartbeat-interval.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)
 
 How often the client will announce itself to server.
 

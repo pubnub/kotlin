@@ -3,10 +3,10 @@
 # removeUUIDMetadata
 
 [common]\
-expect abstract fun [removeUUIDMetadata](remove-u-u-i-d-metadata.md)(uuid: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null): [RemoveUUIDMetadata](../../com.pubnub.api.endpoints.objects.uuid/-remove-u-u-i-d-metadata/index.md)actual abstract fun [removeUUIDMetadata](remove-u-u-i-d-metadata.md)(uuid: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?): [RemoveUUIDMetadata](../../com.pubnub.api.endpoints.objects.uuid/-remove-u-u-i-d-metadata/index.md)
+expect abstract fun [removeUUIDMetadata](remove-u-u-i-d-metadata.md)(uuid: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? = null): [RemoveUUIDMetadata](../../com.pubnub.api.endpoints.objects.uuid/-remove-u-u-i-d-metadata/index.md)actual abstract fun [removeUUIDMetadata](remove-u-u-i-d-metadata.md)(uuid: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)?): [RemoveUUIDMetadata](../../com.pubnub.api.endpoints.objects.uuid/-remove-u-u-i-d-metadata/index.md)
 
 [jvm]\
-actual abstract fun [removeUUIDMetadata](remove-u-u-i-d-metadata.md)(uuid: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?): [RemoveUUIDMetadata](../../com.pubnub.api.endpoints.objects.uuid/-remove-u-u-i-d-metadata/index.md)
+actual abstract fun [removeUUIDMetadata](remove-u-u-i-d-metadata.md)(uuid: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)?): [RemoveUUIDMetadata](../../com.pubnub.api.endpoints.objects.uuid/-remove-u-u-i-d-metadata/index.md)
 
 Removes the metadata from a specified UUID.
 

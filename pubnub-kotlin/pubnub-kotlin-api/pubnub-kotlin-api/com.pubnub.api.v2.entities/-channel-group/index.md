@@ -15,7 +15,7 @@ Use the [com.pubnub.api.PubNub.channelGroup](../../com.pubnub.api/-pub-nub/chann
 
 | Name | Summary |
 |---|---|
-| [name](name.md) | [common]<br>abstract val [name](name.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)<br>The name of this channel group. |
+| [name](name.md) | [common]<br>abstract val [name](name.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)<br>The name of this channel group. |
 
 ## Functions
 

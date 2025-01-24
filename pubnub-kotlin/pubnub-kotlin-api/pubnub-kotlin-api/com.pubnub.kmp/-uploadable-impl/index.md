@@ -3,16 +3,16 @@
 # UploadableImpl
 
 [js]\
-class [UploadableImpl](index.md)(val fileInput: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)) : [Uploadable](../-uploadable/index.md)
+class [UploadableImpl](index.md)(val fileInput: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)) : [Uploadable](../-uploadable/index.md)
 
 ## Constructors
 
 | | |
 |---|---|
-| [UploadableImpl](-uploadable-impl.md) | [js]<br>constructor(fileInput: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)) |
+| [UploadableImpl](-uploadable-impl.md) | [js]<br>constructor(fileInput: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)) |
 
 ## Properties
 
 | Name | Summary |
 |---|---|
-| [fileInput](../-uploadable/file-input.md) | [js]<br>val [fileInput](../-uploadable/file-input.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html) |
+| [fileInput](../-uploadable/file-input.md) | [js]<br>val [fileInput](../-uploadable/file-input.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html) |

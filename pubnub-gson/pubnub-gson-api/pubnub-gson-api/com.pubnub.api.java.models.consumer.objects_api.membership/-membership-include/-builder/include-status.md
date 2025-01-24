@@ -3,7 +3,7 @@
 # includeStatus
 
 [jvm]\
-fun [includeStatus](include-status.md)(includeStatus: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)): [MembershipInclude.Builder](index.md)
+fun [includeStatus](include-status.md)(includeStatus: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)): [MembershipInclude.Builder](index.md)
 
 Specifies whether to include the status of the membership.
 
@@ -20,4 +20,4 @@ jvm
 | includeStatus | `true` to include status, `false` otherwise. |
 
 [jvm]\
-var [includeStatus](include-status.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+var [includeStatus](include-status.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)

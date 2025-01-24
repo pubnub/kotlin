@@ -3,10 +3,10 @@
 # getMessageActions
 
 [common]\
-expect abstract fun [getMessageActions](get-message-actions.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), page: [PNBoundedPage](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.models.consumer/-p-n-bounded-page/index.md) = PNBoundedPage()): [GetMessageActions](../../com.pubnub.api.endpoints.message_actions/-get-message-actions/index.md)actual abstract fun [getMessageActions](get-message-actions.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), page: [PNBoundedPage](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.models.consumer/-p-n-bounded-page/index.md)): [GetMessageActions](../../com.pubnub.api.endpoints.message_actions/-get-message-actions/index.md)
+expect abstract fun [getMessageActions](get-message-actions.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), page: [PNBoundedPage](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.models.consumer/-p-n-bounded-page/index.md) = PNBoundedPage()): [GetMessageActions](../../com.pubnub.api.endpoints.message_actions/-get-message-actions/index.md)actual abstract fun [getMessageActions](get-message-actions.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), page: [PNBoundedPage](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.models.consumer/-p-n-bounded-page/index.md)): [GetMessageActions](../../com.pubnub.api.endpoints.message_actions/-get-message-actions/index.md)
 
 [jvm]\
-actual abstract fun [getMessageActions](get-message-actions.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), page: [PNBoundedPage](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.models.consumer/-p-n-bounded-page/index.md)): [GetMessageActions](../../com.pubnub.api.endpoints.message_actions/-get-message-actions/index.md)
+actual abstract fun [getMessageActions](get-message-actions.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), page: [PNBoundedPage](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.models.consumer/-p-n-bounded-page/index.md)): [GetMessageActions](../../com.pubnub.api.endpoints.message_actions/-get-message-actions/index.md)
 
 Get a list of message actions in a channel. Returns a list of actions in the response.
 
@@ -20,7 +20,7 @@ jvm
 | page | The paging object used for pagination. @see [PNBoundedPage](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.models.consumer/-p-n-bounded-page/index.md) |
 
 [jvm]\
-abstract fun [~~getMessageActions~~](get-message-actions.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), start: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)? = null, end: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)? = null, limit: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)? = null): [GetMessageActions](../../com.pubnub.api.endpoints.message_actions/-get-message-actions/index.md)
+abstract fun [~~getMessageActions~~](get-message-actions.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), start: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html)? = null, end: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html)? = null, limit: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)? = null): [GetMessageActions](../../com.pubnub.api.endpoints.message_actions/-get-message-actions/index.md)
 
 ---
 

@@ -3,4 +3,4 @@
 # connected
 
 [jvm]\
-abstract fun [connected](connected.md)(connected: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)): [PresenceBuilder](index.md)
+abstract fun [connected](connected.md)(connected: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)): [PresenceBuilder](index.md)

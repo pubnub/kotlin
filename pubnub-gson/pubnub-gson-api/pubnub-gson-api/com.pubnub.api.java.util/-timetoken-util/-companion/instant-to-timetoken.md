@@ -4,9 +4,9 @@
 
 [jvm]\
 
-@[JvmStatic](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-static/index.html)
+@[JvmStatic](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.jvm/-jvm-static/index.html)
 
-fun [instantToTimetoken](instant-to-timetoken.md)(instant: [Instant](https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html)): [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)
+fun [instantToTimetoken](instant-to-timetoken.md)(instant: [Instant](https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html)): [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html)
 
 Converts [Instant](https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html) to a PubNub timetoken
 
@@ -14,7 +14,7 @@ A PubNub timetoken is a 17-digit number representing the number of 100-nanosecon
 
 #### Return
 
-A 17-digit [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html) representing the PubNub timetoken for the given [Instant](https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html).
+A 17-digit [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html) representing the PubNub timetoken for the given [Instant](https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html).
 
 #### Parameters
 

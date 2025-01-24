@@ -3,17 +3,17 @@
 # PNChannelMetadataResult
 
 [common]\
-data class [PNChannelMetadataResult](index.md)(val status: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), val data: [PNChannelMetadata](../-p-n-channel-metadata/index.md))
+data class [PNChannelMetadataResult](index.md)(val status: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html), val data: [PNChannelMetadata](../-p-n-channel-metadata/index.md))
 
 ## Constructors
 
 | | |
 |---|---|
-| [PNChannelMetadataResult](-p-n-channel-metadata-result.md) | [common]<br>constructor(status: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), data: [PNChannelMetadata](../-p-n-channel-metadata/index.md)) |
+| [PNChannelMetadataResult](-p-n-channel-metadata-result.md) | [common]<br>constructor(status: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html), data: [PNChannelMetadata](../-p-n-channel-metadata/index.md)) |
 
 ## Properties
 
 | Name | Summary |
 |---|---|
 | [data](data.md) | [common]<br>val [data](data.md): [PNChannelMetadata](../-p-n-channel-metadata/index.md) |
-| [status](status.md) | [common]<br>val [status](status.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
+| [status](status.md) | [common]<br>val [status](status.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html) |

@@ -3,4 +3,4 @@
 # create
 
 [js]\
-abstract fun [create](create.md)(config: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)): [PubNub.PubNubFileType](index.md)
+abstract fun [create](create.md)(config: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)): [PubNub.PubNubFileType](index.md)

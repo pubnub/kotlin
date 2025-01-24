@@ -3,9 +3,9 @@
 # subscribeTimeout
 
 [jvm]\
-abstract fun [subscribeTimeout](subscribe-timeout.md)(subscribeTimeout: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)): [PNConfiguration.Builder](index.md)
+abstract fun [subscribeTimeout](subscribe-timeout.md)(subscribeTimeout: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)): [PNConfiguration.Builder](index.md)
 
-abstract val [subscribeTimeout](subscribe-timeout.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)
+abstract val [subscribeTimeout](subscribe-timeout.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)
 
 The subscribe request timeout.
 

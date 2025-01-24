@@ -3,4 +3,4 @@
 # ttl
 
 [jvm]\
-abstract fun [ttl](ttl.md)(ttl: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)): [Grant](index.md)
+abstract fun [ttl](ttl.md)(ttl: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)): [Grant](index.md)

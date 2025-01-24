@@ -3,4 +3,4 @@
 # maxFreeSockets
 
 [js]\
-abstract var [maxFreeSockets](max-free-sockets.md): [Number](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html)?
+abstract var [maxFreeSockets](max-free-sockets.md): [Number](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-number/index.html)?

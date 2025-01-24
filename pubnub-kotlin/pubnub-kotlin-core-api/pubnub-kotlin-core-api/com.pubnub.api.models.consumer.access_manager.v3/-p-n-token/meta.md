@@ -3,4 +3,4 @@
 # meta
 
 [common]\
-val [meta](meta.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)? = null
+val [meta](meta.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)? = null

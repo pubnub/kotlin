@@ -3,4 +3,4 @@
 # PNMessageResult
 
 [common]\
-constructor(basePubSubResult: [PubSubResult](../-pub-sub-result/index.md), message: [JsonElement](../../com.pubnub.api/-json-element/index.md), customMessageType: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null, error: [PubNubError](../../com.pubnub.api/-pub-nub-error/index.md)? = null)
+constructor(basePubSubResult: [PubSubResult](../-pub-sub-result/index.md), message: [JsonElement](../../com.pubnub.api/-json-element/index.md), customMessageType: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? = null, error: [PubNubError](../../com.pubnub.api/-pub-nub-error/index.md)? = null)

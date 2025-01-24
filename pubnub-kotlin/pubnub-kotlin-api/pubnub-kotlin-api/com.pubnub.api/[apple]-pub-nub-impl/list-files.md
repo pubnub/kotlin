@@ -3,4 +3,4 @@
 # listFiles
 
 [apple]\
-open override fun [listFiles](list-files.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), limit: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)?, next: [PNPage.PNNext](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.objects/-p-n-page/-p-n-next/index.md)?): [ListFiles](../../com.pubnub.api.endpoints.files/-list-files/index.md)
+open override fun [listFiles](list-files.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), limit: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)?, next: [PNPage.PNNext](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.objects/-p-n-page/-p-n-next/index.md)?): [ListFiles](../../com.pubnub.api.endpoints.files/-list-files/index.md)

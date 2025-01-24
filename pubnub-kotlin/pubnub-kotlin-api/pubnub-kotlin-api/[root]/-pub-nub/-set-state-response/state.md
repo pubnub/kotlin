@@ -3,4 +3,4 @@
 # state
 
 [js]\
-abstract var [state](state.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)
+abstract var [state](state.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)

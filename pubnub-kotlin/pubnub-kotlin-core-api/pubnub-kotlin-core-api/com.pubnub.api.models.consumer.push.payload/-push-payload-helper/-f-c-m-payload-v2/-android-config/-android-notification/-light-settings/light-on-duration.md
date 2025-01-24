@@ -3,4 +3,4 @@
 # lightOnDuration
 
 [common]\
-var [lightOnDuration](light-on-duration.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?
+var [lightOnDuration](light-on-duration.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)?

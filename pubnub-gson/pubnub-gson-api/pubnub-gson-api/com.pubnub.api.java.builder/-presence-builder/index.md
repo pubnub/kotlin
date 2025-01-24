@@ -11,5 +11,5 @@ interface [PresenceBuilder](index.md) : [PubSubBuilder](../-pub-sub-builder/inde
 |---|---|
 | [channelGroups](channel-groups.md) | [jvm]<br>abstract fun [channelGroups](channel-groups.md)(channelGroups: [List](https://docs.oracle.com/javase/8/docs/api/java/util/List.html)&lt;[String](https://docs.oracle.com/javase/8/docs/api/java/lang/String.html)&gt;): [PresenceBuilder](index.md) |
 | [channels](channels.md) | [jvm]<br>abstract fun [channels](channels.md)(channels: [List](https://docs.oracle.com/javase/8/docs/api/java/util/List.html)&lt;[String](https://docs.oracle.com/javase/8/docs/api/java/lang/String.html)&gt;): [PresenceBuilder](index.md) |
-| [connected](connected.md) | [jvm]<br>abstract fun [connected](connected.md)(connected: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)): [PresenceBuilder](index.md) |
+| [connected](connected.md) | [jvm]<br>abstract fun [connected](connected.md)(connected: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)): [PresenceBuilder](index.md) |
 | [execute](../-pub-sub-builder/execute.md) | [jvm]<br>abstract fun [execute](../-pub-sub-builder/execute.md)() |

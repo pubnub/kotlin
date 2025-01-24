@@ -3,4 +3,4 @@
 # lastTimetoken
 
 [js]\
-abstract var [lastTimetoken](last-timetoken.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+abstract var [lastTimetoken](last-timetoken.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)

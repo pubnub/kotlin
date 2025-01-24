@@ -3,4 +3,4 @@
 # mode
 
 [js]\
-abstract var [mode](mode.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?
+abstract var [mode](mode.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)?

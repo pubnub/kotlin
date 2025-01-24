@@ -3,4 +3,4 @@
 # encrypt
 
 [jvm]\
-abstract fun [encrypt](encrypt.md)(data: [ByteArray](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html)): [EncryptedData](../../com.pubnub.api.crypto.data/-encrypted-data/index.md)
+abstract fun [encrypt](encrypt.md)(data: [ByteArray](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-byte-array/index.html)): [EncryptedData](../../com.pubnub.api.crypto.data/-encrypted-data/index.md)

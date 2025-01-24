@@ -3,4 +3,4 @@
 # PNAddChannelsToGroupOperation
 
 [js]\
-abstract var [PNAddChannelsToGroupOperation](-p-n-add-channels-to-group-operation.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+abstract var [PNAddChannelsToGroupOperation](-p-n-add-channels-to-group-operation.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)

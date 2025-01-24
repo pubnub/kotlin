@@ -3,7 +3,7 @@
 # includeInstanceIdentifier
 
 [jvm]\
-abstract fun [includeInstanceIdentifier](include-instance-identifier.md)(includeInstanceIdentifier: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)): [PNConfigurationOverride.Builder](index.md)
+abstract fun [includeInstanceIdentifier](include-instance-identifier.md)(includeInstanceIdentifier: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)): [PNConfigurationOverride.Builder](index.md)
 
 Whether to include a PubNubCore.instanceId with every request.
 

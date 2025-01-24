@@ -3,4 +3,4 @@
 # PNHereNowOccupantData
 
 [common]\
-constructor(uuid: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), state: [JsonElement](../../com.pubnub.api/-json-element/index.md)? = null)
+constructor(uuid: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), state: [JsonElement](../../com.pubnub.api/-json-element/index.md)? = null)

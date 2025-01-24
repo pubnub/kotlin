@@ -9,4 +9,4 @@ object [Companion](index.md)
 
 | Name | Summary |
 |---|---|
-| [MAX_COUNT](-m-a-x_-c-o-u-n-t.md) | [common]<br>const val [MAX_COUNT](-m-a-x_-c-o-u-n-t.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) = 100 |
+| [MAX_COUNT](-m-a-x_-c-o-u-n-t.md) | [common]<br>const val [MAX_COUNT](-m-a-x_-c-o-u-n-t.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html) = 100 |

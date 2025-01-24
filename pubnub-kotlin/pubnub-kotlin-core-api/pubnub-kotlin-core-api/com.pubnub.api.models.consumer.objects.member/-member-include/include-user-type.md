@@ -3,6 +3,6 @@
 # includeUserType
 
 [common]\
-abstract val [includeUserType](include-user-type.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+abstract val [includeUserType](include-user-type.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)
 
 Whether to include the type of the user in the result.

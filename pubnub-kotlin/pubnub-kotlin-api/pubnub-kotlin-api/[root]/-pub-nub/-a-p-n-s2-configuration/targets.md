@@ -3,4 +3,4 @@
 # targets
 
 [js]\
-abstract var [targets](targets.md): [Array](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html)&lt;[PubNub.APNS2Target](../-a-p-n-s2-target/index.md)&gt;
+abstract var [targets](targets.md): [Array](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-array/index.html)&lt;[PubNub.APNS2Target](../-a-p-n-s2-target/index.md)&gt;

@@ -3,6 +3,6 @@
 # includeType
 
 [common]\
-abstract val [includeType](include-type.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+abstract val [includeType](include-type.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)
 
 Whether to include the type of the Membership in the result.

@@ -3,9 +3,9 @@
 # secretKey
 
 [jvm]\
-abstract override fun [secretKey](secret-key.md)(secretKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [PNConfiguration.Builder](index.md)
+abstract override fun [secretKey](secret-key.md)(secretKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)): [PNConfiguration.Builder](index.md)
 
-abstract val [secretKey](secret-key.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+abstract val [secretKey](secret-key.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)
 
 The secret key from the admin panel (only required for modifying/revealing access permissions).
 

@@ -3,4 +3,4 @@
 # metadata
 
 [js]\
-abstract var [metadata](metadata.md): [ArrayBuffer](https://kotlinlang.org/api/latest/jvm/stdlib/org.khronos.webgl/-array-buffer/index.html)?
+abstract var [metadata](metadata.md): [ArrayBuffer](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/org.khronos.webgl/-array-buffer/index.html)?

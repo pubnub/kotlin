@@ -3,4 +3,4 @@
 # includeUUID
 
 [jvm]\
-abstract fun [includeUUID](include-u-u-i-d.md)(includeUUID: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)): [FetchMessages](index.md)
+abstract fun [includeUUID](include-u-u-i-d.md)(includeUUID: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)): [FetchMessages](index.md)

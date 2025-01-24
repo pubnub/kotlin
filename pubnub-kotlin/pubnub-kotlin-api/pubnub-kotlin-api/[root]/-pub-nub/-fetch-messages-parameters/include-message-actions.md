@@ -3,4 +3,4 @@
 # includeMessageActions
 
 [js]\
-abstract var [includeMessageActions](include-message-actions.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)?
+abstract var [includeMessageActions](include-message-actions.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)?

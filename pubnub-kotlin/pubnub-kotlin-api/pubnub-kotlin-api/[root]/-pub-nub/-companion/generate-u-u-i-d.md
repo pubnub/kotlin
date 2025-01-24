@@ -3,4 +3,4 @@
 # generateUUID
 
 [js]\
-fun [generateUUID](generate-u-u-i-d.md)(): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+fun [generateUUID](generate-u-u-i-d.md)(): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)

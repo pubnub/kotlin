@@ -3,4 +3,4 @@
 # PNHistoryOperation
 
 [js]\
-abstract var [PNHistoryOperation](-p-n-history-operation.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+abstract var [PNHistoryOperation](-p-n-history-operation.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)

@@ -3,7 +3,7 @@
 # PNTimeResult
 
 [common]\
-class [PNTimeResult](index.md)(val timetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html))
+class [PNTimeResult](index.md)(val timetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html))
 
 Result of the Time operation.
 
@@ -11,10 +11,10 @@ Result of the Time operation.
 
 | | |
 |---|---|
-| [PNTimeResult](-p-n-time-result.md) | [common]<br>constructor(timetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)) |
+| [PNTimeResult](-p-n-time-result.md) | [common]<br>constructor(timetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html)) |
 
 ## Properties
 
 | Name | Summary |
 |---|---|
-| [timetoken](timetoken.md) | [common]<br>val [timetoken](timetoken.md): [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)<br>Current time token. |
+| [timetoken](timetoken.md) | [common]<br>val [timetoken](timetoken.md): [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html)<br>Current time token. |

@@ -15,4 +15,4 @@ external interface [ObjectsResponse](index.md)&lt;[DataType](index.md)&gt;
 | Name | Summary |
 |---|---|
 | [data](data.md) | [js]<br>abstract var [data](data.md): [DataType](index.md) |
-| [status](status.md) | [js]<br>abstract var [status](status.md): [Number](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html) |
+| [status](status.md) | [js]<br>abstract var [status](status.md): [Number](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-number/index.html) |

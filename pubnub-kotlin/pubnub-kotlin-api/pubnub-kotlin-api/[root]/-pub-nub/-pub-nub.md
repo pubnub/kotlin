@@ -3,4 +3,4 @@
 # PubNub
 
 [js]\
-constructor(config: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html))
+constructor(config: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html))

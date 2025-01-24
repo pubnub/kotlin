@@ -3,4 +3,4 @@
 # ChannelWithCustom
 
 [jvm]\
-constructor(@NonNullchannelId: @NonNull[PNChannelMembership.ChannelId](../-channel-id/index.md), @NonNullcustom: @NonNull[Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html))
+constructor(@NonNullchannelId: @NonNull[PNChannelMembership.ChannelId](../-channel-id/index.md), @NonNullcustom: @NonNull[Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html))

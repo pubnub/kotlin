@@ -3,7 +3,7 @@
 # includeCustom
 
 [jvm]\
-fun [includeCustom](include-custom.md)(includeCustom: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)): [MemberInclude.Builder](index.md)
+fun [includeCustom](include-custom.md)(includeCustom: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)): [MemberInclude.Builder](index.md)
 
 Specifies whether to include custom data in the member data.
 
@@ -20,4 +20,4 @@ jvm
 | includeCustom | `true` to include custom fields, `false` otherwise. |
 
 [jvm]\
-var [includeCustom](include-custom.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+var [includeCustom](include-custom.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)

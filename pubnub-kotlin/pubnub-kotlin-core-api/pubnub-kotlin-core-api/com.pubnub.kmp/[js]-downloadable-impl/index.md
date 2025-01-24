@@ -3,16 +3,16 @@
 # DownloadableImpl
 
 [js]\
-class [DownloadableImpl](index.md)(val pubnubFile: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)) : [Downloadable](../-downloadable/index.md)
+class [DownloadableImpl](index.md)(val pubnubFile: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)) : [Downloadable](../-downloadable/index.md)
 
 ## Constructors
 
 | | |
 |---|---|
-| [DownloadableImpl](-downloadable-impl.md) | [js]<br>constructor(pubnubFile: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)) |
+| [DownloadableImpl](-downloadable-impl.md) | [js]<br>constructor(pubnubFile: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)) |
 
 ## Properties
 
 | Name | Summary |
 |---|---|
-| [pubnubFile](../-downloadable/pubnub-file.md) | [js]<br>val [pubnubFile](../-downloadable/pubnub-file.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html) |
+| [pubnubFile](../-downloadable/pubnub-file.md) | [js]<br>val [pubnubFile](../-downloadable/pubnub-file.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html) |

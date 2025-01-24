@@ -3,4 +3,4 @@
 # PNDownloadFileResult
 
 [common]\
-constructor(fileName: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), byteStream: [Downloadable](../../com.pubnub.kmp/-downloadable/index.md)?)
+constructor(fileName: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), byteStream: [Downloadable](../../com.pubnub.kmp/-downloadable/index.md)?)

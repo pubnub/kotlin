@@ -3,4 +3,4 @@
 # PNGetUsersOperation
 
 [js]\
-abstract var [PNGetUsersOperation](-p-n-get-users-operation.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+abstract var [PNGetUsersOperation](-p-n-get-users-operation.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)

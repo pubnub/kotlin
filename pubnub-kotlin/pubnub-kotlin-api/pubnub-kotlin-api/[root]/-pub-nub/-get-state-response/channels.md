@@ -3,4 +3,4 @@
 # channels
 
 [js]\
-abstract var [channels](channels.md): [Json](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.js/-json/index.html)
+abstract var [channels](channels.md): [Json](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.js/-json/index.html)

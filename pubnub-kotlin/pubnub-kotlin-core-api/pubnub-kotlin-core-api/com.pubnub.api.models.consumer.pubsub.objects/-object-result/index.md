@@ -15,4 +15,4 @@ interface [ObjectResult](index.md)&lt;[T](index.md)&gt;
 | Name | Summary |
 |---|---|
 | [data](data.md) | [common]<br>abstract val [data](data.md): [T](index.md) |
-| [event](event.md) | [common]<br>abstract val [event](event.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [event](event.md) | [common]<br>abstract val [event](event.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |

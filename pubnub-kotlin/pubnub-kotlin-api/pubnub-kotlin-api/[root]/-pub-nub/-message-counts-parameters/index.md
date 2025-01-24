@@ -9,5 +9,5 @@ interface [MessageCountsParameters](index.md)
 
 | Name | Summary |
 |---|---|
-| [channels](channels.md) | [js]<br>abstract var [channels](channels.md): [Array](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt; |
-| [channelTimetokens](channel-timetokens.md) | [js]<br>abstract var [channelTimetokens](channel-timetokens.md): [Array](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt; |
+| [channels](channels.md) | [js]<br>abstract var [channels](channels.md): [Array](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-array/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)&gt; |
+| [channelTimetokens](channel-timetokens.md) | [js]<br>abstract var [channelTimetokens](channel-timetokens.md): [Array](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-array/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)&gt; |

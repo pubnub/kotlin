@@ -3,4 +3,4 @@
 # state
 
 [jvm]\
-abstract fun [state](state.md)(state: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)): [Heartbeat](index.md)
+abstract fun [state](state.md)(state: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)): [Heartbeat](index.md)

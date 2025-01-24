@@ -3,4 +3,4 @@
 # endTimeToken
 
 [js]\
-abstract var [endTimeToken](end-time-token.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?
+abstract var [endTimeToken](end-time-token.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)?

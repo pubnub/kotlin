@@ -3,16 +3,16 @@
 # PNRemoveMetadataResult
 
 [common]\
-data class [PNRemoveMetadataResult](index.md)(val status: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html))
+data class [PNRemoveMetadataResult](index.md)(val status: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html))
 
 ## Constructors
 
 | | |
 |---|---|
-| [PNRemoveMetadataResult](-p-n-remove-metadata-result.md) | [common]<br>constructor(status: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)) |
+| [PNRemoveMetadataResult](-p-n-remove-metadata-result.md) | [common]<br>constructor(status: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)) |
 
 ## Properties
 
 | Name | Summary |
 |---|---|
-| [status](status.md) | [common]<br>val [status](status.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
+| [status](status.md) | [common]<br>val [status](status.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html) |

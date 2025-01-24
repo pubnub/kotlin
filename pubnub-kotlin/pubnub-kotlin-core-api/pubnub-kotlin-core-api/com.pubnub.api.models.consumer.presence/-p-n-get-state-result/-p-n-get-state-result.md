@@ -3,4 +3,4 @@
 # PNGetStateResult
 
 [common]\
-constructor(stateByUUID: [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), [JsonElement](../../com.pubnub.api/-json-element/index.md)&gt;)
+constructor(stateByUUID: [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), [JsonElement](../../com.pubnub.api/-json-element/index.md)&gt;)

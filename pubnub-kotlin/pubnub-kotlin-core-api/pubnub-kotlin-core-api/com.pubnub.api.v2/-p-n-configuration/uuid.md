@@ -3,7 +3,7 @@
 # uuid
 
 [jvm]\
-open val [~~uuid~~](uuid.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+open val [~~uuid~~](uuid.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)
 
 ---
 

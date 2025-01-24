@@ -9,4 +9,4 @@ open class [PNRemoveChannelMetadataResult](index.md) : [EntityEnvelope](../../co
 
 | | |
 |---|---|
-| [PNRemoveChannelMetadataResult](-p-n-remove-channel-metadata-result.md) | [jvm]<br>constructor(status: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), data: JsonElement) |
+| [PNRemoveChannelMetadataResult](-p-n-remove-channel-metadata-result.md) | [jvm]<br>constructor(status: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html), data: JsonElement) |

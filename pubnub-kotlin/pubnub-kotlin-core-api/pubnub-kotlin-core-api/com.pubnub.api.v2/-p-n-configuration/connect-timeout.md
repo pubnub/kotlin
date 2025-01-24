@@ -3,7 +3,7 @@
 # connectTimeout
 
 [jvm]\
-abstract val [connectTimeout](connect-timeout.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)
+abstract val [connectTimeout](connect-timeout.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)
 
 How long before the client gives up trying to connect with the server.
 

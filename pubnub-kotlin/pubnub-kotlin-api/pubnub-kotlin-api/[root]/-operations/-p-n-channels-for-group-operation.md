@@ -3,4 +3,4 @@
 # PNChannelsForGroupOperation
 
 [js]\
-abstract var [PNChannelsForGroupOperation](-p-n-channels-for-group-operation.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+abstract var [PNChannelsForGroupOperation](-p-n-channels-for-group-operation.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)

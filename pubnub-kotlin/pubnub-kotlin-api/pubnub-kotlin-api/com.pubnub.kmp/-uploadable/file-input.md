@@ -3,4 +3,4 @@
 # fileInput
 
 [js]\
-val [fileInput](file-input.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)
+val [fileInput](file-input.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)

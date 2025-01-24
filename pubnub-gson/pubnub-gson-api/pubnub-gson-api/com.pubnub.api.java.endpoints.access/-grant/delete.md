@@ -3,4 +3,4 @@
 # delete
 
 [jvm]\
-abstract fun [delete](delete.md)(delete: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)): [Grant](index.md)
+abstract fun [delete](delete.md)(delete: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)): [Grant](index.md)

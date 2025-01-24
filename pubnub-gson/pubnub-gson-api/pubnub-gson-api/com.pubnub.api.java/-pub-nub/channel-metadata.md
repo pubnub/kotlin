@@ -3,4 +3,4 @@
 # channelMetadata
 
 [jvm]\
-abstract fun [channelMetadata](channel-metadata.md)(id: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [ChannelMetadata](../../com.pubnub.api.java.v2.entities/-channel-metadata/index.md)
+abstract fun [channelMetadata](channel-metadata.md)(id: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)): [ChannelMetadata](../../com.pubnub.api.java.v2.entities/-channel-metadata/index.md)

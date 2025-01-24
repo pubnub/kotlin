@@ -3,4 +3,4 @@
 # BasePubSubResult
 
 [common]\
-constructor(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), subscription: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, timetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)?, userMetadata: [JsonElement](../../com.pubnub.api/-json-element/index.md)?, publisher: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?)
+constructor(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), subscription: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)?, timetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html)?, userMetadata: [JsonElement](../../com.pubnub.api/-json-element/index.md)?, publisher: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)?)

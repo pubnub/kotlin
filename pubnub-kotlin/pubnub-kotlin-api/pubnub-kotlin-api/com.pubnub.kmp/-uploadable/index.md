@@ -17,10 +17,10 @@ expect abstract class [Uploadable](index.md)actual abstract class [Uploadable](i
 
 | | |
 |---|---|
-| [Uploadable](-uploadable.md) | [apple]<br>constructor()<br>[js]<br>constructor(fileInput: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)) |
+| [Uploadable](-uploadable.md) | [apple]<br>constructor()<br>[js]<br>constructor(fileInput: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)) |
 
 ## Properties
 
 | Name | Summary |
 |---|---|
-| [fileInput](file-input.md) | [js]<br>val [fileInput](file-input.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html) |
+| [fileInput](file-input.md) | [js]<br>val [fileInput](file-input.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html) |

@@ -15,7 +15,7 @@ Use the [com.pubnub.api.java.PubNub.userMetadata](../../com.pubnub.api.java/-pub
 
 | Name | Summary |
 |---|---|
-| [id](id.md) | [jvm]<br>abstract val [id](id.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)<br>The id for this user metadata object. |
+| [id](id.md) | [jvm]<br>abstract val [id](id.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)<br>The id for this user metadata object. |
 
 ## Functions
 

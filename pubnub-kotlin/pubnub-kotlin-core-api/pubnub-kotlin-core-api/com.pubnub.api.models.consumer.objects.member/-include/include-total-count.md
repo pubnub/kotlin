@@ -3,6 +3,6 @@
 # includeTotalCount
 
 [common]\
-abstract val [includeTotalCount](include-total-count.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+abstract val [includeTotalCount](include-total-count.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)
 
 Whether to include the total count of Memberships in the result.

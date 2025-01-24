@@ -3,4 +3,4 @@
 # LinearRetryPolicy
 
 [js]\
-var [LinearRetryPolicy](-linear-retry-policy.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)
+var [LinearRetryPolicy](-linear-retry-policy.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)

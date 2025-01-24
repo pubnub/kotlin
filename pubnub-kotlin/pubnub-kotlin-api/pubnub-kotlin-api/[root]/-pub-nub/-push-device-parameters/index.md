@@ -9,7 +9,7 @@ interface [PushDeviceParameters](index.md)
 
 | Name | Summary |
 |---|---|
-| [device](device.md) | [js]<br>abstract var [device](device.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
-| [environment](environment.md) | [js]<br>abstract var [environment](environment.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? |
-| [pushGateway](push-gateway.md) | [js]<br>abstract var [pushGateway](push-gateway.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
-| [topic](topic.md) | [js]<br>abstract var [topic](topic.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? |
+| [device](device.md) | [js]<br>abstract var [device](device.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |
+| [environment](environment.md) | [js]<br>abstract var [environment](environment.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |
+| [pushGateway](push-gateway.md) | [js]<br>abstract var [pushGateway](push-gateway.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |
+| [topic](topic.md) | [js]<br>abstract var [topic](topic.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |

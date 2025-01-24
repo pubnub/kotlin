@@ -3,4 +3,4 @@
 # errorData
 
 [js]\
-abstract var [errorData](error-data.md): [Error](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-error/index.html)?
+abstract var [errorData](error-data.md): [Error](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-error/index.html)?

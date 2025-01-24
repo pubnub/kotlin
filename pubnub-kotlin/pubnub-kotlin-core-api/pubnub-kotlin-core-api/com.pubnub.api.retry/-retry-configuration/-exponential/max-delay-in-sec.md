@@ -3,4 +3,4 @@
 # maxDelayInSec
 
 [common]\
-var [maxDelayInSec](max-delay-in-sec.md): [Duration](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/index.html)
+var [maxDelayInSec](max-delay-in-sec.md): [Duration](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.time/-duration/index.html)

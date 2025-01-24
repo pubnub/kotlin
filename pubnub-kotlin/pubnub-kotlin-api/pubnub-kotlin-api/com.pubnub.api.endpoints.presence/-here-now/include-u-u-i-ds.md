@@ -3,4 +3,4 @@
 # includeUUIDs
 
 [jvm]\
-abstract val [includeUUIDs](include-u-u-i-ds.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+abstract val [includeUUIDs](include-u-u-i-ds.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)

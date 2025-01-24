@@ -3,4 +3,4 @@
 # targets
 
 [common]\
-var [targets](targets.md): [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[PushPayloadHelper.APNSPayload.APNS2Configuration.Target](-target/index.md)&gt;?
+var [targets](targets.md): [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html)&lt;[PushPayloadHelper.APNSPayload.APNS2Configuration.Target](-target/index.md)&gt;?

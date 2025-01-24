@@ -3,7 +3,7 @@
 # replicate
 
 [jvm]\
-abstract fun [replicate](replicate.md)(replicate: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)): [PublishBuilder](index.md)
+abstract fun [replicate](replicate.md)(replicate: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)): [PublishBuilder](index.md)
 
 Specifies whether the message should be replicated across datacenters.
 

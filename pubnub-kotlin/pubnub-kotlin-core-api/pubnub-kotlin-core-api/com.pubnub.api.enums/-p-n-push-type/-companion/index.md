@@ -9,4 +9,4 @@ object [Companion](index.md)
 
 | Name | Summary |
 |---|---|
-| [fromParamString](from-param-string.md) | [common]<br>fun [fromParamString](from-param-string.md)(paramString: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [PNPushType](../index.md) |
+| [fromParamString](from-param-string.md) | [common]<br>fun [fromParamString](from-param-string.md)(paramString: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)): [PNPushType](../index.md) |

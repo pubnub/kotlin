@@ -3,4 +3,4 @@
 # directBootOk
 
 [common]\
-var [directBootOk](direct-boot-ok.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+var [directBootOk](direct-boot-ok.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)

@@ -3,9 +3,9 @@
 # googleAppEngineNetworking
 
 [jvm]\
-abstract fun [googleAppEngineNetworking](google-app-engine-networking.md)(googleAppEngineNetworking: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)): [PNConfiguration.Builder](index.md)
+abstract fun [googleAppEngineNetworking](google-app-engine-networking.md)(googleAppEngineNetworking: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)): [PNConfiguration.Builder](index.md)
 
-abstract val [googleAppEngineNetworking](google-app-engine-networking.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+abstract val [googleAppEngineNetworking](google-app-engine-networking.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)
 
 Enable Google App Engine networking.
 

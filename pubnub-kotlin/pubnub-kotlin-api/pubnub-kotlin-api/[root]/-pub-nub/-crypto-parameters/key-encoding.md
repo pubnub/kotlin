@@ -3,4 +3,4 @@
 # keyEncoding
 
 [js]\
-abstract var [keyEncoding](key-encoding.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?
+abstract var [keyEncoding](key-encoding.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)?

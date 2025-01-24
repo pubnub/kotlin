@@ -3,4 +3,4 @@
 # PNTimeoutCategory
 
 [js]\
-abstract var [PNTimeoutCategory](-p-n-timeout-category.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+abstract var [PNTimeoutCategory](-p-n-timeout-category.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)

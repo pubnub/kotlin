@@ -3,4 +3,4 @@
 # whereNow
 
 [apple]\
-open override fun [whereNow](where-now.md)(uuid: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [WhereNow](../../com.pubnub.api.endpoints.presence/-where-now/index.md)
+open override fun [whereNow](where-now.md)(uuid: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)): [WhereNow](../../com.pubnub.api.endpoints.presence/-where-now/index.md)

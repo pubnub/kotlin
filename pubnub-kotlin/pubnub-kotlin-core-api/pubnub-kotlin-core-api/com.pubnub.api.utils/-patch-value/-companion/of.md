@@ -4,7 +4,7 @@
 
 [common]\
 
-@[JvmStatic](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-static/index.html)
+@[JvmStatic](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.jvm/-jvm-static/index.html)
 
 fun &lt;[T](of.md)&gt; [of](of.md)(value: [T](of.md)): [PatchValue](../index.md)&lt;[T](of.md)&gt;
 

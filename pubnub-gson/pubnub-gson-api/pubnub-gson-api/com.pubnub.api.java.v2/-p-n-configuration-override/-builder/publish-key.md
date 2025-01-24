@@ -3,6 +3,6 @@
 # publishKey
 
 [jvm]\
-abstract fun [publishKey](publish-key.md)(publishKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [PNConfigurationOverride.Builder](index.md)
+abstract fun [publishKey](publish-key.md)(publishKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)): [PNConfigurationOverride.Builder](index.md)
 
 The publish key from the admin panel (only required if publishing).

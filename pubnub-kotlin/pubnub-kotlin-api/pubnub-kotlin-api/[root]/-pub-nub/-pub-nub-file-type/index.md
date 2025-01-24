@@ -10,15 +10,15 @@ interface [PubNubFileType](index.md)
 | Name | Summary |
 |---|---|
 | [data](data.md) | [js]<br>abstract var [data](data.md): dynamic |
-| [mimeType](mime-type.md) | [js]<br>abstract var [mimeType](mime-type.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
-| [name](name.md) | [js]<br>abstract var [name](name.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [mimeType](mime-type.md) | [js]<br>abstract var [mimeType](mime-type.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |
+| [name](name.md) | [js]<br>abstract var [name](name.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |
 
 ## Functions
 
 | Name | Summary |
 |---|---|
-| [create](create.md) | [js]<br>abstract fun [create](create.md)(config: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)): [PubNub.PubNubFileType](index.md) |
-| [toArrayBuffer](to-array-buffer.md) | [js]<br>abstract fun [toArrayBuffer](to-array-buffer.md)(): [ArrayBuffer](https://kotlinlang.org/api/latest/jvm/stdlib/org.khronos.webgl/-array-buffer/index.html) |
-| [toBlob](to-blob.md) | [js]<br>abstract fun [toBlob](to-blob.md)(): [Blob](https://kotlinlang.org/api/latest/jvm/stdlib/org.w3c.files/-blob/index.html) |
-| [toFile](to-file.md) | [js]<br>abstract fun [toFile](to-file.md)(): [File](https://kotlinlang.org/api/latest/jvm/stdlib/org.w3c.files/-file/index.html) |
-| [toString](to-string.md) | [js]<br>abstract override fun [toString](to-string.md)(): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [create](create.md) | [js]<br>abstract fun [create](create.md)(config: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)): [PubNub.PubNubFileType](index.md) |
+| [toArrayBuffer](to-array-buffer.md) | [js]<br>abstract fun [toArrayBuffer](to-array-buffer.md)(): [ArrayBuffer](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/org.khronos.webgl/-array-buffer/index.html) |
+| [toBlob](to-blob.md) | [js]<br>abstract fun [toBlob](to-blob.md)(): [Blob](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/org.w3c.files/-blob/index.html) |
+| [toFile](to-file.md) | [js]<br>abstract fun [toFile](to-file.md)(): [File](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/org.w3c.files/-file/index.html) |
+| [toString](to-string.md) | [js]<br>abstract override fun [toString](to-string.md)(): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |

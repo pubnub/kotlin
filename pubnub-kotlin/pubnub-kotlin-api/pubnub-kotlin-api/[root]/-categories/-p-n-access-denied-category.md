@@ -3,4 +3,4 @@
 # PNAccessDeniedCategory
 
 [js]\
-abstract var [PNAccessDeniedCategory](-p-n-access-denied-category.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+abstract var [PNAccessDeniedCategory](-p-n-access-denied-category.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)

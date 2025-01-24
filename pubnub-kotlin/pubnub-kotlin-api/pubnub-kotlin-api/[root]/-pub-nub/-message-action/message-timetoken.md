@@ -3,4 +3,4 @@
 # messageTimetoken
 
 [js]\
-abstract var [messageTimetoken](message-timetoken.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+abstract var [messageTimetoken](message-timetoken.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)

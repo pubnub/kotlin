@@ -3,4 +3,4 @@
 # deleteFile
 
 [js]\
-open override fun [deleteFile](delete-file.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), fileName: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), fileId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [DeleteFile](../../com.pubnub.api.endpoints.files/-delete-file/index.md)
+open override fun [deleteFile](delete-file.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), fileName: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), fileId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)): [DeleteFile](../../com.pubnub.api.endpoints.files/-delete-file/index.md)

@@ -3,4 +3,4 @@
 # adjustCollectionTypes
 
 [js]\
-fun [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html).[adjustCollectionTypes](adjust-collection-types.md)(): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)
+fun [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html).[adjustCollectionTypes](adjust-collection-types.md)(): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)

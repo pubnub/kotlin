@@ -4,7 +4,7 @@
 
 [common, apple, js, jvm]\
 [common]\
-expect fun [createJsonElement](create-json-element.md)(any: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?): [JsonElement](-json-element/index.md)
+expect fun [createJsonElement](create-json-element.md)(any: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)?): [JsonElement](-json-element/index.md)
 
 [apple, js, jvm]\
-actual fun [createJsonElement](create-json-element.md)(any: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?): [JsonElement](-json-element/index.md)
+actual fun [createJsonElement](create-json-element.md)(any: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)?): [JsonElement](-json-element/index.md)

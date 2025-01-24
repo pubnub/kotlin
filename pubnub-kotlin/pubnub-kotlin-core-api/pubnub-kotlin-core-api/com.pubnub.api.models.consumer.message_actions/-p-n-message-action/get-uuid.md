@@ -3,4 +3,4 @@
 # getUuid
 
 [common]\
-fun [getUuid](get-uuid.md)(): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?
+fun [getUuid](get-uuid.md)(): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)?

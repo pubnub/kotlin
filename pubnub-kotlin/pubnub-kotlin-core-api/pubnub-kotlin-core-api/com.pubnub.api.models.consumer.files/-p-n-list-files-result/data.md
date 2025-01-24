@@ -3,4 +3,4 @@
 # data
 
 [common]\
-val [data](data.md): [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/index.html)&lt;[PNUploadedFile](../-p-n-uploaded-file/index.md)&gt;
+val [data](data.md): [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-collection/index.html)&lt;[PNUploadedFile](../-p-n-uploaded-file/index.md)&gt;

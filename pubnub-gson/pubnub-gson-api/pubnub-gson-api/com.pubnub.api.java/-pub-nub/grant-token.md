@@ -5,7 +5,7 @@
 [jvm]\
 abstract fun [grantToken](grant-token.md)(): [GrantTokenBuilder](../../com.pubnub.api.java.endpoints.access.builder/-grant-token-builder/index.md)
 
-abstract fun [grantToken](grant-token.md)(ttl: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)): [GrantTokenBuilder](../../com.pubnub.api.java.endpoints.access.builder/-grant-token-builder/index.md)
+abstract fun [grantToken](grant-token.md)(ttl: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)): [GrantTokenBuilder](../../com.pubnub.api.java.endpoints.access.builder/-grant-token-builder/index.md)
 
 This function generates a grant token for PubNub Access Manager (PAM).
 

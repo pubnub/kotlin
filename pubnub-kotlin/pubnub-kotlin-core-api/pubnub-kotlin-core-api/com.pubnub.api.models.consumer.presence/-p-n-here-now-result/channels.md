@@ -3,4 +3,4 @@
 # channels
 
 [common]\
-val [channels](channels.md): [MutableMap](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), [PNHereNowChannelData](../-p-n-here-now-channel-data/index.md)&gt;
+val [channels](channels.md): [MutableMap](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-mutable-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), [PNHereNowChannelData](../-p-n-here-now-channel-data/index.md)&gt;

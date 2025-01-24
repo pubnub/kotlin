@@ -9,4 +9,4 @@ interface [ListChannelsParameters](index.md)
 
 | Name | Summary |
 |---|---|
-| [channelGroup](channel-group.md) | [js]<br>abstract var [channelGroup](channel-group.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [channelGroup](channel-group.md) | [js]<br>abstract var [channelGroup](channel-group.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |

@@ -3,4 +3,4 @@
 # getActionTimetoken
 
 [common]\
-fun [getActionTimetoken](get-action-timetoken.md)(): [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)?
+fun [getActionTimetoken](get-action-timetoken.md)(): [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html)?

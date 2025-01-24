@@ -3,4 +3,4 @@
 # startTimeToken
 
 [js]\
-abstract var [startTimeToken](start-time-token.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?
+abstract var [startTimeToken](start-time-token.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)?

@@ -3,4 +3,4 @@
 # seconds
 
 [js]\
-val [SecondsAndNanos](-seconds-and-nanos/index.md).[seconds](seconds.md): [Duration](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/index.html)
+val [SecondsAndNanos](-seconds-and-nanos/index.md).[seconds](seconds.md): [Duration](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.time/-duration/index.html)

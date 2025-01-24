@@ -3,4 +3,4 @@
 # setToken
 
 [js]\
-open fun [setToken](set-token.md)(params: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?)
+open fun [setToken](set-token.md)(params: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)?)

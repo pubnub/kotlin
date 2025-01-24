@@ -3,4 +3,4 @@
 # ActionContentToAction
 
 [js]\
-interface [ActionContentToAction](index.md) : [JsMap](../../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.kmp/-js-map/index.md)&lt;[Array](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html)&lt;[PubNub.Action](../-action/index.md)&gt;&gt;
+interface [ActionContentToAction](index.md) : [JsMap](../../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.kmp/-js-map/index.md)&lt;[Array](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-array/index.html)&lt;[PubNub.Action](../-action/index.md)&gt;&gt;

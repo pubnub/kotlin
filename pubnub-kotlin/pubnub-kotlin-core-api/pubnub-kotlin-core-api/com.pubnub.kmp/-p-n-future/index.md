@@ -17,4 +17,4 @@ fun interface [PNFuture](index.md)&lt;out [OUTPUT](index.md)&gt;
 
 | Name | Summary |
 |---|---|
-| [async](async.md) | [common]<br>abstract fun [async](async.md)(callback: [Consumer](../../com.pubnub.api.v2.callbacks/-consumer/index.md)&lt;[Result](../../com.pubnub.api.v2.callbacks/-result/index.md)&lt;@[UnsafeVariance](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unsafe-variance/index.html)[OUTPUT](index.md)&gt;&gt;) |
+| [async](async.md) | [common]<br>abstract fun [async](async.md)(callback: [Consumer](../../com.pubnub.api.v2.callbacks/-consumer/index.md)&lt;[Result](../../com.pubnub.api.v2.callbacks/-result/index.md)&lt;@[UnsafeVariance](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-unsafe-variance/index.html)[OUTPUT](index.md)&gt;&gt;) |

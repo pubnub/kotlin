@@ -3,4 +3,4 @@
 # PNConnectionErrorCategory
 
 [js]\
-abstract var [PNConnectionErrorCategory](-p-n-connection-error-category.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+abstract var [PNConnectionErrorCategory](-p-n-connection-error-category.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)

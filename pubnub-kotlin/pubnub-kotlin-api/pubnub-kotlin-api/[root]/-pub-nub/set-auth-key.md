@@ -3,4 +3,4 @@
 # setAuthKey
 
 [js]\
-open fun [setAuthKey](set-auth-key.md)(authKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html))
+open fun [setAuthKey](set-auth-key.md)(authKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html))

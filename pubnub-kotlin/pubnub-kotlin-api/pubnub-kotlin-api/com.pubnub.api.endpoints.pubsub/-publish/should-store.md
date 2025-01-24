@@ -3,4 +3,4 @@
 # shouldStore
 
 [jvm]\
-abstract val [shouldStore](should-store.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)?
+abstract val [shouldStore](should-store.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)?

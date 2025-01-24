@@ -3,9 +3,9 @@
 # subscribeKey
 
 [jvm]\
-abstract override fun [subscribeKey](subscribe-key.md)(subscribeKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [PNConfiguration.Builder](index.md)
+abstract override fun [subscribeKey](subscribe-key.md)(subscribeKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)): [PNConfiguration.Builder](index.md)
 
 [jvm]\
-abstract val [subscribeKey](subscribe-key.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+abstract val [subscribeKey](subscribe-key.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)
 
 The subscribe key from the admin panel.

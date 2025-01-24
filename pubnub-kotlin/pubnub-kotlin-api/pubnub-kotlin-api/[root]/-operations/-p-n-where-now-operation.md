@@ -3,4 +3,4 @@
 # PNWhereNowOperation
 
 [js]\
-abstract var [PNWhereNowOperation](-p-n-where-now-operation.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+abstract var [PNWhereNowOperation](-p-n-where-now-operation.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)

@@ -3,4 +3,4 @@
 # backContent
 
 [common]\
-var [backContent](back-content.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?
+var [backContent](back-content.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)?

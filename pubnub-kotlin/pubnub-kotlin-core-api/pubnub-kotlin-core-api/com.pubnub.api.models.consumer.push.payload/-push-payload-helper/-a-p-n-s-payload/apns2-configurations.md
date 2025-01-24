@@ -3,4 +3,4 @@
 # apns2Configurations
 
 [common]\
-var [apns2Configurations](apns2-configurations.md): [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[PushPayloadHelper.APNSPayload.APNS2Configuration](-a-p-n-s2-configuration/index.md)&gt;?
+var [apns2Configurations](apns2-configurations.md): [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html)&lt;[PushPayloadHelper.APNSPayload.APNS2Configuration](-a-p-n-s2-configuration/index.md)&gt;?

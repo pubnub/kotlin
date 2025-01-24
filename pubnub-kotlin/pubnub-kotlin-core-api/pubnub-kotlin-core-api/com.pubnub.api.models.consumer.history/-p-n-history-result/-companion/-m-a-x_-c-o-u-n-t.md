@@ -3,4 +3,4 @@
 # MAX_COUNT
 
 [common]\
-const val [MAX_COUNT](-m-a-x_-c-o-u-n-t.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) = 100
+const val [MAX_COUNT](-m-a-x_-c-o-u-n-t.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html) = 100

@@ -3,7 +3,7 @@
 # removeChannelMembers
 
 [jvm]\
-abstract fun [removeChannelMembers](remove-channel-members.md)(channelId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), channelMembers: [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;): [RemoveChannelMembersBuilder](../../com.pubnub.api.java.endpoints.objects_api.members/-remove-channel-members-builder/index.md)
+abstract fun [removeChannelMembers](remove-channel-members.md)(channelId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), channelMembers: [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-collection/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)&gt;): [RemoveChannelMembersBuilder](../../com.pubnub.api.java.endpoints.objects_api.members/-remove-channel-members-builder/index.md)
 
 Remove members from a Channel.
 

@@ -5,4 +5,4 @@
 [jvm]\
 constructor(envelope: [EntityEnvelope](../../com.pubnub.api.java.models.consumer.objects_api/-entity-envelope/index.md)&lt;JsonElement&gt;)
 
-constructor(status: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), data: JsonElement)
+constructor(status: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html), data: JsonElement)

@@ -4,9 +4,9 @@
 
 [jvm]\
 
-@[JvmStatic](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-static/index.html)
+@[JvmStatic](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.jvm/-jvm-static/index.html)
 
-fun [timetokenToUnix](timetoken-to-unix.md)(timetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)): [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)
+fun [timetokenToUnix](timetoken-to-unix.md)(timetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html)): [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html)
 
 Converts a PubNub timetoken to a Unix timestamp (in millis).
 
@@ -14,7 +14,7 @@ A PubNub timetoken is a 17-digit number representing the number of 100-nanosecon
 
 #### Return
 
-A [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html) representing the Unix timestamp in millis corresponding to the given timetoken.
+A [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html) representing the Unix timestamp in millis corresponding to the given timetoken.
 
 #### Parameters
 
@@ -28,4 +28,4 @@ jvm
 
 | | |
 |---|---|
-| [IllegalArgumentException](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-illegal-argument-exception/index.html) | if the timetoken does not have 17 digits. |
+| [IllegalArgumentException](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-illegal-argument-exception/index.html) | if the timetoken does not have 17 digits. |

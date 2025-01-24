@@ -3,4 +3,4 @@
 # create
 
 [apple]\
-fun [create](create.md)(kmpPubNub: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)): [PubNubImpl](../index.md)
+fun [create](create.md)(kmpPubNub: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)): [PubNubImpl](../index.md)

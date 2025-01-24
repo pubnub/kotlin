@@ -3,4 +3,4 @@
 # joinEnabled
 
 [common]\
-var [joinEnabled](join-enabled.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+var [joinEnabled](join-enabled.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)

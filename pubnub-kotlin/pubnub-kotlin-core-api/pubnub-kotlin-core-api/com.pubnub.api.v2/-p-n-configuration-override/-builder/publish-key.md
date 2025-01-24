@@ -3,6 +3,6 @@
 # publishKey
 
 [jvm]\
-abstract var [publishKey](publish-key.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+abstract var [publishKey](publish-key.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)
 
 The publish key from the admin panel (only required if publishing).

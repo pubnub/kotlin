@@ -3,4 +3,4 @@
 # includeCustomMessageType
 
 [js]\
-abstract var [includeCustomMessageType](include-custom-message-type.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)?
+abstract var [includeCustomMessageType](include-custom-message-type.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)?

@@ -3,7 +3,7 @@
 # includeUserCustom
 
 [jvm]\
-fun [includeUserCustom](include-user-custom.md)(includeUserCustom: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)): [MemberInclude.Builder](index.md)
+fun [includeUserCustom](include-user-custom.md)(includeUserCustom: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)): [MemberInclude.Builder](index.md)
 
 Specifies whether to include custom fields for the user in the member data.
 
@@ -20,4 +20,4 @@ jvm
 | includeUserCustom | `true` to include user custom fields, `false` otherwise. |
 
 [jvm]\
-var [includeUserCustom](include-user-custom.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+var [includeUserCustom](include-user-custom.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)

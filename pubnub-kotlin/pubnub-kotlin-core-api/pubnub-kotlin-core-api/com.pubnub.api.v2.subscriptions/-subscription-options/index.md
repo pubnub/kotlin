@@ -31,7 +31,7 @@ The options currently available in the PubNub client are:
 
 | Name | Summary |
 |---|---|
-| [allOptions](all-options.md) | [common]<br>open val [allOptions](all-options.md): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;[SubscriptionOptions](index.md)&gt; |
+| [allOptions](all-options.md) | [common]<br>open val [allOptions](all-options.md): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-set/index.html)&lt;[SubscriptionOptions](index.md)&gt; |
 
 ## Functions
 

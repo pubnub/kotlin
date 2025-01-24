@@ -3,14 +3,14 @@
 # decrypt
 
 [js]\
-open fun [decrypt](decrypt.md)(data: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, customCipherKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) = definedExternally, options: [PubNub.CryptoParameters](-crypto-parameters/index.md) = definedExternally): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)
+open fun [decrypt](decrypt.md)(data: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)?, customCipherKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) = definedExternally, options: [PubNub.CryptoParameters](-crypto-parameters/index.md) = definedExternally): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)
 
-open fun [decrypt](decrypt.md)(data: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)
+open fun [decrypt](decrypt.md)(data: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)?): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)
 
-open fun [decrypt](decrypt.md)(data: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, customCipherKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) = definedExternally): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)
+open fun [decrypt](decrypt.md)(data: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)?, customCipherKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) = definedExternally): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)
 
-open fun [decrypt](decrypt.md)(data: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?, customCipherKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) = definedExternally, options: [PubNub.CryptoParameters](-crypto-parameters/index.md) = definedExternally): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)
+open fun [decrypt](decrypt.md)(data: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)?, customCipherKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) = definedExternally, options: [PubNub.CryptoParameters](-crypto-parameters/index.md) = definedExternally): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)
 
-open fun [decrypt](decrypt.md)(data: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)
+open fun [decrypt](decrypt.md)(data: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)?): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)
 
-open fun [decrypt](decrypt.md)(data: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?, customCipherKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) = definedExternally): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)
+open fun [decrypt](decrypt.md)(data: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)?, customCipherKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) = definedExternally): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)

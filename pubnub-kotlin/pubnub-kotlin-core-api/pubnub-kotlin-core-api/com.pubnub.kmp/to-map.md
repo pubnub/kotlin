@@ -3,4 +3,4 @@
 # toMap
 
 [js]\
-fun &lt;[V](to-map.md)&gt; [JsMap](-js-map/index.md)&lt;[V](to-map.md)&gt;.[toMap](to-map.md)(): [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), [V](to-map.md)&gt;
+fun &lt;[V](to-map.md)&gt; [JsMap](-js-map/index.md)&lt;[V](to-map.md)&gt;.[toMap](to-map.md)(): [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), [V](to-map.md)&gt;

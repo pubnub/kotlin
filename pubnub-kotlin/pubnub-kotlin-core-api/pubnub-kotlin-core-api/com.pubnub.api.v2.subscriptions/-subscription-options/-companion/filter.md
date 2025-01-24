@@ -4,8 +4,8 @@
 
 [common]\
 
-@[JvmStatic](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-static/index.html)
+@[JvmStatic](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.jvm/-jvm-static/index.html)
 
-fun [filter](filter.md)(predicate: ([PNEvent](../../../com.pubnub.api.models.consumer.pubsub/-p-n-event/index.md)) -&gt; [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)): [SubscriptionOptions](../index.md)
+fun [filter](filter.md)(predicate: ([PNEvent](../../../com.pubnub.api.models.consumer.pubsub/-p-n-event/index.md)) -&gt; [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)): [SubscriptionOptions](../index.md)
 
 Create a filter for messages delivered to com.pubnub.api.v2.callbacks.BaseEventListener. Please see com.pubnub.api.v2.callbacks.BaseEventListener for available events.

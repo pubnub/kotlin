@@ -17,7 +17,7 @@ Base interface defining options to include additional data when using Membership
 
 | Name | Summary |
 |---|---|
-| [includeCustom](include-custom.md) | [common]<br>abstract val [includeCustom](include-custom.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)<br>Whether to include custom data of the Membership in the result. |
-| [includeStatus](include-status.md) | [common]<br>abstract val [includeStatus](include-status.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)<br>Whether to include the status of the Membership in the result. |
-| [includeTotalCount](include-total-count.md) | [common]<br>abstract val [includeTotalCount](include-total-count.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)<br>Whether to include the total count of Memberships in the result. |
-| [includeType](include-type.md) | [common]<br>abstract val [includeType](include-type.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)<br>Whether to include the type of the Membership in the result. |
+| [includeCustom](include-custom.md) | [common]<br>abstract val [includeCustom](include-custom.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)<br>Whether to include custom data of the Membership in the result. |
+| [includeStatus](include-status.md) | [common]<br>abstract val [includeStatus](include-status.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)<br>Whether to include the status of the Membership in the result. |
+| [includeTotalCount](include-total-count.md) | [common]<br>abstract val [includeTotalCount](include-total-count.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)<br>Whether to include the total count of Memberships in the result. |
+| [includeType](include-type.md) | [common]<br>abstract val [includeType](include-type.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)<br>Whether to include the type of the Membership in the result. |

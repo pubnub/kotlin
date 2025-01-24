@@ -3,4 +3,4 @@
 # PNGetStateOperation
 
 [js]\
-abstract var [PNGetStateOperation](-p-n-get-state-operation.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+abstract var [PNGetStateOperation](-p-n-get-state-operation.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)

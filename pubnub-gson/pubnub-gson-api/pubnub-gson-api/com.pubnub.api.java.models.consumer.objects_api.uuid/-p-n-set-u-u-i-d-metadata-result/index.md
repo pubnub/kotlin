@@ -9,4 +9,4 @@ open class [PNSetUUIDMetadataResult](index.md) : [EntityEnvelope](../../com.pubn
 
 | | |
 |---|---|
-| [PNSetUUIDMetadataResult](-p-n-set-u-u-i-d-metadata-result.md) | [jvm]<br>constructor(envelope: [EntityEnvelope](../../com.pubnub.api.java.models.consumer.objects_api/-entity-envelope/index.md)&lt;[PNUUIDMetadata](../-p-n-u-u-i-d-metadata/index.md)&gt;)constructor(status: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), data: [PNUUIDMetadata](../-p-n-u-u-i-d-metadata/index.md)) |
+| [PNSetUUIDMetadataResult](-p-n-set-u-u-i-d-metadata-result.md) | [jvm]<br>constructor(envelope: [EntityEnvelope](../../com.pubnub.api.java.models.consumer.objects_api/-entity-envelope/index.md)&lt;[PNUUIDMetadata](../-p-n-u-u-i-d-metadata/index.md)&gt;)constructor(status: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html), data: [PNUUIDMetadata](../-p-n-u-u-i-d-metadata/index.md)) |

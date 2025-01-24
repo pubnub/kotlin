@@ -3,4 +3,4 @@
 # StatusCallback
 
 [js]\
-typealias [StatusCallback](index.md) = (status: [PubNub.PubnubStatus](../-pub-nub/-pubnub-status/index.md)) -&gt; [Unit](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)
+typealias [StatusCallback](index.md) = (status: [PubNub.PubnubStatus](../-pub-nub/-pubnub-status/index.md)) -&gt; [Unit](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-unit/index.html)

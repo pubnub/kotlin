@@ -3,4 +3,4 @@
 # PNRequestMessageCountExceedCategory
 
 [js]\
-abstract var [PNRequestMessageCountExceedCategory](-p-n-request-message-count-exceed-category.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+abstract var [PNRequestMessageCountExceedCategory](-p-n-request-message-count-exceed-category.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)

@@ -4,7 +4,7 @@
 
 [common, js]\
 [common]\
-expect fun [fromEpochMilliseconds](from-epoch-milliseconds.md)(epochMilliseconds: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)): [Instant](../index.md)
+expect fun [fromEpochMilliseconds](from-epoch-milliseconds.md)(epochMilliseconds: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html)): [Instant](../index.md)
 
 [js]\
-actual fun [fromEpochMilliseconds](from-epoch-milliseconds.md)(epochMilliseconds: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)): [Instant](../index.md)
+actual fun [fromEpochMilliseconds](from-epoch-milliseconds.md)(epochMilliseconds: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html)): [Instant](../index.md)

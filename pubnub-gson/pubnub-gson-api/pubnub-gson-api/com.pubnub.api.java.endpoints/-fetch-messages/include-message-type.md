@@ -3,4 +3,4 @@
 # includeMessageType
 
 [jvm]\
-abstract fun [includeMessageType](include-message-type.md)(includeMessageType: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)): [FetchMessages](index.md)
+abstract fun [includeMessageType](include-message-type.md)(includeMessageType: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)): [FetchMessages](index.md)

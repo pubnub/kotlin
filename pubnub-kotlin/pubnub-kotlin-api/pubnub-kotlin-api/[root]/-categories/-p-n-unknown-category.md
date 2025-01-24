@@ -3,4 +3,4 @@
 # PNUnknownCategory
 
 [js]\
-abstract var [PNUnknownCategory](-p-n-unknown-category.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+abstract var [PNUnknownCategory](-p-n-unknown-category.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)

@@ -3,4 +3,4 @@
 # statusField
 
 [js]\
-abstract var [statusField](status-field.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)?
+abstract var [statusField](status-field.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)?

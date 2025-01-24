@@ -3,4 +3,4 @@
 # backContent
 
 [js]\
-abstract var [backContent](back-content.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?
+abstract var [backContent](back-content.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)?

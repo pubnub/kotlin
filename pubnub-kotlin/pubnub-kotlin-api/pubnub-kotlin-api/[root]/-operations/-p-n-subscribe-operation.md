@@ -3,4 +3,4 @@
 # PNSubscribeOperation
 
 [js]\
-abstract var [PNSubscribeOperation](-p-n-subscribe-operation.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+abstract var [PNSubscribeOperation](-p-n-subscribe-operation.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)

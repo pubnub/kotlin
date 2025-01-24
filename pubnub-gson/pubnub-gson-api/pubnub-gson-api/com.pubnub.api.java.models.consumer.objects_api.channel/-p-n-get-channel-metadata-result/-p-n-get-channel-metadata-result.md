@@ -3,4 +3,4 @@
 # PNGetChannelMetadataResult
 
 [jvm]\
-constructor(status: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), data: [PNChannelMetadata](../-p-n-channel-metadata/index.md))
+constructor(status: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html), data: [PNChannelMetadata](../-p-n-channel-metadata/index.md))

@@ -3,4 +3,4 @@
 # includeMessageActions
 
 [jvm]\
-abstract fun [includeMessageActions](include-message-actions.md)(includeMessageActions: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)): [FetchMessages](index.md)
+abstract fun [includeMessageActions](include-message-actions.md)(includeMessageActions: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)): [FetchMessages](index.md)

@@ -3,4 +3,4 @@
 # pageHash
 
 [common]\
-open override val [pageHash](page-hash.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+open override val [pageHash](page-hash.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)

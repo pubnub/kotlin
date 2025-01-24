@@ -5,4 +5,4 @@
 [js]\
 abstract fun [listChannels](list-channels.md)(params: [PubNub.PushDeviceParameters](../-push-device-parameters/index.md), callback: [Callback](../../-callback/index.md)&lt;[PubNub.PushListChannelsResponse](../-push-list-channels-response/index.md)&gt;)
 
-abstract fun [listChannels](list-channels.md)(params: [PubNub.PushDeviceParameters](../-push-device-parameters/index.md)): [Promise](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.js/-promise/index.html)&lt;[PubNub.PushListChannelsResponse](../-push-list-channels-response/index.md)&gt;
+abstract fun [listChannels](list-channels.md)(params: [PubNub.PushDeviceParameters](../-push-device-parameters/index.md)): [Promise](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.js/-promise/index.html)&lt;[PubNub.PushListChannelsResponse](../-push-list-channels-response/index.md)&gt;

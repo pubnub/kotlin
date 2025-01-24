@@ -3,4 +3,4 @@
 # read
 
 [jvm]\
-abstract fun [read](read.md)(read: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)): [Grant](index.md)
+abstract fun [read](read.md)(read: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)): [Grant](index.md)

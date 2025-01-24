@@ -3,6 +3,6 @@
 # includeChannel
 
 [common]\
-abstract val [includeChannel](include-channel.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+abstract val [includeChannel](include-channel.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)
 
 Whether to include channel information in the result.

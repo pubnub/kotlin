@@ -10,5 +10,5 @@
 | [FilterImpl](-filter-impl/index.md) | [common]<br>class [FilterImpl](-filter-impl/index.md) : [SubscriptionOptions](-subscription-options/index.md) |
 | [ReceivePresenceEventsImpl](-receive-presence-events-impl/index.md) | [common]<br>object [ReceivePresenceEventsImpl](-receive-presence-events-impl/index.md) : [SubscriptionOptions](-subscription-options/index.md) |
 | [SubscribeCapable](-subscribe-capable/index.md) | [common]<br>interface [SubscribeCapable](-subscribe-capable/index.md) |
-| [SubscriptionCursor](-subscription-cursor/index.md) | [common]<br>class [SubscriptionCursor](-subscription-cursor/index.md)(val timetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html))<br>A holder for a timetoken value. |
+| [SubscriptionCursor](-subscription-cursor/index.md) | [common]<br>class [SubscriptionCursor](-subscription-cursor/index.md)(val timetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html))<br>A holder for a timetoken value. |
 | [SubscriptionOptions](-subscription-options/index.md) | [common]<br>open class [SubscriptionOptions](-subscription-options/index.md)<br>SubscriptionOptions is a mechanism used for supplying optional modifiers for subscriptions. |

@@ -3,7 +3,7 @@
 # origin
 
 [jvm]\
-abstract var [origin](origin.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+abstract var [origin](origin.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)
 
 Custom origin if needed.
 

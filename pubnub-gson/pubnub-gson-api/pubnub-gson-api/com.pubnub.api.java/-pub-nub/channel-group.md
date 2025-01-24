@@ -3,4 +3,4 @@
 # channelGroup
 
 [jvm]\
-abstract fun [channelGroup](channel-group.md)(name: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [ChannelGroup](../../com.pubnub.api.java.v2.entities/-channel-group/index.md)
+abstract fun [channelGroup](channel-group.md)(name: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)): [ChannelGroup](../../com.pubnub.api.java.v2.entities/-channel-group/index.md)

@@ -3,4 +3,4 @@
 # MAX_RETRIES
 
 [common]\
-const val [MAX_RETRIES](-m-a-x_-r-e-t-r-i-e-s.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) = 6
+const val [MAX_RETRIES](-m-a-x_-r-e-t-r-i-e-s.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html) = 6

@@ -3,4 +3,4 @@
 # PNFileUploadResult
 
 [common]\
-constructor(timetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html), status: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), file: [PNBaseFile](../-p-n-base-file/index.md))
+constructor(timetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html), status: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html), file: [PNBaseFile](../-p-n-base-file/index.md))

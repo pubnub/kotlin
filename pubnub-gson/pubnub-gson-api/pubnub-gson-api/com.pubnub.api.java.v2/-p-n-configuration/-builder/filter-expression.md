@@ -3,8 +3,8 @@
 # filterExpression
 
 [jvm]\
-abstract fun [filterExpression](filter-expression.md)(filterExpression: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [PNConfiguration.Builder](index.md)
+abstract fun [filterExpression](filter-expression.md)(filterExpression: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)): [PNConfiguration.Builder](index.md)
 
-abstract val [filterExpression](filter-expression.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+abstract val [filterExpression](filter-expression.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)
 
 Feature to subscribe with a custom filter expression.

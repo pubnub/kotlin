@@ -3,4 +3,4 @@
 # allOptions
 
 [common]\
-open val [allOptions](all-options.md): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;[SubscriptionOptions](index.md)&gt;
+open val [allOptions](all-options.md): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-set/index.html)&lt;[SubscriptionOptions](index.md)&gt;

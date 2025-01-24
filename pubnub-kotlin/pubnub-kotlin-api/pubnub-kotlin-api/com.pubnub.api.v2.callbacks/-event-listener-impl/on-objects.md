@@ -3,4 +3,4 @@
 # onObjects
 
 [apple]\
-open override val [onObjects](on-objects.md): ([PubNub](../../com.pubnub.api/-pub-nub/index.md), [PNObjectEventResult](../../com.pubnub.api.models.consumer.pubsub.objects/-p-n-object-event-result/index.md)) -&gt; [Unit](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)
+open override val [onObjects](on-objects.md): ([PubNub](../../com.pubnub.api/-pub-nub/index.md), [PNObjectEventResult](../../com.pubnub.api.models.consumer.pubsub.objects/-p-n-object-event-result/index.md)) -&gt; [Unit](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-unit/index.html)

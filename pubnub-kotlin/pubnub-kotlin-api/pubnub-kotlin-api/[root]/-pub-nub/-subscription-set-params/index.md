@@ -9,6 +9,6 @@ interface [SubscriptionSetParams](index.md)
 
 | Name | Summary |
 |---|---|
-| [channelGroups](channel-groups.md) | [js]<br>abstract var [channelGroups](channel-groups.md): [Array](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt; |
-| [channels](channels.md) | [js]<br>abstract var [channels](channels.md): [Array](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt; |
+| [channelGroups](channel-groups.md) | [js]<br>abstract var [channelGroups](channel-groups.md): [Array](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-array/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)&gt; |
+| [channels](channels.md) | [js]<br>abstract var [channels](channels.md): [Array](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-array/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)&gt; |
 | [subscriptionOptions](subscription-options.md) | [js]<br>abstract var [subscriptionOptions](subscription-options.md): [PubNub.SubscriptionOptions](../-subscription-options/index.md) |

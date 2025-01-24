@@ -3,7 +3,7 @@
 # PNChannelGroupsAllChannelsResult
 
 [common]\
-class [PNChannelGroupsAllChannelsResult](index.md)(val channels: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;)
+class [PNChannelGroupsAllChannelsResult](index.md)(val channels: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)&gt;)
 
 Result of the ListChannelsForChannelGroup operation.
 
@@ -11,10 +11,10 @@ Result of the ListChannelsForChannelGroup operation.
 
 | | |
 |---|---|
-| [PNChannelGroupsAllChannelsResult](-p-n-channel-groups-all-channels-result.md) | [common]<br>constructor(channels: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;) |
+| [PNChannelGroupsAllChannelsResult](-p-n-channel-groups-all-channels-result.md) | [common]<br>constructor(channels: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)&gt;) |
 
 ## Properties
 
 | Name | Summary |
 |---|---|
-| [channels](channels.md) | [common]<br>val [channels](channels.md): [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;<br>List of channels belonging to a channel group. |
+| [channels](channels.md) | [common]<br>val [channels](channels.md): [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)&gt;<br>List of channels belonging to a channel group. |

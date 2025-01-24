@@ -9,8 +9,8 @@ interface [PushChannelParameters](index.md)
 
 | Name | Summary |
 |---|---|
-| [channels](channels.md) | [js]<br>abstract var [channels](channels.md): [Array](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt; |
-| [device](device.md) | [js]<br>abstract var [device](device.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
-| [environment](environment.md) | [js]<br>abstract var [environment](environment.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? |
-| [pushGateway](push-gateway.md) | [js]<br>abstract var [pushGateway](push-gateway.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
-| [topic](topic.md) | [js]<br>abstract var [topic](topic.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? |
+| [channels](channels.md) | [js]<br>abstract var [channels](channels.md): [Array](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-array/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)&gt; |
+| [device](device.md) | [js]<br>abstract var [device](device.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |
+| [environment](environment.md) | [js]<br>abstract var [environment](environment.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |
+| [pushGateway](push-gateway.md) | [js]<br>abstract var [pushGateway](push-gateway.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |
+| [topic](topic.md) | [js]<br>abstract var [topic](topic.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |

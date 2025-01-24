@@ -3,4 +3,4 @@
 # includeTimetoken
 
 [js]\
-abstract var [includeTimetoken](include-timetoken.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)?
+abstract var [includeTimetoken](include-timetoken.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)?

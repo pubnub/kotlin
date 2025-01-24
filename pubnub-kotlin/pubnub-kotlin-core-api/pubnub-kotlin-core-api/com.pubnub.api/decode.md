@@ -3,4 +3,4 @@
 # decode
 
 [common]\
-fun [JsonElement](-json-element/index.md).[decode](decode.md)(): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?
+fun [JsonElement](-json-element/index.md).[decode](decode.md)(): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)?

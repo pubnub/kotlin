@@ -3,7 +3,7 @@
 # includeUser
 
 [jvm]\
-fun [includeUser](include-user.md)(includeUser: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)): [MemberInclude.Builder](index.md)
+fun [includeUser](include-user.md)(includeUser: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)): [MemberInclude.Builder](index.md)
 
 Specifies whether to include user information in the member data.
 
@@ -20,4 +20,4 @@ jvm
 | includeUser | `true` to include user information, `false` otherwise. |
 
 [jvm]\
-var [includeUser](include-user.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+var [includeUser](include-user.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)

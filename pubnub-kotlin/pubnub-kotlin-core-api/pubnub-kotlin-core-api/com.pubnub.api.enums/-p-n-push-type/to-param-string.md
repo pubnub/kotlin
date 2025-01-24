@@ -3,4 +3,4 @@
 # toParamString
 
 [common]\
-fun [toParamString](to-param-string.md)(): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+fun [toParamString](to-param-string.md)(): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)

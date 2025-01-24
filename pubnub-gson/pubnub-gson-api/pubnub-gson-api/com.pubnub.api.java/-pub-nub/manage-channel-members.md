@@ -3,7 +3,7 @@
 # manageChannelMembers
 
 [jvm]\
-abstract fun [manageChannelMembers](manage-channel-members.md)(channelId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), set: [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/index.html)&lt;[PNUser](../../com.pubnub.api.java.models.consumer.objects_api.member/-p-n-user/index.md)&gt;, remove: [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;): [ManageChannelMembersBuilder](../../com.pubnub.api.java.endpoints.objects_api.members/-manage-channel-members-builder/index.md)
+abstract fun [manageChannelMembers](manage-channel-members.md)(channelId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), set: [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-collection/index.html)&lt;[PNUser](../../com.pubnub.api.java.models.consumer.objects_api.member/-p-n-user/index.md)&gt;, remove: [Collection](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-collection/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)&gt;): [ManageChannelMembersBuilder](../../com.pubnub.api.java.endpoints.objects_api.members/-manage-channel-members-builder/index.md)
 
 Set or remove members in a channel.
 

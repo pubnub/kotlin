@@ -3,4 +3,4 @@
 # CREATE
 
 [common]\
-const val [CREATE](-c-r-e-a-t-e.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) = 16
+const val [CREATE](-c-r-e-a-t-e.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html) = 16

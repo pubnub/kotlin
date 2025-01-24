@@ -3,4 +3,4 @@
 # PNAccessManagerAudit
 
 [js]\
-abstract var [PNAccessManagerAudit](-p-n-access-manager-audit.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+abstract var [PNAccessManagerAudit](-p-n-access-manager-audit.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)

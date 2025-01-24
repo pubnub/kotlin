@@ -3,4 +3,4 @@
 # PNNetworkUpCategory
 
 [js]\
-abstract var [PNNetworkUpCategory](-p-n-network-up-category.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+abstract var [PNNetworkUpCategory](-p-n-network-up-category.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)

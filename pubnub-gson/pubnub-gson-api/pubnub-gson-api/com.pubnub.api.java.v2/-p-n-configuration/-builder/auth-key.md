@@ -3,7 +3,7 @@
 # authKey
 
 [jvm]\
-abstract override fun [~~authKey~~](auth-key.md)(authKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [PNConfiguration.Builder](index.md)
+abstract override fun [~~authKey~~](auth-key.md)(authKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)): [PNConfiguration.Builder](index.md)
 
 ---
 
@@ -16,7 +16,7 @@ This setting is deprecated because it relates to deprecated Access Manager (PAM 
 If Access Manager (deprecated PAM v2) is utilized, client will use this authKey in all restricted requests.
 
 [jvm]\
-abstract val [~~authKey~~](auth-key.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+abstract val [~~authKey~~](auth-key.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)
 
 ---
 

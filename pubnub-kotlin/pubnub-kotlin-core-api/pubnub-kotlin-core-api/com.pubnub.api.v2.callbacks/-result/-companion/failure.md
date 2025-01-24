@@ -4,7 +4,7 @@
 
 [common]\
 
-@[JvmStatic](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-static/index.html)
+@[JvmStatic](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.jvm/-jvm-static/index.html)
 
 fun &lt;[T](failure.md)&gt; [failure](failure.md)(exception: [PubNubException](../../../com.pubnub.api/-pub-nub-exception/index.md)): [Result](../index.md)&lt;[T](failure.md)&gt;
 
@@ -12,6 +12,6 @@ Returns an instance that encapsulates the given [PubNubException](failure.md) as
 
 [common]\
 
-@[JvmStatic](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-static/index.html)
+@[JvmStatic](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.jvm/-jvm-static/index.html)
 
-fun &lt;[T](failure.md)&gt; [failure](failure.md)(exception: [Throwable](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html)): [Result](../index.md)&lt;[T](failure.md)&gt;
+fun &lt;[T](failure.md)&gt; [failure](failure.md)(exception: [Throwable](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-throwable/index.html)): [Result](../index.md)&lt;[T](failure.md)&gt;

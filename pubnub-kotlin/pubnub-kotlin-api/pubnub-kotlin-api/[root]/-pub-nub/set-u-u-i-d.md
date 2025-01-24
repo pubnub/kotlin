@@ -3,4 +3,4 @@
 # setUUID
 
 [js]\
-open fun [setUUID](set-u-u-i-d.md)(uuid: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html))
+open fun [setUUID](set-u-u-i-d.md)(uuid: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html))

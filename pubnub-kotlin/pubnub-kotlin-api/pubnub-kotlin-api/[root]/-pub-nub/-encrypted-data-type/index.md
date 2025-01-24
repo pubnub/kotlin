@@ -9,5 +9,5 @@ interface [EncryptedDataType](index.md)
 
 | Name | Summary |
 |---|---|
-| [data](data.md) | [js]<br>abstract var [data](data.md): [ArrayBuffer](https://kotlinlang.org/api/latest/jvm/stdlib/org.khronos.webgl/-array-buffer/index.html) |
-| [metadata](metadata.md) | [js]<br>abstract var [metadata](metadata.md): [ArrayBuffer](https://kotlinlang.org/api/latest/jvm/stdlib/org.khronos.webgl/-array-buffer/index.html)? |
+| [data](data.md) | [js]<br>abstract var [data](data.md): [ArrayBuffer](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/org.khronos.webgl/-array-buffer/index.html) |
+| [metadata](metadata.md) | [js]<br>abstract var [metadata](metadata.md): [ArrayBuffer](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/org.khronos.webgl/-array-buffer/index.html)? |

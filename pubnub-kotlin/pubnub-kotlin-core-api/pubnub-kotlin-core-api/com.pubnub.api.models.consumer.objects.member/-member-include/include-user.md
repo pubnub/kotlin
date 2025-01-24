@@ -3,6 +3,6 @@
 # includeUser
 
 [common]\
-abstract val [includeUser](include-user.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+abstract val [includeUser](include-user.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)
 
 Whether to include user information in the result.

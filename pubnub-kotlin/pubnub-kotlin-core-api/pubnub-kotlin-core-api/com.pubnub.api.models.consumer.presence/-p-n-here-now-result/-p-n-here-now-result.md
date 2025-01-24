@@ -3,4 +3,4 @@
 # PNHereNowResult
 
 [common]\
-constructor(totalChannels: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), totalOccupancy: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), channels: [MutableMap](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), [PNHereNowChannelData](../-p-n-here-now-channel-data/index.md)&gt; = mutableMapOf())
+constructor(totalChannels: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html), totalOccupancy: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html), channels: [MutableMap](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-mutable-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), [PNHereNowChannelData](../-p-n-here-now-channel-data/index.md)&gt; = mutableMapOf())

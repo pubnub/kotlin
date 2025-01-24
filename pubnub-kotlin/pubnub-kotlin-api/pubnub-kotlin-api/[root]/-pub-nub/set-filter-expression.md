@@ -3,4 +3,4 @@
 # setFilterExpression
 
 [js]\
-open fun [setFilterExpression](set-filter-expression.md)(filterExpression: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html))
+open fun [setFilterExpression](set-filter-expression.md)(filterExpression: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html))

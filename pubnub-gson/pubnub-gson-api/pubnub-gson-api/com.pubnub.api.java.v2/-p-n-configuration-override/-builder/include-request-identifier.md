@@ -3,7 +3,7 @@
 # includeRequestIdentifier
 
 [jvm]\
-abstract fun [includeRequestIdentifier](include-request-identifier.md)(includeRequestIdentifier: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)): [PNConfigurationOverride.Builder](index.md)
+abstract fun [includeRequestIdentifier](include-request-identifier.md)(includeRequestIdentifier: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)): [PNConfigurationOverride.Builder](index.md)
 
 Whether to include a PubNubCore.requestId with every request.
 

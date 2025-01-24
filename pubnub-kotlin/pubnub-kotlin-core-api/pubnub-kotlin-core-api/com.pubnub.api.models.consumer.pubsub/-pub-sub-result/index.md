@@ -18,8 +18,8 @@ interface [PubSubResult](index.md) : [PNEvent](../-p-n-event/index.md)
 
 | Name | Summary |
 |---|---|
-| [channel](channel.md) | [common]<br>abstract override val [channel](channel.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
-| [publisher](publisher.md) | [common]<br>abstract val [publisher](publisher.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? |
-| [subscription](subscription.md) | [common]<br>abstract override val [subscription](subscription.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? |
-| [timetoken](timetoken.md) | [common]<br>abstract override val [timetoken](timetoken.md): [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)? |
+| [channel](channel.md) | [common]<br>abstract override val [channel](channel.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |
+| [publisher](publisher.md) | [common]<br>abstract val [publisher](publisher.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |
+| [subscription](subscription.md) | [common]<br>abstract override val [subscription](subscription.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |
+| [timetoken](timetoken.md) | [common]<br>abstract override val [timetoken](timetoken.md): [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html)? |
 | [userMetadata](user-metadata.md) | [common]<br>abstract val [userMetadata](user-metadata.md): [JsonElement](../../com.pubnub.api/-json-element/index.md)? |

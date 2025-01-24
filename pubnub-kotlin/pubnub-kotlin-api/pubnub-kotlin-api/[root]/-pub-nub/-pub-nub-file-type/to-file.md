@@ -3,4 +3,4 @@
 # toFile
 
 [js]\
-abstract fun [toFile](to-file.md)(): [File](https://kotlinlang.org/api/latest/jvm/stdlib/org.w3c.files/-file/index.html)
+abstract fun [toFile](to-file.md)(): [File](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/org.w3c.files/-file/index.html)

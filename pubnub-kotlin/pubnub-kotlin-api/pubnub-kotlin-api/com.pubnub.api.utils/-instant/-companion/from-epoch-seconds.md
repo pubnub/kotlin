@@ -4,7 +4,7 @@
 
 [common, js]\
 [common]\
-expect fun [fromEpochSeconds](from-epoch-seconds.md)(epochSeconds: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html), nanosecondAdjustment: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)): [Instant](../index.md)
+expect fun [fromEpochSeconds](from-epoch-seconds.md)(epochSeconds: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html), nanosecondAdjustment: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)): [Instant](../index.md)
 
 [js]\
-actual fun [fromEpochSeconds](from-epoch-seconds.md)(epochSeconds: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html), nanosecondAdjustment: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)): [Instant](../index.md)
+actual fun [fromEpochSeconds](from-epoch-seconds.md)(epochSeconds: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html), nanosecondAdjustment: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)): [Instant](../index.md)

@@ -4,9 +4,9 @@
 
 [common, apple, js, jvm]\
 [common]\
-expect abstract val [authToken](auth-token.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?
+expect abstract val [authToken](auth-token.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)?
 
 [apple, js, jvm]\
-actual abstract val [authToken](auth-token.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?
+actual abstract val [authToken](auth-token.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)?
 
 Authentication token for the PubNub client. This token is required on the client side when Access Manager (PAM) is enabled for PubNub keys. It can be generated using the PubNub.grantToken method, which should be executed on the server side with a PubNub instance initialized using the secret key.

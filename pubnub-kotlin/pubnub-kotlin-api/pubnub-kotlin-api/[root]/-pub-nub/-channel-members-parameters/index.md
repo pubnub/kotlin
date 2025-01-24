@@ -16,8 +16,8 @@ interface [ChannelMembersParameters](index.md)
 
 | Name | Summary |
 |---|---|
-| [filter](filter.md) | [js]<br>abstract var [filter](filter.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? |
+| [filter](filter.md) | [js]<br>abstract var [filter](filter.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |
 | [include](include.md) | [js]<br>abstract var [include](include.md): [PubNub.MembershipIncludeOptions](../-membership-include-options/index.md)? |
-| [limit](limit.md) | [js]<br>abstract var [limit](limit.md): [Number](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html)? |
+| [limit](limit.md) | [js]<br>abstract var [limit](limit.md): [Number](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-number/index.html)? |
 | [page](page.md) | [js]<br>abstract var [page](page.md): [PubNub.MetadataPage](../-metadata-page/index.md)? |
-| [sort](sort.md) | [js]<br>abstract var [sort](sort.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)? |
+| [sort](sort.md) | [js]<br>abstract var [sort](sort.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)? |

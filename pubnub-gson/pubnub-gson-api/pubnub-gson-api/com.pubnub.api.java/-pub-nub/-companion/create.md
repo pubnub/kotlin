@@ -4,7 +4,7 @@
 
 [jvm]\
 
-@[JvmStatic](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-static/index.html)
+@[JvmStatic](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.jvm/-jvm-static/index.html)
 
 fun [create](create.md)(configuration: [PNConfiguration](../../../com.pubnub.api.java.v2/-p-n-configuration/index.md)): [PubNub](../index.md)
 

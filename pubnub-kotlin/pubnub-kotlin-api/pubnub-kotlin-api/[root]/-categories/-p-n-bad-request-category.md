@@ -3,4 +3,4 @@
 # PNBadRequestCategory
 
 [js]\
-abstract var [PNBadRequestCategory](-p-n-bad-request-category.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+abstract var [PNBadRequestCategory](-p-n-bad-request-category.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)

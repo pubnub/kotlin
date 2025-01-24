@@ -9,4 +9,4 @@ open class [PNGetChannelMetadataResult](index.md) : [EntityEnvelope](../../com.p
 
 | | |
 |---|---|
-| [PNGetChannelMetadataResult](-p-n-get-channel-metadata-result.md) | [jvm]<br>constructor(status: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), data: [PNChannelMetadata](../-p-n-channel-metadata/index.md)) |
+| [PNGetChannelMetadataResult](-p-n-get-channel-metadata-result.md) | [jvm]<br>constructor(status: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html), data: [PNChannelMetadata](../-p-n-channel-metadata/index.md)) |
