@@ -8,6 +8,7 @@ import com.pubnub.api.models.consumer.objects.PNMembershipKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
+import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataResult
 import com.pubnub.api.models.consumer.objects.member.MemberInclude
 import com.pubnub.api.models.consumer.objects.member.PNMember
 import com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult
@@ -35,6 +36,7 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter.ISO_ZONED_DATE_TIME
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 
 class ObjectsIntegrationTest : BaseIntegrationTest() {
     private val testUserId01 = "ThisIsMyId01" + randomValue()
@@ -69,6 +71,45 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
         val getAllAfterRemovalResult = pubnub.getAllChannelMetadata(filter = "id == \"$channel\"").sync()
 
         assertTrue(getAllAfterRemovalResult.data.none { it.id == channel })
+    }
+
+    @Test
+    fun canUpdateCustomChannelMetadata() {
+        val channelName = "Channel1on1"
+        val channelDescription = "Channel for 1on1 conversation"
+        val status = "active"
+        val type = "1on1"
+        val initialCustom = mapOf("Days" to "Mon-Fri")
+
+        val channelMetadataAfterSet: PNChannelMetadataResult = pubnub.setChannelMetadata(
+            channel = channel,
+            name = channelName,
+            description = channelDescription,
+            status = status,
+            type = type,
+            custom = initialCustom
+        ).sync()
+
+        val channelMetadataAfterGet = pubnub.getChannelMetadata(channel = channel, includeCustom = true).sync().data
+
+        //  Update metadata with additional custom data
+        val updatedCustomMetadata = (channelMetadataAfterGet.custom?.value ?: emptyMap()) + mapOf("Months" to "Jan-May")
+        val updatedChannelMetadata = pubnub.setChannelMetadata(
+            channel = channelMetadataAfterGet.id,
+            custom = updatedCustomMetadata,
+            includeCustom = true
+        ).sync()
+
+        val updatedData = updatedChannelMetadata.data
+        assertEquals(channel, updatedData.id)
+        assertEquals(channelName, updatedData.name?.value)
+        assertEquals(channelDescription, updatedData.description?.value)
+        assertEquals(status, updatedData.status?.value)
+        assertEquals(type, updatedData.type?.value)
+        val expectedCustom = mapOf("Days" to "Mon-Fri", "Months" to "Jan-May")
+        assertEquals(expectedCustom, updatedData.custom?.value)
+
+        pubnub.removeChannelMetadata(channel = channel).sync()
     }
 
     @Test
