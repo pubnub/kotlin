@@ -109,6 +109,58 @@ public class ChannelMetadataIT extends ObjectsApiBaseIT {
     }
 
     @Test
+    public void canUpdateCustomChannelMetadata() throws PubNubException {
+        final String channel = randomChannelMetadataId;
+        final String channelName = "Channel1on1";
+        final String channelDescription = "Channel for 1on1 conversation";
+        final String status = "active";
+        final String type = "1on1";
+        final Map initialCustom = new HashMap();
+        initialCustom.put("Days", "Mon-Fri");
+
+        final PNSetChannelMetadataResult setChannelMetadataResult = pubNubUnderTest.setChannelMetadata()
+                .channel(channel)
+                .description(channelDescription)
+                .name(channelName)
+                .custom(initialCustom)
+                .includeCustom(true)
+                .status(status)
+                .type(type)
+                .sync();
+
+        final PNChannelMetadata channelMetadataAfterGet = pubNubUnderTest.getChannelMetadata()
+                .channel(channel)
+                .includeCustom(true)
+                .sync().getData();
+
+        Map<String, Object> updatedCustomMetadata = channelMetadataAfterGet.getCustom().getValue();
+        Map<String, Object> additionalMetadata = new HashMap<>();
+        additionalMetadata.put("Months", "Jan-May");
+
+        updatedCustomMetadata.putAll(additionalMetadata);
+
+        final PNSetChannelMetadataResult updatedChannelMetadata = pubNubUnderTest.setChannelMetadata()
+                .channel(channel)
+                .custom(updatedCustomMetadata)
+                .includeCustom(true)
+                .sync();
+
+        PNChannelMetadata updatedData = updatedChannelMetadata.getData();
+        assertEquals(channel, updatedData.getId());
+        assertEquals(channelName, updatedData.getName().getValue());
+        assertEquals(channelDescription, updatedData.getDescription().getValue());
+        assertEquals(status, updatedData.getStatus().getValue());
+        assertEquals(type, updatedData.getType().getValue());
+        Map<String, Object>  expectedCustom = new HashMap<>();
+        expectedCustom.put("Days", "Mon-Fri");
+        expectedCustom.put("Months","Jan-May");
+        assertEquals(expectedCustom, updatedData.getCustom().getValue());
+
+        // clean up
+        pubNubUnderTest.removeChannelMetadata().channel(channel).sync();
+    }
+
+    @Test
     public void getAllChannelHappyPath() throws PubNubException {
         //given
 
