@@ -568,6 +568,36 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
     }
 
     @Test
+    fun canSetChannelMemberWhenReferentialIntegrityIsEnabled() {
+        // before calling setChannelMembers we need to set channel metadata
+        pubnub.setChannelMetadata(
+            channel = channel,
+            name = randomValue(15),
+            status = status01,
+            type = type01,
+        ).sync()
+
+        // before calling setChannelMembers we need to set user metadata
+        pubnub.setUUIDMetadata(
+            uuid = testUserId01,
+            name = randomValue(15),
+            status = status01,
+            type = type01,
+        ).sync()
+
+        val result: PNMemberArrayResult = pubnub.setChannelMembers(
+            channel = channel,
+            users = listOf(PNMember.Partial(uuidId = testUserId01, status = status01, type = type01)),
+            include = MemberInclude(
+                includeStatus = true,
+                includeType = true,
+            )
+        ).sync()
+
+        assertEquals(testUserId01, result.data.first().uuid.id)
+    }
+
+    @Test
     fun testManageMember() {
         pubnub.setChannelMembers(
             channel = channel,
