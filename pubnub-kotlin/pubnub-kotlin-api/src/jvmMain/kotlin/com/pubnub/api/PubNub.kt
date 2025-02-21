@@ -1002,6 +1002,13 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      *
      *                      It's possible to grant permissions to multiple [channelGroups] simultaneously.
      */
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = "This function is deprecated. Use the grantToken(ttl, meta, authorizedUUID, channels, channelGroups, uuids)",
+        replaceWith = ReplaceWith(
+            "grantToken(ttl, meta, authorizedUUID, channels, channelGroups, uuids)"
+        )
+    )
     fun grant(
         read: Boolean = false,
         write: Boolean = false,
@@ -1017,6 +1024,13 @@ actual interface PubNub : StatusEmitter, EventEmitter {
     /**
      * See [grant]
      */
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = "This function is deprecated. Use the grantToken(ttl, meta, authorizedUUID, channels, channelGroups, uuids)",
+        replaceWith = ReplaceWith(
+            "grantToken(ttl, meta, authorizedUUID, channels, channelGroups, uuids)"
+        )
+    )
     fun grant(
         read: Boolean = false,
         write: Boolean = false,
