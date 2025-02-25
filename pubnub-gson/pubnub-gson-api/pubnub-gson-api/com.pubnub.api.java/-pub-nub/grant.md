@@ -3,7 +3,20 @@
 # grant
 
 [jvm]\
-abstract fun [grant](grant.md)(): [Grant](../../com.pubnub.api.java.endpoints.access/-grant/index.md)
+abstract fun [~~grant~~](grant.md)(): [Grant](../../com.pubnub.api.java.endpoints.access/-grant/index.md)
+
+---
+
+### Deprecated
+
+This function is deprecated. Use the grantToken(ttl)
+
+#### Replace with
+
+```kotlin
+grantToken(ttl)
+```
+---
 
 This function establishes access permissions for PubNub Access Manager (PAM) by setting the `read` or `write` attribute to `true`. A grant with `read` or `write` set to `false` (or not included) will revoke any previous grants with `read` or `write` set to `true`.
 
