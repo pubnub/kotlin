@@ -257,6 +257,13 @@ interface PubNub : EventEmitter, StatusEmitter {
      * - Channel level privileges are based on a combination of `subscribeKey` and `channel` name.
      * - User level privileges are based on the combination of `subscribeKey`, `channel`, and `auth_key`.
      */
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = "This function is deprecated. Use the grantToken(ttl)",
+        replaceWith = ReplaceWith(
+            "grantToken(ttl)"
+        )
+    )
     fun grant(): Grant
 
     /**
