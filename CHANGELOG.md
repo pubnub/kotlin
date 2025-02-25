@@ -1,3 +1,9 @@
+## v10.4.2
+February 25 2025
+
+#### Fixed
+- Added deprecation warning to grant methods.
+
 ## v10.4.1
 January 24 2025
 
