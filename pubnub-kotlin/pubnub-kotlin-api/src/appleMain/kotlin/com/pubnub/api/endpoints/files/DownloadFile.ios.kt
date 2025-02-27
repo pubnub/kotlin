@@ -29,10 +29,11 @@ class DownloadFileImpl(
             channel = channel,
             fileName = fileName,
             fileId = fileId,
-            onSuccess = callback.onSuccessHandler {
+            onSuccess = callback.onSuccessHandler { file ->
+                requireNotNull(file)
                 PNDownloadFileResult(
-                    fileName = it?.name().orEmpty(),
-                    byteStream = it?.url()?.let { url -> DownloadableImpl(inputStream = NSInputStream(uRL = url)) }
+                    fileName = file.name(),
+                    byteStream = file.url()?.let { url -> DownloadableImpl(inputStream = NSInputStream(uRL = url)) }
                 )
             },
             onFailure = callback.onFailureHandler()

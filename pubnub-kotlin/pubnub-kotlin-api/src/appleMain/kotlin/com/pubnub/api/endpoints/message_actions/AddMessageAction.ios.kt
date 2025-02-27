@@ -31,14 +31,15 @@ class AddMessageActionImpl(
             actionValue = actionValue,
             messageTimetoken = messageTimetoken.toULong(),
             onSuccess = callback.onSuccessHandler { messageActionObjC ->
+                requireNotNull(messageActionObjC)
                 PNAddMessageActionResult(
                     action = PNMessageAction(
-                        type = messageActionObjC?.actionType().orEmpty(),
-                        value = messageActionObjC?.actionValue().orEmpty(),
-                        messageTimetoken = messageActionObjC?.messageTimetoken()?.toLong() ?: 0,
+                        type = messageActionObjC.actionType(),
+                        value = messageActionObjC.actionValue(),
+                        messageTimetoken = messageActionObjC.messageTimetoken().toLong(),
                     ).apply {
-                        uuid = messageActionObjC?.publisher()
-                        actionTimetoken = messageActionObjC?.actionTimetoken()?.toLong()
+                        uuid = messageActionObjC.publisher()
+                        actionTimetoken = messageActionObjC.actionTimetoken().toLong()
                     }
                 )
             },
