@@ -56,7 +56,7 @@ class PubNubImplTest : BaseTest() {
     fun getVersionAndTimeStamp() {
         val version = PubNubImpl.SDK_VERSION
         val timeStamp = PubNubImpl.timestamp()
-        assertEquals("10.4.2", version)
+        assertEquals("10.4.3", version)
         assertTrue(timeStamp > 0)
     }
 

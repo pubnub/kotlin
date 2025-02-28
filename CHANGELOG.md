@@ -1,3 +1,9 @@
+## v10.4.3
+February 28 2025
+
+#### Fixed
+- Internal fixes.
+
 ## v10.4.2
 February 25 2025
 
