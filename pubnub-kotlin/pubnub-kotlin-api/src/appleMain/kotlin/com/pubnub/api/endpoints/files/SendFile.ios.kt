@@ -50,12 +50,13 @@ class SendFileImpl(
                 shouldStore = shouldStore?.let { NSNumber(it) },
                 customMessageType = customMessageType,
                 onSuccess = callback.onSuccessHandler2 { uploadedFile, timetoken ->
+                    requireNotNull(uploadedFile)
                     PNFileUploadResult(
                         status = 200,
                         timetoken = timetoken.toLong(),
                         file = PNBaseFile(
-                            id = uploadedFile?.id().orEmpty(),
-                            name = uploadedFile?.name().orEmpty()
+                            id = uploadedFile.id(),
+                            name = uploadedFile.name()
                         )
                     )
                 },

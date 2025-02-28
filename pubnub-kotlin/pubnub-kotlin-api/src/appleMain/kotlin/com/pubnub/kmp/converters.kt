@@ -49,9 +49,9 @@ internal fun createPNUUIDMetadata(from: KMPUserMetadata?): PNUUIDMetadata {
         externalId = PatchValue.of(from.externalId()),
         profileUrl = PatchValue.of(from.profileUrl()),
         email = PatchValue.of(from.email()),
-        custom = PatchValue.of(from.custom()?.safeCast()),
-        updated = PatchValue.of(from.updated().orEmpty()),
-        eTag = PatchValue.of(from.eTag().orEmpty()),
+        custom = from.custom()?.safeCast<String, Any>()?.let { PatchValue.of(it) },
+        updated = from.updated()?.let { PatchValue.of(it) },
+        eTag = from.eTag()?.let { PatchValue.of(it) },
         type = PatchValue.of(from.type()),
         status = PatchValue.of(from.status())
     )
@@ -64,9 +64,9 @@ internal fun createPNChannelMetadata(from: KMPChannelMetadata?): PNChannelMetada
         id = from!!.id(),
         name = PatchValue.of(from.name()),
         description = PatchValue.of(from.descr()),
-        custom = PatchValue.of(from.custom()?.safeCast()),
-        updated = PatchValue.of(from.updated().orEmpty()),
-        eTag = PatchValue.of(from.eTag().orEmpty()),
+        custom = from.custom()?.safeCast<String, Any>()?.let { PatchValue.of(it) },
+        updated = from.updated()?.let { PatchValue.of(it) },
+        eTag = from.eTag()?.let { PatchValue.of(it) },
         type = PatchValue.of(from.type()),
         status = PatchValue.of(from.status())
     )
@@ -90,9 +90,9 @@ internal fun createPNChannelMembership(from: KMPMembershipMetadata): PNChannelMe
             id = from.channelMetadataId(),
             name = PatchValue.of(from.channel()?.name()),
             description = PatchValue.of(from.channel()?.descr()),
-            custom = PatchValue.of(from.channel()?.custom()?.safeCast()),
-            updated = PatchValue.of(from.channel()?.updated().orEmpty()),
-            eTag = PatchValue.of(from.channel()?.eTag().orEmpty()),
+            custom = from.channel()?.custom()?.safeCast<String, Any>()?.let { PatchValue.of(it) },
+            updated = from.channel()?.updated()?.let { PatchValue.of(it) },
+            eTag = from.channel()?.eTag()?.let { PatchValue.of(it) },
             type = PatchValue.of(from.channel()?.type()),
             status = PatchValue.of(from.channel()?.status())
         ),
@@ -109,7 +109,7 @@ internal fun createPNChannelMembership(from: KMPMembershipMetadata): PNChannelMe
 internal fun createPNMember(from: KMPMembershipMetadata?): PNMember {
     return PNMember(
         uuid = createPNUUIDMetadata(from = from!!.user()),
-        custom = PatchValue.of(from.custom()?.safeCast()),
+        custom = from.custom()?.safeCast<String, Any>()?.let { PatchValue.of(it) },
         updated = from.updated().orEmpty(),
         eTag = from.eTag().orEmpty(),
         status = PatchValue.of(from.status()),
