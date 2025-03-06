@@ -16,7 +16,7 @@ kotlin {
             dependencies {
                 api(project(":pubnub-kotlin:pubnub-kotlin-api"))
                 api(kotlin("test"))
-                api(libs.coroutines.test)
+                api(libs.kotlinx.coroutines.test)
             }
         }
 

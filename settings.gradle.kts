@@ -29,4 +29,5 @@ include("examples:kotlin-app")
 include("examples:java-app")
 includeBuild("build-logic/ktlint-custom-rules")
 includeBuild("migration_utils")
-include("pubnub-kotlin-coroutines")
+include("pubnub-kotlin:pubnub-kotlin-coroutines")
+

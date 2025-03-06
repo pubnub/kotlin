@@ -58,7 +58,7 @@ kotlin {
             dependencies {
                 implementation(project(":pubnub-kotlin:pubnub-kotlin-test"))
                 implementation(kotlin("test"))
-                implementation(libs.coroutines.test)
+                implementation(libs.kotlinx.coroutines.test)
             }
         }
 

@@ -5,8 +5,8 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-suspend fun <T> PNFuture<T>.await(): T {
-    val t = suspendCancellableCoroutine { cont ->
+suspend fun <T> PNFuture<T>.await(): T =
+    suspendCancellableCoroutine { cont ->
         async { result ->
             result.onSuccess {
                 cont.resume(it)
@@ -15,5 +15,3 @@ suspend fun <T> PNFuture<T>.await(): T {
             }
         }
     }
-    return t
-}
