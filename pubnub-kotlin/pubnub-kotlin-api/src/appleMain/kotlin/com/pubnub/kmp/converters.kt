@@ -14,14 +14,6 @@ import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.utils.PatchValue
 import kotlinx.cinterop.ExperimentalForeignApi
-import platform.Foundation.NSData
-import platform.Foundation.NSString
-import platform.Foundation.NSUTF8StringEncoding
-import platform.Foundation.dataUsingEncoding
-
-internal fun String.toNSData(): NSData? {
-    return (this as NSString).dataUsingEncoding(NSUTF8StringEncoding)
-}
 
 @OptIn(ExperimentalForeignApi::class)
 internal fun createPubNubHashedPage(from: PNPage?): KMPHashedPage {
