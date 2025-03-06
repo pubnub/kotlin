@@ -27,6 +27,7 @@ cbor = { module = "co.nstant.in:cbor", version = "0.9" }
 jetbrains-annotations = { module = "org.jetbrains:annotations", version = "24.1.0" }
 kotlinx-atomicfu = { module = "org.jetbrains.kotlinx:atomicfu", version = "0.24.0" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx_datetime"}
+coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx_coroutines"}
 
 # tests
 wiremock = { module = "com.github.tomakehurst:wiremock", version = "2.27.2" }
