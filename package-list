@@ -3834,6 +3834,8 @@ $dokka.location:com.pubnub.api/SpaceId/value/#/PointingToDeclaration/pubnub-kot
 $dokka.location:com.pubnub.api/UserId///PointingToDeclaration/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api/-user-id/index.md
 $dokka.location:com.pubnub.api/UserId/UserId/#kotlin.String/PointingToDeclaration/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api/-user-id/-user-id.md
 $dokka.location:com.pubnub.api/UserId/value/#/PointingToDeclaration/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api/-user-id/value.md
+$dokka.location:com.pubnub.coroutines////PointingToDeclaration/pubnub-kotlin-coroutines/pubnub-kotlin-coroutines/com.pubnub.coroutines/index.md
+$dokka.location:com.pubnub.coroutines//await/com.pubnub.kmp.PNFuture[TypeParam(bounds=[kotlin.Any?])]#/PointingToDeclaration/pubnub-kotlin-coroutines/pubnub-kotlin-coroutines/com.pubnub.coroutines/await.md
 $dokka.location:com.pubnub.kmp////PointingToDeclaration/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.kmp/index.md
 $dokka.location:com.pubnub.kmp//alsoAsync/com.pubnub.kmp.PNFuture[TypeParam(bounds=[kotlin.Any?])]#kotlin.Function1[TypeParam(bounds=[kotlin.Any?]),com.pubnub.kmp.PNFuture[*]]/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.kmp/also-async.md
 $dokka.location:com.pubnub.kmp//asFuture/TypeParam(bounds=[kotlin.Any?])#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.kmp/as-future.md
@@ -3997,3 +3999,5 @@ com.pubnub.api.v2
 com.pubnub.api.v2.callbacks
 com.pubnub.api.v2.subscriptions
 com.pubnub.kmp
+module:pubnub-kotlin-coroutines
+com.pubnub.coroutines

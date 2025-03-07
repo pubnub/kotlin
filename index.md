@@ -8,3 +8,4 @@
 | [pubnub-gson-impl](pubnub-gson/pubnub-gson-impl/index.md) |  |
 | [pubnub-kotlin-api](pubnub-kotlin/pubnub-kotlin-api/index.md) |  |
 | [pubnub-kotlin-core-api](pubnub-kotlin/pubnub-kotlin-core-api/index.md) |  |
+| [pubnub-kotlin-coroutines](pubnub-kotlin/pubnub-kotlin-coroutines/index.md) |  |
