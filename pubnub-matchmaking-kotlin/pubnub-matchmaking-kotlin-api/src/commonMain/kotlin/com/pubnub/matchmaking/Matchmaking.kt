@@ -6,7 +6,9 @@ import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.kmp.CustomObject
 import com.pubnub.kmp.PNFuture
+import com.pubnub.matchmaking.entities.FindMatchResult
 import com.pubnub.matchmaking.entities.GetUsersResponse
+import com.pubnub.matchmaking.entities.MatchmakingStatus
 
 interface Matchmaking {
     val pubNub: PubNub
@@ -58,7 +60,9 @@ interface Matchmaking {
 
     fun findMatch(userId: String): PNFuture<String>
 
-    fun getMatchStatus(userId: String): com.pubnub.matchmaking.entities.MatchmakingStatus
+    fun findMatch(userId: String, callback: ((MatchmakingStatus) -> Unit)?): PNFuture<FindMatchResult>
+
+    fun getMatchStatus(userId: String): PNFuture<MatchmakingStatus>
 
     fun cancelMatchmaking(userId: String): PNFuture<Unit>
 

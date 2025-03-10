@@ -8,8 +8,8 @@ import com.pubnub.kmp.asFuture
 import com.pubnub.matchmaking.Matchmaking
 import com.pubnub.matchmaking.User
 import com.pubnub.matchmaking.entities.MatchmakingStatus
-import com.pubnub.matchmaking.internal.USER_STATUS_CHANNEL_PREFIX
 import com.pubnub.matchmaking.internal.UserImpl
+import com.pubnub.matchmaking.internal.common.USER_STATUS_CHANNEL_PREFIX
 import com.pubnub.matchmaking.internal.serverREST.entities.MatchGroup
 import com.pubnub.matchmaking.internal.serverREST.entities.MatchmakingResult
 import kotlinx.coroutines.CoroutineScope
@@ -116,7 +116,7 @@ class MatchmakingRestService(
         }
     }
 
-    private suspend fun setMatchmakingStatusForUsers(userIds: Set<String>, status: MatchmakingStatus){
+    private suspend fun setMatchmakingStatusForUsers(userIds: Set<String>, status: MatchmakingStatus) {
         userIds.forEach { userId ->
             setMatchMakingStatus(userId, status)
         }

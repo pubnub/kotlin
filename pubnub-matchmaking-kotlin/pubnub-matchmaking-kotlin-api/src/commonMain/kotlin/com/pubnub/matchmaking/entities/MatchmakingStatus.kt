@@ -7,7 +7,14 @@ enum class MatchmakingStatus {
     MATCH_FOUND,
     CANCELLED, // todo how to cancel matchmaking?
     FAILED,
+    UNKNOWN,
 
     INITIALLY_MATCHED, // todo do we need it,
-    WAITING_FOR_CONFIRMATION // todo do we need it,
+    WAITING_FOR_CONFIRMATION; // todo do we need it,
+
+    companion object {
+        fun fromString(value: String): MatchmakingStatus {
+            return values().find { it.name.equals(value, ignoreCase = true) } ?: UNKNOWN
+        }
+    }
 }
