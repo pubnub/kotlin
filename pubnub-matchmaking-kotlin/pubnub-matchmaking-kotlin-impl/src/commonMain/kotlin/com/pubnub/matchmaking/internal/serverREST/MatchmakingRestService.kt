@@ -29,7 +29,7 @@ class MatchmakingRestService(
     private val scope: CoroutineScope = CoroutineScope(Dispatchers.Default)
 ) {
     // Use a mutable map guarded by a Mutex for thread safety
-    private val matchmakingQueue = mutableMapOf<String, MatchmakingStatus>()
+    private val matchmakingQueue = mutableSetOf<String>()
     private val queueMutex = Mutex()
     private var processingQueueInProgress = false
 
@@ -55,23 +55,25 @@ class MatchmakingRestService(
     // Registers a user for matchmaking.
     private suspend fun findMatchInternal(userId: String): String {
         queueMutex.withLock {
-            if (matchmakingQueue.containsKey(userId)) {
+            if (matchmakingQueue.contains(userId)) {
                 return "User already registered for matchmaking. Duplication not permitted."
             }
-            matchmakingQueue[userId] = MatchmakingStatus.IN_QUEUE
-            // stworz kanał zawierający nazwę usera i wyślij do niego wiadomość ze statusem
+
+            // todo
             // w SDK będzie metoda getStatus, która będzie odczytywała ostatnią wiadomość z tego kanału
             // w SDK będzie metoda getStatus(callback), która będzie się subskrybowała na ten kanał i zwracała aktualny status
 
-            // matchmaking status for user will be stored in channel
-            matchmaking.pubNub.publish(
-                channel = USER_STATUS_CHANNEL_PREFIX + userId,
-                message = MatchmakingStatus.IN_QUEUE
-            ).await()
+            setMatchMakingStatus(userId, MatchmakingStatus.IN_QUEUE)
         }
         ensureMatchmakingIsRunning()
         return "accepted"
     }
+
+    // matchmaking status for user will be stored in channel as a last message
+    private suspend fun setMatchMakingStatus(userId: String, status: MatchmakingStatus) = matchmaking.pubNub.publish(
+        channel = USER_STATUS_CHANNEL_PREFIX + userId,
+        message = status
+    ).await()
 
     // Starts a coroutine loop to process the matchmaking queue when enough users are available.
     private suspend fun ensureMatchmakingIsRunning() {
@@ -92,17 +94,18 @@ class MatchmakingRestService(
         }
     }
 
-    // Processes the matchmaking queue by removing all user IDs for pairing.
+    // Processes the matchmaking queue by removing all user IDs for pairing from the queue
     private suspend fun processMatchmakingQueue() {
         val userIds: Set<String> = queueMutex.withLock {
-            if (matchmakingQueue.size < 2) {
+            if (matchmakingQueue.size < 2) { // todo this should be configurable based on number of player in match
                 return
             }
-            val ids = matchmakingQueue.keys.toSet()
-            matchmakingQueue.keys.removeAll(ids)
+            val ids = matchmakingQueue
+            matchmakingQueue.removeAll(ids)
             ids
         }
         if (userIds.isNotEmpty()) {
+            setMatchmakingStatusForUsers(userIds, MatchmakingStatus.MATCHMAKING_STARTED)
             performMatchmaking(userIds)
         }
         // If not enough users remain, stop processing.
@@ -110,6 +113,12 @@ class MatchmakingRestService(
             if (matchmakingQueue.size < 2) {
                 processingQueueInProgress = false
             }
+        }
+    }
+
+    private suspend fun setMatchmakingStatusForUsers(userIds: Set<String>, status: MatchmakingStatus){
+        userIds.forEach { userId ->
+            setMatchMakingStatus(userId, status)
         }
     }
 
@@ -155,9 +164,10 @@ class MatchmakingRestService(
         println("Adding ${unmatchedUserIds.size} unmatched users back to matchmaking queue.")
         queueMutex.withLock {
             unmatchedUserIds.forEach { userId ->
-                if (!matchmakingQueue.containsKey(userId)) {
-                    matchmakingQueue[userId] = MatchmakingStatus.RE_ADDED_TO_QUEUE
+                if (!matchmakingQueue.contains(userId)) {
                     println("- Added $userId back to matchmaking queue.")
+                    // todo we could introduce count of how many time userId has been re-added to queue
+                    setMatchMakingStatus(userId, MatchmakingStatus.RE_ADDED_TO_QUEUE)
                 }
             }
         }
@@ -166,17 +176,10 @@ class MatchmakingRestService(
     private suspend fun notifyAboutSuccessfulMatch(matchGroups: Set<MatchGroup>) {
         matchGroups.forEach { group ->
             group.users.forEach { user ->
-                notifyUserAboutSuccessfulMatch(user, group)
+                println("Found match for userId: ${user.id} in group: ${group.users.map { it.id }}")
+                setMatchMakingStatus(user.id, MatchmakingStatus.MATCH_FOUND)
             }
         }
-    }
-
-    private suspend fun notifyUserAboutSuccessfulMatch(user: User, group: MatchGroup) {
-        println("Found match for userId: ${user.id} in group: ${group.users.map { it.id }}")
-        matchmaking.pubNub.publish(
-            channel = USER_STATUS_CHANNEL_PREFIX + user.id,
-            message = MatchmakingStatus.MATCH_FOUND
-        ).await()
     }
 
     private fun calculateScore(userA: User, userB: User): Double {

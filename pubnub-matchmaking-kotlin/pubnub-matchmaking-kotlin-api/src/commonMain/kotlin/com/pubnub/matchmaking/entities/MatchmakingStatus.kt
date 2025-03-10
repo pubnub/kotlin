@@ -4,9 +4,8 @@ enum class MatchmakingStatus {
     IN_QUEUE,
     MATCHMAKING_STARTED,
     RE_ADDED_TO_QUEUE,
-    ALREADY_IN_QUEUE,
     MATCH_FOUND,
-    CANCELLED,
+    CANCELLED, // todo how to cancel matchmaking?
     FAILED,
 
     INITIALLY_MATCHED, // todo do we need it,
