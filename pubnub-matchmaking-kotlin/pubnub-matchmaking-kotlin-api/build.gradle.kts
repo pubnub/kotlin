@@ -15,7 +15,7 @@ kotlin {
             dependencies {
                 api(project(":pubnub-kotlin:pubnub-kotlin-api"))
                 // todo do sprawdzania na projekcie z niższym kotlinem wymuszając niższa wersję odpowiednią komenda
-                implementation(libs.kotlinx.atomicfu) // todo do we need atomic functionality w kotlinie 2.1.2 to będzie w standart library. Przy major release
+                implementation(libs.kotlinx.atomicfu) // todo in kotlin 2.1.2 this will be in standard library
             }
         }
         val jvmMain by getting {
@@ -30,7 +30,6 @@ kotlin {
         if (enableAnyIosTarget) {
             val appleMain by getting {
                 dependencies {
-
                 }
             }
         }
@@ -38,7 +37,6 @@ kotlin {
         if (enableJsTarget) {
             val jsMain by getting {
                 dependencies {
-
                 }
             }
         }
@@ -47,12 +45,8 @@ kotlin {
             dependencies {
 //                implementation(project(":pubnub-kotlin:pubnub-kotlin-test")) // todo not needed for now
                 implementation(kotlin("test"))
-                implementation(libs.coroutines.test) // used to implement await
+                implementation(libs.kotlinx.coroutines.test)
             }
         }
-
-
-
     }
-
 }

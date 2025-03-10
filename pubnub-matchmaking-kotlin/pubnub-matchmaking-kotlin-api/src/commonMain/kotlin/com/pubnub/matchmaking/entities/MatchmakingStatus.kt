@@ -10,5 +10,5 @@ enum class MatchmakingStatus {
     FAILED,
 
     INITIALLY_MATCHED, // todo do we need it,
-    WAITING_FOR_CONFIRMATION// todo do we need it,
+    WAITING_FOR_CONFIRMATION // todo do we need it,
 }

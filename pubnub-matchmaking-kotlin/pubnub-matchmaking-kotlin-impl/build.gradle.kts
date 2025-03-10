@@ -20,11 +20,11 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
+                api(libs.kotlinx.coroutines.core) // todo this is needed for Service that simulates matchmaking REST api call
                 implementation(project(":pubnub-matchmaking-kotlin:pubnub-matchmaking-kotlin-api"))
                 implementation(project(":pubnub-kotlin:pubnub-kotlin-api"))
-                implementation(libs.kotlinx.atomicfu) //todo this is needed for Service that simulates matchmaking REST api call
+                implementation(libs.kotlinx.atomicfu) // todo this is needed for Service that simulates matchmaking REST api call
                 implementation(libs.touchlab.kermit)
-                api(libs.coroutines) // todo this is needed for Service that simulates matchmaking REST api call
             }
         }
 
@@ -73,5 +73,3 @@ val generateVersion =
     }
 
 kotlin.sourceSets.getByName("commonMain").kotlin.srcDir(generateVersion)
-
-

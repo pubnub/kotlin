@@ -1,20 +1,19 @@
-package com.pubnub.matchmaking.internal.serverREST
+package com.pubnub.matchmaking.internal
 
+import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
 import com.pubnub.api.models.consumer.objects.PNKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
+import com.pubnub.kmp.CustomObject
 import com.pubnub.kmp.PNFuture
 import com.pubnub.matchmaking.Matchmaking
-import com.pubnub.matchmaking.entities.GetUsersResponse
-import com.pubnub.matchmaking.entities.MatchmakingCallback
-import com.pubnub.matchmaking.entities.MatchmakingStatus
 import com.pubnub.matchmaking.User
+import com.pubnub.matchmaking.entities.GetUsersResponse
+import com.pubnub.matchmaking.entities.MatchmakingStatus
 import com.pubnub.matchmaking.server.MatchmakingRestService
 
-class MatchmakingImpl(val matchmakingRestService: MatchmakingRestService): Matchmaking {
-
-
+class MatchmakingImpl(override val pubNub: PubNub, private val matchmakingRestService: MatchmakingRestService) : Matchmaking {
     override fun createUser(
         id: String,
         name: String?,
@@ -47,27 +46,24 @@ class MatchmakingImpl(val matchmakingRestService: MatchmakingRestService): Match
         externalId: String?,
         profileUrl: String?,
         email: String?,
-        custom: Any?,
+        custom: CustomObject?,
         status: String?,
         type: String?
     ): PNFuture<User> {
         if (!isValidId(id)) {
-            throw PubNubException("Id is required") //todo is throwing ok ere
+            throw PubNubException("Id is required") // todo is throwing ok ere
         }
 
         TODO("Not yet implemented")
     }
 
-
     override fun deleteUser(id: String, soft: Boolean): PNFuture<User?> {
         TODO("Not yet implemented")
     }
 
-    // how to make sure that userId is unique?
-    override fun findMatch(userId: String, callback: MatchmakingCallback): PNFuture<String> {
-        //simulate call to REST service getStatus
-//        ma
-        TODO("Not yet implemented")
+    // todo how to make sure that userId is unique?
+    override fun findMatch(userId: String): PNFuture<String> {
+        return matchmakingRestService.findMatch(userId)
     }
 
     override fun getMatchStatus(userId: String): MatchmakingStatus {

@@ -1,14 +1,16 @@
 package com.pubnub.matchmaking
 
+import com.pubnub.api.PubNub
 import com.pubnub.api.models.consumer.objects.PNKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
+import com.pubnub.kmp.CustomObject
 import com.pubnub.kmp.PNFuture
 import com.pubnub.matchmaking.entities.GetUsersResponse
-import com.pubnub.matchmaking.entities.MatchmakingCallback
-import com.pubnub.matchmaking.entities.MatchmakingStatus
 
 interface Matchmaking {
+    val pubNub: PubNub
+
     fun createUser(
         id: String,
         name: String? = null,
@@ -47,14 +49,14 @@ interface Matchmaking {
         externalId: String? = null,
         profileUrl: String? = null,
         email: String? = null,
-        custom: Any? = null, // todo when KMP use CustomObject?
+        custom: CustomObject? = null,
         status: String? = null,
         type: String? = null,
     ): PNFuture<User>
 
     fun deleteUser(id: String, soft: Boolean = false): PNFuture<User?>
 
-    fun findMatch(userId: String, callback: MatchmakingCallback): PNFuture<String>
+    fun findMatch(userId: String): PNFuture<String>
 
     fun getMatchStatus(userId: String): com.pubnub.matchmaking.entities.MatchmakingStatus
 

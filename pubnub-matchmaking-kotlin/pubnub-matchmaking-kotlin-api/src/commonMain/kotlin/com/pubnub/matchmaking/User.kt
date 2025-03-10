@@ -1,16 +1,16 @@
 package com.pubnub.matchmaking
 
+import com.pubnub.kmp.CustomObject
 import com.pubnub.kmp.PNFuture
-import com.pubnub.matchmaking.Matchmaking
 
-//todo add kdoc
+// todo add kdoc
 interface User {
     val matchmaking: Matchmaking
     val id: String
     val name: String?
     val externalId: String?
     val profileUrl: String?
-    val email: String
+    val email: String?
     val custom: Map<String, Any?>?
     val status: String?
     val type: String?
@@ -22,7 +22,7 @@ interface User {
         externalId: String? = null,
         profileUrl: String? = null,
         email: String? = null,
-        custom: Any? = null, // todo when KMP use CustomObject?
+        custom: CustomObject? = null,
         status: String? = null,
         type: String? = null,
     ): PNFuture<User>
@@ -55,7 +55,7 @@ interface User {
         /**
          * The new value for [User.custom].
          */
-        var custom: Any? = null,  // todo when KMP use CustomObject?
+        var custom: CustomObject? = null,
         /**
          * The new value for [User.status].
          */
