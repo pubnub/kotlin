@@ -12,6 +12,7 @@ import com.pubnub.matchmaking.internal.UserImpl
 import com.pubnub.matchmaking.internal.common.USER_STATUS_CHANNEL_PREFIX
 import com.pubnub.matchmaking.internal.serverREST.entities.MatchGroup
 import com.pubnub.matchmaking.internal.serverREST.entities.MatchmakingResult
+import com.pubnub.matchmaking.internal.serverREST.entities.UserPairWithScore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -24,7 +25,7 @@ import kotlin.coroutines.resumeWithException
 import kotlin.math.abs
 
 // this class represents server-side REST API
-class MatchmakingRestService(
+class MatchmakingRestService( // todo do we need this?
     private val matchmaking: Matchmaking,
     private val scope: CoroutineScope = CoroutineScope(Dispatchers.Default)
 ) {
@@ -39,7 +40,7 @@ class MatchmakingRestService(
             PubNubException("Id is required").asFuture()
         } else {
             PNFuture { callback ->
-                CoroutineScope(Dispatchers.Default).launch {
+                scope.launch {
                     try {
                         // check if user exists, if not then throw
                         getUserMetadata(userId)
@@ -82,7 +83,7 @@ class MatchmakingRestService(
                 processingQueueInProgress = true
                 scope.launch {
                     try {
-                        while (true) {
+                        while (processingQueueInProgress) {
                             processMatchmakingQueue()
                             delay(5000L) // Wait 5 seconds between processing
                         }
@@ -178,6 +179,7 @@ class MatchmakingRestService(
             group.users.forEach { user ->
                 println("Found match for userId: ${user.id} in group: ${group.users.map { it.id }}")
                 setMatchMakingStatus(user.id, MatchmakingStatus.MATCH_FOUND)
+                // todo pass matchMaking result data
             }
         }
     }
@@ -209,13 +211,13 @@ class MatchmakingRestService(
     }
 
     // Create all possible pairs (only including allowed pairs)
-    private fun createAllPairs(users: List<User>): List<Triple<Int, Int, Double>> {
-        val pairs = mutableListOf<Triple<Int, Int, Double>>()
+    private fun createAllPairs(users: List<User>): List<UserPairWithScore> {
+        val pairs = mutableListOf<UserPairWithScore>()
         for (i in users.indices) {
             for (j in i + 1 until users.size) {
                 val score = calculateScore(users[i], users[j])
                 if (score != Double.POSITIVE_INFINITY) {
-                    pairs.add(Triple(i, j, score))
+                    pairs.add(UserPairWithScore(i, j, score))
                 }
             }
         }
@@ -224,28 +226,60 @@ class MatchmakingRestService(
 
     // Greedy pairing: sort by score and select pairs without conflicts.
 // Instead of returning MatchmakingPair, we create a MatchGroup that holds a set of users.
-    private fun pairUsersBySkill(users: List<User>): MatchmakingResult {
-        val allPairs = createAllPairs(users).sortedBy { it.third }
-        val pairedIndices = mutableSetOf<Int>()
-        val groups = mutableSetOf<MatchGroup>()
 
-        for ((i, j, _) in allPairs) {
-            if (i !in pairedIndices && j !in pairedIndices) {
-                groups.add(
-                    MatchGroup(
-                        setOf(
-                            users[i],
-                            users[j]
+    private fun pairUsersBySkill(users: List<User>, groupSize: Int = 2): MatchmakingResult {
+        // If there aren’t enough users to form a single group, return them as unpaired.
+        if (users.size < groupSize) {
+            return MatchmakingResult(emptySet(), users.map { it.id }.toSet())
+        }
+
+        // For pairs, use the existing logic with explicit naming via UserPair.
+        if (groupSize == 2) {
+            val allPairs = createAllPairs(users).sortedBy { it.score }
+            val pairedIndices = mutableSetOf<Int>()
+            val groups = mutableSetOf<MatchGroup>()
+
+            for (pair in allPairs) {
+                if (pair.firstUserIndex !in pairedIndices && pair.secondUserIndex !in pairedIndices) {
+                    groups.add(
+                        MatchGroup(
+                            setOf(
+                                users[pair.firstUserIndex],
+                                users[pair.secondUserIndex]
+                            )
                         )
                     )
-                ) // todo here we are creating group  that consist of 2 player. Make it flexible to be able to return group of N players
-                pairedIndices.add(i)
-                pairedIndices.add(j)
+                    pairedIndices.add(pair.firstUserIndex)
+                    pairedIndices.add(pair.secondUserIndex)
+                }
             }
+            val unpaired = users.indices.filter { it !in pairedIndices }
+                .map { users[it].id }.toSet()
+            return MatchmakingResult(groups, unpaired)
+        } else {
+            // For groups larger than 2, we use a simple greedy grouping.
+            // First, sort users by their Elo rating (fallback to 0 if missing).
+            val sortedUsers = users.sortedBy { (it.custom?.get("elo") as? Int) ?: 0 }
+            val groups = mutableSetOf<MatchGroup>()
+            val usedIndices = mutableSetOf<Int>()
+
+            // Greedily form groups of the desired size from the sorted list.
+            var i = 0
+            while (i <= sortedUsers.size - groupSize) {
+                // Create a group from a consecutive sublist.
+                val groupUsers = sortedUsers.subList(i, i + groupSize).toSet()
+                groups.add(MatchGroup(groupUsers))
+                // Mark these users as grouped.
+                groupUsers.forEach { user ->
+                    usedIndices.add(users.indexOf(user))
+                }
+                i += groupSize
+            }
+            // Any remaining users who didn't fit into a full group are considered unpaired.
+            val unpaired = users.indices.filter { it !in usedIndices }
+                .map { users[it].id }.toSet()
+            return MatchmakingResult(groups, unpaired)
         }
-        val unpaired = users.indices.filter { it !in pairedIndices }
-            .map { users[it].id }.toSet()
-        return MatchmakingResult(groups, unpaired)
     }
 
     private fun isValidId(id: String): Boolean {
