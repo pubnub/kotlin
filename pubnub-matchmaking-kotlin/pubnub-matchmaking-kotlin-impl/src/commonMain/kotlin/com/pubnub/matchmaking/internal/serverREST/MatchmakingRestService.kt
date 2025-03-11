@@ -59,6 +59,7 @@ class MatchmakingRestService( // todo do we need this?
             if (matchmakingQueue.contains(userId)) {
                 return "User already registered for matchmaking. Duplication not permitted."
             }
+            matchmakingQueue.add(userId)
 
             // todo
             // w SDK będzie metoda getStatus, która będzie odczytywała ostatnią wiadomość z tego kanału
@@ -166,6 +167,7 @@ class MatchmakingRestService( // todo do we need this?
         queueMutex.withLock {
             unmatchedUserIds.forEach { userId ->
                 if (!matchmakingQueue.contains(userId)) {
+                    matchmakingQueue.add(userId)
                     println("- Added $userId back to matchmaking queue.")
                     // todo we could introduce count of how many time userId has been re-added to queue
                     setMatchMakingStatus(userId, MatchmakingStatus.RE_ADDED_TO_QUEUE)

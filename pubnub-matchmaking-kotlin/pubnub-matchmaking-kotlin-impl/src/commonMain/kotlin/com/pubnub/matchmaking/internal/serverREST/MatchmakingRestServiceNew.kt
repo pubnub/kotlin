@@ -30,7 +30,6 @@ class MatchmakingRestServiceNew(
     private val openMatchGroups = mutableListOf<OpenMatchGroup>()
     private val groupsMutex = Mutex()
 
-    @Throws(MatchMakingException::class)
     fun findMatch(userId: String): PNFuture<MatchResult> =
         if (!isValidId(userId)) {
             PubNubException("Id is required").asFuture()
@@ -56,20 +55,18 @@ class MatchmakingRestServiceNew(
     private suspend fun findOrCreateMatchGroup(user: User): MatchResult {
         // Create a channel for the current user’s match notification.
         val userChannel = Channel<MatchResult>(Channel.RENDEZVOUS)
-        var groupToJoin: OpenMatchGroup?
 
         groupsMutex.withLock {
             // Find an open group where the user's skill is compatible.
-            groupToJoin = openMatchGroups.firstOrNull { group ->
+            openMatchGroups.firstOrNull { group ->
                 isSkillCompatible(user, group) && group.users.size < group.requiredSize
-            }
-            if (groupToJoin != null) {
+            }?.let { groupToJoin ->
                 // Join the found group.
-                groupToJoin!!.users.add(user)
-                groupToJoin!!.waitingChannels.add(userChannel)
+                groupToJoin.users.add(user)
+                groupToJoin.waitingChannels.add(userChannel)
                 // When the group is full, prepare the final MatchGroup and notify all waiting channels.
-                if (groupToJoin!!.users.size == groupToJoin!!.requiredSize) {
-                    val finalGroup = MatchGroup(users = groupToJoin!!.users.toSet())
+                if (groupToJoin.users.size == groupToJoin.requiredSize) {
+                    val finalGroup = MatchGroup(users = groupToJoin.users.toSet())
                     // Optionally update status for all group members.
                     finalGroup.users.forEach { groupUser ->
                         println("Found match for user: $groupUser")
@@ -77,11 +74,11 @@ class MatchmakingRestServiceNew(
                     // Create matchData. This can be extended as needed.
                     val matchData = mapOf(
                         "status" to "matchFound",
-                        "groupSize" to groupToJoin!!.requiredSize.toString()
+                        "groupSize" to groupToJoin.requiredSize.toString()
                     )
                     val matchResult = MatchResult(match = finalGroup, matchData = matchData)
                     // Notify every waiting channel.
-                    groupToJoin!!.waitingChannels.forEach { channel ->
+                    groupToJoin.waitingChannels.forEach { channel ->
                         scope.launch {
                             channel.send(matchResult)
                         }
@@ -91,12 +88,12 @@ class MatchmakingRestServiceNew(
                 } else { // if must have both main and 'else' branches if used as an expression
                     Unit
                 }
-            } else {
+            } ?: run {
                 // No suitable group found; create a new one.
-                groupToJoin = OpenMatchGroup(requiredSize = 2)
-                groupToJoin!!.users.add(user)
-                groupToJoin!!.waitingChannels.add(userChannel)
-                openMatchGroups.add(groupToJoin!!)
+                val newGroup = OpenMatchGroup(requiredSize = 2)
+                newGroup.users.add(user)
+                newGroup.waitingChannels.add(userChannel)
+                openMatchGroups.add(newGroup)
             }
         }
         // Wait until the group becomes complete and a MatchResult is sent.
