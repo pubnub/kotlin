@@ -4,5 +4,11 @@
     "name": "Java & Kotlin SDK",
     "main": true,
     "overrideRelease": true
+  },
+  "js": {
+    "path": "./pubnub-matchmaking-kotlin/js-matchmaking",
+    "name": "PubNub JS Matchmaking SDK",
+    "main": false,
+    "overrideRelease": true
   }
 }
