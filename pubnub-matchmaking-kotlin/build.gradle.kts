@@ -12,9 +12,9 @@ npmPublish {
     packages {
         getByName("js") {
             scope = "pubnub"
-            packageName = "chat"
+            packageName = "matchmaking"
 //            types.set("index.d.ts") // todo not needed if types are generated and defined in package.json
-            packageJsonTemplateFile = project.layout.projectDirectory.file("js-chat/package_template.json")
+            packageJsonTemplateFile = project.layout.projectDirectory.file("js-matchmaking/package_template.json")
         }
     }
 }
@@ -43,6 +43,7 @@ kotlin {
                 target.set("es2015")
             }
             binaries.library()
+            generateTypeScriptDefinitions() // generates pubnub-matchmaking-kotlin/build/dist/js/productionLibrary/pubnub-pubnub-matchmaking-kotlin.d.ts
         }
     }
 }

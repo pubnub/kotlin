@@ -1,15 +1,15 @@
 {
-  "description": "PubNub JavaScript Chat SDK",
+  "description": "PubNub JavaScript Matchmaking SDK",
   "author": "PubNub <support@pubnub.com>",
   "license": "SEE LICENSE IN LICENSE",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pubnub/kmp-chat.git"
+    "url": "git+https://github.com/pubnub/kotlin/pubnub-matchmaking-kotlin.git"
   },
   "bugs": {
-    "url": "https://github.com/pubnub/kmp-chat/issues"
+    "url": "https://github.com/pubnub/kotlin/issues"
   },
-  "homepage": "https://github.com/pubnub/kmp-chat#readme",
+  "homepage": "https://github.com/pubnub/kotlin/pubnub-matchmaking-kotlin/js-matchmaking#readme",
   "files": [
     "dist", "NOTICE"
   ],
@@ -35,8 +35,8 @@
     "rollup-plugin-ts": "^3.4.5",
     "typescript": "4.9.5"
   },
-  "main": "dist/index.js",
-  "module": "dist/index.es.js",
-  "types": "dist/index.d.ts",
-  "react-native": "dist/index.es.js"
+  "main": "dist/pubnub-pubnub-matchmaking-kotlin.js",
+  "module": "dist/pubnub-pubnub-matchmaking-kotlin.es.js",
+  "types": "dist/pubnub-pubnub-matchmaking-kotlin.d.ts",
+  "react-native": "dist/pubnub-pubnub-matchmaking-kotlin.es.js"
 }

@@ -31,7 +31,7 @@ kotlin {
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
-//                implementation(project(":pubnub-chat-test"))
+//                implementation(project(":pubnub-matchmaking-test"))
             }
         }
 
@@ -57,12 +57,6 @@ kotlin {
             homepage = "Link to a Kotlin/Native module homepage"
         }
     }
-    if (enableJsTarget) {
-        js {
-            generateTypeScriptDefinitions() //todo jeśli nie będzie pliku index.d.ts, może sie nazywac inaczje pubnub-matchmaking-kotlin-impl.d.ts" to to przenieś tą dyrektywae do głownego build.gradle.kts
-        }
-    }
-
 }
 
 val generateVersion =

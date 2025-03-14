@@ -1,6 +1,6 @@
-name: pubnub-js-chat
+name: pubnub-js-matchmaking
 version: 0.11.6
-scm: github.com/pubnub/js-chat
+scm: github.com/pubnub/kotlin
 schema: 1
 files:
   - lib/dist/index.js
