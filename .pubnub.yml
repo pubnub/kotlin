@@ -73,8 +73,8 @@ sdks:
               requires:
                 -
                   name: kotlin-stdlib
-                  min-version: 1.8.0
-                  location: https://repo1.maven.org/maven2/org/jetbrains/kotlin/kotlin-stdlib/2.0.21/kotlin-stdlib-2.0.21.jar
+                  min-version: 2.1.0
+                  location: https://repo1.maven.org/maven2/org/jetbrains/kotlin/kotlin-stdlib/2.1.0/kotlin-stdlib-2.1.0.jar
                   license: Apache License, Version 2.0
                   license-url: https://www.apache.org/licenses/LICENSE-2.0.txt
                   is-required: Required
