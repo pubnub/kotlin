@@ -1,14 +1,13 @@
 package com.pubnub.matchmaking.server
 
+import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult
 import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.kmp.PNFuture
 import com.pubnub.kmp.asFuture
-import com.pubnub.matchmaking.Matchmaking
 import com.pubnub.matchmaking.User
 import com.pubnub.matchmaking.entities.MatchmakingStatus
-import com.pubnub.matchmaking.internal.UserImpl
 import com.pubnub.matchmaking.internal.common.USER_STATUS_CHANNEL_PREFIX
 import com.pubnub.matchmaking.internal.serverREST.entities.MatchGroup
 import com.pubnub.matchmaking.internal.serverREST.entities.MatchmakingResult
@@ -24,9 +23,11 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.math.abs
 
+private const val FIND_MATCH_REQUEST_ACCEPTED = "accepted"
+
 // this class represents server-side REST API
 class MatchmakingRestService( // todo do we need this?
-    private val matchmaking: Matchmaking,
+    private val pubNub: PubNub,
     private val scope: CoroutineScope = CoroutineScope(Dispatchers.Default)
 ) {
     // Use a mutable map guarded by a Mutex for thread safety
@@ -35,15 +36,35 @@ class MatchmakingRestService( // todo do we need this?
     private var processingQueueInProgress = false
 
     // todo get Set<UserId> instead of userId
-    internal fun findMatch(userId: String): PNFuture<String> =
-        if (isValidId(userId)) {
+    internal fun findMatch(userId: String, withDelay: Boolean = false): PNFuture<String> =
+        if (!isValidId(userId)) {
             PubNubException("Id is required").asFuture()
         } else {
             PNFuture { callback ->
                 scope.launch {
+                    //added delay so that callback (if provided is subscribe)
+                    if (withDelay) {
+                        delay(3000L) // todo delay because we need to make sure that status callback is subscribed before we send status message
+                        // we could listen on status listener e.g. use createStatusListener and handle listener removal after status indicate subscription subscribe
+                    }
+
+//                    val statusListener = createStatusListener(pubNub) { _, pnStatus ->
+//                        if ((pnStatus.category == PNStatusCategory.PNConnectedCategory || pnStatus.category == PNStatusCategory.PNSubscriptionChanged) &&
+//                            pnStatus.affectedChannels.contains(USER_STATUS_CHANNEL_PREFIX + userId)
+//                        ) {
+//                            cont.resume(subscription)
+//                        }
+//                        if (pnStatus.category == PNStatusCategory.PNUnexpectedDisconnectCategory || pnStatus.category == PNStatusCategory.PNConnectionError) {
+//                            cont.resumeWithException(pnStatus.exception ?: RuntimeException(pnStatus.category.toString()))
+//                        }
+//                    }
+//
+//                    pubNub.removeListener(statusListener)
+
+
                     try {
                         // check if user exists, if not then throw
-                        getUserMetadata(userId)
+                        val user = getUserMetadata(userId)
                         val result = findMatchInternal(userId)
                         callback.accept(Result.success(result))
                     } catch (e: Exception) {
@@ -57,7 +78,8 @@ class MatchmakingRestService( // todo do we need this?
     private suspend fun findMatchInternal(userId: String): String {
         queueMutex.withLock {
             if (matchmakingQueue.contains(userId)) {
-                return "User already registered for matchmaking. Duplication not permitted."
+                // todo throw exception ?
+                return "-=User already registered for matchmaking. Duplication not permitted."
             }
             matchmakingQueue.add(userId)
 
@@ -67,15 +89,22 @@ class MatchmakingRestService( // todo do we need this?
 
             setMatchMakingStatus(userId, MatchmakingStatus.IN_QUEUE)
         }
-        ensureMatchmakingIsRunning()
-        return "accepted"
+//        ensureMatchmakingIsRunning() //todo uncomment
+        return FIND_MATCH_REQUEST_ACCEPTED
     }
 
     // matchmaking status for user will be stored in channel as a last message
-    private suspend fun setMatchMakingStatus(userId: String, status: MatchmakingStatus) = matchmaking.pubNub.publish(
-        channel = USER_STATUS_CHANNEL_PREFIX + userId,
-        message = status
-    ).await()
+    private suspend fun setMatchMakingStatus(userId: String, status: MatchmakingStatus) {
+        println("-=setMatchMakingStatus to channel $USER_STATUS_CHANNEL_PREFIX$userId: $status")
+        val statusMap = buildMap<String, String> {
+            put("status", status.toString())
+        }
+
+        pubNub.publish(
+            channel = USER_STATUS_CHANNEL_PREFIX + userId,
+            message = statusMap
+        ).await()
+    }
 
     // Starts a coroutine loop to process the matchmaking queue when enough users are available.
     private suspend fun ensureMatchmakingIsRunning() {
@@ -133,19 +162,20 @@ class MatchmakingRestService( // todo do we need this?
     }
 
     private suspend fun getUsersByIds(userIds: Set<String>): Set<User> {
-        val users = mutableSetOf<User>()
-        userIds.forEach { userId ->
-            val pnUuidMetadataResult: PNUUIDMetadataResult = getUserMetadata(userId)
-            val user = UserImpl.fromDTO(matchmaking = matchmaking, user = pnUuidMetadataResult.data)
-            users.add(user)
-        }
-        return users
+        TODO("Not yet implemented")
+//        val users = mutableSetOf<User>()
+//        userIds.forEach { userId ->
+//            val pnUuidMetadataResult: PNUUIDMetadataResult = getUserMetadata(userId)
+//            val user = UserImpl.fromDTO(matchmaking = matchmaking, user = pnUuidMetadataResult.data)
+//            users.add(user)
+//        }
+//        return users
     }
 
     private suspend fun getUserMetadata(userId: String): PNUUIDMetadataResult {
         val pnUuidMetadataResult: PNUUIDMetadataResult
         try {
-            pnUuidMetadataResult = matchmaking.pubNub.getUUIDMetadata(uuid = userId, includeCustom = true).await()
+            pnUuidMetadataResult = pubNub.getUUIDMetadata(uuid = userId, includeCustom = true).await()
         } catch (e: PubNubException) {
             if (e.statusCode == 404) {
                 // Log.error

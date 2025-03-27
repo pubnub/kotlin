@@ -19,12 +19,12 @@ interface Matchmaking {
         externalId: String? = null,
         profileUrl: String? = null,
         email: String? = null,
-        custom: Any? = null,
+        custom: CustomObject? = null,
         status: String? = null,
         type: String? = null,
     ): PNFuture<User>
 
-    fun getUser(userId: String): PNFuture<User>
+    fun getUser(userId: String): PNFuture<User?>
 
     /**
      * Returns a paginated list of all users and their details
@@ -62,7 +62,7 @@ interface Matchmaking {
 
     fun findMatch(userId: String, callback: ((MatchmakingStatus) -> Unit)?): PNFuture<FindMatchResult>
 
-    fun getMatchStatus(userId: String): PNFuture<MatchmakingStatus>
+    fun getStatus(userId: String): PNFuture<MatchmakingStatus>
 
     fun cancelMatchmaking(userId: String): PNFuture<Unit>
 

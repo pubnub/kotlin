@@ -31,7 +31,8 @@ kotlin {
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
-//                implementation(project(":pubnub-matchmaking-test"))
+                implementation(project(":pubnub-kotlin:pubnub-kotlin-test"))
+                implementation(project(":pubnub-kotlin:pubnub-kotlin-impl")) // this is required to have access to e.g. com.pubnub.internal.v2.PNConfigurationImpl$Builder
             }
         }
 

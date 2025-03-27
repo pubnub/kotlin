@@ -10,6 +10,7 @@ import com.pubnub.matchmaking.User
 import com.pubnub.matchmaking.internal.UserImpl
 import com.pubnub.matchmaking.internal.serverREST.entities.MatchGroup
 import com.pubnub.matchmaking.internal.serverREST.entities.MatchResult
+import com.pubnub.matchmaking.server.Constraints
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -30,7 +31,7 @@ class MatchmakingRestServiceNew(
     private val openMatchGroups = mutableListOf<OpenMatchGroup>()
     private val groupsMutex = Mutex()
 
-    fun findMatch(userId: String): PNFuture<MatchResult> =
+    fun findMatch(userId: String, requiredMatchSize: Int = 2): PNFuture<MatchResult> =
         if (!isValidId(userId)) {
             PubNubException("Id is required").asFuture()
         } else {
@@ -41,7 +42,7 @@ class MatchmakingRestServiceNew(
                         val userMeta = getUserMetadata(userId)
                         val user = UserImpl.fromDTO(matchmaking = matchmaking, user = userMeta.data)
                         // Attempt to join an existing group or create a new one.
-                        val result: MatchResult = findOrCreateMatchGroup(user)
+                        val result: MatchResult = findOrCreateMatchGroup(user, requiredMatchSize)
                         callback.accept(Result.success(result))
                     } catch (e: Exception) {
                         callback.accept(Result.failure(e))
@@ -50,67 +51,112 @@ class MatchmakingRestServiceNew(
             }
         }
 
-    // Tries to find a compatible open group based on a simple Elo check.
-    // If one is found and becomes full, a MatchResult is constructed and sent to all waiting callers.
-    private suspend fun findOrCreateMatchGroup(user: User): MatchResult {
+    // Attempts to find a compatible group or creates a new one.
+    private suspend fun findOrCreateMatchGroup(user: User, requiredSize: Int): MatchResult {
         // Create a channel for the current user’s match notification.
         val userChannel = Channel<MatchResult>(Channel.RENDEZVOUS)
+        var groupToJoin: OpenMatchGroup?
 
         groupsMutex.withLock {
-            // Find an open group where the user's skill is compatible.
-            openMatchGroups.firstOrNull { group ->
-                isSkillCompatible(user, group) && group.users.size < group.requiredSize
-            }?.let { groupToJoin ->
+            // Look for an existing group with the same requiredSize that is compatible.
+            groupToJoin = openMatchGroups.firstOrNull { group ->
+                group.requiredSize == requiredSize && isSkillCompatible(user, group) && group.users.size < group.requiredSize
+            }
+            if (groupToJoin != null) {
                 // Join the found group.
-                groupToJoin.users.add(user)
-                groupToJoin.waitingChannels.add(userChannel)
-                // When the group is full, prepare the final MatchGroup and notify all waiting channels.
-                if (groupToJoin.users.size == groupToJoin.requiredSize) {
-                    val finalGroup = MatchGroup(users = groupToJoin.users.toSet())
-                    // Optionally update status for all group members.
+                groupToJoin!!.users.add(user)
+                groupToJoin!!.waitingChannels.add(userChannel)
+                // If the group is now full, create the final match result and notify all waiting users.
+                if (groupToJoin!!.users.size == groupToJoin!!.requiredSize) {
+                    val finalGroup = MatchGroup(users = groupToJoin!!.users.toSet())
                     finalGroup.users.forEach { groupUser ->
                         println("Found match for user: $groupUser")
                     }
-                    // Create matchData. This can be extended as needed.
                     val matchData = mapOf(
                         "status" to "matchFound",
-                        "groupSize" to groupToJoin.requiredSize.toString()
+                        "groupSize" to groupToJoin!!.requiredSize.toString()
                     )
                     val matchResult = MatchResult(match = finalGroup, matchData = matchData)
-                    // Notify every waiting channel.
-                    groupToJoin.waitingChannels.forEach { channel ->
+                    groupToJoin!!.waitingChannels.forEach { channel ->
                         scope.launch {
                             channel.send(matchResult)
                         }
                     }
-                    // Remove the group now that it is complete.
                     openMatchGroups.remove(groupToJoin)
-                } else { // if must have both main and 'else' branches if used as an expression
+                } else { // 'if' must have both main and 'else' branches if used as an expression
                     Unit
                 }
-            } ?: run {
-                // No suitable group found; create a new one.
-                val newGroup = OpenMatchGroup(requiredSize = 2)
-                newGroup.users.add(user)
-                newGroup.waitingChannels.add(userChannel)
-                openMatchGroups.add(newGroup)
+            } else {
+                // No suitable group found; create a new one with the specified requiredSize.
+                groupToJoin = OpenMatchGroup(requiredSize = requiredSize)
+                groupToJoin!!.users.add(user)
+                groupToJoin!!.waitingChannels.add(userChannel)
+                openMatchGroups.add(groupToJoin!!)
             }
         }
-        // Wait until the group becomes complete and a MatchResult is sent.
+        // Wait until a match result is received.
         return userChannel.receive()
     }
 
-    // Simple compatibility check based on Elo difference.
+    // factors MAX_ELO_GAP, SKILL_GAP_WEIGHT, REGIONAL_PRIORITY
     private fun isSkillCompatible(user: User, group: OpenMatchGroup): Boolean {
         // If the group is empty, any user is compatible.
         if (group.users.isEmpty()) {
             return true
         }
+
+        // Retrieve configuration constraints.
+        val constraints = Constraints.getConstraints()
+        val maxEloGap = constraints["MAX_ELO_GAP"] as? Int ?: 100
+        val skillGapWeight = constraints["SKILL_GAP_WEIGHT"] as? Double ?: 1.0
+        val regionalPriority = constraints["REGIONAL_PRIORITY"] as? Double ?: 10.0
+
+        // Retrieve additional dynamic parameters for threshold calculation.
+        val baseThreshold = constraints["BASE_THRESHOLD"] as? Double ?: 20.0
+        val thresholdIncrement = constraints["THRESHOLD_INCREMENT"] as? Double ?: 5.0
+
+        // Get the new user's Elo.
         val userElo = (user.custom?.get("elo") as? Int) ?: 0
-        val groupAverageElo = group.users.map { (it.custom?.get("elo") as? Int ?: 0) }.average()
-        // Example: user is compatible if the difference is 50 or less.
-        return abs(userElo - groupAverageElo) <= 50 // todo get this value from Illuminate
+
+        // Compute the group's average Elo.
+        val groupElos: List<Int> = group.users.map { (it.custom?.get("elo") as? Int ?: 0) }
+        val groupAverageElo = groupElos.average()
+
+        // Automatically reject if the difference exceeds the maximum allowed gap.
+        if (abs(userElo - groupAverageElo) > maxEloGap) {
+            return false
+        }
+
+        // Calculate the weighted Elo difference.
+        val weightedDifference = skillGapWeight * abs(userElo - groupAverageElo)
+
+        // Determine the region for the new user.
+        val userRegion = (user.custom?.get("server") as? String) ?: "global"
+        // Calculate the majority region in the group.
+        val regionCounts = group.users.groupingBy { (it.custom?.get("server") as? String ?: "global") }.eachCount()
+        val majorityRegion = regionCounts.maxByOrNull { it.value }?.key ?: "global"
+        val regionMismatchPenalty = if (userRegion == majorityRegion){
+            0.0
+        } else {
+            regionalPriority
+        }
+
+        // Overall compatibility score.
+        val compatibilityScore = weightedDifference + regionMismatchPenalty
+
+        // Calculate a dynamic threshold that scales with the number of users already in the group.
+        // For example, for a 2-player match the threshold might be baseThreshold,
+        // and for each additional user the tolerance increases by thresholdIncrement.
+        val dynamicThreshold = baseThreshold + (group.users.size - 1) * thresholdIncrement
+
+        // todo consider
+        // val waitTime = System.currentTimeMillis() - group.creationTime
+        // val timeFactor = waitTime / SOME_TIME_UNIT  // e.g., seconds or minutes
+        // val dynamicThreshold = baseThreshold + (group.users.size - 1) * thresholdIncrement + timeFactor
+
+        return compatibilityScore <= dynamicThreshold
     }
+
 
     private suspend fun getUserMetadata(userId: String): PNUUIDMetadataResult {
         val pnUuidMetadataResult: PNUUIDMetadataResult
@@ -146,6 +192,7 @@ class MatchmakingRestServiceNew(
 
 class MatchMakingException : Exception() // todo implement
 
+// todo ad creation time, as time passes the algorithm an gradually incrase the acceptable difference in skill or latency
 private data class OpenMatchGroup(
     val requiredSize: Int = 2, // For pairing, group size is 2 (can be configurable)
     val users: MutableList<User> = mutableListOf(),

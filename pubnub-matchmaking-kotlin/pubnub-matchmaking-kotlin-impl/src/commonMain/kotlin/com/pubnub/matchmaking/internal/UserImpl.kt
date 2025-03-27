@@ -9,15 +9,15 @@ import com.pubnub.matchmaking.User
 data class UserImpl(
     override val matchmaking: Matchmaking,
     override val id: String,
-    override val name: String?,
-    override val externalId: String?,
-    override val profileUrl: String?,
-    override val email: String?,
-    override val custom: Map<String, Any?>?,
-    override val status: String?,
-    override val type: String?,
-    override val updated: String?,
-    override val eTag: String?,
+    override val name: String? = null,
+    override val externalId: String? = null,
+    override val profileUrl: String? = null,
+    override val email: String? = null,
+    override val custom: Map<String, Any?>? = null,
+    override val status: String? = null,
+    override val type: String? = null,
+    override val updated: String? = null,
+    override val eTag: String? = null,
 ) : User {
     override fun update(
         name: String?,
@@ -57,9 +57,9 @@ data class UserImpl(
             profileUrl = user.profileUrl?.value,
             email = user.email?.value,
             custom = user.custom?.value,
-            status = user.updated?.value,
-            type = user.type?.value,
             updated = user.updated?.value,
+            status = user.status?.value,
+            type = user.type?.value,
             eTag = user.eTag?.value
         )
     }
