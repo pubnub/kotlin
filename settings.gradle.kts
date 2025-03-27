@@ -30,4 +30,7 @@ include("examples:kotlin-app")
 include("examples:java-app")
 includeBuild("build-logic/ktlint-custom-rules")
 includeBuild("migration_utils")
-
+include("pubnub-matchmaking-kotlin")
+include("pubnub-matchmaking-kotlin:pubnub-matchmaking-kotlin-api")
+include("pubnub-matchmaking-kotlin:pubnub-matchmaking-kotlin-impl")
+//include("pubnub-matchmaking-kotlin:pubnub-matchmaking-kotlin-test") //todo remove

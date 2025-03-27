@@ -71,9 +71,6 @@ class PubNubBaseKotlinMultiplatformPlugin : Plugin<Project> {
 
                 if (enableJsTarget) {
                     js { ->
-                        project.findProperty("JS_MODULE_NAME")?.toString()?.let { jsModuleName ->
-                            moduleName = jsModuleName
-                        }
                         nodejs {
                             testTask {
                                 it.environment("MOCHA_OPTIONS", "--exit")

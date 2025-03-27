@@ -6,7 +6,7 @@ logback = "1.2.11"
 okhttp = "4.12.0"
 retrofit2 = "2.11.0"
 nexus = "2.0.0"
-kotlin = "2.0.21"
+kotlin = "2.1.0"
 vanniktech = "0.29.0"
 ktlint = "12.1.0"
 dokka = "1.9.20"
@@ -28,6 +28,7 @@ jetbrains-annotations = { module = "org.jetbrains:annotations", version = "24.1.
 kotlinx-atomicfu = { module = "org.jetbrains.kotlinx:atomicfu", version = "0.24.0" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx_datetime"}
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx_coroutines"}
+touchlab-kermit = { module = "co.touchlab:kermit", version = "2.0.4" }
 
 # tests
 wiremock = { module = "com.github.tomakehurst:wiremock", version = "2.27.2" }
@@ -65,3 +66,5 @@ vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version.ref = 
 lombok = { id = "io.freefair.lombok", version = "8.6" }
 gradle-nexus-publish = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "nexus" }
 codingfeline-buildkonfig = { id = "com.codingfeline.buildkonfig", version = "0.15.1" }
+mokkery = { id = "dev.mokkery", version = "2.6.0" }
+npm-publish = { id = "dev.petuska.npm.publish", version = "3.4.3" }
