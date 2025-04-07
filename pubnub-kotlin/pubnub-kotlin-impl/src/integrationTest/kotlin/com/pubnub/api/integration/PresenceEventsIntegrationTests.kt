@@ -5,8 +5,10 @@ import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
+import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.test.CommonUtils
+import com.pubnub.test.CommonUtils.DEFAULT_LISTEN_DURATION
 import com.pubnub.test.CommonUtils.generatePayload
 import com.pubnub.test.CommonUtils.randomChannel
 import com.pubnub.test.listen
@@ -56,6 +58,71 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
         pubnub.subscribeToBlocking(expectedChannel)
 
         success.listen()
+    }
+
+    @Test
+    fun testMultipleSubscribeShouldCauseLeaveEventToAppear() {
+        // “Generate Leave on TCP FIN or RST” should be disabled
+        val countDownLatchForJoinChannel01 = CountDownLatch(1)
+        val countDownLatchForJoinChannel02 = CountDownLatch(1)
+        val countDownLatchForJoinChannel03 = CountDownLatch(1)
+        val channel01Name = randomChannel() + "chan01"
+        val channel02Name = randomChannel() + "chan02"
+        val channel03Name = randomChannel() + "chan03"
+
+        pubnub.addListener(object : EventListener {
+            override fun presence(pubnub: PubNub, result: PNPresenceEventResult) {
+                if (result.event == "join") {
+                    when (result.channel) {
+                        channel01Name -> countDownLatchForJoinChannel01.countDown()
+                        channel02Name -> countDownLatchForJoinChannel02.countDown()
+                        channel03Name -> countDownLatchForJoinChannel03.countDown()
+                    }
+                }
+                println("-= global onPresence channel: ${result.channel} event: ${result.event} occupancy: ${result.occupancy}")
+            }
+        })
+
+        pubnub.subscribe(channels = listOf(channel01Name), withPresence = true)
+        Thread.sleep(2000)
+        pubnub.subscribe(channels = listOf(channel01Name, channel02Name), withPresence = true)
+        Thread.sleep(2000)
+        pubnub.subscribe(channels = listOf(channel03Name), withPresence = true)
+
+        assertTrue(countDownLatchForJoinChannel01.await(DEFAULT_LISTEN_DURATION.toLong(), TimeUnit.SECONDS))
+        assertTrue(countDownLatchForJoinChannel02.await(DEFAULT_LISTEN_DURATION.toLong(), TimeUnit.SECONDS))
+        assertTrue(countDownLatchForJoinChannel03.await(DEFAULT_LISTEN_DURATION.toLong(), TimeUnit.SECONDS))
+    }
+
+    @Test
+    fun testMultipleSubscribeOnChannelEntitiesShouldCauseLeaveEventToAppear() {
+        // “Generate Leave on TCP FIN or RST” should be disabled
+        val countDownLatchForJoinPubNubUser = CountDownLatch(1)
+        val countDownLatchForJoinPubQuestUser = CountDownLatch(1)
+        val channel01Name = randomChannel() + "chan01"
+
+        val subscription01 = pubnub.channel(channel01Name).subscription(SubscriptionOptions.receivePresenceEvents())
+        val subscription02 = guest.channel(channel01Name).subscription(SubscriptionOptions.receivePresenceEvents())
+
+
+        subscription01.onPresence =  { pnPresenceEventResult: PNPresenceEventResult ->
+            println("-= global1 onPresence channel: ${pnPresenceEventResult.channel} event: ${pnPresenceEventResult.event} occupancy: ${pnPresenceEventResult.occupancy}")
+            println("-= ${pubnub.configuration.userId.value == pnPresenceEventResult.uuid}")
+            if(pubnub.configuration.userId.value == pnPresenceEventResult.uuid && pnPresenceEventResult.event == "join") {
+                countDownLatchForJoinPubNubUser.countDown()
+            }
+            if(guest.configuration.userId.value == pnPresenceEventResult.uuid && pnPresenceEventResult.event == "join") {
+                countDownLatchForJoinPubQuestUser.countDown()
+            }
+        }
+
+        subscription01.subscribe()
+        Thread.sleep(2000)
+        subscription02.subscribe()
+        Thread.sleep(2000)
+
+        assertTrue(countDownLatchForJoinPubNubUser.await(DEFAULT_LISTEN_DURATION.toLong(), TimeUnit.SECONDS))
+        assertTrue(countDownLatchForJoinPubQuestUser.await(DEFAULT_LISTEN_DURATION.toLong(), TimeUnit.SECONDS))
     }
 
     @Test

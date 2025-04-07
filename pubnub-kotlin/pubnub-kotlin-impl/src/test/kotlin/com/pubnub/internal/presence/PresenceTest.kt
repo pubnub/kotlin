@@ -7,6 +7,7 @@ import com.pubnub.internal.eventengine.QueueEventEngineConf
 import com.pubnub.internal.managers.ListenerManager
 import com.pubnub.internal.presence.eventengine.data.PresenceData
 import com.pubnub.internal.presence.eventengine.effect.PresenceEffectInvocation
+import com.pubnub.internal.presence.eventengine.effect.effectprovider.HeartbeatProvider
 import com.pubnub.internal.presence.eventengine.effect.effectprovider.LeaveProvider
 import com.pubnub.internal.presence.eventengine.event.PresenceEvent
 import com.pubnub.internal.subscribe.eventengine.effect.successfulRemoteAction
@@ -157,6 +158,46 @@ internal class PresenceTest {
         verify { leaveProviderMock.getLeaveRemoteAction(any(), any()) }
     }
 
+    @Test
+    fun `should call heartbeat when joining channels with heartbeat interval 0`() {
+        // given
+        val heartbeatProviderMock: HeartbeatProvider = mockk()
+        every { heartbeatProviderMock.getHeartbeatRemoteAction(any(), any(), any()) } returns successfulRemoteAction(true)
+
+        val presence =
+            Presence.create(
+                listenerManager = listenerManager,
+                heartbeatInterval = 0.seconds,
+                heartbeatProvider = heartbeatProviderMock,
+            )
+
+        // when
+        presence.joined(setOf("abc"))
+
+        // then
+        verify { heartbeatProviderMock.getHeartbeatRemoteAction(setOf("abc"), emptySet(), any()) }
+    }
+
+    @Test
+    fun `should not call heartbeat when joining empty channels with heartbeat interval 0`() {
+        // given
+        val heartbeatProviderMock: HeartbeatProvider = mockk()
+        every { heartbeatProviderMock.getHeartbeatRemoteAction(any(), any(), any()) } returns successfulRemoteAction(true)
+
+        val presence =
+            Presence.create(
+                listenerManager = listenerManager,
+                heartbeatInterval = 0.seconds,
+                heartbeatProvider = heartbeatProviderMock,
+            )
+
+        // when
+        presence.joined(emptySet())
+
+        // then
+        verify(exactly = 0) { heartbeatProviderMock.getHeartbeatRemoteAction(any(), any(), any()) }
+    }
+
     private fun Presence.Companion.create(
         listenerManager: ListenerManager,
         heartbeatInterval: Duration = 3.seconds,
@@ -165,8 +206,9 @@ internal class PresenceTest {
         presenceData: PresenceData = PresenceData(),
         suppressLeaveEvents: Boolean = false,
         leaveProvider: LeaveProvider = LeaveProvider { _, _ -> successfulRemoteAction(true) },
+        heartbeatProvider: HeartbeatProvider = HeartbeatProvider { _, _, _ -> successfulRemoteAction(true) },
     ) = create(
-        heartbeatProvider = { _, _, _ -> successfulRemoteAction(true) },
+        heartbeatProvider = heartbeatProvider,
         leaveProvider = leaveProvider,
         heartbeatInterval = heartbeatInterval,
         suppressLeaveEvents = suppressLeaveEvents,
