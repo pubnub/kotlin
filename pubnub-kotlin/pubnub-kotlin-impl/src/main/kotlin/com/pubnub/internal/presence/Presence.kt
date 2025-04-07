@@ -34,34 +34,30 @@ internal interface Presence {
                 return PresenceNoOp(suppressLeaveEvents, leaveProvider, heartbeatProvider)
             }
 
-            val effectFactory =
-                PresenceEffectFactory(
-                    heartbeatProvider = heartbeatProvider,
-                    leaveProvider = leaveProvider,
-                    presenceEventSink = eventEngineConf.eventSink,
-                    executorService = executorService,
-                    heartbeatInterval = heartbeatInterval,
-                    suppressLeaveEvents = suppressLeaveEvents,
-                    heartbeatNotificationOptions = heartbeatNotificationOptions,
-                    statusConsumer = listenerManager,
-                    presenceData = presenceData,
-                    sendStateWithHeartbeat = sendStateWithHeartbeat,
-                )
+            val effectFactory = PresenceEffectFactory(
+                heartbeatProvider = heartbeatProvider,
+                leaveProvider = leaveProvider,
+                presenceEventSink = eventEngineConf.eventSink,
+                executorService = executorService,
+                heartbeatInterval = heartbeatInterval,
+                suppressLeaveEvents = suppressLeaveEvents,
+                heartbeatNotificationOptions = heartbeatNotificationOptions,
+                statusConsumer = listenerManager,
+                presenceData = presenceData,
+                sendStateWithHeartbeat = sendStateWithHeartbeat,
+            )
 
-            val eventEngineManager =
-                PresenceEventEngineManager(
-                    eventEngine =
-                    PresenceEventEngine(
-                        effectSink = eventEngineConf.effectSink,
-                        eventSource = eventEngineConf.eventSource,
-                    ),
-                    eventSink = eventEngineConf.eventSink,
-                    effectDispatcher =
-                    EffectDispatcher(
-                        effectFactory = effectFactory,
-                        effectSource = eventEngineConf.effectSource,
-                    ),
-                ).also { it.start() }
+            val eventEngineManager = PresenceEventEngineManager(
+                eventEngine = PresenceEventEngine(
+                    effectSink = eventEngineConf.effectSink,
+                    eventSource = eventEngineConf.eventSource,
+                ),
+                eventSink = eventEngineConf.eventSink,
+                effectDispatcher = EffectDispatcher(
+                    effectFactory = effectFactory,
+                    effectSource = eventEngineConf.effectSource,
+                ),
+            ).also { it.start() }
 
             return EnabledPresence(eventEngineManager)
         }

@@ -104,14 +104,13 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
         val subscription01 = pubnub.channel(channel01Name).subscription(SubscriptionOptions.receivePresenceEvents())
         val subscription02 = guest.channel(channel01Name).subscription(SubscriptionOptions.receivePresenceEvents())
 
-
-        subscription01.onPresence =  { pnPresenceEventResult: PNPresenceEventResult ->
+        subscription01.onPresence = { pnPresenceEventResult: PNPresenceEventResult ->
             println("-= global1 onPresence channel: ${pnPresenceEventResult.channel} event: ${pnPresenceEventResult.event} occupancy: ${pnPresenceEventResult.occupancy}")
             println("-= ${pubnub.configuration.userId.value == pnPresenceEventResult.uuid}")
-            if(pubnub.configuration.userId.value == pnPresenceEventResult.uuid && pnPresenceEventResult.event == "join") {
+            if (pubnub.configuration.userId.value == pnPresenceEventResult.uuid && pnPresenceEventResult.event == "join") {
                 countDownLatchForJoinPubNubUser.countDown()
             }
-            if(guest.configuration.userId.value == pnPresenceEventResult.uuid && pnPresenceEventResult.event == "join") {
+            if (guest.configuration.userId.value == pnPresenceEventResult.uuid && pnPresenceEventResult.event == "join") {
                 countDownLatchForJoinPubQuestUser.countDown()
             }
         }
