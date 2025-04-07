@@ -31,37 +31,33 @@ internal interface Presence {
             executorService: ScheduledExecutorService,
         ): Presence {
             if (heartbeatInterval <= Duration.ZERO) {
-                return PresenceNoOp(suppressLeaveEvents, leaveProvider)
+                return PresenceNoOp(suppressLeaveEvents, leaveProvider, heartbeatProvider)
             }
 
-            val effectFactory =
-                PresenceEffectFactory(
-                    heartbeatProvider = heartbeatProvider,
-                    leaveProvider = leaveProvider,
-                    presenceEventSink = eventEngineConf.eventSink,
-                    executorService = executorService,
-                    heartbeatInterval = heartbeatInterval,
-                    suppressLeaveEvents = suppressLeaveEvents,
-                    heartbeatNotificationOptions = heartbeatNotificationOptions,
-                    statusConsumer = listenerManager,
-                    presenceData = presenceData,
-                    sendStateWithHeartbeat = sendStateWithHeartbeat,
-                )
+            val effectFactory = PresenceEffectFactory(
+                heartbeatProvider = heartbeatProvider,
+                leaveProvider = leaveProvider,
+                presenceEventSink = eventEngineConf.eventSink,
+                executorService = executorService,
+                heartbeatInterval = heartbeatInterval,
+                suppressLeaveEvents = suppressLeaveEvents,
+                heartbeatNotificationOptions = heartbeatNotificationOptions,
+                statusConsumer = listenerManager,
+                presenceData = presenceData,
+                sendStateWithHeartbeat = sendStateWithHeartbeat,
+            )
 
-            val eventEngineManager =
-                PresenceEventEngineManager(
-                    eventEngine =
-                        PresenceEventEngine(
-                            effectSink = eventEngineConf.effectSink,
-                            eventSource = eventEngineConf.eventSource,
-                        ),
-                    eventSink = eventEngineConf.eventSink,
-                    effectDispatcher =
-                        EffectDispatcher(
-                            effectFactory = effectFactory,
-                            effectSource = eventEngineConf.effectSource,
-                        ),
-                ).also { it.start() }
+            val eventEngineManager = PresenceEventEngineManager(
+                eventEngine = PresenceEventEngine(
+                    effectSink = eventEngineConf.effectSink,
+                    eventSource = eventEngineConf.eventSource,
+                ),
+                eventSink = eventEngineConf.eventSink,
+                effectDispatcher = EffectDispatcher(
+                    effectFactory = effectFactory,
+                    effectSource = eventEngineConf.effectSource,
+                ),
+            ).also { it.start() }
 
             return EnabledPresence(eventEngineManager)
         }
@@ -101,6 +97,7 @@ internal interface Presence {
 internal class PresenceNoOp(
     private val suppressLeaveEvents: Boolean = false,
     private val leaveProvider: LeaveProvider,
+    private val heartbeatProvider: HeartbeatProvider
 ) : Presence {
     private val log = LoggerFactory.getLogger(PresenceNoOp::class.java)
     private val channels = mutableSetOf<String>()
@@ -113,6 +110,16 @@ internal class PresenceNoOp(
     ) {
         this.channels.addAll(channels)
         this.channelGroups.addAll(channelGroups)
+
+        // for subscribe with tt=0 this heartbeat call will be not needed but for now we don't offer possibility to enable smartHeartbeat that would eliminate this shortcoming.
+        if (channels.isNotEmpty() || channelGroups.isNotEmpty()) {
+            heartbeatProvider.getHeartbeatRemoteAction(channels = channels, channelGroups = channelGroups, state = null)
+                .async { result ->
+                    result.onFailure {
+                        log.error("HeartbeatEffect failed", it)
+                    }
+                }
+        }
     }
 
     @Synchronized
