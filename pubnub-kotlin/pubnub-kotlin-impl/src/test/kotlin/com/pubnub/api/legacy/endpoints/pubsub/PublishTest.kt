@@ -553,7 +553,7 @@ class PublishTest : BaseTest() {
         val uuid = "uuid"
         val customMessageType = "myCustomMessageType"
         stubFor(
-            get(urlMatching("/v2/subscribe/mySubscribeKey/coolChannel/0.*"))
+            get(urlMatching("/v2/subscribe/mySubscribeKey/$channelName/0.*"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -583,6 +583,7 @@ class PublishTest : BaseTest() {
                     ),
                 ),
         )
+        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(channelName))
 
         val success = AtomicBoolean()
 
@@ -607,7 +608,7 @@ class PublishTest : BaseTest() {
         )
 
         pubnub.subscribe(
-            channels = listOf("coolChannel"),
+            channels = listOf(channelName),
         )
 
         success.listen()

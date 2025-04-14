@@ -14,8 +14,10 @@ import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.test.CommonUtils.failTest
 import com.pubnub.test.listen
+import org.awaitility.Awaitility
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -112,7 +114,7 @@ class ReceiveMessageActions : BaseTest() {
         )
 
         pubnub.subscribe(
-            channels = listOf("$channelName"),
+            channels = listOf(channelName),
         )
 
         success.listen()
@@ -120,8 +122,9 @@ class ReceiveMessageActions : BaseTest() {
 
     @Test
     fun testReceiveMessageActionMulti() {
+        val channelName = "coolChannel"
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/coolChannel/0"))
+            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/$channelName/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -141,7 +144,7 @@ class ReceiveMessageActions : BaseTest() {
                             "r": 12
                            },
                            "k": "mySubscribeKey",
-                           "c": "coolChannel",
+                           "c": "$channelName",
                            "d": {
                             "source": "actions",
                             "version": "1.0",
@@ -183,6 +186,7 @@ class ReceiveMessageActions : BaseTest() {
                     ),
                 ),
         )
+        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(channelName))
 
         val count = AtomicInteger()
         val success = AtomicBoolean()
@@ -230,9 +234,11 @@ class ReceiveMessageActions : BaseTest() {
         )
 
         pubnub.subscribe(
-            channels = listOf("coolChannel"),
+            channels = listOf(channelName),
         )
 
-        success.listen()
+        Awaitility.await()
+            .atMost(5, TimeUnit.SECONDS)
+            .until { success.get() }
     }
 }

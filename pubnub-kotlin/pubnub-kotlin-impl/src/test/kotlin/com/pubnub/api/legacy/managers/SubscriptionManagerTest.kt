@@ -3061,13 +3061,15 @@ class SubscriptionManagerTest : BaseTest() {
     @Test
     fun testHeartbeatsDisabled() {
         val subscribeSuccess = AtomicBoolean()
-        val heartbeatFail = AtomicBoolean()
+        val heartbeatSuccess = AtomicBoolean()
 
         config.heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
 
         assertEquals(PNHeartbeatNotificationOptions.ALL, pubnub.configuration.heartbeatNotificationOptions)
         assertEquals(300, pubnub.configuration.presenceTimeout)
         assertEquals(0, pubnub.configuration.heartbeatInterval)
+        val channelName01 = "ch1"
+        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(channelName01))
 
         stubFor(
             get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch1,ch1-pnpres/0"))
@@ -3087,22 +3089,6 @@ class SubscriptionManagerTest : BaseTest() {
                         .withStatus(200),
                 ),
         )
-        stubFor(
-            get(getMatchingUrlWithChannels("/v2/presence/sub-key/mySubscribeKey/channel/ch1/heartbeat"))
-                .willReturn(
-                    aResponse()
-                        .withStatus(200)
-                        .withBody(
-                            """
-                            {
-                              "status": 200,
-                              "message": "OK",
-                              "service": "Presence"
-                            }
-                            """.trimIndent(),
-                        ),
-                ),
-        )
         pubnub.addListener(
             object : SubscribeCallback() {
                 override fun status(
@@ -3113,7 +3099,7 @@ class SubscriptionManagerTest : BaseTest() {
                         subscribeSuccess.set(true)
                     }
                     if (pnStatus.category == PNStatusCategory.PNHeartbeatSuccess) {
-                        heartbeatFail.set(true)
+                        heartbeatSuccess.set(true)
                     }
                 }
             },
@@ -3126,7 +3112,7 @@ class SubscriptionManagerTest : BaseTest() {
 
         Awaitility.await()
             .atMost(5, TimeUnit.SECONDS)
-            .until { subscribeSuccess.get() && !heartbeatFail.get() }
+            .until { subscribeSuccess.get() && heartbeatSuccess.get() }
     }
 
     @Test
