@@ -22,8 +22,10 @@ import java.util.concurrent.atomic.AtomicInteger
 class ReceiveMessageActions : BaseTest() {
     @Test
     fun testReceiveMessageAction() {
+        val channelName = "coolChannel"
+        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(channelName))
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/coolChannel/0"))
+            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/$channelName/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -43,7 +45,7 @@ class ReceiveMessageActions : BaseTest() {
                             "r": 12
                            },
                            "k": "mySubscribeKey",
-                           "c": "coolChannel",
+                           "c": "$channelName",
                            "d": {
                             "source": "actions",
                             "version": "1.0",
@@ -98,7 +100,7 @@ class ReceiveMessageActions : BaseTest() {
                     pubnub: PubNub,
                     pnMessageActionResult: PNMessageActionResult,
                 ) {
-                    assertEquals(pnMessageActionResult.channel, "coolChannel")
+                    assertEquals(pnMessageActionResult.channel, "$channelName")
                     assertEquals(pnMessageActionResult.messageAction.messageTimetoken, 500L)
                     assertEquals(pnMessageActionResult.messageAction.uuid, "client-1639ed91")
                     assertEquals(pnMessageActionResult.messageAction.actionTimetoken, 600L)
@@ -110,7 +112,7 @@ class ReceiveMessageActions : BaseTest() {
         )
 
         pubnub.subscribe(
-            channels = listOf("coolChannel"),
+            channels = listOf("$channelName"),
         )
 
         success.listen()

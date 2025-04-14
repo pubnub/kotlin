@@ -61,7 +61,7 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
     }
 
     @Test
-    fun testMultipleSubscribeShouldCauseLeaveEventToAppear() {
+    fun testMultipleSubscribeShouldCauseJoinEventToAppear() {
         // “Generate Leave on TCP FIN or RST” should be disabled
         val countDownLatchForJoinChannel01 = CountDownLatch(1)
         val countDownLatchForJoinChannel02 = CountDownLatch(1)
@@ -79,7 +79,6 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
                         channel03Name -> countDownLatchForJoinChannel03.countDown()
                     }
                 }
-                println("-= global onPresence channel: ${result.channel} event: ${result.event} occupancy: ${result.occupancy}")
             }
         })
 
@@ -95,7 +94,7 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
     }
 
     @Test
-    fun testMultipleSubscribeOnChannelEntitiesShouldCauseLeaveEventToAppear() {
+    fun testMultipleSubscribeOnChannelEntitiesShouldCauseJoinEventToAppear() {
         // “Generate Leave on TCP FIN or RST” should be disabled
         val countDownLatchForJoinPubNubUser = CountDownLatch(1)
         val countDownLatchForJoinPubQuestUser = CountDownLatch(1)
@@ -105,8 +104,6 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
         val subscription02 = guest.channel(channel01Name).subscription(SubscriptionOptions.receivePresenceEvents())
 
         subscription01.onPresence = { pnPresenceEventResult: PNPresenceEventResult ->
-            println("-= global1 onPresence channel: ${pnPresenceEventResult.channel} event: ${pnPresenceEventResult.event} occupancy: ${pnPresenceEventResult.occupancy}")
-            println("-= ${pubnub.configuration.userId.value == pnPresenceEventResult.uuid}")
             if (pubnub.configuration.userId.value == pnPresenceEventResult.uuid && pnPresenceEventResult.event == "join") {
                 countDownLatchForJoinPubNubUser.countDown()
             }

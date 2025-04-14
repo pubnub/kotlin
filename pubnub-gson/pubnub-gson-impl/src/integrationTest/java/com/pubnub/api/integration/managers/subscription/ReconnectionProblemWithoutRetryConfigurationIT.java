@@ -11,7 +11,7 @@ import java.util.UUID;
 import static com.pubnub.api.enums.PNLogVerbosity.BODY;
 
 
-public class ReconnectionProblemWithoutReconnectionPolicyIT extends AbstractReconnectionProblemIT {
+public class ReconnectionProblemWithoutRetryConfigurationIT extends AbstractReconnectionProblemIT {
     @Override
     protected @NotNull PubNub privilegedClientPubNub() {
         com.pubnub.api.java.v2.PNConfiguration.Builder pnConfiguration;
