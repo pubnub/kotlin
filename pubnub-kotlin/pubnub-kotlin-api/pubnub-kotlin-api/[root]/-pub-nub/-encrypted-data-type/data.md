@@ -3,4 +3,4 @@
 # data
 
 [js]\
-abstract var [data](data.md): [ArrayBuffer](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/org.khronos.webgl/-array-buffer/index.html)
+abstract var [data](data.md): ArrayBuffer

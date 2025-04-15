@@ -3,4 +3,4 @@
 # toBlob
 
 [js]\
-abstract fun [toBlob](to-blob.md)(): [Blob](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/org.w3c.files/-blob/index.html)
+abstract fun [toBlob](to-blob.md)(): Blob

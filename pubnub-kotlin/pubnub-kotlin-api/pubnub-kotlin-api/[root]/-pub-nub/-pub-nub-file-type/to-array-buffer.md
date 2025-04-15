@@ -3,4 +3,4 @@
 # toArrayBuffer
 
 [js]\
-abstract fun [toArrayBuffer](to-array-buffer.md)(): [ArrayBuffer](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/org.khronos.webgl/-array-buffer/index.html)
+abstract fun [toArrayBuffer](to-array-buffer.md)(): ArrayBuffer
