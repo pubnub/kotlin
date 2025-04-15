@@ -1,6 +1,9 @@
 package com.pubnub.internal.presence
 
+import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
+import com.pubnub.api.enums.PNStatusCategory
+import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.internal.eventengine.EffectDispatcher
 import com.pubnub.internal.eventengine.EventEngineConf
 import com.pubnub.internal.managers.ListenerManager
@@ -31,37 +34,41 @@ internal interface Presence {
             executorService: ScheduledExecutorService,
         ): Presence {
             if (heartbeatInterval <= Duration.ZERO) {
-                return PresenceNoOp(suppressLeaveEvents, leaveProvider)
+                return PresenceNoOp(
+                    suppressLeaveEvents,
+                    leaveProvider,
+                    heartbeatProvider,
+                    listenerManager,
+                    heartbeatNotificationOptions,
+                    presenceData,
+                    sendStateWithHeartbeat
+                )
             }
 
-            val effectFactory =
-                PresenceEffectFactory(
-                    heartbeatProvider = heartbeatProvider,
-                    leaveProvider = leaveProvider,
-                    presenceEventSink = eventEngineConf.eventSink,
-                    executorService = executorService,
-                    heartbeatInterval = heartbeatInterval,
-                    suppressLeaveEvents = suppressLeaveEvents,
-                    heartbeatNotificationOptions = heartbeatNotificationOptions,
-                    statusConsumer = listenerManager,
-                    presenceData = presenceData,
-                    sendStateWithHeartbeat = sendStateWithHeartbeat,
-                )
+            val effectFactory = PresenceEffectFactory(
+                heartbeatProvider = heartbeatProvider,
+                leaveProvider = leaveProvider,
+                presenceEventSink = eventEngineConf.eventSink,
+                executorService = executorService,
+                heartbeatInterval = heartbeatInterval,
+                suppressLeaveEvents = suppressLeaveEvents,
+                heartbeatNotificationOptions = heartbeatNotificationOptions,
+                statusConsumer = listenerManager,
+                presenceData = presenceData,
+                sendStateWithHeartbeat = sendStateWithHeartbeat,
+            )
 
-            val eventEngineManager =
-                PresenceEventEngineManager(
-                    eventEngine =
-                        PresenceEventEngine(
-                            effectSink = eventEngineConf.effectSink,
-                            eventSource = eventEngineConf.eventSource,
-                        ),
-                    eventSink = eventEngineConf.eventSink,
-                    effectDispatcher =
-                        EffectDispatcher(
-                            effectFactory = effectFactory,
-                            effectSource = eventEngineConf.effectSource,
-                        ),
-                ).also { it.start() }
+            val eventEngineManager = PresenceEventEngineManager(
+                eventEngine = PresenceEventEngine(
+                    effectSink = eventEngineConf.effectSink,
+                    eventSource = eventEngineConf.eventSource,
+                ),
+                eventSink = eventEngineConf.eventSink,
+                effectDispatcher = EffectDispatcher(
+                    effectFactory = effectFactory,
+                    effectSource = eventEngineConf.effectSource,
+                ),
+            ).also { it.start() }
 
             return EnabledPresence(eventEngineManager)
         }
@@ -101,6 +108,11 @@ internal interface Presence {
 internal class PresenceNoOp(
     private val suppressLeaveEvents: Boolean = false,
     private val leaveProvider: LeaveProvider,
+    private val heartbeatProvider: HeartbeatProvider,
+    private val listenerManager: ListenerManager,
+    private val heartbeatNotificationOptions: PNHeartbeatNotificationOptions,
+    private val presenceData: PresenceData,
+    private val sendStateWithHeartbeat: Boolean,
 ) : Presence {
     private val log = LoggerFactory.getLogger(PresenceNoOp::class.java)
     private val channels = mutableSetOf<String>()
@@ -113,6 +125,32 @@ internal class PresenceNoOp(
     ) {
         this.channels.addAll(channels)
         this.channelGroups.addAll(channelGroups)
+
+        // for subscribe with tt=0 this heartbeat call will be not needed because server generates implicit heartbeat for it
+        // but for now we don't offer possibility to enable smartHeartbeat that would eliminate this shortcoming.
+        if (channels.isNotEmpty() || channelGroups.isNotEmpty()) {
+            heartbeatProvider.getHeartbeatRemoteAction(
+                channels = channels,
+                channelGroups = channelGroups,
+                state = if (sendStateWithHeartbeat) {
+                    presenceData.channelStates
+                } else {
+                    null
+                },
+            ).async { result ->
+                result.onFailure { exception ->
+                    if (heartbeatNotificationOptions == PNHeartbeatNotificationOptions.ALL ||
+                        heartbeatNotificationOptions == PNHeartbeatNotificationOptions.FAILURES
+                    ) {
+                        listenerManager.announce(PNStatus(PNStatusCategory.PNHeartbeatFailed, PubNubException.from(exception)))
+                    }
+                }.onSuccess {
+                    if (heartbeatNotificationOptions == PNHeartbeatNotificationOptions.ALL) {
+                        listenerManager.announce(PNStatus(PNStatusCategory.PNHeartbeatSuccess))
+                    }
+                }
+            }
+        }
     }
 
     @Synchronized

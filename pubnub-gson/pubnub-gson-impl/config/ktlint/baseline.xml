@@ -4,6 +4,6 @@
         <error line="1" column="1" source="standard:no-empty-file" />
     </file>
     <file name="src/test/kotlin/com/pubnub/api/PNConfigurationTest.kt">
-        <error line="120" column="13" source="standard:function-naming" />
+        <error line="93" column="13" source="standard:function-naming" />
     </file>
 </baseline>

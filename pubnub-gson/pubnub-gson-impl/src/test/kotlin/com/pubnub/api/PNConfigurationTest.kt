@@ -62,33 +62,6 @@ class PNConfigurationTest {
 //    }
 //
 //    @Test
-//    fun `reconnection policy should set retry configuration`() {
-//        val config = PNConfiguration(UserId(PubNub.generateUUID()))
-//        config.setReconnectionPolicy(PNReconnectionPolicy.NONE)
-//        Assert.assertTrue(config.retryConfiguration is RetryConfiguration.None)
-//
-//        config.setReconnectionPolicy(PNReconnectionPolicy.LINEAR)
-//        Assert.assertTrue(config.retryConfiguration is RetryConfiguration.Linear)
-//
-//        config.setReconnectionPolicy(PNReconnectionPolicy.EXPONENTIAL)
-//        Assert.assertTrue(config.retryConfiguration is RetryConfiguration.Exponential)
-//    }
-//
-//    @Test
-//    fun `maximumReconnectionRetries policy should reset retry configuration`() {
-//        val config = PNConfiguration(UserId(PubNub.generateUUID()))
-//
-//        config.setReconnectionPolicy(PNReconnectionPolicy.LINEAR)
-//        config.setMaximumReconnectionRetries(5)
-//        Assert.assertTrue(config.retryConfiguration is RetryConfiguration.Linear)
-//        Assert.assertEquals(5, (config.retryConfiguration as RetryConfiguration.Linear).maxRetryNumber)
-//
-//        config.setMaximumReconnectionRetries(10)
-//        Assert.assertTrue(config.retryConfiguration is RetryConfiguration.Linear)
-//        Assert.assertEquals(10, (config.retryConfiguration as RetryConfiguration.Linear).maxRetryNumber)
-//    }
-//
-//    @Test
 //    fun `cryptomodule uses cipherKey when cryptomodule is not set`() {
 //        val config = PNConfiguration(UserId(PubNub.generateUUID()))
 //
