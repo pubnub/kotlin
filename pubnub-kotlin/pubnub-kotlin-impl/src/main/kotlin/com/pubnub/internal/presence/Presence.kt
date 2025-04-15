@@ -142,11 +142,7 @@ internal class PresenceNoOp(
                     if (heartbeatNotificationOptions == PNHeartbeatNotificationOptions.ALL ||
                         heartbeatNotificationOptions == PNHeartbeatNotificationOptions.FAILURES
                     ) {
-                        listenerManager.announce(
-                            PNStatus(
-                                PNStatusCategory.PNHeartbeatFailed, PubNubException.from(exception)
-                            )
-                        )
+                        listenerManager.announce(PNStatus(PNStatusCategory.PNHeartbeatFailed, PubNubException.from(exception)))
                     }
                 }.onSuccess {
                     if (heartbeatNotificationOptions == PNHeartbeatNotificationOptions.ALL) {

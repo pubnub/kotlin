@@ -316,13 +316,13 @@ class SubscriptionManagerTest : BaseTest() {
     @Test
     fun testSubscribeBuilder() {
         val gotStatus = AtomicInteger()
-        val channelName01 = "ch1"
-        val channelName02 = "ch2"
-        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(channelName01, channelName02))
+        val ch1 = "ch1"
+        val ch2 = "ch2"
+        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(ch1, ch2))
 
         val gotMessage = AtomicBoolean()
         stubFor(
-            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$channelName02,$channelName01/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$ch2,$ch1/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -384,7 +384,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         pubnub.subscribe(
-            channels = listOf(channelName01, channelName02),
+            channels = listOf(ch1, ch2),
         )
 
         Awaitility.await()
@@ -399,14 +399,14 @@ class SubscriptionManagerTest : BaseTest() {
     @Test
     fun testSubscribeDuplicateDisabledBuilder() {
         val gotMessages = AtomicInteger()
-        val channelName01 = "ch1"
-        val channelName02 = "ch2"
-        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(channelName01, channelName02))
+        val ch1 = "ch1"
+        val ch2 = "ch2"
+        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(ch1, ch2))
 
         stubHandshaking(2)
 
         stubFor(
-            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$channelName02,$channelName01/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$ch2,$ch1/0"))
                 .withQueryParam("tt", matching("2"))
                 .willReturn(
                     aResponse().withBody(
@@ -485,7 +485,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         pubnub.subscribe(
-            channels = listOf(channelName01, channelName02),
+            channels = listOf(ch1, ch2),
         )
 
         Awaitility.await()
@@ -497,15 +497,15 @@ class SubscriptionManagerTest : BaseTest() {
     fun testSubscribeDuplicateBuilder() {
         config.dedupOnSubscribe = true
 
-        val channelName01 = "ch1"
-        val channelName02 = "ch2"
-        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(channelName01, channelName02))
+        val ch1 = "ch1"
+        val ch2 = "ch2"
+        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(ch1, ch2))
 
         val gotMessages = AtomicInteger()
         stubHandshaking(2)
 
         stubFor(
-            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$channelName02,$channelName01/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$ch2,$ch1/0"))
                 .withQueryParam("tt", matching("2"))
                 .willReturn(
                     aResponse().withBody(
@@ -584,7 +584,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         pubnub.subscribe(
-            channels = listOf(channelName01, channelName02),
+            channels = listOf(ch1, ch2),
         )
 
         Awaitility.await()
@@ -596,16 +596,16 @@ class SubscriptionManagerTest : BaseTest() {
     fun testSubscribeDuplicateWithLimitBuilder() {
         config.dedupOnSubscribe = true
         config.maximumMessagesCacheSize = 1
-        val channelName01 = "ch1"
-        val channelName02 = "ch2"
-        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(channelName01, channelName02))
+        val ch1 = "ch1"
+        val ch2 = "ch2"
+        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(ch1, ch2))
 
         val gotMessages = AtomicInteger()
 
         stubHandshaking(2)
 
         stubFor(
-            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$channelName02,$channelName01/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$ch2,$ch1/0"))
                 .withQueryParam("tt", matching("2"))
                 .willReturn(
                     aResponse().withBody(
@@ -703,7 +703,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         pubnub.subscribe(
-            channels = listOf(channelName01, channelName02),
+            channels = listOf(ch1, ch2),
         )
 
         Awaitility.await()
@@ -714,12 +714,12 @@ class SubscriptionManagerTest : BaseTest() {
     @Test
     fun testSubscribeBuilderWithAccessManager403Error() {
         val gotStatus = AtomicInteger()
-        val channelName01 = "ch1"
-        val channelName02 = "ch2"
-        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(channelName01, channelName02))
+        val ch1 = "ch1"
+        val ch2 = "ch2"
+        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(ch1, ch2))
 
         stubFor(
-            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$channelName02,$channelName01/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$ch2,$ch1/0"))
                 .willReturn(
                     aResponse().withStatus(403).withBody(
                         """
@@ -751,7 +751,7 @@ class SubscriptionManagerTest : BaseTest() {
                     pnStatus: PNStatus,
                 ) {
                     if (pnStatus.category == PNStatusCategory.PNConnectionError && pnStatus.exception?.statusCode == 403) {
-                        assertEquals(listOf(channelName01, channelName02), pnStatus.exception?.affectedChannels)
+                        assertEquals(listOf(ch1, ch2), pnStatus.exception?.affectedChannels)
                         assertEquals(listOf("cg1", "cg2"), pnStatus.exception?.affectedChannelGroups)
                         gotStatus.addAndGet(1)
                     }
@@ -760,7 +760,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         pubnub.subscribe(
-            channels = listOf(channelName01, channelName02),
+            channels = listOf(ch1, ch2),
         )
 
         Awaitility.await()
@@ -772,12 +772,12 @@ class SubscriptionManagerTest : BaseTest() {
     fun testNamingSubscribeChannelGroupBuilder() {
         val gotStatus = AtomicBoolean()
         val gotMessage = AtomicBoolean()
-        val channelName01 = "ch1"
-        val channelName02 = "ch2"
-        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(channelName01, channelName02))
+        val ch1 = "ch1"
+        val ch2 = "ch2"
+        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(ch1, ch2))
 
         stubFor(
-            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$channelName02,$channelName01/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$ch2,$ch1/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -836,7 +836,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         pubnub.subscribe(
-            channels = listOf(channelName01, channelName02),
+            channels = listOf(ch1, ch2),
         )
 
         Awaitility.await().atMost(4, TimeUnit.SECONDS).untilTrue(gotMessage)
@@ -847,11 +847,11 @@ class SubscriptionManagerTest : BaseTest() {
     fun testPresenceSubscribeBuilder() {
         val gotStatus = AtomicInteger()
         val gotMessage = AtomicBoolean()
-        val channelName01 = "ch1"
-        val channelName02 = "ch2"
-        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(channelName01, channelName02))
+        val ch1 = "ch1"
+        val ch2 = "ch2"
+        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(ch1, ch2))
         stubFor(
-            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$channelName02,$channelName01/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$ch2,$ch1/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -909,7 +909,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         pubnub.subscribe(
-            channels = listOf(channelName01, channelName02),
+            channels = listOf(ch1, ch2),
         )
 
         Awaitility.await()
@@ -925,12 +925,12 @@ class SubscriptionManagerTest : BaseTest() {
     fun testPresenceChannelGroupSubscribeBuilder() {
         val gotStatus = AtomicInteger()
         val gotMessage = AtomicBoolean()
-        val channelName01 = "ch1"
-        val channelName02 = "ch2"
-        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(channelName01, channelName02))
+        val ch1 = "ch1"
+        val ch2 = "ch2"
+        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(ch1, ch2))
 
         stubFor(
-            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$channelName02,$channelName01/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$ch2,$ch1/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -989,7 +989,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         pubnub.subscribe(
-            channels = listOf(channelName01, channelName02),
+            channels = listOf(ch1, ch2),
         )
 
         Awaitility.await()
@@ -1006,13 +1006,13 @@ class SubscriptionManagerTest : BaseTest() {
         val gotMessage1 = AtomicBoolean()
         val gotMessage2 = AtomicBoolean()
         val gotMessage3 = AtomicBoolean()
-        val channelName01 = "ch1"
-        val channelName02 = "ch2"
-        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(channelName01, channelName02))
+        val ch1 = "ch1"
+        val ch2 = "ch2"
+        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(ch1, ch2))
 
         stubHandshaking(2)
         stubFor(
-            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$channelName02,$channelName01/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$ch2,$ch1/0"))
                 .withQueryParam("tt", matching("2"))
                 .willReturn(
                     aResponse().withBody(
@@ -1148,7 +1148,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         pubnub.subscribe(
-            channels = listOf(channelName01, channelName02),
+            channels = listOf(ch1, ch2),
         )
 
 //        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(
@@ -1170,11 +1170,11 @@ class SubscriptionManagerTest : BaseTest() {
     @Test
     fun testSubscribeBuilderNumber() {
         val atomic = AtomicInteger(0)
-        val channelName01 = "ch1"
-        val channelName02 = "ch2"
-        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(channelName01, channelName02))
+        val ch1 = "ch1"
+        val ch2 = "ch2"
+        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(ch1, ch2))
         stubFor(
-            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$channelName02,$channelName01/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$ch2,$ch1/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -1223,7 +1223,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         pubnub.subscribe(
-            channels = listOf(channelName01, channelName02),
+            channels = listOf(ch1, ch2),
         )
 
         Awaitility.await()
@@ -1234,11 +1234,11 @@ class SubscriptionManagerTest : BaseTest() {
     @Test
     fun testSubscribeBuilderWithMetadata() {
         val atomic = AtomicInteger(0)
-        val channelName01 = "ch1"
-        val channelName02 = "ch2"
-        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(channelName01, channelName02))
+        val ch1 = "ch1"
+        val ch2 = "ch2"
+        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(ch1, ch2))
         stubFor(
-            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$channelName02,$channelName01/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$ch2,$ch1/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -1300,7 +1300,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         pubnub.subscribe(
-            channels = listOf(channelName01, channelName02),
+            channels = listOf(ch1, ch2),
         )
 
         Awaitility.await()
@@ -1580,16 +1580,16 @@ class SubscriptionManagerTest : BaseTest() {
     @Test
     fun testSubscribeWithFilterExpressionBuilder() {
         val atomic = AtomicBoolean()
-        val channelName01 = "ch1"
-        val channelName02 = "ch2"
-        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(channelName01, channelName02))
+        val ch1 = "ch1"
+        val ch2 = "ch2"
+        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(ch1, ch2))
 
         config.filterExpression = "much=filtering"
 
         stubHandshaking(2)
 
         stubFor(
-            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$channelName02,$channelName01/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$ch2,$ch1/0"))
                 .withQueryParam("uuid", matching("myUUID"))
                 .withQueryParam("filter-expr", matching("much=filtering"))
                 .withQueryParam("tt", matching("2"))
@@ -1650,7 +1650,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         pubnub.subscribe(
-            channels = listOf(channelName01, channelName02),
+            channels = listOf(ch1, ch2),
         )
 
         Awaitility.await().atMost(5, TimeUnit.SECONDS).untilTrue(atomic)
@@ -1659,11 +1659,11 @@ class SubscriptionManagerTest : BaseTest() {
     @Test
     fun testSubscribeWithEncryption() {
         val atomic = AtomicInteger(0)
-        val channelName01 = "ch1"
-        val channelName02 = "ch2"
-        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(channelName01, channelName02))
+        val ch1 = "ch1"
+        val ch2 = "ch2"
+        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(ch1, ch2))
         stubFor(
-            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$channelName02,$channelName01/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$ch2,$ch1/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -1712,7 +1712,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         pubnub.subscribe(
-            channels = listOf(channelName01, channelName02),
+            channels = listOf(ch1, ch2),
         )
 
         Awaitility.await()
@@ -1723,11 +1723,11 @@ class SubscriptionManagerTest : BaseTest() {
     @Test
     fun testSubscribeWithEncryptionPNOther() {
         val atomic = AtomicInteger(0)
-        val channelName01 = "ch1"
-        val channelName02 = "ch2"
-        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(channelName01, channelName02))
+        val ch1 = "ch1"
+        val ch2 = "ch2"
+        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(ch1, ch2))
         stubFor(
-            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$channelName02,$channelName01/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$ch2,$ch1/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -1783,7 +1783,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         pubnub.subscribe(
-            channels = listOf(channelName01, channelName02),
+            channels = listOf(ch1, ch2),
         )
 
         Awaitility.await()
@@ -1794,12 +1794,12 @@ class SubscriptionManagerTest : BaseTest() {
     @Test
     fun testSubscribePresenceBuilder() {
         val atomic = AtomicInteger(0)
-        val channelName01 = "ch1"
-        val channelName02 = "ch2"
-        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(channelName01, channelName02))
+        val ch1 = "ch1"
+        val ch2 = "ch2"
+        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(ch1, ch2))
 
         stubFor(
-            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$channelName02-pnpres,$channelName01-pnpres,$channelName02,$channelName01/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$ch2-pnpres,$ch1-pnpres,$ch2,$ch1/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -1851,7 +1851,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         pubnub.subscribe(
-            channels = listOf(channelName01, channelName02),
+            channels = listOf(ch1, ch2),
             withPresence = true,
         )
 
@@ -1863,11 +1863,11 @@ class SubscriptionManagerTest : BaseTest() {
     @Test
     fun testSubscribePresencePayloadHereNowRefreshDeltaBuilder() {
         val atomic = AtomicInteger(0)
-        val channelName01 = "ch1"
-        val channelName02 = "ch2"
-        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(channelName01, channelName02))
+        val ch1 = "ch1"
+        val ch2 = "ch2"
+        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(ch1, ch2))
         stubFor(
-            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$channelName02,$channelName01,$channelName02-pnpres,$channelName01-pnpres/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$ch2,$ch1,$ch2-pnpres,$ch1-pnpres/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -1925,7 +1925,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         pubnub.subscribe(
-            channels = listOf(channelName01, channelName02),
+            channels = listOf(ch1, ch2),
             withPresence = true,
         )
 
@@ -1937,11 +1937,11 @@ class SubscriptionManagerTest : BaseTest() {
     @Test
     fun testSubscribePresencePayloadJoinDeltaBuilder() {
         val atomic = AtomicInteger(0)
-        val channelName01 = "ch1"
-        val channelName02 = "ch2"
-        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(channelName01, channelName02))
+        val ch1 = "ch1"
+        val ch2 = "ch2"
+        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(ch1, ch2))
         stubFor(
-            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$channelName02,$channelName01,$channelName02-pnpres,$channelName01-pnpres/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$ch2,$ch1,$ch2-pnpres,$ch1-pnpres/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -2002,7 +2002,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         pubnub.subscribe(
-            channels = listOf(channelName01, channelName02),
+            channels = listOf(ch1, ch2),
             withPresence = true,
         )
 
@@ -2014,9 +2014,9 @@ class SubscriptionManagerTest : BaseTest() {
     @Test
     fun testSubscribePresencePayloadLeaveDeltaBuilder() {
         val atomic = AtomicInteger(0)
-        val channelName01 = "ch1"
-        val channelName02 = "ch2"
-        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(channelName01, channelName02))
+        val ch1 = "ch1"
+        val ch2 = "ch2"
+        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(ch1, ch2))
         stubFor(
             get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
                 .willReturn(
@@ -2079,7 +2079,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         pubnub.subscribe(
-            channels = listOf(channelName01, channelName02),
+            channels = listOf(ch1, ch2),
             withPresence = true,
         )
 
@@ -2091,11 +2091,11 @@ class SubscriptionManagerTest : BaseTest() {
     @Test
     fun testSubscribePresencePayloadTimeoutDeltaBuilder() {
         val atomic = AtomicInteger(0)
-        val channelName01 = "ch1"
-        val channelName02 = "ch2"
-        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(channelName01, channelName02))
+        val ch1 = "ch1"
+        val ch2 = "ch2"
+        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(ch1, ch2))
         stubFor(
-            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$channelName02,$channelName01,$channelName02-pnpres,$channelName01-pnpres/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$ch2,$ch1,$ch2-pnpres,$ch1-pnpres/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -2158,7 +2158,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         pubnub.subscribe(
-            channels = listOf(channelName01, channelName02),
+            channels = listOf(ch1, ch2),
             withPresence = true,
         )
 
@@ -2170,12 +2170,12 @@ class SubscriptionManagerTest : BaseTest() {
     @Test
     fun testSubscribePresencePayloadBuilder() {
         val atomic = AtomicInteger(0)
-        val channelName01 = "ch1"
-        val channelName02 = "ch2"
-        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(channelName01, channelName02))
+        val ch1 = "ch1"
+        val ch2 = "ch2"
+        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(ch1, ch2))
 
         stubFor(
-            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$channelName02,$channelName01,$channelName02-pnpres,$channelName01-pnpres/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$ch2,$ch1,$ch2-pnpres,$ch1-pnpres/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -2232,7 +2232,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         pubnub.subscribe(
-            channels = listOf(channelName01, channelName02),
+            channels = listOf(ch1, ch2),
             withPresence = true,
         )
 
@@ -2338,11 +2338,11 @@ class SubscriptionManagerTest : BaseTest() {
     @Test
     fun testSubscribeRegionBuilder() {
         val atomic = AtomicBoolean()
-        val channelName01 = "ch1"
-        val channelName02 = "ch2"
-        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(channelName01, channelName02))
+        val ch1 = "ch1"
+        val ch2 = "ch2"
+        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(ch1, ch2))
         stubFor(
-            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$channelName02,$channelName01,$channelName02-pnpres,$channelName01-pnpres/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$ch2,$ch1,$ch2-pnpres,$ch1-pnpres/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -2394,7 +2394,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         pubnub.subscribe(
-            channels = listOf(channelName01, channelName02),
+            channels = listOf(ch1, ch2),
             withPresence = true,
         )
 
@@ -2406,9 +2406,9 @@ class SubscriptionManagerTest : BaseTest() {
     @Test
     fun testRemoveListener() {
         val atomic = AtomicInteger(0)
-        val channelName01 = "ch1"
-        val channelName02 = "ch2"
-        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(channelName01, channelName02))
+        val ch1 = "ch1"
+        val ch2 = "ch2"
+        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(ch1, ch2))
         stubFor(
             get(urlPathMatching("/v2/subscribe/mySubscribeKey/.*"))
                 .willReturn(emptyJson()),
@@ -2442,7 +2442,7 @@ class SubscriptionManagerTest : BaseTest() {
         pubnub.removeListener(sub1)
 
         pubnub.subscribe(
-            channels = listOf(channelName01, channelName02),
+            channels = listOf(ch1, ch2),
             withPresence = true,
         )
 
@@ -2455,11 +2455,11 @@ class SubscriptionManagerTest : BaseTest() {
     fun testUnsubscribe() {
         val statusReceived = AtomicBoolean()
         val messageReceived = AtomicBoolean()
-        val channelName01 = "ch1"
-        val channelName02 = "ch2"
-        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(channelName01, channelName02))
+        val ch1 = "ch1"
+        val ch2 = "ch2"
+        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(ch1, ch2))
         stubFor(
-            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$channelName02,$channelName01,$channelName02-pnpres,$channelName01-pnpres/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$ch2,$ch1,$ch2-pnpres,$ch1-pnpres/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -2573,7 +2573,7 @@ class SubscriptionManagerTest : BaseTest() {
         pubnub.addListener(sub1)
 
         pubnub.subscribe(
-            channels = listOf(channelName01, channelName02),
+            channels = listOf(ch1, ch2),
             withPresence = true,
         )
 
@@ -2919,14 +2919,14 @@ class SubscriptionManagerTest : BaseTest() {
     @Test
     fun testSilencedHeartbeats() {
         val statusReceived = AtomicBoolean()
-        val channelName01 = "ch1"
-        val channelName02 = "ch2"
-        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(channelName01, channelName02))
+        val ch1 = "ch1"
+        val ch2 = "ch2"
+        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(ch1, ch2))
 
         config.heartbeatNotificationOptions = PNHeartbeatNotificationOptions.NONE
 
         stubFor(
-            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$channelName02,$channelName01,$channelName02-pnpres,$channelName01-pnpres/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$ch2,$ch1,$ch2-pnpres,$ch1-pnpres/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -3068,8 +3068,8 @@ class SubscriptionManagerTest : BaseTest() {
         assertEquals(PNHeartbeatNotificationOptions.ALL, pubnub.configuration.heartbeatNotificationOptions)
         assertEquals(300, pubnub.configuration.presenceTimeout)
         assertEquals(0, pubnub.configuration.heartbeatInterval)
-        val channelName01 = "ch1"
-        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(channelName01))
+        val ch1 = "ch1"
+        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(ch1))
 
         stubFor(
             get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch1,ch1-pnpres/0"))
@@ -3203,13 +3203,12 @@ class SubscriptionManagerTest : BaseTest() {
     @Test
     fun testUnsubscribeAll() {
         val statusReceived = AtomicBoolean()
-        val channelName01 = "ch1"
-        val channelName02 = "ch2"
-        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(channelName01, channelName02))
-
+        val ch1 = "ch1"
+        val ch2 = "ch2"
+        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(ch1, ch2))
 
         stubFor(
-            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$channelName02,$channelName01,$channelName02-pnpres,$channelName01-pnpres/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/$ch2,$ch1,$ch2-pnpres,$ch1-pnpres/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -3335,7 +3334,7 @@ class SubscriptionManagerTest : BaseTest() {
         pubnub.addListener(sub1)
 
         pubnub.subscribe(
-            channels = listOf(channelName01, channelName02),
+            channels = listOf(ch1, ch2),
             withPresence = true,
         )
 
@@ -3346,9 +3345,9 @@ class SubscriptionManagerTest : BaseTest() {
 
     @Test
     fun testSubscribeWithCustomTimetoken() {
-        val channelName01 = "ch1"
-        val channelName02 = "ch2"
-        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(channelName01, channelName02))
+        val ch1 = "ch1"
+        val ch2 = "ch2"
+        stubForHeartbeatWhenHeartbeatIntervalIs0ThusPresenceEEDoesNotWork(setOf(ch1, ch2))
         stubFor(
             get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .withQueryParam("tt", equalTo("0"))
@@ -3374,7 +3373,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         pubnub.subscribe(
-            channels = listOf(channelName01, channelName02),
+            channels = listOf(ch1, ch2),
             withTimetoken = 555L,
         )
 

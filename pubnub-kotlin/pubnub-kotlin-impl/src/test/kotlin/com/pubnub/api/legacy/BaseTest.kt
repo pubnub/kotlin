@@ -101,8 +101,8 @@ abstract class BaseTest {
             get(urlMatching(urlPattern)).willReturn(
                 aResponse().withBody(
                     """
-                              {"message":"OK","service":"Presence","status":200}  
-                            """.trimIndent()
+                    {"message":"OK","service":"Presence","status":200}  
+                    """.trimIndent()
                 )
             )
         )
