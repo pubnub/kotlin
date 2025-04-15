@@ -1,9 +1,9 @@
 name: kotlin
-version: 10.4.6
+version: 10.4.7
 schema: 1
 scm: github.com/pubnub/kotlin
 files:
-  - build/libs/pubnub-kotlin-10.4.6-all.jar
+  - build/libs/pubnub-kotlin-10.4.7-all.jar
 sdks:
   - 
       type: library
@@ -23,8 +23,8 @@ sdks:
             -
               distribution-type: library
               distribution-repository: maven
-              package-name: pubnub-kotlin-10.4.6
-              location: https://repo.maven.apache.org/maven2/com/pubnub/pubnub-kotlin/10.4.6/pubnub-kotlin-10.4.6.jar
+              package-name: pubnub-kotlin-10.4.7
+              location: https://repo.maven.apache.org/maven2/com/pubnub/pubnub-kotlin/10.4.7/pubnub-kotlin-10.4.7.jar
               supported-platforms:
                 supported-operating-systems:
                   Android:
@@ -121,6 +121,11 @@ sdks:
                   license-url: https://www.apache.org/licenses/LICENSE-2.0.txt
                   is-required: Required
 changelog:
+  - date: 2025-04-15
+    version: v10.4.7
+    changes:
+      - type: bug
+        text: "Heartbeat is sent for subscribe when presenceTimeout or heartbeatInterval not set."
   - date: 2025-03-20
     version: v10.4.6
     changes:

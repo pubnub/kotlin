@@ -1,3 +1,9 @@
+## v10.4.7
+April 15 2025
+
+#### Fixed
+- Heartbeat is sent for subscribe when presenceTimeout or heartbeatInterval not set.
+
 ## v10.4.6
 March 20 2025
 
