@@ -39,7 +39,68 @@ You will need the publish and subscribe keys to authenticate your app. Get your 
     ```
 
 ## Add event listeners
+```kotlin
+// Create a subscription to a specific channel
+val subscription = pubnub.channel("my_channel").subscription(SubscriptionOptions.receivePresenceEvents())
 
+// Add a listener to the subscription for handling various event types
+subscription.addListener(object : EventListener {
+    override fun message(pubnub: PubNub, message: PNMessageResult) {
+        // Log or process message
+        println("Message: ${message.message}")
+    }
+
+    override fun signal(pubnub: PubNub, signal: PNSignalResult) {
+        // Handle signals
+        println("Signal: ${signal.message}")
+    }
+
+    override fun messageAction(pubnub: PubNub, messageAction: PNMessageActionResult) {
+        // Handle message reactions
+        println("Message Reaction: ${messageAction.data}")
+    }
+
+    override fun file(pubnub: PubNub, file: PNFileEventResult) {
+        // Handle file events
+        println("File: ${file.file.name}")
+    }
+
+    override fun objects(pubnub: PubNub, obj: PNObjectEventResult) {
+        // Handle metadata updates
+        println("App Context: ${obj.event}")
+    }
+
+    override fun presence(pubnub: PubNub, presence: PNPresenceEventResult) {
+        // Handle presence updates
+        // requires a subscription with presence
+        println("Presence: ${presence.uuid} - ${presence.event}")
+    }
+})
+
+// Adding the status listener to the PubNub client
+pubnub.addListener(object : StatusListener() {
+    override fun status(pubnub: PubNub, status: PNStatus) {
+        // This block is executed asynchronously for each status update
+        println("Connection Status: ${status.category}")
+    }
+})
+
+// for subscription set
+val subscriptionSet = pubnub.subscriptionSetOf(
+    // Specify channels with default options
+    channels = setOf("my_channel", "other_channel"),
+)
+
+subscriptionSet.addListener(object : EventListener {
+    override fun message(pubnub: PubNub, message: PNMessageResult) {
+        // Log or process message
+        println("Message: ${message.message}")
+    }
+})
+
+```
+
+#### Add event listeners old way
 ```kotlin
 pubnub.addListener(object : SubscribeCallback() {
 
@@ -92,8 +153,29 @@ pubnub.addListener(object : SubscribeCallback() {
 })
 ```
 
-## Publish/subscribe
+## Subscribe
+```kotlin
+subscription.subscribe()
+```
+#### Subscribe old way
+```kotlin
+pubnub.subscribe(channels = listOf("my_channel"), withPresence = true)
+```
 
+## Publish
+```kotlin
+    val channel = pubnub.channel("my_channel")
+    channel.publish(message = "hello").async { result ->
+        result.onSuccess { response ->
+            println("Message timetoken: ${response.timetoken}")
+        }.onFailure { exception ->
+            println("ERROR: Failed to publish message")
+            println("Error details: ${exception.message}")
+        }
+    }
+
+```
+#### Publish old way
 ```kotlin
 pubnub.publish(channel = "my_channel", message = "hello")
     .async { result -> 
