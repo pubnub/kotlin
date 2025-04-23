@@ -122,7 +122,7 @@ class RetrofitManager(
                         }
                     }.apply {
                         level = HttpLoggingInterceptor.Level.BODY
-                    },
+                    }
                 )
             }
 
