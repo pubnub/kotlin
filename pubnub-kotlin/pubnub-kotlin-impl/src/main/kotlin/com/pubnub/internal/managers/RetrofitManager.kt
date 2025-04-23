@@ -22,9 +22,13 @@ import okhttp3.Call
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.jetbrains.annotations.TestOnly
+import org.slf4j.LoggerFactory
+import org.slf4j.helpers.NOPLoggerFactory
 import retrofit2.Retrofit
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.TimeUnit
+
+private const val PUBNUB_OKHTTP_REQUEST_RESPONSE_LOGGER_NAME = "pubnub.okhttp"
 
 class RetrofitManager(
     val pubnub: PubNubImpl,
@@ -108,7 +112,15 @@ class RetrofitManager(
         with(configuration) {
             if (logVerbosity == PNLogVerbosity.BODY) {
                 okHttpBuilder.addInterceptor(
-                    HttpLoggingInterceptor().apply {
+                    HttpLoggingInterceptor { message ->
+                        if (slf4jIsBound()) {
+                            // will follow whatever SLF4J config (logback, log4j2, etc.) is on the classpath
+                            LoggerFactory.getLogger(PUBNUB_OKHTTP_REQUEST_RESPONSE_LOGGER_NAME).debug(message)
+                        } else {
+                            // fallback: always print
+                            println("[$PUBNUB_OKHTTP_REQUEST_RESPONSE_LOGGER_NAME] $message")
+                        }
+                    }.apply {
                         level = HttpLoggingInterceptor.Level.BODY
                     },
                 )
@@ -142,6 +154,11 @@ class RetrofitManager(
         configuration.maximumConnections?.let { okHttpClient.dispatcher.maxRequestsPerHost = it }
 
         return okHttpClient
+    }
+
+    private fun slf4jIsBound(): Boolean {
+        val factory = LoggerFactory.getILoggerFactory()
+        return factory !is NOPLoggerFactory
     }
 
     private fun createRetrofit(callFactory: Call.Factory?): Retrofit {
