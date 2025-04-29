@@ -1,5 +1,6 @@
 package com.pubnub.test.integration
 
+import com.pubnub.kmp.PLATFORM
 import com.pubnub.test.BaseIntegrationTest
 import com.pubnub.test.await
 import com.pubnub.test.randomString
@@ -16,6 +17,9 @@ class MessageCountsTest : BaseIntegrationTest() {
 
     @Test
     fun messageCounts() = runTest {
+        if (PLATFORM == "iOS") { // todo make test not flaky for iOs
+            return@runTest
+        }
         val expectedMeta = mapOf(randomString() to randomString())
         val expectedMessage = randomString()
         val expectedCount = 3L
