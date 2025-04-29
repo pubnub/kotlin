@@ -2,13 +2,12 @@ package com.pubnub.docs.publishAndSubscribe.signal
 
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
-import com.pubnub.api.models.consumer.PNPublishResult
 import com.pubnub.docs.SnippetBase
 
-class SignalOthers {
-
-    private fun signalBasic(){
+class SignalOthers : SnippetBase() {
+    private fun signalBasic() {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/publish-and-subscribe#basic-usage-2
+
         // snippet.signalBasic
         val configBuilder = com.pubnub.api.v2.PNConfiguration.builder(UserId("myUserId"), "demo").apply {
             publishKey = "demo"

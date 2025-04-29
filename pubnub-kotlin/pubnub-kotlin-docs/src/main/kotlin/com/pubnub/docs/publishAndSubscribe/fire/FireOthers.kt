@@ -3,10 +3,8 @@ package com.pubnub.docs.publishAndSubscribe.fire
 import com.google.gson.JsonObject
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
-import com.pubnub.api.models.consumer.PNPublishResult
 
 class FireOthers {
-
     private fun fireBasic() {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/publish-and-subscribe#basic-usage-1
 
@@ -32,5 +30,4 @@ class FireOthers {
 
         // snippet.end
     }
-
 }

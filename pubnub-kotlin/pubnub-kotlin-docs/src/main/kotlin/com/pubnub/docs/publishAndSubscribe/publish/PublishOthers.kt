@@ -8,12 +8,9 @@ import com.pubnub.docs.SnippetBase
 import org.json.JSONArray
 import org.json.JSONObject
 
-
-class PublishOthers: SnippetBase(){
-
+class PublishOthers : SnippetBase() {
     private fun publishRequestExecution() {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/publish-and-subscribe
-
         val pubnub = createPubNub()
 
         // snippet.publishRequestExecution
@@ -30,7 +27,6 @@ class PublishOthers: SnippetBase(){
     }
 
     private fun publishWithMetadata() {
-
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/publish-and-subscribe#publish-with-metadata
 
         // snippet.publishWithMetadata
@@ -61,9 +57,8 @@ class PublishOthers: SnippetBase(){
         // snipped.end
     }
 
-
     private fun publishJsonArrayGSON() {
-        //https://www.pubnub.com/docs/sdks/kotlin/api-reference/publish-and-subscribe#publishing-jsonarray-google-gson
+        // https://www.pubnub.com/docs/sdks/kotlin/api-reference/publish-and-subscribe#publishing-jsonarray-google-gson
 
         // snippet.publishJsonArrayGSON
         val configBuilder = com.pubnub.api.v2.PNConfiguration.builder(UserId("myUserId"), "demo").apply {
@@ -93,7 +88,7 @@ class PublishOthers: SnippetBase(){
     }
 
     private fun publishJsonObjectOrgJson() {
-        //https://www.pubnub.com/docs/sdks/kotlin/api-reference/publish-and-subscribe#publishing-jsonobject-orgjson
+        // https://www.pubnub.com/docs/sdks/kotlin/api-reference/publish-and-subscribe#publishing-jsonobject-orgjson
 
         // snippet.publishJsonObjectOrgJson
         val configBuilder = com.pubnub.api.v2.PNConfiguration.builder(UserId("myUserId"), "demo").apply {
@@ -184,5 +179,4 @@ class PublishOthers: SnippetBase(){
         }
         // snippet.end
     }
-
 }

@@ -2,8 +2,8 @@ package com.pubnub.docs.publishAndSubscribe.unsubscribeAll
 
 import com.pubnub.docs.SnippetBase
 
-class UnsubscribeAllOther: SnippetBase() {
-    private fun unsubscribeAll(){
+class UnsubscribeAllOther : SnippetBase() {
+    private fun unsubscribeAll() {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/publish-and-subscribe#methods-8
 
         val pubnub = createPubNub()
