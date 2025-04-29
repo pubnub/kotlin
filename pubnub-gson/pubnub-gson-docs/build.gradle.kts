@@ -6,6 +6,6 @@ plugins {
 }
 
 dependencies {
-    api(project(":pubnub-kotlin:pubnub-kotlin-api"))
-    implementation(project(":pubnub-kotlin:pubnub-kotlin-impl"))
+    api(project(":pubnub-gson:pubnub-gson-api"))
+    implementation(project(":pubnub-gson:pubnub-gson-impl"))
 }

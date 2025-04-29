@@ -1,12 +1,9 @@
 package com.pubnub.docs.publishAndSubscribe.unsubscribe
 
-import com.pubnub.api.PubNub
 import com.pubnub.docs.SnippetBase
 
-class UnsubscribeOthers: SnippetBase() {
-
+class UnsubscribeOthers : SnippetBase() {
     private fun unsubscribeMethod() {
-
         val pubnub = createPubNub()
         val subscription = pubnub.channel("my_channel").subscription()
         val subscriptionSet = pubnub.subscriptionSetOf(channels = setOf("my_channel", "other_channel"))

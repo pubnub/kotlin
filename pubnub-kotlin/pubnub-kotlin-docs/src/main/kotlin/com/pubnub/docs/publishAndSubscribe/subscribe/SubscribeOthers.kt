@@ -1,12 +1,10 @@
 package com.pubnub.docs.publishAndSubscribe.subscribe
 
-import com.pubnub.api.PubNub
-import com.pubnub.api.UserId
 import com.pubnub.api.v2.subscriptions.SubscriptionCursor
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.docs.SnippetBase
 
-class SubscribeOthers: SnippetBase() {
+class SubscribeOthers : SnippetBase() {
     private fun createSubscription() {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/publish-and-subscribe#create-a-subscription
 

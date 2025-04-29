@@ -12,8 +12,7 @@ import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.docs.SnippetBase
 
-class EventListenersOthers: SnippetBase() {
-
+class EventListenersOthers : SnippetBase() {
     fun addListenersBasic() {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/publish-and-subscribe#basic-usage-5
 
@@ -87,42 +86,41 @@ class EventListenersOthers: SnippetBase() {
     private fun createListenerForOneTypeEvent() {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/publish-and-subscribe#basic-usage-6
 
-
         val pubnub = createPubNub()
         val subscription = pubnub.channel("my_channel").subscription()
 
         // snippet.createListenerForOneTypeEvent
 
         subscription.onMessage = { message ->
-            /* Handle message */
+            // Handle message
         }
 
         subscription.onSignal = { signal ->
-            /* Handle signal */
+            // Handle signal
         }
 
         subscription.onMessageAction = { messageAction ->
-            /* Handle message reaction */
+            // Handle message reaction
         }
 
         subscription.onFile = { file ->
-            /* Handle file event */
+            // Handle file event
         }
 
         subscription.onObjects = { obj ->
-            /* Handle metadata updates */
+            // Handle metadata updates
         }
 
         subscription.onPresence = { presence ->
-            /* Handle presence updates */
+            // Handle presence updates
         }
 
-        val onMessage: (PNMessageResult) -> Unit = {  /* Handle message */ }
+        val onMessage: (PNMessageResult) -> Unit = { /* Handle message */ }
         val onSignal: (PNSignalResult) -> Unit = { /* Handle signal */ }
-        val onMessageAction: (PNMessageActionResult) -> Unit = {  /* Handle message reaction */ }
-        val onFile: (PNFileEventResult) -> Unit = {  /* Handle file event */ }
-        val onObjects: (PNObjectEventResult) -> Unit = {  /* Handle metadata updates */ }
-        val onPresence: (PNPresenceEventResult) -> Unit = {  /* Handle presence updates */ }
+        val onMessageAction: (PNMessageActionResult) -> Unit = { /* Handle message reaction */ }
+        val onFile: (PNFileEventResult) -> Unit = { /* Handle file event */ }
+        val onObjects: (PNObjectEventResult) -> Unit = { /* Handle metadata updates */ }
+        val onPresence: (PNPresenceEventResult) -> Unit = { /* Handle presence updates */ }
 
         subscription.onMessage = onMessage
         subscription.onSignal = onSignal
@@ -163,5 +161,4 @@ class EventListenersOthers: SnippetBase() {
 
         // snippet.end
     }
-
 }

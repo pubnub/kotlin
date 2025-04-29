@@ -885,29 +885,4 @@ class PublishIntegrationTests : BaseIntegrationTest() {
 
         assertEquals(expectedCustomMessageType, message.customMessageType)
     }
-
-    @Test
-    fun testForDocs() {
-        val configBuilder = com.pubnub.api.v2.PNConfiguration.builder(UserId("myUserId"), "demo").apply {
-            publishKey = "demo"
-        }
-        val pubnub = PubNub.create(configBuilder.build())
-        val channel = pubnub.channel("myChannel")
-
-        channel.signal(
-            message = "This is a signal!",
-            customMessageType = "text-message"
-        ).async() { result ->
-            result.onFailure { exception ->
-                println("Error while publishing")
-                exception.printStackTrace()
-            }.onSuccess { value ->
-                println("Signal sent, timetoken: ${value.timetoken}, ${value.toString()}")
-            }
-        }
-
-
-
-        Thread.sleep(2000)
-    }
 }
