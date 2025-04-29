@@ -23,6 +23,7 @@ include("pubnub-kotlin:pubnub-kotlin-api")
 include("pubnub-kotlin:pubnub-kotlin-impl")
 include("pubnub-kotlin:pubnub-kotlin-coroutines")
 include("pubnub-kotlin:pubnub-kotlin-test")
+include("pubnub-kotlin:pubnub-kotlin-docs")
 include("pubnub-gson")
 include("pubnub-gson:pubnub-gson-api")
 include("pubnub-gson:pubnub-gson-impl")
@@ -30,4 +31,4 @@ include("examples:kotlin-app")
 include("examples:java-app")
 includeBuild("build-logic/ktlint-custom-rules")
 includeBuild("migration_utils")
-
+//findProject(":pubnub-kotlin:pubnub-kotlin-docs")?.name = "pubnub-kotlin-docs"
