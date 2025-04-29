@@ -1,3 +1,12 @@
+## v10.5.0
+April 29 2025
+
+#### Added
+- Updated kotlin version to 2.1.20.
+
+#### Fixed
+- Make network calls be logged using slf4j.
+
 ## v10.4.7
 April 15 2025
 
