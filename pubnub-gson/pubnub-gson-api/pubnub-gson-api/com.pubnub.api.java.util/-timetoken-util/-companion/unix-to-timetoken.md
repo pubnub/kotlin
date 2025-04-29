@@ -26,4 +26,4 @@ jvm
 
 | | |
 |---|---|
-| [IllegalArgumentException](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-illegal-argument-exception/index.html) | if the unixTime does not have 13 digits. |
+| [IllegalArgumentException](https://docs.oracle.com/javase/8/docs/api/java/lang/IllegalArgumentException.html) | if the unixTime does not have 13 digits. |
