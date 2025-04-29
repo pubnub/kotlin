@@ -1,9 +1,3 @@
-## v10.4.8
-April 24 2025
-
-#### Fixed
-- Make network calls be logged using slf4j.
-
 ## v10.4.7
 April 15 2025
 

@@ -121,11 +121,6 @@ sdks:
                   license-url: https://www.apache.org/licenses/LICENSE-2.0.txt
                   is-required: Required
 changelog:
-  - date: 2025-04-24
-    version: v10.4.8
-    changes:
-      - type: bug
-        text: "Make network calls be logged using slf4j."
   - date: 2025-04-15
     version: v10.4.7
     changes:
