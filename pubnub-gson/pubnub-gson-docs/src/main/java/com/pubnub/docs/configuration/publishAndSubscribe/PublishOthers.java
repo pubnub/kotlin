@@ -11,6 +11,8 @@ import java.util.Arrays;
 
 public class PublishOthers {
     private void publishWithMetadata() throws PubNubException {
+        // https://www.pubnub.com/docs/sdks/java/api-reference/publish-and-subscribe#publish-with-metadata
+
         // snippet.publishWithMetadata
         PNConfiguration.Builder configBuilder = PNConfiguration.builder(new UserId("yourUserId"), "demo");
         configBuilder.publishKey("demo");
