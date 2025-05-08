@@ -1,13 +1,19 @@
 package com.pubnub.docs.publishAndSubscribe.eventListener;
 
+import com.google.gson.JsonElement;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.java.PubNub;
+import com.pubnub.api.java.models.consumer.objects_api.channel.PNChannelMetadata;
 import com.pubnub.api.java.models.consumer.objects_api.channel.PNChannelMetadataResult;
+import com.pubnub.api.java.models.consumer.objects_api.membership.PNMembership;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNMembershipResult;
+import com.pubnub.api.java.models.consumer.objects_api.uuid.PNUUIDMetadata;
 import com.pubnub.api.java.models.consumer.objects_api.uuid.PNUUIDMetadataResult;
 import com.pubnub.api.java.v2.callbacks.EventListener;
 import com.pubnub.api.java.v2.subscriptions.Subscription;
 import com.pubnub.api.java.v2.subscriptions.SubscriptionSet;
+import com.pubnub.api.models.consumer.files.PNDownloadableFile;
+import com.pubnub.api.models.consumer.message_actions.PNMessageAction;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
@@ -18,6 +24,7 @@ import com.pubnub.docs.SnippetBase;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class EventListenersOthers extends SnippetBase {
@@ -107,6 +114,104 @@ public class EventListenersOthers extends SnippetBase {
 
         // Activate the subscriptionSet to start receiving events
         subscriptionSet.subscribe();
+        // snippet.end
+    }
+
+    private void setEventListenersOneEventType() throws PubNubException {
+        // https://www.pubnub.com/docs/sdks/java/api-reference/publish-and-subscribe#basic-usage-6
+
+        PubNub pubNub = createPubNub();
+        Subscription subscription = pubNub.channel("my_channel").subscription();
+
+        // snippet.setEventListeners
+        subscription.setOnMessage((PNMessageResult pnMessageResult) -> {
+            JsonElement message = pnMessageResult.getMessage();
+            String channel1 = pnMessageResult.getChannel();
+            String publisher = pnMessageResult.getPublisher();
+            String subscription1 = pnMessageResult.getSubscription();
+            String customMessageType = pnMessageResult.getCustomMessageType();
+            Long timetoken = pnMessageResult.getTimetoken();
+        });
+
+        subscription.setOnSignal((PNSignalResult pnSignalResult) -> {
+            JsonElement message = pnSignalResult.getMessage();
+            String channel = pnSignalResult.getChannel();
+            String publisher = pnSignalResult.getPublisher();
+            String subscription1 = pnSignalResult.getSubscription();
+            String customMessageType = pnSignalResult.getCustomMessageType();
+            Long timetoken = pnSignalResult.getTimetoken();
+        });
+
+        subscription.setOnMessageAction((PNMessageActionResult pnMessageActionResult) -> {
+            PNMessageAction messageAction = pnMessageActionResult.getMessageAction();
+            String channel = pnMessageActionResult.getChannel();
+            String event = pnMessageActionResult.getEvent();
+            String publisher = pnMessageActionResult.getPublisher();
+            String subscription1 = pnMessageActionResult.getSubscription();
+            Long timetoken = pnMessageActionResult.getTimetoken();
+        });
+
+        subscription.setOnFile((PNFileEventResult pnFileEventResult) -> {
+            JsonElement message = (JsonElement) pnFileEventResult.getMessage();
+            PNDownloadableFile file = pnFileEventResult.getFile();
+            String channel = pnFileEventResult.getChannel();
+            String publisher = pnFileEventResult.getPublisher();
+            String subscription1 = pnFileEventResult.getSubscription();
+            String customMessageType = pnFileEventResult.getCustomMessageType();
+            Long timetoken = pnFileEventResult.getTimetoken();
+        });
+
+        subscription.setOnUuidMetadata((PNUUIDMetadataResult pnUUIDMetadataResult) -> {
+            String event = pnUUIDMetadataResult.getEvent();
+            PNUUIDMetadata data = pnUUIDMetadataResult.getData();
+            String channel = pnUUIDMetadataResult.getChannel();
+            String publisher = pnUUIDMetadataResult.getPublisher();
+            String subscription1 = pnUUIDMetadataResult.getSubscription();
+            Long timetoken = pnUUIDMetadataResult.getTimetoken();
+        });
+
+        subscription.setOnChannelMetadata((PNChannelMetadataResult pnChannelMetadataResult) -> {
+            String event = pnChannelMetadataResult.getEvent();
+            PNChannelMetadata data = pnChannelMetadataResult.getData();
+            String channel = pnChannelMetadataResult.getChannel();
+            String publisher = pnChannelMetadataResult.getPublisher();
+            String subscription1 = pnChannelMetadataResult.getSubscription();
+            Long timetoken = pnChannelMetadataResult.getTimetoken();
+        });
+
+        subscription.setOnMembership((PNMembershipResult pnMembershipResult) -> {
+            String event = pnMembershipResult.getEvent();
+            PNMembership data = pnMembershipResult.getData();
+            String channel = pnMembershipResult.getChannel();
+            String publisher = pnMembershipResult.getPublisher();
+            String subscription1 = pnMembershipResult.getSubscription();
+            Long timetoken = pnMembershipResult.getTimetoken();
+        });
+
+        subscription.setOnPresence((PNPresenceEventResult pnPresenceEventResult) -> {
+            String event = pnPresenceEventResult.getEvent();
+            Integer occupancy = pnPresenceEventResult.getOccupancy();
+            String channel = pnPresenceEventResult.getChannel();
+            List<String> join = pnPresenceEventResult.getJoin();
+            List<String> leave = pnPresenceEventResult.getLeave();
+            JsonElement state = pnPresenceEventResult.getState();
+            List<String> timeout = pnPresenceEventResult.getTimeout();
+            String subscription1 = pnPresenceEventResult.getSubscription();
+            Long timetoken = pnPresenceEventResult.getTimetoken();
+        });
+        // snippet.end
+    }
+
+    private void addConnectionStatusListener() throws PubNubException {
+        // https://www.pubnub.com/docs/sdks/java/api-reference/publish-and-subscribe#basic-usage-7
+
+        PubNub pubNub = createPubNub();
+
+        // snippet.addConnectionStatusListener
+        pubNub.addListener((pubnub, status) -> {
+            // Handle connection status updates
+            System.out.println("Connection Status: " + status.getCategory());
+        });
         // snippet.end
     }
 }
