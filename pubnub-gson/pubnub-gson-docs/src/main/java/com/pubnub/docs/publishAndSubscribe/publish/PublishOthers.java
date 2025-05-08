@@ -1,4 +1,4 @@
-package com.pubnub.docs.configuration.publishAndSubscribe;
+package com.pubnub.docs.publishAndSubscribe.publish;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
@@ -163,5 +163,4 @@ public class PublishOthers {
                 .sync();
         // snippet.end
     }
-
 }

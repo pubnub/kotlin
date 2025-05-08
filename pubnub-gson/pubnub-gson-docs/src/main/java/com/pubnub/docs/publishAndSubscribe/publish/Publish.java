@@ -1,4 +1,4 @@
-package com.pubnub.docs.configuration.publishAndSubscribe;
+package com.pubnub.docs.publishAndSubscribe.publish;
 
 // snippet.publishMain
 import com.google.gson.JsonObject;
