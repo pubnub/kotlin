@@ -9,15 +9,12 @@ class UnsubscribeAllOther : SnippetBase() {
         val pubnub = createPubNub()
 
         // snippet.unsubscribeAllMethod
-
         pubnub.unsubscribeAll()
-
         // snippet.end
 
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/publish-and-subscribe#basic-usage-9
 
         // snippet.unsubscribeAllBasic
-
         // Subscribe to channels
         pubnub.subscribe(channels = listOf("my_channel", "other_channel"))
 
@@ -26,7 +23,6 @@ class UnsubscribeAllOther : SnippetBase() {
 
         // Later, when you want to unsubscribe from all subscriptions
         pubnub.unsubscribeAll()
-
         // snippet.end
     }
 }

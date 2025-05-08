@@ -80,7 +80,7 @@ public class SubscribeOthers extends SnippetBase {
         // snippet.end
     }
 
-    private void createSubscriptionSetFrom2subscriptions() {
+    private void createSubscriptionSetFrom2subscriptions() throws PubNubException {
         // https://www.pubnub.com/docs/sdks/java/api-reference/publish-and-subscribe#create-a-subscription-set-from-2-individual-subscriptions
 
         PubNub pubNub = createPubNub();
