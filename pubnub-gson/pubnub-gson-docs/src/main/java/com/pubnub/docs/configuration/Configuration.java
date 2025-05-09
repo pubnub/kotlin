@@ -1,4 +1,7 @@
 package com.pubnub.docs.configuration;
+// https://www.pubnub.com/docs/sdks/java/api-reference/configuration#basic-usage
+// snippet.configurationMain
+
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.crypto.CryptoModule;
 import com.pubnub.api.enums.PNLogVerbosity;
@@ -25,3 +28,4 @@ public class Configuration {
         System.out.println("PubNub client initialized.");
     }
 }
+// snippet.end

@@ -1,5 +1,6 @@
 package com.pubnub.docs.configuration
-
+// https://www.pubnub.com/docs/sdks/kotlin/api-reference/configuration#basic-usage
+// snippet.configurationMain
 import com.pubnub.api.UserId
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.crypto.CryptoModule
@@ -115,3 +116,4 @@ fun printConfigDetails(config: PNConfiguration) {
     // Note: We can't access all configuration properties directly
     // as some are private within the PNConfiguration object
 }
+// snippet.end

@@ -66,7 +66,7 @@ public class ConfigurationOther extends SnippetBase {
         // snippet.end
     }
 
-    private void initializePubNub() {
+    private void initializePubNub() throws PubNubException {
         // https://www.pubnub.com/docs/sdks/java/api-reference/configuration#methods-1
 
         // snippet.initializePubnub
@@ -78,7 +78,7 @@ public class ConfigurationOther extends SnippetBase {
 
     }
 
-    private void initializeNonSecureClient() {
+    private void initializeNonSecureClient() throws PubNubException {
         // https://www.pubnub.com/docs/sdks/java/api-reference/configuration#initialize-a-non-secure-client
         // snippet.initializeNonSecureClient
         // import com.pubnub.api.java.v2.PNConfiguration;
@@ -90,7 +90,7 @@ public class ConfigurationOther extends SnippetBase {
         // snippet.end
     }
 
-    private void initializeReadOnlyClient() {
+    private void initializeReadOnlyClient() throws PubNubException {
         // https://www.pubnub.com/docs/sdks/java/api-reference/configuration#initialization-for-a-read-only-client
         // snippet.initializeReadOnlyClient
         // import com.pubnub.api.java.v2.PNConfiguration;
@@ -100,7 +100,7 @@ public class ConfigurationOther extends SnippetBase {
         // snippet.end
     }
 
-    private void initializeWithSSL() {
+    private void initializeWithSSL() throws PubNubException {
         // https://www.pubnub.com/docs/sdks/java/api-reference/configuration#initializing-with-ssl-enabled
 
         // snippet.initializeWithSsl
@@ -112,7 +112,7 @@ public class ConfigurationOther extends SnippetBase {
         // snippet.end
     }
 
-    private void initializeWithAccessManager() {
+    private void initializeWithAccessManager() throws PubNubException {
         // https://www.pubnub.com/docs/sdks/java/api-reference/configuration#initializing-with-access-manager
 
         // snippet.initializeWithAccessManager
@@ -125,7 +125,7 @@ public class ConfigurationOther extends SnippetBase {
         // snippet.end
     }
 
-    private void initializeWithProxy() {
+    private void initializeWithProxy() throws PubNubException {
         // https://www.pubnub.com/docs/sdks/java/api-reference/configuration#how-to-set-proxy
         // snippet.initializeWithProxy
         //  import com.pubnub.api.java.v2.PNConfiguration;
@@ -139,7 +139,7 @@ public class ConfigurationOther extends SnippetBase {
         // snippet.end
     }
 
-    private void configurationSetUserId() {
+    private void configurationSetUserId() throws PubNubException {
         // https://www.pubnub.com/docs/sdks/java/api-reference/configuration#set-user-id
 
         // snippet.configurationSetUserId
@@ -150,7 +150,7 @@ public class ConfigurationOther extends SnippetBase {
         // snippet.end
     }
 
-    private void configurationGetUserId() {
+    private void configurationGetUserId() throws PubNubException {
         // https://www.pubnub.com/docs/sdks/java/api-reference/configuration#get-user-id
 
         // snippet.configurationSetUserId
@@ -163,7 +163,7 @@ public class ConfigurationOther extends SnippetBase {
         // snippet.end
     }
 
-    private void configurationSetFilterExpression() {
+    private void configurationSetFilterExpression() throws PubNubException {
         // https://www.pubnub.com/docs/sdks/java/api-reference/configuration#set-filter-expression
         // snippet.configurationSetFilterExpression
         // import com.pubnub.api.java.v2.PNConfiguration;
@@ -173,7 +173,7 @@ public class ConfigurationOther extends SnippetBase {
         // snippet.end
     }
 
-    private void configurationGetFilterExpression() {
+    private void configurationGetFilterExpression() throws PubNubException {
         // https://www.pubnub.com/docs/sdks/java/api-reference/configuration#get-filter-expression
         // snippet.configurationGetFilterExpression
         // import com.pubnub.api.java.v2.PNConfiguration;
@@ -185,5 +185,4 @@ public class ConfigurationOther extends SnippetBase {
         pubNub.getConfiguration().getFilterExpression();
         // snippet.end
     }
-
 }
