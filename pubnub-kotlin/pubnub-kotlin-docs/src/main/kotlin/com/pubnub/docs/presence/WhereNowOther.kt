@@ -3,7 +3,6 @@ package com.pubnub.docs.presence
 import com.pubnub.docs.SnippetBase
 
 class WhereNowOther : SnippetBase() {
-
     private fun whereNowGetListOfChannelsUuidIsSubscribedTo() {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/presence#get-a-list-of-channels-a-uuid-is-subscribed-to
 

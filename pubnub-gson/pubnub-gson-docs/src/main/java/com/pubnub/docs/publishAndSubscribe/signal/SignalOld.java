@@ -6,7 +6,6 @@ import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.docs.SnippetBase;
 
 public class SignalOld extends SnippetBase {
-
     private void signalMessageToChannel() throws PubNubException {
         // https://www.pubnub.com/docs/sdks/java/api-reference/publish-and-subscribe#signal-a-message-to-a-channel-1
 

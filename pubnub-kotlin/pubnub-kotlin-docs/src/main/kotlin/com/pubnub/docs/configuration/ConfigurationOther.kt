@@ -8,8 +8,7 @@ import com.pubnub.docs.SnippetBase
 import java.net.InetSocketAddress
 import java.net.Proxy
 
-class ConfigurationOther: SnippetBase() {
-
+class ConfigurationOther : SnippetBase() {
     private fun configurationMethod() {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/configuration#methods
 
@@ -68,7 +67,7 @@ class ConfigurationOther: SnippetBase() {
         // snippet.end
     }
 
-    private fun initializeNonSecureClient(){
+    private fun initializeNonSecureClient() {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/configuration#initialize-a-non-secure-client
         // snippet.initializeNonSecureClient
         val builder = PNConfiguration.builder(UserId("abc"), "subscribeKey") {
@@ -86,7 +85,6 @@ class ConfigurationOther: SnippetBase() {
         val pubnub = PubNub.create(builder.build())
         // snippet.end
     }
-
 
     private fun initializeWithAccessManager() {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/configuration#initializing-with-access-manager
@@ -115,16 +113,15 @@ class ConfigurationOther: SnippetBase() {
         // snippet.end
     }
 
-    private fun configurationSetUserId(){
+    private fun configurationSetUserId() {
         // todo add link once created
         // snippet.configurationSetUserId
         val builder = PNConfiguration.builder(UserId("abc"), "subscribeKey")
         val pubnub = PubNub.create(builder.build())
         // snippet.end
-
     }
 
-    private fun configurationGetUserId(){
+    private fun configurationGetUserId() {
         // todo add link once created
         // snippet.configurationGetUserId
         val builder = PNConfiguration.builder(UserId("abc"), "subscribeKey")
@@ -145,5 +142,4 @@ class ConfigurationOther: SnippetBase() {
         val pubnub = PubNub.create(builder.build())
         // snippet.end
     }
-
 }
