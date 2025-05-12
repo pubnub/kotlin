@@ -4,10 +4,8 @@ import com.google.gson.JsonObject
 import com.pubnub.docs.SnippetBase
 
 class SetStateOther : SnippetBase() {
-
     private fun setState() {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/presence#basic-usage-2
-
 
         val pubnub = createPubNub()
 
@@ -51,7 +49,6 @@ class SetStateOther : SnippetBase() {
                 e.message
                 e.statusCode
                 e.pubnubError
-
             }
         }
         // snippet.end

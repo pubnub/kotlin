@@ -5,7 +5,6 @@ import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.docs.SnippetBase
 
 class HereNowOther : SnippetBase() {
-
     private fun hereNowReturningState() {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/presence#returning-state
 
@@ -67,7 +66,7 @@ class HereNowOther : SnippetBase() {
 
         // snippet.hereNowForChannelGroups
         pubnub.hereNow(
-            channelGroups = listOf("cg1", "cg2", "cg3"),  // who is present on those channels groups
+            channelGroups = listOf("cg1", "cg2", "cg3"), // who is present on those channels groups
             includeState = true, // include state with request (false by default)
             includeUUIDs = true // if false, only shows occupancy count
         ).async { result: Result<PNHereNowResult> ->

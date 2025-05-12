@@ -2,11 +2,11 @@ package com.pubnub.docs.configuration
 // https://www.pubnub.com/docs/sdks/kotlin/api-reference/configuration#basic-usage
 // snippet.configurationMain
 import com.pubnub.api.UserId
-import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.retry.RetryConfiguration
+import com.pubnub.api.v2.PNConfiguration
 
 fun main() {
     println("PubNub Configuration Example")
@@ -111,7 +111,11 @@ fun printConfigDetails(config: PNConfiguration) {
 
     // Determine if encryption is enabled
     val encryptionEnabled = config.cryptoModule != null
-    println("  • Encryption: ${if (encryptionEnabled) "Enabled" else "Disabled"}")
+    if (encryptionEnabled) {
+        println("  • Encryption: Enabled")
+    } else {
+        println("  • Encryption: Disabled")
+    }
 
     // Note: We can't access all configuration properties directly
     // as some are private within the PNConfiguration object

@@ -4,8 +4,8 @@ package com.pubnub.docs.presence
 
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
-import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.enums.PNLogVerbosity
+import com.pubnub.api.v2.PNConfiguration
 
 fun main() {
     println("PubNub hereNow() Example")
@@ -112,8 +112,8 @@ fun advancedHereNow(pubnub: PubNub, channel: String) {
 
     pubnub.hereNow(
         channels = listOf(channel),
-        includeUUIDs = true,         // Include the UUIDs of users
-        includeState = true          // Include state information for users
+        includeUUIDs = true, // Include the UUIDs of users
+        includeState = true // Include state information for users
     ).async { result ->
         result.onSuccess { response ->
             println("SUCCESS: Retrieved detailed presence information")
