@@ -3,10 +3,10 @@
 # channelGroup
 
 [common]\
-expect abstract fun [channelGroup](channel-group.md)(name: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)): [ChannelGroup](../../com.pubnub.api.v2.entities/-channel-group/index.md)actual abstract fun [channelGroup](channel-group.md)(name: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)): [ChannelGroup](../../com.pubnub.api.v2.entities/-channel-group/index.md)
+expect abstract fun [channelGroup](channel-group.md)(name: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)): [ChannelGroup](../../com.pubnub.api.v2.entities/-channel-group/index.md)actual abstract fun [channelGroup](channel-group.md)(name: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)): [ChannelGroup](../../com.pubnub.api.v2.entities/-channel-group/index.md)
 
 [jvm]\
-actual abstract fun [channelGroup](channel-group.md)(name: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)): [ChannelGroup](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.v2.entities/-channel-group/index.md)
+actual abstract fun [channelGroup](channel-group.md)(name: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)): [ChannelGroup](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.v2.entities/-channel-group/index.md)
 
 Create a handle to a [ChannelGroup](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.v2.entities/-channel-group/index.md) that can be used to obtain a [Subscription](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.v2.subscriptions/-subscription/index.md).
 

@@ -3,4 +3,4 @@
 # fire
 
 [js]\
-open override fun [fire](fire.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), message: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html), meta: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)?, usePost: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)): [Publish](../../com.pubnub.api.endpoints.pubsub/-publish/index.md)
+open override fun [fire](fire.md)(channel: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html), message: [Any](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html), meta: [Any](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html)?, usePost: [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)): [Publish](../../com.pubnub.api.endpoints.pubsub/-publish/index.md)

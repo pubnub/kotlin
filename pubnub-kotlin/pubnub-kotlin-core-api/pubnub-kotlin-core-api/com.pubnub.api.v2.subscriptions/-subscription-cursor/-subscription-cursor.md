@@ -3,4 +3,4 @@
 # SubscriptionCursor
 
 [common]\
-constructor(timetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html))
+constructor(timetoken: [Long](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html))

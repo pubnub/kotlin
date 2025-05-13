@@ -3,4 +3,4 @@
 # backTitle
 
 [js]\
-abstract var [backTitle](back-title.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)?
+abstract var [backTitle](back-title.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)?

@@ -3,4 +3,4 @@
 # analyticsLabel
 
 [common]\
-var [analyticsLabel](analytics-label.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)?
+var [analyticsLabel](analytics-label.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)?

@@ -10,5 +10,5 @@ interface [HereNowResponse](index.md)
 | Name | Summary |
 |---|---|
 | [channels](channels.md) | [js]<br>abstract var [channels](channels.md): [PubNub.ChannelsToHereNowChannelData](../-channels-to-here-now-channel-data/index.md) |
-| [totalChannels](total-channels.md) | [js]<br>abstract var [totalChannels](total-channels.md): [Number](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-number/index.html) |
-| [totalOccupancy](total-occupancy.md) | [js]<br>abstract var [totalOccupancy](total-occupancy.md): [Number](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-number/index.html) |
+| [totalChannels](total-channels.md) | [js]<br>abstract var [totalChannels](total-channels.md): [Number](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-number/index.html) |
+| [totalOccupancy](total-occupancy.md) | [js]<br>abstract var [totalOccupancy](total-occupancy.md): [Number](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-number/index.html) |

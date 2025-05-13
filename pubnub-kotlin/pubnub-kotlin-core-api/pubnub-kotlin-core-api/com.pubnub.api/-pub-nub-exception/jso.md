@@ -3,4 +3,4 @@
 # jso
 
 [jvm]\
-val [jso](jso.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? = null
+val [jso](jso.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)? = null

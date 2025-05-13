@@ -3,7 +3,7 @@
 # fire
 
 [jvm]\
-abstract fun [fire](fire.md)(message: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)): [PublishBuilder](../../com.pubnub.api.java.v2.endpoints.pubsub/-publish-builder/index.md)
+abstract fun [fire](fire.md)(message: [Any](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html)): [PublishBuilder](../../com.pubnub.api.java.v2.endpoints.pubsub/-publish-builder/index.md)
 
 Send a message to PubNub Functions Event Handlers.
 

@@ -3,4 +3,4 @@
 # reverse
 
 [jvm]\
-abstract fun [reverse](reverse.md)(reverse: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)): [History](index.md)
+abstract fun [reverse](reverse.md)(reverse: [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)): [History](index.md)

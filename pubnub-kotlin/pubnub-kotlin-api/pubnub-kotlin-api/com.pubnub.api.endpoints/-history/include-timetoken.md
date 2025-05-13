@@ -3,4 +3,4 @@
 # includeTimetoken
 
 [jvm]\
-abstract val [includeTimetoken](include-timetoken.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)
+abstract val [includeTimetoken](include-timetoken.md): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)

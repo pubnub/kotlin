@@ -4,7 +4,7 @@
 
 [common]\
 
-@[JvmStatic](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.jvm/-jvm-static/index.html)
+@[JvmStatic](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.jvm/-jvm-static/index.html)
 
 fun [receivePresenceEvents](receive-presence-events.md)(): [SubscriptionOptions](../index.md)
 

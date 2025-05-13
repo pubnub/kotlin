@@ -3,4 +3,4 @@
 # messages
 
 [js]\
-abstract var [messages](messages.md): [Array](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-array/index.html)&lt;[PubNub.HistoryMessage](../-history-message/index.md)&gt;
+abstract var [messages](messages.md): [Array](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-array/index.html)&lt;[PubNub.HistoryMessage](../-history-message/index.md)&gt;

@@ -3,7 +3,7 @@
 # googleAppEngineNetworking
 
 [jvm]\
-abstract val [googleAppEngineNetworking](google-app-engine-networking.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)
+abstract val [googleAppEngineNetworking](google-app-engine-networking.md): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)
 
 Enable Google App Engine networking.
 

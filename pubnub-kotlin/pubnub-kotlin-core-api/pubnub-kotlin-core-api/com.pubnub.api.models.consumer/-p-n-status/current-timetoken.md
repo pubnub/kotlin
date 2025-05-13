@@ -3,4 +3,4 @@
 # currentTimetoken
 
 [common]\
-val [currentTimetoken](current-timetoken.md): [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html)? = null
+val [currentTimetoken](current-timetoken.md): [Long](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html)? = null

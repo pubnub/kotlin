@@ -3,7 +3,7 @@
 # includeChannelStatus
 
 [jvm]\
-fun [includeChannelStatus](include-channel-status.md)(includeChannelStatus: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)): [MembershipInclude.Builder](index.md)
+fun [includeChannelStatus](include-channel-status.md)(includeChannelStatus: [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)): [MembershipInclude.Builder](index.md)
 
 Specifies whether to include the status of the channel in the membership data.
 
@@ -20,4 +20,4 @@ jvm
 | includeChannelStatus | `true` to include channel status, `false` otherwise. |
 
 [jvm]\
-var [includeChannelStatus](include-channel-status.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)
+var [includeChannelStatus](include-channel-status.md): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)

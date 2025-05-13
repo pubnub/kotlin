@@ -3,4 +3,4 @@
 # heartbeatInterval
 
 [js]\
-abstract var [heartbeatInterval](heartbeat-interval.md): [Number](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-number/index.html)?
+abstract var [heartbeatInterval](heartbeat-interval.md): [Number](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-number/index.html)?

@@ -3,7 +3,7 @@
 # includeInstanceIdentifier
 
 [jvm]\
-abstract var [includeInstanceIdentifier](include-instance-identifier.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)
+abstract var [includeInstanceIdentifier](include-instance-identifier.md): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)
 
 Whether to include a PubNubCore.instanceId with every request.
 

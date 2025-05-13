@@ -3,4 +3,4 @@
 # metadata
 
 [jvm]\
-val [metadata](metadata.md): [ByteArray](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-byte-array/index.html)? = null
+val [metadata](metadata.md): [ByteArray](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-byte-array/index.html)? = null

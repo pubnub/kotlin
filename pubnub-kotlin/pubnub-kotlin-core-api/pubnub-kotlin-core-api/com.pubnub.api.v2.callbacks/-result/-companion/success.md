@@ -4,7 +4,7 @@
 
 [common]\
 
-@[JvmStatic](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.jvm/-jvm-static/index.html)
+@[JvmStatic](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.jvm/-jvm-static/index.html)
 
 fun &lt;[T](success.md)&gt; [success](success.md)(value: [T](success.md)): [Result](../index.md)&lt;[T](success.md)&gt;
 

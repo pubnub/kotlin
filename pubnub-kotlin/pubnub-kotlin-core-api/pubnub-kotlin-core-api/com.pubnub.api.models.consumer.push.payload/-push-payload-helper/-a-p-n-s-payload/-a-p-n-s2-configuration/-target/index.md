@@ -16,11 +16,11 @@ class [Target](index.md) : [PushPayloadSerializer](../../../../-push-payload-ser
 | Name | Summary |
 |---|---|
 | [environment](environment.md) | [common]<br>var [environment](environment.md): [PNPushEnvironment](../../../../../com.pubnub.api.enums/-p-n-push-environment/index.md)? |
-| [excludeDevices](exclude-devices.md) | [common]<br>var [excludeDevices](exclude-devices.md): [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)&gt;? |
-| [topic](topic.md) | [common]<br>var [topic](topic.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |
+| [excludeDevices](exclude-devices.md) | [common]<br>var [excludeDevices](exclude-devices.md): [List](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html)&lt;[String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)&gt;? |
+| [topic](topic.md) | [common]<br>var [topic](topic.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)? |
 
 ## Functions
 
 | Name | Summary |
 |---|---|
-| [toMap](to-map.md) | [common]<br>open override fun [toMap](to-map.md)(): [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)&gt; |
+| [toMap](to-map.md) | [common]<br>open override fun [toMap](to-map.md)(): [Map](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html), [Any](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html)&gt; |

@@ -9,4 +9,4 @@ interface [HasStatus](index.md)
 
 | Name | Summary |
 |---|---|
-| [status](status.md) | [js]<br>abstract var [status](status.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |
+| [status](status.md) | [js]<br>abstract var [status](status.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)? |

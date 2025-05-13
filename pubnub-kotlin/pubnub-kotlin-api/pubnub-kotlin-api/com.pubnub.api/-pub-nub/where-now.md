@@ -3,10 +3,10 @@
 # whereNow
 
 [common]\
-expect abstract fun [whereNow](where-now.md)(uuid: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) = configuration.userId.value): [WhereNow](../../com.pubnub.api.endpoints.presence/-where-now/index.md)actual abstract fun [whereNow](where-now.md)(uuid: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)): [WhereNow](../../com.pubnub.api.endpoints.presence/-where-now/index.md)
+expect abstract fun [whereNow](where-now.md)(uuid: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html) = configuration.userId.value): [WhereNow](../../com.pubnub.api.endpoints.presence/-where-now/index.md)actual abstract fun [whereNow](where-now.md)(uuid: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)): [WhereNow](../../com.pubnub.api.endpoints.presence/-where-now/index.md)
 
 [jvm]\
-actual abstract fun [whereNow](where-now.md)(uuid: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)): [WhereNow](../../com.pubnub.api.endpoints.presence/-where-now/index.md)
+actual abstract fun [whereNow](where-now.md)(uuid: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)): [WhereNow](../../com.pubnub.api.endpoints.presence/-where-now/index.md)
 
 Obtain information about the current list of channels to which a UUID is subscribed to.
 

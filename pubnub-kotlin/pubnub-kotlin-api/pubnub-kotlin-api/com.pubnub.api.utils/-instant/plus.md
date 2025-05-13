@@ -4,7 +4,7 @@
 
 [common, js]\
 [common]\
-expect operator fun [plus](plus.md)(duration: [Duration](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.time/-duration/index.html)): [Instant](index.md)
+expect operator fun [plus](plus.md)(duration: [Duration](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.time/-duration/index.html)): [Instant](index.md)
 
 [js]\
-actual operator fun [plus](plus.md)(duration: [Duration](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.time/-duration/index.html)): [Instant](index.md)
+actual operator fun [plus](plus.md)(duration: [Duration](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.time/-duration/index.html)): [Instant](index.md)

@@ -3,7 +3,7 @@
 # heartbeatInterval
 
 [jvm]\
-abstract var [heartbeatInterval](heartbeat-interval.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)
+abstract var [heartbeatInterval](heartbeat-interval.md): [Int](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html)
 
 How often the client will announce itself to server.
 

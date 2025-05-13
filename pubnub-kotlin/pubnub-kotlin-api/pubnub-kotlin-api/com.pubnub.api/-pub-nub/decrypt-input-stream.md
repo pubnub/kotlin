@@ -3,7 +3,7 @@
 # decryptInputStream
 
 [jvm]\
-abstract fun [decryptInputStream](decrypt-input-stream.md)(inputStream: [InputStream](https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html), cipherKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? = null): [InputStream](https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html)
+abstract fun [decryptInputStream](decrypt-input-stream.md)(inputStream: [InputStream](https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html), cipherKey: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)? = null): [InputStream](https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html)
 
 Perform Cryptographic decryption of an input stream using provided cipher key.
 

@@ -9,5 +9,5 @@ interface [GetChannelMetadataParameters](index.md)
 
 | Name | Summary |
 |---|---|
-| [channel](channel.md) | [js]<br>abstract var [channel](channel.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |
+| [channel](channel.md) | [js]<br>abstract var [channel](channel.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html) |
 | [include](include.md) | [js]<br>abstract var [include](include.md): [PubNub.IncludeCustomFields](../-include-custom-fields/index.md)? |

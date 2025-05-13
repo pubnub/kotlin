@@ -3,4 +3,4 @@
 # PNNetworkIssuesCategory
 
 [js]\
-abstract var [PNNetworkIssuesCategory](-p-n-network-issues-category.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)
+abstract var [PNNetworkIssuesCategory](-p-n-network-issues-category.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)

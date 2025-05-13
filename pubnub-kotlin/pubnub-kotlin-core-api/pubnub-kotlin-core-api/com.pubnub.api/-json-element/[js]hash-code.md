@@ -3,4 +3,4 @@
 # hashCode
 
 [js]\
-open override fun [hashCode]([js]hash-code.md)(): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)
+open override fun [hashCode]([js]hash-code.md)(): [Int](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html)

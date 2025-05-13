@@ -3,4 +3,4 @@
 # Instant
 
 [js]\
-constructor(epochSeconds: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html), nanosecondsOfSecond: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html) = 0)
+constructor(epochSeconds: [Long](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html), nanosecondsOfSecond: [Int](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html) = 0)

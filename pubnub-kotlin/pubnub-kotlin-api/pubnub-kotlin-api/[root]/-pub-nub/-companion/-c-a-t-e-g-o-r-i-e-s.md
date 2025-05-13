@@ -3,4 +3,4 @@
 # CATEGORIES
 
 [js]\
-var [CATEGORIES](-c-a-t-e-g-o-r-i-e-s.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)
+var [CATEGORIES](-c-a-t-e-g-o-r-i-e-s.md): [Any](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html)

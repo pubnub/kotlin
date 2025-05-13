@@ -3,4 +3,4 @@
 # includeTotalCount
 
 [jvm]\
-abstract fun [includeTotalCount](include-total-count.md)(includeTotalCount: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)): [GetAllChannelsMetadata](index.md)
+abstract fun [includeTotalCount](include-total-count.md)(includeTotalCount: [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)): [GetAllChannelsMetadata](index.md)

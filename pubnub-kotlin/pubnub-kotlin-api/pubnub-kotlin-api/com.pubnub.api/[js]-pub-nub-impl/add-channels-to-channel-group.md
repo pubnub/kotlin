@@ -3,4 +3,4 @@
 # addChannelsToChannelGroup
 
 [js]\
-open override fun [addChannelsToChannelGroup](add-channels-to-channel-group.md)(channels: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)&gt;, channelGroup: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)): [AddChannelChannelGroup](../../com.pubnub.api.endpoints.channel_groups/-add-channel-channel-group/index.md)
+open override fun [addChannelsToChannelGroup](add-channels-to-channel-group.md)(channels: [List](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html)&lt;[String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)&gt;, channelGroup: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)): [AddChannelChannelGroup](../../com.pubnub.api.endpoints.channel_groups/-add-channel-channel-group/index.md)

@@ -3,7 +3,7 @@
 # authKey
 
 [jvm]\
-abstract fun [~~authKey~~](auth-key.md)(authKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)): [PNConfigurationOverride.Builder](index.md)
+abstract fun [~~authKey~~](auth-key.md)(authKey: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)): [PNConfigurationOverride.Builder](index.md)
 
 ---
 

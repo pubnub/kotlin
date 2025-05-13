@@ -14,8 +14,8 @@ interface [GrantTokenParameters](index.md)
 
 | Name | Summary |
 |---|---|
-| [authorized_uuid](authorized_uuid.md) | [js]<br>abstract var [authorized_uuid](authorized_uuid.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |
-| [meta](meta.md) | [js]<br>abstract var [meta](meta.md): [Json](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.js/-json/index.html)? |
+| [authorized_uuid](authorized_uuid.md) | [js]<br>abstract var [authorized_uuid](authorized_uuid.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)? |
+| [meta](meta.md) | [js]<br>abstract var [meta](meta.md): [Json](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.js/-json/index.html)? |
 | [patterns](patterns.md) | [js]<br>abstract var [patterns](patterns.md): [PubNub.PatternsOrResources](../-patterns-or-resources/index.md)? |
 | [resources](resources.md) | [js]<br>abstract var [resources](resources.md): [PubNub.PatternsOrResources](../-patterns-or-resources/index.md)? |
-| [ttl](ttl.md) | [js]<br>abstract var [ttl](ttl.md): [Number](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-number/index.html) |
+| [ttl](ttl.md) | [js]<br>abstract var [ttl](ttl.md): [Number](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-number/index.html) |

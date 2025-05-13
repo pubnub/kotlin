@@ -10,7 +10,7 @@ interface [ChannelMetadata](index.md) : [PubNub.ObjectParam](../-object-param/in
 | Name | Summary |
 |---|---|
 | [custom](../-object-param/custom.md) | [js]<br>abstract var [custom](../-object-param/custom.md): [PubNub.CustomObject](../-custom-object/index.md)? |
-| [description](../-channel-metadata-fields-nullable/description.md) | [js]<br>abstract var [description](../-channel-metadata-fields-nullable/description.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |
-| [name](../-channel-metadata-fields-nullable/name.md) | [js]<br>abstract var [name](../-channel-metadata-fields-nullable/name.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |
-| [status](../-channel-metadata-fields-nullable/status.md) | [js]<br>abstract var [status](../-channel-metadata-fields-nullable/status.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |
-| [type](../-channel-metadata-fields-nullable/type.md) | [js]<br>abstract var [type](../-channel-metadata-fields-nullable/type.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |
+| [description](../-channel-metadata-fields-nullable/description.md) | [js]<br>abstract var [description](../-channel-metadata-fields-nullable/description.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)? |
+| [name](../-channel-metadata-fields-nullable/name.md) | [js]<br>abstract var [name](../-channel-metadata-fields-nullable/name.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)? |
+| [status](../-channel-metadata-fields-nullable/status.md) | [js]<br>abstract var [status](../-channel-metadata-fields-nullable/status.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)? |
+| [type](../-channel-metadata-fields-nullable/type.md) | [js]<br>abstract var [type](../-channel-metadata-fields-nullable/type.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)? |

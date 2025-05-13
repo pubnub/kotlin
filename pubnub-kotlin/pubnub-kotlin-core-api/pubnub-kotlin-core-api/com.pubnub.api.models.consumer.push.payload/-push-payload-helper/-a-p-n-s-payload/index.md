@@ -22,12 +22,12 @@ class [APNSPayload](index.md) : [PushPayloadSerializer](../../-push-payload-seri
 
 | Name | Summary |
 |---|---|
-| [apns2Configurations](apns2-configurations.md) | [common]<br>var [apns2Configurations](apns2-configurations.md): [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html)&lt;[PushPayloadHelper.APNSPayload.APNS2Configuration](-a-p-n-s2-configuration/index.md)&gt;? |
+| [apns2Configurations](apns2-configurations.md) | [common]<br>var [apns2Configurations](apns2-configurations.md): [List](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html)&lt;[PushPayloadHelper.APNSPayload.APNS2Configuration](-a-p-n-s2-configuration/index.md)&gt;? |
 | [aps](aps.md) | [common]<br>var [aps](aps.md): [PushPayloadHelper.APNSPayload.APS](-a-p-s/index.md)? |
-| [custom](custom.md) | [common]<br>var [custom](custom.md): [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)&gt;? |
+| [custom](custom.md) | [common]<br>var [custom](custom.md): [Map](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html), [Any](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html)&gt;? |
 
 ## Functions
 
 | Name | Summary |
 |---|---|
-| [toMap](to-map.md) | [common]<br>open override fun [toMap](to-map.md)(): [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)&gt; |
+| [toMap](to-map.md) | [common]<br>open override fun [toMap](to-map.md)(): [Map](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html), [Any](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html)&gt; |

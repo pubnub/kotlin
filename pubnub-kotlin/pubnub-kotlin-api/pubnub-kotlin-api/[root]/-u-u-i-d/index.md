@@ -9,4 +9,4 @@ external interface [UUID](index.md)
 
 | Name | Summary |
 |---|---|
-| [uuid](uuid.md) | [js]<br>abstract var [uuid](uuid.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |
+| [uuid](uuid.md) | [js]<br>abstract var [uuid](uuid.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html) |

@@ -3,4 +3,4 @@
 # publisher
 
 [common]\
-val [publisher](publisher.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)?
+val [publisher](publisher.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)?

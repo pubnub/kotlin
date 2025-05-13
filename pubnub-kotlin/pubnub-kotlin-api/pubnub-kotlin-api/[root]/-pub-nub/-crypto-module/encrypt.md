@@ -5,4 +5,4 @@
 [js]\
 open fun [encrypt](encrypt.md)(data: ArrayBuffer): ArrayBuffer
 
-open fun [encrypt](encrypt.md)(data: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)): ArrayBuffer
+open fun [encrypt](encrypt.md)(data: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)): ArrayBuffer

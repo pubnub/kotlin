@@ -3,4 +3,4 @@
 # channel
 
 [jvm]\
-abstract fun [channel](channel.md)(name: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)): [Channel](../../com.pubnub.api.java.v2.entities/-channel/index.md)
+abstract fun [channel](channel.md)(name: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)): [Channel](../../com.pubnub.api.java.v2.entities/-channel/index.md)

@@ -3,4 +3,4 @@
 # READ
 
 [common]\
-const val [READ](-r-e-a-d.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html) = 1
+const val [READ](-r-e-a-d.md): [Int](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html) = 1

@@ -3,4 +3,4 @@
 # clickAction
 
 [common]\
-var [clickAction](click-action.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)?
+var [clickAction](click-action.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)?

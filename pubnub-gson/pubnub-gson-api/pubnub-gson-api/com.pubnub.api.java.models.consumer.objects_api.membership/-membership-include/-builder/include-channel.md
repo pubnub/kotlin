@@ -3,7 +3,7 @@
 # includeChannel
 
 [jvm]\
-fun [includeChannel](include-channel.md)(includeChannel: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)): [MembershipInclude.Builder](index.md)
+fun [includeChannel](include-channel.md)(includeChannel: [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)): [MembershipInclude.Builder](index.md)
 
 Specifies whether to include channel information in the membership data.
 
@@ -20,4 +20,4 @@ jvm
 | includeChannel | `true` to include channel information, `false` otherwise. |
 
 [jvm]\
-var [includeChannel](include-channel.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)
+var [includeChannel](include-channel.md): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)

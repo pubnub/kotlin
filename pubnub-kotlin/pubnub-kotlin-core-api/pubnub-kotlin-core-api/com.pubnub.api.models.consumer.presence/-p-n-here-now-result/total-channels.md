@@ -3,4 +3,4 @@
 # totalChannels
 
 [common]\
-val [totalChannels](total-channels.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)
+val [totalChannels](total-channels.md): [Int](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html)

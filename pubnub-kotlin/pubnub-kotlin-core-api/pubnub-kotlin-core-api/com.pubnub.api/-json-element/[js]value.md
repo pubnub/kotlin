@@ -3,4 +3,4 @@
 # value
 
 [js]\
-val [value]([js]value.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)?
+val [value]([js]value.md): [Any](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html)?

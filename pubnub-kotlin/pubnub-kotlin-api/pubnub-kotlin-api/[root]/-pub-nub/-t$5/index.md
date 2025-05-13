@@ -9,6 +9,6 @@ interface [T$5](index.md)
 
 | Name | Summary |
 |---|---|
-| [id](id.md) | [js]<br>abstract var [id](id.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |
-| [name](name.md) | [js]<br>abstract var [name](name.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |
-| [url](url.md) | [js]<br>abstract var [url](url.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |
+| [id](id.md) | [js]<br>abstract var [id](id.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html) |
+| [name](name.md) | [js]<br>abstract var [name](name.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html) |
+| [url](url.md) | [js]<br>abstract var [url](url.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html) |

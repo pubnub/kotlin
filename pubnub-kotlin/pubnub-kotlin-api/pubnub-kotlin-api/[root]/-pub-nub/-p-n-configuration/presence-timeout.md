@@ -3,4 +3,4 @@
 # presenceTimeout
 
 [js]\
-abstract var [presenceTimeout](presence-timeout.md): [Number](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-number/index.html)?
+abstract var [presenceTimeout](presence-timeout.md): [Number](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-number/index.html)?

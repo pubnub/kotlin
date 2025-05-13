@@ -9,6 +9,6 @@ interface [APNS2Target](index.md)
 
 | Name | Summary |
 |---|---|
-| [environment](environment.md) | [js]<br>abstract var [environment](environment.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |
-| [excludedDevices](excluded-devices.md) | [js]<br>abstract var [excludedDevices](excluded-devices.md): [Array](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-array/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)&gt;? |
-| [topic](topic.md) | [js]<br>abstract var [topic](topic.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |
+| [environment](environment.md) | [js]<br>abstract var [environment](environment.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)? |
+| [excludedDevices](excluded-devices.md) | [js]<br>abstract var [excludedDevices](excluded-devices.md): [Array](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-array/index.html)&lt;[String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)&gt;? |
+| [topic](topic.md) | [js]<br>abstract var [topic](topic.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html) |

@@ -3,4 +3,4 @@
 # PNUUIDMetadataResult
 
 [common]\
-constructor(status: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html), data: [PNUUIDMetadata](../-p-n-u-u-i-d-metadata/index.md))
+constructor(status: [Int](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html), data: [PNUUIDMetadata](../-p-n-u-u-i-d-metadata/index.md))

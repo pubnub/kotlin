@@ -15,6 +15,6 @@ interface [MemberInput](index.md)
 | Name | Summary |
 |---|---|
 | [custom](custom.md) | [common]<br>abstract val [custom](custom.md): [CustomObject](../../com.pubnub.kmp/-custom-object/index.md)? |
-| [status](status.md) | [common]<br>abstract val [status](status.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |
-| [type](type.md) | [common]<br>abstract val [type](type.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |
-| [uuid](uuid.md) | [common]<br>abstract val [uuid](uuid.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |
+| [status](status.md) | [common]<br>abstract val [status](status.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)? |
+| [type](type.md) | [common]<br>abstract val [type](type.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)? |
+| [uuid](uuid.md) | [common]<br>abstract val [uuid](uuid.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html) |

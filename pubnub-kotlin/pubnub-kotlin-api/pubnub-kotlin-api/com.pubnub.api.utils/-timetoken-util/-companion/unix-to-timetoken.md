@@ -3,13 +3,13 @@
 # unixToTimetoken
 
 [common]\
-fun [unixToTimetoken](unix-to-timetoken.md)(unixTime: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html)): [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html)
+fun [unixToTimetoken](unix-to-timetoken.md)(unixTime: [Long](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html)): [Long](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html)
 
 Converts a Unix timestamp (in millis) to a PubNub timetoken
 
 #### Return
 
-A 17-digit [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html) representing the PubNub timetoken corresponding to the given Unix timestamp.
+A 17-digit [Long](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html) representing the PubNub timetoken corresponding to the given Unix timestamp.
 
 #### Parameters
 
@@ -23,4 +23,4 @@ common
 
 | | |
 |---|---|
-| [IllegalArgumentException](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-illegal-argument-exception/index.html) | if the unixTime does not have 13 digits. |
+| [IllegalArgumentException](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-illegal-argument-exception/index.html) | if the unixTime does not have 13 digits. |

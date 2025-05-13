@@ -3,4 +3,4 @@
 # manage
 
 [jvm]\
-abstract fun [manage](manage.md)(manage: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)): [Grant](index.md)
+abstract fun [manage](manage.md)(manage: [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)): [Grant](index.md)

@@ -9,11 +9,9 @@ abstract fun [~~includeChannel~~](include-channel.md)(includeChannel: [Include.P
 
 ### Deprecated
 
----
-
-#### Deprecated
-
 Use [include](include.md) instead.
+
+---
 
 #### Return
 

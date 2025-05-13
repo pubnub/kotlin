@@ -9,4 +9,4 @@ object [Companion](index.md)
 
 | Name | Summary |
 |---|---|
-| [of](of.md) | [common]<br>fun [of](of.md)(value: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)?): [HistoryMessageType](../index.md) |
+| [of](of.md) | [common]<br>fun [of](of.md)(value: [Int](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html)?): [HistoryMessageType](../index.md) |

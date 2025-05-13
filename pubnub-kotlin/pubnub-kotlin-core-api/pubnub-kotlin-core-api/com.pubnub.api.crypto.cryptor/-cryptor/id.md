@@ -3,4 +3,4 @@
 # id
 
 [jvm]\
-abstract fun [id](id.md)(): [ByteArray](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-byte-array/index.html)
+abstract fun [id](id.md)(): [ByteArray](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-byte-array/index.html)

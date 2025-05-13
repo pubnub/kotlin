@@ -3,4 +3,4 @@
 # SecondsAndNanos
 
 [js]\
-typealias [SecondsAndNanos](index.md) = [Pair](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-pair/index.html)&lt;[Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html), [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)&gt;
+typealias [SecondsAndNanos](index.md) = [Pair](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-pair/index.html)&lt;[Long](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html), [Int](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html)&gt;

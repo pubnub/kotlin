@@ -3,4 +3,4 @@
 # customUUIDFields
 
 [js]\
-abstract var [customUUIDFields](custom-u-u-i-d-fields.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)?
+abstract var [customUUIDFields](custom-u-u-i-d-fields.md): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)?

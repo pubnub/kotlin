@@ -3,4 +3,4 @@
 # publisher
 
 [js]\
-abstract var [publisher](publisher.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)?
+abstract var [publisher](publisher.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)?

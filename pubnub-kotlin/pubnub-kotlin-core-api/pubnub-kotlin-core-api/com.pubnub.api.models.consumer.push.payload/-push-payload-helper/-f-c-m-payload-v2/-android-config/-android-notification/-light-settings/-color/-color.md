@@ -3,4 +3,4 @@
 # Color
 
 [common]\
-constructor(red: [Float](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-float/index.html), green: [Float](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-float/index.html), blue: [Float](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-float/index.html), alpha: [Float](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-float/index.html))
+constructor(red: [Float](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-float/index.html), green: [Float](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-float/index.html), blue: [Float](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-float/index.html), alpha: [Float](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-float/index.html))

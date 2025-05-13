@@ -3,4 +3,4 @@
 # PNSetChannelMetadataEventMessage
 
 [common]\
-constructor(source: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), version: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), event: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), type: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), data: [PNChannelMetadata](../../com.pubnub.api.models.consumer.objects.channel/-p-n-channel-metadata/index.md))
+constructor(source: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html), version: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html), event: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html), type: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html), data: [PNChannelMetadata](../../com.pubnub.api.models.consumer.objects.channel/-p-n-channel-metadata/index.md))

@@ -3,4 +3,4 @@
 # expirationDate
 
 [js]\
-abstract var [expirationDate](expiration-date.md): [Date](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.js/-date/index.html)?
+abstract var [expirationDate](expiration-date.md): [Date](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.js/-date/index.html)?

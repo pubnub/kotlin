@@ -3,4 +3,4 @@
 # meta
 
 [js]\
-abstract var [meta](meta.md): [Json](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.js/-json/index.html)?
+abstract var [meta](meta.md): [Json](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.js/-json/index.html)?

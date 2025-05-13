@@ -3,7 +3,7 @@
 # encrypt
 
 [jvm]\
-abstract fun [encrypt](encrypt.md)(inputString: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), cipherKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? = null): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)
+abstract fun [encrypt](encrypt.md)(inputString: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html), cipherKey: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)? = null): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)
 
 Perform Cryptographic encryption of an input string and a cipher key.
 

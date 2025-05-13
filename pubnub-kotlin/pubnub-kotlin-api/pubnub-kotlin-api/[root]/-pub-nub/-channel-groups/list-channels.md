@@ -5,4 +5,4 @@
 [js]\
 abstract fun [listChannels](list-channels.md)(params: [PubNub.ListChannelsParameters](../-list-channels-parameters/index.md), callback: [Callback](../../-callback/index.md)&lt;[PubNub.ListChannelsResponse](../-list-channels-response/index.md)&gt;)
 
-abstract fun [listChannels](list-channels.md)(params: [PubNub.ListChannelsParameters](../-list-channels-parameters/index.md)): [Promise](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.js/-promise/index.html)&lt;[PubNub.ListChannelsResponse](../-list-channels-response/index.md)&gt;
+abstract fun [listChannels](list-channels.md)(params: [PubNub.ListChannelsParameters](../-list-channels-parameters/index.md)): [Promise](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.js/-promise/index.html)&lt;[PubNub.ListChannelsResponse](../-list-channels-response/index.md)&gt;

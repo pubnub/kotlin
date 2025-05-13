@@ -3,4 +3,4 @@
 # data
 
 [js]\
-abstract var [data](data.md): [Array](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-array/index.html)&lt;[PubNub.UploadedFile](../-uploaded-file/index.md)&gt;
+abstract var [data](data.md): [Array](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-array/index.html)&lt;[PubNub.UploadedFile](../-uploaded-file/index.md)&gt;

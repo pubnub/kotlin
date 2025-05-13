@@ -3,4 +3,4 @@
 # encryptFile
 
 [js]\
-open fun [encryptFile](encrypt-file.md)(file: [PubNub.PubNubFileType](../-pub-nub-file-type/index.md), fd: [PubNub.PubNubFileType](../-pub-nub-file-type/index.md)): [Promise](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.js/-promise/index.html)&lt;[PubNub.PubNubFileType](../-pub-nub-file-type/index.md)&gt;
+open fun [encryptFile](encrypt-file.md)(file: [PubNub.PubNubFileType](../-pub-nub-file-type/index.md), fd: [PubNub.PubNubFileType](../-pub-nub-file-type/index.md)): [Promise](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.js/-promise/index.html)&lt;[PubNub.PubNubFileType](../-pub-nub-file-type/index.md)&gt;

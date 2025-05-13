@@ -12,4 +12,4 @@ actual object [Companion](index.md)
 
 | Name | Summary |
 |---|---|
-| [from](from.md) | [common, apple, js, jvm]<br>[common]<br>expect fun [from](from.md)(e: [Throwable](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-throwable/index.html)): [PubNubException](../index.md)<br>[apple, js, jvm]<br>actual fun [from](from.md)(e: [Throwable](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-throwable/index.html)): [PubNubException](../index.md) |
+| [from](from.md) | [common, apple, js, jvm]<br>[common]<br>expect fun [from](from.md)(e: [Throwable](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-throwable/index.html)): [PubNubException](../index.md)<br>[apple, js, jvm]<br>actual fun [from](from.md)(e: [Throwable](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-throwable/index.html)): [PubNubException](../index.md) |

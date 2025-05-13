@@ -3,4 +3,4 @@
 # topic
 
 [common]\
-var [topic](topic.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)?
+var [topic](topic.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)?

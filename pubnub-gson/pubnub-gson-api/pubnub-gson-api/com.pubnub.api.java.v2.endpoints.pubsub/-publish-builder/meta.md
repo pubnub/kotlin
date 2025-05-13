@@ -3,7 +3,7 @@
 # meta
 
 [jvm]\
-abstract fun [meta](meta.md)(meta: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)): [PublishBuilder](index.md)
+abstract fun [meta](meta.md)(meta: [Any](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html)): [PublishBuilder](index.md)
 
 Sets the metadata to be sent along with the message. Metadata can be any custom object.
 

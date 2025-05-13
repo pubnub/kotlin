@@ -3,17 +3,15 @@
 # includeCustom
 
 [jvm]\
-abstract fun [~~includeCustom~~](include-custom.md)(includeCustom: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)): [GetMemberships](index.md)
+abstract fun [~~includeCustom~~](include-custom.md)(includeCustom: [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)): [GetMemberships](index.md)
 
 ---
 
 ### Deprecated
 
----
-
-#### Deprecated
-
 Use [include](include.md) instead.
+
+---
 
 #### Return
 

@@ -3,4 +3,4 @@
 # PNUpdateSpaceOperation
 
 [js]\
-abstract var [PNUpdateSpaceOperation](-p-n-update-space-operation.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)
+abstract var [PNUpdateSpaceOperation](-p-n-update-space-operation.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)

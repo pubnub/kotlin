@@ -3,4 +3,4 @@
 # RemoveUUIDMetadataResponse
 
 [js]\
-typealias [RemoveUUIDMetadataResponse](index.md) = [ObjectsResponse](../-objects-response/index.md)&lt;[Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)&gt;
+typealias [RemoveUUIDMetadataResponse](index.md) = [ObjectsResponse](../-objects-response/index.md)&lt;[Any](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html)&gt;

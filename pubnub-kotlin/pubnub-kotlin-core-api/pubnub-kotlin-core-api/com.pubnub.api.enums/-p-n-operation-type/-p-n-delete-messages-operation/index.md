@@ -9,4 +9,4 @@ object [PNDeleteMessagesOperation](index.md) : [PNOperationType.HistoryOperation
 
 | Name | Summary |
 |---|---|
-| [queryParam](../query-param.md) | [common]<br>open val [queryParam](../query-param.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? = null |
+| [queryParam](../query-param.md) | [common]<br>open val [queryParam](../query-param.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)? = null |

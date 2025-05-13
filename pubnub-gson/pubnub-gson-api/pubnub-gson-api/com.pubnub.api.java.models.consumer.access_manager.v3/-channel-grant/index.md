@@ -12,7 +12,7 @@ open class [ChannelGrant](index.md) : [PNResource](../-p-n-resource/index.md)&lt
 | [delete](delete.md) | [jvm]<br>open fun [delete](delete.md)(): [ChannelGrant](index.md) |
 | [get](get.md) | [jvm]<br>open fun [get](get.md)(): [ChannelGrant](index.md) |
 | [getId](../-p-n-resource/get-id.md) | [jvm]<br>open fun [getId](../-p-n-resource/get-id.md)(): [String](https://docs.oracle.com/javase/8/docs/api/java/lang/String.html) |
-| [isPatternResource](../-p-n-resource/is-pattern-resource.md) | [jvm]<br>open fun [isPatternResource](../-p-n-resource/is-pattern-resource.md)(): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html) |
+| [isPatternResource](../-p-n-resource/is-pattern-resource.md) | [jvm]<br>open fun [isPatternResource](../-p-n-resource/is-pattern-resource.md)(): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html) |
 | [join](join.md) | [jvm]<br>open fun [join](join.md)(): [ChannelGrant](index.md) |
 | [manage](manage.md) | [jvm]<br>open fun [manage](manage.md)(): [ChannelGrant](index.md) |
 | [name](name.md) | [jvm]<br>open fun [name](name.md)(channelName: [String](https://docs.oracle.com/javase/8/docs/api/java/lang/String.html)): [ChannelGrant](index.md) |

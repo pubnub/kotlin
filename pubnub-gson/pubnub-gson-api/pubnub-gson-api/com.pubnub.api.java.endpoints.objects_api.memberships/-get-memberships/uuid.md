@@ -9,11 +9,9 @@ abstract fun [~~uuid~~](uuid.md)(uuid: [String](https://docs.oracle.com/javase/8
 
 ### Deprecated
 
----
-
-#### Deprecated
-
 Use [userId](user-id.md) instead.
+
+---
 
 #### Return
 

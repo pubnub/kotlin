@@ -3,7 +3,7 @@
 # usePOST
 
 [jvm]\
-abstract fun [usePOST](use-p-o-s-t.md)(usePOST: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)): [PublishBuilder](index.md)
+abstract fun [usePOST](use-p-o-s-t.md)(usePOST: [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)): [PublishBuilder](index.md)
 
 Configures the publish request to use the POST HTTP method instead of GET.
 

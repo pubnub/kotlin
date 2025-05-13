@@ -3,7 +3,7 @@
 # fileMessagePublishRetryLimit
 
 [jvm]\
-abstract var [fileMessagePublishRetryLimit](file-message-publish-retry-limit.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)
+abstract var [fileMessagePublishRetryLimit](file-message-publish-retry-limit.md): [Int](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html)
 
 How many times publishing file message should automatically retry before marking the action as failed
 

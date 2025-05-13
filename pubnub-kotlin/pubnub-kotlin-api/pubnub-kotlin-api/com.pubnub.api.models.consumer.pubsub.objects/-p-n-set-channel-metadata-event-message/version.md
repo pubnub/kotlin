@@ -3,4 +3,4 @@
 # version
 
 [common]\
-open override val [version](version.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)
+open override val [version](version.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)

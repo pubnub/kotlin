@@ -3,7 +3,7 @@
 # includeTotalCount
 
 [jvm]\
-fun [includeTotalCount](include-total-count.md)(includeTotalCount: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)): [MembershipInclude.Builder](index.md)
+fun [includeTotalCount](include-total-count.md)(includeTotalCount: [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)): [MembershipInclude.Builder](index.md)
 
 Specifies whether to include the total count of memberships.
 
@@ -20,4 +20,4 @@ jvm
 | includeTotalCount | `true` to include the total count, `false` otherwise. |
 
 [jvm]\
-var [includeTotalCount](include-total-count.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)
+var [includeTotalCount](include-total-count.md): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)

@@ -3,6 +3,6 @@
 # subscriptions
 
 [common]\
-abstract val [subscriptions](subscriptions.md): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-set/index.html)&lt;[Subscription](../-subscription/index.md)&gt;
+abstract val [subscriptions](subscriptions.md): [Set](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-set/index.html)&lt;[Subscription](../-subscription/index.md)&gt;
 
 Returns an immutable copy of the set of subscriptions contained in this [SubscriptionSet](index.md).

@@ -9,4 +9,4 @@ interface [FetchTimeResponse](index.md)
 
 | Name | Summary |
 |---|---|
-| [timetoken](timetoken.md) | [js]<br>abstract var [timetoken](timetoken.md): [Number](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-number/index.html) |
+| [timetoken](timetoken.md) | [js]<br>abstract var [timetoken](timetoken.md): [Number](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-number/index.html) |

@@ -3,10 +3,10 @@
 # userMetadata
 
 [common]\
-expect abstract fun [userMetadata](user-metadata.md)(id: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)): [UserMetadata](../../com.pubnub.api.v2.entities/-user-metadata/index.md)actual abstract fun [userMetadata](user-metadata.md)(id: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)): [UserMetadata](../../com.pubnub.api.v2.entities/-user-metadata/index.md)
+expect abstract fun [userMetadata](user-metadata.md)(id: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)): [UserMetadata](../../com.pubnub.api.v2.entities/-user-metadata/index.md)actual abstract fun [userMetadata](user-metadata.md)(id: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)): [UserMetadata](../../com.pubnub.api.v2.entities/-user-metadata/index.md)
 
 [jvm]\
-actual abstract fun [userMetadata](user-metadata.md)(id: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)): [UserMetadata](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.v2.entities/-user-metadata/index.md)
+actual abstract fun [userMetadata](user-metadata.md)(id: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)): [UserMetadata](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.v2.entities/-user-metadata/index.md)
 
 Create a handle to a [UserMetadata](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.v2.entities/-user-metadata/index.md) object that can be used to obtain a [Subscription](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.v2.subscriptions/-subscription/index.md) to user metadata events.
 

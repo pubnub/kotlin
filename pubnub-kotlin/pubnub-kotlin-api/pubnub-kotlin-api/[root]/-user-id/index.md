@@ -9,4 +9,4 @@ external interface [UserId](index.md)
 
 | Name | Summary |
 |---|---|
-| [userId](user-id.md) | [js]<br>abstract var [userId](user-id.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |
+| [userId](user-id.md) | [js]<br>abstract var [userId](user-id.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html) |

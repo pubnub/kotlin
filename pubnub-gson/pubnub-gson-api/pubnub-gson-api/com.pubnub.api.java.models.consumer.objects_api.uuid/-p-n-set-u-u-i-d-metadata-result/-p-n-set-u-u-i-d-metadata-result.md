@@ -5,4 +5,4 @@
 [jvm]\
 constructor(envelope: [EntityEnvelope](../../com.pubnub.api.java.models.consumer.objects_api/-entity-envelope/index.md)&lt;[PNUUIDMetadata](../-p-n-u-u-i-d-metadata/index.md)&gt;)
 
-constructor(status: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html), data: [PNUUIDMetadata](../-p-n-u-u-i-d-metadata/index.md))
+constructor(status: [Int](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html), data: [PNUUIDMetadata](../-p-n-u-u-i-d-metadata/index.md))

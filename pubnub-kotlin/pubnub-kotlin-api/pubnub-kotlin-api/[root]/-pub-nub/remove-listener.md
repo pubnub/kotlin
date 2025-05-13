@@ -3,4 +3,4 @@
 # removeListener
 
 [js]\
-open fun [removeListener](remove-listener.md)(params: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html))
+open fun [removeListener](remove-listener.md)(params: [Any](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html))

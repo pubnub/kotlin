@@ -15,10 +15,10 @@ expect abstract class [Downloadable](index.md)actual abstract class [Downloadabl
 
 | | |
 |---|---|
-| [Downloadable](-downloadable.md) | [apple]<br>constructor()<br>[js]<br>constructor(pubnubFile: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)) |
+| [Downloadable](-downloadable.md) | [apple]<br>constructor()<br>[js]<br>constructor(pubnubFile: [Any](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html)) |
 
 ## Properties
 
 | Name | Summary |
 |---|---|
-| [pubnubFile](pubnub-file.md) | [js]<br>val [pubnubFile](pubnub-file.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html) |
+| [pubnubFile](pubnub-file.md) | [js]<br>val [pubnubFile](pubnub-file.md): [Any](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html) |

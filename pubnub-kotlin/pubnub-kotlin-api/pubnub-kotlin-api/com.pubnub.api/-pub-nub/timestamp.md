@@ -3,4 +3,4 @@
 # timestamp
 
 [jvm]\
-abstract val [timestamp](timestamp.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)
+abstract val [timestamp](timestamp.md): [Int](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html)

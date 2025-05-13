@@ -9,5 +9,5 @@ interface [MetadataIncludeOptions](index.md)
 
 | Name | Summary |
 |---|---|
-| [customFields](custom-fields.md) | [js]<br>abstract var [customFields](custom-fields.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)? |
-| [totalCount](total-count.md) | [js]<br>abstract var [totalCount](total-count.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)? |
+| [customFields](custom-fields.md) | [js]<br>abstract var [customFields](custom-fields.md): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)? |
+| [totalCount](total-count.md) | [js]<br>abstract var [totalCount](total-count.md): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)? |

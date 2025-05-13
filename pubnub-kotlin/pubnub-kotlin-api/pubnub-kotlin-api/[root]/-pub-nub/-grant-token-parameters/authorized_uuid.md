@@ -3,4 +3,4 @@
 # authorized_uuid
 
 [js]\
-abstract var [authorized_uuid](authorized_uuid.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)?
+abstract var [authorized_uuid](authorized_uuid.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)?

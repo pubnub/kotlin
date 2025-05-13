@@ -3,4 +3,4 @@
 # custom
 
 [jvm]\
-open fun [custom](custom.md)(custom: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)): [PNUser.Builder](index.md)
+open fun [custom](custom.md)(custom: [Any](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html)): [PNUser.Builder](index.md)

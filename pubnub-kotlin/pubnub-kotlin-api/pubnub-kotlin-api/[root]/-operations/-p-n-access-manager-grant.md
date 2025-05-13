@@ -3,4 +3,4 @@
 # PNAccessManagerGrant
 
 [js]\
-abstract var [PNAccessManagerGrant](-p-n-access-manager-grant.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)
+abstract var [PNAccessManagerGrant](-p-n-access-manager-grant.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)

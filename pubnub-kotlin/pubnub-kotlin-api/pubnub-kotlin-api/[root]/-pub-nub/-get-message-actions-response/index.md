@@ -9,6 +9,6 @@ interface [GetMessageActionsResponse](index.md)
 
 | Name | Summary |
 |---|---|
-| [data](data.md) | [js]<br>abstract var [data](data.md): [Array](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-array/index.html)&lt;[PubNub.MessageAction](../-message-action/index.md)&gt; |
-| [end](end.md) | [js]<br>abstract var [end](end.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |
-| [start](start.md) | [js]<br>abstract var [start](start.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |
+| [data](data.md) | [js]<br>abstract var [data](data.md): [Array](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-array/index.html)&lt;[PubNub.MessageAction](../-message-action/index.md)&gt; |
+| [end](end.md) | [js]<br>abstract var [end](end.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)? |
+| [start](start.md) | [js]<br>abstract var [start](start.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)? |

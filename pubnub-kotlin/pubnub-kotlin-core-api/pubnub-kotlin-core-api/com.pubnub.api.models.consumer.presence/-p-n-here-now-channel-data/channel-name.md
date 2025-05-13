@@ -3,4 +3,4 @@
 # channelName
 
 [common]\
-val [channelName](channel-name.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)
+val [channelName](channel-name.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)

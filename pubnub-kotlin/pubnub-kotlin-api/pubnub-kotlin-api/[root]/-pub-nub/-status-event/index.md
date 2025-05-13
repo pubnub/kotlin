@@ -9,11 +9,11 @@ interface [StatusEvent](index.md)
 
 | Name | Summary |
 |---|---|
-| [affectedChannelGroups](affected-channel-groups.md) | [js]<br>abstract var [affectedChannelGroups](affected-channel-groups.md): [Array](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-array/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)&gt;? |
-| [affectedChannels](affected-channels.md) | [js]<br>abstract var [affectedChannels](affected-channels.md): [Array](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-array/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)&gt;? |
-| [category](category.md) | [js]<br>abstract var [category](category.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |
-| [currentTimetoken](current-timetoken.md) | [js]<br>abstract var [currentTimetoken](current-timetoken.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |
-| [lastTimetoken](last-timetoken.md) | [js]<br>abstract var [lastTimetoken](last-timetoken.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |
-| [operation](operation.md) | [js]<br>abstract var [operation](operation.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |
-| [statusCode](status-code.md) | [js]<br>abstract var [statusCode](status-code.md): [Number](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-number/index.html)? |
-| [subscribedChannels](subscribed-channels.md) | [js]<br>abstract var [subscribedChannels](subscribed-channels.md): [Array](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-array/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)&gt;? |
+| [affectedChannelGroups](affected-channel-groups.md) | [js]<br>abstract var [affectedChannelGroups](affected-channel-groups.md): [Array](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-array/index.html)&lt;[String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)&gt;? |
+| [affectedChannels](affected-channels.md) | [js]<br>abstract var [affectedChannels](affected-channels.md): [Array](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-array/index.html)&lt;[String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)&gt;? |
+| [category](category.md) | [js]<br>abstract var [category](category.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html) |
+| [currentTimetoken](current-timetoken.md) | [js]<br>abstract var [currentTimetoken](current-timetoken.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)? |
+| [lastTimetoken](last-timetoken.md) | [js]<br>abstract var [lastTimetoken](last-timetoken.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html) |
+| [operation](operation.md) | [js]<br>abstract var [operation](operation.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html) |
+| [statusCode](status-code.md) | [js]<br>abstract var [statusCode](status-code.md): [Number](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-number/index.html)? |
+| [subscribedChannels](subscribed-channels.md) | [js]<br>abstract var [subscribedChannels](subscribed-channels.md): [Array](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-array/index.html)&lt;[String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)&gt;? |

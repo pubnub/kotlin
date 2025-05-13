@@ -10,5 +10,5 @@ interface [T$10](index.md)
 | Name | Summary |
 |---|---|
 | [data](data.md) | [js]<br>abstract var [data](data.md): [PubNub.ChannelMetadataObject](../-channel-metadata-object/index.md) |
-| [event](event.md) | [js]<br>abstract var [event](event.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |
-| [type](type.md) | [js]<br>abstract var [type](type.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |
+| [event](event.md) | [js]<br>abstract var [event](event.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html) |
+| [type](type.md) | [js]<br>abstract var [type](type.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html) |

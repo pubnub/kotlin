@@ -3,4 +3,4 @@
 # PNRemoveAllPushNotificationsOperation
 
 [js]\
-abstract var [PNRemoveAllPushNotificationsOperation](-p-n-remove-all-push-notifications-operation.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)
+abstract var [PNRemoveAllPushNotificationsOperation](-p-n-remove-all-push-notifications-operation.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)

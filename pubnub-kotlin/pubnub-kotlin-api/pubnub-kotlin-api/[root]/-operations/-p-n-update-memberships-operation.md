@@ -3,4 +3,4 @@
 # PNUpdateMembershipsOperation
 
 [js]\
-abstract var [PNUpdateMembershipsOperation](-p-n-update-memberships-operation.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)
+abstract var [PNUpdateMembershipsOperation](-p-n-update-memberships-operation.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)

@@ -3,4 +3,4 @@
 # uuidId
 
 [common]\
-val [uuidId](uuid-id.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)
+val [uuidId](uuid-id.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)

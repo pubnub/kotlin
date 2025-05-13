@@ -3,7 +3,7 @@
 # encrypt
 
 [jvm]\
-abstract fun [encrypt](encrypt.md)(inputString: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), cipherKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)?): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)
+abstract fun [encrypt](encrypt.md)(inputString: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html), cipherKey: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)?): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)
 
 Perform Cryptographic encryption of an input string and a cipher key.
 
@@ -27,7 +27,7 @@ jvm
 | [PubNubException](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api/-pub-nub-exception/index.md) | Throws exception in case of failed encryption. |
 
 [jvm]\
-abstract fun [encrypt](encrypt.md)(inputString: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)
+abstract fun [encrypt](encrypt.md)(inputString: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)
 
 Perform Cryptographic encryption of an input string and a cipher key.
 

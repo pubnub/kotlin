@@ -3,7 +3,7 @@
 # timetokenToInstant
 
 [common]\
-fun [timetokenToInstant](timetoken-to-instant.md)(timetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html)): [Instant](../../-instant/index.md)
+fun [timetokenToInstant](timetoken-to-instant.md)(timetoken: [Long](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html)): [Instant](../../-instant/index.md)
 
 Converts a PubNub timetoken (a unique identifier for each message sent and received in a PubNub channel that is a number of 100-nanosecond intervals since January 1, 1970) to LocalDateTime object representing the corresponding moment in time.
 
@@ -23,4 +23,4 @@ common
 
 | | |
 |---|---|
-| [IllegalArgumentException](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-illegal-argument-exception/index.html) | if the timetoken does not have 17 digits. |
+| [IllegalArgumentException](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-illegal-argument-exception/index.html) | if the timetoken does not have 17 digits. |

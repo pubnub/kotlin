@@ -9,4 +9,4 @@ interface [PublishFileResponse](index.md)
 
 | Name | Summary |
 |---|---|
-| [timetoken](timetoken.md) | [js]<br>abstract var [timetoken](timetoken.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |
+| [timetoken](timetoken.md) | [js]<br>abstract var [timetoken](timetoken.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html) |

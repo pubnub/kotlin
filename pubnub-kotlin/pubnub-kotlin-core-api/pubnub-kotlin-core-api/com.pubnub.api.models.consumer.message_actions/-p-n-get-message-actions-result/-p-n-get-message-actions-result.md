@@ -3,4 +3,4 @@
 # PNGetMessageActionsResult
 
 [common]\
-constructor(actions: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html)&lt;[PNMessageAction](../-p-n-message-action/index.md)&gt;, page: [PNBoundedPage](../../com.pubnub.api.models.consumer/-p-n-bounded-page/index.md)?)
+constructor(actions: [List](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html)&lt;[PNMessageAction](../-p-n-message-action/index.md)&gt;, page: [PNBoundedPage](../../com.pubnub.api.models.consumer/-p-n-bounded-page/index.md)?)

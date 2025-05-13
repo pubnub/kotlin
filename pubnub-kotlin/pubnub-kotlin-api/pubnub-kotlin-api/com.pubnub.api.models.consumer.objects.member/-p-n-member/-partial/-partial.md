@@ -3,4 +3,4 @@
 # Partial
 
 [common]\
-constructor(uuidId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), custom: [CustomObject](../../../com.pubnub.kmp/-custom-object/index.md)? = null, status: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? = null, type: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? = null)
+constructor(uuidId: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html), custom: [CustomObject](../../../com.pubnub.kmp/-custom-object/index.md)? = null, status: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)? = null, type: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)? = null)

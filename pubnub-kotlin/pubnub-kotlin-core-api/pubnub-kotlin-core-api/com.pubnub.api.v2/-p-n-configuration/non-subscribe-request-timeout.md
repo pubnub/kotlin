@@ -3,7 +3,7 @@
 # nonSubscribeRequestTimeout
 
 [jvm]\
-open val [~~nonSubscribeRequestTimeout~~](non-subscribe-request-timeout.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)
+open val [~~nonSubscribeRequestTimeout~~](non-subscribe-request-timeout.md): [Int](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html)
 
 ---
 

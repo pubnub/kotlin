@@ -3,4 +3,4 @@
 # includeTimetoken
 
 [jvm]\
-abstract fun [includeTimetoken](include-timetoken.md)(includeTimetoken: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)): [History](index.md)
+abstract fun [includeTimetoken](include-timetoken.md)(includeTimetoken: [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)): [History](index.md)

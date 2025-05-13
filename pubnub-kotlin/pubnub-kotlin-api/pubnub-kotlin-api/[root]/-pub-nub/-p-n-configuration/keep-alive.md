@@ -3,4 +3,4 @@
 # keepAlive
 
 [js]\
-abstract var [keepAlive](keep-alive.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)?
+abstract var [keepAlive](keep-alive.md): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)?

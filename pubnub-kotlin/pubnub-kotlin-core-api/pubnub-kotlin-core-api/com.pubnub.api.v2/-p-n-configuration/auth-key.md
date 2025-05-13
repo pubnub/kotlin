@@ -4,10 +4,10 @@
 
 [common, apple]\
 [common]\
-expect abstract val [~~authKey~~](auth-key.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)
+expect abstract val [~~authKey~~](auth-key.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)
 
 [apple]\
-actual abstract val [~~authKey~~](auth-key.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)
+actual abstract val [~~authKey~~](auth-key.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)
 
 ---
 
@@ -18,7 +18,7 @@ This setting is deprecated because it relates to deprecated Access Manager (PAM 
 ---
 
 [js]\
-actual abstract val [~~authKey~~](auth-key.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)
+actual abstract val [~~authKey~~](auth-key.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)
 
 ---
 
@@ -29,7 +29,7 @@ This setting is deprecated because it relates to deprecated Access Manager (PAM 
 ---
 
 [jvm]\
-actual abstract val [~~authKey~~](auth-key.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)
+actual abstract val [~~authKey~~](auth-key.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)
 
 ---
 

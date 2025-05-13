@@ -3,4 +3,4 @@
 # message
 
 [js]\
-abstract val [message](message.md): (messageEvent: [PubNub.MessageEvent](../-message-event/index.md)) -&gt; [Unit](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-unit/index.html)?
+abstract val [message](message.md): (messageEvent: [PubNub.MessageEvent](../-message-event/index.md)) -&gt; [Unit](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html)?

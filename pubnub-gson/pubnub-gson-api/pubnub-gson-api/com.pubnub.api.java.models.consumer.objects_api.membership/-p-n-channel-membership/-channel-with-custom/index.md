@@ -11,7 +11,7 @@ Represents a membership with a channel ID and custom data.
 
 | | |
 |---|---|
-| [ChannelWithCustom](-channel-with-custom.md) | [jvm]<br>constructor(@NonNullchannelId: @NonNull[PNChannelMembership.ChannelId](../-channel-id/index.md), @NonNullcustom: @NonNull[Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)) |
+| [ChannelWithCustom](-channel-with-custom.md) | [jvm]<br>constructor(@NonNullchannelId: @NonNull[PNChannelMembership.ChannelId](../-channel-id/index.md), @NonNullcustom: @NonNull[Any](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html)) |
 
 ## Functions
 
@@ -19,4 +19,4 @@ Represents a membership with a channel ID and custom data.
 |---|---|
 | [builder](../builder.md) | [jvm]<br>open fun [builder](../builder.md)(channelId: [String](https://docs.oracle.com/javase/8/docs/api/java/lang/String.html)): [PNChannelMembership.Builder](../-builder/index.md) |
 | [channel](../channel.md) | [jvm]<br>open fun [channel](../channel.md)(channelId: [String](https://docs.oracle.com/javase/8/docs/api/java/lang/String.html)): [PNChannelMembership](../index.md) |
-| [channelWithCustom](../channel-with-custom.md) | [jvm]<br>open fun [channelWithCustom](../channel-with-custom.md)(channelId: [String](https://docs.oracle.com/javase/8/docs/api/java/lang/String.html), custom: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)): [PNChannelMembership](../index.md) |
+| [channelWithCustom](../channel-with-custom.md) | [jvm]<br>open fun [channelWithCustom](../channel-with-custom.md)(channelId: [String](https://docs.oracle.com/javase/8/docs/api/java/lang/String.html), custom: [Any](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html)): [PNChannelMembership](../index.md) |

@@ -3,4 +3,4 @@
 # PNDeleteMembershipEvent
 
 [common]\
-constructor(channelId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), uuid: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html))
+constructor(channelId: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html), uuid: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html))

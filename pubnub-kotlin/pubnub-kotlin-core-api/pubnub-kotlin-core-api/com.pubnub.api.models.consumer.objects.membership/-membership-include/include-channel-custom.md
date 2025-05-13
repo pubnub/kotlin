@@ -3,6 +3,6 @@
 # includeChannelCustom
 
 [common]\
-abstract val [includeChannelCustom](include-channel-custom.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)
+abstract val [includeChannelCustom](include-channel-custom.md): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)
 
 Whether to include custom properties of the channel in the result.

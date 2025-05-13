@@ -3,17 +3,17 @@
 # EncryptedData
 
 [jvm]\
-data class [EncryptedData](index.md)(val metadata: [ByteArray](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-byte-array/index.html)? = null, val data: [ByteArray](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-byte-array/index.html))
+data class [EncryptedData](index.md)(val metadata: [ByteArray](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-byte-array/index.html)? = null, val data: [ByteArray](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-byte-array/index.html))
 
 ## Constructors
 
 | | |
 |---|---|
-| [EncryptedData](-encrypted-data.md) | [jvm]<br>constructor(metadata: [ByteArray](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-byte-array/index.html)? = null, data: [ByteArray](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-byte-array/index.html)) |
+| [EncryptedData](-encrypted-data.md) | [jvm]<br>constructor(metadata: [ByteArray](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-byte-array/index.html)? = null, data: [ByteArray](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-byte-array/index.html)) |
 
 ## Properties
 
 | Name | Summary |
 |---|---|
-| [data](data.md) | [jvm]<br>val [data](data.md): [ByteArray](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-byte-array/index.html) |
-| [metadata](metadata.md) | [jvm]<br>val [metadata](metadata.md): [ByteArray](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-byte-array/index.html)? = null |
+| [data](data.md) | [jvm]<br>val [data](data.md): [ByteArray](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-byte-array/index.html) |
+| [metadata](metadata.md) | [jvm]<br>val [metadata](metadata.md): [ByteArray](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-byte-array/index.html)? = null |

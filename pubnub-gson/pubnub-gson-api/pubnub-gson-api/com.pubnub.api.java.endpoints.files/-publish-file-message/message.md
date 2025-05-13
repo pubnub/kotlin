@@ -3,4 +3,4 @@
 # message
 
 [jvm]\
-abstract fun [message](message.md)(message: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)): [PublishFileMessage](index.md)
+abstract fun [message](message.md)(message: [Any](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html)): [PublishFileMessage](index.md)

@@ -3,4 +3,4 @@
 # getValue
 
 [common]\
-fun [getValue](get-value.md)(): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)
+fun [getValue](get-value.md)(): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)

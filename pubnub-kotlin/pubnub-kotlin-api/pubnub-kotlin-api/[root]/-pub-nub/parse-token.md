@@ -3,4 +3,4 @@
 # parseToken
 
 [js]\
-open fun [parseToken](parse-token.md)(params: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)): [PubNub.ParsedGrantToken](-parsed-grant-token/index.md)
+open fun [parseToken](parse-token.md)(params: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)): [PubNub.ParsedGrantToken](-parsed-grant-token/index.md)

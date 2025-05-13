@@ -3,7 +3,7 @@
 # cacheBusting
 
 [jvm]\
-abstract var [cacheBusting](cache-busting.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)
+abstract var [cacheBusting](cache-busting.md): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)
 
 If operating behind a misbehaving proxy, allow the client to shuffle the subdomains.
 

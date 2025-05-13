@@ -3,4 +3,4 @@
 # cryptors
 
 [js]\
-open var [cryptors](cryptors.md): [Array](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-array/index.html)&lt;dynamic&gt;
+open var [cryptors](cryptors.md): [Array](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-array/index.html)&lt;dynamic&gt;

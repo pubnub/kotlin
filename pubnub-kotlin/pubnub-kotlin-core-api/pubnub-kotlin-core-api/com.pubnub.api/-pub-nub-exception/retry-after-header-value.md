@@ -3,4 +3,4 @@
 # retryAfterHeaderValue
 
 [jvm]\
-val [retryAfterHeaderValue](retry-after-header-value.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)? = null
+val [retryAfterHeaderValue](retry-after-header-value.md): [Int](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html)? = null

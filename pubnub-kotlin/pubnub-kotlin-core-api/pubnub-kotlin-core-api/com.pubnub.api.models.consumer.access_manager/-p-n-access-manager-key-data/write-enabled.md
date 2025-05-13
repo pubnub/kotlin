@@ -3,6 +3,6 @@
 # writeEnabled
 
 [common]\
-var [writeEnabled](write-enabled.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)
+var [writeEnabled](write-enabled.md): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)
 
 Is `true` if *write* rights are granted.

@@ -2,9 +2,9 @@
 
 # asLong
 
-[common, apple, js]\
+[common, apple, js, jvm]\
 [common]\
-expect fun [JsonElement](-json-element/index.md).[asLong](as-long.md)(): [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html)?
+expect fun [JsonElement](-json-element/index.md).[asLong](as-long.md)(): [Long](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html)?
 
-[apple, js]\
-actual fun [JsonElement](-json-element/index.md).[asLong](as-long.md)(): [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html)?
+[apple, js, jvm]\
+actual fun [JsonElement](-json-element/index.md).[asLong](as-long.md)(): [Long](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html)?

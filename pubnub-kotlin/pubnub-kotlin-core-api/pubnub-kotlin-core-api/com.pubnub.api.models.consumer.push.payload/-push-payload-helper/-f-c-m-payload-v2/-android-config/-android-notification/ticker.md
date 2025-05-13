@@ -3,4 +3,4 @@
 # ticker
 
 [common]\
-var [ticker](ticker.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)?
+var [ticker](ticker.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)?

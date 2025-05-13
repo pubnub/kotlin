@@ -9,5 +9,5 @@ interface [RemoveChannelParameters](index.md)
 
 | Name | Summary |
 |---|---|
-| [channelGroup](channel-group.md) | [js]<br>abstract var [channelGroup](channel-group.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |
-| [channels](channels.md) | [js]<br>abstract var [channels](channels.md): [Array](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-array/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)&gt; |
+| [channelGroup](channel-group.md) | [js]<br>abstract var [channelGroup](channel-group.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html) |
+| [channels](channels.md) | [js]<br>abstract var [channels](channels.md): [Array](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-array/index.html)&lt;[String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)&gt; |

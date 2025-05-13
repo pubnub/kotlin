@@ -3,6 +3,6 @@
 # manageEnabled
 
 [common]\
-var [manageEnabled](manage-enabled.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)
+var [manageEnabled](manage-enabled.md): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)
 
 Is `true` if *manage* rights are granted.

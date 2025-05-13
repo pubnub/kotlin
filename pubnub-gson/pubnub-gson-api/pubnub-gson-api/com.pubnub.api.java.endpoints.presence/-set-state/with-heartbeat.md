@@ -3,4 +3,4 @@
 # withHeartbeat
 
 [jvm]\
-abstract fun [withHeartbeat](with-heartbeat.md)(withHeartbeat: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)): [SetState](index.md)
+abstract fun [withHeartbeat](with-heartbeat.md)(withHeartbeat: [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)): [SetState](index.md)

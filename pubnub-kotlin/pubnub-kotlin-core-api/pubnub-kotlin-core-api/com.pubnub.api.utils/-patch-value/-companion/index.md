@@ -9,4 +9,4 @@ object [Companion](index.md)
 
 | Name | Summary |
 |---|---|
-| [of](of.md) | [common]<br>@[JvmStatic](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.jvm/-jvm-static/index.html)<br>fun &lt;[T](of.md)&gt; [of](of.md)(value: [T](of.md)): [PatchValue](../index.md)&lt;[T](of.md)&gt;<br>Create an optional with the specified value (which can be null). |
+| [of](of.md) | [common]<br>@[JvmStatic](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.jvm/-jvm-static/index.html)<br>fun &lt;[T](of.md)&gt; [of](of.md)(value: [T](of.md)): [PatchValue](../index.md)&lt;[T](of.md)&gt;<br>Create an optional with the specified value (which can be null). |

@@ -9,4 +9,4 @@ object [Companion](index.md)
 
 | Name | Summary |
 |---|---|
-| [create](create.md) | [apple]<br>fun [create](create.md)(kmpPubNub: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)): [PubNubImpl](../index.md) |
+| [create](create.md) | [apple]<br>fun [create](create.md)(kmpPubNub: [Any](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html)): [PubNubImpl](../index.md) |

@@ -3,4 +3,4 @@
 # PNSignalResult
 
 [common]\
-constructor(basePubSubResult: [PubSubResult](../-pub-sub-result/index.md), message: [JsonElement](../../com.pubnub.api/-json-element/index.md), customMessageType: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? = null)
+constructor(basePubSubResult: [PubSubResult](../-pub-sub-result/index.md), message: [JsonElement](../../com.pubnub.api/-json-element/index.md), customMessageType: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)? = null)

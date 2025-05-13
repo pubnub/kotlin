@@ -4,7 +4,7 @@
 
 [jvm]\
 
-@[JvmStatic](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.jvm/-jvm-static/index.html)
+@[JvmStatic](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.jvm/-jvm-static/index.html)
 
 fun [builder](builder.md)(): [MembershipInclude.Builder](../-builder/index.md)
 

@@ -3,4 +3,4 @@
 # occupants
 
 [js]\
-abstract var [occupants](occupants.md): [Array](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-array/index.html)&lt;[PubNub.HereNowOccupantData](../-here-now-occupant-data/index.md)&gt;
+abstract var [occupants](occupants.md): [Array](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-array/index.html)&lt;[PubNub.HereNowOccupantData](../-here-now-occupant-data/index.md)&gt;

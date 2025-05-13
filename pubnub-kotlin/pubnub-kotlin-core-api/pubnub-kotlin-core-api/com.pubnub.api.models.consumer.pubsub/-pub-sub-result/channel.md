@@ -3,4 +3,4 @@
 # channel
 
 [common]\
-abstract override val [channel](channel.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)
+abstract override val [channel](channel.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)

@@ -3,6 +3,6 @@
 # isSuccess
 
 [common]\
-val [isSuccess](is-success.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)
+val [isSuccess](is-success.md): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)
 
 Returns `true` if this instance represents a successful outcome. In this case [isFailure](is-failure.md) returns `false`.

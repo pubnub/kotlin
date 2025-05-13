@@ -5,4 +5,4 @@
 [js]\
 open fun [decrypt](decrypt.md)(data: ArrayBuffer): dynamic
 
-open fun [decrypt](decrypt.md)(data: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)): dynamic
+open fun [decrypt](decrypt.md)(data: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)): dynamic

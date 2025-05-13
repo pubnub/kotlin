@@ -3,4 +3,4 @@
 # storeInHistory
 
 [js]\
-abstract var [storeInHistory](store-in-history.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)?
+abstract var [storeInHistory](store-in-history.md): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)?

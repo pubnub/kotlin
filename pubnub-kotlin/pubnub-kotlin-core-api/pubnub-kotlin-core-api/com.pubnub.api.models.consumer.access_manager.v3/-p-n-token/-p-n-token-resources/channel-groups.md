@@ -3,4 +3,4 @@
 # channelGroups
 
 [common]\
-val [channelGroups](channel-groups.md): [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), [PNToken.PNResourcePermissions](../-p-n-resource-permissions/index.md)&gt;
+val [channelGroups](channel-groups.md): [Map](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html), [PNToken.PNResourcePermissions](../-p-n-resource-permissions/index.md)&gt;

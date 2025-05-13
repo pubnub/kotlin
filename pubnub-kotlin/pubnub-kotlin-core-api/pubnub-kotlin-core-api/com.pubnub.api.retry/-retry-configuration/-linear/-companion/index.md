@@ -9,4 +9,4 @@ object [Companion](index.md)
 
 | Name | Summary |
 |---|---|
-| [MAX_RETRIES](-m-a-x_-r-e-t-r-i-e-s.md) | [common]<br>const val [MAX_RETRIES](-m-a-x_-r-e-t-r-i-e-s.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html) = 10 |
+| [MAX_RETRIES](-m-a-x_-r-e-t-r-i-e-s.md) | [common]<br>const val [MAX_RETRIES](-m-a-x_-r-e-t-r-i-e-s.md): [Int](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html) = 10 |

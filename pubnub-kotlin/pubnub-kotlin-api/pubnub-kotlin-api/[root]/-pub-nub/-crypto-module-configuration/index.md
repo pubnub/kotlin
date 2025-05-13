@@ -9,5 +9,5 @@ interface [CryptoModuleConfiguration](index.md)
 
 | Name | Summary |
 |---|---|
-| [cryptors](cryptors.md) | [js]<br>abstract var [cryptors](cryptors.md): [Array](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-array/index.html)&lt;dynamic&gt;? |
+| [cryptors](cryptors.md) | [js]<br>abstract var [cryptors](cryptors.md): [Array](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-array/index.html)&lt;dynamic&gt;? |
 | [default](default.md) | [js]<br>abstract var [default](default.md): dynamic |

@@ -3,10 +3,10 @@
 # channelMetadata
 
 [common]\
-expect abstract fun [channelMetadata](channel-metadata.md)(id: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)): [ChannelMetadata](../../com.pubnub.api.v2.entities/-channel-metadata/index.md)actual abstract fun [channelMetadata](channel-metadata.md)(id: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)): [ChannelMetadata](../../com.pubnub.api.v2.entities/-channel-metadata/index.md)
+expect abstract fun [channelMetadata](channel-metadata.md)(id: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)): [ChannelMetadata](../../com.pubnub.api.v2.entities/-channel-metadata/index.md)actual abstract fun [channelMetadata](channel-metadata.md)(id: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)): [ChannelMetadata](../../com.pubnub.api.v2.entities/-channel-metadata/index.md)
 
 [jvm]\
-actual abstract fun [channelMetadata](channel-metadata.md)(id: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)): [ChannelMetadata](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.v2.entities/-channel-metadata/index.md)
+actual abstract fun [channelMetadata](channel-metadata.md)(id: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)): [ChannelMetadata](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.v2.entities/-channel-metadata/index.md)
 
 Create a handle to a [ChannelMetadata](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.v2.entities/-channel-metadata/index.md) object that can be used to obtain a [Subscription](../../../../../pubnub-kotlin/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api.v2.subscriptions/-subscription/index.md) to metadata events.
 

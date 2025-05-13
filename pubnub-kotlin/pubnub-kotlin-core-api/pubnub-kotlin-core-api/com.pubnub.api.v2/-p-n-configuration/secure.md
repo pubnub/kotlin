@@ -3,7 +3,7 @@
 # secure
 
 [jvm]\
-abstract val [secure](secure.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)
+abstract val [secure](secure.md): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)
 
 If set to `true`,  requests will be made over HTTPS.
 

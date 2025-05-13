@@ -9,4 +9,4 @@ interface [HasId](index.md)
 
 | Name | Summary |
 |---|---|
-| [id](id.md) | [js]<br>abstract var [id](id.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |
+| [id](id.md) | [js]<br>abstract var [id](id.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html) |

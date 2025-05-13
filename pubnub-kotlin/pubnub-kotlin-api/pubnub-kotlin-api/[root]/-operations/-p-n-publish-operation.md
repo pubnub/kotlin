@@ -3,4 +3,4 @@
 # PNPublishOperation
 
 [js]\
-abstract var [PNPublishOperation](-p-n-publish-operation.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)
+abstract var [PNPublishOperation](-p-n-publish-operation.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)

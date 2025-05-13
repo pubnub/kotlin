@@ -3,4 +3,4 @@
 # includeState
 
 [jvm]\
-abstract fun [includeState](include-state.md)(includeState: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)): [HereNow](index.md)
+abstract fun [includeState](include-state.md)(includeState: [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)): [HereNow](index.md)

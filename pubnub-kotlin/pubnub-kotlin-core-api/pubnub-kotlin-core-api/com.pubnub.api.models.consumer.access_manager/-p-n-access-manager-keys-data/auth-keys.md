@@ -3,4 +3,4 @@
 # authKeys
 
 [common]\
-val [authKeys](auth-keys.md): [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), [PNAccessManagerKeyData](../-p-n-access-manager-key-data/index.md)&gt;? = null
+val [authKeys](auth-keys.md): [Map](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html), [PNAccessManagerKeyData](../-p-n-access-manager-key-data/index.md)&gt;? = null

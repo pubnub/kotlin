@@ -3,6 +3,6 @@
 # includeUserCustom
 
 [common]\
-abstract val [includeUserCustom](include-user-custom.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)
+abstract val [includeUserCustom](include-user-custom.md): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)
 
 Whether to include custom properties of the user in the result.

@@ -3,4 +3,4 @@
 # join
 
 [jvm]\
-abstract fun [join](join.md)(join: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)): [Grant](index.md)
+abstract fun [join](join.md)(join: [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)): [Grant](index.md)

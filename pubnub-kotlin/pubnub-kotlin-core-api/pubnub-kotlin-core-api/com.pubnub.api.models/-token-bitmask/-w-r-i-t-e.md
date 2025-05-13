@@ -3,4 +3,4 @@
 # WRITE
 
 [common]\
-const val [WRITE](-w-r-i-t-e.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html) = 2
+const val [WRITE](-w-r-i-t-e.md): [Int](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html) = 2

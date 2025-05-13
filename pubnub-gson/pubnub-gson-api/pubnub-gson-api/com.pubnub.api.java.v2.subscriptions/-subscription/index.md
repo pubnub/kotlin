@@ -11,7 +11,7 @@ Create objects of this class through the com.pubnub.api.v2.entities.Subscribable
 
 Created subscriptions are initially inactive, which means you must call [subscribe](subscribe.md) to start receiving events.
 
-This class implements the [AutoCloseable](https://docs.oracle.com/javase/8/docs/api/java/lang/AutoCloseable.html) interface to help you release resources by calling [unsubscribe](../../../../../pubnub-gson/pubnub-gson-api/com.pubnub.api.java.v2.subscriptions/-subscription/unsubscribe.md) and removing all listeners on [close](../../../../../pubnub-gson/pubnub-gson-api/com.pubnub.api.java.v2.subscriptions/-subscription/close.md). Remember to always call [close](../../../../../pubnub-gson/pubnub-gson-api/com.pubnub.api.java.v2.subscriptions/-subscription/close.md) when you no longer need this Subscription.
+This class implements the [AutoCloseable](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-auto-closeable/index.html) interface to help you release resources by calling [unsubscribe](../../../../../pubnub-gson/pubnub-gson-api/com.pubnub.api.java.v2.subscriptions/-subscription/unsubscribe.md) and removing all listeners on [close](../../../../../pubnub-gson/pubnub-gson-api/com.pubnub.api.java.v2.subscriptions/-subscription/close.md). Remember to always call [close](../../../../../pubnub-gson/pubnub-gson-api/com.pubnub.api.java.v2.subscriptions/-subscription/close.md) when you no longer need this Subscription.
 
 ## Functions
 

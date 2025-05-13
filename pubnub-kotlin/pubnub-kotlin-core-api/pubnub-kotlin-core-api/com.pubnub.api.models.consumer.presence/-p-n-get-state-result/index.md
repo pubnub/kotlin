@@ -3,7 +3,7 @@
 # PNGetStateResult
 
 [common]\
-class [PNGetStateResult](index.md)(val stateByUUID: [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), [JsonElement](../../com.pubnub.api/-json-element/index.md)&gt;)
+class [PNGetStateResult](index.md)(val stateByUUID: [Map](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html), [JsonElement](../../com.pubnub.api/-json-element/index.md)&gt;)
 
 Result of the GetPresenceState operation.
 
@@ -11,10 +11,10 @@ Result of the GetPresenceState operation.
 
 | | |
 |---|---|
-| [PNGetStateResult](-p-n-get-state-result.md) | [common]<br>constructor(stateByUUID: [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), [JsonElement](../../com.pubnub.api/-json-element/index.md)&gt;) |
+| [PNGetStateResult](-p-n-get-state-result.md) | [common]<br>constructor(stateByUUID: [Map](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html), [JsonElement](../../com.pubnub.api/-json-element/index.md)&gt;) |
 
 ## Properties
 
 | Name | Summary |
 |---|---|
-| [stateByUUID](state-by-u-u-i-d.md) | [common]<br>val [stateByUUID](state-by-u-u-i-d.md): [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), [JsonElement](../../com.pubnub.api/-json-element/index.md)&gt;<br>Map of UUIDs and the user states. |
+| [stateByUUID](state-by-u-u-i-d.md) | [common]<br>val [stateByUUID](state-by-u-u-i-d.md): [Map](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html), [JsonElement](../../com.pubnub.api/-json-element/index.md)&gt;<br>Map of UUIDs and the user states. |

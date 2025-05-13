@@ -3,4 +3,4 @@
 # PNHeartbeatOperation
 
 [js]\
-abstract var [PNHeartbeatOperation](-p-n-heartbeat-operation.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)
+abstract var [PNHeartbeatOperation](-p-n-heartbeat-operation.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)

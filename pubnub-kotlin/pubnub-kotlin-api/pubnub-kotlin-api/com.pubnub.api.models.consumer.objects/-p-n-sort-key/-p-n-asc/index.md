@@ -15,4 +15,4 @@ class [PNAsc](index.md)&lt;[T](index.md) : [SortField](../../-sort-field/index.m
 
 | Name | Summary |
 |---|---|
-| [toSortParameter](../to-sort-parameter.md) | [common]<br>fun [toSortParameter](../to-sort-parameter.md)(): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |
+| [toSortParameter](../to-sort-parameter.md) | [common]<br>fun [toSortParameter](../to-sort-parameter.md)(): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html) |

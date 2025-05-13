@@ -16,6 +16,6 @@ interface [PNEvent](index.md)
 
 | Name | Summary |
 |---|---|
-| [channel](channel.md) | [common]<br>abstract val [channel](channel.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |
-| [subscription](subscription.md) | [common]<br>abstract val [subscription](subscription.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |
-| [timetoken](timetoken.md) | [common]<br>abstract val [timetoken](timetoken.md): [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html)? |
+| [channel](channel.md) | [common]<br>abstract val [channel](channel.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html) |
+| [subscription](subscription.md) | [common]<br>abstract val [subscription](subscription.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)? |
+| [timetoken](timetoken.md) | [common]<br>abstract val [timetoken](timetoken.md): [Long](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html)? |

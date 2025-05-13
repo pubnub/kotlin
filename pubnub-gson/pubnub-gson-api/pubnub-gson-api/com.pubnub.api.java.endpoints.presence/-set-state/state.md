@@ -3,4 +3,4 @@
 # state
 
 [jvm]\
-abstract fun [state](state.md)(state: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)): [SetState](index.md)
+abstract fun [state](state.md)(state: [Any](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html)): [SetState](index.md)

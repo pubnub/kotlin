@@ -9,5 +9,5 @@ interface [Action](index.md)
 
 | Name | Summary |
 |---|---|
-| [actionTimetoken](action-timetoken.md) | [js]<br>abstract var [actionTimetoken](action-timetoken.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |
-| [uuid](uuid.md) | [js]<br>abstract var [uuid](uuid.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |
+| [actionTimetoken](action-timetoken.md) | [js]<br>abstract var [actionTimetoken](action-timetoken.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html) |
+| [uuid](uuid.md) | [js]<br>abstract var [uuid](uuid.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html) |

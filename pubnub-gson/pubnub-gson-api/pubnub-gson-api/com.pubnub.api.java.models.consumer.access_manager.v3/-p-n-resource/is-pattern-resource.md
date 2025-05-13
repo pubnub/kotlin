@@ -3,4 +3,4 @@
 # isPatternResource
 
 [jvm]\
-open fun [isPatternResource](is-pattern-resource.md)(): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)
+open fun [isPatternResource](is-pattern-resource.md)(): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)

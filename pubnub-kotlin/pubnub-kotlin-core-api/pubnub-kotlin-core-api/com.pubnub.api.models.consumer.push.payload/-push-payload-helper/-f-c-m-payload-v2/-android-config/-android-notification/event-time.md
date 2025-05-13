@@ -3,4 +3,4 @@
 # eventTime
 
 [common]\
-var [eventTime](event-time.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)?
+var [eventTime](event-time.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)?

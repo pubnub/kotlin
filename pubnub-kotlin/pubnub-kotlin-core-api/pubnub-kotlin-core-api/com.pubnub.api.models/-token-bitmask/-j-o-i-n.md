@@ -3,4 +3,4 @@
 # JOIN
 
 [common]\
-const val [JOIN](-j-o-i-n.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html) = 128
+const val [JOIN](-j-o-i-n.md): [Int](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html) = 128

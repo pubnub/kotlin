@@ -3,4 +3,4 @@
 # subscriptionSetOf
 
 [jvm]\
-abstract fun [subscriptionSetOf](subscription-set-of.md)(subscriptions: [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-set/index.html)&lt;[Subscription](../../com.pubnub.api.java.v2.subscriptions/-subscription/index.md)&gt;): [SubscriptionSet](../../com.pubnub.api.java.v2.subscriptions/-subscription-set/index.md)
+abstract fun [subscriptionSetOf](subscription-set-of.md)(subscriptions: [Set](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-set/index.html)&lt;[Subscription](../../com.pubnub.api.java.v2.subscriptions/-subscription/index.md)&gt;): [SubscriptionSet](../../com.pubnub.api.java.v2.subscriptions/-subscription-set/index.md)

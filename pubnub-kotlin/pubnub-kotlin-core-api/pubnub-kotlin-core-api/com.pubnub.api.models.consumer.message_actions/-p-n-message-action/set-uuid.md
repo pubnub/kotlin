@@ -3,4 +3,4 @@
 # setUuid
 
 [common]\
-fun [setUuid](set-uuid.md)(uuid: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)): [PNMessageAction](index.md)
+fun [setUuid](set-uuid.md)(uuid: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)): [PNMessageAction](index.md)

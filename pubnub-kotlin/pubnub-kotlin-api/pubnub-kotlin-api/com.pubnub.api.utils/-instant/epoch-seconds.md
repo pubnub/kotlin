@@ -4,7 +4,7 @@
 
 [common, js]\
 [common]\
-expect val [epochSeconds](epoch-seconds.md): [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html)
+expect val [epochSeconds](epoch-seconds.md): [Long](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html)
 
 [js]\
-actual val [epochSeconds](epoch-seconds.md): [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html)
+actual val [epochSeconds](epoch-seconds.md): [Long](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html)

@@ -3,4 +3,4 @@
 # tlsEnabled
 
 [jvm]\
-val [tlsEnabled](tls-enabled.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)
+val [tlsEnabled](tls-enabled.md): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)

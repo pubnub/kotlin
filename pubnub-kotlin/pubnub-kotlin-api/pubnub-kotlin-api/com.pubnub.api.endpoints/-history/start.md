@@ -3,4 +3,4 @@
 # start
 
 [jvm]\
-abstract val [start](start.md): [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html)?
+abstract val [start](start.md): [Long](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html)?

@@ -3,4 +3,4 @@
 # ttl
 
 [common]\
-var [ttl](ttl.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)?
+var [ttl](ttl.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)?

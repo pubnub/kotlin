@@ -3,16 +3,16 @@
 # PNGrantTokenResult
 
 [common]\
-data class [PNGrantTokenResult](index.md)(val token: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html))
+data class [PNGrantTokenResult](index.md)(val token: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html))
 
 ## Constructors
 
 | | |
 |---|---|
-| [PNGrantTokenResult](-p-n-grant-token-result.md) | [common]<br>constructor(token: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)) |
+| [PNGrantTokenResult](-p-n-grant-token-result.md) | [common]<br>constructor(token: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)) |
 
 ## Properties
 
 | Name | Summary |
 |---|---|
-| [token](token.md) | [common]<br>val [token](token.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |
+| [token](token.md) | [common]<br>val [token](token.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html) |

@@ -3,4 +3,4 @@
 # includeMeta
 
 [jvm]\
-abstract fun [includeMeta](include-meta.md)(includeMeta: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)): [History](index.md)
+abstract fun [includeMeta](include-meta.md)(includeMeta: [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)): [History](index.md)

@@ -3,4 +3,4 @@
 # subscribeKey
 
 [jvm]\
-abstract fun [subscribeKey](subscribe-key.md)(subscribeKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)): [PNConfigurationOverride.Builder](index.md)
+abstract fun [subscribeKey](subscribe-key.md)(subscribeKey: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)): [PNConfigurationOverride.Builder](index.md)

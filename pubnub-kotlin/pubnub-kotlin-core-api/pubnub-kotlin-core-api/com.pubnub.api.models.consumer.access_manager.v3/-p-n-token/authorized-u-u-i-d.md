@@ -3,4 +3,4 @@
 # authorizedUUID
 
 [common]\
-val [authorizedUUID](authorized-u-u-i-d.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? = null
+val [authorizedUUID](authorized-u-u-i-d.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)? = null

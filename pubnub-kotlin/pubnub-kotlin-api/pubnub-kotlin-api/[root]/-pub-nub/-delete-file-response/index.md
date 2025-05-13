@@ -9,4 +9,4 @@ interface [DeleteFileResponse](index.md)
 
 | Name | Summary |
 |---|---|
-| [status](status.md) | [js]<br>abstract var [status](status.md): [Number](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-number/index.html) |
+| [status](status.md) | [js]<br>abstract var [status](status.md): [Number](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-number/index.html) |

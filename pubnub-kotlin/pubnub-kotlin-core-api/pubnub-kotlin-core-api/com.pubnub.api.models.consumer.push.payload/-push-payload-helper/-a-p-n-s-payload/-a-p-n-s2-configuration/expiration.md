@@ -3,4 +3,4 @@
 # expiration
 
 [common]\
-var [expiration](expiration.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)?
+var [expiration](expiration.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)?

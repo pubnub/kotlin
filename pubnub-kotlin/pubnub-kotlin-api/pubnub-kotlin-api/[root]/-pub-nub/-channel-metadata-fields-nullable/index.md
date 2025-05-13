@@ -15,7 +15,7 @@ interface [ChannelMetadataFieldsNullable](index.md)
 
 | Name | Summary |
 |---|---|
-| [description](description.md) | [js]<br>abstract var [description](description.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |
-| [name](name.md) | [js]<br>abstract var [name](name.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |
-| [status](status.md) | [js]<br>abstract var [status](status.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |
-| [type](type.md) | [js]<br>abstract var [type](type.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |
+| [description](description.md) | [js]<br>abstract var [description](description.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)? |
+| [name](name.md) | [js]<br>abstract var [name](name.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)? |
+| [status](status.md) | [js]<br>abstract var [status](status.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)? |
+| [type](type.md) | [js]<br>abstract var [type](type.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)? |

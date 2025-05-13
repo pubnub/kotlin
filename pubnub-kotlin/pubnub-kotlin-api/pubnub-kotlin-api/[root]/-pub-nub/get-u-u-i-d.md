@@ -3,4 +3,4 @@
 # getUUID
 
 [js]\
-open fun [getUUID](get-u-u-i-d.md)(): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)
+open fun [getUUID](get-u-u-i-d.md)(): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)

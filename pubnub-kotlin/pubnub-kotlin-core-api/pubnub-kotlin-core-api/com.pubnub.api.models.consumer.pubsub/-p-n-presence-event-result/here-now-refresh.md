@@ -3,4 +3,4 @@
 # hereNowRefresh
 
 [common]\
-val [hereNowRefresh](here-now-refresh.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)? = null
+val [hereNowRefresh](here-now-refresh.md): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)? = null

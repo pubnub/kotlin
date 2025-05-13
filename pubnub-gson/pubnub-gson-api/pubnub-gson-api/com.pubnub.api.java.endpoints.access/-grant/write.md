@@ -3,4 +3,4 @@
 # write
 
 [jvm]\
-abstract fun [write](write.md)(write: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)): [Grant](index.md)
+abstract fun [write](write.md)(write: [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)): [Grant](index.md)

@@ -19,8 +19,8 @@ interface [BaseObjectsEvent](index.md)
 
 | Name | Summary |
 |---|---|
-| [channel](channel.md) | [js]<br>abstract var [channel](channel.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |
+| [channel](channel.md) | [js]<br>abstract var [channel](channel.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html) |
 | [message](message.md) | [js]<br>abstract var [message](message.md): [PubNub.T$6](../-t$6/index.md) |
-| [publisher](publisher.md) | [js]<br>abstract var [publisher](publisher.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |
-| [subscription](subscription.md) | [js]<br>abstract var [subscription](subscription.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |
-| [timetoken](timetoken.md) | [js]<br>abstract var [timetoken](timetoken.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |
+| [publisher](publisher.md) | [js]<br>abstract var [publisher](publisher.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)? |
+| [subscription](subscription.md) | [js]<br>abstract var [subscription](subscription.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)? |
+| [timetoken](timetoken.md) | [js]<br>abstract var [timetoken](timetoken.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html) |

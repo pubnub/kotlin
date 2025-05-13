@@ -3,4 +3,4 @@
 # setActionTimetoken
 
 [common]\
-fun [setActionTimetoken](set-action-timetoken.md)(actionTimetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html)): [PNMessageAction](index.md)
+fun [setActionTimetoken](set-action-timetoken.md)(actionTimetoken: [Long](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html)): [PNMessageAction](index.md)

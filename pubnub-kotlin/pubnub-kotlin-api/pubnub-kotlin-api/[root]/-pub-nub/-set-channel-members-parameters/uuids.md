@@ -3,4 +3,4 @@
 # uuids
 
 [js]\
-abstract var [uuids](uuids.md): [Array](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-array/index.html)&lt;[PubNub.SetCustom](../-set-custom/index.md)&gt;
+abstract var [uuids](uuids.md): [Array](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-array/index.html)&lt;[PubNub.SetCustom](../-set-custom/index.md)&gt;

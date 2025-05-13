@@ -2,9 +2,9 @@
 
 # asList
 
-[common, apple, js]\
+[common, apple, js, jvm]\
 [common]\
-expect fun [JsonElement](-json-element/index.md).[asList](as-list.md)(): [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html)&lt;[JsonElement](-json-element/index.md)&gt;?
+expect fun [JsonElement](-json-element/index.md).[asList](as-list.md)(): [List](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html)&lt;[JsonElement](-json-element/index.md)&gt;?
 
-[apple, js]\
-actual fun [JsonElement](-json-element/index.md).[asList](as-list.md)(): [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html)&lt;[JsonElement](-json-element/index.md)&gt;?
+[apple, js, jvm]\
+actual fun [JsonElement](-json-element/index.md).[asList](as-list.md)(): [List](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html)&lt;[JsonElement](-json-element/index.md)&gt;?

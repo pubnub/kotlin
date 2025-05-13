@@ -9,4 +9,4 @@ interface [SubscriptionOptions](index.md)
 
 | Name | Summary |
 |---|---|
-| [receivePresenceEvents](receive-presence-events.md) | [js]<br>abstract var [receivePresenceEvents](receive-presence-events.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html) |
+| [receivePresenceEvents](receive-presence-events.md) | [js]<br>abstract var [receivePresenceEvents](receive-presence-events.md): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html) |

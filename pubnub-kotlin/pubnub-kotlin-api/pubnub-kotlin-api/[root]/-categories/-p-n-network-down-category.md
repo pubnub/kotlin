@@ -3,4 +3,4 @@
 # PNNetworkDownCategory
 
 [js]\
-abstract var [PNNetworkDownCategory](-p-n-network-down-category.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)
+abstract var [PNNetworkDownCategory](-p-n-network-down-category.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)

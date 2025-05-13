@@ -5,4 +5,4 @@
 [js]\
 abstract fun [addChannels](add-channels.md)(params: [PubNub.AddChannelParameters](../-add-channel-parameters/index.md), callback: [StatusCallback](../../-status-callback/index.md))
 
-abstract fun [addChannels](add-channels.md)(params: [PubNub.AddChannelParameters](../-add-channel-parameters/index.md)): [Promise](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.js/-promise/index.html)&lt;[Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)&gt;
+abstract fun [addChannels](add-channels.md)(params: [PubNub.AddChannelParameters](../-add-channel-parameters/index.md)): [Promise](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.js/-promise/index.html)&lt;[Any](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html)&gt;

@@ -3,4 +3,4 @@
 # OPERATIONS
 
 [js]\
-var [OPERATIONS](-o-p-e-r-a-t-i-o-n-s.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)
+var [OPERATIONS](-o-p-e-r-a-t-i-o-n-s.md): [Any](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html)

@@ -3,4 +3,4 @@
 # getMessageTimetoken
 
 [common]\
-fun [getMessageTimetoken](get-message-timetoken.md)(): [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html)?
+fun [getMessageTimetoken](get-message-timetoken.md)(): [Long](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html)?

@@ -9,5 +9,5 @@ interface [MetadataPage](index.md)
 
 | Name | Summary |
 |---|---|
-| [next](next.md) | [js]<br>abstract var [next](next.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |
-| [prev](prev.md) | [js]<br>abstract var [prev](prev.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)? |
+| [next](next.md) | [js]<br>abstract var [next](next.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)? |
+| [prev](prev.md) | [js]<br>abstract var [prev](prev.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)? |

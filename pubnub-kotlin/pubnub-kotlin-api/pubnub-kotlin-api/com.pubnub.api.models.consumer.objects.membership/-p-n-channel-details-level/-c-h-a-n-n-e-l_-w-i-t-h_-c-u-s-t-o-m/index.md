@@ -9,5 +9,5 @@
 
 | Name | Summary |
 |---|---|
-| [name](index.md#-372974862%2FProperties%2F1885423883) | [common]<br>val [name](index.md#-372974862%2FProperties%2F1885423883): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |
-| [ordinal](index.md#-739389684%2FProperties%2F1885423883) | [common]<br>val [ordinal](index.md#-739389684%2FProperties%2F1885423883): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html) |
+| [name](index.md#-372974862%2FProperties%2F1885423883) | [common]<br>val [name](index.md#-372974862%2FProperties%2F1885423883): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html) |
+| [ordinal](index.md#-739389684%2FProperties%2F1885423883) | [common]<br>val [ordinal](index.md#-739389684%2FProperties%2F1885423883): [Int](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html) |

@@ -3,4 +3,4 @@
 # of
 
 [common]\
-fun [of](of.md)(value: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)?): [HistoryMessageType](../index.md)
+fun [of](of.md)(value: [Int](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html)?): [HistoryMessageType](../index.md)

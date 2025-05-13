@@ -3,4 +3,4 @@
 # channels
 
 [js]\
-abstract var [channels](channels.md): [JsMap](../../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.kmp/-js-map/index.md)&lt;[Number](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-number/index.html)&gt;
+abstract var [channels](channels.md): [JsMap](../../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.kmp/-js-map/index.md)&lt;[Number](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-number/index.html)&gt;

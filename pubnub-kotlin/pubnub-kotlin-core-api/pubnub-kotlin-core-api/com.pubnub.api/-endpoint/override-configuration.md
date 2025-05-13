@@ -3,7 +3,7 @@
 # overrideConfiguration
 
 [jvm]\
-abstract fun [overrideConfiguration](override-configuration.md)(action: [PNConfigurationOverride.Builder](../../com.pubnub.api.v2/-p-n-configuration-override/-builder/index.md).() -&gt; [Unit](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-unit/index.html)): [Endpoint](index.md)&lt;[OUTPUT](index.md)&gt;
+abstract fun [overrideConfiguration](override-configuration.md)(action: [PNConfigurationOverride.Builder](../../com.pubnub.api.v2/-p-n-configuration-override/-builder/index.md).() -&gt; [Unit](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html)): [Endpoint](index.md)&lt;[OUTPUT](index.md)&gt;
 
 Allows to override certain configuration options (see [PNConfigurationOverride.Builder](../../com.pubnub.api.v2/-p-n-configuration-override/-builder/index.md)) for this request only.
 

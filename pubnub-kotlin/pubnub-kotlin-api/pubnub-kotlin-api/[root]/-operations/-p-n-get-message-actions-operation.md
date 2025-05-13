@@ -3,4 +3,4 @@
 # PNGetMessageActionsOperation
 
 [js]\
-abstract var [PNGetMessageActionsOperation](-p-n-get-message-actions-operation.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)
+abstract var [PNGetMessageActionsOperation](-p-n-get-message-actions-operation.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)

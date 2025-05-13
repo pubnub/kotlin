@@ -3,4 +3,4 @@
 # sort
 
 [js]\
-abstract var [sort](sort.md): [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html)?
+abstract var [sort](sort.md): [Any](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html)?

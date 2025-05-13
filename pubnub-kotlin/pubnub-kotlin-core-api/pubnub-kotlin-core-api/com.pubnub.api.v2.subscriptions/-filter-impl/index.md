@@ -9,8 +9,8 @@ class [FilterImpl](index.md) : [SubscriptionOptions](../-subscription-options/in
 
 | Name | Summary |
 |---|---|
-| [allOptions](../-subscription-options/all-options.md) | [common]<br>open val [allOptions](../-subscription-options/all-options.md): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-set/index.html)&lt;[SubscriptionOptions](../-subscription-options/index.md)&gt; |
-| [predicate](predicate.md) | [common]<br>val [predicate](predicate.md): ([PNEvent](../../com.pubnub.api.models.consumer.pubsub/-p-n-event/index.md)) -&gt; [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html) |
+| [allOptions](../-subscription-options/all-options.md) | [common]<br>open val [allOptions](../-subscription-options/all-options.md): [Set](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-set/index.html)&lt;[SubscriptionOptions](../-subscription-options/index.md)&gt; |
+| [predicate](predicate.md) | [common]<br>val [predicate](predicate.md): ([PNEvent](../../com.pubnub.api.models.consumer.pubsub/-p-n-event/index.md)) -&gt; [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html) |
 
 ## Functions
 

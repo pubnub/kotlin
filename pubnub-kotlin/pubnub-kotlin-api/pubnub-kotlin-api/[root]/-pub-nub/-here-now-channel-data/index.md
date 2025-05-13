@@ -9,6 +9,6 @@ interface [HereNowChannelData](index.md)
 
 | Name | Summary |
 |---|---|
-| [name](name.md) | [js]<br>abstract var [name](name.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html) |
-| [occupancy](occupancy.md) | [js]<br>abstract var [occupancy](occupancy.md): [Number](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-number/index.html) |
-| [occupants](occupants.md) | [js]<br>abstract var [occupants](occupants.md): [Array](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-array/index.html)&lt;[PubNub.HereNowOccupantData](../-here-now-occupant-data/index.md)&gt; |
+| [name](name.md) | [js]<br>abstract var [name](name.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html) |
+| [occupancy](occupancy.md) | [js]<br>abstract var [occupancy](occupancy.md): [Number](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-number/index.html) |
+| [occupants](occupants.md) | [js]<br>abstract var [occupants](occupants.md): [Array](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-array/index.html)&lt;[PubNub.HereNowOccupantData](../-here-now-occupant-data/index.md)&gt; |

@@ -11,7 +11,7 @@ A no-op options object. It doesn't modify subscription behavior in any way.
 
 | Name | Summary |
 |---|---|
-| [allOptions](all-options.md) | [common]<br>open override val [allOptions](all-options.md): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-set/index.html)&lt;[SubscriptionOptions](../-subscription-options/index.md)&gt; |
+| [allOptions](all-options.md) | [common]<br>open override val [allOptions](all-options.md): [Set](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-set/index.html)&lt;[SubscriptionOptions](../-subscription-options/index.md)&gt; |
 
 ## Functions
 

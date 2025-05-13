@@ -9,10 +9,6 @@ abstract fun [ttl](ttl.md)(ttl: [Integer](https://docs.oracle.com/javase/8/docs/
 
 instance of this builder
 
-#### Deprecated
-
-Use [grantToken](../../../../../pubnub-gson/pubnub-gson-api/com.pubnub.api.java/-pub-nub/grant-token.md)} instead.
-
 #### Parameters
 
 jvm

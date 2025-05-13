@@ -3,4 +3,4 @@
 # statusCode
 
 [js]\
-abstract var [statusCode](status-code.md): [Number](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-number/index.html)?
+abstract var [statusCode](status-code.md): [Number](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-number/index.html)?

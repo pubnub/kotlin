@@ -3,4 +3,4 @@
 # signal
 
 [js]\
-abstract val [signal](signal.md): (signalEvent: [PubNub.SignalEvent](../-signal-event/index.md)) -&gt; [Unit](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-unit/index.html)?
+abstract val [signal](signal.md): (signalEvent: [PubNub.SignalEvent](../-signal-event/index.md)) -&gt; [Unit](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html)?

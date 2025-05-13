@@ -3,4 +3,4 @@
 # Action
 
 [common]\
-constructor(uuid: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), actionTimetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html))
+constructor(uuid: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html), actionTimetoken: [Long](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html))

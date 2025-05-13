@@ -3,7 +3,7 @@
 # start
 
 [common]\
-val [start](start.md): [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html)? = null
+val [start](start.md): [Long](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html)? = null
 
 #### Parameters
 

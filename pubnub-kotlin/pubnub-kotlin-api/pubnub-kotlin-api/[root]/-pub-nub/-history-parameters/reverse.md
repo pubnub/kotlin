@@ -3,4 +3,4 @@
 # reverse
 
 [js]\
-abstract var [reverse](reverse.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)?
+abstract var [reverse](reverse.md): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)?

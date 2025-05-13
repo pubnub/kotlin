@@ -9,4 +9,4 @@ external interface [JsMap](index.md)&lt;[V](index.md)&gt;
 
 | Name | Summary |
 |---|---|
-| [toMap](../to-map.md) | [js]<br>fun &lt;[V](../to-map.md)&gt; [JsMap](index.md)&lt;[V](../to-map.md)&gt;.[toMap](../to-map.md)(): [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), [V](../to-map.md)&gt; |
+| [toMap](../to-map.md) | [js]<br>fun &lt;[V](../to-map.md)&gt; [JsMap](index.md)&lt;[V](../to-map.md)&gt;.[toMap](../to-map.md)(): [Map](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html), [V](../to-map.md)&gt; |

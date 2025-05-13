@@ -3,4 +3,4 @@
 # timetoken
 
 [js]\
-abstract var [timetoken](timetoken.md): [Number](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-number/index.html)
+abstract var [timetoken](timetoken.md): [Number](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-number/index.html)

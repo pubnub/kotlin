@@ -3,4 +3,4 @@
 # pushGateway
 
 [js]\
-abstract var [pushGateway](push-gateway.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)
+abstract var [pushGateway](push-gateway.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)

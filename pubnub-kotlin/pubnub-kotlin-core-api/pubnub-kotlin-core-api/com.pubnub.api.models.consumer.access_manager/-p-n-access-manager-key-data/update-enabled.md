@@ -3,4 +3,4 @@
 # updateEnabled
 
 [common]\
-var [updateEnabled](update-enabled.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)
+var [updateEnabled](update-enabled.md): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)

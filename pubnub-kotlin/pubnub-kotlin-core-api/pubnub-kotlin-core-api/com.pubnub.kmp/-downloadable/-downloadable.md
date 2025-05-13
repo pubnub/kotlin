@@ -7,4 +7,4 @@
 constructor()
 
 [js]\
-constructor(pubnubFile: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-any/index.html))
+constructor(pubnubFile: [Any](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html))

@@ -3,6 +3,6 @@
 # includeStatus
 
 [common]\
-abstract val [includeStatus](include-status.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)
+abstract val [includeStatus](include-status.md): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)
 
 Whether to include the status of the Membership in the result.

@@ -3,4 +3,4 @@
 # channelsTimetoken
 
 [jvm]\
-abstract val [channelsTimetoken](channels-timetoken.md): [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-list/index.html)&lt;[Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html)&gt;
+abstract val [channelsTimetoken](channels-timetoken.md): [List](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html)&lt;[Long](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html)&gt;

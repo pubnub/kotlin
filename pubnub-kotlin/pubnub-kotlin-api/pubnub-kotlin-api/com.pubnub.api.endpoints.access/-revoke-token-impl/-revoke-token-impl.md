@@ -3,4 +3,4 @@
 # RevokeTokenImpl
 
 [js]\
-constructor(pubnub: [PubNub](../../[root]/-pub-nub/index.md), params: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html))
+constructor(pubnub: [PubNub](../../[root]/-pub-nub/index.md), params: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html))

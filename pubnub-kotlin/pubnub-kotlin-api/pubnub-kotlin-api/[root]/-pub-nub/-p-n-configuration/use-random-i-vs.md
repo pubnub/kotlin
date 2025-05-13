@@ -3,4 +3,4 @@
 # useRandomIVs
 
 [js]\
-abstract var [useRandomIVs](use-random-i-vs.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)?
+abstract var [useRandomIVs](use-random-i-vs.md): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)?

@@ -3,4 +3,4 @@
 # source
 
 [common]\
-open override val [source](source.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)
+open override val [source](source.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)

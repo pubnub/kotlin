@@ -3,4 +3,4 @@
 # count
 
 [jvm]\
-abstract fun [count](count.md)(count: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-int/index.html)): [History](index.md)
+abstract fun [count](count.md)(count: [Int](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html)): [History](index.md)

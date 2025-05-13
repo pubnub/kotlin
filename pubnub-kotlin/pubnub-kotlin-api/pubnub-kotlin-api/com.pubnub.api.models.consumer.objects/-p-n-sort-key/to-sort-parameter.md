@@ -3,4 +3,4 @@
 # toSortParameter
 
 [common]\
-fun [toSortParameter](to-sort-parameter.md)(): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)
+fun [toSortParameter](to-sort-parameter.md)(): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)

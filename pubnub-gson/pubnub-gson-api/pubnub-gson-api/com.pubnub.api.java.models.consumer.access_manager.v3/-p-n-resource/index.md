@@ -25,4 +25,4 @@ abstract class [PNResource](index.md)&lt;[T](index.md)&gt;
 | Name | Summary |
 |---|---|
 | [getId](get-id.md) | [jvm]<br>open fun [getId](get-id.md)(): [String](https://docs.oracle.com/javase/8/docs/api/java/lang/String.html) |
-| [isPatternResource](is-pattern-resource.md) | [jvm]<br>open fun [isPatternResource](is-pattern-resource.md)(): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html) |
+| [isPatternResource](is-pattern-resource.md) | [jvm]<br>open fun [isPatternResource](is-pattern-resource.md)(): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html) |

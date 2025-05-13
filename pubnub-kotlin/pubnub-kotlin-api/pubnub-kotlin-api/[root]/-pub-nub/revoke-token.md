@@ -3,6 +3,6 @@
 # revokeToken
 
 [js]\
-open fun [revokeToken](revoke-token.md)(params: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html), callback: [Callback](../-callback/index.md)&lt;[PubNub.RevokeTokenResponse](-revoke-token-response/index.md)&gt;)
+open fun [revokeToken](revoke-token.md)(params: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html), callback: [Callback](../-callback/index.md)&lt;[PubNub.RevokeTokenResponse](-revoke-token-response/index.md)&gt;)
 
-open fun [revokeToken](revoke-token.md)(params: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)): [Promise](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.js/-promise/index.html)&lt;[PubNub.RevokeTokenResponse](-revoke-token-response/index.md)&gt;
+open fun [revokeToken](revoke-token.md)(params: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)): [Promise](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.js/-promise/index.html)&lt;[PubNub.RevokeTokenResponse](-revoke-token-response/index.md)&gt;

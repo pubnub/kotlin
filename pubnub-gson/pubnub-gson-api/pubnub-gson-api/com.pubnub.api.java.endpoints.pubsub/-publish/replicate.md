@@ -3,4 +3,4 @@
 # replicate
 
 [jvm]\
-abstract fun [replicate](replicate.md)(replicate: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)): [Publish](index.md)
+abstract fun [replicate](replicate.md)(replicate: [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)): [Publish](index.md)

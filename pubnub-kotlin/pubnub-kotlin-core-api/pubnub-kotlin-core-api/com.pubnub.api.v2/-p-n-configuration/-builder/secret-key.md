@@ -3,7 +3,7 @@
 # secretKey
 
 [jvm]\
-abstract var [secretKey](secret-key.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)
+abstract var [secretKey](secret-key.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)
 
 The secret key from the admin panel (only required for modifying/revealing access permissions).
 

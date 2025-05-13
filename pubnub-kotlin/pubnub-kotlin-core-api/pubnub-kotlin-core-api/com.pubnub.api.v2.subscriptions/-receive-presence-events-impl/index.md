@@ -9,7 +9,7 @@ object [ReceivePresenceEventsImpl](index.md) : [SubscriptionOptions](../-subscri
 
 | Name | Summary |
 |---|---|
-| [allOptions](../-subscription-options/all-options.md) | [common]<br>open val [allOptions](../-subscription-options/all-options.md): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin.collections/-set/index.html)&lt;[SubscriptionOptions](../-subscription-options/index.md)&gt; |
+| [allOptions](../-subscription-options/all-options.md) | [common]<br>open val [allOptions](../-subscription-options/all-options.md): [Set](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-set/index.html)&lt;[SubscriptionOptions](../-subscription-options/index.md)&gt; |
 
 ## Functions
 

@@ -3,4 +3,4 @@
 # ttl
 
 [common]\
-val [ttl](ttl.md): [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-long/index.html) = 0
+val [ttl](ttl.md): [Long](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html) = 0

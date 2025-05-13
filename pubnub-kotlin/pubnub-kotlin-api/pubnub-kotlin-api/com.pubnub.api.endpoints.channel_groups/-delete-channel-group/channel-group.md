@@ -3,4 +3,4 @@
 # channelGroup
 
 [jvm]\
-abstract val [channelGroup](channel-group.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)
+abstract val [channelGroup](channel-group.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)

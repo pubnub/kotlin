@@ -2,9 +2,9 @@
 
 # isNull
 
-[common, apple, js]\
+[common, apple, js, jvm]\
 [common]\
-expect fun [JsonElement](-json-element/index.md).[isNull](is-null.md)(): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)
+expect fun [JsonElement](-json-element/index.md).[isNull](is-null.md)(): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)
 
-[apple, js]\
-actual fun [JsonElement](-json-element/index.md).[isNull](is-null.md)(): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-boolean/index.html)
+[apple, js, jvm]\
+actual fun [JsonElement](-json-element/index.md).[isNull](is-null.md)(): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)

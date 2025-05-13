@@ -3,4 +3,4 @@
 # getFileUrl
 
 [js]\
-open fun [getFileUrl](get-file-url.md)(params: [PubNub.FileInputParameters](-file-input-parameters/index.md)): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin-stdlib/kotlin/-string/index.html)
+open fun [getFileUrl](get-file-url.md)(params: [PubNub.FileInputParameters](-file-input-parameters/index.md)): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)
