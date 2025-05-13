@@ -13,7 +13,7 @@ import com.pubnub.api.models.consumer.presence.PNHereNowResult;
 
 import java.util.Arrays;
 
-public class HereNow {
+public class HereNowApp {
     public static void main(String[] args) throws PubNubException {
         // Configure PubNub instance
         PNConfiguration.Builder configBuilder = PNConfiguration.builder(new UserId("demoUserId"), "demo");

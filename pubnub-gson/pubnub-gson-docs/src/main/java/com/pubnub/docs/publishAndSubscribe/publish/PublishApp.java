@@ -10,7 +10,7 @@ import com.pubnub.api.enums.PNLogVerbosity;
 import com.pubnub.api.java.v2.entities.Channel;
 import com.pubnub.api.models.consumer.PNPublishResult;
 
-public class Publish {
+public class PublishApp {
     public static void main(String[] args) throws PubNubException {
         // Configure PubNub instance
         PNConfiguration.Builder configBuilder = PNConfiguration.builder(new UserId("demoUserId"), "demo");
