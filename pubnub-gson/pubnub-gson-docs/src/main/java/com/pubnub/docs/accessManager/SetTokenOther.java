@@ -4,7 +4,7 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.java.PubNub;
 import com.pubnub.docs.SnippetBase;
 
-public class SetToken extends SnippetBase {
+public class SetTokenOther extends SnippetBase {
     private void setToken() throws PubNubException {
         // https://www.pubnub.com/docs/sdks/java/api-reference/access-manager#basic-usage-4
 
