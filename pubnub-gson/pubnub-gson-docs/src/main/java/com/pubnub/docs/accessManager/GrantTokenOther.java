@@ -9,6 +9,7 @@ import com.pubnub.api.java.models.consumer.access_manager.sum.UserPermissions;
 import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGroupGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.UUIDGrant;
+import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult;
 import com.pubnub.docs.SnippetBase;
 
 import java.util.Arrays;
@@ -21,7 +22,7 @@ public class GrantTokenOther extends SnippetBase {
         PubNub pubNub = createPubNub();
 
         // snippet.grantTokenDifferentAccessLevels
-        pubNub.grantToken()
+        PNGrantTokenResult pnGrantTokenResult = pubNub.grantToken()
                 .ttl(15)
                 .authorizedUUID("my-authorized-uuid")
                 .channels(Arrays.asList(
@@ -34,7 +35,9 @@ public class GrantTokenOther extends SnippetBase {
                 .uuids(Arrays.asList(
                         UUIDGrant.id("uuid-c").get(),
                         UUIDGrant.id("uuid-d").get().update()))
-                .async(result -> { /* check result */ });
+                .sync();
+
+        String token = pnGrantTokenResult.getToken();
         // snippet.end
     }
 
@@ -83,11 +86,13 @@ public class GrantTokenOther extends SnippetBase {
         PubNub pubnub = createPubNub();
 
         // snippet.grantTokenUsersAndSpacesBasic
-        pubnub.grantToken()
+        PNGrantTokenResult pnGrantTokenResult = pubnub.grantToken()
                 .ttl(15)
                 .authorizedUserId(new UserId("my-authorized-userId"))
                 .spacesPermissions(Arrays.asList(SpacePermissions.id(new SpaceId("space-id")).read()))
-                .async(result -> { /* check result */ });
+                .sync();
+
+        String token = pnGrantTokenResult.getToken();
         // snippet.end
     }
 
@@ -132,7 +137,7 @@ public class GrantTokenOther extends SnippetBase {
         PubNub pubnub = createPubNub();
 
         // snippet.grantTokenUsersAndSpacesDifferentLevelsWithRegEx
-        pubnub.grantToken()
+        PNGrantTokenResult pnGrantTokenResult = pubnub.grantToken()
                 .ttl(15)
                 .authorizedUserId(new UserId("my-authorized-userId"))
                 .spacesPermissions(Arrays.asList(
@@ -144,7 +149,10 @@ public class GrantTokenOther extends SnippetBase {
                 .usersPermissions(Arrays.asList(
                         UserPermissions.id(new UserId("userId-c")).get(),
                         UserPermissions.id(new UserId("userId-d")).get().update()))
-                .async(result -> { /* check result */ });
+                .sync();
+
+        String token = pnGrantTokenResult.getToken();
+
         // snippet.end
     }
 }
