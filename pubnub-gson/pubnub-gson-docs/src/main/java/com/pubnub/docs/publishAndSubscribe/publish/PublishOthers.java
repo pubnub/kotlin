@@ -57,13 +57,11 @@ public class PublishOthers {
 
         System.out.println("position: " + position);
 
-        channel.publish(position)
+        PNPublishResult publishResult = channel.publish(position)
                 .customMessageType("text-message")
-                .async(result -> {
-                    result.onSuccess((PNPublishResult publishResult) -> {
-                        System.out.println("PubNub timetoken: " + publishResult.getTimetoken());
-                    });
-                });
+                .sync();
+
+        System.out.println("PubNub timetoken: " + publishResult.getTimetoken());
         // snippet.end
     }
 
@@ -109,13 +107,11 @@ public class PublishOthers {
         position.put("lng", 32L);
 
         System.out.println("before pub: " + position);
-        channel.publish(position.toMap())
+        PNPublishResult publishResult = channel.publish(position.toMap())
                 .customMessageType("text-message")
-                .async(result -> {
-                    result.onSuccess((PNPublishResult publishResult) -> {
-                        System.out.println("PubNub timetoken: " + publishResult.getTimetoken());
-                    });
-                });
+                .sync();
+
+        System.out.println("PubNub timetoken: " + publishResult.getTimetoken());
         // snippet.end
     }
 
@@ -156,11 +152,13 @@ public class PublishOthers {
         PubNub pubnub = PubNub.create(pnConfiguration);
         Channel channel = pubnub.channel("myChannel");
 
-        PNPublishResult result = channel.publish("test-message")
+        PNPublishResult publishResult = channel.publish("test-message")
                 .customMessageType("text-message")
                 .shouldStore(true)
                 .ttl(10)
                 .sync();
+
+        System.out.println("PubNub timetoken: " + publishResult.getTimetoken());
         // snippet.end
     }
 }

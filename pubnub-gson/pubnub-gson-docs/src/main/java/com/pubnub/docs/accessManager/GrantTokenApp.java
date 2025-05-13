@@ -1,5 +1,6 @@
 package com.pubnub.docs.accessManager;
 
+import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
 import com.pubnub.api.java.PubNub;
 import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGrant;
@@ -8,7 +9,7 @@ import com.pubnub.api.java.v2.PNConfiguration;
 import java.util.Arrays;
 
 public class GrantTokenApp {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws PubNubException {
         // https://www.pubnub.com/docs/sdks/java/api-reference/access-manager#basic-usage
 
         // snippet.basicGrantToken
