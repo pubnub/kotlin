@@ -10,7 +10,7 @@ import com.pubnub.api.java.PubNub;
 import com.pubnub.api.java.v2.PNConfiguration;
 import com.pubnub.api.retry.RetryConfiguration;
 
-public class Configuration {
+public class ConfigurationApp {
     public static void main(String[] args) throws PubNubException {
         PNConfiguration.Builder configBuilder = PNConfiguration.builder(new UserId("demoUserId"), "demo");
 
