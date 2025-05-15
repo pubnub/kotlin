@@ -2,11 +2,11 @@ package com.pubnub.docs.configuration;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
+import com.pubnub.api.crypto.CryptoModule;
 import com.pubnub.api.java.PubNub;
 import com.pubnub.api.java.v2.PNConfiguration;
 import com.pubnub.api.java.v2.PNConfigurationOverride;
 import com.pubnub.docs.SnippetBase;
-import com.pubnub.api.crypto.CryptoModule;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -56,7 +56,7 @@ public class ConfigurationOther extends SnippetBase {
         configBuilder.cryptoModule(CryptoModule.createAesCbcCryptoModule("enigma", true));
         PNConfiguration config = configBuilder.build();
 
-       // publish
+        // publish
         PNConfiguration overrideConfig = PNConfigurationOverride.from(config)
                 .publishKey("overridePublishKey")
                 .build();
@@ -65,6 +65,7 @@ public class ConfigurationOther extends SnippetBase {
                 .overrideConfiguration(overrideConfig).sync();
         // snippet.end
     }
+
     private void initializePubNubMethod() throws PubNubException {
         // https://www.pubnub.com/docs/sdks/java/api-reference/configuration#methods-1
 
@@ -196,6 +197,18 @@ public class ConfigurationOther extends SnippetBase {
         // snippet.end
     }
 
+    private void configurationSetFilterExpressionMethod() {
+        // https://www.pubnub.com/docs/sdks/java/api-reference/configuration#methods-3
+
+        PNConfiguration.Builder configBuilder = PNConfiguration.builder(new UserId("yourUserId"), "yourSubscribeKey");
+
+        // snippet.configurationSetFilterExpressionMethod
+        // import com.pubnub.api.java.v2.PNConfiguration;
+
+        configBuilder.filterExpression("someString");
+        // snippet.end
+    }
+
     private void configurationSetFilterExpression() throws PubNubException {
         // https://www.pubnub.com/docs/sdks/java/api-reference/configuration#set-filter-expression
         // snippet.configurationSetFilterExpression
@@ -203,6 +216,17 @@ public class ConfigurationOther extends SnippetBase {
 
         PNConfiguration.Builder configBuilder = PNConfiguration.builder(new UserId("yourUserId"), "yourSubscribeKey");
         configBuilder.filterExpression("such=wow");
+        // snippet.end
+    }
+
+    private void configurationGetFilterExpressionMethod() throws PubNubException {
+        // https://www.pubnub.com/docs/sdks/java/api-reference/configuration#methods-3 // <-- this is the same anchore like for setFilterExpression
+
+        PubNub pubNub = createPubNub();
+        // snippet.configurationGetFilterExpressionMethod
+        // import com.pubnub.api.java.v2.PNConfiguration;
+
+        pubNub.getConfiguration().getFilterExpression();
         // snippet.end
     }
 
