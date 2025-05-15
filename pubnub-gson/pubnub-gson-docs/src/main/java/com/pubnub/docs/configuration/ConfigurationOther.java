@@ -149,6 +149,16 @@ public class ConfigurationOther extends SnippetBase {
         // snippet.end
     }
 
+    private void configurationSetUserIdMethod() {
+        // https://www.pubnub.com/docs/sdks/java/api-reference/configuration#methods-2
+
+        // snippet.configurationSetUserIdMethod
+        // import com.pubnub.api.java.v2.PNConfiguration;
+
+        PNConfiguration.builder(new UserId("yourUserId"), "yourSubscribeKey");
+        // snippet.end
+    }
+
     private void configurationSetUserId() throws PubNubException {
         // https://www.pubnub.com/docs/sdks/java/api-reference/configuration#set-user-id
 
@@ -157,6 +167,19 @@ public class ConfigurationOther extends SnippetBase {
 
         PNConfiguration.Builder configBuilder = PNConfiguration.builder(new UserId("yourUserId"), "yourSubscribeKey");
         PubNub pubNub = PubNub.create(configBuilder.build());
+        // snippet.end
+    }
+
+    private void configurationGetUserIdMethod() {
+        // https://www.pubnub.com/docs/sdks/java/api-reference/configuration#methods-2  // <-- this is the same anchore as for setUserId
+
+        PNConfiguration.Builder configBuilder = PNConfiguration.builder(new UserId("yourUserId"), "yourSubscribeKey");
+        PubNub pubNub = PubNub.create(configBuilder.build());
+
+        // snippet.configurationGetUserIdMethod
+        // import com.pubnub.api.java.v2.PNConfiguration;
+
+        pubNub.getConfiguration().getUserId();
         // snippet.end
     }
 
