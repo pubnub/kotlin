@@ -78,7 +78,7 @@ public class ConfigurationOther extends SnippetBase {
 
 
     private void initializePubNubBasieExample() throws PubNubException {
-        // https://www.pubnub.com/docs/sdks/java/api-reference/configuration#methods-1
+        // https://www.pubnub.com/docs/sdks/java/api-reference/configuration#initialize-the-pubnub-client-api
 
         // snippet.initializePubNubBasieExample
         // import com.pubnub.api.java.v2.PNConfiguration;
@@ -163,7 +163,7 @@ public class ConfigurationOther extends SnippetBase {
     private void configurationGetUserId() throws PubNubException {
         // https://www.pubnub.com/docs/sdks/java/api-reference/configuration#get-user-id
 
-        // snippet.configurationSetUserId
+        // snippet.configurationGetUserId
         //  import com.pubnub.api.java.v2.PNConfiguration;
 
         PNConfiguration.Builder configBuilder = PNConfiguration.builder(new UserId("yourUserId"), "yourSubscribeKey");
