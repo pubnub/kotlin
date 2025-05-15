@@ -65,18 +65,27 @@ public class ConfigurationOther extends SnippetBase {
                 .overrideConfiguration(overrideConfig).sync();
         // snippet.end
     }
-
-    private void initializePubNub() throws PubNubException {
+    private void initializePubNubMethod() throws PubNubException {
         // https://www.pubnub.com/docs/sdks/java/api-reference/configuration#methods-1
 
-        // snippet.initializePubnub
+        // snippet.initializePubNubMethod
         // import com.pubnub.api.java.v2.PNConfiguration;
-        // import com.pubnub.api.java.v2.PNConfiguration; // duplicate test should be removed
+
+        PNConfiguration.Builder configBuilder = PNConfiguration.builder(new UserId("yourUserId"), "yourSubscribeKey");
+        PubNub.create(configBuilder.build());
+        // snippet.end
+    }
+
+
+    private void initializePubNubBasieExample() throws PubNubException {
+        // https://www.pubnub.com/docs/sdks/java/api-reference/configuration#methods-1
+
+        // snippet.initializePubNubBasieExample
+        // import com.pubnub.api.java.v2.PNConfiguration;
 
         PNConfiguration.Builder configBuilder = PNConfiguration.builder(new UserId("yourUserId"), "yourSubscribeKey");
         PubNub pubNub = PubNub.create(configBuilder.build());
         // snippet.end
-
     }
 
     private void initializeNonSecureClient() throws PubNubException {
