@@ -8,6 +8,8 @@ import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.docs.SnippetBase;
 import org.json.JSONObject;
 
+import java.util.Arrays;
+
 public class PublishOld extends SnippetBase {
 
     private void publishMessageToChannel() throws PubNubException {
@@ -29,6 +31,22 @@ public class PublishOld extends SnippetBase {
                         System.out.println("pub timetoken: " + publishResult.getTimetoken());
                     });
                 });
+        // snippet.end
+    }
+
+    private void publishWithMetadata() throws PubNubException {
+        // https://www.pubnub.com/docs/sdks/java/api-reference/publish-and-subscribe#publish-with-metadata-1
+
+        PubNub pubNub = createPubNub();
+
+        // snippet.publishWithMetadata
+        PNPublishResult pnPublishResult = pubNub.publish()
+                .message(Arrays.asList("hello", "there"))
+                .channel("suchChannel")
+                .shouldStore(true)
+                .meta("meta") // optional meta data object which can be used with the filtering ability.
+                .usePOST(true)
+                .sync();
         // snippet.end
     }
 
