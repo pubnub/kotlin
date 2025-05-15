@@ -71,6 +71,7 @@ public class ConfigurationOther extends SnippetBase {
 
         // snippet.initializePubnub
         // import com.pubnub.api.java.v2.PNConfiguration;
+        // import com.pubnub.api.java.v2.PNConfiguration; // duplicate test should be removed
 
         PNConfiguration.Builder configBuilder = PNConfiguration.builder(new UserId("yourUserId"), "yourSubscribeKey");
         PubNub pubNub = PubNub.create(configBuilder.build());
