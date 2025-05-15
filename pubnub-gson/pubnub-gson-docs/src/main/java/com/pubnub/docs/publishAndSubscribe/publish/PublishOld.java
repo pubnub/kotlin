@@ -12,7 +12,7 @@ import java.util.Arrays;
 
 public class PublishOld extends SnippetBase {
 
-    private void publishMessageToChannel() throws PubNubException {
+    private void publishOldMessageToChannel() throws PubNubException {
         // https://www.pubnub.com/docs/sdks/java/api-reference/publish-and-subscribe#publish-a-message-to-a-channel-1
 
         PubNub pubNub = createPubNub();
@@ -34,12 +34,12 @@ public class PublishOld extends SnippetBase {
         // snippet.end
     }
 
-    private void publishWithMetadata() throws PubNubException {
+    private void publishOldWithMetadata() throws PubNubException {
         // https://www.pubnub.com/docs/sdks/java/api-reference/publish-and-subscribe#publish-with-metadata-1
 
         PubNub pubNub = createPubNub();
 
-        // snippet.publishWithMetadata
+        // snippet.publishOldWithMetadata
         PNPublishResult pnPublishResult = pubNub.publish()
                 .message(Arrays.asList("hello", "there"))
                 .channel("suchChannel")
