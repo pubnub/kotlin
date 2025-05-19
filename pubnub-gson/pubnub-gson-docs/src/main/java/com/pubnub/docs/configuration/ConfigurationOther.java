@@ -78,10 +78,10 @@ public class ConfigurationOther extends SnippetBase {
     }
 
 
-    private void initializePubNubBasieExample() throws PubNubException {
+    private void initializePubNubBasicExample() throws PubNubException {
         // https://www.pubnub.com/docs/sdks/java/api-reference/configuration#initialize-the-pubnub-client-api
 
-        // snippet.initializePubNubBasieExample
+        // snippet.initializePubNubBasicExample
         // import com.pubnub.api.java.v2.PNConfiguration;
 
         PNConfiguration.Builder configBuilder = PNConfiguration.builder(new UserId("yourUserId"), "yourSubscribeKey");
