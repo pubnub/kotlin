@@ -10,7 +10,7 @@ import java.util.Calendar;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class MessageCounts extends SnippetBase {
+public class MessageCountsOthers extends SnippetBase {
 
     private void messageCounts() throws PubNubException {
         // https://www.pubnub.com/docs/sdks/java/api-reference/storage-and-playback#basic-usage-2
