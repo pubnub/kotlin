@@ -7,6 +7,19 @@ import com.pubnub.api.models.consumer.history.PNHistoryResult;
 import com.pubnub.docs.SnippetBase;
 
 public class HistoryDeprecated extends SnippetBase {
+    private void historyDeprecatedBasic() throws PubNubException {
+        // https://www.pubnub.com/docs/sdks/java/api-reference/storage-and-playback#basic-usage-3
+
+        PubNub pubNub = createPubNub();
+
+        // snippet.historyDeprecatedBasic
+        pubNub.history()
+                .channel("history_channel") // where to fetch history from
+                .count(100) // how many items to fetch
+                .async(result -> { /* check result */ });
+        // snippet.end
+    }
+
     private void historyThreeOldestMessages() throws PubNubException {
         // https://www.pubnub.com/docs/sdks/java/api-reference/storage-and-playback#use-history-to-retrieve-the-three-oldest-messages-by-retrieving-from-the-time-line-in-reverse
 
