@@ -14,7 +14,6 @@ fun main() {
     val userId = UserId("publish-demo-user")
     val config = PNConfiguration.builder(userId, "demo").apply {
         publishKey = "demo"
-        subscribeKey = "demo"
         logVerbosity = PNLogVerbosity.BODY // Enable debug logging
     }.build()
 
