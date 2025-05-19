@@ -1,4 +1,7 @@
 package com.pubnub.docs.messagePersistence;
+// https://www.pubnub.com/docs/sdks/java/api-reference/storage-and-playback#history-paging-example
+
+// snippet.historyPagingExampleDeprecated
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
@@ -7,8 +10,6 @@ import com.pubnub.api.java.v2.PNConfiguration;
 import com.pubnub.api.models.consumer.history.PNHistoryItemResult;
 import com.pubnub.api.models.consumer.history.PNHistoryResult;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.function.Consumer;
 
 public class DeprecatedHistoryApp {
@@ -72,3 +73,4 @@ public class DeprecatedHistoryApp {
                 );
     }
 }
+// snippet.end
