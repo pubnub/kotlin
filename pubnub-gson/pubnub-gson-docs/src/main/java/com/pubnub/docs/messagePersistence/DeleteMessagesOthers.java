@@ -6,7 +6,7 @@ import com.pubnub.docs.SnippetBase;
 
 import java.util.Arrays;
 
-public class DeleteMessages extends SnippetBase {
+public class DeleteMessagesOthers extends SnippetBase {
     private void deleteMessages() throws PubNubException {
         // https://www.pubnub.com/docs/sdks/java/api-reference/storage-and-playback#basic-usage-1
 

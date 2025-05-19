@@ -2,7 +2,7 @@ package com.pubnub.docs.MessagePersistence
 
 import com.pubnub.docs.SnippetBase
 
-class DeleteMessages : SnippetBase() {
+class DeleteMessagesOther : SnippetBase() {
 
     private fun deleteMessagesBasic() {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/storage-and-playback#basic-usage-1
