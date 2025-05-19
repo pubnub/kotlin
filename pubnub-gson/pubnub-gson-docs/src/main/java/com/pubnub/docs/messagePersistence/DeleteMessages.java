@@ -26,7 +26,7 @@ public class DeleteMessages extends SnippetBase {
 
         PubNub pubNub = createPubNub();
 
-        // snippet.deleteMessages
+        // snippet.deleteSpecificMessages
         pubNub.deleteMessages()
                 .channels(Arrays.asList("channel_1"))
                 .start(15526611838554309L)
