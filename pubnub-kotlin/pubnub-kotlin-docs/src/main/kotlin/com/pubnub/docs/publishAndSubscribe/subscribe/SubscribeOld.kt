@@ -16,7 +16,6 @@ class SubscribeOld : SnippetBase() {
 
         // snippet.subscribeWithLogging
         val pnConfiguration = com.pubnub.api.v2.PNConfiguration.builder(UserId("myUserId"), "demo").apply {
-            subscribeKey = "my_subkey"
             publishKey = "my_pubkey"
             logVerbosity = PNLogVerbosity.BODY
         }
@@ -167,7 +166,6 @@ class SubscribeOld : SnippetBase() {
 
         // snippet.subscribeWithState
         val pnConfiguration = com.pubnub.api.v2.PNConfiguration.builder(UserId("myUserId"), "demo").apply {
-            subscribeKey = "demo"
             publishKey = "demo"
         }
 
