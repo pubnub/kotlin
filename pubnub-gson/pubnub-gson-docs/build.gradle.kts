@@ -8,4 +8,6 @@ plugins {
 dependencies {
     api(project(":pubnub-gson:pubnub-gson-api"))
     implementation(project(":pubnub-gson:pubnub-gson-impl"))
+
+    implementation(libs.hamcrest)
 }
