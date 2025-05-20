@@ -8,4 +8,6 @@ plugins {
 dependencies {
     api(project(":pubnub-kotlin:pubnub-kotlin-api"))
     implementation(project(":pubnub-kotlin:pubnub-kotlin-impl"))
+
+    implementation(kotlin("test"))
 }
