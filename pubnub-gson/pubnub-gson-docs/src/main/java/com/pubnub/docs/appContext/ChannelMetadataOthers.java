@@ -43,4 +43,16 @@ public class ChannelMetadataOthers extends SnippetBase {
                 .async(result -> { /* check result */ });
         // snippet.end
     }
+
+    private void removeChannelMetadataBasic() throws PubNubException {
+        // https://www.pubnub.com/docs/sdks/java/api-reference/objects#basic-usage-7
+
+        PubNub pubNub = createPubNub();
+
+        // snippet.removeChannelMetadataBasic
+        pubNub.removeChannelMetadata()
+                .channel("myChannel")
+                .async(result -> { /* check result */ });
+        // snippet.end
+    }
 }
