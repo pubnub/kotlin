@@ -30,7 +30,7 @@ public class SendFileApp {
             // Input stream for the file to be sent. Replace with SendFileApp.class.getClassLoader().getResourceAsStream("your_picture.jpg")) {
 
             if (inputStream == null) {
-                System.err.println("Error: cat_picture.jpg not found in resources.");
+                System.err.println("Error: your_picture.jpg not found.");
                 return; // Exit if the resource is not found
             }
 
