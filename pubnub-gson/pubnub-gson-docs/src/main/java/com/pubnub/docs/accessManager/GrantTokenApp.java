@@ -4,6 +4,7 @@ package com.pubnub.docs.accessManager;
 // snippet.basicGrantToken
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
+import com.pubnub.api.enums.PNLogVerbosity;
 import com.pubnub.api.java.PubNub;
 import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGrant;
 import com.pubnub.api.java.v2.PNConfiguration;
@@ -18,8 +19,7 @@ public class GrantTokenApp {
         configBuilder.secretKey("yourSecretKey");  // <-- a VALID secretKey is required
         PubNub pubnub = PubNub.create(configBuilder.build());
 
-        pubnub.grantToken()
-                .ttl(15)
+        pubnub.grantToken(15)
                 .authorizedUUID("my-authorized-uuid")
                 .channels(Arrays.asList(
                         ChannelGrant.name("channel-a").read(),

@@ -2,6 +2,7 @@ package com.pubnub.docs.accessManager;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
+import com.pubnub.api.enums.PNLogVerbosity;
 import com.pubnub.api.java.PubNub;
 import com.pubnub.api.java.SpaceId;
 import com.pubnub.api.java.models.consumer.access_manager.sum.SpacePermissions;
@@ -9,6 +10,7 @@ import com.pubnub.api.java.models.consumer.access_manager.sum.UserPermissions;
 import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGroupGrant;
 import com.pubnub.api.java.models.consumer.access_manager.v3.UUIDGrant;
+import com.pubnub.api.java.v2.PNConfiguration;
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult;
 import com.pubnub.docs.SnippetBase;
 
@@ -22,8 +24,7 @@ public class GrantTokenOther extends SnippetBase {
         PubNub pubNub = createPubNub();
 
         // snippet.grantTokenDifferentAccessLevels
-        PNGrantTokenResult pnGrantTokenResult = pubNub.grantToken()
-                .ttl(15)
+        PNGrantTokenResult pnGrantTokenResult = pubNub.grantToken(15)
                 .authorizedUUID("my-authorized-uuid")
                 .channels(Arrays.asList(
                         ChannelGrant.name("channel-a").read(),
@@ -47,8 +48,7 @@ public class GrantTokenOther extends SnippetBase {
         PubNub pubNub = createPubNub();
 
         // snippet.grantTokenWithRegEx
-        pubNub.grantToken()
-                .ttl(15)
+        pubNub.grantToken(15)
                 .authorizedUUID("my-authorized-uuid")
                 .channels(Arrays.asList(
                         ChannelGrant.pattern("^channel-[A-Za-z0-9]*$").read()))
@@ -62,8 +62,7 @@ public class GrantTokenOther extends SnippetBase {
         PubNub pubNub = createPubNub();
 
         // snippet.grantTokenDifferentAccessLevelsWithRegEx
-        pubNub.grantToken()
-                .ttl(15)
+        pubNub.grantToken(15)
                 .authorizedUUID("my-authorized-uuid")
                 .channels(Arrays.asList(
                         ChannelGrant.name("channel-a").read(),
@@ -86,8 +85,7 @@ public class GrantTokenOther extends SnippetBase {
         PubNub pubnub = createPubNub();
 
         // snippet.grantTokenUsersAndSpacesBasic
-        PNGrantTokenResult pnGrantTokenResult = pubnub.grantToken()
-                .ttl(15)
+        PNGrantTokenResult pnGrantTokenResult = pubnub.grantToken(15)
                 .authorizedUserId(new UserId("my-authorized-userId"))
                 .spacesPermissions(Arrays.asList(SpacePermissions.id(new SpaceId("space-id")).read()))
                 .sync();
@@ -102,8 +100,7 @@ public class GrantTokenOther extends SnippetBase {
         PubNub pubnub = createPubNub();
 
         // snippet.grantTokenUsersAndSpacesDifferentLevels
-        pubnub.grantToken()
-                .ttl(15)
+        pubnub.grantToken(15)
                 .authorizedUserId(new UserId("my-authorized-userId"))
                 .spacesPermissions(Arrays.asList(
                         SpacePermissions.id(new SpaceId("space-a")).read(),
@@ -123,8 +120,7 @@ public class GrantTokenOther extends SnippetBase {
         PubNub pubnub = createPubNub();
 
         // snippet.grantTokenUsersAndSpacesWithRegEx
-        pubnub.grantToken()
-                .ttl(15)
+        pubnub.grantToken(15)
                 .authorizedUserId(new UserId("my-authorized-userId"))
                 .spacesPermissions(Collections.singletonList(
                         SpacePermissions.pattern("^space-[A-Za-z0-9]*$").read()))
@@ -137,8 +133,7 @@ public class GrantTokenOther extends SnippetBase {
         PubNub pubnub = createPubNub();
 
         // snippet.grantTokenUsersAndSpacesDifferentLevelsWithRegEx
-        PNGrantTokenResult pnGrantTokenResult = pubnub.grantToken()
-                .ttl(15)
+        PNGrantTokenResult pnGrantTokenResult = pubnub.grantToken(15)
                 .authorizedUserId(new UserId("my-authorized-userId"))
                 .spacesPermissions(Arrays.asList(
                         SpacePermissions.id(new SpaceId("space-a")).read(),
