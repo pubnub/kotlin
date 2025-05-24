@@ -43,7 +43,7 @@ public class GetFileUrlImpl extends PassthroughEndpoint<PNFileUrlResult> impleme
 
     public static Builder builder(PubNub pubNub) {
         return new Builder(ChannelFileNameFileIdBuilder.create((channel, fileName, fileId) ->
-                new GetFileUrlImpl(channel, fileName, fileId, pubNub)));
+                new GetFileUrlImpl(channel, fileId, fileName, pubNub)));
     }
 
     @Override
