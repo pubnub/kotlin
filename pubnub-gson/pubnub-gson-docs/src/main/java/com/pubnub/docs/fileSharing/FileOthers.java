@@ -79,4 +79,24 @@ public class FileOthers extends SnippetBase {
                 .async(result -> { /* check result */ });
         // snippet.end
     }
+
+    private void publishFileMessageBasic() throws PubNubException {
+        // https://www.pubnub.com/docs/sdks/java/api-reference/files#publish-file-message
+
+        PubNub pubNub = createPubNub();
+
+        // snippet.publishFileMessageBasic
+        pubnub.publishFileMessage()
+                .channel("my_channel")
+                .fileName("cat_picture.jpg")
+                .fileId("d9515cb7-48a7-41a4-9284-f4bf331bc770")
+                .message("This is a sample message")
+                .customMessageType("file-message")
+                .async(result -> {
+                    result.onSuccess(res -> {
+                        System.out.println("send timetoken: " + res.getTimetoken());
+                    });
+                });
+        // snippet.end
+    }
 }
