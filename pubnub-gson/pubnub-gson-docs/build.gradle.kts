@@ -10,4 +10,5 @@ dependencies {
     implementation(project(":pubnub-gson:pubnub-gson-impl"))
 
     implementation(libs.hamcrest)
+    implementation(libs.slf4j)
 }
