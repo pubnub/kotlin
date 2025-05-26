@@ -86,7 +86,7 @@ public class FileOthers extends SnippetBase {
         PubNub pubNub = createPubNub();
 
         // snippet.publishFileMessageBasic
-        pubnub.publishFileMessage()
+        pubNub.publishFileMessage()
                 .channel("my_channel")
                 .fileName("cat_picture.jpg")
                 .fileId("d9515cb7-48a7-41a4-9284-f4bf331bc770")
