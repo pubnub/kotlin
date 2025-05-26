@@ -1,0 +1,22 @@
+<!-- https://www.pubnub.com/docs/sdks/java/logging#implement-logging-using-logback -->
+<!-- snippet.logbackConfig -->
+
+<configuration>
+    <!-- Console appender -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!-- Format: timestamp [thread] level logger - message -->
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Set the default logging level for all loggers -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+    </root>
+
+    <!-- Configure PubNub network calls logging -->
+    <logger name="pubnub.okhttp" level="DEBUG"/>
+
+</configuration>
+<!-- snippet.end -->
