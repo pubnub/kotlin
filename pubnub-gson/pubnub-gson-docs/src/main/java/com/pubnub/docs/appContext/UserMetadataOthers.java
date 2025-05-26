@@ -13,7 +13,7 @@ public class UserMetadataOthers extends SnippetBase {
 
         // snippet.getUUIDMetadataBasic
         pubNub.getUUIDMetadata().async(result -> { /* check result */ });
-        //snippet.end
+        // snippet.end
     }
 
     private void setUUIDMetadataBasic() throws PubNubException {
