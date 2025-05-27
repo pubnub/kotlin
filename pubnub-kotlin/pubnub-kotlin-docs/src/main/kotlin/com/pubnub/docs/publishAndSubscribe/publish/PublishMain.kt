@@ -1,5 +1,5 @@
 package com.pubnub.docs.publishAndSubscribe.publish
-
+// https://www.pubnub.com/docs/sdks/kotlin/api-reference/publish-and-subscribe#basic-usage
 // snippet.publishMain
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
