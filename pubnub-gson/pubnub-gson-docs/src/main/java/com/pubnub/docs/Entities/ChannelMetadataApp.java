@@ -1,7 +1,7 @@
 package com.pubnub.docs.Entities;
 // https://www.pubnub.com/docs/sdks/java/entities/channel-metadata#basic-usage
-// snippet.channelGroupApp
 
+// snippet.channelMetadataApp
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.java.PubNub;
 import com.pubnub.api.java.v2.PNConfiguration;
