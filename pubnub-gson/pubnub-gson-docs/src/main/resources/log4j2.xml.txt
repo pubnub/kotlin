@@ -1,6 +1,3 @@
-<!--https://www.pubnub.com/docs/sdks/java/logging#implement-logging-using-log4j-->
-
-<!--snippet.log4j2Config-->
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
     <Appenders>
@@ -24,4 +21,3 @@
         </Logger>
     </Loggers>
 </Configuration>
-<!--snippet.end-->
