@@ -32,6 +32,7 @@ class HistoryDeprecated : SnippetBase() {
                 }
             }
         }
+        // snippet.end
     }
 
     private fun historyRetrieveMessagesNewerThanGivenTimetoken() {
@@ -56,6 +57,7 @@ class HistoryDeprecated : SnippetBase() {
                 e.pubnubError
             }
         }
+        // snippet.end
     }
 
     private fun historyRetrieveMessagesUntilGivenTimetoken() {
@@ -82,6 +84,7 @@ class HistoryDeprecated : SnippetBase() {
                 e.pubnubError
             }
         }
+        // snippet.end
     }
 
     private fun includeTimetoken() {
