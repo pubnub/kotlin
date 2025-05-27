@@ -102,6 +102,7 @@ public class MiscellaneousOthers extends SnippetBase {
         // snippet.end
     }
 
+
     private void reconnectBasic() throws PubNubException {
         // https://www.pubnub.com/docs/sdks/java/api-reference/misc#basic-usage-8
 
@@ -109,6 +110,16 @@ public class MiscellaneousOthers extends SnippetBase {
 
         // snippet.reconnectBasic
         pubNub.reconnect();
+        // snippet.end
+    }
+
+    private void disconnectBasic() throws PubNubException {
+        // https://www.pubnub.com/docs/sdks/java/api-reference/misc#basic-usage-9
+
+        PubNub pubNub = createPubNub();
+
+        // snippet.disconnectBasic
+        pubNub.disconnect();
         // snippet.end
     }
 
