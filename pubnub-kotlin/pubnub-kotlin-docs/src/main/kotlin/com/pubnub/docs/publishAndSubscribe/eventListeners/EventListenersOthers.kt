@@ -19,7 +19,6 @@ class EventListenersOthers : SnippetBase() {
         val pubnub = createPubNub()
 
         // snippet.addListenersBasic
-
         // Create a subscription to a specific channel
         val subscription = pubnub.channel("my_channel").subscription()
 
@@ -90,7 +89,6 @@ class EventListenersOthers : SnippetBase() {
         val subscription = pubnub.channel("my_channel").subscription()
 
         // snippet.createListenerForOneTypeEvent
-
         subscription.onMessage = { message ->
             // Handle message
         }
@@ -134,7 +132,6 @@ class EventListenersOthers : SnippetBase() {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/publish-and-subscribe#remove-event-listener
 
         // snippet.removeEventListener
-
         subscription.onMessage = null
         subscription.onSignal = null
         subscription.onMessageAction = null
@@ -151,7 +148,6 @@ class EventListenersOthers : SnippetBase() {
         val pubnub = createPubNub()
 
         // snippet.addConnectionStatusListenerMethod
-
         pubnub.addListener(object : StatusListener {
             override fun status(pubnub: PubNub, status: PNStatus) {
                 // Handle connection status updates
