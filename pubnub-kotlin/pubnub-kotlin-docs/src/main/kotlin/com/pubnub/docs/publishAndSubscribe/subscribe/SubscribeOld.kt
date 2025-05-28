@@ -28,6 +28,18 @@ class SubscribeOld : SnippetBase() {
         // snippet.end
     }
 
+    private fun subscribe() {
+        // https://www.pubnub.com/docs/sdks/kotlin/api-reference/publish-and-subscribe#basic-usage-13
+        val pubnub = createPubNub()
+
+        // snippet.subscribe
+        pubnub.subscribe(
+            channels = listOf("my_channel")
+        )
+
+        // snippet.end
+    }
+
     private fun subscribeWithMultipleChannels() {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/publish-and-subscribe#subscribing-to-multiple-channels
 

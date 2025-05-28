@@ -36,7 +36,6 @@ class SubscribeOthers : SnippetBase() {
         val subscriptionSet = pubnub.subscriptionSetOf(channels = setOf("channelName"))
 
         // snippet.subscription
-
         // For subscription
         subscription.subscribe()
         // For subscription set
@@ -51,7 +50,6 @@ class SubscribeOthers : SnippetBase() {
         val pubnub = createPubNub()
 
         // snippet.subscribeBasicUsage
-
         // Step 1: Create a subscription set
         val subscriptionSet = pubnub.subscriptionSetOf(
             // Specify channels with default options
@@ -70,7 +68,6 @@ class SubscribeOthers : SnippetBase() {
         val pubnub = createPubNub()
 
         // snippet.createSubscriptionSetFrom2individualSubscriptions
-
         // Create subscriptions
         val subscription1 = pubnub.channel("channelName").subscription()
         val subscription2 = pubnub.channelGroup("channelGroup").subscription()
@@ -110,7 +107,6 @@ class SubscribeOthers : SnippetBase() {
         val pubnub = createPubNub()
 
         // snippet.subscribeToSubscriptionSetUsingTimetoken
-
         // Define the channels to subscribe to
         val channels = setOf("my_channel", "other_channel")
 
