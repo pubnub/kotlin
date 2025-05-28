@@ -1,4 +1,4 @@
-package com.pubnub.docs.MessagePersistence
+package com.pubnub.docs.messagePersistence
 
 import com.pubnub.docs.SnippetBase
 

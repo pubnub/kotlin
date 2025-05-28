@@ -1,4 +1,4 @@
-package com.pubnub.docs.MessagePersistence
+package com.pubnub.docs.messagePersistence
 
 import java.util.concurrent.TimeUnit
 import com.pubnub.api.PubNub
