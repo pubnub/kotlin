@@ -766,6 +766,8 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         pubnub.publish(channel01, expectedMessage).sync()
 
         success.listen()
+
+        pubnub.deleteChannelGroup(channelGroup).sync()
     }
 
     @Test
