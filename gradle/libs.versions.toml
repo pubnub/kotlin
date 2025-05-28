@@ -13,7 +13,7 @@ dokka = "2.0.0"
 kotlinx_datetime = "0.6.2"
 kotlinx_coroutines = "1.10.2"
 pubnub_js = "8.6.0"
-pubnub_swift = "9.1.0"
+pubnub_swift = "9.2.0"
 
 [libraries]
 retrofit2 = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit2" }

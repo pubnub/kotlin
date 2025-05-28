@@ -1,9 +1,9 @@
 name: kotlin
-version: 10.5.1
+version: 10.5.2
 schema: 1
 scm: github.com/pubnub/kotlin
 files:
-  - build/libs/pubnub-kotlin-10.5.1-all.jar
+  - build/libs/pubnub-kotlin-10.5.2-all.jar
 sdks:
   - 
       type: library
@@ -23,8 +23,8 @@ sdks:
             -
               distribution-type: library
               distribution-repository: maven
-              package-name: pubnub-kotlin-10.5.1
-              location: https://repo.maven.apache.org/maven2/com/pubnub/pubnub-kotlin/10.5.1/pubnub-kotlin-10.5.1.jar
+              package-name: pubnub-kotlin-10.5.2
+              location: https://repo.maven.apache.org/maven2/com/pubnub/pubnub-kotlin/10.5.2/pubnub-kotlin-10.5.2.jar
               supported-platforms:
                 supported-operating-systems:
                   Android:
@@ -121,6 +121,11 @@ sdks:
                   license-url: https://www.apache.org/licenses/LICENSE-2.0.txt
                   is-required: Required
 changelog:
+  - date: 2025-05-15
+    version: v10.5.2
+    changes:
+      - type: bug
+        text: "Internal fixes."
   - date: 2025-05-13
     version: v10.5.1
     changes:
