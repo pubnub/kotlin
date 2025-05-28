@@ -151,6 +151,11 @@ class PushPayloadHelper {
         }
     }
 
+    @Deprecated(
+        replaceWith = ReplaceWith("FCMPayloadV2"),
+        message = "The legacy GCM/FCM payload is deprecated and will" +
+            "be removed in the next major release. Use`FCMPayloadV2` instead."
+    )
     class FCMPayload : PushPayloadSerializer {
         var custom: Map<String, Any>? = null
         var data: Map<String, Any>? = null

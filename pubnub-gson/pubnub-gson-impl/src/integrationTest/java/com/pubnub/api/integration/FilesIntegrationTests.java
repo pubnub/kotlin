@@ -39,6 +39,76 @@ public class FilesIntegrationTests extends BaseIntegrationTest {
         doItAllFilesTest(false);
     }
 
+    @Test
+    public void uploadListGetUrlDownloadDelete() throws Exception {
+        String channel = randomChannel();
+        String fileName = "cat_picture_" + channel + ".jpg";
+        String message = "Look at this photo!";
+        String customMessageType = "file-message";
+        String content = "This is a test image content";
+
+        // Upload file
+        PNFileUploadResult uploadResult;
+        try (InputStream inputStream = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8))) {
+            uploadResult = pubNub.sendFile()
+                    .channel(channel)
+                    .fileName(fileName)
+                    .inputStream(inputStream)
+                    .message(message)
+                    .customMessageType(customMessageType)
+                    .sync();
+        }
+        String fileId = uploadResult.getFile().getId();
+        Assert.assertNotNull(fileId);
+
+        // List files
+        PNListFilesResult listFilesResult = pubNub.listFiles()
+                .channel(channel)
+                .sync();
+        boolean found = false;
+        for (PNUploadedFile file : listFilesResult.getData()) {
+            if (file.getId().equals(fileId) && file.getName().equals(fileName)) {
+                found = true;
+                break;
+            }
+        }
+        Assert.assertTrue("Uploaded file should be listed", found);
+
+        // Get file URL
+        String fileUrl = pubNub.getFileUrl()
+                .channel(channel)
+                .fileName(fileName)
+                .fileId(fileId)
+                .sync().getUrl();
+        Assert.assertNotNull(fileUrl);
+        Assert.assertTrue(fileUrl.contains(fileId));
+        Assert.assertTrue(fileUrl.contains(fileName));
+        // Assert that fileId appears before fileName in the URL path
+        int fileIdIndex = fileUrl.indexOf(fileId);
+        int fileNameIndex = fileUrl.indexOf(fileName);
+        Assert.assertTrue(
+                "fileId should appear before fileName in the file URL path. URL: " + fileUrl,
+                fileIdIndex > 0 && fileNameIndex > 0 && fileIdIndex < fileNameIndex
+        );
+
+        // Download file
+        PNDownloadFileResult downloadResult = pubNub.downloadFile()
+                .channel(channel)
+                .fileName(fileName)
+                .fileId(fileId)
+                .sync();
+        try (InputStream is = downloadResult.getByteStream()) {
+            Assert.assertEquals(content, readToString(is));
+        }
+
+        // Delete file
+        pubNub.deleteFile()
+                .channel(channel)
+                .fileName(fileName)
+                .fileId(fileId)
+                .sync();
+    }
+
     public void doItAllFilesTest(boolean withCipher) throws PubNubException, InterruptedException, IOException {
         if (withCipher) {
             pubNub = getPubNub(builder -> builder.cryptoModule(CryptoModule.createLegacyCryptoModule("enigma", true)));
