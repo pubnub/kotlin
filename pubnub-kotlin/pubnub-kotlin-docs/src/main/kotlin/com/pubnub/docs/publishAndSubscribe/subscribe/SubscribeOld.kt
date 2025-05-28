@@ -29,8 +29,7 @@ class SubscribeOld : SnippetBase() {
     }
 
     private fun subscribe() {
-        // https://www.pubnub.com/docs/sdks/kotlin/api-reference/publish-and-subscribe#basic-usage-1
-
+        // https://www.pubnub.com/docs/sdks/kotlin/api-reference/publish-and-subscribe#basic-usage-13
         val pubnub = createPubNub()
 
         // snippet.subscribe
