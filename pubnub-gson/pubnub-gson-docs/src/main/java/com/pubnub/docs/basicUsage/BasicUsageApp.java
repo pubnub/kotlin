@@ -15,7 +15,7 @@ import com.pubnub.api.java.v2.entities.Channel;
 import com.pubnub.api.java.v2.subscriptions.Subscription;
 import com.pubnub.api.models.consumer.PNStatus;
 
-public class App {
+public class BasicUsageApp {
     public static void main(String[] args) throws PubNubException {
         // snippet.initializePubNub
         // Initialize PubNub
