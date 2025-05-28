@@ -41,7 +41,14 @@ class ChannelMembershipsOthers : SnippetBase() {
 
         // snippet.setMembershipsBasic
         pubnub.setMemberships(
-            channels = listOf(PNChannelMembership.Partial(channelId = "myChannel", custom = mapOf("owner" to "PubNub"), status = "active", type = "regular_membership")),
+            channels = listOf(
+                PNChannelMembership.Partial(
+                    channelId = "myChannel",
+                    custom = mapOf("owner" to "PubNub"),
+                    status = "active",
+                    type = "regular_membership"
+                )
+            ),
             include = MembershipInclude(
                 includeCustom = true,
                 includeStatus = true,
@@ -62,7 +69,7 @@ class ChannelMembershipsOthers : SnippetBase() {
         // snippet.end
     }
 
-    private fun removeMembershipsBasic(){
+    private fun removeMembershipsBasic() {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/objects#basic-usage-10
 
         val pubnub = createPubNub()

@@ -8,4 +8,12 @@
         <error line="12" column="25" source="standard:argument-list-wrapping" />
         <error line="12" column="271" source="standard:argument-list-wrapping" />
     </file>
+    <file name="src/main/kotlin/com/pubnub/docs/appContext/GetAllUUIDMetadataMain.kt">
+        <error line="97" column="31" source="standard:no-multi-spaces" />
+        <error line="98" column="29" source="standard:no-multi-spaces" />
+        <error line="137" column="26" source="standard:no-multi-spaces" />
+        <error line="138" column="21" source="standard:no-multi-spaces" />
+        <error line="139" column="31" source="standard:no-multi-spaces" />
+        <error line="140" column="29" source="standard:no-multi-spaces" />
+    </file>
 </baseline>

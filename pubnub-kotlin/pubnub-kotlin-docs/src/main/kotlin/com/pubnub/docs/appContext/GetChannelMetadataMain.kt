@@ -9,7 +9,6 @@ import com.pubnub.api.v2.PNConfiguration
 import kotlin.test.assertEquals
 
 fun main() {
-
     // create configuration
     val pnConfiguration = PNConfiguration.builder(userId = UserId("user01"), subscribeKey = "demo") {
         publishKey = "demo"

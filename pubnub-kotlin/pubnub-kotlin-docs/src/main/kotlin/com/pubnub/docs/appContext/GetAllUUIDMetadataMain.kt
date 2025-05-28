@@ -5,8 +5,8 @@ package com.pubnub.docs.appContext
 
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
-import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.enums.PNLogVerbosity
+import com.pubnub.api.v2.PNConfiguration
 
 /**
  * This example demonstrates how to use the getAllUUIDMetadata method in the PubNub Kotlin SDK.
@@ -198,7 +198,7 @@ private fun getSpecificUUIDMetadata(pubnub: PubNub) {
 }
 
 private fun cleanupUserMetadata(pubnub: PubNub) {
-   val users = listOf("user-1", "user-2", "user-3")
+    val users = listOf("user-1", "user-2", "user-3")
 
     users.forEach { userId ->
         println("\nCleaning up metadata for $userId")

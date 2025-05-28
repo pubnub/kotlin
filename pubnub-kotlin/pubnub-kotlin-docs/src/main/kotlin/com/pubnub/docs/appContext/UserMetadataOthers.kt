@@ -51,6 +51,6 @@ class UserMetadataOthers : SnippetBase() {
                     // Handle successful method result
                 }
             }
-        //snippet.end
+        // snippet.end
     }
 }

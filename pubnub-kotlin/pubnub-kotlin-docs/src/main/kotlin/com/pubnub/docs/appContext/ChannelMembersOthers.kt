@@ -49,7 +49,6 @@ class ChannelMembersOthers : SnippetBase() {
             }.onSuccess { value ->
                 // Handle successful method result
             }
-
         }
         // snippet.end
     }
