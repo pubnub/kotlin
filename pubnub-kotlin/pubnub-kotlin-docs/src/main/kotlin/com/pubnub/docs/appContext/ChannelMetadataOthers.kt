@@ -1,12 +1,10 @@
 package com.pubnub.docs.appContext
 
-import com.pubnub.docs.SnippetBase
+import com.pubnub.api.PubNub
 
-class ChannelMetadataOthers : SnippetBase() {
-    private fun getAllChannelMetadataBasic() {
+class ChannelMetadataOthers {
+    private fun getAllChannelMetadataBasic(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/objects#basic-usage-4
-
-        val pubnub = createPubNub()
 
         // snippet.getAllChannelMetadataBasic
         pubnub.getAllChannelMetadata()
@@ -20,10 +18,8 @@ class ChannelMetadataOthers : SnippetBase() {
         // snippet.end
     }
 
-    private fun getChannelMetadataBasic() {
+    private fun getChannelMetadataBasic(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/objects#basic-usage-5
-
-        val pubnub = createPubNub()
 
         // snippet.getChannelMetadataBasic
         pubnub.getChannelMetadata(channel = "myChannel")
@@ -37,10 +33,8 @@ class ChannelMetadataOthers : SnippetBase() {
         // snippet.end
     }
 
-    private fun setChannelMetadataBasic() {
+    private fun setChannelMetadataBasic(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/objects#basic-usage-6
-
-        val pubnub = createPubNub()
 
         // snippet.setChannelMetadataBasic
         pubnub.setChannelMetadata(channel = "myChannel")
@@ -54,10 +48,8 @@ class ChannelMetadataOthers : SnippetBase() {
         // snippet.end
     }
 
-    private fun removeChannelMetadata() {
+    private fun removeChannelMetadata(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/objects#basic-usage-7
-
-        val pubnub = createPubNub()
 
         // snippet.removeChannelMetadata
         pubnub.removeChannelMetadata(channel = "myChannel")

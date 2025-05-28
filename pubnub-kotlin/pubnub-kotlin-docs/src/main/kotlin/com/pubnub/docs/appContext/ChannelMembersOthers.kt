@@ -5,13 +5,11 @@ import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.member.MemberInclude
 import com.pubnub.api.models.consumer.objects.member.PNMember
 import com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult
-import com.pubnub.docs.SnippetBase
+import com.pubnub.api.PubNub
 
-class ChannelMembersOthers : SnippetBase() {
-    private fun getChannelMembersBasic() {
+class ChannelMembersOthers {
+    private fun getChannelMembersBasic(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/objects#basic-usage-12
-
-        val pubnub = createPubNub()
 
         // snippet.getChannelMembersBasic
         pubnub.getChannelMembers("myChannel")
@@ -25,10 +23,8 @@ class ChannelMembersOthers : SnippetBase() {
         // snippet.end
     }
 
-    private fun setChannelMembersBasic() {
+    private fun setChannelMembersBasic(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/objects#basic-usage-13
-
-        val pubnub = createPubNub()
 
         // snippet.setChannelMembersBasic
         pubnub.setChannelMembers(
@@ -53,10 +49,8 @@ class ChannelMembersOthers : SnippetBase() {
         // snippet.end
     }
 
-    private fun removeChannelMembersBasic() {
+    private fun removeChannelMembersBasic(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/objects#basic-usage-14
-
-        val pubnub = createPubNub()
 
         // snippet.removeChannelMembersBasic
         pubnub.removeChannelMembers(
@@ -73,10 +67,8 @@ class ChannelMembersOthers : SnippetBase() {
         // snippet.end
     }
 
-    private fun manageChannelMembersBasic() {
+    private fun manageChannelMembersBasic(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/objects#basic-usage-15
-
-        val pubnub = createPubNub()
 
         // snippet.manageChannelMembersBasic
         val pnMemberArrayResult: PNMemberArrayResult = pubnub.manageChannelMembers(

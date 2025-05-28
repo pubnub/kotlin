@@ -1,13 +1,11 @@
 package com.pubnub.docs.MessagePersistence
 
-import com.pubnub.docs.SnippetBase
 import java.util.concurrent.TimeUnit
+import com.pubnub.api.PubNub
 
-class MessageCountsOthers : SnippetBase() {
-    private fun messageCountsBasic() {
+class MessageCountsOthers {
+    private fun messageCountsBasic(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/storage-and-playback#basic-usage-2
-
-        val pubnub = createPubNub()
 
         // snippet.messageCountsBasic
         val lastHourTimetoken = System.currentTimeMillis() - TimeUnit.HOURS.toMillis(1)
@@ -25,10 +23,8 @@ class MessageCountsOthers : SnippetBase() {
         // snippet.end
     }
 
-    private fun messageCountsDifferentTimetokenForEachChannel() {
+    private fun messageCountsDifferentTimetokenForEachChannel(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/storage-and-playback#other-examples-2
-
-        val pubnub = createPubNub()
 
         // snippet.messageCountsDifferentTimetokenForEachChannel
         val lastHourTimetoken = System.currentTimeMillis() - TimeUnit.HOURS.toMillis(1)

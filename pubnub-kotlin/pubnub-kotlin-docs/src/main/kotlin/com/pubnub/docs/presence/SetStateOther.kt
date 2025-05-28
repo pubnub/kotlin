@@ -1,13 +1,11 @@
 package com.pubnub.docs.presence
 
 import com.google.gson.JsonObject
-import com.pubnub.docs.SnippetBase
+import com.pubnub.api.PubNub
 
-class SetStateOther : SnippetBase() {
-    private fun setState() {
+class SetStateOther {
+    private fun setState(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/presence#basic-usage-2
-
-        val pubnub = createPubNub()
 
         // snippet.setState
         pubnub.setPresenceState(
@@ -18,10 +16,8 @@ class SetStateOther : SnippetBase() {
         // snippet.end
     }
 
-    private fun getState() {
+    private fun getState(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/presence#basic-usage-2
-
-        val pubnub = createPubNub()
 
         // snippet.getState
         pubnub.getPresenceState(
@@ -31,10 +27,8 @@ class SetStateOther : SnippetBase() {
         // snippet.end
     }
 
-    private fun setStateForChannelsInChannelGroup() {
+    private fun setStateForChannelsInChannelGroup(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/presence#set-state-for-channels-in-channel-group
-
-        val pubnub = createPubNub()
 
         // snippet.setStateForChannelsInChannelGroup
         pubnub.setPresenceState(
@@ -54,10 +48,8 @@ class SetStateOther : SnippetBase() {
         // snippet.end
     }
 
-    private fun getStateForUuid() {
+    private fun getStateForUuid(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/presence#get-state-for-uuid
-
-        val pubnub = createPubNub()
 
         // snippet.getStateForUuid
         pubnub.getPresenceState(

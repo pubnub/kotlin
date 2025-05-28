@@ -1,12 +1,10 @@
 package com.pubnub.docs.MessagePersistence
 
-import com.pubnub.docs.SnippetBase
+import com.pubnub.api.PubNub
 
-class DeleteMessagesOther : SnippetBase() {
-    private fun deleteMessagesBasic() {
+class DeleteMessagesOther {
+    private fun deleteMessagesBasic(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/storage-and-playback#basic-usage-1
-
-        val pubnub = createPubNub()
 
         // snippet.deleteMessagesBasic
         pubnub.deleteMessages(
@@ -26,10 +24,8 @@ class DeleteMessagesOther : SnippetBase() {
         // snippet.end
     }
 
-    private fun deleteSpecificMessageFromHistory() {
+    private fun deleteSpecificMessageFromHistory(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/storage-and-playback#delete-specific-message-from-history
-
-        val pubnub = createPubNub()
 
         // snippet.deleteSpecificMessageFromHistory
         pubnub.deleteMessages(

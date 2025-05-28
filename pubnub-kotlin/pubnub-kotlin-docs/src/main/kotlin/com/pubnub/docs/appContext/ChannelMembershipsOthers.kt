@@ -4,12 +4,11 @@ import com.pubnub.api.models.consumer.objects.PNMembershipKey
 import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.membership.MembershipInclude
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
-import com.pubnub.docs.SnippetBase
+import com.pubnub.api.PubNub
 
-class ChannelMembershipsOthers : SnippetBase() {
-    private fun getMembershipsBasic() {
+class ChannelMembershipsOthers {
+    private fun getMembershipsBasic(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/objects#basic-usage-8
-        val pubnub = createPubNub()
 
         // snippet.getMembershipsBasic
         pubnub.getMemberships(
@@ -34,10 +33,8 @@ class ChannelMembershipsOthers : SnippetBase() {
         // snippet.end
     }
 
-    private fun setMembershipsBasic() {
+    private fun setMembershipsBasic(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/objects#basic-usage-9
-
-        val pubnub = createPubNub()
 
         // snippet.setMembershipsBasic
         pubnub.setMemberships(
@@ -69,10 +66,8 @@ class ChannelMembershipsOthers : SnippetBase() {
         // snippet.end
     }
 
-    private fun removeMembershipsBasic() {
+    private fun removeMembershipsBasic(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/objects#basic-usage-10
-
-        val pubnub = createPubNub()
 
         // snippet.removeMembershipsBasic
         pubnub.removeMemberships(listOf("myChannel"))
@@ -86,10 +81,8 @@ class ChannelMembershipsOthers : SnippetBase() {
         // snippet.end
     }
 
-    private fun manageMembershipsBasic() {
+    private fun manageMembershipsBasic(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/objects#basic-usage-11
-
-        val pubnub = createPubNub()
 
         // snippet.manageMembershipsBasic
         pubnub.manageMemberships(
