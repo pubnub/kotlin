@@ -1,5 +1,6 @@
 package com.pubnub.docs.accessManager
 
+import com.pubnub.api.PubNub
 import com.pubnub.api.SpaceId
 import com.pubnub.api.UserId
 import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions
@@ -9,11 +10,9 @@ import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
 import com.pubnub.docs.SnippetBase
 
-class GrantTokenOther : SnippetBase() {
-    private fun grantTokenDifferentAccessLevels() {
+class GrantTokenOther {
+    private fun grantTokenDifferentAccessLevels(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/access-manager#grant-an-authorized-client-different-levels-of-access-to-various-resources-in-a-single-call
-
-        val pubnub = createPubNub()
 
         // snippet.grantTokenDifferentAccessLevels
         pubnub.grantToken(
@@ -42,10 +41,8 @@ class GrantTokenOther : SnippetBase() {
         // snippet.end
     }
 
-    private fun grantTokenWithPatternBasedChannelAccess() {
+    private fun grantTokenWithPatternBasedChannelAccess(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/access-manager#grant-an-authorized-client-read-access-to-multiple-channels-using-regex
-
-        val pubnub = createPubNub()
 
         // snippet.grantTokenWithPatternBasedChannelAccess
         pubnub.grantToken(
@@ -65,10 +62,8 @@ class GrantTokenOther : SnippetBase() {
         // snippet.end
     }
 
-    private fun grantTokenWithPatternBasedChannelGroupAccess() {
+    private fun grantTokenWithPatternBasedChannelGroupAccess(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/access-manager#grant-an-authorized-client-different-levels-of-access-to-various-resources-and-read-access-to-channels-using-regex-in-a-single-call
-
-        val pubnub = createPubNub()
 
         // snippet.grantTokenWithPatternBasedChannelGroupAccess
         pubnub.grantToken(
@@ -99,10 +94,8 @@ class GrantTokenOther : SnippetBase() {
         // snippet.end
     }
 
-    private fun grantTokenWithSpacePermission() {
+    private fun grantTokenWithSpacePermission(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/access-manager#basic-usage-1
-
-        val pubnub = createPubNub()
 
         // snippet.grantTokenWithSpacePermission
         pubnub.grantToken(
@@ -120,10 +113,8 @@ class GrantTokenOther : SnippetBase() {
         // snippet.end
     }
 
-    private fun grantTokenWithSpaceAndUserPermissionDifferentLevels() {
+    private fun grantTokenWithSpaceAndUserPermissionDifferentLevels(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/access-manager#grant-an-authorized-client-different-levels-of-access-to-various-resources-in-a-single-call-1
-
-        val pubnub = createPubNub()
 
         // snippet.grantTokenWithSpaceAndUserPermissionDifferentLevels
         pubnub.grantToken(
@@ -150,10 +141,8 @@ class GrantTokenOther : SnippetBase() {
         // snippet.end
     }
 
-    private fun grantTokenMultipleSpacesUsingRegEx() {
+    private fun grantTokenMultipleSpacesUsingRegEx(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/access-manager#grant-an-authorized-client-read-access-to-multiple-spaces-using-regex
-
-        val pubnub = createPubNub()
 
         // snippet.grantTokenMultipleSpacesUsingRegEx
         pubnub.grantToken(
@@ -173,10 +162,8 @@ class GrantTokenOther : SnippetBase() {
         // snippet.end
     }
 
-    private fun grantTokenVariousResourcesUsingRegEx() {
+    private fun grantTokenVariousResourcesUsingRegEx(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/access-manager#grant-an-authorized-client-different-levels-of-access-to-various-resources-and-read-access-to-spaces-using-regex-in-a-single-call
-
-        val pubnub = createPubNub()
 
         // snippet.grantTokenMultipleSpacesUsingRegEx
         pubnub.grantToken(
