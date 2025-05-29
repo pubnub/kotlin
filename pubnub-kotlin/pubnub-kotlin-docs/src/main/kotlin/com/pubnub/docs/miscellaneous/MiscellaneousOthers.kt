@@ -84,6 +84,13 @@ class MiscellaneousOthers {
         // snippet.end
     }
 
+    fun getSubscribedChannelGroups(pubNub: PubNub) {
+
+        // snippet.getSubscribedChannelGroups
+        val subscribedChannelGroups = pubNub.getSubscribedChannelGroups()
+        // snippet.end
+    }
+
     fun disconnect(pubNub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/misc#basic-usage-7
 
