@@ -316,7 +316,7 @@ open class PubNubImpl(
         return ChannelImpl(this, ChannelName(name))
     }
 
-    override fun channelGroup(name: String): ChannelGroup {
+    override fun channelGroup(name: String): ChannelGroupImpl {
         return ChannelGroupImpl(this, ChannelGroupName(name))
     }
 
