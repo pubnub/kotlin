@@ -1,5 +1,7 @@
 package com.pubnub.api.crypto
 
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.crypto.cryptor.Cryptor
@@ -22,7 +24,7 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.io.ByteArrayInputStream
 import java.io.InputStream
-import java.util.Base64
+import java.util.*
 import org.hamcrest.Matchers.`is` as iz
 
 class CryptoModuleTest {
@@ -148,6 +150,25 @@ class CryptoModuleTest {
 
         // then
         assertArrayEquals(msgToEncrypt, decryptedMsg)
+    }
+    @Test
+    fun mytest() {
+
+        // https://www.pubnub.com/docs/general/setup/data-security#apns-example
+
+        // snippet.encryptApnsBasic
+        val clearData = JsonObject()
+        clearData.addProperty("test_name", "pregnancy")
+        clearData.addProperty("results", "positive")
+        clearData.addProperty("notes", "You are having twins!")
+        val clearBytes: ByteArray = clearData.toString().toByteArray(Charsets.UTF_8)
+        val cipherKey = "enigma"
+        val aesCbcCryptoModule = CryptoModule.createAesCbcCryptoModule(cipherKey)
+        val encryptedData = aesCbcCryptoModule.encrypt(clearBytes)
+
+        val decryptedBytes = aesCbcCryptoModule.decrypt(encryptedData);
+        val decryptedJson: JsonObject = JsonParser.parseString(decryptedBytes.toString(Charsets.UTF_8)).asJsonObject
+        assertEquals(clearData, decryptedJson)
     }
 
     @Test
