@@ -1,6 +1,7 @@
 package com.pubnub.docs.miscellaneous
 
 import com.pubnub.api.PubNub
+import com.pubnub.api.UserId
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper
 import com.pubnub.api.utils.Instant
@@ -163,6 +164,19 @@ class MiscellaneousOthers {
         println("Current date: ${localDateTime.date}")
         println("Current time: ${localDateTime.time}")
         println("PubNub timetoken: ${timetoken}")
+        // snippet.end
+    }
+
+    fun createCryptoModuleBasic() {
+        // https://www.pubnub.com/docs/general/setup/data-security#encrypting-messages
+
+        // snippet.createCryptoModuleBasic
+        val config = com.pubnub.api.v2.PNConfiguration.builder(UserId("myUserId"), "demo").apply {
+            publishKey = "demo"
+            cryptoModule = CryptoModule.createAesCbcCryptoModule("enigma")
+        }.build()
+
+        val pubnub = PubNub.create(config)
         // snippet.end
     }
 }

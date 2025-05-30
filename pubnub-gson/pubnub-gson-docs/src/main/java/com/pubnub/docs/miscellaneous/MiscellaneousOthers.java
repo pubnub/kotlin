@@ -1,7 +1,9 @@
 package com.pubnub.docs.miscellaneous;
 
 import com.pubnub.api.PubNubException;
+import com.pubnub.api.UserId;
 import com.pubnub.api.crypto.CryptoModule;
+import com.pubnub.api.java.v2.PNConfiguration;
 import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper;
 import com.pubnub.docs.SnippetBase;
 import com.pubnub.api.java.PubNub;
@@ -178,6 +180,19 @@ public class MiscellaneousOthers extends SnippetBase {
         System.out.println("Current date: " + localDateTime.toLocalDate());
         System.out.println("Current time: " + localDateTime.toLocalTime());
         System.out.println("PubNub timetoken: " + timetoken);
+        // snippet.end
+    }
+
+    private void createCryptoModuleBasic() {
+        // https://www.pubnub.com/docs/general/setup/data-security#encrypting-messages
+
+        // snippet.createCryptoModuleBasic
+        PNConfiguration.Builder configBuilder = PNConfiguration.builder(new UserId("yourUserId"), "yourSubscribeKey");
+        // publishKey from Admin Portal (only required if publishing)
+        configBuilder.publishKey("PublishKey");
+        configBuilder.cryptoModule(CryptoModule.createAesCbcCryptoModule("enigma", true));
+        // all necessary config options
+        PubNub pubNub = PubNub.create(configBuilder.build());
         // snippet.end
     }
 }
