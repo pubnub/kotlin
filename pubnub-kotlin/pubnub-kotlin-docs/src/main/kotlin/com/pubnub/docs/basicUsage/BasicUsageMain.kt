@@ -1,6 +1,5 @@
 package com.pubnub.docs.basicUsage
 // https://www.pubnub.com/docs/sdks/kotlin#complete-example
-// snippet.initializePubNubBasic
 
 import com.google.gson.JsonObject
 import com.pubnub.api.PubNub
@@ -14,6 +13,7 @@ import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 
 fun main() {
+    // snippet.initializePubNubBasic
     // Step 1: Initialize PubNub with configuration
     val config = com.pubnub.api.v2.PNConfiguration.builder(UserId("myUserId"), "demo").apply {
         publishKey = "demo"
@@ -81,5 +81,5 @@ fun main() {
     
     // Keep the program running to receive the published message
     Thread.sleep(2000)
+    // snippet.end
 }
-// snippet.end
