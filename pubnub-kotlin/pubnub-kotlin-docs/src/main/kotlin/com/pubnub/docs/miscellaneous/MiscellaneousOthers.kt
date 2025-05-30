@@ -3,6 +3,9 @@ package com.pubnub.docs.miscellaneous
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
 import com.pubnub.api.crypto.CryptoModule
+import com.pubnub.api.crypto.cryptor.Cryptor
+import com.pubnub.api.crypto.data.EncryptedData
+import com.pubnub.api.crypto.data.EncryptedStreamData
 import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper
 import com.pubnub.api.utils.Instant
 import com.pubnub.api.utils.TimetokenUtil
@@ -10,9 +13,10 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
+import java.io.InputStream
 
 class MiscellaneousOthers {
-    fun createPushPayloadMethod(pubNub: PubNub) {
+     private fun createPushPayloadMethod(pubNub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/misc#methods
 
         // snippet.createPushPayloadMethod
@@ -26,7 +30,7 @@ class MiscellaneousOthers {
         // snippet.end
     }
 
-    fun encryptString() {
+    private fun encryptString() {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/misc#encrypt-part-of-message
 
         // snippet.encryptString
@@ -36,7 +40,7 @@ class MiscellaneousOthers {
         // snippet.end
     }
 
-    fun encryptInputStream() {
+    private fun encryptInputStream() {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/misc#basic-usage-2
 
         // snippet.encryptInputStream
@@ -46,7 +50,7 @@ class MiscellaneousOthers {
         // snippet.end
     }
 
-    fun decryptString() {
+    private fun decryptString() {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/misc#basic-usage-3
 
         // snippet.decryptString
@@ -57,7 +61,7 @@ class MiscellaneousOthers {
         // snippet.end
     }
 
-    fun decryptInputStream() {
+    private fun decryptInputStream() {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/misc#basic-usage-4
 
         // snippet.decryptInputStream
@@ -69,7 +73,7 @@ class MiscellaneousOthers {
         // snippet.end
     }
 
-    fun destroy(pubNub: PubNub) {
+    private fun destroy(pubNub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/misc#basic-usage-5
 
         // snippet.destroy
@@ -77,7 +81,7 @@ class MiscellaneousOthers {
         // snippet.end
     }
 
-    fun getSubscribedChannels(pubNub: PubNub) {
+    private fun getSubscribedChannels(pubNub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/misc#basic-usage-6
 
         // snippet.getSubscribedChannels
@@ -85,14 +89,14 @@ class MiscellaneousOthers {
         // snippet.end
     }
 
-    fun getSubscribedChannelGroups(pubNub: PubNub) {
+    private fun getSubscribedChannelGroups(pubNub: PubNub) {
 
         // snippet.getSubscribedChannelGroups
         val subscribedChannelGroups = pubNub.getSubscribedChannelGroups()
         // snippet.end
     }
 
-    fun disconnect(pubNub: PubNub) {
+    private fun disconnect(pubNub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/misc#basic-usage-7
 
         // snippet.disconnect
@@ -100,7 +104,7 @@ class MiscellaneousOthers {
         // snippet.end
     }
 
-    fun reconnect(pubNub: PubNub) {
+    private fun reconnect(pubNub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/misc#basic-usage-8
 
         // snippet.reconnect
@@ -108,7 +112,7 @@ class MiscellaneousOthers {
         // snippet.end
     }
 
-    fun timetokenToInstant() {
+    private fun timetokenToInstant() {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/misc#basic-usage-9
 
         // snippet.timetokenToInstant
@@ -122,7 +126,7 @@ class MiscellaneousOthers {
         // snippet.end
     }
 
-    fun instantToTimetoken() {
+    private fun instantToTimetoken() {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/misc#basic-usage-10
 
         // snippet.instantToTimetoken
@@ -137,7 +141,7 @@ class MiscellaneousOthers {
         // snippet.end
     }
 
-    fun unixToTimetoken() {
+    private fun unixToTimetoken() {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/misc#basic-usage-11
 
         // snippet.unixToTimetoken
@@ -152,7 +156,7 @@ class MiscellaneousOthers {
         // snippet.end
     }
 
-    fun timetokenToUnix() {
+    private fun timetokenToUnix() {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/misc#basic-usage-12
 
         // snippet.timetokenToUnix
@@ -167,7 +171,7 @@ class MiscellaneousOthers {
         // snippet.end
     }
 
-    fun createCryptoModuleBasic() {
+    private fun createCryptoModuleBasic() {
         // https://www.pubnub.com/docs/general/setup/data-security#encrypting-messages
 
         // snippet.createCryptoModuleBasic
@@ -179,4 +183,38 @@ class MiscellaneousOthers {
         val pubnub = PubNub.create(config)
         // snippet.end
     }
+
+    private fun customCryptor() {
+        // https://www.pubnub.com/docs/general/setup/data-security#example-custom-cryptor-implementation
+
+        // snippet.customCryptor
+        fun myCustomCryptor() = object : Cryptor {
+            override fun id(): ByteArray {
+                // Should return a ByteArray of exactly 4 bytes.
+                return byteArrayOf('C'.code.toByte(), 'U'.code.toByte(), 'S'.code.toByte(), 'T'.code.toByte())
+            }
+
+            override fun encrypt(data: ByteArray): EncryptedData {
+                // implement your crypto logic
+                return EncryptedData(metadata = null, data = data)
+            }
+
+            override fun decrypt(encryptedData: EncryptedData): ByteArray {
+                // implement your crypto logic
+                return encryptedData.data
+            }
+
+            override fun encryptStream(stream: InputStream): EncryptedStreamData {
+                // implement your crypto logic
+                return EncryptedStreamData(metadata = null, stream = stream)
+            }
+
+            override fun decryptStream(encryptedData: EncryptedStreamData): InputStream {
+                // implement your crypto logic
+                return encryptedData.stream
+            }
+        }
+        // snippet.end
+    }
+
 }
