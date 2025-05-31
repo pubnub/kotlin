@@ -29,6 +29,7 @@ class HereNowOther {
                 e.pubnubError
             }
         }
+        // snippet.end
     }
 
     private fun hereNowReturnOccupancyOnly(pubnub: PubNub) {

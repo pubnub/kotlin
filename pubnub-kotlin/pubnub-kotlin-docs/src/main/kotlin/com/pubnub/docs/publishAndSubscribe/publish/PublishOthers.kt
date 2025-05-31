@@ -52,7 +52,7 @@ class PublishOthers {
                 println("Message sent, timetoken: ${publishResult.timetoken}")
             }
         }
-        // snipped.end
+        // snippet.end
     }
 
     private fun publishJsonArrayGSON() {

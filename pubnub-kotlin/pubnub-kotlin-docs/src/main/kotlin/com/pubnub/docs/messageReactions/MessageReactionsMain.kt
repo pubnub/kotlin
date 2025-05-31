@@ -16,7 +16,7 @@ fun main() {
     val userId = UserId("message-action-demo-user")
     val config = PNConfiguration.builder(userId, "demo").apply {
         publishKey = "demo"
-        logVerbosity = PNLogVerbosity.BODY // Enable debug logging for visibility
+        logVerbosity = PNLogVerbosity.BODY // Enable debug logging of network calls
     }.build()
 
     // 2. Create PubNub instance
