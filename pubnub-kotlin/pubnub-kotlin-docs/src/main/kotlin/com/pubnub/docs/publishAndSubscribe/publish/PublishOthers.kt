@@ -4,14 +4,12 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
-import com.pubnub.docs.SnippetBase
 import org.json.JSONArray
 import org.json.JSONObject
 
-class PublishOthers : SnippetBase() {
-    private fun publishRequestExecution() {
+class PublishOthers {
+    private fun publishRequestExecution(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/publish-and-subscribe
-        val pubnub = createPubNub()
 
         // snippet.publishRequestExecution
         val channel = pubnub.channel("channelName")
@@ -54,7 +52,7 @@ class PublishOthers : SnippetBase() {
                 println("Message sent, timetoken: ${publishResult.timetoken}")
             }
         }
-        // snipped.end
+        // snippet.end
     }
 
     private fun publishJsonArrayGSON() {

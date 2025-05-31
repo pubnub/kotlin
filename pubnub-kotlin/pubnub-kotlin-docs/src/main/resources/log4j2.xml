@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} -=extra if you like=- [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Root level="INFO">
+            <AppenderRef ref="Console"/>
+        </Root>
+        <!-- Set PubNub logging level -->
+        <Logger name="com.pubnub" level="trace" additivity="false">
+            <AppenderRef ref="Console"/>
+            <!-- <AppenderRef ref="YourCustomAppender"/>-->
+        </Logger>
+        <!-- Set specific logger for PubNub network calls -->
+        <Logger name="pubnub.okhttp" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+            <!-- <AppenderRef ref="YourCustomAppender"/>-->
+        </Logger>
+    </Loggers>
+</Configuration>

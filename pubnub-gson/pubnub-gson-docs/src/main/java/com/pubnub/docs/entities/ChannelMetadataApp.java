@@ -1,15 +1,15 @@
-package com.pubnub.docs.Entities;
-// https://www.pubnub.com/docs/sdks/java/entities/channel#basic-usage
-// snippet.channelApp
+package com.pubnub.docs.entities;
+// https://www.pubnub.com/docs/sdks/java/entities/channel-metadata#basic-usage
 
+// snippet.channelMetadataApp
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.java.PubNub;
 import com.pubnub.api.java.v2.PNConfiguration;
 import com.pubnub.api.UserId;
 import com.pubnub.api.enums.PNLogVerbosity;
-import com.pubnub.api.java.v2.entities.Channel;
+import com.pubnub.api.java.v2.entities.ChannelMetadata;
 
-public class ChannelApp {
+public class ChannelMetadataApp {
     public static void main(String[] args) throws PubNubException {
         // Configure PubNub instance
         PNConfiguration.Builder configBuilder = PNConfiguration.builder(new UserId("demoUserId"), "demo");
@@ -19,10 +19,10 @@ public class ChannelApp {
 
         PubNub pubnub = PubNub.create(configBuilder.build());
 
-        // Create a Channel entity
-        Channel singleChannel = pubnub.channel("myChannel");
+        // Create a ChannelMetadata entity
+        ChannelMetadata metadata = pubnub.channelMetadata("myChannel");
 
-        System.out.println("Channel created: " + singleChannel.getName());
+        System.out.println("Channel Metadata created: " + metadata.getId());
     }
 }
 // snippet.end

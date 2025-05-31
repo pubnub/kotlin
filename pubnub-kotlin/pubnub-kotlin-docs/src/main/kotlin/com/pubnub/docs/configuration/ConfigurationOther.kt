@@ -4,6 +4,7 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.v2.PNConfiguration
+import com.pubnub.api.v2.PNConfigurationOverride
 import com.pubnub.docs.SnippetBase
 import java.net.InetSocketAddress
 import java.net.Proxy
@@ -116,8 +117,14 @@ class ConfigurationOther : SnippetBase() {
     private fun configurationSetUserId() {
         // todo add link once created
         // snippet.configurationSetUserId
+        // Setting the userId during initialization
         val builder = PNConfiguration.builder(UserId("abc"), "subscribeKey")
         val pubnub = PubNub.create(builder.build())
+
+        // Setting the userId after initialization
+        val pnConfigurationWithModifiedUserId: PNConfiguration = PNConfigurationOverride.from(pubnub.configuration).apply {
+            userId = UserId("new-user-id")
+        }.build()
         // snippet.end
     }
 

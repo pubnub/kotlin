@@ -1,4 +1,4 @@
-package com.pubnub.docs.MessagePersistence
+package com.pubnub.docs.messagePersistence
 // https://www.pubnub.com/docs/sdks/kotlin/api-reference/storage-and-playback#history-paging-example
 
 // snippet.historyPagingExampleDeprecated

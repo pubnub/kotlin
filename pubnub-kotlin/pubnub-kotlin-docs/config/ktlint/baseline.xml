@@ -16,4 +16,16 @@
         <error line="139" column="31" source="standard:no-multi-spaces" />
         <error line="140" column="29" source="standard:no-multi-spaces" />
     </file>
+    <file name="src/main/kotlin/com/pubnub/docs/fileSharing/FileSharingMain.kt">
+        <error line="53" column="44" source="standard:no-multi-spaces" />
+        <error line="54" column="45" source="standard:no-multi-spaces" />
+        <error line="55" column="40" source="standard:no-multi-spaces" />
+        <error line="56" column="30" source="standard:no-multi-spaces" />
+        <error line="61" column="27" source="standard:no-multi-spaces" />
+    </file>
+    <file name="src/main/kotlin/com/pubnub/docs/messageReactions/MessageReactionsMain.kt">
+        <error line="101" column="28" source="standard:no-multi-spaces" />
+        <error line="102" column="32" source="standard:no-multi-spaces" />
+        <error line="103" column="45" source="standard:no-multi-spaces" />
+    </file>
 </baseline>

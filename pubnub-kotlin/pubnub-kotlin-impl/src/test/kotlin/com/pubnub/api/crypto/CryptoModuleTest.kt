@@ -1,5 +1,7 @@
 package com.pubnub.api.crypto
 
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.crypto.cryptor.Cryptor
@@ -22,7 +24,7 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.io.ByteArrayInputStream
 import java.io.InputStream
-import java.util.Base64
+import java.util.*
 import org.hamcrest.Matchers.`is` as iz
 
 class CryptoModuleTest {

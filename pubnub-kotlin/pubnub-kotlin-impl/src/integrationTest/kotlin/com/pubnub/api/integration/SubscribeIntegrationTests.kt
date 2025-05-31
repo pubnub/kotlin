@@ -771,6 +771,60 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
     }
 
     @Test
+    fun testSubscribeToChannelMetadata() {
+        val success = AtomicBoolean()
+        val expectedMessage = randomValue()
+
+        // add channels to channelGroup
+        val channelMetadataName = randomChannel()
+        val channelMetadataSubscription = pubnub.channelMetadata(channelMetadataName).subscription()
+        channelMetadataSubscription.addListener(
+            object : EventListener {
+                override fun message(
+                    pubnub: PubNub,
+                    result: PNMessageResult,
+                ) {
+                    assertEquals(expectedMessage, result.message.asString)
+                    success.set(true)
+                }
+            },
+        )
+
+        channelMetadataSubscription.subscribe()
+        Thread.sleep(2000)
+        pubnub.publish(channelMetadataName, expectedMessage).sync()
+
+        success.listen()
+    }
+
+    @Test
+    fun testSubscribeToUserMetadata() {
+        val success = AtomicBoolean()
+        val expectedMessage = randomValue()
+
+        // add channels to channelGroup
+        val userMetadataName = randomChannel()
+        val userMetadataSubscription = pubnub.userMetadata(userMetadataName).subscription()
+        userMetadataSubscription.addListener(
+            object : EventListener {
+                override fun message(
+                    pubnub: PubNub,
+                    result: PNMessageResult,
+                ) {
+                    assertEquals(expectedMessage, result.message.asString)
+                    success.set(true)
+                }
+            },
+        )
+
+        userMetadataSubscription.subscribe()
+        Thread.sleep(2000)
+        pubnub.publish(userMetadataName, expectedMessage).sync()
+
+        success.listen()
+    }
+
+    @Test
     fun testSubscribeWithFilter() {
         val success = AtomicBoolean()
         val phraseToLookForInMessage = "abc"
