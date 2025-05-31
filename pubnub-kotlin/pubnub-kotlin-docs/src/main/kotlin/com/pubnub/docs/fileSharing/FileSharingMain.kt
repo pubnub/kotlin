@@ -4,8 +4,8 @@ package com.pubnub.docs.fileSharing
 // snippet.filesBasicUsage
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
-import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.enums.PNLogVerbosity
+import com.pubnub.api.v2.PNConfiguration
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -84,14 +84,12 @@ fun main() {
                         // 8. Clean up resources
                         inputStream.close()
                         pubnub.destroy() // Clean up PubNub resources
-
                     }.onFailure { exception ->
                         println("Error getting file URL: ${exception.message}")
                         inputStream.close()
                         pubnub.destroy()
                     }
                 }
-
             }.onFailure { exception ->
                 println("Error uploading file: ${exception.message}")
                 inputStream.close()
@@ -104,10 +102,9 @@ fun main() {
 
         // Keep the program running to allow async operations to complete
         Thread.sleep(5000)
-
     } catch (e: Exception) {
         println("Error: ${e.message}")
         e.printStackTrace()
     }
 }
-//snippet.end
+// snippet.end

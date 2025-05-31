@@ -4,8 +4,8 @@ package com.pubnub.docs.entities
 // snippet.userMetadata
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
-import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.enums.PNLogVerbosity
+import com.pubnub.api.v2.PNConfiguration
 
 fun main() {
     println("PubNub UserMetadata Entity Example")

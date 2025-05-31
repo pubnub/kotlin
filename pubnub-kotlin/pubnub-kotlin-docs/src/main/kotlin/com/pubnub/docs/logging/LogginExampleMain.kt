@@ -78,7 +78,6 @@ fun demonstrateLogging(pubnub: PubNub) {
         // Unsubscribe
         pubnub.unsubscribeAll()
         println("   Unsubscribed from all channels")
-
     } catch (e: Exception) {
         println("ERROR: ${e.message}")
     }

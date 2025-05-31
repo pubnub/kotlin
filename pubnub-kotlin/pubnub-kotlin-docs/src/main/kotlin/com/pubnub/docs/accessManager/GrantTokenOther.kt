@@ -8,7 +8,6 @@ import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
-import com.pubnub.docs.SnippetBase
 
 class GrantTokenOther {
     private fun grantTokenDifferentAccessLevels(pubnub: PubNub) {

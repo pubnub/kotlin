@@ -1,10 +1,10 @@
 package com.pubnub.docs.appContext
 
+import com.pubnub.api.PubNub
 import com.pubnub.api.models.consumer.objects.PNMembershipKey
 import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.membership.MembershipInclude
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
-import com.pubnub.api.PubNub
 
 class ChannelMembershipsOthers {
     private fun getMembershipsBasic(pubnub: PubNub) {

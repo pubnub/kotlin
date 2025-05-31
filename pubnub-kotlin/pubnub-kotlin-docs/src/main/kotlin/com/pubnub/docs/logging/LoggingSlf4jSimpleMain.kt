@@ -46,7 +46,6 @@ object LoggingSlf4jSimpl {
                 .publish("Hello from SLF4J Simple Example")
                 .sync()
             logger.info("Message published successfully")
-
         } catch (e: PubNubException) {
             logger.error("Error during operations: ${e.message}", e)
         }

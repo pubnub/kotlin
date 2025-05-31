@@ -66,10 +66,8 @@ fun main() {
     // 6. Publish a message to the channel
     pubnub.publish(channelMetadataName, "Some message").sync()
 
-
     // 7. Wait for operation to complete
     Thread.sleep(2000)
-
 
     // 8. Clean up
     pubnub.destroy()

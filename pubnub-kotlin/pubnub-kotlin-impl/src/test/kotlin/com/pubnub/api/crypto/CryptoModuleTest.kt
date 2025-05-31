@@ -151,25 +151,6 @@ class CryptoModuleTest {
         // then
         assertArrayEquals(msgToEncrypt, decryptedMsg)
     }
-    @Test
-    fun mytest() {
-
-        // https://www.pubnub.com/docs/general/setup/data-security#apns-example
-
-        // snippet.encryptApnsBasic
-        val clearData = JsonObject()
-        clearData.addProperty("test_name", "pregnancy")
-        clearData.addProperty("results", "positive")
-        clearData.addProperty("notes", "You are having twins!")
-        val clearBytes: ByteArray = clearData.toString().toByteArray(Charsets.UTF_8)
-        val cipherKey = "enigma"
-        val aesCbcCryptoModule = CryptoModule.createAesCbcCryptoModule(cipherKey)
-        val encryptedData = aesCbcCryptoModule.encrypt(clearBytes)
-
-        val decryptedBytes = aesCbcCryptoModule.decrypt(encryptedData);
-        val decryptedJson: JsonObject = JsonParser.parseString(decryptedBytes.toString(Charsets.UTF_8)).asJsonObject
-        assertEquals(clearData, decryptedJson)
-    }
 
     @Test
     fun `using AesCbcCryptoModule can decrypt message that was encrypted with LegacyCryptor with staticIV `() {

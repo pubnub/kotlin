@@ -4,10 +4,10 @@ package com.pubnub.docs.miscellaneous
 // snippet.createPushPayloadMain
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
-import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper
+import com.pubnub.api.v2.PNConfiguration
 
 /**
  * This example demonstrates how to use the PushPayloadHelper class in PubNub Kotlin SDK.
@@ -124,7 +124,8 @@ fun createAdvancedPushPayload(pubnub: PubNub) {
                 channelId = "meeting_reminders"
                 sound = "meeting_alert"
                 // Set higher priority for this notification
-                notificationPriority = PushPayloadHelper.FCMPayloadV2.AndroidConfig.AndroidNotification.NotificationPriority.PRIORITY_HIGH
+                notificationPriority =
+                    PushPayloadHelper.FCMPayloadV2.AndroidConfig.AndroidNotification.NotificationPriority.PRIORITY_HIGH
             }
         }
 

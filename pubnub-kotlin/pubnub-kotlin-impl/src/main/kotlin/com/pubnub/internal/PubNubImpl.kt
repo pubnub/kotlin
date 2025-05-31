@@ -238,11 +238,11 @@ open class PubNubImpl(
     fun generatePnsdk(): String {
         val joinedSuffixes = configuration.pnsdkSuffixes.toSortedMap().values.joinToString(" ")
         return "$pnsdkName/$SDK_VERSION" +
-            if (joinedSuffixes.isNotBlank()) {
-                " $joinedSuffixes"
-            } else {
-                ""
-            }
+                if (joinedSuffixes.isNotBlank()) {
+                    " $joinedSuffixes"
+                } else {
+                    ""
+                }
     }
 
     private val emitterHelper = EmitterHelper(listenerManager)
@@ -726,13 +726,13 @@ open class PubNubImpl(
         return GetAllChannelMetadataEndpoint(
             pubnub = this,
             collectionQueryParameters =
-                CollectionQueryParameters(
-                    limit = limit,
-                    page = page,
-                    filter = filter,
-                    sort = sort,
-                    includeCount = includeCount,
-                ),
+            CollectionQueryParameters(
+                limit = limit,
+                page = page,
+                filter = filter,
+                sort = sort,
+                includeCount = includeCount,
+            ),
             includeQueryParam = IncludeQueryParam(includeCustom = includeCustom),
         )
     }
@@ -786,13 +786,13 @@ open class PubNubImpl(
         return GetAllUUIDMetadataEndpoint(
             pubnub = this,
             collectionQueryParameters =
-                CollectionQueryParameters(
-                    limit = limit,
-                    page = page,
-                    filter = filter,
-                    sort = sort,
-                    includeCount = includeCount,
-                ),
+            CollectionQueryParameters(
+                limit = limit,
+                page = page,
+                filter = filter,
+                sort = sort,
+                includeCount = includeCount,
+            ),
             withInclude = IncludeQueryParam(includeCustom = includeCustom),
         )
     }
@@ -1167,12 +1167,12 @@ open class PubNubImpl(
 
     @Deprecated(
         replaceWith =
-            ReplaceWith(
-                "fetchMessages(channels = channels, page = PNBoundedPage(start = start, end = end," +
+        ReplaceWith(
+            "fetchMessages(channels = channels, page = PNBoundedPage(start = start, end = end," +
                     " limit = maximumPerChannel),includeMeta = includeMeta," +
                     " includeMessageActions = includeMessageActions, includeMessageType = includeMessageType)",
-                "com.pubnub.api.models.consumer.PNBoundedPage",
-            ),
+            "com.pubnub.api.models.consumer.PNBoundedPage",
+        ),
         level = DeprecationLevel.ERROR,
         message = "Use fetchMessages(String, PNBoundedPage, Boolean, Boolean, Boolean) instead",
     )
@@ -1197,10 +1197,10 @@ open class PubNubImpl(
 
     @Deprecated(
         replaceWith =
-            ReplaceWith(
-                "getMessageActions(channel = channel, page = PNBoundedPage(start = start, end = end, limit = limit))",
-                "com.pubnub.api.models.consumer.PNBoundedPage",
-            ),
+        ReplaceWith(
+            "getMessageActions(channel = channel, page = PNBoundedPage(start = start, end = end, limit = limit))",
+            "com.pubnub.api.models.consumer.PNBoundedPage",
+        ),
         level = DeprecationLevel.ERROR,
         message = "Use getMessageActions(String, PNBoundedPage) instead",
     )
@@ -1215,11 +1215,11 @@ open class PubNubImpl(
 
     @Deprecated(
         replaceWith =
-            ReplaceWith(
-                "setMemberships(channels = channels, uuid = uuid, limit = limit, " +
+        ReplaceWith(
+            "setMemberships(channels = channels, uuid = uuid, limit = limit, " +
                     "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
                     "includeChannelDetails = includeChannelDetails)",
-            ),
+        ),
         level = DeprecationLevel.ERROR,
         message = "Use setMemberships instead",
     )
@@ -1248,11 +1248,11 @@ open class PubNubImpl(
     @Deprecated(
         "Use getChannelMembers instead",
         replaceWith =
-            ReplaceWith(
-                "getChannelMembers(channel = channel, limit = limit, page = page, " +
+        ReplaceWith(
+            "getChannelMembers(channel = channel, limit = limit, page = page, " +
                     "filter = filter, sort = sort, includeCount = includeCount, " +
                     "includeCustom = includeCustom,includeUUIDDetails = includeUUIDDetails)",
-            ),
+        ),
         level = DeprecationLevel.ERROR,
     )
     override fun getMembers(
@@ -1278,11 +1278,11 @@ open class PubNubImpl(
     @Deprecated(
         "Use setChannelMembers instead",
         replaceWith =
-            ReplaceWith(
-                "setChannelMembers(channel = channel, uuids = uuids, limit = limit, " +
+        ReplaceWith(
+            "setChannelMembers(channel = channel, uuids = uuids, limit = limit, " +
                     "page = page, filter = filter, sort = sort, includeCount = includeCount," +
                     " includeCustom = includeCustom,includeUUIDDetails = includeUUIDDetails)",
-            ),
+        ),
         level = DeprecationLevel.ERROR,
     )
     override fun addMembers(
@@ -1355,11 +1355,11 @@ open class PubNubImpl(
     @Deprecated(
         "Use removeChannelMembers instead",
         replaceWith =
-            ReplaceWith(
-                "removeChannelMembers(channel = channel, uuids = uuids, limit = limit, " +
+        ReplaceWith(
+            "removeChannelMembers(channel = channel, uuids = uuids, limit = limit, " +
                     "page = page, filter = filter, sort = sort, includeCount = includeCount, " +
                     "includeCustom = includeCustom,includeUUIDDetails = includeUUIDDetails)",
-            ),
+        ),
         level = DeprecationLevel.ERROR,
     )
     override fun removeMembers(
@@ -1538,8 +1538,8 @@ open class PubNubImpl(
             shouldStore = shouldStore,
             customMessageType = customMessageType,
             executorService =
-                retrofitManager.getTransactionClientExecutorService()
-                    ?: Executors.newSingleThreadExecutor(),
+            retrofitManager.getTransactionClientExecutorService()
+                ?: Executors.newSingleThreadExecutor(),
             fileMessagePublishRetryLimit = configuration.fileMessagePublishRetryLimit,
             generateUploadUrlFactory = GenerateUploadUrlEndpoint.Factory(this),
             publishFileMessageFactory = PublishFileMessageEndpoint.Factory(this),

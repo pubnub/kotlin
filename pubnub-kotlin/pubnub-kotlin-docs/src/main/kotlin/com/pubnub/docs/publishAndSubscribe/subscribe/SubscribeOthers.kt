@@ -1,9 +1,9 @@
 package com.pubnub.docs.publishAndSubscribe.subscribe
 
+import com.pubnub.api.PubNub
 import com.pubnub.api.v2.subscriptions.SubscriptionCursor
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.docs.SnippetBase
-import com.pubnub.api.PubNub
 
 class SubscribeOthers : SnippetBase() {
     private fun createSubscription(pubnub: PubNub) {

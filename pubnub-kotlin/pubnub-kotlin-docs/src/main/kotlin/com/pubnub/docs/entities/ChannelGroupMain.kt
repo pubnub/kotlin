@@ -64,7 +64,6 @@ fun main() {
     // 6. Publish a message to a channel in the group
     pubnub.publish(channelMarketing, "Important message").sync()
 
-
     // Wait for operation to complete
     Thread.sleep(2000)
 

@@ -78,7 +78,6 @@ fun main() {
             println("Message sent, timetoken: ${value.timetoken}")
         }
     }
-    
     // Keep the program running to receive the published message
     Thread.sleep(2000)
     // snippet.end

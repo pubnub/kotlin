@@ -48,7 +48,6 @@ object LoggingLog4j2 {
                 .publish("Hello from Log4j Example")
                 .sync()
             logger.info("Message published successfully")
-
         } catch (e: PubNubException) {
             logger.error("Error during operations: ${e.message}", e)
         }

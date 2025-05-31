@@ -16,7 +16,7 @@ import kotlinx.datetime.toLocalDateTime
 import java.io.InputStream
 
 class MiscellaneousOthers {
-     private fun createPushPayloadMethod(pubNub: PubNub) {
+    private fun createPushPayloadMethod(pubNub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/misc#methods
 
         // snippet.createPushPayloadMethod
@@ -90,7 +90,6 @@ class MiscellaneousOthers {
     }
 
     private fun getSubscribedChannelGroups(pubNub: PubNub) {
-
         // snippet.getSubscribedChannelGroups
         val subscribedChannelGroups = pubNub.getSubscribedChannelGroups()
         // snippet.end
@@ -120,7 +119,7 @@ class MiscellaneousOthers {
         val instant: Instant = TimetokenUtil.timetokenToInstant(timetoken)
         val localDateTimeInUTC = instant.toLocalDateTime(TimeZone.UTC)
 
-        println("PubNub timetoken: ${timetoken}")
+        println("PubNub timetoken: $timetoken")
         println("Current date: ${localDateTimeInUTC.date}")
         println("Current time: ${localDateTimeInUTC.time}")
         // snippet.end
@@ -130,14 +129,23 @@ class MiscellaneousOthers {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/misc#basic-usage-10
 
         // snippet.instantToTimetoken
-        val localDateTime = LocalDateTime(year = 2024, monthNumber = 9, dayOfMonth = 30, hour = 12, minute = 12, second =  44, nanosecond =  123456789)
+        val localDateTime = LocalDateTime(
+            year = 2024,
+            monthNumber = 9,
+            dayOfMonth = 30,
+            hour = 12,
+            minute = 12,
+            second = 44,
+            nanosecond = 123456789
+        )
+
         val zone = TimeZone.currentSystemDefault()
         val instant = localDateTime.toInstant(zone)
         val timetoken = TimetokenUtil.instantToTimetoken(instant)
 
         println("Current date: ${localDateTime.date}")
         println("Current time: ${localDateTime.time}")
-        println("PubNub timetoken: ${timetoken}")
+        println("PubNub timetoken: $timetoken")
         // snippet.end
     }
 
@@ -152,7 +160,7 @@ class MiscellaneousOthers {
 
         println("Current date: ${localDateTime.date}")
         println("Current time: ${localDateTime.time}")
-        println("PubNub timetoken: ${timetoken}")
+        println("PubNub timetoken: $timetoken")
         // snippet.end
     }
 
@@ -167,7 +175,7 @@ class MiscellaneousOthers {
 
         println("Current date: ${localDateTime.date}")
         println("Current time: ${localDateTime.time}")
-        println("PubNub timetoken: ${timetoken}")
+        println("PubNub timetoken: $timetoken")
         // snippet.end
     }
 
@@ -216,5 +224,4 @@ class MiscellaneousOthers {
         }
         // snippet.end
     }
-
 }

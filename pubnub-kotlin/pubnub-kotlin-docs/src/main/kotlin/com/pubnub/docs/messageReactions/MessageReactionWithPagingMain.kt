@@ -27,11 +27,11 @@ fun main() {
     pubnub.addMessageAction(
         channel = channelName,
         messageAction =
-        PNMessageAction(
-            type = "someother",
-            value = "smiley",
-            messageTimetoken = pnPublishResult.timetoken,
-        ),
+            PNMessageAction(
+                type = "someother",
+                value = "smiley",
+                messageTimetoken = pnPublishResult.timetoken,
+            ),
     ).sync()
 
     getMessageActionsWithPaging(
@@ -77,7 +77,7 @@ fun getMessageActionsWithPaging(
                     getMessageActionsResult.actions.first().actionTimetoken,
                     callback
                 )
-            }else{
+            } else {
                 callback.invoke(emptyList())
             }
         }.onFailure { exception: PubNubException ->

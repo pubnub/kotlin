@@ -2,9 +2,6 @@ package com.pubnub.docs.messageReactions
 
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
-import com.pubnub.api.models.consumer.PNBoundedPage
-import com.pubnub.api.models.consumer.message_actions.PNGetMessageActionsResult
-import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.message_actions.PNRemoveMessageActionResult
 import com.pubnub.api.v2.callbacks.Result
 

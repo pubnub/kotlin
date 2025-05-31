@@ -4,9 +4,9 @@ package com.pubnub.docs.messageReactions
 // snippet.messageReactionsMain
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
-import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
+import com.pubnub.api.v2.PNConfiguration
 
 fun main() {
     println("PubNub addMessageAction() Example")
@@ -40,8 +40,8 @@ fun main() {
                 // Check if there are any existing message actions for our message
                 val existingActions = response.actions.filter {
                     it.messageTimetoken?.toLong() == messageTimetoken &&
-                            it.type == "reaction" &&
-                            it.value == "smiley_face"
+                        it.type == "reaction" &&
+                        it.value == "smiley_face"
                 }
 
                 if (existingActions.isNotEmpty()) {
@@ -84,7 +84,6 @@ fun main() {
         // Keep the program running to allow async operations to complete
         println("\nWaiting for async operations to complete...")
         Thread.sleep(10000)
-
     } catch (e: Exception) {
         println("Error: ${e.message}")
         e.printStackTrace()
@@ -99,8 +98,8 @@ fun addNewMessageAction(pubnub: PubNub, channel: String, messageTimetoken: Long)
 
     // Create a message action
     val messageAction = PNMessageAction(
-        type = "reaction",           // Type of reaction (can be any string)
-        value = "smiley_face",       // Value of reaction (can be any string)
+        type = "reaction",                   // Type of reaction (can be any string)
+        value = "smiley_face",               // Value of reaction (can be any string)
         messageTimetoken = messageTimetoken  // Timetoken of the message to add the reaction to
     )
 
@@ -125,7 +124,6 @@ fun addNewMessageAction(pubnub: PubNub, channel: String, messageTimetoken: Long)
 
             // Clean up resources
             pubnub.destroy()
-
         }.onFailure { exception ->
             println("Error adding message action: ${exception.message}")
             exception.printStackTrace()

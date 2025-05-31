@@ -1,8 +1,8 @@
 package com.pubnub.docs.presence
 
+import com.pubnub.api.PubNub
 import com.pubnub.api.models.consumer.presence.PNHereNowResult
 import com.pubnub.api.v2.callbacks.Result
-import com.pubnub.api.PubNub
 
 class HereNowOther {
     private fun hereNowReturningState(pubnub: PubNub) {

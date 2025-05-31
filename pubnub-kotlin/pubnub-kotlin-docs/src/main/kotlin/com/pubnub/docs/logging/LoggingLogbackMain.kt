@@ -54,7 +54,6 @@ object LoggingLogback {
                 .publish("Hello from Logging Example")
                 .sync()
             logger.info("Message published - check logs for details")
-
         } catch (e: PubNubException) {
             logger.error("Error during operations: {}", e.message, e)
         }

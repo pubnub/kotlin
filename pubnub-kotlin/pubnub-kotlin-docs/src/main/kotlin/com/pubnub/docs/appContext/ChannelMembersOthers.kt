@@ -1,11 +1,11 @@
 package com.pubnub.docs.appContext
 
+import com.pubnub.api.PubNub
 import com.pubnub.api.models.consumer.objects.PNMemberKey
 import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.member.MemberInclude
 import com.pubnub.api.models.consumer.objects.member.PNMember
 import com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult
-import com.pubnub.api.PubNub
 
 class ChannelMembersOthers {
     private fun getChannelMembersBasic(pubnub: PubNub) {

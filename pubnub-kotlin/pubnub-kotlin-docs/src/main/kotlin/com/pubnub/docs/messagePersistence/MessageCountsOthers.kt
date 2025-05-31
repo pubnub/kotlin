@@ -1,7 +1,7 @@
 package com.pubnub.docs.messagePersistence
 
-import java.util.concurrent.TimeUnit
 import com.pubnub.api.PubNub
+import java.util.concurrent.TimeUnit
 
 class MessageCountsOthers {
     private fun messageCountsBasic(pubnub: PubNub) {
