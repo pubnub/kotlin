@@ -186,7 +186,7 @@ public class MiscellaneousOthers extends SnippetBase {
         // snippet.end
     }
 
-    private void createCryptoModuleBasic() {
+    private void createCryptoModuleBasic() throws PubNubException {
         // https://www.pubnub.com/docs/general/setup/data-security#encrypting-messages
 
         // snippet.createCryptoModuleBasic
