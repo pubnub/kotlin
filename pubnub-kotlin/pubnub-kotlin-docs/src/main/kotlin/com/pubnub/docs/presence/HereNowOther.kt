@@ -1,14 +1,12 @@
 package com.pubnub.docs.presence
 
+import com.pubnub.api.PubNub
 import com.pubnub.api.models.consumer.presence.PNHereNowResult
 import com.pubnub.api.v2.callbacks.Result
-import com.pubnub.docs.SnippetBase
 
-class HereNowOther : SnippetBase() {
-    private fun hereNowReturningState() {
+class HereNowOther {
+    private fun hereNowReturningState(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/presence#returning-state
-
-        val pubnub = createPubNub()
 
         // snippet.hereNowReturningState
         pubnub.hereNow(
@@ -31,12 +29,11 @@ class HereNowOther : SnippetBase() {
                 e.pubnubError
             }
         }
+        // snippet.end
     }
 
-    private fun hereNowReturnOccupancyOnly() {
+    private fun hereNowReturnOccupancyOnly(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/presence#return-occupancy-only
-
-        val pubnub = createPubNub()
 
         // snippet.hereNowReturnOccupancyOnly
         pubnub.hereNow(
@@ -59,10 +56,8 @@ class HereNowOther : SnippetBase() {
         // snippet.end
     }
 
-    private fun hereNowForChannelGroups() {
+    private fun hereNowForChannelGroups(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/presence#here-now-for-channel-groups
-
-        val pubnub = createPubNub()
 
         // snippet.hereNowForChannelGroups
         pubnub.hereNow(

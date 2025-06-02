@@ -69,7 +69,7 @@ fun createAdvancedConfig(): PNConfiguration {
         suppressLeaveEvents = false // Whether to send leave events when disconnecting
 
         // Debugging parameters
-        logVerbosity = PNLogVerbosity.BODY // Enable debug logging
+        logVerbosity = PNLogVerbosity.BODY // Enable debug logging of network calls
 
         // Retry configuration (for reconnection)
         retryConfiguration = RetryConfiguration.Linear(

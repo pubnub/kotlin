@@ -1,16 +1,15 @@
-package com.pubnub.docs.Entities;
-// https://www.pubnub.com/docs/sdks/java/entities/channel-group#basic-usage
-
-// snippet.channelGroupApp
+package com.pubnub.docs.entities;
+// https://www.pubnub.com/docs/sdks/java/entities/channel#basic-usage
+// snippet.channelApp
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.java.PubNub;
 import com.pubnub.api.java.v2.PNConfiguration;
 import com.pubnub.api.UserId;
 import com.pubnub.api.enums.PNLogVerbosity;
-import com.pubnub.api.java.v2.entities.ChannelGroup;
+import com.pubnub.api.java.v2.entities.Channel;
 
-public class ChannelGroupApp {
+public class ChannelApp {
     public static void main(String[] args) throws PubNubException {
         // Configure PubNub instance
         PNConfiguration.Builder configBuilder = PNConfiguration.builder(new UserId("demoUserId"), "demo");
@@ -20,10 +19,10 @@ public class ChannelGroupApp {
 
         PubNub pubnub = PubNub.create(configBuilder.build());
 
-        // Create a ChannelGroup entity
-        ChannelGroup myChannelGroup = pubnub.channelGroup("myGroup");
+        // Create a Channel entity
+        Channel singleChannel = pubnub.channel("myChannel");
 
-        System.out.println("Channel Group created: " + myChannelGroup.getName());
+        System.out.println("Channel created: " + singleChannel.getName());
     }
 }
 // snippet.end

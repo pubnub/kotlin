@@ -1,14 +1,13 @@
 package com.pubnub.docs.publishAndSubscribe.subscribe
 
+import com.pubnub.api.PubNub
 import com.pubnub.api.v2.subscriptions.SubscriptionCursor
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.docs.SnippetBase
 
 class SubscribeOthers : SnippetBase() {
-    private fun createSubscription() {
+    private fun createSubscription(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/publish-and-subscribe#create-a-subscription
-
-        val pubnub = createPubNub()
 
         // snippet.createSubscription
         // Entity-based, local-scoped
@@ -27,10 +26,9 @@ class SubscribeOthers : SnippetBase() {
         // snippet.end
     }
 
-    private fun subscription() {
+    private fun subscription(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/publish-and-subscribe#subscribe-1
 
-        val pubnub = createPubNub()
         val myChannel = pubnub.channel("channelName")
         val subscription = myChannel.subscription()
         val subscriptionSet = pubnub.subscriptionSetOf(channels = setOf("channelName"))
@@ -44,10 +42,8 @@ class SubscribeOthers : SnippetBase() {
         // snippet.end
     }
 
-    private fun subscribeBasicUsage() {
+    private fun subscribeBasicUsage(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/publish-and-subscribe#basic-usage-3
-
-        val pubnub = createPubNub()
 
         // snippet.subscribeBasicUsage
         // Step 1: Create a subscription set
@@ -62,10 +58,8 @@ class SubscribeOthers : SnippetBase() {
         // snippet.end
     }
 
-    private fun createSubscriptionSetFrom2individualSubscriptions() {
+    private fun createSubscriptionSetFrom2individualSubscriptions(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/publish-and-subscribe#create-a-subscription-set-from-2-individual-subscriptions
-
-        val pubnub = createPubNub()
 
         // snippet.createSubscriptionSetFrom2individualSubscriptions
         // Create subscriptions
@@ -89,9 +83,8 @@ class SubscribeOthers : SnippetBase() {
         // snippet.end
     }
 
-    fun subscribeWithTimetoken() {
+    fun subscribeWithTimetoken(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/publish-and-subscribe#subscribe-with-timetoken
-        val pubnub = createPubNub()
         val channels = setOf("my_channel", "other_channel")
         val subscriptionSet = pubnub.subscriptionSetOf(channels = channels)
         val yourTimeToken = 100000000000L // Directly using Long type

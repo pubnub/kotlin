@@ -1,12 +1,10 @@
 package com.pubnub.docs.appContext
 
-import com.pubnub.docs.SnippetBase
+import com.pubnub.api.PubNub
 
-class UserMetadataOthers : SnippetBase() {
-    private fun getUUIDMetadataBasic() {
+class UserMetadataOthers {
+    private fun getUUIDMetadataBasic(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/objects#basic-usage-1
-
-        val pubnub = createPubNub()
 
         // snippet.getUUIDMetadataBasic
         pubnub.getUUIDMetadata()
@@ -20,10 +18,8 @@ class UserMetadataOthers : SnippetBase() {
         // snippet.end
     }
 
-    private fun setUUIDMetadataBasic() {
+    private fun setUUIDMetadataBasic(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/objects#basic-usage-2
-
-        val pubnub = createPubNub()
 
         // snippet.setUUIDMetadataBasic
         pubnub.setUUIDMetadata()
@@ -37,10 +33,8 @@ class UserMetadataOthers : SnippetBase() {
         // snippet.end
     }
 
-    private fun removeUUIDMetadataBasic() {
+    private fun removeUUIDMetadataBasic(pubnub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/objects#basic-usage-3
-
-        val pubnub = createPubNub()
 
         // snippet.removeUUIDMetadataBasic
         pubnub.removeUUIDMetadata()
