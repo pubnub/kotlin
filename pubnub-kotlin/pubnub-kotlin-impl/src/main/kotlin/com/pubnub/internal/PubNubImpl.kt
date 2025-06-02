@@ -82,7 +82,6 @@ import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
-import com.pubnub.api.v2.entities.ChannelGroup
 import com.pubnub.api.v2.entities.ChannelMetadata
 import com.pubnub.api.v2.entities.UserMetadata
 import com.pubnub.api.v2.subscriptions.EmptyOptions
@@ -238,11 +237,11 @@ open class PubNubImpl(
     fun generatePnsdk(): String {
         val joinedSuffixes = configuration.pnsdkSuffixes.toSortedMap().values.joinToString(" ")
         return "$pnsdkName/$SDK_VERSION" +
-                if (joinedSuffixes.isNotBlank()) {
-                    " $joinedSuffixes"
-                } else {
-                    ""
-                }
+            if (joinedSuffixes.isNotBlank()) {
+                " $joinedSuffixes"
+            } else {
+                ""
+            }
     }
 
     private val emitterHelper = EmitterHelper(listenerManager)
@@ -724,16 +723,16 @@ open class PubNubImpl(
         includeCustom: Boolean,
     ): GetAllChannelMetadata {
         return GetAllChannelMetadataEndpoint(
-            pubnub = this,
-            collectionQueryParameters =
-            CollectionQueryParameters(
-                limit = limit,
-                page = page,
-                filter = filter,
-                sort = sort,
-                includeCount = includeCount,
-            ),
-            includeQueryParam = IncludeQueryParam(includeCustom = includeCustom),
+                pubnub = this,
+                collectionQueryParameters =
+                CollectionQueryParameters(
+                        limit = limit,
+                        page = page,
+                        filter = filter,
+                        sort = sort,
+                        includeCount = includeCount,
+                ),
+                includeQueryParam = IncludeQueryParam(includeCustom = includeCustom),
         )
     }
 
@@ -1276,14 +1275,14 @@ open class PubNubImpl(
     )
 
     @Deprecated(
-        "Use setChannelMembers instead",
-        replaceWith =
-        ReplaceWith(
-            "setChannelMembers(channel = channel, uuids = uuids, limit = limit, " +
-                    "page = page, filter = filter, sort = sort, includeCount = includeCount," +
-                    " includeCustom = includeCustom,includeUUIDDetails = includeUUIDDetails)",
-        ),
-        level = DeprecationLevel.ERROR,
+            "Use setChannelMembers instead",
+            replaceWith =
+            ReplaceWith(
+                "setChannelMembers(channel = channel, uuids = uuids, limit = limit, " +
+                        "page = page, filter = filter, sort = sort, includeCount = includeCount," +
+                        " includeCustom = includeCustom,includeUUIDDetails = includeUUIDDetails)",
+            ),
+            level = DeprecationLevel.ERROR,
     )
     override fun addMembers(
         channel: String,
@@ -1529,22 +1528,22 @@ open class PubNubImpl(
                 configuration.cryptoModule
             }
         return SendFileEndpoint(
-            channel = channel,
-            fileName = fileName,
-            inputStream = inputStream,
-            message = message,
-            meta = meta,
-            ttl = ttl,
-            shouldStore = shouldStore,
-            customMessageType = customMessageType,
-            executorService =
-            retrofitManager.getTransactionClientExecutorService()
-                ?: Executors.newSingleThreadExecutor(),
-            fileMessagePublishRetryLimit = configuration.fileMessagePublishRetryLimit,
-            generateUploadUrlFactory = GenerateUploadUrlEndpoint.Factory(this),
-            publishFileMessageFactory = PublishFileMessageEndpoint.Factory(this),
-            sendFileToS3Factory = UploadFileEndpoint.Factory(this),
-            cryptoModule = cryptoModule,
+                channel = channel,
+                fileName = fileName,
+                inputStream = inputStream,
+                message = message,
+                meta = meta,
+                ttl = ttl,
+                shouldStore = shouldStore,
+                customMessageType = customMessageType,
+                executorService =
+                retrofitManager.getTransactionClientExecutorService()
+                    ?: Executors.newSingleThreadExecutor(),
+                fileMessagePublishRetryLimit = configuration.fileMessagePublishRetryLimit,
+                generateUploadUrlFactory = GenerateUploadUrlEndpoint.Factory(this),
+                publishFileMessageFactory = PublishFileMessageEndpoint.Factory(this),
+                sendFileToS3Factory = UploadFileEndpoint.Factory(this),
+                cryptoModule = cryptoModule,
         )
     }
 

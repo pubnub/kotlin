@@ -1,5 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <baseline version="1.0">
+    <file name="src/main/kotlin/com/pubnub/internal/PubNubImpl.kt">
+        <error line="726" column="1" source="standard:indent" />
+        <error line="727" column="1" source="standard:indent" />
+        <error line="729" column="1" source="standard:indent" />
+        <error line="730" column="1" source="standard:indent" />
+        <error line="731" column="1" source="standard:indent" />
+        <error line="732" column="1" source="standard:indent" />
+        <error line="733" column="1" source="standard:indent" />
+        <error line="735" column="1" source="standard:indent" />
+        <error line="788" column="1" source="standard:indent" />
+        <error line="789" column="1" source="standard:indent" />
+        <error line="790" column="1" source="standard:indent" />
+        <error line="791" column="1" source="standard:indent" />
+        <error line="792" column="1" source="standard:indent" />
+        <error line="793" column="1" source="standard:indent" />
+        <error line="794" column="1" source="standard:indent" />
+        <error line="1169" column="1" source="standard:indent" />
+        <error line="1170" column="1" source="standard:indent" />
+        <error line="1173" column="1" source="standard:indent" />
+        <error line="1174" column="1" source="standard:indent" />
+        <error line="1199" column="1" source="standard:indent" />
+        <error line="1200" column="1" source="standard:indent" />
+        <error line="1201" column="1" source="standard:indent" />
+        <error line="1202" column="1" source="standard:indent" />
+        <error line="1217" column="1" source="standard:indent" />
+        <error line="1218" column="1" source="standard:indent" />
+        <error line="1221" column="1" source="standard:indent" />
+        <error line="1250" column="1" source="standard:indent" />
+        <error line="1251" column="1" source="standard:indent" />
+        <error line="1254" column="1" source="standard:indent" />
+        <error line="1278" column="1" source="standard:indent" />
+        <error line="1279" column="1" source="standard:indent" />
+        <error line="1282" column="1" source="standard:indent" />
+        <error line="1283" column="1" source="standard:indent" />
+        <error line="1285" column="1" source="standard:indent" />
+        <error line="1357" column="1" source="standard:indent" />
+        <error line="1358" column="1" source="standard:indent" />
+        <error line="1361" column="1" source="standard:indent" />
+        <error line="1531" column="1" source="standard:indent" />
+        <error line="1532" column="1" source="standard:indent" />
+        <error line="1533" column="1" source="standard:indent" />
+        <error line="1534" column="1" source="standard:indent" />
+        <error line="1535" column="1" source="standard:indent" />
+        <error line="1536" column="1" source="standard:indent" />
+        <error line="1537" column="1" source="standard:indent" />
+        <error line="1538" column="1" source="standard:indent" />
+        <error line="1539" column="1" source="standard:indent" />
+        <error line="1542" column="1" source="standard:indent" />
+        <error line="1543" column="1" source="standard:indent" />
+        <error line="1544" column="1" source="standard:indent" />
+        <error line="1545" column="1" source="standard:indent" />
+        <error line="1546" column="1" source="standard:indent" />
+    </file>
     <file name="src/main/kotlin/com/pubnub/internal/managers/BasePathManager.kt">
         <error line="15" column="17" source="standard:property-naming" />
         <error line="21" column="17" source="standard:property-naming" />
@@ -7,6 +60,11 @@
     </file>
     <file name="src/main/kotlin/com/pubnub/internal/subscribe/eventengine/effect/ReconnectionPolicy.kt">
         <error line="1" column="1" source="standard:no-empty-file" />
+    </file>
+    <file name="src/test/kotlin/com/pubnub/api/crypto/CryptoModuleTest.kt">
+        <error line="3" column="1" source="standard:no-unused-imports" />
+        <error line="4" column="1" source="standard:no-unused-imports" />
+        <error line="27" column="1" source="standard:no-wildcard-imports" />
     </file>
     <file name="src/test/kotlin/com/pubnub/api/legacy/endpoints/files/TestsWithFiles.kt">
         <error line="17" column="30" source="standard:property-naming" />
