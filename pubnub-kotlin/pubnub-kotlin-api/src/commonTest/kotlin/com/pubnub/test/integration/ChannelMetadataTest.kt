@@ -6,7 +6,10 @@ import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteChannelMetadataEventMessage
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetChannelMetadataEventMessage
+import com.pubnub.kmp.PLATFORM
 import com.pubnub.kmp.createCustomObject
+import com.pubnub.kmp.readAllBytes
+import com.pubnub.kmp.stringToUploadable
 import com.pubnub.test.BaseIntegrationTest
 import com.pubnub.test.await
 import com.pubnub.test.randomString
@@ -50,6 +53,51 @@ class ChannelMetadataTest : BaseIntegrationTest() {
         assertEquals(customData, pnuuidMetadata.custom?.value)
         assertEquals(type, pnuuidMetadata.type?.value)
         assertEquals(description, pnuuidMetadata.description?.value)
+    }
+
+    @Test
+    fun can_send_file_downloadFile() = runTest {
+        if (PLATFORM == "JS" || PLATFORM == "iOS") { // todo enable for JS/iOS once is implemented
+            return@runTest
+        }
+        val fileName = "test.txt"
+        val fileContent = "Hello, World!"
+        // Upload file
+        val uploadResult = pubnub.sendFile(
+            channel = channel,
+            fileName = fileName,
+            inputStream = stringToUploadable(fileContent, "text/plain"),
+            message = "Test file upload",
+            customMessageType = "somethingCustom"
+        ).await()
+
+        // Assert upload result
+        assertNotNull(uploadResult)
+        assertEquals(fileName, uploadResult.file.name)
+        assertTrue(uploadResult.file.id.isNotBlank())
+
+        // Download file
+        val downloadResult = pubnub.downloadFile(
+            channel = channel,
+            fileName = uploadResult.file.name,
+            fileId = uploadResult.file.id,
+            cipherKey = null
+        ).await()
+
+        assertNotNull(downloadResult)
+        assertEquals(fileName, downloadResult.fileName)
+        assertNotNull(downloadResult.byteStream)
+        val downloadedBytes = readAllBytes(downloadResult.byteStream)
+        val downloadedContent = downloadedBytes.decodeToString()
+        assertEquals(fileContent, downloadedContent)
+
+        // Delete file
+        val deleteResult = pubnub.deleteFile(
+            channel = channel,
+            fileName = uploadResult.file.name,
+            fileId = uploadResult.file.id
+        ).await()
+        assertEquals(200, deleteResult.status)
     }
 
     @Test
@@ -97,7 +145,8 @@ class ChannelMetadataTest : BaseIntegrationTest() {
 
         // when
         val ex = assertFailsWith<PubNubException> {
-            pubnub.setChannelMetadata(channel, status = "someNewStatus", ifMatchesEtag = pnChannelMetadata.eTag?.value).await()
+            pubnub.setChannelMetadata(channel, status = "someNewStatus", ifMatchesEtag = pnChannelMetadata.eTag?.value)
+                .await()
         }
 
         // then
