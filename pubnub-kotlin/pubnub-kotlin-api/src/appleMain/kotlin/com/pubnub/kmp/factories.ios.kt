@@ -7,7 +7,6 @@ import cocoapods.PubNubSwift.KMPConnectionStatusCategoryDisconnected
 import cocoapods.PubNubSwift.KMPConnectionStatusCategoryDisconnectedUnexpectedly
 import cocoapods.PubNubSwift.KMPConnectionStatusCategoryHeartbeatFailed
 import cocoapods.PubNubSwift.KMPConnectionStatusCategoryHeartbeatSuccess
-import cocoapods.PubNubSwift.KMPConnectionStatusCategoryMalformedResponseCategory
 import cocoapods.PubNubSwift.KMPConnectionStatusCategorySubscriptionChanged
 import cocoapods.PubNubSwift.KMPEventListener
 import cocoapods.PubNubSwift.KMPFileChangeEvent
@@ -347,8 +346,6 @@ actual fun createStatusListener(
                     PNStatusCategory.PNUnexpectedDisconnectCategory
                 KMPConnectionStatusCategoryConnectionError ->
                     PNStatusCategory.PNConnectionError
-                KMPConnectionStatusCategoryMalformedResponseCategory ->
-                    PNStatusCategory.PNMalformedResponseCategory
                 KMPConnectionStatusCategoryHeartbeatFailed ->
                     PNStatusCategory.PNHeartbeatFailed
                 KMPConnectionStatusCategoryHeartbeatSuccess ->

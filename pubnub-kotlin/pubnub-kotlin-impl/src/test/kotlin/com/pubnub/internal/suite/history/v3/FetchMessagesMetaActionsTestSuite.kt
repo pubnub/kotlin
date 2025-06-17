@@ -116,7 +116,6 @@ class FetchMessagesMetaActionsTestSuite :
                 pnError = PubNubError.PARSING_ERROR
                 additionalChecks = { result ->
                     assertTrue(result.isFailure)
-//                    assertEquals(PNStatusCategory.PNMalformedResponseCategory, status.category)
                 }
             },
         )

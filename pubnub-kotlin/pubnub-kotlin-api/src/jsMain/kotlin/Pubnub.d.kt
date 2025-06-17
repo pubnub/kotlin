@@ -1452,7 +1452,6 @@ external interface Categories {
     var PNReconnectedCategory: String
     var PNConnectedCategory: String
     var PNRequestMessageCountExceedCategory: String
-    var PNMalformedResponseCategory: String
     var PNDisconnectedUnexpectedlyCategory: String
     var PNConnectionErrorCategory: String
 }
