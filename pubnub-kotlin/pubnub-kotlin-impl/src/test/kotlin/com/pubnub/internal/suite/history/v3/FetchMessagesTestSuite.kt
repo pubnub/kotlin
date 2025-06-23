@@ -90,7 +90,6 @@ class FetchMessagesTestSuite : com.pubnub.internal.suite.CoreEndpointTestSuite<F
                 pnError = PubNubError.PARSING_ERROR
                 additionalChecks = { result ->
                     assertTrue(result.isFailure)
-//                    assertEquals(PNStatusCategory.PNMalformedResponseCategory, status.category)
                 }
             },
         )

@@ -43,6 +43,7 @@
         <error line="1455" column="9" source="standard:property-naming" />
         <error line="1456" column="9" source="standard:property-naming" />
         <error line="1457" column="9" source="standard:property-naming" />
+        <error line="1460" column="9" source="standard:property-naming" />
         <error line="1461" column="9" source="standard:property-naming" />
         <error line="1462" column="9" source="standard:property-naming" />
         <error line="1463" column="9" source="standard:property-naming" />
