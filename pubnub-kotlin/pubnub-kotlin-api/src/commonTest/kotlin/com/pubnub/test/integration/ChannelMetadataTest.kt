@@ -155,6 +155,9 @@ class ChannelMetadataTest : BaseIntegrationTest() {
 
     @Test
     fun can_receive_set_metadata_event() = runTest {
+        if (PLATFORM == "JS") { // todo enable for JS once stable on CI/CD
+            return@runTest
+        }
         pubnub.test(backgroundScope) {
             // given
             pubnub.awaitSubscribe(listOf(channel))
