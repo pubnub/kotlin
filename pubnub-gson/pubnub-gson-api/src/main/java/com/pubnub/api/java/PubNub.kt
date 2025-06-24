@@ -277,6 +277,14 @@ interface PubNub : EventEmitter, StatusEmitter {
      * Each type of resource have different set of permissions. To know what's possible for each of them
      * check ChannelGrant, ChannelGroupGrant and UUIDGrant.
      */
+    @Deprecated(
+        replaceWith =
+            ReplaceWith(
+                "grantToken(ttl)"
+            ),
+        level = DeprecationLevel.WARNING,
+        message = "Use grantToken(ttl) instead",
+    )
     fun grantToken(): GrantTokenBuilder
 
     /**

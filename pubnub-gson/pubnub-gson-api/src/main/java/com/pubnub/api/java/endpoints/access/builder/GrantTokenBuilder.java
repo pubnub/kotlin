@@ -30,9 +30,12 @@ public interface GrantTokenBuilder extends Endpoint<PNGrantTokenResult> {
 
     GrantTokenObjectsBuilder authorizedUUID(String authorizedUUID);
 
+    @Deprecated
     GrantTokenEntitiesBuilder authorizedUserId(UserId userId);
 
+    @Deprecated
     GrantTokenEntitiesBuilder spacesPermissions(List<SpacePermissions> spacesPermissions);
 
+    @Deprecated
     GrantTokenEntitiesBuilder usersPermissions(List<UserPermissions> usersPermissions);
 }
