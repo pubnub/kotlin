@@ -1090,6 +1090,13 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      * @param spacesPermissions List of all space grants
      * @param usersPermissions List of all userId grants
      */
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = "This function is deprecated. Use the new grantToken(ttl, userId, meta, authorizedUUID, channels, channelGroups, uuids)",
+        replaceWith = ReplaceWith(
+            "grantToken(ttl, meta, authorizedUUID, channels, channelGroups, uuids)"
+        )
+    )
     fun grantToken(
         ttl: Int,
         meta: Any? = null,

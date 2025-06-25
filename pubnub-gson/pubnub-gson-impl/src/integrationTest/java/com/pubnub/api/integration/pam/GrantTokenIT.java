@@ -63,8 +63,7 @@ public class GrantTokenIT extends BaseIntegrationTest {
 
         //when
         final PNGrantTokenResult grantTokenResponse = pubNubUnderTest
-                .grantToken()
-                .ttl(expectedTTL)
+                .grantToken(expectedTTL)
                 .channels(Arrays.asList(ChannelGrant.name(expectedChannelResourceName).delete(),
                         ChannelGrant.pattern(expectedChannelPattern).write()))
                 .channelGroups(Arrays.asList(ChannelGroupGrant.id(expectedChannelGroupResourceId).read(),
