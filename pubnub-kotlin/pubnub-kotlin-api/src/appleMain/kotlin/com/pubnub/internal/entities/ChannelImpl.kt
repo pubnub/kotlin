@@ -58,7 +58,6 @@ class ChannelImpl(
     override val name: String
         get() = channel.name()
 
-    // TODO: Add support for handling SubscriptionOptions
     override fun subscription(options: SubscriptionOptions): Subscription {
         val presenceOptions = options.allOptions.filterIsInstance<ReceivePresenceEventsImpl>()
         val objcSubscription = KMPSubscription(channel, presenceOptions.isNotEmpty())
