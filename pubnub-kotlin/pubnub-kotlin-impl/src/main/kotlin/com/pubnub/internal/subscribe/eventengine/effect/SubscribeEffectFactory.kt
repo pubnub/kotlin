@@ -5,6 +5,7 @@ import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.internal.eventengine.Effect
 import com.pubnub.internal.eventengine.EffectFactory
 import com.pubnub.internal.eventengine.Sink
+import com.pubnub.internal.logging.LogConfig
 import com.pubnub.internal.presence.eventengine.data.PresenceData
 import com.pubnub.internal.subscribe.eventengine.effect.effectprovider.HandshakeProvider
 import com.pubnub.internal.subscribe.eventengine.effect.effectprovider.ReceiveMessagesProvider
@@ -24,6 +25,7 @@ internal class SubscribeEffectFactory(
     private val statusConsumer: StatusConsumer,
     private val presenceData: PresenceData,
     private val sendStateWithSubscribe: Boolean,
+    private val logConfig: LogConfig
 ) : EffectFactory<SubscribeEffectInvocation> {
     override fun create(effectInvocation: SubscribeEffectInvocation): Effect? {
         return when (effectInvocation) {
@@ -32,7 +34,7 @@ internal class SubscribeEffectFactory(
             }
 
             is SubscribeEffectInvocation.EmitStatus -> {
-                EmitStatusEffect(statusConsumer, effectInvocation.status)
+                EmitStatusEffect(statusConsumer, effectInvocation.status, logConfig)
             }
 
             is SubscribeEffectInvocation.Handshake -> {

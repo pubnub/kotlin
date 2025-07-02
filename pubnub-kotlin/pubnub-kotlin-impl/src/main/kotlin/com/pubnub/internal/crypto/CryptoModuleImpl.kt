@@ -9,6 +9,7 @@ import com.pubnub.api.crypto.data.EncryptedStreamData
 import com.pubnub.internal.crypto.cryptor.HeaderParser
 import com.pubnub.internal.crypto.cryptor.LEGACY_CRYPTOR_ID
 import com.pubnub.internal.crypto.cryptor.ParseResult
+import com.pubnub.internal.logging.LoggerManager
 import java.io.BufferedInputStream
 import java.io.InputStream
 import java.io.SequenceInputStream
@@ -21,6 +22,7 @@ class CryptoModuleImpl internal constructor(
     @get:JvmSynthetic
     internal val cryptorsForDecryptionOnly: List<Cryptor> = listOf(),
 ) : CryptoModule {
+//    private val log = LoggerManager.getLogger(pubNub = p)
     private val headerParser: HeaderParser = HeaderParser()
 
     override fun encrypt(data: ByteArray): ByteArray {

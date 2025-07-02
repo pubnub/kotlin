@@ -139,6 +139,7 @@ import com.pubnub.internal.endpoints.push.AddChannelsToPushEndpoint
 import com.pubnub.internal.endpoints.push.ListPushProvisionsEndpoint
 import com.pubnub.internal.endpoints.push.RemoveAllPushChannelsForDeviceEndpoint
 import com.pubnub.internal.endpoints.push.RemoveChannelsFromPushEndpoint
+import com.pubnub.internal.logging.LogConfig
 import com.pubnub.internal.managers.BasePathManager
 import com.pubnub.internal.managers.DuplicationManager
 import com.pubnub.internal.managers.ListenerManager
@@ -188,12 +189,23 @@ open class PubNubImpl(
     constructor(configuration: PNConfiguration) : this(configuration, PNSDK_PUBNUB_KOTLIN)
 
     val mapper = MapperManager()
+    /**
+     * Unique id of this PubNub instance.
+     *
+     * @see [PNConfiguration.includeInstanceIdentifier]
+     */
+    val instanceId = UUID.randomUUID().toString()
+    val logConfig: LogConfig = LogConfig(
+        pnInstanceId = instanceId,
+        userId = configuration.userId.value,
+        customLoggers = configuration.customLoggers,
+    )
 
     private val numberOfThreadsInPool = Integer.min(Runtime.getRuntime().availableProcessors(), 8)
     internal val executorService: ScheduledExecutorService = Executors.newScheduledThreadPool(numberOfThreadsInPool)
     val listenerManager: ListenerManager = ListenerManager(this)
     private val basePathManager = BasePathManager(configuration)
-    internal val retrofitManager = RetrofitManager(this, configuration)
+    internal val retrofitManager = RetrofitManager(pubnub = this, configuration = configuration, callingClass = null)
     internal val publishSequenceManager = PublishSequenceManager(MAX_SEQUENCE)
     private val tokenParser: TokenParser = TokenParser()
     private val presenceData = PresenceData()
@@ -220,13 +232,6 @@ open class PubNubImpl(
             sendStateWithHeartbeat = configuration.maintainPresenceState,
             executorService = executorService,
         )
-
-    /**
-     * Unique id of this PubNub instance.
-     *
-     * @see [PNConfiguration.includeInstanceIdentifier]
-     */
-    val instanceId = UUID.randomUUID().toString()
 
     //region Internal
     internal fun baseUrl() = basePathManager.basePath()
