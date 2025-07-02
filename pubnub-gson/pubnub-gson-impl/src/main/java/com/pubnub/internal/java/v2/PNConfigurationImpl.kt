@@ -12,7 +12,6 @@ import okhttp3.Authenticator
 import okhttp3.CertificatePinner
 import okhttp3.ConnectionSpec
 import okhttp3.logging.HttpLoggingInterceptor
-import org.slf4j.LoggerFactory
 import java.net.Proxy
 import java.net.ProxySelector
 import javax.net.ssl.HostnameVerifier
@@ -71,6 +70,7 @@ class PNConfigurationImpl(
         )
     ),
     override val managePresenceListManually: Boolean = false,
+    override val customLoggers: List<Any>? = null,
 ) : PNConfiguration {
     companion object {
         const val DEFAULT_DEDUPE_SIZE = 100
@@ -85,7 +85,7 @@ class PNConfigurationImpl(
         PNConfiguration.Builder, PNConfigurationOverride.Builder {
             constructor(userId: UserId, subscribeKey: String) : this(PNConfigurationImpl(userId, subscribeKey))
 
-            private val log = LoggerFactory.getLogger(this::class.simpleName)
+//            private val log = LoggerFactory.getLogger(this::class.simpleName)
 
             override var userId: UserId = defaultConfiguration.userId
 
@@ -160,7 +160,8 @@ class PNConfigurationImpl(
 
             override fun presenceTimeout(presenceTimeout: Int): Builder {
                 this.presenceTimeout = if (presenceTimeout < MINIMUM_PRESENCE_TIMEOUT) {
-                    log.warn("Presence timeout is too low. Defaulting to: $MINIMUM_PRESENCE_TIMEOUT")
+                    println("Presence timeout is too low. Defaulting to: $MINIMUM_PRESENCE_TIMEOUT")
+//                    log.warn("Presence timeout is too low. Defaulting to: $MINIMUM_PRESENCE_TIMEOUT")
                     MINIMUM_PRESENCE_TIMEOUT
                 } else {
                     presenceTimeout

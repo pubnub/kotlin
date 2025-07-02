@@ -76,6 +76,8 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             assertFalse(result.isFailure)
             assertTrue(result.getOrThrow().timetoken > 0)
         }
+
+
     }
 
     @Test

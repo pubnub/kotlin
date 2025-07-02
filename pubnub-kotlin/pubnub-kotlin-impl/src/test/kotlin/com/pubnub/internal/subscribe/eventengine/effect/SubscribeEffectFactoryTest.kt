@@ -5,6 +5,7 @@ import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.internal.eventengine.ManagedEffect
 import com.pubnub.internal.eventengine.Sink
+import com.pubnub.internal.logging.LogConfig
 import com.pubnub.internal.presence.eventengine.data.PresenceData
 import com.pubnub.internal.subscribe.eventengine.effect.effectprovider.HandshakeProvider
 import com.pubnub.internal.subscribe.eventengine.effect.effectprovider.ReceiveMessagesProvider
@@ -31,6 +32,7 @@ class SubscribeEffectFactoryTest {
     private val handshakeRemoteAction: RemoteAction<SubscriptionCursor> = mockk()
     private val receiveMessagesRemoteAction: RemoteAction<ReceiveMessagesResult> = mockk()
     private val statusConsumer = mockk<StatusConsumer>()
+    private val logConfig = mockk<LogConfig>()
     private val presenceData = PresenceData()
 
     @BeforeEach
@@ -45,6 +47,7 @@ class SubscribeEffectFactoryTest {
                 statusConsumer,
                 presenceData,
                 true,
+                logConfig,
             )
     }
 
@@ -141,6 +144,7 @@ class SubscribeEffectFactoryTest {
                 statusConsumer,
                 presenceData,
                 false,
+                logConfig,
             )
         presenceData.channelStates[channels.first()] = mapOf("aaa" to "bbb")
         val effectInvocation = SubscribeEffectInvocation.Handshake(channels, channelGroups)

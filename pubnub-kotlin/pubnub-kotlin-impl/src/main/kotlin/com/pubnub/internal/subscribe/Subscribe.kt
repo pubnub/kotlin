@@ -65,6 +65,7 @@ internal class Subscribe(
                     statusConsumer = listenerManager,
                     presenceData = presenceData,
                     sendStateWithSubscribe = sendStateWithSubscribe,
+                    logConfig = pubNub.logConfig
                 )
 
             val subscribeEventEngine =

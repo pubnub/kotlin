@@ -4,6 +4,7 @@ import com.pubnub.api.UserId
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNLogVerbosity
+import com.pubnub.api.logging.CustomLogger
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.api.v2.PNConfiguration
@@ -12,7 +13,7 @@ import okhttp3.Authenticator
 import okhttp3.CertificatePinner
 import okhttp3.ConnectionSpec
 import okhttp3.logging.HttpLoggingInterceptor
-import org.slf4j.LoggerFactory
+//import org.slf4j.LoggerFactory
 import java.net.Proxy
 import java.net.ProxySelector
 import javax.net.ssl.HostnameVerifier
@@ -71,6 +72,7 @@ class PNConfigurationImpl(
         )
     ),
     override val managePresenceListManually: Boolean = false,
+    override val customLoggers: List<CustomLogger>? = null,
 ) : PNConfiguration, PNConfigurationOverride {
     companion object {
         const val DEFAULT_DEDUPE_SIZE = 100
@@ -86,7 +88,8 @@ class PNConfigurationImpl(
         PNConfigurationOverride.Builder {
         constructor(userId: UserId, subscribeKey: String) : this(PNConfigurationImpl(userId, subscribeKey))
 
-        private val log = LoggerFactory.getLogger(this::class.simpleName)
+//        private val log = LoggerFactory.getLogger(this::class.simpleName)
+//        private val log = LoggerManager.getLogger(pubnub, this::class.java)
 
         override var userId: UserId = defaultConfiguration.userId
 
@@ -114,7 +117,8 @@ class PNConfigurationImpl(
             set(value) {
                 field =
                     if (value < MINIMUM_PRESENCE_TIMEOUT) {
-                        log.warn("Presence timeout is too low. Defaulting to: $MINIMUM_PRESENCE_TIMEOUT")
+                        println("Presence timeout is too low. Defaulting to: $MINIMUM_PRESENCE_TIMEOUT")
+//                        log.warn("Presence timeout is too low. Defaulting to: $MINIMUM_PRESENCE_TIMEOUT")
                         MINIMUM_PRESENCE_TIMEOUT
                     } else {
                         value
@@ -183,6 +187,8 @@ class PNConfigurationImpl(
 
         override var managePresenceListManually: Boolean = defaultConfiguration.managePresenceListManually
 
+        override var customLoggers: List<CustomLogger>? = defaultConfiguration.customLoggers
+
         override fun build(): PNConfiguration {
             return PNConfigurationImpl(
                 userId = userId,
@@ -224,6 +230,7 @@ class PNConfigurationImpl(
                 pnsdkSuffixes = pnsdkSuffixes,
                 retryConfiguration = retryConfiguration,
                 managePresenceListManually = managePresenceListManually,
+                customLoggers = customLoggers,
             )
         }
     }
