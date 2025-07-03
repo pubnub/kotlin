@@ -28,8 +28,8 @@ class EntitiesTest : BaseIntegrationTest() {
     fun can_subscribe_channel_group_subscription() = runTest {
         pubnub.test(backgroundScope) {
             val channelGroupName = "channelGroupName"
-            val channel = pubnub.channelGroup(channelGroupName)
-            val subscription = channel.awaitSubscribe()
+            val channelGroup = pubnub.channelGroup(channelGroupName)
+            val subscription = channelGroup.awaitSubscribe()
             assertEquals(listOf(channelGroupName), pubnub.getSubscribedChannelGroups())
         }
     }
