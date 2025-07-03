@@ -11,7 +11,7 @@ class ChannelGroupImpl(private val jsChannelGroup: dynamic) : ChannelGroup {
     override val name: String
         get() = jsChannelGroup.name
 
-    override fun subscription(options: SubscriptionOptions): Subscription { // todo use options
+    override fun subscription(options: SubscriptionOptions): Subscription { // TODO: Handle missing filter options
         return SubscriptionImpl(
             jsChannelGroup.subscription(
                 createJsObject<PubNub.SubscriptionOptions> {
