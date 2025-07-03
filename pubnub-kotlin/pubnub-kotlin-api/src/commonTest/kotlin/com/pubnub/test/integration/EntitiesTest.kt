@@ -25,6 +25,16 @@ class EntitiesTest : BaseIntegrationTest() {
     }
 
     @Test
+    fun can_subscribe_channel_group_subscription() = runTest {
+        pubnub.test(backgroundScope) {
+            val channelGroupName = "channelGroupName"
+            val channel = pubnub.channelGroup(channelGroupName)
+            val subscription = channel.awaitSubscribe()
+            assertEquals(listOf(channelGroupName), pubnub.getSubscribedChannelGroups())
+        }
+    }
+
+    @Test
     @Ignore // TODO flaky test
     fun can_get_events_from_channel_subscription() = runTest {
         pubnub.test(backgroundScope) {
