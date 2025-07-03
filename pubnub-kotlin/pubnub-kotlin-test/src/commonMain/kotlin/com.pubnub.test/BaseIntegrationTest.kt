@@ -178,25 +178,6 @@ class PubNubTest(
         subscription.subscribe()
     }
 
-    suspend fun com.pubnub.api.v2.entities.ChannelGroup.awaitSubscribe(options: SubscriptionOptions = EmptyOptions) = suspendCancellableCoroutine { cont ->
-        val subscription = subscription(options)
-        val statusListener = createStatusListener(pubNub) { _, pnStatus ->
-            if ((pnStatus.category == PNStatusCategory.PNConnectedCategory || pnStatus.category == PNStatusCategory.PNSubscriptionChanged) &&
-                pnStatus.affectedChannelGroups.contains(name)
-            ) {
-                cont.resume(subscription)
-            }
-            if (pnStatus.category == PNStatusCategory.PNUnexpectedDisconnectCategory || pnStatus.category == PNStatusCategory.PNConnectionError) {
-                cont.resumeWithException(pnStatus.exception ?: RuntimeException(pnStatus.category.toString()))
-            }
-        }
-        pubNub.addListener(statusListener)
-        cont.invokeOnCancellation {
-            pubNub.removeListener(statusListener)
-        }
-        subscription.subscribe()
-    }
-
     suspend fun PubNub.awaitSubscribe(
         channels: Collection<String> = setOf(),
         channelGroups: Collection<String> = setOf(),
