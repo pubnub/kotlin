@@ -126,6 +126,7 @@ import com.pubnub.api.v2.subscriptions.ReceivePresenceEventsImpl
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
+import com.pubnub.internal.v2.entities.ChannelGroupImpl
 import com.pubnub.internal.v2.entities.ChannelImpl
 import com.pubnub.internal.v2.subscriptions.SubscriptionSetImpl
 import com.pubnub.kmp.CustomObject
@@ -1202,7 +1203,7 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
     }
 
     override fun channelGroup(name: String): ChannelGroup {
-        TODO("Not yet implemented")
+        return ChannelGroupImpl(jsPubNub.asDynamic().channelGroup(name))
     }
 
     override fun channelMetadata(id: String): ChannelMetadata {

@@ -3,6 +3,7 @@ package com.pubnub.internal.entities
 import cocoapods.PubNubSwift.KMPChannelGroupEntity
 import cocoapods.PubNubSwift.KMPSubscription
 import com.pubnub.api.v2.entities.ChannelGroup
+import com.pubnub.api.v2.subscriptions.ReceivePresenceEventsImpl
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.internal.subscription.SubscriptionImpl
@@ -16,7 +17,9 @@ class ChannelGroupImpl(
         get() = channelGroup.name()
 
     override fun subscription(options: SubscriptionOptions): Subscription {
-        // TODO: Add support for handling SubscriptionOptions
-        return SubscriptionImpl(objCSubscription = KMPSubscription(entity = channelGroup))
+        val presenceOptions = options.allOptions.filterIsInstance<ReceivePresenceEventsImpl>()
+        val objcSubscription = KMPSubscription(channelGroup, presenceOptions.isNotEmpty())
+
+        return SubscriptionImpl(objcSubscription)
     }
 }
