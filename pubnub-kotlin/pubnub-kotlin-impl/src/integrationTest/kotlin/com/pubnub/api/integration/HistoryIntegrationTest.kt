@@ -25,6 +25,74 @@ import org.junit.jupiter.api.Test
 import java.time.Duration
 
 class HistoryIntegrationTest : BaseIntegrationTest() {
+
+    @Test
+    fun canGetMessageCounts() {
+        val channel01 = randomChannel()
+        val channel02 = randomChannel()
+        val firstPublishToChannel01Result = pubnub.publish(channel01, message = "FirstMessageChannel01").sync()
+        pubnub.publish(channel01, message = "SecondMessage").sync()
+        val firstPublishToChannel02Result = pubnub.publish(channel02, message = "FirstMessageChannel02").sync()
+        
+        // Test with multiple timetokens (one per channel)
+        val messagesCounts = pubnub.messageCounts(
+            channels = listOf(channel01, channel02),
+            channelsTimetoken = listOf(
+                firstPublishToChannel01Result.timetoken - 1, // Count from first message onwards
+                firstPublishToChannel02Result.timetoken - 1  // Count from first message onwards
+            )
+        ).sync()
+        assertEquals(2, messagesCounts.channels[channel01])
+        assertEquals(1, messagesCounts.channels[channel02])
+    }
+
+    @Test
+    fun canGetMessageCountsWithSingleTimetoken() {
+        val channel01 = randomChannel()
+        val channel02 = randomChannel()
+        val firstPublishToChannel01Result = pubnub.publish(channel01, message = "FirstMessageChannel01").sync()
+        pubnub.publish(channel01, message = "SecondMessage").sync()
+        val firstPublishToChannel02Result = pubnub.publish(channel02, message = "FirstMessageChannel02").sync()
+        
+        // Test with single timetoken applied to all channels
+        val messagesCounts = pubnub.messageCounts(
+            channels = listOf(channel01, channel02),
+            channelsTimetoken = listOf(firstPublishToChannel01Result.timetoken - 1) // Single timetoken for all channels
+        ).sync()
+        assertEquals(2, messagesCounts.channels[channel01])
+        assertEquals(1, messagesCounts.channels[channel02])
+    }
+
+    @Test
+    fun canGetMessageCountsWithMultipleTimetokens() {
+        val channel01 = randomChannel()
+        val channel02 = randomChannel()
+        val channel03 = randomChannel()
+        
+        val firstPublishToChannel01Result = pubnub.publish(channel01, message = "FirstMessageChannel01").sync()
+        pubnub.publish(channel01, message = "SecondMessage").sync()
+        pubnub.publish(channel01, message = "ThirdMessage").sync()
+        
+        val firstPublishToChannel02Result = pubnub.publish(channel02, message = "FirstMessageChannel02").sync()
+        pubnub.publish(channel02, message = "SecondMessage").sync()
+        
+        val firstPublishToChannel03Result = pubnub.publish(channel03, message = "FirstMessageChannel03").sync()
+        
+        // Test with multiple timetokens, each tailored to specific channels
+        val messagesCounts = pubnub.messageCounts(
+            channels = listOf(channel01, channel02, channel03),
+            channelsTimetoken = listOf(
+                firstPublishToChannel01Result.timetoken, // Should count 2 messages (second and third)
+                firstPublishToChannel02Result.timetoken - 1, // Should count 2 messages (all)
+                firstPublishToChannel03Result.timetoken - 1  // Should count 1 message (all)
+            )
+        ).sync()
+        
+        assertEquals(2, messagesCounts.channels[channel01])
+        assertEquals(2, messagesCounts.channels[channel02])
+        assertEquals(1, messagesCounts.channels[channel03])
+    }
+
     @Test
     fun historySingleScenario() {
         val channel = randomChannel()
@@ -139,11 +207,11 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
             pubnub.addMessageAction(
                 channel = channel,
                 messageAction =
-                    PNMessageAction(
-                        type = expectedAction,
-                        value = expectedActionValue,
-                        messageTimetoken = result.timetoken,
-                    ),
+                PNMessageAction(
+                    type = expectedAction,
+                    value = expectedActionValue,
+                    messageTimetoken = result.timetoken,
+                ),
             ).sync()
 
         var fetchResult: PNFetchMessagesResult? = null
@@ -174,27 +242,27 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
                 meta = expectedMeta,
                 messageType = HistoryMessageType.Message,
                 actions =
-                    mapOf(
-                        expectedAction to
+                mapOf(
+                    expectedAction to
                             mapOf(
                                 expectedActionValue to
-                                    listOf(
-                                        PNFetchMessageItem.Action(
-                                            actionTimetoken = actionResult.actionTimetoken!!,
-                                            uuid = pubnub.configuration.userId.value,
+                                        listOf(
+                                            PNFetchMessageItem.Action(
+                                                actionTimetoken = actionResult.actionTimetoken!!,
+                                                uuid = pubnub.configuration.userId.value,
+                                            ),
                                         ),
-                                    ),
                             ),
-                    ),
+                ),
                 customMessageType = expectedCustomMessageType
             )
 
         val expectedChannelsResponse: Map<String, List<PNFetchMessageItem>> =
             mapOf(
                 channel to
-                    listOf(
-                        expectedItem,
-                    ),
+                        listOf(
+                            expectedItem,
+                        ),
             )
 
         val fetchMessageItem = fetchResult!!
@@ -213,9 +281,9 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
         assertEquals(
             mapOf(
                 channel to
-                    listOf(
-                        expectedItem.copy(actions = null),
-                    ),
+                        listOf(
+                            expectedItem.copy(actions = null),
+                        ),
             ),
             fetchResultWithoutActions.channels,
         )
@@ -279,9 +347,9 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
         val expectedChannelsResponse: Map<String, List<PNFetchMessageItem>> =
             mapOf(
                 channel to
-                    listOf(
-                        expectedItem,
-                    ),
+                        listOf(
+                            expectedItem,
+                        ),
             )
 
         val fetchMessageItem = fetchResult!!

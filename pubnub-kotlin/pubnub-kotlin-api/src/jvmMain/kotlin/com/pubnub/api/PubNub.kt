@@ -738,10 +738,18 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      * The count returned is the number of messages in history with a timetoken value greater
      * than the passed value in the [MessageCounts.channelsTimetoken] parameter.
      *
+     * **Important:** The timetoken represents an exclusive boundary. Messages with timetokens
+     * greater than (but not equal to) the specified timetoken are counted. To count messages
+     * from a specific message onwards, you typically need to subtract 1 from the message's
+     * timetoken.
+     *
      * @param channels Channels to fetch the message count from.
-     * @param channelsTimetoken List of timetokens, in order of the channels list.
-     *                          Specify a single timetoken to apply it to all channels.
-     *                          Otherwise, the list of timetokens must be the same length as the list of channels.
+     * @param channelsTimetoken List of timetokens representing exclusive boundaries for message counting.
+     *                          Each timetoken corresponds to a channel in the same order.
+     *                          - **Single timetoken**: Applied to all channels (list with one element)
+     *                          - **Multiple timetokens**: Must match the number of channels exactly
+     *                          - **Exclusive boundary**: Only messages with timetokens > specified value are counted
+     *                          - **Common pattern**: Use `(messageTimetoken - 1)` to count from a specific message onwards
      */
     actual fun messageCounts(
         channels: List<String>,
