@@ -189,6 +189,7 @@ open class PubNubImpl(
     constructor(configuration: PNConfiguration) : this(configuration, PNSDK_PUBNUB_KOTLIN)
 
     val mapper = MapperManager()
+
     /**
      * Unique id of this PubNub instance.
      *
@@ -205,7 +206,7 @@ open class PubNubImpl(
     internal val executorService: ScheduledExecutorService = Executors.newScheduledThreadPool(numberOfThreadsInPool)
     val listenerManager: ListenerManager = ListenerManager(this)
     private val basePathManager = BasePathManager(configuration)
-    internal val retrofitManager = RetrofitManager(pubnub = this, configuration = configuration, callingClass = null)
+    internal val retrofitManager = RetrofitManager(pubnub = this, configuration = configuration)
     internal val publishSequenceManager = PublishSequenceManager(MAX_SEQUENCE)
     private val tokenParser: TokenParser = TokenParser()
     private val presenceData = PresenceData()
@@ -728,16 +729,16 @@ open class PubNubImpl(
         includeCustom: Boolean,
     ): GetAllChannelMetadata {
         return GetAllChannelMetadataEndpoint(
-                pubnub = this,
-                collectionQueryParameters =
+            pubnub = this,
+            collectionQueryParameters =
                 CollectionQueryParameters(
-                        limit = limit,
-                        page = page,
-                        filter = filter,
-                        sort = sort,
-                        includeCount = includeCount,
+                    limit = limit,
+                    page = page,
+                    filter = filter,
+                    sort = sort,
+                    includeCount = includeCount,
                 ),
-                includeQueryParam = IncludeQueryParam(includeCustom = includeCustom),
+            includeQueryParam = IncludeQueryParam(includeCustom = includeCustom),
         )
     }
 
@@ -790,13 +791,13 @@ open class PubNubImpl(
         return GetAllUUIDMetadataEndpoint(
             pubnub = this,
             collectionQueryParameters =
-            CollectionQueryParameters(
-                limit = limit,
-                page = page,
-                filter = filter,
-                sort = sort,
-                includeCount = includeCount,
-            ),
+                CollectionQueryParameters(
+                    limit = limit,
+                    page = page,
+                    filter = filter,
+                    sort = sort,
+                    includeCount = includeCount,
+                ),
             withInclude = IncludeQueryParam(includeCustom = includeCustom),
         )
     }
@@ -1171,12 +1172,12 @@ open class PubNubImpl(
 
     @Deprecated(
         replaceWith =
-        ReplaceWith(
-            "fetchMessages(channels = channels, page = PNBoundedPage(start = start, end = end," +
+            ReplaceWith(
+                "fetchMessages(channels = channels, page = PNBoundedPage(start = start, end = end," +
                     " limit = maximumPerChannel),includeMeta = includeMeta," +
                     " includeMessageActions = includeMessageActions, includeMessageType = includeMessageType)",
-            "com.pubnub.api.models.consumer.PNBoundedPage",
-        ),
+                "com.pubnub.api.models.consumer.PNBoundedPage",
+            ),
         level = DeprecationLevel.ERROR,
         message = "Use fetchMessages(String, PNBoundedPage, Boolean, Boolean, Boolean) instead",
     )
@@ -1201,10 +1202,10 @@ open class PubNubImpl(
 
     @Deprecated(
         replaceWith =
-        ReplaceWith(
-            "getMessageActions(channel = channel, page = PNBoundedPage(start = start, end = end, limit = limit))",
-            "com.pubnub.api.models.consumer.PNBoundedPage",
-        ),
+            ReplaceWith(
+                "getMessageActions(channel = channel, page = PNBoundedPage(start = start, end = end, limit = limit))",
+                "com.pubnub.api.models.consumer.PNBoundedPage",
+            ),
         level = DeprecationLevel.ERROR,
         message = "Use getMessageActions(String, PNBoundedPage) instead",
     )
@@ -1219,11 +1220,11 @@ open class PubNubImpl(
 
     @Deprecated(
         replaceWith =
-        ReplaceWith(
-            "setMemberships(channels = channels, uuid = uuid, limit = limit, " +
+            ReplaceWith(
+                "setMemberships(channels = channels, uuid = uuid, limit = limit, " +
                     "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
                     "includeChannelDetails = includeChannelDetails)",
-        ),
+            ),
         level = DeprecationLevel.ERROR,
         message = "Use setMemberships instead",
     )
@@ -1252,11 +1253,11 @@ open class PubNubImpl(
     @Deprecated(
         "Use getChannelMembers instead",
         replaceWith =
-        ReplaceWith(
-            "getChannelMembers(channel = channel, limit = limit, page = page, " +
+            ReplaceWith(
+                "getChannelMembers(channel = channel, limit = limit, page = page, " +
                     "filter = filter, sort = sort, includeCount = includeCount, " +
                     "includeCustom = includeCustom,includeUUIDDetails = includeUUIDDetails)",
-        ),
+            ),
         level = DeprecationLevel.ERROR,
     )
     override fun getMembers(
@@ -1280,14 +1281,14 @@ open class PubNubImpl(
     )
 
     @Deprecated(
-            "Use setChannelMembers instead",
-            replaceWith =
+        "Use setChannelMembers instead",
+        replaceWith =
             ReplaceWith(
                 "setChannelMembers(channel = channel, uuids = uuids, limit = limit, " +
-                        "page = page, filter = filter, sort = sort, includeCount = includeCount," +
-                        " includeCustom = includeCustom,includeUUIDDetails = includeUUIDDetails)",
+                    "page = page, filter = filter, sort = sort, includeCount = includeCount," +
+                    " includeCustom = includeCustom,includeUUIDDetails = includeUUIDDetails)",
             ),
-            level = DeprecationLevel.ERROR,
+        level = DeprecationLevel.ERROR,
     )
     override fun addMembers(
         channel: String,
@@ -1359,11 +1360,11 @@ open class PubNubImpl(
     @Deprecated(
         "Use removeChannelMembers instead",
         replaceWith =
-        ReplaceWith(
-            "removeChannelMembers(channel = channel, uuids = uuids, limit = limit, " +
+            ReplaceWith(
+                "removeChannelMembers(channel = channel, uuids = uuids, limit = limit, " +
                     "page = page, filter = filter, sort = sort, includeCount = includeCount, " +
                     "includeCustom = includeCustom,includeUUIDDetails = includeUUIDDetails)",
-        ),
+            ),
         level = DeprecationLevel.ERROR,
     )
     override fun removeMembers(
@@ -1533,22 +1534,22 @@ open class PubNubImpl(
                 configuration.cryptoModule
             }
         return SendFileEndpoint(
-                channel = channel,
-                fileName = fileName,
-                inputStream = inputStream,
-                message = message,
-                meta = meta,
-                ttl = ttl,
-                shouldStore = shouldStore,
-                customMessageType = customMessageType,
-                executorService =
+            channel = channel,
+            fileName = fileName,
+            inputStream = inputStream,
+            message = message,
+            meta = meta,
+            ttl = ttl,
+            shouldStore = shouldStore,
+            customMessageType = customMessageType,
+            executorService =
                 retrofitManager.getTransactionClientExecutorService()
                     ?: Executors.newSingleThreadExecutor(),
-                fileMessagePublishRetryLimit = configuration.fileMessagePublishRetryLimit,
-                generateUploadUrlFactory = GenerateUploadUrlEndpoint.Factory(this),
-                publishFileMessageFactory = PublishFileMessageEndpoint.Factory(this),
-                sendFileToS3Factory = UploadFileEndpoint.Factory(this),
-                cryptoModule = cryptoModule,
+            fileMessagePublishRetryLimit = configuration.fileMessagePublishRetryLimit,
+            generateUploadUrlFactory = GenerateUploadUrlEndpoint.Factory(this),
+            publishFileMessageFactory = PublishFileMessageEndpoint.Factory(this),
+            sendFileToS3Factory = UploadFileEndpoint.Factory(this),
+            cryptoModule = cryptoModule,
         )
     }
 

@@ -9,16 +9,11 @@ class LoggerToPortalSender(
     slf4jLogger: Logger,
     logMessageContext: LogMessageContext
 ) : BaseDefaultLogger(logMessageContext) {
-
     companion object {
         private const val PORTAL_CHANNEL = "pubnub-internal-logs"
     }
 
     override val delegate: Logger = slf4jLogger
-
-//    override val contextInfo: Map<String, String> = buildMap {
-//        putAll(additionalContext)
-//    }
 
     override fun onLog(level: Level, message: LogMessage) {
         if (isLoggingToPortalEnabled() && shouldLogMessageForThisUser() && shouldLogMessageForThisLevel(level)) {
@@ -36,12 +31,13 @@ class LoggerToPortalSender(
             // format message.
             val messageAsJsonToBeSentToPortal: String = MapperManager().toJson(message)
 
-            println("\n-=Log message: $messageAsJsonToBeSentToPortal \n")
+            println("\n-=LoggerToPortalSender message: $messageAsJsonToBeSentToPortal \n")
         }
     }
 
     private fun shouldLogMessageForThisLevel(level: Level): Boolean {
-        return getConfigFromPortal().logLevel == level // todo when there is TRACE set in portal config then all level below should be logged
+        val configuredLevel = getConfigFromPortal().logLevel
+        return level.toInt() >= configuredLevel.toInt()
     }
 
     private fun isLoggingToPortalEnabled(): Boolean {

@@ -1,4 +1,4 @@
-package com.pubnub.internal.logging.networkLogging
+package com.pubnub.api.logging
 
 import com.google.gson.annotations.SerializedName
 

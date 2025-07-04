@@ -1,31 +1,35 @@
 package com.pubnub.internal.logging.networkLogging
 
 import com.pubnub.api.enums.PNLogVerbosity
+import com.pubnub.api.logging.ErrorDetails
+import com.pubnub.api.logging.HttpMethod
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.pubnub.internal.logging.ExtendedLogger
 import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.logging.NetworkLog
+import com.pubnub.api.logging.NetworkRequestMessage
+import com.pubnub.api.logging.NetworkResponseMessage
+import com.pubnub.internal.logging.ExtendedLogger
 import com.pubnub.internal.managers.MapperManager
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
-import okhttp3.ResponseBody
+import okhttp3.ResponseBody.Companion.toResponseBody
 import okio.Buffer
 import org.slf4j.LoggerFactory
 import org.slf4j.event.Level
 import org.slf4j.helpers.NOPLoggerFactory
 import java.io.IOException
-import java.util.Base64
+import java.util.*
 
 private const val PUBNUB_OKHTTP_REQUEST_RESPONSE_LOGGER_NAME = "pubnub.okhttp"
 
 class CustomHttpLoggingInterceptor(
     private val logger: ExtendedLogger,
     private val logVerbosity: PNLogVerbosity,
+    private val pnInstanceId: String,
     private val maxBodySize: Int = 1024 * 1024 // 1MB limit  todo clarify in ADR
 ) : Interceptor {
-
     private fun slf4jIsBound(): Boolean {
         val factory = LoggerFactory.getILoggerFactory()
         return factory !is NOPLoggerFactory
@@ -34,31 +38,41 @@ class CustomHttpLoggingInterceptor(
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val requestStartTime = System.currentTimeMillis()
+        val location = request.url.pathSegments.firstOrNull() ?: "unknown"
 
         // Log request
-        logRequest(request)
+        logRequest(request, location)
 
         var response: Response? = null
         var failed = false
         var canceled = false
+        var error: Exception? = null
 
         try {
             response = chain.proceed(request)
 
             // Log response and get the modified response with cloned body
-            val modifiedResponse = logResponse(response, requestStartTime, failed, canceled)
-
+            val modifiedResponse = logResponse(response, location)
             return modifiedResponse
         } catch (e: Exception) {
             failed = true
+            error = e
+
+            // Log the error
+            logError(request, location, e, requestStartTime)
+
             throw e
         }
     }
 
-    private fun logRequest(request: Request) {
+    private fun logRequest(request: Request, location: String) {
         val url = request.url
         val origin = "${url.scheme}://${url.host}"
-        val path = url.encodedPath + if (url.encodedQuery != null) "?${url.encodedQuery}" else ""
+        val path = url.encodedPath + if (url.encodedQuery != null) {
+            "?${url.encodedQuery}"
+        } else {
+            ""
+        }
 
         // Parse query parameters
         val queryParams = url.queryParameterNames.associateWith { url.queryParameter(it) ?: "" }
@@ -68,11 +82,13 @@ class CustomHttpLoggingInterceptor(
 
         // Parse body
         val body = request.body?.let { requestBody ->
-            if (requestBody.contentLength() > 0 && requestBody.contentLength() <= maxBodySize) {
+            if (requestBody.contentLength() in 1..maxBodySize) {
                 val buffer = Buffer()
                 requestBody.writeTo(buffer)
                 buffer.readUtf8()
-            } else null
+            } else {
+                null
+            }
         }
 
         val networkRequest = NetworkRequestMessage(
@@ -93,16 +109,15 @@ class CustomHttpLoggingInterceptor(
             failed = false
         )
 
+
         val logMessage = LogMessage(
-            timestamp = System.currentTimeMillis(),
-            pubNubId = "TODO", // You'll need to get this from context
+            pubNubId = pnInstanceId,
             logLevel = Level.DEBUG,
-            location = "CustomHttpLoggingInterceptor",
+            location = location,
             type = LogMessageType.NETWORK_REQUEST,
             message = LogMessageContent.NetworkRequest(requestLog),
-            details = "HTTP Request"
+//            details = "HTTP Request"
         )
-
 
         if (slf4jIsBound()) {
             logger.debug(logMessage)
@@ -115,10 +130,9 @@ class CustomHttpLoggingInterceptor(
         }
     }
 
-    private fun logResponse(response: Response, requestStartTime: Long, failed: Boolean, canceled: Boolean): Response {
+    private fun logResponse(response: Response, location: String): Response {
         val url = response.request.url.toString()
         val status = response.code
-        val duration = System.currentTimeMillis() - requestStartTime
 
         // Parse headers
         val headers = response.headers.toMap()
@@ -133,19 +147,21 @@ class CustomHttpLoggingInterceptor(
                     when {
                         contentType.contains("application/json") -> {
                             val bodyString = responseBody.string()
-                            val clonedResponseBody = ResponseBody.create(responseBody.contentType(), bodyString)
+                            val clonedResponseBody = bodyString.toResponseBody(responseBody.contentType())
                             val newResponse = response.newBuilder().body(clonedResponseBody).build()
                             bodyString to newResponse
                         }
+
                         contentType.startsWith("text/") -> {
                             val bodyString = responseBody.string()
-                            val clonedResponseBody = ResponseBody.create(responseBody.contentType(), bodyString)
+                            val clonedResponseBody = bodyString.toResponseBody(responseBody.contentType())
                             val newResponse = response.newBuilder().body(clonedResponseBody).build()
                             bodyString to newResponse
                         }
+
                         else -> {
                             val bytes = responseBody.bytes()
-                            val clonedResponseBody = ResponseBody.create(responseBody.contentType(), bytes)
+                            val clonedResponseBody = bytes.toResponseBody(responseBody.contentType())
                             val newResponse = response.newBuilder().body(clonedResponseBody).build()
                             Base64.getEncoder().encodeToString(bytes) to newResponse
                         }
@@ -170,10 +186,9 @@ class CustomHttpLoggingInterceptor(
         val responseLog = NetworkLog.Response(message = networkResponse)
 
         val logMessage = LogMessage(
-            timestamp = System.currentTimeMillis(),
-            pubNubId = "TODO", // You'll need to get this from context
+            pubNubId = pnInstanceId,
             logLevel = Level.DEBUG,
-            location = "CustomHttpLoggingInterceptor",
+            location = location,
             type = LogMessageType.NETWORK_RESPONSE,
             message = LogMessageContent.NetworkResponse(responseLog),
             details = "HTTP Response"
@@ -191,4 +206,56 @@ class CustomHttpLoggingInterceptor(
 
         return modifiedResponse
     }
+
+    private fun logError(request: Request, location: String, error: Exception, requestStartTime: Long) {
+        val url = request.url.toString()
+        val duration = System.currentTimeMillis() - requestStartTime
+
+        val networkRequest = NetworkRequestMessage(
+            origin = "${request.url.scheme}://${request.url.host}",
+            path = request.url.encodedPath + if (request.url.encodedQuery != null) "?${request.url.encodedQuery}" else "",
+            query = request.url.queryParameterNames.associateWith { request.url.queryParameter(it) ?: "" }
+                .takeIf { it.isNotEmpty() },
+            method = HttpMethod.fromString(request.method.lowercase()),
+            headers = request.headers.toMap().takeIf { it.isNotEmpty() },
+            formData = null,
+            body = null,
+            timeout = null,
+            identifier = request.url.queryParameter("requestid")
+        )
+
+        val requestLog = NetworkLog.Request(
+            message = networkRequest,
+            canceled = false,
+            failed = true
+        )
+
+        val errorDetails = LogMessageContent.Error(
+            message = ErrorDetails(
+                type = error.javaClass.simpleName,
+                message = error.message ?: "Unknown error",
+                stack = error.stackTrace.take(10).map { it.toString() }
+            )
+        )
+
+        val logMessage = LogMessage(
+            pubNubId = pnInstanceId,
+            logLevel = Level.ERROR,
+            location = location,
+            type = LogMessageType.ERROR,
+            message = errorDetails,
+            details = "HTTP Request failed after ${duration}ms: ${error.message}"
+        )
+
+        if (slf4jIsBound()) {
+            logger.error(logMessage)
+        } else {
+            // fallback: always print
+            if (logVerbosity == PNLogVerbosity.BODY) {
+                val jsonMessage = MapperManager().toJson(logMessage)
+                println("[$PUBNUB_OKHTTP_REQUEST_RESPONSE_LOGGER_NAME] ERROR: $jsonMessage")
+            }
+        }
+    }
+
 }

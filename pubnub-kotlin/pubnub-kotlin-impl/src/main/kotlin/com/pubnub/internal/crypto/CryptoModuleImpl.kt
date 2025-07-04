@@ -9,7 +9,6 @@ import com.pubnub.api.crypto.data.EncryptedStreamData
 import com.pubnub.internal.crypto.cryptor.HeaderParser
 import com.pubnub.internal.crypto.cryptor.LEGACY_CRYPTOR_ID
 import com.pubnub.internal.crypto.cryptor.ParseResult
-import com.pubnub.internal.logging.LoggerManager
 import java.io.BufferedInputStream
 import java.io.InputStream
 import java.io.SequenceInputStream

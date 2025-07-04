@@ -13,7 +13,6 @@ import okhttp3.Authenticator
 import okhttp3.CertificatePinner
 import okhttp3.ConnectionSpec
 import okhttp3.logging.HttpLoggingInterceptor
-//import org.slf4j.LoggerFactory
 import java.net.Proxy
 import java.net.ProxySelector
 import javax.net.ssl.HostnameVerifier

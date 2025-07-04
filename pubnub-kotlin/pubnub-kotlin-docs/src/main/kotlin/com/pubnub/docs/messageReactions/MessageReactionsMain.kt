@@ -98,9 +98,9 @@ fun addNewMessageAction(pubnub: PubNub, channel: String, messageTimetoken: Long)
 
     // Create a message action
     val messageAction = PNMessageAction(
-        type = "reaction",                   // Type of reaction (can be any string)
-        value = "smiley_face",               // Value of reaction (can be any string)
-        messageTimetoken = messageTimetoken  // Timetoken of the message to add the reaction to
+        type = "reaction", // Type of reaction (can be any string)
+        value = "smiley_face", // Value of reaction (can be any string)
+        messageTimetoken = messageTimetoken // Timetoken of the message to add the reaction to
     )
 
     // Add the message action

@@ -50,15 +50,15 @@ fun main() {
 
         // 6. Send the file to PubNub
         pubnub.sendFile(
-            channel = "demo-file-channel",     // The channel to upload the file to
-            fileName = "test_document.txt",    // The name to give the file when uploaded
-            inputStream = inputStream,         // The file data to upload
-            message = mapOf(                   // Optional message to accompany the file
+            channel = "demo-file-channel", // The channel to upload the file to
+            fileName = "test_document.txt", // The name to give the file when uploaded
+            inputStream = inputStream, // The file data to upload
+            message = mapOf( // Optional message to accompany the file
                 "text" to "Here's a test document!",
                 "type" to "document"
             ),
             customMessageType = "file-message", // Optional custom message type
-            meta = mapOf(                      // Optional metadata for filtering
+            meta = mapOf( // Optional metadata for filtering
                 "sender" to "demo-user",
                 "app" to "kotlin-example"
             )
