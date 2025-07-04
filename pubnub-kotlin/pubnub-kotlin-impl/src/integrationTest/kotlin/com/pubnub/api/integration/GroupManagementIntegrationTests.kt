@@ -102,10 +102,21 @@ class GroupManagementIntegrationTests : BaseIntegrationTest() {
             channelGroup = expectedGroup,
             channels = listOf(expectedChannel1, expectedChannel2, expectedChannel3),
         ).await { result ->
-            assertFalse(result.isFailure) // TODO is this part of the result? if not then there's nothing to assert on
-//            assertEquals(1, status.affectedChannelGroups.size)
-//            assertEquals(3, status.affectedChannels.size)
+            assertFalse(result.isFailure)
         }
+    }
+
+    @Test
+    fun testDeleteChannelGroup() {
+        pubnub.addChannelsToChannelGroup(
+            channelGroup = expectedGroup,
+            channels = listOf(expectedChannel1, expectedChannel2, expectedChannel3),
+        ).sync()
+
+        pubnub.deleteChannelGroup(channelGroup = expectedGroup).sync()
+
+        val listAllChannelGroupsResult = pubnub.listAllChannelGroups().sync()
+        assertFalse(listAllChannelGroupsResult.groups.contains(expectedGroup))
     }
 
     private fun addChannelsToGroup() {

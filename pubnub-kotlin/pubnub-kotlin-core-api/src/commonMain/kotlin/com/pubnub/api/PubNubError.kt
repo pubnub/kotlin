@@ -19,7 +19,7 @@ enum class PubNubError(private val code: Int, val message: String) {
 
     SECRET_KEY_MISSING(
         114,
-        "ULS configuration failed. Secret Key not configured",
+        "Secret Key not configured",
     ),
 
     JSON_ERROR(

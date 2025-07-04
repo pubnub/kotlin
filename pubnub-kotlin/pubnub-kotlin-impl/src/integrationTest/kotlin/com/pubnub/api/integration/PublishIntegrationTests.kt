@@ -8,6 +8,7 @@ import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNBoundedPage
+import com.pubnub.api.models.consumer.PNPublishResult
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.v2.PNConfigurationOverride
@@ -37,6 +38,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -54,6 +56,14 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         guestClient = createPubNub {}
     }
 
+    @Test
+    fun testFireMessage() {
+        val expectedChannel = randomChannel()
+        val fireResult: PNPublishResult = pubnub.fire(channel = expectedChannel, message = generatePayload(), meta = null).sync()
+
+        assertNotNull(fireResult.timetoken)
+    }
+    
     @Test
     fun testPublishMessage() {
         val expectedChannel = randomChannel()
