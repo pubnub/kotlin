@@ -5,5 +5,5 @@ enum class LogMessageType(val type: String) {
     OBJECT("object"),
     ERROR("error"),
     NETWORK_REQUEST("network-request"),
-    NETWORK_RESPONSE("network-response");
+    NETWORK_RESPONSE("network-response")
 }

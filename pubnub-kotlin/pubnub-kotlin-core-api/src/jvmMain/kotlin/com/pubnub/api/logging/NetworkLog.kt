@@ -16,4 +16,4 @@ sealed class NetworkLog {
         @SerializedName("message")
         val message: NetworkResponseMessage
     ) : NetworkLog()
-} 
+}

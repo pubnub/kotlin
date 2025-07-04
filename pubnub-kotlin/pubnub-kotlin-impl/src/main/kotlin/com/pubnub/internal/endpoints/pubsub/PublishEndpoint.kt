@@ -4,6 +4,9 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.pubsub.Publish
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
+import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.models.consumer.PNPublishResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
@@ -13,10 +16,11 @@ import com.pubnub.internal.extension.numericString
 import com.pubnub.internal.extension.quoted
 import com.pubnub.internal.extension.valueString
 import com.pubnub.internal.logging.ExtendedLogger
-import com.pubnub.api.logging.LogMessage
-import com.pubnub.api.logging.LogMessageType
 import com.pubnub.internal.logging.LoggerManager
-import com.pubnub.api.logging.LogMessageContent
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.slf4j.event.Level
 import retrofit2.Call
 import retrofit2.Response
@@ -34,10 +38,7 @@ class PublishEndpoint internal constructor(
     override val replicate: Boolean = true,
     override val ttl: Int? = null,
     override val customMessageType: String? = null,
-    val printLog: Boolean = true
 ) : EndpointCore<List<Any>, PNPublishResult>(pubnub), Publish {
-//    private val log2: Logger = LoggerFactory.getLogger(this::class.java)
-//    private val log = InMemoryLoggerAndToPortalSenderFactory.getLogger(pubnub, this::class.java)
     private val log: ExtendedLogger = LoggerManager.getLogger(pubnub.logConfig, this::class.java)
 
     companion object {
@@ -54,30 +55,27 @@ class PublishEndpoint internal constructor(
     override fun getAffectedChannels() = listOf(channel)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<List<Any>> {
-//        log.info("Publish called with channel: $channel, message: $message, queryParams: $queryParams, instanceId: ${pubnub.instanceId}")
-//        log.info(msgObject = "Publish called with channel: $channel, message: $message, queryParams: $queryParams, instanceId: ${pubnub.instanceId}")
         log.info(
             LogMessage(
-            timestamp = System.currentTimeMillis(),
-            pubNubId = pubnub.instanceId,
-            logLevel = Level.INFO,
-            location = this::class.java.toString(),
-            type = LogMessageType.OBJECT,
-            message = LogMessageContent.Object(
-                message = mapOf(
-                    "message" to message,
-                    "channel" to channel,
-                    "shouldStore" to (shouldStore ?: true),
-                    "meta" to (meta ?: ""),
-                    "queryParams" to queryParams,
-                    "usePost" to usePost,
-                    "ttl" to (ttl ?: 0),
-                    "replicate" to replicate,
-                    "customMessageType" to (customMessageType ?: "")
-                )
-            ),
-            details = "Publish API call"
-        )
+                pubNubId = pubnub.instanceId,
+                logLevel = Level.INFO,
+                location = this::class.java.toString(),
+                type = LogMessageType.OBJECT,
+                message = LogMessageContent.Object(
+                    message = mapOf(
+                        "message" to message,
+                        "channel" to channel,
+                        "shouldStore" to (shouldStore ?: true),
+                        "meta" to (meta ?: ""),
+                        "queryParams" to queryParams,
+                        "usePost" to usePost,
+                        "ttl" to (ttl ?: 0),
+                        "replicate" to replicate,
+                        "customMessageType" to (customMessageType ?: "")
+                    )
+                ),
+                details = "Publish API call"
+            )
         )
 
         addQueryParams(queryParams)
@@ -97,7 +95,6 @@ class PublishEndpoint internal constructor(
             val stringifiedMessage = getParamMessage(message)
 
             println("-=About to call retrofitManager.publishService.publish from ${this::class.java.simpleName}=-")
-            println("-=retrofitManager callingClass: ${retrofitManager.callingClass?.simpleName}=-")
             retrofitManager.publishService.publish(
                 configuration.publishKey,
                 configuration.subscribeKey,

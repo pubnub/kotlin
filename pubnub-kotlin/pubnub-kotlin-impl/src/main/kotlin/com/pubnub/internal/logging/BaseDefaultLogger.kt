@@ -1,19 +1,20 @@
 package com.pubnub.internal.logging
 
 import com.pubnub.api.logging.LogMessage
-import com.pubnub.api.logging.LogMessageType
+import com.pubnub.internal.logging.networkLogging.simplified
 import org.slf4j.Logger
 import org.slf4j.event.Level
-import org.slf4j.event.Level.TRACE
 import org.slf4j.event.Level.DEBUG
-import org.slf4j.event.Level.INFO
-import org.slf4j.event.Level.WARN
 import org.slf4j.event.Level.ERROR
+import org.slf4j.event.Level.INFO
+import org.slf4j.event.Level.TRACE
+import org.slf4j.event.Level.WARN
 
 /**
  * Abstract base logger that provides common functionality.
  * Both internal and custom loggers can extend this class.
  */
+// todo is BaseDefaultLogger ok. Maybe it can be renamed?
 abstract class BaseDefaultLogger(val logMessageContext: LogMessageContext) : ExtendedLogger {
     // Delegate all Logger methods to the underlying SLF4J logger
     protected abstract val delegate: Logger
@@ -24,36 +25,30 @@ abstract class BaseDefaultLogger(val logMessageContext: LogMessageContext) : Ext
      */
     protected open fun onLog(level: Level, message: LogMessage) {
         // Default implementation does nothing
-        println("onLog") // todo remove
     }
 
     override fun trace(message: LogMessage) {
-        val simplifiedMessage = getSimplifiedMessage(message)
-        delegate.trace(simplifiedMessage)
+        delegate.trace(message.simplified())
         onLog(TRACE, message)
     }
 
     override fun debug(message: LogMessage) {
-        val simplifiedMessage = getSimplifiedMessage(message)
-        delegate.debug(simplifiedMessage)
+        delegate.debug(message.simplified())
         onLog(DEBUG, message)
     }
 
     override fun info(message: LogMessage) {
-        val simplifiedMessage = getSimplifiedMessage(message)
-        delegate.info(simplifiedMessage)
+        delegate.info(message.simplified())
         onLog(INFO, message)
     }
 
     override fun warn(message: LogMessage) {
-        val simplifiedMessage = getSimplifiedMessage(message)
-        delegate.warn(simplifiedMessage)
+        delegate.warn(message.simplified())
         onLog(WARN, message)
     }
 
     override fun error(message: LogMessage) {
-        val simplifiedMessage = getSimplifiedMessage(message)
-        delegate.error(simplifiedMessage)
+        delegate.error(message.simplified())
         onLog(ERROR, message)
     }
 }

@@ -189,6 +189,7 @@ open class PubNubImpl(
     constructor(configuration: PNConfiguration) : this(configuration, PNSDK_PUBNUB_KOTLIN)
 
     val mapper = MapperManager()
+
     /**
      * Unique id of this PubNub instance.
      *
@@ -205,7 +206,7 @@ open class PubNubImpl(
     internal val executorService: ScheduledExecutorService = Executors.newScheduledThreadPool(numberOfThreadsInPool)
     val listenerManager: ListenerManager = ListenerManager(this)
     private val basePathManager = BasePathManager(configuration)
-    internal val retrofitManager = RetrofitManager(pubnub = this, configuration = configuration, callingClass = null)
+    internal val retrofitManager = RetrofitManager(pubnub = this, configuration = configuration)
     internal val publishSequenceManager = PublishSequenceManager(MAX_SEQUENCE)
     private val tokenParser: TokenParser = TokenParser()
     private val presenceData = PresenceData()

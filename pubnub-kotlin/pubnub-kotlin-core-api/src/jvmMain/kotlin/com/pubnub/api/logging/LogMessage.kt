@@ -2,10 +2,12 @@ package com.pubnub.api.logging
 
 import com.google.gson.annotations.SerializedName
 import org.slf4j.event.Level
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 class LogMessage(
     @SerializedName("timestamp")
-    val timestamp: Long,
+    val timestamp: String = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.SSS")),
     @SerializedName("pubNubId")
     val pubNubId: String,
     @SerializedName("logLevel")
@@ -15,7 +17,7 @@ class LogMessage(
     @SerializedName("type")
     val type: LogMessageType,
     @SerializedName("message")
-    val message: LogMessageContent, // Changed to use the sealed class
+    val message: LogMessageContent,
     @SerializedName("details")
     val details: String? = null
 )
