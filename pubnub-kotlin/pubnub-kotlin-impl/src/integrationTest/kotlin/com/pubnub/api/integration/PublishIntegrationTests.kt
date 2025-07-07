@@ -59,11 +59,12 @@ class PublishIntegrationTests : BaseIntegrationTest() {
     @Test
     fun testFireMessage() {
         val expectedChannel = randomChannel()
-        val fireResult: PNPublishResult = pubnub.fire(channel = expectedChannel, message = generatePayload(), meta = null).sync()
+        val fireResult: PNPublishResult =
+            pubnub.fire(channel = expectedChannel, message = generatePayload(), meta = null).sync()
 
         assertNotNull(fireResult.timetoken)
     }
-    
+
     @Test
     fun testPublishMessage() {
         val expectedChannel = randomChannel()
