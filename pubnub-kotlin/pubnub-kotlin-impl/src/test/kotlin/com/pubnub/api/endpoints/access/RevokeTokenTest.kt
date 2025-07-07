@@ -1,6 +1,5 @@
 package com.pubnub.api.endpoints.access
 
-import io.mockk.verify
 import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
 import com.pubnub.internal.PubNubImpl
@@ -15,6 +14,7 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import io.mockk.spyk
+import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -79,7 +79,13 @@ class RevokeTokenTest {
         every { pubNub.retrofitManager } returns retrofitManager
         every { retrofitManager.accessManagerService } returns accessManagerService
         every { accessManagerService.revokeToken(any(), any(), any()) } returns call
-        every { call.execute() } returns Response.success(RevokeTokenResponse(200, RevokeTokenData("message", "token"), "service"))
+        every { call.execute() } returns Response.success(
+            RevokeTokenResponse(
+                200,
+                RevokeTokenData("message", "token"),
+                "service"
+            )
+        )
 
         // Act
         pubNub.revokeToken(expectedToken).sync()
