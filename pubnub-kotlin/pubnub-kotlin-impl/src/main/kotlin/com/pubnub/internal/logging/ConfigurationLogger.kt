@@ -36,19 +36,19 @@ object ConfigurationLogger {
             "suppressLeaveEvents" to configuration.suppressLeaveEvents,
             "maintainPresenceState" to configuration.maintainPresenceState,
             // Authentication
-            "authKey" to (configuration.authKey.takeIf { it.isNotBlank() }?.let { "set: *****" } ?: "not set"),
-            "authToken" to (configuration.authToken?.takeIf { it.isNotBlank() }?.let { "(@Deprecated) set: *****" } ?: "not set"),
+            "authKey" to (configuration.authKey.takeIf { it.isNotBlank() }?.let { "(@Deprecated) set: *****" } ?: "not set"),
+            "authToken" to (configuration.authToken?.takeIf { it.isNotBlank() }?.let { "set: *****" } ?: "not set"),
             // Filtering and subscriptions
             "filterExpression" to (configuration.filterExpression.takeIf { it.isNotBlank() } ?: "not set"),
-            "dedupOnSubscribe" to (configuration.dedupOnSubscribe ?: "not set"),
-            "maximumMessagesCacheSize" to (configuration.maximumMessagesCacheSize ?: "not set"),
+            "dedupOnSubscribe" to configuration.dedupOnSubscribe,
+            "maximumMessagesCacheSize" to configuration.maximumMessagesCacheSize,
             // Retry and reliability
-            "retryConfiguration" to (configuration.retryConfiguration?.javaClass?.simpleName ?: "none"),
+            "retryConfiguration" to (configuration.retryConfiguration.javaClass.simpleName ?: "none"),
             "fileMessagePublishRetryLimit" to configuration.fileMessagePublishRetryLimit,
             // Identification and tracking
             "includeInstanceIdentifier" to configuration.includeInstanceIdentifier,
             "includeRequestIdentifier" to configuration.includeRequestIdentifier,
-            "pnsdkSuffixes" to (configuration.pnsdkSuffixes?.takeIf { it.isNotEmpty() } ?: "not set"),
+            "pnsdkSuffixes" to (configuration.pnsdkSuffixes.takeIf { it.isNotEmpty() } ?: "not set"),
             // Crypto and encryption
             "cryptoModule" to (
                 if (configuration.cryptoModule != null) {
