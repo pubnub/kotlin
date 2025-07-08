@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test
 import org.slf4j.event.Level
 
 class ConfigurationLoggerTest {
-
     @Test
     fun `should log configuration with all required fields`() {
         // Given
