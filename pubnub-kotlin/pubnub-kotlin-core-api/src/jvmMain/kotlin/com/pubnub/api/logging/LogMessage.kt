@@ -5,6 +5,17 @@ import org.slf4j.event.Level
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
+/**
+ * Represents a structured log message with validation and sanitization.
+ *
+ * @param pubNubId The PubNub instance identifier
+ * @param logLevel The logging level
+ * @param location The source location of the log
+ * @param type The type of log message
+ * @param message The log message content
+ * @param details Optional additional details (will be sanitized)
+ * @param timestamp The timestamp when the log was created
+ */
 class LogMessage(
     @SerializedName("pubNubId")
     val pubNubId: String,

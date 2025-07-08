@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test
 class EmitStatusEffectTest {
     private val statusConsumer: StatusConsumer = mockk()
     val status: PNStatus = mockk()
-    private val logConfig: LogConfig =  LogConfig(pnInstanceId = "testInstanceId", userId = "testUserId")
+    private val logConfig: LogConfig = LogConfig(pnInstanceId = "testInstanceId", userId = "testUserId")
 
     @Test
     fun `should announce status when status provided`() {

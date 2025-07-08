@@ -209,6 +209,7 @@ class SendFileTest : TestsWithFiles {
         val retryConfiguration = RetryConfiguration.None
         every { mockConfig.retryConfiguration } returns retryConfiguration
         every { mockPubNub.configuration } returns mockConfig
+        every { mockPubNub.logConfig } returns mockk()
         return mockPubNub
     }
 

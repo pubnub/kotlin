@@ -36,8 +36,8 @@ object ConfigurationLogger {
             "suppressLeaveEvents" to configuration.suppressLeaveEvents,
             "maintainPresenceState" to configuration.maintainPresenceState,
             // Authentication
-            "authKey" to (configuration.authKey.takeIf { it.isNotBlank() }?.let {"set: *****"} ?: "not set"),
-            "authToken" to (configuration.authToken?.takeIf { it.isNotBlank() }?.let {"(@Deprecated) set: *****"} ?: "not set"),
+            "authKey" to (configuration.authKey.takeIf { it.isNotBlank() }?.let { "set: *****" } ?: "not set"),
+            "authToken" to (configuration.authToken?.takeIf { it.isNotBlank() }?.let { "(@Deprecated) set: *****" } ?: "not set"),
             // Filtering and subscriptions
             "filterExpression" to (configuration.filterExpression.takeIf { it.isNotBlank() } ?: "not set"),
             "dedupOnSubscribe" to (configuration.dedupOnSubscribe ?: "not set"),
@@ -51,24 +51,24 @@ object ConfigurationLogger {
             "pnsdkSuffixes" to (configuration.pnsdkSuffixes?.takeIf { it.isNotEmpty() } ?: "not set"),
             // Crypto and encryption
             "cryptoModule" to (
-                    if (configuration.cryptoModule != null) {
-                        "enabled"
-                    } else {
-                        "disabled"
-                    }
-                    ),
+                if (configuration.cryptoModule != null) {
+                    "enabled"
+                } else {
+                    "disabled"
+                }
+            ),
             // Manual presence management
             "managePresenceListManually" to (configuration.managePresenceListManually ?: "not set"),
             // Logging configuration
             "customLoggers" to (
-                    configuration.customLoggers?.let {
-                        "enabled (${it.size} logger${if (it.size != 1) {
-                            "s"
-                        } else {
-                            ""
-                        }})"
-                    } ?: "not set"
-                    ),
+                configuration.customLoggers?.let {
+                    "enabled (${it.size} logger${if (it.size != 1) {
+                        "s"
+                    } else {
+                        ""
+                    }})"
+                } ?: "not set"
+            ),
             // Network and proxy settings
             "proxy" to (configuration.proxy?.toString() ?: "not set"),
             "proxySelector" to (configuration.proxySelector?.toString() ?: "not set"),

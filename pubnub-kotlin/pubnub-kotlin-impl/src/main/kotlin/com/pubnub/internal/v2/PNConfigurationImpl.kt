@@ -87,9 +87,6 @@ class PNConfigurationImpl(
         PNConfigurationOverride.Builder {
         constructor(userId: UserId, subscribeKey: String) : this(PNConfigurationImpl(userId, subscribeKey))
 
-//        private val log = LoggerFactory.getLogger(this::class.simpleName)
-//        private val log = LoggerManager.getLogger(pubnub, this::class.java)
-
         override var userId: UserId = defaultConfiguration.userId
 
         override var subscribeKey: String = defaultConfiguration.subscribeKey

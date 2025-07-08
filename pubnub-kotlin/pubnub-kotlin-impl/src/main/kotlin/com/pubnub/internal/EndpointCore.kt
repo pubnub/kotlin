@@ -41,7 +41,7 @@ abstract class EndpointCore<Input, Output> protected constructor(protected val p
             RetrofitManager(pubnub.retrofitManager, configOverrideNonNull)
         } ?: pubnub.retrofitManager
 
-    private val logger = LoggerManager.getLogger(pubnub.logConfig, this::class.java)
+    private val logger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     private lateinit var cachedCallback: Consumer<Result<Output>>
     private lateinit var call: Call<Input>

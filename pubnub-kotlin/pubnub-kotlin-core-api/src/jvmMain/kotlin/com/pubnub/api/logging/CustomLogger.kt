@@ -1,47 +1,82 @@
 package com.pubnub.api.logging
 
+/**
+ * Interface for custom logger implementations.
+ * Provides both string-based and structured LogMessage-based logging.
+ */
 interface CustomLogger {
-    fun getName(): String {
-        return "CustomLogger"
-    }
+    /**
+     * The name of this logger implementation.
+     */
+    val name: String get() = "CustomLogger"
 
+    /**
+     * Log a trace message with a string.
+     */
     fun trace(message: String?) {
-        // by default do nothing
+        // Default implementation does nothing
     }
 
-    fun trace(message: LogMessage) {
-        // by default do nothing
+    /**
+     * Log a trace message with structured data.
+     */
+    fun trace(logMessage: LogMessage) {
+        // Default implementation does nothing
     }
 
+    /**
+     * Log a debug message with a string.
+     */
     fun debug(message: String?) {
-        // by default do nothing
+        // Default implementation does nothing
     }
 
-    fun debug(message: LogMessage) {
-        // by default do nothing
+    /**
+     * Log a debug message with structured data.
+     */
+    fun debug(logMessage: LogMessage) {
+        // Default implementation does nothing
     }
 
+    /**
+     * Log an info message with a string.
+     */
     fun info(message: String?) {
-        // by default do nothing
+        // Default implementation does nothing
     }
 
-    fun info(message: LogMessage) {
-        // by default do nothing
+    /**
+     * Log an info message with structured data.
+     */
+    fun info(logMessage: LogMessage) {
+        // Default implementation does nothing
     }
 
+    /**
+     * Log a warning message with a string.
+     */
     fun warn(message: String?) {
-        // by default do nothing
+        // Default implementation does nothing
     }
 
-    fun warn(message: LogMessage) {
-        // by default do nothing
+    /**
+     * Log a warning message with structured data.
+     */
+    fun warn(logMessage: LogMessage) {
+        // Default implementation does nothing
     }
 
+    /**
+     * Log an error message with a string.
+     */
     fun error(message: String?) {
-        // by default do nothing
+        // Default implementation does nothing
     }
 
-    fun error(message: LogMessage) {
-        // by default do nothing
+    /**
+     * Log an error message with structured data.
+     */
+    fun error(logMessage: LogMessage) {
+        // Default implementation does nothing
     }
 }

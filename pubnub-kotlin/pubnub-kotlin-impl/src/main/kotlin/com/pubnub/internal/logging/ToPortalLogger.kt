@@ -12,16 +12,15 @@ import org.slf4j.event.Level.TRACE
 import org.slf4j.event.Level.WARN
 
 /**
- * Abstract base logger that provides common functionality.
- * Both internal and custom loggers can extend this class.
+ * Logger implementation that sends logs to a portal while delegating to a standard SLF4J logger based on customer
+ * configuration of slf4j implementation e.g. logback.xml, log4j2.xml, etc.
  */
-// todo is BaseDefaultLogger ok. Maybe it can be renamed?
 class ToPortalLogger(
     private val delegate: Logger,
-    private val userId: String) : ExtendedLogger {
+    private val userId: String,
+) : ExtendedLogger {
     // todo is logMessageContext needed here?
     // Delegate all Logger methods to the underlying SLF4J logger
-
 
     companion object {
         private const val PORTAL_CHANNEL = "pubnub-internal-logs"
@@ -89,7 +88,14 @@ class ToPortalLogger(
         return getConfigFromPortal().userId == userId
     }
 
-    private fun getConfigFromPortal(): LogConfigFromPortal {
+    // Thread-safe lazy configuration loading
+    private val portalConfig: LogConfigFromPortal by lazy {
+        loadConfigFromPortal()
+    }
+
+    private fun getConfigFromPortal(): LogConfigFromPortal = portalConfig
+
+    private fun loadConfigFromPortal(): LogConfigFromPortal {
         // This function should retrieve the logging configuration from the portal
         // For now, we return a default configuration
         return LogConfigFromPortal(

@@ -14,7 +14,7 @@ internal class EmitStatusEffect(
     private val status: PNStatus,
     private val logConfig: LogConfig
 ) : Effect {
-    private val log = LoggerManager.getLogger(logConfig, this::class.java)
+    private val log = LoggerManager.instance.getLogger(logConfig, this::class.java)
 
     override fun runEffect() {
         log.trace(

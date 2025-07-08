@@ -184,7 +184,7 @@ open class PubNubImpl(
     val pnsdkName: String = PNSDK_PUBNUB_KOTLIN,
     eventEnginesConf: EventEnginesConf = EventEnginesConf()
 ) : PubNub {
-    private val logger: ExtendedLogger by lazy { LoggerManager.getLogger(logConfig, this::class.java) }
+    private val logger: ExtendedLogger by lazy { LoggerManager.instance.getLogger(logConfig, this::class.java) }
     internal val tokenManager: TokenManager = TokenManager()
 
     init {

@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory
 import org.slf4j.event.Level
 import org.slf4j.helpers.NOPLoggerFactory
 import java.io.IOException
-import java.util.*
+import java.util.Base64
 
 private const val PUBNUB_OKHTTP_REQUEST_RESPONSE_LOGGER_NAME = "pubnub.okhttp"
 
