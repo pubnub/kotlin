@@ -9,21 +9,16 @@ object LoggerManager {
     fun getLogger(logConfig: LogConfig, clazz: Class<*>): ExtendedLogger {
         val slf4jLogger = org.slf4j.LoggerFactory.getLogger(clazz)
 
-        val logMessageContext = LogMessageContext(
-            pnInstanceId = logConfig.pnInstanceId,
-            userId = logConfig.userId,
-        )
-
-        val inMemoryLogger: ExtendedLogger = LoggerToPortalSender(
-            slf4jLogger = slf4jLogger,
-            logMessageContext = logMessageContext
+        val toPortalLogger: ExtendedLogger = ToPortalLogger(
+            delegate = slf4jLogger,
+            userId = logConfig.userId
         )
 
         val customLoggers: List<CustomLogger>? = logConfig.customLoggers
-        return if (customLoggers != null) { // todo add check if list is not empty
-            CompositeLogger(inMemoryLogger, customLoggers)
+        return if (!customLoggers.isNullOrEmpty()) {
+            CompositeLogger(toPortalLogger, customLoggers)
         } else {
-            inMemoryLogger
+            toPortalLogger
         }
     }
 }

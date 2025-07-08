@@ -4,6 +4,7 @@ import com.pubnub.api.UserId
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNLogVerbosity
+import com.pubnub.api.logging.CustomLogger
 import com.pubnub.api.retry.RetryConfiguration
 import okhttp3.Authenticator
 import okhttp3.CertificatePinner
@@ -248,7 +249,11 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
          *
          * @see [HttpLoggingInterceptor]
          */
-        val httpLoggingInterceptor: HttpLoggingInterceptor?
+        @Deprecated(
+            message = "This setting is deprecated. Use customLoggers  instead",
+            level = DeprecationLevel.WARNING
+        )
+        val httpLoggingInterceptor: HttpLoggingInterceptor? // todo deprecate
 
         /**
          * @see [SSLSocketFactory]
@@ -300,6 +305,12 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
          * @see PNConfiguration.heartbeatInterval
          */
         val managePresenceListManually: Boolean
+
+        /**
+         * Custom loggers list for creating additional logger instances.
+         * Use it if your slf4j implementation like logback, log4j2, etc. can't meet your specific logging requirements.
+         */
+        val customLoggers: List<CustomLogger>?
 
         override fun build(): PNConfiguration
 
@@ -479,6 +490,10 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
          *
          * @see [HttpLoggingInterceptor]
          */
+        @Deprecated(
+            message = "This setting is deprecated. Use customLoggers  instead",
+            level = DeprecationLevel.WARNING
+        )
         fun httpLoggingInterceptor(httpLoggingInterceptor: HttpLoggingInterceptor?): Builder
 
         /**
@@ -533,6 +548,12 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
          * @see PNConfigurationImpl.heartbeatInterval
          */
         fun managePresenceListManually(managePresenceListManually: Boolean): Builder
+
+        /**
+         * Custom loggers list for creating additional logger instances.
+         * Use it if your slf4j implementation like logback, log4j2, etc. can't meet your specific logging requirements.
+         */
+        fun customLoggers(customLoggers: List<CustomLogger>?): Builder
     }
 }
 

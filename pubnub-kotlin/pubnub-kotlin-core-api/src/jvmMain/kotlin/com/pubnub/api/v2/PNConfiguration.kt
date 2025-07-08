@@ -235,6 +235,10 @@ actual interface PNConfiguration {
      *
      * @see [HttpLoggingInterceptor]
      */
+    @Deprecated(
+        message = "This setting is deprecated. Use customLoggers  instead",
+        level = DeprecationLevel.WARNING
+    )
     val httpLoggingInterceptor: HttpLoggingInterceptor?
 
     /**
@@ -289,9 +293,8 @@ actual interface PNConfiguration {
     val managePresenceListManually: Boolean
 
     /**
-     * Custom logger factory for creating additional logger instances.
-     * The InMemoryLogger will always be used as the base logger.
-     * If provided, this factory will create a logger that wraps the base logger.
+     * Custom loggers list for creating additional logger instances.
+     * Use it if your slf4j implementation like logback, log4j2, etc. can't meet your specific logging requirements.
      */
     val customLoggers: List<CustomLogger>?
 
@@ -549,7 +552,11 @@ actual interface PNConfiguration {
          *
          * @see [HttpLoggingInterceptor]
          */
-        var httpLoggingInterceptor: HttpLoggingInterceptor?
+        @Deprecated(
+            message = "This setting is deprecated. Use customLoggers  instead",
+            level = DeprecationLevel.WARNING
+        )
+        var httpLoggingInterceptor: HttpLoggingInterceptor? // todo deprecate since we introduce  customLoggers
 
         /**
          * @see [SSLSocketFactory]

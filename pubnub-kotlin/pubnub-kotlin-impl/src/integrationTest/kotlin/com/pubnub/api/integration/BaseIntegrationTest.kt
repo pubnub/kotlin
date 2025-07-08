@@ -95,7 +95,7 @@ abstract class BaseIntegrationTest {
         }
         clientConfig.retryConfiguration = RetryConfiguration.None
         clientConfig.logVerbosity = PNLogVerbosity.NONE
-//        clientConfig.httpLoggingInterceptor = createInterceptor(logger)
+//        clientConfig.httpLoggingInterceptor = createInterceptor(logger) // todo remove when all places get logging statements
         clientConfig.logVerbosity = PNLogVerbosity.BODY
         clientConfig.customLoggers = listOf(ObfuscatingLogger())
 

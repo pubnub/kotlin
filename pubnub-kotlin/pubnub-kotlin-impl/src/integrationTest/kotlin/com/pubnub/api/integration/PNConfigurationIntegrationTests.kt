@@ -4,6 +4,7 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.PNConfigurationOverride
+import com.pubnub.test.CommonUtils.createInterceptor
 import com.pubnub.test.CommonUtils.randomChannel
 import com.pubnub.test.Keys
 import org.junit.Assert

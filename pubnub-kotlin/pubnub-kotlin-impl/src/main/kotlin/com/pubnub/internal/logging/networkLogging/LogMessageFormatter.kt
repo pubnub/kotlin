@@ -1,8 +1,8 @@
 package com.pubnub.internal.logging.networkLogging
 
+import com.google.gson.GsonBuilder
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.google.gson.GsonBuilder
 
 fun LogMessage.simplified(): String {
     val messageContent = when (val content = this.message) {

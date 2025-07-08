@@ -6,6 +6,7 @@ import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.java.v2.PNConfiguration
 import com.pubnub.api.java.v2.PNConfigurationOverride
+import com.pubnub.api.logging.CustomLogger
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.retry.RetryableEndpointGroup
 import okhttp3.Authenticator
@@ -70,7 +71,7 @@ class PNConfigurationImpl(
         )
     ),
     override val managePresenceListManually: Boolean = false,
-    override val customLoggers: List<Any>? = null,
+    override val customLoggers: List<CustomLogger>? = null,
 ) : PNConfiguration {
     companion object {
         const val DEFAULT_DEDUPE_SIZE = 100
@@ -368,6 +369,13 @@ class PNConfigurationImpl(
             }
 
             override var managePresenceListManually: Boolean = defaultConfiguration.managePresenceListManually
+
+            override fun customLoggers(customLoggers: List<CustomLogger>?): Builder {
+                this.customLoggers = customLoggers
+                return this
+            }
+
+            override var customLoggers: List<CustomLogger>? = defaultConfiguration.customLoggers
 
             override fun build(): PNConfiguration {
                 return PNConfigurationImpl(

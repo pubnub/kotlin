@@ -6,8 +6,6 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 class LogMessage(
-    @SerializedName("timestamp")
-    val timestamp: String = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.SSS")),
     @SerializedName("pubNubId")
     val pubNubId: String,
     @SerializedName("logLevel")
@@ -19,5 +17,7 @@ class LogMessage(
     @SerializedName("message")
     val message: LogMessageContent,
     @SerializedName("details")
-    val details: String? = null
+    val details: String? = null,
+    @SerializedName("timestamp")
+    val timestamp: String = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.SSS")),
 )

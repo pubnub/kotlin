@@ -24,7 +24,7 @@ import java.util.*
 
 private const val PUBNUB_OKHTTP_REQUEST_RESPONSE_LOGGER_NAME = "pubnub.okhttp"
 
-class CustomHttpLoggingInterceptor(
+class CustomPnHttpLoggingInterceptor(
     private val logger: ExtendedLogger,
     private val logVerbosity: PNLogVerbosity,
     private val pnInstanceId: String,
@@ -108,7 +108,6 @@ class CustomHttpLoggingInterceptor(
             canceled = false,
             failed = false
         )
-
 
         val logMessage = LogMessage(
             pubNubId = pnInstanceId,
@@ -213,7 +212,11 @@ class CustomHttpLoggingInterceptor(
 
         val networkRequest = NetworkRequestMessage(
             origin = "${request.url.scheme}://${request.url.host}",
-            path = request.url.encodedPath + if (request.url.encodedQuery != null) "?${request.url.encodedQuery}" else "",
+            path = request.url.encodedPath + if (request.url.encodedQuery != null) {
+                "?${request.url.encodedQuery}"
+            } else {
+                ""
+            },
             query = request.url.queryParameterNames.associateWith { request.url.queryParameter(it) ?: "" }
                 .takeIf { it.isNotEmpty() },
             method = HttpMethod.fromString(request.method.lowercase()),
@@ -257,5 +260,4 @@ class CustomHttpLoggingInterceptor(
             }
         }
     }
-
 }

@@ -29,7 +29,6 @@ enum class HttpMethod(val value: String) {
     PATCH("patch"),
     DELETE("delete");
 
-
     companion object {
         fun fromString(method: String): HttpMethod {
             return when (method.lowercase()) {

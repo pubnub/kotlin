@@ -1,11 +1,10 @@
 package com.pubnub.internal.managers
 
-import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.interceptor.SignatureInterceptor
 import com.pubnub.internal.logging.LoggerManager
-import com.pubnub.internal.logging.networkLogging.CustomHttpLoggingInterceptor
+import com.pubnub.internal.logging.networkLogging.CustomPnHttpLoggingInterceptor
 import com.pubnub.internal.services.AccessManagerService
 import com.pubnub.internal.services.ChannelGroupService
 import com.pubnub.internal.services.FilesService
@@ -112,14 +111,16 @@ class RetrofitManager(
             .connectTimeout(configuration.connectTimeout.toLong(), TimeUnit.SECONDS)
 
         with(configuration) {
-            // todo detect that this is publish to portal and not log this to avoid recursion
-            if (logVerbosity == PNLogVerbosity.BODY) { // todo move into CustomHttpLoggingInterceptor
-                // Replace the standard HttpLoggingInterceptor with our custom one
-                val customLogger = LoggerManager.getLogger(pubnub.logConfig, this::class.java)
-                okHttpBuilder.addInterceptor(
-                    CustomHttpLoggingInterceptor(customLogger, logVerbosity, pubnub.logConfig.pnInstanceId)
-                )
+            okHttpBuilder.interceptors().removeAll { interceptor ->
+                interceptor is CustomPnHttpLoggingInterceptor
             }
+
+            // todo detect that this is publish to portal and not log this to avoid recursion
+            // Replace the standard HttpLoggingInterceptor with our custom one
+            val customLogger = LoggerManager.getLogger(pubnub.logConfig, this::class.java)
+            okHttpBuilder.addInterceptor(
+                CustomPnHttpLoggingInterceptor(customLogger, logVerbosity, pubnub.instanceId)
+           )
 
             if (httpLoggingInterceptor != null) {
                 okHttpBuilder.addInterceptor(httpLoggingInterceptor!!)

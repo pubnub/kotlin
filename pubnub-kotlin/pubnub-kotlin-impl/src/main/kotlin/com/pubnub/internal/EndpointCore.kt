@@ -10,12 +10,13 @@ import com.pubnub.api.v2.PNConfiguration.Companion.isValid
 import com.pubnub.api.v2.PNConfigurationOverride
 import com.pubnub.api.v2.callbacks.Consumer
 import com.pubnub.api.v2.callbacks.Result
+import com.pubnub.internal.logging.ConfigurationLogger.logConfiguration
+import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.managers.RetrofitManager
 import com.pubnub.internal.retry.RetryableBase
 import com.pubnub.internal.retry.RetryableCallback
 import com.pubnub.internal.retry.RetryableRestCaller
 import com.pubnub.internal.v2.PNConfigurationImpl
-import org.slf4j.LoggerFactory
 import retrofit2.Call
 import retrofit2.Response
 import java.io.IOException
@@ -40,7 +41,7 @@ abstract class EndpointCore<Input, Output> protected constructor(protected val p
             RetrofitManager(pubnub.retrofitManager, configOverrideNonNull)
         } ?: pubnub.retrofitManager
 
-    private val log = LoggerFactory.getLogger(this.javaClass.simpleName)
+    private val logger = LoggerManager.getLogger(pubnub.logConfig, this::class.java)
 
     private lateinit var cachedCallback: Consumer<Result<Output>>
     private lateinit var call: Call<Input>
@@ -439,6 +440,7 @@ abstract class EndpointCore<Input, Output> protected constructor(protected val p
     }
 
     fun overrideConfigurationInternal(configuration: PNConfiguration) {
+        logConfiguration(configuration = configuration, logger = logger, instanceId = pubnub.instanceId, className = this::class.java)
         this.configOverride = configuration
     }
 

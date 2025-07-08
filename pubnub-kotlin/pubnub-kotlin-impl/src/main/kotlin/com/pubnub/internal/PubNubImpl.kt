@@ -139,7 +139,10 @@ import com.pubnub.internal.endpoints.push.AddChannelsToPushEndpoint
 import com.pubnub.internal.endpoints.push.ListPushProvisionsEndpoint
 import com.pubnub.internal.endpoints.push.RemoveAllPushChannelsForDeviceEndpoint
 import com.pubnub.internal.endpoints.push.RemoveChannelsFromPushEndpoint
+import com.pubnub.internal.logging.ConfigurationLogger.logConfiguration
+import com.pubnub.internal.logging.ExtendedLogger
 import com.pubnub.internal.logging.LogConfig
+import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.managers.BasePathManager
 import com.pubnub.internal.managers.DuplicationManager
 import com.pubnub.internal.managers.ListenerManager
@@ -181,6 +184,7 @@ open class PubNubImpl(
     val pnsdkName: String = PNSDK_PUBNUB_KOTLIN,
     eventEnginesConf: EventEnginesConf = EventEnginesConf()
 ) : PubNub {
+    private val logger: ExtendedLogger by lazy { LoggerManager.getLogger(logConfig, this::class.java) }
     internal val tokenManager: TokenManager = TokenManager()
 
     init {
@@ -280,6 +284,10 @@ open class PubNubImpl(
          */
         @JvmStatic
         fun generateUUID() = "pn-${UUID.randomUUID()}"
+    }
+
+    init {
+        logConfiguration(configuration = configuration, logger = logger, instanceId = instanceId, className = this::class.java)
     }
 
     override fun subscriptionSetOf(
