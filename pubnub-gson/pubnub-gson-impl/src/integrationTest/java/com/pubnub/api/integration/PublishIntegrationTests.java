@@ -44,6 +44,7 @@ import static com.pubnub.api.integration.util.Utils.random;
 import static com.pubnub.api.integration.util.Utils.randomChannel;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -57,6 +58,15 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
     @Override
     protected void onAfter() {
 
+    }
+
+    @Test
+    public void canFireMessage() throws PubNubException {
+        final String expectedChannel = randomChannel();
+        final JsonObject messagePayload = generateMessage(pubNub);
+        PNPublishResult fireResult = pubNub.fire(messagePayload, expectedChannel).sync();
+
+        assertNotNull(fireResult.getTimetoken());
     }
 
     @Test

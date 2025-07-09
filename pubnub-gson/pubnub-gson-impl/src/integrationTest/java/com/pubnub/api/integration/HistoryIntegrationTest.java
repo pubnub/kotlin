@@ -11,6 +11,7 @@ import com.pubnub.api.models.consumer.history.PNFetchMessageItem;
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult;
 import com.pubnub.api.models.consumer.history.PNHistoryItemResult;
 import com.pubnub.api.models.consumer.history.PNHistoryResult;
+import com.pubnub.api.models.consumer.history.PNMessageCountResult;
 import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult;
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction;
 import org.junit.Test;
@@ -670,5 +671,69 @@ public class HistoryIntegrationTest extends BaseIntegrationTest {
         for (PNFetchMessageItem messageItem : fetchMessagesResult.getChannels().get(expectedChannelName)) {
             assertNull(messageItem.getMessageType());
         }
+    }
+
+    @Test
+    public void canGetMessageCounts() throws PubNubException {
+        String channel01 = randomChannel();
+        String channel02 = randomChannel();
+        long firstPublishToChannel01Timetoken = pubNub.publish().channel(channel01).message("FirstMessageChannel01").sync().getTimetoken();
+        pubNub.publish().channel(channel01).message("SecondMessage").sync();
+        long firstPublishToChannel02Timetoken = pubNub.publish().channel(channel02).message("FirstMessageChannel02").sync().getTimetoken();
+
+        // Test with multiple timetokens (one per channel)
+        PNMessageCountResult messagesCounts = pubNub.messageCounts()
+                .channels(Arrays.asList(channel01, channel02))
+                .channelsTimetoken(Arrays.asList(firstPublishToChannel01Timetoken - 1, firstPublishToChannel02Timetoken - 1))
+                .sync();
+        assertEquals(Long.valueOf(2), messagesCounts.getChannels().get(channel01));
+        assertEquals(Long.valueOf(1), messagesCounts.getChannels().get(channel02));
+    }
+
+    @Test
+    public void canGetMessageCountsWithSingleTimetoken() throws PubNubException {
+        String channel01 = randomChannel();
+        String channel02 = randomChannel();
+        long firstPublishToChannel01Timetoken = pubNub.publish().channel(channel01).message("FirstMessageChannel01").sync().getTimetoken();
+        pubNub.publish().channel(channel01).message("SecondMessage").sync();
+        pubNub.publish().channel(channel02).message("FirstMessageChannel02").sync();
+
+        // Test with single timetoken applied to all channels
+        PNMessageCountResult messagesCounts = pubNub.messageCounts()
+                .channels(Arrays.asList(channel01, channel02))
+                .channelsTimetoken(Arrays.asList(firstPublishToChannel01Timetoken - 1))
+                .sync();
+        assertEquals(Long.valueOf(2), messagesCounts.getChannels().get(channel01));
+        assertEquals(Long.valueOf(1), messagesCounts.getChannels().get(channel02));
+    }
+
+    @Test
+    public void canGetMessageCountsWithMultipleTimetokens() throws PubNubException {
+        String channel01 = randomChannel();
+        String channel02 = randomChannel();
+        String channel03 = randomChannel();
+
+        long firstPublishToChannel01Timetoken = pubNub.publish().channel(channel01).message("FirstMessageChannel01").sync().getTimetoken();
+        pubNub.publish().channel(channel01).message("SecondMessage").sync();
+        pubNub.publish().channel(channel01).message("ThirdMessage").sync();
+
+        long firstPublishToChannel02Timetoken = pubNub.publish().channel(channel02).message("FirstMessageChannel02").sync().getTimetoken();
+        pubNub.publish().channel(channel02).message("SecondMessage").sync();
+
+        long firstPublishToChannel03Timetoken = pubNub.publish().channel(channel03).message("FirstMessageChannel03").sync().getTimetoken();
+
+        // Test with multiple timetokens, each tailored to specific channels
+        PNMessageCountResult messagesCounts = pubNub.messageCounts()
+                .channels(Arrays.asList(channel01, channel02, channel03))
+                .channelsTimetoken(Arrays.asList(
+                        firstPublishToChannel01Timetoken, // Should count 2 messages (second and third)
+                        firstPublishToChannel02Timetoken - 1, // Should count 2 messages (all)
+                        firstPublishToChannel03Timetoken - 1 // Should count 1 message (all)
+                ))
+                .sync();
+
+        assertEquals(Long.valueOf(2), messagesCounts.getChannels().get(channel01));
+        assertEquals(Long.valueOf(2), messagesCounts.getChannels().get(channel02));
+        assertEquals(Long.valueOf(1), messagesCounts.getChannels().get(channel03));
     }
 }
