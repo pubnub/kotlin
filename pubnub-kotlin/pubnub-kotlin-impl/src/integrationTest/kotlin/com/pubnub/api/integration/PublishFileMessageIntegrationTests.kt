@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit
 
 class PublishFileMessageIntegrationTests : BaseIntegrationTest() {
     @Test
-    fun can_publishFileMessage() {
+    fun canPublishFileMessage() {
         val publishFileMessageResult: PNPublishFileMessageResult = pubnub.publishFileMessage(
             channel = "whatever",
             fileName = "whatever",
@@ -25,7 +25,7 @@ class PublishFileMessageIntegrationTests : BaseIntegrationTest() {
     }
 
     @Test
-    fun publishFileMessage_endToEnd() {
+    fun publishFileMessageAndReceiveOnListener() {
         val channelName = com.pubnub.test.CommonUtils.randomChannel()
         val fileName = "fileName_24channelName.txt"
         val messageSendFile = "This is a file message"

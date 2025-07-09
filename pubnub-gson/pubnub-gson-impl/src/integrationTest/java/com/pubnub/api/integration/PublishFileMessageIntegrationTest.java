@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class PublishFileMessageIntegrationTest extends BaseIntegrationTest {
 
     @Test
-    public void can_publishFileMessage() throws PubNubException {
+    public void canPublishFileMessage() throws PubNubException {
         PNPublishFileMessageResult publishFileMessageResult = pubNub.publishFileMessage()
                 .channel("whatever")
                 .fileName("whatever")
@@ -35,7 +35,7 @@ public class PublishFileMessageIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void publishFileMessage_endToEnd() throws Exception {
+    public void publishFileMessageAndReceiveOnListener() throws Exception {
         String channelName = randomChannel();
         String fileName = "fileName_" + channelName + ".txt";
         String messageSendFile = "This is a file message";
