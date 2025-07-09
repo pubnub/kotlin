@@ -89,6 +89,5 @@ class PublishFileMessageIntegrationTests : BaseIntegrationTest() {
                 fileId = fileId,
             ).sync()
         }
-
     }
 }
