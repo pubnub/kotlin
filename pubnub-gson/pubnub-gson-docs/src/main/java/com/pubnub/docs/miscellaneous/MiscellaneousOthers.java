@@ -107,19 +107,8 @@ public class MiscellaneousOthers extends SnippetBase {
         // snippet.end
     }
 
-
-    private void reconnectBasic() throws PubNubException {
-        // https://www.pubnub.com/docs/sdks/java/api-reference/misc#basic-usage-8
-
-        PubNub pubNub = createPubNub();
-
-        // snippet.reconnectBasic
-        pubNub.reconnect();
-        // snippet.end
-    }
-
     private void disconnectBasic() throws PubNubException {
-        // https://www.pubnub.com/docs/sdks/java/api-reference/misc#basic-usage-9
+        // https://www.pubnub.com/docs/sdks/java/api-reference/misc#basic-usage-8
 
         PubNub pubNub = createPubNub();
 
@@ -127,6 +116,22 @@ public class MiscellaneousOthers extends SnippetBase {
         pubNub.disconnect();
         // snippet.end
     }
+
+
+    private void reconnectBasic() throws PubNubException {
+        // https://www.pubnub.com/docs/sdks/java/api-reference/misc#basic-usage-9
+
+        PubNub pubNub = createPubNub();
+
+        // snippet.reconnectBasic
+        pubNub.reconnect();
+        // or
+        Long timetoken = 17276954606232118L; // Example timetoken received in publish/signal response
+        pubNub.reconnect(timetoken);
+        // snippet.end
+    }
+
+
 
     private void timetokenToDateTimeBasic() {
         // https://www.pubnub.com/docs/sdks/java/api-reference/misc#basic-usage-10
