@@ -205,7 +205,9 @@ open external class PubNub(config: Any /* UUID | UserId */) {
 
     open fun stop()
 
-    open fun reconnect()
+    open fun reconnect(params: ReconnectParameters)
+
+    open fun disconnect()
 
     open fun addListener(params: ListenerParameters)
 
@@ -743,6 +745,10 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         val messageAction: ((messageActionEvent: MessageActionEvent) -> Unit)?
         val file: ((fileEvent: FileEvent) -> Unit)?
         val objects: ((objectEvent: BaseObjectsEvent) -> Unit)?
+    }
+
+    interface ReconnectParameters {
+        var timetoken: String?
     }
 
     interface StatusListenerParameters {

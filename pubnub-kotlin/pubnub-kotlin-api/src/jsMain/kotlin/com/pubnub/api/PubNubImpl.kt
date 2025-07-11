@@ -195,6 +195,14 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
         )
     }
 
+    override fun reconnect(timetoken: Long) {
+        jsPubNub.reconnect(createJsObject { this.timetoken = timetoken.toString() })
+    }
+
+    override fun disconnect() {
+        jsPubNub.disconnect()
+    }
+
     override fun fire(channel: String, message: Any, meta: Any?, usePost: Boolean): Publish {
         return FireImpl(
             jsPubNub,

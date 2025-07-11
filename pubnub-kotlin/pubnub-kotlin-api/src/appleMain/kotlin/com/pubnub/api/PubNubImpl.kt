@@ -1061,4 +1061,12 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
             fileId = fileId
         )
     }
+
+    override fun disconnect() {
+        pubNubObjC.disconnect()
+    }
+
+    override fun reconnect(timetoken: Long) {
+// todo expose in swift    pubNubObjC.reconnect(timetoken = timetoken.toULong())
+    }
 }

@@ -554,4 +554,8 @@ expect interface PubNub {
     ): SubscriptionSet
 
     fun parseToken(token: String): PNToken
+
+    fun reconnect(timetoken: Long = 0L)
+
+    fun disconnect()
 }
