@@ -121,7 +121,7 @@ sdks:
                   license-url: https://www.apache.org/licenses/LICENSE-2.0.txt
                   is-required: Required
 changelog:
-  - date: 2025-07-03
+  - date: 2025-07-15
     version: v10.5.3
     changes:
       - type: bug
