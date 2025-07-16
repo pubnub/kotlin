@@ -3,4 +3,10 @@
 # authorizedUserId
 
 [jvm]\
-abstract fun [authorizedUserId](authorized-user-id.md)(userId: [UserId](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api/-user-id/index.md)): [GrantTokenEntitiesBuilder](../-grant-token-entities-builder/index.md)
+abstract fun [~~authorizedUserId~~](authorized-user-id.md)(userId: [UserId](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api/-user-id/index.md)): [GrantTokenEntitiesBuilder](../-grant-token-entities-builder/index.md)
+
+---
+
+### Deprecated
+
+---

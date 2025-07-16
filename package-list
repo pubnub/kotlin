@@ -10,7 +10,6 @@ $dokka.location:/Categories/PNBadRequestCategory/#/PointingToDeclaration/pubnub
 $dokka.location:/Categories/PNConnectedCategory/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-categories/-p-n-connected-category.md
 $dokka.location:/Categories/PNConnectionErrorCategory/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-categories/-p-n-connection-error-category.md
 $dokka.location:/Categories/PNDisconnectedUnexpectedlyCategory/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-categories/-p-n-disconnected-unexpectedly-category.md
-$dokka.location:/Categories/PNMalformedResponseCategory/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-categories/-p-n-malformed-response-category.md
 $dokka.location:/Categories/PNNetworkDownCategory/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-categories/-p-n-network-down-category.md
 $dokka.location:/Categories/PNNetworkIssuesCategory/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-categories/-p-n-network-issues-category.md
 $dokka.location:/Categories/PNNetworkUpCategory/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-categories/-p-n-network-up-category.md
@@ -1377,7 +1376,6 @@ $dokka.location:com.pubnub.api.enums/PNStatusCategory.PNConnectionError///Pointi
 $dokka.location:com.pubnub.api.enums/PNStatusCategory.PNDisconnectedCategory///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.enums/-p-n-status-category/-p-n-disconnected-category/index.md
 $dokka.location:com.pubnub.api.enums/PNStatusCategory.PNHeartbeatFailed///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.enums/-p-n-status-category/-p-n-heartbeat-failed/index.md
 $dokka.location:com.pubnub.api.enums/PNStatusCategory.PNHeartbeatSuccess///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.enums/-p-n-status-category/-p-n-heartbeat-success/index.md
-$dokka.location:com.pubnub.api.enums/PNStatusCategory.PNMalformedResponseCategory///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.enums/-p-n-status-category/-p-n-malformed-response-category/index.md
 $dokka.location:com.pubnub.api.enums/PNStatusCategory.PNSubscriptionChanged///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.enums/-p-n-status-category/-p-n-subscription-changed/index.md
 $dokka.location:com.pubnub.api.enums/PNStatusCategory.PNUnexpectedDisconnectCategory///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.enums/-p-n-status-category/-p-n-unexpected-disconnect-category/index.md
 $dokka.location:com.pubnub.api.enums/PNStatusCategory///PointingToDeclaration/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.enums/-p-n-status-category/index.md
@@ -3848,6 +3846,225 @@ $dokka.location:com.pubnub.api/UserId/UserId/#kotlin.String/PointingToDeclaratio
 $dokka.location:com.pubnub.api/UserId/value/#/PointingToDeclaration/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api/-user-id/value.md
 $dokka.location:com.pubnub.coroutines////PointingToDeclaration/pubnub-kotlin-coroutines/pubnub-kotlin-coroutines/com.pubnub.coroutines/index.md
 $dokka.location:com.pubnub.coroutines//await/com.pubnub.kmp.PNFuture[TypeParam(bounds=[kotlin.Any?])]#/PointingToDeclaration/pubnub-kotlin-coroutines/pubnub-kotlin-coroutines/com.pubnub.coroutines/await.md
+$dokka.location:com.pubnub.docs.accessManager////PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.accessManager/index.md
+$dokka.location:com.pubnub.docs.accessManager//main/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.accessManager/main.md
+$dokka.location:com.pubnub.docs.accessManager//useTokenAsClient/#kotlin.String#kotlin.String#kotlin.String#kotlin.String/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.accessManager/use-token-as-client.md
+$dokka.location:com.pubnub.docs.accessManager/GrantTokenApp///PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.accessManager/-grant-token-app/index.md
+$dokka.location:com.pubnub.docs.accessManager/GrantTokenApp/GrantTokenApp/#/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.accessManager/-grant-token-app/-grant-token-app.md
+$dokka.location:com.pubnub.docs.accessManager/GrantTokenApp/main/#java.lang.String[]/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.accessManager/-grant-token-app/main.md
+$dokka.location:com.pubnub.docs.accessManager/GrantTokenOther///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.accessManager/-grant-token-other/index.md
+$dokka.location:com.pubnub.docs.accessManager/GrantTokenOther/GrantTokenOther/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.accessManager/-grant-token-other/-grant-token-other.md
+$dokka.location:com.pubnub.docs.accessManager/ParseTokenOther///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.accessManager/-parse-token-other/index.md
+$dokka.location:com.pubnub.docs.accessManager/ParseTokenOther/ParseTokenOther/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.accessManager/-parse-token-other/-parse-token-other.md
+$dokka.location:com.pubnub.docs.accessManager/RevokeTokenOther///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.accessManager/-revoke-token-other/index.md
+$dokka.location:com.pubnub.docs.accessManager/RevokeTokenOther/RevokeTokenOther/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.accessManager/-revoke-token-other/-revoke-token-other.md
+$dokka.location:com.pubnub.docs.accessManager/SetTokenOther///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.accessManager/-set-token-other/index.md
+$dokka.location:com.pubnub.docs.accessManager/SetTokenOther/SetTokenOther/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.accessManager/-set-token-other/-set-token-other.md
+$dokka.location:com.pubnub.docs.appContext////PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.appContext/index.md
+$dokka.location:com.pubnub.docs.appContext//main/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.appContext/main.md
+$dokka.location:com.pubnub.docs.appContext/ChannelMembersOthers///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.appContext/-channel-members-others/index.md
+$dokka.location:com.pubnub.docs.appContext/ChannelMembersOthers/ChannelMembersOthers/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.appContext/-channel-members-others/-channel-members-others.md
+$dokka.location:com.pubnub.docs.appContext/ChannelMembershipsOthers///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.appContext/-channel-memberships-others/index.md
+$dokka.location:com.pubnub.docs.appContext/ChannelMembershipsOthers/ChannelMembershipsOthers/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.appContext/-channel-memberships-others/-channel-memberships-others.md
+$dokka.location:com.pubnub.docs.appContext/ChannelMetadataOthers///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.appContext/-channel-metadata-others/index.md
+$dokka.location:com.pubnub.docs.appContext/ChannelMetadataOthers/ChannelMetadataOthers/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.appContext/-channel-metadata-others/-channel-metadata-others.md
+$dokka.location:com.pubnub.docs.appContext/GetAllUUIDMetadataApp///PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.appContext/-get-all-u-u-i-d-metadata-app/index.md
+$dokka.location:com.pubnub.docs.appContext/GetAllUUIDMetadataApp/GetAllUUIDMetadataApp/#/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.appContext/-get-all-u-u-i-d-metadata-app/-get-all-u-u-i-d-metadata-app.md
+$dokka.location:com.pubnub.docs.appContext/GetAllUUIDMetadataApp/main/#java.lang.String[]/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.appContext/-get-all-u-u-i-d-metadata-app/main.md
+$dokka.location:com.pubnub.docs.appContext/UpdateCustomChannelMetadataApp///PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.appContext/-update-custom-channel-metadata-app/index.md
+$dokka.location:com.pubnub.docs.appContext/UpdateCustomChannelMetadataApp/UpdateCustomChannelMetadataApp/#/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.appContext/-update-custom-channel-metadata-app/-update-custom-channel-metadata-app.md
+$dokka.location:com.pubnub.docs.appContext/UpdateCustomChannelMetadataApp/main/#java.lang.String[]/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.appContext/-update-custom-channel-metadata-app/main.md
+$dokka.location:com.pubnub.docs.appContext/UserMetadataOthers///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.appContext/-user-metadata-others/index.md
+$dokka.location:com.pubnub.docs.appContext/UserMetadataOthers/UserMetadataOthers/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.appContext/-user-metadata-others/-user-metadata-others.md
+$dokka.location:com.pubnub.docs.basicUsage////PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.basicUsage/index.md
+$dokka.location:com.pubnub.docs.basicUsage//main/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.basicUsage/main.md
+$dokka.location:com.pubnub.docs.basicUsage/BasicUsageApp///PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.basicUsage/-basic-usage-app/index.md
+$dokka.location:com.pubnub.docs.basicUsage/BasicUsageApp/BasicUsageApp/#/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.basicUsage/-basic-usage-app/-basic-usage-app.md
+$dokka.location:com.pubnub.docs.basicUsage/BasicUsageApp/main/#java.lang.String[]/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.basicUsage/-basic-usage-app/main.md
+$dokka.location:com.pubnub.docs.channelGroups////PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.channelGroups/index.md
+$dokka.location:com.pubnub.docs.channelGroups//cleanup/#com.pubnub.api.PubNub#kotlin.String/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.channelGroups/cleanup.md
+$dokka.location:com.pubnub.docs.channelGroups//main/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.channelGroups/main.md
+$dokka.location:com.pubnub.docs.channelGroups/ChannelGroupsApp///PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.channelGroups/-channel-groups-app/index.md
+$dokka.location:com.pubnub.docs.channelGroups/ChannelGroupsApp/ChannelGroupsApp/#/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.channelGroups/-channel-groups-app/-channel-groups-app.md
+$dokka.location:com.pubnub.docs.channelGroups/ChannelGroupsApp/main/#java.lang.String[]/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.channelGroups/-channel-groups-app/main.md
+$dokka.location:com.pubnub.docs.channelGroups/ChannelGroupsOther///PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.channelGroups/-channel-groups-other/index.md
+$dokka.location:com.pubnub.docs.channelGroups/ChannelGroupsOther/ChannelGroupsOther/#/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.channelGroups/-channel-groups-other/-channel-groups-other.md
+$dokka.location:com.pubnub.docs.channelGroups/ChannelGroupsOthers///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.channelGroups/-channel-groups-others/index.md
+$dokka.location:com.pubnub.docs.channelGroups/ChannelGroupsOthers/ChannelGroupsOthers/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.channelGroups/-channel-groups-others/-channel-groups-others.md
+$dokka.location:com.pubnub.docs.configuration////PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.configuration/index.md
+$dokka.location:com.pubnub.docs.configuration//createAdvancedConfig/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.configuration/create-advanced-config.md
+$dokka.location:com.pubnub.docs.configuration//createBasicConfig/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.configuration/create-basic-config.md
+$dokka.location:com.pubnub.docs.configuration//createEncryptedConfig/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.configuration/create-encrypted-config.md
+$dokka.location:com.pubnub.docs.configuration//main/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.configuration/main.md
+$dokka.location:com.pubnub.docs.configuration//printConfigDetails/#com.pubnub.api.v2.PNConfiguration/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.configuration/print-config-details.md
+$dokka.location:com.pubnub.docs.configuration/ConfigurationApp///PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.configuration/-configuration-app/index.md
+$dokka.location:com.pubnub.docs.configuration/ConfigurationApp/ConfigurationApp/#/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.configuration/-configuration-app/-configuration-app.md
+$dokka.location:com.pubnub.docs.configuration/ConfigurationApp/main/#java.lang.String[]/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.configuration/-configuration-app/main.md
+$dokka.location:com.pubnub.docs.configuration/ConfigurationOther///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.configuration/-configuration-other/index.md
+$dokka.location:com.pubnub.docs.configuration/ConfigurationOther/ConfigurationOther/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.configuration/-configuration-other/-configuration-other.md
+$dokka.location:com.pubnub.docs.entities////PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.entities/index.md
+$dokka.location:com.pubnub.docs.entities//main/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.entities/main.md
+$dokka.location:com.pubnub.docs.entities/ChannelApp///PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.entities/-channel-app/index.md
+$dokka.location:com.pubnub.docs.entities/ChannelApp/ChannelApp/#/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.entities/-channel-app/-channel-app.md
+$dokka.location:com.pubnub.docs.entities/ChannelApp/main/#java.lang.String[]/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.entities/-channel-app/main.md
+$dokka.location:com.pubnub.docs.entities/ChannelGroupApp///PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.entities/-channel-group-app/index.md
+$dokka.location:com.pubnub.docs.entities/ChannelGroupApp/ChannelGroupApp/#/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.entities/-channel-group-app/-channel-group-app.md
+$dokka.location:com.pubnub.docs.entities/ChannelGroupApp/main/#java.lang.String[]/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.entities/-channel-group-app/main.md
+$dokka.location:com.pubnub.docs.entities/ChannelMetadataApp///PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.entities/-channel-metadata-app/index.md
+$dokka.location:com.pubnub.docs.entities/ChannelMetadataApp/ChannelMetadataApp/#/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.entities/-channel-metadata-app/-channel-metadata-app.md
+$dokka.location:com.pubnub.docs.entities/ChannelMetadataApp/main/#java.lang.String[]/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.entities/-channel-metadata-app/main.md
+$dokka.location:com.pubnub.docs.entities/UserMetadataApp///PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.entities/-user-metadata-app/index.md
+$dokka.location:com.pubnub.docs.entities/UserMetadataApp/UserMetadataApp/#/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.entities/-user-metadata-app/-user-metadata-app.md
+$dokka.location:com.pubnub.docs.entities/UserMetadataApp/main/#java.lang.String[]/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.entities/-user-metadata-app/main.md
+$dokka.location:com.pubnub.docs.fileSharing////PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.fileSharing/index.md
+$dokka.location:com.pubnub.docs.fileSharing//main/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.fileSharing/main.md
+$dokka.location:com.pubnub.docs.fileSharing/FileOthers///PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.fileSharing/-file-others/index.md
+$dokka.location:com.pubnub.docs.fileSharing/FileOthers/FileOthers/#/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.fileSharing/-file-others/-file-others.md
+$dokka.location:com.pubnub.docs.fileSharing/FileSharingOthers///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.fileSharing/-file-sharing-others/index.md
+$dokka.location:com.pubnub.docs.fileSharing/FileSharingOthers/FileSharingOthers/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.fileSharing/-file-sharing-others/-file-sharing-others.md
+$dokka.location:com.pubnub.docs.fileSharing/SendFileApp///PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.fileSharing/-send-file-app/index.md
+$dokka.location:com.pubnub.docs.fileSharing/SendFileApp/SendFileApp/#/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.fileSharing/-send-file-app/-send-file-app.md
+$dokka.location:com.pubnub.docs.fileSharing/SendFileApp/main/#java.lang.String[]/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.fileSharing/-send-file-app/main.md
+$dokka.location:com.pubnub.docs.logging////PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.logging/index.md
+$dokka.location:com.pubnub.docs.logging//demonstrateLogging/#com.pubnub.api.PubNub/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.logging/demonstrate-logging.md
+$dokka.location:com.pubnub.docs.logging//main/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.logging/main.md
+$dokka.location:com.pubnub.docs.logging/LoggingExampleApp///PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.logging/-logging-example-app/index.md
+$dokka.location:com.pubnub.docs.logging/LoggingExampleApp/LoggingExampleApp/#/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.logging/-logging-example-app/-logging-example-app.md
+$dokka.location:com.pubnub.docs.logging/LoggingExampleApp/main/#java.lang.String[]/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.logging/-logging-example-app/main.md
+$dokka.location:com.pubnub.docs.logging/LoggingLog4j2///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.logging/-logging-log4j2/index.md
+$dokka.location:com.pubnub.docs.logging/LoggingLog4j2/main/#kotlin.Array[kotlin.String]/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.logging/-logging-log4j2/main.md
+$dokka.location:com.pubnub.docs.logging/LoggingLogback///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.logging/-logging-logback/index.md
+$dokka.location:com.pubnub.docs.logging/LoggingLogback/main/#kotlin.Array[kotlin.String]/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.logging/-logging-logback/main.md
+$dokka.location:com.pubnub.docs.logging/LoggingLogbackApp///PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.logging/-logging-logback-app/index.md
+$dokka.location:com.pubnub.docs.logging/LoggingLogbackApp/LoggingLogbackApp/#/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.logging/-logging-logback-app/-logging-logback-app.md
+$dokka.location:com.pubnub.docs.logging/LoggingLogbackApp/main/#java.lang.String[]/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.logging/-logging-logback-app/main.md
+$dokka.location:com.pubnub.docs.logging/LoggingSlf4jSimpl///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.logging/-logging-slf4j-simpl/index.md
+$dokka.location:com.pubnub.docs.logging/LoggingSlf4jSimpl/main/#kotlin.Array[kotlin.String]/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.logging/-logging-slf4j-simpl/main.md
+$dokka.location:com.pubnub.docs.logging/LoggingSlf4jSimpleApp///PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.logging/-logging-slf4j-simple-app/index.md
+$dokka.location:com.pubnub.docs.logging/LoggingSlf4jSimpleApp/LoggingSlf4jSimpleApp/#/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.logging/-logging-slf4j-simple-app/-logging-slf4j-simple-app.md
+$dokka.location:com.pubnub.docs.logging/LoggingSlf4jSimpleApp/main/#java.lang.String[]/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.logging/-logging-slf4j-simple-app/main.md
+$dokka.location:com.pubnub.docs.messagePersistence////PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.messagePersistence/index.md
+$dokka.location:com.pubnub.docs.messagePersistence//displayMessages/#com.pubnub.api.models.consumer.history.PNFetchMessagesResult#kotlin.String/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.messagePersistence/display-messages.md
+$dokka.location:com.pubnub.docs.messagePersistence//fetchBasicHistory/#com.pubnub.api.PubNub#kotlin.String/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.messagePersistence/fetch-basic-history.md
+$dokka.location:com.pubnub.docs.messagePersistence//fetchHistoryWithOptions/#com.pubnub.api.PubNub#kotlin.String/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.messagePersistence/fetch-history-with-options.md
+$dokka.location:com.pubnub.docs.messagePersistence//main/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.messagePersistence/main.md
+$dokka.location:com.pubnub.docs.messagePersistence/DeleteMessagesOther///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.messagePersistence/-delete-messages-other/index.md
+$dokka.location:com.pubnub.docs.messagePersistence/DeleteMessagesOther/DeleteMessagesOther/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.messagePersistence/-delete-messages-other/-delete-messages-other.md
+$dokka.location:com.pubnub.docs.messagePersistence/DeleteMessagesOthers///PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.messagePersistence/-delete-messages-others/index.md
+$dokka.location:com.pubnub.docs.messagePersistence/DeleteMessagesOthers/DeleteMessagesOthers/#/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.messagePersistence/-delete-messages-others/-delete-messages-others.md
+$dokka.location:com.pubnub.docs.messagePersistence/DeprecatedHistoryApp///PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.messagePersistence/-deprecated-history-app/index.md
+$dokka.location:com.pubnub.docs.messagePersistence/DeprecatedHistoryApp/DeprecatedHistoryApp/#/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.messagePersistence/-deprecated-history-app/-deprecated-history-app.md
+$dokka.location:com.pubnub.docs.messagePersistence/DeprecatedHistoryApp/main/#java.lang.String[]/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.messagePersistence/-deprecated-history-app/main.md
+$dokka.location:com.pubnub.docs.messagePersistence/FetchMessagesApp///PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.messagePersistence/-fetch-messages-app/index.md
+$dokka.location:com.pubnub.docs.messagePersistence/FetchMessagesApp/FetchMessagesApp/#/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.messagePersistence/-fetch-messages-app/-fetch-messages-app.md
+$dokka.location:com.pubnub.docs.messagePersistence/FetchMessagesApp/main/#java.lang.String[]/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.messagePersistence/-fetch-messages-app/main.md
+$dokka.location:com.pubnub.docs.messagePersistence/FetchMessagesWithPagingApp///PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.messagePersistence/-fetch-messages-with-paging-app/index.md
+$dokka.location:com.pubnub.docs.messagePersistence/FetchMessagesWithPagingApp/FetchMessagesWithPagingApp/#/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.messagePersistence/-fetch-messages-with-paging-app/-fetch-messages-with-paging-app.md
+$dokka.location:com.pubnub.docs.messagePersistence/FetchMessagesWithPagingApp/main/#java.lang.String[]/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.messagePersistence/-fetch-messages-with-paging-app/main.md
+$dokka.location:com.pubnub.docs.messagePersistence/HistoryDeprecated///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.messagePersistence/-history-deprecated/index.md
+$dokka.location:com.pubnub.docs.messagePersistence/HistoryDeprecated/HistoryDeprecated/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.messagePersistence/-history-deprecated/-history-deprecated.md
+$dokka.location:com.pubnub.docs.messagePersistence/MessageCountsOthers///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.messagePersistence/-message-counts-others/index.md
+$dokka.location:com.pubnub.docs.messagePersistence/MessageCountsOthers/MessageCountsOthers/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.messagePersistence/-message-counts-others/-message-counts-others.md
+$dokka.location:com.pubnub.docs.messageReactions////PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.messageReactions/index.md
+$dokka.location:com.pubnub.docs.messageReactions//addNewMessageAction/#com.pubnub.api.PubNub#kotlin.String#kotlin.Long/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.messageReactions/add-new-message-action.md
+$dokka.location:com.pubnub.docs.messageReactions//getMessageActionsWithPaging/#com.pubnub.api.PubNub#kotlin.String#kotlin.Long?#kotlin.Function1[kotlin.collections.List[com.pubnub.api.models.consumer.message_actions.PNMessageAction],kotlin.Unit]/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.messageReactions/get-message-actions-with-paging.md
+$dokka.location:com.pubnub.docs.messageReactions//main/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.messageReactions/main.md
+$dokka.location:com.pubnub.docs.messageReactions/GetMessageActionsWithPagingApp///PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.messageReactions/-get-message-actions-with-paging-app/index.md
+$dokka.location:com.pubnub.docs.messageReactions/GetMessageActionsWithPagingApp/GetMessageActionsWithPagingApp/#/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.messageReactions/-get-message-actions-with-paging-app/-get-message-actions-with-paging-app.md
+$dokka.location:com.pubnub.docs.messageReactions/GetMessageActionsWithPagingApp/main/#java.lang.String[]/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.messageReactions/-get-message-actions-with-paging-app/main.md
+$dokka.location:com.pubnub.docs.messageReactions/MessageReactionsApp///PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.messageReactions/-message-reactions-app/index.md
+$dokka.location:com.pubnub.docs.messageReactions/MessageReactionsApp/MessageReactionsApp/#/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.messageReactions/-message-reactions-app/-message-reactions-app.md
+$dokka.location:com.pubnub.docs.messageReactions/MessageReactionsApp/main/#java.lang.String[]/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.messageReactions/-message-reactions-app/main.md
+$dokka.location:com.pubnub.docs.messageReactions/MessageReactionsOthers///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.messageReactions/-message-reactions-others/index.md
+$dokka.location:com.pubnub.docs.messageReactions/MessageReactionsOthers/MessageReactionsOthers/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.messageReactions/-message-reactions-others/-message-reactions-others.md
+$dokka.location:com.pubnub.docs.miscellaneous////PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.miscellaneous/index.md
+$dokka.location:com.pubnub.docs.miscellaneous//createAdvancedPushPayload/#com.pubnub.api.PubNub/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.miscellaneous/create-advanced-push-payload.md
+$dokka.location:com.pubnub.docs.miscellaneous//createBasicPushPayload/#com.pubnub.api.PubNub/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.miscellaneous/create-basic-push-payload.md
+$dokka.location:com.pubnub.docs.miscellaneous//main/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.miscellaneous/main.md
+$dokka.location:com.pubnub.docs.miscellaneous/CreatePushPayloadApp///PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.miscellaneous/-create-push-payload-app/index.md
+$dokka.location:com.pubnub.docs.miscellaneous/CreatePushPayloadApp/CreatePushPayloadApp/#/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.miscellaneous/-create-push-payload-app/-create-push-payload-app.md
+$dokka.location:com.pubnub.docs.miscellaneous/CreatePushPayloadApp/main/#java.lang.String[]/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.miscellaneous/-create-push-payload-app/main.md
+$dokka.location:com.pubnub.docs.miscellaneous/MiscellaneousOthers///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.miscellaneous/-miscellaneous-others/index.md
+$dokka.location:com.pubnub.docs.miscellaneous/MiscellaneousOthers/MiscellaneousOthers/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.miscellaneous/-miscellaneous-others/-miscellaneous-others.md
+$dokka.location:com.pubnub.docs.mobilePush////PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.mobilePush/index.md
+$dokka.location:com.pubnub.docs.mobilePush//listPushNotificationChannels/#com.pubnub.api.PubNub#kotlin.String#kotlin.String/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.mobilePush/list-push-notification-channels.md
+$dokka.location:com.pubnub.docs.mobilePush//main/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.mobilePush/main.md
+$dokka.location:com.pubnub.docs.mobilePush//publishMessageWithPushNotification/#com.pubnub.api.PubNub/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.mobilePush/publish-message-with-push-notification.md
+$dokka.location:com.pubnub.docs.mobilePush//registerDeviceForPushNotifications/#com.pubnub.api.PubNub#kotlin.String#kotlin.String/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.mobilePush/register-device-for-push-notifications.md
+$dokka.location:com.pubnub.docs.mobilePush//unregisterDeviceFromPushNotifications/#com.pubnub.api.PubNub#kotlin.String#kotlin.String/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.mobilePush/unregister-device-from-push-notifications.md
+$dokka.location:com.pubnub.docs.mobilePush/AddPushNotificationsOnChannelsApp///PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.mobilePush/-add-push-notifications-on-channels-app/index.md
+$dokka.location:com.pubnub.docs.mobilePush/AddPushNotificationsOnChannelsApp/AddPushNotificationsOnChannelsApp/#/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.mobilePush/-add-push-notifications-on-channels-app/-add-push-notifications-on-channels-app.md
+$dokka.location:com.pubnub.docs.mobilePush/AddPushNotificationsOnChannelsApp/main/#java.lang.String[]/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.mobilePush/-add-push-notifications-on-channels-app/main.md
+$dokka.location:com.pubnub.docs.mobilePush/ListChannelsForDeviceOthers///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.mobilePush/-list-channels-for-device-others/index.md
+$dokka.location:com.pubnub.docs.mobilePush/ListChannelsForDeviceOthers/ListChannelsForDeviceOthers/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.mobilePush/-list-channels-for-device-others/-list-channels-for-device-others.md
+$dokka.location:com.pubnub.docs.mobilePush/RemoveAllMobilePushNotificationsOthers///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.mobilePush/-remove-all-mobile-push-notifications-others/index.md
+$dokka.location:com.pubnub.docs.mobilePush/RemoveAllMobilePushNotificationsOthers/RemoveAllMobilePushNotificationsOthers/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.mobilePush/-remove-all-mobile-push-notifications-others/-remove-all-mobile-push-notifications-others.md
+$dokka.location:com.pubnub.docs.mobilePush/RemoveAllPushNotificationsFromDeviceWithPushTokenOther///PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.mobilePush/-remove-all-push-notifications-from-device-with-push-token-other/index.md
+$dokka.location:com.pubnub.docs.mobilePush/RemoveAllPushNotificationsFromDeviceWithPushTokenOther/RemoveAllPushNotificationsFromDeviceWithPushTokenOther/#/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.mobilePush/-remove-all-push-notifications-from-device-with-push-token-other/-remove-all-push-notifications-from-device-with-push-token-other.md
+$dokka.location:com.pubnub.docs.mobilePush/RemoveDeviceFromChannelOthers///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.mobilePush/-remove-device-from-channel-others/index.md
+$dokka.location:com.pubnub.docs.mobilePush/RemoveDeviceFromChannelOthers/RemoveDeviceFromChannelOthers/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.mobilePush/-remove-device-from-channel-others/-remove-device-from-channel-others.md
+$dokka.location:com.pubnub.docs.presence////PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.presence/index.md
+$dokka.location:com.pubnub.docs.presence//advancedHereNow/#com.pubnub.api.PubNub#kotlin.String/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.presence/advanced-here-now.md
+$dokka.location:com.pubnub.docs.presence//main/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.presence/main.md
+$dokka.location:com.pubnub.docs.presence//multipleChannelsHereNow/#com.pubnub.api.PubNub#kotlin.collections.List[kotlin.String]/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.presence/multiple-channels-here-now.md
+$dokka.location:com.pubnub.docs.presence//singleChannelHereNow/#com.pubnub.api.PubNub#kotlin.String/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.presence/single-channel-here-now.md
+$dokka.location:com.pubnub.docs.presence/HereNowApp///PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.presence/-here-now-app/index.md
+$dokka.location:com.pubnub.docs.presence/HereNowApp/HereNowApp/#/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.presence/-here-now-app/-here-now-app.md
+$dokka.location:com.pubnub.docs.presence/HereNowApp/main/#java.lang.String[]/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.presence/-here-now-app/main.md
+$dokka.location:com.pubnub.docs.presence/HereNowOther///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.presence/-here-now-other/index.md
+$dokka.location:com.pubnub.docs.presence/HereNowOther/HereNowOther/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.presence/-here-now-other/-here-now-other.md
+$dokka.location:com.pubnub.docs.presence/SetStateOther///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.presence/-set-state-other/index.md
+$dokka.location:com.pubnub.docs.presence/SetStateOther/SetStateOther/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.presence/-set-state-other/-set-state-other.md
+$dokka.location:com.pubnub.docs.presence/UserStateOther///PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.presence/-user-state-other/index.md
+$dokka.location:com.pubnub.docs.presence/UserStateOther/UserStateOther/#/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.presence/-user-state-other/-user-state-other.md
+$dokka.location:com.pubnub.docs.presence/WhereNowOther///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.presence/-where-now-other/index.md
+$dokka.location:com.pubnub.docs.presence/WhereNowOther/WhereNowOther/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.presence/-where-now-other/-where-now-other.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.eventListener////PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.publishAndSubscribe.eventListener/index.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.eventListener/EventListenersOthers///PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.publishAndSubscribe.eventListener/-event-listeners-others/index.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.eventListener/EventListenersOthers/EventListenersOthers/#/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.publishAndSubscribe.eventListener/-event-listeners-others/-event-listeners-others.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.eventListeners////PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.eventListeners/index.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.eventListeners/EventListenerOld///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.eventListeners/-event-listener-old/index.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.eventListeners/EventListenerOld/EventListenerOld/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.eventListeners/-event-listener-old/-event-listener-old.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.eventListeners/EventListenersOthers///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.eventListeners/-event-listeners-others/index.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.eventListeners/EventListenersOthers/EventListenersOthers/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.eventListeners/-event-listeners-others/-event-listeners-others.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.eventListeners/EventListenersOthers/addListenersBasic/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.eventListeners/-event-listeners-others/add-listeners-basic.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.fire////PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.fire/index.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.fire/FireOld///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.fire/-fire-old/index.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.fire/FireOld/FireOld/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.fire/-fire-old/-fire-old.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.fire/FireOthers///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.fire/-fire-others/index.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.fire/FireOthers/FireOthers/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.fire/-fire-others/-fire-others.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.publish////PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.publish/index.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.publish//main/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.publish/main.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.publish/PublishApp///PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.publishAndSubscribe.publish/-publish-app/index.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.publish/PublishApp/PublishApp/#/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.publishAndSubscribe.publish/-publish-app/-publish-app.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.publish/PublishApp/main/#java.lang.String[]/PointingToDeclaration/pubnub-gson-docs/pubnub-gson-docs/com.pubnub.docs.publishAndSubscribe.publish/-publish-app/main.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.publish/PublishOld///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.publish/-publish-old/index.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.publish/PublishOld/PublishOld/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.publish/-publish-old/-publish-old.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.publish/PublishOthers///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.publish/-publish-others/index.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.publish/PublishOthers/PublishOthers/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.publish/-publish-others/-publish-others.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.signal////PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.signal/index.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.signal/SignalOld///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.signal/-signal-old/index.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.signal/SignalOld/SignalOld/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.signal/-signal-old/-signal-old.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.signal/SignalOthers///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.signal/-signal-others/index.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.signal/SignalOthers/SignalOthers/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.signal/-signal-others/-signal-others.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.subscribe////PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.subscribe/index.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.subscribe/SubscribeOld///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.subscribe/-subscribe-old/index.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.subscribe/SubscribeOld/SubscribeOld/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.subscribe/-subscribe-old/-subscribe-old.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.subscribe/SubscribeOthers///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.subscribe/-subscribe-others/index.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.subscribe/SubscribeOthers/SubscribeOthers/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.subscribe/-subscribe-others/-subscribe-others.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.subscribe/SubscribeOthers/subscribeToSubscriptionSetUsingTimetoken/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.subscribe/-subscribe-others/subscribe-to-subscription-set-using-timetoken.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.subscribe/SubscribeOthers/subscribeWithTimetoken/#com.pubnub.api.PubNub/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.subscribe/-subscribe-others/subscribe-with-timetoken.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.unsubscribe////PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.unsubscribe/index.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.unsubscribe/UnsubscribeOld///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.unsubscribe/-unsubscribe-old/index.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.unsubscribe/UnsubscribeOld/UnsubscribeOld/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.unsubscribe/-unsubscribe-old/-unsubscribe-old.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.unsubscribe/UnsubscribeOthers///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.unsubscribe/-unsubscribe-others/index.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.unsubscribe/UnsubscribeOthers/UnsubscribeOthers/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.unsubscribe/-unsubscribe-others/-unsubscribe-others.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.unsubscribeAll////PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.unsubscribeAll/index.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.unsubscribeAll/UnsubscribeAllOther///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.unsubscribeAll/-unsubscribe-all-other/index.md
+$dokka.location:com.pubnub.docs.publishAndSubscribe.unsubscribeAll/UnsubscribeAllOther/UnsubscribeAllOther/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs.publishAndSubscribe.unsubscribeAll/-unsubscribe-all-other/-unsubscribe-all-other.md
+$dokka.location:com.pubnub.docs////PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs/index.md
+$dokka.location:com.pubnub.docs/SnippetBase///PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs/-snippet-base/index.md
+$dokka.location:com.pubnub.docs/SnippetBase/SnippetBase/#/PointingToDeclaration/pubnub-kotlin-docs/pubnub-kotlin-docs/com.pubnub.docs/-snippet-base/-snippet-base.md
 $dokka.location:com.pubnub.kmp////PointingToDeclaration/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.kmp/index.md
 $dokka.location:com.pubnub.kmp//alsoAsync/com.pubnub.kmp.PNFuture[TypeParam(bounds=[kotlin.Any?])]#kotlin.Function1[TypeParam(bounds=[kotlin.Any?]),com.pubnub.kmp.PNFuture[*]]/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.kmp/also-async.md
 $dokka.location:com.pubnub.kmp//asFuture/TypeParam(bounds=[kotlin.Any?])#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.kmp/as-future.md
@@ -3942,6 +4159,28 @@ com.pubnub.api.java.v2.callbacks.handlers
 com.pubnub.api.java.v2.endpoints.pubsub
 com.pubnub.api.java.v2.entities
 com.pubnub.api.java.v2.subscriptions
+module:pubnub-gson-docs
+com.pubnub.docs
+com.pubnub.docs.accessManager
+com.pubnub.docs.appContext
+com.pubnub.docs.basicUsage
+com.pubnub.docs.channelGroups
+com.pubnub.docs.configuration
+com.pubnub.docs.entities
+com.pubnub.docs.fileSharing
+com.pubnub.docs.logging
+com.pubnub.docs.messagePersistence
+com.pubnub.docs.messageReactions
+com.pubnub.docs.miscellaneous
+com.pubnub.docs.mobilePush
+com.pubnub.docs.presence
+com.pubnub.docs.publishAndSubscribe.eventListener
+com.pubnub.docs.publishAndSubscribe.fire
+com.pubnub.docs.publishAndSubscribe.publish
+com.pubnub.docs.publishAndSubscribe.signal
+com.pubnub.docs.publishAndSubscribe.subscribe
+com.pubnub.docs.publishAndSubscribe.unsubscribe
+com.pubnub.docs.publishAndSubscribe.unsubscribeAll
 module:pubnub-gson-impl
 com.pubnub.api.java.models.consumer.objects_api.channel
 com.pubnub.api.java.models.consumer.objects_api.member
@@ -4013,3 +4252,25 @@ com.pubnub.api.v2.subscriptions
 com.pubnub.kmp
 module:pubnub-kotlin-coroutines
 com.pubnub.coroutines
+module:pubnub-kotlin-docs
+com.pubnub.docs
+com.pubnub.docs.accessManager
+com.pubnub.docs.appContext
+com.pubnub.docs.basicUsage
+com.pubnub.docs.channelGroups
+com.pubnub.docs.configuration
+com.pubnub.docs.entities
+com.pubnub.docs.fileSharing
+com.pubnub.docs.logging
+com.pubnub.docs.messagePersistence
+com.pubnub.docs.messageReactions
+com.pubnub.docs.miscellaneous
+com.pubnub.docs.mobilePush
+com.pubnub.docs.presence
+com.pubnub.docs.publishAndSubscribe.eventListeners
+com.pubnub.docs.publishAndSubscribe.fire
+com.pubnub.docs.publishAndSubscribe.publish
+com.pubnub.docs.publishAndSubscribe.signal
+com.pubnub.docs.publishAndSubscribe.subscribe
+com.pubnub.docs.publishAndSubscribe.unsubscribe
+com.pubnub.docs.publishAndSubscribe.unsubscribeAll

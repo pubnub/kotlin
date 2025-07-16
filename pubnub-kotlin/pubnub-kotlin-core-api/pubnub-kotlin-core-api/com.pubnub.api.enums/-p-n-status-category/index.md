@@ -18,7 +18,6 @@ Check the status category via [PNStatus.category](../../com.pubnub.api.models.co
 | [PNConnectionError](-p-n-connection-error/index.md) | [common]<br>[PNConnectionError](-p-n-connection-error/index.md)<br>The subscription loop was not able to connect, and at this moment the client is disconnected from real-time data channels. |
 | [PNHeartbeatFailed](-p-n-heartbeat-failed/index.md) | [common]<br>[PNHeartbeatFailed](-p-n-heartbeat-failed/index.md)<br>A background implicit Heartbeat request attempt failed. |
 | [PNHeartbeatSuccess](-p-n-heartbeat-success/index.md) | [common]<br>[PNHeartbeatSuccess](-p-n-heartbeat-success/index.md)<br>A background implicit Heartbeat request was successful. |
-| [PNMalformedResponseCategory](-p-n-malformed-response-category/index.md) | [common]<br>[PNMalformedResponseCategory](-p-n-malformed-response-category/index.md)<br>PubNub sent a malformed response. This may happen when you connect to a public WiFi Hotspot that requires you to auth via your web browser first, or if there is a proxy somewhere returning an HTML access denied error, or if there was an intermittent server issue. |
 
 ## Properties
 

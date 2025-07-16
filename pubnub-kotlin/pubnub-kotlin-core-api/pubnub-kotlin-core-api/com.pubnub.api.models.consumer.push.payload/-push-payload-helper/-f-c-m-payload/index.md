@@ -3,7 +3,18 @@
 # FCMPayload
 
 [common]\
-class [FCMPayload](index.md) : [PushPayloadSerializer](../../-push-payload-serializer/index.md)
+class [~~FCMPayload~~](index.md) : [PushPayloadSerializer](../../-push-payload-serializer/index.md)---
+
+### Deprecated
+
+The legacy GCM/FCM payload is deprecated and willbe removed in the next major release. Use`FCMPayloadV2` instead.
+
+#### Replace with
+
+```kotlin
+FCMPayloadV2
+```
+---
 
 ## Constructors
 

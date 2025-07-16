@@ -3,4 +3,10 @@
 # meta
 
 [jvm]\
-abstract fun [meta](meta.md)(meta: [Any](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html)): [GrantTokenEntitiesBuilder](index.md)
+abstract fun [~~meta~~](meta.md)(meta: [Any](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html)): [GrantTokenEntitiesBuilder](index.md)
+
+---
+
+### Deprecated
+
+---

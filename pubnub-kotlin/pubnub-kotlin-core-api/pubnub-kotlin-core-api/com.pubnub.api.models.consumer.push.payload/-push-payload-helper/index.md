@@ -16,7 +16,7 @@ class [PushPayloadHelper](index.md)
 | Name | Summary |
 |---|---|
 | [APNSPayload](-a-p-n-s-payload/index.md) | [common]<br>class [APNSPayload](-a-p-n-s-payload/index.md) : [PushPayloadSerializer](../-push-payload-serializer/index.md) |
-| [FCMPayload](-f-c-m-payload/index.md) | [common]<br>class [FCMPayload](-f-c-m-payload/index.md) : [PushPayloadSerializer](../-push-payload-serializer/index.md) |
+| [FCMPayload](-f-c-m-payload/index.md) | [common]<br>class [~~FCMPayload~~](-f-c-m-payload/index.md) : [PushPayloadSerializer](../-push-payload-serializer/index.md) |
 | [FCMPayloadV2](-f-c-m-payload-v2/index.md) | [common]<br>class [FCMPayloadV2](-f-c-m-payload-v2/index.md) : [PushPayloadSerializer](../-push-payload-serializer/index.md) |
 | [MPNSPayload](-m-p-n-s-payload/index.md) | [common]<br>class [MPNSPayload](-m-p-n-s-payload/index.md) : [PushPayloadSerializer](../-push-payload-serializer/index.md) |
 
