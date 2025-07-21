@@ -263,7 +263,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      *
      * @param timetoken optional timetoken to use for the subscriptions on reconnection.
      */
-     actual fun reconnect(timetoken: Long)
+    actual fun reconnect(timetoken: Long)
 
     /**
      * Cancel any subscribe and heartbeat loops or ongoing re-connections.
