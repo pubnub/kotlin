@@ -672,10 +672,10 @@ interface PubNub : EventEmitter, StatusEmitter {
     @Deprecated(
         replaceWith =
             ReplaceWith(
-                "publish(message, channel)"
+                "fire(message, channel)"
             ),
         level = DeprecationLevel.WARNING,
-        message = "Use publish(Object, String) instead",
+        message = "Use fire(Object, String) instead",
     )
     fun fire(): Publish
 
