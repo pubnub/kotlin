@@ -596,6 +596,8 @@ $dokka.location:/PubNub.PushDeviceParameters/pushGateway/#/PointingToDeclaration
 $dokka.location:/PubNub.PushDeviceParameters/topic/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-push-device-parameters/topic.md
 $dokka.location:/PubNub.PushListChannelsResponse///PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-push-list-channels-response/index.md
 $dokka.location:/PubNub.PushListChannelsResponse/channels/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-push-list-channels-response/channels.md
+$dokka.location:/PubNub.ReconnectParameters///PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-reconnect-parameters/index.md
+$dokka.location:/PubNub.ReconnectParameters/timetoken/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-reconnect-parameters/timetoken.md
 $dokka.location:/PubNub.RemoveChannelMembersParameters///PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-remove-channel-members-parameters/index.md
 $dokka.location:/PubNub.RemoveChannelMembersParameters/channel/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-remove-channel-members-parameters/channel.md
 $dokka.location:/PubNub.RemoveChannelMembersParameters/uuids/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-remove-channel-members-parameters/uuids.md
@@ -809,6 +811,7 @@ $dokka.location:/PubNub/deleteFile/#PubNub.FileInputParameters/PointingToDeclara
 $dokka.location:/PubNub/deleteMessages/#PubNub.DeleteMessagesParameters#kotlin.Function1[PubNub.PubnubStatus,kotlin.Unit]/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/delete-messages.md
 $dokka.location:/PubNub/deleteMessages/#PubNub.DeleteMessagesParameters/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/delete-messages.md
 $dokka.location:/PubNub/destroy/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/destroy.md
+$dokka.location:/PubNub/disconnect/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/disconnect.md
 $dokka.location:/PubNub/downloadFile/#PubNub.DownloadFileParameters#kotlin.Function2[PubNub.PubnubStatus,kotlin.Any,kotlin.Unit]/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/download-file.md
 $dokka.location:/PubNub/downloadFile/#PubNub.DownloadFileParameters/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/download-file.md
 $dokka.location:/PubNub/encrypt/#kotlin.String#kotlin.String#PubNub.CryptoParameters/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/encrypt.md
@@ -845,7 +848,7 @@ $dokka.location:/PubNub/publish/#PubNub.PublishParameters/PointingToDeclaration/
 $dokka.location:/PubNub/publishFile/#PubNub.PublishFileParameters#kotlin.Function2[PubNub.PubnubStatus,PubNub.PublishFileResponse,kotlin.Unit]/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/publish-file.md
 $dokka.location:/PubNub/publishFile/#PubNub.PublishFileParameters/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/publish-file.md
 $dokka.location:/PubNub/push/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/push.md
-$dokka.location:/PubNub/reconnect/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/reconnect.md
+$dokka.location:/PubNub/reconnect/#PubNub.ReconnectParameters/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/reconnect.md
 $dokka.location:/PubNub/removeListener/#kotlin.Any/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/remove-listener.md
 $dokka.location:/PubNub/removeMessageAction/#PubNub.RemoveMessageActionParameters#kotlin.Function2[PubNub.PubnubStatus,RemoveMessageActionResult,kotlin.Unit]/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/remove-message-action.md
 $dokka.location:/PubNub/removeMessageAction/#PubNub.RemoveMessageActionParameters/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/remove-message-action.md
@@ -3779,6 +3782,7 @@ $dokka.location:com.pubnub.api/PubNubImpl/deleteChannelGroup/#kotlin.String/Poin
 $dokka.location:com.pubnub.api/PubNubImpl/deleteFile/#kotlin.String#kotlin.String#kotlin.String/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api/[js]-pub-nub-impl/delete-file.md
 $dokka.location:com.pubnub.api/PubNubImpl/deleteMessages/#kotlin.collections.List[kotlin.String]#kotlin.Long?#kotlin.Long?/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api/[js]-pub-nub-impl/delete-messages.md
 $dokka.location:com.pubnub.api/PubNubImpl/destroy/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api/[js]-pub-nub-impl/destroy.md
+$dokka.location:com.pubnub.api/PubNubImpl/disconnect/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api/[js]-pub-nub-impl/disconnect.md
 $dokka.location:com.pubnub.api/PubNubImpl/downloadFile/#kotlin.String#kotlin.String#kotlin.String#kotlin.String?/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api/[js]-pub-nub-impl/download-file.md
 $dokka.location:com.pubnub.api/PubNubImpl/fetchMessages/#kotlin.collections.List[kotlin.String]#com.pubnub.api.models.consumer.PNBoundedPage#kotlin.Boolean#kotlin.Boolean#kotlin.Boolean#kotlin.Boolean#kotlin.Boolean/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api/[js]-pub-nub-impl/fetch-messages.md
 $dokka.location:com.pubnub.api/PubNubImpl/fire/#kotlin.String#kotlin.Any#kotlin.Any?#kotlin.Boolean/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api/[js]-pub-nub-impl/fire.md
@@ -3807,6 +3811,7 @@ $dokka.location:com.pubnub.api/PubNubImpl/parseToken/#kotlin.String/PointingToDe
 $dokka.location:com.pubnub.api/PubNubImpl/presence/#kotlin.collections.List[kotlin.String]#kotlin.collections.List[kotlin.String]#kotlin.Boolean/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api/[js]-pub-nub-impl/presence.md
 $dokka.location:com.pubnub.api/PubNubImpl/publish/#kotlin.String#kotlin.Any#kotlin.Any?#kotlin.Boolean?#kotlin.Boolean#kotlin.Boolean#kotlin.Int?#kotlin.String?/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api/[js]-pub-nub-impl/publish.md
 $dokka.location:com.pubnub.api/PubNubImpl/publishFileMessage/#kotlin.String#kotlin.String#kotlin.String#kotlin.Any?#kotlin.Any?#kotlin.Int?#kotlin.Boolean?#kotlin.String?/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api/[js]-pub-nub-impl/publish-file-message.md
+$dokka.location:com.pubnub.api/PubNubImpl/reconnect/#kotlin.Long/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api/[js]-pub-nub-impl/reconnect.md
 $dokka.location:com.pubnub.api/PubNubImpl/removeAllListeners/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api/[js]-pub-nub-impl/remove-all-listeners.md
 $dokka.location:com.pubnub.api/PubNubImpl/removeAllPushNotificationsFromDeviceWithPushToken/#com.pubnub.api.enums.PNPushType#kotlin.String#kotlin.String?#com.pubnub.api.enums.PNPushEnvironment/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api/[js]-pub-nub-impl/remove-all-push-notifications-from-device-with-push-token.md
 $dokka.location:com.pubnub.api/PubNubImpl/removeChannelMembers/#kotlin.String#kotlin.collections.List[kotlin.String]#kotlin.Int?#com.pubnub.api.models.consumer.objects.PNPage?#kotlin.String?#kotlin.collections.Collection[com.pubnub.api.models.consumer.objects.PNSortKey[com.pubnub.api.models.consumer.objects.PNMemberKey]]#com.pubnub.api.models.consumer.objects.member.MemberInclude/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/com.pubnub.api/[js]-pub-nub-impl/remove-channel-members.md

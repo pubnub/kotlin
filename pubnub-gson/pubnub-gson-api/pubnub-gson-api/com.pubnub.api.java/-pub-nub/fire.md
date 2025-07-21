@@ -18,12 +18,12 @@ abstract fun [~~fire~~](fire.md)(): [Publish](../../com.pubnub.api.java.endpoint
 
 ### Deprecated
 
-Use publish(Object, String) instead
+Use fire(Object, String) instead
 
 #### Replace with
 
 ```kotlin
-publish(message, channel)
+fire(message, channel)
 ```
 ---
 

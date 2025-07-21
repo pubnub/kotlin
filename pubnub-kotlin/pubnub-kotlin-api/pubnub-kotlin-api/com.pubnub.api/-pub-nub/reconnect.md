@@ -2,8 +2,11 @@
 
 # reconnect
 
+[common]\
+expect abstract fun [reconnect](reconnect.md)(timetoken: [Long](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html) = 0)actual abstract fun [reconnect](reconnect.md)(timetoken: [Long](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html))
+
 [jvm]\
-abstract fun [reconnect](reconnect.md)(timetoken: [Long](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html) = 0)
+actual abstract fun [reconnect](reconnect.md)(timetoken: [Long](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html))
 
 Force the SDK to try and reach out PubNub. Monitor the results in SubscribeCallback.status
 

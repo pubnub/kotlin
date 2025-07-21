@@ -3,4 +3,4 @@
 # reconnect
 
 [js]\
-open fun [reconnect](reconnect.md)()
+open fun [reconnect](reconnect.md)(params: [PubNub.ReconnectParameters](-reconnect-parameters/index.md))

@@ -2,8 +2,11 @@
 
 # disconnect
 
+[common]\
+expect abstract fun [disconnect](disconnect.md)()actual abstract fun [disconnect](disconnect.md)()
+
 [jvm]\
-abstract fun [disconnect](disconnect.md)()
+actual abstract fun [disconnect](disconnect.md)()
 
 Cancel any subscribe and heartbeat loops or ongoing re-connections.
 
