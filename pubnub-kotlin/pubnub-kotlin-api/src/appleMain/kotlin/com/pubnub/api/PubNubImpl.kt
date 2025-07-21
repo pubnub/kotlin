@@ -1068,6 +1068,6 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
     }
 
     override fun reconnect(timetoken: Long) {
-         pubNubObjC.reconnectWithTimetoken(platform.Foundation.NSNumber(timetoken.toULong()))
+         pubNubObjC.reconnectWithTimetoken(platform.Foundation.NSNumber(unsignedLongLong = timetoken.toULong()))
     }
 }
