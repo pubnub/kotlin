@@ -1,3 +1,9 @@
+## v10.5.4
+July 21 2025
+
+#### Fixed
+- Internal change - expose reconnect and disconnect in KMP .
+
 ## v10.5.3
 July 15 2025
 
