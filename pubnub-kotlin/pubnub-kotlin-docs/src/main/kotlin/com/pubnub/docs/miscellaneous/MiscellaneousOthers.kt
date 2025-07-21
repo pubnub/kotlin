@@ -81,22 +81,24 @@ class MiscellaneousOthers {
         // snippet.end
     }
 
-    private fun getSubscribedChannels(pubNub: PubNub) {
+    private fun getSubscribedChannelGroups(pubNub: PubNub) {
         // https://www.pubnub.com/docs/sdks/kotlin/api-reference/misc#basic-usage-6
+
+        // snippet.getSubscribedChannelGroups
+        val subscribedChannelGroups = pubNub.getSubscribedChannelGroups()
+        // snippet.end
+    }
+
+    private fun getSubscribedChannels(pubNub: PubNub) {
+        // https://www.pubnub.com/docs/sdks/kotlin/api-reference/misc#basic-usage-7
 
         // snippet.getSubscribedChannels
         val subscribedChannels = pubNub.getSubscribedChannels()
         // snippet.end
     }
 
-    private fun getSubscribedChannelGroups(pubNub: PubNub) {
-        // snippet.getSubscribedChannelGroups
-        val subscribedChannelGroups = pubNub.getSubscribedChannelGroups()
-        // snippet.end
-    }
-
     private fun disconnect(pubNub: PubNub) {
-        // https://www.pubnub.com/docs/sdks/kotlin/api-reference/misc#basic-usage-7
+        // https://www.pubnub.com/docs/sdks/kotlin/api-reference/misc#basic-usage-8
 
         // snippet.disconnect
         pubNub.disconnect()
@@ -104,10 +106,13 @@ class MiscellaneousOthers {
     }
 
     private fun reconnect(pubNub: PubNub) {
-        // https://www.pubnub.com/docs/sdks/kotlin/api-reference/misc#basic-usage-8
+        // https://www.pubnub.com/docs/sdks/kotlin/api-reference/misc#basic-usage-9
 
         // snippet.reconnect
         pubNub.reconnect()
+        // or
+        val timetoken = 17276954606232118L // Example timetoken received in publish/signal response
+        pubNub.reconnect(timetoken)
         // snippet.end
     }
 

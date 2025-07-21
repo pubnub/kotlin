@@ -1,6 +1,8 @@
 package com.pubnub.api.integration;
 
+import com.pubnub.api.PubNubException;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
+import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsListAllResult;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -129,6 +131,17 @@ public class GroupManagementIntegrationTests extends BaseIntegrationTest {
                 });
 
         signal.await();
+    }
+
+    @Test
+    public void testDeleteChannelGroup() throws PubNubException {
+        pubNub.addChannelsToChannelGroup().channelGroup(mGroup).channels(Arrays.asList(mChannel1, mChannel2, mChannel3)).sync();
+
+        pubNub.deleteChannelGroup().channelGroup(mGroup).sync();
+
+        PNChannelGroupsListAllResult channelGroupsList = pubNub.listAllChannelGroups().sync();
+
+        assertFalse(channelGroupsList.getGroups().contains(mGroup));
     }
 
     private void addChannelsToGroup() throws InterruptedException {
