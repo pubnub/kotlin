@@ -518,4 +518,8 @@ actual interface PubNub {
         ttl: Int?,
         customMessageType: String?
     ): Publish
+
+    actual fun reconnect(timetoken: Long)
+
+    actual fun disconnect()
 }

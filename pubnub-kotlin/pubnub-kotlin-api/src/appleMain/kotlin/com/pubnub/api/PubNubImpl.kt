@@ -10,6 +10,7 @@ import cocoapods.PubNubSwift.channelMetadataWith
 import cocoapods.PubNubSwift.channelWith
 import cocoapods.PubNubSwift.disconnect
 import cocoapods.PubNubSwift.getToken
+import cocoapods.PubNubSwift.reconnectWithTimetoken
 import cocoapods.PubNubSwift.removeAllListeners
 import cocoapods.PubNubSwift.removeEventListenerWithListener
 import cocoapods.PubNubSwift.removeStatusListenerWithListener
@@ -1060,5 +1061,13 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
             fileName = fileName,
             fileId = fileId
         )
+    }
+
+    override fun disconnect() {
+        pubNubObjC.disconnect()
+    }
+
+    override fun reconnect(timetoken: Long) {
+        pubNubObjC.reconnectWithTimetoken(platform.Foundation.NSNumber(unsignedLongLong = timetoken.toULong()))
     }
 }
