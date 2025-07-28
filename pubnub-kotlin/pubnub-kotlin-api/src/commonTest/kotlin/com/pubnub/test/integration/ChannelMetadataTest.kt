@@ -1,6 +1,8 @@
 package com.pubnub.test.integration
 
 import com.pubnub.api.PubNubException
+import com.pubnub.api.enums.PNStatusCategory
+import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteChannelMetadataEventMessage
@@ -40,8 +42,12 @@ class ChannelMetadataTest : BaseIntegrationTest() {
     @Test
     fun test_disconnect() = runTest(timeout = 30.seconds) {
         val channelName = "myChannel"
+        var disconnectStatus: PNStatus? = null
 
         val statusListener = createStatusListener(pubnub) { _, status ->
+            if (status.category == PNStatusCategory.PNDisconnectedCategory) {
+                disconnectStatus = status
+            }
         }
 
         pubnub.test(backgroundScope) {
@@ -51,17 +57,22 @@ class ChannelMetadataTest : BaseIntegrationTest() {
                 val channel = pubnub.channel(channelName)
                 channel.subscription().subscribe()
 
-                // Wait for next status that should be connection status
+                // Wait for connection status
                 val connectStatus = nextStatus()
                 assertEquals(false, connectStatus.error)
                 assertEquals(PN_CONNECTED_CATEGORY, connectStatus.category.toString())
 
+                // Disconnect and wait for disconnect status
                 pubnub.disconnect()
 
-                // Wait for next status that should be disconnect status
-                val disconnectStatus = nextStatus()
-                assertEquals(false, disconnectStatus.error)
-                assertEquals(PN_DISCONNECTED_CATEGORY, disconnectStatus.category.toString())
+                // Wait for disconnect status using nextStatus() (from test infrastructure)
+                val disconnectStatusFromQueue = nextStatus()
+                assertEquals(false, disconnectStatusFromQueue.error)
+                assertEquals(PN_DISCONNECTED_CATEGORY, disconnectStatusFromQueue.category.toString())
+
+                // Verify our listener also captured the disconnect status
+                assertNotNull(disconnectStatus)
+                assertEquals(PN_DISCONNECTED_CATEGORY, disconnectStatus!!.category.toString())
             } finally {
                 // Cleanup
                 pubnub.removeListener(statusListener)
@@ -72,8 +83,24 @@ class ChannelMetadataTest : BaseIntegrationTest() {
     @Test
     fun test_reconnect() = runTest(timeout = 30.seconds) {
         val channelName = "myChannel"
+        var disconnectStatus: PNStatus? = null
+        var reconnectStatus: PNStatus? = null
 
         val statusListener = createStatusListener(pubnub) { _, status ->
+            when (status.category) {
+                PNStatusCategory.PNDisconnectedCategory -> {
+                    disconnectStatus = status
+                }
+                PNStatusCategory.PNConnectedCategory -> {
+                    // Only capture reconnect status (not initial connect)
+                    if (disconnectStatus != null) {
+                        reconnectStatus = status
+                    }
+                }
+                else -> {
+                    // Ignore other status categories
+                }
+            }
         }
 
         pubnub.test(backgroundScope) {
@@ -83,24 +110,30 @@ class ChannelMetadataTest : BaseIntegrationTest() {
                 val channel = pubnub.channel(channelName)
                 channel.subscription().subscribe()
 
-                // Wait for next status that should be connection status
+                // Wait for connection status
                 val connectStatus = nextStatus()
                 assertEquals(false, connectStatus.error)
                 assertEquals(PN_CONNECTED_CATEGORY, connectStatus.category.toString())
 
+                // Disconnect and wait for disconnect status
                 pubnub.disconnect()
 
-                // Wait for next status that should be disconnect status
-                val disconnectStatus = nextStatus()
-                assertEquals(false, disconnectStatus.error)
-                assertEquals(PN_DISCONNECTED_CATEGORY, disconnectStatus.category.toString())
+                val disconnectStatusFromQueue = nextStatus()
+                assertEquals(false, disconnectStatusFromQueue.error)
+                assertEquals(PN_DISCONNECTED_CATEGORY, disconnectStatusFromQueue.category.toString())
 
+                // Reconnect and wait for reconnect status
                 pubnub.reconnect()
 
-                // Wait for next status that should be PNConnectedCategory status
-                val reconnectStatus = nextStatus()
-                assertEquals(false, disconnectStatus.error)
-                assertEquals(PN_CONNECTED_CATEGORY, reconnectStatus.category.toString())
+                val reconnectStatusFromQueue = nextStatus()
+                assertEquals(false, reconnectStatusFromQueue.error)
+                assertEquals(PN_CONNECTED_CATEGORY, reconnectStatusFromQueue.category.toString())
+
+                // Verify our listener captured both statuses
+                assertNotNull(disconnectStatus)
+                assertEquals(PN_DISCONNECTED_CATEGORY, disconnectStatus!!.category.toString())
+                assertNotNull(reconnectStatus)
+                assertEquals(PN_CONNECTED_CATEGORY, reconnectStatus!!.category.toString())
             } finally {
                 // Cleanup
                 pubnub.removeListener(statusListener)
@@ -283,8 +316,9 @@ class ChannelMetadataTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_receive_delete_metadata_event() = runTest {
+    fun can_receive_delete_metadata_event() = runTest(timeout = 30.seconds) {
         pubnub.test(backgroundScope) {
+            // given
             pubnub.setChannelMetadata(
                 channel,
                 name = name,
@@ -300,13 +334,8 @@ class ChannelMetadataTest : BaseIntegrationTest() {
             pubnub.removeChannelMetadata(channel).await()
 
             // then
-            var result = nextEvent<PNObjectEventResult>()
-            if (result.extractedMessage !is PNDeleteChannelMetadataEventMessage) {
-                result = nextEvent()
-            }
-            val message = result.extractedMessage
-            assertTrue { message is PNDeleteChannelMetadataEventMessage }
-            message as PNDeleteChannelMetadataEventMessage
+            val result = nextEvent<PNObjectEventResult>()
+            val message = result.extractedMessage as PNDeleteChannelMetadataEventMessage
             assertEquals(channel, message.channel)
         }
     }
