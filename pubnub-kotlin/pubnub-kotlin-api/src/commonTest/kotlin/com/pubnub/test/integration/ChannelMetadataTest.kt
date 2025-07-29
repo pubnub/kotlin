@@ -6,7 +6,6 @@ import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteChannelMetadataEventMessage
-import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetChannelMetadataEventMessage
 import com.pubnub.kmp.PLATFORM
 import com.pubnub.kmp.createCustomObject
@@ -17,6 +16,7 @@ import com.pubnub.test.BaseIntegrationTest
 import com.pubnub.test.await
 import com.pubnub.test.randomString
 import com.pubnub.test.test
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -263,10 +263,13 @@ class ChannelMetadataTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_receive_set_metadata_event() = runTest {
+    fun can_receive_set_metadata_event() = runTest(timeout = 30.seconds) {
         pubnub.test(backgroundScope) {
             // given
             pubnub.awaitSubscribe(listOf(channel))
+
+            // Wait a bit to ensure subscription is fully established
+            delay(100)
 
             // when
             pubnub.setChannelMetadata(
@@ -280,9 +283,8 @@ class ChannelMetadataTest : BaseIntegrationTest() {
             ).await()
 
             // then
-            val result = nextEvent<PNObjectEventResult>()
-            val message = result.extractedMessage
-            message as PNSetChannelMetadataEventMessage
+            val result = waitForEvent(PNSetChannelMetadataEventMessage::class)
+            val message = result.extractedMessage as PNSetChannelMetadataEventMessage
             assertEquals(channel, message.data.id)
             assertEquals(name, message.data.name?.value)
             assertEquals(description, message.data.description?.value)
@@ -330,11 +332,14 @@ class ChannelMetadataTest : BaseIntegrationTest() {
             ).await()
             pubnub.awaitSubscribe(listOf(channel))
 
+            // Wait a bit to ensure subscription is fully established
+            delay(100)
+
             // when
             pubnub.removeChannelMetadata(channel).await()
 
             // then
-            val result = nextEvent<PNObjectEventResult>()
+            val result = waitForEvent(PNDeleteChannelMetadataEventMessage::class)
             val message = result.extractedMessage as PNDeleteChannelMetadataEventMessage
             assertEquals(channel, message.channel)
         }

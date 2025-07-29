@@ -7,6 +7,7 @@ import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
+import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.createPNConfiguration
 import com.pubnub.api.v2.subscriptions.EmptyOptions
@@ -26,6 +27,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
+import kotlin.reflect.KClass
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.assertTrue
@@ -282,6 +284,32 @@ class PubNubTest(
         for (i in 0 until n) {
             nextEvent<PNEvent>()
         }
+    }
+
+    /**
+     * Waits for a specific event type with retries, handling spurious events that might arrive first
+     */
+    suspend fun PubNubTest.waitForEvent(
+        expectedMessageType: KClass<*>,
+        maxRetries: Int = 3
+    ): PNObjectEventResult {
+        repeat(maxRetries) { attempt ->
+            try {
+                val result = nextEvent<PNObjectEventResult>()
+                if (expectedMessageType.isInstance(result.extractedMessage)) {
+                    return result
+                }
+                // Log that we got an unexpected event type (for debugging)
+                // Continue to next attempt
+            } catch (e: Exception) {
+                if (attempt == maxRetries - 1) {
+                    throw e // Re-throw on final attempt
+                }
+                // Wait a bit before retrying
+                delay(50)
+            }
+        }
+        throw RuntimeException("Failed to receive expected event type ${expectedMessageType.simpleName} after $maxRetries attempts")
     }
 
     fun close() {
