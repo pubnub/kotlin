@@ -94,11 +94,12 @@ class PublishTest : BaseIntegrationTest() {
     }
 
     private fun isIOS() = PLATFORM == "iOS"
+
     private fun isJS() = PLATFORM == "JS"
 
     @Test
     fun can_receive_message_with_primitive_payload() = runTest(timeout = 30.seconds) {
-        if(isJS()){
+        if (isJS()) {
             return@runTest
         }
         pubnub.test(backgroundScope) {
