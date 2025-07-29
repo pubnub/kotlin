@@ -269,7 +269,7 @@ class ChannelMetadataTest : BaseIntegrationTest() {
             pubnub.awaitSubscribe(listOf(channel))
 
             // Wait a bit to ensure subscription is fully established
-            delay(100)
+            delay(200)
 
             // when
             pubnub.setChannelMetadata(
@@ -333,7 +333,7 @@ class ChannelMetadataTest : BaseIntegrationTest() {
             pubnub.awaitSubscribe(listOf(channel))
 
             // Wait a bit to ensure subscription is fully established
-            delay(100)
+            delay(200)
 
             // when
             pubnub.removeChannelMetadata(channel).await()

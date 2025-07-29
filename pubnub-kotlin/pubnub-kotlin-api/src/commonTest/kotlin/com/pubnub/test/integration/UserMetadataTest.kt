@@ -120,7 +120,7 @@ class UserMetadataTest : BaseIntegrationTest() {
             pubnub.awaitSubscribe(listOf(uuid))
 
             // Wait a bit to ensure subscription is fully established
-            delay(100)
+            delay(200)
 
             // when
             pubnub.setUUIDMetadata(
@@ -190,7 +190,7 @@ class UserMetadataTest : BaseIntegrationTest() {
             pubnub.awaitSubscribe(listOf(uuid))
 
             // Wait a bit to ensure subscription is fully established
-            delay(100)
+            delay(200)
 
             // when
             pubnub.removeUUIDMetadata(uuid).await()

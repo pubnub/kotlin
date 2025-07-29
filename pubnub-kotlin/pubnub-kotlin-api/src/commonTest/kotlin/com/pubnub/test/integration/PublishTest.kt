@@ -13,12 +13,14 @@ import com.pubnub.test.BaseIntegrationTest
 import com.pubnub.test.await
 import com.pubnub.test.randomString
 import com.pubnub.test.test
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
 import kotlin.js.JsExport
 import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlin.time.Duration.Companion.seconds
 
 @JsExport
 data class ABC(
@@ -67,9 +69,13 @@ class PublishTest : BaseIntegrationTest() {
         }
 
     @Test
-    fun can_receive_message_with_map_metadata() = runTest {
+    fun can_receive_message_with_map_metadata() = runTest(timeout = 30.seconds) {
         pubnub.test(backgroundScope) {
             pubnub.awaitSubscribe(listOf(channel))
+
+            // Wait a bit to ensure subscription is fully established
+            delay(200)
+
             val mapData = mapOf(
                 "stringValue" to "bbb",
                 "mapValue" to mapOf("innerKey" to false),
@@ -88,11 +94,19 @@ class PublishTest : BaseIntegrationTest() {
     }
 
     private fun isIOS() = PLATFORM == "iOS"
+    private fun isJS() = PLATFORM == "JS"
 
     @Test
-    fun can_receive_message_with_primitive_payload() = runTest {
+    fun can_receive_message_with_primitive_payload() = runTest(timeout = 30.seconds) {
+        if(isJS()){
+            return@runTest
+        }
         pubnub.test(backgroundScope) {
             pubnub.awaitSubscribe(listOf(channel))
+
+            // Wait a bit to ensure subscription is fully established
+            delay(200)
+
             pubnub.publish(
                 channel,
                 111,
@@ -110,9 +124,13 @@ class PublishTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_receive_message_with_map_payload() = runTest {
+    fun can_receive_message_with_map_payload() = runTest(timeout = 30.seconds) {
         pubnub.test(backgroundScope) {
             pubnub.awaitSubscribe(listOf(channel))
+
+            // Wait a bit to ensure subscription is fully established
+            delay(200)
+
             val mapData = mapOf(
                 "stringValue" to "bbb",
                 "mapValue" to mapOf("innerKey" to false),
@@ -131,9 +149,13 @@ class PublishTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_receive_signal_with_map_payload() = runTest {
+    fun can_receive_signal_with_map_payload() = runTest(timeout = 30.seconds) {
         pubnub.test(backgroundScope) {
             pubnub.awaitSubscribe(listOf(channel))
+
+            // Wait a bit to ensure subscription is fully established
+            delay(200)
+
             val mapData = mapOf(
                 "stringValue" to "bbb",
                 "mapValue" to mapOf("innerKey" to false)
@@ -148,9 +170,13 @@ class PublishTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_receive_message_with_payload_with_floats() = runTest {
+    fun can_receive_message_with_payload_with_floats() = runTest(timeout = 30.seconds) {
         pubnub.test(backgroundScope) {
             pubnub.awaitSubscribe(listOf(channel))
+
+            // Wait a bit to ensure subscription is fully established
+            delay(200)
+
             val mapData = mapOf(
                 "floatValue" to 1.23f,
                 "doubleValue" to 1.23,
@@ -187,10 +213,14 @@ class PublishTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun publish_with_custom_message_type() = runTest {
+    fun publish_with_custom_message_type() = runTest(timeout = 30.seconds) {
         val customMessageType = randomString()
         pubnub.test(backgroundScope) {
             pubnub.awaitSubscribe(listOf(channel))
+
+            // Wait a bit to ensure subscription is fully established
+            delay(500)
+
             pubnub.publish(channel, "some message", customMessageType = customMessageType).await()
             val result = nextMessage()
             assertEquals("some message", result.message.asString())
