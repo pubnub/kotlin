@@ -5,13 +5,13 @@ import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteUUIDMetadataEventMessage
+import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetUUIDMetadataEventMessage
 import com.pubnub.kmp.createCustomObject
 import com.pubnub.test.BaseIntegrationTest
 import com.pubnub.test.await
 import com.pubnub.test.randomString
 import com.pubnub.test.test
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -114,13 +114,10 @@ class UserMetadataTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_receive_set_metadata_event() = runTest(timeout = 30.seconds) {
+    fun can_receive_set_metadata_event() = runTest {
         pubnub.test(backgroundScope) {
             // given
             pubnub.awaitSubscribe(listOf(uuid))
-
-            // Wait a bit to ensure subscription is fully established
-            delay(200)
 
             // when
             pubnub.setUUIDMetadata(
@@ -135,8 +132,9 @@ class UserMetadataTest : BaseIntegrationTest() {
             ).await()
 
             // then
-            val result = waitForEvent(PNSetUUIDMetadataEventMessage::class)
-            val message = result.extractedMessage as PNSetUUIDMetadataEventMessage
+            val result = nextEvent<PNObjectEventResult>()
+            val message = result.extractedMessage
+            message as PNSetUUIDMetadataEventMessage
             assertEquals(uuid, message.data.id)
             assertNull(message.data.name?.value)
             assertEquals(externalId, message.data.externalId?.value)
@@ -173,7 +171,7 @@ class UserMetadataTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun can_receive_delete_metadata_event() = runTest(timeout = 30.seconds) {
+    fun can_receive_delete_metadata_event() = runTest {
         pubnub.test(backgroundScope) {
             // given
             pubnub.setUUIDMetadata(
@@ -189,14 +187,11 @@ class UserMetadataTest : BaseIntegrationTest() {
             ).await()
             pubnub.awaitSubscribe(listOf(uuid))
 
-            // Wait a bit to ensure subscription is fully established
-            delay(200)
-
             // when
             pubnub.removeUUIDMetadata(uuid).await()
 
             // then
-            val result = waitForEvent(PNDeleteUUIDMetadataEventMessage::class)
+            val result = nextEvent<PNObjectEventResult>()
             val message = result.extractedMessage as PNDeleteUUIDMetadataEventMessage
             assertEquals(uuid, message.uuid)
         }
