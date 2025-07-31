@@ -33,28 +33,32 @@ class PublishTest : BaseIntegrationTest() {
     @Test
     fun can_publish_message_string() =
         runTest {
-            val result = pubnub.publish(channel = channel, message = "some message", customMessageType = "myCustomType").await()
+            val result =
+                pubnub.publish(channel = channel, message = "some message", customMessageType = "myCustomType").await()
             assertTrue { result.timetoken > 0 }
         }
 
     @Test
     fun can_signal() =
         runTest {
-            val result = pubnub.signal(channel = channel, message = "some message", customMessageType = "myCustomType").await()
+            val result =
+                pubnub.signal(channel = channel, message = "some message", customMessageType = "myCustomType").await()
             assertTrue { result.timetoken > 0 }
         }
 
     @Test
     fun can_publish_message_map() =
         runTest {
-            val result = pubnub.publish(channel, mapOf("platform" to PLATFORM, "otherKey" to 123, "another" to true)).await()
+            val result =
+                pubnub.publish(channel, mapOf("platform" to PLATFORM, "otherKey" to 123, "another" to true)).await()
             assertTrue { result.timetoken > 0 }
         }
 
     @Test
     fun can_signal_map() =
         runTest {
-            val result = pubnub.signal(channel, mapOf("platform" to PLATFORM, "otherKey" to 123, "another" to true)).await()
+            val result =
+                pubnub.signal(channel, mapOf("platform" to PLATFORM, "otherKey" to 123, "another" to true)).await()
             assertTrue { result.timetoken > 0 }
         }
 
@@ -70,6 +74,7 @@ class PublishTest : BaseIntegrationTest() {
     fun can_receive_message_with_map_metadata() = runTest {
         pubnub.test(backgroundScope) {
             pubnub.awaitSubscribe(listOf(channel))
+
             val mapData = mapOf(
                 "stringValue" to "bbb",
                 "mapValue" to mapOf("innerKey" to false),
@@ -88,6 +93,8 @@ class PublishTest : BaseIntegrationTest() {
     }
 
     private fun isIOS() = PLATFORM == "iOS"
+
+    private fun isJS() = PLATFORM == "JS"
 
     @Test
     fun can_receive_message_with_primitive_payload() = runTest {
@@ -113,6 +120,7 @@ class PublishTest : BaseIntegrationTest() {
     fun can_receive_message_with_map_payload() = runTest {
         pubnub.test(backgroundScope) {
             pubnub.awaitSubscribe(listOf(channel))
+
             val mapData = mapOf(
                 "stringValue" to "bbb",
                 "mapValue" to mapOf("innerKey" to false),
@@ -134,6 +142,7 @@ class PublishTest : BaseIntegrationTest() {
     fun can_receive_signal_with_map_payload() = runTest {
         pubnub.test(backgroundScope) {
             pubnub.awaitSubscribe(listOf(channel))
+
             val mapData = mapOf(
                 "stringValue" to "bbb",
                 "mapValue" to mapOf("innerKey" to false)
@@ -151,6 +160,7 @@ class PublishTest : BaseIntegrationTest() {
     fun can_receive_message_with_payload_with_floats() = runTest {
         pubnub.test(backgroundScope) {
             pubnub.awaitSubscribe(listOf(channel))
+
             val mapData = mapOf(
                 "floatValue" to 1.23f,
                 "doubleValue" to 1.23,

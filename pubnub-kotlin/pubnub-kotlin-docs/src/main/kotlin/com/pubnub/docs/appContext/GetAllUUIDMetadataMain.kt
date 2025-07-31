@@ -94,8 +94,8 @@ private fun getAllUUIDMetadataBasic(pubnub: PubNub) {
     println("\n# Getting All UUID Metadata (Basic)")
 
     pubnub.getAllUUIDMetadata(
-        includeCustom = true,  // Include custom fields
-        includeCount = true    // Include total count in response
+        includeCustom = true, // Include custom fields
+        includeCount = true // Include total count in response
     ).async { result ->
         result.onSuccess { response ->
             println("SUCCESS: Retrieved UUID metadata objects")
@@ -134,10 +134,10 @@ private fun getAllUUIDMetadataWithFilter(pubnub: PubNub) {
     val filter = "custom.role == 'Developer'"
 
     pubnub.getAllUUIDMetadata(
-        filter = filter,        // Filter expression
-        limit = 10,             // Maximum number of results
-        includeCustom = true,   // Include custom fields
-        includeCount = true     // Include total count in response
+        filter = filter, // Filter expression
+        limit = 10, // Maximum number of results
+        includeCustom = true, // Include custom fields
+        includeCount = true // Include total count in response
     ).async { result ->
         result.onSuccess { response ->
             println("SUCCESS: Retrieved filtered UUID metadata objects")

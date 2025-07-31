@@ -1,6 +1,8 @@
 package com.pubnub.test.integration
 
 import com.pubnub.api.PubNubException
+import com.pubnub.api.enums.PNStatusCategory
+import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteChannelMetadataEventMessage
@@ -8,6 +10,7 @@ import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetChannelMetadataEventMessage
 import com.pubnub.kmp.PLATFORM
 import com.pubnub.kmp.createCustomObject
+import com.pubnub.kmp.createStatusListener
 import com.pubnub.kmp.readAllBytes
 import com.pubnub.kmp.stringToUploadable
 import com.pubnub.test.BaseIntegrationTest
@@ -22,6 +25,10 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 import kotlin.time.Duration.Companion.seconds
 
+private const val PN_CONNECTED_CATEGORY = "PNConnectedCategory"
+
+private const val PN_DISCONNECTED_CATEGORY = "PNDisconnectedCategory"
+
 class ChannelMetadataTest : BaseIntegrationTest() {
     private val channel = "myChannel" + randomString()
     private val name = randomString()
@@ -31,6 +38,108 @@ class ChannelMetadataTest : BaseIntegrationTest() {
     private val custom = createCustomObject(customData)
     private val includeCustom = true
     private val type = randomString()
+
+    @Test
+    fun test_disconnect() = runTest(timeout = 30.seconds) {
+        val channelName = "myChannel"
+        var disconnectStatus: PNStatus? = null
+
+        val statusListener = createStatusListener(pubnub) { _, status ->
+            if (status.category == PNStatusCategory.PNDisconnectedCategory) {
+                disconnectStatus = status
+            }
+        }
+
+        pubnub.test(backgroundScope) {
+            try {
+                pubnub.addListener(statusListener)
+
+                val channel = pubnub.channel(channelName)
+                channel.subscription().subscribe()
+
+                // Wait for connection status
+                val connectStatus = nextStatus()
+                assertEquals(false, connectStatus.error)
+                assertEquals(PN_CONNECTED_CATEGORY, connectStatus.category.toString())
+
+                // Disconnect and wait for disconnect status
+                pubnub.disconnect()
+
+                // Wait for disconnect status using nextStatus() (from test infrastructure)
+                val disconnectStatusFromQueue = nextStatus()
+                assertEquals(false, disconnectStatusFromQueue.error)
+                assertEquals(PN_DISCONNECTED_CATEGORY, disconnectStatusFromQueue.category.toString())
+
+                // Verify our listener also captured the disconnect status
+                assertNotNull(disconnectStatus)
+                assertEquals(PN_DISCONNECTED_CATEGORY, disconnectStatus!!.category.toString())
+            } finally {
+                // Cleanup
+                pubnub.removeListener(statusListener)
+            }
+        }
+    }
+
+    @Test
+    fun test_reconnect() = runTest(timeout = 30.seconds) {
+        val channelName = "myChannel"
+        var disconnectStatus: PNStatus? = null
+        var reconnectStatus: PNStatus? = null
+
+        val statusListener = createStatusListener(pubnub) { _, status ->
+            when (status.category) {
+                PNStatusCategory.PNDisconnectedCategory -> {
+                    disconnectStatus = status
+                }
+                PNStatusCategory.PNConnectedCategory -> {
+                    // Only capture reconnect status (not initial connect)
+                    if (disconnectStatus != null) {
+                        reconnectStatus = status
+                    }
+                }
+                else -> {
+                    // Ignore other status categories
+                }
+            }
+        }
+
+        pubnub.test(backgroundScope) {
+            try {
+                pubnub.addListener(statusListener)
+
+                val channel = pubnub.channel(channelName)
+                channel.subscription().subscribe()
+
+                // Wait for connection status
+                val connectStatus = nextStatus()
+                assertEquals(false, connectStatus.error)
+                assertEquals(PN_CONNECTED_CATEGORY, connectStatus.category.toString())
+
+                // Disconnect and wait for disconnect status
+                pubnub.disconnect()
+
+                val disconnectStatusFromQueue = nextStatus()
+                assertEquals(false, disconnectStatusFromQueue.error)
+                assertEquals(PN_DISCONNECTED_CATEGORY, disconnectStatusFromQueue.category.toString())
+
+                // Reconnect and wait for reconnect status
+                pubnub.reconnect()
+
+                val reconnectStatusFromQueue = nextStatus()
+                assertEquals(false, reconnectStatusFromQueue.error)
+                assertEquals(PN_CONNECTED_CATEGORY, reconnectStatusFromQueue.category.toString())
+
+                // Verify our listener captured both statuses
+                assertNotNull(disconnectStatus)
+                assertEquals(PN_DISCONNECTED_CATEGORY, disconnectStatus!!.category.toString())
+                assertNotNull(reconnectStatus)
+                assertEquals(PN_CONNECTED_CATEGORY, reconnectStatus!!.category.toString())
+            } finally {
+                // Cleanup
+                pubnub.removeListener(statusListener)
+            }
+        }
+    }
 
     @Test
     fun can_set_metadata() = runTest {

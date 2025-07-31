@@ -31,6 +31,8 @@ import kotlin.test.BeforeTest
 import kotlin.test.assertTrue
 import kotlin.time.Duration.Companion.milliseconds
 
+internal expect val PLATFORM: String
+
 abstract class BaseIntegrationTest {
     lateinit var config: PNConfiguration
     lateinit var config02: PNConfiguration
@@ -185,29 +187,37 @@ class PubNubTest(
         customSubscriptionBlock: () -> Unit = {
             subscribe(channels.toList(), channelGroups.toList(), withPresence)
         }
-    ) = suspendCancellableCoroutine { cont ->
-        val statusListener = createStatusListener(pubNub) { _, pnStatus ->
-            if ((pnStatus.category == PNStatusCategory.PNConnectedCategory || pnStatus.category == PNStatusCategory.PNSubscriptionChanged) &&
-                pnStatus.affectedChannels.containsAll(channels) && pnStatus.affectedChannelGroups.containsAll(
-                    channelGroups
-                ) || (
-                    getSubscribedChannels().containsAll(channels) && getSubscribedChannelGroups().containsAll(
+    ) {
+        suspendCancellableCoroutine { cont ->
+            val statusListener = createStatusListener(pubNub) { _, pnStatus ->
+                if ((pnStatus.category == PNStatusCategory.PNConnectedCategory || pnStatus.category == PNStatusCategory.PNSubscriptionChanged) &&
+                    pnStatus.affectedChannels.containsAll(channels) && pnStatus.affectedChannelGroups.containsAll(
                         channelGroups
+                    ) || (
+                        getSubscribedChannels().containsAll(channels) && getSubscribedChannelGroups().containsAll(
+                            channelGroups
+                        )
                     )
-                )
-            ) {
-                if (!cont.isCompleted) {
-                    cont.resume(Unit)
+                ) {
+                    if (!cont.isCompleted) {
+                        cont.resume(Unit)
+                    }
+                } else if (pnStatus.category == PNStatusCategory.PNUnexpectedDisconnectCategory || pnStatus.category == PNStatusCategory.PNConnectionError) {
+                    cont.resumeWithException(pnStatus.exception ?: RuntimeException(pnStatus.category.toString()))
                 }
-            } else if (pnStatus.category == PNStatusCategory.PNUnexpectedDisconnectCategory || pnStatus.category == PNStatusCategory.PNConnectionError) {
-                cont.resumeWithException(pnStatus.exception ?: RuntimeException(pnStatus.category.toString()))
+            }
+            pubNub.addListener(statusListener)
+            cont.invokeOnCancellation {
+                pubNub.removeListener(statusListener)
+            }
+            customSubscriptionBlock()
+        }
+        if (PLATFORM == "JS") {
+            withContext(Dispatchers.Default) {
+                // this is needed for JS test to work properly
+                delay(200)
             }
         }
-        pubNub.addListener(statusListener)
-        cont.invokeOnCancellation {
-            pubNub.removeListener(statusListener)
-        }
-        customSubscriptionBlock()
     }
 
     suspend fun PubNub.awaitUnsubscribe(
