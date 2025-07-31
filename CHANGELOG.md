@@ -1,3 +1,9 @@
+## v10.5.6
+July 31 2025
+
+#### Fixed
+- Internal change - enabled EE for JS target in KMP tests.
+
 ## v10.5.5
 July 30 2025
 
