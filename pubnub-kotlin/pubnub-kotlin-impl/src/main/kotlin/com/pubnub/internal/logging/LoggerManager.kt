@@ -5,6 +5,8 @@ import org.slf4j.Logger
 /**
  * Manages logger creation with dependency injection support for better testability.
  * Ensures logging never fails the application by providing fallback mechanisms.
+ *
+ * This class is fully thread-safe and can be used concurrently from multiple threads
  */
 class LoggerManager(
     private val loggerFactory: (Class<*>) -> Logger = { org.slf4j.LoggerFactory.getLogger(it) },

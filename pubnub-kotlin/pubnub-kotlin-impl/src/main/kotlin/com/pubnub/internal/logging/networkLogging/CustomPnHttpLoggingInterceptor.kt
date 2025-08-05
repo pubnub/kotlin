@@ -30,6 +30,8 @@ class CustomPnHttpLoggingInterceptor(
     private val pnInstanceId: String,
     private val maxBodySize: Int = 1024 * 1024 // 1MB limit  todo clarify in ADR
 ) : Interceptor {
+    private val mapperManager = MapperManager()
+
     private fun slf4jIsBound(): Boolean {
         val factory = LoggerFactory.getILoggerFactory()
         return factory !is NOPLoggerFactory
@@ -73,7 +75,7 @@ class CustomPnHttpLoggingInterceptor(
         // Parse headers
         val headers = request.headers.toMap()
 
-        // Parse body
+        // Parse body - Buffer operations are thread-safe as each request gets its own buffer instance
         val body = request.body?.let { requestBody ->
             if (requestBody.contentLength() in 1..maxBodySize) {
                 val buffer = Buffer()
@@ -108,7 +110,7 @@ class CustomPnHttpLoggingInterceptor(
             location = location,
             type = LogMessageType.NETWORK_REQUEST,
             message = LogMessageContent.NetworkRequest(requestLog),
-//            details = "HTTP Request"
+            details = "HTTP Request"
         )
 
         if (slf4jIsBound()) {
@@ -116,7 +118,7 @@ class CustomPnHttpLoggingInterceptor(
         } else {
             // fallback: always print
             if (logVerbosity == PNLogVerbosity.BODY) {
-                val jsonMessage = MapperManager().toJson(logMessage)
+                val jsonMessage = mapperManager.toJson(logMessage)
                 println("[$PUBNUB_OKHTTP_REQUEST_RESPONSE_LOGGER_NAME] REQUEST: $jsonMessage")
             }
         }
@@ -191,7 +193,7 @@ class CustomPnHttpLoggingInterceptor(
         } else {
             // fallback: always print
             if (logVerbosity == PNLogVerbosity.BODY) {
-                val jsonMessage = MapperManager().toJson(logMessage)
+                val jsonMessage = mapperManager.toJson(logMessage)
                 println("[$PUBNUB_OKHTTP_REQUEST_RESPONSE_LOGGER_NAME] RESPONSE: $jsonMessage")
             }
         }
@@ -224,7 +226,7 @@ class CustomPnHttpLoggingInterceptor(
         } else {
             // fallback: always print
             if (logVerbosity == PNLogVerbosity.BODY) {
-                val jsonMessage = MapperManager().toJson(logMessage)
+                val jsonMessage = mapperManager.toJson(logMessage)
                 println("[$PUBNUB_OKHTTP_REQUEST_RESPONSE_LOGGER_NAME] ERROR: $jsonMessage")
             }
         }
