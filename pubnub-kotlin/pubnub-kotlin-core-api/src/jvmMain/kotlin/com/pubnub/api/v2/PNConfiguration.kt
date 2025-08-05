@@ -243,7 +243,7 @@ actual interface PNConfiguration {
      * @see [HttpLoggingInterceptor]
      */
     @Deprecated(
-        message = "This setting is deprecated. Use customLoggers  instead",
+        message = "This setting is deprecated. Use customLoggers instead.",
         level = DeprecationLevel.WARNING
     )
     val httpLoggingInterceptor: HttpLoggingInterceptor?

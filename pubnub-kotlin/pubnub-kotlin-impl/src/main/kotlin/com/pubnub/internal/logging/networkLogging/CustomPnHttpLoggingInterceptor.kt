@@ -22,7 +22,7 @@ import org.slf4j.helpers.NOPLoggerFactory
 import java.io.IOException
 import java.util.Base64
 
-private const val PUBNUB_OKHTTP_REQUEST_RESPONSE_LOGGER_NAME = "pubnub.okhttp"
+private const val PUBNUB_OKHTTP_LOG_TAG = "pubnub.okhttp"
 
 class CustomPnHttpLoggingInterceptor(
     private val logger: ExtendedLogger,
@@ -119,7 +119,7 @@ class CustomPnHttpLoggingInterceptor(
             // fallback: always print
             if (logVerbosity == PNLogVerbosity.BODY) {
                 val jsonMessage = mapperManager.toJson(logMessage)
-                println("[$PUBNUB_OKHTTP_REQUEST_RESPONSE_LOGGER_NAME] REQUEST: $jsonMessage")
+                println("[$PUBNUB_OKHTTP_LOG_TAG] REQUEST: $jsonMessage")
             }
         }
     }
@@ -194,7 +194,7 @@ class CustomPnHttpLoggingInterceptor(
             // fallback: always print
             if (logVerbosity == PNLogVerbosity.BODY) {
                 val jsonMessage = mapperManager.toJson(logMessage)
-                println("[$PUBNUB_OKHTTP_REQUEST_RESPONSE_LOGGER_NAME] RESPONSE: $jsonMessage")
+                println("[$PUBNUB_OKHTTP_LOG_TAG] RESPONSE: $jsonMessage")
             }
         }
 
@@ -227,7 +227,7 @@ class CustomPnHttpLoggingInterceptor(
             // fallback: always print
             if (logVerbosity == PNLogVerbosity.BODY) {
                 val jsonMessage = mapperManager.toJson(logMessage)
-                println("[$PUBNUB_OKHTTP_REQUEST_RESPONSE_LOGGER_NAME] ERROR: $jsonMessage")
+                println("[$PUBNUB_OKHTTP_LOG_TAG] ERROR: $jsonMessage")
             }
         }
     }

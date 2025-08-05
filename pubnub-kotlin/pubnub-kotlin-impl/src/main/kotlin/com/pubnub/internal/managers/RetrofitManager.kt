@@ -28,8 +28,6 @@ import retrofit2.Retrofit
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.TimeUnit
 
-private const val PUBNUB_OKHTTP_REQUEST_RESPONSE_LOGGER_NAME = "pubnub.okhttp"
-
 class RetrofitManager(
     val pubnub: PubNubImpl,
     private val configuration: PNConfiguration,

@@ -4,7 +4,6 @@ package com.pubnub.docs.configuration
 import com.pubnub.api.UserId
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
-import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.v2.PNConfiguration
 
@@ -69,7 +68,6 @@ fun createAdvancedConfig(): PNConfiguration {
         suppressLeaveEvents = false // Whether to send leave events when disconnecting
 
         // Debugging parameters
-        logVerbosity = PNLogVerbosity.BODY // Enable debug logging of network calls
 
         // Retry configuration (for reconnection)
         retryConfiguration = RetryConfiguration.Linear(
