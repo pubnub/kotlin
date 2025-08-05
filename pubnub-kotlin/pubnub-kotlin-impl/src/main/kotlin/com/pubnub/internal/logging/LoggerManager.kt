@@ -1,6 +1,5 @@
 package com.pubnub.internal.logging
 
-import com.pubnub.api.logging.CustomLogger
 import org.slf4j.Logger
 
 /**
@@ -24,32 +23,19 @@ class LoggerManager(
     }
 
     private fun createLogger(logConfig: LogConfig, clazz: Class<*>): ExtendedLogger {
-        val slf4jLogger = loggerFactory(clazz)
-
-        val toPortalLogger = ToPortalLogger(
-            delegate = slf4jLogger,
-            userId = logConfig.userId,
-        )
-
-        val customLoggers: List<CustomLogger>? = logConfig.customLoggers
-        return if (!customLoggers.isNullOrEmpty()) {
-            CompositeLogger(toPortalLogger, logConfig)
-        } else {
-            toPortalLogger
-        }
+        val slf4jLogger: Logger = loggerFactory(clazz)
+        val toPortalLogger = ToPortalLogger(userId = logConfig.userId)
+        return CompositeLogger(slf4jLogger, toPortalLogger, logConfig.customLoggers, logConfig.pnInstanceId)
     }
 
     private fun createFallbackLogger(clazz: Class<*>, cause: Exception): ExtendedLogger {
         // Try to create a basic SLF4J logger as fallback
         return try {
             val fallbackSlf4jLogger = org.slf4j.LoggerFactory.getLogger(clazz)
-            fallbackSlf4jLogger.warn("Failed to create portal logger, using fallback", cause)
+            fallbackSlf4jLogger.warn("Failed to create portal logger. Using fallback", cause)
 
-            // Create a minimal portal logger without custom features
-            ToPortalLogger(
-                delegate = fallbackSlf4jLogger,
-                userId = "fallback-user"
-            )
+            // Create a minimal logger
+            CompositeLogger(fallbackSlf4jLogger)
         } catch (fallbackException: Exception) {
             // If even SLF4J fails, return no-op logger
             NoOpLogger(clazz)

@@ -44,9 +44,6 @@ class CustomPnHttpLoggingInterceptor(
         logRequest(request, location)
 
         var response: Response? = null
-        var failed = false
-        var canceled = false
-        var error: Exception? = null
 
         try {
             response = chain.proceed(request)
@@ -55,10 +52,6 @@ class CustomPnHttpLoggingInterceptor(
             val modifiedResponse = logResponse(response, location)
             return modifiedResponse
         } catch (e: Exception) {
-            failed = true
-            error = e
-
-            // Log the error
             logError(request, location, e, requestStartTime)
 
             throw e
@@ -207,31 +200,7 @@ class CustomPnHttpLoggingInterceptor(
     }
 
     private fun logError(request: Request, location: String, error: Exception, requestStartTime: Long) {
-        val url = request.url.toString()
         val duration = System.currentTimeMillis() - requestStartTime
-
-        val networkRequest = NetworkRequestMessage(
-            origin = "${request.url.scheme}://${request.url.host}",
-            path = request.url.encodedPath + if (request.url.encodedQuery != null) {
-                "?${request.url.encodedQuery}"
-            } else {
-                ""
-            },
-            query = request.url.queryParameterNames.associateWith { request.url.queryParameter(it) ?: "" }
-                .takeIf { it.isNotEmpty() },
-            method = HttpMethod.fromString(request.method.lowercase()),
-            headers = request.headers.toMap().takeIf { it.isNotEmpty() },
-            formData = null,
-            body = null,
-            timeout = null,
-            identifier = request.url.queryParameter("requestid")
-        )
-
-        val requestLog = NetworkLog.Request(
-            message = networkRequest,
-            canceled = false,
-            failed = true
-        )
 
         val errorDetails = LogMessageContent.Error(
             message = ErrorDetails(

@@ -5,7 +5,7 @@ import com.pubnub.api.logging.LogMessage
 
 // ToDo remove it or leave for test purposes
 class ObfuscatingLogger : CustomLogger {
-    override fun getName(): String = "ObfuscatingLogger"
+    override val name: String = "ObfuscatingLogger"
 
 //    override fun trace(msg: String?) {
 //        // Do nothing for trace level

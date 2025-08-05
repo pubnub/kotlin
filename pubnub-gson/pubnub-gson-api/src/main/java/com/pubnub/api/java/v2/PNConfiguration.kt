@@ -92,6 +92,13 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
         /**
          * Set to [PNLogVerbosity.BODY] to enable logging of network traffic, otherwise se to [PNLogVerbosity.NONE].
          */
+        @Deprecated(
+            message = "LogVerbosity setting is deprecated and will be removed in future versions. " +
+                "For logging configuration:\n" +
+                "1. Use an SLF4J implementation (recommended)\n" +
+                "2. Or implement CustomLogger interface and set via customLoggers property",
+            level = DeprecationLevel.WARNING
+        )
         val logVerbosity: PNLogVerbosity
 
         /**
@@ -348,6 +355,13 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
         /**
          * Set to [PNLogVerbosity.BODY] to enable logging of network traffic, otherwise se to [PNLogVerbosity.NONE].
          */
+        @Deprecated(
+            message = "LogVerbosity setting is deprecated and will be removed in future versions. " +
+                "For logging configuration:\n" +
+                "1. Use an SLF4J implementation (recommended)\n" +
+                "2. Or implement CustomLogger interface and set via customLoggers property",
+            level = DeprecationLevel.WARNING
+        )
         fun logVerbosity(logVerbosity: PNLogVerbosity): Builder
 
         /**

@@ -14,7 +14,8 @@ object LogMessageFormatter {
     }
 
     /**
-     * Formats message content based on type
+     * Formats message content based on type.
+     * Uses cached Gson instances for better performance.
      */
     fun formatMessageContent(content: LogMessageContent): String {
         return try {
@@ -41,7 +42,6 @@ object LogMessageFormatter {
 
 /**
  * Extension function to create a simplified string representation of LogMessage.
- * Uses cached Gson instances for better performance.
  */
 fun LogMessage.simplified(): String {
     val messageContent = LogMessageFormatter.formatMessageContent(this.message)

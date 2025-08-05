@@ -105,6 +105,13 @@ class PNConfigurationImpl(
 
         override var secure: Boolean = defaultConfiguration.secure
 
+        @Deprecated(
+            message = "LogVerbosity setting is deprecated and will be removed in future versions. " +
+                "For logging configuration:\n" +
+                "1. Use an SLF4J implementation (recommended)\n" +
+                "2. Or implement CustomLogger interface and set via customLoggers property",
+            level = DeprecationLevel.WARNING
+        )
         override var logVerbosity: PNLogVerbosity = defaultConfiguration.logVerbosity
 
         override var heartbeatNotificationOptions: PNHeartbeatNotificationOptions = defaultConfiguration.heartbeatNotificationOptions
@@ -114,7 +121,6 @@ class PNConfigurationImpl(
                 field =
                     if (value < MINIMUM_PRESENCE_TIMEOUT) {
                         println("Presence timeout is too low. Defaulting to: $MINIMUM_PRESENCE_TIMEOUT")
-//                        log.warn("Presence timeout is too low. Defaulting to: $MINIMUM_PRESENCE_TIMEOUT")
                         MINIMUM_PRESENCE_TIMEOUT
                     } else {
                         value

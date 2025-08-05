@@ -162,7 +162,6 @@ class PNConfigurationImpl(
             override fun presenceTimeout(presenceTimeout: Int): Builder {
                 this.presenceTimeout = if (presenceTimeout < MINIMUM_PRESENCE_TIMEOUT) {
                     println("Presence timeout is too low. Defaulting to: $MINIMUM_PRESENCE_TIMEOUT")
-//                    log.warn("Presence timeout is too low. Defaulting to: $MINIMUM_PRESENCE_TIMEOUT")
                     MINIMUM_PRESENCE_TIMEOUT
                 } else {
                     presenceTimeout
