@@ -416,6 +416,7 @@ class PNConfigurationImpl(
                     pnsdkSuffixes = pnsdkSuffixes,
                     retryConfiguration = retryConfiguration,
                     managePresenceListManually = managePresenceListManually,
+                    customLoggers = customLoggers
                 )
             }
         }
