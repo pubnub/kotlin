@@ -1,5 +1,7 @@
 package com.pubnub.api
 
+import cocoapods.PubNubSwift.KMPPAMPermission
+import cocoapods.PubNubSwift.KMPPAMTokenResource
 import cocoapods.PubNubSwift.KMPPubNub
 import cocoapods.PubNubSwift.KMPSubscription
 import cocoapods.PubNubSwift.KMPSubscriptionSet
@@ -10,6 +12,7 @@ import cocoapods.PubNubSwift.channelMetadataWith
 import cocoapods.PubNubSwift.channelWith
 import cocoapods.PubNubSwift.disconnect
 import cocoapods.PubNubSwift.getToken
+import cocoapods.PubNubSwift.parseWithToken
 import cocoapods.PubNubSwift.reconnectWithTimetoken
 import cocoapods.PubNubSwift.removeAllListeners
 import cocoapods.PubNubSwift.removeEventListenerWithListener
@@ -144,6 +147,7 @@ import com.pubnub.internal.subscription.SubscriptionImpl
 import com.pubnub.internal.subscription.SubscriptionSetImpl
 import com.pubnub.kmp.CustomObject
 import com.pubnub.kmp.Uploadable
+import com.pubnub.kmp.safeCast
 import kotlinx.cinterop.ExperimentalForeignApi
 
 @OptIn(ExperimentalForeignApi::class)
@@ -1022,7 +1026,49 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
     }
 
     override fun parseToken(token: String): PNToken {
-        TODO("Not yet implemented")
+        return pubNubObjC.parseWithToken(token)?.let {
+            PNToken(
+                version = it.version().intValue,
+                timestamp = it.timestamp().longValue(),
+                authorizedUUID = it.authorizedUUID(),
+                resources = mapPAMTokenResources(it.resources()),
+                patterns = mapPAMTokenResources(it.patterns()),
+                meta = it.meta().asMap()
+            )
+        } ?: PNToken(
+            resources = PNToken.PNTokenResources(),
+            patterns = PNToken.PNTokenResources()
+        )
+    }
+
+    private fun mapPAMTokenResources(from: KMPPAMTokenResource): PNToken.PNTokenResources {
+        val channels = from.channels().safeCast<String, KMPPAMPermission>().mapValues {
+            mapPAMTokenResourcePermission(it.value)
+        }
+        val channelGroups = from.channelGroups().safeCast<String, KMPPAMPermission>().mapValues {
+            mapPAMTokenResourcePermission(it.value)
+        }
+        val uuids = from.uuids().safeCast<String, KMPPAMPermission>().mapValues {
+            mapPAMTokenResourcePermission(it.value)
+        }
+
+        return PNToken.PNTokenResources(
+            channels = channels,
+            channelGroups = channelGroups,
+            uuids = uuids
+        )
+    }
+
+    private fun mapPAMTokenResourcePermission(from: KMPPAMPermission): PNToken.PNResourcePermissions {
+        return PNToken.PNResourcePermissions(
+            read = from.read(),
+            write = from.write(),
+            manage = from.manage(),
+            delete = from.delete(),
+            get = from.get(),
+            update = from.update(),
+            join = from.join()
+        )
     }
 
     override fun unsubscribeAll() {
