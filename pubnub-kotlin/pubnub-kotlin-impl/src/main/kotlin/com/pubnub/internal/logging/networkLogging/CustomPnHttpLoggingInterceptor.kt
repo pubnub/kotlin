@@ -127,7 +127,6 @@ class CustomPnHttpLoggingInterceptor(
             } catch (e: IOException) {
                 "[Error reading response body: ${e.message}]" to response
             }
-
         } ?: (null to response)
 
         val networkResponse = NetworkResponseMessage(

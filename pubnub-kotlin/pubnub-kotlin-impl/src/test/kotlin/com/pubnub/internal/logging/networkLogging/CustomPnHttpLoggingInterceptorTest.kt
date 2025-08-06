@@ -10,18 +10,12 @@ import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
 import okhttp3.Interceptor
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.Request
-import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
-import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.slf4j.event.Level
-import java.io.IOException
 
 class CustomPnHttpLoggingInterceptorTest {
     private val mockLogger = mockk<ExtendedLogger>(relaxed = true)
