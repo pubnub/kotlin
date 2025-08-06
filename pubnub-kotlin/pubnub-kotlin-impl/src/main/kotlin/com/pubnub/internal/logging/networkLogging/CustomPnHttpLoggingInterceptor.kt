@@ -15,7 +15,6 @@ import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.ResponseBody.Companion.toResponseBody
-import okio.Buffer
 import org.slf4j.event.Level
 import java.io.IOException
 import java.util.Base64
@@ -26,7 +25,6 @@ class CustomPnHttpLoggingInterceptor(
     private val logger: ExtendedLogger,
     private val logVerbosity: PNLogVerbosity,
     private val pnInstanceId: String,
-    private val maxBodySize: Int = 1024 * 1024 // 1MB limit  todo clarify in ADR
 ) : Interceptor {
     private val mapperManager = MapperManager()
 
@@ -68,17 +66,6 @@ class CustomPnHttpLoggingInterceptor(
         // Parse headers
         val headers = request.headers.toMap()
 
-        // Parse body - Buffer operations are thread-safe as each request gets its own buffer instance
-        val body = request.body?.let { requestBody ->
-            if (requestBody.contentLength() in 1..maxBodySize) {
-                val buffer = Buffer()
-                requestBody.writeTo(buffer)
-                buffer.readUtf8()
-            } else {
-                null
-            }
-        }
-
         val networkRequest = NetworkRequestMessage(
             origin = origin,
             path = path,
@@ -86,7 +73,7 @@ class CustomPnHttpLoggingInterceptor(
             method = HttpMethod.fromString(request.method.lowercase()),
             headers = headers.takeIf { it.isNotEmpty() },
             formData = null, // TODO: Parse form data if needed
-            body = body,
+            body = request.body.toString(),
             timeout = null, // TODO: Extract from request if available
             identifier = queryParams["requestid"]
         )
@@ -123,41 +110,24 @@ class CustomPnHttpLoggingInterceptor(
 
         // Parse body and create modified response with cloned body
         val (body, modifiedResponse) = response.body?.let { responseBody ->
-            val contentLength = responseBody.contentLength()
-            if (contentLength > 0 && contentLength <= maxBodySize) {
-                val contentType = responseBody.contentType()?.toString() ?: ""
+            val contentType = responseBody.contentType()?.toString() ?: ""
 
-                try {
-                    when {
-                        contentType.contains("application/json") -> {
-                            val bodyString = responseBody.string()
-                            val clonedResponseBody = bodyString.toResponseBody(responseBody.contentType())
-                            val newResponse = response.newBuilder().body(clonedResponseBody).build()
-                            bodyString to newResponse
-                        }
-
-                        contentType.startsWith("text/") -> {
-                            val bodyString = responseBody.string()
-                            val clonedResponseBody = bodyString.toResponseBody(responseBody.contentType())
-                            val newResponse = response.newBuilder().body(clonedResponseBody).build()
-                            bodyString to newResponse
-                        }
-
-                        else -> {
-                            val bytes = responseBody.bytes()
-                            val clonedResponseBody = bytes.toResponseBody(responseBody.contentType())
-                            val newResponse = response.newBuilder().body(clonedResponseBody).build()
-                            Base64.getEncoder().encodeToString(bytes) to newResponse
-                        }
-                    }
-                } catch (e: IOException) {
-                    "[Error reading response body: ${e.message}]" to response
+            try {
+                if (contentType.contains("application/json") || contentType.startsWith("text/")) {
+                    val bodyString = responseBody.string()
+                    val clonedResponseBody = bodyString.toResponseBody(responseBody.contentType())
+                    val newResponse = response.newBuilder().body(clonedResponseBody).build()
+                    bodyString to newResponse
+                } else {
+                    val bytes = responseBody.bytes()
+                    val clonedResponseBody = bytes.toResponseBody(responseBody.contentType())
+                    val newResponse = response.newBuilder().body(clonedResponseBody).build()
+                    Base64.getEncoder().encodeToString(bytes) to newResponse
                 }
-            } else if (contentLength > maxBodySize) {
-                "[Body too large to log: $contentLength bytes (max: $maxBodySize bytes)]" to response
-            } else {
-                null to response
+            } catch (e: IOException) {
+                "[Error reading response body: ${e.message}]" to response
             }
+
         } ?: (null to response)
 
         val networkResponse = NetworkResponseMessage(
