@@ -89,8 +89,6 @@ class PublishEndpoint internal constructor(
         } else {
             // HTTP GET request
             val stringifiedMessage = getParamMessage(message)
-
-            println("-=About to call retrofitManager.publishService.publish from ${this::class.java.simpleName}=-")
             retrofitManager.publishService.publish(
                 configuration.publishKey,
                 configuration.subscribeKey,

@@ -16,9 +16,7 @@ import okhttp3.Request
 import okhttp3.Response
 import okhttp3.ResponseBody.Companion.toResponseBody
 import okio.Buffer
-import org.slf4j.LoggerFactory
 import org.slf4j.event.Level
-import org.slf4j.helpers.NOPLoggerFactory
 import java.io.IOException
 import java.util.Base64
 
@@ -31,11 +29,6 @@ class CustomPnHttpLoggingInterceptor(
     private val maxBodySize: Int = 1024 * 1024 // 1MB limit  todo clarify in ADR
 ) : Interceptor {
     private val mapperManager = MapperManager()
-
-    private fun slf4jIsBound(): Boolean {
-        val factory = LoggerFactory.getILoggerFactory()
-        return factory !is NOPLoggerFactory
-    }
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
@@ -113,14 +106,11 @@ class CustomPnHttpLoggingInterceptor(
             details = "HTTP Request"
         )
 
-        if (slf4jIsBound()) {
-            logger.debug(logMessage)
-        } else {
-            // fallback: always print
-            if (logVerbosity == PNLogVerbosity.BODY) {
-                val jsonMessage = mapperManager.toJson(logMessage)
-                println("[$PUBNUB_OKHTTP_LOG_TAG] REQUEST: $jsonMessage")
-            }
+        logger.debug(logMessage)
+        // to keep PNLogVerbosity.BODY functional
+        if (logVerbosity == PNLogVerbosity.BODY) {
+            val jsonMessage = mapperManager.toJson(logMessage)
+            println("[$PUBNUB_OKHTTP_LOG_TAG] REQUEST: $jsonMessage")
         }
     }
 
@@ -188,14 +178,11 @@ class CustomPnHttpLoggingInterceptor(
             details = "HTTP Response"
         )
 
-        if (slf4jIsBound()) {
-            logger.debug(logMessage)
-        } else {
-            // fallback: always print
-            if (logVerbosity == PNLogVerbosity.BODY) {
-                val jsonMessage = mapperManager.toJson(logMessage)
-                println("[$PUBNUB_OKHTTP_LOG_TAG] RESPONSE: $jsonMessage")
-            }
+        logger.debug(logMessage)
+        // to keep PNLogVerbosity.BODY functional
+        if (logVerbosity == PNLogVerbosity.BODY) {
+            val jsonMessage = mapperManager.toJson(logMessage)
+            println("[$PUBNUB_OKHTTP_LOG_TAG] RESPONSE: $jsonMessage")
         }
 
         return modifiedResponse
@@ -221,14 +208,11 @@ class CustomPnHttpLoggingInterceptor(
             details = "HTTP Request failed after ${duration}ms: ${error.message}"
         )
 
-        if (slf4jIsBound()) {
-            logger.error(logMessage)
-        } else {
-            // fallback: always print
-            if (logVerbosity == PNLogVerbosity.BODY) {
-                val jsonMessage = mapperManager.toJson(logMessage)
-                println("[$PUBNUB_OKHTTP_LOG_TAG] ERROR: $jsonMessage")
-            }
+        logger.error(logMessage)
+        // to keep PNLogVerbosity.BODY functional
+        if (logVerbosity == PNLogVerbosity.BODY) {
+            val jsonMessage = mapperManager.toJson(logMessage)
+            println("[$PUBNUB_OKHTTP_LOG_TAG] ERROR: $jsonMessage")
         }
     }
 }

@@ -49,8 +49,6 @@ dependencies {
     implementation(libs.cbor)
 
     testImplementation(libs.wiremock)
-    testImplementation(libs.logback.classic)
-    testImplementation(libs.logback.core)
     testImplementation(libs.cucumber.java)
     testImplementation(libs.cucumber.junit)
     testImplementation(libs.cucumber.picocontainer)

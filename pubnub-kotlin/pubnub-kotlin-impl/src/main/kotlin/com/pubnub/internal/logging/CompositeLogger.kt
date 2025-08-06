@@ -27,9 +27,7 @@ class CompositeLogger(
     }
 
     override fun debug(message: LogMessage) {
-        println("-= about to log slf4jLogger debug") // todo remove
         slf4jLogger.debug(message.simplified())
-        println("-= about to log toPortalLogger debug") // todo remove
         toPortalLogger?.debug(message)
         delegateToCustomLoggers { logger: CustomLogger ->
             sendMessageToCustomLogger(logger, message)
@@ -37,9 +35,7 @@ class CompositeLogger(
     }
 
     override fun info(message: LogMessage) {
-        println("-= about to log slf4jLogger info") // todo remove
         slf4jLogger.info(message.simplified())
-        println("-= about to log toPortalLogger info") // todo remove
         toPortalLogger?.info(message)
         delegateToCustomLoggers { logger: CustomLogger ->
             sendMessageToCustomLogger(logger, message)
@@ -69,15 +65,11 @@ class CompositeLogger(
                 logger.trace(message = message.simplified())
             }
             Level.DEBUG -> {
-                println("-= about to log customLogger.debug(message)") // todo remove
                 logger.debug(logMessage = message)
-                println("-= about to log customLogger.debug(message.simplified())") // todo remove
                 logger.debug(message = message.simplified())
             }
             Level.INFO -> {
-                println("-= about to log customLogger.info(message)") // todo remove
                 logger.info(logMessage = message)
-                println("-= about to log customLogger.info(message.simplified())") // todo remove
                 logger.info(message = message.simplified())
             }
             Level.WARN -> {

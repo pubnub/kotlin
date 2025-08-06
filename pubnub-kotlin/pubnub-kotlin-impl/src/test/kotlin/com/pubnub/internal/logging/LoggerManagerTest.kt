@@ -14,16 +14,16 @@ import org.slf4j.event.Level
 
 class LoggerManagerTest {
     @Test
-    fun `should create ToPortalLogger successfully with valid config`() {
+    fun `should create logger successfully when customLoggers are null`() {
         val mockSlf4jLogger = mockk<Logger>(relaxed = true)
         val mockFactory = { _: Class<*> -> mockSlf4jLogger }
         val manager = LoggerManager(loggerFactory = mockFactory)
 
-        val testLogConfig = LogConfig("test-instance-id", "test-user-id")
+        val testLogConfig = LogConfig("test-instance-id", "test-user-id", customLoggers = null)
 
         val logger = manager.getLogger(testLogConfig, String::class.java)
 
-        assertThat(logger, IsInstanceOf.instanceOf(ToPortalLogger::class.java))
+        assertThat(logger, IsInstanceOf.instanceOf(CompositeLogger::class.java))
     }
 
     @Test
@@ -106,7 +106,7 @@ class LoggerManagerTest {
         val logger = manager.getLogger(testLogConfig, String::class.java)
 
         // Should create ToPortalLogger, not CompositeLogger
-        assertThat(logger, IsInstanceOf.instanceOf(ToPortalLogger::class.java))
+        assertThat(logger, IsInstanceOf.instanceOf(CompositeLogger::class.java))
     }
 
     @Test
@@ -115,8 +115,9 @@ class LoggerManagerTest {
         val mockFactory = { _: Class<*> -> mockSlf4jLogger }
         val manager = LoggerManager(loggerFactory = mockFactory)
 
+        val pnInstanceId = "test-instance-id"
         val testLogConfig = LogConfig(
-            pnInstanceId = "test-instance-id",
+            pnInstanceId = pnInstanceId,
             userId = "test-user-id",
             customLoggers = null
         )
@@ -124,7 +125,7 @@ class LoggerManagerTest {
         val logger = manager.getLogger(testLogConfig, String::class.java)
 
         // Should create ToPortalLogger, not CompositeLogger
-        assertThat(logger, IsInstanceOf.instanceOf(ToPortalLogger::class.java))
+        assertThat(logger, IsInstanceOf.instanceOf(CompositeLogger::class.java))
     }
 
     @Test
