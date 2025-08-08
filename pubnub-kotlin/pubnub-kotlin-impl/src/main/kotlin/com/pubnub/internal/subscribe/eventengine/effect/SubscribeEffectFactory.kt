@@ -30,7 +30,7 @@ internal class SubscribeEffectFactory(
     override fun create(effectInvocation: SubscribeEffectInvocation): Effect? {
         return when (effectInvocation) {
             is SubscribeEffectInvocation.EmitMessages -> {
-                EmitMessagesEffect(messagesConsumer, effectInvocation.messages)
+                EmitMessagesEffect(messagesConsumer, effectInvocation.messages, logConfig)
             }
 
             is SubscribeEffectInvocation.EmitStatus -> {
@@ -48,7 +48,7 @@ internal class SubscribeEffectFactory(
                             null
                         },
                     )
-                HandshakeEffect(handshakeRemoteAction, subscribeEventSink)
+                HandshakeEffect(handshakeRemoteAction, subscribeEventSink, logConfig)
             }
 
             is SubscribeEffectInvocation.ReceiveMessages -> {
@@ -58,7 +58,7 @@ internal class SubscribeEffectFactory(
                         effectInvocation.channelGroups,
                         effectInvocation.subscriptionCursor,
                     )
-                ReceiveMessagesEffect(receiveMessagesRemoteAction, subscribeEventSink)
+                ReceiveMessagesEffect(receiveMessagesRemoteAction, subscribeEventSink, logConfig)
             }
 
             SubscribeEffectInvocation.CancelHandshake,

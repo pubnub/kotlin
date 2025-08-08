@@ -6,6 +6,7 @@ import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.internal.eventengine.EffectDispatcher
 import com.pubnub.internal.eventengine.EventEngineConf
+import com.pubnub.internal.logging.LogConfig
 import com.pubnub.internal.managers.ListenerManager
 import com.pubnub.internal.managers.PresenceEventEngineManager
 import com.pubnub.internal.presence.eventengine.PresenceEventEngine
@@ -32,6 +33,7 @@ internal interface Presence {
             presenceData: PresenceData = PresenceData(),
             sendStateWithHeartbeat: Boolean,
             executorService: ScheduledExecutorService,
+            logConfig: LogConfig,
         ): Presence {
             if (heartbeatInterval <= Duration.ZERO) {
                 return PresenceNoOp(
@@ -56,6 +58,7 @@ internal interface Presence {
                 statusConsumer = listenerManager,
                 presenceData = presenceData,
                 sendStateWithHeartbeat = sendStateWithHeartbeat,
+                logConfig = logConfig,
             )
 
             val eventEngineManager = PresenceEventEngineManager(
@@ -142,7 +145,12 @@ internal class PresenceNoOp(
                     if (heartbeatNotificationOptions == PNHeartbeatNotificationOptions.ALL ||
                         heartbeatNotificationOptions == PNHeartbeatNotificationOptions.FAILURES
                     ) {
-                        listenerManager.announce(PNStatus(PNStatusCategory.PNHeartbeatFailed, PubNubException.from(exception)))
+                        listenerManager.announce(
+                            PNStatus(
+                                PNStatusCategory.PNHeartbeatFailed,
+                                PubNubException.from(exception)
+                            )
+                        )
                     }
                 }.onSuccess {
                     if (heartbeatNotificationOptions == PNHeartbeatNotificationOptions.ALL) {

@@ -1,5 +1,6 @@
 package com.pubnub.internal.presence.eventengine.effect
 
+import com.pubnub.internal.logging.LogConfig
 import com.pubnub.internal.presence.eventengine.event.PresenceEvent
 import com.pubnub.internal.subscribe.eventengine.effect.TestEventSink
 import org.awaitility.Awaitility
@@ -14,6 +15,7 @@ import kotlin.time.Duration.Companion.milliseconds
 class WaitEffectTest {
     private val heartbeatInterval = 1.milliseconds
     private val presenceEventSink = TestEventSink<PresenceEvent>()
+    private val logConfig: LogConfig = LogConfig(pnInstanceId = "testInstanceId", userId = "testUserId")
 
     companion object {
         private val executorService: ScheduledExecutorService = Executors.newScheduledThreadPool(10)
@@ -28,7 +30,7 @@ class WaitEffectTest {
     @Test
     fun `should deliver TimesUp event when WaitEffect finishes successfully`() {
         // given
-        val waitEffect = WaitEffect(heartbeatInterval, presenceEventSink, executorService)
+        val waitEffect = WaitEffect(heartbeatInterval, presenceEventSink, executorService, logConfig)
 
         // when
         waitEffect.runEffect()
@@ -46,7 +48,7 @@ class WaitEffectTest {
     @Test
     fun `should not deliver TimesUp event when cancelled on time`() {
         // given
-        val waitEffect = WaitEffect(20.milliseconds, presenceEventSink, executorService)
+        val waitEffect = WaitEffect(20.milliseconds, presenceEventSink, executorService, logConfig)
 
         // when
         waitEffect.runEffect()
@@ -67,7 +69,7 @@ class WaitEffectTest {
     @Test
     fun `should not deliver TimesUp event when cancelled before runEffect`() {
         // given
-        val waitEffect = WaitEffect(heartbeatInterval, presenceEventSink, executorService)
+        val waitEffect = WaitEffect(heartbeatInterval, presenceEventSink, executorService, logConfig)
 
         // when
         waitEffect.cancel()

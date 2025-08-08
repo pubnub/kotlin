@@ -6,6 +6,7 @@ import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
+import com.pubnub.internal.logging.LogConfig
 import com.pubnub.internal.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.internal.subscribe.eventengine.event.SubscriptionCursor
 import io.mockk.spyk
@@ -22,12 +23,13 @@ class ReceiveMessagesEffectTest {
     private val messages: List<PNEvent> = createPNMessageResultList()
     private val receiveMessageResult = ReceiveMessagesResult(messages, subscriptionCursor)
     private val reason = PubNubException("Test")
+    private val logConfig: LogConfig = LogConfig(pnInstanceId = "testInstanceId", userId = "testUserId")
 
     @Test
     fun `should deliver ReceiveSuccess event when ReceiveMessagesEffect succeeded `() {
         // given
         val receiveMessagesEffect =
-            ReceiveMessagesEffect(successfulRemoteAction(receiveMessageResult), subscribeEventSink)
+            ReceiveMessagesEffect(successfulRemoteAction(receiveMessageResult), subscribeEventSink, logConfig)
 
         // when
         receiveMessagesEffect.runEffect()
@@ -48,7 +50,7 @@ class ReceiveMessagesEffectTest {
     @Test
     fun `should deliver ReceiveFailure event when ReceiveMessagesEffect failed `() {
         // given
-        val receiveMessagesEffect = ReceiveMessagesEffect(failingRemoteAction(reason), subscribeEventSink)
+        val receiveMessagesEffect = ReceiveMessagesEffect(failingRemoteAction(reason), subscribeEventSink, logConfig)
 
         // when
         receiveMessagesEffect.runEffect()
@@ -65,7 +67,7 @@ class ReceiveMessagesEffectTest {
     fun `should cancel remoteAction when cancel effect`() {
         // given
         val remoteAction: RemoteAction<ReceiveMessagesResult> = spyk()
-        val receiveMessagesEffect = ReceiveMessagesEffect(remoteAction, subscribeEventSink)
+        val receiveMessagesEffect = ReceiveMessagesEffect(remoteAction, subscribeEventSink, logConfig)
 
         // when
         receiveMessagesEffect.cancel()

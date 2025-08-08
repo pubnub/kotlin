@@ -4,6 +4,7 @@ import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.internal.eventengine.Effect
 import com.pubnub.internal.eventengine.EffectFactory
 import com.pubnub.internal.eventengine.Sink
+import com.pubnub.internal.logging.LogConfig
 import com.pubnub.internal.presence.eventengine.data.PresenceData
 import com.pubnub.internal.presence.eventengine.effect.effectprovider.HeartbeatProvider
 import com.pubnub.internal.presence.eventengine.effect.effectprovider.LeaveProvider
@@ -23,6 +24,7 @@ internal class PresenceEffectFactory(
     private val statusConsumer: StatusConsumer,
     private val presenceData: PresenceData,
     private val sendStateWithHeartbeat: Boolean,
+    private val logConfig: LogConfig,
 ) : EffectFactory<PresenceEffectInvocation> {
     override fun create(effectInvocation: PresenceEffectInvocation): Effect? {
         return when (effectInvocation) {
@@ -37,7 +39,7 @@ internal class PresenceEffectFactory(
                             null
                         },
                     )
-                HeartbeatEffect(heartbeatRemoteAction, presenceEventSink, heartbeatNotificationOptions, statusConsumer)
+                HeartbeatEffect(heartbeatRemoteAction, presenceEventSink, heartbeatNotificationOptions, statusConsumer, logConfig)
             }
 
             is PresenceEffectInvocation.Leave -> {
@@ -47,14 +49,14 @@ internal class PresenceEffectFactory(
                             effectInvocation.channels,
                             effectInvocation.channelGroups,
                         )
-                    LeaveEffect(leaveRemoteAction)
+                    LeaveEffect(leaveRemoteAction, logConfig)
                 } else {
                     null
                 }
             }
 
             is PresenceEffectInvocation.Wait -> {
-                WaitEffect(heartbeatInterval, presenceEventSink, executorService)
+                WaitEffect(heartbeatInterval, presenceEventSink, executorService, logConfig)
             }
 
             PresenceEffectInvocation.CancelWait,

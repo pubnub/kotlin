@@ -2,6 +2,7 @@ package com.pubnub.internal.presence.eventengine.effect
 
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
+import com.pubnub.internal.logging.LogConfig
 import com.pubnub.internal.presence.eventengine.event.PresenceEvent
 import com.pubnub.internal.subscribe.eventengine.effect.StatusConsumer
 import com.pubnub.internal.subscribe.eventengine.effect.TestEventSink
@@ -24,6 +25,7 @@ class HeartbeatEffectTest {
     private val reason = PubNubException("Unknown error")
     private val heartbeatNotificationOptions: PNHeartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
     private val statusConsumer: StatusConsumer = mockk()
+    private val logConfig: LogConfig = LogConfig(pnInstanceId = "testInstanceId", userId = "testUserId")
 
     companion object {
         @JvmStatic
@@ -48,7 +50,7 @@ class HeartbeatEffectTest {
         // given
         every { statusConsumer.announce(any()) } returns Unit
         val heartbeatEffect =
-            HeartbeatEffect(successfulRemoteAction(true), eventSink, heartbeatNotificationOptions, statusConsumer)
+            HeartbeatEffect(successfulRemoteAction(true), eventSink, heartbeatNotificationOptions, statusConsumer, logConfig)
 
         // when
         heartbeatEffect.runEffect()
@@ -68,7 +70,7 @@ class HeartbeatEffectTest {
         // given
         every { statusConsumer.announce(any()) } returns Unit
         val heartbeatEffect =
-            HeartbeatEffect(failingRemoteAction(reason), eventSink, heartbeatNotificationOptions, statusConsumer)
+            HeartbeatEffect(failingRemoteAction(reason), eventSink, heartbeatNotificationOptions, statusConsumer, logConfig)
         // when
         heartbeatEffect.runEffect()
 
@@ -91,7 +93,7 @@ class HeartbeatEffectTest {
         // given
         val heartbeatNotificationOptions: PNHeartbeatNotificationOptions = pnHeartbeatNotificationOptions
         val heartbeatEffect =
-            HeartbeatEffect(successfulRemoteAction(true), eventSink, heartbeatNotificationOptions, statusConsumer)
+            HeartbeatEffect(successfulRemoteAction(true), eventSink, heartbeatNotificationOptions, statusConsumer, logConfig)
 
         // when
         heartbeatEffect.runEffect()
@@ -119,7 +121,7 @@ class HeartbeatEffectTest {
         // given
         val heartbeatNotificationOptions: PNHeartbeatNotificationOptions = pnHeartbeatNotificationOptions
         val heartbeatEffect =
-            HeartbeatEffect(failingRemoteAction(reason), eventSink, heartbeatNotificationOptions, statusConsumer)
+            HeartbeatEffect(failingRemoteAction(reason), eventSink, heartbeatNotificationOptions, statusConsumer, logConfig)
 
         // when
         heartbeatEffect.runEffect()

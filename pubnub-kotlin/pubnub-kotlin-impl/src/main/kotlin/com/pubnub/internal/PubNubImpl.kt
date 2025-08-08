@@ -236,6 +236,7 @@ open class PubNubImpl(
             presenceData = presenceData,
             sendStateWithHeartbeat = configuration.maintainPresenceState,
             executorService = executorService,
+            logConfig = logConfig,
         )
 
     //region Internal

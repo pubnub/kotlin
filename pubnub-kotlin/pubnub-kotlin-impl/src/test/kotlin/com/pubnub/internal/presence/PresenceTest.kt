@@ -4,6 +4,7 @@ import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.contract.subscribe.eventEngine.state.TestSinkSource
 import com.pubnub.internal.eventengine.EventEngineConf
 import com.pubnub.internal.eventengine.QueueEventEngineConf
+import com.pubnub.internal.logging.LogConfig
 import com.pubnub.internal.managers.ListenerManager
 import com.pubnub.internal.presence.eventengine.data.PresenceData
 import com.pubnub.internal.presence.eventengine.effect.PresenceEffectInvocation
@@ -33,6 +34,7 @@ private const val CHANNEL_GROUPS_01 = "channelGroups01"
 internal class PresenceTest {
     private val listenerManager: ListenerManager = mockk()
     private val executorService: ScheduledExecutorService = mockk()
+    private val logConfig: LogConfig = LogConfig(pnInstanceId = "testInstanceId", userId = "testUserId")
 
     companion object {
         @JvmStatic
@@ -207,6 +209,7 @@ internal class PresenceTest {
         suppressLeaveEvents: Boolean = false,
         leaveProvider: LeaveProvider = LeaveProvider { _, _ -> successfulRemoteAction(true) },
         heartbeatProvider: HeartbeatProvider = HeartbeatProvider { _, _, _ -> successfulRemoteAction(true) },
+        logConfig: LogConfig = LogConfig(pnInstanceId = "testInstanceId", userId = "testUserId"),
     ) = create(
         heartbeatProvider = heartbeatProvider,
         leaveProvider = leaveProvider,
@@ -218,5 +221,6 @@ internal class PresenceTest {
         presenceData = presenceData,
         sendStateWithHeartbeat = true,
         executorService = executorService,
+        logConfig = logConfig,
     )
 }

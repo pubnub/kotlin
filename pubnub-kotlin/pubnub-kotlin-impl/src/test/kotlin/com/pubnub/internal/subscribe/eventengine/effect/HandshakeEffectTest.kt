@@ -4,6 +4,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.internal.eventengine.Sink
+import com.pubnub.internal.logging.LogConfig
 import com.pubnub.internal.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.internal.subscribe.eventengine.event.SubscriptionCursor
 import io.mockk.spyk
@@ -20,11 +21,12 @@ class HandshakeEffectTest {
     private val subscribeEventSink = TestEventSink<SubscribeEvent>()
     private val subscriptionCursor = SubscriptionCursor(1337L, "1337")
     private val reason = PubNubException("Unknown error")
+    private val logConfig: LogConfig = LogConfig(pnInstanceId = "testInstanceId", userId = "testUserId")
 
     @Test
     fun `should deliver HandshakeSuccess event when HandshakeEffect succeeded`() {
         // given
-        val handshakeEffect = HandshakeEffect(successfulRemoteAction(subscriptionCursor), subscribeEventSink)
+        val handshakeEffect = HandshakeEffect(successfulRemoteAction(subscriptionCursor), subscribeEventSink, logConfig)
 
         // when
         handshakeEffect.runEffect()
@@ -42,7 +44,7 @@ class HandshakeEffectTest {
     @Test
     fun `should deliver HandshakeFailure event when HandshakeEffect failed`() {
         // given
-        val handshakeEffect = HandshakeEffect(failingRemoteAction(reason), subscribeEventSink)
+        val handshakeEffect = HandshakeEffect(failingRemoteAction(reason), subscribeEventSink, logConfig)
 
         // when
         handshakeEffect.runEffect()
@@ -61,7 +63,7 @@ class HandshakeEffectTest {
     fun `should cancel remoteAction when cancel effect`() {
         // given
         val remoteAction: RemoteAction<SubscriptionCursor> = spyk()
-        val handshakeEffect = HandshakeEffect(remoteAction, subscribeEventSink)
+        val handshakeEffect = HandshakeEffect(remoteAction, subscribeEventSink, logConfig)
 
         // when
         handshakeEffect.cancel()
