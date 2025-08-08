@@ -37,6 +37,8 @@ class ToPortalLogger(
     private fun onLog(level: Level, message: LogMessage) {
         if (isLoggingToPortalEnabled() && shouldLogMessageForThisUser() && shouldLogMessageForThisLevel(level)) {
             // todo implement sending to portal
+            // replace message content with calculated finger print using logic from ADR both for LogMessageType.OBJECT
+            // that is used to log details about API calls and also in NetworkRequest, NetworkResponse
         }
     }
 

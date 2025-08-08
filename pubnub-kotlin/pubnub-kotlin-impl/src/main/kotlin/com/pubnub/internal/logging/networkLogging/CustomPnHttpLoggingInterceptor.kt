@@ -75,7 +75,6 @@ class CustomPnHttpLoggingInterceptor(
             formData = null, // TODO: Parse form data if needed
             body = request.body.toString(),
             timeout = null, // TODO: Extract from request if available
-            identifier = queryParams["requestid"]
         )
 
         val requestLog = NetworkLog.Request(
