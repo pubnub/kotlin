@@ -4,6 +4,9 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.FetchMessages
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
+import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.history.HistoryMessageType
 import com.pubnub.api.models.consumer.history.PNFetchMessageItem
@@ -14,9 +17,12 @@ import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.extension.limit
 import com.pubnub.internal.extension.nonPositiveToNull
 import com.pubnub.internal.extension.tryDecryptMessage
+import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.models.server.FetchMessagesEnvelope
 import com.pubnub.internal.models.server.history.ServerFetchMessageItem
 import com.pubnub.internal.toCsv
+import org.slf4j.event.Level
 import retrofit2.Call
 import retrofit2.Response
 import java.util.Locale
@@ -34,6 +40,8 @@ class FetchMessagesEndpoint internal constructor(
     override val includeMessageType: Boolean = false,
     override val includeCustomMessageType: Boolean = false
 ) : EndpointCore<FetchMessagesEnvelope, PNFetchMessagesResult>(pubnub), FetchMessages {
+    private val log: ExtendedLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+
     internal companion object {
         private const val SINGLE_CHANNEL_DEFAULT_MESSAGES = 100
         private const val SINGLE_CHANNEL_MAX_MESSAGES = 100
@@ -77,6 +85,28 @@ class FetchMessagesEndpoint internal constructor(
     override fun getAffectedChannels() = channels
 
     override fun doWork(queryParams: HashMap<String, String>): Call<FetchMessagesEnvelope> {
+        log.trace(
+            LogMessage(
+                pubNubId = pubnub.instanceId,
+                logLevel = Level.TRACE,
+                location = this::class.java.toString(),
+                type = LogMessageType.OBJECT,
+                message = LogMessageContent.Object(
+                    message = mapOf(
+                        "channels" to channels,
+                        "page" to page,
+                        "includeUUID" to includeUUID,
+                        "includeMeta" to includeMeta,
+                        "includeMessageActions" to includeMessageActions,
+                        "includeMessageType" to includeMessageType,
+                        "includeCustomMessageType" to includeCustomMessageType,
+                        "queryParams" to queryParams
+                    )
+                ),
+                details = "FetchMessages API call"
+            )
+        )
+
         addQueryParams(queryParams)
 
         return if (!includeMessageActions) {

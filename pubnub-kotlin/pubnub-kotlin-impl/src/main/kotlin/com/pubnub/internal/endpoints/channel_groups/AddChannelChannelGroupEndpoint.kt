@@ -4,11 +4,17 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.channel_groups.AddChannelChannelGroup
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
+import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsAddChannelResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.toCsv
+import org.slf4j.event.Level
 import retrofit2.Call
 import retrofit2.Response
 
@@ -20,6 +26,8 @@ class AddChannelChannelGroupEndpoint internal constructor(
     override val channelGroup: String,
     override val channels: List<String>,
 ) : EndpointCore<Void, PNChannelGroupsAddChannelResult>(pubnub), AddChannelChannelGroup {
+    private val log: ExtendedLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+
     override fun getAffectedChannels() = channels
 
     override fun getAffectedChannelGroups() = listOf(channelGroup)
@@ -35,6 +43,23 @@ class AddChannelChannelGroupEndpoint internal constructor(
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Void> {
+        log.trace(
+            LogMessage(
+                pubNubId = pubnub.instanceId,
+                logLevel = Level.TRACE,
+                location = this::class.java.toString(),
+                type = LogMessageType.OBJECT,
+                message = LogMessageContent.Object(
+                    message = mapOf(
+                        "channelGroup" to channelGroup,
+                        "channels" to channels,
+                        "queryParams" to queryParams
+                    )
+                ),
+                details = "AddChannelChannelGroup API call"
+            )
+        )
+
         addQueryParams(queryParams)
 
         return retrofitManager.channelGroupService

@@ -4,10 +4,16 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.pubsub.Signal
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
+import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.models.consumer.PNPublishResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.LoggerManager
+import org.slf4j.event.Level
 import retrofit2.Call
 import retrofit2.Response
 
@@ -20,6 +26,8 @@ class SignalEndpoint internal constructor(
     override val message: Any,
     override val customMessageType: String? = null
 ) : EndpointCore<List<Any>, PNPublishResult>(pubnub), Signal {
+    private val log: ExtendedLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+
     companion object {
         private const val CUSTOM_MESSAGE_TYPE_QUERY_PARAM = "custom_message_type"
     }
@@ -34,6 +42,24 @@ class SignalEndpoint internal constructor(
     override fun getAffectedChannels() = listOf(channel)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<List<Any>> {
+        log.trace(
+            LogMessage(
+                pubNubId = pubnub.instanceId,
+                logLevel = Level.TRACE,
+                location = this::class.java.toString(),
+                type = LogMessageType.OBJECT,
+                message = LogMessageContent.Object(
+                    message = mapOf(
+                        "channel" to channel,
+                        "message" to message,
+                        "customMessageType" to (customMessageType ?: ""),
+                        "queryParams" to queryParams
+                    )
+                ),
+                details = "Signal API call"
+            )
+        )
+
         customMessageType?.let { customMessageTypeNotNull ->
             queryParams[CUSTOM_MESSAGE_TYPE_QUERY_PARAM] = customMessageTypeNotNull
         }

@@ -3,15 +3,23 @@ package com.pubnub.internal.endpoints.presence
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
+import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.PubNubUtil
+import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.toCsv
+import org.slf4j.event.Level
 import retrofit2.Call
 import retrofit2.Response
 
 class LeaveEndpoint internal constructor(pubnub: PubNubImpl) : EndpointCore<Void, Boolean>(pubnub) {
+    private val log: ExtendedLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+
     var channels = emptyList<String>()
     var channelGroups = emptyList<String>()
 
@@ -32,6 +40,23 @@ class LeaveEndpoint internal constructor(pubnub: PubNubImpl) : EndpointCore<Void
     override fun getAffectedChannelGroups() = channelGroups
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Void> {
+        log.trace(
+            LogMessage(
+                pubNubId = pubnub.instanceId,
+                logLevel = Level.TRACE,
+                location = this::class.java.toString(),
+                type = LogMessageType.OBJECT,
+                message = LogMessageContent.Object(
+                    message = mapOf(
+                        "channels" to channels,
+                        "channelGroups" to channelGroups,
+                        "queryParams" to queryParams
+                    )
+                ),
+                details = "Leave API call"
+            )
+        )
+
         addQueryParams(queryParams)
         return retrofitManager.presenceService.leave(
             configuration.subscribeKey,

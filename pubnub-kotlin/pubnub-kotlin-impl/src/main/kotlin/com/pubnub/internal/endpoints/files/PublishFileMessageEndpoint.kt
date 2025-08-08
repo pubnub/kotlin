@@ -5,6 +5,9 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.files.PublishFileMessage
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
+import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.models.consumer.files.PNBaseFile
 import com.pubnub.api.models.consumer.files.PNPublishFileMessageResult
 import com.pubnub.api.retry.RetryableEndpointGroup
@@ -14,7 +17,10 @@ import com.pubnub.internal.crypto.encryptString
 import com.pubnub.internal.endpoints.pubsub.PublishEndpoint.Companion.CUSTOM_MESSAGE_TYPE_QUERY_PARAM
 import com.pubnub.internal.extension.numericString
 import com.pubnub.internal.extension.quoted
+import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.models.server.files.FileUploadNotification
+import org.slf4j.event.Level
 import retrofit2.Call
 import retrofit2.Response
 
@@ -32,6 +38,7 @@ open class PublishFileMessageEndpoint(
     private val customMessageType: String? = null,
     pubNub: PubNubImpl,
 ) : EndpointCore<List<Any>, PNPublishFileMessageResult>(pubNub), PublishFileMessage {
+    private val log: ExtendedLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
     private val pnFile = PNBaseFile(fileId, fileName)
 
     @Throws(PubNubException::class)
@@ -43,6 +50,29 @@ open class PublishFileMessageEndpoint(
 
     @Throws(PubNubException::class)
     override fun doWork(queryParams: HashMap<String, String>): Call<List<Any>> {
+        log.trace(
+            LogMessage(
+                pubNubId = pubnub.instanceId,
+                logLevel = Level.TRACE,
+                location = this::class.java.toString(),
+                type = LogMessageType.OBJECT,
+                message = LogMessageContent.Object(
+                    message = mapOf(
+                        "channel" to channel,
+                        "fileName" to pnFile.name,
+                        "fileId" to pnFile.id,
+                        "message" to (message ?: ""),
+                        "meta" to (meta ?: ""),
+                        "ttl" to (ttl ?: 0),
+                        "shouldStore" to (shouldStore ?: true),
+                        "customMessageType" to (customMessageType ?: ""),
+                        "queryParams" to queryParams
+                    )
+                ),
+                details = "PublishFileMessage API call"
+            )
+        )
+
         val stringifiedMessage: String = pubnub.mapper.toJson(FileUploadNotification(message, pnFile))
         val messageAsString = configuration.cryptoModule?.encryptString(stringifiedMessage)?.quoted() ?: stringifiedMessage
         meta?.let {

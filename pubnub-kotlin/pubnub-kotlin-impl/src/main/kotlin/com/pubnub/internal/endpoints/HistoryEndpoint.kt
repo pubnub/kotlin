@@ -5,12 +5,18 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.History
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
+import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.models.consumer.history.PNHistoryItemResult
 import com.pubnub.api.models.consumer.history.PNHistoryResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.extension.tryDecryptMessage
+import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.LoggerManager
+import org.slf4j.event.Level
 import retrofit2.Call
 import retrofit2.Response
 import java.util.Locale
@@ -28,6 +34,7 @@ class HistoryEndpoint internal constructor(
     override val includeTimetoken: Boolean,
     override val includeMeta: Boolean,
 ) : EndpointCore<JsonElement, PNHistoryResult>(pubnub), History {
+    private val log: ExtendedLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
     private val countParam: Int =
         if (count in 1..PNHistoryResult.MAX_COUNT) {
             count
@@ -45,6 +52,28 @@ class HistoryEndpoint internal constructor(
     override fun getAffectedChannels() = listOf(channel)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<JsonElement> {
+        log.trace(
+            LogMessage(
+                pubNubId = pubnub.instanceId,
+                logLevel = Level.TRACE,
+                location = this::class.java.toString(),
+                type = LogMessageType.OBJECT,
+                message = LogMessageContent.Object(
+                    message = mapOf(
+                        "channel" to channel,
+                        "start" to (start ?: ""),
+                        "end" to (end ?: ""),
+                        "count" to count,
+                        "reverse" to reverse,
+                        "includeTimetoken" to includeTimetoken,
+                        "includeMeta" to includeMeta,
+                        "queryParams" to queryParams
+                    )
+                ),
+                details = "History API call"
+            )
+        )
+
         addQueryParams(queryParams)
 
         return retrofitManager.historyService.fetchHistory(

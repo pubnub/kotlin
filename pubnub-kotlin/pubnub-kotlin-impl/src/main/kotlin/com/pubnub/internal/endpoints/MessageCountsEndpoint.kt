@@ -5,11 +5,17 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.MessageCounts
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
+import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.models.consumer.history.PNMessageCountResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.toCsv
+import org.slf4j.event.Level
 import retrofit2.Call
 import retrofit2.Response
 
@@ -21,6 +27,8 @@ class MessageCountsEndpoint internal constructor(
     override val channels: List<String>,
     override val channelsTimetoken: List<Long>,
 ) : EndpointCore<JsonElement, PNMessageCountResult>(pubnub), MessageCounts {
+    private val log: ExtendedLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+
     override fun validateParams() {
         super.validateParams()
         if (channels.isEmpty()) {
@@ -37,6 +45,23 @@ class MessageCountsEndpoint internal constructor(
     override fun getAffectedChannels() = channels
 
     override fun doWork(queryParams: HashMap<String, String>): Call<JsonElement> {
+        log.trace(
+            LogMessage(
+                pubNubId = pubnub.instanceId,
+                logLevel = Level.TRACE,
+                location = this::class.java.toString(),
+                type = LogMessageType.OBJECT,
+                message = LogMessageContent.Object(
+                    message = mapOf(
+                        "channels" to channels,
+                        "channelsTimetoken" to channelsTimetoken,
+                        "queryParams" to queryParams
+                    )
+                ),
+                details = "MessageCounts API call"
+            )
+        )
+
         addQueryParams(queryParams)
 
         return retrofitManager.historyService.fetchCount(

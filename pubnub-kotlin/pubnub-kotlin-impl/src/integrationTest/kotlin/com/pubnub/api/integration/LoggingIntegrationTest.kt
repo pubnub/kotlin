@@ -85,11 +85,11 @@ class LoggingIntegrationTest : BaseIntegrationTest() {
     class CustomLoggerTestImpl : CustomLogger {
         override val name: String = "CustomLoggerTestImpl"
 
-        override fun info(message: String?) {
+        override fun trace(message: String?) {
             stringMessages.add(message ?: "")
         }
 
-        override fun info(message: LogMessage) {
+        override fun trace(message: LogMessage) {
             logMessages.add(message)
         }
 

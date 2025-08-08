@@ -6,10 +6,16 @@ import com.pubnub.api.endpoints.push.ListPushProvisions
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
+import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.models.consumer.push.PNPushListProvisionsResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.LoggerManager
+import org.slf4j.event.Level
 import retrofit2.Call
 import retrofit2.Response
 import java.util.Locale
@@ -24,6 +30,8 @@ class ListPushProvisionsEndpoint internal constructor(
     override val topic: String? = null,
     override val environment: PNPushEnvironment = PNPushEnvironment.DEVELOPMENT,
 ) : EndpointCore<List<String>, PNPushListProvisionsResult>(pubnub), ListPushProvisions {
+    private val log: ExtendedLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+
     override fun validateParams() {
         super.validateParams()
         if (deviceId.isBlank()) {
@@ -35,6 +43,25 @@ class ListPushProvisionsEndpoint internal constructor(
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<List<String>> {
+        log.trace(
+            LogMessage(
+                pubNubId = pubnub.instanceId,
+                logLevel = Level.TRACE,
+                location = this::class.java.toString(),
+                type = LogMessageType.OBJECT,
+                message = LogMessageContent.Object(
+                    message = mapOf(
+                        "pushType" to pushType,
+                        "deviceId" to deviceId,
+                        "topic" to (topic ?: ""),
+                        "environment" to environment,
+                        "queryParams" to queryParams
+                    )
+                ),
+                details = "ListPushProvisions API call"
+            )
+        )
+
         addQueryParams(queryParams)
 
         return if (pushType != PNPushType.APNS2) {

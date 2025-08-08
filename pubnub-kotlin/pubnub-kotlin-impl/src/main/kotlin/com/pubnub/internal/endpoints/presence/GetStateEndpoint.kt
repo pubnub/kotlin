@@ -5,12 +5,18 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.presence.GetState
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
+import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.models.consumer.presence.PNGetStateResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.models.server.Envelope
 import com.pubnub.internal.toCsv
+import org.slf4j.event.Level
 import retrofit2.Call
 import retrofit2.Response
 
@@ -23,6 +29,8 @@ class GetStateEndpoint internal constructor(
     override val channelGroups: List<String>,
     override val uuid: String = pubnub.configuration.userId.value,
 ) : EndpointCore<Envelope<JsonElement>, PNGetStateResult>(pubnub), GetState {
+    private val log: ExtendedLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+
     override fun getAffectedChannels() = channels
 
     override fun getAffectedChannelGroups() = channelGroups
@@ -35,6 +43,24 @@ class GetStateEndpoint internal constructor(
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<JsonElement>> {
+        log.trace(
+            LogMessage(
+                pubNubId = pubnub.instanceId,
+                logLevel = Level.TRACE,
+                location = this::class.java.toString(),
+                type = LogMessageType.OBJECT,
+                message = LogMessageContent.Object(
+                    message = mapOf(
+                        "channels" to channels,
+                        "channelGroups" to channelGroups,
+                        "uuid" to uuid,
+                        "queryParams" to queryParams
+                    )
+                ),
+                details = "GetState API call"
+            )
+        )
+
         addQueryParams(queryParams)
 
         return retrofitManager.presenceService.getState(

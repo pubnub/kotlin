@@ -2,13 +2,19 @@ package com.pubnub.internal.endpoints.objects.channel
 
 import com.pubnub.api.endpoints.objects.channel.GetChannelMetadata
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
+import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.endpoints.objects.internal.IncludeQueryParam
+import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.models.server.objects_api.EntityEnvelope
+import org.slf4j.event.Level
 import retrofit2.Call
 import retrofit2.Response
 
@@ -20,7 +26,24 @@ class GetChannelMetadataEndpoint internal constructor(
     private val channel: String,
     private val includeQueryParam: IncludeQueryParam,
 ) : EndpointCore<EntityEnvelope<PNChannelMetadata>, PNChannelMetadataResult>(pubnub), GetChannelMetadata {
+    private val log: ExtendedLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNChannelMetadata>> {
+        log.trace(
+            LogMessage(
+                pubNubId = pubnub.instanceId,
+                logLevel = Level.TRACE,
+                location = this::class.java.toString(),
+                type = LogMessageType.OBJECT,
+                message = LogMessageContent.Object(
+                    message = mapOf(
+                        "channel" to channel,
+                        "queryParams" to queryParams
+                    )
+                ),
+                details = "GetChannelMetadata API call"
+            )
+        )
         val params = queryParams + includeQueryParam.createIncludeQueryParams()
         return retrofitManager.objectsService.getChannelMetadata(
             subKey = configuration.subscribeKey,

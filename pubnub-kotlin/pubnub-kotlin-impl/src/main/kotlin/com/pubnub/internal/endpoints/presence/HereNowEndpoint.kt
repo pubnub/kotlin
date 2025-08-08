@@ -3,14 +3,20 @@ package com.pubnub.internal.endpoints.presence
 import com.google.gson.JsonElement
 import com.pubnub.api.endpoints.presence.HereNow
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
+import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.models.consumer.presence.PNHereNowChannelData
 import com.pubnub.api.models.consumer.presence.PNHereNowOccupantData
 import com.pubnub.api.models.consumer.presence.PNHereNowResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.models.server.Envelope
 import com.pubnub.internal.toCsv
+import org.slf4j.event.Level
 import retrofit2.Call
 import retrofit2.Response
 
@@ -24,6 +30,8 @@ class HereNowEndpoint internal constructor(
     override val includeState: Boolean = false,
     override val includeUUIDs: Boolean = true,
 ) : EndpointCore<Envelope<JsonElement>, PNHereNowResult>(pubnub), HereNow {
+    private val log: ExtendedLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+
     private fun isGlobalHereNow() = channels.isEmpty() && channelGroups.isEmpty()
 
     override fun getAffectedChannels() = channels
@@ -31,6 +39,26 @@ class HereNowEndpoint internal constructor(
     override fun getAffectedChannelGroups() = channelGroups
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<JsonElement>> {
+        log.trace(
+            LogMessage(
+                pubNubId = pubnub.instanceId,
+                logLevel = Level.TRACE,
+                location = this::class.java.toString(),
+                type = LogMessageType.OBJECT,
+                message = LogMessageContent.Object(
+                    message = mapOf(
+                        "channels" to channels,
+                        "channelGroups" to channelGroups,
+                        "includeState" to includeState,
+                        "includeUUIDs" to includeUUIDs,
+                        "isGlobalHereNow" to isGlobalHereNow(),
+                        "queryParams" to queryParams
+                    )
+                ),
+                details = "HereNow API call"
+            )
+        )
+
         addQueryParams(queryParams)
 
         return if (!isGlobalHereNow()) {

@@ -5,11 +5,17 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.endpoints.files.DownloadFile
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
+import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.models.consumer.files.PNDownloadFileResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.LoggerManager
 import okhttp3.ResponseBody
+import org.slf4j.event.Level
 import retrofit2.Call
 import retrofit2.Response
 
@@ -23,6 +29,8 @@ class DownloadFileEndpoint(
     private val cryptoModule: CryptoModule? = null,
     pubNub: PubNubImpl,
 ) : EndpointCore<ResponseBody, PNDownloadFileResult>(pubNub), DownloadFile {
+    private val log: ExtendedLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+
     @Throws(PubNubException::class)
     override fun validateParams() {
         if (channel.isEmpty()) {
@@ -31,14 +39,34 @@ class DownloadFileEndpoint(
     }
 
     @Throws(PubNubException::class)
-    override fun doWork(queryParams: HashMap<String, String>): Call<ResponseBody> =
-        retrofitManager.filesService.downloadFile(
+    override fun doWork(queryParams: HashMap<String, String>): Call<ResponseBody> {
+        log.trace(
+            LogMessage(
+                pubNubId = pubnub.instanceId,
+                logLevel = Level.TRACE,
+                location = this::class.java.toString(),
+                type = LogMessageType.OBJECT,
+                message = LogMessageContent.Object(
+                    message = mapOf(
+                        "channel" to channel,
+                        "fileName" to fileName,
+                        "fileId" to fileId,
+                        "cryptoModule" to (cryptoModule != null).toString(),
+                        "queryParams" to queryParams
+                    )
+                ),
+                details = "DownloadFile API call"
+            )
+        )
+
+        return retrofitManager.filesService.downloadFile(
             configuration.subscribeKey,
             channel,
             fileId,
             fileName,
             queryParams,
         )
+    }
 
     @Throws(PubNubException::class)
     override fun createResponse(input: Response<ResponseBody>): PNDownloadFileResult {

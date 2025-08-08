@@ -2,6 +2,9 @@ package com.pubnub.internal.endpoints.objects.membership
 
 import com.pubnub.api.endpoints.objects.membership.GetMemberships
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
+import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult
 import com.pubnub.api.retry.RetryableEndpointGroup
@@ -10,7 +13,10 @@ import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.endpoints.objects.internal.CollectionQueryParameters
 import com.pubnub.internal.endpoints.objects.internal.IncludeQueryParam
 import com.pubnub.internal.extension.toPNChannelMembershipArrayResult
+import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.models.server.objects_api.EntityArrayEnvelope
+import org.slf4j.event.Level
 import retrofit2.Call
 import retrofit2.Response
 
@@ -24,7 +30,24 @@ class GetMembershipsEndpoint internal constructor(
     private val includeQueryParam: IncludeQueryParam,
 ) : EndpointCore<EntityArrayEnvelope<PNChannelMembership>, PNChannelMembershipArrayResult>(pubnub),
     GetMemberships {
+    private val log: ExtendedLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityArrayEnvelope<PNChannelMembership>> {
+        log.trace(
+            LogMessage(
+                pubNubId = pubnub.instanceId,
+                logLevel = Level.TRACE,
+                location = this::class.java.toString(),
+                type = LogMessageType.OBJECT,
+                message = LogMessageContent.Object(
+                    message = mapOf(
+                        "uuid" to uuid,
+                        "queryParams" to queryParams
+                    )
+                ),
+                details = "GetMemberships API call"
+            )
+        )
         val params =
             queryParams + collectionQueryParameters.createCollectionQueryParams() + includeQueryParam.createIncludeQueryParams()
 

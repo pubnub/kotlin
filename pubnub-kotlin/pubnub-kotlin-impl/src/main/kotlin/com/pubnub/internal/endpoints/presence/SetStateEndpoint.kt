@@ -6,13 +6,19 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.presence.SetState
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
+import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.models.consumer.presence.PNSetStateResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.models.server.Envelope
 import com.pubnub.internal.presence.eventengine.data.PresenceData
 import com.pubnub.internal.toCsv
+import org.slf4j.event.Level
 import retrofit2.Call
 import retrofit2.Response
 
@@ -27,6 +33,8 @@ class SetStateEndpoint internal constructor(
     override val uuid: String = pubnub.configuration.userId.value,
     private val presenceData: PresenceData,
 ) : EndpointCore<Envelope<JsonElement>, PNSetStateResult>(pubnub), SetState {
+    private val log: ExtendedLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+
     override fun getAffectedChannels() = channels
 
     override fun getAffectedChannelGroups() = channelGroups
@@ -39,6 +47,25 @@ class SetStateEndpoint internal constructor(
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<JsonElement>> {
+        log.trace(
+            LogMessage(
+                pubNubId = pubnub.instanceId,
+                logLevel = Level.TRACE,
+                location = this::class.java.toString(),
+                type = LogMessageType.OBJECT,
+                message = LogMessageContent.Object(
+                    message = mapOf(
+                        "channels" to channels,
+                        "channelGroups" to channelGroups,
+                        "state" to state,
+                        "uuid" to uuid,
+                        "queryParams" to queryParams
+                    )
+                ),
+                details = "SetState API call"
+            )
+        )
+
         if (uuid == pubnub.configuration.userId.value) {
             val stateCopy = pubnub.mapper.fromJson(pubnub.mapper.toJson(state), JsonElement::class.java)
             presenceData.channelStates.putAll(channels.associateWith { stateCopy })

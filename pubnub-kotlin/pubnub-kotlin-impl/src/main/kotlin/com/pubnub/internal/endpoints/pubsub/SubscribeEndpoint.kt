@@ -3,16 +3,24 @@ package com.pubnub.internal.endpoints.pubsub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
+import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.PubNubUtil
+import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.models.server.SubscribeEnvelope
 import com.pubnub.internal.toCsv
+import org.slf4j.event.Level
 import retrofit2.Call
 import retrofit2.Response
 
 class SubscribeEndpoint internal constructor(pubnub: PubNubImpl) : EndpointCore<SubscribeEnvelope, SubscribeEnvelope>(pubnub) {
+    private val log: ExtendedLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+
     var channels = emptyList<String>()
     var channelGroups = emptyList<String>()
     var timetoken: Long? = null
@@ -32,6 +40,27 @@ class SubscribeEndpoint internal constructor(pubnub: PubNubImpl) : EndpointCore<
     override fun getAffectedChannelGroups() = channelGroups
 
     override fun doWork(queryParams: HashMap<String, String>): Call<SubscribeEnvelope> {
+        log.trace(
+            LogMessage(
+                pubNubId = pubnub.instanceId,
+                logLevel = Level.TRACE,
+                location = this::class.java.toString(),
+                type = LogMessageType.OBJECT,
+                message = LogMessageContent.Object(
+                    message = mapOf(
+                        "channels" to channels,
+                        "channelGroups" to channelGroups,
+                        "timetoken" to (timetoken ?: 0L),
+                        "region" to (region ?: ""),
+                        "state" to (state ?: ""),
+                        "filterExpression" to (filterExpression ?: ""),
+                        "queryParams" to queryParams
+                    )
+                ),
+                details = "Subscribe API call"
+            )
+        )
+
         addQueryParams(queryParams)
 
         return retrofitManager.subscribeService.subscribe(

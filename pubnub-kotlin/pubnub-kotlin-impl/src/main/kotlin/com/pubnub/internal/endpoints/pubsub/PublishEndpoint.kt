@@ -51,10 +51,10 @@ class PublishEndpoint internal constructor(
     override fun getAffectedChannels() = listOf(channel)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<List<Any>> {
-        log.info(
+        log.trace(
             LogMessage(
                 pubNubId = pubnub.instanceId,
-                logLevel = Level.INFO,
+                logLevel = Level.TRACE,
                 location = this::class.java.toString(),
                 type = LogMessageType.OBJECT,
                 message = LogMessageContent.Object(
