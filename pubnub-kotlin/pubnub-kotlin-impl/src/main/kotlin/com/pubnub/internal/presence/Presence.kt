@@ -65,6 +65,7 @@ internal interface Presence {
                 eventEngine = PresenceEventEngine(
                     effectSink = eventEngineConf.effectSink,
                     eventSource = eventEngineConf.eventSource,
+                    logConfig = logConfig,
                 ),
                 eventSink = eventEngineConf.eventSink,
                 effectDispatcher = EffectDispatcher(

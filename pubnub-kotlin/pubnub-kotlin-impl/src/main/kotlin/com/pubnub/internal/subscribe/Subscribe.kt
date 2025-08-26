@@ -72,6 +72,7 @@ internal class Subscribe(
                 SubscribeEventEngine(
                     effectSink = eventEnginesConf.subscribe.effectSink,
                     eventSource = eventEnginesConf.subscribe.eventSource,
+                    logConfig = pubNub.logConfig,
                 )
             val subscribeEffectDispatcher =
                 EffectDispatcher(

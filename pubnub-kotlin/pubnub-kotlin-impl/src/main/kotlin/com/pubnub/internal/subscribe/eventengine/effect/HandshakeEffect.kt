@@ -21,7 +21,7 @@ internal class HandshakeEffect(
     private val log = LoggerManager.instance.getLogger(logConfig, this::class.java)
 
     override fun runEffect() {
-        log.error(
+        log.trace(
             LogMessage(
                 pubNubId = logConfig.pnInstanceId,
                 logLevel = Level.TRACE,
