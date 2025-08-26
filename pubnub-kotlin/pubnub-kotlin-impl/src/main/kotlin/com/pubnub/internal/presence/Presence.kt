@@ -70,6 +70,7 @@ internal interface Presence {
                 effectDispatcher = EffectDispatcher(
                     effectFactory = effectFactory,
                     effectSource = eventEngineConf.effectSource,
+                    logConfig = logConfig,
                 ),
             ).also { it.start() }
 

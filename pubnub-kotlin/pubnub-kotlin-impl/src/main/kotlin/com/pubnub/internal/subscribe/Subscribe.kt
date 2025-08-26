@@ -77,6 +77,7 @@ internal class Subscribe(
                 EffectDispatcher(
                     effectFactory = subscribeEffectFactory,
                     effectSource = eventEnginesConf.subscribe.effectSource,
+                    logConfig = pubNub.logConfig,
                 )
 
             val subscribeEventEngineManager =
