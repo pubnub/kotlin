@@ -399,6 +399,15 @@ actual interface PNConfiguration {
         /**
          * Set to [PNLogVerbosity.BODY] to enable logging of network traffic, otherwise se to [PNLogVerbosity.NONE].
          */
+        @Deprecated(
+            message = "LogVerbosity setting is deprecated and will be removed in future versions. " +
+                    "For logging configuration:\n" +
+                    "1. Use an SLF4J implementation (recommended)\n" +
+                    "2. Or implement CustomLogger interface and set via customLoggers property. " +
+                    "Use CustomLogger if your slf4j implementation like logback, log4j2, etc. can't meet " +
+                    "your specific logging requirements.",
+            level = DeprecationLevel.WARNING
+        )
         var logVerbosity: PNLogVerbosity
 
         /**
@@ -560,10 +569,10 @@ actual interface PNConfiguration {
          * @see [HttpLoggingInterceptor]
          */
         @Deprecated(
-            message = "This setting is deprecated. Use customLoggers  instead",
+            message = "This setting is deprecated. Use customLoggers instead",
             level = DeprecationLevel.WARNING
         )
-        var httpLoggingInterceptor: HttpLoggingInterceptor? // todo deprecate since we introduce  customLoggers
+        var httpLoggingInterceptor: HttpLoggingInterceptor?
 
         /**
          * @see [SSLSocketFactory]
@@ -617,9 +626,8 @@ actual interface PNConfiguration {
         var managePresenceListManually: Boolean
 
         /**
-         * Custom logger factory for creating additional logger instances.
-         * The InMemoryLogger will always be used as the base logger.
-         * If provided, this factory will create a logger that wraps the base logger.
+         * Custom loggers list for creating additional logger instances.
+         * Use it if your slf4j implementation like logback, log4j2, etc. can't meet your specific logging requirements.
          */
         var customLoggers: List<CustomLogger>?
 

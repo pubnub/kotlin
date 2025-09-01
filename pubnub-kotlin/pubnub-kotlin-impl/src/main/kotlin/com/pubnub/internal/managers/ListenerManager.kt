@@ -28,6 +28,10 @@ class ListenerManager(val pubnub: PubNub) : MessagesConsumer, StatusConsumer, Ev
     private val eventListeners get() = listeners.filterIsInstance<EventListener>()
 
     private val log = LoggerFactory.getLogger(this.javaClass.simpleName)
+//    private val log = LoggerManager.instance.getLogger(pubnub.logConfig)
+//
+//    private val logger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+
 
     /**
      * Add a listener.

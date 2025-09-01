@@ -155,7 +155,6 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
             subscribeKey = Keys.pamSubKey
             publishKey = Keys.pamPubKey
             logVerbosity = PNLogVerbosity.NONE
-            httpLoggingInterceptor = CommonUtils.createInterceptor(logger)
         }
 
         // setToken

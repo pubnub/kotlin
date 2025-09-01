@@ -5,18 +5,15 @@ import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.v2.PNConfiguration
-import com.pubnub.test.CommonUtils.createInterceptor
 import com.pubnub.test.Keys
+import okhttp3.logging.HttpLoggingInterceptor
 import org.junit.After
 import org.junit.Before
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
-import org.slf4j.LoggerFactory
 import java.util.UUID
 
 abstract class BaseIntegrationTest {
-    protected val logger = LoggerFactory.getLogger(this.javaClass.simpleName)
-
     val pubnub: PubNub by lazy { createPubNub() }
     val server: PubNub by lazy { createServer() }
     var clientConfig: PNConfiguration.Builder.() -> Unit = {}
@@ -95,7 +92,6 @@ abstract class BaseIntegrationTest {
         }
         clientConfig.retryConfiguration = RetryConfiguration.None
         clientConfig.logVerbosity = PNLogVerbosity.NONE
-//        clientConfig.httpLoggingInterceptor = createInterceptor(logger) // todo remove when all places get logging statements
 
         return clientConfig
     }
@@ -105,7 +101,7 @@ abstract class BaseIntegrationTest {
         serverConfig.publishKey = Keys.pamPubKey
         serverConfig.secretKey = Keys.pamSecKey
         serverConfig.logVerbosity = PNLogVerbosity.NONE
-        serverConfig.httpLoggingInterceptor = createInterceptor(logger)
+        serverConfig.httpLoggingInterceptor = HttpLoggingInterceptor()
         serverConfig.action()
 
         return serverConfig.build()

@@ -26,7 +26,7 @@ class PNConfigurationImpl(
     override val secretKey: String = "",
     override val authKey: String = "",
     override val authToken: String? = null, // this property is not used, user can't create configuration with authToken
-    override val cryptoModule: CryptoModule? = null, // todo same as in kotlin
+    override val cryptoModule: CryptoModule? = null,
     override val origin: String = "",
     override val secure: Boolean = true,
     override val logVerbosity: PNLogVerbosity = PNLogVerbosity.NONE,
@@ -144,6 +144,15 @@ class PNConfigurationImpl(
 
             override var secure: Boolean = defaultConfiguration.secure
 
+            @Deprecated(
+                message = "LogVerbosity setting is deprecated and will be removed in future versions. " +
+                        "For logging configuration:\n" +
+                        "1. Use an SLF4J implementation (recommended)\n" +
+                        "2. Or implement CustomLogger interface and set via customLoggers property. " +
+                        "Use CustomLogger if your slf4j implementation like logback, log4j2, etc. can't meet " +
+                        "your specific logging requirements.",
+                level = DeprecationLevel.WARNING
+            )
             override fun logVerbosity(logVerbosity: PNLogVerbosity): Builder {
                 this.logVerbosity = logVerbosity
                 return this
@@ -292,6 +301,10 @@ class PNConfigurationImpl(
 
             override var certificatePinner: CertificatePinner? = defaultConfiguration.certificatePinner
 
+            @Deprecated(
+                message = "This setting is deprecated. Use customLoggers instead.",
+                level = DeprecationLevel.WARNING
+            )
             override fun httpLoggingInterceptor(httpLoggingInterceptor: HttpLoggingInterceptor?): Builder {
                 this.httpLoggingInterceptor = httpLoggingInterceptor
                 return this
