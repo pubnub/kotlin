@@ -1,5 +1,6 @@
 package com.pubnub.internal.logging
 
+import com.pubnub.api.logging.LogConfig
 import org.slf4j.Logger
 
 /**

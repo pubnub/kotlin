@@ -89,7 +89,7 @@ internal class SubscribeMessageProcessor(
             )
         } else {
             val (extractedMessage, error) =
-                message.payload?.tryDecryptMessage(pubnub.configuration.cryptoModule, pubnub.mapper)
+                message.payload?.tryDecryptMessage(pubnub.cryptoModuleWithLogConfig, pubnub.mapper)
                     ?: (null to null)
 
             if (extractedMessage == null) {

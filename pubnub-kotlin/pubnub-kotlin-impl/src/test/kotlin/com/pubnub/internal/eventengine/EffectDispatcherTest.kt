@@ -1,6 +1,6 @@
 package com.pubnub.internal.eventengine
 
-import com.pubnub.internal.logging.LogConfig
+import com.pubnub.api.logging.LogConfig
 import com.pubnub.internal.subscribe.eventengine.effect.SubscribeEffectInvocation
 import io.mockk.every
 import io.mockk.mockk

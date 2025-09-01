@@ -1,12 +1,12 @@
 package com.pubnub.internal.presence.eventengine.effect
 
+import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.logging.LogMessageType
 import com.pubnub.internal.eventengine.ManagedEffect
 import com.pubnub.internal.eventengine.Sink
 import com.pubnub.internal.extension.scheduleWithDelay
-import com.pubnub.internal.logging.LogConfig
 import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.presence.eventengine.event.PresenceEvent
 import org.slf4j.event.Level

@@ -5,9 +5,11 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.crypto.cryptor.Cryptor
 import com.pubnub.api.crypto.data.EncryptedData
 import com.pubnub.api.crypto.data.EncryptedStreamData
+import com.pubnub.api.logging.LogConfig
 import com.pubnub.internal.crypto.CryptoModuleImpl
 import com.pubnub.internal.crypto.cryptor.AesCbcCryptor
 import com.pubnub.internal.crypto.cryptor.LegacyCryptor
+import com.pubnub.internal.crypto.withLogConfig
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.containsInAnyOrder
@@ -346,6 +348,44 @@ class CryptoModuleTest {
         val encrypted = cryptoModule.encryptStream(input.byteInputStream())
         val decrypted = cryptoModule.decryptStream(encrypted)
         assertEquals(input, String(decrypted.readBytes()))
+    }
+
+    @Test
+    fun `should inject LogConfig into CryptoModule created as LegacyCryptoModule`() {
+        // given
+        val cipherKey = "enigma"
+        val cryptoModule = CryptoModule.createLegacyCryptoModule(cipherKey) as CryptoModuleImpl
+        val logConfig = LogConfig(
+            pnInstanceId = "test-instance-id",
+            userId = "test-user-id"
+        )
+
+        // when
+        val cryptoModuleWithLogConfig = cryptoModule.withLogConfig(logConfig) as CryptoModuleImpl
+
+        // then
+        assertEquals(logConfig, cryptoModuleWithLogConfig.logConfig)
+        assertTrue(cryptoModuleWithLogConfig.primaryCryptor is LegacyCryptor)
+        assertEquals(cryptoModule.cryptorsForDecryptionOnly, cryptoModuleWithLogConfig.cryptorsForDecryptionOnly)
+    }
+
+    @Test
+    fun `should inject LogConfig into CryptoModule created as AesCbcCryptoModule`() {
+        // given
+        val cipherKey = "enigma"
+        val cryptoModule = CryptoModule.createAesCbcCryptoModule(cipherKey) as CryptoModuleImpl
+        val logConfig = LogConfig(
+            pnInstanceId = "test-instance-id",
+            userId = "test-user-id"
+        )
+
+        // when
+        val cryptoModuleWithLogConfig = cryptoModule.withLogConfig(logConfig) as CryptoModuleImpl
+
+        // then
+        assertEquals(logConfig, cryptoModuleWithLogConfig.logConfig)
+        assertTrue(cryptoModuleWithLogConfig.primaryCryptor is AesCbcCryptor)
+        assertEquals(cryptoModule.cryptorsForDecryptionOnly, cryptoModuleWithLogConfig.cryptorsForDecryptionOnly)
     }
 
     companion object {

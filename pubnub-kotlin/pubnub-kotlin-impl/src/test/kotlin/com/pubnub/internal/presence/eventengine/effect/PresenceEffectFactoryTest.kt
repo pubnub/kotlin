@@ -2,8 +2,8 @@ package com.pubnub.internal.presence.eventengine.effect
 
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
+import com.pubnub.api.logging.LogConfig
 import com.pubnub.internal.eventengine.Sink
-import com.pubnub.internal.logging.LogConfig
 import com.pubnub.internal.presence.eventengine.data.PresenceData
 import com.pubnub.internal.presence.eventengine.effect.effectprovider.HeartbeatProvider
 import com.pubnub.internal.presence.eventengine.effect.effectprovider.LeaveProvider

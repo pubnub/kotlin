@@ -5,10 +5,12 @@ import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.logging.CustomLogger
+import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.PNConfigurationOverride
+import com.pubnub.internal.crypto.withLogConfig
 import okhttp3.Authenticator
 import okhttp3.CertificatePinner
 import okhttp3.ConnectionSpec
@@ -26,7 +28,7 @@ class PNConfigurationImpl(
     override val secretKey: String = "",
     override val authKey: String = "",
     override val authToken: String? = null,
-    override val cryptoModule: CryptoModule? = null,
+    override val cryptoModule: CryptoModule? = null, // don't use getter directly use getCryptoModuleWithLogConfig to be able to properly configure logging in CryptoModule
     override val origin: String = "",
     override val secure: Boolean = true,
     override val logVerbosity: PNLogVerbosity = PNLogVerbosity.NONE,
@@ -80,6 +82,10 @@ class PNConfigurationImpl(
         const val NON_SUBSCRIBE_REQUEST_TIMEOUT = 10
         const val SUBSCRIBE_TIMEOUT = 310
         const val CONNECT_TIMEOUT = 5
+    }
+
+    fun getCryptoModuleWithLogConfig(logConfig: LogConfig): CryptoModule? {
+        return cryptoModule?.withLogConfig(logConfig)
     }
 
     class Builder(defaultConfiguration: PNConfiguration) :

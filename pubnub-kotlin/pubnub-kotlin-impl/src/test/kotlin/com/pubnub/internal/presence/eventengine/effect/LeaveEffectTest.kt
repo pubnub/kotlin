@@ -1,7 +1,7 @@
 package com.pubnub.internal.presence.eventengine.effect
 
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
-import com.pubnub.internal.logging.LogConfig
+import com.pubnub.api.logging.LogConfig
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just

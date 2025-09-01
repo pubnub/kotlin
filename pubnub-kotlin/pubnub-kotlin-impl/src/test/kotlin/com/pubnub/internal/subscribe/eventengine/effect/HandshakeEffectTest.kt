@@ -2,9 +2,9 @@ package com.pubnub.internal.subscribe.eventengine.effect
 
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
+import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.internal.eventengine.Sink
-import com.pubnub.internal.logging.LogConfig
 import com.pubnub.internal.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.internal.subscribe.eventengine.event.SubscriptionCursor
 import io.mockk.spyk

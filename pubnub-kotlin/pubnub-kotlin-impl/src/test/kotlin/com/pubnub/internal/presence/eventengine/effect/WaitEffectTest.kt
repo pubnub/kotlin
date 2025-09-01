@@ -1,6 +1,6 @@
 package com.pubnub.internal.presence.eventengine.effect
 
-import com.pubnub.internal.logging.LogConfig
+import com.pubnub.api.logging.LogConfig
 import com.pubnub.internal.presence.eventengine.event.PresenceEvent
 import com.pubnub.internal.subscribe.eventengine.effect.TestEventSink
 import org.awaitility.Awaitility

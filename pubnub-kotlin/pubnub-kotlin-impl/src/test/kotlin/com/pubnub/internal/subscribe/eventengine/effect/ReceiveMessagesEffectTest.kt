@@ -3,10 +3,10 @@ package com.pubnub.internal.subscribe.eventengine.effect
 import com.google.gson.JsonPrimitive
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
+import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
-import com.pubnub.internal.logging.LogConfig
 import com.pubnub.internal.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.internal.subscribe.eventengine.event.SubscriptionCursor
 import io.mockk.spyk

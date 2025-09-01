@@ -1,6 +1,4 @@
-package com.pubnub.internal.logging
-
-import com.pubnub.api.logging.CustomLogger
+package com.pubnub.api.logging
 
 /**
  * Configuration for logging system with validation.

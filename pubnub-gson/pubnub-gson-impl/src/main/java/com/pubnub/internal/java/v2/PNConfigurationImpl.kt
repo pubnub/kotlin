@@ -26,7 +26,7 @@ class PNConfigurationImpl(
     override val secretKey: String = "",
     override val authKey: String = "",
     override val authToken: String? = null, // this property is not used, user can't create configuration with authToken
-    override val cryptoModule: CryptoModule? = null,
+    override val cryptoModule: CryptoModule? = null, // todo same as in kotlin
     override val origin: String = "",
     override val secure: Boolean = true,
     override val logVerbosity: PNLogVerbosity = PNLogVerbosity.NONE,

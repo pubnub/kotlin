@@ -1,6 +1,7 @@
 package com.pubnub.internal.subscribe.eventengine.effect
 
 import com.google.gson.JsonPrimitive
+import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.models.consumer.files.PNDownloadableFile
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
@@ -13,7 +14,6 @@ import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResu
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetMembershipEvent
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetMembershipEventMessage
-import com.pubnub.internal.logging.LogConfig
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot

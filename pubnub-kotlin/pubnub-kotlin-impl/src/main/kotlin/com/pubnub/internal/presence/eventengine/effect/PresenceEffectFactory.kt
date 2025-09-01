@@ -1,10 +1,10 @@
 package com.pubnub.internal.presence.eventengine.effect
 
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
+import com.pubnub.api.logging.LogConfig
 import com.pubnub.internal.eventengine.Effect
 import com.pubnub.internal.eventengine.EffectFactory
 import com.pubnub.internal.eventengine.Sink
-import com.pubnub.internal.logging.LogConfig
 import com.pubnub.internal.presence.eventengine.data.PresenceData
 import com.pubnub.internal.presence.eventengine.effect.effectprovider.HeartbeatProvider
 import com.pubnub.internal.presence.eventengine.effect.effectprovider.LeaveProvider
@@ -39,7 +39,13 @@ internal class PresenceEffectFactory(
                             null
                         },
                     )
-                HeartbeatEffect(heartbeatRemoteAction, presenceEventSink, heartbeatNotificationOptions, statusConsumer, logConfig)
+                HeartbeatEffect(
+                    heartbeatRemoteAction,
+                    presenceEventSink,
+                    heartbeatNotificationOptions,
+                    statusConsumer,
+                    logConfig
+                )
             }
 
             is PresenceEffectInvocation.Leave -> {

@@ -1,5 +1,6 @@
 package com.pubnub.internal.subscribe.eventengine.effect
 
+import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.logging.LogMessageType
@@ -11,7 +12,6 @@ import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.internal.eventengine.Effect
-import com.pubnub.internal.logging.LogConfig
 import com.pubnub.internal.logging.LoggerManager
 import org.slf4j.event.Level
 

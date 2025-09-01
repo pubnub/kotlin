@@ -1,9 +1,9 @@
 package com.pubnub.internal.subscribe.eventengine
 
+import com.pubnub.api.logging.LogConfig
 import com.pubnub.internal.eventengine.EventEngine
 import com.pubnub.internal.eventengine.Sink
 import com.pubnub.internal.eventengine.Source
-import com.pubnub.internal.logging.LogConfig
 import com.pubnub.internal.subscribe.eventengine.effect.SubscribeEffectInvocation
 import com.pubnub.internal.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.internal.subscribe.eventengine.state.SubscribeState

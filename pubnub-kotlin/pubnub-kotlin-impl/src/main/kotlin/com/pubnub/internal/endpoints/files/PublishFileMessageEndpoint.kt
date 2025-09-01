@@ -74,7 +74,7 @@ open class PublishFileMessageEndpoint(
         )
 
         val stringifiedMessage: String = pubnub.mapper.toJson(FileUploadNotification(message, pnFile))
-        val messageAsString = configuration.cryptoModule?.encryptString(stringifiedMessage)?.quoted() ?: stringifiedMessage
+        val messageAsString = pubnub.cryptoModuleWithLogConfig?.encryptString(stringifiedMessage)?.quoted() ?: stringifiedMessage
         meta?.let {
             val stringifiedMeta: String = pubnub.mapper.toJson(it)
             queryParams["meta"] = stringifiedMeta

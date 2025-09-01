@@ -1,7 +1,7 @@
 package com.pubnub.internal.subscribe.eventengine.effect
 
+import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.models.consumer.PNStatus
-import com.pubnub.internal.logging.LogConfig
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot

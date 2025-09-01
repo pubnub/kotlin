@@ -1,6 +1,7 @@
 package com.pubnub.internal.logging
 
 import com.pubnub.api.logging.CustomLogger
+import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.logging.LogMessageType

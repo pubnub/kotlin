@@ -1,6 +1,7 @@
 package com.pubnub.api.crypto
 
 import com.pubnub.api.crypto.cryptor.Cryptor
+import com.pubnub.api.logging.LogConfig
 import java.io.InputStream
 
 interface CryptoModule {
@@ -16,7 +17,10 @@ interface CryptoModule {
         ): CryptoModule {
             return instantiateCryptoModuleImpl(
                 primaryCryptor = instantiateLegacyCryptor(cipherKey, randomIv),
-                cryptorsForDecryptionOnly = listOf(instantiateLegacyCryptor(cipherKey, randomIv), instantiateAesCbcCryptor(cipherKey)),
+                cryptorsForDecryptionOnly = listOf(
+                    instantiateLegacyCryptor(cipherKey, randomIv),
+                    instantiateAesCbcCryptor(cipherKey)
+                ),
             )
         }
 
@@ -27,7 +31,10 @@ interface CryptoModule {
         ): CryptoModule {
             return instantiateCryptoModuleImpl(
                 primaryCryptor = instantiateAesCbcCryptor(cipherKey),
-                cryptorsForDecryptionOnly = listOf(instantiateAesCbcCryptor(cipherKey), instantiateLegacyCryptor(cipherKey, randomIv)),
+                cryptorsForDecryptionOnly = listOf(
+                    instantiateAesCbcCryptor(cipherKey),
+                    instantiateLegacyCryptor(cipherKey, randomIv)
+                ),
             )
         }
 
@@ -52,10 +59,13 @@ private fun instantiateCryptoModuleImpl(
     primaryCryptor: Cryptor,
     cryptorsForDecryptionOnly: List<Cryptor>,
 ): CryptoModule {
-    return Class.forName("com.pubnub.internal.crypto.CryptoModuleImpl").getConstructor(Cryptor::class.java, List::class.java).newInstance(
-        primaryCryptor,
-        cryptorsForDecryptionOnly,
-    ) as CryptoModule
+    return Class.forName("com.pubnub.internal.crypto.CryptoModuleImpl")
+        .getConstructor(Cryptor::class.java, List::class.java, LogConfig::class.java)
+        .newInstance(
+            primaryCryptor,
+            cryptorsForDecryptionOnly,
+            null
+        ) as CryptoModule
 }
 
 private fun instantiateLegacyCryptor(
@@ -71,7 +81,8 @@ private fun instantiateLegacyCryptor(
 }
 
 private fun instantiateAesCbcCryptor(cipherKey: String): Cryptor {
-    return Class.forName("com.pubnub.internal.crypto.cryptor.AesCbcCryptor").getConstructor(String::class.java).newInstance(
-        cipherKey,
-    ) as Cryptor
+    return Class.forName("com.pubnub.internal.crypto.cryptor.AesCbcCryptor").getConstructor(String::class.java)
+        .newInstance(
+            cipherKey,
+        ) as Cryptor
 }

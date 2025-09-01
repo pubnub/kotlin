@@ -1,9 +1,9 @@
 package com.pubnub.internal.eventengine
 
+import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.logging.LogMessageType
-import com.pubnub.internal.logging.LogConfig
 import com.pubnub.internal.logging.LoggerManager
 import org.slf4j.event.Level
 import java.util.concurrent.ExecutorService

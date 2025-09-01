@@ -110,7 +110,7 @@ class HistoryEndpoint internal constructor(
                 if (includeTimetoken || includeMeta) {
                     historyMessageWithError =
                         pubnub.mapper.getField(historyEntry, "message")!!
-                            .tryDecryptMessage(configuration.cryptoModule, pubnub.mapper)
+                            .tryDecryptMessage(pubnub.cryptoModuleWithLogConfig, pubnub.mapper)
                     if (includeTimetoken) {
                         timetoken = pubnub.mapper.elementToLong(historyEntry, "timetoken")
                     }
@@ -118,7 +118,7 @@ class HistoryEndpoint internal constructor(
                         meta = pubnub.mapper.getField(historyEntry, "meta")
                     }
                 } else {
-                    historyMessageWithError = historyEntry.tryDecryptMessage(configuration.cryptoModule, pubnub.mapper)
+                    historyMessageWithError = historyEntry.tryDecryptMessage(pubnub.cryptoModuleWithLogConfig, pubnub.mapper)
                 }
 
                 val message: JsonElement = historyMessageWithError.first

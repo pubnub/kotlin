@@ -1,10 +1,10 @@
 package com.pubnub.internal.presence
 
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
+import com.pubnub.api.logging.LogConfig
 import com.pubnub.contract.subscribe.eventEngine.state.TestSinkSource
 import com.pubnub.internal.eventengine.EventEngineConf
 import com.pubnub.internal.eventengine.QueueEventEngineConf
-import com.pubnub.internal.logging.LogConfig
 import com.pubnub.internal.managers.ListenerManager
 import com.pubnub.internal.presence.eventengine.data.PresenceData
 import com.pubnub.internal.presence.eventengine.effect.PresenceEffectInvocation
@@ -164,7 +164,9 @@ internal class PresenceTest {
     fun `should call heartbeat when joining channels with heartbeat interval 0`() {
         // given
         val heartbeatProviderMock: HeartbeatProvider = mockk()
-        every { heartbeatProviderMock.getHeartbeatRemoteAction(any(), any(), any()) } returns successfulRemoteAction(true)
+        every { heartbeatProviderMock.getHeartbeatRemoteAction(any(), any(), any()) } returns successfulRemoteAction(
+            true
+        )
 
         val presence =
             Presence.create(
@@ -184,7 +186,9 @@ internal class PresenceTest {
     fun `should not call heartbeat when joining empty channels with heartbeat interval 0`() {
         // given
         val heartbeatProviderMock: HeartbeatProvider = mockk()
-        every { heartbeatProviderMock.getHeartbeatRemoteAction(any(), any(), any()) } returns successfulRemoteAction(true)
+        every { heartbeatProviderMock.getHeartbeatRemoteAction(any(), any(), any()) } returns successfulRemoteAction(
+            true
+        )
 
         val presence =
             Presence.create(

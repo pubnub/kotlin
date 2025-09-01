@@ -52,6 +52,7 @@ import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice
 import com.pubnub.api.endpoints.push.RemoveChannelsFromPush
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
+import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions
 import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions
@@ -91,6 +92,7 @@ import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.internal.crypto.decryptString
 import com.pubnub.internal.crypto.encryptString
+import com.pubnub.internal.crypto.withLogConfig
 import com.pubnub.internal.endpoints.DeleteMessagesEndpoint
 import com.pubnub.internal.endpoints.FetchMessagesEndpoint
 import com.pubnub.internal.endpoints.HistoryEndpoint
@@ -141,7 +143,6 @@ import com.pubnub.internal.endpoints.push.RemoveAllPushChannelsForDeviceEndpoint
 import com.pubnub.internal.endpoints.push.RemoveChannelsFromPushEndpoint
 import com.pubnub.internal.logging.ConfigurationLogger.logConfiguration
 import com.pubnub.internal.logging.ExtendedLogger
-import com.pubnub.internal.logging.LogConfig
 import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.managers.BasePathManager
 import com.pubnub.internal.managers.DuplicationManager
@@ -158,6 +159,7 @@ import com.pubnub.internal.presence.eventengine.effect.effectprovider.LeaveProvi
 import com.pubnub.internal.subscribe.PRESENCE_CHANNEL_SUFFIX
 import com.pubnub.internal.subscribe.Subscribe
 import com.pubnub.internal.subscribe.eventengine.configuration.EventEnginesConf
+import com.pubnub.internal.v2.PNConfigurationImpl
 import com.pubnub.internal.v2.entities.ChannelGroupImpl
 import com.pubnub.internal.v2.entities.ChannelGroupName
 import com.pubnub.internal.v2.entities.ChannelImpl
@@ -190,6 +192,7 @@ open class PubNubImpl(
     init {
         this.setToken(configuration.authToken)
     }
+
     constructor(configuration: PNConfiguration) : this(configuration, PNSDK_PUBNUB_KOTLIN)
 
     val mapper = MapperManager()
@@ -238,6 +241,10 @@ open class PubNubImpl(
             executorService = executorService,
             logConfig = logConfig,
         )
+
+    internal val cryptoModuleWithLogConfig: CryptoModule? by lazy {
+        (configuration as? PNConfigurationImpl)?.getCryptoModuleWithLogConfig(logConfig)
+    }
 
     //region Internal
     internal fun baseUrl() = basePathManager.basePath()
@@ -288,7 +295,12 @@ open class PubNubImpl(
     }
 
     init {
-        logConfiguration(configuration = configuration, logger = logger, instanceId = instanceId, className = this::class.java)
+        logConfiguration(
+            configuration = configuration,
+            logger = logger,
+            instanceId = instanceId,
+            className = this::class.java
+        )
     }
 
     override fun subscriptionSetOf(
@@ -1465,6 +1477,7 @@ open class PubNubImpl(
                     includeUserType = includeUUIDType,
                 )
             }
+
             PNUUIDDetailsLevel.UUID_WITH_CUSTOM -> {
                 IncludeQueryParam(
                     includeCustom = includeCustom,
@@ -1473,6 +1486,7 @@ open class PubNubImpl(
                     includeUserType = includeUUIDType,
                 )
             }
+
             null -> IncludeQueryParam(includeCustom = includeCustom, includeUserType = includeUUIDType)
         }
         return ManageChannelMembersEndpoint(
@@ -1538,9 +1552,9 @@ open class PubNubImpl(
     ): SendFile {
         val cryptoModule =
             if (cipherKey != null) {
-                CryptoModule.createLegacyCryptoModule(cipherKey)
+                CryptoModule.createLegacyCryptoModule(cipherKey).withLogConfig(logConfig)
             } else {
-                configuration.cryptoModule
+                cryptoModuleWithLogConfig
             }
         return SendFileEndpoint(
             channel = channel,
@@ -1596,9 +1610,9 @@ open class PubNubImpl(
     ): DownloadFile {
         val cryptoModule =
             if (cipherKey != null) {
-                CryptoModule.createLegacyCryptoModule(cipherKey)
+                CryptoModule.createLegacyCryptoModule(cipherKey).withLogConfig(logConfig)
             } else {
-                configuration.cryptoModule
+                cryptoModuleWithLogConfig
             }
         return DownloadFileEndpoint(
             pubNub = this,
@@ -1660,8 +1674,10 @@ open class PubNubImpl(
     )
 
     private fun getCryptoModuleOrThrow(cipherKey: String? = null): CryptoModule {
-        return cipherKey?.let { cipherKeyNotNull -> CryptoModule.createLegacyCryptoModule(cipherKeyNotNull) }
-            ?: configuration.cryptoModule ?: throw PubNubException("Crypto module is not initialized")
+        return cipherKey?.let { cipherKeyNotNull ->
+            CryptoModule.createLegacyCryptoModule(cipherKeyNotNull).withLogConfig(logConfig)
+        }
+            ?: cryptoModuleWithLogConfig ?: throw PubNubException("Crypto module is not initialized")
     }
 
     @Throws(PubNubException::class)
@@ -1980,6 +1996,7 @@ open class PubNubImpl(
 
     @Throws(PubNubException::class)
     private fun getCryptoModuleOrThrow(cryptoModule: CryptoModule? = null): CryptoModule {
-        return cryptoModule ?: configuration.cryptoModule ?: throw PubNubException("Crypto module is not initialized")
+        return cryptoModule?.withLogConfig(logConfig) ?: cryptoModuleWithLogConfig
+            ?: throw PubNubException("Crypto module is not initialized")
     }
 }

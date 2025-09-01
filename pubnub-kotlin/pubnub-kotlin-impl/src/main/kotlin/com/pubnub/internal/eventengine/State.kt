@@ -1,8 +1,6 @@
 package com.pubnub.internal.eventengine
 
 internal interface State<Ei : EffectInvocation, Ev : Event, S : State<Ei, Ev, S>> {
-
-
     fun onEntry(): Set<Ei> = setOf()
 
     fun onExit(): Set<Ei> = setOf()
