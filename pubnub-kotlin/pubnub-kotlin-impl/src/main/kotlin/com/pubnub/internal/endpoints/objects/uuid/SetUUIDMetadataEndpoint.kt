@@ -11,7 +11,7 @@ import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.endpoints.objects.internal.IncludeQueryParam
-import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.models.server.objects_api.EntityEnvelope
 import com.pubnub.internal.models.server.objects_api.UUIDMetadataInput
@@ -35,7 +35,7 @@ class SetUUIDMetadataEndpoint internal constructor(
     private val status: String?,
     private val ifMatchesEtag: String?,
 ) : EndpointCore<EntityEnvelope<PNUUIDMetadata>, PNUUIDMetadataResult>(pubnub), SetUUIDMetadata {
-    private val log: ExtendedLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+    private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNUUIDMetadata>> {
         log.trace(

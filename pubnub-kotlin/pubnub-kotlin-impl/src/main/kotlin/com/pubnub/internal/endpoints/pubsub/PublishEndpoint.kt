@@ -15,7 +15,7 @@ import com.pubnub.internal.crypto.encryptString
 import com.pubnub.internal.extension.numericString
 import com.pubnub.internal.extension.quoted
 import com.pubnub.internal.extension.valueString
-import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.logging.LoggerManager
 import org.slf4j.event.Level
 import retrofit2.Call
@@ -35,7 +35,7 @@ class PublishEndpoint internal constructor(
     override val ttl: Int? = null,
     override val customMessageType: String? = null,
 ) : EndpointCore<List<Any>, PNPublishResult>(pubnub), Publish {
-    private val log: ExtendedLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+    private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     companion object {
         internal const val CUSTOM_MESSAGE_TYPE_QUERY_PARAM = "custom_message_type"

@@ -14,10 +14,10 @@ import org.slf4j.event.Level
  */
 class CompositeLogger(
     private val slf4jLogger: Logger,
-    private val toPortalLogger: ExtendedLogger? = null,
+    private val toPortalLogger: PNLogger? = null,
     private val customLoggers: List<CustomLogger>? = null,
     private val pnInstanceId: String? = null,
-) : ExtendedLogger {
+) : PNLogger {
     override fun trace(message: LogMessage) {
         slf4jLogger.trace(message.simplified())
         toPortalLogger?.trace(message)

@@ -13,7 +13,7 @@ import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.models.server.objects_api.EntityEnvelope
 import org.slf4j.event.Level
@@ -29,7 +29,7 @@ class AddMessageActionEndpoint internal constructor(
     override val channel: String,
     override val messageAction: PNMessageAction,
 ) : EndpointCore<EntityEnvelope<PNMessageAction>, PNAddMessageActionResult>(pubnub), AddMessageAction {
-    private val log: ExtendedLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+    private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     override fun validateParams() {
         super.validateParams()

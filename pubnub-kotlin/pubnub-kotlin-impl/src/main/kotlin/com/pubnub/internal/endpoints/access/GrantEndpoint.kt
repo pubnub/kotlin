@@ -14,7 +14,7 @@ import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.api.v2.PNConfiguration.Companion.isValid
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.models.server.Envelope
 import com.pubnub.internal.models.server.access_manager.AccessManagerGrantPayload
@@ -41,7 +41,7 @@ open class GrantEndpoint(
     override val channelGroups: List<String> = emptyList(),
     override val uuids: List<String> = emptyList(),
 ) : EndpointCore<Envelope<AccessManagerGrantPayload>, PNAccessManagerGrantResult>(pubnub), Grant {
-    private val log: ExtendedLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+    private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     override fun validateParams() {
         super.validateParams()

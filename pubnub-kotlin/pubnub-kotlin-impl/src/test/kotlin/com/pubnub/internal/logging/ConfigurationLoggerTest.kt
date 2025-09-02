@@ -18,7 +18,7 @@ class ConfigurationLoggerTest {
     @Test
     fun `should log configuration with all required fields`() {
         // Given
-        val mockLogger = mockk<ExtendedLogger>(relaxed = true)
+        val mockLogger = mockk<PNLogger>(relaxed = true)
         val logMessageSlot = slot<LogMessage>()
 
         val config = PNConfigurationImpl(
@@ -50,7 +50,7 @@ class ConfigurationLoggerTest {
     @Test
     fun `should handle optional fields correctly`() {
         // Given
-        val mockLogger = mockk<ExtendedLogger>(relaxed = true)
+        val mockLogger = mockk<PNLogger>(relaxed = true)
         val logMessageSlot = slot<LogMessage>()
 
         val config = PNConfigurationImpl(
@@ -82,7 +82,7 @@ class ConfigurationLoggerTest {
     @Test
     fun `should handle null and empty optional fields`() {
         // Given
-        val mockLogger = mockk<ExtendedLogger>(relaxed = true)
+        val mockLogger = mockk<PNLogger>(relaxed = true)
         val logMessageSlot = slot<LogMessage>()
 
         val config = PNConfigurationImpl(
@@ -114,7 +114,7 @@ class ConfigurationLoggerTest {
     @Test
     fun `should handle custom loggers configuration`() {
         // Given
-        val mockLogger = mockk<ExtendedLogger>(relaxed = true)
+        val mockLogger = mockk<PNLogger>(relaxed = true)
         val logMessageSlot = slot<LogMessage>()
         val customLogger = mockk<com.pubnub.api.logging.CustomLogger>()
 
@@ -141,7 +141,7 @@ class ConfigurationLoggerTest {
     @Test
     fun `should handle multiple custom loggers`() {
         // Given
-        val mockLogger = mockk<ExtendedLogger>(relaxed = true)
+        val mockLogger = mockk<PNLogger>(relaxed = true)
         val logMessageSlot = slot<LogMessage>()
         val customLogger1 = mockk<com.pubnub.api.logging.CustomLogger>()
         val customLogger2 = mockk<com.pubnub.api.logging.CustomLogger>()
@@ -169,7 +169,7 @@ class ConfigurationLoggerTest {
     @Test
     fun `should handle null custom loggers`() {
         // Given
-        val mockLogger = mockk<ExtendedLogger>(relaxed = true)
+        val mockLogger = mockk<PNLogger>(relaxed = true)
         val logMessageSlot = slot<LogMessage>()
 
         val config = PNConfigurationImpl(
@@ -195,7 +195,7 @@ class ConfigurationLoggerTest {
     @Test
     fun `should handle crypto module configuration`() {
         // Given
-        val mockLogger = mockk<ExtendedLogger>(relaxed = true)
+        val mockLogger = mockk<PNLogger>(relaxed = true)
         val logMessageSlot = slot<LogMessage>()
         val cryptoModule = mockk<com.pubnub.api.crypto.CryptoModule>()
 
@@ -222,7 +222,7 @@ class ConfigurationLoggerTest {
     @Test
     fun `should handle disabled crypto module`() {
         // Given
-        val mockLogger = mockk<ExtendedLogger>(relaxed = true)
+        val mockLogger = mockk<PNLogger>(relaxed = true)
         val logMessageSlot = slot<LogMessage>()
 
         val config = PNConfigurationImpl(
@@ -248,7 +248,7 @@ class ConfigurationLoggerTest {
     @Test
     fun `should include all configuration fields in summary`() {
         // Given
-        val mockLogger = mockk<ExtendedLogger>(relaxed = true)
+        val mockLogger = mockk<PNLogger>(relaxed = true)
         val logMessageSlot = slot<LogMessage>()
 
         val config = PNConfigurationImpl(

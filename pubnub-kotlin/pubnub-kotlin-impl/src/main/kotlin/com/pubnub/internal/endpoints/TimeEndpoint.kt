@@ -9,7 +9,7 @@ import com.pubnub.api.models.consumer.PNTimeResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.logging.LoggerManager
 import org.slf4j.event.Level
 import retrofit2.Call
@@ -21,7 +21,7 @@ import retrofit2.Response
 class TimeEndpoint(pubnub: PubNubImpl, private val excludeFromRetry: Boolean = false) :
     EndpointCore<List<Long>, PNTimeResult>(pubnub),
     Time {
-    private val log: ExtendedLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+    private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     override fun getAffectedChannels() = emptyList<String>()
 

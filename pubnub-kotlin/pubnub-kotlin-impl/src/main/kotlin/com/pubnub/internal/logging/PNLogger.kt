@@ -2,8 +2,7 @@ package com.pubnub.internal.logging
 
 import com.pubnub.api.logging.LogMessage
 
-// todo rename to PNLogger?
-interface ExtendedLogger {
+interface PNLogger {
     fun trace(message: LogMessage)
 
     fun debug(message: LogMessage)

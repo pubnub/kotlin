@@ -17,7 +17,7 @@ import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.extension.limit
 import com.pubnub.internal.extension.nonPositiveToNull
 import com.pubnub.internal.extension.tryDecryptMessage
-import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.models.server.FetchMessagesEnvelope
 import com.pubnub.internal.models.server.history.ServerFetchMessageItem
@@ -40,7 +40,7 @@ class FetchMessagesEndpoint internal constructor(
     override val includeMessageType: Boolean = false,
     override val includeCustomMessageType: Boolean = false
 ) : EndpointCore<FetchMessagesEnvelope, PNFetchMessagesResult>(pubnub), FetchMessages {
-    private val log: ExtendedLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+    private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     internal companion object {
         private const val SINGLE_CHANNEL_DEFAULT_MESSAGES = 100

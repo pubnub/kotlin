@@ -15,7 +15,7 @@ import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.api.v2.PNConfiguration.Companion.isValid
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.models.server.access_manager.v3.GrantTokenRequestBody
 import com.pubnub.internal.models.server.access_manager.v3.GrantTokenResponse
@@ -32,7 +32,7 @@ class GrantTokenEndpoint(
     private val channelGroups: List<ChannelGroupGrant>,
     private val uuids: List<UUIDGrant>,
 ) : EndpointCore<GrantTokenResponse, PNGrantTokenResult>(pubnub), GrantToken {
-    private val log: ExtendedLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+    private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     override fun getAffectedChannels(): List<String> = channels.map { it.id }
 

@@ -16,7 +16,7 @@ class LoggerManager(
      * Creates a logger for the given configuration and class.
      * Returns a fallback logger if creation fails to prevent application crashes.
      */
-    fun getLogger(logConfig: LogConfig, clazz: Class<*>): ExtendedLogger {
+    fun getLogger(logConfig: LogConfig, clazz: Class<*>): PNLogger {
         return try {
             createLogger(logConfig, clazz)
         } catch (e: Exception) {
@@ -25,13 +25,13 @@ class LoggerManager(
         }
     }
 
-    private fun createLogger(logConfig: LogConfig, clazz: Class<*>): ExtendedLogger {
+    private fun createLogger(logConfig: LogConfig, clazz: Class<*>): PNLogger {
         val slf4jLogger: Logger = loggerFactory(clazz)
         val toPortalLogger = ToPortalLogger(userId = logConfig.userId)
         return CompositeLogger(slf4jLogger, toPortalLogger, logConfig.customLoggers, logConfig.pnInstanceId)
     }
 
-    private fun createFallbackLogger(clazz: Class<*>, cause: Exception): ExtendedLogger {
+    private fun createFallbackLogger(clazz: Class<*>, cause: Exception): PNLogger {
         // Try to create a basic SLF4J logger as fallback
         return try {
             val fallbackSlf4jLogger = org.slf4j.LoggerFactory.getLogger(clazz)
@@ -58,7 +58,7 @@ class LoggerManager(
  * No-operation logger implementation used as last resort fallback.
  * Ensures logging calls never crash the application.
  */
-private class NoOpLogger(private val clazz: Class<*>) : ExtendedLogger {
+private class NoOpLogger(private val clazz: Class<*>) : PNLogger {
     override fun trace(message: com.pubnub.api.logging.LogMessage) {
         // No-op
     }

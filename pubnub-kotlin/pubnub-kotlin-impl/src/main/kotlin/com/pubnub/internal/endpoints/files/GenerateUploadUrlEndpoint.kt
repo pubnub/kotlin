@@ -10,7 +10,7 @@ import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.models.server.files.FileUploadRequestDetails
 import com.pubnub.internal.models.server.files.FormField
@@ -25,7 +25,7 @@ internal class GenerateUploadUrlEndpoint(
     private val fileName: String,
     pubNub: PubNubImpl,
 ) : EndpointCore<GeneratedUploadUrlResponse, FileUploadRequestDetails>(pubNub) {
-    private val log: ExtendedLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+    private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     @Throws(PubNubException::class)
     override fun validateParams() {

@@ -11,7 +11,7 @@ import com.pubnub.api.models.consumer.PNPublishResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.logging.LoggerManager
 import org.slf4j.event.Level
 import retrofit2.Call
@@ -26,7 +26,7 @@ class SignalEndpoint internal constructor(
     override val message: Any,
     override val customMessageType: String? = null
 ) : EndpointCore<List<Any>, PNPublishResult>(pubnub), Signal {
-    private val log: ExtendedLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+    private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     companion object {
         private const val CUSTOM_MESSAGE_TYPE_QUERY_PARAM = "custom_message_type"

@@ -9,7 +9,7 @@ import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.logging.NetworkLog
 import com.pubnub.api.logging.NetworkRequestMessage
 import com.pubnub.api.logging.NetworkResponseMessage
-import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.managers.MapperManager
 import okhttp3.Interceptor
 import okhttp3.Request
@@ -22,7 +22,7 @@ import java.util.Base64
 private const val PUBNUB_OKHTTP_LOG_TAG = "pubnub.okhttp"
 
 class CustomPnHttpLoggingInterceptor(
-    private val logger: ExtendedLogger,
+    private val logger: PNLogger,
     private val logVerbosity: PNLogVerbosity,
     private val pnInstanceId: String,
 ) : Interceptor {

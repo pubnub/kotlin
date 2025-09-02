@@ -13,7 +13,7 @@ import com.pubnub.api.logging.LogMessageType
 import com.pubnub.internal.crypto.cryptor.HeaderParser
 import com.pubnub.internal.crypto.cryptor.LEGACY_CRYPTOR_ID
 import com.pubnub.internal.crypto.cryptor.ParseResult
-import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.logging.LoggerManager
 import org.slf4j.event.Level
 import java.io.BufferedInputStream
@@ -30,7 +30,7 @@ class CryptoModuleImpl internal constructor(
     @get:JvmSynthetic
     internal val logConfig: LogConfig? = null,
 ) : CryptoModule {
-    private val log: ExtendedLogger by lazy {
+    private val log: PNLogger by lazy {
         logConfig?.let { LoggerManager.instance.getLogger(it, this::class.java) }
             ?: LoggerManager.instance.getLogger(LogConfig("default", "default"), this::class.java)
     }

@@ -14,7 +14,7 @@ import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.extension.tryDecryptMessage
-import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.logging.LoggerManager
 import org.slf4j.event.Level
 import retrofit2.Call
@@ -34,7 +34,7 @@ class HistoryEndpoint internal constructor(
     override val includeTimetoken: Boolean,
     override val includeMeta: Boolean,
 ) : EndpointCore<JsonElement, PNHistoryResult>(pubnub), History {
-    private val log: ExtendedLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+    private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
     private val countParam: Int =
         if (count in 1..PNHistoryResult.MAX_COUNT) {
             count

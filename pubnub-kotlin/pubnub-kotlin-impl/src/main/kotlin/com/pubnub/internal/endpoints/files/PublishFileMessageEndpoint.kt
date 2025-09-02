@@ -17,7 +17,7 @@ import com.pubnub.internal.crypto.encryptString
 import com.pubnub.internal.endpoints.pubsub.PublishEndpoint.Companion.CUSTOM_MESSAGE_TYPE_QUERY_PARAM
 import com.pubnub.internal.extension.numericString
 import com.pubnub.internal.extension.quoted
-import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.models.server.files.FileUploadNotification
 import org.slf4j.event.Level
@@ -38,7 +38,7 @@ open class PublishFileMessageEndpoint(
     private val customMessageType: String? = null,
     pubNub: PubNubImpl,
 ) : EndpointCore<List<Any>, PNPublishFileMessageResult>(pubNub), PublishFileMessage {
-    private val log: ExtendedLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+    private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
     private val pnFile = PNBaseFile(fileId, fileName)
 
     @Throws(PubNubException::class)

@@ -12,7 +12,7 @@ import com.pubnub.api.models.consumer.presence.PNHereNowResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.models.server.Envelope
 import com.pubnub.internal.toCsv
@@ -30,7 +30,7 @@ class HereNowEndpoint internal constructor(
     override val includeState: Boolean = false,
     override val includeUUIDs: Boolean = true,
 ) : EndpointCore<Envelope<JsonElement>, PNHereNowResult>(pubnub), HereNow {
-    private val log: ExtendedLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+    private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     private fun isGlobalHereNow() = channels.isEmpty() && channelGroups.isEmpty()
 

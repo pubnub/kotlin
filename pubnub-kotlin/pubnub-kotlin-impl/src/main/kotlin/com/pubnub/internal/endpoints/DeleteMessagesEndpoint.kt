@@ -11,7 +11,7 @@ import com.pubnub.api.models.consumer.history.PNDeleteMessagesResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.toCsv
 import org.slf4j.event.Level
@@ -28,7 +28,7 @@ class DeleteMessagesEndpoint internal constructor(
     override val start: Long? = null,
     override val end: Long? = null,
 ) : EndpointCore<Void, PNDeleteMessagesResult>(pubnub), DeleteMessages {
-    private val log: ExtendedLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+    private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     override fun validateParams() {
         super.validateParams()

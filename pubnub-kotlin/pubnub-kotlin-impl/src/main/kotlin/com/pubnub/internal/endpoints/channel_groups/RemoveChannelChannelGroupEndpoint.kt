@@ -11,7 +11,7 @@ import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsRemoveChannel
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.toCsv
 import org.slf4j.event.Level
@@ -26,7 +26,7 @@ class RemoveChannelChannelGroupEndpoint internal constructor(
     override val channelGroup: String,
     override val channels: List<String>,
 ) : EndpointCore<Void, PNChannelGroupsRemoveChannelResult>(pubnub), RemoveChannelChannelGroup {
-    private val log: ExtendedLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+    private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     override fun getAffectedChannels() = channels
 

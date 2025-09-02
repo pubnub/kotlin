@@ -13,7 +13,7 @@ import org.slf4j.event.Level.WARN
  */
 class ToPortalLogger(
     private val userId: String,
-) : ExtendedLogger {
+) : PNLogger {
     override fun trace(message: LogMessage) {
         onLog(TRACE, message)
     }

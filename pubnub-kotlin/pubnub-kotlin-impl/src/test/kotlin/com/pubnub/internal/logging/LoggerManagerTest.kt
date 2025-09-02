@@ -58,7 +58,7 @@ class LoggerManagerTest {
         val logger = manager.getLogger(testLogConfig, String::class.java)
 
         // Verify it's not null and logging works
-        assertThat(logger, IsInstanceOf.instanceOf(ExtendedLogger::class.java))
+        assertThat(logger, IsInstanceOf.instanceOf(PNLogger::class.java))
 
         // Should not crash when logging
         logger.error(
@@ -136,7 +136,7 @@ class LoggerManagerTest {
 
         val logger = manager.getLogger(testLogConfig, String::class.java)
 
-        assertThat(logger, IsInstanceOf.instanceOf(ExtendedLogger::class.java))
+        assertThat(logger, IsInstanceOf.instanceOf(PNLogger::class.java))
     }
 
     @Test
@@ -159,8 +159,8 @@ class LoggerManagerTest {
         val logger2 = manager.getLogger(testLogConfig, Int::class.java)
 
         // Both should be ExtendedLogger but potentially different instances
-        assertThat(logger1, IsInstanceOf.instanceOf(ExtendedLogger::class.java))
-        assertThat(logger2, IsInstanceOf.instanceOf(ExtendedLogger::class.java))
+        assertThat(logger1, IsInstanceOf.instanceOf(PNLogger::class.java))
+        assertThat(logger2, IsInstanceOf.instanceOf(PNLogger::class.java))
     }
 
     @Test
@@ -203,7 +203,7 @@ class LoggerManagerTest {
         val logger = manager.getLogger(testLogConfig, String::class.java)
 
         // Should still get a working logger (fallback)
-        assertThat(logger, IsInstanceOf.instanceOf(ExtendedLogger::class.java))
+        assertThat(logger, IsInstanceOf.instanceOf(PNLogger::class.java))
 
         // Should be able to log without crashing
         logger.warn(

@@ -12,7 +12,7 @@ import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.models.server.files.ListFilesResult
 import org.slf4j.event.Level
@@ -28,7 +28,7 @@ class ListFilesEndpoint(
     private val next: PNPage.PNNext? = null,
     pubNub: PubNubImpl,
 ) : EndpointCore<ListFilesResult, PNListFilesResult>(pubNub), ListFiles {
-    private val log: ExtendedLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+    private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     @Throws(PubNubException::class)
     override fun validateParams() {

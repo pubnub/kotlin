@@ -20,7 +20,7 @@ import com.pubnub.api.v2.callbacks.StatusEmitter
 import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.subscribe.eventengine.effect.MessagesConsumer
 import com.pubnub.internal.subscribe.eventengine.effect.StatusConsumer
@@ -33,7 +33,7 @@ class ListenerManager(val pubnub: PubNub) : MessagesConsumer, StatusConsumer, Ev
     private val statusListeners get() = listeners.filterIsInstance<StatusListener>()
     private val eventListeners get() = listeners.filterIsInstance<EventListener>()
 
-    private val logger: ExtendedLogger =
+    private val logger: PNLogger =
         LoggerManager.instance.getLogger((pubnub as PubNubImpl).logConfig, this::class.java)
 
     /**

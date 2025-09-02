@@ -3,6 +3,7 @@ package com.pubnub.api.integration
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNLogVerbosity
+import com.pubnub.api.integration.LoggingIntegrationTest.CustomLoggerTestImpl
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.PNConfigurationOverride
 import com.pubnub.test.CommonUtils.randomChannel
@@ -36,6 +37,7 @@ class PNConfigurationIntegrationTests : BaseIntegrationTest() {
             publishKey = Keys.pubKey
             authToken = expectedAuthToken
             logVerbosity = PNLogVerbosity.NONE
+            customLoggers = listOf(CustomLoggerTestImpl())
         }
         val pubNub = PubNub.create(configBuilder.build())
 

@@ -15,7 +15,7 @@ import org.slf4j.event.Level
 
 class CompositeLoggerTest {
     private val mockSlf4jLogger = mockk<Logger>(relaxed = true)
-    private val mockToPortalLogger = mockk<ExtendedLogger>(relaxed = true)
+    private val mockToPortalLogger = mockk<PNLogger>(relaxed = true)
     private val mockCustomLogger1 = mockk<CustomLogger>(relaxed = true)
     private val mockCustomLogger2 = mockk<CustomLogger>(relaxed = true)
     private val testInstanceId = "test-instance-id"

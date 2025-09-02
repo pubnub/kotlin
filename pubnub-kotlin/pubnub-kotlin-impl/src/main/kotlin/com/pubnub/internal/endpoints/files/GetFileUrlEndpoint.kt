@@ -13,7 +13,7 @@ import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.PubNubUtil
-import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.logging.LoggerManager
 import okhttp3.ResponseBody
 import org.slf4j.event.Level
@@ -32,7 +32,7 @@ class GetFileUrlEndpoint(
     private val fileId: String,
     pubNub: PubNubImpl,
 ) : EndpointCore<ResponseBody, PNFileUrlResult>(pubNub), GetFileUrl {
-    private val log: ExtendedLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+    private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
     private lateinit var cachedCallback: Consumer<Result<PNFileUrlResult>>
     private val executorService: ExecutorService = retrofitManager.getTransactionClientExecutorService() ?: Executors.newSingleThreadExecutor()
 

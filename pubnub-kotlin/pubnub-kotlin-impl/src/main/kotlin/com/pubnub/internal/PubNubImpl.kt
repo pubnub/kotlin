@@ -142,7 +142,7 @@ import com.pubnub.internal.endpoints.push.ListPushProvisionsEndpoint
 import com.pubnub.internal.endpoints.push.RemoveAllPushChannelsForDeviceEndpoint
 import com.pubnub.internal.endpoints.push.RemoveChannelsFromPushEndpoint
 import com.pubnub.internal.logging.ConfigurationLogger.logConfiguration
-import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.managers.BasePathManager
 import com.pubnub.internal.managers.DuplicationManager
@@ -186,7 +186,7 @@ open class PubNubImpl(
     val pnsdkName: String = PNSDK_PUBNUB_KOTLIN,
     eventEnginesConf: EventEnginesConf = EventEnginesConf()
 ) : PubNub {
-    private val logger: ExtendedLogger by lazy { LoggerManager.instance.getLogger(logConfig, this::class.java) }
+    private val logger: PNLogger by lazy { LoggerManager.instance.getLogger(logConfig, this::class.java) }
     internal val tokenManager: TokenManager = TokenManager()
 
     init {

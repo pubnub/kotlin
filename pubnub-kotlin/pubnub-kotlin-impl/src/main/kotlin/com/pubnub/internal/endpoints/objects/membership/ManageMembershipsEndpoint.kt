@@ -14,7 +14,7 @@ import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.endpoints.objects.internal.CollectionQueryParameters
 import com.pubnub.internal.endpoints.objects.internal.IncludeQueryParam
 import com.pubnub.internal.extension.toPNChannelMembershipArrayResult
-import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.models.server.objects_api.ChangeMembershipInput
 import com.pubnub.internal.models.server.objects_api.ChannelId
@@ -36,7 +36,7 @@ class ManageMembershipsEndpoint internal constructor(
     private val includeQueryParam: IncludeQueryParam,
 ) : EndpointCore<EntityArrayEnvelope<PNChannelMembership>, PNChannelMembershipArrayResult>(pubnub),
     ManageMemberships {
-    private val log: ExtendedLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+    private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityArrayEnvelope<PNChannelMembership>> {
         log.trace(

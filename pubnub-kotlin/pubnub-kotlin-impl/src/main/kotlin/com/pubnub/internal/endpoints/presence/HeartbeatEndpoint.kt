@@ -10,7 +10,7 @@ import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.PubNubUtil
-import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.logging.LoggerManager
 import org.slf4j.event.Level
 import retrofit2.Call
@@ -22,7 +22,7 @@ class HeartbeatEndpoint internal constructor(
     val channelGroups: List<String> = listOf(),
     val state: Any? = null,
 ) : EndpointCore<Void, Boolean>(pubnub) {
-    private val log: ExtendedLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+    private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     override fun getAffectedChannels() = channels
 

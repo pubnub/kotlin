@@ -9,7 +9,7 @@ import org.slf4j.event.Level
 object ConfigurationLogger {
     fun logConfiguration(
         configuration: PNConfiguration,
-        logger: ExtendedLogger,
+        logger: PNLogger,
         instanceId: String,
         className: Class<*>
     ) {

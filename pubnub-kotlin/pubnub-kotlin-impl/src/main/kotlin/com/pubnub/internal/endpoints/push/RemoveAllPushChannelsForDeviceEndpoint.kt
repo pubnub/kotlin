@@ -13,7 +13,7 @@ import com.pubnub.api.models.consumer.push.PNPushRemoveAllChannelsResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.logging.LoggerManager
 import org.slf4j.event.Level
 import retrofit2.Call
@@ -30,7 +30,7 @@ class RemoveAllPushChannelsForDeviceEndpoint internal constructor(
     override val environment: PNPushEnvironment = PNPushEnvironment.DEVELOPMENT,
     override val topic: String? = null,
 ) : EndpointCore<Void, PNPushRemoveAllChannelsResult>(pubnub), RemoveAllPushChannelsForDevice {
-    private val log: ExtendedLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+    private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     override fun validateParams() {
         super.validateParams()
