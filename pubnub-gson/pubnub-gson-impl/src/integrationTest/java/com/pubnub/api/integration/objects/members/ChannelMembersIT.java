@@ -17,8 +17,6 @@ import org.apache.http.HttpStatus;
 import org.jetbrains.annotations.Nullable;
 import org.junit.After;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,7 +46,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class ChannelMembersIT extends ObjectsApiBaseIT {
-    private static final Logger LOG = LoggerFactory.getLogger(ChannelMembersIT.class);
     private static final String STATUS_01 = "myStatus01";
     private static final String TYPE_01 = "myType01" + random();
     private static final String TYPE_02 = "myType02" + random();
@@ -475,7 +472,7 @@ public class ChannelMembersIT extends ObjectsApiBaseIT {
                         .sync();
 
             } catch (Exception e) {
-                LOG.warn("Could not cleanup {}", createdMembers, e);
+                System.out.printf("Could not cleanup %s%n", createdMembers);
             }
         }
     }

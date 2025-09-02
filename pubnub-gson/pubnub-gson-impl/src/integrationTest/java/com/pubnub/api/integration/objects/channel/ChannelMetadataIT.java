@@ -12,8 +12,6 @@ import org.apache.http.HttpStatus;
 import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,7 +33,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class ChannelMetadataIT extends ObjectsApiBaseIT {
-    private static final Logger LOG = LoggerFactory.getLogger(ChannelMetadataIT.class);
     private static final int NUMBER_OF_RANDOM_TEST_NAMES = 10;
     private static final int FETCH_LIMIT = 3;
 
@@ -272,7 +269,7 @@ public class ChannelMetadataIT extends ObjectsApiBaseIT {
                         .channel(setChannelMetadataResult.getData().getId())
                         .sync();
             } catch (Exception e) {
-                LOG.warn("Could not cleanup {}", setChannelMetadataResult, e);
+                System.out.printf("Could not cleanup {}", setChannelMetadataResult);
             }
         });
     }

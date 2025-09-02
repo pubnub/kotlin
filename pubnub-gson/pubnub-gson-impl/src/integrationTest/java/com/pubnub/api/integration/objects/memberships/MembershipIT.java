@@ -14,8 +14,6 @@ import com.pubnub.api.utils.PatchValue;
 import org.apache.http.HttpStatus;
 import org.junit.After;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,7 +38,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 public class MembershipIT extends ObjectsApiBaseIT {
-    private static final Logger LOG = LoggerFactory.getLogger(MembershipIT.class);
     private static final String STATUS = "status";
     private static final String CHANNEL = "channel";
 
@@ -453,7 +450,7 @@ public class MembershipIT extends ObjectsApiBaseIT {
                 pubNubUnderTest.removeMemberships(channelIds).sync();
 
             } catch (Exception e) {
-                LOG.warn("Could not cleanup {}", createdMembership, e);
+                System.out.printf("Could not cleanup {}", createdMembership);
             }
         }
     }

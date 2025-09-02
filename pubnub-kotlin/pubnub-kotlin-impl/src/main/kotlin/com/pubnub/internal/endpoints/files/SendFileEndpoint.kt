@@ -92,14 +92,14 @@ class SendFileEndpoint internal constructor(
             cryptoModule?.encryptStream(InputStreamSeparator(inputStream))?.use {
                 it.readBytes()
             } ?: inputStream.readBytes()
-        return ComposableRemoteAction.firstDo(generateUploadUrlFactory.create(channel, fileName)) // generateUrl
+        return ComposableRemoteAction.firstDo(generateUploadUrlFactory.create(channel, fileName)) // 1. generateUrl
             .then { res ->
                 result.set(res)
-                sendFileToS3Factory.create(fileName, content, res) // upload to s3
+                sendFileToS3Factory.create(fileName, content, res) // 2. upload to s3
             }.checkpoint().then {
                 val details = result.get()
                 RetryingRemoteAction.autoRetry(
-                    publishFileMessageFactory.create(
+                    publishFileMessageFactory.create( // 3. PublishFileMessage
                         channel = channel,
                         fileName = details.data.name,
                         fileId = details.data.id,

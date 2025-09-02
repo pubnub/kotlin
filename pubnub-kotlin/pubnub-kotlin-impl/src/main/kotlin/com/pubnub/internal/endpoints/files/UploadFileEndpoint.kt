@@ -4,8 +4,13 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.logging.LogConfig
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
+import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.models.server.files.FileUploadRequestDetails
 import com.pubnub.internal.models.server.files.FormField
 import com.pubnub.internal.services.S3Service
@@ -13,7 +18,7 @@ import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import org.slf4j.LoggerFactory
+import org.slf4j.event.Level
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -32,8 +37,10 @@ internal class UploadFileEndpoint(
     private val key: FormField,
     private val formParams: List<FormField>,
     private val baseUrl: String,
+    private val logConfig: LogConfig
 ) : ExtendedRemoteAction<Unit> {
     private var call: Call<Unit>? = null
+    private val log = LoggerManager.instance.getLogger(logConfig, this::class.java)
 
     @Throws(PubNubException::class)
     private fun prepareCall(): Call<Unit> {
@@ -58,7 +65,15 @@ internal class UploadFileEndpoint(
             try {
                 contentType.toMediaType()
             } catch (t: Throwable) {
-                log.warn("Content-Type: $contentType was not recognized by MediaType.get", t)
+                log.warn(
+                    LogMessage(
+                        pubNubId = logConfig.pnInstanceId,
+                        logLevel = Level.WARN,
+                        location = this::class.java.toString(),
+                        type = LogMessageType.TEXT,
+                        message = LogMessageContent.Text("Content-Type: $contentType was not recognized by MediaType.get: ${t.message}"),
+                    )
+                )
                 APPLICATION_OCTET_STREAM
             }
         }
@@ -182,6 +197,7 @@ internal class UploadFileEndpoint(
                 fileUploadRequestDetails.keyFormField,
                 fileUploadRequestDetails.formFields,
                 fileUploadRequestDetails.url,
+                pubNub.logConfig
             )
         }
     }
@@ -190,7 +206,6 @@ internal class UploadFileEndpoint(
         private val APPLICATION_OCTET_STREAM = "application/octet-stream".toMediaType()
         private const val CONTENT_TYPE_HEADER = "Content-Type"
         private const val FILE_PART_MULTIPART = "file"
-        private val log = LoggerFactory.getLogger(UploadFileEndpoint::class.java)
 
         private fun addFormParamsWithKeyFirst(
             keyValue: FormField,
