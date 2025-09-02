@@ -47,7 +47,8 @@ internal interface Presence {
                     listenerManager,
                     heartbeatNotificationOptions,
                     presenceData,
-                    sendStateWithHeartbeat
+                    sendStateWithHeartbeat,
+                    logConfig
                 )
             }
 
