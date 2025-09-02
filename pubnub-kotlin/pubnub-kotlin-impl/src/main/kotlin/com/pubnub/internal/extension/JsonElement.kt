@@ -3,20 +3,23 @@ package com.pubnub.internal.extension
 import com.google.gson.JsonElement
 import com.pubnub.api.PubNubError
 import com.pubnub.api.crypto.CryptoModule
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
+import com.pubnub.api.logging.LogMessageType
 import com.pubnub.internal.crypto.decryptString
+import com.pubnub.internal.logging.ExtendedLogger
 import com.pubnub.internal.managers.MapperManager
-import org.slf4j.LoggerFactory
-
-private val log = LoggerFactory.getLogger("JsonElement")
+import org.slf4j.event.Level
 
 private const val PN_OTHER = "pn_other"
 
 internal fun JsonElement.tryDecryptMessage(
     cryptoModule: CryptoModule?,
     mapper: MapperManager,
+    logger: ExtendedLogger,
+    pnInstanceId: String,
 ): Pair<JsonElement, PubNubError?> {
     cryptoModule ?: return this to null
-
     val inputText =
         if (mapper.isJsonObject(this)) {
             // property pn_other is used when we want to send encrypted Push Notification, not whole JSON object is encrypted but only value of pn_other property
@@ -25,21 +28,21 @@ internal fun JsonElement.tryDecryptMessage(
                 mapper.elementToString(this, PN_OTHER)
             } else {
                 // plain JSON object indicates that this is not encrypted message
-                return this to logAndReturnDecryptionError()
+                return this to logAndReturnDecryptionError(logger, pnInstanceId)
             }
         } else if (isJsonPrimitive && asJsonPrimitive.isString) {
             // String may represent not encrypted string or encrypted data. We will check this when decrypting.
             mapper.elementToString(this)
         } else {
             // Input represents some other Json structure, such as JsonArray
-            return this to logAndReturnDecryptionError()
+            return this to logAndReturnDecryptionError(logger, pnInstanceId)
         }
 
     val outputText =
         try {
             cryptoModule.decryptString(inputText!!)
         } catch (e: Exception) {
-            return this to logAndReturnDecryptionError()
+            return this to logAndReturnDecryptionError(logger, pnInstanceId)
         }
 
     var outputObject = mapper.fromJson(outputText, JsonElement::class.java)
@@ -53,8 +56,16 @@ internal fun JsonElement.tryDecryptMessage(
     return outputObject to null
 }
 
-private fun logAndReturnDecryptionError(): PubNubError {
+private fun logAndReturnDecryptionError(logger: ExtendedLogger, pnInstanceId: String,): PubNubError {
     val pnError = PubNubError.CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED
-    log.warn(pnError.message)
+    logger.warn(
+        LogMessage(
+            pubNubId = pnInstanceId,
+            logLevel = Level.WARN,
+            location = "JsonElement.tryDecryptMessage",
+            type = LogMessageType.TEXT,
+            message = LogMessageContent.Text(pnError.message),
+        )
+    )
     return pnError
 }

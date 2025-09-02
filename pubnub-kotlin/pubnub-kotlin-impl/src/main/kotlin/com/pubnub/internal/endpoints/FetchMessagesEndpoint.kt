@@ -133,6 +133,8 @@ class FetchMessagesEndpoint internal constructor(
                         serverMessageItem.message.tryDecryptMessage(
                             pubnub.cryptoModuleWithLogConfig,
                             pubnub.mapper,
+                            log,
+                            pubnub.instanceId
                         )
                     val newActions =
                         if (includeMessageActions) {
