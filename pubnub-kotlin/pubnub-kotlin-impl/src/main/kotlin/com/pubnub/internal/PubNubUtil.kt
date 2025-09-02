@@ -5,7 +5,6 @@ import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.PNConfiguration.Companion.isValid
 import okhttp3.Request
 import okio.Buffer
-import org.slf4j.LoggerFactory
 import java.io.IOException
 import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
@@ -19,8 +18,6 @@ import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
 internal object PubNubUtil {
-    private val log = LoggerFactory.getLogger("PubNubUtil")
-
     private const val CHARSET = "UTF-8"
     const val SIGNATURE_QUERY_PARAM_NAME = "signature"
     const val TIMESTAMP_QUERY_PARAM_NAME = "timestamp"
@@ -128,9 +125,9 @@ internal object PubNubUtil {
                 signature = "v2.$signature"
             }
         } catch (e: PubNubException) {
-            log.warn("signature failed on SignatureInterceptor: $e")
+            // do nothing
         } catch (e: UnsupportedEncodingException) {
-            log.warn("signature failed on SignatureInterceptor: $e")
+            // do nothing
         }
         return signature
     }

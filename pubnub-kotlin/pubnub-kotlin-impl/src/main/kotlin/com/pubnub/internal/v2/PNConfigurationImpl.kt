@@ -116,8 +116,8 @@ class PNConfigurationImpl(
                 "For logging configuration:\n" +
                 "1. Use an SLF4J implementation (recommended)\n" +
                 "2. Or implement CustomLogger interface and set via customLoggers property. " +
-                    "Use CustomLogger if your slf4j implementation like logback, log4j2, etc. can't meet " +
-                    "your specific logging requirements.",
+                "Use CustomLogger if your slf4j implementation like logback, log4j2, etc. can't meet " +
+                "your specific logging requirements.",
             level = DeprecationLevel.WARNING
         )
         override var logVerbosity: PNLogVerbosity = defaultConfiguration.logVerbosity

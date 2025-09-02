@@ -30,7 +30,6 @@ private const val MAX_VALUE_THAT_CAN_BE_STORED_ON_TWO_BYTES = 65535
 private const val MINIMAL_SIZE_OF_CRYPTO_HEADER = 10
 
 internal class HeaderParser(val logConfig: LogConfig?) {
-    // private val log1 = LoggerFactory.getLogger(HeaderParser::class.java) //todo check all appearance of LoggerFactory.getLogger
     private val log = logConfig?.let {
         LoggerManager.instance.getLogger(logConfig = it, clazz = this::class.java)
     } ?: LoggerManager.instance.getLogger(

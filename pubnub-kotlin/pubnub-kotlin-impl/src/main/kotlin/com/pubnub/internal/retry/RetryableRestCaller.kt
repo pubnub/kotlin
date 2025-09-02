@@ -2,11 +2,16 @@ package com.pubnub.internal.retry
 
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.logging.LogConfig
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
+import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.PubNubRetryableException
+import com.pubnub.internal.logging.LoggerManager
 import okhttp3.ResponseBody.Companion.toResponseBody
-import org.slf4j.LoggerFactory
+import org.slf4j.event.Level
 import retrofit2.Call
 import retrofit2.Response
 
@@ -14,8 +19,10 @@ internal class RetryableRestCaller<T>(
     retryConfiguration: RetryConfiguration,
     endpointGroupName: RetryableEndpointGroup,
     private val isEndpointRetryable: Boolean,
+    private val logConfig: LogConfig,
 ) : RetryableBase<T>(retryConfiguration, endpointGroupName) {
-    private val log = LoggerFactory.getLogger(this.javaClass.simpleName)
+    private val log = LoggerManager.instance.getLogger(logConfig, this::class.java)
+
     internal lateinit var call: Call<T>
 
     internal fun execute(callToBeExecuted: Call<T>): Response<T> {
@@ -34,7 +41,15 @@ internal class RetryableRestCaller<T>(
             }
             val randomDelayInMillis = random.nextInt(MAX_RANDOM_DELAY_IN_MILLIS)
             val effectiveDelayInMillis = getDelayBasedOnResponse(response).inWholeMilliseconds + randomDelayInMillis
-            log.trace("Added random delay so effective retry delay is $effectiveDelayInMillis")
+            log.trace(
+                LogMessage(
+                    pubNubId = logConfig.pnInstanceId,
+                    logLevel = Level.TRACE,
+                    location = this::class.java.simpleName,
+                    type = LogMessageType.TEXT,
+                    message = LogMessageContent.Text("Added random delay so effective retry delay is $effectiveDelayInMillis"),
+                )
+            )
             Thread.sleep(effectiveDelayInMillis) // we want to sleep here on current thread since this is synchronous call
 
             call = call.clone()

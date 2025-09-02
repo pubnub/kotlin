@@ -2,6 +2,10 @@ package com.pubnub.internal.workers
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonNull
+import com.pubnub.api.logging.LogConfig
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
+import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.models.consumer.files.PNDownloadableFile
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
@@ -18,6 +22,7 @@ import com.pubnub.api.v2.PNConfiguration.Companion.isValid
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.PubNubUtil
 import com.pubnub.internal.extension.tryDecryptMessage
+import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.managers.DuplicationManager
 import com.pubnub.internal.models.consumer.pubsub.objects.PNObjectEventMessage
 import com.pubnub.internal.models.consumer.pubsub.objects.toApi
@@ -26,13 +31,14 @@ import com.pubnub.internal.models.server.SubscribeMessage
 import com.pubnub.internal.models.server.files.FileUploadNotification
 import com.pubnub.internal.services.FilesService
 import com.pubnub.internal.subscribe.PRESENCE_CHANNEL_SUFFIX
-import org.slf4j.LoggerFactory
+import org.slf4j.event.Level
 
 internal class SubscribeMessageProcessor(
     private val pubnub: PubNubImpl,
     private val duplicationManager: DuplicationManager,
+    private val logConfig: LogConfig,
 ) {
-    private val log = LoggerFactory.getLogger("SubscribeMessageProcessor")
+    private val log = LoggerManager.instance.getLogger(logConfig, this::class.java)
 
     companion object {
         internal const val TYPE_MESSAGE = 0
@@ -93,7 +99,15 @@ internal class SubscribeMessageProcessor(
                     ?: (null to null)
 
             if (extractedMessage == null) {
-                log.debug("unable to parse payload on #processIncomingMessages")
+                log.debug(
+                    LogMessage(
+                        pubNubId = logConfig.pnInstanceId,
+                        logLevel = Level.DEBUG,
+                        location = this::class.java.simpleName,
+                        type = LogMessageType.TEXT,
+                        message = LogMessageContent.Text("unable to parse payload on #processIncomingMessages"),
+                    )
+                )
             }
             val customMessageType = message.customMessageType
 

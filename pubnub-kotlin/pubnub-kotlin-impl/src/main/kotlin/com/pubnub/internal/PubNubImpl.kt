@@ -222,7 +222,7 @@ open class PubNubImpl(
             this,
             listenerManager,
             eventEnginesConf,
-            SubscribeMessageProcessor(this, DuplicationManager(configuration)),
+            SubscribeMessageProcessor(this, DuplicationManager(configuration), logConfig),
             presenceData,
             configuration.maintainPresenceState,
         )

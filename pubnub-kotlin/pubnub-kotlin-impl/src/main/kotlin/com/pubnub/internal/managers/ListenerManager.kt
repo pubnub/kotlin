@@ -2,14 +2,10 @@ package com.pubnub.internal.managers
 
 import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.Listener
-import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.logging.ExtendedLogger
-import com.pubnub.internal.logging.LoggerManager
+import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.logging.LogMessageType
-import org.slf4j.event.Level
-import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
@@ -23,8 +19,12 @@ import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusEmitter
 import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.api.v2.subscriptions.Subscription
+import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.logging.ExtendedLogger
+import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.subscribe.eventengine.effect.MessagesConsumer
 import com.pubnub.internal.subscribe.eventengine.effect.StatusConsumer
+import org.slf4j.event.Level
 import java.util.concurrent.CopyOnWriteArrayList
 
 class ListenerManager(val pubnub: PubNub) : MessagesConsumer, StatusConsumer, EventEmitter, StatusEmitter {
@@ -33,7 +33,8 @@ class ListenerManager(val pubnub: PubNub) : MessagesConsumer, StatusConsumer, Ev
     private val statusListeners get() = listeners.filterIsInstance<StatusListener>()
     private val eventListeners get() = listeners.filterIsInstance<EventListener>()
 
-    private val logger: ExtendedLogger = LoggerManager.instance.getLogger((pubnub as PubNubImpl).logConfig, this::class.java)
+    private val logger: ExtendedLogger =
+        LoggerManager.instance.getLogger((pubnub as PubNubImpl).logConfig, this::class.java)
 
     /**
      * Add a listener.

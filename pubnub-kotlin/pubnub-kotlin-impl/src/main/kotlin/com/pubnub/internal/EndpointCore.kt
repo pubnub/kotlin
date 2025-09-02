@@ -51,6 +51,7 @@ abstract class EndpointCore<Input, Output> protected constructor(protected val p
             configuration.retryConfiguration,
             getEndpointGroupName(),
             isEndpointRetryable(),
+            pubnub.logConfig
         )
     }
 
@@ -120,6 +121,7 @@ abstract class EndpointCore<Input, Output> protected constructor(protected val p
                 endpointGroupName = getEndpointGroupName(),
                 isEndpointRetryable = isEndpointRetryable(),
                 executorService = pubnub.executorService,
+                logConfig = pubnub.logConfig
             ) {
                 override fun onFinalResponse(
                     call: Call<Input>,
