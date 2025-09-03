@@ -17,10 +17,6 @@ import java.time.format.DateTimeFormatter
  * @param timestamp The timestamp when the log was created
  */
 class LogMessage(
-    @SerializedName("pubNubId")
-    val pubNubId: String,
-    @SerializedName("logLevel")
-    val logLevel: Level,
     @SerializedName("location")
     val location: String,
     @SerializedName("type")
@@ -29,6 +25,10 @@ class LogMessage(
     val message: LogMessageContent,
     @SerializedName("details")
     val details: String? = null,
+    @SerializedName("pubNubId")
+    val pubNubId: String? = null, // this value will be set in CompositeLogger
+    @SerializedName("logLevel")
+    val logLevel: Level? = null, // this value will be set in CompositeLogger
     @SerializedName("timestamp")
     val timestamp: String = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.SSS")),
 )

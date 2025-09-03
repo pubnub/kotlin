@@ -7,7 +7,6 @@ import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.logging.LogMessageType
 import com.pubnub.internal.eventengine.Effect
 import com.pubnub.internal.logging.LoggerManager
-import org.slf4j.event.Level
 
 internal class LeaveEffect(
     val leaveRemoteAction: RemoteAction<Boolean>,
@@ -18,11 +17,9 @@ internal class LeaveEffect(
     override fun runEffect() {
         log.trace(
             LogMessage(
-                pubNubId = logConfig.pnInstanceId,
-                logLevel = Level.TRACE,
                 location = this::class.java.simpleName,
                 type = LogMessageType.TEXT,
-                message = LogMessageContent.Text("Running LeaveEffect."),
+                message = LogMessageContent.Text("Running LeaveEffect.")
             )
         )
         leaveRemoteAction.async { result ->

@@ -11,7 +11,6 @@ import com.pubnub.internal.eventengine.Sink
 import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.internal.subscribe.eventengine.event.SubscriptionCursor
-import org.slf4j.event.Level
 
 internal class HandshakeEffect(
     private val handshakeRemoteAction: RemoteAction<SubscriptionCursor>,
@@ -23,11 +22,9 @@ internal class HandshakeEffect(
     override fun runEffect() {
         log.trace(
             LogMessage(
-                pubNubId = logConfig.pnInstanceId,
-                logLevel = Level.TRACE,
                 location = this::class.java.simpleName,
                 type = LogMessageType.TEXT,
-                message = LogMessageContent.Text("Running HandshakeEffect"),
+                message = LogMessageContent.Text("Running HandshakeEffect")
             )
         )
 

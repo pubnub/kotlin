@@ -20,11 +20,10 @@ import com.pubnub.api.v2.callbacks.StatusEmitter
 import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.logging.LoggerManager
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.subscribe.eventengine.effect.MessagesConsumer
 import com.pubnub.internal.subscribe.eventengine.effect.StatusConsumer
-import org.slf4j.event.Level
 import java.util.concurrent.CopyOnWriteArrayList
 
 class ListenerManager(val pubnub: PubNub) : MessagesConsumer, StatusConsumer, EventEmitter, StatusEmitter {
@@ -127,8 +126,6 @@ class ListenerManager(val pubnub: PubNub) : MessagesConsumer, StatusConsumer, Ev
             } catch (e: Throwable) {
                 logger.warn(
                     LogMessage(
-                        pubNubId = (pubnub as PubNubImpl).instanceId,
-                        logLevel = Level.WARN,
                         location = this::class.java.toString(),
                         type = LogMessageType.TEXT,
                         message = LogMessageContent.Text("Caught exception in listener: ${e.message}"),

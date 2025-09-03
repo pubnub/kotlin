@@ -38,7 +38,7 @@ class LoggerManager(
             fallbackSlf4jLogger.warn("Failed to create portal logger. Using fallback", cause)
 
             // Create a minimal logger
-            CompositeLogger(fallbackSlf4jLogger)
+            CompositeLogger(fallbackSlf4jLogger, pnInstanceId = "fallback-instance")
         } catch (fallbackException: Exception) {
             // If even SLF4J fails, return no-op logger
             NoOpLogger(clazz)

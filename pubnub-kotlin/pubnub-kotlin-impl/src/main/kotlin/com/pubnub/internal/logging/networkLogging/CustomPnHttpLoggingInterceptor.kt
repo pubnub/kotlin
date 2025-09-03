@@ -15,7 +15,6 @@ import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.ResponseBody.Companion.toResponseBody
-import org.slf4j.event.Level
 import java.io.IOException
 import java.util.Base64
 
@@ -84,12 +83,10 @@ class CustomPnHttpLoggingInterceptor(
         )
 
         val logMessage = LogMessage(
-            pubNubId = pnInstanceId,
-            logLevel = Level.DEBUG,
             location = location,
             type = LogMessageType.NETWORK_REQUEST,
             message = LogMessageContent.NetworkRequest(requestLog),
-            details = "HTTP Request"
+            details = "HTTP Request",
         )
 
         logger.debug(logMessage)
@@ -138,12 +135,10 @@ class CustomPnHttpLoggingInterceptor(
         val responseLog = NetworkLog.Response(message = networkResponse)
 
         val logMessage = LogMessage(
-            pubNubId = pnInstanceId,
-            logLevel = Level.DEBUG,
             location = location,
             type = LogMessageType.NETWORK_RESPONSE,
             message = LogMessageContent.NetworkResponse(responseLog),
-            details = "HTTP Response"
+            details = "HTTP Response",
         )
 
         logger.debug(logMessage)
@@ -168,12 +163,10 @@ class CustomPnHttpLoggingInterceptor(
         )
 
         val logMessage = LogMessage(
-            pubNubId = pnInstanceId,
-            logLevel = Level.ERROR,
             location = location,
             type = LogMessageType.ERROR,
             message = errorDetails,
-            details = "HTTP Request failed after ${duration}ms: ${error.message}"
+            details = "HTTP Request failed after ${duration}ms: ${error.message}",
         )
 
         logger.error(logMessage)

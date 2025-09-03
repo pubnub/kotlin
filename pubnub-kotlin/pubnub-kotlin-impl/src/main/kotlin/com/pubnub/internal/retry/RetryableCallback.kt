@@ -8,7 +8,6 @@ import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.extension.scheduleWithDelay
 import com.pubnub.internal.logging.LoggerManager
-import org.slf4j.event.Level
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -89,13 +88,11 @@ internal abstract class RetryableCallback<T>(
         val effectiveDelay: Duration = delay + randomDelayInMillis.milliseconds
         log.trace(
             LogMessage(
-                pubNubId = logConfig.pnInstanceId,
-                logLevel = Level.TRACE,
                 location = this::class.java.simpleName,
                 type = LogMessageType.TEXT,
                 message = LogMessageContent.Text(
                     "Added random delay so effective retry delay is ${effectiveDelay.inWholeMilliseconds} millis"
-                ),
+                )
             )
         )
         // don't want to block the main thread in case of Android so using executorService
@@ -106,11 +103,9 @@ internal abstract class RetryableCallback<T>(
         } catch (_: RejectedExecutionException) {
             log.trace(
                 LogMessage(
-                    pubNubId = logConfig.pnInstanceId,
-                    logLevel = Level.TRACE,
                     location = this::class.java.simpleName,
                     type = LogMessageType.TEXT,
-                    message = LogMessageContent.Text("Unable to schedule retry, PubNub was likely already destroyed."),
+                    message = LogMessageContent.Text("Unable to schedule retry, PubNub was likely already destroyed.")
                 )
             )
         }

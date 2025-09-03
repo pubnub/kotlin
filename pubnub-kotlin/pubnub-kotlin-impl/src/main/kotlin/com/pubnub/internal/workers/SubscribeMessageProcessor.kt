@@ -31,7 +31,6 @@ import com.pubnub.internal.models.server.SubscribeMessage
 import com.pubnub.internal.models.server.files.FileUploadNotification
 import com.pubnub.internal.services.FilesService
 import com.pubnub.internal.subscribe.PRESENCE_CHANNEL_SUFFIX
-import org.slf4j.event.Level
 
 internal class SubscribeMessageProcessor(
     private val pubnub: PubNubImpl,
@@ -101,11 +100,9 @@ internal class SubscribeMessageProcessor(
             if (extractedMessage == null) {
                 log.debug(
                     LogMessage(
-                        pubNubId = logConfig.pnInstanceId,
-                        logLevel = Level.DEBUG,
                         location = this::class.java.simpleName,
                         type = LogMessageType.TEXT,
-                        message = LogMessageContent.Text("unable to parse payload on #processIncomingMessages"),
+                        message = LogMessageContent.Text("unable to parse payload on #processIncomingMessages")
                     )
                 )
             }

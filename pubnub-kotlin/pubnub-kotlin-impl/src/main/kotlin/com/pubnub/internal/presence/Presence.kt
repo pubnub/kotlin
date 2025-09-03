@@ -20,7 +20,6 @@ import com.pubnub.internal.presence.eventengine.effect.PresenceEffectInvocation
 import com.pubnub.internal.presence.eventengine.effect.effectprovider.HeartbeatProvider
 import com.pubnub.internal.presence.eventengine.effect.effectprovider.LeaveProvider
 import com.pubnub.internal.presence.eventengine.event.PresenceEvent
-import org.slf4j.event.Level
 import java.util.concurrent.ScheduledExecutorService
 import kotlin.time.Duration
 
@@ -179,8 +178,6 @@ internal class PresenceNoOp(
                 result.onFailure {
                     log.error(
                         LogMessage(
-                            pubNubId = logConfig.pnInstanceId,
-                            logLevel = Level.ERROR,
                             location = this::class.java.toString(),
                             type = LogMessageType.TEXT,
                             message = LogMessageContent.Text("LeaveEffect from left operation failed: $it"),
@@ -200,8 +197,6 @@ internal class PresenceNoOp(
                 result.onFailure {
                     log.error(
                         LogMessage(
-                            pubNubId = logConfig.pnInstanceId,
-                            logLevel = Level.ERROR,
                             location = this::class.java.toString(),
                             type = LogMessageType.TEXT,
                             message = LogMessageContent.Text("LeaveEffect from leftAll operation failed: $it"),

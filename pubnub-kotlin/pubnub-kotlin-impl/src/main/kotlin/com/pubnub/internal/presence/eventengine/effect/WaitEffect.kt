@@ -9,7 +9,6 @@ import com.pubnub.internal.eventengine.Sink
 import com.pubnub.internal.extension.scheduleWithDelay
 import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.presence.eventengine.event.PresenceEvent
-import org.slf4j.event.Level
 import java.util.concurrent.RejectedExecutionException
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
@@ -33,11 +32,9 @@ internal class WaitEffect(
     override fun runEffect() {
         log.trace(
             LogMessage(
-                pubNubId = logConfig.pnInstanceId,
-                logLevel = Level.TRACE,
                 location = this::class.java.simpleName,
                 type = LogMessageType.TEXT,
-                message = LogMessageContent.Text("Running WaitEffect."),
+                message = LogMessageContent.Text("Running WaitEffect.")
             )
         )
         if (cancelled) {
@@ -52,11 +49,9 @@ internal class WaitEffect(
         } catch (_: RejectedExecutionException) {
             log.trace(
                 LogMessage(
-                    pubNubId = logConfig.pnInstanceId,
-                    logLevel = Level.TRACE,
                     location = this::class.java.simpleName,
                     type = LogMessageType.TEXT,
-                    message = LogMessageContent.Text("Unable to schedule retry, PubNub was likely already destroyed."),
+                    message = LogMessageContent.Text("Unable to schedule retry, PubNub was likely already destroyed.")
                 )
             )
         }

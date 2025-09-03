@@ -15,9 +15,8 @@ import com.pubnub.internal.crypto.encryptString
 import com.pubnub.internal.extension.numericString
 import com.pubnub.internal.extension.quoted
 import com.pubnub.internal.extension.valueString
-import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.logging.LoggerManager
-import org.slf4j.event.Level
+import com.pubnub.internal.logging.PNLogger
 import retrofit2.Call
 import retrofit2.Response
 
@@ -53,8 +52,6 @@ class PublishEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<List<Any>> {
         log.trace(
             LogMessage(
-                pubNubId = pubnub.instanceId,
-                logLevel = Level.TRACE,
                 location = this::class.java.toString(),
                 type = LogMessageType.OBJECT,
                 message = LogMessageContent.Object(

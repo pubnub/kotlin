@@ -11,10 +11,9 @@ import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.endpoints.objects.internal.IncludeQueryParam
-import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.logging.LoggerManager
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.models.server.objects_api.EntityEnvelope
-import org.slf4j.event.Level
 import retrofit2.Call
 import retrofit2.Response
 
@@ -31,8 +30,6 @@ class GetUUIDMetadataEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNUUIDMetadata>> {
         log.trace(
             LogMessage(
-                pubNubId = pubnub.instanceId,
-                logLevel = Level.TRACE,
                 location = this::class.java.toString(),
                 type = LogMessageType.OBJECT,
                 message = LogMessageContent.Object(

@@ -22,11 +22,11 @@ class CompositeLoggerTest {
 
     private fun createTestLogMessage(level: Level): LogMessage {
         return LogMessage(
-            pubNubId = testInstanceId,
-            logLevel = level,
             location = "test-location",
             type = LogMessageType.TEXT,
-            message = LogMessageContent.Text("test message")
+            message = LogMessageContent.Text("test message"),
+            pubNubId = testInstanceId,
+            logLevel = level
         )
     }
 
@@ -275,30 +275,6 @@ class CompositeLoggerTest {
     }
 
     @Test
-    fun `should handle null instance id gracefully`() {
-        every { mockCustomLogger1.name } returns "FailingLogger"
-        every { mockCustomLogger1.info(logMessage = any()) } throws RuntimeException("Test failure")
-
-        val customLoggers = listOf(mockCustomLogger1)
-        val compositeLogger = CompositeLogger(
-            slf4jLogger = mockSlf4jLogger,
-            toPortalLogger = mockToPortalLogger,
-            customLoggers = customLoggers,
-            pnInstanceId = null
-        )
-
-        val testMessage = createTestLogMessage(Level.INFO)
-        val errorMessageSlot = slot<LogMessage>()
-        every { mockToPortalLogger.error(capture(errorMessageSlot)) } returns Unit
-
-        compositeLogger.info(testMessage)
-
-        verify { mockToPortalLogger.error(any()) }
-        val capturedErrorMessage = errorMessageSlot.captured
-        assertEquals("unknown-instanceId", capturedErrorMessage.pubNubId)
-    }
-
-    @Test
     fun `should be thread safe with concurrent access`() {
         val customLoggers = listOf(mockCustomLogger1, mockCustomLogger2)
         val compositeLogger = CompositeLogger(
@@ -310,11 +286,11 @@ class CompositeLoggerTest {
 
         val messages = (1..100).map { i ->
             LogMessage(
-                pubNubId = testInstanceId,
-                logLevel = Level.INFO,
                 location = "thread-test",
                 type = LogMessageType.TEXT,
-                message = LogMessageContent.Text("message $i")
+                message = LogMessageContent.Text("message $i"),
+                pubNubId = testInstanceId,
+                logLevel = Level.INFO
             )
         }
 

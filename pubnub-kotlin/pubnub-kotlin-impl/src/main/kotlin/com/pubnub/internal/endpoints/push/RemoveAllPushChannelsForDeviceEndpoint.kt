@@ -13,9 +13,8 @@ import com.pubnub.api.models.consumer.push.PNPushRemoveAllChannelsResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.logging.LoggerManager
-import org.slf4j.event.Level
+import com.pubnub.internal.logging.PNLogger
 import retrofit2.Call
 import retrofit2.Response
 import java.util.Locale
@@ -45,8 +44,6 @@ class RemoveAllPushChannelsForDeviceEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<Void> {
         log.trace(
             LogMessage(
-                pubNubId = pubnub.instanceId,
-                logLevel = Level.TRACE,
                 location = this::class.java.toString(),
                 type = LogMessageType.OBJECT,
                 message = LogMessageContent.Object(

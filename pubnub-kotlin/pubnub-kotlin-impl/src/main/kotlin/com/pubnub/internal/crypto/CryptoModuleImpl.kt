@@ -13,9 +13,8 @@ import com.pubnub.api.logging.LogMessageType
 import com.pubnub.internal.crypto.cryptor.HeaderParser
 import com.pubnub.internal.crypto.cryptor.LEGACY_CRYPTOR_ID
 import com.pubnub.internal.crypto.cryptor.ParseResult
-import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.logging.LoggerManager
-import org.slf4j.event.Level
+import com.pubnub.internal.logging.PNLogger
 import java.io.BufferedInputStream
 import java.io.InputStream
 import java.io.SequenceInputStream
@@ -119,8 +118,6 @@ class CryptoModuleImpl internal constructor(
     private fun logDebugMessage(message: String) {
         log.debug(
             LogMessage(
-                pubNubId = logConfig?.pnInstanceId ?: "default",
-                logLevel = Level.DEBUG,
                 location = this::class.java.toString(),
                 type = LogMessageType.TEXT,
                 message = LogMessageContent.Text(message),

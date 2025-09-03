@@ -16,45 +16,90 @@ class CompositeLogger(
     private val slf4jLogger: Logger,
     private val toPortalLogger: PNLogger? = null,
     private val customLoggers: List<CustomLogger>? = null,
-    private val pnInstanceId: String? = null,
+    private val pnInstanceId: String, // todo move as a second param
 ) : PNLogger {
     override fun trace(message: LogMessage) {
-        slf4jLogger.trace(message.simplified())
-        toPortalLogger?.trace(message)
+        val enhancedLogMessage = LogMessage(
+            location = message.location,
+            type = message.type,
+            message = message.message,
+            details = message.details,
+            pubNubId = pnInstanceId,
+            logLevel = Level.TRACE,
+            timestamp = message.timestamp
+        )
+        slf4jLogger.trace(enhancedLogMessage.simplified())
+        toPortalLogger?.trace(enhancedLogMessage)
         delegateToCustomLoggers { logger: CustomLogger ->
-            sendMessageToCustomLogger(logger, message)
+            sendMessageToCustomLogger(logger, enhancedLogMessage)
         }
     }
 
     override fun debug(message: LogMessage) {
-        slf4jLogger.debug(message.simplified())
-        toPortalLogger?.debug(message)
+        val enhancedLogMessage = LogMessage(
+            location = message.location,
+            type = message.type,
+            message = message.message,
+            details = message.details,
+            pubNubId = pnInstanceId,
+            logLevel = Level.DEBUG,
+            timestamp = message.timestamp
+        )
+        slf4jLogger.debug(enhancedLogMessage.simplified())
+        toPortalLogger?.debug(enhancedLogMessage)
         delegateToCustomLoggers { logger: CustomLogger ->
-            sendMessageToCustomLogger(logger, message)
+            sendMessageToCustomLogger(logger, enhancedLogMessage)
         }
     }
 
     override fun info(message: LogMessage) {
-        slf4jLogger.info(message.simplified())
-        toPortalLogger?.info(message)
+        val enhancedLogMessage = LogMessage(
+            location = message.location,
+            type = message.type,
+            message = message.message,
+            details = message.details,
+            pubNubId = pnInstanceId,
+            logLevel = Level.INFO,
+            timestamp = message.timestamp
+        )
+        slf4jLogger.info(enhancedLogMessage.simplified())
+        toPortalLogger?.info(enhancedLogMessage)
         delegateToCustomLoggers { logger: CustomLogger ->
-            sendMessageToCustomLogger(logger, message)
+            sendMessageToCustomLogger(logger, enhancedLogMessage)
         }
     }
 
     override fun warn(message: LogMessage) {
-        slf4jLogger.warn(message.simplified())
-        toPortalLogger?.warn(message)
+        val enhancedLogMessage = LogMessage(
+            location = message.location,
+            type = message.type,
+            message = message.message,
+            details = message.details,
+            pubNubId = pnInstanceId,
+            logLevel = Level.WARN,
+            timestamp = message.timestamp
+        )
+        slf4jLogger.warn(enhancedLogMessage.simplified())
+        toPortalLogger?.warn(enhancedLogMessage)
         delegateToCustomLoggers { logger: CustomLogger ->
-            sendMessageToCustomLogger(logger, message)
+            sendMessageToCustomLogger(logger, enhancedLogMessage)
         }
     }
 
     override fun error(message: LogMessage) {
-        slf4jLogger.error(message.simplified())
-        toPortalLogger?.error(message)
+        val enhancedLogMessage = LogMessage(
+            location = message.location,
+            type = message.type,
+            message = message.message,
+            details = message.details,
+            pubNubId = pnInstanceId,
+            logLevel = Level.ERROR,
+            timestamp = message.timestamp
+        )
+        slf4jLogger.error(enhancedLogMessage.simplified())
+        toPortalLogger?.error(enhancedLogMessage)
         delegateToCustomLoggers { logger: CustomLogger ->
-            sendMessageToCustomLogger(logger, message)
+            sendMessageToCustomLogger(logger, enhancedLogMessage)
         }
     }
 
@@ -97,13 +142,13 @@ class CompositeLogger(
                 // but don't let it crash the logging system
                 try {
                     val logMessage = LogMessage(
-                        pubNubId = pnInstanceId ?: "unknown-instanceId",
-                        logLevel = Level.WARN,
                         location = "CompositeLogger",
                         type = LogMessageType.ERROR,
                         message = LogMessageContent.Text(
                             "Custom logger ${logger.name} failed: ${e.message}"
-                        )
+                        ),
+                        pubNubId = pnInstanceId,
+                        logLevel = Level.ERROR
                     )
                     slf4jLogger.error(logMessage.simplified())
                     toPortalLogger?.error(logMessage)

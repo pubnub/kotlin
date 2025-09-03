@@ -5,7 +5,6 @@ import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.logging.LogMessageType
 import com.pubnub.internal.logging.LoggerManager
-import org.slf4j.event.Level
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -38,29 +37,25 @@ internal class EventEngine<Ei : EffectInvocation, Ev : Event, S : State<Ei, Ev, 
     internal fun performTransitionAndEmitEffects(event: Ev) {
         log.trace(
             LogMessage(
-                pubNubId = logConfig.pnInstanceId,
-                logLevel = Level.TRACE,
                 location = this::class.java.toString(),
                 type = LogMessageType.TEXT,
                 message = LogMessageContent.Text(
                     "Current state is: ${currentState::class.simpleName} ; ${
                         event::class.java.name.substringAfterLast('.').substringBefore('$')
                     } to be handled is: $event ",
-                ),
+                )
             )
         )
         val (newState, invocations) = transition(currentState, event)
         log.trace(
             LogMessage(
-                pubNubId = logConfig.pnInstanceId,
-                logLevel = Level.TRACE,
                 location = this::class.java.toString(),
                 type = LogMessageType.TEXT,
                 message = LogMessageContent.Text(
                     "New state is: ${newState::class.simpleName} ; Emitting fallowing effects: ${
                         invocations.joinToString { it::class.java.name.substringAfterLast('.').substringAfter('$') }
                     }",
-                ),
+                )
             )
         )
         currentState = newState

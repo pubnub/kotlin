@@ -8,8 +8,8 @@ import com.google.gson.JsonPrimitive
 import com.pubnub.api.PubNubError
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.logging.LogConfig
-import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.logging.LoggerManager
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.managers.MapperManager
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull

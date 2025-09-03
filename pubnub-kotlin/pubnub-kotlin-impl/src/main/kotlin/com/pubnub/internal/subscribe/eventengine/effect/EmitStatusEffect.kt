@@ -7,7 +7,6 @@ import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.internal.eventengine.Effect
 import com.pubnub.internal.logging.LoggerManager
-import org.slf4j.event.Level
 
 internal class EmitStatusEffect(
     private val statusConsumer: StatusConsumer,
@@ -19,11 +18,9 @@ internal class EmitStatusEffect(
     override fun runEffect() {
         log.trace(
             LogMessage(
-                pubNubId = logConfig.pnInstanceId,
-                logLevel = Level.TRACE,
                 location = this::class.java.simpleName,
                 type = LogMessageType.TEXT,
-                message = LogMessageContent.Text("Running EmitStatusEffect: $status"),
+                message = LogMessageContent.Text("Running EmitStatusEffect: $status")
             )
         )
         statusConsumer.announce(status)

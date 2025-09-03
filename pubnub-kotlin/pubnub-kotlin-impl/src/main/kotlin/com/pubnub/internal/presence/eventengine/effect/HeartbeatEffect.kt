@@ -14,7 +14,6 @@ import com.pubnub.internal.eventengine.Sink
 import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.presence.eventengine.event.PresenceEvent
 import com.pubnub.internal.subscribe.eventengine.effect.StatusConsumer
-import org.slf4j.event.Level
 
 internal class HeartbeatEffect(
     val heartbeatRemoteAction: RemoteAction<Boolean>,
@@ -28,8 +27,6 @@ internal class HeartbeatEffect(
     override fun runEffect() {
         log.trace(
             LogMessage(
-                pubNubId = logConfig.pnInstanceId,
-                logLevel = Level.TRACE,
                 location = this::class.java.simpleName,
                 type = LogMessageType.TEXT,
                 message = LogMessageContent.Text("Running HeartbeatEffect"),

@@ -18,7 +18,6 @@ import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import org.slf4j.event.Level
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -67,11 +66,9 @@ internal class UploadFileEndpoint(
             } catch (t: Throwable) {
                 log.warn(
                     LogMessage(
-                        pubNubId = logConfig.pnInstanceId,
-                        logLevel = Level.WARN,
                         location = this::class.java.toString(),
                         type = LogMessageType.TEXT,
-                        message = LogMessageContent.Text("Content-Type: $contentType was not recognized by MediaType.get: ${t.message}"),
+                        message = LogMessageContent.Text("Content-Type: $contentType was not recognized by MediaType.get: ${t.message}")
                     )
                 )
                 APPLICATION_OCTET_STREAM

@@ -13,10 +13,9 @@ import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.PubNubUtil
-import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.logging.LoggerManager
+import com.pubnub.internal.logging.PNLogger
 import okhttp3.ResponseBody
-import org.slf4j.event.Level
 import retrofit2.Call
 import retrofit2.Response
 import java.util.concurrent.ExecutorService
@@ -51,8 +50,6 @@ class GetFileUrlEndpoint(
     override fun sync(): PNFileUrlResult {
         log.trace(
             LogMessage(
-                pubNubId = pubnub.instanceId,
-                logLevel = Level.TRACE,
                 location = this::class.java.toString(),
                 type = LogMessageType.OBJECT,
                 message = LogMessageContent.Object(

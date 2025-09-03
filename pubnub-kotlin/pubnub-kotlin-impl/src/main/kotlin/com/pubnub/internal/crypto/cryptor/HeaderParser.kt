@@ -8,7 +8,6 @@ import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.logging.LogMessageType
 import com.pubnub.internal.crypto.readExactlyNBytez
 import com.pubnub.internal.logging.LoggerManager
-import org.slf4j.event.Level
 import java.io.BufferedInputStream
 import java.io.InputStream
 
@@ -188,8 +187,6 @@ internal class HeaderParser(val logConfig: LogConfig?) {
     private fun logTraceMessage(message: String) {
         log.trace(
             LogMessage(
-                pubNubId = logConfig?.pnInstanceId ?: "default",
-                logLevel = Level.TRACE,
                 location = this::class.java.toString(),
                 type = LogMessageType.TEXT,
                 message = LogMessageContent.Text(message),

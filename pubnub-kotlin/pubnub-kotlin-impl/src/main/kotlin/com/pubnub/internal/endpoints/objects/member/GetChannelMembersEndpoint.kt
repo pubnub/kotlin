@@ -13,10 +13,9 @@ import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.endpoints.objects.internal.CollectionQueryParameters
 import com.pubnub.internal.endpoints.objects.internal.IncludeQueryParam
 import com.pubnub.internal.extension.toPNMemberArrayResult
-import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.logging.LoggerManager
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.models.server.objects_api.EntityArrayEnvelope
-import org.slf4j.event.Level
 import retrofit2.Call
 import retrofit2.Response
 
@@ -34,8 +33,6 @@ class GetChannelMembersEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityArrayEnvelope<PNMember>> {
         log.trace(
             LogMessage(
-                pubNubId = pubnub.instanceId,
-                logLevel = Level.TRACE,
                 location = this::class.java.toString(),
                 type = LogMessageType.OBJECT,
                 message = LogMessageContent.Object(

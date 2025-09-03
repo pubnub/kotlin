@@ -5,7 +5,6 @@ import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.logging.LogMessageType
 import com.pubnub.internal.logging.LoggerManager
-import org.slf4j.event.Level
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -39,11 +38,9 @@ internal class EffectDispatcher<T : EffectInvocation>(
     internal fun dispatch(effectInvocation: T) {
         log.trace(
             LogMessage(
-                pubNubId = logConfig.pnInstanceId,
-                logLevel = Level.TRACE,
                 location = this::class.java.simpleName,
                 type = LogMessageType.TEXT,
-                message = LogMessageContent.Text("Dispatching effect: $effectInvocation"),
+                message = LogMessageContent.Text("Dispatching effect: $effectInvocation")
             )
         )
 

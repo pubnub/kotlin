@@ -142,8 +142,8 @@ import com.pubnub.internal.endpoints.push.ListPushProvisionsEndpoint
 import com.pubnub.internal.endpoints.push.RemoveAllPushChannelsForDeviceEndpoint
 import com.pubnub.internal.endpoints.push.RemoveChannelsFromPushEndpoint
 import com.pubnub.internal.logging.ConfigurationLogger.logConfiguration
-import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.logging.LoggerManager
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.managers.BasePathManager
 import com.pubnub.internal.managers.DuplicationManager
 import com.pubnub.internal.managers.ListenerManager

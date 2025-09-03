@@ -10,7 +10,6 @@ import com.pubnub.internal.eventengine.ManagedEffect
 import com.pubnub.internal.eventengine.Sink
 import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.subscribe.eventengine.event.SubscribeEvent
-import org.slf4j.event.Level
 
 internal class ReceiveMessagesEffect(
     private val receiveMessagesRemoteAction: RemoteAction<ReceiveMessagesResult>,
@@ -22,11 +21,9 @@ internal class ReceiveMessagesEffect(
     override fun runEffect() {
         log.trace(
             LogMessage(
-                pubNubId = logConfig.pnInstanceId,
-                logLevel = Level.TRACE,
                 location = this::class.java.simpleName,
                 type = LogMessageType.TEXT,
-                message = LogMessageContent.Text("Running ReceiveMessagesEffect"),
+                message = LogMessageContent.Text("Running ReceiveMessagesEffect")
             )
         )
 

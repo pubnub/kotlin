@@ -17,10 +17,9 @@ import com.pubnub.internal.crypto.encryptString
 import com.pubnub.internal.endpoints.pubsub.PublishEndpoint.Companion.CUSTOM_MESSAGE_TYPE_QUERY_PARAM
 import com.pubnub.internal.extension.numericString
 import com.pubnub.internal.extension.quoted
-import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.logging.LoggerManager
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.models.server.files.FileUploadNotification
-import org.slf4j.event.Level
 import retrofit2.Call
 import retrofit2.Response
 
@@ -52,8 +51,6 @@ open class PublishFileMessageEndpoint(
     override fun doWork(queryParams: HashMap<String, String>): Call<List<Any>> {
         log.trace(
             LogMessage(
-                pubNubId = pubnub.instanceId,
-                logLevel = Level.TRACE,
                 location = this::class.java.toString(),
                 type = LogMessageType.OBJECT,
                 message = LogMessageContent.Object(

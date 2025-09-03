@@ -4,7 +4,6 @@ import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.v2.PNConfiguration
-import org.slf4j.event.Level
 
 object ConfigurationLogger {
     fun logConfiguration(
@@ -89,12 +88,10 @@ object ConfigurationLogger {
 
         logger.debug(
             LogMessage(
-                pubNubId = instanceId,
-                logLevel = Level.DEBUG,
                 location = className.toString(),
                 type = LogMessageType.OBJECT,
                 message = LogMessageContent.Object(message = configSummary),
-                details = "Configuration logged"
+                details = "Configuration logged",
             )
         )
     }

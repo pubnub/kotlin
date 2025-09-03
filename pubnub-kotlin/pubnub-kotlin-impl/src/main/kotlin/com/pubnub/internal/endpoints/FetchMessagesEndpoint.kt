@@ -17,12 +17,11 @@ import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.extension.limit
 import com.pubnub.internal.extension.nonPositiveToNull
 import com.pubnub.internal.extension.tryDecryptMessage
-import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.logging.LoggerManager
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.models.server.FetchMessagesEnvelope
 import com.pubnub.internal.models.server.history.ServerFetchMessageItem
 import com.pubnub.internal.toCsv
-import org.slf4j.event.Level
 import retrofit2.Call
 import retrofit2.Response
 import java.util.Locale
@@ -87,8 +86,6 @@ class FetchMessagesEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<FetchMessagesEnvelope> {
         log.trace(
             LogMessage(
-                pubNubId = pubnub.instanceId,
-                logLevel = Level.TRACE,
                 location = this::class.java.toString(),
                 type = LogMessageType.OBJECT,
                 message = LogMessageContent.Object(

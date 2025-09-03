@@ -9,7 +9,6 @@ import com.pubnub.api.logging.LogMessageType
 import com.pubnub.internal.crypto.decryptString
 import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.managers.MapperManager
-import org.slf4j.event.Level
 
 private const val PN_OTHER = "pn_other"
 
@@ -56,12 +55,10 @@ internal fun JsonElement.tryDecryptMessage(
     return outputObject to null
 }
 
-private fun logAndReturnDecryptionError(logger: PNLogger, pnInstanceId: String,): PubNubError {
+private fun logAndReturnDecryptionError(logger: PNLogger, pnInstanceId: String): PubNubError {
     val pnError = PubNubError.CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED
     logger.warn(
         LogMessage(
-            pubNubId = pnInstanceId,
-            logLevel = Level.WARN,
             location = "JsonElement.tryDecryptMessage",
             type = LogMessageType.TEXT,
             message = LogMessageContent.Text(pnError.message),

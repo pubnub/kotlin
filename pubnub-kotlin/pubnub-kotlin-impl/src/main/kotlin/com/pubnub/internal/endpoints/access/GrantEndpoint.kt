@@ -14,12 +14,11 @@ import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.api.v2.PNConfiguration.Companion.isValid
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
-import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.logging.LoggerManager
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.models.server.Envelope
 import com.pubnub.internal.models.server.access_manager.AccessManagerGrantPayload
 import com.pubnub.internal.toCsv
-import org.slf4j.event.Level
 import retrofit2.Call
 import retrofit2.Response
 
@@ -57,8 +56,6 @@ open class GrantEndpoint(
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<AccessManagerGrantPayload>> {
         log.trace(
             LogMessage(
-                pubNubId = pubnub.instanceId,
-                logLevel = Level.TRACE,
                 location = this::class.java.toString(),
                 type = LogMessageType.OBJECT,
                 message = LogMessageContent.Object(
