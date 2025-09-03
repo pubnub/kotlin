@@ -10,9 +10,9 @@ import io.mockk.slot
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import org.slf4j.event.Level
 
 class ConfigurationLoggerTest {
     @Test
@@ -35,8 +35,8 @@ class ConfigurationLoggerTest {
         verify { mockLogger.debug(capture(logMessageSlot)) }
 
         val capturedMessage = logMessageSlot.captured
-        assertEquals(instanceId, capturedMessage.pubNubId)
-        assertEquals(Level.DEBUG, capturedMessage.logLevel)
+        assertNull(capturedMessage.pubNubId)
+        assertNull(capturedMessage.logLevel)
         assertEquals(testClass.toString(), capturedMessage.location)
         assertEquals(LogMessageType.OBJECT, capturedMessage.type)
         assertEquals("Configuration logged", capturedMessage.details)

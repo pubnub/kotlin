@@ -2,6 +2,7 @@ package com.pubnub.internal.retry
 
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.models.server.FetchMessagesEnvelope
@@ -22,12 +23,14 @@ private const val RETRY_AFTER_HEADER_NAME = "Retry-After"
 private const val RETRY_AFTER_VALUE = "3"
 
 class RetryableRestCallerTest {
+    private val testLogConfig = LogConfig("test-instance-id", "test-user-id")
+
     private fun getRetryableRestCaller(
         retryConfiguration: RetryConfiguration,
         isEndpointRetryable: Boolean = true,
         endpointGroupName: RetryableEndpointGroup = RetryableEndpointGroup.MESSAGE_PERSISTENCE,
     ): RetryableRestCaller<FetchMessagesEnvelope> {
-        return RetryableRestCaller(retryConfiguration, endpointGroupName, isEndpointRetryable)
+        return RetryableRestCaller(retryConfiguration, endpointGroupName, isEndpointRetryable, testLogConfig)
     }
 
     @Test

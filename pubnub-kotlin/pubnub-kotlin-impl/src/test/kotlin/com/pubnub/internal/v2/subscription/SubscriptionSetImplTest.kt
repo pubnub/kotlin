@@ -1,5 +1,6 @@
 package com.pubnub.internal.v2.subscription
 
+import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.v2.subscriptions.EmptyOptions
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.internal.PubNubImpl
@@ -23,6 +24,8 @@ class SubscriptionSetImplTest {
 
     @BeforeEach
     fun setUp() {
+        val testLogConfig = LogConfig("test-instance-id", "test-user-id")
+        every { pubNubImpl.logConfig } returns testLogConfig
         val listenerManager = ListenerManager(pubNubImpl)
         every { pubNubImpl.listenerManager } returns listenerManager
 
