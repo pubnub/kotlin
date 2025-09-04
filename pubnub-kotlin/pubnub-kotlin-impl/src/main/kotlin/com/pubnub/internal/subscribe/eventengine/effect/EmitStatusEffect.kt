@@ -15,12 +15,7 @@ internal class EmitStatusEffect(
     private val log = LoggerManager.instance.getLogger(logConfig, this::class.java)
 
     override fun runEffect() {
-        log.trace(
-            LogMessage(
-                location = this::class.java.simpleName,
-                message = LogMessageContent.Text("Running EmitStatusEffect: $status")
-            )
-        )
+        log.trace(LogMessage(message = LogMessageContent.Text("Running EmitStatusEffect: $status")))
         statusConsumer.announce(status)
     }
 }

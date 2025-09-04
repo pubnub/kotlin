@@ -27,14 +27,13 @@ class WhereNowEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<WhereNowPayload>> {
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "uuid" to uuid,
                         "queryParams" to queryParams
                     )
                 ),
-                details = "WhereNow API call"
+                details = "WhereNow API call",
             )
         )
 

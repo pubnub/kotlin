@@ -29,14 +29,13 @@ class GetUUIDMetadataEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNUUIDMetadata>> {
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "uuid" to uuid,
                         "queryParams" to queryParams
                     )
                 ),
-                details = "GetUUIDMetadata API call"
+                details = "GetUUIDMetadata API call",
             )
         )
         val params = queryParams + includeQueryParam.createIncludeQueryParams()

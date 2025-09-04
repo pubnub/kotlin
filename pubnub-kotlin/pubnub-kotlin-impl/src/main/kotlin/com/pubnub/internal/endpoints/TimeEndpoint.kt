@@ -28,14 +28,13 @@ class TimeEndpoint(pubnub: PubNubImpl, private val excludeFromRetry: Boolean = f
     override fun doWork(queryParams: HashMap<String, String>): Call<List<Long>> {
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "excludeFromRetry" to excludeFromRetry,
                         "queryParams" to queryParams
                     )
                 ),
-                details = "Time API call"
+                details = "Time API call",
             )
         )
 

@@ -39,7 +39,6 @@ class GetMessageActionsEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<PNGetMessageActionsResult> {
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "channel" to channel,
@@ -49,7 +48,7 @@ class GetMessageActionsEndpoint internal constructor(
                         "queryParams" to queryParams
                     )
                 ),
-                details = "GetMessageActions API call"
+                details = "GetMessageActions API call",
             )
         )
 

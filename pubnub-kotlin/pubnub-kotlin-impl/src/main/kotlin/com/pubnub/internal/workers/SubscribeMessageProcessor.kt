@@ -99,8 +99,7 @@ internal class SubscribeMessageProcessor(
             if (extractedMessage == null) {
                 log.debug(
                     LogMessage(
-                        location = this::class.java.simpleName,
-                        message = LogMessageContent.Text("unable to parse payload on #processIncomingMessages")
+                        message = LogMessageContent.Text("unable to parse payload on #processIncomingMessages"),
                     )
                 )
             }

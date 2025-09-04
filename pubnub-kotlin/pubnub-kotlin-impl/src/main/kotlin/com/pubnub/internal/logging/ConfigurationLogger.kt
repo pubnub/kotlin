@@ -88,9 +88,9 @@ object ConfigurationLogger {
 
         logger.debug(
             LogMessage(
-                location = className.toString(),
                 message = LogMessageContent.Object(message = configSummary),
                 details = "Configuration logged",
+                location = className.toString(),
             )
         )
     }

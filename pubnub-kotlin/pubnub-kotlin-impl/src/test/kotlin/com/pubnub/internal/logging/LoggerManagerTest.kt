@@ -63,9 +63,9 @@ class LoggerManagerTest {
         // Should not crash when logging
         logger.error(
             LogMessage(
-                location = "test",
                 message = LogMessageContent.Text("test error"),
                 type = LogMessageType.ERROR,
+                location = "test",
                 pubNubId = testLogConfig.pnInstanceId,
                 logLevel = Level.ERROR
             )
@@ -83,9 +83,9 @@ class LoggerManagerTest {
         // Should still be able to log without crashing
         logger.info(
             LogMessage(
-                location = "test",
                 message = LogMessageContent.Text("test info"),
                 type = LogMessageType.TEXT,
+                location = "test",
                 pubNubId = "test",
                 logLevel = Level.INFO
             )
@@ -208,9 +208,9 @@ class LoggerManagerTest {
         // Should be able to log without crashing
         logger.warn(
             LogMessage(
-                location = "test",
                 message = LogMessageContent.Text("test warning"),
                 type = LogMessageType.TEXT,
+                location = "test",
                 pubNubId = "test",
                 logLevel = Level.WARN
             )

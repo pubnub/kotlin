@@ -50,7 +50,6 @@ open class PublishFileMessageEndpoint(
     override fun doWork(queryParams: HashMap<String, String>): Call<List<Any>> {
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "channel" to channel,
@@ -64,7 +63,7 @@ open class PublishFileMessageEndpoint(
                         "queryParams" to queryParams
                     )
                 ),
-                details = "PublishFileMessage API call"
+                details = "PublishFileMessage API call",
             )
         )
 

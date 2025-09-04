@@ -37,7 +37,6 @@ class SetChannelMetadataEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNChannelMetadata>> {
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "channel" to channel,
@@ -51,7 +50,7 @@ class SetChannelMetadataEndpoint internal constructor(
                         "queryParams" to queryParams
                     )
                 ),
-                details = "SetChannelMetadata API call"
+                details = "SetChannelMetadata API call",
             )
         )
 

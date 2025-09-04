@@ -87,10 +87,9 @@ internal abstract class RetryableCallback<T>(
         val effectiveDelay: Duration = delay + randomDelayInMillis.milliseconds
         log.trace(
             LogMessage(
-                location = this::class.java.simpleName,
                 message = LogMessageContent.Text(
                     "Added random delay so effective retry delay is ${effectiveDelay.inWholeMilliseconds} millis"
-                )
+                ),
             )
         )
         // don't want to block the main thread in case of Android so using executorService
@@ -101,8 +100,7 @@ internal abstract class RetryableCallback<T>(
         } catch (_: RejectedExecutionException) {
             log.trace(
                 LogMessage(
-                    location = this::class.java.simpleName,
-                    message = LogMessageContent.Text("Unable to schedule retry, PubNub was likely already destroyed.")
+                    message = LogMessageContent.Text("Unable to schedule retry, PubNub was likely already destroyed."),
                 )
             )
         }

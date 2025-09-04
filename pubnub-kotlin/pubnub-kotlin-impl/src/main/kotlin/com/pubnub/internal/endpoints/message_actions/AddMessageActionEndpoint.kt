@@ -47,7 +47,6 @@ class AddMessageActionEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNMessageAction>> {
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "channel" to channel,
@@ -57,7 +56,7 @@ class AddMessageActionEndpoint internal constructor(
                         "queryParams" to queryParams
                     )
                 ),
-                details = "AddMessageAction API call"
+                details = "AddMessageAction API call",
             )
         )
 

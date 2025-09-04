@@ -28,7 +28,7 @@ class LoggerManager(
     private fun createLogger(logConfig: LogConfig, clazz: Class<*>): PNLogger {
         val slf4jLogger: Logger = loggerFactory(clazz)
         val toPortalLogger = ToPortalLogger(userId = logConfig.userId)
-        return CompositeLogger(slf4jLogger, toPortalLogger, logConfig.customLoggers, logConfig.pnInstanceId)
+        return CompositeLogger(slf4jLogger, toPortalLogger, logConfig.customLoggers, clazz.simpleName, logConfig.pnInstanceId)
     }
 
     private fun createFallbackLogger(clazz: Class<*>, cause: Exception): PNLogger {
@@ -38,7 +38,7 @@ class LoggerManager(
             fallbackSlf4jLogger.warn("Failed to create portal logger. Using fallback", cause)
 
             // Create a minimal logger
-            CompositeLogger(fallbackSlf4jLogger, pnInstanceId = "fallback-instance")
+            CompositeLogger(fallbackSlf4jLogger, location = clazz.simpleName, pnInstanceId = "fallback-instance")
         } catch (fallbackException: Exception) {
             // If even SLF4J fails, return no-op logger
             NoOpLogger(clazz)

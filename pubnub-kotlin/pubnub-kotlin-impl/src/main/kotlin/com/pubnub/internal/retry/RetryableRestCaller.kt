@@ -41,8 +41,7 @@ internal class RetryableRestCaller<T>(
             val effectiveDelayInMillis = getDelayBasedOnResponse(response).inWholeMilliseconds + randomDelayInMillis
             log.trace(
                 LogMessage(
-                    location = this::class.java.simpleName,
-                    message = LogMessageContent.Text("Added random delay so effective retry delay is $effectiveDelayInMillis")
+                    message = LogMessageContent.Text("Added random delay so effective retry delay is $effectiveDelayInMillis"),
                 )
             )
             Thread.sleep(effectiveDelayInMillis) // we want to sleep here on current thread since this is synchronous call

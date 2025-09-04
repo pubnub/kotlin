@@ -404,11 +404,10 @@ open class PubNubImpl(
     ): Publish {
         logger.warn(
             LogMessage(
-                location = this::class.simpleName ?: "PubNubImpl",
                 message = LogMessageContent.Text(
                     "DEPRECATED: fire() with ttl parameter is deprecated. Use fire(channel, message, meta, usePost) instead."
                 ),
-                details = "The ttl parameter is not used and this method will be removed in a future version"
+                details = "The ttl parameter is not used and this method will be removed in a future version",
             )
         )
         return fire(channel, message, meta, usePost)
@@ -495,11 +494,10 @@ open class PubNubImpl(
     ): History {
         logger.warn(
             LogMessage(
-                location = this::class.simpleName ?: "PubNubImpl",
                 message = LogMessageContent.Text(
                     "DEPRECATED: history() is deprecated. Use fetchMessages() instead."
                 ),
-                details = "This method will be removed in a future version"
+                details = "This method will be removed in a future version",
             )
         )
         return HistoryEndpoint(

@@ -61,7 +61,6 @@ internal class GenerateUploadUrlEndpoint(
     override fun doWork(queryParams: HashMap<String, String>): Call<GeneratedUploadUrlResponse> {
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "channel" to channel,
@@ -69,7 +68,7 @@ internal class GenerateUploadUrlEndpoint(
                         "queryParams" to queryParams
                     )
                 ),
-                details = "GenerateUploadUrl API call"
+                details = "GenerateUploadUrl API call",
             )
         )
 

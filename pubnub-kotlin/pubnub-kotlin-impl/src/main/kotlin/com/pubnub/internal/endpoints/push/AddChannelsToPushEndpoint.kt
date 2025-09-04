@@ -50,7 +50,6 @@ class AddChannelsToPushEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<Void> {
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "pushType" to pushType,
@@ -61,7 +60,7 @@ class AddChannelsToPushEndpoint internal constructor(
                         "queryParams" to queryParams
                     )
                 ),
-                details = "AddChannelsToPush API call"
+                details = "AddChannelsToPush API call",
             )
         )
 

@@ -85,7 +85,6 @@ class FetchMessagesEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<FetchMessagesEnvelope> {
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "channels" to channels,
@@ -98,7 +97,7 @@ class FetchMessagesEndpoint internal constructor(
                         "queryParams" to queryParams
                     )
                 ),
-                details = "FetchMessages API call"
+                details = "FetchMessages API call",
             )
         )
 

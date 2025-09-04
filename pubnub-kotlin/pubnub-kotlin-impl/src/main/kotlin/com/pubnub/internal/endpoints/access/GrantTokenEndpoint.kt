@@ -54,7 +54,6 @@ class GrantTokenEndpoint(
     override fun doWork(queryParams: HashMap<String, String>): Call<GrantTokenResponse> {
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "ttl" to ttl,
@@ -68,7 +67,7 @@ class GrantTokenEndpoint(
                         "queryParams" to queryParams
                     )
                 ),
-                details = "GrantToken API call"
+                details = "GrantToken API call",
             )
         )
 

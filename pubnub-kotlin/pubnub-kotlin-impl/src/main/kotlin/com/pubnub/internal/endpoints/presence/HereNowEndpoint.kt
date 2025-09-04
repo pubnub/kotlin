@@ -39,7 +39,6 @@ class HereNowEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<JsonElement>> {
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "channels" to channels,
@@ -50,7 +49,7 @@ class HereNowEndpoint internal constructor(
                         "queryParams" to queryParams
                     )
                 ),
-                details = "HereNow API call"
+                details = "HereNow API call",
             )
         )
 

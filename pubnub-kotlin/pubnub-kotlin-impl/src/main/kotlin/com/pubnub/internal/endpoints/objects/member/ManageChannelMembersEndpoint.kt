@@ -38,7 +38,6 @@ class ManageChannelMembersEndpoint(
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityArrayEnvelope<PNMember>> {
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "channel" to channel,
@@ -47,7 +46,7 @@ class ManageChannelMembersEndpoint(
                         "queryParams" to queryParams
                     )
                 ),
-                details = "ManageChannelMembers API call"
+                details = "ManageChannelMembers API call",
             )
         )
         val params =

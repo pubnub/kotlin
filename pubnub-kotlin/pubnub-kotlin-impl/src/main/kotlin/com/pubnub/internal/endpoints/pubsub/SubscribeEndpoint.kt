@@ -40,7 +40,6 @@ class SubscribeEndpoint internal constructor(pubnub: PubNubImpl) : EndpointCore<
     override fun doWork(queryParams: HashMap<String, String>): Call<SubscribeEnvelope> {
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "channels" to channels,
@@ -52,7 +51,7 @@ class SubscribeEndpoint internal constructor(pubnub: PubNubImpl) : EndpointCore<
                         "queryParams" to queryParams
                     )
                 ),
-                details = "Subscribe API call"
+                details = "Subscribe API call",
             )
         )
 

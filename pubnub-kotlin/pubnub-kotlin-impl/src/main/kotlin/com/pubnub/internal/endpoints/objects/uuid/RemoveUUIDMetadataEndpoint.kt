@@ -23,14 +23,13 @@ class RemoveUUIDMetadataEndpoint(
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<Any?>> {
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "uuid" to (uuid ?: configuration.userId.value),
                         "queryParams" to queryParams
                     )
                 ),
-                details = "RemoveUUIDMetadata API call"
+                details = "RemoveUUIDMetadata API call",
             )
         )
         return retrofitManager.objectsService.deleteUUIDMetadata(

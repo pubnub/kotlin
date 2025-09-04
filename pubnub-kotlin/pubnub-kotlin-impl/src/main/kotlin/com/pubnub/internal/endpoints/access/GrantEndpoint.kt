@@ -55,7 +55,6 @@ open class GrantEndpoint(
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<AccessManagerGrantPayload>> {
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "read" to read,
@@ -73,7 +72,7 @@ open class GrantEndpoint(
                         "queryParams" to queryParams
                     )
                 ),
-                details = "Grant API call"
+                details = "Grant API call",
             )
         )
 

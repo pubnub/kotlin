@@ -177,7 +177,6 @@ internal class PresenceNoOp(
                 result.onFailure {
                     log.error(
                         LogMessage(
-                            location = this::class.java.toString(),
                             message = LogMessageContent.Text("LeaveEffect from left operation failed: $it"),
                         )
                     )
@@ -195,7 +194,6 @@ internal class PresenceNoOp(
                 result.onFailure {
                     log.error(
                         LogMessage(
-                            location = this::class.java.toString(),
                             message = LogMessageContent.Text("LeaveEffect from leftAll operation failed: $it"),
                         )
                     )

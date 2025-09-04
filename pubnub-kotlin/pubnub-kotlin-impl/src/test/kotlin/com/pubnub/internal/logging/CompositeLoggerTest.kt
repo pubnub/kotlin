@@ -20,22 +20,23 @@ class CompositeLoggerTest {
     private val mockCustomLogger1 = mockk<CustomLogger>(relaxed = true)
     private val mockCustomLogger2 = mockk<CustomLogger>(relaxed = true)
     private val testInstanceId = "test-instance-id"
+    private val testLocation = "CompositeLoggerTest"
 
     private fun createTestLogMessage(): LogMessage {
         return LogMessage(
-            location = "test-location",
             message = LogMessageContent.Text("test message"),
             details = "test details",
-            type = LogMessageType.TEXT
+            type = LogMessageType.TEXT,
+            location = "test-location"
         )
     }
 
     private fun createTestLogMessageWithNulls(): LogMessage {
         return LogMessage(
-            location = "test-location",
             message = LogMessageContent.Text("test message"),
             details = null,
             type = LogMessageType.TEXT,
+            location = "test-location",
             pubNubId = null,
             logLevel = null
         )
@@ -48,6 +49,7 @@ class CompositeLoggerTest {
             slf4jLogger = mockSlf4jLogger,
             toPortalLogger = mockToPortalLogger,
             customLoggers = customLoggers,
+            location = testLocation,
             pnInstanceId = testInstanceId
         )
 
@@ -85,6 +87,7 @@ class CompositeLoggerTest {
             slf4jLogger = mockSlf4jLogger,
             toPortalLogger = mockToPortalLogger,
             customLoggers = customLoggers,
+            location = testLocation,
             pnInstanceId = testInstanceId
         )
 
@@ -122,6 +125,7 @@ class CompositeLoggerTest {
             slf4jLogger = mockSlf4jLogger,
             toPortalLogger = mockToPortalLogger,
             customLoggers = customLoggers,
+            location = testLocation,
             pnInstanceId = testInstanceId
         )
 
@@ -159,6 +163,7 @@ class CompositeLoggerTest {
             slf4jLogger = mockSlf4jLogger,
             toPortalLogger = mockToPortalLogger,
             customLoggers = customLoggers,
+            location = testLocation,
             pnInstanceId = testInstanceId
         )
 
@@ -196,6 +201,7 @@ class CompositeLoggerTest {
             slf4jLogger = mockSlf4jLogger,
             toPortalLogger = mockToPortalLogger,
             customLoggers = customLoggers,
+            location = testLocation,
             pnInstanceId = testInstanceId
         )
 
@@ -233,6 +239,7 @@ class CompositeLoggerTest {
             slf4jLogger = mockSlf4jLogger,
             toPortalLogger = null,
             customLoggers = customLoggers,
+            location = testLocation,
             pnInstanceId = testInstanceId
         )
 
@@ -251,6 +258,7 @@ class CompositeLoggerTest {
             slf4jLogger = mockSlf4jLogger,
             toPortalLogger = mockToPortalLogger,
             customLoggers = null,
+            location = testLocation,
             pnInstanceId = testInstanceId
         )
 
@@ -268,6 +276,7 @@ class CompositeLoggerTest {
             slf4jLogger = mockSlf4jLogger,
             toPortalLogger = mockToPortalLogger,
             customLoggers = emptyList(),
+            location = testLocation,
             pnInstanceId = testInstanceId
         )
 
@@ -290,6 +299,7 @@ class CompositeLoggerTest {
             slf4jLogger = mockSlf4jLogger,
             toPortalLogger = mockToPortalLogger,
             customLoggers = customLoggers,
+            location = testLocation,
             pnInstanceId = testInstanceId
         )
 
@@ -321,6 +331,7 @@ class CompositeLoggerTest {
             slf4jLogger = mockSlf4jLogger,
             toPortalLogger = mockToPortalLogger,
             customLoggers = customLoggers,
+            location = testLocation,
             pnInstanceId = testInstanceId
         )
 
@@ -343,6 +354,7 @@ class CompositeLoggerTest {
             slf4jLogger = mockSlf4jLogger,
             toPortalLogger = mockToPortalLogger,
             customLoggers = customLoggers,
+            location = testLocation,
             pnInstanceId = testInstanceId
         )
 
@@ -367,14 +379,15 @@ class CompositeLoggerTest {
             slf4jLogger = mockSlf4jLogger,
             toPortalLogger = mockToPortalLogger,
             customLoggers = customLoggers,
+            location = testLocation,
             pnInstanceId = testInstanceId
         )
 
         val messages = (1..100).map { i ->
             LogMessage(
-                location = "thread-test",
                 message = LogMessageContent.Text("message $i"),
-                type = LogMessageType.TEXT
+                type = LogMessageType.TEXT,
+                location = "thread-test"
             )
         }
 
@@ -403,15 +416,16 @@ class CompositeLoggerTest {
             slf4jLogger = mockSlf4jLogger,
             toPortalLogger = mockToPortalLogger,
             customLoggers = null,
+            location = testLocation,
             pnInstanceId = testInstanceId
         )
 
         val customTimestamp = "23:59:59.999"
         val originalMessage = LogMessage(
-            location = "test-location",
             message = LogMessageContent.Object(mapOf("key" to "value")),
             details = "important details",
             type = LogMessageType.OBJECT,
+            location = "test-location",
             timestamp = customTimestamp
         )
 
@@ -440,6 +454,7 @@ class CompositeLoggerTest {
             slf4jLogger = mockSlf4jLogger,
             toPortalLogger = mockToPortalLogger,
             customLoggers = null,
+            location = testLocation,
             pnInstanceId = testInstanceId
         )
 
@@ -469,14 +484,15 @@ class CompositeLoggerTest {
             slf4jLogger = mockSlf4jLogger,
             toPortalLogger = mockToPortalLogger,
             customLoggers = null,
+            location = testLocation,
             pnInstanceId = testInstanceId
         )
 
         // Create message with different pubNubId and logLevel
         val messageWithExistingValues = LogMessage(
-            location = "test-location",
             message = LogMessageContent.Text("test message"),
             type = LogMessageType.TEXT,
+            location = "test-location",
             pubNubId = "different-instance-id",
             logLevel = Level.ERROR // This should be overridden to WARN
         )

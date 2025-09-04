@@ -38,7 +38,6 @@ class SetUUIDMetadataEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNUUIDMetadata>> {
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "uuid" to (uuid ?: configuration.userId.value),
@@ -53,7 +52,7 @@ class SetUUIDMetadataEndpoint internal constructor(
                         "queryParams" to queryParams
                     )
                 ),
-                details = "SetUUIDMetadata API call"
+                details = "SetUUIDMetadata API call",
             )
         )
         val params = queryParams + withInclude.createIncludeQueryParams()

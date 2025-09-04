@@ -31,8 +31,7 @@ internal class WaitEffect(
     override fun runEffect() {
         log.trace(
             LogMessage(
-                location = this::class.java.simpleName,
-                message = LogMessageContent.Text("Running WaitEffect.")
+                message = LogMessageContent.Text("Running WaitEffect."),
             )
         )
         if (cancelled) {
@@ -47,8 +46,7 @@ internal class WaitEffect(
         } catch (_: RejectedExecutionException) {
             log.trace(
                 LogMessage(
-                    location = this::class.java.simpleName,
-                    message = LogMessageContent.Text("Unable to schedule retry, PubNub was likely already destroyed.")
+                    message = LogMessageContent.Text("Unable to schedule retry, PubNub was likely already destroyed."),
                 )
             )
         }

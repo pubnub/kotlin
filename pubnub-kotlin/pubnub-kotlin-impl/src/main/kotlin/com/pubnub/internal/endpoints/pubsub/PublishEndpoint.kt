@@ -51,7 +51,6 @@ class PublishEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<List<Any>> {
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "message" to message,

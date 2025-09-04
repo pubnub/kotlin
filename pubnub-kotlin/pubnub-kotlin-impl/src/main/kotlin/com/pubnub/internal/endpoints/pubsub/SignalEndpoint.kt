@@ -42,7 +42,6 @@ class SignalEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<List<Any>> {
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "channel" to channel,
@@ -51,7 +50,7 @@ class SignalEndpoint internal constructor(
                         "queryParams" to queryParams
                     )
                 ),
-                details = "Signal API call"
+                details = "Signal API call",
             )
         )
 

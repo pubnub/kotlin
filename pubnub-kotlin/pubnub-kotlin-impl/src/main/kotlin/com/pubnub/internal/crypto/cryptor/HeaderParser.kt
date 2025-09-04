@@ -184,12 +184,7 @@ internal class HeaderParser(val logConfig: LogConfig?) {
     }
 
     private fun logTraceMessage(message: String) {
-        log.trace(
-            LogMessage(
-                location = this::class.java.toString(),
-                message = LogMessageContent.Text(message),
-            )
-        )
+        log.trace(LogMessage(message = LogMessageContent.Text(message)))
     }
 
     private fun convertTwoBytesToIntBigEndian(

@@ -180,11 +180,11 @@ open class PubNubForJavaImpl(configuration: PNConfiguration) :
     override fun history(): History {
         logger.warn(
             LogMessage(
-                location = this::class.java.simpleName,
                 message = LogMessageContent.Text(
                     "DEPRECATED: history() is deprecated. Use fetchMessages() instead."
                 ),
-                details = "This method will be removed in a future version"
+                details = "This method will be removed in a future version",
+                location = this::class.java.simpleName
             )
         )
         return HistoryImpl(this)
@@ -210,11 +210,11 @@ open class PubNubForJavaImpl(configuration: PNConfiguration) :
     override fun grantToken(): GrantTokenBuilder {
         logger.warn(
             LogMessage(
-                location = this::class.java.simpleName,
                 message = LogMessageContent.Text(
                     "DEPRECATED: grantToken() without TTL is deprecated. Use grantToken(int ttl) instead."
                 ),
-                details = "This method will be removed in a future version"
+                details = "This method will be removed in a future version",
+                location = this::class.java.simpleName
             )
         )
         return GrantTokenImpl(this)
@@ -239,11 +239,11 @@ open class PubNubForJavaImpl(configuration: PNConfiguration) :
     override fun publish(): Publish {
         logger.warn(
             LogMessage(
-                location = this::class.java.simpleName,
                 message = LogMessageContent.Text(
                     "DEPRECATED: publish() builder pattern is deprecated. Use publish(Object message, String channel) instead."
                 ),
-                details = "This method will be removed in a future version"
+                details = "This method will be removed in a future version",
+                location = this::class.java.simpleName
             )
         )
         return PublishImpl(this)
@@ -256,11 +256,11 @@ open class PubNubForJavaImpl(configuration: PNConfiguration) :
     override fun signal(): Signal {
         logger.warn(
             LogMessage(
-                location = this::class.java.simpleName,
                 message = LogMessageContent.Text(
                     "DEPRECATED: signal() builder pattern is deprecated. Use signal(Object message, String channel) instead."
                 ),
-                details = "This method will be removed in a future version"
+                details = "This method will be removed in a future version",
+                location = this::class.java.simpleName
             )
         )
         return SignalImpl(this)
@@ -460,11 +460,11 @@ open class PubNubForJavaImpl(configuration: PNConfiguration) :
     override fun fire(): Publish {
         logger.warn(
             LogMessage(
-                location = this::class.java.simpleName,
                 message = LogMessageContent.Text(
                     "DEPRECATED: fire() builder pattern is deprecated. Use fire(Object message, String channel) instead."
                 ),
-                details = "This method will be removed in a future version"
+                details = "This method will be removed in a future version",
+                location = this::class.java.simpleName
             )
         )
         return publish().shouldStore(false).replicate(false)

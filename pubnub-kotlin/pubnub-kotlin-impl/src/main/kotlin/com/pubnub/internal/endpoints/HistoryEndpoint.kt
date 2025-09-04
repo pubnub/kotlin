@@ -52,7 +52,6 @@ class HistoryEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<JsonElement> {
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "channel" to channel,
@@ -65,7 +64,7 @@ class HistoryEndpoint internal constructor(
                         "queryParams" to queryParams
                     )
                 ),
-                details = "History API call"
+                details = "History API call",
             )
         )
 

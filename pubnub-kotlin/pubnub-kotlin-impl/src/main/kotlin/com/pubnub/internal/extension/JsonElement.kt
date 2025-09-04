@@ -57,8 +57,8 @@ private fun logAndReturnDecryptionError(logger: PNLogger): PubNubError {
     val pnError = PubNubError.CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED
     logger.warn(
         LogMessage(
-            location = "JsonElement.tryDecryptMessage",
             message = LogMessageContent.Text(pnError.message),
+            location = "JsonElement.tryDecryptMessage",
         )
     )
     return pnError

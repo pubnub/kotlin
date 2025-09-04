@@ -35,12 +35,7 @@ internal class EffectDispatcher<T : EffectInvocation>(
     }
 
     internal fun dispatch(effectInvocation: T) {
-        log.trace(
-            LogMessage(
-                location = this::class.java.simpleName,
-                message = LogMessageContent.Text("Dispatching effect: $effectInvocation")
-            )
-        )
+        log.trace(LogMessage(message = LogMessageContent.Text("Dispatching effect: $effectInvocation")))
 
         when (val type = effectInvocation.type) {
             is Cancel -> {

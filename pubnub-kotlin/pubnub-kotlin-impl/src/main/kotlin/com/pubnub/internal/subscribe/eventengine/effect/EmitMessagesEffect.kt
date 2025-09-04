@@ -23,8 +23,7 @@ internal class EmitMessagesEffect(
     override fun runEffect() {
         log.trace(
             LogMessage(
-                location = this::class.java.simpleName,
-                message = LogMessageContent.Text("Running EmitMessagesEffect: Emitting ${messages.size} messages to consumers")
+                message = LogMessageContent.Text("Running EmitMessagesEffect: Emitting ${messages.size} messages to consumers"),
             )
         )
         for (message in messages) {

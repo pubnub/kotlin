@@ -38,14 +38,13 @@ class AllChannelsChannelGroupEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<Map<String, Any>>> {
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "channelGroup" to channelGroup,
                         "queryParams" to queryParams
                     )
                 ),
-                details = "AllChannelsChannelGroup API call"
+                details = "AllChannelsChannelGroup API call",
             )
         )
 

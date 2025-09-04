@@ -49,7 +49,6 @@ class ListFilesEndpoint(
     override fun doWork(queryParams: HashMap<String, String>): Call<ListFilesResult> {
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "channel" to channel,
@@ -58,7 +57,7 @@ class ListFilesEndpoint(
                         "queryParams" to queryParams
                     )
                 ),
-                details = "ListFiles API call"
+                details = "ListFiles API call",
             )
         )
 

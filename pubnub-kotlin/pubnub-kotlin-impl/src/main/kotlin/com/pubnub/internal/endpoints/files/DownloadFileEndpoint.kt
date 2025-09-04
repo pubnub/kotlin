@@ -40,7 +40,6 @@ class DownloadFileEndpoint(
     override fun doWork(queryParams: HashMap<String, String>): Call<ResponseBody> {
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "channel" to channel,
@@ -50,7 +49,7 @@ class DownloadFileEndpoint(
                         "queryParams" to queryParams
                     )
                 ),
-                details = "DownloadFile API call"
+                details = "DownloadFile API call",
             )
         )
 

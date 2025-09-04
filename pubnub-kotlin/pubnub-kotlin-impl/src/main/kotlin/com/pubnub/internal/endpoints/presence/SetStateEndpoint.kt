@@ -47,7 +47,6 @@ class SetStateEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<JsonElement>> {
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "channels" to channels,
@@ -57,7 +56,7 @@ class SetStateEndpoint internal constructor(
                         "queryParams" to queryParams
                     )
                 ),
-                details = "SetState API call"
+                details = "SetState API call",
             )
         )
 

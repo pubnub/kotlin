@@ -14,12 +14,7 @@ internal class LeaveEffect(
     private val log = LoggerManager.instance.getLogger(logConfig, this::class.java)
 
     override fun runEffect() {
-        log.trace(
-            LogMessage(
-                location = this::class.java.simpleName,
-                message = LogMessageContent.Text("Running LeaveEffect.")
-            )
-        )
+        log.trace(LogMessage(message = LogMessageContent.Text("Running LeaveEffect.")))
         leaveRemoteAction.async { result ->
             result.onFailure {
             }

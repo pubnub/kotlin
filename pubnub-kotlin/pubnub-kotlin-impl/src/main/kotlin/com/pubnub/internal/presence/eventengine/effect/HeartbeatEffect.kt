@@ -24,12 +24,7 @@ internal class HeartbeatEffect(
     private val log = LoggerManager.instance.getLogger(logConfig, this::class.java)
 
     override fun runEffect() {
-        log.trace(
-            LogMessage(
-                location = this::class.java.simpleName,
-                message = LogMessageContent.Text("Running HeartbeatEffect"),
-            )
-        )
+        log.trace(LogMessage(message = LogMessageContent.Text("Running HeartbeatEffect")))
         heartbeatRemoteAction.async { result ->
             result.onFailure { exception ->
                 if (heartbeatNotificationOptions == PNHeartbeatNotificationOptions.ALL ||

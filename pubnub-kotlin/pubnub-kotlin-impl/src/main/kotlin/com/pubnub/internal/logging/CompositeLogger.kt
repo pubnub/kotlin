@@ -17,14 +17,15 @@ class CompositeLogger(
     private val slf4jLogger: Logger,
     private val toPortalLogger: PNLogger? = null,
     private val customLoggers: List<CustomLogger>? = null,
+    private val location: String,
     private val pnInstanceId: String, // todo move as a second param
 ) : PNLogger {
     override fun trace(message: LogMessage) {
         val enhancedLogMessage = LogMessage(
-            location = message.location,
             message = message.message,
             details = message.details,
             type = message.type,
+            location = message.location ?: location,
             pubNubId = pnInstanceId,
             logLevel = Level.TRACE,
             timestamp = message.timestamp
@@ -38,10 +39,10 @@ class CompositeLogger(
 
     override fun debug(message: LogMessage) {
         val enhancedLogMessage = LogMessage(
-            location = message.location,
             message = message.message,
             details = message.details,
             type = message.type,
+            location = message.location ?: location,
             pubNubId = pnInstanceId,
             logLevel = Level.DEBUG,
             timestamp = message.timestamp
@@ -55,10 +56,10 @@ class CompositeLogger(
 
     override fun info(message: LogMessage) {
         val enhancedLogMessage = LogMessage(
-            location = message.location,
             message = message.message,
             details = message.details,
             type = message.type,
+            location = message.location ?: location,
             pubNubId = pnInstanceId,
             logLevel = Level.INFO,
             timestamp = message.timestamp
@@ -72,10 +73,10 @@ class CompositeLogger(
 
     override fun warn(message: LogMessage) {
         val enhancedLogMessage = LogMessage(
-            location = message.location,
             message = message.message,
             details = message.details,
             type = message.type,
+            location = message.location ?: location,
             pubNubId = pnInstanceId,
             logLevel = Level.WARN,
             timestamp = message.timestamp
@@ -89,10 +90,10 @@ class CompositeLogger(
 
     override fun error(message: LogMessage) {
         val enhancedLogMessage = LogMessage(
-            location = message.location,
             message = message.message,
             details = message.details,
             type = message.type,
+            location = message.location ?: location,
             pubNubId = pnInstanceId,
             logLevel = Level.ERROR,
             timestamp = message.timestamp
@@ -148,7 +149,6 @@ class CompositeLogger(
                 // but don't let it crash the logging system
                 try {
                     val logMessage = LogMessage(
-                        location = "CompositeLogger",
                         message = LogMessageContent.Error(
                             ErrorDetails(
                                 type = this::class.java.simpleName,
@@ -156,6 +156,7 @@ class CompositeLogger(
                             )
                         ),
                         type = LogMessageType.ERROR,
+                        location = "CompositeLogger",
                         pubNubId = pnInstanceId,
                         logLevel = Level.ERROR
                     )

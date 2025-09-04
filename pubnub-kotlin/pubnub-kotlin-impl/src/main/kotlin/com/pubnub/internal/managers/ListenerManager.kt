@@ -31,8 +31,7 @@ class ListenerManager(val pubnub: PubNub) : MessagesConsumer, StatusConsumer, Ev
     private val statusListeners get() = listeners.filterIsInstance<StatusListener>()
     private val eventListeners get() = listeners.filterIsInstance<EventListener>()
 
-    private val logger: PNLogger =
-        LoggerManager.instance.getLogger((pubnub as PubNubImpl).logConfig, this::class.java)
+    private val log: PNLogger = LoggerManager.instance.getLogger((pubnub as PubNubImpl).logConfig, this::class.java)
 
     /**
      * Add a listener.
@@ -123,12 +122,7 @@ class ListenerManager(val pubnub: PubNub) : MessagesConsumer, StatusConsumer, Ev
             try {
                 action(element)
             } catch (e: Throwable) {
-                logger.warn(
-                    LogMessage(
-                        location = this::class.java.toString(),
-                        message = LogMessageContent.Text("Caught exception in listener: ${e.message}"),
-                    )
-                )
+                log.warn(LogMessage(message = LogMessageContent.Text("Caught exception in listener: ${e.message}")))
             }
         }
     }

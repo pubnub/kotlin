@@ -40,7 +40,6 @@ class LeaveEndpoint internal constructor(pubnub: PubNubImpl) : EndpointCore<Void
     override fun doWork(queryParams: HashMap<String, String>): Call<Void> {
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "channels" to channels,
@@ -48,7 +47,7 @@ class LeaveEndpoint internal constructor(pubnub: PubNubImpl) : EndpointCore<Void
                         "queryParams" to queryParams
                     )
                 ),
-                details = "Leave API call"
+                details = "Leave API call",
             )
         )
 

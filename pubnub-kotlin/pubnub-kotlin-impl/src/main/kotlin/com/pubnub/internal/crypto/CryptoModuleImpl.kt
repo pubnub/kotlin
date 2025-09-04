@@ -115,12 +115,7 @@ class CryptoModuleImpl internal constructor(
     }
 
     private fun logDebugMessage(message: String) {
-        log.debug(
-            LogMessage(
-                location = this::class.java.toString(),
-                message = LogMessageContent.Text(message),
-            )
-        )
+        log.debug(LogMessage(message = LogMessageContent.Text(message)))
     }
 
     private fun validateCryptorIdSize(cryptorId: ByteArray) {

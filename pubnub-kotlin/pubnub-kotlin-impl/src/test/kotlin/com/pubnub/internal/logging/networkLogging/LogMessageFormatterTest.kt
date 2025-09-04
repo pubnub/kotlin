@@ -140,10 +140,10 @@ class LogMessageFormatterTest {
     @Test
     fun `simplified extension function should format complete log message`() {
         val logMessage = LogMessage(
-            location = "TestClass.testMethod",
             message = LogMessageContent.Text("This is a test message"),
             details = "Additional context information",
             type = LogMessageType.TEXT,
+            location = "TestClass.testMethod",
             pubNubId = "test-instance-123",
             logLevel = Level.INFO
         )
@@ -159,10 +159,10 @@ class LogMessageFormatterTest {
     @Test
     fun `simplified extension function should handle null details`() {
         val logMessage = LogMessage(
-            location = "AnotherClass.anotherMethod",
             message = LogMessageContent.Object(mapOf("key" to "value")),
             details = null,
             type = LogMessageType.OBJECT,
+            location = "AnotherClass.anotherMethod",
             pubNubId = "test-instance-456",
             logLevel = Level.DEBUG
         )
@@ -193,10 +193,10 @@ class LogMessageFormatterTest {
         )
         val requestLog = NetworkLog.Request(networkRequest, canceled = false, failed = false)
         val logMessage = LogMessage(
-            location = "PublishEndpoint",
             message = LogMessageContent.NetworkRequest(requestLog),
             details = "Publishing message to channel",
             type = LogMessageType.NETWORK_REQUEST,
+            location = "PublishEndpoint",
             pubNubId = "publish-instance",
             logLevel = Level.DEBUG
         )

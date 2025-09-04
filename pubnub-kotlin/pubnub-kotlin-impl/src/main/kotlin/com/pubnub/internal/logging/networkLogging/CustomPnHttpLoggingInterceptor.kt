@@ -80,9 +80,9 @@ class CustomPnHttpLoggingInterceptor(
         )
 
         val logMessage = LogMessage(
-            location = location,
             message = LogMessageContent.NetworkRequest(requestLog),
             details = "HTTP Request",
+            location = location,
         )
 
         logger.debug(logMessage)
@@ -131,9 +131,9 @@ class CustomPnHttpLoggingInterceptor(
         val responseLog = NetworkLog.Response(message = networkResponse)
 
         val logMessage = LogMessage(
-            location = location,
             message = LogMessageContent.NetworkResponse(responseLog),
             details = "HTTP Response",
+            location = location,
         )
 
         logger.debug(logMessage)
@@ -158,9 +158,9 @@ class CustomPnHttpLoggingInterceptor(
         )
 
         val logMessage = LogMessage(
-            location = location,
             message = errorDetails,
             details = "HTTP Request failed after ${duration}ms: ${error.message}",
+            location = location,
         )
 
         logger.error(logMessage)

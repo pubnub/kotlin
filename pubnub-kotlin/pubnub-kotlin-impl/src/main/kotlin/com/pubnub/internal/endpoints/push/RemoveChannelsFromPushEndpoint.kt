@@ -50,7 +50,6 @@ class RemoveChannelsFromPushEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<Void> {
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "pushType" to pushType,
@@ -61,7 +60,7 @@ class RemoveChannelsFromPushEndpoint internal constructor(
                         "queryParams" to queryParams
                     )
                 ),
-                details = "RemoveChannelsFromPush API call"
+                details = "RemoveChannelsFromPush API call",
             )
         )
 

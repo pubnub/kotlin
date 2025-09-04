@@ -14,7 +14,7 @@ internal class EventEngine<Ei : EffectInvocation, Ev : Event, S : State<Ei, Ev, 
     private val logConfig: LogConfig,
     private val executorService: ExecutorService = Executors.newSingleThreadExecutor(),
 ) {
-    private val log = LoggerManager.instance.getLogger(logConfig, State::class.java)
+    private val log = LoggerManager.instance.getLogger(logConfig, this::class.java)
 
     fun start() {
         executorService.submit {
@@ -36,23 +36,21 @@ internal class EventEngine<Ei : EffectInvocation, Ev : Event, S : State<Ei, Ev, 
     internal fun performTransitionAndEmitEffects(event: Ev) {
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Text(
                     "Current state is: ${currentState::class.simpleName} ; ${
                         event::class.java.name.substringAfterLast('.').substringBefore('$')
                     } to be handled is: $event ",
-                )
+                ),
             )
         )
         val (newState, invocations) = transition(currentState, event)
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Text(
                     "New state is: ${newState::class.simpleName} ; Emitting fallowing effects: ${
                         invocations.joinToString { it::class.java.name.substringAfterLast('.').substringAfter('$') }
                     }",
-                )
+                ),
             )
         )
         currentState = newState

@@ -43,7 +43,6 @@ class ListPushProvisionsEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<List<String>> {
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "pushType" to pushType,
@@ -53,7 +52,7 @@ class ListPushProvisionsEndpoint internal constructor(
                         "queryParams" to queryParams
                     )
                 ),
-                details = "ListPushProvisions API call"
+                details = "ListPushProvisions API call",
             )
         )
 

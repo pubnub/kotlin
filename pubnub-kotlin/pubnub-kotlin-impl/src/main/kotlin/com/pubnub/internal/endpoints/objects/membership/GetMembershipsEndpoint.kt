@@ -33,14 +33,13 @@ class GetMembershipsEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityArrayEnvelope<PNChannelMembership>> {
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "uuid" to uuid,
                         "queryParams" to queryParams
                     )
                 ),
-                details = "GetMemberships API call"
+                details = "GetMemberships API call",
             )
         )
         val params =

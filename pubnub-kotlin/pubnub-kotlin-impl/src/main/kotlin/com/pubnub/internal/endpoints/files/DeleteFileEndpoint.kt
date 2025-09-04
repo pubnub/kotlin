@@ -37,7 +37,6 @@ class DeleteFileEndpoint(
     override fun doWork(queryParams: HashMap<String, String>): Call<Unit> {
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "channel" to channel,
@@ -46,7 +45,7 @@ class DeleteFileEndpoint(
                         "queryParams" to queryParams
                     )
                 ),
-                details = "DeleteFile API call"
+                details = "DeleteFile API call",
             )
         )
 

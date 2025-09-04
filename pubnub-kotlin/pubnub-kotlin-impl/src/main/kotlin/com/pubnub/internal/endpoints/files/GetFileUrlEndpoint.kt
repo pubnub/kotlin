@@ -49,7 +49,6 @@ class GetFileUrlEndpoint(
     override fun sync(): PNFileUrlResult {
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "channel" to channel,
@@ -57,7 +56,7 @@ class GetFileUrlEndpoint(
                         "fileId" to fileId
                     )
                 ),
-                details = "GetFileUrl API call"
+                details = "GetFileUrl API call",
             )
         )
 

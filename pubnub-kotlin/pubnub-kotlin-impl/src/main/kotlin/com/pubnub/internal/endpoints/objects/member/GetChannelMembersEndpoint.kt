@@ -32,14 +32,13 @@ class GetChannelMembersEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityArrayEnvelope<PNMember>> {
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "channel" to channel,
                         "queryParams" to queryParams
                     )
                 ),
-                details = "GetChannelMembers API call"
+                details = "GetChannelMembers API call",
             )
         )
         val params =

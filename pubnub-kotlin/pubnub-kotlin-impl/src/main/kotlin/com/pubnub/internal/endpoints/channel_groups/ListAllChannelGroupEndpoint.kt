@@ -25,13 +25,12 @@ class ListAllChannelGroupEndpoint internal constructor(pubnub: PubNubImpl) :
         override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<Map<String, Any>>> {
             log.trace(
                 LogMessage(
-                    location = this::class.java.toString(),
                     message = LogMessageContent.Object(
                         message = mapOf(
                             "queryParams" to queryParams
                         )
                     ),
-                    details = "ListAllChannelGroup API call"
+                    details = "ListAllChannelGroup API call",
                 )
             )
 

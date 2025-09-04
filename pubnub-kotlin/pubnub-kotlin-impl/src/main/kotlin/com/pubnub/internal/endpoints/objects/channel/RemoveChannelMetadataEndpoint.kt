@@ -23,14 +23,13 @@ class RemoveChannelMetadataEndpoint(
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<Any?>> {
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "channel" to channel,
                         "queryParams" to queryParams
                     )
                 ),
-                details = "RemoveChannelMetadata API call"
+                details = "RemoveChannelMetadata API call",
             )
         )
         return retrofitManager.objectsService.deleteChannelMetadata(

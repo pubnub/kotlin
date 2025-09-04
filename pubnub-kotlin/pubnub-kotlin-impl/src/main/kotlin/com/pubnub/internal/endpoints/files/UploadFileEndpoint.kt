@@ -65,8 +65,7 @@ internal class UploadFileEndpoint(
             } catch (t: Throwable) {
                 log.warn(
                     LogMessage(
-                        location = this::class.java.toString(),
-                        message = LogMessageContent.Text("Content-Type: $contentType was not recognized by MediaType.get: ${t.message}")
+                        message = LogMessageContent.Text("Content-Type: $contentType was not recognized by MediaType.get: ${t.message}"),
                     )
                 )
                 APPLICATION_OCTET_STREAM

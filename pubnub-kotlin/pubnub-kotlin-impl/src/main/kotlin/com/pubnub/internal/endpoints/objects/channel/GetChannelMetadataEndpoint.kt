@@ -29,14 +29,13 @@ class GetChannelMetadataEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNChannelMetadata>> {
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "channel" to channel,
                         "queryParams" to queryParams
                     )
                 ),
-                details = "GetChannelMetadata API call"
+                details = "GetChannelMetadata API call",
             )
         )
         val params = queryParams + includeQueryParam.createIncludeQueryParams()

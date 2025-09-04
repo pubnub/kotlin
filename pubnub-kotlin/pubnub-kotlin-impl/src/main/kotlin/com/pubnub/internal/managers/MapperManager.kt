@@ -234,21 +234,11 @@ class MapperManager(private val logConfig: LogConfig) {
         input: JsonElement?,
         clazz: Class<T>,
     ): T {
-        log.debug(
-            LogMessage(
-                location = this::class.java.simpleName,
-                message = LogMessageContent.Text("Deserializing message content")
-            )
-        )
+        log.debug(LogMessage(message = LogMessageContent.Text("Deserializing message content")))
 
         val result = this.objectMapper.fromJson(input, clazz) as T
 
-        log.debug(
-            LogMessage(
-                location = this::class.java.simpleName,
-                message = LogMessageContent.Text("Message deserialized successfully")
-            )
-        )
+        log.debug(LogMessage(message = LogMessageContent.Text("Message deserialized successfully")))
 
         return result
     }
@@ -261,12 +251,7 @@ class MapperManager(private val logConfig: LogConfig) {
     }
 
     fun toJson(input: Any?): String {
-        log.debug(
-            LogMessage(
-                location = this::class.java.simpleName,
-                message = LogMessageContent.Text("Serializing message content")
-            )
-        )
+        log.debug(LogMessage(message = LogMessageContent.Text("Serializing message content")))
         try {
             val result = if (input is List<*> && input.javaClass.isAnonymousClass) {
                 objectMapper.toJson(input, List::class.java)
@@ -278,18 +263,12 @@ class MapperManager(private val logConfig: LogConfig) {
                 objectMapper.toJson(input)
             }
 
-            log.debug(
-                LogMessage(
-                    location = this::class.java.simpleName,
-                    message = LogMessageContent.Text("Message serialized successfully")
-                )
-            )
+            log.debug(LogMessage(message = LogMessageContent.Text("Message serialized successfully")))
 
             return result
         } catch (e: JsonParseException) {
             log.error(
                 LogMessage(
-                    location = this::class.java.simpleName, // todo infer in CompositeLogger
                     message = LogMessageContent.Error(
                         ErrorDetails(
                             type = e.javaClass.simpleName,

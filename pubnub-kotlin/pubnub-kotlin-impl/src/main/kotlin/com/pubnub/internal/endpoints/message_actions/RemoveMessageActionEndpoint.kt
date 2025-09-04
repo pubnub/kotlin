@@ -39,7 +39,6 @@ class RemoveMessageActionEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<Void> {
         log.trace(
             LogMessage(
-                location = this::class.java.toString(),
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "channel" to channel,
@@ -48,7 +47,7 @@ class RemoveMessageActionEndpoint internal constructor(
                         "queryParams" to queryParams
                     )
                 ),
-                details = "RemoveMessageAction API call"
+                details = "RemoveMessageAction API call",
             )
         )
 
