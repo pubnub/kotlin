@@ -1,5 +1,6 @@
 package com.pubnub.internal.logging
 
+import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.v2.PNConfiguration
@@ -21,7 +22,7 @@ object ConfigurationLogger {
             // Security and connection settings
             "secure" to configuration.secure,
             "origin" to (configuration.origin.takeIf { it.isNotBlank() } ?: "default"),
-            "logVerbosity" to configuration.logVerbosity.name,
+            "logVerbosity" to (configuration.logVerbosity.takeIf { it == PNLogVerbosity.BODY }?.let { "(Deprecated) ${it.name}" } ?: "not set"),
             "cacheBusting" to configuration.cacheBusting,
             // Timeout configurations
             "connectTimeout" to configuration.connectTimeout,

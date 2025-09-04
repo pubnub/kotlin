@@ -53,6 +53,8 @@ import com.pubnub.api.endpoints.push.RemoveChannelsFromPush
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.logging.LogConfig
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions
 import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions
@@ -186,7 +188,7 @@ open class PubNubImpl(
     val pnsdkName: String = PNSDK_PUBNUB_KOTLIN,
     eventEnginesConf: EventEnginesConf = EventEnginesConf()
 ) : PubNub {
-    private val logger: PNLogger by lazy { LoggerManager.instance.getLogger(logConfig, this::class.java) }
+    protected val logger: PNLogger by lazy { LoggerManager.instance.getLogger(logConfig, this::class.java) }
     internal val tokenManager: TokenManager = TokenManager()
 
     init {
@@ -399,7 +401,18 @@ open class PubNubImpl(
         meta: Any?,
         usePost: Boolean,
         ttl: Int?,
-    ): Publish = fire(channel, message, meta, usePost)
+    ): Publish {
+        logger.warn(
+            LogMessage(
+                location = this::class.simpleName ?: "PubNubImpl",
+                message = LogMessageContent.Text(
+                    "DEPRECATED: fire() with ttl parameter is deprecated. Use fire(channel, message, meta, usePost) instead."
+                ),
+                details = "The ttl parameter is not used and this method will be removed in a future version"
+            )
+        )
+        return fire(channel, message, meta, usePost)
+    }
 
     override fun signal(
         channel: String,
@@ -480,6 +493,15 @@ open class PubNubImpl(
         includeTimetoken: Boolean,
         includeMeta: Boolean,
     ): History {
+        logger.warn(
+            LogMessage(
+                location = this::class.simpleName ?: "PubNubImpl",
+                message = LogMessageContent.Text(
+                    "DEPRECATED: history() is deprecated. Use fetchMessages() instead."
+                ),
+                details = "This method will be removed in a future version"
+            )
+        )
         return HistoryEndpoint(
             pubnub = this,
             channel = channel,
