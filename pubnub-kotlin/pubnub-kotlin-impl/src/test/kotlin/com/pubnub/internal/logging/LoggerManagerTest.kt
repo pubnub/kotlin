@@ -64,8 +64,8 @@ class LoggerManagerTest {
         logger.error(
             LogMessage(
                 location = "test",
-                type = LogMessageType.ERROR,
                 message = LogMessageContent.Text("test error"),
+                type = LogMessageType.ERROR,
                 pubNubId = testLogConfig.pnInstanceId,
                 logLevel = Level.ERROR
             )
@@ -84,8 +84,8 @@ class LoggerManagerTest {
         logger.info(
             LogMessage(
                 location = "test",
-                type = LogMessageType.TEXT,
                 message = LogMessageContent.Text("test info"),
+                type = LogMessageType.TEXT,
                 pubNubId = "test",
                 logLevel = Level.INFO
             )
@@ -209,8 +209,8 @@ class LoggerManagerTest {
         logger.warn(
             LogMessage(
                 location = "test",
-                type = LogMessageType.TEXT,
                 message = LogMessageContent.Text("test warning"),
+                type = LogMessageType.TEXT,
                 pubNubId = "test",
                 logLevel = Level.WARN
             )

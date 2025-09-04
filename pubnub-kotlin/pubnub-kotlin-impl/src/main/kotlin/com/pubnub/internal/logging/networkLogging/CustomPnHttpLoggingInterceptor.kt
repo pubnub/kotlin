@@ -24,7 +24,6 @@ class CustomPnHttpLoggingInterceptor(
     private val mapperManager: MapperManager,
     private val logVerbosity: PNLogVerbosity,
 ) : Interceptor {
-
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val requestStartTime = System.currentTimeMillis()

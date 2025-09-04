@@ -24,18 +24,18 @@ class CompositeLoggerTest {
     private fun createTestLogMessage(): LogMessage {
         return LogMessage(
             location = "test-location",
-            type = LogMessageType.TEXT,
             message = LogMessageContent.Text("test message"),
-            details = "test details"
+            details = "test details",
+            type = LogMessageType.TEXT
         )
     }
 
     private fun createTestLogMessageWithNulls(): LogMessage {
         return LogMessage(
             location = "test-location",
-            type = LogMessageType.TEXT,
             message = LogMessageContent.Text("test message"),
             details = null,
+            type = LogMessageType.TEXT,
             pubNubId = null,
             logLevel = null
         )
@@ -373,8 +373,8 @@ class CompositeLoggerTest {
         val messages = (1..100).map { i ->
             LogMessage(
                 location = "thread-test",
-                type = LogMessageType.TEXT,
-                message = LogMessageContent.Text("message $i")
+                message = LogMessageContent.Text("message $i"),
+                type = LogMessageType.TEXT
             )
         }
 
@@ -409,9 +409,9 @@ class CompositeLoggerTest {
         val customTimestamp = "23:59:59.999"
         val originalMessage = LogMessage(
             location = "test-location",
-            type = LogMessageType.OBJECT,
             message = LogMessageContent.Object(mapOf("key" to "value")),
             details = "important details",
+            type = LogMessageType.OBJECT,
             timestamp = customTimestamp
         )
 
@@ -475,8 +475,8 @@ class CompositeLoggerTest {
         // Create message with different pubNubId and logLevel
         val messageWithExistingValues = LogMessage(
             location = "test-location",
-            type = LogMessageType.TEXT,
             message = LogMessageContent.Text("test message"),
+            type = LogMessageType.TEXT,
             pubNubId = "different-instance-id",
             logLevel = Level.ERROR // This should be overridden to WARN
         )

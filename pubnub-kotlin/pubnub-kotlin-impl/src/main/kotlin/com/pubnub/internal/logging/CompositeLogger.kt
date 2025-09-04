@@ -23,8 +23,8 @@ class CompositeLogger(
         val enhancedLogMessage = LogMessage(
             location = message.location,
             message = message.message,
-            type = message.type,
             details = message.details,
+            type = message.type,
             pubNubId = pnInstanceId,
             logLevel = Level.TRACE,
             timestamp = message.timestamp
@@ -40,8 +40,8 @@ class CompositeLogger(
         val enhancedLogMessage = LogMessage(
             location = message.location,
             message = message.message,
-            type = message.type,
             details = message.details,
+            type = message.type,
             pubNubId = pnInstanceId,
             logLevel = Level.DEBUG,
             timestamp = message.timestamp
@@ -57,8 +57,8 @@ class CompositeLogger(
         val enhancedLogMessage = LogMessage(
             location = message.location,
             message = message.message,
-            type = message.type,
             details = message.details,
+            type = message.type,
             pubNubId = pnInstanceId,
             logLevel = Level.INFO,
             timestamp = message.timestamp
@@ -74,8 +74,8 @@ class CompositeLogger(
         val enhancedLogMessage = LogMessage(
             location = message.location,
             message = message.message,
-            type = message.type,
             details = message.details,
+            type = message.type,
             pubNubId = pnInstanceId,
             logLevel = Level.WARN,
             timestamp = message.timestamp
@@ -91,8 +91,8 @@ class CompositeLogger(
         val enhancedLogMessage = LogMessage(
             location = message.location,
             message = message.message,
-            type = message.type,
             details = message.details,
+            type = message.type,
             pubNubId = pnInstanceId,
             logLevel = Level.ERROR,
             timestamp = message.timestamp
