@@ -4,7 +4,6 @@ import com.pubnub.api.endpoints.objects.channel.GetChannelMetadata
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataResult
 import com.pubnub.api.retry.RetryableEndpointGroup
@@ -31,7 +30,6 @@ class GetChannelMetadataEndpoint internal constructor(
         log.trace(
             LogMessage(
                 location = this::class.java.toString(),
-                type = LogMessageType.OBJECT,
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "channel" to channel,

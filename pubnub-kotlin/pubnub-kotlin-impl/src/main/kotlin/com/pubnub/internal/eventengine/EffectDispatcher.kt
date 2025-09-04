@@ -3,7 +3,6 @@ package com.pubnub.internal.eventengine
 import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.pubnub.api.logging.LogMessageType
 import com.pubnub.internal.logging.LoggerManager
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ExecutorService
@@ -39,7 +38,6 @@ internal class EffectDispatcher<T : EffectInvocation>(
         log.trace(
             LogMessage(
                 location = this::class.java.simpleName,
-                type = LogMessageType.TEXT,
                 message = LogMessageContent.Text("Dispatching effect: $effectInvocation")
             )
         )

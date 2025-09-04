@@ -4,7 +4,6 @@ import com.pubnub.api.endpoints.objects.uuid.GetAllUUIDMetadata
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult
@@ -34,7 +33,6 @@ class GetAllUUIDMetadataEndpoint internal constructor(
         log.trace(
             LogMessage(
                 location = this::class.java.toString(),
-                type = LogMessageType.OBJECT,
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "queryParams" to queryParams

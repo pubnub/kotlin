@@ -5,7 +5,6 @@ import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.pubnub.api.logging.LogMessageType
 import com.pubnub.internal.eventengine.ManagedEffect
 import com.pubnub.internal.eventengine.Sink
 import com.pubnub.internal.logging.LoggerManager
@@ -22,7 +21,6 @@ internal class ReceiveMessagesEffect(
         log.trace(
             LogMessage(
                 location = this::class.java.simpleName,
-                type = LogMessageType.TEXT,
                 message = LogMessageContent.Text("Running ReceiveMessagesEffect")
             )
         )

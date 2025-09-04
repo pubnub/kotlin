@@ -1,6 +1,7 @@
 package com.pubnub.internal.logging
 
 import com.pubnub.api.logging.CustomLogger
+import com.pubnub.api.logging.ErrorDetails
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.logging.LogMessageType
@@ -21,8 +22,8 @@ class CompositeLogger(
     override fun trace(message: LogMessage) {
         val enhancedLogMessage = LogMessage(
             location = message.location,
-            type = message.type,
             message = message.message,
+            type = message.type,
             details = message.details,
             pubNubId = pnInstanceId,
             logLevel = Level.TRACE,
@@ -38,8 +39,8 @@ class CompositeLogger(
     override fun debug(message: LogMessage) {
         val enhancedLogMessage = LogMessage(
             location = message.location,
-            type = message.type,
             message = message.message,
+            type = message.type,
             details = message.details,
             pubNubId = pnInstanceId,
             logLevel = Level.DEBUG,
@@ -55,8 +56,8 @@ class CompositeLogger(
     override fun info(message: LogMessage) {
         val enhancedLogMessage = LogMessage(
             location = message.location,
-            type = message.type,
             message = message.message,
+            type = message.type,
             details = message.details,
             pubNubId = pnInstanceId,
             logLevel = Level.INFO,
@@ -72,8 +73,8 @@ class CompositeLogger(
     override fun warn(message: LogMessage) {
         val enhancedLogMessage = LogMessage(
             location = message.location,
-            type = message.type,
             message = message.message,
+            type = message.type,
             details = message.details,
             pubNubId = pnInstanceId,
             logLevel = Level.WARN,
@@ -89,8 +90,8 @@ class CompositeLogger(
     override fun error(message: LogMessage) {
         val enhancedLogMessage = LogMessage(
             location = message.location,
-            type = message.type,
             message = message.message,
+            type = message.type,
             details = message.details,
             pubNubId = pnInstanceId,
             logLevel = Level.ERROR,
@@ -109,22 +110,27 @@ class CompositeLogger(
                 logger.trace(logMessage = message)
                 logger.trace(message = message.simplified())
             }
+
             Level.DEBUG -> {
                 logger.debug(logMessage = message)
                 logger.debug(message = message.simplified())
             }
+
             Level.INFO -> {
                 logger.info(logMessage = message)
                 logger.info(message = message.simplified())
             }
+
             Level.WARN -> {
                 logger.warn(logMessage = message)
                 logger.warn(message = message.simplified())
             }
+
             Level.ERROR -> {
                 logger.error(logMessage = message)
                 logger.error(message = message.simplified())
             }
+
             else -> throw IllegalArgumentException("Unsupported log level: ${message.logLevel}")
         }
     }
@@ -143,10 +149,13 @@ class CompositeLogger(
                 try {
                     val logMessage = LogMessage(
                         location = "CompositeLogger",
-                        type = LogMessageType.ERROR,
-                        message = LogMessageContent.Text(
-                            "Custom logger ${logger.name} failed: ${e.message}"
+                        message = LogMessageContent.Error(
+                            ErrorDetails(
+                                type = this::class.java.simpleName,
+                                message = "Custom logger ${logger.name} failed: ${e.message}",
+                            )
                         ),
+                        type = LogMessageType.ERROR,
                         pubNubId = pnInstanceId,
                         logLevel = Level.ERROR
                     )

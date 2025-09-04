@@ -5,7 +5,6 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.pubnub.api.logging.LogMessageType
 import com.pubnub.internal.crypto.readExactlyNBytez
 import com.pubnub.internal.logging.LoggerManager
 import java.io.BufferedInputStream
@@ -188,7 +187,6 @@ internal class HeaderParser(val logConfig: LogConfig?) {
         log.trace(
             LogMessage(
                 location = this::class.java.toString(),
-                type = LogMessageType.TEXT,
                 message = LogMessageContent.Text(message),
             )
         )

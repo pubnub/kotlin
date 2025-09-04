@@ -6,7 +6,6 @@ import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.internal.eventengine.EffectDispatcher
 import com.pubnub.internal.eventengine.EventEngineConf
@@ -179,7 +178,6 @@ internal class PresenceNoOp(
                     log.error(
                         LogMessage(
                             location = this::class.java.toString(),
-                            type = LogMessageType.TEXT,
                             message = LogMessageContent.Text("LeaveEffect from left operation failed: $it"),
                         )
                     )
@@ -198,7 +196,6 @@ internal class PresenceNoOp(
                     log.error(
                         LogMessage(
                             location = this::class.java.toString(),
-                            type = LogMessageType.TEXT,
                             message = LogMessageContent.Text("LeaveEffect from leftAll operation failed: $it"),
                         )
                     )

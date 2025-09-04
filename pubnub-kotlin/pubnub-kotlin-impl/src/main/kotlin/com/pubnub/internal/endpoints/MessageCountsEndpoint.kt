@@ -7,7 +7,6 @@ import com.pubnub.api.endpoints.MessageCounts
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.models.consumer.history.PNMessageCountResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
@@ -47,7 +46,6 @@ class MessageCountsEndpoint internal constructor(
         log.trace(
             LogMessage(
                 location = this::class.java.toString(),
-                type = LogMessageType.OBJECT,
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "channels" to channels,

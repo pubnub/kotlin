@@ -5,7 +5,6 @@ import com.google.gson.JsonNull
 import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.models.consumer.files.PNDownloadableFile
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
@@ -101,7 +100,6 @@ internal class SubscribeMessageProcessor(
                 log.debug(
                     LogMessage(
                         location = this::class.java.simpleName,
-                        type = LogMessageType.TEXT,
                         message = LogMessageContent.Text("unable to parse payload on #processIncomingMessages")
                     )
                 )

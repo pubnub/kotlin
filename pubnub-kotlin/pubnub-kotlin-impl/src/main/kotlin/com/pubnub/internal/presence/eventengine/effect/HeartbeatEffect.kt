@@ -7,7 +7,6 @@ import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.internal.eventengine.Effect
 import com.pubnub.internal.eventengine.Sink
@@ -28,7 +27,6 @@ internal class HeartbeatEffect(
         log.trace(
             LogMessage(
                 location = this::class.java.simpleName,
-                type = LogMessageType.TEXT,
                 message = LogMessageContent.Text("Running HeartbeatEffect"),
             )
         )

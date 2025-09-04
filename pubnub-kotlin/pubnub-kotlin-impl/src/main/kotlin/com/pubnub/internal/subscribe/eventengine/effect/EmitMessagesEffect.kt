@@ -3,7 +3,6 @@ package com.pubnub.internal.subscribe.eventengine.effect
 import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
@@ -25,7 +24,6 @@ internal class EmitMessagesEffect(
         log.trace(
             LogMessage(
                 location = this::class.java.simpleName,
-                type = LogMessageType.TEXT,
                 message = LogMessageContent.Text("Running EmitMessagesEffect: Emitting ${messages.size} messages to consumers")
             )
         )

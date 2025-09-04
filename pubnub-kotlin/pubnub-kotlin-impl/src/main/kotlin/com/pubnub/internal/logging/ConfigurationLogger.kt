@@ -2,7 +2,6 @@ package com.pubnub.internal.logging
 
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.v2.PNConfiguration
 
 object ConfigurationLogger {
@@ -89,7 +88,6 @@ object ConfigurationLogger {
         logger.debug(
             LogMessage(
                 location = className.toString(),
-                type = LogMessageType.OBJECT,
                 message = LogMessageContent.Object(message = configSummary),
                 details = "Configuration logged",
             )

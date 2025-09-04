@@ -7,7 +7,6 @@ import com.pubnub.api.endpoints.History
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.models.consumer.history.PNHistoryItemResult
 import com.pubnub.api.models.consumer.history.PNHistoryResult
 import com.pubnub.api.retry.RetryableEndpointGroup
@@ -54,7 +53,6 @@ class HistoryEndpoint internal constructor(
         log.trace(
             LogMessage(
                 location = this::class.java.toString(),
-                type = LogMessageType.OBJECT,
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "channel" to channel,

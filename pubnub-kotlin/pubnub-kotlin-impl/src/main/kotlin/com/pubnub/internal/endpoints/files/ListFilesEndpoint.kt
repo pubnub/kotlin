@@ -6,7 +6,6 @@ import com.pubnub.api.endpoints.files.ListFiles
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.models.consumer.files.PNListFilesResult
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.retry.RetryableEndpointGroup
@@ -51,7 +50,6 @@ class ListFilesEndpoint(
         log.trace(
             LogMessage(
                 location = this::class.java.toString(),
-                type = LogMessageType.OBJECT,
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "channel" to channel,

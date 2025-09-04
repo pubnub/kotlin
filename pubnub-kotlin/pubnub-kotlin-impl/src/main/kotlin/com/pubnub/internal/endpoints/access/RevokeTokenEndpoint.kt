@@ -6,7 +6,6 @@ import com.pubnub.api.endpoints.access.RevokeToken
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.api.v2.PNConfiguration.Companion.isValid
 import com.pubnub.internal.EndpointCore
@@ -38,7 +37,6 @@ class RevokeTokenEndpoint(
         log.trace(
             LogMessage(
                 location = this::class.java.toString(),
-                type = LogMessageType.OBJECT,
                 message = LogMessageContent.Object(
                     message = mapOf(
                         "token" to token,

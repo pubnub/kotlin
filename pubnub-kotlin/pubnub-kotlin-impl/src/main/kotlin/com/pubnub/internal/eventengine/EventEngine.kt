@@ -3,7 +3,6 @@ package com.pubnub.internal.eventengine
 import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.pubnub.api.logging.LogMessageType
 import com.pubnub.internal.logging.LoggerManager
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -38,7 +37,6 @@ internal class EventEngine<Ei : EffectInvocation, Ev : Event, S : State<Ei, Ev, 
         log.trace(
             LogMessage(
                 location = this::class.java.toString(),
-                type = LogMessageType.TEXT,
                 message = LogMessageContent.Text(
                     "Current state is: ${currentState::class.simpleName} ; ${
                         event::class.java.name.substringAfterLast('.').substringBefore('$')
@@ -50,7 +48,6 @@ internal class EventEngine<Ei : EffectInvocation, Ev : Event, S : State<Ei, Ev, 
         log.trace(
             LogMessage(
                 location = this::class.java.toString(),
-                type = LogMessageType.TEXT,
                 message = LogMessageContent.Text(
                     "New state is: ${newState::class.simpleName} ; Emitting fallowing effects: ${
                         invocations.joinToString { it::class.java.name.substringAfterLast('.').substringAfter('$') }

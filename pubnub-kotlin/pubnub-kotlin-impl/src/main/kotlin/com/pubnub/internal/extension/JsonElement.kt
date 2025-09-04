@@ -5,7 +5,6 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.pubnub.api.logging.LogMessageType
 import com.pubnub.internal.crypto.decryptString
 import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.managers.MapperManager
@@ -60,7 +59,6 @@ private fun logAndReturnDecryptionError(logger: PNLogger, pnInstanceId: String):
     logger.warn(
         LogMessage(
             location = "JsonElement.tryDecryptMessage",
-            type = LogMessageType.TEXT,
             message = LogMessageContent.Text(pnError.message),
         )
     )

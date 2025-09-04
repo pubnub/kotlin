@@ -5,7 +5,6 @@ import com.pubnub.api.logging.ErrorDetails
 import com.pubnub.api.logging.HttpMethod
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.logging.NetworkLog
 import com.pubnub.api.logging.NetworkRequestMessage
 import com.pubnub.api.logging.NetworkResponseMessage
@@ -84,7 +83,6 @@ class CustomPnHttpLoggingInterceptor(
 
         val logMessage = LogMessage(
             location = location,
-            type = LogMessageType.NETWORK_REQUEST,
             message = LogMessageContent.NetworkRequest(requestLog),
             details = "HTTP Request",
         )
@@ -136,7 +134,6 @@ class CustomPnHttpLoggingInterceptor(
 
         val logMessage = LogMessage(
             location = location,
-            type = LogMessageType.NETWORK_RESPONSE,
             message = LogMessageContent.NetworkResponse(responseLog),
             details = "HTTP Response",
         )
@@ -164,7 +161,6 @@ class CustomPnHttpLoggingInterceptor(
 
         val logMessage = LogMessage(
             location = location,
-            type = LogMessageType.ERROR,
             message = errorDetails,
             details = "HTTP Request failed after ${duration}ms: ${error.message}",
         )

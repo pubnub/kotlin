@@ -9,7 +9,6 @@ import com.pubnub.api.crypto.data.EncryptedStreamData
 import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.pubnub.api.logging.LogMessageType
 import com.pubnub.internal.crypto.cryptor.HeaderParser
 import com.pubnub.internal.crypto.cryptor.LEGACY_CRYPTOR_ID
 import com.pubnub.internal.crypto.cryptor.ParseResult
@@ -119,7 +118,6 @@ class CryptoModuleImpl internal constructor(
         log.debug(
             LogMessage(
                 location = this::class.java.toString(),
-                type = LogMessageType.TEXT,
                 message = LogMessageContent.Text(message),
             )
         )

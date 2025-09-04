@@ -5,7 +5,6 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.PubNubRetryableException
@@ -43,7 +42,6 @@ internal class RetryableRestCaller<T>(
             log.trace(
                 LogMessage(
                     location = this::class.java.simpleName,
-                    type = LogMessageType.TEXT,
                     message = LogMessageContent.Text("Added random delay so effective retry delay is $effectiveDelayInMillis")
                 )
             )

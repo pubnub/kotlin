@@ -5,7 +5,6 @@ import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
@@ -127,7 +126,6 @@ class ListenerManager(val pubnub: PubNub) : MessagesConsumer, StatusConsumer, Ev
                 logger.warn(
                     LogMessage(
                         location = this::class.java.toString(),
-                        type = LogMessageType.TEXT,
                         message = LogMessageContent.Text("Caught exception in listener: ${e.message}"),
                     )
                 )

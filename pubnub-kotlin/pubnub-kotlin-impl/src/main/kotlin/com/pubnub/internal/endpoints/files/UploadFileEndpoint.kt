@@ -7,7 +7,6 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.pubnub.api.logging.LogMessageType
 import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.logging.LoggerManager
@@ -67,7 +66,6 @@ internal class UploadFileEndpoint(
                 log.warn(
                     LogMessage(
                         location = this::class.java.toString(),
-                        type = LogMessageType.TEXT,
                         message = LogMessageContent.Text("Content-Type: $contentType was not recognized by MediaType.get: ${t.message}")
                     )
                 )

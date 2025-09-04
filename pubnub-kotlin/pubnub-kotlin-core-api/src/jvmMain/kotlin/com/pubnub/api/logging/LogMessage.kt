@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter
  * @param pubNubId The PubNub instance identifier
  * @param logLevel The logging level
  * @param location The source location of the log
- * @param type The type of log message
+ * @param type The type of log message (automatically inferred from message content)
  * @param message The log message content
  * @param details Optional additional details (will be sanitized)
  * @param timestamp The timestamp when the log was created
@@ -19,10 +19,10 @@ import java.time.format.DateTimeFormatter
 class LogMessage(
     @SerializedName("location")
     val location: String,
-    @SerializedName("type")
-    val type: LogMessageType,
     @SerializedName("message")
     val message: LogMessageContent,
+    @SerializedName("type")
+    val type: LogMessageType = message.inferType(),
     @SerializedName("details")
     val details: String? = null,
     @SerializedName("pubNubId")
@@ -32,3 +32,14 @@ class LogMessage(
     @SerializedName("timestamp")
     val timestamp: String = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.SSS")),
 )
+
+/**
+ * Infers the LogMessageType from LogMessageContent.
+ */
+private fun LogMessageContent.inferType(): LogMessageType = when (this) {
+    is LogMessageContent.Text -> LogMessageType.TEXT
+    is LogMessageContent.Object -> LogMessageType.OBJECT
+    is LogMessageContent.Error -> LogMessageType.ERROR
+    is LogMessageContent.NetworkRequest -> LogMessageType.NETWORK_REQUEST
+    is LogMessageContent.NetworkResponse -> LogMessageType.NETWORK_RESPONSE
+}
