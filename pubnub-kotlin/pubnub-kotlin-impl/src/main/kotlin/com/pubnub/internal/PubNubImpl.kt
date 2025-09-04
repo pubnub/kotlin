@@ -197,8 +197,6 @@ open class PubNubImpl(
 
     constructor(configuration: PNConfiguration) : this(configuration, PNSDK_PUBNUB_KOTLIN)
 
-    val mapper = MapperManager()
-
     /**
      * Unique id of this PubNub instance.
      *
@@ -210,6 +208,8 @@ open class PubNubImpl(
         userId = configuration.userId.value,
         customLoggers = configuration.customLoggers,
     )
+
+    val mapper = MapperManager(logConfig)
 
     private val numberOfThreadsInPool = Integer.min(Runtime.getRuntime().availableProcessors(), 8)
     internal val executorService: ScheduledExecutorService = Executors.newScheduledThreadPool(numberOfThreadsInPool)

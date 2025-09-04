@@ -117,7 +117,7 @@ class RetrofitManager(
             // Replace the standard HttpLoggingInterceptor with our custom one
             val customLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
             okHttpBuilder.addInterceptor(
-                CustomPnHttpLoggingInterceptor(customLogger, logVerbosity, pubnub.instanceId)
+                CustomPnHttpLoggingInterceptor(customLogger, pubnub.mapper, logVerbosity)
             )
 
             if (httpLoggingInterceptor != null) {

@@ -19,7 +19,12 @@ import com.google.gson.stream.JsonToken
 import com.google.gson.stream.JsonWriter
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.logging.ErrorDetails
+import com.pubnub.api.logging.LogConfig
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.utils.PatchValue
+import com.pubnub.internal.logging.LoggerManager
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -28,7 +33,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
-class MapperManager {
+class MapperManager(private val logConfig: LogConfig) {
+    private val log = LoggerManager.instance.getLogger(logConfig, this::class.java)
     private val objectMapper: Gson
     internal val converterFactory: Converter.Factory
 
@@ -228,7 +234,23 @@ class MapperManager {
         input: JsonElement?,
         clazz: Class<T>,
     ): T {
-        return this.objectMapper.fromJson(input, clazz) as T
+        log.debug(
+            LogMessage(
+                location = this::class.java.simpleName,
+                message = LogMessageContent.Text("Deserializing message content")
+            )
+        )
+
+        val result = this.objectMapper.fromJson(input, clazz) as T
+
+        log.debug(
+            LogMessage(
+                location = this::class.java.simpleName,
+                message = LogMessageContent.Text("Message deserialized successfully")
+            )
+        )
+
+        return result
     }
 
     fun <T> convertValue(
@@ -239,8 +261,14 @@ class MapperManager {
     }
 
     fun toJson(input: Any?): String {
+        log.debug(
+            LogMessage(
+                location = this::class.java.simpleName,
+                message = LogMessageContent.Text("Serializing message content")
+            )
+        )
         try {
-            return if (input is List<*> && input.javaClass.isAnonymousClass) {
+            val result = if (input is List<*> && input.javaClass.isAnonymousClass) {
                 objectMapper.toJson(input, List::class.java)
             } else if (input is Map<*, *> && input.javaClass.isAnonymousClass) {
                 objectMapper.toJson(input, Map::class.java)
@@ -249,7 +277,27 @@ class MapperManager {
             } else {
                 objectMapper.toJson(input)
             }
+
+            log.debug(
+                LogMessage(
+                    location = this::class.java.simpleName,
+                    message = LogMessageContent.Text("Message serialized successfully")
+                )
+            )
+
+            return result
         } catch (e: JsonParseException) {
+            log.error(
+                LogMessage(
+                    location = this::class.java.simpleName, // todo infer in CompositeLogger
+                    message = LogMessageContent.Error(
+                        ErrorDetails(
+                            type = e.javaClass.simpleName,
+                            message = "Serialization of content failed due to: ${e.message}"
+                        )
+                    )
+                )
+            )
             throw PubNubException(
                 pubnubError = PubNubError.JSON_ERROR,
                 errorMessage = e.message,

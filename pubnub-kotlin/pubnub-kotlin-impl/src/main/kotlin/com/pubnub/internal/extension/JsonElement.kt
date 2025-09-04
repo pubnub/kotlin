@@ -15,7 +15,6 @@ internal fun JsonElement.tryDecryptMessage(
     cryptoModule: CryptoModule?,
     mapper: MapperManager,
     logger: PNLogger,
-    pnInstanceId: String,
 ): Pair<JsonElement, PubNubError?> {
     cryptoModule ?: return this to null
     val inputText =
@@ -26,21 +25,21 @@ internal fun JsonElement.tryDecryptMessage(
                 mapper.elementToString(this, PN_OTHER)
             } else {
                 // plain JSON object indicates that this is not encrypted message
-                return this to logAndReturnDecryptionError(logger, pnInstanceId)
+                return this to logAndReturnDecryptionError(logger)
             }
         } else if (isJsonPrimitive && asJsonPrimitive.isString) {
             // String may represent not encrypted string or encrypted data. We will check this when decrypting.
             mapper.elementToString(this)
         } else {
             // Input represents some other Json structure, such as JsonArray
-            return this to logAndReturnDecryptionError(logger, pnInstanceId)
+            return this to logAndReturnDecryptionError(logger)
         }
 
     val outputText =
         try {
             cryptoModule.decryptString(inputText!!)
         } catch (e: Exception) {
-            return this to logAndReturnDecryptionError(logger, pnInstanceId)
+            return this to logAndReturnDecryptionError(logger)
         }
 
     var outputObject = mapper.fromJson(outputText, JsonElement::class.java)
@@ -54,7 +53,7 @@ internal fun JsonElement.tryDecryptMessage(
     return outputObject to null
 }
 
-private fun logAndReturnDecryptionError(logger: PNLogger, pnInstanceId: String): PubNubError {
+private fun logAndReturnDecryptionError(logger: PNLogger): PubNubError {
     val pnError = PubNubError.CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED
     logger.warn(
         LogMessage(

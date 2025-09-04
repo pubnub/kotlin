@@ -129,7 +129,6 @@ class FetchMessagesEndpoint internal constructor(
                             pubnub.cryptoModuleWithLogConfig,
                             pubnub.mapper,
                             log,
-                            pubnub.instanceId
                         )
                     val newActions =
                         if (includeMessageActions) {

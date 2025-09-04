@@ -21,10 +21,9 @@ private const val PUBNUB_OKHTTP_LOG_TAG = "pubnub.okhttp"
 
 class CustomPnHttpLoggingInterceptor(
     private val logger: PNLogger,
+    private val mapperManager: MapperManager,
     private val logVerbosity: PNLogVerbosity,
-    private val pnInstanceId: String,
 ) : Interceptor {
-    private val mapperManager = MapperManager()
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
