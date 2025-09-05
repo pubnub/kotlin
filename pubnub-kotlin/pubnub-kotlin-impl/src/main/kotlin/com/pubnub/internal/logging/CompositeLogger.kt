@@ -136,10 +136,6 @@ class CompositeLogger(
         }
     }
 
-    /**
-     * Efficiently delegates to custom loggers with error handling.
-     * Ensures one failing logger doesn't affect others.
-     */
     private inline fun delegateToCustomLoggers(action: (CustomLogger) -> Unit) {
         customLoggers?.forEach { logger ->
             try {

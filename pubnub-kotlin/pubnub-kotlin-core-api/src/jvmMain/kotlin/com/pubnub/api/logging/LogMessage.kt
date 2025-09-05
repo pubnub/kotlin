@@ -33,9 +33,6 @@ class LogMessage(
     val timestamp: String = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.SSS")),
 )
 
-/**
- * Infers the LogMessageType from LogMessageContent.
- */
 private fun LogMessageContent.inferType(): LogMessageType = when (this) {
     is LogMessageContent.Text -> LogMessageType.TEXT
     is LogMessageContent.Object -> LogMessageType.OBJECT
