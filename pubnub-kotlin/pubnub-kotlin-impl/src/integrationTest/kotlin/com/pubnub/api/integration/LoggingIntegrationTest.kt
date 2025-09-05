@@ -62,7 +62,7 @@ class LoggingIntegrationTest : BaseIntegrationTest() {
         assertTrue(
             "Should have called publish on the expected channel",
             CustomLoggerTestImpl.logMessages.any { msg ->
-                msg.type == LogMessageType.OBJECT && msg.location.contains("PublishEndpoint") &&
+                msg.type == LogMessageType.OBJECT && msg.location!!.contains("PublishEndpoint") &&
                     (msg.message as? LogMessageContent.Object)?.message?.get("channel") == expectedChannel
             }
         )
@@ -70,14 +70,14 @@ class LoggingIntegrationTest : BaseIntegrationTest() {
         assertTrue(
             "Should have called publish API. LogMessage type should be NETWORK_REQUEST",
             CustomLoggerTestImpl.logMessages.any { msg ->
-                msg.type == LogMessageType.NETWORK_REQUEST && msg.location.contains("publish")
+                msg.type == LogMessageType.NETWORK_REQUEST && msg.location!!.contains("publish")
             }
         )
 
         assertTrue(
             "Should have called publish API. LogMessage type should be NETWORK_RESPONSE",
             CustomLoggerTestImpl.logMessages.any { msg ->
-                msg.type == LogMessageType.NETWORK_RESPONSE && msg.location.contains("publish")
+                msg.type == LogMessageType.NETWORK_RESPONSE && msg.location!!.contains("publish")
             }
         )
     }

@@ -24,7 +24,7 @@ class LogMessage(
     @SerializedName("type")
     val type: LogMessageType = message.inferType(),
     @SerializedName("location")
-    val location: String? = null,
+    val location: String? = null, // this value will be set in CompositeLogger if not set
     @SerializedName("pubNubId")
     val pubNubId: String? = null, // this value will be set in CompositeLogger
     @SerializedName("logLevel")
