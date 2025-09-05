@@ -9,7 +9,6 @@ import com.pubnub.api.logging.LogConfig
 import com.pubnub.internal.crypto.CryptoModuleImpl
 import com.pubnub.internal.crypto.cryptor.AesCbcCryptor
 import com.pubnub.internal.crypto.cryptor.LegacyCryptor
-import com.pubnub.internal.crypto.withLogConfig
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.containsInAnyOrder
@@ -361,7 +360,11 @@ class CryptoModuleTest {
         )
 
         // when
-        val cryptoModuleWithLogConfig = cryptoModule.withLogConfig(logConfig) as CryptoModuleImpl
+        val cryptoModuleWithLogConfig = CryptoModuleImpl(
+            primaryCryptor = cryptoModule.primaryCryptor,
+            cryptorsForDecryptionOnly = cryptoModule.cryptorsForDecryptionOnly,
+            logConfig = logConfig
+        )
 
         // then
         assertEquals(logConfig, cryptoModuleWithLogConfig.logConfig)
@@ -380,7 +383,11 @@ class CryptoModuleTest {
         )
 
         // when
-        val cryptoModuleWithLogConfig = cryptoModule.withLogConfig(logConfig) as CryptoModuleImpl
+        val cryptoModuleWithLogConfig = CryptoModuleImpl(
+            primaryCryptor = cryptoModule.primaryCryptor,
+            cryptorsForDecryptionOnly = cryptoModule.cryptorsForDecryptionOnly,
+            logConfig = logConfig
+        )
 
         // then
         assertEquals(logConfig, cryptoModuleWithLogConfig.logConfig)

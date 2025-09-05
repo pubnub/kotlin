@@ -20,13 +20,18 @@ import java.io.SequenceInputStream
 
 private const val SIZE_OF_CRYPTOR_ID = 4
 
-class CryptoModuleImpl internal constructor(
+/**
+ * Public constructor for internal cross-module access only.
+ * This class is in an internal package and should not be used directly by consumers.
+ * Use CryptoModule factory methods instead.
+ */
+class CryptoModuleImpl(
     @get:JvmSynthetic
-    internal val primaryCryptor: Cryptor,
+    val primaryCryptor: Cryptor,
     @get:JvmSynthetic
-    internal val cryptorsForDecryptionOnly: List<Cryptor> = listOf(),
+    val cryptorsForDecryptionOnly: List<Cryptor> = listOf(),
     @get:JvmSynthetic
-    internal val logConfig: LogConfig? = null,
+    val logConfig: LogConfig? = null,
 ) : CryptoModule {
     private val log: PNLogger by lazy {
         logConfig?.let { LoggerManager.instance.getLogger(it, this::class.java) }
@@ -221,23 +226,4 @@ internal fun InputStream.readNBytez(len: Int): ByteArray {
         remaining -= n
     }
     return originalArray.copyOf(nread)
-}
-
-/**
- * Injects LogConfig into a CryptoModule instance for internal SDK use.
- * This allows the CryptoModule to have logging capabilities without exposing LogConfig in the public API.
- */
-internal fun CryptoModule.withLogConfig(logConfig: LogConfig): CryptoModule {
-    return if (this is CryptoModuleImpl) {
-        // If it's already a CryptoModuleImpl, create a new instance with LogConfig
-        CryptoModuleImpl(
-            primaryCryptor = this.primaryCryptor,
-            cryptorsForDecryptionOnly = this.cryptorsForDecryptionOnly,
-            logConfig = logConfig
-        )
-    } else {
-        // For other implementations, return the original instance
-        // This maintains compatibility with custom CryptoModule implementations
-        this
-    }
 }

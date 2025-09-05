@@ -52,6 +52,7 @@ import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice
 import com.pubnub.api.endpoints.push.RemoveChannelsFromPush
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
+import com.pubnub.api.logging.ErrorDetails
 import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
@@ -92,9 +93,9 @@ import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionCursor
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
+import com.pubnub.internal.crypto.CryptoModuleImpl
 import com.pubnub.internal.crypto.decryptString
 import com.pubnub.internal.crypto.encryptString
-import com.pubnub.internal.crypto.withLogConfig
 import com.pubnub.internal.endpoints.DeleteMessagesEndpoint
 import com.pubnub.internal.endpoints.FetchMessagesEndpoint
 import com.pubnub.internal.endpoints.HistoryEndpoint
@@ -245,7 +246,29 @@ open class PubNubImpl(
         )
 
     internal val cryptoModuleWithLogConfig: CryptoModule? by lazy {
-        (configuration as? PNConfigurationImpl)?.getCryptoModuleWithLogConfig(logConfig)
+        when (configuration) {
+            is PNConfigurationImpl -> (configuration as PNConfigurationImpl).getCryptoModuleWithLogConfig(logConfig)
+            else -> {
+                // Try to call getCryptoModuleWithLogConfig using reflection for Java implementation
+                try {
+                    val method = configuration.javaClass.getMethod("getCryptoModuleWithLogConfig", LogConfig::class.java)
+                    method.invoke(configuration, logConfig) as? CryptoModule
+                } catch (e: Exception) {
+                    logger.error(
+                        LogMessage(
+                            message = LogMessageContent.Error(
+                                message = ErrorDetails(
+                                    type = e.javaClass.simpleName,
+                                    message = "Failed calling getCryptoModuleWithLogConfig"
+                                )
+                            ),
+                            details = "details",
+                        )
+                    )
+                    null
+                }
+            }
+        }
     }
 
     //region Internal
@@ -1572,7 +1595,7 @@ open class PubNubImpl(
     ): SendFile {
         val cryptoModule =
             if (cipherKey != null) {
-                CryptoModule.createLegacyCryptoModule(cipherKey).withLogConfig(logConfig)
+                createCryptoModuleWithLogConfig(CryptoModule.createLegacyCryptoModule(cipherKey))
             } else {
                 cryptoModuleWithLogConfig
             }
@@ -1630,7 +1653,7 @@ open class PubNubImpl(
     ): DownloadFile {
         val cryptoModule =
             if (cipherKey != null) {
-                CryptoModule.createLegacyCryptoModule(cipherKey).withLogConfig(logConfig)
+                createCryptoModuleWithLogConfig(CryptoModule.createLegacyCryptoModule(cipherKey))
             } else {
                 cryptoModuleWithLogConfig
             }
@@ -1695,7 +1718,7 @@ open class PubNubImpl(
 
     private fun getCryptoModuleOrThrow(cipherKey: String? = null): CryptoModule {
         return cipherKey?.let { cipherKeyNotNull ->
-            CryptoModule.createLegacyCryptoModule(cipherKeyNotNull).withLogConfig(logConfig)
+            createCryptoModuleWithLogConfig(CryptoModule.createLegacyCryptoModule(cipherKeyNotNull))
         }
             ?: cryptoModuleWithLogConfig ?: throw PubNubException("Crypto module is not initialized")
     }
@@ -2016,7 +2039,20 @@ open class PubNubImpl(
 
     @Throws(PubNubException::class)
     private fun getCryptoModuleOrThrow(cryptoModule: CryptoModule? = null): CryptoModule {
-        return cryptoModule?.withLogConfig(logConfig) ?: cryptoModuleWithLogConfig
+        return cryptoModule?.let { createCryptoModuleWithLogConfig(it) } ?: cryptoModuleWithLogConfig
             ?: throw PubNubException("Crypto module is not initialized")
+    }
+
+    private fun createCryptoModuleWithLogConfig(cryptoModule: CryptoModule): CryptoModule {
+        return if (cryptoModule is CryptoModuleImpl) {
+            CryptoModuleImpl(
+                primaryCryptor = cryptoModule.primaryCryptor,
+                cryptorsForDecryptionOnly = cryptoModule.cryptorsForDecryptionOnly,
+                logConfig = logConfig
+            )
+        } else {
+            // For custom implementations, return the original instance
+            cryptoModule
+        }
     }
 }

@@ -10,7 +10,7 @@ import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.PNConfigurationOverride
-import com.pubnub.internal.crypto.withLogConfig
+import com.pubnub.internal.crypto.CryptoModuleImpl
 import okhttp3.Authenticator
 import okhttp3.CertificatePinner
 import okhttp3.ConnectionSpec
@@ -85,7 +85,18 @@ class PNConfigurationImpl(
     }
 
     fun getCryptoModuleWithLogConfig(logConfig: LogConfig): CryptoModule? {
-        return cryptoModule?.withLogConfig(logConfig)
+        return cryptoModule?.let { module ->
+            if (module is CryptoModuleImpl) {
+                CryptoModuleImpl(
+                    primaryCryptor = module.primaryCryptor,
+                    cryptorsForDecryptionOnly = module.cryptorsForDecryptionOnly,
+                    logConfig = logConfig
+                )
+            } else {
+                // For custom implementations, return the original instance
+                module
+            }
+        }
     }
 
     class Builder(defaultConfiguration: PNConfiguration) :

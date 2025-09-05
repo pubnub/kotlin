@@ -7,8 +7,10 @@ import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.java.v2.PNConfiguration
 import com.pubnub.api.java.v2.PNConfigurationOverride
 import com.pubnub.api.logging.CustomLogger
+import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.retry.RetryableEndpointGroup
+import com.pubnub.internal.crypto.CryptoModuleImpl
 import okhttp3.Authenticator
 import okhttp3.CertificatePinner
 import okhttp3.ConnectionSpec
@@ -80,6 +82,22 @@ class PNConfigurationImpl(
         const val NON_SUBSCRIBE_REQUEST_TIMEOUT = 10
         const val SUBSCRIBE_TIMEOUT = 310
         const val CONNECT_TIMEOUT = 5
+    }
+
+    // this method is used from cryptoModuleWithLogConfig using reflection
+    fun getCryptoModuleWithLogConfig(logConfig: LogConfig): CryptoModule? {
+        return cryptoModule?.let { module ->
+            if (module is CryptoModuleImpl) {
+                CryptoModuleImpl(
+                    primaryCryptor = module.primaryCryptor,
+                    cryptorsForDecryptionOnly = module.cryptorsForDecryptionOnly,
+                    logConfig = logConfig
+                )
+            } else {
+                // For custom implementations, return the original instance
+                module
+            }
+        }
     }
 
     class Builder internal constructor(defaultConfiguration: com.pubnub.api.v2.PNConfiguration) :
