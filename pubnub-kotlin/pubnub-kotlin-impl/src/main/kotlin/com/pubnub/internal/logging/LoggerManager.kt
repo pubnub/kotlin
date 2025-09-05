@@ -27,8 +27,14 @@ class LoggerManager(
 
     private fun createLogger(logConfig: LogConfig, clazz: Class<*>): PNLogger {
         val slf4jLogger: Logger = loggerFactory(clazz)
-        val toPortalLogger = ToPortalLogger(userId = logConfig.userId)
-        return CompositeLogger(slf4jLogger, toPortalLogger, logConfig.customLoggers, clazz.simpleName, logConfig.pnInstanceId)
+//        val toPortalLogger = ToPortalLogger(userId = logConfig.userId) // todo enable when ready
+        return CompositeLogger(
+            slf4jLogger,
+            clazz.simpleName,
+            logConfig.pnInstanceId,
+            null,
+            logConfig.customLoggers
+        )
     }
 
     private fun createFallbackLogger(clazz: Class<*>, cause: Exception): PNLogger {

@@ -47,10 +47,10 @@ class CompositeLoggerTest {
         val customLoggers = listOf(mockCustomLogger1, mockCustomLogger2)
         val compositeLogger = CompositeLogger(
             slf4jLogger = mockSlf4jLogger,
-            toPortalLogger = mockToPortalLogger,
-            customLoggers = customLoggers,
             location = testLocation,
-            pnInstanceId = testInstanceId
+            pnInstanceId = testInstanceId,
+            toPortalLogger = mockToPortalLogger,
+            customLoggers = customLoggers
         )
 
         val originalMessage = createTestLogMessage()
@@ -85,10 +85,10 @@ class CompositeLoggerTest {
         val customLoggers = listOf(mockCustomLogger1, mockCustomLogger2)
         val compositeLogger = CompositeLogger(
             slf4jLogger = mockSlf4jLogger,
-            toPortalLogger = mockToPortalLogger,
-            customLoggers = customLoggers,
             location = testLocation,
-            pnInstanceId = testInstanceId
+            pnInstanceId = testInstanceId,
+            toPortalLogger = mockToPortalLogger,
+            customLoggers = customLoggers
         )
 
         val originalMessage = createTestLogMessage()
@@ -123,10 +123,10 @@ class CompositeLoggerTest {
         val customLoggers = listOf(mockCustomLogger1, mockCustomLogger2)
         val compositeLogger = CompositeLogger(
             slf4jLogger = mockSlf4jLogger,
-            toPortalLogger = mockToPortalLogger,
-            customLoggers = customLoggers,
             location = testLocation,
-            pnInstanceId = testInstanceId
+            pnInstanceId = testInstanceId,
+            toPortalLogger = mockToPortalLogger,
+            customLoggers = customLoggers
         )
 
         val originalMessage = createTestLogMessage()
@@ -161,10 +161,10 @@ class CompositeLoggerTest {
         val customLoggers = listOf(mockCustomLogger1, mockCustomLogger2)
         val compositeLogger = CompositeLogger(
             slf4jLogger = mockSlf4jLogger,
-            toPortalLogger = mockToPortalLogger,
-            customLoggers = customLoggers,
             location = testLocation,
-            pnInstanceId = testInstanceId
+            pnInstanceId = testInstanceId,
+            toPortalLogger = mockToPortalLogger,
+            customLoggers = customLoggers
         )
 
         val originalMessage = createTestLogMessage()
@@ -199,10 +199,10 @@ class CompositeLoggerTest {
         val customLoggers = listOf(mockCustomLogger1, mockCustomLogger2)
         val compositeLogger = CompositeLogger(
             slf4jLogger = mockSlf4jLogger,
-            toPortalLogger = mockToPortalLogger,
-            customLoggers = customLoggers,
             location = testLocation,
-            pnInstanceId = testInstanceId
+            pnInstanceId = testInstanceId,
+            toPortalLogger = mockToPortalLogger,
+            customLoggers = customLoggers
         )
 
         val originalMessage = createTestLogMessage()
@@ -237,10 +237,10 @@ class CompositeLoggerTest {
         val customLoggers = listOf(mockCustomLogger1)
         val compositeLogger = CompositeLogger(
             slf4jLogger = mockSlf4jLogger,
-            toPortalLogger = null,
-            customLoggers = customLoggers,
             location = testLocation,
-            pnInstanceId = testInstanceId
+            pnInstanceId = testInstanceId,
+            toPortalLogger = null,
+            customLoggers = customLoggers
         )
 
         val originalMessage = createTestLogMessage()
@@ -256,10 +256,10 @@ class CompositeLoggerTest {
     fun `should work without custom loggers`() {
         val compositeLogger = CompositeLogger(
             slf4jLogger = mockSlf4jLogger,
-            toPortalLogger = mockToPortalLogger,
-            customLoggers = null,
             location = testLocation,
-            pnInstanceId = testInstanceId
+            pnInstanceId = testInstanceId,
+            toPortalLogger = mockToPortalLogger,
+            customLoggers = null
         )
 
         val testMessage = createTestLogMessage()
@@ -274,10 +274,10 @@ class CompositeLoggerTest {
     fun `should work with empty custom loggers list`() {
         val compositeLogger = CompositeLogger(
             slf4jLogger = mockSlf4jLogger,
-            toPortalLogger = mockToPortalLogger,
-            customLoggers = emptyList(),
             location = testLocation,
-            pnInstanceId = testInstanceId
+            pnInstanceId = testInstanceId,
+            toPortalLogger = mockToPortalLogger,
+            customLoggers = emptyList()
         )
 
         val testMessage = createTestLogMessage()
@@ -297,10 +297,10 @@ class CompositeLoggerTest {
         val customLoggers = listOf(mockCustomLogger1, mockCustomLogger2)
         val compositeLogger = CompositeLogger(
             slf4jLogger = mockSlf4jLogger,
-            toPortalLogger = mockToPortalLogger,
-            customLoggers = customLoggers,
             location = testLocation,
-            pnInstanceId = testInstanceId
+            pnInstanceId = testInstanceId,
+            toPortalLogger = mockToPortalLogger,
+            customLoggers = customLoggers
         )
 
         val testMessage = createTestLogMessage()
@@ -329,10 +329,10 @@ class CompositeLoggerTest {
         val customLoggers = listOf(mockCustomLogger1)
         val compositeLogger = CompositeLogger(
             slf4jLogger = mockSlf4jLogger,
-            toPortalLogger = mockToPortalLogger,
-            customLoggers = customLoggers,
             location = testLocation,
-            pnInstanceId = testInstanceId
+            pnInstanceId = testInstanceId,
+            toPortalLogger = mockToPortalLogger,
+            customLoggers = customLoggers
         )
 
         val testMessage = createTestLogMessage()
@@ -352,10 +352,10 @@ class CompositeLoggerTest {
         val customLoggers = listOf(mockCustomLogger1)
         val compositeLogger = CompositeLogger(
             slf4jLogger = mockSlf4jLogger,
-            toPortalLogger = mockToPortalLogger,
-            customLoggers = customLoggers,
             location = testLocation,
-            pnInstanceId = testInstanceId
+            pnInstanceId = testInstanceId,
+            toPortalLogger = mockToPortalLogger,
+            customLoggers = customLoggers
         )
 
         val testMessage = createTestLogMessage()
@@ -377,10 +377,10 @@ class CompositeLoggerTest {
         val customLoggers = listOf(mockCustomLogger1, mockCustomLogger2)
         val compositeLogger = CompositeLogger(
             slf4jLogger = mockSlf4jLogger,
-            toPortalLogger = mockToPortalLogger,
-            customLoggers = customLoggers,
             location = testLocation,
-            pnInstanceId = testInstanceId
+            pnInstanceId = testInstanceId,
+            toPortalLogger = mockToPortalLogger,
+            customLoggers = customLoggers
         )
 
         val messages = (1..100).map { i ->
@@ -414,10 +414,10 @@ class CompositeLoggerTest {
     fun `should preserve all original message fields including timestamp`() {
         val compositeLogger = CompositeLogger(
             slf4jLogger = mockSlf4jLogger,
-            toPortalLogger = mockToPortalLogger,
-            customLoggers = null,
             location = testLocation,
-            pnInstanceId = testInstanceId
+            pnInstanceId = testInstanceId,
+            toPortalLogger = mockToPortalLogger,
+            customLoggers = null
         )
 
         val customTimestamp = "23:59:59.999"
@@ -452,10 +452,10 @@ class CompositeLoggerTest {
     fun `should handle null fields gracefully`() {
         val compositeLogger = CompositeLogger(
             slf4jLogger = mockSlf4jLogger,
-            toPortalLogger = mockToPortalLogger,
-            customLoggers = null,
             location = testLocation,
-            pnInstanceId = testInstanceId
+            pnInstanceId = testInstanceId,
+            toPortalLogger = mockToPortalLogger,
+            customLoggers = null
         )
 
         val messageWithNulls = createTestLogMessageWithNulls()
@@ -482,10 +482,10 @@ class CompositeLoggerTest {
     fun `should override existing pubNubId and logLevel in original message`() {
         val compositeLogger = CompositeLogger(
             slf4jLogger = mockSlf4jLogger,
-            toPortalLogger = mockToPortalLogger,
-            customLoggers = null,
             location = testLocation,
-            pnInstanceId = testInstanceId
+            pnInstanceId = testInstanceId,
+            toPortalLogger = mockToPortalLogger,
+            customLoggers = null
         )
 
         // Create message with different pubNubId and logLevel
