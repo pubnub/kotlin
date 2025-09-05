@@ -5,6 +5,8 @@ import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.v2.PNConfiguration
 
+private const val NOT_SET = "not set"
+
 object ConfigurationLogger {
     fun logConfiguration(
         configuration: PNConfiguration,
@@ -17,12 +19,12 @@ object ConfigurationLogger {
             "userId" to configuration.userId.value,
             "subscribeKey" to configuration.subscribeKey,
             // Optional parameters
-            "publishKey" to (configuration.publishKey.takeIf { it.isNotBlank() } ?: "not set"),
-            "secretKey" to (configuration.secretKey.takeIf { it.isNotBlank() }?.let { "set: *****" } ?: "not set"),
+            "publishKey" to (configuration.publishKey.takeIf { it.isNotBlank() } ?: NOT_SET),
+            "secretKey" to (configuration.secretKey.takeIf { it.isNotBlank() }?.let { "set: *****" } ?: NOT_SET),
             // Security and connection settings
             "secure" to configuration.secure,
             "origin" to (configuration.origin.takeIf { it.isNotBlank() } ?: "default"),
-            "logVerbosity" to (configuration.logVerbosity.takeIf { it == PNLogVerbosity.BODY }?.let { "(Deprecated) ${it.name}" } ?: "not set"),
+            "logVerbosity" to (configuration.logVerbosity.takeIf { it == PNLogVerbosity.BODY }?.let { "(Deprecated) ${it.name}" } ?: NOT_SET),
             "cacheBusting" to configuration.cacheBusting,
             // Timeout configurations
             "connectTimeout" to configuration.connectTimeout,
@@ -35,10 +37,10 @@ object ConfigurationLogger {
             "suppressLeaveEvents" to configuration.suppressLeaveEvents,
             "maintainPresenceState" to configuration.maintainPresenceState,
             // Authentication
-            "authKey" to (configuration.authKey.takeIf { it.isNotBlank() }?.let { "(@Deprecated) set: *****" } ?: "not set"),
-            "authToken" to (configuration.authToken?.takeIf { it.isNotBlank() }?.let { "set: *****" } ?: "not set"),
+            "authKey" to (configuration.authKey.takeIf { it.isNotBlank() }?.let { "(@Deprecated) set: *****" } ?: NOT_SET),
+            "authToken" to (configuration.authToken?.takeIf { it.isNotBlank() }?.let { "set: *****" } ?: NOT_SET),
             // Filtering and subscriptions
-            "filterExpression" to (configuration.filterExpression.takeIf { it.isNotBlank() } ?: "not set"),
+            "filterExpression" to (configuration.filterExpression.takeIf { it.isNotBlank() } ?: NOT_SET),
             "dedupOnSubscribe" to configuration.dedupOnSubscribe,
             "maximumMessagesCacheSize" to configuration.maximumMessagesCacheSize,
             // Retry and reliability
@@ -47,7 +49,7 @@ object ConfigurationLogger {
             // Identification and tracking
             "includeInstanceIdentifier" to configuration.includeInstanceIdentifier,
             "includeRequestIdentifier" to configuration.includeRequestIdentifier,
-            "pnsdkSuffixes" to (configuration.pnsdkSuffixes.takeIf { it.isNotEmpty() } ?: "not set"),
+            "pnsdkSuffixes" to (configuration.pnsdkSuffixes.takeIf { it.isNotEmpty() } ?: NOT_SET),
             // Crypto and encryption
             "cryptoModule" to (
                 if (configuration.cryptoModule != null) {
@@ -57,7 +59,7 @@ object ConfigurationLogger {
                 }
             ),
             // Manual presence management
-            "managePresenceListManually" to (configuration.managePresenceListManually ?: "not set"),
+            "managePresenceListManually" to (configuration.managePresenceListManually ?: NOT_SET),
             // Logging configuration
             "customLoggers" to (
                 configuration.customLoggers?.let {
@@ -66,20 +68,20 @@ object ConfigurationLogger {
                     } else {
                         ""
                     }})"
-                } ?: "not set"
+                } ?: NOT_SET
             ),
             // Network and proxy settings
-            "proxy" to (configuration.proxy?.toString() ?: "not set"),
-            "proxySelector" to (configuration.proxySelector?.toString() ?: "not set"),
-            "proxyAuthenticator" to (configuration.proxyAuthenticator?.toString() ?: "not set"),
-            "maximumConnections" to (configuration.maximumConnections?.toString() ?: "not set"),
-            "httpLoggingInterceptor" to (configuration.httpLoggingInterceptor?.let { "(@Deprecated) enabled (${it.level})" } ?: "not set"),
+            "proxy" to (configuration.proxy?.toString() ?: NOT_SET),
+            "proxySelector" to (configuration.proxySelector?.toString() ?: NOT_SET),
+            "proxyAuthenticator" to (configuration.proxyAuthenticator?.toString() ?: NOT_SET),
+            "maximumConnections" to (configuration.maximumConnections?.toString() ?: NOT_SET),
+            "httpLoggingInterceptor" to (configuration.httpLoggingInterceptor?.let { "(@Deprecated) enabled (${it.level})" } ?: NOT_SET),
             // SSL/TLS settings
-            "sslSocketFactory" to (configuration.sslSocketFactory?.toString() ?: "not set"),
-            "x509ExtendedTrustManager" to (configuration.x509ExtendedTrustManager?.toString() ?: "not set"),
-            "connectionSpec" to (configuration.connectionSpec?.toString() ?: "not set"),
-            "hostnameVerifier" to (configuration.hostnameVerifier?.toString() ?: "not set"),
-            "certificatePinner" to (configuration.certificatePinner?.toString() ?: "not set"),
+            "sslSocketFactory" to (configuration.sslSocketFactory?.toString() ?: NOT_SET),
+            "x509ExtendedTrustManager" to (configuration.x509ExtendedTrustManager?.toString() ?: NOT_SET),
+            "connectionSpec" to (configuration.connectionSpec?.toString() ?: NOT_SET),
+            "hostnameVerifier" to (configuration.hostnameVerifier?.toString() ?: NOT_SET),
+            "certificatePinner" to (configuration.certificatePinner?.toString() ?: NOT_SET),
             // App Engine settings
             "googleAppEngineNetworking" to configuration.googleAppEngineNetworking,
             // Instance identification
