@@ -87,6 +87,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
                     pubnub: PubNub,
                     pnStatus: PNStatus,
                 ) {
+                    // do nothing
                 }
 
                 override fun message(
