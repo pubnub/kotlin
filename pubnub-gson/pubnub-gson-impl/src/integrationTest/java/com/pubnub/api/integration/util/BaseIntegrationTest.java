@@ -147,7 +147,6 @@ public abstract class BaseIntegrationTest {
         }
         pnConfiguration.retryConfiguration(RetryConfiguration.None.INSTANCE);
         pnConfiguration.logVerbosity(PNLogVerbosity.NONE);
-//        pnConfiguration.httpLoggingInterceptor(createInterceptor()); // todo remove when logging is implemented
         if (action != null) {
             action.accept(pnConfiguration);
         }

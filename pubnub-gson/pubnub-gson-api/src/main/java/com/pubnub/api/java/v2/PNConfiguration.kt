@@ -257,10 +257,10 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
          * @see [HttpLoggingInterceptor]
          */
         @Deprecated(
-            message = "This setting is deprecated. Use customLoggers  instead",
+            message = "This setting is deprecated. Use customLoggers instead",
             level = DeprecationLevel.WARNING
         )
-        val httpLoggingInterceptor: HttpLoggingInterceptor? // todo deprecate
+        val httpLoggingInterceptor: HttpLoggingInterceptor?
 
         /**
          * @see [SSLSocketFactory]
@@ -505,7 +505,7 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
          * @see [HttpLoggingInterceptor]
          */
         @Deprecated(
-            message = "This setting is deprecated. Use customLoggers  instead",
+            message = "This setting is deprecated. Use customLoggers instead",
             level = DeprecationLevel.WARNING
         )
         fun httpLoggingInterceptor(httpLoggingInterceptor: HttpLoggingInterceptor?): Builder
