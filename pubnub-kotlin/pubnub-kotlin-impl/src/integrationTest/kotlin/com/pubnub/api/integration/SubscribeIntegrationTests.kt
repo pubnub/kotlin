@@ -1,5 +1,7 @@
 package com.pubnub.api.integration
 
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
 import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNStatusCategory
@@ -16,6 +18,7 @@ import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.test.CommonUtils.DEFAULT_LISTEN_DURATION
 import com.pubnub.test.CommonUtils.randomChannel
 import com.pubnub.test.CommonUtils.randomValue
+import com.pubnub.test.awaitZero
 import com.pubnub.test.listen
 import com.pubnub.test.subscribeToBlocking
 import okhttp3.HttpUrl
@@ -83,7 +86,8 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
                 override fun status(
                     pubnub: PubNub,
                     pnStatus: PNStatus,
-                ) {}
+                ) {
+                }
 
                 override fun message(
                     pubnub: PubNub,
@@ -118,7 +122,8 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
                 override fun status(
                     pubnub: PubNub,
                     pnStatus: PNStatus,
-                ) {}
+                ) {
+                }
 
                 override fun message(
                     pubnub: PubNub,
@@ -137,6 +142,226 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         ).sync()
 
         success.listen()
+    }
+
+    @Test
+    fun testSubscribeWithFilterExpressionOnMessageElements() {
+        val filterExpression = "data.name == \"Kate\" || data.name == 'Joe' || data.age == 20"
+
+        val messageCountdown = AtomicInteger(3)
+        val configWithFilterExpression = getBasicPnConfiguration().apply {
+            this.filterExpression = filterExpression
+        }.build()
+
+        val pubnub = PubNub.create(configWithFilterExpression)
+        registerGuestClient(pubnub)
+
+        val expectedChannelName = randomChannel()
+        val channel = pubnub.channel(expectedChannelName)
+        val subscription = channel.subscription()
+
+        subscription.onMessage = { message: PNMessageResult ->
+            messageCountdown.decrementAndGet()
+        }
+
+        subscription.subscribe()
+        Thread.sleep(150)
+
+        val expectedPayload01 =
+            JsonObject().apply {
+                addProperty("name", "Joe")
+                addProperty("age", 48)
+                add(
+                    "colors",
+                    JsonArray().apply {
+                        add("red")
+                        add("blue")
+                        add("green")
+                    }
+                )
+            }
+        val expectedPayload02 =
+            JsonObject().apply {
+                addProperty("name", "Kate")
+                addProperty("age", 30)
+            }
+        val expectedPayload03 =
+            JsonObject().apply {
+                addProperty("name", "Tom")
+                addProperty("age", 20)
+            }
+
+        channel.publish(message = expectedPayload01).sync()
+        channel.publish(message = expectedPayload02).sync()
+        channel.publish(message = expectedPayload03).sync()
+
+        messageCountdown.awaitZero()
+    }
+
+    @Test
+    fun testSubscribeWithFilterExpressionOnMetadata() {
+        val filterExpression = "meta.category == 'urgent'"
+
+        val receivesMessageCount = AtomicInteger(0)
+        val configWithFilterExpression = getBasicPnConfiguration().apply {
+            this.filterExpression = filterExpression
+        }.build()
+
+        val pubnub = PubNub.create(configWithFilterExpression)
+        registerGuestClient(pubnub)
+
+        val expectedPayload = JsonObject().apply {
+            addProperty("content", "This is an urgent message")
+        }
+
+        val matchingMeta = JsonObject().apply {
+            addProperty("category", "urgent")
+        }
+
+        val nonMatchingMeta = JsonObject().apply {
+            addProperty("category", "normal")
+        }
+
+        val expectedChannelName = randomChannel()
+        val channel = pubnub.channel(expectedChannelName)
+        val subscription = channel.subscription()
+
+        subscription.onMessage = { message: PNMessageResult ->
+            receivesMessageCount.incrementAndGet()
+        }
+
+        subscription.subscribe()
+        Thread.sleep(150)
+
+        // Publish message with non-matching metadata - should be filtered out
+        channel.publish(message = expectedPayload, meta = nonMatchingMeta).sync()
+
+        // Publish message with matching metadata - should be received
+        channel.publish(message = expectedPayload, meta = matchingMeta).sync()
+
+        Thread.sleep(2000)
+
+        assertEquals(1, receivesMessageCount.get())
+    }
+
+    @Test
+    fun testSubscribeWithFilterExpressionOnMetadataWithArraysAndObject() {
+        val filterExpression = "data.colors[0] == 'blue' || data.config['enabled'] == \"true\""
+
+        val receivesMessageCount = AtomicInteger(0)
+        val configWithFilterExpression = getBasicPnConfiguration().apply {
+            this.filterExpression = filterExpression
+        }.build()
+
+        val pubnub = PubNub.create(configWithFilterExpression)
+        registerGuestClient(pubnub)
+
+        val expectedChannelName = randomChannel()
+        val channel = pubnub.channel(expectedChannelName)
+        val subscription = channel.subscription()
+
+        subscription.onMessage = { message: PNMessageResult ->
+            receivesMessageCount.incrementAndGet()
+        }
+
+        subscription.subscribe()
+        Thread.sleep(150)
+
+        val expectedPayload01 =
+            JsonObject().apply {
+                addProperty("name", "Joe")
+                addProperty("age", 48)
+                add(
+                    "colors",
+                    JsonArray().apply {
+                        add("blue")
+                        add("red")
+                        add("green")
+                    }
+                )
+            }
+        val expectedPayload02 =
+            JsonObject().apply {
+                addProperty("name", "Kate")
+                addProperty("age", 30)
+                add(
+                    "config",
+                    JsonObject().apply {
+                        addProperty("enabled", "true")
+                        addProperty("version", 2)
+                    }
+                )
+            }
+        val expectedPayload03 =
+            JsonObject().apply {
+                addProperty("name", "Tom")
+                addProperty("age", 20)
+            }
+
+        channel.publish(message = expectedPayload01).sync()
+        channel.publish(message = expectedPayload02).sync()
+        channel.publish(message = expectedPayload03).sync()
+
+        Thread.sleep(2000)
+
+        assertEquals(2, receivesMessageCount.get())
+    }
+
+    @Test
+    fun testSubscribeWithFilterExpressionCustomMessageTypeWorkaround() {
+        val customMessageTypeValue = "alert"
+        val filterExpression = "data.customMessageType == '$customMessageTypeValue'"
+
+        val receivesMessageCount = AtomicInteger(0)
+        val configWithFilterExpression = getBasicPnConfiguration().apply {
+            this.filterExpression = filterExpression
+        }.build()
+
+        val pubnub = PubNub.create(configWithFilterExpression)
+        registerGuestClient(pubnub)
+
+        val expectedChannelName = randomChannel()
+        val channel = pubnub.channel(expectedChannelName)
+        val subscription = channel.subscription()
+
+        subscription.onMessage = { message: PNMessageResult ->
+            println("-=- received message: ${message.message}")
+            receivesMessageCount.incrementAndGet()
+        }
+
+        subscription.subscribe()
+        Thread.sleep(150)
+
+        val expectedPayload01 = HashMap<String, String>()
+        expectedPayload01["text"] = "System Alert"
+
+        expectedPayload01["customMessageType"] = customMessageTypeValue
+
+        val expectedPayload02 =
+            JsonObject().apply {
+                addProperty("name", "Kate")
+                addProperty("age", 30)
+                add(
+                    "config",
+                    JsonObject().apply {
+                        addProperty("enabled", "true")
+                        addProperty("version", 2)
+                    }
+                )
+            }
+        val expectedPayload03 =
+            JsonObject().apply {
+                addProperty("name", "Tom")
+                addProperty("age", 20)
+            }
+
+        channel.publish(message = expectedPayload01, customMessageType = customMessageTypeValue).sync()
+        channel.publish(message = expectedPayload02, customMessageType = "info").sync()
+        channel.publish(message = expectedPayload03, customMessageType = "info").sync()
+
+        Thread.sleep(2000)
+
+        assertEquals(1, receivesMessageCount.get())
     }
 
     @Test

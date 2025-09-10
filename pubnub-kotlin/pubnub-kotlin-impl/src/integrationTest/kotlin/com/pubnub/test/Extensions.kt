@@ -115,6 +115,10 @@ fun AtomicBoolean.listen(seconds: Int = CommonUtils.DEFAULT_LISTEN_DURATION) {
     CommonUtils.observe(this, seconds)
 }
 
+fun AtomicInteger.awaitZero(seconds: Int = CommonUtils.DEFAULT_LISTEN_DURATION) {
+    CommonUtils.observe(this, seconds)
+}
+
 fun PubNub.subscribeToBlocking(vararg channels: String) {
     this.subscribe(
         channels = listOf(*channels),
