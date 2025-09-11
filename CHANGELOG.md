@@ -2,7 +2,7 @@
 September 11 2025
 
 #### Added
-- Transport layer, crypto module,  serialization, API calls, etc.
+- Added structured log statements throughout the system in transport layer, crypto module, serialization, API calls, etc.
 - Added deprecation warning for logVerbosity and httpLoggingInterceptor config params. For logging configuration we advise using SLF4J implementation lib like logback or log4j2 and their config capabilities.
 - Added new config property called customLoggers, which can bu used when customer needs can not be implemented using configuration options of SLF4J implementation libs like logback or log4j2.
 
