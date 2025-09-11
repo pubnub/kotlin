@@ -3,9 +3,17 @@
 # httpLoggingInterceptor
 
 [jvm]\
-abstract fun [httpLoggingInterceptor](http-logging-interceptor.md)(httpLoggingInterceptor: HttpLoggingInterceptor?): [PNConfiguration.Builder](index.md)
+abstract fun [~~httpLoggingInterceptor~~](http-logging-interceptor.md)(httpLoggingInterceptor: HttpLoggingInterceptor?): [PNConfiguration.Builder](index.md)
 
-abstract val [httpLoggingInterceptor](http-logging-interceptor.md): HttpLoggingInterceptor?
+abstract val [~~httpLoggingInterceptor~~](http-logging-interceptor.md): HttpLoggingInterceptor?
+
+---
+
+### Deprecated
+
+This setting is deprecated. Use customLoggers instead
+
+---
 
 Sets a custom HttpLoggingInterceptor for logging network traffic.
 

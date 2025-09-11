@@ -16,6 +16,7 @@
 | [com.pubnub.api.endpoints.pubsub](pubnub-kotlin-core-api/com.pubnub.api.endpoints.pubsub/index.md) |
 | [com.pubnub.api.endpoints.remoteaction](pubnub-kotlin-core-api/com.pubnub.api.endpoints.remoteaction/index.md) |
 | [com.pubnub.api.enums](pubnub-kotlin-core-api/com.pubnub.api.enums/index.md) |
+| [com.pubnub.api.logging](pubnub-kotlin-core-api/com.pubnub.api.logging/index.md) |
 | [com.pubnub.api.models](pubnub-kotlin-core-api/com.pubnub.api.models/index.md) |
 | [com.pubnub.api.models.consumer](pubnub-kotlin-core-api/com.pubnub.api.models.consumer/index.md) |
 | [com.pubnub.api.models.consumer.access_manager](pubnub-kotlin-core-api/com.pubnub.api.models.consumer.access_manager/index.md) |

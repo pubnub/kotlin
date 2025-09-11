@@ -3,7 +3,15 @@
 # httpLoggingInterceptor
 
 [jvm]\
-abstract var [httpLoggingInterceptor](http-logging-interceptor.md): HttpLoggingInterceptor?
+abstract var [~~httpLoggingInterceptor~~](http-logging-interceptor.md): HttpLoggingInterceptor?
+
+---
+
+### Deprecated
+
+This setting is deprecated. Use customLoggers instead
+
+---
 
 Sets a custom HttpLoggingInterceptor for logging network traffic.
 
