@@ -4,10 +4,14 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.channel_groups.AllChannelsChannelGroup
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsAllChannelsResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.logging.LoggerManager
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.models.server.Envelope
 import retrofit2.Call
 import retrofit2.Response
@@ -20,6 +24,8 @@ class AllChannelsChannelGroupEndpoint internal constructor(
     override val channelGroup: String,
 ) : EndpointCore<Envelope<Map<String, Any>>, PNChannelGroupsAllChannelsResult>(pubnub),
     AllChannelsChannelGroup {
+    private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+
     override fun getAffectedChannelGroups() = listOf(channelGroup)
 
     override fun validateParams() {
@@ -30,6 +36,18 @@ class AllChannelsChannelGroupEndpoint internal constructor(
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<Map<String, Any>>> {
+        log.trace(
+            LogMessage(
+                message = LogMessageContent.Object(
+                    message = mapOf(
+                        "channelGroup" to channelGroup,
+                        "queryParams" to queryParams
+                    )
+                ),
+                details = "AllChannelsChannelGroup API call",
+            )
+        )
+
         return retrofitManager.channelGroupService
             .allChannelsChannelGroup(
                 configuration.subscribeKey,

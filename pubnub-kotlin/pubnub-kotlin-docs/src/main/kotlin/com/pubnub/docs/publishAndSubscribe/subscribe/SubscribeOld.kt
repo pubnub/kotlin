@@ -3,7 +3,6 @@ package com.pubnub.docs.publishAndSubscribe.subscribe
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
 import com.pubnub.api.callbacks.SubscribeCallback
-import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
@@ -17,7 +16,6 @@ class SubscribeOld : SnippetBase() {
         // snippet.subscribeWithLogging
         val pnConfiguration = com.pubnub.api.v2.PNConfiguration.builder(UserId("myUserId"), "demo").apply {
             publishKey = "my_pubkey"
-            logVerbosity = PNLogVerbosity.BODY
         }
 
         val pubnub = PubNub.create(pnConfiguration.build())

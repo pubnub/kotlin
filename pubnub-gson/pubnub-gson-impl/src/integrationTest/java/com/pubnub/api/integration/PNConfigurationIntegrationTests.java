@@ -2,6 +2,7 @@ package com.pubnub.api.integration;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
+import com.pubnub.api.integration.util.CustomLoggerTestImpl;
 import com.pubnub.api.integration.util.ITTestConfig;
 import com.pubnub.api.integration.util.Utils;
 import com.pubnub.api.java.PubNub;
@@ -10,6 +11,8 @@ import com.pubnub.api.java.v2.PNConfigurationOverride;
 import org.aeonbits.owner.ConfigFactory;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.Arrays;
 
 public class PNConfigurationIntegrationTests {
     final ITTestConfig itTestConfig = ConfigFactory.create(ITTestConfig.class, System.getenv());
@@ -35,12 +38,14 @@ public class PNConfigurationIntegrationTests {
         String expectedUuid = PubNub.generateUUID();
 
         PNConfiguration.Builder configBuilder = PNConfiguration.builder(new UserId(expectedUuid), itTestConfig.subscribeKey())
-                .publishKey(itTestConfig.publishKey());
+                .publishKey(itTestConfig.publishKey())
+                .customLoggers( Arrays.asList(new CustomLoggerTestImpl()));
         PubNub pubNub = PubNub.create(configBuilder.build());
 
         Assert.assertEquals(expectedUuid, pubNub.getConfiguration().getUserId().getValue());
         Assert.assertEquals(itTestConfig.subscribeKey(), pubNub.getConfiguration().getSubscribeKey());
         Assert.assertEquals(itTestConfig.publishKey(), pubNub.getConfiguration().getPublishKey());
+        Assert.assertTrue(pubNub.getConfiguration().getCustomLoggers().get(0) instanceof CustomLoggerTestImpl);
     }
 
     @Test

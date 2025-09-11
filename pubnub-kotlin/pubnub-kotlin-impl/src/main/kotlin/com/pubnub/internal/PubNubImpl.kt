@@ -52,6 +52,10 @@ import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice
 import com.pubnub.api.endpoints.push.RemoveChannelsFromPush
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
+import com.pubnub.api.logging.ErrorDetails
+import com.pubnub.api.logging.LogConfig
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions
 import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions
@@ -89,6 +93,7 @@ import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionCursor
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
+import com.pubnub.internal.crypto.CryptoModuleImpl
 import com.pubnub.internal.crypto.decryptString
 import com.pubnub.internal.crypto.encryptString
 import com.pubnub.internal.endpoints.DeleteMessagesEndpoint
@@ -139,6 +144,9 @@ import com.pubnub.internal.endpoints.push.AddChannelsToPushEndpoint
 import com.pubnub.internal.endpoints.push.ListPushProvisionsEndpoint
 import com.pubnub.internal.endpoints.push.RemoveAllPushChannelsForDeviceEndpoint
 import com.pubnub.internal.endpoints.push.RemoveChannelsFromPushEndpoint
+import com.pubnub.internal.logging.ConfigurationLogger.logConfiguration
+import com.pubnub.internal.logging.LoggerManager
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.managers.BasePathManager
 import com.pubnub.internal.managers.DuplicationManager
 import com.pubnub.internal.managers.ListenerManager
@@ -154,6 +162,7 @@ import com.pubnub.internal.presence.eventengine.effect.effectprovider.LeaveProvi
 import com.pubnub.internal.subscribe.PRESENCE_CHANNEL_SUFFIX
 import com.pubnub.internal.subscribe.Subscribe
 import com.pubnub.internal.subscribe.eventengine.configuration.EventEnginesConf
+import com.pubnub.internal.v2.PNConfigurationImpl
 import com.pubnub.internal.v2.entities.ChannelGroupImpl
 import com.pubnub.internal.v2.entities.ChannelGroupName
 import com.pubnub.internal.v2.entities.ChannelImpl
@@ -180,20 +189,34 @@ open class PubNubImpl(
     val pnsdkName: String = PNSDK_PUBNUB_KOTLIN,
     eventEnginesConf: EventEnginesConf = EventEnginesConf()
 ) : PubNub {
+    protected val logger: PNLogger by lazy { LoggerManager.instance.getLogger(logConfig, this::class.java) }
     internal val tokenManager: TokenManager = TokenManager()
 
     init {
         this.setToken(configuration.authToken)
     }
+
     constructor(configuration: PNConfiguration) : this(configuration, PNSDK_PUBNUB_KOTLIN)
 
-    val mapper = MapperManager()
+    /**
+     * Unique id of this PubNub instance.
+     *
+     * @see [PNConfiguration.includeInstanceIdentifier]
+     */
+    val instanceId = UUID.randomUUID().toString()
+    val logConfig: LogConfig = LogConfig(
+        pnInstanceId = instanceId,
+        userId = configuration.userId.value,
+        customLoggers = configuration.customLoggers,
+    )
+
+    val mapper = MapperManager(logConfig)
 
     private val numberOfThreadsInPool = Integer.min(Runtime.getRuntime().availableProcessors(), 8)
     internal val executorService: ScheduledExecutorService = Executors.newScheduledThreadPool(numberOfThreadsInPool)
     val listenerManager: ListenerManager = ListenerManager(this)
     private val basePathManager = BasePathManager(configuration)
-    internal val retrofitManager = RetrofitManager(this, configuration)
+    internal val retrofitManager = RetrofitManager(pubnub = this, configuration = configuration)
     internal val publishSequenceManager = PublishSequenceManager(MAX_SEQUENCE)
     private val tokenParser: TokenParser = TokenParser()
     private val presenceData = PresenceData()
@@ -202,7 +225,7 @@ open class PubNubImpl(
             this,
             listenerManager,
             eventEnginesConf,
-            SubscribeMessageProcessor(this, DuplicationManager(configuration)),
+            SubscribeMessageProcessor(this, DuplicationManager(configuration), logConfig),
             presenceData,
             configuration.maintainPresenceState,
         )
@@ -219,14 +242,34 @@ open class PubNubImpl(
             presenceData = presenceData,
             sendStateWithHeartbeat = configuration.maintainPresenceState,
             executorService = executorService,
+            logConfig = logConfig,
         )
 
-    /**
-     * Unique id of this PubNub instance.
-     *
-     * @see [PNConfiguration.includeInstanceIdentifier]
-     */
-    val instanceId = UUID.randomUUID().toString()
+    internal val cryptoModuleWithLogConfig: CryptoModule? by lazy {
+        when (configuration) {
+            is PNConfigurationImpl -> (configuration as PNConfigurationImpl).getCryptoModuleWithLogConfig(logConfig)
+            else -> {
+                // Try to call getCryptoModuleWithLogConfig using reflection for Java implementation
+                try {
+                    val method = configuration.javaClass.getMethod("getCryptoModuleWithLogConfig", LogConfig::class.java)
+                    method.invoke(configuration, logConfig) as? CryptoModule
+                } catch (e: Exception) {
+                    logger.error(
+                        LogMessage(
+                            message = LogMessageContent.Error(
+                                message = ErrorDetails(
+                                    type = e.javaClass.simpleName,
+                                    message = "Failed calling getCryptoModuleWithLogConfig"
+                                )
+                            ),
+                            details = "details",
+                        )
+                    )
+                    null
+                }
+            }
+        }
+    }
 
     //region Internal
     internal fun baseUrl() = basePathManager.basePath()
@@ -274,6 +317,15 @@ open class PubNubImpl(
          */
         @JvmStatic
         fun generateUUID() = "pn-${UUID.randomUUID()}"
+    }
+
+    init {
+        logConfiguration(
+            configuration = configuration,
+            logger = logger,
+            instanceId = instanceId,
+            className = this::class.java
+        )
     }
 
     override fun subscriptionSetOf(
@@ -372,7 +424,17 @@ open class PubNubImpl(
         meta: Any?,
         usePost: Boolean,
         ttl: Int?,
-    ): Publish = fire(channel, message, meta, usePost)
+    ): Publish {
+        logger.warn(
+            LogMessage(
+                message = LogMessageContent.Text(
+                    "DEPRECATED: fire() with ttl parameter is deprecated. Use fire(channel, message, meta, usePost) instead."
+                ),
+                details = "The ttl parameter is not used and this method will be removed in a future version",
+            )
+        )
+        return fire(channel, message, meta, usePost)
+    }
 
     override fun signal(
         channel: String,
@@ -453,6 +515,14 @@ open class PubNubImpl(
         includeTimetoken: Boolean,
         includeMeta: Boolean,
     ): History {
+        logger.warn(
+            LogMessage(
+                message = LogMessageContent.Text(
+                    "DEPRECATED: history() is deprecated. Use fetchMessages() instead."
+                ),
+                details = "This method will be removed in a future version",
+            )
+        )
         return HistoryEndpoint(
             pubnub = this,
             channel = channel,
@@ -1450,6 +1520,7 @@ open class PubNubImpl(
                     includeUserType = includeUUIDType,
                 )
             }
+
             PNUUIDDetailsLevel.UUID_WITH_CUSTOM -> {
                 IncludeQueryParam(
                     includeCustom = includeCustom,
@@ -1458,6 +1529,7 @@ open class PubNubImpl(
                     includeUserType = includeUUIDType,
                 )
             }
+
             null -> IncludeQueryParam(includeCustom = includeCustom, includeUserType = includeUUIDType)
         }
         return ManageChannelMembersEndpoint(
@@ -1523,9 +1595,9 @@ open class PubNubImpl(
     ): SendFile {
         val cryptoModule =
             if (cipherKey != null) {
-                CryptoModule.createLegacyCryptoModule(cipherKey)
+                createCryptoModuleWithLogConfig(CryptoModule.createLegacyCryptoModule(cipherKey))
             } else {
-                configuration.cryptoModule
+                cryptoModuleWithLogConfig
             }
         return SendFileEndpoint(
             channel = channel,
@@ -1581,9 +1653,9 @@ open class PubNubImpl(
     ): DownloadFile {
         val cryptoModule =
             if (cipherKey != null) {
-                CryptoModule.createLegacyCryptoModule(cipherKey)
+                createCryptoModuleWithLogConfig(CryptoModule.createLegacyCryptoModule(cipherKey))
             } else {
-                configuration.cryptoModule
+                cryptoModuleWithLogConfig
             }
         return DownloadFileEndpoint(
             pubNub = this,
@@ -1645,8 +1717,10 @@ open class PubNubImpl(
     )
 
     private fun getCryptoModuleOrThrow(cipherKey: String? = null): CryptoModule {
-        return cipherKey?.let { cipherKeyNotNull -> CryptoModule.createLegacyCryptoModule(cipherKeyNotNull) }
-            ?: configuration.cryptoModule ?: throw PubNubException("Crypto module is not initialized")
+        return cipherKey?.let { cipherKeyNotNull ->
+            createCryptoModuleWithLogConfig(CryptoModule.createLegacyCryptoModule(cipherKeyNotNull))
+        }
+            ?: cryptoModuleWithLogConfig ?: throw PubNubException("Crypto module is not initialized")
     }
 
     @Throws(PubNubException::class)
@@ -1965,6 +2039,20 @@ open class PubNubImpl(
 
     @Throws(PubNubException::class)
     private fun getCryptoModuleOrThrow(cryptoModule: CryptoModule? = null): CryptoModule {
-        return cryptoModule ?: configuration.cryptoModule ?: throw PubNubException("Crypto module is not initialized")
+        return cryptoModule?.let { createCryptoModuleWithLogConfig(it) } ?: cryptoModuleWithLogConfig
+            ?: throw PubNubException("Crypto module is not initialized")
+    }
+
+    private fun createCryptoModuleWithLogConfig(cryptoModule: CryptoModule): CryptoModule {
+        return if (cryptoModule is CryptoModuleImpl) {
+            CryptoModuleImpl(
+                primaryCryptor = cryptoModule.primaryCryptor,
+                cryptorsForDecryptionOnly = cryptoModule.cryptorsForDecryptionOnly,
+                logConfig = logConfig
+            )
+        } else {
+            // For custom implementations, return the original instance
+            cryptoModule
+        }
     }
 }

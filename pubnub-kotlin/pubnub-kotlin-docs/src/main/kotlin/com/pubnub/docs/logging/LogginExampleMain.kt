@@ -4,31 +4,20 @@ package com.pubnub.docs.logging
 // snippet.loggingExampleMain
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
-import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.v2.PNConfiguration
 
 fun main() {
     println("PubNub Logging Example")
     println("======================")
 
-    // Configure PubNub with logging enabled
     val userId = UserId("loggingDemoUser")
     val pnConfiguration = PNConfiguration.builder(userId, "demo").apply {
         // Replace "demo" with your Subscribe Key from the PubNub Admin Portal
         publishKey = "demo" // Replace with your Publish Key from the PubNub Admin Portal
-
-        // Set log verbosity - configure how much detail to log
-        // Options:
-        // - PNLogVerbosity.NONE (Turn off logging)
-        // - PNLogVerbosity.BODY (Log request and response bodies - most detailed)
-        logVerbosity = PNLogVerbosity.BODY
     }.build()
-
-    println("Logging configured with level: ${pnConfiguration.logVerbosity}")
 
     // Initialize PubNub with the configuration
     val pubnub = PubNub.create(pnConfiguration)
-    println("PubNub initialized with logging enabled")
 
     // Perform operations to generate logs
     demonstrateLogging(pubnub)
@@ -83,6 +72,5 @@ fun demonstrateLogging(pubnub: PubNub) {
     }
 
     println("\nLogging demonstration complete")
-    println("Check your console for detailed logs based on the configured verbosity level")
 }
 // snippet.end

@@ -1,5 +1,6 @@
 package com.pubnub.internal.eventengine
 
+import com.pubnub.api.logging.LogConfig
 import com.pubnub.contract.subscribe.eventEngine.state.TestSinkSource
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions
@@ -31,6 +32,7 @@ class EventEngineTest {
                 effectSink = eventEngineConf.effectSink,
                 eventSource = eventEngineConf.eventSource,
                 currentState = TestState,
+                logConfig = LogConfig(pnInstanceId = "EventEngineTest", userId = "TestUserId"),
                 executorService = executorService,
             )
 

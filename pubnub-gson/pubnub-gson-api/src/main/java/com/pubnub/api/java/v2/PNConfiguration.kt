@@ -4,6 +4,7 @@ import com.pubnub.api.UserId
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNLogVerbosity
+import com.pubnub.api.logging.CustomLogger
 import com.pubnub.api.retry.RetryConfiguration
 import okhttp3.Authenticator
 import okhttp3.CertificatePinner
@@ -91,6 +92,13 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
         /**
          * Set to [PNLogVerbosity.BODY] to enable logging of network traffic, otherwise se to [PNLogVerbosity.NONE].
          */
+        @Deprecated(
+            message = "LogVerbosity setting is deprecated and will be removed in future versions. " +
+                "For logging configuration:\n" +
+                "1. Use an SLF4J implementation (recommended)\n" +
+                "2. Or implement CustomLogger interface and set via customLoggers property",
+            level = DeprecationLevel.WARNING
+        )
         val logVerbosity: PNLogVerbosity
 
         /**
@@ -248,6 +256,10 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
          *
          * @see [HttpLoggingInterceptor]
          */
+        @Deprecated(
+            message = "This setting is deprecated. Use customLoggers instead",
+            level = DeprecationLevel.WARNING
+        )
         val httpLoggingInterceptor: HttpLoggingInterceptor?
 
         /**
@@ -301,6 +313,12 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
          */
         val managePresenceListManually: Boolean
 
+        /**
+         * Custom loggers list for creating additional logger instances.
+         * Use it if your slf4j implementation like logback, log4j2, etc. can't meet your specific logging requirements.
+         */
+        val customLoggers: List<CustomLogger>?
+
         override fun build(): PNConfiguration
 
         override fun setUserId(userId: UserId): Builder
@@ -337,6 +355,13 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
         /**
          * Set to [PNLogVerbosity.BODY] to enable logging of network traffic, otherwise se to [PNLogVerbosity.NONE].
          */
+        @Deprecated(
+            message = "LogVerbosity setting is deprecated and will be removed in future versions. " +
+                "For logging configuration:\n" +
+                "1. Use an SLF4J implementation (recommended)\n" +
+                "2. Or implement CustomLogger interface and set via customLoggers property",
+            level = DeprecationLevel.WARNING
+        )
         fun logVerbosity(logVerbosity: PNLogVerbosity): Builder
 
         /**
@@ -479,6 +504,10 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
          *
          * @see [HttpLoggingInterceptor]
          */
+        @Deprecated(
+            message = "This setting is deprecated. Use customLoggers instead",
+            level = DeprecationLevel.WARNING
+        )
         fun httpLoggingInterceptor(httpLoggingInterceptor: HttpLoggingInterceptor?): Builder
 
         /**
@@ -533,6 +562,12 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
          * @see PNConfigurationImpl.heartbeatInterval
          */
         fun managePresenceListManually(managePresenceListManually: Boolean): Builder
+
+        /**
+         * Custom loggers list for creating additional logger instances.
+         * Use it if your slf4j implementation like logback, log4j2, etc. can't meet your specific logging requirements.
+         */
+        fun customLoggers(customLoggers: List<CustomLogger>?): Builder
     }
 }
 

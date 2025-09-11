@@ -1,6 +1,7 @@
 package com.pubnub.internal.managers
 
 import com.pubnub.api.PubNubException
+import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -8,10 +9,12 @@ import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 
 internal class MapperManagerTest {
+    val logConfig = LogConfig("testPnInstanceId", "testUserId")
+
     @Test
     @Throws(PubNubException::class)
     fun toJson_anonymousList() {
-        val mapperManager = MapperManager()
+        val mapperManager = MapperManager(logConfig)
         val expected = "[1,2,3]"
         val anonList: List<Int> =
             object : ArrayList<Int>() {
@@ -34,7 +37,7 @@ internal class MapperManagerTest {
     @Test
     @Throws(PubNubException::class)
     fun toJson_anonymousMap() {
-        val mapperManager = MapperManager()
+        val mapperManager = MapperManager(logConfig)
         val expected = "{\"city\":\"Toronto\"}"
         val anonMap: HashMap<String, String> =
             object : HashMap<String, String>() {
@@ -53,7 +56,7 @@ internal class MapperManagerTest {
     @Test
     @Throws(PubNubException::class)
     fun toJson_anonymousSet() {
-        val mapperManager = MapperManager()
+        val mapperManager = MapperManager(logConfig)
         val expected = "[1,2,3]"
         val anonSet: Set<Int> =
             object : HashSet<Int>() {
@@ -75,7 +78,7 @@ internal class MapperManagerTest {
 
     @Test
     fun fromJson_numbers() {
-        val mapperManager = MapperManager()
+        val mapperManager = MapperManager(logConfig)
         val map = mapOf(
             "a" to 12345678,
             "b" to 1.2313,
@@ -100,7 +103,7 @@ internal class MapperManagerTest {
 
     @Test
     fun fromJson_optionalsAndNulls() {
-        val mapperManager = MapperManager()
+        val mapperManager = MapperManager(logConfig)
         val input = """
             { "id" : "myId", "name": null, "description": "myDescription", "eTag": "myEtag", "custom": { "a" : "b" } }
         """.trimIndent()

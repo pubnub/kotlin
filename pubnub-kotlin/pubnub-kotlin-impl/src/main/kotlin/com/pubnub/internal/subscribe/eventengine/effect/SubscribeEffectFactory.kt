@@ -1,6 +1,7 @@
 package com.pubnub.internal.subscribe.eventengine.effect
 
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
+import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.internal.eventengine.Effect
 import com.pubnub.internal.eventengine.EffectFactory
@@ -24,15 +25,16 @@ internal class SubscribeEffectFactory(
     private val statusConsumer: StatusConsumer,
     private val presenceData: PresenceData,
     private val sendStateWithSubscribe: Boolean,
+    private val logConfig: LogConfig
 ) : EffectFactory<SubscribeEffectInvocation> {
     override fun create(effectInvocation: SubscribeEffectInvocation): Effect? {
         return when (effectInvocation) {
             is SubscribeEffectInvocation.EmitMessages -> {
-                EmitMessagesEffect(messagesConsumer, effectInvocation.messages)
+                EmitMessagesEffect(messagesConsumer, effectInvocation.messages, logConfig)
             }
 
             is SubscribeEffectInvocation.EmitStatus -> {
-                EmitStatusEffect(statusConsumer, effectInvocation.status)
+                EmitStatusEffect(statusConsumer, effectInvocation.status, logConfig)
             }
 
             is SubscribeEffectInvocation.Handshake -> {
@@ -46,7 +48,7 @@ internal class SubscribeEffectFactory(
                             null
                         },
                     )
-                HandshakeEffect(handshakeRemoteAction, subscribeEventSink)
+                HandshakeEffect(handshakeRemoteAction, subscribeEventSink, logConfig)
             }
 
             is SubscribeEffectInvocation.ReceiveMessages -> {
@@ -56,7 +58,7 @@ internal class SubscribeEffectFactory(
                         effectInvocation.channelGroups,
                         effectInvocation.subscriptionCursor,
                     )
-                ReceiveMessagesEffect(receiveMessagesRemoteAction, subscribeEventSink)
+                ReceiveMessagesEffect(receiveMessagesRemoteAction, subscribeEventSink, logConfig)
             }
 
             SubscribeEffectInvocation.CancelHandshake,

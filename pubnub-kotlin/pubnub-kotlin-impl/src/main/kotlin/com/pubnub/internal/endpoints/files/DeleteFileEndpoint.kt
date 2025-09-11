@@ -4,10 +4,14 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.files.DeleteFile
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.models.consumer.files.PNDeleteFileResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.logging.LoggerManager
+import com.pubnub.internal.logging.PNLogger
 import retrofit2.Call
 import retrofit2.Response
 
@@ -20,6 +24,8 @@ class DeleteFileEndpoint(
     private val fileId: String,
     pubNub: PubNubImpl,
 ) : EndpointCore<Unit, PNDeleteFileResult>(pubNub), DeleteFile {
+    private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+
     @Throws(PubNubException::class)
     override fun validateParams() {
         if (channel.isEmpty()) {
@@ -28,14 +34,29 @@ class DeleteFileEndpoint(
     }
 
     @Throws(PubNubException::class)
-    override fun doWork(queryParams: HashMap<String, String>): Call<Unit> =
-        retrofitManager.filesService.deleteFile(
+    override fun doWork(queryParams: HashMap<String, String>): Call<Unit> {
+        log.trace(
+            LogMessage(
+                message = LogMessageContent.Object(
+                    message = mapOf(
+                        "channel" to channel,
+                        "fileName" to fileName,
+                        "fileId" to fileId,
+                        "queryParams" to queryParams
+                    )
+                ),
+                details = "DeleteFile API call",
+            )
+        )
+
+        return retrofitManager.filesService.deleteFile(
             configuration.subscribeKey,
             channel,
             fileId,
             fileName,
             queryParams,
         )
+    }
 
     @Throws(PubNubException::class)
     override fun createResponse(input: Response<Unit>): PNDeleteFileResult =

@@ -6,10 +6,14 @@ import com.pubnub.api.endpoints.push.RemoveChannelsFromPush
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.models.consumer.push.PNPushRemoveChannelResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.logging.LoggerManager
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.toCsv
 import retrofit2.Call
 import retrofit2.Response
@@ -26,6 +30,8 @@ class RemoveChannelsFromPushEndpoint internal constructor(
     override val topic: String? = null,
     override val environment: PNPushEnvironment = PNPushEnvironment.DEVELOPMENT,
 ) : EndpointCore<Void, PNPushRemoveChannelResult>(pubnub), RemoveChannelsFromPush {
+    private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+
     override fun getAffectedChannels() = channels
 
     override fun validateParams() {
@@ -42,6 +48,22 @@ class RemoveChannelsFromPushEndpoint internal constructor(
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Void> {
+        log.trace(
+            LogMessage(
+                message = LogMessageContent.Object(
+                    message = mapOf(
+                        "pushType" to pushType,
+                        "channels" to channels,
+                        "deviceId" to deviceId,
+                        "topic" to (topic ?: ""),
+                        "environment" to environment,
+                        "queryParams" to queryParams
+                    )
+                ),
+                details = "RemoveChannelsFromPush API call",
+            )
+        )
+
         addQueryParams(queryParams)
 
         return if (pushType != PNPushType.APNS2) {

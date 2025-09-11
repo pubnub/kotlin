@@ -5,12 +5,16 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.access.Grant
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.models.consumer.access_manager.PNAccessManagerGrantResult
 import com.pubnub.api.models.consumer.access_manager.PNAccessManagerKeyData
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.api.v2.PNConfiguration.Companion.isValid
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.logging.LoggerManager
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.models.server.Envelope
 import com.pubnub.internal.models.server.access_manager.AccessManagerGrantPayload
 import com.pubnub.internal.toCsv
@@ -35,6 +39,8 @@ open class GrantEndpoint(
     override val channelGroups: List<String> = emptyList(),
     override val uuids: List<String> = emptyList(),
 ) : EndpointCore<Envelope<AccessManagerGrantPayload>, PNAccessManagerGrantResult>(pubnub), Grant {
+    private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+
     override fun validateParams() {
         super.validateParams()
         if (!pubnub.configuration.secretKey.isValid()) {
@@ -47,6 +53,29 @@ open class GrantEndpoint(
     override fun getAffectedChannelGroups() = channelGroups
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<AccessManagerGrantPayload>> {
+        log.trace(
+            LogMessage(
+                message = LogMessageContent.Object(
+                    message = mapOf(
+                        "read" to read,
+                        "write" to write,
+                        "manage" to manage,
+                        "delete" to delete,
+                        "get" to get,
+                        "update" to update,
+                        "join" to join,
+                        "ttl" to ttl,
+                        "authKeys" to authKeys,
+                        "channels" to channels,
+                        "channelGroups" to channelGroups,
+                        "uuids" to uuids,
+                        "queryParams" to queryParams
+                    )
+                ),
+                details = "Grant API call",
+            )
+        )
+
         addQueryParams(queryParams)
 
         return retrofitManager.accessManagerService

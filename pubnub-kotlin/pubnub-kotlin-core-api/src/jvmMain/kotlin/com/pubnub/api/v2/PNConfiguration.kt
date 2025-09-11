@@ -4,6 +4,7 @@ import com.pubnub.api.UserId
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNLogVerbosity
+import com.pubnub.api.logging.CustomLogger
 import com.pubnub.api.retry.RetryConfiguration
 import okhttp3.Authenticator
 import okhttp3.CertificatePinner
@@ -77,6 +78,13 @@ actual interface PNConfiguration {
     /**
      * Set to [PNLogVerbosity.BODY] to enable logging of network traffic, otherwise se to [PNLogVerbosity.NONE].
      */
+    @Deprecated(
+        message = "LogVerbosity setting is deprecated and will be removed in future versions. " +
+            "For logging configuration:\n" +
+            "1. Use an SLF4J implementation (recommended)\n" +
+            "2. Or implement CustomLogger interface and set via customLoggers property",
+        level = DeprecationLevel.WARNING
+    )
     actual val logVerbosity: PNLogVerbosity
 
     /**
@@ -124,7 +132,7 @@ actual interface PNConfiguration {
      * For non subscribe operations (publish, herenow, etc),
      * This property relates to a read timeout that is applied from the moment the connection between a client
      * and the server has been successfully established. It defines a maximum time of inactivity between two
-     * data packets when waiting for the server’s response.
+     * data packets when waiting for the server's response.
      *
      * The value is in seconds.
      *
@@ -141,7 +149,7 @@ actual interface PNConfiguration {
      * For non subscribe operations (publish, herenow, etc),
      * This property relates to a read timeout that is applied from the moment the connection between a client
      * and the server has been successfully established. It defines a maximum time of inactivity between two
-     * data packets when waiting for the server’s response.
+     * data packets when waiting for the server's response.
      *
      * The value is in seconds.
      *
@@ -234,6 +242,10 @@ actual interface PNConfiguration {
      *
      * @see [HttpLoggingInterceptor]
      */
+    @Deprecated(
+        message = "This setting is deprecated. Use customLoggers instead.",
+        level = DeprecationLevel.WARNING
+    )
     val httpLoggingInterceptor: HttpLoggingInterceptor?
 
     /**
@@ -286,6 +298,12 @@ actual interface PNConfiguration {
      * @see PNConfiguration.heartbeatInterval
      */
     val managePresenceListManually: Boolean
+
+    /**
+     * Custom loggers list for creating additional logger instances.
+     * Use it if your slf4j implementation like logback, log4j2, etc. can't meet your specific logging requirements.
+     */
+    val customLoggers: List<CustomLogger>?
 
     @Deprecated(
         level = DeprecationLevel.WARNING,
@@ -381,6 +399,15 @@ actual interface PNConfiguration {
         /**
          * Set to [PNLogVerbosity.BODY] to enable logging of network traffic, otherwise se to [PNLogVerbosity.NONE].
          */
+        @Deprecated(
+            message = "LogVerbosity setting is deprecated and will be removed in future versions. " +
+                "For logging configuration:\n" +
+                "1. Use an SLF4J implementation (recommended)\n" +
+                "2. Or implement CustomLogger interface and set via customLoggers property. " +
+                "Use CustomLogger if your slf4j implementation like logback, log4j2, etc. can't meet " +
+                "your specific logging requirements.",
+            level = DeprecationLevel.WARNING
+        )
         var logVerbosity: PNLogVerbosity
 
         /**
@@ -428,7 +455,7 @@ actual interface PNConfiguration {
          * For non subscribe operations (publish, herenow, etc),
          * This property relates to a read timeout that is applied from the moment the connection between a client
          * and the server has been successfully established. It defines a maximum time of inactivity between two
-         * data packets when waiting for the server’s response.
+         * data packets when waiting for the server's response.
          *
          * The value is in seconds.
          *
@@ -448,7 +475,7 @@ actual interface PNConfiguration {
          * For non subscribe operations (publish, herenow, etc),
          * This property relates to a read timeout that is applied from the moment the connection between a client
          * and the server has been successfully established. It defines a maximum time of inactivity between two
-         * data packets when waiting for the server’s response.
+         * data packets when waiting for the server's response.
          *
          * The value is in seconds.
          *
@@ -541,6 +568,10 @@ actual interface PNConfiguration {
          *
          * @see [HttpLoggingInterceptor]
          */
+        @Deprecated(
+            message = "This setting is deprecated. Use customLoggers instead",
+            level = DeprecationLevel.WARNING
+        )
         var httpLoggingInterceptor: HttpLoggingInterceptor?
 
         /**
@@ -578,7 +609,7 @@ actual interface PNConfiguration {
          * Retry configuration for requests.
          *  Defaults to [RetryConfiguration.Exponential] enabled only for subscription endpoint (other endpoints are excluded).
          *
-         *  Use [RetryConfiguration.Linear] to set retry with linear delay intervar
+         *  Use [RetryConfiguration.Linear] to set retry with linear delay interval
          *  Use [RetryConfiguration.Exponential] to set retry with exponential delay interval
          *  Delay will vary from provided value by random value.
          */
@@ -593,6 +624,12 @@ actual interface PNConfiguration {
          * @see PNConfiguration.heartbeatInterval
          */
         var managePresenceListManually: Boolean
+
+        /**
+         * Custom loggers list for creating additional logger instances.
+         * Use it if your slf4j implementation like logback, log4j2, etc. can't meet your specific logging requirements.
+         */
+        var customLoggers: List<CustomLogger>?
 
         /**
          * Create a [PNConfiguration] object with values from this builder.
@@ -693,7 +730,7 @@ interface PNConfigurationOverride {
          * For non subscribe operations (publish, herenow, etc),
          * This property relates to a read timeout that is applied from the moment the connection between a client
          * and the server has been successfully established. It defines a maximum time of inactivity between two
-         * data packets when waiting for the server’s response.
+         * data packets when waiting for the server's response.
          *
          * The value is in seconds.
          *

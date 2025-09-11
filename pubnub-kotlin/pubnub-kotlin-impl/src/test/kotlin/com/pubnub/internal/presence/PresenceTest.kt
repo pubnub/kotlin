@@ -1,6 +1,7 @@
 package com.pubnub.internal.presence
 
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
+import com.pubnub.api.logging.LogConfig
 import com.pubnub.contract.subscribe.eventEngine.state.TestSinkSource
 import com.pubnub.internal.eventengine.EventEngineConf
 import com.pubnub.internal.eventengine.QueueEventEngineConf
@@ -33,6 +34,7 @@ private const val CHANNEL_GROUPS_01 = "channelGroups01"
 internal class PresenceTest {
     private val listenerManager: ListenerManager = mockk()
     private val executorService: ScheduledExecutorService = mockk()
+    private val logConfig: LogConfig = LogConfig(pnInstanceId = "testInstanceId", userId = "testUserId")
 
     companion object {
         @JvmStatic
@@ -162,7 +164,9 @@ internal class PresenceTest {
     fun `should call heartbeat when joining channels with heartbeat interval 0`() {
         // given
         val heartbeatProviderMock: HeartbeatProvider = mockk()
-        every { heartbeatProviderMock.getHeartbeatRemoteAction(any(), any(), any()) } returns successfulRemoteAction(true)
+        every { heartbeatProviderMock.getHeartbeatRemoteAction(any(), any(), any()) } returns successfulRemoteAction(
+            true
+        )
 
         val presence =
             Presence.create(
@@ -182,7 +186,9 @@ internal class PresenceTest {
     fun `should not call heartbeat when joining empty channels with heartbeat interval 0`() {
         // given
         val heartbeatProviderMock: HeartbeatProvider = mockk()
-        every { heartbeatProviderMock.getHeartbeatRemoteAction(any(), any(), any()) } returns successfulRemoteAction(true)
+        every { heartbeatProviderMock.getHeartbeatRemoteAction(any(), any(), any()) } returns successfulRemoteAction(
+            true
+        )
 
         val presence =
             Presence.create(
@@ -207,6 +213,7 @@ internal class PresenceTest {
         suppressLeaveEvents: Boolean = false,
         leaveProvider: LeaveProvider = LeaveProvider { _, _ -> successfulRemoteAction(true) },
         heartbeatProvider: HeartbeatProvider = HeartbeatProvider { _, _, _ -> successfulRemoteAction(true) },
+        logConfig: LogConfig = LogConfig(pnInstanceId = "testInstanceId", userId = "testUserId"),
     ) = create(
         heartbeatProvider = heartbeatProvider,
         leaveProvider = leaveProvider,
@@ -218,5 +225,6 @@ internal class PresenceTest {
         presenceData = presenceData,
         sendStateWithHeartbeat = true,
         executorService = executorService,
+        logConfig = logConfig,
     )
 }

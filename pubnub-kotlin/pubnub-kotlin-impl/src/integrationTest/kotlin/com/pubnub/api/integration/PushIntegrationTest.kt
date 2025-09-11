@@ -39,10 +39,10 @@ class PushIntegrationTest : BaseIntegrationTest() {
     }
 
     private fun runPushOperations(pushType: PNPushType) {
-        logger.info("Push type '$pushType'")
-        logger.info("Channels $expectedChannels'")
-        logger.info("Topic $expectedTopic'")
-        logger.info("GeneratedToken '${expectedDeviceId.length}': $expectedDeviceId")
+        println("Push type '$pushType'")
+        println("Channels $expectedChannels'")
+        println("Topic $expectedTopic'")
+        println("GeneratedToken '${expectedDeviceId.length}': $expectedDeviceId")
 
         pubnub.addPushNotificationsOnChannels(
             channels = expectedChannels,

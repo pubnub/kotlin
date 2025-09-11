@@ -1,7 +1,6 @@
 package com.pubnub.api.retry
 
 // import org.jetbrains.annotations.TestOnly TODO
-// import org.slf4j.LoggerFactory TODO
 import kotlin.jvm.JvmSynthetic
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -32,8 +31,6 @@ sealed class RetryConfiguration {
         val excludedOperations: List<RetryableEndpointGroup> = emptyList(),
         isInternal: Boolean = false,
     ) : RetryConfiguration() {
-//        private val log = LoggerFactory.getLogger(this.javaClass.simpleName + "-" + "RetryConfiguration")
-
         constructor(
             delayInSec: Int = MIN_DELAY,
             maxRetryNumber: Int = MAX_RETRIES,
@@ -48,11 +45,9 @@ sealed class RetryConfiguration {
         init {
             if (!isInternal) {
                 if (delayInSec < MIN_DELAY.seconds) {
-//                    log.trace("Provided delay is less than $MIN_DELAY, setting it to $MIN_DELAY")
                     delayInSec = MIN_DELAY.seconds
                 }
                 if (maxRetryNumber > MAX_RETRIES) {
-//                    log.trace("Provided maxRetryNumber is greater than $MAX_RETRIES, setting it to $MAX_RETRIES")
                     maxRetryNumber = MAX_RETRIES
                 }
             }
@@ -89,8 +84,6 @@ sealed class RetryConfiguration {
         val excludedOperations: List<RetryableEndpointGroup> = emptyList(),
         isInternal: Boolean = false,
     ) : RetryConfiguration() {
-//        private val log = LoggerFactory.getLogger(this.javaClass.simpleName + "-" + "RetryConfiguration")
-
         constructor(
             minDelayInSec: Int = MIN_DELAY,
             maxDelayInSec: Int = MAX_DELAY,
@@ -125,7 +118,7 @@ sealed class RetryConfiguration {
                 maxRetryNumber = maxRetryNumber.coerceAtMost(MAX_RETRIES)
 
                 if (minDelayInSec != originalMinDelayInSec || maxDelayInSec != originalMaxDelayInSec || maxRetryNumber != originalMaxRetryNumber) {
-//                    log.trace("Adjusted values: minDelayInSec=$minDelayInSec, maxDelayInSec=$maxDelayInSec, maxRetryNumber=$maxRetryNumber")
+                    // no action
                 }
             }
         }

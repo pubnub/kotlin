@@ -231,7 +231,7 @@ public class MessageActionsTest extends BaseIntegrationTest {
 
             @Override
             public void onDone() {
-                log.error(String.format("onDone %s", count.get()));
+                System.out.println(String.format("onDone %s", count.get()));
                 success.set(count.get() == messageCount);
             }
         });

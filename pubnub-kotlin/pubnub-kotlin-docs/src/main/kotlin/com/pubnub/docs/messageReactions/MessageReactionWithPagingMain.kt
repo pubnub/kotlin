@@ -5,7 +5,6 @@ package com.pubnub.docs.messageReactions
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
-import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.message_actions.PNGetMessageActionsResult
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
@@ -15,7 +14,6 @@ fun main() {
     val userId = UserId("message-action-demo-user")
     val config = PNConfiguration.builder(userId, "demo").apply {
         publishKey = "demo"
-        logVerbosity = PNLogVerbosity.BODY // Enable debug logging for visibility
     }.build()
 
     val pubnub = PubNub.create(config)

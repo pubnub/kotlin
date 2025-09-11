@@ -1,5 +1,6 @@
 package com.pubnub.internal.presence.eventengine
 
+import com.pubnub.api.logging.LogConfig
 import com.pubnub.internal.eventengine.EventEngine
 import com.pubnub.internal.eventengine.Sink
 import com.pubnub.internal.eventengine.Source
@@ -12,5 +13,6 @@ internal typealias PresenceEventEngine = EventEngine<PresenceEffectInvocation, P
 internal fun PresenceEventEngine(
     effectSink: Sink<PresenceEffectInvocation>,
     eventSource: Source<PresenceEvent>,
+    logConfig: LogConfig,
     currentState: PresenceState = PresenceState.HeartbeatInactive,
-): PresenceEventEngine = EventEngine(effectSink, eventSource, currentState)
+): PresenceEventEngine = EventEngine(effectSink, eventSource, currentState, logConfig)

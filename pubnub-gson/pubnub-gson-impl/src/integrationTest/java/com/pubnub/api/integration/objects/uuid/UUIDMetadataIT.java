@@ -10,8 +10,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.HttpStatus;
 import org.junit.After;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +31,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class UUIDMetadataIT extends ObjectsApiBaseIT {
-    private static final Logger LOG = LoggerFactory.getLogger(UUIDMetadataIT.class);
     private static final int NUMBER_OF_RANDOM_TEST_UUIDS = 10;
     private static final int FETCH_LIMIT = 3;
 
@@ -184,7 +181,7 @@ public class UUIDMetadataIT extends ObjectsApiBaseIT {
                         .uuid(pnSetUUIDMetadataResult.getData().getId())
                         .sync();
             } catch (Exception e) {
-                LOG.warn("Could not cleanup {}", pnSetUUIDMetadataResult, e);
+                System.out.printf("Could not cleanup {}", pnSetUUIDMetadataResult, e);
             }
         });
     }

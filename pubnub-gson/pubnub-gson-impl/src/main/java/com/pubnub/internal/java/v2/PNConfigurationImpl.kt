@@ -6,13 +6,15 @@ import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.java.v2.PNConfiguration
 import com.pubnub.api.java.v2.PNConfigurationOverride
+import com.pubnub.api.logging.CustomLogger
+import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.retry.RetryableEndpointGroup
+import com.pubnub.internal.crypto.CryptoModuleImpl
 import okhttp3.Authenticator
 import okhttp3.CertificatePinner
 import okhttp3.ConnectionSpec
 import okhttp3.logging.HttpLoggingInterceptor
-import org.slf4j.LoggerFactory
 import java.net.Proxy
 import java.net.ProxySelector
 import javax.net.ssl.HostnameVerifier
@@ -71,6 +73,7 @@ class PNConfigurationImpl(
         )
     ),
     override val managePresenceListManually: Boolean = false,
+    override val customLoggers: List<CustomLogger>? = null,
 ) : PNConfiguration {
     companion object {
         const val DEFAULT_DEDUPE_SIZE = 100
@@ -81,11 +84,25 @@ class PNConfigurationImpl(
         const val CONNECT_TIMEOUT = 5
     }
 
+    // this method is used from cryptoModuleWithLogConfig using reflection
+    fun getCryptoModuleWithLogConfig(logConfig: LogConfig): CryptoModule? {
+        return cryptoModule?.let { module ->
+            if (module is CryptoModuleImpl) {
+                CryptoModuleImpl(
+                    primaryCryptor = module.primaryCryptor,
+                    cryptorsForDecryptionOnly = module.cryptorsForDecryptionOnly,
+                    logConfig = logConfig
+                )
+            } else {
+                // For custom implementations, return the original instance
+                module
+            }
+        }
+    }
+
     class Builder internal constructor(defaultConfiguration: com.pubnub.api.v2.PNConfiguration) :
         PNConfiguration.Builder, PNConfigurationOverride.Builder {
             constructor(userId: UserId, subscribeKey: String) : this(PNConfigurationImpl(userId, subscribeKey))
-
-            private val log = LoggerFactory.getLogger(this::class.simpleName)
 
             override var userId: UserId = defaultConfiguration.userId
 
@@ -143,6 +160,15 @@ class PNConfigurationImpl(
 
             override var secure: Boolean = defaultConfiguration.secure
 
+            @Deprecated(
+                message = "LogVerbosity setting is deprecated and will be removed in future versions. " +
+                    "For logging configuration:\n" +
+                    "1. Use an SLF4J implementation (recommended)\n" +
+                    "2. Or implement CustomLogger interface and set via customLoggers property. " +
+                    "Use CustomLogger if your slf4j implementation like logback, log4j2, etc. can't meet " +
+                    "your specific logging requirements.",
+                level = DeprecationLevel.WARNING
+            )
             override fun logVerbosity(logVerbosity: PNLogVerbosity): Builder {
                 this.logVerbosity = logVerbosity
                 return this
@@ -160,7 +186,7 @@ class PNConfigurationImpl(
 
             override fun presenceTimeout(presenceTimeout: Int): Builder {
                 this.presenceTimeout = if (presenceTimeout < MINIMUM_PRESENCE_TIMEOUT) {
-                    log.warn("Presence timeout is too low. Defaulting to: $MINIMUM_PRESENCE_TIMEOUT")
+                    println("Presence timeout is too low. Defaulting to: $MINIMUM_PRESENCE_TIMEOUT")
                     MINIMUM_PRESENCE_TIMEOUT
                 } else {
                     presenceTimeout
@@ -291,6 +317,10 @@ class PNConfigurationImpl(
 
             override var certificatePinner: CertificatePinner? = defaultConfiguration.certificatePinner
 
+            @Deprecated(
+                message = "This setting is deprecated. Use customLoggers instead.",
+                level = DeprecationLevel.WARNING
+            )
             override fun httpLoggingInterceptor(httpLoggingInterceptor: HttpLoggingInterceptor?): Builder {
                 this.httpLoggingInterceptor = httpLoggingInterceptor
                 return this
@@ -368,6 +398,13 @@ class PNConfigurationImpl(
 
             override var managePresenceListManually: Boolean = defaultConfiguration.managePresenceListManually
 
+            override fun customLoggers(customLoggers: List<CustomLogger>?): Builder {
+                this.customLoggers = customLoggers
+                return this
+            }
+
+            override var customLoggers: List<CustomLogger>? = defaultConfiguration.customLoggers
+
             override fun build(): PNConfiguration {
                 return PNConfigurationImpl(
                     userId = userId,
@@ -408,6 +445,7 @@ class PNConfigurationImpl(
                     pnsdkSuffixes = pnsdkSuffixes,
                     retryConfiguration = retryConfiguration,
                     managePresenceListManually = managePresenceListManually,
+                    customLoggers = customLoggers
                 )
             }
         }

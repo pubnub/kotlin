@@ -4,7 +4,6 @@ package com.pubnub.docs.presence
 
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
-import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.v2.PNConfiguration
 
 fun main() {
@@ -15,7 +14,6 @@ fun main() {
     val userId = UserId("here-now-demo-user")
     val config = PNConfiguration.builder(userId, "demo").apply {
         publishKey = "demo"
-        logVerbosity = PNLogVerbosity.BODY // Enable debug logging of network calls
     }.build()
 
     // Create PubNub instance

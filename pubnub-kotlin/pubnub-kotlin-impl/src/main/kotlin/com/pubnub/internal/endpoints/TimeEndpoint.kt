@@ -2,10 +2,15 @@ package com.pubnub.internal.endpoints
 
 import com.pubnub.api.endpoints.Time
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.models.consumer.PNTimeResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.logging.LoggerManager
+import com.pubnub.internal.logging.PNLogger
+import retrofit2.Call
 import retrofit2.Response
 
 /**
@@ -14,11 +19,27 @@ import retrofit2.Response
 class TimeEndpoint(pubnub: PubNubImpl, private val excludeFromRetry: Boolean = false) :
     EndpointCore<List<Long>, PNTimeResult>(pubnub),
     Time {
+    private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+
     override fun getAffectedChannels() = emptyList<String>()
 
     override fun getAffectedChannelGroups() = emptyList<String>()
 
-    override fun doWork(queryParams: HashMap<String, String>) = retrofitManager.timeService.fetchTime(queryParams)
+    override fun doWork(queryParams: HashMap<String, String>): Call<List<Long>> {
+        log.trace(
+            LogMessage(
+                message = LogMessageContent.Object(
+                    message = mapOf(
+                        "excludeFromRetry" to excludeFromRetry,
+                        "queryParams" to queryParams
+                    )
+                ),
+                details = "Time API call",
+            )
+        )
+
+        return retrofitManager.timeService.fetchTime(queryParams)
+    }
 
     override fun createResponse(input: Response<List<Long>>): PNTimeResult {
         return PNTimeResult(input.body()!![0])

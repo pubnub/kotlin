@@ -1,6 +1,7 @@
 package com.pubnub.internal.subscribe.eventengine.effect
 
 import com.google.gson.JsonPrimitive
+import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.models.consumer.files.PNDownloadableFile
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
@@ -26,12 +27,13 @@ class EmitMessagesEffectTest {
     private val message = "Message1"
     private val messageActionType = "reaction"
     private val objectEventType = "membership"
+    private val logConfig: LogConfig = LogConfig(pnInstanceId = "testInstanceId", userId = "testUserId")
 
     @Test
     fun `should announce PNMessageResult when PNMessageResult exist in messages`() {
         // given
         val messages: List<PNEvent> = listOf(PNMessageResult(createBasePubSubResult(), JsonPrimitive(message)))
-        val emitMessagesEffect = EmitMessagesEffect(messagesConsumer, messages)
+        val emitMessagesEffect = EmitMessagesEffect(messagesConsumer, messages, logConfig)
         val pnEventCapture = slot<PNMessageResult>()
         every { messagesConsumer.announce(capture(pnEventCapture)) } returns Unit
 
@@ -47,7 +49,7 @@ class EmitMessagesEffectTest {
     fun `should announce PNSignalResult when PNSignalResult exist in messages`() {
         // given
         val messages: List<PNEvent> = listOf(PNSignalResult(createBasePubSubResult(), JsonPrimitive(message)))
-        val emitMessagesEffect = EmitMessagesEffect(messagesConsumer, messages)
+        val emitMessagesEffect = EmitMessagesEffect(messagesConsumer, messages, logConfig)
         val pnEventCapture = slot<PNSignalResult>()
         every { messagesConsumer.announce(capture(pnEventCapture)) } returns Unit
 
@@ -63,7 +65,7 @@ class EmitMessagesEffectTest {
     fun `should announce PNFileEventResult when PNFileEventResult exist in messages`() {
         // given
         val messages: List<PNEvent> = listOf(createPnFileEventResult(message))
-        val emitMessagesEffect = EmitMessagesEffect(messagesConsumer, messages)
+        val emitMessagesEffect = EmitMessagesEffect(messagesConsumer, messages, logConfig)
         val pnEventCapture = slot<PNFileEventResult>()
         every { messagesConsumer.announce(capture(pnEventCapture)) } returns Unit
 
@@ -79,7 +81,7 @@ class EmitMessagesEffectTest {
     fun `should announce PNMessageActionResult when PNMessageActionResult exist in messages`() {
         // given
         val messages: List<PNEvent> = listOf(createPnMessageActionResult(messageActionType))
-        val emitMessagesEffect = EmitMessagesEffect(messagesConsumer, messages)
+        val emitMessagesEffect = EmitMessagesEffect(messagesConsumer, messages, logConfig)
         val pnEventCapture = slot<PNMessageActionResult>()
         every { messagesConsumer.announce(capture(pnEventCapture)) } returns Unit
 
@@ -95,7 +97,7 @@ class EmitMessagesEffectTest {
     fun `should announce PNObjectEventResult when PNObjectEventResult exist in messages`() {
         // given
         val messages: List<PNEvent> = listOf(createPnObjectEventResult(objectEventType))
-        val emitMessagesEffect = EmitMessagesEffect(messagesConsumer, messages)
+        val emitMessagesEffect = EmitMessagesEffect(messagesConsumer, messages, logConfig)
         val pnEventCapture = slot<PNObjectEventResult>()
         every { messagesConsumer.announce(capture(pnEventCapture)) } returns Unit
 
@@ -128,7 +130,7 @@ class EmitMessagesEffectTest {
                 pnMessageActionResult,
                 pnObjectEventResult,
             )
-        val emitMessagesEffect = EmitMessagesEffect(messagesConsumer, listOfDifferentMessages)
+        val emitMessagesEffect = EmitMessagesEffect(messagesConsumer, listOfDifferentMessages, logConfig)
 
         // when
         emitMessagesEffect.runEffect()

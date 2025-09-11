@@ -1,17 +1,21 @@
 package com.pubnub.internal.subscribe.eventengine.effect
 
+import com.pubnub.api.logging.LogConfig
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.internal.eventengine.Effect
-import org.slf4j.LoggerFactory
+import com.pubnub.internal.logging.LoggerManager
 
 internal class EmitStatusEffect(
     private val statusConsumer: StatusConsumer,
     private val status: PNStatus,
+    private val logConfig: LogConfig
 ) : Effect {
-    private val log = LoggerFactory.getLogger(EmitStatusEffect::class.java)
+    private val log = LoggerManager.instance.getLogger(logConfig, this::class.java)
 
     override fun runEffect() {
-        log.trace("Running EmitStatusEffect: $status")
+        log.trace(LogMessage(message = LogMessageContent.Text("Running EmitStatusEffect: $status")))
         statusConsumer.announce(status)
     }
 }

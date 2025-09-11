@@ -4,11 +4,15 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.files.ListFiles
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.models.consumer.files.PNListFilesResult
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.logging.LoggerManager
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.models.server.files.ListFilesResult
 import retrofit2.Call
 import retrofit2.Response
@@ -22,6 +26,8 @@ class ListFilesEndpoint(
     private val next: PNPage.PNNext? = null,
     pubNub: PubNubImpl,
 ) : EndpointCore<ListFilesResult, PNListFilesResult>(pubNub), ListFiles {
+    private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+
     @Throws(PubNubException::class)
     override fun validateParams() {
         if (channel.isEmpty()) {
@@ -41,6 +47,20 @@ class ListFilesEndpoint(
 
     @Throws(PubNubException::class)
     override fun doWork(queryParams: HashMap<String, String>): Call<ListFilesResult> {
+        log.trace(
+            LogMessage(
+                message = LogMessageContent.Object(
+                    message = mapOf(
+                        "channel" to channel,
+                        "limit" to (limit ?: DEFAULT_LIMIT),
+                        "next" to (next?.pageHash ?: ""),
+                        "queryParams" to queryParams
+                    )
+                ),
+                details = "ListFiles API call",
+            )
+        )
+
         queryParams[LIMIT_QUERY_PARAM] = (limit ?: DEFAULT_LIMIT).toString()
         if (next != null) {
             queryParams[NEXT_PAGE_QUERY_PARAM] = next.pageHash

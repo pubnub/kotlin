@@ -2,7 +2,6 @@ package com.pubnub.docs.mobilePush
 
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
-import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.PNPublishResult
@@ -30,7 +29,6 @@ fun main() {
     val userId = UserId("push-notifications-demo-user")
     val config = PNConfiguration.builder(userId, "demo").apply {
         publishKey = "demo"
-        logVerbosity = PNLogVerbosity.BODY // Enable debug logging of network calls
     }.build()
 
     // 2. Create PubNub instance

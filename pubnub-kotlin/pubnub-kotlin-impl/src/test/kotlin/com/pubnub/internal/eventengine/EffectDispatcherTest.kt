@@ -1,5 +1,6 @@
 package com.pubnub.internal.eventengine
 
+import com.pubnub.api.logging.LogConfig
 import com.pubnub.internal.subscribe.eventengine.effect.SubscribeEffectInvocation
 import io.mockk.every
 import io.mockk.mockk
@@ -14,6 +15,7 @@ import java.util.concurrent.ScheduledExecutorService
 
 class EffectDispatcherTest {
     private val executorService: ScheduledExecutorService = mockk()
+    private val logConfig: LogConfig = LogConfig(pnInstanceId = "testInstanceId", userId = "testUserId")
 
     internal sealed class TestEffectInvocation(override val type: EffectInvocationType) : EffectInvocation {
         override val id: String = this::class.java.simpleName
@@ -54,6 +56,7 @@ class EffectDispatcherTest {
             EffectDispatcher(
                 effectFactory = EffectHandlerFactoryImpl(),
                 managedEffects = managedEffects,
+                logConfig = logConfig,
                 effectSource = QueueSinkSource(),
                 executorService = executorService,
             )
@@ -73,6 +76,7 @@ class EffectDispatcherTest {
             EffectDispatcher(
                 effectFactory = EffectHandlerFactoryImpl(),
                 managedEffects = managedEffects,
+                logConfig = logConfig,
                 effectSource = QueueSinkSource(),
                 executorService = executorService,
             )
@@ -93,6 +97,7 @@ class EffectDispatcherTest {
             EffectDispatcher(
                 effectFactory = EffectHandlerFactoryImpl(),
                 managedEffects = managedEffects,
+                logConfig = logConfig,
                 effectSource = QueueSinkSource(),
                 executorService = executorService,
             )
@@ -117,6 +122,7 @@ class EffectDispatcherTest {
             EffectDispatcher(
                 effectFactory = effectHandlerFactory,
                 managedEffects = managedEffects,
+                logConfig = logConfig,
                 effectSource = QueueSinkSource(),
                 executorService = executorService,
             )
@@ -140,6 +146,7 @@ class EffectDispatcherTest {
             EffectDispatcher(
                 effectFactory = effectFactory,
                 managedEffects = managedEffects,
+                logConfig = logConfig,
                 effectSource = QueueSinkSource(),
                 executorService = executorService,
             )

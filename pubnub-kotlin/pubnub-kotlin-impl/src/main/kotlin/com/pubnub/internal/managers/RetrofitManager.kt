@@ -1,9 +1,10 @@
 package com.pubnub.internal.managers
 
-import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.interceptor.SignatureInterceptor
+import com.pubnub.internal.logging.LoggerManager
+import com.pubnub.internal.logging.networkLogging.CustomPnHttpLoggingInterceptor
 import com.pubnub.internal.services.AccessManagerService
 import com.pubnub.internal.services.ChannelGroupService
 import com.pubnub.internal.services.FilesService
@@ -20,7 +21,6 @@ import com.pubnub.internal.services.TimeService
 import com.pubnub.internal.vendor.AppEngineFactory.Factory
 import okhttp3.Call
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import org.jetbrains.annotations.TestOnly
 import org.slf4j.LoggerFactory
 import org.slf4j.helpers.NOPLoggerFactory
@@ -28,11 +28,10 @@ import retrofit2.Retrofit
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.TimeUnit
 
-private const val PUBNUB_OKHTTP_REQUEST_RESPONSE_LOGGER_NAME = "pubnub.okhttp"
-
 class RetrofitManager(
     val pubnub: PubNubImpl,
     private val configuration: PNConfiguration,
+    // todo make private
     @get:TestOnly internal var transactionClientInstance: OkHttpClient? = null,
     @get:TestOnly internal var subscriptionClientInstance: OkHttpClient? = null,
     @get:TestOnly internal var noSignatureClientInstance: OkHttpClient? = null,
@@ -110,21 +109,16 @@ class RetrofitManager(
             .connectTimeout(configuration.connectTimeout.toLong(), TimeUnit.SECONDS)
 
         with(configuration) {
-            if (logVerbosity == PNLogVerbosity.BODY) {
-                okHttpBuilder.addInterceptor(
-                    HttpLoggingInterceptor { message ->
-                        if (slf4jIsBound()) {
-                            // will follow whatever SLF4J config (logback, log4j2, etc.) is on the classpath
-                            LoggerFactory.getLogger(PUBNUB_OKHTTP_REQUEST_RESPONSE_LOGGER_NAME).debug(message)
-                        } else {
-                            // fallback: always print
-                            println("[$PUBNUB_OKHTTP_REQUEST_RESPONSE_LOGGER_NAME] $message")
-                        }
-                    }.apply {
-                        level = HttpLoggingInterceptor.Level.BODY
-                    }
-                )
+            okHttpBuilder.interceptors().removeAll { interceptor ->
+                interceptor is CustomPnHttpLoggingInterceptor
             }
+
+            // todo detect that this is publish to portal and not log this to avoid recursion
+            // Replace the standard HttpLoggingInterceptor with our custom one
+            val customLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+            okHttpBuilder.addInterceptor(
+                CustomPnHttpLoggingInterceptor(customLogger, pubnub.mapper, logVerbosity)
+            )
 
             if (httpLoggingInterceptor != null) {
                 okHttpBuilder.addInterceptor(httpLoggingInterceptor!!)

@@ -43,8 +43,6 @@ import static org.junit.Assert.assertEquals;
 
 public abstract class BaseIntegrationTest {
 
-    protected Logger log = LoggerFactory.getLogger(BaseIntegrationTest.class);
-
     private static String SUB_KEY;
     private static String PUB_KEY;
     private static String PAM_SUB_KEY;
@@ -149,7 +147,6 @@ public abstract class BaseIntegrationTest {
         }
         pnConfiguration.retryConfiguration(RetryConfiguration.None.INSTANCE);
         pnConfiguration.logVerbosity(PNLogVerbosity.NONE);
-        pnConfiguration.httpLoggingInterceptor(createInterceptor());
         if (action != null) {
             action.accept(pnConfiguration);
         }
@@ -166,17 +163,10 @@ public abstract class BaseIntegrationTest {
         pnConfiguration.publishKey(PAM_PUB_KEY);
         pnConfiguration.secretKey(PAM_SEC_KEY);
         pnConfiguration.logVerbosity(PNLogVerbosity.NONE);
-        pnConfiguration.httpLoggingInterceptor(createInterceptor());
         if (action != null) {
             action.accept(pnConfiguration);
         }
         return pnConfiguration.build();
-    }
-
-    private HttpLoggingInterceptor createInterceptor() {
-        final HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor(log::debug);
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        return interceptor;
     }
 
     protected void subscribeToChannel(@NotNull com.pubnub.api.java.PubNub pubnub, @NotNull String... channels) {

@@ -4,7 +4,6 @@ package com.pubnub.docs.entities
 // snippet.channelGroup
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
-import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.entities.ChannelGroup
 
@@ -17,7 +16,6 @@ fun main() {
     val config = PNConfiguration.builder(userId, "demo").apply {
         publishKey = "demo"
         subscribeKey = "demo"
-        logVerbosity = PNLogVerbosity.BODY // Enable debug logging of network calls
     }.build()
 
     // 2. Create PubNub instance

@@ -4,6 +4,8 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.FetchMessages
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.history.HistoryMessageType
 import com.pubnub.api.models.consumer.history.PNFetchMessageItem
@@ -14,6 +16,8 @@ import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.extension.limit
 import com.pubnub.internal.extension.nonPositiveToNull
 import com.pubnub.internal.extension.tryDecryptMessage
+import com.pubnub.internal.logging.LoggerManager
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.models.server.FetchMessagesEnvelope
 import com.pubnub.internal.models.server.history.ServerFetchMessageItem
 import com.pubnub.internal.toCsv
@@ -34,6 +38,8 @@ class FetchMessagesEndpoint internal constructor(
     override val includeMessageType: Boolean = false,
     override val includeCustomMessageType: Boolean = false
 ) : EndpointCore<FetchMessagesEnvelope, PNFetchMessagesResult>(pubnub), FetchMessages {
+    private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+
     internal companion object {
         private const val SINGLE_CHANNEL_DEFAULT_MESSAGES = 100
         private const val SINGLE_CHANNEL_MAX_MESSAGES = 100
@@ -77,6 +83,24 @@ class FetchMessagesEndpoint internal constructor(
     override fun getAffectedChannels() = channels
 
     override fun doWork(queryParams: HashMap<String, String>): Call<FetchMessagesEnvelope> {
+        log.trace(
+            LogMessage(
+                message = LogMessageContent.Object(
+                    message = mapOf(
+                        "channels" to channels,
+                        "page" to page,
+                        "includeUUID" to includeUUID,
+                        "includeMeta" to includeMeta,
+                        "includeMessageActions" to includeMessageActions,
+                        "includeMessageType" to includeMessageType,
+                        "includeCustomMessageType" to includeCustomMessageType,
+                        "queryParams" to queryParams
+                    )
+                ),
+                details = "FetchMessages API call",
+            )
+        )
+
         addQueryParams(queryParams)
 
         return if (!includeMessageActions) {
@@ -101,8 +125,9 @@ class FetchMessagesEndpoint internal constructor(
                 value.map { serverMessageItem: ServerFetchMessageItem ->
                     val (newMessage, error) =
                         serverMessageItem.message.tryDecryptMessage(
-                            configuration.cryptoModule,
+                            pubnub.cryptoModuleWithLogConfig,
                             pubnub.mapper,
+                            log,
                         )
                     val newActions =
                         if (includeMessageActions) {

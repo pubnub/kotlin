@@ -2,8 +2,11 @@ package com.pubnub.internal.crypto.cryptor
 
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.logging.LogConfig
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.internal.crypto.readExactlyNBytez
-import org.slf4j.LoggerFactory
+import com.pubnub.internal.logging.LoggerManager
 import java.io.BufferedInputStream
 import java.io.InputStream
 
@@ -24,8 +27,13 @@ private const val THREE_BYTES_CRYPTOR_DATA_SIZE_ENDING_INDEX = 11
 private const val MAX_VALUE_THAT_CAN_BE_STORED_ON_TWO_BYTES = 65535
 private const val MINIMAL_SIZE_OF_CRYPTO_HEADER = 10
 
-internal class HeaderParser {
-    private val log = LoggerFactory.getLogger(HeaderParser::class.java)
+internal class HeaderParser(val logConfig: LogConfig?) {
+    private val log = logConfig?.let {
+        LoggerManager.instance.getLogger(logConfig = it, clazz = this::class.java)
+    } ?: LoggerManager.instance.getLogger(
+        logConfig = LogConfig("default", "default"),
+        clazz = this::class.java
+    )
 
     fun parseDataWithHeader(stream: BufferedInputStream): ParseResult<out InputStream> {
         val bufferedInputStream = stream.buffered()
@@ -81,8 +89,7 @@ internal class HeaderParser {
 
         if (data.size < MINIMAL_SIZE_OF_DATA_HAVING_CRYPTOR_HEADER) {
             throw PubNubException(
-                errorMessage =
-                    "Minimal size of encrypted data having Cryptor Data Header is: $MINIMAL_SIZE_OF_DATA_HAVING_CRYPTOR_HEADER",
+                errorMessage = "Minimal size of encrypted data having Cryptor Data Header is: $MINIMAL_SIZE_OF_DATA_HAVING_CRYPTOR_HEADER",
                 pubnubError = PubNubError.CRYPTOR_DATA_HEADER_SIZE_TO_SMALL,
             )
         }
@@ -90,7 +97,7 @@ internal class HeaderParser {
         validateCryptorHeaderVersion(data)
 
         val cryptorId = data.sliceArray(CRYPTOR_ID_STARTING_INDEX..CRYPTOR_ID_ENDING_INDEX)
-        log.trace("CryptoId: ${String(cryptorId, Charsets.UTF_8)}")
+        logTraceMessage("CryptoId: ${String(cryptorId, Charsets.UTF_8)}")
 
         val cryptorDataSizeFirstByte: Byte = data[CRYPTOR_DATA_SIZE_STARTING_INDEX]
         val (startingIndexOfCryptorData, cryptorDataSize) =
@@ -128,9 +135,7 @@ internal class HeaderParser {
                 byteArrayOf(cryptorDataSize.toByte()) + writeNumberOnTwoBytes(cryptorDataSize)
             } else {
                 throw PubNubException(
-                    errorMessage =
-                        "Cryptor Data Size is: $cryptorDataSize whereas " +
-                            "max cryptor data size is: $MAX_VALUE_THAT_CAN_BE_STORED_ON_TWO_BYTES",
+                    errorMessage = "Cryptor Data Size is: $cryptorDataSize whereas max cryptor data size is: $MAX_VALUE_THAT_CAN_BE_STORED_ON_TWO_BYTES",
                     pubnubError = PubNubError.CRYPTOR_HEADER_PARSE_ERROR,
                 )
             }
@@ -154,14 +159,14 @@ internal class HeaderParser {
 
         if (cryptoDataFirstByteAsUByte == THREE_BYTES_SIZE_CRYPTOR_DATA_INDICATOR) {
             startingIndexOfCryptorData = STARTING_INDEX_OF_THREE_BYTES_CRYPTOR_DATA_SIZE
-            log.trace("\"Cryptor data size\" first byte's value is 255 that mean that size is stored on two next bytes")
+            logTraceMessage("\"Cryptor data size\" first byte's value is 255 that mean that size is stored on two next bytes")
             val cryptorDataSizeSecondByte = data[THREE_BYTES_CRYPTOR_DATA_SIZE_STARTING_INDEX]
             val cryptorDataSizeThirdByte = data[THREE_BYTES_CRYPTOR_DATA_SIZE_ENDING_INDEX]
             cryptorDataSize = convertTwoBytesToIntBigEndian(cryptorDataSizeSecondByte, cryptorDataSizeThirdByte)
         } else {
             startingIndexOfCryptorData = STARTING_INDEX_OF_ONE_BYTE_CRYPTOR_DATA_SIZE
             cryptorDataSize = cryptoDataFirstByteAsUByte.toInt()
-            log.trace("\"Cryptor data size\" is 1 byte long and its value is: $cryptorDataSize")
+            logTraceMessage("\"Cryptor data size\" is 1 byte long and its value is: $cryptorDataSize")
         }
         return Pair(startingIndexOfCryptorData, cryptorDataSize)
     }
@@ -169,13 +174,17 @@ internal class HeaderParser {
     private fun validateCryptorHeaderVersion(data: ByteArray) {
         val version: UByte = data[VERSION_INDEX].toUByte() // 5th byte
         val versionAsInt = version.toInt()
-        log.trace("Cryptor header version is: $versionAsInt")
+        logTraceMessage("Cryptor header version is: $versionAsInt")
         // check if version exist in this SDK version
         CryptorHeaderVersion.fromValue(versionAsInt)
             ?: throw PubNubException(
                 errorMessage = "Cryptor header version unknown. Please, update SDK",
                 pubnubError = PubNubError.CRYPTOR_HEADER_VERSION_UNKNOWN,
             )
+    }
+
+    private fun logTraceMessage(message: String) {
+        log.trace(LogMessage(message = LogMessageContent.Text(message)))
     }
 
     private fun convertTwoBytesToIntBigEndian(

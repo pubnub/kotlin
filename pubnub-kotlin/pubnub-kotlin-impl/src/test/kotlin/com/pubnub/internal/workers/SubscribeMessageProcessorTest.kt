@@ -10,6 +10,7 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
 import com.pubnub.api.crypto.CryptoModule
+import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.v2.PNConfiguration
@@ -204,6 +205,7 @@ class SubscribeMessageProcessorTest(
         SubscribeMessageProcessor(
             pubnub = PubNubImpl(configuration),
             duplicationManager = DuplicationManager(configuration),
+            logConfig = LogConfig("testPnInstanceId", "testUserId")
         )
 
     private fun message(messageJson: JsonElement): String {

@@ -2,6 +2,7 @@ package com.pubnub.internal.presence.eventengine.effect
 
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
+import com.pubnub.api.logging.LogConfig
 import com.pubnub.internal.eventengine.Sink
 import com.pubnub.internal.presence.eventengine.data.PresenceData
 import com.pubnub.internal.presence.eventengine.effect.effectprovider.HeartbeatProvider
@@ -36,6 +37,7 @@ class PresenceEffectFactoryTest {
     private val heartbeatNotificationOptions: PNHeartbeatNotificationOptions = mockk()
     private val statusConsumer: StatusConsumer = mockk()
     private val presenceData = PresenceData()
+    private val logConfig: LogConfig = LogConfig(pnInstanceId = "testInstanceId", userId = "testUserId")
 
     @BeforeEach
     fun setUp() {
@@ -52,6 +54,7 @@ class PresenceEffectFactoryTest {
                 statusConsumer,
                 presenceData,
                 true,
+                logConfig,
             )
     }
 
@@ -136,6 +139,7 @@ class PresenceEffectFactoryTest {
             statusConsumer,
             presenceData,
             false,
+            logConfig
         ).create(effectInvocation)
 
         // then
@@ -181,6 +185,7 @@ class PresenceEffectFactoryTest {
                 statusConsumer,
                 PresenceData(),
                 true,
+                logConfig
             )
         val effectInvocation = PresenceEffectInvocation.Leave(channels, channelGroups)
         every {

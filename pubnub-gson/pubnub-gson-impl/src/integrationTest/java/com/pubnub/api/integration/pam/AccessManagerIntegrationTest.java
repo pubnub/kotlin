@@ -56,7 +56,7 @@ abstract class AccessManagerIntegrationTest extends BaseIntegrationTest {
 
     @Override
     protected void onPrePubNub() {
-        log.warn("onPrePubNub");
+        System.out.println("onPrePubNub");
         expectedChannel = randomChannel();
         authKey = "auth_".concat(random());
         authKey = authKey.toLowerCase();
@@ -71,7 +71,7 @@ abstract class AccessManagerIntegrationTest extends BaseIntegrationTest {
         if (performOnServer()) {
             pubNub = server;
         }
-        log.warn("performOnServer: " + performOnServer());
+        System.out.println("performOnServer: " + performOnServer());
 
         if (addDelays) {
             pause(3);
@@ -970,9 +970,9 @@ abstract class AccessManagerIntegrationTest extends BaseIntegrationTest {
         }
 
         if (!revokeAllAccess) {
-            log.info(String.format("Requesting access for %1$s at %2$s level", sum, getPamLevel()));
+            System.out.println(String.format("Requesting access for %1$s at %2$s level", sum, getPamLevel()));
         } else {
-            log.info("Revoking all access!");
+            System.out.println("Revoking all access!");
         }
 
         final List<Integer> bitList = Arrays.asList(bitmasks);
@@ -1002,7 +1002,7 @@ abstract class AccessManagerIntegrationTest extends BaseIntegrationTest {
         try {
             final PNAccessManagerGrantResult grantResult = grantOperationBuilder.sync();
             assertNotNull(grantResult);
-            log.info(String.format("Access request result: %s", new Gson().toJson(grantResult)));
+            System.out.println(String.format("Access request result: %s", new Gson().toJson(grantResult)));
             if (revokeAllAccess) {
                 assertEquals(LEVEL_APP, grantResult.getLevel());
             } else {

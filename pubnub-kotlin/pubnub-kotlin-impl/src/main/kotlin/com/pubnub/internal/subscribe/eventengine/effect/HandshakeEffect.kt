@@ -2,20 +2,24 @@ package com.pubnub.internal.subscribe.eventengine.effect
 
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
+import com.pubnub.api.logging.LogConfig
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.internal.eventengine.ManagedEffect
 import com.pubnub.internal.eventengine.Sink
+import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.internal.subscribe.eventengine.event.SubscriptionCursor
-import org.slf4j.LoggerFactory
 
 internal class HandshakeEffect(
     private val handshakeRemoteAction: RemoteAction<SubscriptionCursor>,
     private val subscribeEventSink: Sink<SubscribeEvent>,
+    private val logConfig: LogConfig,
 ) : ManagedEffect {
-    private val log = LoggerFactory.getLogger(HandshakeEffect::class.java)
+    private val log = LoggerManager.instance.getLogger(logConfig, this::class.java)
 
     override fun runEffect() {
-        log.trace("Running HandshakeEffect")
+        log.trace(LogMessage(message = LogMessageContent.Text("Running HandshakeEffect")))
 
         handshakeRemoteAction.async { result ->
             result.onFailure {

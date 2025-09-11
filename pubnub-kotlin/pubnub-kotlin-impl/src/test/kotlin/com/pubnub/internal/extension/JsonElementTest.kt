@@ -7,6 +7,9 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
 import com.pubnub.api.PubNubError
 import com.pubnub.api.crypto.CryptoModule
+import com.pubnub.api.logging.LogConfig
+import com.pubnub.internal.logging.LoggerManager
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.managers.MapperManager
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
@@ -17,6 +20,7 @@ import org.junit.jupiter.params.provider.MethodSource
 class JsonElementTest {
     companion object {
         val gson = Gson()
+        val logConfig = LogConfig("testPnInstanceId", "testUserId")
 
         @JvmStatic
         fun cryptoModuleConfiguration(): List<Arguments> {
@@ -81,10 +85,11 @@ class JsonElementTest {
         objectUnderTest = JsonPrimitive(unencryptedMessage)
         val cipherKey = "enigma"
         val cryptoModule = CryptoModule.createLegacyCryptoModule(cipherKey = cipherKey, randomIv = true)
-        val mapper = MapperManager()
+        val mapper = MapperManager(logConfig)
+        val logger: PNLogger = LoggerManager.instance.getLogger(LogConfig("testPnInstanceId", "testUser"), this::class.java)
 
         // when
-        val (jsonElement, errorMessage) = objectUnderTest.tryDecryptMessage(cryptoModule, mapper)
+        val (jsonElement, errorMessage) = objectUnderTest.tryDecryptMessage(cryptoModule, mapper, logger)
 
         // then
         assertEquals(objectUnderTest, jsonElement)
@@ -100,10 +105,11 @@ class JsonElementTest {
     ) {
         // given
         objectUnderTest = JsonPrimitive(encryptedMessage)
-        val mapper = MapperManager()
+        val mapper = MapperManager(logConfig)
+        val logger: PNLogger = LoggerManager.instance.getLogger(LogConfig("testPnInstanceId", "testUser"), this::class.java)
 
         // when
-        val (jsonElement, errorMessage) = objectUnderTest.tryDecryptMessage(cryptoModule, mapper)
+        val (jsonElement, errorMessage) = objectUnderTest.tryDecryptMessage(cryptoModule, mapper, logger)
 
         // then
         assertEquals(message, jsonElement)
@@ -119,10 +125,11 @@ class JsonElementTest {
     ) {
         // given
         objectUnderTest = message
-        val mapper = MapperManager()
+        val mapper = MapperManager(logConfig)
+        val logger: PNLogger = LoggerManager.instance.getLogger(LogConfig("testPnInstanceId", "testUser"), this::class.java)
 
         // when
-        val (jsonElement, errorMessage) = objectUnderTest.tryDecryptMessage(cryptoModule, mapper)
+        val (jsonElement, errorMessage) = objectUnderTest.tryDecryptMessage(cryptoModule, mapper, logger)
 
         // then
         assertEquals(objectUnderTest, jsonElement)
@@ -139,10 +146,11 @@ class JsonElementTest {
         // given
         val messageWithPNOther = generateMessageWithPNOther(JsonPrimitive(encryptedMessage))
         objectUnderTest = messageWithPNOther
-        val mapper = MapperManager()
+        val mapper = MapperManager(logConfig)
+        val logger: PNLogger = LoggerManager.instance.getLogger(LogConfig("testPnInstanceId", "testUser"), this::class.java)
 
         // when
-        val (jsonElement, errorMessage) = objectUnderTest.tryDecryptMessage(cryptoModule, mapper)
+        val (jsonElement, errorMessage) = objectUnderTest.tryDecryptMessage(cryptoModule, mapper, logger)
 
         // then
         assertEquals(messageWithPNOther, jsonElement)

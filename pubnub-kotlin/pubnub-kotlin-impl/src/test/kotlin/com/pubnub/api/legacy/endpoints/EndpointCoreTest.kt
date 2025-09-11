@@ -7,11 +7,13 @@ import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.matching.UrlPattern
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
+import com.pubnub.api.Endpoint
 import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.retry.RetryableEndpointGroup
+import com.pubnub.api.v2.PNConfigurationOverride
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.v2.PNConfigurationImpl
@@ -110,6 +112,13 @@ class EndpointCoreTest : BaseTest() {
                     includeInstanceIdentifier = false,
                 ),
             )
+        }.sync()
+    }
+
+    @Test
+    fun testOverrideConfigurationIsLogged() {
+        fakeEndpoint {
+            assertEquals("myUUID", it["uuid"])
         }.sync()
     }
 
@@ -326,6 +335,10 @@ class EndpointCoreTest : BaseTest() {
             override fun isAuthRequired() = false
 
             override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.PUBLISH
+
+            override fun overrideConfiguration(action: PNConfigurationOverride.Builder.() -> Unit): Endpoint<Any> {
+                return super.overrideConfiguration(action)
+            }
         }
 
     private fun fakeCall() =

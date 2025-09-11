@@ -1,10 +1,13 @@
 package com.pubnub.internal.presence.eventengine.effect
 
+import com.pubnub.api.logging.LogConfig
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.internal.eventengine.ManagedEffect
 import com.pubnub.internal.eventengine.Sink
 import com.pubnub.internal.extension.scheduleWithDelay
+import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.presence.eventengine.event.PresenceEvent
-import org.slf4j.LoggerFactory
 import java.util.concurrent.RejectedExecutionException
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
@@ -14,8 +17,9 @@ internal class WaitEffect(
     private val heartbeatInterval: Duration,
     private val presenceEventSink: Sink<PresenceEvent>,
     private val executorService: ScheduledExecutorService,
+    private val logConfig: LogConfig,
 ) : ManagedEffect {
-    private val log = LoggerFactory.getLogger(WaitEffect::class.java)
+    private val log = LoggerManager.instance.getLogger(logConfig, this::class.java)
 
     @Transient
     private var cancelled: Boolean = false
@@ -25,7 +29,11 @@ internal class WaitEffect(
 
     @Synchronized
     override fun runEffect() {
-        log.trace("Running WaitEffect")
+        log.trace(
+            LogMessage(
+                message = LogMessageContent.Text("Running WaitEffect."),
+            )
+        )
         if (cancelled) {
             return
         }
@@ -36,7 +44,11 @@ internal class WaitEffect(
                     presenceEventSink.add(PresenceEvent.TimesUp)
                 }
         } catch (_: RejectedExecutionException) {
-            log.trace("Unable to schedule retry, PubNub was likely already destroyed.")
+            log.trace(
+                LogMessage(
+                    message = LogMessageContent.Text("Unable to schedule retry, PubNub was likely already destroyed."),
+                )
+            )
         }
     }
 

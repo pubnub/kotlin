@@ -7,6 +7,7 @@ import com.pubnub.api.UserId
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNStatusCategory
+import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.PNPublishResult
 import com.pubnub.api.models.consumer.PNStatus
@@ -80,6 +81,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
 
     @Test
     fun testPublishMessageHistory() {
+        val logConfig = LogConfig("testPnInstanceId", "testUserId")
         val expectedChannel = randomChannel()
 
         val expectedPayload =
@@ -88,7 +90,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
                 addProperty("age", 48)
             }
 
-        val convertedPayload = MapperManager().convertValue(expectedPayload, JsonObject::class.java)
+        val convertedPayload = MapperManager(logConfig).convertValue(expectedPayload, JsonObject::class.java)
 
         pubnub.publish(
             channel = expectedChannel,

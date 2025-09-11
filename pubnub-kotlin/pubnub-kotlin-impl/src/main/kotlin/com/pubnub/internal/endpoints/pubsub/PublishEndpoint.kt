@@ -4,6 +4,8 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.pubsub.Publish
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.models.consumer.PNPublishResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
@@ -12,6 +14,8 @@ import com.pubnub.internal.crypto.encryptString
 import com.pubnub.internal.extension.numericString
 import com.pubnub.internal.extension.quoted
 import com.pubnub.internal.extension.valueString
+import com.pubnub.internal.logging.LoggerManager
+import com.pubnub.internal.logging.PNLogger
 import retrofit2.Call
 import retrofit2.Response
 
@@ -27,8 +31,10 @@ class PublishEndpoint internal constructor(
     override val usePost: Boolean = false,
     override val replicate: Boolean = true,
     override val ttl: Int? = null,
-    override val customMessageType: String? = null
+    override val customMessageType: String? = null,
 ) : EndpointCore<List<Any>, PNPublishResult>(pubnub), Publish {
+    private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+
     companion object {
         internal const val CUSTOM_MESSAGE_TYPE_QUERY_PARAM = "custom_message_type"
     }
@@ -43,6 +49,25 @@ class PublishEndpoint internal constructor(
     override fun getAffectedChannels() = listOf(channel)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<List<Any>> {
+        log.trace(
+            LogMessage(
+                message = LogMessageContent.Object(
+                    message = mapOf(
+                        "message" to message,
+                        "channel" to channel,
+                        "shouldStore" to (shouldStore ?: true),
+                        "meta" to (meta ?: ""),
+                        "queryParams" to queryParams,
+                        "usePost" to usePost,
+                        "ttl" to (ttl ?: 0),
+                        "replicate" to replicate,
+                        "customMessageType" to (customMessageType ?: "")
+                    )
+                ),
+                details = "Publish API call"
+            )
+        )
+
         addQueryParams(queryParams)
 
         return if (usePost) {
@@ -58,7 +83,6 @@ class PublishEndpoint internal constructor(
         } else {
             // HTTP GET request
             val stringifiedMessage = getParamMessage(message)
-
             retrofitManager.publishService.publish(
                 configuration.publishKey,
                 configuration.subscribeKey,
@@ -100,10 +124,10 @@ class PublishEndpoint internal constructor(
     // endregion
 
     // region Message parsers
-    private fun getBodyMessage(message: Any): Any = configuration.cryptoModule?.encryptString(toJson(message)) ?: message
+    private fun getBodyMessage(message: Any): Any = pubnub.cryptoModuleWithLogConfig?.encryptString(toJson(message)) ?: message
 
     private fun getParamMessage(message: Any): String =
-        configuration.cryptoModule?.encryptString(toJson(message))?.quoted() ?: toJson(message)
+        pubnub.cryptoModuleWithLogConfig?.encryptString(toJson(message))?.quoted() ?: toJson(message)
 
     private fun toJson(message: Any): String = pubnub.mapper.toJson(message)
     // endregion

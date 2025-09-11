@@ -2,6 +2,7 @@ package com.pubnub.api.legacy.endpoints.files
 
 import com.pubnub.api.PubNubException
 import com.pubnub.api.crypto.CryptoModule
+import com.pubnub.api.logging.LogConfig
 import com.pubnub.internal.endpoints.files.UploadFileEndpoint
 import com.pubnub.internal.models.server.files.FormField
 import com.pubnub.internal.services.S3Service
@@ -24,6 +25,7 @@ import org.hamcrest.Matchers.`is` as iz
 
 class UploadFileTest : TestsWithFiles {
     private val s3Service: S3Service = mockk {}
+    private val logConfig = LogConfig("testPnInstanceId", "testUserId")
 
     @Test
     fun keyIsFirstInMultipart() {
@@ -37,6 +39,7 @@ class UploadFileTest : TestsWithFiles {
                 FormField("key", "keyValue"),
                 listOf(FormField("other", "otherValue")),
                 "https://s3.aws.com/bucket",
+                logConfig,
             )
         every { s3Service.upload(any(), any()) } returns mockRetrofitSuccessfulCall {}
 
@@ -68,6 +71,7 @@ class UploadFileTest : TestsWithFiles {
                 FormField("key", "keyValue"),
                 listOf(FormField("Content-Type", contentTypeValue)),
                 "https://s3.aws.com/bucket",
+                logConfig,
             )
         every { s3Service.upload(any(), any()) } returns mockRetrofitSuccessfulCall { null }
 
@@ -94,6 +98,7 @@ class UploadFileTest : TestsWithFiles {
                 FormField("key", "keyValue"),
                 emptyList(),
                 "https://s3.aws.com/bucket",
+                logConfig,
             )
         every { s3Service.upload(any(), any()) } returns mockRetrofitSuccessfulCall { null }
 
@@ -124,6 +129,7 @@ class UploadFileTest : TestsWithFiles {
                 FormField("key", "keyValue"),
                 emptyList(),
                 "https://s3.aws.com/bucket",
+                logConfig,
             )
         every { s3Service.upload(any(), any()) } returns mockRetrofitSuccessfulCall { null }
 
@@ -154,6 +160,7 @@ class UploadFileTest : TestsWithFiles {
                 FormField("key", "keyValue"),
                 emptyList(),
                 "https://s3.aws.com/bucket",
+                logConfig,
             )
         every { s3Service.upload(any(), any()) } returns
             mockRetrofitErrorCall {

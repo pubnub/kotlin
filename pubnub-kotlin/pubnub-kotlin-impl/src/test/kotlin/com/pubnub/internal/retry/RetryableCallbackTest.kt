@@ -1,5 +1,6 @@
 package com.pubnub.internal.retry
 
+import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.test.listen
@@ -26,6 +27,7 @@ class RetryableCallbackTest {
     private lateinit var mockResponse: Response<Any>
     private var onFinalResponseCalled = false
     private var onFinalFailureCalled = false
+    private val testLogConfig = LogConfig("test-instance-id", "test-user-id")
 
     @BeforeEach
     fun setUp() {
@@ -55,6 +57,7 @@ class RetryableCallbackTest {
             call = mockCall,
             isEndpointRetryable = true,
             executorService = executorService,
+            testLogConfig,
         ) {
             override fun onFinalResponse(
                 call: Call<Any>,

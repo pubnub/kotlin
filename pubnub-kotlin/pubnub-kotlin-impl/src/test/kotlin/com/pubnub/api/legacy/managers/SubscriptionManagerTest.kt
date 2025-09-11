@@ -18,6 +18,7 @@ import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.legacy.BaseTest
+import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
@@ -41,6 +42,7 @@ import java.util.concurrent.atomic.AtomicInteger
 class SubscriptionManagerTest : BaseTest() {
     private val subscribeUrlMatcher = Regex("(/v2/subscribe/[^/]+/)(.+)?(/.+)")
     private val presenceUrlMatcher = Regex("(/v2/presence/sub-key/[^/]+/channel/)(.+)(/.+)")
+    val logConfig = LogConfig("testPnInstanceId", "testUserId")
 
     // gets UrlPathPattern that matches the URL with channels in any order (order doesn't matter)
     private fun getMatchingUrlWithChannels(url: String): UrlPathPattern {
@@ -374,7 +376,7 @@ class SubscriptionManagerTest : BaseTest() {
                 ) {
                     val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
                     assertTrue(requests.size > 0)
-                    assertEquals("Message", MapperManager().elementToString(pnMessageResult.message, "text"))
+                    assertEquals("Message", MapperManager(logConfig).elementToString(pnMessageResult.message, "text"))
                     assertEquals("coolChannel", pnMessageResult.channel)
                     assertEquals(null, pnMessageResult.subscription)
                     assertEquals("Publisher-A", pnMessageResult.publisher)
@@ -827,7 +829,7 @@ class SubscriptionManagerTest : BaseTest() {
                 ) {
                     val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
                     assertTrue(requests.size > 0)
-                    assertEquals("Message", MapperManager().elementToString(pnMessageResult.message, "text"))
+                    assertEquals("Message", MapperManager(logConfig).elementToString(pnMessageResult.message, "text"))
                     assertEquals("coolChannel", pnMessageResult.channel)
                     assertEquals("coolChannelGroup", pnMessageResult.subscription)
                     gotMessage.set(true)
@@ -1705,7 +1707,7 @@ class SubscriptionManagerTest : BaseTest() {
                 ) {
                     val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
                     assertTrue(requests.size > 0)
-                    assertEquals("hey", MapperManager().elementToString(pnMessageResult.message, "text"))
+                    assertEquals("hey", MapperManager(logConfig).elementToString(pnMessageResult.message, "text"))
                     atomic.addAndGet(1)
                 }
             },

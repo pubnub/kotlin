@@ -4,12 +4,16 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.files.GetFileUrl
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.models.consumer.files.PNFileUrlResult
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.PubNubUtil
+import com.pubnub.internal.logging.LoggerManager
+import com.pubnub.internal.logging.PNLogger
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
@@ -26,6 +30,7 @@ class GetFileUrlEndpoint(
     private val fileId: String,
     pubNub: PubNubImpl,
 ) : EndpointCore<ResponseBody, PNFileUrlResult>(pubNub), GetFileUrl {
+    private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
     private lateinit var cachedCallback: Consumer<Result<PNFileUrlResult>>
     private val executorService: ExecutorService = retrofitManager.getTransactionClientExecutorService() ?: Executors.newSingleThreadExecutor()
 
@@ -42,6 +47,19 @@ class GetFileUrlEndpoint(
     // properly constructed url the code creates a request which isn't executed
     @Throws(PubNubException::class)
     override fun sync(): PNFileUrlResult {
+        log.trace(
+            LogMessage(
+                message = LogMessageContent.Object(
+                    message = mapOf(
+                        "channel" to channel,
+                        "fileName" to fileName,
+                        "fileId" to fileId
+                    )
+                ),
+                details = "GetFileUrl API call",
+            )
+        )
+
         return try {
             val baseParams: Map<String, String> = createBaseParams()
             val call: Call<ResponseBody> =

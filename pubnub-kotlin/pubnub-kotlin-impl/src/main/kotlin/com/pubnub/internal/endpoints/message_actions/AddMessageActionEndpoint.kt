@@ -5,11 +5,15 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.message_actions.AddMessageAction
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.logging.LoggerManager
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.models.server.objects_api.EntityEnvelope
 import retrofit2.Call
 import retrofit2.Response
@@ -23,6 +27,8 @@ class AddMessageActionEndpoint internal constructor(
     override val channel: String,
     override val messageAction: PNMessageAction,
 ) : EndpointCore<EntityEnvelope<PNMessageAction>, PNAddMessageActionResult>(pubnub), AddMessageAction {
+    private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+
     override fun validateParams() {
         super.validateParams()
         if (channel.isBlank()) {
@@ -39,6 +45,21 @@ class AddMessageActionEndpoint internal constructor(
     override fun getAffectedChannels() = listOf(channel)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNMessageAction>> {
+        log.trace(
+            LogMessage(
+                message = LogMessageContent.Object(
+                    message = mapOf(
+                        "channel" to channel,
+                        "messageActionType" to messageAction.type,
+                        "messageActionValue" to messageAction.value,
+                        "messageTimetoken" to messageAction.messageTimetoken,
+                        "queryParams" to queryParams
+                    )
+                ),
+                details = "AddMessageAction API call",
+            )
+        )
+
         val body =
             JsonObject().apply {
                 addProperty("type", messageAction.type)

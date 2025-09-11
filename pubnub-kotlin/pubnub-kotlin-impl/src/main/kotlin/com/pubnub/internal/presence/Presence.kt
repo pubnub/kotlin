@@ -3,9 +3,13 @@ package com.pubnub.internal.presence
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNStatusCategory
+import com.pubnub.api.logging.LogConfig
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.internal.eventengine.EffectDispatcher
 import com.pubnub.internal.eventengine.EventEngineConf
+import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.managers.ListenerManager
 import com.pubnub.internal.managers.PresenceEventEngineManager
 import com.pubnub.internal.presence.eventengine.PresenceEventEngine
@@ -15,7 +19,6 @@ import com.pubnub.internal.presence.eventengine.effect.PresenceEffectInvocation
 import com.pubnub.internal.presence.eventengine.effect.effectprovider.HeartbeatProvider
 import com.pubnub.internal.presence.eventengine.effect.effectprovider.LeaveProvider
 import com.pubnub.internal.presence.eventengine.event.PresenceEvent
-import org.slf4j.LoggerFactory
 import java.util.concurrent.ScheduledExecutorService
 import kotlin.time.Duration
 
@@ -32,6 +35,7 @@ internal interface Presence {
             presenceData: PresenceData = PresenceData(),
             sendStateWithHeartbeat: Boolean,
             executorService: ScheduledExecutorService,
+            logConfig: LogConfig,
         ): Presence {
             if (heartbeatInterval <= Duration.ZERO) {
                 return PresenceNoOp(
@@ -41,7 +45,8 @@ internal interface Presence {
                     listenerManager,
                     heartbeatNotificationOptions,
                     presenceData,
-                    sendStateWithHeartbeat
+                    sendStateWithHeartbeat,
+                    logConfig
                 )
             }
 
@@ -56,17 +61,20 @@ internal interface Presence {
                 statusConsumer = listenerManager,
                 presenceData = presenceData,
                 sendStateWithHeartbeat = sendStateWithHeartbeat,
+                logConfig = logConfig,
             )
 
             val eventEngineManager = PresenceEventEngineManager(
                 eventEngine = PresenceEventEngine(
                     effectSink = eventEngineConf.effectSink,
                     eventSource = eventEngineConf.eventSource,
+                    logConfig = logConfig,
                 ),
                 eventSink = eventEngineConf.eventSink,
                 effectDispatcher = EffectDispatcher(
                     effectFactory = effectFactory,
                     effectSource = eventEngineConf.effectSource,
+                    logConfig = logConfig,
                 ),
             ).also { it.start() }
 
@@ -113,8 +121,9 @@ internal class PresenceNoOp(
     private val heartbeatNotificationOptions: PNHeartbeatNotificationOptions,
     private val presenceData: PresenceData,
     private val sendStateWithHeartbeat: Boolean,
+    private val logConfig: LogConfig,
 ) : Presence {
-    private val log = LoggerFactory.getLogger(PresenceNoOp::class.java)
+    private val log = LoggerManager.instance.getLogger(logConfig, this::class.java)
     private val channels = mutableSetOf<String>()
     private val channelGroups = mutableSetOf<String>()
 
@@ -142,7 +151,12 @@ internal class PresenceNoOp(
                     if (heartbeatNotificationOptions == PNHeartbeatNotificationOptions.ALL ||
                         heartbeatNotificationOptions == PNHeartbeatNotificationOptions.FAILURES
                     ) {
-                        listenerManager.announce(PNStatus(PNStatusCategory.PNHeartbeatFailed, PubNubException.from(exception)))
+                        listenerManager.announce(
+                            PNStatus(
+                                PNStatusCategory.PNHeartbeatFailed,
+                                PubNubException.from(exception)
+                            )
+                        )
                     }
                 }.onSuccess {
                     if (heartbeatNotificationOptions == PNHeartbeatNotificationOptions.ALL) {
@@ -161,7 +175,11 @@ internal class PresenceNoOp(
         if (!suppressLeaveEvents && (channels.isNotEmpty() || channelGroups.isNotEmpty())) {
             leaveProvider.getLeaveRemoteAction(channels, channelGroups).async { result ->
                 result.onFailure {
-                    log.error("LeaveEffect failed", it)
+                    log.error(
+                        LogMessage(
+                            message = LogMessageContent.Text("LeaveEffect from left operation failed: $it"),
+                        )
+                    )
                 }
             }
         }
@@ -174,7 +192,11 @@ internal class PresenceNoOp(
         if (!suppressLeaveEvents && (channels.isNotEmpty() || channelGroups.isNotEmpty())) {
             leaveProvider.getLeaveRemoteAction(channels, channelGroups).async { result ->
                 result.onFailure {
-                    log.error("LeaveEffect failed", it)
+                    log.error(
+                        LogMessage(
+                            message = LogMessageContent.Text("LeaveEffect from leftAll operation failed: $it"),
+                        )
+                    )
                 }
             }
         }

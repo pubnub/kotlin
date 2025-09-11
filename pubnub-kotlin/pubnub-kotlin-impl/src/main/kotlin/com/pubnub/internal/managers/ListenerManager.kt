@@ -3,6 +3,8 @@ package com.pubnub.internal.managers
 import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.callbacks.SubscribeCallback
+import com.pubnub.api.logging.LogMessage
+import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
@@ -16,9 +18,11 @@ import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusEmitter
 import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.api.v2.subscriptions.Subscription
+import com.pubnub.internal.PubNubImpl
+import com.pubnub.internal.logging.LoggerManager
+import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.subscribe.eventengine.effect.MessagesConsumer
 import com.pubnub.internal.subscribe.eventengine.effect.StatusConsumer
-import org.slf4j.LoggerFactory
 import java.util.concurrent.CopyOnWriteArrayList
 
 class ListenerManager(val pubnub: PubNub) : MessagesConsumer, StatusConsumer, EventEmitter, StatusEmitter {
@@ -27,7 +31,7 @@ class ListenerManager(val pubnub: PubNub) : MessagesConsumer, StatusConsumer, Ev
     private val statusListeners get() = listeners.filterIsInstance<StatusListener>()
     private val eventListeners get() = listeners.filterIsInstance<EventListener>()
 
-    private val log = LoggerFactory.getLogger(this.javaClass.simpleName)
+    private val log: PNLogger = LoggerManager.instance.getLogger((pubnub as PubNubImpl).logConfig, this::class.java)
 
     /**
      * Add a listener.
@@ -118,7 +122,7 @@ class ListenerManager(val pubnub: PubNub) : MessagesConsumer, StatusConsumer, Ev
             try {
                 action(element)
             } catch (e: Throwable) {
-                log.warn("Uncaught exception in listener.", e)
+                log.warn(LogMessage(message = LogMessageContent.Text("Caught exception in listener: ${e.message}")))
             }
         }
     }

@@ -65,17 +65,20 @@ internal class Subscribe(
                     statusConsumer = listenerManager,
                     presenceData = presenceData,
                     sendStateWithSubscribe = sendStateWithSubscribe,
+                    logConfig = pubNub.logConfig
                 )
 
             val subscribeEventEngine =
                 SubscribeEventEngine(
                     effectSink = eventEnginesConf.subscribe.effectSink,
                     eventSource = eventEnginesConf.subscribe.eventSource,
+                    logConfig = pubNub.logConfig,
                 )
             val subscribeEffectDispatcher =
                 EffectDispatcher(
                     effectFactory = subscribeEffectFactory,
                     effectSource = eventEnginesConf.subscribe.effectSource,
+                    logConfig = pubNub.logConfig,
                 )
 
             val subscribeEventEngineManager =
