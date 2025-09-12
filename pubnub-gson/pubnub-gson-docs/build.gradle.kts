@@ -22,5 +22,5 @@ dependencies {
     // implementation("org.apache.logging.log4j:log4j-slf4j2-impl:$log4j2Version")
 
     // ↓ LOGBACK ↓ to use it comment out SLF4J SIMPLE and LOG4J 2 dependencies
-     implementation("ch.qos.logback:logback-classic:1.3.15")
+    implementation("ch.qos.logback:logback-classic:1.3.15")
 }
