@@ -4,7 +4,6 @@ package com.pubnub.docs.appContext;
 // snippet.getAllUUIDMetadataApp
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
-import com.pubnub.api.enums.PNLogVerbosity;
 import com.pubnub.api.java.PubNub;
 import com.pubnub.api.java.endpoints.objects_api.utils.PNSortKey;
 import com.pubnub.api.java.models.consumer.objects_api.uuid.PNUUIDMetadata;
@@ -18,7 +17,6 @@ public class GetAllUUIDMetadataApp {
         // Configure PubNub instance
         PNConfiguration.Builder configBuilder = PNConfiguration.builder(new UserId("demoUserId"), "demo");
         configBuilder.publishKey("demo");
-        configBuilder.logVerbosity(PNLogVerbosity.BODY);
         configBuilder.secure(true);
 
         PubNub pubnub = PubNub.create(configBuilder.build());

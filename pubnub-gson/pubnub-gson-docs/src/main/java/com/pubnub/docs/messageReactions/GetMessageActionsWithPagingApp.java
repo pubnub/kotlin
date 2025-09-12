@@ -6,7 +6,6 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
 import com.pubnub.api.java.PubNub;
 import com.pubnub.api.java.v2.PNConfiguration;
-import com.pubnub.api.enums.PNLogVerbosity;
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction;
 
 import java.util.List;
@@ -43,7 +42,6 @@ public class GetMessageActionsWithPagingApp {
         }
         PNConfiguration config = PNConfiguration.builder(userId, "demo")
                 .publishKey("demo")
-                .logVerbosity(PNLogVerbosity.BODY)
                 .secure(true)
                 .build();
 

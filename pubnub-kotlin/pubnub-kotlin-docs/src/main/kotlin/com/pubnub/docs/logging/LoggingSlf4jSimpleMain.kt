@@ -9,8 +9,8 @@ import com.pubnub.api.v2.PNConfiguration
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-object LoggingSlf4jSimpl {
-    private val logger: Logger = LoggerFactory.getLogger(LoggingSlf4jSimpl::class.java)
+object LoggingSlf4jSimple {
+    private val logger: Logger = LoggerFactory.getLogger(LoggingSlf4jSimple::class.java)
 
     @JvmStatic
     fun main(args: Array<String>) {

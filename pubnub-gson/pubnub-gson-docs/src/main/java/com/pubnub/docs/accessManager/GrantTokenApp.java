@@ -4,7 +4,6 @@ package com.pubnub.docs.accessManager;
 // snippet.basicGrantToken
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
-import com.pubnub.api.enums.PNLogVerbosity;
 import com.pubnub.api.java.PubNub;
 import com.pubnub.api.java.models.consumer.access_manager.v3.ChannelGrant;
 import com.pubnub.api.java.v2.PNConfiguration;

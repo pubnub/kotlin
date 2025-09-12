@@ -6,7 +6,6 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.java.PubNub;
 import com.pubnub.api.java.v2.PNConfiguration;
 import com.pubnub.api.UserId;
-import com.pubnub.api.enums.PNLogVerbosity;
 import com.pubnub.api.models.consumer.history.PNFetchMessageItem;
 
 import java.util.Arrays;
@@ -18,7 +17,6 @@ public class FetchMessagesApp {
         // Configure PubNub instance
         PNConfiguration.Builder configBuilder = PNConfiguration.builder(new UserId("demoUserId"), "demo");
         configBuilder.publishKey("demo");
-        configBuilder.logVerbosity(PNLogVerbosity.BODY);
         configBuilder.secure(true);
 
         PubNub pubnub = PubNub.create(configBuilder.build());

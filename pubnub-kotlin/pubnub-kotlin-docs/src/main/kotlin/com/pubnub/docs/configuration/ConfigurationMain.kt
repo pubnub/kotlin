@@ -4,6 +4,8 @@ package com.pubnub.docs.configuration
 import com.pubnub.api.UserId
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
+import com.pubnub.api.logging.CustomLogger
+import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.v2.PNConfiguration
 
@@ -68,6 +70,7 @@ fun createAdvancedConfig(): PNConfiguration {
         suppressLeaveEvents = false // Whether to send leave events when disconnecting
 
         // Debugging parameters
+        customLoggers = listOf(MyCustomLoggerImpl()) // Add custom loggers if needed
 
         // Retry configuration (for reconnection)
         retryConfiguration = RetryConfiguration.Linear(
@@ -79,6 +82,39 @@ fun createAdvancedConfig(): PNConfiguration {
         heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
     }
     return builder.build()
+}
+
+/**
+ * When config options of slf4j implementation of your choice like logback or log4j don't meet you logging requirements implement CustomLogger and pass implementation to PNConfiguration.customLoggers
+ */
+class MyCustomLoggerImpl : CustomLogger {
+    override val name: String = "MyCustomLoggerImpl"
+
+    override fun trace(message: String?) {
+        stringMessages.add(message ?: "")
+    }
+
+    override fun trace(message: LogMessage) {
+        logMessages.add(message)
+    }
+
+    override fun debug(message: String?) {
+        stringMessages.add(message ?: "")
+    }
+
+    override fun debug(logMessage: LogMessage) {
+        logMessages.add(logMessage)
+    }
+
+    companion object {
+        val stringMessages = mutableListOf<String>()
+        val logMessages = mutableListOf<LogMessage>()
+
+        fun clear() {
+            stringMessages.clear()
+            logMessages.clear()
+        }
+    }
 }
 
 /**
