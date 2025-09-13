@@ -14,10 +14,5 @@
             <AppenderRef ref="Console"/>
             <!-- <AppenderRef ref="YourCustomAppender"/>-->
         </Logger>
-        <!-- Set specific logger for PubNub network calls -->
-        <Logger name="pubnub.okhttp" level="debug" additivity="false">
-            <AppenderRef ref="Console"/>
-            <!-- <AppenderRef ref="YourCustomAppender"/>-->
-        </Logger>
     </Loggers>
 </Configuration>

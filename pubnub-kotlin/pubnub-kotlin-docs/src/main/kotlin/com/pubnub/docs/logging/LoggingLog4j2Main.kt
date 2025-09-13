@@ -1,14 +1,15 @@
 package com.pubnub.docs.logging
 
+// snippet.loggingLog4j2Main
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
 import com.pubnub.api.v2.PNConfiguration
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 object LoggingLog4j2 {
-    private val logger: Logger = LogManager.getLogger(LoggingLog4j2::class.java)
+    private val logger: Logger = LoggerFactory.getLogger(LoggingLog4j2::class.java)
 
     @JvmStatic
     fun main(args: Array<String>) {
@@ -43,3 +44,4 @@ object LoggingLog4j2 {
         logger.info("Log4j example complete - check the log file for details")
     }
 }
+// snippet.end

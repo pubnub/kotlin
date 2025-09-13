@@ -12,7 +12,10 @@
         <appender-ref ref="CONSOLE" />
     </root>
 
-    <!-- Configure PubNub network calls logging -->
-    <logger name="pubnub.okhttp" level="DEBUG"/>
+    <!-- Configure PubNub calls logging -->
+    <logger name="com.pubnub" level="TRACE" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
 
 </configuration>

@@ -49,14 +49,12 @@ abstract class BaseIntegrationTest {
             UserId(randomString()),
             Keys.subKey,
             Keys.pubKey,
-            logVerbosity = PNLogVerbosity.BODY,
             authToken = null
         )
         config02 = createPNConfiguration(
             UserId(randomString()),
             Keys.subKey,
             Keys.pubKey,
-            logVerbosity = PNLogVerbosity.BODY,
             authToken = null
         )
         pubnub = createPubNub(config)

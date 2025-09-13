@@ -6,7 +6,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
-import com.pubnub.api.enums.PNLogVerbosity;
 import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.java.PubNub;
 import com.pubnub.api.java.v2.PNConfiguration;
@@ -23,7 +22,6 @@ public class BasicUsageApp {
         // publishKey from Admin Portal (only required if publishing)
         configBuilder.publishKey("demo");
         configBuilder.secure(true);
-        configBuilder.logVerbosity(PNLogVerbosity.BODY);
         PubNub pubnub = PubNub.create(configBuilder.build());
         // snippet.end
 

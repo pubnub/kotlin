@@ -2,7 +2,6 @@ package com.pubnub.docs.publishAndSubscribe.subscribe;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
-import com.pubnub.api.enums.PNLogVerbosity;
 import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.java.PubNub;
 import com.pubnub.api.java.callbacks.SubscribeCallback;
@@ -36,7 +35,6 @@ public class SubscribeOld extends SnippetBase {
         // snippet.subscribeWithLogging
         PNConfiguration.Builder configBuilder = PNConfiguration.builder(new UserId("yourUserId"), "demo");
         configBuilder.publishKey("demo");
-        configBuilder.logVerbosity(PNLogVerbosity.BODY);
 
         PNConfiguration pnConfiguration = configBuilder.build();
         PubNub pubnub = PubNub.create(pnConfiguration);

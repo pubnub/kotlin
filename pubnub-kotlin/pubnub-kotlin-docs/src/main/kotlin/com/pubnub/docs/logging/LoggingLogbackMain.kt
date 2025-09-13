@@ -47,7 +47,7 @@ object LoggingLogback {
             logger.error("Error during operations: {}", e.message, e)
         }
 
-        logger.info("Logging example complete - detailed logs should be visible in your console output")
+        logger.info("Logging example complete - detailed logs should be visible according to your logging configuration")
     }
 }
 // snippet.end
