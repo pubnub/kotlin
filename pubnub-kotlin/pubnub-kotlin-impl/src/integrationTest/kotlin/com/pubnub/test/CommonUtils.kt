@@ -11,6 +11,7 @@ import com.pubnub.api.models.consumer.PNPublishResult
 import okhttp3.logging.HttpLoggingInterceptor
 import org.awaitility.Awaitility
 import org.awaitility.Durations
+import org.hamcrest.core.IsEqual
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.fail
@@ -23,6 +24,7 @@ import java.util.concurrent.Callable
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 import java.util.stream.Collectors
 
 object CommonUtils {
@@ -35,6 +37,15 @@ object CommonUtils {
         Awaitility.await()
             .atMost(seconds.toLong(), TimeUnit.SECONDS)
             .untilTrue(success)
+    }
+
+    internal fun observe(
+        number: AtomicInteger,
+        seconds: Int,
+    ) {
+        Awaitility.await()
+            .atMost(seconds.toLong(), TimeUnit.SECONDS)
+            .untilAtomic(number, IsEqual(0))
     }
 
     fun assertPnException(

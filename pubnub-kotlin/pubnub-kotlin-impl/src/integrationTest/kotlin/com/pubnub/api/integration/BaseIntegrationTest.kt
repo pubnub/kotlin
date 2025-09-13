@@ -71,7 +71,7 @@ abstract class BaseIntegrationTest {
         return pubNub
     }
 
-    private fun registerGuestClient(guestClient: PubNub) {
+    protected fun registerGuestClient(guestClient: PubNub) {
         mGuestClients.add(guestClient)
     }
 
