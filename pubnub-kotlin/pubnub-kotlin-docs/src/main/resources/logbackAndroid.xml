@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Android LogCat appender with simple pattern -->
+    <appender name="LOGCAT" class="ch.qos.logback.classic.android.LogcatAppender">
+        <encoder>
+            <pattern>%logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Set DEBUG level for PubNub packages -->
+    <logger name="com.pubnub" level="TRACE" />
+
+    <!-- Root logger -->
+    <root level="INFO">
+        <appender-ref ref="LOGCAT" />
+    </root>
+</configuration>
