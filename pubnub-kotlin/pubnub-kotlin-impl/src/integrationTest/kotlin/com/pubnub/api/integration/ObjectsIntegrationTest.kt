@@ -74,6 +74,25 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
     }
 
     @Test
+    fun setGetAndRemoveChannelMetadataFilterByDescription() {
+        val setResult =
+            pubnub.setChannelMetadata(
+                channel = channel,
+                name = randomValue(15),
+                status = status01,
+                type = type01,
+                description = "myDescq1234"
+            ).sync()
+
+        val getAllResult = pubnub.getAllChannelMetadata(filter = "description  LIKE \"myDescq*\"").sync()
+        val getAllResult2 = pubnub.getAllChannelMetadata(filter = "['description']  LIKE \"myDescq*\"").sync()
+
+        assertEquals(getAllResult, getAllResult2)
+
+        pubnub.removeChannelMetadata(channel = channel).sync()
+    }
+
+    @Test
     fun canUpdateCustomChannelMetadata() {
         val channelName = "Channel1on1"
         val channelDescription = "Channel for 1on1 conversation"
