@@ -1,9 +1,13 @@
 package com.pubnub.api.enums
 
 enum class PNPushType(private val value: String) {
+    @Deprecated(
+        replaceWith = ReplaceWith("FCM"),
+        message = "GCM is deprecated. Use FCM instead."
+    )
+    GCM("gcm"),
     APNS("apns"),
     MPNS("mpns"),
-    GCM("gcm"),
     FCM("gcm"),
     APNS2("apns2"),
     ;
