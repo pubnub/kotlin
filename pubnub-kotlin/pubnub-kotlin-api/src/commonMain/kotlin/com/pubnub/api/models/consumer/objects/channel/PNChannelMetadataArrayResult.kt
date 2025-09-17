@@ -8,6 +8,4 @@ data class PNChannelMetadataArrayResult(
     val totalCount: Int?,
     val next: PNPage.PNNext?,
     val prev: PNPage.PNPrev?,
-){
-
-}
+)
