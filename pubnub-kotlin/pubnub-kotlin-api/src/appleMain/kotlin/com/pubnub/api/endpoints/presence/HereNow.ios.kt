@@ -27,7 +27,9 @@ class HereNowImpl(
     private val channels: List<String>,
     private val channelGroups: List<String>,
     private val includeState: Boolean,
-    private val includeUUIDs: Boolean
+    private val includeUUIDs: Boolean,
+    private val limit: Int = 1000,
+    private val startFrom: Int? = null,
 ) : HereNow {
     override fun async(callback: Consumer<Result<PNHereNowResult>>) {
         pubnub.hereNowWithChannels(
@@ -35,10 +37,14 @@ class HereNowImpl(
             channelGroups = channelGroups,
             includeState = includeState,
             includeUUIDs = includeUUIDs,
+            // todo pass limit and startFrom once available
+            // limit = limit,
+            // startFrom = startFrom,
             onSuccess = callback.onSuccessHandler {
                 PNHereNowResult(
                     totalChannels = it?.totalChannels()?.toInt() ?: 0,
                     totalOccupancy = it?.totalOccupancy()?.toInt() ?: 0,
+                    // nextStartFrom = it?.nextStartFrom()?.toInt(), // todo uncomment once available
                     channels = (it?.channels()?.safeCast<String, KMPHereNowChannelData>())?.mapValues { entry ->
                         PNHereNowChannelData(
                             channelName = entry.value.channelName(),
@@ -51,6 +57,7 @@ class HereNowImpl(
                             }
                         )
                     }?.toMutableMap() ?: emptyMap<String, PNHereNowChannelData>().toMutableMap()
+
                 )
             },
             onFailure = callback.onFailureHandler()

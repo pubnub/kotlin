@@ -1,6 +1,8 @@
 package com.pubnub.internal.endpoints.presence
 
 import com.google.gson.JsonElement
+import com.pubnub.api.PubNubError
+import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.presence.HereNow
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.logging.LogMessage
@@ -18,6 +20,8 @@ import com.pubnub.internal.toCsv
 import retrofit2.Call
 import retrofit2.Response
 
+private const val MAX_NUMBER_OF_RESULT_ON_ONE_PAGE = 1000
+
 /**
  * @see [PubNubImpl.hereNow]
  */
@@ -27,6 +31,8 @@ class HereNowEndpoint internal constructor(
     override val channelGroups: List<String> = emptyList(),
     override val includeState: Boolean = false,
     override val includeUUIDs: Boolean = true,
+    override val limit: Int = MAX_NUMBER_OF_RESULT_ON_ONE_PAGE,
+    override val startFrom: Int? = null,
 ) : EndpointCore<Envelope<JsonElement>, PNHereNowResult>(pubnub), HereNow {
     private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
@@ -37,6 +43,14 @@ class HereNowEndpoint internal constructor(
     override fun getAffectedChannelGroups() = channelGroups
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<JsonElement>> {
+        if (limit !in 1..MAX_NUMBER_OF_RESULT_ON_ONE_PAGE) {
+            throw PubNubException(PubNubError.HERE_NOW_LIMIT_OUT_OF_RANGE)
+        }
+        if (startFrom != null && startFrom < 0) {
+            throw PubNubException(PubNubError.HERE_NOW_START_FROM_OUT_OF_RANGE)
+
+        }
+
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
@@ -45,7 +59,9 @@ class HereNowEndpoint internal constructor(
                         "channelGroups" to channelGroups,
                         "includeState" to includeState,
                         "includeUUIDs" to includeUUIDs,
-                        "isGlobalHereNow" to isGlobalHereNow()
+                        "limit" to limit,
+                        "startFrom" to (startFrom?.toString() ?: "null"),
+                        "isGlobalHereNow" to isGlobalHereNow(),
                     ),
                     operation = this::class.simpleName
                 ),
@@ -81,21 +97,37 @@ class HereNowEndpoint internal constructor(
 
     override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.PRESENCE
 
+    internal fun calculateNextStartFrom(actualResultSize: Int): Int? {
+        return when {
+            actualResultSize < limit -> null
+            actualResultSize == limit -> (startFrom ?: 0) + limit
+            else -> null
+        }
+    }
+
     private fun parseSingleChannelResponse(input: Envelope<JsonElement>): PNHereNowResult {
+        val occupants = if (includeUUIDs) {
+            prepareOccupantData(input.uuids!!)
+        } else {
+            emptyList()
+        }
+        val actualResultSize = occupants.size
+
         val pnHereNowResult =
             PNHereNowResult(
                 totalChannels = 1,
                 totalOccupancy = input.occupancy,
+                nextStartFrom = calculateNextStartFrom(actualResultSize),
             )
 
         val pnHereNowChannelData =
             PNHereNowChannelData(
                 channelName = channels[0],
                 occupancy = input.occupancy,
+                occupants = occupants
             )
 
         if (includeUUIDs) {
-            pnHereNowChannelData.occupants = prepareOccupantData(input.uuids!!)
             pnHereNowResult.channels[channels[0]] = pnHereNowChannelData
         }
 
@@ -103,26 +135,35 @@ class HereNowEndpoint internal constructor(
     }
 
     private fun parseMultipleChannelResponse(input: JsonElement): PNHereNowResult {
-        val pnHereNowResult =
-            PNHereNowResult(
-                totalChannels = pubnub.mapper.elementToInt(input, "total_channels"),
-                totalOccupancy = pubnub.mapper.elementToInt(input, "total_occupancy"),
-            )
-
         val it = pubnub.mapper.getObjectIterator(input, "channels")
+        var totalOccupantsReturned = 0
 
+        val channelsMap = mutableMapOf<String, PNHereNowChannelData>()
         while (it.hasNext()) {
             val entry = it.next()
+            val occupants = if (includeUUIDs) {
+                prepareOccupantData(pubnub.mapper.getField(entry.value, "uuids")!!)
+            } else {
+                emptyList()
+            }
+            totalOccupantsReturned += occupants.size
+
             val pnHereNowChannelData =
                 PNHereNowChannelData(
                     channelName = entry.key,
                     occupancy = pubnub.mapper.elementToInt(entry.value, "occupancy"),
+                    occupants = occupants
                 )
-            if (includeUUIDs) {
-                pnHereNowChannelData.occupants = prepareOccupantData(pubnub.mapper.getField(entry.value, "uuids")!!)
-            }
-            pnHereNowResult.channels[entry.key] = pnHereNowChannelData
+            channelsMap[entry.key] = pnHereNowChannelData
         }
+
+        val pnHereNowResult =
+            PNHereNowResult(
+                totalChannels = pubnub.mapper.elementToInt(input, "total_channels"),
+                totalOccupancy = pubnub.mapper.elementToInt(input, "total_occupancy"),
+                channels = channelsMap,
+                nextStartFrom = calculateNextStartFrom(totalOccupantsReturned),
+            )
 
         return pnHereNowResult
     }
@@ -160,5 +201,7 @@ class HereNowEndpoint internal constructor(
         if (channelGroups.isNotEmpty()) {
             queryParams["channel-group"] = channelGroups.toCsv()
         }
+        queryParams["limit"] = limit.toString()
+        startFrom?.let { queryParams["offset"] = it.toString() }
     }
 }

@@ -774,6 +774,8 @@ actual interface PubNub : StatusEmitter, EventEmitter {
         channelGroups: List<String>,
         includeState: Boolean,
         includeUUIDs: Boolean,
+        limit: Int,
+        startFrom: Int?,
     ): HereNow
 
     /**

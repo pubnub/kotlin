@@ -20,6 +20,8 @@ public class HereNowImpl extends PassthroughEndpoint<PNHereNowResult> implements
     private List<String> channelGroups = new ArrayList<>();
     private boolean includeState = false;
     private boolean includeUUIDs = true;
+    private int limit = 1000;
+    private Integer startFrom = null;
 
     public HereNowImpl(PubNub pubnub) {
         super(pubnub);
@@ -32,7 +34,9 @@ public class HereNowImpl extends PassthroughEndpoint<PNHereNowResult> implements
                 channels,
                 channelGroups,
                 includeState,
-                includeUUIDs
+                includeUUIDs,
+                limit,
+                startFrom
         );
     }
 }

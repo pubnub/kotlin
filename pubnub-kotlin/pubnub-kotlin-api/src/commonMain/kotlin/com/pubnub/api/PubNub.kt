@@ -171,6 +171,8 @@ expect interface PubNub {
         channelGroups: List<String> = emptyList(),
         includeState: Boolean = false,
         includeUUIDs: Boolean = true,
+        limit: Int = 1000,
+        startFrom: Int? = null,
     ): HereNow
 
     fun whereNow(uuid: String = configuration.userId.value): WhereNow

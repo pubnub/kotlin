@@ -41,6 +41,7 @@ fun main() {
 fun singleChannelHereNow(pubnub: PubNub, channel: String) {
     println("\n# Basic hereNow for single channel: $channel")
 
+    // todo consider adding limit and startFrom to docs
     pubnub.hereNow(
         channels = listOf(channel)
     ).async { result ->

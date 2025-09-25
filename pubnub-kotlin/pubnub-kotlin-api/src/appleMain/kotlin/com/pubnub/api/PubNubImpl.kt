@@ -353,14 +353,18 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         channels: List<String>,
         channelGroups: List<String>,
         includeState: Boolean,
-        includeUUIDs: Boolean
+        includeUUIDs: Boolean,
+        limit: Int,
+        startFrom: Int?
     ): HereNow {
         return HereNowImpl(
             pubnub = pubNubObjC,
             channels = channels,
             channelGroups = channelGroups,
             includeState = includeState,
-            includeUUIDs = includeUUIDs
+            includeUUIDs = includeUUIDs,
+            limit = limit,
+            startFrom = startFrom
         )
     }
 

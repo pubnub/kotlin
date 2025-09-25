@@ -578,6 +578,8 @@ open class PubNubImpl(
         channelGroups: List<String>,
         includeState: Boolean,
         includeUUIDs: Boolean,
+        limit: Int,
+        startFrom: Int?,
     ): HereNow {
         return HereNowEndpoint(
             pubnub = this,
@@ -585,6 +587,8 @@ open class PubNubImpl(
             channelGroups = channelGroups,
             includeState = includeState,
             includeUUIDs = includeUUIDs,
+            limit = limit,
+            startFrom = startFrom,
         )
     }
 
