@@ -41,7 +41,7 @@ class ListPushProvisionsEndpoint internal constructor(
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<List<String>> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
                     message = mapOf(

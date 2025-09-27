@@ -47,7 +47,7 @@ class ListFilesEndpoint(
 
     @Throws(PubNubException::class)
     override fun doWork(queryParams: HashMap<String, String>): Call<ListFilesResult> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
                     message = mapOf(

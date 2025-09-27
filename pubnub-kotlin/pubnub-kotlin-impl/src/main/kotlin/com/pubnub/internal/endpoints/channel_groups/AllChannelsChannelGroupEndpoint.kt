@@ -36,7 +36,7 @@ class AllChannelsChannelGroupEndpoint internal constructor(
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<Map<String, Any>>> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
                     message = mapOf(

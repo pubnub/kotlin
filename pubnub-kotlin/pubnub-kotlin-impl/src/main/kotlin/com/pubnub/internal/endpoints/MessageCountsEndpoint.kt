@@ -43,7 +43,7 @@ class MessageCountsEndpoint internal constructor(
     override fun getAffectedChannels() = channels
 
     override fun doWork(queryParams: HashMap<String, String>): Call<JsonElement> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
                     message = mapOf(

@@ -45,7 +45,7 @@ class SetStateEndpoint internal constructor(
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<JsonElement>> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
                     message = mapOf(

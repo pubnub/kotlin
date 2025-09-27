@@ -38,7 +38,7 @@ class DownloadFileEndpoint(
 
     @Throws(PubNubException::class)
     override fun doWork(queryParams: HashMap<String, String>): Call<ResponseBody> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
                     message = mapOf(

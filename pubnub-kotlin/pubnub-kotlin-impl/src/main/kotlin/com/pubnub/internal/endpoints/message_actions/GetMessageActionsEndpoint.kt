@@ -37,7 +37,7 @@ class GetMessageActionsEndpoint internal constructor(
     override fun getAffectedChannels() = listOf(channel)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<PNGetMessageActionsResult> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
                     message = mapOf(

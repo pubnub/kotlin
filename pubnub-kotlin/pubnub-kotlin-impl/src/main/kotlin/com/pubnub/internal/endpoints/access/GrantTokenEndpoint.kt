@@ -52,7 +52,7 @@ class GrantTokenEndpoint(
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<GrantTokenResponse> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
                     message = mapOf(

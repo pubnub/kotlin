@@ -59,7 +59,7 @@ internal class GenerateUploadUrlEndpoint(
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<GeneratedUploadUrlResponse> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
                     message = mapOf(

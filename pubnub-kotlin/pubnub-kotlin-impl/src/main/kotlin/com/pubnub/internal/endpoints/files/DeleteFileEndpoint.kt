@@ -35,7 +35,7 @@ class DeleteFileEndpoint(
 
     @Throws(PubNubException::class)
     override fun doWork(queryParams: HashMap<String, String>): Call<Unit> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
                     message = mapOf(

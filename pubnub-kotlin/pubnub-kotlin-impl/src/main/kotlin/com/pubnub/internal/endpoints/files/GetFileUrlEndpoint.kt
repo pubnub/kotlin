@@ -47,7 +47,7 @@ class GetFileUrlEndpoint(
     // properly constructed url the code creates a request which isn't executed
     @Throws(PubNubException::class)
     override fun sync(): PNFileUrlResult {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
                     message = mapOf(

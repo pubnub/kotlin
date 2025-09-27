@@ -40,7 +40,7 @@ class SignalEndpoint internal constructor(
     override fun getAffectedChannels() = listOf(channel)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<List<Any>> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
                     message = mapOf(

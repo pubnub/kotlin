@@ -26,7 +26,7 @@ class TimeEndpoint(pubnub: PubNubImpl, private val excludeFromRetry: Boolean = f
     override fun getAffectedChannelGroups() = emptyList<String>()
 
     override fun doWork(queryParams: HashMap<String, String>): Call<List<Long>> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
                     message = mapOf(

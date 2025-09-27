@@ -83,7 +83,7 @@ class FetchMessagesEndpoint internal constructor(
     override fun getAffectedChannels() = channels
 
     override fun doWork(queryParams: HashMap<String, String>): Call<FetchMessagesEnvelope> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
                     message = mapOf(

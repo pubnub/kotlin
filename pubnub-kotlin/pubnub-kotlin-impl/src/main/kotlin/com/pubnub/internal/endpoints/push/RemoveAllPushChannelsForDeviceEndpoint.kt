@@ -41,7 +41,7 @@ class RemoveAllPushChannelsForDeviceEndpoint internal constructor(
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Void> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
                     message = mapOf(
