@@ -44,11 +44,11 @@ class RemoveChannelChannelGroupEndpoint internal constructor(
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "channelGroup" to channelGroup,
-                        "channels" to channels,
-                        "queryParams" to queryParams
-                    )
+                        "channels" to channels
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "RemoveChannelChannelGroup API call",
             )

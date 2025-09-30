@@ -42,12 +42,12 @@ class HeartbeatEndpoint internal constructor(
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "channels" to channels,
                         "channelGroups" to channelGroups,
-                        "state" to (state ?: ""),
-                        "queryParams" to queryParams
-                    )
+                        "state" to (state ?: "")
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "Heartbeat API call",
             )

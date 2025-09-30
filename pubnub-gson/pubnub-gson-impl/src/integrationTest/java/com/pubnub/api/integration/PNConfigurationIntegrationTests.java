@@ -39,7 +39,9 @@ public class PNConfigurationIntegrationTests {
 
         PNConfiguration.Builder configBuilder = PNConfiguration.builder(new UserId(expectedUuid), itTestConfig.subscribeKey())
                 .publishKey(itTestConfig.publishKey())
-                .customLoggers( Arrays.asList(new CustomLoggerTestImpl()));
+                .customLoggers( Arrays.asList(new CustomLoggerTestImpl()))
+                .secretKey("fa")
+                ;
         PubNub pubNub = PubNub.create(configBuilder.build());
 
         Assert.assertEquals(expectedUuid, pubNub.getConfiguration().getUserId().getValue());

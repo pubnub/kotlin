@@ -48,13 +48,13 @@ class SetStateEndpoint internal constructor(
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "channels" to channels,
                         "channelGroups" to channelGroups,
                         "state" to state,
-                        "uuid" to uuid,
-                        "queryParams" to queryParams
-                    )
+                        "uuid" to uuid
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "SetState API call",
             )

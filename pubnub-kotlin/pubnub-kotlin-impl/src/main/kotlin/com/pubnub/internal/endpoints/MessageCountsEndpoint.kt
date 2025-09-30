@@ -46,11 +46,11 @@ class MessageCountsEndpoint internal constructor(
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "channels" to channels,
-                        "channelsTimetoken" to channelsTimetoken,
-                        "queryParams" to queryParams
-                    )
+                        "channelsTimetoken" to channelsTimetoken
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "MessageCounts API call",
             )

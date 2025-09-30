@@ -33,9 +33,7 @@ class GetAllUUIDMetadataEndpoint internal constructor(
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
-                        "queryParams" to queryParams
-                    )
+                    operation = this::class.simpleName
                 ),
                 details = "GetAllUUIDMetadata API call",
             )

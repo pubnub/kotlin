@@ -79,7 +79,7 @@ public class LoggingIntegrationTest extends BaseIntegrationTest {
                         msg.getType() == LogMessageType.OBJECT &&
                                 msg.getLocation().contains("PublishEndpoint") &&
                                 (msg.getMessage() instanceof LogMessageContent.Object) &&
-                                expectedChannel.equals(((LogMessageContent.Object) msg.getMessage()).getMessage().get("channel"))
+                                expectedChannel.equals(((LogMessageContent.Object) msg.getMessage()).getArguments().get("channel"))
                 )
         );
 

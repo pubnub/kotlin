@@ -51,14 +51,14 @@ class AddChannelsToPushEndpoint internal constructor(
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "pushType" to pushType,
                         "channels" to channels,
                         "deviceId" to deviceId,
                         "topic" to (topic ?: ""),
-                        "environment" to environment,
-                        "queryParams" to queryParams
-                    )
+                        "environment" to environment
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "AddChannelsToPush API call",
             )

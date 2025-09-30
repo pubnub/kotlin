@@ -42,9 +42,9 @@ class ConfigurationLoggerTest {
         assertEquals("Configuration logged", capturedMessage.details)
 
         val configSummary = capturedMessage.message as LogMessageContent.Object
-        assertNotNull(configSummary.message)
-        assertEquals("test-user", configSummary.message["userId"])
-        assertEquals("test-sub-key", configSummary.message["subscribeKey"])
+        assertNotNull(configSummary.arguments)
+        assertEquals("test-user", configSummary.arguments!!["userId"])
+        assertEquals("test-sub-key", configSummary.arguments!!["subscribeKey"])
     }
 
     @Test
@@ -73,10 +73,10 @@ class ConfigurationLoggerTest {
         val capturedMessage = logMessageSlot.captured
         val configSummary = capturedMessage.message as LogMessageContent.Object
 
-        assertEquals("test-pub-key", configSummary.message["publishKey"])
-        assertEquals("set: *****", configSummary.message["secretKey"])
-        assertEquals("(@Deprecated) set: *****", configSummary.message["authKey"])
-        assertEquals("custom-origin", configSummary.message["origin"])
+        assertEquals("test-pub-key", configSummary.arguments!!["publishKey"])
+        assertEquals("set: *****", configSummary.arguments!!["secretKey"])
+        assertEquals("(@Deprecated) set: *****", configSummary.arguments!!["authKey"])
+        assertEquals("custom-origin", configSummary.arguments!!["origin"])
     }
 
     @Test
@@ -105,10 +105,10 @@ class ConfigurationLoggerTest {
         val capturedMessage = logMessageSlot.captured
         val configSummary = capturedMessage.message as LogMessageContent.Object
 
-        assertEquals("not set", configSummary.message["publishKey"])
-        assertEquals("not set", configSummary.message["secretKey"])
-        assertEquals("not set", configSummary.message["authKey"])
-        assertEquals("default", configSummary.message["origin"])
+        assertEquals("not set", configSummary.arguments!!["publishKey"])
+        assertEquals("not set", configSummary.arguments!!["secretKey"])
+        assertEquals("not set", configSummary.arguments!!["authKey"])
+        assertEquals("default", configSummary.arguments!!["origin"])
     }
 
     @Test
@@ -135,7 +135,7 @@ class ConfigurationLoggerTest {
         val capturedMessage = logMessageSlot.captured
         val configSummary = capturedMessage.message as LogMessageContent.Object
 
-        assertEquals("enabled (1 logger)", configSummary.message["customLoggers"])
+        assertEquals("enabled (1 logger)", configSummary.arguments!!["customLoggers"])
     }
 
     @Test
@@ -163,7 +163,7 @@ class ConfigurationLoggerTest {
         val capturedMessage = logMessageSlot.captured
         val configSummary = capturedMessage.message as LogMessageContent.Object
 
-        assertEquals("enabled (2 loggers)", configSummary.message["customLoggers"])
+        assertEquals("enabled (2 loggers)", configSummary.arguments!!["customLoggers"])
     }
 
     @Test
@@ -189,7 +189,7 @@ class ConfigurationLoggerTest {
         val capturedMessage = logMessageSlot.captured
         val configSummary = capturedMessage.message as LogMessageContent.Object
 
-        assertEquals("not set", configSummary.message["customLoggers"])
+        assertEquals("not set", configSummary.arguments!!["customLoggers"])
     }
 
     @Test
@@ -216,7 +216,7 @@ class ConfigurationLoggerTest {
         val capturedMessage = logMessageSlot.captured
         val configSummary = capturedMessage.message as LogMessageContent.Object
 
-        assertEquals("enabled", configSummary.message["cryptoModule"])
+        assertEquals("enabled", configSummary.arguments!!["cryptoModule"])
     }
 
     @Test
@@ -242,7 +242,7 @@ class ConfigurationLoggerTest {
         val capturedMessage = logMessageSlot.captured
         val configSummary = capturedMessage.message as LogMessageContent.Object
 
-        assertEquals("disabled", configSummary.message["cryptoModule"])
+        assertEquals("disabled", configSummary.arguments!!["cryptoModule"])
     }
 
     @Test
@@ -283,7 +283,7 @@ class ConfigurationLoggerTest {
         )
 
         expectedFields.forEach { field ->
-            assertTrue(configSummary.message.containsKey(field), "Missing field: $field")
+            assertTrue(configSummary.arguments!!.containsKey(field), "Missing field: $field")
         }
     }
 }

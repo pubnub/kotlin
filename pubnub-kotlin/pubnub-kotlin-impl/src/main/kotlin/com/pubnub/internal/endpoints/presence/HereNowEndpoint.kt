@@ -40,14 +40,14 @@ class HereNowEndpoint internal constructor(
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "channels" to channels,
                         "channelGroups" to channelGroups,
                         "includeState" to includeState,
                         "includeUUIDs" to includeUUIDs,
-                        "isGlobalHereNow" to isGlobalHereNow(),
-                        "queryParams" to queryParams
-                    )
+                        "isGlobalHereNow" to isGlobalHereNow()
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "HereNow API call",
             )

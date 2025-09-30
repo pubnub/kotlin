@@ -324,7 +324,7 @@ open class PubNubImpl(
             configuration = configuration,
             logger = logger,
             instanceId = instanceId,
-            className = this::class.java
+            className = PNConfigurationImpl::class.java
         )
     }
 

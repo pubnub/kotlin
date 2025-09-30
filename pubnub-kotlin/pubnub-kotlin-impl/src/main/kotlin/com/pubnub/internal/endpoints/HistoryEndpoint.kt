@@ -53,16 +53,16 @@ class HistoryEndpoint internal constructor(
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "channel" to channel,
                         "start" to (start ?: ""),
                         "end" to (end ?: ""),
                         "count" to count,
                         "reverse" to reverse,
                         "includeTimetoken" to includeTimetoken,
-                        "includeMeta" to includeMeta,
-                        "queryParams" to queryParams
-                    )
+                        "includeMeta" to includeMeta
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "History API call",
             )

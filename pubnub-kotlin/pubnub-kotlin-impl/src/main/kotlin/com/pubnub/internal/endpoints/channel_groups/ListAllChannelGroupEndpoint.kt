@@ -26,9 +26,8 @@ class ListAllChannelGroupEndpoint internal constructor(pubnub: PubNubImpl) :
             log.debug(
                 LogMessage(
                     message = LogMessageContent.Object(
-                        message = mapOf(
-                            "queryParams" to queryParams
-                        )
+                        arguments = mapOf(),
+                        operation = this::class.simpleName
                     ),
                     details = "ListAllChannelGroup API call",
                 )

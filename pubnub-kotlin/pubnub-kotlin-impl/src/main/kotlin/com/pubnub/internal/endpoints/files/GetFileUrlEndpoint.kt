@@ -50,11 +50,12 @@ class GetFileUrlEndpoint(
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "channel" to channel,
                         "fileName" to fileName,
                         "fileId" to fileId
-                    )
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "GetFileUrl API call",
             )

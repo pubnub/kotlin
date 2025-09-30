@@ -33,10 +33,10 @@ class GetChannelMembersEndpoint internal constructor(
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
-                        "channel" to channel,
-                        "queryParams" to queryParams
-                    )
+                    arguments = mapOf(
+                        "channel" to channel
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "GetChannelMembers API call",
             )

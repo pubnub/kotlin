@@ -40,13 +40,13 @@ class GetMessageActionsEndpoint internal constructor(
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "channel" to channel,
                         "pageStart" to (page.start ?: ""),
                         "pageEnd" to (page.end ?: ""),
-                        "pageLimit" to (page.limit ?: 100),
-                        "queryParams" to queryParams
-                    )
+                        "pageLimit" to (page.limit ?: 100)
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "GetMessageActions API call",
             )

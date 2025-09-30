@@ -21,7 +21,7 @@ object LogMessageFormatter {
         return try {
             when (content) {
                 is LogMessageContent.Text -> content.message
-                is LogMessageContent.Object -> prettyGson.toJson(content.message)
+                is LogMessageContent.Object -> prettyGson.toJson(mapOf("operation" to content.operation, "arguments" to content.arguments))
                 is LogMessageContent.Error -> {
                     val err = content.message
                     "Error(type=${err.type}, message=${err.message}, stack=${err.stack?.joinToString("\n")})"
@@ -45,5 +45,5 @@ object LogMessageFormatter {
  */
 fun LogMessage.simplified(): String {
     val messageContent = LogMessageFormatter.formatMessageContent(this.message)
-    return "pnInstanceId: $pubNubId location: $location details: ${details ?: ""}\n$messageContent"
+    return "PubNub-$pubNubId details: ${details ?: ""}\n$messageContent"
 }

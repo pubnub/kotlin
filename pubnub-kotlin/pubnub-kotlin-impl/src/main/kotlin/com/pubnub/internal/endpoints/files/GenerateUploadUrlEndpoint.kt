@@ -62,11 +62,11 @@ internal class GenerateUploadUrlEndpoint(
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "channel" to channel,
-                        "fileName" to fileName,
-                        "queryParams" to queryParams
-                    )
+                        "fileName" to fileName
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "GenerateUploadUrl API call",
             )

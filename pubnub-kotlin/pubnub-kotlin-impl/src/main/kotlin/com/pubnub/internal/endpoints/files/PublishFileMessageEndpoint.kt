@@ -51,7 +51,7 @@ open class PublishFileMessageEndpoint(
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "channel" to channel,
                         "fileName" to pnFile.name,
                         "fileId" to pnFile.id,
@@ -59,9 +59,9 @@ open class PublishFileMessageEndpoint(
                         "meta" to (meta ?: ""),
                         "ttl" to (ttl ?: 0),
                         "shouldStore" to (shouldStore ?: true),
-                        "customMessageType" to (customMessageType ?: ""),
-                        "queryParams" to queryParams
-                    )
+                        "customMessageType" to (customMessageType ?: "")
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "PublishFileMessage API call",
             )

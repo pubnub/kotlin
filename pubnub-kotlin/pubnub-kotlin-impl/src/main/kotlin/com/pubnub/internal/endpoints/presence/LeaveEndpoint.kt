@@ -41,11 +41,11 @@ class LeaveEndpoint internal constructor(pubnub: PubNubImpl) : EndpointCore<Void
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "channels" to channels,
-                        "channelGroups" to channelGroups,
-                        "queryParams" to queryParams
-                    )
+                        "channelGroups" to channelGroups
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "Leave API call",
             )

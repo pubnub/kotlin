@@ -422,7 +422,7 @@ class CompositeLoggerTest {
 
         val customTimestamp = "23:59:59.999"
         val originalMessage = LogMessage(
-            message = LogMessageContent.Object(mapOf("key" to "value")),
+            message = LogMessageContent.Object(mapOf("key" to "value"), "TimeEndpoint"),
             details = "important details",
             type = LogMessageType.OBJECT,
             location = "test-location",

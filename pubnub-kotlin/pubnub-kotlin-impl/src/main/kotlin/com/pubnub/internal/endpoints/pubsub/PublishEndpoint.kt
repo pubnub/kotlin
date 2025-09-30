@@ -52,17 +52,17 @@ class PublishEndpoint internal constructor(
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "message" to message,
                         "channel" to channel,
                         "shouldStore" to (shouldStore ?: true),
                         "meta" to (meta ?: ""),
-                        "queryParams" to queryParams,
                         "usePost" to usePost,
                         "ttl" to (ttl ?: 0),
                         "replicate" to replicate,
                         "customMessageType" to (customMessageType ?: "")
-                    )
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "Publish API call"
             )

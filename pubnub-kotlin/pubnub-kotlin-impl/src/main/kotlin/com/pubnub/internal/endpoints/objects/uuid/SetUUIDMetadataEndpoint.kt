@@ -39,7 +39,7 @@ class SetUUIDMetadataEndpoint internal constructor(
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "uuid" to (uuid ?: configuration.userId.value),
                         "name" to (name ?: ""),
                         "externalId" to (externalId ?: ""),
@@ -48,9 +48,9 @@ class SetUUIDMetadataEndpoint internal constructor(
                         "custom" to (custom ?: ""),
                         "type" to (type ?: ""),
                         "status" to (status ?: ""),
-                        "ifMatchesEtag" to (ifMatchesEtag ?: ""),
-                        "queryParams" to queryParams
-                    )
+                        "ifMatchesEtag" to (ifMatchesEtag ?: "")
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "SetUUIDMetadata API call",
             )

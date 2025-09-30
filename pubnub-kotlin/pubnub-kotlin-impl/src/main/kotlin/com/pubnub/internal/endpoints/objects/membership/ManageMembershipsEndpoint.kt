@@ -40,12 +40,12 @@ class ManageMembershipsEndpoint internal constructor(
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "uuid" to uuid,
                         "channelsToSet" to channelsToSet,
-                        "channelsToRemove" to channelsToRemove,
-                        "queryParams" to queryParams
-                    )
+                        "channelsToRemove" to channelsToRemove
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "ManageMemberships API call",
             )

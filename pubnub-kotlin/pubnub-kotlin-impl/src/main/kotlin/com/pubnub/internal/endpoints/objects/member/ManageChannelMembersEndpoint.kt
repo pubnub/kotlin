@@ -39,12 +39,12 @@ class ManageChannelMembersEndpoint(
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "channel" to channel,
                         "userToSet" to userToSet,
-                        "userIdsRemove" to userIdsRemove,
-                        "queryParams" to queryParams
-                    )
+                        "userIdsRemove" to userIdsRemove
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "ManageChannelMembers API call",
             )

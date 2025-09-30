@@ -28,10 +28,10 @@ class WhereNowEndpoint internal constructor(
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
-                        "uuid" to uuid,
-                        "queryParams" to queryParams
-                    )
+                    arguments = mapOf(
+                        "uuid" to uuid
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "WhereNow API call",
             )

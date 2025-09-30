@@ -43,12 +43,12 @@ class SignalEndpoint internal constructor(
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "channel" to channel,
                         "message" to message,
-                        "customMessageType" to (customMessageType ?: ""),
-                        "queryParams" to queryParams
-                    )
+                        "customMessageType" to (customMessageType ?: "")
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "Signal API call",
             )

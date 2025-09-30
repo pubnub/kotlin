@@ -48,13 +48,13 @@ class AddMessageActionEndpoint internal constructor(
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "channel" to channel,
                         "messageActionType" to messageAction.type,
                         "messageActionValue" to messageAction.value,
-                        "messageTimetoken" to messageAction.messageTimetoken,
-                        "queryParams" to queryParams
-                    )
+                        "messageTimetoken" to messageAction.messageTimetoken
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "AddMessageAction API call",
             )

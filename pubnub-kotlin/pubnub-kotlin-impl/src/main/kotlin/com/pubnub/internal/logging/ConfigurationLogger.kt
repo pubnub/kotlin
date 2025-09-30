@@ -90,7 +90,7 @@ object ConfigurationLogger {
 
         logger.debug(
             LogMessage(
-                message = LogMessageContent.Object(message = configSummary),
+                message = LogMessageContent.Object(arguments = configSummary),
                 details = "Configuration logged",
                 location = className.toString(),
             )

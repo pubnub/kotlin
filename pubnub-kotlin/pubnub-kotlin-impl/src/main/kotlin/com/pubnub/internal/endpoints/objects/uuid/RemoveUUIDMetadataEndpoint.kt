@@ -24,10 +24,10 @@ class RemoveUUIDMetadataEndpoint(
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
-                        "uuid" to (uuid ?: configuration.userId.value),
-                        "queryParams" to queryParams
-                    )
+                    arguments = mapOf(
+                        "uuid" to (uuid ?: configuration.userId.value)
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "RemoveUUIDMetadata API call",
             )

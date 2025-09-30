@@ -44,13 +44,13 @@ class RemoveAllPushChannelsForDeviceEndpoint internal constructor(
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "pushType" to pushType,
                         "deviceId" to deviceId,
                         "environment" to environment,
-                        "topic" to (topic ?: ""),
-                        "queryParams" to queryParams
-                    )
+                        "topic" to (topic ?: "")
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "RemoveAllPushChannelsForDevice API call",
             )

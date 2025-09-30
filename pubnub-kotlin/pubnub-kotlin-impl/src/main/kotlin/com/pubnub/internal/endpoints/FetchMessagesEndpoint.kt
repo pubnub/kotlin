@@ -86,16 +86,16 @@ class FetchMessagesEndpoint internal constructor(
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "channels" to channels,
                         "page" to page,
                         "includeUUID" to includeUUID,
                         "includeMeta" to includeMeta,
                         "includeMessageActions" to includeMessageActions,
                         "includeMessageType" to includeMessageType,
-                        "includeCustomMessageType" to includeCustomMessageType,
-                        "queryParams" to queryParams
-                    )
+                        "includeCustomMessageType" to includeCustomMessageType
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "FetchMessages API call",
             )

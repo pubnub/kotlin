@@ -38,12 +38,12 @@ class DeleteFileEndpoint(
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "channel" to channel,
                         "fileName" to fileName,
-                        "fileId" to fileId,
-                        "queryParams" to queryParams
-                    )
+                        "fileId" to fileId
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "DeleteFile API call",
             )

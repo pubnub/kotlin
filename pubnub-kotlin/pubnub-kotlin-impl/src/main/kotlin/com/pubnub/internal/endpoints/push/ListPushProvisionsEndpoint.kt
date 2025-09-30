@@ -44,13 +44,13 @@ class ListPushProvisionsEndpoint internal constructor(
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "pushType" to pushType,
                         "deviceId" to deviceId,
                         "topic" to (topic ?: ""),
-                        "environment" to environment,
-                        "queryParams" to queryParams
-                    )
+                        "environment" to environment
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "ListPushProvisions API call",
             )

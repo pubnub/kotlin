@@ -40,12 +40,12 @@ class RemoveMessageActionEndpoint internal constructor(
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "channel" to channel,
                         "messageTimetoken" to messageTimetoken,
-                        "actionTimetoken" to actionTimetoken,
-                        "queryParams" to queryParams
-                    )
+                        "actionTimetoken" to actionTimetoken
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "RemoveMessageAction API call",
             )
