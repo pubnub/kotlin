@@ -41,7 +41,7 @@ class CryptoModuleImpl(
     private val headerParser: HeaderParser = HeaderParser(logConfig)
 
     override fun encrypt(data: ByteArray): ByteArray {
-        logDebugMessage("Encrypting data of size: ${data.size} bytes")
+        logTraceMessage("Encrypting data of size: ${data.size} bytes")
 
         val cryptorId = primaryCryptor.id()
         validateData(data)
@@ -54,36 +54,36 @@ class CryptoModuleImpl(
             val cryptorHeader = headerParser.createCryptorHeader(cryptorId, metadata)
             cryptorHeader + encryptedData
         }
-        logDebugMessage("Encrypting successful")
+        logTraceMessage("Encrypting successful")
         return result
     }
 
     override fun decrypt(encryptedData: ByteArray): ByteArray {
-        logDebugMessage("Decrypting data of size: ${encryptedData.size} bytes")
+        logTraceMessage("Decrypting data of size: ${encryptedData.size} bytes")
 
         validateData(encryptedData)
         val parsedData: ParseResult<out ByteArray> = headerParser.parseDataWithHeader(encryptedData)
         val decryptedData: ByteArray =
             when (parsedData) {
                 is ParseResult.NoHeader -> {
-                    logDebugMessage("Using legacy cryptor for decryption")
+                    logTraceMessage("Using legacy cryptor for decryption")
                     getDecryptedDataForLegacyCryptor(encryptedData)
                 }
 
                 is ParseResult.Success -> {
-                    logDebugMessage("Using cryptor with header for decryption")
+                    logTraceMessage("Using cryptor with header for decryption")
                     getDecryptedDataForCryptorWithHeader(parsedData)
                 }
             }
-        logDebugMessage("Decryption successful")
+        logTraceMessage("Decryption successful")
         return decryptedData
     }
 
     override fun encryptStream(stream: InputStream): InputStream {
-        logDebugMessage("Encrypting stream")
+        logTraceMessage("Encrypting stream")
         val bufferedInputStream = validateStreamAndReturnBuffered(stream)
         val (metadata, encryptedData) = primaryCryptor.encryptStream(bufferedInputStream)
-        logDebugMessage("Encrypting stream successful")
+        logTraceMessage("Encrypting stream successful")
         return if (primaryCryptor.id().contentEquals(LEGACY_CRYPTOR_ID)) {
             encryptedData
         } else {
@@ -93,7 +93,7 @@ class CryptoModuleImpl(
     }
 
     override fun decryptStream(encryptedData: InputStream): InputStream {
-        logDebugMessage("Decrypting stream")
+        logTraceMessage("Decrypting stream")
         val bufferedInputStream = validateStreamAndReturnBuffered(encryptedData)
         return when (val parsedHeader = headerParser.parseDataWithHeader(bufferedInputStream)) {
             ParseResult.NoHeader -> {
@@ -119,8 +119,8 @@ class CryptoModuleImpl(
         }
     }
 
-    private fun logDebugMessage(message: String) {
-        log.debug(LogMessage(message = LogMessageContent.Text(message)))
+    private fun logTraceMessage(message: String) {
+        log.trace(LogMessage(message = LogMessageContent.Text(message)))
     }
 
     private fun validateCryptorIdSize(cryptorId: ByteArray) {
