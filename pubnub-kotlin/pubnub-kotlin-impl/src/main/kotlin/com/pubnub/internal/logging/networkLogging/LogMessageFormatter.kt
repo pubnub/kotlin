@@ -42,8 +42,11 @@ object LogMessageFormatter {
 
 /**
  * Extension function to create a simplified string representation of LogMessage.
+ * Extracts only the first segment of the pubNubId UUID (e.g., "646f1660" from "646f1660-6621-4c27-8560-597017d1ba95")
+ * for more concise logging output.
  */
 fun LogMessage.simplified(): String {
     val messageContent = LogMessageFormatter.formatMessageContent(this.message)
-    return "PubNub-$pubNubId details: ${details ?: ""}\n$messageContent"
+    val shortPubNubId = pubNubId?.substringBefore('-')
+    return "PubNub-$shortPubNubId details: ${details ?: ""}\n$messageContent"
 }

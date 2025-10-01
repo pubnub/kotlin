@@ -145,13 +145,13 @@ class LogMessageFormatterTest {
             details = "Additional context information",
             type = LogMessageType.TEXT,
             location = "TestClass.testMethod",
-            pubNubId = "test-instance-123",
+            pubNubId = "646f1660-6621-4c27-8560-597017d1ba95",
             logLevel = Level.INFO
         )
 
         val result = logMessage.simplified()
 
-        assertTrue(result.contains("PubNub-test-instance-123"))
+        assertTrue(result.contains("PubNub-646f1660"))
         assertFalse(result.contains("location: TestClass.testMethod"))
         assertTrue(result.contains("details: Additional context information"))
         assertTrue(result.contains("This is a test message"))
@@ -164,13 +164,13 @@ class LogMessageFormatterTest {
             details = null,
             type = LogMessageType.OBJECT,
             location = "AnotherClass.anotherMethod",
-            pubNubId = "test-instance-456",
+            pubNubId = "646f1660-6621-4c27-8560-597017d1ba95",
             logLevel = Level.DEBUG
         )
 
         val result = logMessage.simplified()
 
-        assertTrue(result.contains("PubNub-test-instance"))
+        assertTrue(result.contains("PubNub-646f1660"))
         assertFalse(result.contains("location: AnotherClass.anotherMethod"))
         assertTrue(result.contains("details: ")) // Should show empty string for null details
         assertTrue(result.contains("\"key\": \"value\""))
@@ -198,13 +198,13 @@ class LogMessageFormatterTest {
             details = "Publishing message to channel",
             type = LogMessageType.NETWORK_REQUEST,
             location = "PublishEndpoint",
-            pubNubId = "publish-instance",
+            pubNubId = "646f1660-6621-4c27-8560-597017d1ba95",
             logLevel = Level.DEBUG
         )
 
         val result = logMessage.simplified()
 
-        assertTrue(result.contains("PubNub-publish-instance"))
+        assertTrue(result.contains("PubNub-646f1660"))
         assertFalse(result.contains("location: PublishEndpoint"))
         assertTrue(result.contains("details: Publishing message to channel"))
         assertTrue(result.contains("NetworkRequest:"))
