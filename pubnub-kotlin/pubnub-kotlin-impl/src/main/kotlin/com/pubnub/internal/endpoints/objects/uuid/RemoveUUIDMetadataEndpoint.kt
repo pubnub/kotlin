@@ -21,13 +21,13 @@ class RemoveUUIDMetadataEndpoint(
     private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<Any?>> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
-                        "uuid" to (uuid ?: configuration.userId.value),
-                        "queryParams" to queryParams
-                    )
+                    arguments = mapOf(
+                        "uuid" to (uuid ?: configuration.userId.value)
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "RemoveUUIDMetadata API call",
             )

@@ -41,14 +41,14 @@ class AddChannelChannelGroupEndpoint internal constructor(
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Void> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "channelGroup" to channelGroup,
                         "channels" to channels,
-                        "queryParams" to queryParams
-                    )
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "AddChannelChannelGroup API call",
             )

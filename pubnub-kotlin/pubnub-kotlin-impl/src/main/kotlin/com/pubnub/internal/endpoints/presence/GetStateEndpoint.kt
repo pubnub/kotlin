@@ -41,15 +41,15 @@ class GetStateEndpoint internal constructor(
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<JsonElement>> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "channels" to channels,
                         "channelGroups" to channelGroups,
-                        "uuid" to uuid,
-                        "queryParams" to queryParams
-                    )
+                        "uuid" to uuid
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "GetState API call",
             )

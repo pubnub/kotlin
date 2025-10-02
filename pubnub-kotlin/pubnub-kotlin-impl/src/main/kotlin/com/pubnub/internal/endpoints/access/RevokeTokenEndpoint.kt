@@ -34,13 +34,13 @@ class RevokeTokenEndpoint(
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<RevokeTokenResponse> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
-                        "token" to token,
-                        "queryParams" to queryParams
-                    )
+                    arguments = mapOf(
+                        "token" to token
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "RevokeToken API call",
             )

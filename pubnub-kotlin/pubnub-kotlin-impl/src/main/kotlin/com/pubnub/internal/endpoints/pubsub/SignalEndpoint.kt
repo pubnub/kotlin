@@ -40,15 +40,15 @@ class SignalEndpoint internal constructor(
     override fun getAffectedChannels() = listOf(channel)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<List<Any>> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "channel" to channel,
                         "message" to message,
-                        "customMessageType" to (customMessageType ?: ""),
-                        "queryParams" to queryParams
-                    )
+                        "customMessageType" to (customMessageType ?: "")
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "Signal API call",
             )

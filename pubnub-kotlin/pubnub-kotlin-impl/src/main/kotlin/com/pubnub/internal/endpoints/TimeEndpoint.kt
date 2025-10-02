@@ -26,13 +26,13 @@ class TimeEndpoint(pubnub: PubNubImpl, private val excludeFromRetry: Boolean = f
     override fun getAffectedChannelGroups() = emptyList<String>()
 
     override fun doWork(queryParams: HashMap<String, String>): Call<List<Long>> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
-                        "excludeFromRetry" to excludeFromRetry,
-                        "queryParams" to queryParams
-                    )
+                    arguments = mapOf(
+                        "excludeFromRetry" to excludeFromRetry
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "Time API call",
             )

@@ -37,17 +37,17 @@ class HereNowEndpoint internal constructor(
     override fun getAffectedChannelGroups() = channelGroups
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<JsonElement>> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "channels" to channels,
                         "channelGroups" to channelGroups,
                         "includeState" to includeState,
                         "includeUUIDs" to includeUUIDs,
-                        "isGlobalHereNow" to isGlobalHereNow(),
-                        "queryParams" to queryParams
-                    )
+                        "isGlobalHereNow" to isGlobalHereNow()
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "HereNow API call",
             )

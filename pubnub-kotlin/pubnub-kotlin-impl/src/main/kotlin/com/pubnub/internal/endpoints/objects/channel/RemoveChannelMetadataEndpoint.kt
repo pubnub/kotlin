@@ -21,13 +21,13 @@ class RemoveChannelMetadataEndpoint(
     private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<Any?>> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
-                        "channel" to channel,
-                        "queryParams" to queryParams
-                    )
+                    arguments = mapOf(
+                        "channel" to channel
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "RemoveChannelMetadata API call",
             )

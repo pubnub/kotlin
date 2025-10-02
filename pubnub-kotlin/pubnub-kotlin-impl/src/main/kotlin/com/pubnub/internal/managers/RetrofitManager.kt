@@ -115,7 +115,7 @@ class RetrofitManager(
 
             // todo detect that this is publish to portal and not log this to avoid recursion
             // Replace the standard HttpLoggingInterceptor with our custom one
-            val customLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+            val customLogger = LoggerManager.instance.getLogger(pubnub.logConfig, CustomPnHttpLoggingInterceptor::class.java)
             okHttpBuilder.addInterceptor(
                 CustomPnHttpLoggingInterceptor(customLogger, pubnub.mapper, logVerbosity)
             )

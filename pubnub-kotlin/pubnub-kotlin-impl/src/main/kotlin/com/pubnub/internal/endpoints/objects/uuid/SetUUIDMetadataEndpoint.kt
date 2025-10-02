@@ -36,10 +36,10 @@ class SetUUIDMetadataEndpoint internal constructor(
     private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNUUIDMetadata>> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "uuid" to (uuid ?: configuration.userId.value),
                         "name" to (name ?: ""),
                         "externalId" to (externalId ?: ""),
@@ -48,9 +48,9 @@ class SetUUIDMetadataEndpoint internal constructor(
                         "custom" to (custom ?: ""),
                         "type" to (type ?: ""),
                         "status" to (status ?: ""),
-                        "ifMatchesEtag" to (ifMatchesEtag ?: ""),
-                        "queryParams" to queryParams
-                    )
+                        "ifMatchesEtag" to (ifMatchesEtag ?: "")
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "SetUUIDMetadata API call",
             )

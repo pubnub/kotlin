@@ -53,10 +53,10 @@ open class GrantEndpoint(
     override fun getAffectedChannelGroups() = channelGroups
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<AccessManagerGrantPayload>> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "read" to read,
                         "write" to write,
                         "manage" to manage,
@@ -68,9 +68,9 @@ open class GrantEndpoint(
                         "authKeys" to authKeys,
                         "channels" to channels,
                         "channelGroups" to channelGroups,
-                        "uuids" to uuids,
-                        "queryParams" to queryParams
-                    )
+                        "uuids" to uuids
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "Grant API call",
             )

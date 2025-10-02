@@ -47,15 +47,15 @@ class ListFilesEndpoint(
 
     @Throws(PubNubException::class)
     override fun doWork(queryParams: HashMap<String, String>): Call<ListFilesResult> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "channel" to channel,
                         "limit" to (limit ?: DEFAULT_LIMIT),
-                        "next" to (next?.pageHash ?: ""),
-                        "queryParams" to queryParams
-                    )
+                        "next" to (next?.pageHash ?: "")
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "ListFiles API call",
             )

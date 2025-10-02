@@ -9,6 +9,7 @@ import com.pubnub.api.logging.NetworkLog
 import com.pubnub.api.logging.NetworkRequestMessage
 import com.pubnub.api.logging.NetworkResponseMessage
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.slf4j.event.Level
@@ -30,7 +31,7 @@ class LogMessageFormatterTest {
             "key2" to 42,
             "key3" to listOf("item1", "item2")
         )
-        val objectContent = LogMessageContent.Object(testObject)
+        val objectContent = LogMessageContent.Object(testObject, "TimeEndpoint")
 
         val result = LogMessageFormatter.formatMessageContent(objectContent)
 
@@ -144,14 +145,14 @@ class LogMessageFormatterTest {
             details = "Additional context information",
             type = LogMessageType.TEXT,
             location = "TestClass.testMethod",
-            pubNubId = "test-instance-123",
+            pubNubId = "646f1660-6621-4c27-8560-597017d1ba95",
             logLevel = Level.INFO
         )
 
         val result = logMessage.simplified()
 
-        assertTrue(result.contains("pnInstanceId: test-instance-123"))
-        assertTrue(result.contains("location: TestClass.testMethod"))
+        assertTrue(result.contains("PubNub-646f1660"))
+        assertFalse(result.contains("location: TestClass.testMethod"))
         assertTrue(result.contains("details: Additional context information"))
         assertTrue(result.contains("This is a test message"))
     }
@@ -159,18 +160,18 @@ class LogMessageFormatterTest {
     @Test
     fun `simplified extension function should handle null details`() {
         val logMessage = LogMessage(
-            message = LogMessageContent.Object(mapOf("key" to "value")),
+            message = LogMessageContent.Object(mapOf("key" to "value"), "TimeEndpoint"),
             details = null,
             type = LogMessageType.OBJECT,
             location = "AnotherClass.anotherMethod",
-            pubNubId = "test-instance-456",
+            pubNubId = "646f1660-6621-4c27-8560-597017d1ba95",
             logLevel = Level.DEBUG
         )
 
         val result = logMessage.simplified()
 
-        assertTrue(result.contains("pnInstanceId: test-instance-456"))
-        assertTrue(result.contains("location: AnotherClass.anotherMethod"))
+        assertTrue(result.contains("PubNub-646f1660"))
+        assertFalse(result.contains("location: AnotherClass.anotherMethod"))
         assertTrue(result.contains("details: ")) // Should show empty string for null details
         assertTrue(result.contains("\"key\": \"value\""))
     }
@@ -197,14 +198,14 @@ class LogMessageFormatterTest {
             details = "Publishing message to channel",
             type = LogMessageType.NETWORK_REQUEST,
             location = "PublishEndpoint",
-            pubNubId = "publish-instance",
+            pubNubId = "646f1660-6621-4c27-8560-597017d1ba95",
             logLevel = Level.DEBUG
         )
 
         val result = logMessage.simplified()
 
-        assertTrue(result.contains("pnInstanceId: publish-instance"))
-        assertTrue(result.contains("location: PublishEndpoint"))
+        assertTrue(result.contains("PubNub-646f1660"))
+        assertFalse(result.contains("location: PublishEndpoint"))
         assertTrue(result.contains("details: Publishing message to channel"))
         assertTrue(result.contains("NetworkRequest:"))
         assertTrue(result.contains("\"method\": \"POST\""))
@@ -228,7 +229,7 @@ class LogMessageFormatterTest {
                 mapOf("id" to 2, "name" to "item2")
             )
         )
-        val objectContent = LogMessageContent.Object(complexObject)
+        val objectContent = LogMessageContent.Object(complexObject, "TimeEndpoint")
 
         val result = LogMessageFormatter.formatMessageContent(objectContent)
 
@@ -251,7 +252,7 @@ class LogMessageFormatterTest {
             "emptyMap" to emptyMap<String, Any>(),
             "emptyString" to ""
         )
-        val objectContent = LogMessageContent.Object(objectWithEmptyCollections)
+        val objectContent = LogMessageContent.Object(objectWithEmptyCollections, "TimeEndpoint")
 
         val result = LogMessageFormatter.formatMessageContent(objectContent)
 

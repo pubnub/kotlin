@@ -41,16 +41,16 @@ class ListPushProvisionsEndpoint internal constructor(
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<List<String>> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "pushType" to pushType,
                         "deviceId" to deviceId,
                         "topic" to (topic ?: ""),
-                        "environment" to environment,
-                        "queryParams" to queryParams
-                    )
+                        "environment" to environment
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "ListPushProvisions API call",
             )

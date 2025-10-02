@@ -163,11 +163,24 @@ class CustomPnHttpLoggingInterceptor(
             location = location,
         )
 
-        logger.error(logMessage)
-        // to keep PNLogVerbosity.BODY functional
-        if (logVerbosity == PNLogVerbosity.BODY) {
-            val jsonMessage = mapperManager.toJson(logMessage)
-            println("[$PUBNUB_OKHTTP_LOG_TAG] ERROR: $jsonMessage")
+        // Cancellation is normal Event Engine behavior when there is subscriptionChange
+        // Log as debug instead of error to avoid noise in logs
+        val isCancellation = error is java.io.IOException && error.message == "Canceled"
+
+        if (isCancellation) {
+            logger.debug(logMessage)
+            // to keep PNLogVerbosity.BODY functional
+            if (logVerbosity == PNLogVerbosity.BODY) {
+                val jsonMessage = mapperManager.toJson(logMessage)
+                println("[$PUBNUB_OKHTTP_LOG_TAG] DEBUG: $jsonMessage")
+            }
+        } else {
+            logger.error(logMessage)
+            // to keep PNLogVerbosity.BODY functional
+            if (logVerbosity == PNLogVerbosity.BODY) {
+                val jsonMessage = mapperManager.toJson(logMessage)
+                println("[$PUBNUB_OKHTTP_LOG_TAG] ERROR: $jsonMessage")
+            }
         }
     }
 }

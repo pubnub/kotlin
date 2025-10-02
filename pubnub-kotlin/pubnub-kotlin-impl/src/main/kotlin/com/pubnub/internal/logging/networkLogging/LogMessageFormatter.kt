@@ -21,7 +21,7 @@ object LogMessageFormatter {
         return try {
             when (content) {
                 is LogMessageContent.Text -> content.message
-                is LogMessageContent.Object -> prettyGson.toJson(content.message)
+                is LogMessageContent.Object -> prettyGson.toJson(mapOf("operation" to content.operation, "arguments" to content.arguments))
                 is LogMessageContent.Error -> {
                     val err = content.message
                     "Error(type=${err.type}, message=${err.message}, stack=${err.stack?.joinToString("\n")})"
@@ -42,8 +42,11 @@ object LogMessageFormatter {
 
 /**
  * Extension function to create a simplified string representation of LogMessage.
+ * Extracts only the first segment of the pubNubId UUID (e.g., "646f1660" from "646f1660-6621-4c27-8560-597017d1ba95")
+ * for more concise logging output.
  */
 fun LogMessage.simplified(): String {
     val messageContent = LogMessageFormatter.formatMessageContent(this.message)
-    return "pnInstanceId: $pubNubId location: $location details: ${details ?: ""}\n$messageContent"
+    val shortPubNubId = pubNubId?.substringBefore('-')
+    return "PubNub-$shortPubNubId details: ${details ?: ""}\n$messageContent"
 }

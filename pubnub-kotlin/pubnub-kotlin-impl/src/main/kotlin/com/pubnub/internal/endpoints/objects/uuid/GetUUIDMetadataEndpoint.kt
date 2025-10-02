@@ -27,13 +27,13 @@ class GetUUIDMetadataEndpoint internal constructor(
     private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNUUIDMetadata>> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
-                        "uuid" to uuid,
-                        "queryParams" to queryParams
-                    )
+                    arguments = mapOf(
+                        "uuid" to uuid
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "GetUUIDMetadata API call",
             )

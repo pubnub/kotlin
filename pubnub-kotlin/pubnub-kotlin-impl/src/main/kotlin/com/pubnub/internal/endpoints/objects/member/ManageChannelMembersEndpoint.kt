@@ -36,15 +36,15 @@ class ManageChannelMembersEndpoint(
     private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityArrayEnvelope<PNMember>> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "channel" to channel,
                         "userToSet" to userToSet,
-                        "userIdsRemove" to userIdsRemove,
-                        "queryParams" to queryParams
-                    )
+                        "userIdsRemove" to userIdsRemove
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "ManageChannelMembers API call",
             )

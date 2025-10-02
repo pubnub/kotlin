@@ -19,8 +19,10 @@ sealed class LogMessageContent {
      * Dictionary/object message for object type logs.
      */
     data class Object(
-        @SerializedName("message")
-        val message: Map<String, Any>
+        @SerializedName("arguments")
+        val arguments: Map<String, Any>? = null,
+        @SerializedName("operation")
+        val operation: String? = null,
     ) : LogMessageContent()
 
     /**

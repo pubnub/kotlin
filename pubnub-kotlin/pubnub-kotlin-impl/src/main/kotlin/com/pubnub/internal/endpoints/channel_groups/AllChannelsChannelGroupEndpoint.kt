@@ -36,13 +36,13 @@ class AllChannelsChannelGroupEndpoint internal constructor(
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<Map<String, Any>>> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
-                        "channelGroup" to channelGroup,
-                        "queryParams" to queryParams
-                    )
+                    arguments = mapOf(
+                        "channelGroup" to channelGroup
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "AllChannelsChannelGroup API call",
             )

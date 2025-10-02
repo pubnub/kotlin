@@ -23,12 +23,11 @@ class ListAllChannelGroupEndpoint internal constructor(pubnub: PubNubImpl) :
         private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
         override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<Map<String, Any>>> {
-            log.trace(
+            log.debug(
                 LogMessage(
                     message = LogMessageContent.Object(
-                        message = mapOf(
-                            "queryParams" to queryParams
-                        )
+                        arguments = mapOf(),
+                        operation = this::class.simpleName
                     ),
                     details = "ListAllChannelGroup API call",
                 )

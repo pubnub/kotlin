@@ -63,7 +63,7 @@ class LoggingIntegrationTest : BaseIntegrationTest() {
             "Should have called publish on the expected channel",
             CustomLoggerTestImpl.logMessages.any { msg ->
                 msg.type == LogMessageType.OBJECT && msg.location!!.contains("PublishEndpoint") &&
-                    (msg.message as? LogMessageContent.Object)?.message?.get("channel") == expectedChannel
+                    (msg.message as? LogMessageContent.Object)?.arguments?.get("channel") == expectedChannel
             }
         )
 

@@ -38,16 +38,16 @@ class DownloadFileEndpoint(
 
     @Throws(PubNubException::class)
     override fun doWork(queryParams: HashMap<String, String>): Call<ResponseBody> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "channel" to channel,
                         "fileName" to fileName,
                         "fileId" to fileId,
-                        "cryptoModule" to (cryptoModule != null).toString(),
-                        "queryParams" to queryParams
-                    )
+                        "cryptoModule" to (cryptoModule != null).toString()
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "DownloadFile API call",
             )

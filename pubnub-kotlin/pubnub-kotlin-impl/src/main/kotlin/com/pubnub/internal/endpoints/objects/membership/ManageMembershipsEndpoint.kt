@@ -37,15 +37,15 @@ class ManageMembershipsEndpoint internal constructor(
     private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityArrayEnvelope<PNChannelMembership>> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "uuid" to uuid,
                         "channelsToSet" to channelsToSet,
-                        "channelsToRemove" to channelsToRemove,
-                        "queryParams" to queryParams
-                    )
+                        "channelsToRemove" to channelsToRemove
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "ManageMemberships API call",
             )

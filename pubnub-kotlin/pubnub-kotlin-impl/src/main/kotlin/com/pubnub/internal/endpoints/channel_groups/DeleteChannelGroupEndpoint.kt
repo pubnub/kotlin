@@ -34,13 +34,13 @@ class DeleteChannelGroupEndpoint internal constructor(
     override fun getAffectedChannelGroups() = listOf(channelGroup)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Void> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
-                        "channelGroup" to channelGroup,
-                        "queryParams" to queryParams
-                    )
+                    arguments = mapOf(
+                        "channelGroup" to channelGroup
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "DeleteChannelGroup API call",
             )

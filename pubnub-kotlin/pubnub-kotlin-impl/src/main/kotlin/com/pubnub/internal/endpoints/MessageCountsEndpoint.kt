@@ -43,14 +43,14 @@ class MessageCountsEndpoint internal constructor(
     override fun getAffectedChannels() = channels
 
     override fun doWork(queryParams: HashMap<String, String>): Call<JsonElement> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "channels" to channels,
-                        "channelsTimetoken" to channelsTimetoken,
-                        "queryParams" to queryParams
-                    )
+                        "channelsTimetoken" to channelsTimetoken
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "MessageCounts API call",
             )

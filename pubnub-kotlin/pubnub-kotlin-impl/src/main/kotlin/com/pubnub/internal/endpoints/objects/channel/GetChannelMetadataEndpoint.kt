@@ -27,13 +27,13 @@ class GetChannelMetadataEndpoint internal constructor(
     private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNChannelMetadata>> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
-                        "channel" to channel,
-                        "queryParams" to queryParams
-                    )
+                    arguments = mapOf(
+                        "channel" to channel
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "GetChannelMetadata API call",
             )

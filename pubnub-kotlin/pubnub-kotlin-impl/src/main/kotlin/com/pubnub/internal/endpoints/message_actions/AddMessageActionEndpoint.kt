@@ -45,16 +45,16 @@ class AddMessageActionEndpoint internal constructor(
     override fun getAffectedChannels() = listOf(channel)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNMessageAction>> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "channel" to channel,
                         "messageActionType" to messageAction.type,
                         "messageActionValue" to messageAction.value,
-                        "messageTimetoken" to messageAction.messageTimetoken,
-                        "queryParams" to queryParams
-                    )
+                        "messageTimetoken" to messageAction.messageTimetoken
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "AddMessageAction API call",
             )

@@ -52,10 +52,10 @@ class GrantTokenEndpoint(
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<GrantTokenResponse> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "ttl" to ttl,
                         "meta" to (meta ?: ""),
                         "authorizedUUID" to (authorizedUUID ?: ""),
@@ -63,9 +63,9 @@ class GrantTokenEndpoint(
                             mapOf("id" to it.id, "read" to it.read, "write" to it.write, "manage" to it.manage, "delete" to it.delete, "get" to it.get, "update" to it.update, "join" to it.join)
                         },
                         "channelGroups" to channelGroups.map { mapOf("id" to it.id, "read" to it.read, "write" to it.write, "manage" to it.manage) },
-                        "uuids" to uuids.map { mapOf("id" to it.id, "get" to it.get, "update" to it.update, "delete" to it.delete) },
-                        "queryParams" to queryParams
-                    )
+                        "uuids" to uuids.map { mapOf("id" to it.id, "get" to it.get, "update" to it.update, "delete" to it.delete) }
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "GrantToken API call",
             )

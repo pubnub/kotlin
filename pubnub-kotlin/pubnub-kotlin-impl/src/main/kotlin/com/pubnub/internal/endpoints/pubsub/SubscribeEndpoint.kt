@@ -38,18 +38,18 @@ class SubscribeEndpoint internal constructor(pubnub: PubNubImpl) : EndpointCore<
     override fun getAffectedChannelGroups() = channelGroups
 
     override fun doWork(queryParams: HashMap<String, String>): Call<SubscribeEnvelope> {
-        log.trace(
+        log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
-                    message = mapOf(
+                    arguments = mapOf(
                         "channels" to channels,
                         "channelGroups" to channelGroups,
                         "timetoken" to (timetoken ?: 0L),
                         "region" to (region ?: ""),
                         "state" to (state ?: ""),
-                        "filterExpression" to (filterExpression ?: ""),
-                        "queryParams" to queryParams
-                    )
+                        "filterExpression" to (filterExpression ?: "")
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "Subscribe API call",
             )
