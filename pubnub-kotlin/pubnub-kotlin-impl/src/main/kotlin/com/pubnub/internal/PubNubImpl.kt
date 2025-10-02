@@ -425,7 +425,7 @@ open class PubNubImpl(
         usePost: Boolean,
         ttl: Int?,
     ): Publish {
-        logger.warn(
+        logger.debug(
             LogMessage(
                 message = LogMessageContent.Text(
                     "DEPRECATED: fire() with ttl parameter is deprecated. Use fire(channel, message, meta, usePost) instead."
@@ -519,7 +519,7 @@ open class PubNubImpl(
         includeTimetoken: Boolean,
         includeMeta: Boolean,
     ): History {
-        logger.warn(
+        logger.debug(
             LogMessage(
                 message = LogMessageContent.Text(
                     "DEPRECATED: history() is deprecated. Use fetchMessages(List<String>, PNBoundedPage, Boolean, Boolean, Boolean, Boolean, Boolean) instead."
@@ -931,7 +931,7 @@ open class PubNubImpl(
         includeChannelDetails: PNChannelDetailsLevel?,
         includeType: Boolean,
     ): GetMemberships {
-        logger.warn(
+        logger.debug(
             LogMessage(
                 message = LogMessageContent.Text(
                     "DEPRECATED: getMemberships() with uuid, includeChannelDetails and includeType parameters is deprecated. Use getMemberships(userId, limit, page, filter, sort, include) instead."
@@ -1023,7 +1023,7 @@ open class PubNubImpl(
         includeChannelDetails: PNChannelDetailsLevel?,
         includeType: Boolean,
     ): ManageMemberships {
-        logger.warn(
+        logger.debug(
             LogMessage(
                 message = LogMessageContent.Text(
                     "DEPRECATED: setMemberships() with uuid, includeChannelDetails and includeType parameters is deprecated. Use setMemberships(channels, userId, limit, page, filter, sort, include) instead."
@@ -1085,7 +1085,7 @@ open class PubNubImpl(
         includeChannelDetails: PNChannelDetailsLevel?,
         includeType: Boolean,
     ): ManageMemberships {
-        logger.warn(
+        logger.debug(
             LogMessage(
                 message = LogMessageContent.Text(
                     "DEPRECATED: removeMemberships() with uuid, includeChannelDetails and includeType parameters is deprecated. Use removeMemberships(channels, userId, limit, page, filter, sort, include) instead."
@@ -1148,7 +1148,7 @@ open class PubNubImpl(
         includeChannelDetails: PNChannelDetailsLevel?,
         includeType: Boolean,
     ): ManageMemberships {
-        logger.warn(
+        logger.debug(
             LogMessage(
                 message = LogMessageContent.Text(
                     "DEPRECATED: manageMemberships() with uuid, includeChannelDetails and includeType parameters is deprecated. Use manageMemberships(channelsToSet, channelsToRemove, userId, limit, page, filter, sort, include) instead."
@@ -1245,7 +1245,7 @@ open class PubNubImpl(
         includeUUIDDetails: PNUUIDDetailsLevel?,
         includeType: Boolean,
     ): GetChannelMembers {
-        logger.warn(
+        logger.debug(
             LogMessage(
                 message = LogMessageContent.Text(
                     "DEPRECATED: getChannelMembers() with includeUUIDDetails and includeType parameters is deprecated. Use getChannelMembers(channel, limit, page, filter, sort, include) instead."
@@ -1338,7 +1338,7 @@ open class PubNubImpl(
         includeMessageType: Boolean,
         includeCustomMessageType: Boolean
     ): FetchMessages {
-        logger.warn(
+        logger.debug(
             LogMessage(
                 message = LogMessageContent.Text(
                     "DEPRECATED: fetchMessages() with maximumPerChannel, start, end parameters is deprecated. Use fetchMessages(channels, page, includeUUID, includeMeta, includeMessageActions, includeMessageType, includeCustomMessageType) instead."
@@ -1372,7 +1372,7 @@ open class PubNubImpl(
         end: Long?,
         limit: Int?,
     ): GetMessageActions {
-        logger.warn(
+        logger.debug(
             LogMessage(
                 message = LogMessageContent.Text(
                     "DEPRECATED: getMessageActions() with start, end, limit parameters is deprecated. Use getMessageActions(channel, page) instead."
@@ -1404,7 +1404,7 @@ open class PubNubImpl(
         includeCustom: Boolean,
         includeChannelDetails: PNChannelDetailsLevel?,
     ): ManageMemberships {
-        logger.warn(
+        logger.debug(
             LogMessage(
                 message = LogMessageContent.Text(
                     "DEPRECATED: addMemberships() is deprecated. Use setMemberships() instead."
@@ -1445,7 +1445,7 @@ open class PubNubImpl(
         includeCustom: Boolean,
         includeUUIDDetails: PNUUIDDetailsLevel?,
     ): GetChannelMembers {
-        logger.warn(
+        logger.debug(
             LogMessage(
                 message = LogMessageContent.Text(
                     "DEPRECATED: getMembers() is deprecated. Use getChannelMembers() instead."
@@ -1486,7 +1486,7 @@ open class PubNubImpl(
         includeCustom: Boolean,
         includeUUIDDetails: PNUUIDDetailsLevel?,
     ): ManageChannelMembers {
-        logger.warn(
+        logger.debug(
             LogMessage(
                 message = LogMessageContent.Text(
                     "DEPRECATED: addMembers() is deprecated. Use setChannelMembers() instead."
@@ -1527,7 +1527,7 @@ open class PubNubImpl(
         includeUUIDDetails: PNUUIDDetailsLevel?,
         includeType: Boolean,
     ): ManageChannelMembers {
-        logger.warn(
+        logger.debug(
             LogMessage(
                 message = LogMessageContent.Text(
                     "DEPRECATED: setChannelMembers() with uuids, includeUUIDDetails and includeType parameters is deprecated. Use setChannelMembers(channel, users, limit, page, filter, sort, include) instead."
@@ -1590,7 +1590,7 @@ open class PubNubImpl(
         includeCustom: Boolean,
         includeUUIDDetails: PNUUIDDetailsLevel?,
     ): ManageChannelMembers {
-        logger.warn(
+        logger.debug(
             LogMessage(
                 message = LogMessageContent.Text(
                     "DEPRECATED: removeMembers() is deprecated. Use removeChannelMembers() instead."
@@ -1631,7 +1631,7 @@ open class PubNubImpl(
         includeUUIDDetails: PNUUIDDetailsLevel?,
         includeType: Boolean,
     ): ManageChannelMembers {
-        logger.warn(
+        logger.debug(
             LogMessage(
                 message = LogMessageContent.Text(
                     "DEPRECATED: removeChannelMembers() with uuids, includeUUIDDetails and includeType parameters is deprecated. Use removeChannelMembers(channel, userIds, limit, page, filter, sort, include) instead."
@@ -1694,7 +1694,7 @@ open class PubNubImpl(
         includeUUIDDetails: PNUUIDDetailsLevel?,
         includeUUIDType: Boolean,
     ): ManageChannelMembers {
-        logger.warn(
+        logger.debug(
             LogMessage(
                 message = LogMessageContent.Text(
                     "DEPRECATED: manageChannelMembers() with uuidsToSet, uuidsToRemove, includeUUIDDetails and includeUUIDType parameters is deprecated. Use manageChannelMembers(channel, userToSet, userIdsToRemove, limit, page, filter, sort, include) instead."
