@@ -9,14 +9,11 @@ class MonitoringService {
         timestamp: String,
         location: String?
     ) {
-        // no need to implement
     }
 
     fun reportNetworkFailure(url: String, method: String, instanceId: String?) {
-        // no need to implement
     }
 
     fun logWarning(it: String) {
-        // no need to implement
     }
 }
