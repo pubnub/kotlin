@@ -23,14 +23,13 @@ object LogMessageFormatter {
                 is LogMessageContent.Text -> content.message
                 is LogMessageContent.Object -> prettyGson.toJson(mapOf("operation" to content.operation, "arguments" to content.arguments))
                 is LogMessageContent.Error -> {
-                    val err = content.message
-                    "Error(type=${err.type}, message=${err.message}, stack=${err.stack?.joinToString("\n")})"
+                    "Error(type=${content.type}, message=${content.message}, stack=${content.stack?.joinToString("\n")})"
                 }
                 is LogMessageContent.NetworkRequest -> {
-                    "NetworkRequest:\n${prettyGson.toJson(content.message)}"
+                    "NetworkRequest:\n${prettyGson.toJson(content)}"
                 }
                 is LogMessageContent.NetworkResponse -> {
-                    "NetworkResponse:\n${prettyGson.toJson(content.message)}"
+                    "NetworkResponse:\n${prettyGson.toJson(content)}"
                 }
                 else -> content.toString()
             }

@@ -52,7 +52,6 @@ import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice
 import com.pubnub.api.endpoints.push.RemoveChannelsFromPush
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
-import com.pubnub.api.logging.ErrorDetails
 import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
@@ -257,10 +256,9 @@ open class PubNubImpl(
                     logger.error(
                         LogMessage(
                             message = LogMessageContent.Error(
-                                message = ErrorDetails(
-                                    type = e.javaClass.simpleName,
-                                    message = "Failed calling getCryptoModuleWithLogConfig"
-                                )
+                                type = e.javaClass.simpleName,
+                                message = "Failed calling getCryptoModuleWithLogConfig",
+                                stack = null
                             ),
                             details = "details",
                         )

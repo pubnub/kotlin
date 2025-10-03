@@ -19,7 +19,6 @@ import com.google.gson.stream.JsonToken
 import com.google.gson.stream.JsonWriter
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
-import com.pubnub.api.logging.ErrorDetails
 import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
@@ -270,10 +269,9 @@ class MapperManager(private val logConfig: LogConfig) {
             log.error(
                 LogMessage(
                     message = LogMessageContent.Error(
-                        ErrorDetails(
-                            type = e.javaClass.simpleName,
-                            message = "Serialization of content failed due to: ${e.message}"
-                        )
+                        type = e.javaClass.simpleName,
+                        message = "Serialization of content failed due to: ${e.message}",
+                        stack = null
                     )
                 )
             )

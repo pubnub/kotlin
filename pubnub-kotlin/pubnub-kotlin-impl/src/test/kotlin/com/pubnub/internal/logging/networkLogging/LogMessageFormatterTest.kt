@@ -1,13 +1,9 @@
 package com.pubnub.internal.logging.networkLogging
 
-import com.pubnub.api.logging.ErrorDetails
 import com.pubnub.api.logging.HttpMethod
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.logging.LogMessageType
-import com.pubnub.api.logging.NetworkLog
-import com.pubnub.api.logging.NetworkRequestMessage
-import com.pubnub.api.logging.NetworkResponseMessage
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -44,7 +40,7 @@ class LogMessageFormatterTest {
 
     @Test
     fun `should format error message content with stack trace`() {
-        val errorDetails = ErrorDetails(
+        val errorContent = LogMessageContent.Error(
             type = "RuntimeException",
             message = "Something went wrong",
             stack = listOf(
@@ -52,7 +48,6 @@ class LogMessageFormatterTest {
                 "at com.example.Test.method2(Test.java:20)"
             )
         )
-        val errorContent = LogMessageContent.Error(errorDetails)
 
         val result = LogMessageFormatter.formatMessageContent(errorContent)
 
@@ -64,12 +59,11 @@ class LogMessageFormatterTest {
 
     @Test
     fun `should format error message content without stack trace`() {
-        val errorDetails = ErrorDetails(
+        val errorContent = LogMessageContent.Error(
             type = "IOException",
             message = "Network error",
             stack = null
         )
-        val errorContent = LogMessageContent.Error(errorDetails)
 
         val result = LogMessageFormatter.formatMessageContent(errorContent)
 
@@ -80,7 +74,7 @@ class LogMessageFormatterTest {
 
     @Test
     fun `should format network request message content as JSON`() {
-        val networkRequest = NetworkRequestMessage(
+        val requestContent = LogMessageContent.NetworkRequest(
             origin = "https://ps.pndsn.com",
             path = "/v2/subscribe/demo/my-channel/0",
             query = mapOf("uuid" to "test-uuid"),
@@ -89,10 +83,10 @@ class LogMessageFormatterTest {
             formData = null,
             body = """{"message": "hello"}""",
             timeout = 5000,
-            identifier = "req-123"
+            identifier = "req-123",
+            canceled = false,
+            failed = false
         )
-        val requestLog = NetworkLog.Request(networkRequest, canceled = false, failed = false)
-        val requestContent = LogMessageContent.NetworkRequest(requestLog)
 
         val result = LogMessageFormatter.formatMessageContent(requestContent)
 
@@ -108,14 +102,12 @@ class LogMessageFormatterTest {
 
     @Test
     fun `should format network response message content as JSON`() {
-        val networkResponse = NetworkResponseMessage(
+        val responseContent = LogMessageContent.NetworkResponse(
             url = "https://ps.pndsn.com/v2/subscribe/demo/my-channel/0",
             status = 200,
             headers = mapOf("Content-Type" to "application/json"),
             body = """{"status": 200, "message": "OK"}"""
         )
-        val responseLog = NetworkLog.Response(networkResponse)
-        val responseContent = LogMessageContent.NetworkResponse(responseLog)
 
         val result = LogMessageFormatter.formatMessageContent(responseContent)
 
@@ -178,23 +170,23 @@ class LogMessageFormatterTest {
 
     @Test
     fun `simplified extension function should format complex network request`() {
-        val networkRequest = NetworkRequestMessage(
-            origin = "https://ps.pndsn.com",
-            path = "/publish/demo/my-channel/0",
-            query = mapOf("pnsdk" to "kotlin/1.0.0", "uuid" to "user-123"),
-            method = HttpMethod.POST,
-            headers = mapOf(
-                "Content-Type" to "application/json",
-                "Authorization" to "Bearer token123"
-            ),
-            formData = null,
-            body = """{"text": "Hello World!", "meta": {"timestamp": 1234567890}}""",
-            timeout = 10000,
-            identifier = "publish-req-789"
-        )
-        val requestLog = NetworkLog.Request(networkRequest, canceled = false, failed = false)
         val logMessage = LogMessage(
-            message = LogMessageContent.NetworkRequest(requestLog),
+            message = LogMessageContent.NetworkRequest(
+                origin = "https://ps.pndsn.com",
+                path = "/publish/demo/my-channel/0",
+                query = mapOf("pnsdk" to "kotlin/1.0.0", "uuid" to "user-123"),
+                method = HttpMethod.POST,
+                headers = mapOf(
+                    "Content-Type" to "application/json",
+                    "Authorization" to "Bearer token123"
+                ),
+                formData = null,
+                body = """{"text": "Hello World!", "meta": {"timestamp": 1234567890}}""",
+                timeout = 10000,
+                identifier = "publish-req-789",
+                canceled = false,
+                failed = false
+            ),
             details = "Publishing message to channel",
             type = LogMessageType.NETWORK_REQUEST,
             location = "PublishEndpoint",
