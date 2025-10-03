@@ -35,6 +35,7 @@ class HereNowEndpoint internal constructor(
     override val startFrom: Int? = null,
 ) : EndpointCore<Envelope<JsonElement>, PNHereNowResult>(pubnub), HereNow {
     private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
+    private val effectiveLimit: Int = if (limit in 1..MAX_NUMBER_OF_RESULT_ON_ONE_PAGE) limit else MAX_NUMBER_OF_RESULT_ON_ONE_PAGE
 
     private fun isGlobalHereNow() = channels.isEmpty() && channelGroups.isEmpty()
 
@@ -43,12 +44,8 @@ class HereNowEndpoint internal constructor(
     override fun getAffectedChannelGroups() = channelGroups
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<JsonElement>> {
-        if (limit !in 1..MAX_NUMBER_OF_RESULT_ON_ONE_PAGE) {
-            throw PubNubException(PubNubError.HERE_NOW_LIMIT_OUT_OF_RANGE)
-        }
         if (startFrom != null && startFrom < 0) {
             throw PubNubException(PubNubError.HERE_NOW_START_FROM_OUT_OF_RANGE)
-
         }
 
         log.debug(
@@ -59,7 +56,7 @@ class HereNowEndpoint internal constructor(
                         "channelGroups" to channelGroups,
                         "includeState" to includeState,
                         "includeUUIDs" to includeUUIDs,
-                        "limit" to limit,
+                        "limit" to effectiveLimit,
                         "startFrom" to (startFrom?.toString() ?: "null"),
                         "isGlobalHereNow" to isGlobalHereNow(),
                     ),
@@ -99,8 +96,8 @@ class HereNowEndpoint internal constructor(
 
     internal fun calculateNextStartFrom(actualResultSize: Int): Int? {
         return when {
-            actualResultSize < limit -> null
-            actualResultSize == limit -> (startFrom ?: 0) + limit
+            actualResultSize < effectiveLimit -> null
+            actualResultSize == effectiveLimit -> (startFrom ?: 0) + effectiveLimit
             else -> null
         }
     }
@@ -146,7 +143,11 @@ class HereNowEndpoint internal constructor(
             } else {
                 emptyList()
             }
-            totalOccupantsReturned += occupants.size
+
+            // we want to know amount of occupants in channel that has the most occupants
+            if (occupants.size > totalOccupantsReturned){
+                totalOccupantsReturned = occupants.size
+            }
 
             val pnHereNowChannelData =
                 PNHereNowChannelData(
@@ -201,7 +202,7 @@ class HereNowEndpoint internal constructor(
         if (channelGroups.isNotEmpty()) {
             queryParams["channel-group"] = channelGroups.toCsv()
         }
-        queryParams["limit"] = limit.toString()
+        queryParams["limit"] = effectiveLimit.toString()
         startFrom?.let { queryParams["offset"] = it.toString() }
     }
 }

@@ -57,7 +57,6 @@ class HereNowImpl(
                             }
                         )
                     }?.toMutableMap() ?: emptyMap<String, PNHereNowChannelData>().toMutableMap()
-
                 )
             },
             onFailure = callback.onFailureHandler()
