@@ -1,7 +1,5 @@
 package com.pubnub.internal.logging
 
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import com.pubnub.api.logging.CustomLogger
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
@@ -39,11 +37,6 @@ class CompositeLogger(
     }
 
     override fun debug(message: LogMessage) {
-        // todo remove
-        val prettyGson: Gson = GsonBuilder().setPrettyPrinting().create()
-        val toJson = prettyGson.toJson(message)
-        println("-=JSON:\n$toJson")
-
         val enhancedLogMessage = LogMessage(
             message = message.message,
             details = message.details,
