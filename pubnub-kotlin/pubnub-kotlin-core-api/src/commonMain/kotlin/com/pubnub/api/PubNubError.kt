@@ -239,6 +239,12 @@ enum class PubNubError(private val code: Int, val message: String) {
         181,
         "Channel and/or ChannelGroup contains empty string which is not allowed.",
     ),
+
+    HERE_NOW_START_FROM_OUT_OF_RANGE(
+        182,
+        "HereNow startFrom is out of range. Valid range is 0 to infinity.",
+    )
+
     ;
 
     override fun toString(): String {
