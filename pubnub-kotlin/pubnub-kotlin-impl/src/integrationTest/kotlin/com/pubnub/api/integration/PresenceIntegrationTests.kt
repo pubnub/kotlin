@@ -321,8 +321,8 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
                 // With limit=3, we should get only 3 occupants even though 6 are present
                 assertEquals(testLimit, channelData.occupants.size)
 
-                // nextStartFrom should be present since we limited results
-                assertEquals(3, it.nextStartFrom)
+                // nextOffset should be present since we limited results
+                assertEquals(3, it.nextOffset)
             }
         }
     }
@@ -360,8 +360,8 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
                 // With startFrom=2, we should get remaining occupants (5 total - 2 skipped = 3 remaining)
                 assertEquals(totalClientsCount - startFromValue, channelData.occupants.size)
 
-                // nextStartFrom should be null since we got all remaining results
-                assertNull(it.nextStartFrom)
+                // nextOffset should be null since we got all remaining results
+                assertNull(it.nextOffset)
             }
         }
     }
@@ -418,7 +418,7 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
         assertEquals(channel01TotalCount, channel01DataPage01.occupancy)
         assertEquals(totalClientsCount, firstPage.totalOccupancy) // this is totalOccupancy in all pages
         assertEquals(pageSize, channel01DataPage01.occupants.size)
-        assertEquals(3, firstPage.nextStartFrom)
+        assertEquals(3, firstPage.nextOffset)
         val channel02Data = firstPage.channels[channel02]!!
         assertEquals(channel02TotalCount, channel02Data.occupancy)
         assertEquals(pageSize, channel02Data.occupants.size)
@@ -426,12 +426,12 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
         // Collect UUIDs from first page
         channel01DataPage01.occupants.forEach { allOccupantsInChannel01.add(it.uuid) }
 
-        // Second page using nextStartFrom
+        // Second page using nextOffset
         val secondPage = pubnub.hereNow(
             channels = listOf(channel01),
             includeUUIDs = true,
             limit = pageSize,
-            startFrom = firstPage.nextStartFrom!!,
+            startFrom = firstPage.nextOffset!!,
         ).sync()!!
 
         secondPage.channels.forEach { it: Map.Entry<String, PNHereNowChannelData> ->
@@ -447,7 +447,7 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
             secondPage.totalOccupancy
         ) // we get result only from channel01 because there is no more result for channel02
         assertEquals(pageSize, channel01DataPage02.occupants.size)
-        assertEquals(6, secondPage.nextStartFrom)
+        assertEquals(6, secondPage.nextOffset)
 
         assertFalse(secondPage.channels.containsKey(channel02))
 
@@ -457,12 +457,12 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
             allOccupantsInChannel01.add(it.uuid)
         }
 
-        // Third page using nextStartFrom from second page
+        // Third page using nextOffset from second page
         val thirdPage = pubnub.hereNow(
             channels = listOf(channel01),
             includeUUIDs = true,
             limit = pageSize,
-            startFrom = secondPage.nextStartFrom!!,
+            startFrom = secondPage.nextOffset!!,
         ).sync()!!
 
         thirdPage.channels.forEach { it: Map.Entry<String, PNHereNowChannelData> ->
@@ -480,7 +480,7 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
         assertEquals(expectedRemainingCount, channel01DataPage03.occupants.size)
 
         // Should be null since no more pages
-        assertNull(thirdPage.nextStartFrom)
+        assertNull(thirdPage.nextOffset)
 
         // Collect UUIDs from third page
         channel01DataPage03.occupants.forEach {
@@ -522,9 +522,9 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
                 assertEquals(limitValue, channelData.occupants.size)
 
                 // Since returned count equals limit and there are more clients,
-                // nextStartFrom should be present
-                assertNotNull(it.nextStartFrom)
-                assertEquals(limitValue, it.nextStartFrom)
+                // nextOffset should be present
+                assertNotNull(it.nextOffset)
+                assertEquals(limitValue, it.nextOffset)
             }
         }
     }

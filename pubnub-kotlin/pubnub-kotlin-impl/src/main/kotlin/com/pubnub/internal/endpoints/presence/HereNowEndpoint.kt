@@ -94,7 +94,7 @@ class HereNowEndpoint internal constructor(
 
     override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.PRESENCE
 
-    internal fun calculateNextStartFrom(actualResultSize: Int): Int? {
+    internal fun calculateNextOffset(actualResultSize: Int): Int? {
         return when {
             actualResultSize < effectiveLimit -> null
             actualResultSize == effectiveLimit -> (startFrom ?: 0) + effectiveLimit
@@ -114,7 +114,7 @@ class HereNowEndpoint internal constructor(
             PNHereNowResult(
                 totalChannels = 1,
                 totalOccupancy = input.occupancy,
-                nextStartFrom = calculateNextStartFrom(actualResultSize),
+                nextOffset = calculateNextOffset(actualResultSize),
             )
 
         val pnHereNowChannelData =
@@ -163,7 +163,7 @@ class HereNowEndpoint internal constructor(
                 totalChannels = pubnub.mapper.elementToInt(input, "total_channels"),
                 totalOccupancy = pubnub.mapper.elementToInt(input, "total_occupancy"),
                 channels = channelsMap,
-                nextStartFrom = calculateNextStartFrom(totalOccupantsReturned),
+                nextOffset = calculateNextOffset(totalOccupantsReturned),
             )
 
         return pnHereNowResult
