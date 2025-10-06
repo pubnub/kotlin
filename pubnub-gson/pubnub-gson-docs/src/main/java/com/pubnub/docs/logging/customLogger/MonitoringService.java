@@ -1,4 +1,4 @@
-package com.pubnub.docs.logging.customLogger;
+package com.pubnub.docs.logging.customlogger;
 
 import java.util.List;
 

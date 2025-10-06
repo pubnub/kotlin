@@ -1,4 +1,4 @@
-package com.pubnub.docs.logging.customLogger
+package com.pubnub.docs.logging.customlogger
 
 class AnalyticsService {
     fun trackConfigChange(instanceId: String?, details: Map<String, Any>?) {
