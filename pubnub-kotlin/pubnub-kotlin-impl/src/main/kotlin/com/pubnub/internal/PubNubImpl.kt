@@ -52,7 +52,6 @@ import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice
 import com.pubnub.api.endpoints.push.RemoveChannelsFromPush
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
-import com.pubnub.api.logging.ErrorDetails
 import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
@@ -257,10 +256,9 @@ open class PubNubImpl(
                     logger.error(
                         LogMessage(
                             message = LogMessageContent.Error(
-                                message = ErrorDetails(
-                                    type = e.javaClass.simpleName,
-                                    message = "Failed calling getCryptoModuleWithLogConfig"
-                                )
+                                type = e.javaClass.simpleName,
+                                message = "Failed calling getCryptoModuleWithLogConfig",
+                                stack = null
                             ),
                             details = "details",
                         )
@@ -425,7 +423,7 @@ open class PubNubImpl(
         usePost: Boolean,
         ttl: Int?,
     ): Publish {
-        logger.warn(
+        logger.debug(
             LogMessage(
                 message = LogMessageContent.Text(
                     "DEPRECATED: fire() with ttl parameter is deprecated. Use fire(channel, message, meta, usePost) instead."
@@ -506,6 +504,10 @@ open class PubNubImpl(
         )
     }
 
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = "Use fetchMessages(List<String>, PNBoundedPage, Boolean, Boolean, Boolean, Boolean, Boolean) instead",
+    )
     override fun history(
         channel: String,
         start: Long?,
@@ -515,10 +517,10 @@ open class PubNubImpl(
         includeTimetoken: Boolean,
         includeMeta: Boolean,
     ): History {
-        logger.warn(
+        logger.debug(
             LogMessage(
                 message = LogMessageContent.Text(
-                    "DEPRECATED: history() is deprecated. Use fetchMessages() instead."
+                    "DEPRECATED: history() is deprecated. Use fetchMessages(List<String>, PNBoundedPage, Boolean, Boolean, Boolean, Boolean, Boolean) instead."
                 ),
                 details = "This method will be removed in a future version",
             )
@@ -908,7 +910,14 @@ open class PubNubImpl(
         return RemoveUUIDMetadataEndpoint(pubnub = this, uuid = uuid)
     }
 
-    // deprecated
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = "This function is deprecated. Use the new getMemberships(userId, limit, page, filter, sort, MembershipInclude(...))",
+        replaceWith = ReplaceWith(
+            "getMemberships(userId = uuid, limit = limit, page = page, filter = filter, sort = sort, include = com.pubnub.api.models.consumer.objects.membership.MembershipInclude(includeTotalCount = includeCount, includeCustom = includeCustom, includeChannel = true, includeChannelCustom = true, includeType = includeType))",
+            "com.pubnub.api.models.consumer.objects.membership.MembershipInclude"
+        )
+    )
     override fun getMemberships(
         uuid: String?,
         limit: Int?,
@@ -920,6 +929,14 @@ open class PubNubImpl(
         includeChannelDetails: PNChannelDetailsLevel?,
         includeType: Boolean,
     ): GetMemberships {
+        logger.debug(
+            LogMessage(
+                message = LogMessageContent.Text(
+                    "DEPRECATED: getMemberships() with uuid, includeChannelDetails and includeType parameters is deprecated. Use getMemberships(userId, limit, page, filter, sort, include) instead."
+                ),
+                details = "This method will be removed in a future version",
+            )
+        )
         val includeQueryParamValue = when (includeChannelDetails) {
             PNChannelDetailsLevel.CHANNEL -> {
                 IncludeQueryParam(
@@ -984,7 +1001,14 @@ open class PubNubImpl(
         )
     }
 
-    // deprecated
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = "This function is deprecated. Use the new setMemberships(channels, userId, limit, page, filter, sort, MembershipInclude(...))",
+        replaceWith = ReplaceWith(
+            "setMemberships(channels = channels, userId = uuid, limit = limit, page = page, filter = filter, sort = sort, include = com.pubnub.api.models.consumer.objects.membership.MembershipInclude(includeTotalCount = includeCount, includeCustom = includeCustom, includeChannel = true, includeChannelCustom = true, includeType = includeType))",
+            "com.pubnub.api.models.consumer.objects.membership.MembershipInclude"
+        )
+    )
     override fun setMemberships(
         channels: List<ChannelMembershipInput>,
         uuid: String?,
@@ -996,19 +1020,29 @@ open class PubNubImpl(
         includeCustom: Boolean,
         includeChannelDetails: PNChannelDetailsLevel?,
         includeType: Boolean,
-    ): ManageMemberships = manageMemberships(
-        channelsToSet = channels,
-        channelsToRemove = listOf(),
-        uuid = uuid,
-        limit = limit,
-        page = page,
-        filter = filter,
-        sort = sort,
-        includeCount = includeCount,
-        includeCustom = includeCustom,
-        includeChannelDetails = includeChannelDetails,
-        includeType = includeType
-    )
+    ): ManageMemberships {
+        logger.debug(
+            LogMessage(
+                message = LogMessageContent.Text(
+                    "DEPRECATED: setMemberships() with uuid, includeChannelDetails and includeType parameters is deprecated. Use setMemberships(channels, userId, limit, page, filter, sort, include) instead."
+                ),
+                details = "This method will be removed in a future version",
+            )
+        )
+        return manageMemberships(
+            channelsToSet = channels,
+            channelsToRemove = listOf(),
+            uuid = uuid,
+            limit = limit,
+            page = page,
+            filter = filter,
+            sort = sort,
+            includeCount = includeCount,
+            includeCustom = includeCustom,
+            includeChannelDetails = includeChannelDetails,
+            includeType = includeType
+        )
+    }
 
     override fun setMemberships(
         channels: List<ChannelMembershipInput>,
@@ -1029,7 +1063,14 @@ open class PubNubImpl(
         include = include
     )
 
-    // deprecated
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = "This function is deprecated. Use the new removeMemberships(channels, userId, limit, page, filter, sort, MembershipInclude(...))",
+        replaceWith = ReplaceWith(
+            "removeMemberships(channels = channels, userId = uuid, limit = limit, page = page, filter = filter, sort = sort, include = com.pubnub.api.models.consumer.objects.membership.MembershipInclude(includeTotalCount = includeCount, includeCustom = includeCustom, includeChannel = true, includeChannelCustom = true, includeType = includeType))",
+            "com.pubnub.api.models.consumer.objects.membership.MembershipInclude"
+        )
+    )
     override fun removeMemberships(
         channels: List<String>,
         uuid: String?,
@@ -1041,19 +1082,29 @@ open class PubNubImpl(
         includeCustom: Boolean,
         includeChannelDetails: PNChannelDetailsLevel?,
         includeType: Boolean,
-    ): ManageMemberships = manageMemberships(
-        channelsToSet = listOf(),
-        channelsToRemove = channels,
-        uuid = uuid,
-        limit = limit,
-        page = page,
-        filter = filter,
-        sort = sort,
-        includeCount = includeCount,
-        includeCustom = includeCustom,
-        includeChannelDetails = includeChannelDetails,
-        includeType = includeType,
-    )
+    ): ManageMemberships {
+        logger.debug(
+            LogMessage(
+                message = LogMessageContent.Text(
+                    "DEPRECATED: removeMemberships() with uuid, includeChannelDetails and includeType parameters is deprecated. Use removeMemberships(channels, userId, limit, page, filter, sort, include) instead."
+                ),
+                details = "This method will be removed in a future version",
+            )
+        )
+        return manageMemberships(
+            channelsToSet = listOf(),
+            channelsToRemove = channels,
+            uuid = uuid,
+            limit = limit,
+            page = page,
+            filter = filter,
+            sort = sort,
+            includeCount = includeCount,
+            includeCustom = includeCustom,
+            includeChannelDetails = includeChannelDetails,
+            includeType = includeType,
+        )
+    }
 
     override fun removeMemberships(
         channels: List<String>,
@@ -1074,7 +1125,14 @@ open class PubNubImpl(
         include = include
     )
 
-    // deprecated
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = "This function is deprecated. Use the new manageMemberships(channelsToSet, channelsToRemove, userId, limit, page, filter, sort, MembershipInclude(...))",
+        replaceWith = ReplaceWith(
+            "manageMemberships(channelsToSet = channelsToSet, channelsToRemove = channelsToRemove, userId = uuid, limit = limit, page = page, filter = filter, sort = sort, include = com.pubnub.api.models.consumer.objects.membership.MembershipInclude(includeTotalCount = includeCount, includeCustom = includeCustom, includeChannel = true, includeChannelCustom = true, includeChannelType = includeType))",
+            "com.pubnub.api.models.consumer.objects.membership.MembershipInclude"
+        )
+    )
     override fun manageMemberships(
         channelsToSet: List<ChannelMembershipInput>,
         channelsToRemove: List<String>,
@@ -1088,6 +1146,14 @@ open class PubNubImpl(
         includeChannelDetails: PNChannelDetailsLevel?,
         includeType: Boolean,
     ): ManageMemberships {
+        logger.debug(
+            LogMessage(
+                message = LogMessageContent.Text(
+                    "DEPRECATED: manageMemberships() with uuid, includeChannelDetails and includeType parameters is deprecated. Use manageMemberships(channelsToSet, channelsToRemove, userId, limit, page, filter, sort, include) instead."
+                ),
+                details = "This method will be removed in a future version",
+            )
+        )
         val includeQueryParamValue = when (includeChannelDetails) {
             PNChannelDetailsLevel.CHANNEL -> {
                 IncludeQueryParam(
@@ -1158,7 +1224,14 @@ open class PubNubImpl(
         )
     }
 
-    // deprecated
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = "This function is deprecated. Use the new getChannelMembers(channel, limit, page, filter, sort, MemberInclude(...))",
+        replaceWith = ReplaceWith(
+            "getChannelMembers(channel = channel, limit = limit, page = page, filter = filter, sort = sort, include = com.pubnub.api.models.consumer.objects.member.MemberInclude(includeTotalCount = includeCount, includeCustom = includeCustom, includeUser = true, includeUserCustom = true, includeUserType = includeType))",
+            "com.pubnub.api.models.consumer.objects.member.MemberInclude"
+        )
+    )
     override fun getChannelMembers(
         channel: String,
         limit: Int?,
@@ -1170,6 +1243,14 @@ open class PubNubImpl(
         includeUUIDDetails: PNUUIDDetailsLevel?,
         includeType: Boolean,
     ): GetChannelMembers {
+        logger.debug(
+            LogMessage(
+                message = LogMessageContent.Text(
+                    "DEPRECATED: getChannelMembers() with includeUUIDDetails and includeType parameters is deprecated. Use getChannelMembers(channel, limit, page, filter, sort, include) instead."
+                ),
+                details = "This method will be removed in a future version",
+            )
+        )
         val includeQueryParamValue = when (includeUUIDDetails) {
             PNUUIDDetailsLevel.UUID -> {
                 IncludeQueryParam(
@@ -1242,7 +1323,7 @@ open class PubNubImpl(
                     " includeMessageActions = includeMessageActions, includeMessageType = includeMessageType)",
                 "com.pubnub.api.models.consumer.PNBoundedPage",
             ),
-        level = DeprecationLevel.ERROR,
+        level = DeprecationLevel.WARNING,
         message = "Use fetchMessages(String, PNBoundedPage, Boolean, Boolean, Boolean) instead",
     )
     override fun fetchMessages(
@@ -1254,15 +1335,25 @@ open class PubNubImpl(
         includeMessageActions: Boolean,
         includeMessageType: Boolean,
         includeCustomMessageType: Boolean
-    ): FetchMessages = fetchMessages(
-        channels = channels,
-        page = PNBoundedPage(start = start, end = end, limit = maximumPerChannel),
-        includeUUID = true,
-        includeMeta = includeMeta,
-        includeMessageActions = includeMessageActions,
-        includeMessageType = includeMessageType,
-        includeCustomMessageType = includeCustomMessageType
-    )
+    ): FetchMessages {
+        logger.debug(
+            LogMessage(
+                message = LogMessageContent.Text(
+                    "DEPRECATED: fetchMessages() with maximumPerChannel, start, end parameters is deprecated. Use fetchMessages(channels, page, includeUUID, includeMeta, includeMessageActions, includeMessageType, includeCustomMessageType) instead."
+                ),
+                details = "This method will be removed in a future version",
+            )
+        )
+        return fetchMessages(
+            channels = channels,
+            page = PNBoundedPage(start = start, end = end, limit = maximumPerChannel),
+            includeUUID = true,
+            includeMeta = includeMeta,
+            includeMessageActions = includeMessageActions,
+            includeMessageType = includeMessageType,
+            includeCustomMessageType = includeCustomMessageType
+        )
+    }
 
     @Deprecated(
         replaceWith =
@@ -1270,7 +1361,7 @@ open class PubNubImpl(
                 "getMessageActions(channel = channel, page = PNBoundedPage(start = start, end = end, limit = limit))",
                 "com.pubnub.api.models.consumer.PNBoundedPage",
             ),
-        level = DeprecationLevel.ERROR,
+        level = DeprecationLevel.WARNING,
         message = "Use getMessageActions(String, PNBoundedPage) instead",
     )
     override fun getMessageActions(
@@ -1279,6 +1370,14 @@ open class PubNubImpl(
         end: Long?,
         limit: Int?,
     ): GetMessageActions {
+        logger.debug(
+            LogMessage(
+                message = LogMessageContent.Text(
+                    "DEPRECATED: getMessageActions() with start, end, limit parameters is deprecated. Use getMessageActions(channel, page) instead."
+                ),
+                details = "This method will be removed in a future version",
+            )
+        )
         return getMessageActions(channel = channel, page = PNBoundedPage(start = start, end = end, limit = limit))
     }
 
@@ -1289,7 +1388,7 @@ open class PubNubImpl(
                     "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
                     "includeChannelDetails = includeChannelDetails)",
             ),
-        level = DeprecationLevel.ERROR,
+        level = DeprecationLevel.WARNING,
         message = "Use setMemberships instead",
     )
     override fun addMemberships(
@@ -1302,17 +1401,27 @@ open class PubNubImpl(
         includeCount: Boolean,
         includeCustom: Boolean,
         includeChannelDetails: PNChannelDetailsLevel?,
-    ): ManageMemberships = setMemberships(
-        channels = channels,
-        uuid = uuid ?: configuration.userId.value,
-        limit = limit,
-        page = page,
-        filter = filter,
-        sort = sort,
-        includeCount = includeCount,
-        includeCustom = includeCustom,
-        includeChannelDetails = includeChannelDetails,
-    )
+    ): ManageMemberships {
+        logger.debug(
+            LogMessage(
+                message = LogMessageContent.Text(
+                    "DEPRECATED: addMemberships() is deprecated. Use setMemberships() instead."
+                ),
+                details = "This method will be removed in a future version",
+            )
+        )
+        return setMemberships(
+            channels = channels,
+            uuid = uuid ?: configuration.userId.value,
+            limit = limit,
+            page = page,
+            filter = filter,
+            sort = sort,
+            includeCount = includeCount,
+            includeCustom = includeCustom,
+            includeChannelDetails = includeChannelDetails,
+        )
+    }
 
     @Deprecated(
         "Use getChannelMembers instead",
@@ -1322,7 +1431,7 @@ open class PubNubImpl(
                     "filter = filter, sort = sort, includeCount = includeCount, " +
                     "includeCustom = includeCustom,includeUUIDDetails = includeUUIDDetails)",
             ),
-        level = DeprecationLevel.ERROR,
+        level = DeprecationLevel.WARNING,
     )
     override fun getMembers(
         channel: String,
@@ -1333,16 +1442,26 @@ open class PubNubImpl(
         includeCount: Boolean,
         includeCustom: Boolean,
         includeUUIDDetails: PNUUIDDetailsLevel?,
-    ): GetChannelMembers = getChannelMembers(
-        channel = channel,
-        limit = limit,
-        page = page,
-        filter = filter,
-        sort = sort,
-        includeCount = includeCount,
-        includeCustom = includeCustom,
-        includeUUIDDetails = includeUUIDDetails,
-    )
+    ): GetChannelMembers {
+        logger.debug(
+            LogMessage(
+                message = LogMessageContent.Text(
+                    "DEPRECATED: getMembers() is deprecated. Use getChannelMembers() instead."
+                ),
+                details = "This method will be removed in a future version",
+            )
+        )
+        return getChannelMembers(
+            channel = channel,
+            limit = limit,
+            page = page,
+            filter = filter,
+            sort = sort,
+            includeCount = includeCount,
+            includeCustom = includeCustom,
+            includeUUIDDetails = includeUUIDDetails,
+        )
+    }
 
     @Deprecated(
         "Use setChannelMembers instead",
@@ -1352,7 +1471,7 @@ open class PubNubImpl(
                     "page = page, filter = filter, sort = sort, includeCount = includeCount," +
                     " includeCustom = includeCustom,includeUUIDDetails = includeUUIDDetails)",
             ),
-        level = DeprecationLevel.ERROR,
+        level = DeprecationLevel.WARNING,
     )
     override fun addMembers(
         channel: String,
@@ -1364,19 +1483,36 @@ open class PubNubImpl(
         includeCount: Boolean,
         includeCustom: Boolean,
         includeUUIDDetails: PNUUIDDetailsLevel?,
-    ): ManageChannelMembers = setChannelMembers(
-        channel = channel,
-        uuids = uuids,
-        limit = limit,
-        page = page,
-        filter = filter,
-        sort = sort,
-        includeCount = includeCount,
-        includeCustom = includeCustom,
-        includeUUIDDetails = includeUUIDDetails,
-    )
+    ): ManageChannelMembers {
+        logger.debug(
+            LogMessage(
+                message = LogMessageContent.Text(
+                    "DEPRECATED: addMembers() is deprecated. Use setChannelMembers() instead."
+                ),
+                details = "This method will be removed in a future version",
+            )
+        )
+        return setChannelMembers(
+            channel = channel,
+            uuids = uuids,
+            limit = limit,
+            page = page,
+            filter = filter,
+            sort = sort,
+            includeCount = includeCount,
+            includeCustom = includeCustom,
+            includeUUIDDetails = includeUUIDDetails,
+        )
+    }
 
-    // deprecated
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = "This function is deprecated. Use the new setChannelMembers(channel, users, limit, page, filter, sort, MemberInclude(...))",
+        replaceWith = ReplaceWith(
+            "setChannelMembers(channel = channel, users = uuids, limit = limit, page = page, filter = filter, sort = sort, include = com.pubnub.api.models.consumer.objects.member.MemberInclude(includeTotalCount = includeCount, includeCustom = includeCustom, includeUser = true, includeUserCustom = true, includeUserType = includeType))",
+            "com.pubnub.api.models.consumer.objects.member.MemberInclude"
+        )
+    )
     override fun setChannelMembers(
         channel: String,
         uuids: List<MemberInput>,
@@ -1388,19 +1524,29 @@ open class PubNubImpl(
         includeCustom: Boolean,
         includeUUIDDetails: PNUUIDDetailsLevel?,
         includeType: Boolean,
-    ): ManageChannelMembers = manageChannelMembers(
-        channel = channel,
-        uuidsToSet = uuids,
-        uuidsToRemove = listOf(),
-        limit = limit,
-        page = page,
-        filter = filter,
-        sort = sort,
-        includeCount = includeCount,
-        includeCustom = includeCustom,
-        includeUUIDDetails = includeUUIDDetails,
-        includeUUIDType = includeType
-    )
+    ): ManageChannelMembers {
+        logger.debug(
+            LogMessage(
+                message = LogMessageContent.Text(
+                    "DEPRECATED: setChannelMembers() with uuids, includeUUIDDetails and includeType parameters is deprecated. Use setChannelMembers(channel, users, limit, page, filter, sort, include) instead."
+                ),
+                details = "This method will be removed in a future version",
+            )
+        )
+        return manageChannelMembers(
+            channel = channel,
+            uuidsToSet = uuids,
+            uuidsToRemove = listOf(),
+            limit = limit,
+            page = page,
+            filter = filter,
+            sort = sort,
+            includeCount = includeCount,
+            includeCustom = includeCustom,
+            includeUUIDDetails = includeUUIDDetails,
+            includeUUIDType = includeType
+        )
+    }
 
     override fun setChannelMembers(
         channel: String,
@@ -1429,7 +1575,7 @@ open class PubNubImpl(
                     "page = page, filter = filter, sort = sort, includeCount = includeCount, " +
                     "includeCustom = includeCustom,includeUUIDDetails = includeUUIDDetails)",
             ),
-        level = DeprecationLevel.ERROR,
+        level = DeprecationLevel.WARNING,
     )
     override fun removeMembers(
         channel: String,
@@ -1441,19 +1587,36 @@ open class PubNubImpl(
         includeCount: Boolean,
         includeCustom: Boolean,
         includeUUIDDetails: PNUUIDDetailsLevel?,
-    ): ManageChannelMembers = removeChannelMembers(
-        channel = channel,
-        uuids = uuids,
-        limit = limit,
-        page = page,
-        filter = filter,
-        sort = sort,
-        includeCount = includeCount,
-        includeCustom = includeCustom,
-        includeUUIDDetails = includeUUIDDetails,
-    )
+    ): ManageChannelMembers {
+        logger.debug(
+            LogMessage(
+                message = LogMessageContent.Text(
+                    "DEPRECATED: removeMembers() is deprecated. Use removeChannelMembers() instead."
+                ),
+                details = "This method will be removed in a future version",
+            )
+        )
+        return removeChannelMembers(
+            channel = channel,
+            uuids = uuids,
+            limit = limit,
+            page = page,
+            filter = filter,
+            sort = sort,
+            includeCount = includeCount,
+            includeCustom = includeCustom,
+            includeUUIDDetails = includeUUIDDetails,
+        )
+    }
 
-    // deprecated
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = "This function is deprecated. Use the new removeChannelMembers(channel, userIds, limit, page, filter, sort, MemberInclude(...))",
+        replaceWith = ReplaceWith(
+            "removeChannelMembers(channel = channel, userIds = uuids, limit = limit, page = page, filter = filter, sort = sort, include = com.pubnub.api.models.consumer.objects.member.MemberInclude(includeTotalCount = includeCount, includeCustom = includeCustom, includeUser = true, includeUserCustom = true, includeUserType = includeType))",
+            "com.pubnub.api.models.consumer.objects.member.MemberInclude"
+        )
+    )
     override fun removeChannelMembers(
         channel: String,
         uuids: List<String>,
@@ -1465,19 +1628,29 @@ open class PubNubImpl(
         includeCustom: Boolean,
         includeUUIDDetails: PNUUIDDetailsLevel?,
         includeType: Boolean,
-    ): ManageChannelMembers = manageChannelMembers(
-        channel = channel,
-        uuidsToSet = listOf(),
-        uuidsToRemove = uuids,
-        limit = limit,
-        page = page,
-        filter = filter,
-        sort = sort,
-        includeCount = includeCount,
-        includeCustom = includeCustom,
-        includeUUIDDetails = includeUUIDDetails,
-        includeUUIDType = includeType,
-    )
+    ): ManageChannelMembers {
+        logger.debug(
+            LogMessage(
+                message = LogMessageContent.Text(
+                    "DEPRECATED: removeChannelMembers() with uuids, includeUUIDDetails and includeType parameters is deprecated. Use removeChannelMembers(channel, userIds, limit, page, filter, sort, include) instead."
+                ),
+                details = "This method will be removed in a future version",
+            )
+        )
+        return manageChannelMembers(
+            channel = channel,
+            uuidsToSet = listOf(),
+            uuidsToRemove = uuids,
+            limit = limit,
+            page = page,
+            filter = filter,
+            sort = sort,
+            includeCount = includeCount,
+            includeCustom = includeCustom,
+            includeUUIDDetails = includeUUIDDetails,
+            includeUUIDType = includeType,
+        )
+    }
 
     override fun removeChannelMembers(
         channel: String,
@@ -1498,7 +1671,14 @@ open class PubNubImpl(
         include = include
     )
 
-    // deprecated
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = "This function is deprecated. Use the new manageChannelMembers(channel, userToSet, userIdsToRemove, limit, page, filter, sort, MemberInclude(...))",
+        replaceWith = ReplaceWith(
+            "manageChannelMembers(channel = channel, userToSet = uuidsToSet, userIdsToRemove = uuidsToRemove, limit = limit, page = page, filter = filter, sort = sort, include = com.pubnub.api.models.consumer.objects.member.MemberInclude(includeTotalCount = includeCount, includeCustom = includeCustom, includeUser = true, includeUserCustom = true, includeUserType = includeUUIDType))",
+            "com.pubnub.api.models.consumer.objects.member.MemberInclude"
+        )
+    )
     override fun manageChannelMembers(
         channel: String,
         uuidsToSet: Collection<MemberInput>,
@@ -1512,6 +1692,14 @@ open class PubNubImpl(
         includeUUIDDetails: PNUUIDDetailsLevel?,
         includeUUIDType: Boolean,
     ): ManageChannelMembers {
+        logger.debug(
+            LogMessage(
+                message = LogMessageContent.Text(
+                    "DEPRECATED: manageChannelMembers() with uuidsToSet, uuidsToRemove, includeUUIDDetails and includeUUIDType parameters is deprecated. Use manageChannelMembers(channel, userToSet, userIdsToRemove, limit, page, filter, sort, include) instead."
+                ),
+                details = "This method will be removed in a future version",
+            )
+        )
         val includeQueryParamValue = when (includeUUIDDetails) {
             PNUUIDDetailsLevel.UUID -> {
                 IncludeQueryParam(

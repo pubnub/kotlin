@@ -29,32 +29,53 @@ sealed class LogMessageContent {
      * Error message with type, message, and stack trace.
      */
     data class Error(
+        @SerializedName("type")
+        val type: String? = null,
         @SerializedName("message")
-        val message: ErrorDetails
+        val message: String,
+        @SerializedName("stack")
+        val stack: List<String>? = null
     ) : LogMessageContent()
 
     /**
      * Network request message.
      */
     data class NetworkRequest(
-        @SerializedName("message")
-        val message: NetworkLog.Request
+        @SerializedName("origin")
+        val origin: String,
+        @SerializedName("path")
+        val path: String,
+        @SerializedName("query")
+        val query: Map<String, String>? = null,
+        @SerializedName("method")
+        val method: HttpMethod,
+        @SerializedName("headers")
+        val headers: Map<String, String>? = null,
+        @SerializedName("formData")
+        val formData: Map<String, String>? = null,
+        @SerializedName("body")
+        val body: String? = null,
+        @SerializedName("timeout")
+        val timeout: Long? = null,
+        @SerializedName("identifier")
+        val identifier: String? = null,
+        @SerializedName("canceled")
+        val canceled: Boolean = false,
+        @SerializedName("failed")
+        val failed: Boolean = false
     ) : LogMessageContent()
 
     /**
      * Network response message.
      */
     data class NetworkResponse(
-        @SerializedName("message")
-        val message: NetworkLog.Response
+        @SerializedName("url")
+        val url: String,
+        @SerializedName("status")
+        val status: Int,
+        @SerializedName("headers")
+        val headers: Map<String, String>? = null,
+        @SerializedName("body")
+        val body: String? = null
     ) : LogMessageContent()
 }
-
-data class ErrorDetails(
-    @SerializedName("type")
-    val type: String? = null,
-    @SerializedName("message")
-    val message: String,
-    @SerializedName("stack")
-    val stack: List<String>? = null
-)

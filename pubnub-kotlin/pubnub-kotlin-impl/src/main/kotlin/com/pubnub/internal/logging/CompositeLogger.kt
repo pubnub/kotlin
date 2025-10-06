@@ -1,7 +1,6 @@
 package com.pubnub.internal.logging
 
 import com.pubnub.api.logging.CustomLogger
-import com.pubnub.api.logging.ErrorDetails
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.logging.LogMessageType
@@ -146,10 +145,9 @@ class CompositeLogger(
                 try {
                     val logMessage = LogMessage(
                         message = LogMessageContent.Error(
-                            ErrorDetails(
-                                type = this::class.java.simpleName,
-                                message = "Custom logger ${logger.name} failed: ${e.message}",
-                            )
+                            type = this::class.java.simpleName,
+                            message = "Custom logger ${logger.name} failed: ${e.message}",
+                            stack = null
                         ),
                         type = LogMessageType.ERROR,
                         location = "CompositeLogger",

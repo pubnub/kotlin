@@ -1,13 +1,9 @@
 package com.pubnub.internal.logging.networkLogging
 
 import com.pubnub.api.enums.PNLogVerbosity
-import com.pubnub.api.logging.ErrorDetails
 import com.pubnub.api.logging.HttpMethod
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.pubnub.api.logging.NetworkLog
-import com.pubnub.api.logging.NetworkRequestMessage
-import com.pubnub.api.logging.NetworkResponseMessage
 import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.managers.MapperManager
 import okhttp3.Interceptor
@@ -62,7 +58,7 @@ class CustomPnHttpLoggingInterceptor(
         // Parse headers
         val headers = request.headers.toMap()
 
-        val networkRequest = NetworkRequestMessage(
+        val networkRequest = LogMessageContent.NetworkRequest(
             origin = origin,
             path = path,
             query = queryParams.takeIf { it.isNotEmpty() },
@@ -71,16 +67,13 @@ class CustomPnHttpLoggingInterceptor(
             formData = null, // TODO: Parse form data if needed
             body = request.body.toString(),
             timeout = null, // TODO: Extract from request if available
-        )
-
-        val requestLog = NetworkLog.Request(
-            message = networkRequest,
+            identifier = null,
             canceled = false,
             failed = false
         )
 
         val logMessage = LogMessage(
-            message = LogMessageContent.NetworkRequest(requestLog),
+            message = networkRequest,
             details = "HTTP Request",
             location = location,
         )
@@ -121,17 +114,13 @@ class CustomPnHttpLoggingInterceptor(
             }
         } ?: (null to response)
 
-        val networkResponse = NetworkResponseMessage(
-            url = url,
-            status = status,
-            headers = headers.takeIf { it.isNotEmpty() },
-            body = body
-        )
-
-        val responseLog = NetworkLog.Response(message = networkResponse)
-
         val logMessage = LogMessage(
-            message = LogMessageContent.NetworkResponse(responseLog),
+            message = LogMessageContent.NetworkResponse(
+                url = url,
+                status = status,
+                headers = headers.takeIf { it.isNotEmpty() },
+                body = body
+            ),
             details = "HTTP Response",
             location = location,
         )
@@ -150,11 +139,9 @@ class CustomPnHttpLoggingInterceptor(
         val duration = System.currentTimeMillis() - requestStartTime
 
         val errorDetails = LogMessageContent.Error(
-            message = ErrorDetails(
-                type = error.javaClass.simpleName,
-                message = error.message ?: "Unknown error",
-                stack = error.stackTrace.take(10).map { it.toString() }
-            )
+            type = error.javaClass.simpleName,
+            message = error.message ?: "Unknown error",
+            stack = error.stackTrace.take(10).map { it.toString() }
         )
 
         val logMessage = LogMessage(
