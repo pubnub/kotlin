@@ -5,7 +5,6 @@ import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
-import com.pubnub.api.models.consumer.presence.PNHereNowChannelData
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.test.CommonUtils.generatePayload
 import com.pubnub.test.CommonUtils.randomChannel
