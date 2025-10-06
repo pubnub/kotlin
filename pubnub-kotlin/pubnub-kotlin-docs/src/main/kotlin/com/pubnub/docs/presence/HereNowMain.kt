@@ -51,7 +51,7 @@ fun singleChannelHereNow(pubnub: PubNub, channel: String) {
             printChannelData(channel, response)
 
             // Check if more results are available
-            if (response.nextOffset != null && response.nextOffset != 0) {
+            if (response.nextOffset != null) {
                 println("\nMore occupants available. Fetching next page...")
 
                 // Fetch next page using the offset from previous response
