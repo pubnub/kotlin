@@ -20,7 +20,7 @@ import com.pubnub.internal.toCsv
 import retrofit2.Call
 import retrofit2.Response
 
-private const val MAX_NUMBER_OF_RESULT_ON_ONE_PAGE_PER_CHANNEL = 1000
+private const val MAX_CHANNEL_OCCUPANTS_LIMIT = 1000
 
 /**
  * @see [PubNubImpl.hereNow]
@@ -31,22 +31,22 @@ class HereNowEndpoint internal constructor(
     override val channelGroups: List<String> = emptyList(),
     override val includeState: Boolean = false,
     override val includeUUIDs: Boolean = true,
-    override val limit: Int = MAX_NUMBER_OF_RESULT_ON_ONE_PAGE_PER_CHANNEL,
+    override val limit: Int = MAX_CHANNEL_OCCUPANTS_LIMIT,
     override val offset: Int? = null,
 ) : EndpointCore<Envelope<JsonElement>, PNHereNowResult>(pubnub), HereNow {
     private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
-    private val effectiveLimit: Int = if (limit in 1..MAX_NUMBER_OF_RESULT_ON_ONE_PAGE_PER_CHANNEL) {
+    private val effectiveLimit: Int = if (limit in 1..MAX_CHANNEL_OCCUPANTS_LIMIT) {
         limit
     } else {
         log.warn(
             LogMessage(
                 LogMessageContent.Text(
-                    "Valid range is 1 to $MAX_NUMBER_OF_RESULT_ON_ONE_PAGE_PER_CHANNEL. " +
-                        "Shrinking limit to $MAX_NUMBER_OF_RESULT_ON_ONE_PAGE_PER_CHANNEL."
+                    "Valid range is 1 to $MAX_CHANNEL_OCCUPANTS_LIMIT. " +
+                        "Shrinking limit to $MAX_CHANNEL_OCCUPANTS_LIMIT."
                 )
             )
         )
-        MAX_NUMBER_OF_RESULT_ON_ONE_PAGE_PER_CHANNEL
+        MAX_CHANNEL_OCCUPANTS_LIMIT
     }
 
     private fun isGlobalHereNow() = channels.isEmpty() && channelGroups.isEmpty()
@@ -106,10 +106,10 @@ class HereNowEndpoint internal constructor(
 
     override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.PRESENCE
 
-    internal fun calculateNextOffset(actualResultSize: Int): Int? {
+    internal fun calculateNextOffset(occupantsCount: Int): Int? {
         return when {
-            actualResultSize < effectiveLimit -> null
-            actualResultSize == effectiveLimit -> (offset ?: 0) + effectiveLimit
+            occupantsCount < effectiveLimit -> null
+            occupantsCount == effectiveLimit -> (offset ?: 0) + effectiveLimit
             else -> null
         }
     }
@@ -120,12 +120,12 @@ class HereNowEndpoint internal constructor(
         } else {
             emptyList()
         }
-        val actualResultSize = occupants.size
+        val occupantsCount = occupants.size
 
         val pnHereNowResult = PNHereNowResult(
             totalChannels = 1,
             totalOccupancy = input.occupancy,
-            nextOffset = calculateNextOffset(actualResultSize),
+            nextOffset = calculateNextOffset(occupantsCount),
         )
 
         val pnHereNowChannelData = PNHereNowChannelData(
@@ -143,7 +143,7 @@ class HereNowEndpoint internal constructor(
 
     private fun parseMultipleChannelResponse(input: JsonElement): PNHereNowResult {
         val it = pubnub.mapper.getObjectIterator(input, "channels")
-        var totalOccupantsReturned = 0
+        var maxOccupantsReturned = 0
 
         val channelsMap = mutableMapOf<String, PNHereNowChannelData>()
         while (it.hasNext()) {
@@ -155,8 +155,8 @@ class HereNowEndpoint internal constructor(
             }
 
             // we want to know amount of occupants in channel that has the most occupants
-            if (occupants.size > totalOccupantsReturned) {
-                totalOccupantsReturned = occupants.size
+            if (occupants.size > maxOccupantsReturned) {
+                maxOccupantsReturned = occupants.size
             }
 
             val pnHereNowChannelData = PNHereNowChannelData(
@@ -171,7 +171,7 @@ class HereNowEndpoint internal constructor(
             totalChannels = pubnub.mapper.elementToInt(input, "total_channels"),
             totalOccupancy = pubnub.mapper.elementToInt(input, "total_occupancy"),
             channels = channelsMap,
-            nextOffset = calculateNextOffset(totalOccupantsReturned),
+            nextOffset = calculateNextOffset(maxOccupantsReturned),
         )
 
         return pnHereNowResult
