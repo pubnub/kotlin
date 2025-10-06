@@ -16,8 +16,8 @@ class HereNowEndpointTest : BaseTest() {
         )
 
         // When actual result size equals limit, there might be more results
-        val nextStartFrom = endpoint.calculateNextStartFrom(10)
-        assertEquals(30, nextStartFrom) // startFrom + limit
+        val nextOffset = endpoint.calculateNextOffset(10)
+        assertEquals(30, nextOffset) // startFrom + limit
     }
 
     @Test
@@ -29,8 +29,8 @@ class HereNowEndpointTest : BaseTest() {
         )
 
         // When actual result size is less than limit, no more results
-        val nextStartFrom = endpoint.calculateNextStartFrom(5)
-        assertNull(nextStartFrom)
+        val nextOffset = endpoint.calculateNextOffset(5)
+        assertNull(nextOffset)
     }
 
     @Test
@@ -42,8 +42,8 @@ class HereNowEndpointTest : BaseTest() {
         )
 
         // When result equals limit, return next page
-        val nextStartFrom = endpoint.calculateNextStartFrom(50)
-        assertEquals(70, nextStartFrom) // 20 + 50
+        val nextOffset = endpoint.calculateNextOffset(50)
+        assertEquals(70, nextOffset) // 20 + 50
     }
 
     @Test
@@ -54,8 +54,8 @@ class HereNowEndpointTest : BaseTest() {
             startFrom = null // Should default to 0 in calculation
         )
 
-        val nextStartFrom = endpoint.calculateNextStartFrom(10)
-        assertEquals(10, nextStartFrom) // 0 + 10
+        val nextOffset = endpoint.calculateNextOffset(10)
+        assertEquals(10, nextOffset) // 0 + 10
     }
 
     @Test
@@ -128,9 +128,9 @@ class HereNowEndpointTest : BaseTest() {
         assertEquals(1500, endpoint.limit)
 
         // But effectiveLimit should be capped at 1000, verified by calculateNextStartFrom
-        // If we get 1000 results, nextStartFrom should be 1000 (not 1500)
-        val nextStartFrom = endpoint.calculateNextStartFrom(1000)
-        assertEquals(1000, nextStartFrom) // 0 + 1000 (capped limit)
+        // If we get 1000 results, nextOffset should be 1000 (not 1500)
+        val nextOffset = endpoint.calculateNextOffset(1000)
+        assertEquals(1000, nextOffset) // 0 + 1000 (capped limit)
     }
 
     @Test
@@ -147,8 +147,8 @@ class HereNowEndpointTest : BaseTest() {
         assertEquals(0, endpoint.limit)
 
         // But effectiveLimit should default to 1000, verified by calculateNextStartFrom
-        val nextStartFrom = endpoint.calculateNextStartFrom(1000)
-        assertEquals(1000, nextStartFrom) // 0 + 1000 (default limit)
+        val nextOffset = endpoint.calculateNextOffset(1000)
+        assertEquals(1000, nextOffset) // 0 + 1000 (default limit)
     }
 
     @Test
@@ -165,8 +165,8 @@ class HereNowEndpointTest : BaseTest() {
         assertEquals(-5, endpoint.limit)
 
         // But effectiveLimit should default to 1000, verified by calculateNextStartFrom
-        val nextStartFrom = endpoint.calculateNextStartFrom(1000)
-        assertEquals(1000, nextStartFrom) // 0 + 1000 (default limit)
+        val nextOffset = endpoint.calculateNextOffset(1000)
+        assertEquals(1000, nextOffset) // 0 + 1000 (default limit)
     }
 
     @Test

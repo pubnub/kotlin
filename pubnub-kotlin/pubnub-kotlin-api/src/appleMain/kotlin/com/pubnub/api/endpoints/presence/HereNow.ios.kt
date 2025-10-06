@@ -44,7 +44,7 @@ class HereNowImpl(
                 PNHereNowResult(
                     totalChannels = it?.totalChannels()?.toInt() ?: 0,
                     totalOccupancy = it?.totalOccupancy()?.toInt() ?: 0,
-                    // nextStartFrom = it?.nextStartFrom()?.toInt(), // todo uncomment once available
+                    // nextOffset = it?.nextOffset()?.toInt(), // todo uncomment once available
                     channels = (it?.channels()?.safeCast<String, KMPHereNowChannelData>())?.mapValues { entry ->
                         PNHereNowChannelData(
                             channelName = entry.value.channelName(),
