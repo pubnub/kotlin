@@ -160,7 +160,7 @@ actual interface PubNub {
         includeState: Boolean,
         includeUUIDs: Boolean,
         limit: Int,
-        startFrom: Int?
+        offset: Int?
     ): HereNow
 
     actual fun whereNow(uuid: String): WhereNow

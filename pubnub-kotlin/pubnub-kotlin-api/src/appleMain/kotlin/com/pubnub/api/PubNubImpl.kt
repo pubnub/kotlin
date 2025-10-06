@@ -355,7 +355,7 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         includeState: Boolean,
         includeUUIDs: Boolean,
         limit: Int,
-        startFrom: Int?
+        offset: Int?
     ): HereNow {
         return HereNowImpl(
             pubnub = pubNubObjC,
@@ -364,7 +364,7 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
             includeState = includeState,
             includeUUIDs = includeUUIDs,
             limit = limit,
-            startFrom = startFrom
+            offset = offset
         )
     }
 

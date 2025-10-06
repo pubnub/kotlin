@@ -329,7 +329,7 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
 
     @Test
     fun testHereNowWithStartFrom() {
-        val startFromValue = 2
+        val offsetValue = 2
         val totalClientsCount = 5
         val expectedChannel = randomChannel()
 
@@ -346,7 +346,7 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
         pubnub.hereNow(
             channels = listOf(expectedChannel),
             includeUUIDs = true,
-            startFrom = startFromValue,
+            offset = offsetValue,
         ).asyncRetry { result ->
             assertFalse(result.isFailure)
             result.onSuccess {
@@ -357,8 +357,8 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
                 val channelData = it.channels[expectedChannel]!!
                 assertEquals(totalClientsCount, channelData.occupancy)
 
-                // With startFrom=2, we should get remaining occupants (5 total - 2 skipped = 3 remaining)
-                assertEquals(totalClientsCount - startFromValue, channelData.occupants.size)
+                // With offset=2, we should get remaining occupants (5 total - 2 skipped = 3 remaining)
+                assertEquals(totalClientsCount - offsetValue, channelData.occupants.size)
 
                 // nextOffset should be null since we got all remaining results
                 assertNull(it.nextOffset)
@@ -396,7 +396,6 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
 
         Thread.sleep(2000)
 
-
         val allOccupantsInChannel01 = mutableSetOf<String>()
 
         // First page
@@ -431,7 +430,7 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
             channels = listOf(channel01),
             includeUUIDs = true,
             limit = pageSize,
-            startFrom = firstPage.nextOffset!!,
+            offset = firstPage.nextOffset!!,
         ).sync()!!
 
         secondPage.channels.forEach { it: Map.Entry<String, PNHereNowChannelData> ->
@@ -462,7 +461,7 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
             channels = listOf(channel01),
             includeUUIDs = true,
             limit = pageSize,
-            startFrom = secondPage.nextOffset!!,
+            offset = secondPage.nextOffset!!,
         ).sync()!!
 
         thirdPage.channels.forEach { it: Map.Entry<String, PNHereNowChannelData> ->
@@ -491,7 +490,6 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
         // Verify we got all unique clients
         assertEquals(channel01TotalCount, allOccupantsInChannel01.size)
     }
-
 
     @Test
     fun testHereNowNextStartFromWhenMoreResults() {

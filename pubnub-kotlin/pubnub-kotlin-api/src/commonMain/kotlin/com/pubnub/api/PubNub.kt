@@ -172,7 +172,7 @@ expect interface PubNub {
         includeState: Boolean = false,
         includeUUIDs: Boolean = true,
         limit: Int = 1000,
-        startFrom: Int? = null,
+        offset: Int? = null,
     ): HereNow
 
     fun whereNow(uuid: String = configuration.userId.value): WhereNow

@@ -775,7 +775,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
         includeState: Boolean,
         includeUUIDs: Boolean,
         limit: Int,
-        startFrom: Int?,
+        offset: Int?,
     ): HereNow
 
     /**

@@ -21,7 +21,7 @@ public class HereNowImpl extends PassthroughEndpoint<PNHereNowResult> implements
     private boolean includeState = false;
     private boolean includeUUIDs = true;
     private int limit = 1000;
-    private Integer startFrom = null;
+    private Integer offset = null;
 
     public HereNowImpl(PubNub pubnub) {
         super(pubnub);
@@ -36,7 +36,7 @@ public class HereNowImpl extends PassthroughEndpoint<PNHereNowResult> implements
                 includeState,
                 includeUUIDs,
                 limit,
-                startFrom
+                offset
         );
     }
 }

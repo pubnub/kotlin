@@ -29,7 +29,7 @@ class HereNowImpl(
     private val includeState: Boolean,
     private val includeUUIDs: Boolean,
     private val limit: Int = 1000,
-    private val startFrom: Int? = null,
+    private val offset: Int? = null,
 ) : HereNow {
     override fun async(callback: Consumer<Result<PNHereNowResult>>) {
         pubnub.hereNowWithChannels(
@@ -37,9 +37,9 @@ class HereNowImpl(
             channelGroups = channelGroups,
             includeState = includeState,
             includeUUIDs = includeUUIDs,
-            // todo pass limit and startFrom once available
+            // todo pass limit and offset once available
             // limit = limit,
-            // startFrom = startFrom,
+            // offset = offset,
             onSuccess = callback.onSuccessHandler {
                 PNHereNowResult(
                     totalChannels = it?.totalChannels()?.toInt() ?: 0,

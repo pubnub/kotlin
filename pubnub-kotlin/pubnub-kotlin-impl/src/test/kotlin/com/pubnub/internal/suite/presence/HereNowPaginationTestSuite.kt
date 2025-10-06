@@ -19,7 +19,7 @@ class HereNowPaginationTestSuite : com.pubnub.internal.suite.CoreEndpointTestSui
         pubnub.hereNow(
             channels = listOf("ch1"),
             limit = 100,
-            startFrom = 50
+            offset = 50
         )
 
     override fun verifyResultExpectations(result: PNHereNowResult) {

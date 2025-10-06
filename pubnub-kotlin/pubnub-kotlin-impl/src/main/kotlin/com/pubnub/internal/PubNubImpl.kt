@@ -579,7 +579,7 @@ open class PubNubImpl(
         includeState: Boolean,
         includeUUIDs: Boolean,
         limit: Int,
-        startFrom: Int?,
+        offset: Int?,
     ): HereNow {
         return HereNowEndpoint(
             pubnub = this,
@@ -588,7 +588,7 @@ open class PubNubImpl(
             includeState = includeState,
             includeUUIDs = includeUUIDs,
             limit = limit,
-            startFrom = startFrom,
+            offset = offset,
         )
     }
 
