@@ -42,7 +42,7 @@ class HereNowEndpoint internal constructor(
             LogMessage(
                 LogMessageContent.Text(
                     "Valid range is 1 to $MAX_NUMBER_OF_RESULT_ON_ONE_PAGE_PER_CHANNEL. " +
-                            "Shrinking limit to $MAX_NUMBER_OF_RESULT_ON_ONE_PAGE_PER_CHANNEL."
+                        "Shrinking limit to $MAX_NUMBER_OF_RESULT_ON_ONE_PAGE_PER_CHANNEL."
                 )
             )
         )
@@ -71,7 +71,8 @@ class HereNowEndpoint internal constructor(
                         "limit" to effectiveLimit,
                         "offset" to (offset?.toString() ?: "null"),
                         "isGlobalHereNow" to isGlobalHereNow(),
-                    ), operation = this::class.simpleName
+                    ),
+                    operation = this::class.simpleName
                 ),
                 details = "HereNow API call",
             )
@@ -128,7 +129,9 @@ class HereNowEndpoint internal constructor(
         )
 
         val pnHereNowChannelData = PNHereNowChannelData(
-            channelName = channels[0], occupancy = input.occupancy, occupants = occupants
+            channelName = channels[0],
+            occupancy = input.occupancy,
+            occupants = occupants
         )
 
         if (includeUUIDs) {
