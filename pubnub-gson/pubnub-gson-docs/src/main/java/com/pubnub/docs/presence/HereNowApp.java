@@ -21,29 +21,61 @@ public class HereNowApp {
 
         PubNub pubnub = PubNub.create(configBuilder.build());
 
-        // Get presence information for specified channels
+        // Get presence information for specified channels with pagination support
         pubnub.hereNow()
                 .channels(Arrays.asList("coolChannel", "coolChannel2"))
                 .includeUUIDs(true)
+                .limit(100)
                 .async(result -> {
                     result.onSuccess((PNHereNowResult res) -> {
+                        printHereNowResult(res);
 
-                        System.out.println("Total Channels: " + res.getTotalChannels());
-                        System.out.println("Total Occupancy: " + res.getTotalOccupancy());
+                        // Check if more results are available
+                        if (res.getNextOffset() != null && res.getNextOffset() != 0) {
+                            System.out.println("\nMore results available. Fetching next page...\n");
 
-                        for (PNHereNowChannelData channelData : res.getChannels().values()) {
-                            System.out.println("---");
-                            System.out.println("Channel: " + channelData.getChannelName());
-                            System.out.println("Occupancy: " + channelData.getOccupancy());
-                            System.out.println("Occupants:");
-                            for (PNHereNowOccupantData occupant : channelData.getOccupants()) {
-                                System.out.println("UUID: " + occupant.getUuid() + " State: " + occupant.getState());
-                            }
+                            // Fetch next page using the offset from previous response
+                            pubnub.hereNow()
+                                    .channels(Arrays.asList("coolChannel", "coolChannel2"))
+                                    .includeUUIDs(true)
+                                    .limit(100)
+                                    .offset(res.getNextOffset())
+                                    .async(result2 -> {
+                                        result2.onSuccess((PNHereNowResult res2) -> {
+                                            printHereNowResult(res2);
+
+                                            // Continue pagination if needed by checking res2.getNextOffset()
+                                        }).onFailure((PubNubException exception) -> {
+                                            System.out.println("Error retrieving hereNow data: " + exception.getMessage());
+                                        });
+                                    });
                         }
-                    }).onFailure( (PubNubException exception) -> {
+                    }).onFailure((PubNubException exception) -> {
                         System.out.println("Error retrieving hereNow data: " + exception.getMessage());
                     });
                 });
+    }
+
+    /**
+     * Helper method to print HereNow presence information
+     */
+    private static void printHereNowResult(PNHereNowResult result) {
+        System.out.println("Total Channels: " + result.getTotalChannels());
+        System.out.println("Total Occupancy: " + result.getTotalOccupancy());
+
+        for (PNHereNowChannelData channelData : result.getChannels().values()) {
+            System.out.println("---");
+            System.out.println("Channel: " + channelData.getChannelName());
+            System.out.println("Occupancy: " + channelData.getOccupancy());
+            System.out.println("Occupants:");
+            for (PNHereNowOccupantData occupant : channelData.getOccupants()) {
+                System.out.println("UUID: " + occupant.getUuid() + " State: " + occupant.getState());
+            }
+        }
+
+        if (result.getNextOffset() != null && result.getNextOffset() != 0) {
+            System.out.println("Next Offset: " + result.getNextOffset());
+        }
     }
 }
 // snippet.end

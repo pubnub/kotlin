@@ -4,6 +4,7 @@ package com.pubnub.docs.presence
 
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
+import com.pubnub.api.models.consumer.presence.PNHereNowResult
 import com.pubnub.api.v2.PNConfiguration
 
 fun main() {
@@ -36,27 +37,39 @@ fun main() {
 }
 
 /**
- * Demonstrates basic usage of hereNow for a single channel
+ * Demonstrates basic usage of hereNow for a single channel with pagination support
  */
 fun singleChannelHereNow(pubnub: PubNub, channel: String) {
     println("\n# Basic hereNow for single channel: $channel")
 
-    // todo consider adding limit and offset to docs
     pubnub.hereNow(
-        channels = listOf(channel)
+        channels = listOf(channel),
+        limit = 100,
     ).async { result ->
         result.onSuccess { response ->
             println("SUCCESS: Retrieved presence information")
+            printChannelData(channel, response)
 
-            // Get information for our specific channel
-            val channelData = response.channels[channel]
+            // Check if more results are available
+            if (response.nextOffset != null && response.nextOffset != 0) {
+                println("\nMore occupants available. Fetching next page...")
 
-            if (channelData != null) {
-                println("Channel: $channel")
-                println("Occupancy: ${channelData.occupancy}")
-                println("UUIDs: ${channelData.occupants.map { it.uuid }}")
-            } else {
-                println("No presence data for channel: $channel")
+                // Fetch next page using the offset from previous response
+                pubnub.hereNow(
+                    channels = listOf(channel),
+                    limit = 100,
+                    offset = response.nextOffset
+                ).async { nextResult ->
+                    nextResult.onSuccess { nextResponse ->
+                        println("\nNext Page Results:")
+                        printChannelData(channel, nextResponse)
+
+                        // Continue pagination if needed by checking nextResponse.nextOffset
+                    }.onFailure { exception ->
+                        println("ERROR: Failed to get next page of presence information")
+                        println("Error details: ${exception.message}")
+                    }
+                }
             }
         }.onFailure { exception ->
             println("ERROR: Failed to get presence information")
@@ -147,5 +160,24 @@ fun advancedHereNow(pubnub: PubNub, channel: String) {
 
     // Wait for the operation to complete
     Thread.sleep(2000)
+}
+
+/**
+ * Helper function to print channel presence data
+ */
+private fun printChannelData(channel: String, response: PNHereNowResult) {
+    val channelData = response.channels[channel]
+
+    if (channelData != null) {
+        println("Channel: $channel")
+        println("Occupancy: ${channelData.occupancy}")
+        println("UUIDs: ${channelData.occupants.map { it.uuid }}")
+
+        if (response.nextOffset != null && response.nextOffset != 0) {
+            println("Next Offset: ${response.nextOffset}")
+        }
+    } else {
+        println("No presence data for channel: $channel")
+    }
 }
 // snippet.end
