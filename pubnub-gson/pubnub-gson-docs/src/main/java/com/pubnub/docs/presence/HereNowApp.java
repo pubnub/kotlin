@@ -31,7 +31,7 @@ public class HereNowApp {
                         printHereNowResult(res);
 
                         // Check if more results are available
-                        if (res.getNextOffset() != null && res.getNextOffset() != 0) {
+                        if (res.getNextOffset() != null) {
                             System.out.println("\nMore results available. Fetching next page...\n");
 
                             // Fetch next page using the offset from previous response
