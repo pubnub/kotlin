@@ -12,12 +12,12 @@ class HereNowEndpointTest : BaseTest() {
         val endpoint = HereNowEndpoint(
             pubnub = pubnub,
             limit = 10,
-            startFrom = 20
+            offset = 20
         )
 
         // When actual result size equals limit, there might be more results
         val nextOffset = endpoint.calculateNextOffset(10)
-        assertEquals(30, nextOffset) // startFrom + limit
+        assertEquals(30, nextOffset) // offset + limit
     }
 
     @Test
@@ -25,7 +25,7 @@ class HereNowEndpointTest : BaseTest() {
         val endpoint = HereNowEndpoint(
             pubnub = pubnub,
             limit = 10,
-            startFrom = 20
+            offset = 20
         )
 
         // When actual result size is less than limit, no more results
@@ -38,7 +38,7 @@ class HereNowEndpointTest : BaseTest() {
         val endpoint = HereNowEndpoint(
             pubnub = pubnub,
             limit = 50,
-            startFrom = 20
+            offset = 20
         )
 
         // When result equals limit, return next page
@@ -47,11 +47,11 @@ class HereNowEndpointTest : BaseTest() {
     }
 
     @Test
-    fun testNextStartFromCalculation_startFromDefaultsToZero() {
+    fun testNextStartFromCalculation_offsetDefaultsToZero() {
         val endpoint = HereNowEndpoint(
             pubnub = pubnub,
             limit = 10,
-            startFrom = null // Should default to 0 in calculation
+            offset = null // Should default to 0 in calculation
         )
 
         val nextOffset = endpoint.calculateNextOffset(10)
@@ -67,12 +67,12 @@ class HereNowEndpointTest : BaseTest() {
             includeState = false,
             includeUUIDs = true,
             limit = 50,
-            startFrom = 100
+            offset = 100
         )
 
         assertNotNull(hereNow)
         assertEquals(50, (hereNow as HereNowEndpoint).limit)
-        assertEquals(100, hereNow.startFrom)
+        assertEquals(100, hereNow.offset)
     }
 
     @Test
@@ -87,7 +87,7 @@ class HereNowEndpointTest : BaseTest() {
 
         assertNotNull(hereNow)
         assertEquals(1000, (hereNow as HereNowEndpoint).limit) // Default limit is 1000
-        assertNull(hereNow.startFrom)
+        assertNull(hereNow.offset)
     }
 
     @Test
@@ -171,63 +171,63 @@ class HereNowEndpointTest : BaseTest() {
 
     @Test
     fun testHereNowStartFromZeroBoundary() {
-        // Test minimum valid startFrom value
+        // Test minimum valid offset value
         val hereNow = pubnub.hereNow(
             channels = listOf("test-channel"),
             includeUUIDs = true,
-            startFrom = 0
+            offset = 0
         )
         assertNotNull(hereNow)
-        assertEquals(0, (hereNow as HereNowEndpoint).startFrom)
+        assertEquals(0, (hereNow as HereNowEndpoint).offset)
     }
 
     @Test
     fun testHereNowStartFromLargeValue() {
-        // Test large valid startFrom value
+        // Test large valid offset value
         val hereNow = pubnub.hereNow(
             channels = listOf("test-channel"),
             includeUUIDs = true,
-            startFrom = 1000000
+            offset = 1000000
         )
         assertNotNull(hereNow)
-        assertEquals(1000000, (hereNow as HereNowEndpoint).startFrom)
+        assertEquals(1000000, (hereNow as HereNowEndpoint).offset)
     }
 
     @Test
     fun testHereNowStartFromNullIsValid() {
-        // Test that null startFrom is valid (defaults to 0)
+        // Test that null offset is valid (defaults to 0)
         val hereNow = pubnub.hereNow(
             channels = listOf("test-channel"),
             includeUUIDs = true,
-            startFrom = null
+            offset = null
         )
         assertNotNull(hereNow)
-        assertNull((hereNow as HereNowEndpoint).startFrom)
+        assertNull((hereNow as HereNowEndpoint).offset)
     }
 
     @Test
     fun testHereNowStartFromNegativeAccepted() {
-        // Test that startFrom=-1 is accepted at creation time
+        // Test that offset=-1 is accepted at creation time
         // (validation happens during execution in doWork())
         val hereNow = pubnub.hereNow(
             channels = listOf("test-channel"),
             includeUUIDs = true,
-            startFrom = -1
+            offset = -1
         )
         assertNotNull(hereNow)
-        assertEquals(-1, (hereNow as HereNowEndpoint).startFrom)
+        assertEquals(-1, (hereNow as HereNowEndpoint).offset)
     }
 
     @Test
     fun testHereNowStartFromLargeNegativeAccepted() {
-        // Test that large negative startFrom is accepted at creation time
+        // Test that large negative offset is accepted at creation time
         // (validation happens during execution in doWork())
         val hereNow = pubnub.hereNow(
             channels = listOf("test-channel"),
             includeUUIDs = true,
-            startFrom = -100
+            offset = -100
         )
         assertNotNull(hereNow)
-        assertEquals(-100, (hereNow as HereNowEndpoint).startFrom)
+        assertEquals(-100, (hereNow as HereNowEndpoint).offset)
     }
 }

@@ -16,12 +16,11 @@ import java.util.List;
 @Setter
 @Accessors(chain = true, fluent = true)
 public class HereNowImpl extends PassthroughEndpoint<PNHereNowResult> implements HereNow {
-    public static final int MAX_CHANNEL_OCCUPANTS_LIMIT = 1000;
     private List<String> channels = new ArrayList<>();
     private List<String> channelGroups = new ArrayList<>();
     private boolean includeState = false;
     private boolean includeUUIDs = true;
-    private int limit = MAX_CHANNEL_OCCUPANTS_LIMIT;
+    private int limit = 1000;
     private Integer offset = null;
 
     public HereNowImpl(PubNub pubnub) {

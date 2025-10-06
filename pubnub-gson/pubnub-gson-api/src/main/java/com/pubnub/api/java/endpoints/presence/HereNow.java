@@ -14,5 +14,5 @@ public interface HereNow extends Endpoint<PNHereNowResult> {
 
     HereNow limit(int limit);
 
-    HereNow startFrom(Integer startFrom);
+    HereNow offset(Integer offset);
 }

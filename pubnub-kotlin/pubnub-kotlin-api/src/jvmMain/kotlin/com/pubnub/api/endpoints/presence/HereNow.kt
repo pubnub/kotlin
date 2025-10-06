@@ -12,5 +12,5 @@ actual interface HereNow : Endpoint<PNHereNowResult> {
     val includeState: Boolean
     val includeUUIDs: Boolean
     val limit: Int
-    val startFrom: Int?
+    val offset: Int?
 }
