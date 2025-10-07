@@ -5,12 +5,14 @@ package com.pubnub.docs.presence;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
 import com.pubnub.api.java.PubNub;
+import com.pubnub.api.java.endpoints.presence.HereNow;
 import com.pubnub.api.java.v2.PNConfiguration;
 import com.pubnub.api.models.consumer.presence.PNHereNowChannelData;
 import com.pubnub.api.models.consumer.presence.PNHereNowOccupantData;
 import com.pubnub.api.models.consumer.presence.PNHereNowResult;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class HereNowApp {
     public static void main(String[] args) throws PubNubException {
@@ -21,39 +23,43 @@ public class HereNowApp {
 
         PubNub pubnub = PubNub.create(configBuilder.build());
 
-        // Get presence information for specified channels with pagination support
-        pubnub.hereNow()
-                .channels(Arrays.asList("coolChannel", "coolChannel2"))
+        // Get presence information for specified channels with automatic pagination
+        List<String> channels = Arrays.asList("coolChannel", "coolChannel2");
+        fetchHereNowWithPagination(pubnub, channels, null);
+    }
+
+    /**
+     * Fetches hereNow data with automatic pagination handling.
+     * This method recursively fetches all pages of results.
+     *
+     * @param pubnub PubNub instance
+     * @param channels List of channels to query
+     * @param offset Pagination offset (null for first page)
+     */
+    private static void fetchHereNowWithPagination(PubNub pubnub, List<String> channels, Integer offset) {
+        HereNow builder = pubnub.hereNow()
+                .channels(channels)
                 .includeUUIDs(true)
-                .limit(100)
-                .async(result -> {
-                    result.onSuccess((PNHereNowResult res) -> {
-                        printHereNowResult(res);
+                .limit(100);
 
-                        // Check if more results are available
-                        if (res.getNextOffset() != null) {
-                            System.out.println("\nMore results available. Fetching next page...\n");
+        // Apply offset if provided (for subsequent pages)
+        if (offset != null) {
+            builder.offset(offset);
+            System.out.println("\nFetching next page with offset: " + offset + "\n");
+        }
 
-                            // Fetch next page using the offset from previous response
-                            pubnub.hereNow()
-                                    .channels(Arrays.asList("coolChannel", "coolChannel2"))
-                                    .includeUUIDs(true)
-                                    .limit(100)
-                                    .offset(res.getNextOffset())
-                                    .async(result2 -> {
-                                        result2.onSuccess((PNHereNowResult res2) -> {
-                                            printHereNowResult(res2);
+        builder.async(result -> {
+            result.onSuccess((PNHereNowResult res) -> {
+                printHereNowResult(res);
 
-                                            // Continue pagination if needed by checking res2.getNextOffset()
-                                        }).onFailure((PubNubException exception) -> {
-                                            System.out.println("Error retrieving hereNow data: " + exception.getMessage());
-                                        });
-                                    });
-                        }
-                    }).onFailure((PubNubException exception) -> {
-                        System.out.println("Error retrieving hereNow data: " + exception.getMessage());
-                    });
-                });
+                // Recursively fetch next page if available
+                if (res.getNextOffset() != null) {
+                    fetchHereNowWithPagination(pubnub, channels, res.getNextOffset());
+                }
+            }).onFailure((PubNubException exception) -> {
+                System.out.println("Error retrieving hereNow data: " + exception.getMessage());
+            });
+        });
     }
 
     /**
