@@ -37,48 +37,48 @@ fun main() {
 }
 
 /**
- * Demonstrates basic usage of hereNow for a single channel with pagination support
+ * Demonstrates basic usage of hereNow for a single channel with automatic pagination support
  */
 fun singleChannelHereNow(pubnub: PubNub, channel: String) {
     println("\n# Basic hereNow for single channel: $channel")
 
+    fetchHereNowWithPagination(pubnub, channel, null)
+
+    // Wait for the operation to complete
+    Thread.sleep(2000)
+}
+
+/**
+ * Fetches hereNow data with automatic pagination handling.
+ * This function recursively fetches all pages of results.
+ *
+ * @param pubnub PubNub instance
+ * @param channel Channel to query
+ * @param offset Pagination offset (null for first page)
+ */
+private fun fetchHereNowWithPagination(pubnub: PubNub, channel: String, offset: Int?) {
+    if (offset != null) {
+        println("\nFetching next page with offset: $offset")
+    }
+
     pubnub.hereNow(
         channels = listOf(channel),
         limit = 100,
+        offset = offset
     ).async { result ->
         result.onSuccess { response ->
             println("SUCCESS: Retrieved presence information")
             printChannelData(channel, response)
 
-            // Check if more results are available
+            // Recursively fetch next page if available
             if (response.nextOffset != null) {
-                println("\nMore occupants available. Fetching next page...")
-
-                // Fetch next page using the offset from previous response
-                pubnub.hereNow(
-                    channels = listOf(channel),
-                    limit = 100,
-                    offset = response.nextOffset
-                ).async { nextResult ->
-                    nextResult.onSuccess { nextResponse ->
-                        println("\nNext Page Results:")
-                        printChannelData(channel, nextResponse)
-
-                        // Continue pagination if needed by checking nextResponse.nextOffset
-                    }.onFailure { exception ->
-                        println("ERROR: Failed to get next page of presence information")
-                        println("Error details: ${exception.message}")
-                    }
-                }
+                fetchHereNowWithPagination(pubnub, channel, response.nextOffset)
             }
         }.onFailure { exception ->
             println("ERROR: Failed to get presence information")
             println("Error details: ${exception.message}")
         }
     }
-
-    // Wait for the operation to complete
-    Thread.sleep(2000)
 }
 
 /**
