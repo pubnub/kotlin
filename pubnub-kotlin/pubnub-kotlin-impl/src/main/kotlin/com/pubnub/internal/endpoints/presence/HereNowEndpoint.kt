@@ -22,6 +22,8 @@ import retrofit2.Response
 
 private const val MAX_CHANNEL_OCCUPANTS_LIMIT = 1000
 
+private const val MIN_CHANNEL_OCCUPANTS_LIMIT = 0
+
 /**
  * @see [PubNubImpl.hereNow]
  */
@@ -35,13 +37,13 @@ class HereNowEndpoint internal constructor(
     override val offset: Int? = null,
 ) : EndpointCore<Envelope<JsonElement>, PNHereNowResult>(pubnub), HereNow {
     private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
-    private val effectiveLimit: Int = if (limit in 1..MAX_CHANNEL_OCCUPANTS_LIMIT) {
+    private val effectiveLimit: Int = if (limit in MIN_CHANNEL_OCCUPANTS_LIMIT..MAX_CHANNEL_OCCUPANTS_LIMIT) {
         limit
     } else {
         log.warn(
             LogMessage(
                 LogMessageContent.Text(
-                    "Valid range is 1 to $MAX_CHANNEL_OCCUPANTS_LIMIT. " +
+                    "Valid range is $MIN_CHANNEL_OCCUPANTS_LIMIT to $MAX_CHANNEL_OCCUPANTS_LIMIT. " +
                         "Shrinking limit to $MAX_CHANNEL_OCCUPANTS_LIMIT."
                 )
             )
@@ -115,8 +117,8 @@ class HereNowEndpoint internal constructor(
     }
 
     private fun parseSingleChannelResponse(input: Envelope<JsonElement>): PNHereNowResult {
-        val occupants = if (includeUUIDs) {
-            prepareOccupantData(input.uuids!!)
+        val occupants = if (includeUUIDs && input.uuids != null) {
+            prepareOccupantData(input.uuids)
         } else {
             emptyList()
         }
@@ -128,13 +130,12 @@ class HereNowEndpoint internal constructor(
             nextOffset = calculateNextOffset(occupantsCount),
         )
 
-        val pnHereNowChannelData = PNHereNowChannelData(
-            channelName = channels[0],
-            occupancy = input.occupancy,
-            occupants = occupants
-        )
-
         if (includeUUIDs) {
+            val pnHereNowChannelData = PNHereNowChannelData(
+                channelName = channels[0],
+                occupancy = input.occupancy,
+                occupants = occupants
+            )
             pnHereNowResult.channels[channels[0]] = pnHereNowChannelData
         }
 

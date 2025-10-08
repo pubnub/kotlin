@@ -503,6 +503,43 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
     }
 
     @Test
+    fun testHereNowWithLimit0() {
+        val limit = 0
+        val totalClientsCount = 5
+        val expectedChannel = randomChannel()
+
+        // Subscribe multiple clients to the channel
+        val clients =
+            mutableListOf(pubnub).apply {
+                addAll(generateSequence { createPubNub {} }.take(totalClientsCount - 1).toList())
+            }
+
+        clients.forEach {
+            it.subscribeNonBlocking(expectedChannel)
+        }
+        Thread.sleep(2000)
+
+        // Query with limit=0 to get occupancy without occupant details
+        pubnub.hereNow(
+            channels = listOf(expectedChannel),
+            includeUUIDs = true,
+            limit = limit,
+        ).asyncRetry { result ->
+            assertFalse(result.isFailure)
+            result.onSuccess {
+                assertEquals(1, it.totalChannels)
+                val channelData = it.channels[expectedChannel]!!
+
+                // Occupancy should reflect actual client count
+                assertEquals(totalClientsCount, channelData.occupancy)
+
+                // With limit=0, occupants list should be empty
+                assertEquals(0, channelData.occupants.size)
+            }
+        }
+    }
+
+    @Test
     fun testHereNowPaginationWithEmptyChannels() {
         val emptyChannel = randomChannel()
         val pageSize = 10
