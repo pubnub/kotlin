@@ -140,6 +140,64 @@ internal class SubscribeTest {
     }
 
     @Test
+    fun `should NOT send event when subscribing to already-subscribed channels`() {
+        // Given: subscriptionData already contains CHANNEL_01, CHANNEL_02
+        // When: subscribe to CHANNEL_01 again (already subscribed)
+        objectUnderTest.subscribe(setOf(CHANNEL_01), emptySet(), withPresence)
+
+        // Then: NO event should be sent to Event Engine
+        verify(exactly = 0) { subscribeEventEngineManager.addEventToQueue(any()) }
+
+        // And: channels should still be in subscription data
+        assertTrue(subscriptionData.channels.contains(CHANNEL_01))
+        assertTrue(subscriptionData.channels.contains(CHANNEL_02))
+    }
+
+    @Test
+    fun `should NOT send event when subscribing to already-subscribed channelGroups`() {
+        // Given: subscriptionData already contains CHANNEL_GROUPS_01, CHANNEL_GROUPS_02
+        // When: subscribe to CHANNEL_GROUPS_01 again (already subscribed)
+        objectUnderTest.subscribe(emptySet(), setOf(CHANNEL_GROUPS_01), withPresence)
+
+        // Then: NO event should be sent to Event Engine
+        verify(exactly = 0) { subscribeEventEngineManager.addEventToQueue(any()) }
+
+        // And: channelGroups should still be in subscription data
+        assertTrue(subscriptionData.channelGroups.contains(CHANNEL_GROUPS_01))
+        assertTrue(subscriptionData.channelGroups.contains(CHANNEL_GROUPS_02))
+    }
+
+    @Test
+    fun `should NOT send event when unsubscribing from non-subscribed channels`() {
+        // Given: subscriptionData contains CHANNEL_01, CHANNEL_02
+        // When: unsubscribe from CHANNEL_03 (never subscribed)
+        objectUnderTest.unsubscribe(setOf(CHANNEL_03), emptySet())
+
+        // Then: NO event should be sent to Event Engine
+        verify(exactly = 0) { subscribeEventEngineManager.addEventToQueue(any()) }
+
+        // And: existing channels should remain unchanged
+        assertTrue(subscriptionData.channels.contains(CHANNEL_01))
+        assertTrue(subscriptionData.channels.contains(CHANNEL_02))
+        assertFalse(subscriptionData.channels.contains(CHANNEL_03))
+    }
+
+    @Test
+    fun `should NOT send event when unsubscribing from non-subscribed channelGroups`() {
+        // Given: subscriptionData contains CHANNEL_GROUPS_01, CHANNEL_GROUPS_02
+        // When: unsubscribe from CHANNEL_GROUPS_03 (never subscribed)
+        objectUnderTest.unsubscribe(emptySet(), setOf(CHANNEL_GROUPS_03))
+
+        // Then: NO event should be sent to Event Engine
+        verify(exactly = 0) { subscribeEventEngineManager.addEventToQueue(any()) }
+
+        // And: existing channelGroups should remain unchanged
+        assertTrue(subscriptionData.channelGroups.contains(CHANNEL_GROUPS_01))
+        assertTrue(subscriptionData.channelGroups.contains(CHANNEL_GROUPS_02))
+        assertFalse(subscriptionData.channelGroups.contains(CHANNEL_GROUPS_03))
+    }
+
+    @Test
     fun `should pass disconnect event for handling when disconnect`() {
         objectUnderTest.disconnect()
 

@@ -101,26 +101,37 @@ internal class Subscribe(
         withTimetoken: Long = 0L,
     ) {
         throwExceptionIfChannelAndChannelGroupIsMissing(channels, channelGroups)
+
+        // Capture current subscription state BEFORE adding new channels/channelGroups
+        val channelsBefore = subscriptionData.channels.toSet()
+        val channelGroupsBefore = subscriptionData.channelGroups.toSet()
+
         addChannelsToSubscriptionData(channels, withPresence)
         addChannelGroupsToSubscriptionData(channelGroups, withPresence)
-        val channelsInLocalStorage = subscriptionData.channels
-        val channelGroupsInLocalStorage = subscriptionData.channelGroups
+
+        // Capture subscription state AFTER adding new channels/channelGroups
+        val channelsAfter = subscriptionData.channels
+        val channelGroupsAfter = subscriptionData.channelGroups
+
         if (withTimetoken != 0L) {
+            // SubscriptionRestored: Always send event (used for reconnection with specific timetoken)
             val subscriptionRestoredEvent =
                 SubscriptionRestored(
-                    channelsInLocalStorage,
-                    channelGroupsInLocalStorage,
+                    channelsAfter,
+                    channelGroupsAfter,
                     SubscriptionCursor(
                         withTimetoken,
                         region = null,
                     ), // we don't know region here. Subscribe response will return region.
                 )
             subscribeEventEngineManager.addEventToQueue(subscriptionRestoredEvent)
-        } else {
+        } else if (channelsAfter != channelsBefore || channelGroupsAfter != channelGroupsBefore) {
+            // Only send SubscriptionChanged event if channels or channelGroups actually changed
+            // This prevents unnecessary REST call cancellations when subscribing to already-subscribed channels
             subscribeEventEngineManager.addEventToQueue(
                 SubscriptionChanged(
-                    channelsInLocalStorage,
-                    channelGroupsInLocalStorage,
+                    channelsAfter,
+                    channelGroupsAfter,
                 ),
             )
         }
@@ -132,23 +143,36 @@ internal class Subscribe(
         channelGroups: Set<String> = emptySet(),
     ) {
         throwExceptionIfChannelAndChannelGroupIsMissing(channels, channelGroups)
+
+        // Capture current subscription state BEFORE removing channels/channelGroups
+        val channelsBefore = subscriptionData.channels.toSet()
+        val channelGroupsBefore = subscriptionData.channelGroups.toSet()
+
         removeChannelsFromSubscriptionData(channels)
         removeChannelGroupsFromSubscriptionData(channelGroups)
 
         presenceData.channelStates.keys.removeAll(channels)
 
-        if (subscriptionData.channels.size > 0 || subscriptionData.channelGroups.size > 0) {
-            val channelsInLocalStorage = subscriptionData.channels
-            val channelGroupsInLocalStorage = subscriptionData.channelGroups
-            subscribeEventEngineManager.addEventToQueue(
-                SubscriptionChanged(
-                    channelsInLocalStorage,
-                    channelGroupsInLocalStorage,
-                ),
-            )
-        } else {
-            subscribeEventEngineManager.addEventToQueue(SubscribeEvent.UnsubscribeAll)
+        // Capture subscription state AFTER removing channels/channelGroups
+        val channelsAfter = subscriptionData.channels
+        val channelGroupsAfter = subscriptionData.channelGroups
+
+        // Only send event if subscription state actually changed
+        if (channelsAfter != channelsBefore || channelGroupsAfter != channelGroupsBefore) {
+            if (channelsAfter.size > 0 || channelGroupsAfter.size > 0) {
+                // Still have subscriptions remaining - send SubscriptionChanged
+                subscribeEventEngineManager.addEventToQueue(
+                    SubscriptionChanged(
+                        channelsAfter,
+                        channelGroupsAfter,
+                    ),
+                )
+            } else {
+                // All subscriptions removed - send UnsubscribeAll
+                subscribeEventEngineManager.addEventToQueue(SubscribeEvent.UnsubscribeAll)
+            }
         }
+        // else: No change in subscription state, don't send any event to Event Engine
     }
 
     @Synchronized

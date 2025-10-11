@@ -25,6 +25,7 @@ import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.logging.HttpLoggingInterceptor
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Ignore
@@ -1257,6 +1258,269 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         channelsList.forEach { channelName ->
             pubnub.publish(channelName, "-=message to $channelName").sync()
         }
+    }
+
+    @Test
+    fun testUnsubscribeFromNonSubscribedChannel() {
+        val subscribedChannel = randomChannel()
+        val neverSubscribedChannel = randomChannel()
+        val expectedMessage = "test_${randomValue()}"
+
+        // Track events
+        val subscriptionChangedAfterUnsubscribe = AtomicInteger(0)
+        val messageCount = AtomicInteger(0)
+
+        val subscription = pubnub.channel(subscribedChannel).subscription()
+        subscription.addListener(
+            object : EventListener {
+                override fun message(
+                    pubnub: PubNub,
+                    result: PNMessageResult,
+                ) {
+                    messageCount.incrementAndGet()
+                }
+            }
+        )
+
+        subscription.subscribe()
+        Thread.sleep(2000) // Wait for connection
+
+        pubnub.addListener(
+            object : StatusListener {
+                override fun status(
+                    pubnub: PubNub,
+                    status: PNStatus,
+                ) {
+                    if (status.category == PNStatusCategory.PNSubscriptionChanged) {
+                        subscriptionChangedAfterUnsubscribe.incrementAndGet()
+                    }
+                }
+            }
+        )
+
+        pubnub.unsubscribe(channels = listOf(neverSubscribedChannel))
+        Thread.sleep(1000) // Give time for any potential events
+
+        assertEquals(
+            "Unsubscribing from non-subscribed channel should NOT send SubscriptionChanged event. " +
+                "The state didn't actually change.",
+            0,
+            subscriptionChangedAfterUnsubscribe.get()
+        )
+
+        // Verify original subscription still works
+        pubnub.publish(subscribedChannel, expectedMessage).sync()
+        Thread.sleep(1000)
+
+        assertEquals("Original subscription should still receive messages", 1, messageCount.get())
+
+        // Verify channel is still in subscribed list
+        assertTrue(
+            "subscribedChannel should still be in subscription list",
+            pubnub.getSubscribedChannels().contains(subscribedChannel)
+        )
+        assertFalse(
+            "neverSubscribedChannel should NOT be in subscription list",
+            pubnub.getSubscribedChannels().contains(neverSubscribedChannel)
+        )
+
+        // Clean up
+        subscription.close()
+    }
+
+    @Test
+    fun testSubscriptionsToTheSameChannel() {
+        val channelName = randomChannel()
+        val expectedMessage = "test_${randomValue()}"
+
+        val connectedEventCount = AtomicInteger(0)
+        val subscriptionChangedCount =
+            AtomicInteger(0) // there should be no subscriptionChanged events when subscribing to the already subscribed channel
+
+        // Track messages received by each listener
+        val listenerAMessageCount = AtomicInteger(0)
+        val listenerBMessageCount = AtomicInteger(0)
+
+        pubnub.addListener(
+            object : StatusListener {
+                override fun status(
+                    pubnub: PubNub,
+                    status: PNStatus,
+                ) {
+                    when (status.category) {
+                        PNStatusCategory.PNConnectedCategory -> {
+                            connectedEventCount.incrementAndGet()
+                        }
+
+                        PNStatusCategory.PNSubscriptionChanged -> {
+                            subscriptionChangedCount.incrementAndGet()
+                        }
+
+                        else -> {}
+                    }
+                }
+            }
+        )
+
+        // First subscription
+        val subscriptionSet1 = pubnub.subscriptionSetOf(setOf(channelName))
+        subscriptionSet1.addListener(
+            object : EventListener {
+                override fun message(
+                    pubnub: PubNub,
+                    result: PNMessageResult,
+                ) {
+                    println("ListenerA received: ${result.message.asString}")
+                    listenerAMessageCount.incrementAndGet()
+                }
+            }
+        )
+
+        subscriptionSet1.subscribe()
+        Thread.sleep(2000) // Wait for handshake to complete
+
+        // Second subscription (SAME channel, different listener)
+        val subscriptionSet2 = pubnub.subscriptionSetOf(setOf(channelName))
+        subscriptionSet2.addListener(
+            object : EventListener {
+                override fun message(
+                    pubnub: PubNub,
+                    result: PNMessageResult,
+                ) {
+                    println("ListenerB received: ${result.message.asString}")
+                    listenerBMessageCount.incrementAndGet()
+                }
+            }
+        )
+
+        subscriptionSet2.subscribe()
+        Thread.sleep(2000) // Wait to observe any state changes
+
+        // Publish a message - both listeners should receive it
+        pubnub.publish(channelName, expectedMessage).sync()
+        Thread.sleep(1000)
+
+        // Verify both listeners received the message (this works regardless of the bug)
+        assertEquals("ListenerA should receive message", 1, listenerAMessageCount.get())
+        assertEquals("ListenerB should receive message", 1, listenerBMessageCount.get())
+
+        assertEquals(
+            "Should be 0 PNSubscriptionChanged events when subscribing to already subscribed channel. ",
+            0, // Fixed! Was 1 before (the bug)
+            subscriptionChangedCount.get()
+        )
+
+        assertEquals(
+            "Should have exactly 1 PNConnectedCategory (initial handshake only)",
+            1,
+            connectedEventCount.get()
+        )
+
+        // Clean up
+        subscriptionSet1.close()
+        subscriptionSet2.close()
+    }
+
+    @Test
+    fun testSubscriptionsToTheSameChannelGroup() {
+        val channelGroupName = "cg_test_${randomValue()}"
+        val testChannel = randomChannel()
+        val expectedMessage = "test_${randomValue()}"
+
+        // Setup: Add channels to the channel group
+        pubnub.addChannelsToChannelGroup(
+            channels = listOf(testChannel),
+            channelGroup = channelGroupName,
+        ).sync()
+        Thread.sleep(1000) // Wait for channel group to propagate
+
+        val connectedEventCount = AtomicInteger(0)
+        val subscriptionChangedCount =
+            AtomicInteger(0) // there should be no subscriptionChanged events when subscribing to the already subscribed channelGroup
+
+        // Track messages received by each listener
+        val listenerAMessageCount = AtomicInteger(0)
+        val listenerBMessageCount = AtomicInteger(0)
+
+        pubnub.addListener(
+            object : StatusListener {
+                override fun status(
+                    pubnub: PubNub,
+                    status: PNStatus,
+                ) {
+                    when (status.category) {
+                        PNStatusCategory.PNConnectedCategory -> {
+                            connectedEventCount.incrementAndGet()
+                        }
+
+                        PNStatusCategory.PNSubscriptionChanged -> {
+                            subscriptionChangedCount.incrementAndGet()
+                        }
+
+                        else -> {}
+                    }
+                }
+            }
+        )
+
+        // First subscription
+        val subscriptionSet1 = pubnub.subscriptionSetOf(channelGroups = setOf(channelGroupName))
+        subscriptionSet1.addListener(
+            object : EventListener {
+                override fun message(
+                    pubnub: PubNub,
+                    result: PNMessageResult,
+                ) {
+                    println("ListenerA received: ${result.message.asString}")
+                    listenerAMessageCount.incrementAndGet()
+                }
+            }
+        )
+
+        subscriptionSet1.subscribe()
+        Thread.sleep(2000) // Wait for handshake to complete
+
+        // Second subscription (SAME channelGroup, different listener)
+        val subscriptionSet2 = pubnub.subscriptionSetOf(channelGroups = setOf(channelGroupName))
+        subscriptionSet2.addListener(
+            object : EventListener {
+                override fun message(
+                    pubnub: PubNub,
+                    result: PNMessageResult,
+                ) {
+                    println("ListenerB received: ${result.message.asString}")
+                    listenerBMessageCount.incrementAndGet()
+                }
+            }
+        )
+
+        subscriptionSet2.subscribe()
+        Thread.sleep(2000) // Wait to observe any state changes
+
+        // Publish a message - both listeners should receive it
+        pubnub.publish(testChannel, expectedMessage).sync()
+        Thread.sleep(1000)
+
+        // Verify both listeners received the message (this works regardless of the bug)
+        assertEquals("ListenerA should receive message", 1, listenerAMessageCount.get())
+        assertEquals("ListenerB should receive message", 1, listenerBMessageCount.get())
+
+        assertEquals(
+            "Should be 0 PNSubscriptionChanged events when subscribing to already subscribed channelGroup. ",
+            0,
+            subscriptionChangedCount.get()
+        )
+
+        assertEquals(
+            "Should have exactly 1 PNConnectedCategory (initial handshake only)",
+            1,
+            connectedEventCount.get()
+        )
+
+        // Clean up
+        subscriptionSet1.close()
+        subscriptionSet2.close()
+        pubnub.deleteChannelGroup(channelGroupName).sync()
     }
 
     private fun createThread(channelsList: List<String>) = Thread {
