@@ -61,6 +61,9 @@ class HereNowEndpoint internal constructor(
         if (offset != null && offset < 0) {
             throw PubNubException(PubNubError.HERE_NOW_OFFSET_OUT_OF_RANGE)
         }
+        if (offset != null && effectiveLimit == 0) {
+            throw PubNubException(PubNubError.HERE_NOW_OFFSET_REQUIRES_LIMIT_HIGHER_THAN_0)
+        }
 
         log.debug(
             LogMessage(
@@ -110,6 +113,7 @@ class HereNowEndpoint internal constructor(
 
     internal fun calculateNextOffset(occupantsCount: Int): Int? {
         return when {
+            !includeUUIDs -> null
             occupantsCount < effectiveLimit -> null
             occupantsCount == effectiveLimit -> (offset ?: 0) + effectiveLimit
             else -> null
@@ -130,32 +134,31 @@ class HereNowEndpoint internal constructor(
             nextOffset = calculateNextOffset(occupantsCount),
         )
 
-        if (includeUUIDs) {
-            val pnHereNowChannelData = PNHereNowChannelData(
-                channelName = channels[0],
-                occupancy = input.occupancy,
-                occupants = occupants
-            )
-            pnHereNowResult.channels[channels[0]] = pnHereNowChannelData
-        }
+        // When includeUUIDs = false, occupants list will be empty but channel data is still present
+        val pnHereNowChannelData = PNHereNowChannelData(
+            channelName = channels[0],
+            occupancy = input.occupancy,
+            occupants = occupants
+        )
+        pnHereNowResult.channels[channels[0]] = pnHereNowChannelData
 
         return pnHereNowResult
     }
 
     private fun parseMultipleChannelResponse(input: JsonElement): PNHereNowResult {
-        val it = pubnub.mapper.getObjectIterator(input, "channels")
+        val channels = pubnub.mapper.getObjectIterator(input, "channels")
         var maxOccupantsReturned = 0
 
         val channelsMap = mutableMapOf<String, PNHereNowChannelData>()
-        while (it.hasNext()) {
-            val entry = it.next()
+        while (channels.hasNext()) {
+            val entry = channels.next()
             val occupants = if (includeUUIDs) {
                 prepareOccupantData(pubnub.mapper.getField(entry.value, "uuids")!!)
             } else {
                 emptyList()
             }
 
-            // we want to know amount of occupants in channel that has the most occupants
+            // we want to know number of occupants in channel that has the most occupants
             if (occupants.size > maxOccupantsReturned) {
                 maxOccupantsReturned = occupants.size
             }

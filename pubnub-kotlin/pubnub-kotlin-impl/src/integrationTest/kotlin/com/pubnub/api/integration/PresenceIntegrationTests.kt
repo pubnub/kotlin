@@ -366,6 +366,45 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
     }
 
     @Test
+    fun testHereNowWithStartFromIncludeUUIDSisFalse() {
+        val offsetValue = 2
+        val totalClientsCount = 5
+        val expectedChannel = randomChannel()
+
+        val clients =
+            mutableListOf(pubnub).apply {
+                addAll(generateSequence { createPubNub {} }.take(totalClientsCount - 1).toList())
+            }
+
+        clients.forEach {
+            it.subscribeNonBlocking(expectedChannel)
+        }
+        Thread.sleep(2000)
+
+        pubnub.hereNow(
+            channels = listOf(expectedChannel),
+            includeUUIDs = false,
+            offset = offsetValue,
+        ).asyncRetry { result ->
+            assertFalse(result.isFailure)
+            result.onSuccess {
+                assertEquals(1, it.totalChannels)
+                assertEquals(1, it.channels.size) // Channel data is always present (consistent with multi-channel)
+                assertEquals(totalClientsCount, it.totalOccupancy)
+
+                // Verify channel data is present with occupancy but no occupants list
+                val channelData = it.channels[expectedChannel]!!
+                assertEquals(totalClientsCount, channelData.occupancy)
+                assertEquals(0, channelData.occupants.size) // occupants list is empty when includeUUIDs = false
+
+                // nextOffset should be null since includeUUIDs = false
+                assertNull(it.nextOffset)
+            }
+        }
+    }
+
+
+    @Test
     fun testHereNowPaginationFlow() {
         // 8 users in channel01
         // 3 users in channel02
@@ -464,6 +503,50 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
 
         // Verify we got all unique clients
         assertEquals(channel01TotalCount, allOccupantsInChannel01.size)
+    }
+
+    @Test
+    fun testHereNowPaginationFlowIncludeUUIDSisFalse() {
+        // 8 users in channel01
+        // 3 users in channel02
+        val pageSize = 3
+        val totalClientsCount = 11
+        val channel01TotalCount = 8
+        val channel02TotalCount = 3
+        val channel01 = randomChannel()
+        val channel02 = randomChannel()
+
+        val clients =
+            mutableListOf(pubnub).apply {
+                addAll(generateSequence { createPubNub {} }.take(channel01TotalCount - 1).toList())
+            }
+
+        clients.forEach {
+            it.subscribeNonBlocking(channel01)
+        }
+
+        clients.take(3).forEach {
+            it.subscribeNonBlocking(channel02)
+        }
+
+        Thread.sleep(2000)
+
+        // First page
+        val firstPage = pubnub.hereNow(
+            channels = listOf(channel01, channel02),
+            includeUUIDs = false,
+            limit = pageSize,
+        ).sync()!!
+
+        assertEquals(2, firstPage.totalChannels)
+        val channel01Data = firstPage.channels[channel01]!!
+        assertEquals(channel01TotalCount, channel01Data.occupancy)
+        assertEquals(0, channel01Data.occupants.size)
+        assertEquals(totalClientsCount, firstPage.totalOccupancy) // this is totalOccupancy in all pages
+        assertNull(firstPage.nextOffset)
+        val channel02Data = firstPage.channels[channel02]!!
+        assertEquals(channel02TotalCount, channel02Data.occupancy)
+        assertEquals(0, channel02Data.occupants.size)
     }
 
     @Test
