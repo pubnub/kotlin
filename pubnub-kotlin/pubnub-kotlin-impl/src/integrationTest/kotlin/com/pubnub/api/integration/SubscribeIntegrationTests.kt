@@ -1406,7 +1406,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
 
         assertEquals(
             "Should be 0 PNSubscriptionChanged events when subscribing to already subscribed channel. ",
-            0, // Fixed! Was 1 before (the bug)
+            0,
             subscriptionChangedCount.get()
         )
 
