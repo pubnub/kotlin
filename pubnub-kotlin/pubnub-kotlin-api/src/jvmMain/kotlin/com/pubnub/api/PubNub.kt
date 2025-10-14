@@ -761,13 +761,22 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      * currently subscribed to the channel and the total occupancy count of the channel.
      *
      * @param channels The channels to get the 'here now' details of.
-     *                 Leave empty for a 'global her now'.
+     *                 Leave empty for a 'global here now'.
      * @param channelGroups The channel groups to get the 'here now' details of.
-     *                      Leave empty for a 'global her now'.
+     *                      Leave empty for a 'global here now'.
      * @param includeState Whether the response should include presence state information, if available.
      *                     Defaults to `false`.
      * @param includeUUIDs Whether the response should include UUIDs od connected clients.
      *                     Defaults to `true`.
+     * @param limit Maximum number of occupants to return per channel. Valid range: 0-1000.
+     *              - Default: 1000
+     *              - Use 0 to get occupancy counts without user details
+     *              - Values outside the valid range are automatically adjusted to 1000 with a warning log
+     * @param offset Zero-based starting index for pagination. Returns occupants starting from this position in the list. Must be >= 0.
+     *              - Default: null (no offset)
+     *              - Requires limit > 0 (throws [PubNubException] with [PubNubError.HERE_NOW_OFFSET_REQUIRES_LIMIT_HIGHER_THAN_0] if limit is 0)
+     *              - Use with limit to paginate through large user lists
+     *              - Throws [PubNubException] with [PubNubError.HERE_NOW_OFFSET_OUT_OF_RANGE] if negative
      */
     actual fun hereNow(
         channels: List<String>,

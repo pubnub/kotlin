@@ -665,4 +665,80 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
         // Note: In a shared test environment, there might be residual presence state
         assertTrue(result.totalOccupancy >= 0)
     }
+
+    @Test
+    fun testHereNowWithChannelGroupPagination() {
+        val testLimit = 3
+        val totalClientsCount = 6
+        val channelGroupName = randomValue()
+        val channel01 = randomChannel()
+        val channel02 = randomChannel()
+
+        // Create channel group and add channels to it
+        pubnub.addChannelsToChannelGroup(
+            channels = listOf(channel01, channel02),
+            channelGroup = channelGroupName,
+        ).sync()
+
+        Thread.sleep(1000) // Wait for channel group to be created
+
+        // Subscribe clients to the channels
+        val clients = mutableListOf(pubnub).apply {
+            addAll(generateSequence { createPubNub {} }.take(totalClientsCount - 1).toList())
+        }
+
+        // Subscribe all clients to channel01, first 3 to channel02
+        clients.forEach {
+            it.subscribeNonBlocking(channel01)
+        }
+        clients.take(3).forEach {
+            it.subscribeNonBlocking(channel02)
+        }
+
+        Thread.sleep(2000) // Wait for presence to register
+
+        // Query hereNow with channel group and limit
+        val result = pubnub.hereNow(
+            channelGroups = listOf(channelGroupName),
+            includeUUIDs = true,
+            limit = testLimit,
+        ).sync()!!
+
+        // Verify results
+        assertEquals(2, result.totalChannels)
+        assertTrue(result.channels.containsKey(channel01))
+        assertTrue(result.channels.containsKey(channel02))
+
+        val channel01Data = result.channels[channel01]!!
+        val channel02Data = result.channels[channel02]!!
+
+        // Verify occupancy counts
+        assertEquals(totalClientsCount, channel01Data.occupancy)
+        assertEquals(3, channel02Data.occupancy)
+
+        // Verify pagination: with limit=3, each channel should return at most 3 occupants
+        assertTrue(channel01Data.occupants.size <= testLimit)
+        assertTrue(channel02Data.occupants.size <= testLimit)
+        assertEquals(testLimit, channel01Data.occupants.size) // channel01 has 6 users, should return 3
+        assertEquals(testLimit, channel02Data.occupants.size) // channel02 has 3 users, should return 3
+
+        // Test with offset
+        val resultWithOffset = pubnub.hereNow(
+            channels = emptyList(),
+            channelGroups = listOf(channelGroupName),
+            includeUUIDs = true,
+            limit = testLimit,
+            offset = 2,
+        ).sync()!!
+
+        val channel01DataWithOffset = resultWithOffset.channels[channel01]!!
+        assertEquals(totalClientsCount, channel01DataWithOffset.occupancy)
+        // With offset=2 and limit=3, we should get 3 occupants (skipping first 2)
+        assertEquals(testLimit, channel01DataWithOffset.occupants.size)
+
+        // Cleanup: remove channel group
+        pubnub.deleteChannelGroup(
+            channelGroup = channelGroupName,
+        ).sync()
+    }
 }
