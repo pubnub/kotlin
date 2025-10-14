@@ -8,7 +8,6 @@ import com.pubnub.api.endpoints.presence.HereNow
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.presence.PNHereNowResult
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
 
 class HereNowPaginationTestSuite : com.pubnub.internal.suite.CoreEndpointTestSuite<HereNow, PNHereNowResult>() {
     override fun pnOperation() = PNOperationType.PNHereNowOperation
@@ -27,8 +26,6 @@ class HereNowPaginationTestSuite : com.pubnub.internal.suite.CoreEndpointTestSui
         assertEquals(1, result.totalOccupancy)
         assertEquals(1, result.channels.size)
         assertEquals("user_1", result.channels["ch1"]!!.occupants[0].uuid)
-        // With only 1 occupant but limit 100, nextOffset should be null (no more results)
-        assertNull(result.nextOffset)
     }
 
     override fun successfulResponseBody() =

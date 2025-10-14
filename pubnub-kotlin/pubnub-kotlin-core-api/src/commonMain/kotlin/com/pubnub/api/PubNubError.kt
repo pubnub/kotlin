@@ -246,8 +246,8 @@ enum class PubNubError(private val code: Int, val message: String) {
     ),
 
     HERE_NOW_OFFSET_REQUIRES_LIMIT_HIGHER_THAN_0(
-    183,
-    "offset requires limit > 0",
+        183,
+        "offset requires limit > 0",
     )
 
     ;

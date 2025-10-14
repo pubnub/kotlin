@@ -37,7 +37,7 @@ class HereNowEndpoint internal constructor(
     override val offset: Int? = null,
 ) : EndpointCore<Envelope<JsonElement>, PNHereNowResult>(pubnub), HereNow {
     private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
-    private val effectiveLimit: Int = if (limit in MIN_CHANNEL_OCCUPANTS_LIMIT..MAX_CHANNEL_OCCUPANTS_LIMIT) {
+    internal val effectiveLimit: Int = if (limit in MIN_CHANNEL_OCCUPANTS_LIMIT..MAX_CHANNEL_OCCUPANTS_LIMIT) {
         limit
     } else {
         log.warn(
@@ -111,27 +111,16 @@ class HereNowEndpoint internal constructor(
 
     override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.PRESENCE
 
-    internal fun calculateNextOffset(occupantsCount: Int): Int? {
-        return when {
-            !includeUUIDs -> null
-            occupantsCount < effectiveLimit -> null
-            occupantsCount == effectiveLimit -> (offset ?: 0) + effectiveLimit
-            else -> null
-        }
-    }
-
     private fun parseSingleChannelResponse(input: Envelope<JsonElement>): PNHereNowResult {
         val occupants = if (includeUUIDs && input.uuids != null) {
             prepareOccupantData(input.uuids)
         } else {
             emptyList()
         }
-        val occupantsCount = occupants.size
 
         val pnHereNowResult = PNHereNowResult(
             totalChannels = 1,
             totalOccupancy = input.occupancy,
-            nextOffset = calculateNextOffset(occupantsCount),
         )
 
         // When includeUUIDs = false, occupants list will be empty but channel data is still present
@@ -147,7 +136,6 @@ class HereNowEndpoint internal constructor(
 
     private fun parseMultipleChannelResponse(input: JsonElement): PNHereNowResult {
         val channels = pubnub.mapper.getObjectIterator(input, "channels")
-        var maxOccupantsReturned = 0
 
         val channelsMap = mutableMapOf<String, PNHereNowChannelData>()
         while (channels.hasNext()) {
@@ -156,11 +144,6 @@ class HereNowEndpoint internal constructor(
                 prepareOccupantData(pubnub.mapper.getField(entry.value, "uuids")!!)
             } else {
                 emptyList()
-            }
-
-            // we want to know number of occupants in channel that has the most occupants
-            if (occupants.size > maxOccupantsReturned) {
-                maxOccupantsReturned = occupants.size
             }
 
             val pnHereNowChannelData = PNHereNowChannelData(
@@ -175,7 +158,6 @@ class HereNowEndpoint internal constructor(
             totalChannels = pubnub.mapper.elementToInt(input, "total_channels"),
             totalOccupancy = pubnub.mapper.elementToInt(input, "total_occupancy"),
             channels = channelsMap,
-            nextOffset = calculateNextOffset(maxOccupantsReturned),
         )
 
         return pnHereNowResult

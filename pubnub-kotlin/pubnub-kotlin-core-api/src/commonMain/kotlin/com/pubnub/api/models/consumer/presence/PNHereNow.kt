@@ -8,14 +8,12 @@ import com.pubnub.api.JsonElement
  * @property totalChannels Total number channels matching the associated HereNow call.
  * @property totalOccupancy Total occupancy matching the associated HereNow call.
  * @property channels A map with values of [PNHereNowChannelData] for each channel.
- * @property nextOffset Starting position for next page of results. Null if no more pages available.
  */
 class PNHereNowResult(
     val totalChannels: Int,
     val totalOccupancy: Int,
     // TODO this should be immutable
     val channels: MutableMap<String, PNHereNowChannelData> = mutableMapOf(),
-    val nextOffset: Int? = null,
 )
 
 /**
