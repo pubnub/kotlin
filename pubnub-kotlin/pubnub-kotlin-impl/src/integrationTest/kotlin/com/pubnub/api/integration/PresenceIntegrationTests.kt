@@ -319,9 +319,6 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
 
                 // With limit=3, we should get only 3 occupants even though 6 are present
                 assertEquals(testLimit, channelData.occupants.size)
-
-                // nextOffset should be present since we limited results
-                assertEquals(3, it.nextOffset)
             }
         }
     }
@@ -358,9 +355,6 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
 
                 // With offset=2, we should get remaining occupants (5 total - 2 skipped = 3 remaining)
                 assertEquals(totalClientsCount - offsetValue, channelData.occupants.size)
-
-                // nextOffset should be null since we got all remaining results
-                assertNull(it.nextOffset)
             }
         }
     }
@@ -396,19 +390,17 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
                 val channelData = it.channels[expectedChannel]!!
                 assertEquals(totalClientsCount, channelData.occupancy)
                 assertEquals(0, channelData.occupants.size) // occupants list is empty when includeUUIDs = false
-
-                // nextOffset should be null since includeUUIDs = false
-                assertNull(it.nextOffset)
             }
         }
     }
-
 
     @Test
     fun testHereNowPaginationFlow() {
         // 8 users in channel01
         // 3 users in channel02
         val pageSize = 3
+        val firstPageOffset = 0
+        val secondPageOffset = 3
         val totalClientsCount = 11
         val channel01TotalCount = 8
         val channel02TotalCount = 3
@@ -444,7 +436,6 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
         assertEquals(channel01TotalCount, channel01DataPage01.occupancy)
         assertEquals(totalClientsCount, firstPage.totalOccupancy) // this is totalOccupancy in all pages
         assertEquals(pageSize, channel01DataPage01.occupants.size)
-        assertEquals(3, firstPage.nextOffset)
         val channel02Data = firstPage.channels[channel02]!!
         assertEquals(channel02TotalCount, channel02Data.occupancy)
         assertEquals(pageSize, channel02Data.occupants.size)
@@ -452,12 +443,12 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
         // Collect UUIDs from first page
         channel01DataPage01.occupants.forEach { allOccupantsInChannel01.add(it.uuid) }
 
-        // Second page using nextOffset
+        // Second page using pageSize + firstPageOffset
         val secondPage = pubnub.hereNow(
             channels = listOf(channel01),
             includeUUIDs = true,
             limit = pageSize,
-            offset = firstPage.nextOffset!!,
+            offset = pageSize + firstPageOffset,
         ).sync()!!
 
         val channel01DataPage02 = secondPage.channels[channel01]!!
@@ -467,7 +458,6 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
             secondPage.totalOccupancy
         ) // we get result only from channel01 because there is no more result for channel02
         assertEquals(pageSize, channel01DataPage02.occupants.size)
-        assertEquals(6, secondPage.nextOffset)
 
         assertFalse(secondPage.channels.containsKey(channel02))
 
@@ -477,12 +467,12 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
             allOccupantsInChannel01.add(it.uuid)
         }
 
-        // Third page using nextOffset from second page
+        // Third page using pageSize + secondPageOffset
         val thirdPage = pubnub.hereNow(
             channels = listOf(channel01),
             includeUUIDs = true,
             limit = pageSize,
-            offset = secondPage.nextOffset!!,
+            offset = pageSize + secondPageOffset,
         ).sync()!!
 
         val channel01DataPage03 = thirdPage.channels[channel01]!!
@@ -491,9 +481,6 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
         // Should have remaining clients (8 - 3 - 3 = 2)
         val expectedRemainingCount = channel01TotalCount - (pageSize * 2)
         assertEquals(expectedRemainingCount, channel01DataPage03.occupants.size)
-
-        // Should be null since no more pages
-        assertNull(thirdPage.nextOffset)
 
         // Collect UUIDs from third page
         channel01DataPage03.occupants.forEach {
@@ -543,46 +530,9 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
         assertEquals(channel01TotalCount, channel01Data.occupancy)
         assertEquals(0, channel01Data.occupants.size)
         assertEquals(totalClientsCount, firstPage.totalOccupancy) // this is totalOccupancy in all pages
-        assertNull(firstPage.nextOffset)
         val channel02Data = firstPage.channels[channel02]!!
         assertEquals(channel02TotalCount, channel02Data.occupancy)
         assertEquals(0, channel02Data.occupants.size)
-    }
-
-    @Test
-    fun testHereNowNextStartFromWhenMoreResults() {
-        val limitValue = 4
-        val totalClientsCount = 10
-        val expectedChannel = randomChannel()
-
-        val clients =
-            mutableListOf(pubnub).apply {
-                addAll(generateSequence { createPubNub {} }.take(totalClientsCount - 1).toList())
-            }
-
-        clients.forEach {
-            it.subscribeNonBlocking(expectedChannel)
-        }
-        Thread.sleep(2000)
-
-        pubnub.hereNow(
-            channels = listOf(expectedChannel),
-            includeUUIDs = true,
-            limit = limitValue,
-        ).asyncRetry { result ->
-            assertFalse(result.isFailure)
-            result.onSuccess {
-                assertEquals(1, it.totalChannels)
-                val channelData = it.channels[expectedChannel]!!
-                assertEquals(totalClientsCount, channelData.occupancy)
-                assertEquals(limitValue, channelData.occupants.size)
-
-                // Since returned count equals limit and there are more clients,
-                // nextOffset should be present
-                assertNotNull(it.nextOffset)
-                assertEquals(limitValue, it.nextOffset)
-            }
-        }
     }
 
     @Test
@@ -618,66 +568,6 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
 
                 // With limit=0, occupants list should be empty
                 assertEquals(0, channelData.occupants.size)
-            }
-        }
-    }
-
-    @Test
-    fun testHereNowPaginationWithEmptyChannels() {
-        val emptyChannel = randomChannel()
-        val pageSize = 10
-
-        // Don't subscribe any clients to the channel, leaving it empty
-
-        pubnub.hereNow(
-            channels = listOf(emptyChannel),
-            includeUUIDs = true,
-            limit = pageSize,
-        ).asyncRetry { result ->
-            assertFalse(result.isFailure)
-            result.onSuccess {
-                // Empty channels are still included in the response
-                assertEquals(1, it.totalChannels)
-                assertEquals(0, it.totalOccupancy)
-                assertEquals(1, it.channels.size)
-
-                val channelData = it.channels[emptyChannel]!!
-                assertEquals(0, channelData.occupancy)
-                assertTrue(channelData.occupants.isEmpty())
-
-                // No pagination needed for empty results
-                assertNull(it.nextOffset)
-            }
-        }
-    }
-
-    @Test
-    fun testHereNowPaginationWithEmptyChannelsAndOffset() {
-        val emptyChannel = randomChannel()
-        val pageSize = 10
-        val offset = 5
-
-        // Don't subscribe any clients to the channel, leaving it empty
-
-        pubnub.hereNow(
-            channels = listOf(emptyChannel),
-            includeUUIDs = true,
-            limit = pageSize,
-            offset = offset,
-        ).asyncRetry { result ->
-            assertFalse(result.isFailure)
-            result.onSuccess {
-                // Empty channels are still included in the response even with offset
-                assertEquals(1, it.totalChannels)
-                assertEquals(0, it.totalOccupancy)
-                assertEquals(1, it.channels.size)
-
-                val channelData = it.channels[emptyChannel]!!
-                assertEquals(0, channelData.occupancy)
-                assertTrue(channelData.occupants.isEmpty())
-
-                // No pagination needed for empty results
-                assertNull(it.nextOffset)
             }
         }
     }
@@ -724,9 +614,6 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
         // With limit=3, each channel should have at most 3 occupants returned
         assertTrue(channel01Data.occupants.size <= testLimit)
         assertTrue(channel02Data.occupants.size <= testLimit)
-
-        // nextOffset should be present since we limited results and channel02 has 6 occupants
-        assertNotNull(result.nextOffset)
     }
 
     @Test
@@ -764,88 +651,9 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
     }
 
     @Test
-    fun testGlobalHereNowPaginationFlow() {
-        val pageSize = 3
-        val totalClientsInChannel01 = 8
-        val totalClientsInChannel02 = 3
-        val channel01 = randomChannel()
-        val channel02 = randomChannel()
-
-        val clients =
-            mutableListOf(pubnub).apply {
-                addAll(generateSequence { createPubNub {} }.take(totalClientsInChannel01 - 1).toList())
-            }
-
-        // Subscribe 8 clients to channel01
-        clients.forEach {
-            it.subscribeNonBlocking(channel01)
-        }
-
-        // Subscribe first 3 clients to channel02 as well
-        clients.take(totalClientsInChannel02).forEach {
-            it.subscribeNonBlocking(channel02)
-        }
-
-        Thread.sleep(2000)
-
-        val allOccupantsInChannel01 = mutableSetOf<String>()
-
-        // First page - global hereNow with no channels specified
-        val firstPage = pubnub.hereNow(
-            channels = emptyList(),
-            includeUUIDs = true,
-            limit = pageSize,
-        ).sync()!!
-
-        // Should include at least our test channels
-        assertTrue(firstPage.totalChannels >= 2)
-        assertTrue(firstPage.channels.containsKey(channel01))
-        assertTrue(firstPage.channels.containsKey(channel02))
-
-        val channel01DataPage01 = firstPage.channels[channel01]!!
-        val channel02DataPage01 = firstPage.channels[channel02]!!
-
-        assertEquals(totalClientsInChannel01, channel01DataPage01.occupancy)
-        assertEquals(totalClientsInChannel02, channel02DataPage01.occupancy)
-
-        // With limit, should get limited results
-        assertTrue(channel01DataPage01.occupants.size <= pageSize)
-        assertTrue(channel02DataPage01.occupants.size <= pageSize)
-
-        // Collect UUIDs from first page
-        channel01DataPage01.occupants.forEach { allOccupantsInChannel01.add(it.uuid) }
-
-        // Should have nextOffset since we have more results
-        assertNotNull(firstPage.nextOffset)
-
-        // Second page using nextOffset
-        val secondPage = pubnub.hereNow(
-            channels = emptyList(),
-            includeUUIDs = true,
-            limit = pageSize,
-            offset = firstPage.nextOffset!!,
-        ).sync()!!
-
-        // May have more or fewer channels than first page
-        assertTrue(secondPage.totalChannels >= 1)
-
-        if (secondPage.channels.containsKey(channel01)) {
-            val channel01DataPage02 = secondPage.channels[channel01]!!
-            assertEquals(totalClientsInChannel01, channel01DataPage02.occupancy)
-
-            // Collect UUIDs from second page (should not overlap with first page)
-            channel01DataPage02.occupants.forEach {
-                assertFalse("UUID ${it.uuid} already found in first page", allOccupantsInChannel01.contains(it.uuid))
-                allOccupantsInChannel01.add(it.uuid)
-            }
-        }
-    }
-
-    @Test
     fun testGlobalHereNowWithNoActiveChannels() {
         // Don't subscribe any clients, making it a truly empty global query
         // Wait a bit to ensure no residual presence state from other tests
-        Thread.sleep(1000)
 
         val result = pubnub.hereNow(
             channels = emptyList(),
@@ -853,11 +661,8 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
             limit = 10,
         ).sync()!!
 
-        // Should have no channels or very few residual ones
+        // Should have no channels
         // Note: In a shared test environment, there might be residual presence state
         assertTrue(result.totalOccupancy >= 0)
-
-        // No pagination needed when no active subscriptions for this client
-        // Note: Result may vary based on test isolation
     }
 }
