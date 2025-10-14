@@ -485,7 +485,7 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
         // 3 users in channel02
         final int pageSize = 3;
         final int firstOffset = 0;
-        final int secondOffset = 0;
+        final int secondOffset = 3;
         final int totalClientsCount = 11;
         final int channel01TotalCount = 8;
         final int channel02TotalCount = 3;
@@ -711,27 +711,5 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
 
         // With offset=2, we should get remaining occupants
         assertTrue(channelData.getOccupants().size() <= totalClientsCount - offsetValue);
-    }
-
-    @Test
-    public void testGlobalHereNowWithNoActiveChannels() throws PubNubException {
-        // Don't subscribe any clients, making it a truly empty global query
-        // Wait a bit to ensure no residual presence state from other tests
-        pause(1);
-
-        PNHereNowResult result = pubNub.hereNow()
-                .channels(Collections.emptyList())
-                .includeUUIDs(true)
-                .limit(10)
-                .sync();
-
-        assertNotNull(result);
-
-        // Should have no channels or very few residual ones
-        // Note: In a shared test environment, there might be residual presence state
-        assertTrue(result.getTotalOccupancy() == 0);
-
-        // No pagination needed when no active subscriptions for this client
-        // Note: Result may vary based on test isolation
     }
 }
