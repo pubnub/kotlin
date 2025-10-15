@@ -101,7 +101,7 @@ class HereNowEndpoint internal constructor(
 
     override fun createResponse(input: Response<Envelope<JsonElement>>): PNHereNowResult {
         return if (isGlobalHereNow() || (channels.size > 1 || channelGroups.isNotEmpty())) {
-            parseMultipleChannelResponse(input.body()?.payload!!)
+            parseMultipleChannelResponse(input.body()!!.payload!!)
         } else {
             parseSingleChannelResponse(input.body()!!)
         }
@@ -112,8 +112,8 @@ class HereNowEndpoint internal constructor(
     override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.PRESENCE
 
     private fun parseSingleChannelResponse(input: Envelope<JsonElement>): PNHereNowResult {
-        val occupants = if (includeUUIDs && input.uuids != null) {
-            prepareOccupantData(input.uuids)
+        val occupants = if (includeUUIDs) {
+            prepareOccupantData(input.uuids!!)
         } else {
             emptyList()
         }
