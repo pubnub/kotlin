@@ -57,27 +57,6 @@ class AddChannelsToPushTest : BaseTest() {
     }
 
     @Test
-    fun testAddMicrosoftSuccessSync() {
-        WireMock.stubFor(
-            WireMock.get(WireMock.urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
-                .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]")),
-        )
-
-        pubnub.addPushNotificationsOnChannels(
-            deviceId = "niceDevice",
-            pushType = PNPushType.MPNS,
-            channels = listOf("ch1", "ch2", "ch3"),
-        ).sync()
-
-        val requests = WireMock.findAll(WireMock.getRequestedFor(WireMock.urlMatching("/.*")))
-        assertEquals(1, requests.size)
-        assertEquals("ch1,ch2,ch3", requests[0].queryParameter("add").firstValue())
-        assertEquals("mpns", requests[0].queryParameter("type").firstValue())
-        assertFalse(requests[0].queryParameter("environment").isPresent)
-        assertFalse(requests[0].queryParameter("topic").isPresent)
-    }
-
-    @Test
     fun testAddApns2SuccessSync() {
         WireMock.stubFor(
             WireMock.get(WireMock.urlPathEqualTo("/v2/push/sub-key/mySubscribeKey/devices-apns2/niceDevice"))

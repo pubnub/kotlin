@@ -44,8 +44,7 @@ public class PushIntegrationTest extends BaseIntegrationTest {
     public void testEnumNames() {
         assertEquals("apns", PNPushType.APNS.toString());
         assertEquals("gcm", PNPushType.GCM.toString());
-        assertEquals("gcm", PNPushType.FCM.toString());
-        assertEquals("mpns", PNPushType.MPNS.toString());
+        assertEquals("fcm", PNPushType.FCM.toString());
         assertEquals("apns2", PNPushType.APNS2.toString());
     }
 

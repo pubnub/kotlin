@@ -26,8 +26,7 @@ class PushIntegrationTest : BaseIntegrationTest() {
     @Test
     fun testEnumNames() {
         assertEquals("apns", PNPushType.APNS.toParamString())
-        assertEquals("gcm", PNPushType.FCM.toParamString())
-        assertEquals("mpns", PNPushType.MPNS.toParamString())
+        assertEquals("fcm", PNPushType.FCM.toParamString())
         assertEquals("apns2", PNPushType.APNS2.toParamString())
     }
 

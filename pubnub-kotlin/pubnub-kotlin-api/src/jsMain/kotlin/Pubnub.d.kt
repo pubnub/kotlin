@@ -1307,16 +1307,6 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var isSilent: Boolean
     }
 
-    interface MPNSNotificationPayload : BaseNotificationPayload {
-        var backContent: String?
-
-        var backTitle: String?
-
-        var count: Number?
-
-        var type: String?
-    }
-
     interface FCMNotificationPayload : BaseNotificationPayload {
         var isSilent: Boolean
         var icon: String?
@@ -1326,7 +1316,6 @@ open external class PubNub(config: Any /* UUID | UserId */) {
 
     interface `T$37` {
         var apns: Any?
-        var mpns: Any?
         var fcm: Any?
     }
 
@@ -1344,7 +1333,6 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var body: String?
 
         var apns: APNSNotificationPayload
-        var mpns: MPNSNotificationPayload
         var fcm: FCMNotificationPayload
 
         fun buildPayload(platforms: Array<String>): Any?

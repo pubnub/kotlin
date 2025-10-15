@@ -6,9 +6,14 @@ enum class PNPushType(private val value: String) {
         message = "GCM is deprecated. Use FCM instead."
     )
     GCM("gcm"),
+
+    @Deprecated(
+        replaceWith = ReplaceWith("APNS2"),
+        message = "APNS is deprecated. Use APNS2 instead."
+    )
     APNS("apns"),
-    MPNS("mpns"),
-    FCM("gcm"),
+
+    FCM("fcm"),
     APNS2("apns2"),
     ;
 

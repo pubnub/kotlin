@@ -59,25 +59,6 @@ class RemoveAllPushChannelsForDeviceTest : BaseTest() {
     }
 
     @Test
-    fun testMicrosoftSuccessSyncRemoveAll() {
-        stubFor(
-            get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice/remove"))
-                .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")),
-        )
-
-        pubnub.removeAllPushNotificationsFromDeviceWithPushToken(
-            deviceId = "niceDevice",
-            pushType = PNPushType.MPNS,
-        ).sync()
-
-        val requests = findAll(getRequestedFor(urlMatching("/.*")))
-        assertEquals(1, requests.size)
-        assertEquals("mpns", requests[0].queryParameter("type").firstValue())
-        assertFalse(requests[0].queryParameter("environment").isPresent)
-        assertFalse(requests[0].queryParameter("topic").isPresent)
-    }
-
-    @Test
     fun testApns2SuccessSyncRemoveAll() {
         stubFor(
             get(urlPathEqualTo("/v2/push/sub-key/mySubscribeKey/devices-apns2/niceDevice/remove"))

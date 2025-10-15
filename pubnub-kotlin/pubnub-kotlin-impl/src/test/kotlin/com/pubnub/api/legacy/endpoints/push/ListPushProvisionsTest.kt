@@ -70,29 +70,6 @@ class ListPushProvisionsTest : BaseTest() {
     }
 
     @Test
-    fun testMicrosoftSuccessSync() {
-        stubFor(
-            get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
-                .willReturn(aResponse().withBody("""["ch1", "ch2", "ch3"]""")),
-        )
-
-        val response =
-            pubnub.auditPushChannelProvisions(
-                deviceId = "niceDevice",
-                pushType = PNPushType.MPNS,
-                topic = "irrelevant",
-            ).sync()
-
-        assertEquals(listOf("ch1", "ch2", "ch3"), response.channels)
-
-        val requests = findAll(getRequestedFor(urlMatching("/.*")))
-        assertEquals(1, requests.size)
-        assertEquals("mpns", requests[0].queryParameter("type").firstValue())
-        assertFalse(requests[0].queryParameter("environment").isPresent)
-        assertFalse(requests[0].queryParameter("topic").isPresent)
-    }
-
-    @Test
     fun testApns2SuccessSync() {
         stubFor(
             get(urlPathEqualTo("/v2/push/sub-key/mySubscribeKey/devices-apns2/niceDevice"))
