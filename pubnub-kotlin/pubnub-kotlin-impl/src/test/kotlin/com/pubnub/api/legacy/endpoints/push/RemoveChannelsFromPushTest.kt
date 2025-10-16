@@ -50,7 +50,7 @@ class RemoveChannelsFromPushTest : BaseTest() {
 
         val requests = WireMock.findAll(WireMock.getRequestedFor(WireMock.urlMatching("/.*")))
         assertEquals(1, requests.size)
-        assertEquals("gcm", requests[0].queryParameter("type").firstValue())
+        assertEquals("fcm", requests[0].queryParameter("type").firstValue())
         assertEquals("chr1,chr2,chr3", requests[0].queryParameter("remove").firstValue())
         assertFalse(requests[0].queryParameter("environment").isPresent)
         assertFalse(requests[0].queryParameter("topic").isPresent)

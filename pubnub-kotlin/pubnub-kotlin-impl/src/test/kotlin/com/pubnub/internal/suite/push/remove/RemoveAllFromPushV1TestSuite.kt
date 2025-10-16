@@ -33,7 +33,7 @@ class RemoveAllFromPushV1TestSuite :
 
     override fun mappingBuilder() =
         get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/12345/remove"))
-            .withQueryParam("type", equalTo("gcm"))
+            .withQueryParam("type", equalTo("fcm"))
             .withQueryParam("environment", absent())
             .withQueryParam("topic", absent())
 

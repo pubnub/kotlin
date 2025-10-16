@@ -53,7 +53,7 @@ class RemoveAllPushChannelsForDeviceTest : BaseTest() {
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
-        assertEquals("gcm", requests[0].queryParameter("type").firstValue())
+        assertEquals("fcm", requests[0].queryParameter("type").firstValue())
         assertFalse(requests[0].queryParameter("environment").isPresent)
         assertFalse(requests[0].queryParameter("topic").isPresent)
     }
