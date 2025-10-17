@@ -771,7 +771,6 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      * @param limit Maximum number of occupants to return per channel. Valid range: 0-1000.
      *              - Default: 1000
      *              - Use 0 to get occupancy counts without user details
-     *              - Values outside the valid range are automatically adjusted to 1000 with a warning log
      * @param offset Zero-based starting index for pagination. Returns occupants starting from this position in the list. Must be >= 0.
      *              - Default: null (no offset)
      */
