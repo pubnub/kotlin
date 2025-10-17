@@ -774,9 +774,6 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      *              - Values outside the valid range are automatically adjusted to 1000 with a warning log
      * @param offset Zero-based starting index for pagination. Returns occupants starting from this position in the list. Must be >= 0.
      *              - Default: null (no offset)
-     *              - Requires limit > 0 (throws [PubNubException] with [PubNubError.HERE_NOW_OFFSET_REQUIRES_LIMIT_HIGHER_THAN_0] if limit is 0)
-     *              - Use with limit to paginate through large user lists
-     *              - Throws [PubNubException] with [PubNubError.HERE_NOW_OFFSET_OUT_OF_RANGE] if negative
      */
     actual fun hereNow(
         channels: List<String>,
