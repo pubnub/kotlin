@@ -1,6 +1,7 @@
 package com.pubnub.api.integration
 
 import com.pubnub.api.PubNub
+import com.pubnub.api.PubNubException
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNStatusCategory
@@ -24,7 +25,6 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Timeout
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
@@ -740,5 +740,63 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
         pubnub.deleteChannelGroup(
             channelGroup = channelGroupName,
         ).sync()
+    }
+
+    @Test
+    fun testHereNowWithLimitAbove1000andBelow0() {
+        val limitAboveMax = 2000
+        val totalClientsCount = 5
+        val expectedChannel = randomChannel()
+
+        val clients =
+            mutableListOf(pubnub).apply {
+                addAll(generateSequence { createPubNub {} }.take(totalClientsCount - 1).toList())
+            }
+
+        clients.forEach {
+            it.subscribeNonBlocking(expectedChannel)
+        }
+        Thread.sleep(2000)
+
+        // This should not throw a client-side validation error
+        // Server will validate the limit and respond accordingly
+        pubnub.hereNow(
+            channels = listOf(expectedChannel),
+            includeUUIDs = true,
+            limit = limitAboveMax,
+        ).asyncRetry { result ->
+            assertTrue(result.isFailure)
+            result.onFailure { exception: PubNubException ->
+                assertTrue(exception.message!!.contains("Cannot return more than 1000 uuids at a time"))
+            }
+        }
+    }
+
+    @Test
+    fun testHereNowWithLimitBelow0() {
+        val limitBelow0 = -1
+        val totalClientsCount = 5
+        val expectedChannel = randomChannel()
+
+        val clients =
+            mutableListOf(pubnub).apply {
+                addAll(generateSequence { createPubNub {} }.take(totalClientsCount - 1).toList())
+            }
+
+        clients.forEach {
+            it.subscribeNonBlocking(expectedChannel)
+        }
+        Thread.sleep(2000)
+
+        pubnub.hereNow(
+            channels = listOf(expectedChannel),
+            includeUUIDs = true,
+            limit = limitBelow0,
+        ).asyncRetry { result ->
+            assertTrue(result.isFailure)
+            result.onFailure { exception: PubNubException ->
+                assertTrue(exception.message!!.contains("Limit must be greater than or equal to 0"))
+            }
+        }
     }
 }
