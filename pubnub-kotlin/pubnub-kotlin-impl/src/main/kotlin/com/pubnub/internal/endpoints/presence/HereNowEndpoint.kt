@@ -88,8 +88,12 @@ class HereNowEndpoint internal constructor(
     override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.PRESENCE
 
     private fun parseSingleChannelResponse(input: Envelope<JsonElement>): PNHereNowResult {
-        val occupants = if (includeUUIDs && input.uuids != null) {
-            prepareOccupantData(input.uuids)
+        val occupants = if (includeUUIDs) {
+            when {
+                input.uuids != null -> prepareOccupantData(input.uuids)
+                limit == 0 -> emptyList() // Server omits uuids field when limit=0
+                else -> prepareOccupantData(input.uuids!!) // Should be present, NPE if malformed response
+            }
         } else {
             emptyList()
         }
@@ -117,8 +121,12 @@ class HereNowEndpoint internal constructor(
         while (channels.hasNext()) {
             val entry = channels.next()
             val uuidsField = pubnub.mapper.getField(entry.value, "uuids")
-            val occupants = if (includeUUIDs && uuidsField != null) {
-                prepareOccupantData(uuidsField)
+            val occupants = if (includeUUIDs) {
+                when {
+                    uuidsField != null -> prepareOccupantData(uuidsField)
+                    limit == 0 -> emptyList() // Server omits uuids field when limit=0
+                    else -> prepareOccupantData(uuidsField!!) // Should be present, NPE if malformed response
+                }
             } else {
                 emptyList()
             }
