@@ -45,6 +45,7 @@ fun AtomicBoolean.listen(function: () -> Boolean): AtomicBoolean {
 
 fun <Output> RemoteAction<Output>.asyncRetry(function: (result: Result<Output>) -> Unit) {
     val hits = AtomicInteger(0)
+    var lastException: Throwable? = null
 
     val block = {
         hits.incrementAndGet()
@@ -55,7 +56,15 @@ fun <Output> RemoteAction<Output>.asyncRetry(function: (result: Result<Output>) 
             try {
                 function.invoke(result)
                 success.set(true)
+            } catch (e: AssertionError) {
+                // Test logic errors - fail immediately with clear context
+                throw AssertionError("Assertion failed on attempt ${hits.get()}: ${e.message}", e)
+            } catch (e: org.opentest4j.AssertionFailedError) {
+                // JUnit 5 assertion failures - fail immediately
+                throw e
             } catch (e: Throwable) {
+                // Environmental failures - save for potential retry
+                lastException = e
                 success.set(false)
             }
             latch.countDown()
@@ -125,6 +134,13 @@ fun PubNub.subscribeToBlocking(vararg channels: String) {
         withPresence = true,
     )
     Thread.sleep(2000)
+}
+
+fun PubNub.subscribeNonBlocking(vararg channels: String) {
+    this.subscribe(
+        channels = listOf(*channels),
+        withPresence = true,
+    )
 }
 
 fun PubNub.unsubscribeFromBlocking(vararg channels: String) {

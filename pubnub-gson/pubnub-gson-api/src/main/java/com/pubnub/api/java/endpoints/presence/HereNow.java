@@ -11,4 +11,8 @@ public interface HereNow extends Endpoint<PNHereNowResult> {
     HereNow includeState(boolean includeState);
 
     HereNow includeUUIDs(boolean includeUUIDs);
+
+    HereNow limit(int limit);
+
+    HereNow offset(Integer offset);
 }

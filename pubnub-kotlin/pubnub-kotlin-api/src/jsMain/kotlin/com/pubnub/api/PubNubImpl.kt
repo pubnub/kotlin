@@ -354,11 +354,14 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
         channels: List<String>,
         channelGroups: List<String>,
         includeState: Boolean,
-        includeUUIDs: Boolean
+        includeUUIDs: Boolean,
+        limit: Int,
+        offset: Int?
     ): HereNow {
         return HereNowImpl(
             jsPubNub,
             createJsObject {
+                // todo handle limit and offset
                 this.channels = channels.toTypedArray()
                 this.channelGroups = channelGroups.toTypedArray()
                 this.includeState = includeState

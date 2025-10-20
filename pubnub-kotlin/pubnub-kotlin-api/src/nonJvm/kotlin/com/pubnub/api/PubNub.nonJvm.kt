@@ -158,7 +158,9 @@ actual interface PubNub {
         channels: List<String>,
         channelGroups: List<String>,
         includeState: Boolean,
-        includeUUIDs: Boolean
+        includeUUIDs: Boolean,
+        limit: Int,
+        offset: Int?
     ): HereNow
 
     actual fun whereNow(uuid: String): WhereNow

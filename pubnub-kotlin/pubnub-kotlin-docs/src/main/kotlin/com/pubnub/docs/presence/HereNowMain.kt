@@ -42,7 +42,9 @@ fun singleChannelHereNow(pubnub: PubNub, channel: String) {
     println("\n# Basic hereNow for single channel: $channel")
 
     pubnub.hereNow(
-        channels = listOf(channel)
+        channels = listOf(channel),
+        limit = 100,
+        offset = 10
     ).async { result ->
         result.onSuccess { response ->
             println("SUCCESS: Retrieved presence information")

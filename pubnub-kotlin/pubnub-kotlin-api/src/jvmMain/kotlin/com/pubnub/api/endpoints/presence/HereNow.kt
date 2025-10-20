@@ -11,4 +11,6 @@ actual interface HereNow : Endpoint<PNHereNowResult> {
     val channelGroups: List<String>
     val includeState: Boolean
     val includeUUIDs: Boolean
+    val limit: Int
+    val offset: Int?
 }
