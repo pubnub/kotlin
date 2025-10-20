@@ -821,7 +821,7 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
     }
 
     @Test
-    fun testHereNowWithLimitAbove1000andBelow0() {
+    fun testHereNowWithLimitAbove1000() {
         val limitAboveMax = 2000
         val totalClientsCount = 5
         val expectedChannel = randomChannel()

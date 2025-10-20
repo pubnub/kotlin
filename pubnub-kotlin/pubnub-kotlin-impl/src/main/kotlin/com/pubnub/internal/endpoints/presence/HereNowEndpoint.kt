@@ -92,7 +92,7 @@ class HereNowEndpoint internal constructor(
             when {
                 input.uuids != null -> prepareOccupantData(input.uuids)
                 limit == 0 -> emptyList() // Server omits uuids field when limit=0
-                else -> prepareOccupantData(input.uuids!!) // Should be present, NPE if malformed response
+                else -> prepareOccupantData(input.uuids!!)
             }
         } else {
             emptyList()
@@ -125,7 +125,7 @@ class HereNowEndpoint internal constructor(
                 when {
                     uuidsField != null -> prepareOccupantData(uuidsField)
                     limit == 0 -> emptyList() // Server omits uuids field when limit=0
-                    else -> prepareOccupantData(uuidsField!!) // Should be present, NPE if malformed response
+                    else -> prepareOccupantData(uuidsField!!)
                 }
             } else {
                 emptyList()
