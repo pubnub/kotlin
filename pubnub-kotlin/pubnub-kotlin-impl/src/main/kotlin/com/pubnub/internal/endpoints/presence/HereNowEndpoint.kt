@@ -88,8 +88,8 @@ class HereNowEndpoint internal constructor(
     override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.PRESENCE
 
     private fun parseSingleChannelResponse(input: Envelope<JsonElement>): PNHereNowResult {
-        val occupants = if (includeUUIDs) {
-            prepareOccupantData(input.uuids!!)
+        val occupants = if (includeUUIDs && input.uuids != null) {
+            prepareOccupantData(input.uuids)
         } else {
             emptyList()
         }
@@ -116,8 +116,9 @@ class HereNowEndpoint internal constructor(
         val channelsMap = mutableMapOf<String, PNHereNowChannelData>()
         while (channels.hasNext()) {
             val entry = channels.next()
-            val occupants = if (includeUUIDs) {
-                prepareOccupantData(pubnub.mapper.getField(entry.value, "uuids")!!)
+            val uuidsField = pubnub.mapper.getField(entry.value, "uuids")
+            val occupants = if (includeUUIDs && uuidsField != null) {
+                prepareOccupantData(uuidsField)
             } else {
                 emptyList()
             }

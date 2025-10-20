@@ -573,6 +573,84 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
     }
 
     @Test
+    fun testHereNowMultipleChannelsWithLimit0() {
+        val limit = 0
+        val totalClientsCount = 5
+        val channel01 = randomChannel()
+        val channel02 = randomChannel()
+
+        // Subscribe multiple clients to both channels
+        val clients =
+            mutableListOf(pubnub).apply {
+                addAll(generateSequence { createPubNub {} }.take(totalClientsCount - 1).toList())
+            }
+
+        clients.forEach {
+            it.subscribeNonBlocking(channel01)
+            it.subscribeNonBlocking(channel02)
+        }
+        Thread.sleep(2000)
+
+        // Query with limit=0 to get occupancy without occupant details for multiple channels
+        pubnub.hereNow(
+            channels = listOf(channel01, channel02),
+            includeUUIDs = true,
+            limit = limit,
+        ).asyncRetry { result ->
+            assertFalse(result.isFailure)
+            result.onSuccess {
+                assertEquals(2, it.totalChannels)
+
+                val channel01Data = it.channels[channel01]!!
+                val channel02Data = it.channels[channel02]!!
+
+                // Occupancy should reflect actual client count for both channels
+                assertEquals(totalClientsCount, channel01Data.occupancy)
+                assertEquals(totalClientsCount, channel02Data.occupancy)
+
+                // With limit=0, occupants list should be empty for both channels
+                assertEquals(0, channel01Data.occupants.size)
+                assertEquals(0, channel02Data.occupants.size)
+            }
+        }
+    }
+
+    @Test
+    fun testGlobalHereNowWithLimit0() {
+        val limit = 0
+        val totalClientsCount = 4
+        val expectedChannel = randomChannel()
+
+        // Subscribe multiple clients to the channel
+        val clients =
+            mutableListOf(pubnub).apply {
+                addAll(generateSequence { createPubNub {} }.take(totalClientsCount - 1).toList())
+            }
+
+        clients.forEach {
+            it.subscribeNonBlocking(expectedChannel)
+        }
+        Thread.sleep(2000)
+
+        // Global hereNow with limit=0
+        val result = pubnub.hereNow(
+            channels = emptyList(),
+            includeUUIDs = true,
+            limit = limit,
+        ).sync()!!
+
+        // Should include at least our test channel
+        assertTrue(result.totalChannels >= 1)
+        assertTrue(result.channels.containsKey(expectedChannel))
+
+        val channelData = result.channels[expectedChannel]!!
+        assertEquals(totalClientsCount, channelData.occupancy)
+
+        // With limit=0, occupants list should be empty
+        assertEquals(0, channelData.occupants.size)
+    }
+
+    @Test
     fun testGlobalHereNowWithLimit() {
         val testLimit = 3
         val totalClientsCount = 6
