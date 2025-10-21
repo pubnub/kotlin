@@ -1253,6 +1253,153 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         assertEquals(2, subscriptionSet.subscriptions.size)
     }
 
+    @Test
+    fun `shouldDeduplicateChannelSubscriptionsWhenSubscribingToSameChannelMultipleTimes`() {
+        // given
+        val numberOfSubscribe = 4
+        // punbub.subscribe does subscribe to already subscribed channel so only two subscribe calls should occur. Handshake and actual subscribe.
+        val countDownLatch = CountDownLatch(2)
+        var interceptedUrl: HttpUrl? = null
+        val testChannel = randomChannel()
+
+        clientConfig = {
+            httpLoggingInterceptor =
+                HttpLoggingInterceptor { message ->
+                    // Intercept subscribe GET request
+                    if (message.startsWith("--> GET https://") && message.contains("/v2/subscribe/")) {
+                        val url = message.substringAfter("--> GET ").substringBefore(" HTTP")
+                        interceptedUrl = url.toHttpUrlOrNull()
+                        countDownLatch.countDown()
+                    }
+                }.apply { level = HttpLoggingInterceptor.Level.BASIC }
+        }
+
+        try {
+            repeat(numberOfSubscribe) { iteration ->
+                pubnub.subscribe(channels = listOf(testChannel))
+                Thread.sleep(2000)
+                println("Subscribe call ${iteration + 1}/$numberOfSubscribe completed")
+            }
+
+            // Wait for the subscribe request to be made
+            assertTrue(countDownLatch.await(12000, TimeUnit.MILLISECONDS))
+
+            // then: verify channel appears only once in subscribed channels
+            val subscribedChannels = pubnub.getSubscribedChannels()
+
+            assertEquals(1, subscribedChannels.size)
+            assertTrue(subscribedChannels.contains(testChannel))
+
+            // then: verify the actual HTTP request only includes the channel once
+            assertNotNull("Expected to intercept subscribe URL", interceptedUrl)
+
+            val channelsParam =
+                interceptedUrl!!.queryParameter("channel") ?: interceptedUrl!!.encodedPath.substringAfter("/subscribe/")
+                    .substringAfter("/").substringBefore("/")
+
+            val channelList = channelsParam.split(",").filter { it.isNotEmpty() }
+
+            assertEquals(1, channelList.count { it == testChannel })
+        } finally {
+            pubnub.forceDestroy()
+        }
+    }
+
+    @Test
+    fun `heartbeatShouldDeduplicateChannelNameInUrlWhenSubscribingToSameChannelMultipleTimes`() {
+        // given
+        val numberOfSubscribe = 4
+        val countDownLatch = CountDownLatch(2) // we want to verify second heartbeat URL
+        var interceptedUrl: HttpUrl? = null
+        val testChannel = randomChannel()
+
+        clientConfig = {
+            heartbeatInterval = 5
+            httpLoggingInterceptor =
+                HttpLoggingInterceptor { message ->
+                    // Intercept subscribe GET request
+                    if (message.startsWith("--> GET https://") && message.contains("/v2/presence/") && message.contains("/heartbeat")) {
+                        val url = message.substringAfter("--> GET ").substringBefore(" HTTP")
+                        interceptedUrl = url.toHttpUrlOrNull()
+                        countDownLatch.countDown()
+                    }
+                }.apply { level = HttpLoggingInterceptor.Level.BASIC }
+        }
+
+        try {
+            repeat(numberOfSubscribe) { iteration ->
+                pubnub.subscribe(channels = listOf(testChannel))
+                Thread.sleep(150)
+                println("Subscribe call ${iteration + 1}/$numberOfSubscribe completed")
+            }
+
+            // Wait for the heartbeat request to be made
+            assertTrue(countDownLatch.await(6000, TimeUnit.MILLISECONDS))
+
+            // then: verify the actual HTTP request only includes the channel once
+            assertNotNull("Expected to intercept heartbeat URL", interceptedUrl)
+
+            // Extract channel from heartbeat URL: /v2/presence/sub-key/{sub-key}/channel/{channels}/heartbeat
+            val channelsParam = interceptedUrl!!.encodedPath
+                .substringAfter("/channel/")
+                .substringBefore("/heartbeat")
+
+            val channelList = channelsParam.split(",").filter { it.isNotEmpty() }
+
+            assertEquals(1, channelList.count { it == testChannel })
+
+        } finally {
+            pubnub.forceDestroy()
+        }
+    }
+
+    @Test
+    fun `shouldDeduplicateChannelSubscriptionsWhenSubscribingToListOfTheSameChannels`() {
+        // given
+        val countDownLatch = CountDownLatch(2) // Only two subscribe calls should occur. Handshake and actual subscribe.
+        var interceptedUrl: HttpUrl? = null
+        val testChannel = randomChannel()
+
+        clientConfig = {
+            httpLoggingInterceptor =
+                HttpLoggingInterceptor { message ->
+                    // Intercept subscribe GET request
+                    if (message.startsWith("--> GET https://") && message.contains("/v2/subscribe/")) {
+                        val url = message.substringAfter("--> GET ").substringBefore(" HTTP")
+                        interceptedUrl = url.toHttpUrlOrNull()
+                        countDownLatch.countDown()
+                    }
+                }.apply { level = HttpLoggingInterceptor.Level.BASIC }
+        }
+
+        try {
+            pubnub.subscribe(channels = listOf(testChannel, testChannel, testChannel))
+            Thread.sleep(2000)
+
+            // Wait for the subscribe request to be made
+            assertTrue(countDownLatch.await(12000, TimeUnit.MILLISECONDS))
+
+            // then: verify channel appears only once in subscribed channels
+            val subscribedChannels = pubnub.getSubscribedChannels()
+
+            assertEquals(1, subscribedChannels.size)
+            assertTrue(subscribedChannels.contains(testChannel))
+
+            // then: verify the actual HTTP request only includes the channel once
+            assertNotNull("Expected to intercept subscribe URL", interceptedUrl)
+
+            val channelsParam =
+                interceptedUrl!!.queryParameter("channel") ?: interceptedUrl!!.encodedPath.substringAfter("/subscribe/")
+                    .substringAfter("/").substringBefore("/")
+
+            val channelList = channelsParam.split(",").filter { it.isNotEmpty() }
+
+            assertEquals(1, channelList.count { it == testChannel })
+        } finally {
+            pubnub.forceDestroy()
+        }
+    }
+
     private fun publishToChannels(channelsList: List<String>) {
         channelsList.forEach { channelName ->
             pubnub.publish(channelName, "-=message to $channelName").sync()

@@ -324,7 +324,7 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
     }
 
     @Test
-    fun testHereNowWithStartFrom() {
+    fun testHereNowWithOffset() {
         val offsetValue = 2
         val totalClientsCount = 5
         val expectedChannel = randomChannel()
