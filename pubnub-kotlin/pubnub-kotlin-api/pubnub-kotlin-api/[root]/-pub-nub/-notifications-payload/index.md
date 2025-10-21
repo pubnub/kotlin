@@ -14,7 +14,6 @@ interface [NotificationsPayload](index.md)
 | [body](body.md) | [js]<br>abstract var [body](body.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)? |
 | [debugging](debugging.md) | [js]<br>abstract var [debugging](debugging.md): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html) |
 | [fcm](fcm.md) | [js]<br>abstract var [fcm](fcm.md): [PubNub.FCMNotificationPayload](../-f-c-m-notification-payload/index.md) |
-| [mpns](mpns.md) | [js]<br>abstract var [mpns](mpns.md): [PubNub.MPNSNotificationPayload](../-m-p-n-s-notification-payload/index.md) |
 | [payload](payload.md) | [js]<br>abstract var [payload](payload.md): [PubNub.T$37](../-t$37/index.md) |
 | [sound](sound.md) | [js]<br>abstract var [sound](sound.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)? |
 | [subtitle](subtitle.md) | [js]<br>abstract var [subtitle](subtitle.md): [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)? |

@@ -3,7 +3,20 @@
 # GCM
 
 [common]\
-[GCM](index.md)
+[~~GCM~~](index.md)
+
+---
+
+### Deprecated
+
+GCM is deprecated. Use FCM instead.
+
+#### Replace with
+
+```kotlin
+FCM
+```
+---
 
 ## Properties
 

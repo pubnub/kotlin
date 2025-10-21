@@ -15,6 +15,7 @@
 | [com.pubnub.docs.entities](pubnub-gson-docs/com.pubnub.docs.entities/index.md) |
 | [com.pubnub.docs.fileSharing](pubnub-gson-docs/com.pubnub.docs.fileSharing/index.md) |
 | [com.pubnub.docs.logging](pubnub-gson-docs/com.pubnub.docs.logging/index.md) |
+| [com.pubnub.docs.logging.customlogger](pubnub-gson-docs/com.pubnub.docs.logging.customlogger/index.md) |
 | [com.pubnub.docs.messagePersistence](pubnub-gson-docs/com.pubnub.docs.messagePersistence/index.md) |
 | [com.pubnub.docs.messageReactions](pubnub-gson-docs/com.pubnub.docs.messageReactions/index.md) |
 | [com.pubnub.docs.miscellaneous](pubnub-gson-docs/com.pubnub.docs.miscellaneous/index.md) |

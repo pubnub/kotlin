@@ -3,4 +3,4 @@
 # NetworkResponse
 
 [jvm]\
-constructor(message: [NetworkLog.Response](../../-network-log/-response/index.md))
+constructor(url: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html), status: [Int](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html), headers: [Map](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html), [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)&gt;? = null, body: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)? = null)

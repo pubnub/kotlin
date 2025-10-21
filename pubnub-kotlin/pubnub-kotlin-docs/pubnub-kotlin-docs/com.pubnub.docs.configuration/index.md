@@ -7,6 +7,7 @@
 | Name | Summary |
 |---|---|
 | [ConfigurationOther](-configuration-other/index.md) | [jvm]<br>class [ConfigurationOther](-configuration-other/index.md) : [SnippetBase](../com.pubnub.docs/-snippet-base/index.md) |
+| [MyCustomLoggerImpl](-my-custom-logger-impl/index.md) | [jvm]<br>class [MyCustomLoggerImpl](-my-custom-logger-impl/index.md) : [CustomLogger](../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.logging/-custom-logger/index.md)<br>When config options of slf4j implementation of your choice like logback or log4j don't meet you logging requirements implement CustomLogger and pass implementation to PNConfiguration.customLoggers |
 
 ## Functions
 

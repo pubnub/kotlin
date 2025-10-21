@@ -12,7 +12,6 @@ interface [PushPayloadSerializer](index.md)
 | [APS](../-push-payload-helper/-a-p-n-s-payload/-a-p-s/index.md) |
 | [APNS2Configuration](../-push-payload-helper/-a-p-n-s-payload/-a-p-n-s2-configuration/index.md) |
 | [Target](../-push-payload-helper/-a-p-n-s-payload/-a-p-n-s2-configuration/-target/index.md) |
-| [MPNSPayload](../-push-payload-helper/-m-p-n-s-payload/index.md) |
 | [FCMPayload](../-push-payload-helper/-f-c-m-payload/index.md) |
 | [Notification](../-push-payload-helper/-f-c-m-payload/-notification/index.md) |
 | [FCMPayloadV2](../-push-payload-helper/-f-c-m-payload-v2/index.md) |

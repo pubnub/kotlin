@@ -29,6 +29,8 @@ expect interface [HereNow](index.md) : [PNFuture](../../../../../pubnub-kotlin/p
 | [channels](channels.md) | [jvm]<br>abstract val [channels](channels.md): [List](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html)&lt;[String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)&gt; |
 | [includeState](include-state.md) | [jvm]<br>abstract val [includeState](include-state.md): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html) |
 | [includeUUIDs](include-u-u-i-ds.md) | [jvm]<br>abstract val [includeUUIDs](include-u-u-i-ds.md): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html) |
+| [limit](limit.md) | [jvm]<br>abstract val [limit](limit.md): [Int](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html) |
+| [offset](offset.md) | [jvm]<br>abstract val [offset](offset.md): [Int](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html)? |
 
 ## Functions
 

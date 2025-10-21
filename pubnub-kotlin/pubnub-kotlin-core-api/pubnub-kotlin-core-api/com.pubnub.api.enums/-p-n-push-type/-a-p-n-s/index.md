@@ -3,7 +3,20 @@
 # APNS
 
 [common]\
-[APNS](index.md)
+[~~APNS~~](index.md)
+
+---
+
+### Deprecated
+
+APNS is deprecated. Use APNS2 instead.
+
+#### Replace with
+
+```kotlin
+APNS2
+```
+---
 
 ## Properties
 

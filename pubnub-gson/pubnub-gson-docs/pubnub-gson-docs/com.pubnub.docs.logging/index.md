@@ -6,6 +6,6 @@
 
 | Name | Summary |
 |---|---|
-| [LoggingExampleApp](-logging-example-app/index.md) | [jvm]<br>open class [LoggingExampleApp](-logging-example-app/index.md) |
+| [LoggingLog4j2App](-logging-log4j2-app/index.md) | [jvm]<br>open class [LoggingLog4j2App](-logging-log4j2-app/index.md) |
 | [LoggingLogbackApp](-logging-logback-app/index.md) | [jvm]<br>open class [LoggingLogbackApp](-logging-logback-app/index.md) |
 | [LoggingSlf4jSimpleApp](-logging-slf4j-simple-app/index.md) | [jvm]<br>open class [LoggingSlf4jSimpleApp](-logging-slf4j-simple-app/index.md) |

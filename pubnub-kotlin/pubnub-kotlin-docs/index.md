@@ -15,6 +15,7 @@
 | [com.pubnub.docs.entities](pubnub-kotlin-docs/com.pubnub.docs.entities/index.md) |
 | [com.pubnub.docs.fileSharing](pubnub-kotlin-docs/com.pubnub.docs.fileSharing/index.md) |
 | [com.pubnub.docs.logging](pubnub-kotlin-docs/com.pubnub.docs.logging/index.md) |
+| [com.pubnub.docs.logging.customlogger](pubnub-kotlin-docs/com.pubnub.docs.logging.customlogger/index.md) |
 | [com.pubnub.docs.messagePersistence](pubnub-kotlin-docs/com.pubnub.docs.messagePersistence/index.md) |
 | [com.pubnub.docs.messageReactions](pubnub-kotlin-docs/com.pubnub.docs.messageReactions/index.md) |
 | [com.pubnub.docs.miscellaneous](pubnub-kotlin-docs/com.pubnub.docs.miscellaneous/index.md) |

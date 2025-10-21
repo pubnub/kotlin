@@ -16,7 +16,7 @@ jvm
 
 | | |
 |---|---|
-| pushType | Accepted values: FCM, APNS, MPNS, APNS2.     @see [PNPushType](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.enums/-p-n-push-type/index.md) |
+| pushType | Accepted values: FCM, APNS2.     @see [PNPushType](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.enums/-p-n-push-type/index.md) |
 | channels | Channels to add push notifications to. |
 | deviceId | The device ID (token) to associate with push notifications. |
 | environment | Environment within which device should manage list of channels with enabled notifications     (works only if [pushType](add-push-notifications-on-channels.md) set to [PNPushType.APNS2](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.enums/-p-n-push-type/-a-p-n-s2/index.md)). |

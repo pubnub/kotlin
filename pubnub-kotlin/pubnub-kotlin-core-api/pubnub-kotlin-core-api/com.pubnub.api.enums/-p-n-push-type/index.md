@@ -9,9 +9,8 @@ enum [PNPushType](index.md) : [Enum](https://kotlinlang.org/api/core/kotlin-stdl
 
 | | |
 |---|---|
-| [APNS](-a-p-n-s/index.md) | [common]<br>[APNS](-a-p-n-s/index.md) |
-| [MPNS](-m-p-n-s/index.md) | [common]<br>[MPNS](-m-p-n-s/index.md) |
-| [GCM](-g-c-m/index.md) | [common]<br>[GCM](-g-c-m/index.md) |
+| [GCM](-g-c-m/index.md) | [common]<br>[~~GCM~~](-g-c-m/index.md) |
+| [APNS](-a-p-n-s/index.md) | [common]<br>[~~APNS~~](-a-p-n-s/index.md) |
 | [FCM](-f-c-m/index.md) | [common]<br>[FCM](-f-c-m/index.md) |
 | [APNS2](-a-p-n-s2/index.md) | [common]<br>[APNS2](-a-p-n-s2/index.md) |
 

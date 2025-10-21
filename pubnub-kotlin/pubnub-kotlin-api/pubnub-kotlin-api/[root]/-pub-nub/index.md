@@ -94,7 +94,6 @@ open external class [PubNub](index.md)(config: [Any](https://kotlinlang.org/api/
 | [MessageEvent](-message-event/index.md) | [js]<br>interface [MessageEvent](-message-event/index.md) |
 | [MetadataIncludeOptions](-metadata-include-options/index.md) | [js]<br>interface [MetadataIncludeOptions](-metadata-include-options/index.md) |
 | [MetadataPage](-metadata-page/index.md) | [js]<br>interface [MetadataPage](-metadata-page/index.md) |
-| [MPNSNotificationPayload](-m-p-n-s-notification-payload/index.md) | [js]<br>interface [MPNSNotificationPayload](-m-p-n-s-notification-payload/index.md) : [PubNub.BaseNotificationPayload](-base-notification-payload/index.md) |
 | [NotificationsPayload](-notifications-payload/index.md) | [js]<br>interface [NotificationsPayload](-notifications-payload/index.md) |
 | [ObjectParam](-object-param/index.md) | [js]<br>interface [ObjectParam](-object-param/index.md) |
 | [Page](-page/index.md) | [js]<br>interface [Page](-page/index.md) |

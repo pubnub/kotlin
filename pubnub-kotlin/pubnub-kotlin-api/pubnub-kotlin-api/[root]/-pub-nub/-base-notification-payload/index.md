@@ -9,7 +9,6 @@ interface [BaseNotificationPayload](index.md)
 | |
 |---|
 | [APNSNotificationPayload](../-a-p-n-s-notification-payload/index.md) |
-| [MPNSNotificationPayload](../-m-p-n-s-notification-payload/index.md) |
 | [FCMNotificationPayload](../-f-c-m-notification-payload/index.md) |
 
 ## Properties
