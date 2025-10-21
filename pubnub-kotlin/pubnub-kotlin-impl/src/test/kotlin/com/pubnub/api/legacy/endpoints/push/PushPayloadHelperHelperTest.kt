@@ -19,7 +19,6 @@ import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayloadV
 import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayloadV2.FcmOptions
 import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayloadV2.WebpushConfig
 import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayloadV2.WebpushConfig.WebpushFcmOptions
-import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.MPNSPayload
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -42,7 +41,6 @@ class PushPayloadHelperHelperTest : BaseTest() {
         pushPayloadHelper.commonPayload = null
         pushPayloadHelper.fcmPayload = null
         pushPayloadHelper.fcmPayloadV2 = null
-        pushPayloadHelper.mpnsPayload = null
         val map = pushPayloadHelper.build()
         assertTrue(map.isEmpty())
     }
@@ -54,7 +52,6 @@ class PushPayloadHelperHelperTest : BaseTest() {
         pushPayloadHelper.commonPayload = HashMap()
         pushPayloadHelper.fcmPayload = FCMPayload()
         pushPayloadHelper.fcmPayloadV2 = FCMPayloadV2()
-        pushPayloadHelper.mpnsPayload = MPNSPayload()
         val map = pushPayloadHelper.build()
         assertTrue(map.isEmpty())
     }
@@ -610,114 +607,5 @@ class PushPayloadHelperHelperTest : BaseTest() {
         assertNotNull(pnFcmMap["key_2"])
         assertNotNull(pnFcmMap["key_3"])
         assertNotNull(pnFcmMap["key_4"])
-    }
-
-    @Test
-    fun testMicrosoft_Missing() {
-        val pushPayloadHelper = PushPayloadHelper()
-
-        val mpnsPayload =
-            MPNSPayload().apply {
-                backContent = "Back Content"
-                backTitle = "Back Title"
-                count = 1
-                title = "Title"
-                type = "Type"
-                custom =
-                    mapOf(
-                        "a" to "a",
-                        "b" to 1,
-                        "c" to "",
-                    )
-            }
-        pushPayloadHelper.mpnsPayload = mpnsPayload
-        val map = pushPayloadHelper.build()
-
-        val pnMpnsMap = map["pn_mpns"] as HashMap<*, *>
-        assertNotNull(pnMpnsMap)
-        assertEquals(pnMpnsMap["back_content"], "Back Content")
-        assertEquals(pnMpnsMap["back_title"], "Back Title")
-        assertEquals(pnMpnsMap["count"], 1)
-        assertEquals(pnMpnsMap["title"], "Title")
-        assertEquals(pnMpnsMap["type"], "Type")
-        assertEquals(pnMpnsMap["a"], "a")
-        assertEquals(pnMpnsMap["b"], 1)
-        assertEquals(pnMpnsMap["c"], "")
-    }
-
-    @Test
-    fun testMicrosoft_Valid() {
-        val pushPayloadHelper = PushPayloadHelper()
-        pushPayloadHelper.mpnsPayload =
-            MPNSPayload().apply {
-                backContent = "Back Content"
-                backTitle = "Back Title"
-                count = 1
-                title = "Title"
-                type = "Type"
-                custom =
-                    mapOf(
-                        "a" to "a",
-                        "b" to 1,
-                        "c" to "",
-                    )
-            }
-
-        val map = pushPayloadHelper.build()
-        val pnMpnsMap = map["pn_mpns"] as Map<*, *>
-
-        assertNotNull(pnMpnsMap)
-        assertEquals(pnMpnsMap["back_content"], "Back Content")
-        assertEquals(pnMpnsMap["back_title"], "Back Title")
-        assertEquals(pnMpnsMap["count"], 1)
-        assertEquals(pnMpnsMap["title"], "Title")
-        assertEquals(pnMpnsMap["type"], "Type")
-        assertEquals(pnMpnsMap["a"], "a")
-        assertEquals(pnMpnsMap["b"], 1)
-        assertEquals(pnMpnsMap["c"], "")
-        assertEquals(pnMpnsMap["d"], null)
-    }
-
-    @Test
-    fun testMicrosoft_Empty() {
-        val pushPayloadHelper = PushPayloadHelper()
-        val mpnsPayload = MPNSPayload()
-        pushPayloadHelper.mpnsPayload = mpnsPayload
-        val map = pushPayloadHelper.build()
-        val pnMpnsMap = map["pn_mpns"]
-        assertNull(pnMpnsMap)
-    }
-
-    @Test
-    fun testMicrosoft_Custom() {
-        val pushPayloadHelper = PushPayloadHelper()
-        pushPayloadHelper.mpnsPayload =
-            MPNSPayload().apply {
-                backContent = ""
-                backTitle = "Back Title"
-                count = 1
-                title = null
-                type = "Type"
-                custom =
-                    mapOf(
-                        "a" to "a",
-                        "b" to 1,
-                        "c" to "",
-                    )
-            }
-
-        val map = pushPayloadHelper.build()
-
-        val pnMpnsMap = map["pn_mpns"] as Map<*, *>
-        assertNotNull(pnMpnsMap)
-        assertEquals("", pnMpnsMap["back_content"])
-        assertEquals("Back Title", pnMpnsMap["back_title"])
-        assertEquals(1, pnMpnsMap["count"])
-        assertFalse(pnMpnsMap.containsKey("title"))
-        assertEquals("Type", pnMpnsMap["type"])
-        assertEquals("a", pnMpnsMap["a"])
-        assertEquals(1, pnMpnsMap["b"])
-        assertEquals("", pnMpnsMap["c"])
-        assertFalse(pnMpnsMap.containsKey("d"))
     }
 }

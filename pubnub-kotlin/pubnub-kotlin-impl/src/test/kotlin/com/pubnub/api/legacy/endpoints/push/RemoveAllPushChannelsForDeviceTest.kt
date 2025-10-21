@@ -53,26 +53,7 @@ class RemoveAllPushChannelsForDeviceTest : BaseTest() {
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
-        assertEquals("gcm", requests[0].queryParameter("type").firstValue())
-        assertFalse(requests[0].queryParameter("environment").isPresent)
-        assertFalse(requests[0].queryParameter("topic").isPresent)
-    }
-
-    @Test
-    fun testMicrosoftSuccessSyncRemoveAll() {
-        stubFor(
-            get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice/remove"))
-                .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")),
-        )
-
-        pubnub.removeAllPushNotificationsFromDeviceWithPushToken(
-            deviceId = "niceDevice",
-            pushType = PNPushType.MPNS,
-        ).sync()
-
-        val requests = findAll(getRequestedFor(urlMatching("/.*")))
-        assertEquals(1, requests.size)
-        assertEquals("mpns", requests[0].queryParameter("type").firstValue())
+        assertEquals("fcm", requests[0].queryParameter("type").firstValue())
         assertFalse(requests[0].queryParameter("environment").isPresent)
         assertFalse(requests[0].queryParameter("topic").isPresent)
     }

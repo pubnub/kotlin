@@ -12,7 +12,6 @@ class PushPayloadHelper {
     )
     var fcmPayload: FCMPayload? = null
     var fcmPayloadV2: FCMPayloadV2? = null
-    var mpnsPayload: MPNSPayload? = null
     var apnsPayload: APNSPayload? = null
 
     fun build(): Map<String, Any> {
@@ -35,13 +34,6 @@ class PushPayloadHelper {
                 it.toMap().run {
                     if (isNotEmpty()) {
                         put("pn_fcm", this)
-                    }
-                }
-            }
-            mpnsPayload?.let {
-                it.toMap().run {
-                    if (isNotEmpty()) {
-                        put("pn_mpns", this)
                     }
                 }
             }
@@ -127,26 +119,6 @@ class PushPayloadHelper {
                         environment?.let { put("environment", it.name.lowercase()) }
                     }
                 }
-            }
-        }
-    }
-
-    class MPNSPayload : PushPayloadSerializer {
-        var count: Int? = null
-        var backTitle: String? = null
-        var title: String? = null
-        var backContent: String? = null
-        var type: String? = null
-        var custom: Map<String, Any>? = null
-
-        override fun toMap(): Map<String, Any> {
-            return mutableMapOf<String, Any>().apply {
-                count?.let { put("count", it) }
-                backTitle?.let { put("back_title", it) }
-                title?.let { put("title", it) }
-                backContent?.let { put("back_content", it) }
-                type?.let { put("type", it) }
-                custom?.let { putAll(it) }
             }
         }
     }

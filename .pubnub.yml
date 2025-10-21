@@ -1,9 +1,9 @@
 name: kotlin
-version: 10.6.0
+version: 11.0.0
 schema: 1
 scm: github.com/pubnub/kotlin
 files:
-  - build/libs/pubnub-kotlin-10.6.0-all.jar
+  - build/libs/pubnub-kotlin-11.0.0-all.jar
 sdks:
   - 
       type: library
@@ -23,8 +23,8 @@ sdks:
             -
               distribution-type: library
               distribution-repository: maven
-              package-name: pubnub-kotlin-10.6.0
-              location: https://repo.maven.apache.org/maven2/com/pubnub/pubnub-kotlin/10.6.0/pubnub-kotlin-10.6.0.jar
+              package-name: pubnub-kotlin-11.0.0
+              location: https://repo.maven.apache.org/maven2/com/pubnub/pubnub-kotlin/11.0.0/pubnub-kotlin-11.0.0.jar
               supported-platforms:
                 supported-operating-systems:
                   Android:
@@ -121,6 +121,19 @@ sdks:
                   license-url: https://www.apache.org/licenses/LICENSE-2.0.txt
                   is-required: Required
 changelog:
+  - date: 2025-10-21
+    version: v11.0.0
+    changes:
+      - type: feature
+        text: "Added limit and offset parameters for hereNow. Number of returned users per channel by default is limited to 1000. Breaking change."
+      - type: bug
+        text: "Single-channel hereNow with includeUUIDs=false now returns channel data in the channels map for consistency with multi-channel behaviour. Previously, the channels map was empty in this scenario, forcing reliance on totalOccupancy field only. Breaking change."
+      - type: bug
+        text: "Removed possibility to use deprecated MPNS -Microsoft Push Notification Service. Breaking change."
+      - type: bug
+        text: "Added deprecation warning for GCP and old APNS PushType. ."
+      - type: bug
+        text: "In case FCM is chosen as PushType type REST query param gets fcm value instead of gcm."
   - date: 2025-09-11
     version: v10.6.0
     changes:

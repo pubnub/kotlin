@@ -1,8 +1,6 @@
 package com.pubnub.internal.endpoints.presence
 
 import com.google.gson.JsonElement
-import com.pubnub.api.PubNubError
-import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.presence.HereNow
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.logging.LogMessage
@@ -22,8 +20,6 @@ import retrofit2.Response
 
 private const val MAX_CHANNEL_OCCUPANTS_LIMIT = 1000
 
-private const val MIN_CHANNEL_OCCUPANTS_LIMIT = 0
-
 /**
  * @see [PubNubImpl.hereNow]
  */
@@ -37,19 +33,6 @@ class HereNowEndpoint internal constructor(
     override val offset: Int? = null,
 ) : EndpointCore<Envelope<JsonElement>, PNHereNowResult>(pubnub), HereNow {
     private val log: PNLogger = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
-    internal val effectiveLimit: Int = if (limit in MIN_CHANNEL_OCCUPANTS_LIMIT..MAX_CHANNEL_OCCUPANTS_LIMIT) {
-        limit
-    } else {
-        log.warn(
-            LogMessage(
-                LogMessageContent.Text(
-                    "Valid range is $MIN_CHANNEL_OCCUPANTS_LIMIT to $MAX_CHANNEL_OCCUPANTS_LIMIT. " +
-                        "Shrinking limit to $MAX_CHANNEL_OCCUPANTS_LIMIT."
-                )
-            )
-        )
-        MAX_CHANNEL_OCCUPANTS_LIMIT
-    }
 
     private fun isGlobalHereNow() = channels.isEmpty() && channelGroups.isEmpty()
 
@@ -58,13 +41,6 @@ class HereNowEndpoint internal constructor(
     override fun getAffectedChannelGroups() = channelGroups
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<JsonElement>> {
-        if (offset != null && offset < 0) {
-            throw PubNubException(PubNubError.HERE_NOW_OFFSET_OUT_OF_RANGE)
-        }
-        if (offset != null && effectiveLimit == 0) {
-            throw PubNubException(PubNubError.HERE_NOW_OFFSET_REQUIRES_LIMIT_HIGHER_THAN_0)
-        }
-
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
@@ -73,7 +49,7 @@ class HereNowEndpoint internal constructor(
                         "channelGroups" to channelGroups,
                         "includeState" to includeState,
                         "includeUUIDs" to includeUUIDs,
-                        "limit" to effectiveLimit,
+                        "limit" to limit,
                         "offset" to (offset?.toString() ?: "null"),
                         "isGlobalHereNow" to isGlobalHereNow(),
                     ),
@@ -113,7 +89,11 @@ class HereNowEndpoint internal constructor(
 
     private fun parseSingleChannelResponse(input: Envelope<JsonElement>): PNHereNowResult {
         val occupants = if (includeUUIDs) {
-            prepareOccupantData(input.uuids!!)
+            when {
+                input.uuids != null -> prepareOccupantData(input.uuids)
+                limit == 0 -> emptyList() // Server omits uuids field when limit=0
+                else -> prepareOccupantData(input.uuids!!)
+            }
         } else {
             emptyList()
         }
@@ -140,8 +120,13 @@ class HereNowEndpoint internal constructor(
         val channelsMap = mutableMapOf<String, PNHereNowChannelData>()
         while (channels.hasNext()) {
             val entry = channels.next()
+            val uuidsField = pubnub.mapper.getField(entry.value, "uuids")
             val occupants = if (includeUUIDs) {
-                prepareOccupantData(pubnub.mapper.getField(entry.value, "uuids")!!)
+                when {
+                    uuidsField != null -> prepareOccupantData(uuidsField)
+                    limit == 0 -> emptyList() // Server omits uuids field when limit=0
+                    else -> prepareOccupantData(uuidsField!!)
+                }
             } else {
                 emptyList()
             }
@@ -196,7 +181,7 @@ class HereNowEndpoint internal constructor(
         if (channelGroups.isNotEmpty()) {
             queryParams["channel-group"] = channelGroups.toCsv()
         }
-        queryParams["limit"] = effectiveLimit.toString()
+        queryParams["limit"] = limit.toString()
         offset?.let { queryParams["offset"] = it.toString() }
     }
 }

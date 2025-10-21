@@ -50,28 +50,7 @@ class RemoveChannelsFromPushTest : BaseTest() {
 
         val requests = WireMock.findAll(WireMock.getRequestedFor(WireMock.urlMatching("/.*")))
         assertEquals(1, requests.size)
-        assertEquals("gcm", requests[0].queryParameter("type").firstValue())
-        assertEquals("chr1,chr2,chr3", requests[0].queryParameter("remove").firstValue())
-        assertFalse(requests[0].queryParameter("environment").isPresent)
-        assertFalse(requests[0].queryParameter("topic").isPresent)
-    }
-
-    @Test
-    fun testRemoveMicrosoftSuccessSync() {
-        WireMock.stubFor(
-            WireMock.get(WireMock.urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
-                .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]")),
-        )
-
-        pubnub.removePushNotificationsFromChannels(
-            deviceId = "niceDevice",
-            pushType = PNPushType.MPNS,
-            channels = listOf("chr1", "chr2", "chr3"),
-        ).sync()
-
-        val requests = WireMock.findAll(WireMock.getRequestedFor(WireMock.urlMatching("/.*")))
-        assertEquals(1, requests.size)
-        assertEquals("mpns", requests[0].queryParameter("type").firstValue())
+        assertEquals("fcm", requests[0].queryParameter("type").firstValue())
         assertEquals("chr1,chr2,chr3", requests[0].queryParameter("remove").firstValue())
         assertFalse(requests[0].queryParameter("environment").isPresent)
         assertFalse(requests[0].queryParameter("topic").isPresent)

@@ -1,3 +1,15 @@
+## v11.0.0
+October 21 2025
+
+#### Added
+- Added limit and offset parameters for hereNow. Number of returned users per channel by default is limited to 1000. Breaking change.
+
+#### Fixed
+- Single-channel hereNow with includeUUIDs=false now returns channel data in the channels map for consistency with multi-channel behaviour. Previously, the channels map was empty in this scenario, forcing reliance on totalOccupancy field only. Breaking change.
+- Removed possibility to use deprecated MPNS -Microsoft Push Notification Service. Breaking change.
+- Added deprecation warning for GCP and old APNS PushType. .
+- In case FCM is chosen as PushType type REST query param gets fcm value instead of gcm.
+
 ## v10.6.0
 September 11 2025
 

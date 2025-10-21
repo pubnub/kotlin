@@ -492,7 +492,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
     /**
      * Enable push notifications on provided set of channels.
      *
-     * @param pushType Accepted values: FCM, APNS, MPNS, APNS2.
+     * @param pushType Accepted values: FCM, APNS2.
      *                 @see [PNPushType]
      * @param channels Channels to add push notifications to.
      * @param deviceId The device ID (token) to associate with push notifications.
@@ -512,7 +512,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
     /**
      * Request a list of all channels on which push notifications have been enabled using specified [ListPushProvisions.deviceId].
      *
-     * @param pushType Accepted values: FCM, APNS, MPNS, APNS2. @see [PNPushType]
+     * @param pushType Accepted values: FCM, APNS2. @see [PNPushType]
      * @param deviceId The device ID (token) to associate with push notifications.
      * @param environment Environment within which device should manage list of channels with enabled notifications
      *                    (works only if [pushType] set to [PNPushType.APNS2]).
@@ -529,7 +529,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
     /**
      * Disable push notifications on provided set of channels.
      *
-     * @param pushType Accepted values: FCM, APNS, MPNS, APNS2. @see [PNPushType]
+     * @param pushType Accepted values: FCM, APNS2. @see [PNPushType]
      * @param channels Channels to remove push notifications from.
      * @param deviceId The device ID (token) associated with push notifications.
      * @param environment Environment within which device should manage list of channels with enabled notifications
@@ -548,7 +548,7 @@ actual interface PubNub : StatusEmitter, EventEmitter {
     /**
      * Disable push notifications from all channels registered with the specified [RemoveAllPushChannelsForDevice.deviceId].
      *
-     * @param pushType Accepted values: FCM, APNS, MPNS, APNS2. @see [PNPushType]
+     * @param pushType Accepted values: FCM, APNS2. @see [PNPushType]
      * @param deviceId The device ID (token) to associate with push notifications.
      * @param environment Environment within which device should manage list of channels with enabled notifications
      *                    (works only if [pushType] set to [PNPushType.APNS2]).
@@ -771,12 +771,8 @@ actual interface PubNub : StatusEmitter, EventEmitter {
      * @param limit Maximum number of occupants to return per channel. Valid range: 0-1000.
      *              - Default: 1000
      *              - Use 0 to get occupancy counts without user details
-     *              - Values outside the valid range are automatically adjusted to 1000 with a warning log
      * @param offset Zero-based starting index for pagination. Returns occupants starting from this position in the list. Must be >= 0.
      *              - Default: null (no offset)
-     *              - Requires limit > 0 (throws [PubNubException] with [PubNubError.HERE_NOW_OFFSET_REQUIRES_LIMIT_HIGHER_THAN_0] if limit is 0)
-     *              - Use with limit to paginate through large user lists
-     *              - Throws [PubNubException] with [PubNubError.HERE_NOW_OFFSET_OUT_OF_RANGE] if negative
      */
     actual fun hereNow(
         channels: List<String>,

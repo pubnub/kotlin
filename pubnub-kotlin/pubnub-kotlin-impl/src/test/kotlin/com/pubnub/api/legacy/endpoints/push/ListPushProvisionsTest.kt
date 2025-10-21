@@ -64,30 +64,7 @@ class ListPushProvisionsTest : BaseTest() {
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
-        assertEquals("gcm", requests[0].queryParameter("type").firstValue())
-        assertFalse(requests[0].queryParameter("environment").isPresent)
-        assertFalse(requests[0].queryParameter("topic").isPresent)
-    }
-
-    @Test
-    fun testMicrosoftSuccessSync() {
-        stubFor(
-            get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
-                .willReturn(aResponse().withBody("""["ch1", "ch2", "ch3"]""")),
-        )
-
-        val response =
-            pubnub.auditPushChannelProvisions(
-                deviceId = "niceDevice",
-                pushType = PNPushType.MPNS,
-                topic = "irrelevant",
-            ).sync()
-
-        assertEquals(listOf("ch1", "ch2", "ch3"), response.channels)
-
-        val requests = findAll(getRequestedFor(urlMatching("/.*")))
-        assertEquals(1, requests.size)
-        assertEquals("mpns", requests[0].queryParameter("type").firstValue())
+        assertEquals("fcm", requests[0].queryParameter("type").firstValue())
         assertFalse(requests[0].queryParameter("environment").isPresent)
         assertFalse(requests[0].queryParameter("topic").isPresent)
     }
