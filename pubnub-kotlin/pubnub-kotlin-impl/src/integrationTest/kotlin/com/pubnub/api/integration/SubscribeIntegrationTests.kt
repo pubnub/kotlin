@@ -1254,7 +1254,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
     }
 
     @Test
-    fun shouldDeduplicateChannelSubscriptionsWhenSubscribingToSameChannelMultipleTimes() {
+    fun `shouldDeduplicateChannelSubscriptionsWhenSubscribingToSameChannelMultipleTimes`() {
         // given
         val numberOfSubscribe = 4
         // punbub.subscribe does subscribe to already subscribed channel so only two subscribe calls should occur. Handshake and actual subscribe.
@@ -1306,7 +1306,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
     }
 
     @Test
-    fun heartbeatShouldDeduplicateChannelNameInUrlWhenSubscribingToSameChannelMultipleTimes() {
+    fun `heartbeatShouldDeduplicateChannelNameInUrlWhenSubscribingToSameChannelMultipleTimes`() {
         // given
         val numberOfSubscribe = 4
         val countDownLatch = CountDownLatch(2) // we want to verify second heartbeat URL
@@ -1347,13 +1347,14 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
             val channelList = channelsParam.split(",").filter { it.isNotEmpty() }
 
             assertEquals(1, channelList.count { it == testChannel })
+
         } finally {
             pubnub.forceDestroy()
         }
     }
 
     @Test
-    fun shouldDeduplicateChannelSubscriptionsWhenSubscribingToListOfTheSameChannels() {
+    fun `shouldDeduplicateChannelSubscriptionsWhenSubscribingToListOfTheSameChannels`() {
         // given
         val countDownLatch = CountDownLatch(2) // Only two subscribe calls should occur. Handshake and actual subscribe.
         var interceptedUrl: HttpUrl? = null

@@ -189,6 +189,10 @@ class PNConfigurationImpl(
 
         override var certificatePinner: CertificatePinner? = defaultConfiguration.certificatePinner
 
+        @Deprecated(
+            message = "This setting is deprecated. Use customLoggers instead.",
+            level = DeprecationLevel.WARNING
+        )
         override var httpLoggingInterceptor: HttpLoggingInterceptor? = defaultConfiguration.httpLoggingInterceptor
 
         override var sslSocketFactory: SSLSocketFactory? = defaultConfiguration.sslSocketFactory

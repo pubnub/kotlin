@@ -252,10 +252,14 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
         val certificatePinner: CertificatePinner?
 
         /**
-         * Sets a custom [HttpLoggingInterceptor].
+         * Sets a custom [HttpLoggingInterceptor] for logging network traffic.
          *
          * @see [HttpLoggingInterceptor]
          */
+        @Deprecated(
+            message = "This setting is deprecated. Use customLoggers instead",
+            level = DeprecationLevel.WARNING
+        )
         val httpLoggingInterceptor: HttpLoggingInterceptor?
 
         /**
@@ -496,10 +500,14 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
         fun certificatePinner(certificatePinner: CertificatePinner?): Builder
 
         /**
-         * Sets a custom [HttpLoggingInterceptor].
+         * Sets a custom [HttpLoggingInterceptor] for logging network traffic.
          *
          * @see [HttpLoggingInterceptor]
          */
+        @Deprecated(
+            message = "This setting is deprecated. Use customLoggers instead",
+            level = DeprecationLevel.WARNING
+        )
         fun httpLoggingInterceptor(httpLoggingInterceptor: HttpLoggingInterceptor?): Builder
 
         /**
