@@ -1268,7 +1268,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
 
         val customLogger = object : CustomLogger {
             override fun debug(logMessage: LogMessage) {
-                if(logMessage.type == LogMessageType.NETWORK_REQUEST){
+                if (logMessage.type == LogMessageType.NETWORK_REQUEST) {
                     val networkRequestDetails = logMessage.message as LogMessageContent.NetworkRequest
                     if (networkRequestDetails.path.contains("/v2/subscribe/")) {
                         interceptedUrl = (networkRequestDetails.origin + networkRequestDetails.path).toHttpUrlOrNull()
@@ -1324,7 +1324,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
 
         val customLogger = object : CustomLogger {
             override fun debug(logMessage: LogMessage) {
-                if(logMessage.type == LogMessageType.NETWORK_REQUEST){
+                if (logMessage.type == LogMessageType.NETWORK_REQUEST) {
                     val networkRequestDetails = logMessage.message as LogMessageContent.NetworkRequest
                     if (networkRequestDetails.path.contains("/v2/presence/") && networkRequestDetails.path.contains("/heartbeat")) {
                         interceptedUrl = (networkRequestDetails.origin + networkRequestDetails.path).toHttpUrlOrNull()
@@ -1360,7 +1360,6 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
             val channelList = channelsParam.split(",").filter { it.isNotEmpty() }
 
             assertEquals(1, channelList.count { it == testChannel })
-
         } finally {
             pubnub.forceDestroy()
         }
@@ -1373,17 +1372,17 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         var interceptedUrl: HttpUrl? = null
         val testChannel = randomChannel()
 
-         val customLogger = object : CustomLogger {
-             override fun debug(logMessage: LogMessage) {
-                 if(logMessage.type == LogMessageType.NETWORK_REQUEST){
-                     val networkRequestDetails = logMessage.message as LogMessageContent.NetworkRequest
-                        if (networkRequestDetails.path.contains("/v2/subscribe/")) {
-                            interceptedUrl = (networkRequestDetails.origin + networkRequestDetails.path).toHttpUrlOrNull()
-                            countDownLatch.countDown()
-                        }
-                 }
-             }
-         }
+        val customLogger = object : CustomLogger {
+            override fun debug(logMessage: LogMessage) {
+                if (logMessage.type == LogMessageType.NETWORK_REQUEST) {
+                    val networkRequestDetails = logMessage.message as LogMessageContent.NetworkRequest
+                    if (networkRequestDetails.path.contains("/v2/subscribe/")) {
+                        interceptedUrl = (networkRequestDetails.origin + networkRequestDetails.path).toHttpUrlOrNull()
+                        countDownLatch.countDown()
+                    }
+                }
+            }
+        }
 
         clientConfig = {
             customLoggers = listOf(customLogger)
