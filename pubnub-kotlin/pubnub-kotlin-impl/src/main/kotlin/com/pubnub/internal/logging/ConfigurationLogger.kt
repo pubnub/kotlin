@@ -75,7 +75,7 @@ object ConfigurationLogger {
             "proxySelector" to (configuration.proxySelector?.toString() ?: NOT_SET),
             "proxyAuthenticator" to (configuration.proxyAuthenticator?.toString() ?: NOT_SET),
             "maximumConnections" to (configuration.maximumConnections?.toString() ?: NOT_SET),
-            "httpLoggingInterceptor" to (configuration.httpLoggingInterceptor?.let { "(@Deprecated) enabled (${it.level})" } ?: NOT_SET),
+            "httpLoggingInterceptor" to (configuration.httpLoggingInterceptor?.toString() ?: NOT_SET),
             // SSL/TLS settings
             "sslSocketFactory" to (configuration.sslSocketFactory?.toString() ?: NOT_SET),
             "x509ExtendedTrustManager" to (configuration.x509ExtendedTrustManager?.toString() ?: NOT_SET),

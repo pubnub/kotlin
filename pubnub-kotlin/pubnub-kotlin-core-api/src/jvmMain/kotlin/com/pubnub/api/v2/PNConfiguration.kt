@@ -238,14 +238,10 @@ actual interface PNConfiguration {
     val certificatePinner: CertificatePinner?
 
     /**
-     * Sets a custom [HttpLoggingInterceptor] for logging network traffic.
+     * Sets a custom [HttpLoggingInterceptor].
      *
      * @see [HttpLoggingInterceptor]
      */
-    @Deprecated(
-        message = "This setting is deprecated. Use customLoggers instead.",
-        level = DeprecationLevel.WARNING
-    )
     val httpLoggingInterceptor: HttpLoggingInterceptor?
 
     /**
@@ -564,14 +560,10 @@ actual interface PNConfiguration {
         var certificatePinner: CertificatePinner?
 
         /**
-         * Sets a custom [HttpLoggingInterceptor] for logging network traffic.
+         * Sets a custom [HttpLoggingInterceptor].
          *
          * @see [HttpLoggingInterceptor]
          */
-        @Deprecated(
-            message = "This setting is deprecated. Use customLoggers instead",
-            level = DeprecationLevel.WARNING
-        )
         var httpLoggingInterceptor: HttpLoggingInterceptor?
 
         /**
