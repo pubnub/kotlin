@@ -6,6 +6,7 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.retry.RetryableEndpointGroup
+import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.logging.LoggerManager
@@ -17,7 +18,10 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
 import retrofit2.Response
+import java.io.ByteArrayInputStream
 import java.time.Instant
+import java.util.function.Consumer
+import javax.xml.parsers.DocumentBuilderFactory
 
 internal class UploadFileEndpoint(
     private val fileName: String,
@@ -102,6 +106,61 @@ internal class UploadFileEndpoint(
                 )
                 APPLICATION_OCTET_STREAM
             }
+        }
+    }
+
+    @Throws(PubNubException::class)
+    override fun sync(): Unit {
+        try {
+            return super.sync()
+        } catch (e: PubNubException) {
+            throw parseS3XmlError(e)
+        }
+    }
+
+    override fun async(callback: Consumer<Result<Unit>>) {
+        super.async { result ->
+            result.onFailure { throwable ->
+                if (throwable is PubNubException) {
+                    callback.accept(Result.failure(parseS3XmlError(throwable)))
+                } else {
+                    callback.accept(result)
+                }
+            }
+            result.onSuccess {
+                callback.accept(result)
+            }
+        }
+    }
+
+    private fun parseS3XmlError(exception: PubNubException): PubNubException {
+        val errorMessage = exception.errorMessage
+
+        // Check if error message looks like XML
+        if (errorMessage == null || !errorMessage.trim().startsWith("<")) {
+            return exception
+        }
+
+        return try {
+            val dbFactory = DocumentBuilderFactory.newInstance()
+            dbFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true)
+            dbFactory.isXIncludeAware = false
+            val dBuilder = dbFactory.newDocumentBuilder()
+            val doc = dBuilder.parse(ByteArrayInputStream(errorMessage.toByteArray()))
+            doc.documentElement.normalize()
+
+            val messageElements = doc.getElementsByTagName("Message")
+            val cleanMessage = messageElements.item(0)?.firstChild?.nodeValue ?: errorMessage
+
+            exception.copy(errorMessage = cleanMessage)
+        } catch (e: Exception) {
+            // If XML parsing fails, return original exception
+            log.warn(
+                LogMessage(
+                    message = LogMessageContent.Text("Failed to parse S3 XML error: ${e.message}"),
+                )
+            )
+            exception
         }
     }
 
