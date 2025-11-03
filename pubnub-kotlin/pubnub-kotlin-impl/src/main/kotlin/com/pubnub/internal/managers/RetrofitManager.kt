@@ -150,11 +150,6 @@ class RetrofitManager(
         return okHttpClient
     }
 
-    private fun slf4jIsBound(): Boolean {
-        val factory = LoggerFactory.getILoggerFactory()
-        return factory !is NOPLoggerFactory
-    }
-
     private fun createRetrofit(callFactory: Call.Factory?): Retrofit {
         val retrofitBuilder =
             Retrofit.Builder()

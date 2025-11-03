@@ -287,6 +287,10 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
          *
          * Defaults to `5`
          */
+        @Deprecated(
+            message = "This setting is deprecated. Use retryConfiguration instead",
+            level = DeprecationLevel.WARNING
+        )
         val fileMessagePublishRetryLimit: Int
 
         val dedupOnSubscribe: Boolean
@@ -535,6 +539,10 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
          *
          * Defaults to `5`
          */
+        @Deprecated(
+            message = "This setting is deprecated. Use retryConfiguration instead",
+            level = DeprecationLevel.WARNING
+        )
         fun fileMessagePublishRetryLimit(fileMessagePublishRetryLimit: Int): Builder
 
         fun dedupOnSubscribe(dedupOnSubscribe: Boolean): Builder

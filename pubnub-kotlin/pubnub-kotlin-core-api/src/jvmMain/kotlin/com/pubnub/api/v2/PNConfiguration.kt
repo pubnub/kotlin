@@ -273,6 +273,10 @@ actual interface PNConfiguration {
      *
      * Defaults to `5`
      */
+    @Deprecated(
+        message = "This setting is deprecated. Use retryConfiguration instead",
+        level = DeprecationLevel.WARNING
+    )
     val fileMessagePublishRetryLimit: Int
 
     val dedupOnSubscribe: Boolean
@@ -599,6 +603,10 @@ actual interface PNConfiguration {
          *
          * Defaults to `5`
          */
+        @Deprecated(
+            message = "This setting is deprecated. Use retryConfiguration instead",
+            level = DeprecationLevel.WARNING
+        )
         var fileMessagePublishRetryLimit: Int
 
         var dedupOnSubscribe: Boolean

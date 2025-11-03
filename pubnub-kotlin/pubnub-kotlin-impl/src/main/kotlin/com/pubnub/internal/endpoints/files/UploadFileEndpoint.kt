@@ -2,52 +2,87 @@ package com.pubnub.internal.endpoints.files
 
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
-import com.pubnub.api.v2.callbacks.Result
+import com.pubnub.api.retry.RetryableEndpointGroup
+import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.models.server.files.FileUploadRequestDetails
 import com.pubnub.internal.models.server.files.FormField
-import com.pubnub.internal.services.S3Service
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.Response
-import java.io.IOException
-import java.net.SocketException
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
-import java.util.function.Consumer
-import javax.net.ssl.SSLException
-import javax.xml.parsers.DocumentBuilderFactory
+import java.time.Instant
 
 internal class UploadFileEndpoint(
-    private val s3Service: S3Service,
     private val fileName: String,
     private val content: ByteArray,
     private val key: FormField,
     private val formParams: List<FormField>,
     private val baseUrl: String,
-    private val logConfig: LogConfig
-) : ExtendedRemoteAction<Unit> {
-    private var call: Call<Unit>? = null
-    private val log = LoggerManager.instance.getLogger(logConfig, this::class.java)
+    private val expirationDate: String?,
+    pubNub: PubNubImpl,
+) : EndpointCore<Unit, Unit>(pubNub) {
+    private val log = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     @Throws(PubNubException::class)
-    private fun prepareCall(): Call<Unit> {
+    override fun validateParams() {
+        if (baseUrl.isBlank()) {
+            throw PubNubException(PubNubError.INVALID_ARGUMENTS).copy(
+                errorMessage = "S3 upload URL cannot be empty"
+            )
+        }
+
+        if (fileName.isBlank()) {
+            throw PubNubException(PubNubError.INVALID_ARGUMENTS).copy(
+                errorMessage = "File name cannot be empty"
+            )
+        }
+    }
+
+    @Throws(PubNubException::class)
+    override fun createResponse(input: Response<Unit>): Unit {
+        // S3 returns empty response on success, just return Unit
+        return Unit
+    }
+
+    override fun doWork(queryParams: HashMap<String, String>): Call<Unit> {
+        // Check URL expiration before EACH attempt (including retries)
+        expirationDate?.let { expirationDateString ->
+            try {
+                val expiration = Instant.parse(expirationDateString)
+                if (Instant.now().isAfter(expiration)) {
+                    throw PubNubException(PubNubError.HTTP_ERROR).copy(
+                        errorMessage = "S3 pre-signed URL has expired. Expiration time: $expiration. " +
+                            "The URL is only valid for ~60 seconds. Cannot retry upload - please call sendFile() again."
+                    )
+                }
+            } catch (e: Exception) {
+                when (e) {
+                    is PubNubException -> throw e // Re-throw our expiration error
+                    else -> {
+                        // If parsing fails, log warning but don't fail the upload
+                        log.warn(
+                            LogMessage(
+                                message = LogMessageContent.Text("Failed to parse S3 URL expiration date: $expirationDateString - ${e.message}"),
+                            )
+                        )
+                    }
+                }
+            }
+        }
+
         val builder = MultipartBody.Builder().setType(MultipartBody.FORM)
         addFormParamsWithKeyFirst(key, formParams, builder)
         val mediaType = getMediaType(formParams.findContentType())
 
         builder.addFormDataPart(FILE_PART_MULTIPART, fileName, content.toRequestBody(mediaType, 0, content.size))
-        return s3Service.upload(baseUrl, builder.build())
+        return retrofitManager.s3Service.upload(baseUrl, builder.build())
     }
 
     private fun List<FormField>.findContentType(): String? {
@@ -73,125 +108,32 @@ internal class UploadFileEndpoint(
         }
     }
 
-    @Throws(PubNubException::class)
-    override fun sync() {
-        call = prepareCall()
-        val serverResponse =
-            try {
-                call!!.execute()
-            } catch (e: IOException) {
-                throw PubNubException(
-                    errorMessage = e.message,
-                    affectedCall = call,
-                    pubnubError = PubNubError.PARSING_ERROR,
-                    cause = e,
-                )
-            }
-        if (!serverResponse.isSuccessful) {
-            throw createException(serverResponse)
-        }
-    }
+    override fun getAffectedChannels(): List<String> = emptyList()
 
-    override fun async(callback: Consumer<Result<Unit>>) {
-        try {
-            call = prepareCall()
-            call!!.enqueue(
-                object : Callback<Unit> {
-                    override fun onResponse(
-                        performedCall: Call<Unit>,
-                        response: Response<Unit>,
-                    ) {
-                        if (!response.isSuccessful) {
-                            val ex = createException(response)
-                            callback.accept(Result.failure(ex))
-                            return
-                        }
-                        callback.accept(Result.success(Unit))
-                    }
+    override fun getAffectedChannelGroups(): List<String> = emptyList()
 
-                    override fun onFailure(
-                        performedCall: Call<Unit>,
-                        throwable: Throwable,
-                    ) {
-                        if (call!!.isCanceled) {
-                            return
-                        }
-                        val error =
-                            when (throwable) {
-                                is UnknownHostException, is SocketException, is SSLException -> PubNubError.CONNECT_EXCEPTION
-                                is SocketTimeoutException -> PubNubError.SUBSCRIBE_TIMEOUT
-                                else ->
-                                    if (performedCall.isCanceled) {
-                                        PubNubError.HTTP_ERROR
-                                    } else {
-                                        PubNubError.HTTP_ERROR
-                                    }
-                            }
-                        callback.accept(
-                            Result.failure(
-                                PubNubException(error).copy(
-                                    errorMessage = throwable.message ?: error.message,
-                                    cause = throwable,
-                                ),
-                            ),
-                        )
-                    }
-                },
-            )
-        } catch (e: Throwable) {
-            callback.accept(Result.failure(PubNubException.from(e)))
-        }
-    }
+    override fun isAuthRequired(): Boolean = false
 
-    override fun retry() {}
+    override fun isSubKeyRequired(): Boolean = false
 
-    override fun silentCancel() {
-        if (!call!!.isCanceled) {
-            call!!.cancel()
-        }
-    }
+    override fun isPubKeyRequired(): Boolean = false
 
-    private fun createException(response: Response<Unit>): PubNubException {
-        return try {
-            PubNubException(
-                errorMessage = response.readErrorMessage(),
-                affectedCall = call,
-                statusCode = response.code(),
-            )
-        } catch (e: Exception) {
-            PubNubException(
-                errorMessage = e.message,
-                affectedCall = call,
-                statusCode = response.code(),
-            )
-        }
-    }
-
-    private fun Response<Unit>.readErrorMessage(): String {
-        val dbFactory = DocumentBuilderFactory.newInstance()
-        dbFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true)
-        dbFactory.isXIncludeAware = false
-        val dBuilder = dbFactory.newDocumentBuilder()
-        val doc = dBuilder.parse(errorBody()!!.byteStream())
-        doc.documentElement.normalize()
-        val elements = doc.getElementsByTagName("Message")
-        return elements.item(0)?.firstChild?.nodeValue ?: "N/A"
-    }
+    override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.FILE_PERSISTENCE
 
     internal class Factory(private val pubNub: PubNubImpl) {
         fun create(
             fileName: String,
             content: ByteArray,
             fileUploadRequestDetails: FileUploadRequestDetails,
-        ): ExtendedRemoteAction<Unit> {
+        ): UploadFileEndpoint {
             return UploadFileEndpoint(
-                pubNub.retrofitManager.s3Service,
-                fileName,
-                content,
-                fileUploadRequestDetails.keyFormField,
-                fileUploadRequestDetails.formFields,
-                fileUploadRequestDetails.url,
-                pubNub.logConfig
+                fileName = fileName,
+                content = content,
+                key = fileUploadRequestDetails.keyFormField,
+                formParams = fileUploadRequestDetails.formFields,
+                baseUrl = fileUploadRequestDetails.url,
+                expirationDate = fileUploadRequestDetails.expirationDate,
+                pubNub = pubNub
             )
         }
     }
