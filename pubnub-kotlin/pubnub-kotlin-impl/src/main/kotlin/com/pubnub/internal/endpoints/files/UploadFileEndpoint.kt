@@ -57,10 +57,7 @@ internal class UploadFileEndpoint(
             try {
                 val expiration = Instant.parse(expirationDateString)
                 if (Instant.now().isAfter(expiration)) {
-                    throw PubNubException(PubNubError.HTTP_ERROR).copy(
-                        errorMessage = "S3 pre-signed URL has expired. Expiration time: $expiration. " +
-                            "The URL is only valid for ~60 seconds. Cannot retry upload - please call sendFile() again."
-                    )
+                    throw PubNubException(PubNubError.S3_PRE_SIGNED_URL_HAS_EXPIRED)
                 }
             } catch (e: Exception) {
                 when (e) {

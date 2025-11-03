@@ -357,7 +357,7 @@ class PNConfigurationImpl(
             override var hostnameVerifier: HostnameVerifier? = defaultConfiguration.hostnameVerifier
 
             @Deprecated(
-                message = "This setting is deprecated. Use retryConfiguration instead",
+                message = "This setting is deprecated. Use retryConfiguration instead e.g. retryConfiguration = RetryConfiguration.Linear()",
                 level = DeprecationLevel.WARNING
             )
             override fun fileMessagePublishRetryLimit(fileMessagePublishRetryLimit: Int): Builder {

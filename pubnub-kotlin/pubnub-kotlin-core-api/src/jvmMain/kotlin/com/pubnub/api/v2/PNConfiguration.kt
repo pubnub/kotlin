@@ -604,7 +604,7 @@ actual interface PNConfiguration {
          * Defaults to `5`
          */
         @Deprecated(
-            message = "This setting is deprecated. Use retryConfiguration instead",
+            message = "This setting is deprecated. Use retryConfiguration instead e.g. retryConfiguration = RetryConfiguration.Linear()",
             level = DeprecationLevel.WARNING
         )
         var fileMessagePublishRetryLimit: Int
