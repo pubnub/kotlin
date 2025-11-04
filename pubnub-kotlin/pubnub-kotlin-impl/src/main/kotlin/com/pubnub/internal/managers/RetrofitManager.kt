@@ -22,8 +22,6 @@ import com.pubnub.internal.vendor.AppEngineFactory.Factory
 import okhttp3.Call
 import okhttp3.OkHttpClient
 import org.jetbrains.annotations.TestOnly
-import org.slf4j.LoggerFactory
-import org.slf4j.helpers.NOPLoggerFactory
 import retrofit2.Retrofit
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.TimeUnit

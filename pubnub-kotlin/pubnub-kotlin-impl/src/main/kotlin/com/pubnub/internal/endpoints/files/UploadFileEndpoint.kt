@@ -50,9 +50,9 @@ internal class UploadFileEndpoint(
     }
 
     @Throws(PubNubException::class)
-    override fun createResponse(input: Response<Unit>): Unit {
+    override fun createResponse(input: Response<Unit>) {
         // S3 returns empty response on success, just return Unit
-        return Unit
+        return
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Unit> {
@@ -70,7 +70,9 @@ internal class UploadFileEndpoint(
                         // If parsing fails, log warning but don't fail the upload
                         log.warn(
                             LogMessage(
-                                message = LogMessageContent.Text("Failed to parse S3 URL expiration date: $expirationDateString - ${e.message}"),
+                                message = LogMessageContent.Text(
+                                    "Failed to parse S3 URL expiration date: $expirationDateString - ${e.message}"
+                                ),
                             )
                         )
                     }
@@ -110,7 +112,7 @@ internal class UploadFileEndpoint(
     }
 
     @Throws(PubNubException::class)
-    override fun sync(): Unit {
+    override fun sync() {
         try {
             return super.sync()
         } catch (e: PubNubException) {
