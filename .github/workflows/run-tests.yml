@@ -38,7 +38,7 @@ jobs:
           pod repo update
       - name: Build and run tests
         run: |
-          ./gradlew check
+          ./gradlew check integrationTest
         env:
           SDK_PUB_KEY: ${{ secrets.SDK_PUB_KEY }}
           SDK_SUB_KEY: ${{ secrets.SDK_SUB_KEY }}
