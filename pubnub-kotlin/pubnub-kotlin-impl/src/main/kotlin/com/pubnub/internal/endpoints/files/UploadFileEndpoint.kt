@@ -19,7 +19,6 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
 import retrofit2.Response
 import java.io.ByteArrayInputStream
-import java.time.Instant
 import java.util.function.Consumer
 import javax.xml.parsers.DocumentBuilderFactory
 
@@ -112,12 +111,30 @@ internal class UploadFileEndpoint(
 
     internal fun parseS3XmlError(exception: PubNubException): PubNubException {
         val errorMessage = exception.errorMessage
-
-        // Check if error message looks like XML
-        if (errorMessage == null || !errorMessage.trim().startsWith("<")) {
+        if (!isS3XmlError(errorMessage)) {
             return exception
         }
 
+        return try {
+            val s3Error = parseS3XmlErrorResponse(errorMessage!!) ?: return exception
+            handleS3ErrorCode(s3Error, exception)
+        } catch (e: Exception) {
+            handleParsingException(e, exception)
+        }
+    }
+
+    private fun isS3XmlError(errorMessage: String?): Boolean {
+        return errorMessage != null && errorMessage.trim().startsWith("<")
+    }
+
+    private data class S3ErrorResponse(
+        val code: String?,
+        val message: String,
+        val proposedSize: String? = null,
+        val maxSizeAllowed: String? = null
+    )
+
+    private fun parseS3XmlErrorResponse(errorMessage: String): S3ErrorResponse? {
         return try {
             val dbFactory = DocumentBuilderFactory.newInstance()
             dbFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true)
@@ -126,54 +143,55 @@ internal class UploadFileEndpoint(
             val doc = dBuilder.parse(ByteArrayInputStream(errorMessage.toByteArray()))
             doc.documentElement.normalize()
 
-            // Extract Code element
-            val codeElements = doc.getElementsByTagName("Code")
-            val s3ErrorCode = codeElements.item(0)?.firstChild?.nodeValue
+            val code = doc.getElementsByTagName("Code").item(0)?.firstChild?.nodeValue
+            val message = doc.getElementsByTagName("Message").item(0)?.firstChild?.nodeValue ?: errorMessage
+            val proposedSize = doc.getElementsByTagName("ProposedSize").item(0)?.firstChild?.nodeValue
+            val maxSizeAllowed = doc.getElementsByTagName("MaxSizeAllowed").item(0)?.firstChild?.nodeValue
 
-            // Extract Message element
-            val messageElements = doc.getElementsByTagName("Message")
-            val baseMessage = messageElements.item(0)?.firstChild?.nodeValue ?: errorMessage
-
-            // Handle specific S3 error types
-            when (s3ErrorCode) {
-                "AccessDenied" -> {
-                    // Check if this is a policy expiration error
-                    if (baseMessage.contains("Policy expired", ignoreCase = true)) {
-                        throw PubNubException(PubNubError.S3_PRE_SIGNED_URL_HAS_EXPIRED)
-                    }
-                    exception.copy(errorMessage = baseMessage)
-                }
-                "EntityTooLarge" -> {
-                    // Extract size information for better error message
-                    val proposedSize = doc.getElementsByTagName("ProposedSize").item(0)?.firstChild?.nodeValue
-                    val maxSizeAllowed = doc.getElementsByTagName("MaxSizeAllowed").item(0)?.firstChild?.nodeValue
-
-                    val detailedMessage = if (proposedSize != null && maxSizeAllowed != null) {
-                        "File size ($proposedSize bytes) exceeds maximum allowed size ($maxSizeAllowed bytes)"
-                    } else {
-                        "File size exceeds maximum allowed size"
-                    }
-                    throw PubNubException(PubNubError.FILE_TOO_LARGE).copy(errorMessage = detailedMessage)
-                }
-                else -> {
-                    // For all other errors, just return the cleaned message
-                    exception.copy(errorMessage = baseMessage)
-                }
-            }
+            S3ErrorResponse(code, message, proposedSize, maxSizeAllowed)
         } catch (e: Exception) {
-            when (e) {
-                is PubNubException -> throw e // Re-throw our mapped errors
-                else -> {
-                    // If XML parsing fails, return original exception
-                    log.warn(
-                        LogMessage(
-                            message = LogMessageContent.Text("Failed to parse S3 XML error: ${e.message}"),
-                        )
-                    )
-                    exception
-                }
-            }
+            null
         }
+    }
+
+    private fun handleS3ErrorCode(s3Error: S3ErrorResponse, exception: PubNubException): PubNubException {
+        return when (s3Error.code) {
+            "AccessDenied" -> handleAccessDeniedError(s3Error.message, exception)
+            "EntityTooLarge" -> handleEntityTooLargeError(s3Error.proposedSize, s3Error.maxSizeAllowed)
+            else -> exception.copy(errorMessage = s3Error.message)
+        }
+    }
+
+    private fun handleAccessDeniedError(message: String, exception: PubNubException): PubNubException {
+        if (message.contains("Policy expired", ignoreCase = true)) {
+            throw PubNubException(PubNubError.S3_PRE_SIGNED_URL_HAS_EXPIRED)
+        }
+        return exception.copy(errorMessage = message)
+    }
+
+    private fun handleEntityTooLargeError(proposedSize: String?, maxSizeAllowed: String?): Nothing {
+        val detailedMessage = buildEntityTooLargeMessage(proposedSize, maxSizeAllowed)
+        throw PubNubException(PubNubError.FILE_TOO_LARGE).copy(errorMessage = detailedMessage)
+    }
+
+    private fun buildEntityTooLargeMessage(proposedSize: String?, maxSizeAllowed: String?): String {
+        return if (proposedSize != null && maxSizeAllowed != null) {
+            "File size ($proposedSize bytes) exceeds maximum allowed size ($maxSizeAllowed bytes)"
+        } else {
+            "File size exceeds maximum allowed size"
+        }
+    }
+
+    private fun handleParsingException(e: Exception, exception: PubNubException): PubNubException {
+        if (e is PubNubException) {
+            throw e
+        }
+        log.warn(
+            LogMessage(
+                message = LogMessageContent.Text("Failed to parse S3 XML error: ${e.message}"),
+            )
+        )
+        return exception
     }
 
     override fun getAffectedChannels(): List<String> = emptyList()

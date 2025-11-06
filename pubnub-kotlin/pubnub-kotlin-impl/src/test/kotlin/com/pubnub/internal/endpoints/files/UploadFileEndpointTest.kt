@@ -16,7 +16,6 @@ import org.junit.Test
  * These tests directly call parseS3XmlError() to verify proper error handling.
  */
 class UploadFileEndpointTest : BaseTest() {
-
     private val testFileName = "test.txt"
     private val testContent = "Hello World".toByteArray()
 
