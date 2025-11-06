@@ -135,7 +135,7 @@ internal class UploadFileEndpoint(
         }
     }
 
-    private fun parseS3XmlError(exception: PubNubException): PubNubException {
+    internal fun parseS3XmlError(exception: PubNubException): PubNubException {
         val errorMessage = exception.errorMessage
 
         // Check if error message looks like XML
@@ -151,18 +151,53 @@ internal class UploadFileEndpoint(
             val doc = dBuilder.parse(ByteArrayInputStream(errorMessage.toByteArray()))
             doc.documentElement.normalize()
 
-            val messageElements = doc.getElementsByTagName("Message")
-            val cleanMessage = messageElements.item(0)?.firstChild?.nodeValue ?: errorMessage
+            // Extract Code element
+            val codeElements = doc.getElementsByTagName("Code")
+            val s3ErrorCode = codeElements.item(0)?.firstChild?.nodeValue
 
-            exception.copy(errorMessage = cleanMessage)
+            // Extract Message element
+            val messageElements = doc.getElementsByTagName("Message")
+            val baseMessage = messageElements.item(0)?.firstChild?.nodeValue ?: errorMessage
+
+            // Handle specific S3 error types
+            when (s3ErrorCode) {
+                "AccessDenied" -> {
+                    // Check if this is a policy expiration error
+                    if (baseMessage.contains("Policy expired", ignoreCase = true)) {
+                        throw PubNubException(PubNubError.S3_PRE_SIGNED_URL_HAS_EXPIRED)
+                    }
+                    exception.copy(errorMessage = baseMessage)
+                }
+                "EntityTooLarge" -> {
+                    // Extract size information for better error message
+                    val proposedSize = doc.getElementsByTagName("ProposedSize").item(0)?.firstChild?.nodeValue
+                    val maxSizeAllowed = doc.getElementsByTagName("MaxSizeAllowed").item(0)?.firstChild?.nodeValue
+
+                    val detailedMessage = if (proposedSize != null && maxSizeAllowed != null) {
+                        "File size ($proposedSize bytes) exceeds maximum allowed size ($maxSizeAllowed bytes)"
+                    } else {
+                        "File size exceeds maximum allowed size"
+                    }
+                    throw PubNubException(PubNubError.FILE_TOO_LARGE).copy(errorMessage = detailedMessage)
+                }
+                else -> {
+                    // For all other errors, just return the cleaned message
+                    exception.copy(errorMessage = baseMessage)
+                }
+            }
         } catch (e: Exception) {
-            // If XML parsing fails, return original exception
-            log.warn(
-                LogMessage(
-                    message = LogMessageContent.Text("Failed to parse S3 XML error: ${e.message}"),
-                )
-            )
-            exception
+            when (e) {
+                is PubNubException -> throw e // Re-throw our mapped errors
+                else -> {
+                    // If XML parsing fails, return original exception
+                    log.warn(
+                        LogMessage(
+                            message = LogMessageContent.Text("Failed to parse S3 XML error: ${e.message}"),
+                        )
+                    )
+                    exception
+                }
+            }
         }
     }
 
