@@ -49,16 +49,41 @@ internal class UploadFileEndpoint(
 
     @Throws(PubNubException::class)
     override fun createResponse(input: Response<Unit>) {
+        log.debug(
+            LogMessage(
+                message = LogMessageContent.Text(
+                    "S3 upload successful - fileName: $fileName, responseCode: ${input.code()}, responseMessage: ${input.message()}"
+                )
+            )
+        )
         // S3 returns empty response on success, just return Unit
         return
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Unit> {
+        val contentType = formParams.findContentType()
+        log.debug(
+            LogMessage(
+                message = LogMessageContent.Text(
+                    "Initiating S3 upload - fileName: $fileName, contentSize: ${content.size} bytes, contentType: $contentType, formFieldsCount: ${formParams.size}"
+                )
+            )
+        )
+
         val builder = MultipartBody.Builder().setType(MultipartBody.FORM)
         addFormParamsWithKeyFirst(key, formParams, builder)
-        val mediaType = getMediaType(formParams.findContentType())
+        val mediaType = getMediaType(contentType)
 
         builder.addFormDataPart(FILE_PART_MULTIPART, fileName, content.toRequestBody(mediaType, 0, content.size))
+
+        log.debug(
+            LogMessage(
+                message = LogMessageContent.Text(
+                    "Multipart request built - executing upload to S3 for fileName: $fileName"
+                )
+            )
+        )
+
         return retrofitManager.s3Service.upload(baseUrl, builder.build())
     }
 
@@ -87,23 +112,75 @@ internal class UploadFileEndpoint(
 
     @Throws(PubNubException::class)
     override fun sync() {
+        val startTime = System.currentTimeMillis()
         try {
-            return super.sync()
+            super.sync()
+            val duration = System.currentTimeMillis() - startTime
+            log.debug(
+                LogMessage(
+                    message = LogMessageContent.Text(
+                        "Synchronous upload completed successfully - fileName: $fileName, duration: ${duration}ms"
+                    )
+                )
+            )
         } catch (e: PubNubException) {
+            val duration = System.currentTimeMillis() - startTime
+            log.error(
+                LogMessage(
+                    message = LogMessageContent.Text(
+                        "Synchronous upload failed - fileName: $fileName, duration: ${duration}ms, error: ${e.pubnubError}, statusCode: ${e.statusCode}, message: ${
+                            e.errorMessage?.take(
+                                200
+                            )
+                        }"
+                    )
+                )
+            )
             throw parseS3XmlError(e)
         }
     }
 
     override fun async(callback: Consumer<Result<Unit>>) {
+        val startTime = System.currentTimeMillis()
         super.async { result ->
+            val duration = System.currentTimeMillis() - startTime
             result.onFailure { throwable ->
                 if (throwable is PubNubException) {
+                    log.error(
+                        LogMessage(
+                            message = LogMessageContent.Text(
+                                "Asynchronous upload failed - fileName: $fileName, duration: ${duration}ms, error: ${throwable.pubnubError}, statusCode: ${throwable.statusCode}, message: ${
+                                    throwable.errorMessage?.take(
+                                        200
+                                    )
+                                }"
+                            )
+                        )
+                    )
                     callback.accept(Result.failure(parseS3XmlError(throwable)))
                 } else {
+                    log.error(
+                        LogMessage(
+                            message = LogMessageContent.Text(
+                                "Asynchronous upload failed with non-PubNub exception - fileName: $fileName, duration: ${duration}ms, exception: ${throwable.javaClass.simpleName}, message: ${
+                                    throwable.message?.take(
+                                        200
+                                    )
+                                }"
+                            )
+                        )
+                    )
                     callback.accept(result)
                 }
             }
             result.onSuccess {
+                log.debug(
+                    LogMessage(
+                        message = LogMessageContent.Text(
+                            "Asynchronous upload completed successfully - fileName: $fileName, duration: ${duration}ms"
+                        )
+                    )
+                )
                 callback.accept(result)
             }
         }
