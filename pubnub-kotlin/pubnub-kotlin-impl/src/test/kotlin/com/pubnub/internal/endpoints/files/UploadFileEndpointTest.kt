@@ -117,7 +117,7 @@ class UploadFileEndpointTest : BaseTest() {
             endpoint.parseS3XmlError(originalException)
             throw AssertionError("Expected PubNubException to be thrown")
         } catch (e: PubNubException) {
-            assertEquals(PubNubError.S3_PRE_SIGNED_URL_HAS_EXPIRED, e.pubnubError)
+            assertEquals(PubNubError.UPLOAD_URL_HAS_EXPIRED, e.pubnubError)
         }
     }
 
@@ -138,7 +138,7 @@ class UploadFileEndpointTest : BaseTest() {
         val result = endpoint.parseS3XmlError(originalException)
 
         // Should NOT be S3_PRE_SIGNED_URL_HAS_EXPIRED since message doesn't contain "Policy expired"
-        assertNotEquals(PubNubError.S3_PRE_SIGNED_URL_HAS_EXPIRED, result.pubnubError)
+        assertNotEquals(PubNubError.UPLOAD_URL_HAS_EXPIRED, result.pubnubError)
         assertEquals("Access Denied", result.errorMessage)
     }
 
@@ -243,7 +243,7 @@ class UploadFileEndpointTest : BaseTest() {
             throw AssertionError("Expected PubNubException to be thrown")
         } catch (e: PubNubException) {
             // Should match "Policy expired" case-insensitively
-            assertEquals(PubNubError.S3_PRE_SIGNED_URL_HAS_EXPIRED, e.pubnubError)
+            assertEquals(PubNubError.UPLOAD_URL_HAS_EXPIRED, e.pubnubError)
         }
     }
 }

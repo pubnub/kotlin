@@ -89,11 +89,6 @@ class SendFileTest : TestsWithFiles {
         Assert.assertTrue(countDownLatch.await(1, TimeUnit.SECONDS))
     }
 
-    // NOTE: Retry tests removed because fileMessagePublishRetryLimit parameter was removed
-    // All file upload steps (Generate URL, S3 Upload, Publish Message) now use EndpointCore's
-    // automatic retry mechanism instead of explicit RetryingRemoteAction wrapper.
-    // Retry behavior is tested at the EndpointCore level.
-
     private fun generateUploadUrlProperResponse(): FileUploadRequestDetails {
         return FileUploadRequestDetails(
             200,

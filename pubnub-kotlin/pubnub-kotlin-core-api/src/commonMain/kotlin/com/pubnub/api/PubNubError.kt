@@ -240,9 +240,9 @@ enum class PubNubError(private val code: Int, val message: String) {
         "Channel and/or ChannelGroup contains empty string which is not allowed.",
     ),
 
-    S3_PRE_SIGNED_URL_HAS_EXPIRED(
+    UPLOAD_URL_HAS_EXPIRED(
         code = 182,
-        message = "S3 pre-signed URL has expired. The URL is only valid for ~60 seconds. With exponential backoff later retries may exceed URL validity. Consider using Linear retry policy with shorter delays. Cannot retry upload - please call sendFile() again.",
+        message = "The upload URL has expired.",
     ),
 
     FILE_TOO_LARGE(

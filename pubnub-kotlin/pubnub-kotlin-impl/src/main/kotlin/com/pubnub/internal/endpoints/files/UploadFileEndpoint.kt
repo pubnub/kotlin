@@ -241,7 +241,7 @@ internal class UploadFileEndpoint(
 
     private fun handleAccessDeniedError(message: String, exception: PubNubException): PubNubException {
         if (message.contains("Policy expired", ignoreCase = true)) {
-            throw PubNubException(PubNubError.S3_PRE_SIGNED_URL_HAS_EXPIRED)
+            throw PubNubException(PubNubError.UPLOAD_URL_HAS_EXPIRED)
         }
         return exception.copy(errorMessage = message)
     }
