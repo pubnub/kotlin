@@ -29,7 +29,6 @@ internal class UploadFileEndpoint(
     private val key: FormField,
     private val formParams: List<FormField>,
     private val baseUrl: String,
-    private val expirationDate: String?,
     pubNub: PubNubImpl,
 ) : EndpointCore<Unit, Unit>(pubNub) {
     private val log = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
@@ -56,30 +55,6 @@ internal class UploadFileEndpoint(
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Unit> {
-        // Check URL expiration before EACH attempt (including retries)
-        expirationDate?.let { expirationDateString ->
-            try {
-                val expiration = Instant.parse(expirationDateString)
-                if (Instant.now().isAfter(expiration)) {
-                    throw PubNubException(PubNubError.S3_PRE_SIGNED_URL_HAS_EXPIRED)
-                }
-            } catch (e: Exception) {
-                when (e) {
-                    is PubNubException -> throw e // Re-throw our expiration error
-                    else -> {
-                        // If parsing fails, log warning but don't fail the upload
-                        log.warn(
-                            LogMessage(
-                                message = LogMessageContent.Text(
-                                    "Failed to parse S3 URL expiration date: $expirationDateString - ${e.message}"
-                                ),
-                            )
-                        )
-                    }
-                }
-            }
-        }
-
         val builder = MultipartBody.Builder().setType(MultipartBody.FORM)
         addFormParamsWithKeyFirst(key, formParams, builder)
         val mediaType = getMediaType(formParams.findContentType())
@@ -225,7 +200,6 @@ internal class UploadFileEndpoint(
                 key = fileUploadRequestDetails.keyFormField,
                 formParams = fileUploadRequestDetails.formFields,
                 baseUrl = fileUploadRequestDetails.url,
-                expirationDate = fileUploadRequestDetails.expirationDate,
                 pubNub = pubNub
             )
         }
