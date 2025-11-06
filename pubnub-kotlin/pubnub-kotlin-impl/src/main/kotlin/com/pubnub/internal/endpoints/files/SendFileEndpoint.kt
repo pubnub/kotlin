@@ -14,7 +14,6 @@ import com.pubnub.api.models.consumer.files.PNPublishFileMessageResult
 import com.pubnub.api.v2.callbacks.Result
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.crypto.cryptor.InputStreamSeparator
-import com.pubnub.internal.endpoints.remoteaction.RetryingRemoteAction
 import com.pubnub.internal.models.server.files.FileUploadRequestDetails
 import java.io.InputStream
 import java.net.HttpURLConnection
@@ -34,7 +33,6 @@ class SendFileEndpoint internal constructor(
     private val ttl: Int? = null,
     private val shouldStore: Boolean? = null,
     private val customMessageType: String? = null,
-    private val fileMessagePublishRetryLimit: Int,
     private val executorService: ExecutorService,
     generateUploadUrlFactory: GenerateUploadUrlEndpoint.Factory,
     publishFileMessageFactory: PublishFileMessageEndpoint.Factory,
@@ -98,20 +96,16 @@ class SendFileEndpoint internal constructor(
                 sendFileToS3Factory.create(fileName, content, res) // 2. upload to s3
             }.checkpoint().then {
                 val details = result.get()
-                RetryingRemoteAction.autoRetry(
-                    publishFileMessageFactory.create( // 3. PublishFileMessage
-                        channel = channel,
-                        fileName = details.data.name,
-                        fileId = details.data.id,
-                        message = message,
-                        meta = meta,
-                        ttl = ttl,
-                        shouldStore = shouldStore,
-                        customMessageType = customMessageType,
-                    ),
-                    fileMessagePublishRetryLimit,
-                    executorService,
-                ) // publish file message
+                publishFileMessageFactory.create( // 3. PublishFileMessage
+                    channel = channel,
+                    fileName = details.data.name,
+                    fileId = details.data.id,
+                    message = message,
+                    meta = meta,
+                    ttl = ttl,
+                    shouldStore = shouldStore,
+                    customMessageType = customMessageType,
+                )
             }.map { mapPublishFileMessageToFileUpload(result.get(), it) }
     }
 

@@ -240,6 +240,16 @@ enum class PubNubError(private val code: Int, val message: String) {
         "Channel and/or ChannelGroup contains empty string which is not allowed.",
     ),
 
+    UPLOAD_URL_HAS_EXPIRED(
+        code = 182,
+        message = "The upload URL has expired.",
+    ),
+
+    FILE_TOO_LARGE(
+        code = 183,
+        message = "File size exceeds the maximum allowed size for upload.",
+    )
+
     ;
 
     override fun toString(): String {

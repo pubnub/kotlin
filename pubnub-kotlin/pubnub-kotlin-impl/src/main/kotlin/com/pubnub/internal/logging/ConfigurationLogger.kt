@@ -45,7 +45,7 @@ object ConfigurationLogger {
             "maximumMessagesCacheSize" to configuration.maximumMessagesCacheSize,
             // Retry and reliability
             "retryConfiguration" to (configuration.retryConfiguration.javaClass.simpleName ?: "none"),
-            "fileMessagePublishRetryLimit" to configuration.fileMessagePublishRetryLimit,
+            "fileMessagePublishRetryLimit" to configuration.fileMessagePublishRetryLimit.takeIf { it > 0 }.let { "(Deprecated) $it" },
             // Identification and tracking
             "includeInstanceIdentifier" to configuration.includeInstanceIdentifier,
             "includeRequestIdentifier" to configuration.includeRequestIdentifier,

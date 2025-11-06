@@ -1803,7 +1803,6 @@ open class PubNubImpl(
             executorService =
                 retrofitManager.getTransactionClientExecutorService()
                     ?: Executors.newSingleThreadExecutor(),
-            fileMessagePublishRetryLimit = configuration.fileMessagePublishRetryLimit,
             generateUploadUrlFactory = GenerateUploadUrlEndpoint.Factory(this),
             publishFileMessageFactory = PublishFileMessageEndpoint.Factory(this),
             sendFileToS3Factory = UploadFileEndpoint.Factory(this),

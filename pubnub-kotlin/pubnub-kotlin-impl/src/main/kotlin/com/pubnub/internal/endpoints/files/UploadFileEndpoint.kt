@@ -2,52 +2,89 @@ package com.pubnub.internal.endpoints.files
 
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.logging.LogConfig
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
+import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.api.v2.callbacks.Result
+import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.models.server.files.FileUploadRequestDetails
 import com.pubnub.internal.models.server.files.FormField
-import com.pubnub.internal.services.S3Service
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.Response
-import java.io.IOException
-import java.net.SocketException
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
+import java.io.ByteArrayInputStream
 import java.util.function.Consumer
-import javax.net.ssl.SSLException
 import javax.xml.parsers.DocumentBuilderFactory
 
 internal class UploadFileEndpoint(
-    private val s3Service: S3Service,
     private val fileName: String,
     private val content: ByteArray,
     private val key: FormField,
     private val formParams: List<FormField>,
     private val baseUrl: String,
-    private val logConfig: LogConfig
-) : ExtendedRemoteAction<Unit> {
-    private var call: Call<Unit>? = null
-    private val log = LoggerManager.instance.getLogger(logConfig, this::class.java)
+    pubNub: PubNubImpl,
+) : EndpointCore<Unit, Unit>(pubNub) {
+    private val log = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
 
     @Throws(PubNubException::class)
-    private fun prepareCall(): Call<Unit> {
+    override fun validateParams() {
+        if (baseUrl.isBlank()) {
+            throw PubNubException(PubNubError.INVALID_ARGUMENTS).copy(
+                errorMessage = "S3 upload URL cannot be empty"
+            )
+        }
+
+        if (fileName.isBlank()) {
+            throw PubNubException(PubNubError.INVALID_ARGUMENTS).copy(
+                errorMessage = "File name cannot be empty"
+            )
+        }
+    }
+
+    @Throws(PubNubException::class)
+    override fun createResponse(input: Response<Unit>) {
+        log.debug(
+            LogMessage(
+                message = LogMessageContent.Text(
+                    "S3 upload successful - fileName: $fileName, responseCode: ${input.code()}, responseMessage: ${input.message()}"
+                )
+            )
+        )
+        // S3 returns empty response on success, just return Unit
+        return
+    }
+
+    override fun doWork(queryParams: HashMap<String, String>): Call<Unit> {
+        val contentType = formParams.findContentType()
+        log.debug(
+            LogMessage(
+                message = LogMessageContent.Text(
+                    "Initiating S3 upload - fileName: $fileName, contentSize: ${content.size} bytes, contentType: $contentType, formFieldsCount: ${formParams.size}"
+                )
+            )
+        )
+
         val builder = MultipartBody.Builder().setType(MultipartBody.FORM)
         addFormParamsWithKeyFirst(key, formParams, builder)
-        val mediaType = getMediaType(formParams.findContentType())
+        val mediaType = getMediaType(contentType)
 
         builder.addFormDataPart(FILE_PART_MULTIPART, fileName, content.toRequestBody(mediaType, 0, content.size))
-        return s3Service.upload(baseUrl, builder.build())
+
+        log.debug(
+            LogMessage(
+                message = LogMessageContent.Text(
+                    "Multipart request built - executing upload to S3 for fileName: $fileName"
+                )
+            )
+        )
+
+        return retrofitManager.s3Service.upload(baseUrl, builder.build())
     }
 
     private fun List<FormField>.findContentType(): String? {
@@ -75,123 +112,190 @@ internal class UploadFileEndpoint(
 
     @Throws(PubNubException::class)
     override fun sync() {
-        call = prepareCall()
-        val serverResponse =
-            try {
-                call!!.execute()
-            } catch (e: IOException) {
-                throw PubNubException(
-                    errorMessage = e.message,
-                    affectedCall = call,
-                    pubnubError = PubNubError.PARSING_ERROR,
-                    cause = e,
+        val startTime = System.currentTimeMillis()
+        try {
+            super.sync()
+            val duration = System.currentTimeMillis() - startTime
+            log.debug(
+                LogMessage(
+                    message = LogMessageContent.Text(
+                        "Synchronous upload completed successfully - fileName: $fileName, duration: ${duration}ms"
+                    )
                 )
-            }
-        if (!serverResponse.isSuccessful) {
-            throw createException(serverResponse)
+            )
+        } catch (e: PubNubException) {
+            val duration = System.currentTimeMillis() - startTime
+            log.error(
+                LogMessage(
+                    message = LogMessageContent.Text(
+                        "Synchronous upload failed - fileName: $fileName, duration: ${duration}ms, error: ${e.pubnubError}, statusCode: ${e.statusCode}, message: ${
+                            e.errorMessage?.take(
+                                200
+                            )
+                        }"
+                    )
+                )
+            )
+            throw parseS3XmlError(e)
         }
     }
 
     override fun async(callback: Consumer<Result<Unit>>) {
-        try {
-            call = prepareCall()
-            call!!.enqueue(
-                object : Callback<Unit> {
-                    override fun onResponse(
-                        performedCall: Call<Unit>,
-                        response: Response<Unit>,
-                    ) {
-                        if (!response.isSuccessful) {
-                            val ex = createException(response)
-                            callback.accept(Result.failure(ex))
-                            return
-                        }
-                        callback.accept(Result.success(Unit))
-                    }
-
-                    override fun onFailure(
-                        performedCall: Call<Unit>,
-                        throwable: Throwable,
-                    ) {
-                        if (call!!.isCanceled) {
-                            return
-                        }
-                        val error =
-                            when (throwable) {
-                                is UnknownHostException, is SocketException, is SSLException -> PubNubError.CONNECT_EXCEPTION
-                                is SocketTimeoutException -> PubNubError.SUBSCRIBE_TIMEOUT
-                                else ->
-                                    if (performedCall.isCanceled) {
-                                        PubNubError.HTTP_ERROR
-                                    } else {
-                                        PubNubError.HTTP_ERROR
-                                    }
-                            }
-                        callback.accept(
-                            Result.failure(
-                                PubNubException(error).copy(
-                                    errorMessage = throwable.message ?: error.message,
-                                    cause = throwable,
-                                ),
-                            ),
+        val startTime = System.currentTimeMillis()
+        super.async { result ->
+            val duration = System.currentTimeMillis() - startTime
+            result.onFailure { throwable ->
+                if (throwable is PubNubException) {
+                    log.error(
+                        LogMessage(
+                            message = LogMessageContent.Text(
+                                "Asynchronous upload failed - fileName: $fileName, duration: ${duration}ms, error: ${throwable.pubnubError}, statusCode: ${throwable.statusCode}, message: ${
+                                    throwable.errorMessage?.take(
+                                        200
+                                    )
+                                }"
+                            )
                         )
-                    }
-                },
-            )
-        } catch (e: Throwable) {
-            callback.accept(Result.failure(PubNubException.from(e)))
+                    )
+                    callback.accept(Result.failure(parseS3XmlError(throwable)))
+                } else {
+                    log.error(
+                        LogMessage(
+                            message = LogMessageContent.Text(
+                                "Asynchronous upload failed with non-PubNub exception - fileName: $fileName, duration: ${duration}ms, exception: ${throwable.javaClass.simpleName}, message: ${
+                                    throwable.message?.take(
+                                        200
+                                    )
+                                }"
+                            )
+                        )
+                    )
+                    callback.accept(result)
+                }
+            }
+            result.onSuccess {
+                log.debug(
+                    LogMessage(
+                        message = LogMessageContent.Text(
+                            "Asynchronous upload completed successfully - fileName: $fileName, duration: ${duration}ms"
+                        )
+                    )
+                )
+                callback.accept(result)
+            }
         }
     }
 
-    override fun retry() {}
-
-    override fun silentCancel() {
-        if (!call!!.isCanceled) {
-            call!!.cancel()
+    internal fun parseS3XmlError(exception: PubNubException): PubNubException {
+        val errorMessage = exception.errorMessage
+        if (!isS3XmlError(errorMessage)) {
+            return exception
         }
-    }
 
-    private fun createException(response: Response<Unit>): PubNubException {
         return try {
-            PubNubException(
-                errorMessage = response.readErrorMessage(),
-                affectedCall = call,
-                statusCode = response.code(),
-            )
+            val s3Error = parseS3XmlErrorResponse(errorMessage!!) ?: return exception
+            handleS3ErrorCode(s3Error, exception)
         } catch (e: Exception) {
-            PubNubException(
-                errorMessage = e.message,
-                affectedCall = call,
-                statusCode = response.code(),
-            )
+            handleParsingException(e, exception)
         }
     }
 
-    private fun Response<Unit>.readErrorMessage(): String {
-        val dbFactory = DocumentBuilderFactory.newInstance()
-        dbFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true)
-        dbFactory.isXIncludeAware = false
-        val dBuilder = dbFactory.newDocumentBuilder()
-        val doc = dBuilder.parse(errorBody()!!.byteStream())
-        doc.documentElement.normalize()
-        val elements = doc.getElementsByTagName("Message")
-        return elements.item(0)?.firstChild?.nodeValue ?: "N/A"
+    private fun isS3XmlError(errorMessage: String?): Boolean {
+        return errorMessage != null && errorMessage.trim().startsWith("<")
     }
+
+    private data class S3ErrorResponse(
+        val code: String?,
+        val message: String,
+        val proposedSize: String? = null,
+        val maxSizeAllowed: String? = null
+    )
+
+    private fun parseS3XmlErrorResponse(errorMessage: String): S3ErrorResponse? {
+        return try {
+            val dbFactory = DocumentBuilderFactory.newInstance()
+            dbFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true)
+            dbFactory.isXIncludeAware = false
+            val dBuilder = dbFactory.newDocumentBuilder()
+            val doc = dBuilder.parse(ByteArrayInputStream(errorMessage.toByteArray()))
+            doc.documentElement.normalize()
+
+            val code = doc.getElementsByTagName("Code").item(0)?.firstChild?.nodeValue
+            val message = doc.getElementsByTagName("Message").item(0)?.firstChild?.nodeValue ?: errorMessage
+            val proposedSize = doc.getElementsByTagName("ProposedSize").item(0)?.firstChild?.nodeValue
+            val maxSizeAllowed = doc.getElementsByTagName("MaxSizeAllowed").item(0)?.firstChild?.nodeValue
+
+            S3ErrorResponse(code, message, proposedSize, maxSizeAllowed)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    private fun handleS3ErrorCode(s3Error: S3ErrorResponse, exception: PubNubException): PubNubException {
+        return when (s3Error.code) {
+            "AccessDenied" -> handleAccessDeniedError(s3Error.message, exception)
+            "EntityTooLarge" -> handleEntityTooLargeError(s3Error.proposedSize, s3Error.maxSizeAllowed)
+            else -> exception.copy(errorMessage = s3Error.message)
+        }
+    }
+
+    private fun handleAccessDeniedError(message: String, exception: PubNubException): PubNubException {
+        if (message.contains("Policy expired", ignoreCase = true)) {
+            throw PubNubException(PubNubError.UPLOAD_URL_HAS_EXPIRED)
+        }
+        return exception.copy(errorMessage = message)
+    }
+
+    private fun handleEntityTooLargeError(proposedSize: String?, maxSizeAllowed: String?): Nothing {
+        val detailedMessage = buildEntityTooLargeMessage(proposedSize, maxSizeAllowed)
+        throw PubNubException(PubNubError.FILE_TOO_LARGE).copy(errorMessage = detailedMessage)
+    }
+
+    private fun buildEntityTooLargeMessage(proposedSize: String?, maxSizeAllowed: String?): String {
+        return if (proposedSize != null && maxSizeAllowed != null) {
+            "File size ($proposedSize bytes) exceeds maximum allowed size ($maxSizeAllowed bytes)"
+        } else {
+            "File size exceeds maximum allowed size"
+        }
+    }
+
+    private fun handleParsingException(e: Exception, exception: PubNubException): PubNubException {
+        if (e is PubNubException) {
+            throw e
+        }
+        log.warn(
+            LogMessage(
+                message = LogMessageContent.Text("Failed to parse S3 XML error: ${e.message}"),
+            )
+        )
+        return exception
+    }
+
+    override fun getAffectedChannels(): List<String> = emptyList()
+
+    override fun getAffectedChannelGroups(): List<String> = emptyList()
+
+    override fun isAuthRequired(): Boolean = false
+
+    override fun isSubKeyRequired(): Boolean = false
+
+    override fun isPubKeyRequired(): Boolean = false
+
+    override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.FILE_PERSISTENCE
 
     internal class Factory(private val pubNub: PubNubImpl) {
         fun create(
             fileName: String,
             content: ByteArray,
             fileUploadRequestDetails: FileUploadRequestDetails,
-        ): ExtendedRemoteAction<Unit> {
+        ): UploadFileEndpoint {
             return UploadFileEndpoint(
-                pubNub.retrofitManager.s3Service,
-                fileName,
-                content,
-                fileUploadRequestDetails.keyFormField,
-                fileUploadRequestDetails.formFields,
-                fileUploadRequestDetails.url,
-                pubNub.logConfig
+                fileName = fileName,
+                content = content,
+                key = fileUploadRequestDetails.keyFormField,
+                formParams = fileUploadRequestDetails.formFields,
+                baseUrl = fileUploadRequestDetails.url,
+                pubNub = pubNub
             )
         }
     }

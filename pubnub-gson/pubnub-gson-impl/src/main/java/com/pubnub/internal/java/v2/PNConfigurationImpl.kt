@@ -55,7 +55,7 @@ class PNConfigurationImpl(
     override val x509ExtendedTrustManager: X509ExtendedTrustManager? = null,
     override val connectionSpec: ConnectionSpec? = null,
     override val hostnameVerifier: HostnameVerifier? = null,
-    override val fileMessagePublishRetryLimit: Int = 5,
+    override val fileMessagePublishRetryLimit: Int = 0,
     override val dedupOnSubscribe: Boolean = false,
     override val maximumMessagesCacheSize: Int = DEFAULT_DEDUPE_SIZE,
     override val pnsdkSuffixes: Map<String, String> = emptyMap(),
@@ -356,6 +356,10 @@ class PNConfigurationImpl(
 
             override var hostnameVerifier: HostnameVerifier? = defaultConfiguration.hostnameVerifier
 
+            @Deprecated(
+                message = "This setting is deprecated. Use retryConfiguration instead e.g. retryConfiguration = RetryConfiguration.Linear()",
+                level = DeprecationLevel.WARNING
+            )
             override fun fileMessagePublishRetryLimit(fileMessagePublishRetryLimit: Int): Builder {
                 this.fileMessagePublishRetryLimit = fileMessagePublishRetryLimit
                 return this

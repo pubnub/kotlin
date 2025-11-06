@@ -17,8 +17,6 @@ import com.pubnub.internal.models.server.files.FileUploadRequestDetails
 import com.pubnub.internal.models.server.files.FormField
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.spyk
-import io.mockk.verify
 import org.junit.Assert
 import org.junit.jupiter.api.Test
 import java.io.InputStream
@@ -26,7 +24,6 @@ import java.time.Instant
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicInteger
 import java.util.function.Consumer
 
 class SendFileTest : TestsWithFiles {
@@ -46,7 +43,7 @@ class SendFileTest : TestsWithFiles {
                 fileUploadRequestDetails,
             )
 
-        every { sendFileToS3Factory.create(any(), any(), any()) } returns TestRemoteAction.successful(Unit)
+        every { sendFileToS3Factory.create(any(), any(), any()) } returns AlwaysSuccessfulUploadFile.create(getPubNubMock())
         val publishFileMessage: PublishFileMessageEndpoint =
             AlwaysSuccessfulPublishFileMessage.create(publishFileMessageResult, getPubNubMock())
         every { publishFileMessageFactory.create(any(), any(), any(), any(), any(), any(), any(), any()) } returns publishFileMessage
@@ -73,7 +70,7 @@ class SendFileTest : TestsWithFiles {
                 fileUploadRequestDetails,
             )
 
-        every { sendFileToS3Factory.create(any(), any(), any()) } returns TestRemoteAction.successful(Unit)
+        every { sendFileToS3Factory.create(any(), any(), any()) } returns AlwaysSuccessfulUploadFile.create(getPubNubMock())
         val publishFileMessage: PublishFileMessageEndpoint =
             AlwaysSuccessfulPublishFileMessage.create(publishFileMessageResult, getPubNubMock())
         every { publishFileMessageFactory.create(any(), any(), any(), any(), any(), any(), any(), any()) } returns publishFileMessage
@@ -90,82 +87,6 @@ class SendFileTest : TestsWithFiles {
             }
         }
         Assert.assertTrue(countDownLatch.await(1, TimeUnit.SECONDS))
-    }
-
-    @Test
-    fun async_publishFileMessageRetry() {
-        // given
-        val countDownLatch = CountDownLatch(1)
-        val fileUploadRequestDetails = generateUploadUrlProperResponse()
-        val expectedResponse = pnFileUploadResult()
-        val publishFileMessageResult = PNPublishFileMessageResult(expectedResponse.timetoken)
-        val numberOfRetries = 5
-        every { generateUploadUrlFactory.create(any(), any()) } returns
-            TestRemoteAction.successful(
-                fileUploadRequestDetails,
-            )
-
-        every { sendFileToS3Factory.create(any(), any(), any()) } returns TestRemoteAction.successful(Unit)
-        val publishFileMessage: PublishFileMessageEndpoint =
-            spyk(
-                FailingPublishFileMessage.create(
-                    publishFileMessageResult,
-                    numberOfRetries - 1,
-                    getPubNubMock(),
-                ),
-            )
-        every { publishFileMessageFactory.create(any(), any(), any(), any(), any(), any(), any(), any()) } returns publishFileMessage
-        inputStream().use { inputStream ->
-            sendFile(
-                channel,
-                fileName(),
-                inputStream,
-                numberOfRetries,
-            ).async { result ->
-                result.onSuccess {
-                    Assert.assertEquals(expectedResponse, it)
-                    countDownLatch.countDown()
-                }
-            }
-        }
-
-        // then
-        Assert.assertTrue(countDownLatch.await(1, TimeUnit.SECONDS))
-        verify(exactly = numberOfRetries) { publishFileMessage.sync() }
-    }
-
-    @Test
-    fun sync_publishFileMessageRetry() {
-        // given
-        val fileUploadRequestDetails = generateUploadUrlProperResponse()
-        val expectedResponse = pnFileUploadResult()
-        val publishFileMessageResult = PNPublishFileMessageResult(expectedResponse.timetoken)
-        val numberOfRetries = 5
-        every { generateUploadUrlFactory.create(any(), any()) } returns
-            TestRemoteAction.successful(
-                fileUploadRequestDetails,
-            )
-
-        every { sendFileToS3Factory.create(any(), any(), any()) } returns TestRemoteAction.successful(Unit)
-        val publishFileMessage: PublishFileMessageEndpoint =
-            spyk(
-                FailingPublishFileMessage.create(
-                    publishFileMessageResult,
-                    numberOfRetries - 1,
-                    getPubNubMock(),
-                ),
-            )
-        every { publishFileMessageFactory.create(any(), any(), any(), any(), any(), any(), any(), any()) } returns publishFileMessage
-
-        // when
-        val result: PNFileUploadResult? =
-            inputStream().use { inputStream ->
-                sendFile(channel, fileName(), inputStream, numberOfRetries).sync()
-            }
-
-        // then
-        Assert.assertEquals(expectedResponse, result)
-        verify(exactly = numberOfRetries) { publishFileMessage.sync() }
     }
 
     private fun generateUploadUrlProperResponse(): FileUploadRequestDetails {
@@ -199,7 +120,6 @@ class SendFileTest : TestsWithFiles {
             publishFileMessageFactory = publishFileMessageFactory,
             sendFileToS3Factory = sendFileToS3Factory,
             executorService = Executors.newSingleThreadExecutor(),
-            fileMessagePublishRetryLimit = numberOfRetries,
         )
     }
 
@@ -211,50 +131,6 @@ class SendFileTest : TestsWithFiles {
         every { mockPubNub.configuration } returns mockConfig
         every { mockPubNub.logConfig } returns mockk()
         return mockPubNub
-    }
-
-    internal class FailingPublishFileMessage(
-        private val result: PNPublishFileMessageResult,
-        private val numberOfFailsBeforeSuccess: Int,
-        pubNub: PubNubImpl,
-    ) :
-        PublishFileMessageEndpoint(
-                channel = "channel",
-                fileName = "fileName",
-                fileId = "fileId",
-                pubNub = pubNub,
-            ) {
-        private val numberOfFails = AtomicInteger(0)
-
-        override fun async(callback: Consumer<Result<PNPublishFileMessageResult>>) {
-            if (numberOfFails.getAndAdd(1) < numberOfFailsBeforeSuccess) {
-                callback.accept(Result.failure(PubNubException()))
-            } else {
-                callback.accept(Result.success(result))
-            }
-        }
-
-        @Throws(PubNubException::class)
-        override fun sync(): PNPublishFileMessageResult {
-            if (numberOfFails.getAndAdd(1) < numberOfFailsBeforeSuccess) {
-                throw PubNubException()
-            }
-            return result
-        }
-
-        companion object {
-            fun create(
-                result: PNPublishFileMessageResult,
-                numberOfFailsBeforeSuccess: Int,
-                pubNub: PubNubImpl,
-            ): PublishFileMessageEndpoint {
-                return FailingPublishFileMessage(
-                    result,
-                    numberOfFailsBeforeSuccess,
-                    pubNub,
-                )
-            }
-        }
     }
 
     internal class AlwaysSuccessfulPublishFileMessage(
@@ -283,6 +159,20 @@ class SendFileTest : TestsWithFiles {
                 pubNub: PubNubImpl,
             ): PublishFileMessageEndpoint {
                 return AlwaysSuccessfulPublishFileMessage(result, pubNub)
+            }
+        }
+    }
+
+    internal class AlwaysSuccessfulUploadFile {
+        companion object {
+            fun create(pubNub: PubNubImpl): UploadFileEndpoint {
+                val mock = mockk<UploadFileEndpoint>(relaxed = true)
+                every { mock.sync() } returns Unit
+                every { mock.async(any()) } answers {
+                    val callback = firstArg<Consumer<Result<Unit>>>()
+                    callback.accept(Result.success(Unit))
+                }
+                return mock
             }
         }
     }
