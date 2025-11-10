@@ -1,9 +1,9 @@
 name: kotlin
-version: 11.0.0
+version: 12.0.0
 schema: 1
 scm: github.com/pubnub/kotlin
 files:
-  - build/libs/pubnub-kotlin-11.0.0-all.jar
+  - build/libs/pubnub-kotlin-12.0.0-all.jar
 sdks:
   - 
       type: library
@@ -23,8 +23,8 @@ sdks:
             -
               distribution-type: library
               distribution-repository: maven
-              package-name: pubnub-kotlin-11.0.0
-              location: https://repo.maven.apache.org/maven2/com/pubnub/pubnub-kotlin/11.0.0/pubnub-kotlin-11.0.0.jar
+              package-name: pubnub-kotlin-12.0.0
+              location: https://repo.maven.apache.org/maven2/com/pubnub/pubnub-kotlin/12.0.0/pubnub-kotlin-12.0.0.jar
               supported-platforms:
                 supported-operating-systems:
                   Android:
@@ -121,6 +121,15 @@ sdks:
                   license-url: https://www.apache.org/licenses/LICENSE-2.0.txt
                   is-required: Required
 changelog:
+  - date: 2025-11-10
+    version: v12.0.0
+    changes:
+      - type: feature
+        text: "Added UploadFileEndpoint that is AWS S3 upload to general retryConfiguration."
+      - type: feature
+        text: "Breaking change: Moved publishFileMessage API to use the general retryConfiguration instead of the old fileMessagePublishRetryLimit -based retry mechanism."
+      - type: feature
+        text: "Breaking change: deprecated config property fileMessagePublishRetryLimit that is no longer used by publishFileMessage API. From now on all operations that make up sendFile API which are generate upload like, upload file and publish file message are controlled by retryConfiguration."
   - date: 2025-10-21
     version: v11.0.0
     changes:
