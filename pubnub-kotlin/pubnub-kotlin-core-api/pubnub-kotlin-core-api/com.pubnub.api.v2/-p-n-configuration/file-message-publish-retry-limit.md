@@ -3,7 +3,15 @@
 # fileMessagePublishRetryLimit
 
 [jvm]\
-abstract val [fileMessagePublishRetryLimit](file-message-publish-retry-limit.md): [Int](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html)
+abstract val [~~fileMessagePublishRetryLimit~~](file-message-publish-retry-limit.md): [Int](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html)
+
+---
+
+### Deprecated
+
+This setting is deprecated. Use retryConfiguration instead
+
+---
 
 How many times publishing file message should automatically retry before marking the action as failed
 
