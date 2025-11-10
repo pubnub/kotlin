@@ -1,3 +1,11 @@
+## v12.0.0
+November 10 2025
+
+#### Added
+- Added UploadFileEndpoint that is AWS S3 upload to general retryConfiguration.
+- Breaking change: Moved publishFileMessage API to use the general retryConfiguration instead of the old fileMessagePublishRetryLimit -based retry mechanism.
+- Breaking change: deprecated config property fileMessagePublishRetryLimit that is no longer used by publishFileMessage API. From now on all operations that make up sendFile API which are generate upload like, upload file and publish file message are controlled by retryConfiguration.
+
 ## v11.0.0
 October 21 2025
 
