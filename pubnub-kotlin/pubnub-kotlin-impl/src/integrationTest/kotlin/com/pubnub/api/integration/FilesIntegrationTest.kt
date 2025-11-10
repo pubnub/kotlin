@@ -37,7 +37,7 @@ class FilesIntegrationTest : BaseIntegrationTest() {
         val fileSent = CountDownLatch(1)
         val channelName: String = randomChannel()
         val fileName = "fileName$channelName.txt"
-        val message = "This is message"
+        val message = "This is a message"
         val meta = "This is meta"
         val content = "This is content"
         val customMessageType = "MyCustom-Type_"
