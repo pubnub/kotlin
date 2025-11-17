@@ -32,18 +32,17 @@ class FilesIntegrationTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun uploadListDownloadDeleteWithCipherUseFileWithLegacyCryptoModule(){
+    fun uploadListDownloadDeleteWithCipherUseFileWithLegacyCryptoModule() {
         uploadListDownloadDeleteWithCipherFile(true)
     }
 
     @Test
-    fun uploadListDownloadDeleteWithCipherUseFileWithAesCbcCryptoModule(){
+    fun uploadListDownloadDeleteWithCipherUseFileWithAesCbcCryptoModule() {
         uploadListDownloadDeleteWithCipherFile(false)
     }
 
-
     fun uploadListDownloadDeleteWithCipherFile(withLegacyCrypto: Boolean) {
-        if(withLegacyCrypto){
+        if (withLegacyCrypto) {
             clientConfig = {
                 cryptoModule = CryptoModule.createLegacyCryptoModule("enigma")
             }
@@ -123,7 +122,11 @@ class FilesIntegrationTest : BaseIntegrationTest() {
         byteStream?.use {
             val downloadedContent = it.readBytes()
             val downloadedString = String(downloadedContent, StandardCharsets.UTF_8)
-            Assert.assertEquals("Downloaded content should match original logback.xml", originalContentString, downloadedString)
+            Assert.assertEquals(
+                "Downloaded content should match original logback.xml",
+                originalContentString,
+                downloadedString
+            )
         }
 
         pubnub.deleteFile(
@@ -375,11 +378,11 @@ class FilesIntegrationTest : BaseIntegrationTest() {
         val channel: String = randomChannel()
 
         val testSizes = listOf(
-            100,      // Small file
-            1024,     // 1KB
-            10240,    // 10KB
-            102400,   // 100KB
-            524288    // 512KB
+            100, // Small file
+            1024, // 1KB
+            10240, // 10KB
+            102400, // 100KB
+            524288 // 512KB
         )
 
         for (size in testSizes) {
