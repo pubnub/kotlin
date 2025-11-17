@@ -36,12 +36,11 @@ internal class HeaderParser(val logConfig: LogConfig?) {
     )
 
     fun parseDataWithHeader(stream: BufferedInputStream): ParseResult<out InputStream> {
-        val bufferedInputStream = stream.buffered()
-        bufferedInputStream.mark(Int.MAX_VALUE) // TODO Can be calculated from spec
+        stream.mark(Int.MAX_VALUE) // TODO Can be calculated from spec
         val possibleInitialHeader = ByteArray(MINIMAL_SIZE_OF_CRYPTO_HEADER)
-        val initiallyRead = bufferedInputStream.read(possibleInitialHeader)
+        val initiallyRead = stream.read(possibleInitialHeader)
         if (!possibleInitialHeader.sliceArray(SENTINEL_STARTING_INDEX..SENTINEL_ENDING_INDEX).contentEquals(SENTINEL)) {
-            bufferedInputStream.reset()
+            stream.reset()
             return ParseResult.NoHeader
         }
 
@@ -58,17 +57,17 @@ internal class HeaderParser(val logConfig: LogConfig?) {
 
         val cryptorData: ByteArray =
             if (cryptorDataSizeFirstByte == THREE_BYTES_SIZE_CRYPTOR_DATA_INDICATOR) {
-                val cryptorDataSizeBytes = readExactlyNBytez(bufferedInputStream, 2)
+                val cryptorDataSizeBytes = readExactlyNBytez(stream, 2)
                 val cryptorDataSize = convertTwoBytesToIntBigEndian(cryptorDataSizeBytes[0], cryptorDataSizeBytes[1])
-                readExactlyNBytez(bufferedInputStream, cryptorDataSize)
+                readExactlyNBytez(stream, cryptorDataSize)
             } else {
                 if (cryptorDataSizeFirstByte == UByte.MIN_VALUE) {
                     byteArrayOf()
                 } else {
-                    readExactlyNBytez(bufferedInputStream, cryptorDataSizeFirstByte.toInt())
+                    readExactlyNBytez(stream, cryptorDataSizeFirstByte.toInt())
                 }
             }
-        return ParseResult.Success(cryptorId, cryptorData, bufferedInputStream)
+        return ParseResult.Success(cryptorId, cryptorData, stream)
     }
 
     private fun readExactlyNBytez(
