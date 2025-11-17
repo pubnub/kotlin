@@ -28,6 +28,7 @@ internal class UploadFileEndpoint(
     private val key: FormField,
     private val formParams: List<FormField>,
     private val baseUrl: String,
+    private val isEncrypted: Boolean = false,
     pubNub: PubNubImpl,
 ) : EndpointCore<Unit, Unit>(pubNub) {
     private val log = LoggerManager.instance.getLogger(pubnub.logConfig, this::class.java)
@@ -65,21 +66,40 @@ internal class UploadFileEndpoint(
         log.debug(
             LogMessage(
                 message = LogMessageContent.Text(
-                    "Initiating S3 upload - fileName: $fileName, contentSize: ${content.size} bytes, contentType: $contentType, formFieldsCount: ${formParams.size}"
+                    "Initiating S3 upload - fileName: $fileName, contentSize: ${content.size} bytes, contentType: $contentType, isEncrypted: $isEncrypted, formFieldsCount: ${formParams.size}"
                 )
             )
         )
 
+        // Override Content-Type for encrypted files to prevent UTF-8 corruption of binary data
+        val modifiedFormParams = if (isEncrypted) {
+            formParams.map { param ->
+                if (param.key.equals(CONTENT_TYPE_HEADER, ignoreCase = true)) {
+                    FormField(param.key, "application/octet-stream")
+                } else {
+                    param
+                }
+            }
+        } else {
+            formParams
+        }
+
         val builder = MultipartBody.Builder().setType(MultipartBody.FORM)
-        addFormParamsWithKeyFirst(key, formParams, builder)
-        val mediaType = getMediaType(contentType)
+        addFormParamsWithKeyFirst(key, modifiedFormParams, builder)
+
+        // For encrypted files, always use application/octet-stream to prevent charset interpretation
+        val mediaType = if (isEncrypted) {
+            APPLICATION_OCTET_STREAM
+        } else {
+            getMediaType(modifiedFormParams.findContentType())
+        }
 
         builder.addFormDataPart(FILE_PART_MULTIPART, fileName, content.toRequestBody(mediaType, 0, content.size))
 
         log.debug(
             LogMessage(
                 message = LogMessageContent.Text(
-                    "Multipart request built - executing upload to S3 for fileName: $fileName"
+                    "Multipart request built - executing upload to S3 for fileName: $fileName with mediaType: $mediaType"
                 )
             )
         )
@@ -288,6 +308,7 @@ internal class UploadFileEndpoint(
             fileName: String,
             content: ByteArray,
             fileUploadRequestDetails: FileUploadRequestDetails,
+            isEncrypted: Boolean = false,
         ): UploadFileEndpoint {
             return UploadFileEndpoint(
                 fileName = fileName,
@@ -295,6 +316,7 @@ internal class UploadFileEndpoint(
                 key = fileUploadRequestDetails.keyFormField,
                 formParams = fileUploadRequestDetails.formFields,
                 baseUrl = fileUploadRequestDetails.url,
+                isEncrypted = isEncrypted,
                 pubNub = pubNub
             )
         }

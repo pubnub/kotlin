@@ -86,6 +86,7 @@ class SendFileEndpoint internal constructor(
     ): ExtendedRemoteAction<PNFileUploadResult> {
         val result = AtomicReference<FileUploadRequestDetails>()
 
+        val isEncrypted = cryptoModule != null
         val content =
             cryptoModule?.encryptStream(InputStreamSeparator(inputStream))?.use {
                 it.readBytes()
@@ -93,7 +94,7 @@ class SendFileEndpoint internal constructor(
         return ComposableRemoteAction.firstDo(generateUploadUrlFactory.create(channel, fileName)) // 1. generateUrl
             .then { res ->
                 result.set(res)
-                sendFileToS3Factory.create(fileName, content, res) // 2. upload to s3
+                sendFileToS3Factory.create(fileName, content, res, isEncrypted) // 2. upload to s3
             }.checkpoint().then {
                 val details = result.get()
                 publishFileMessageFactory.create( // 3. PublishFileMessage

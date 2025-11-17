@@ -130,9 +130,9 @@ internal class HeaderParser(val logConfig: LogConfig?) {
         val finalCryptorDataSize: ByteArray =
             if (cryptorDataSize < THREE_BYTES_SIZE_CRYPTOR_DATA_INDICATOR.toInt()) {
                 byteArrayOf(cryptorDataSize.toByte()) // cryptorDataSize will be stored on 1 byte
-            } else if (cryptorDataSize < MAX_VALUE_THAT_CAN_BE_STORED_ON_TWO_BYTES) {
-                // cryptorDataSize will be stored on 3 byte
-                byteArrayOf(cryptorDataSize.toByte()) + writeNumberOnTwoBytes(cryptorDataSize)
+            } else if (cryptorDataSize <= MAX_VALUE_THAT_CAN_BE_STORED_ON_TWO_BYTES) {
+                // cryptorDataSize will be stored on 3 bytes: indicator (255) + 2 bytes for actual size
+                byteArrayOf(THREE_BYTES_SIZE_CRYPTOR_DATA_INDICATOR.toByte()) + writeNumberOnTwoBytes(cryptorDataSize)
             } else {
                 throw PubNubException(
                     errorMessage = "Cryptor Data Size is: $cryptorDataSize whereas max cryptor data size is: $MAX_VALUE_THAT_CAN_BE_STORED_ON_TWO_BYTES",

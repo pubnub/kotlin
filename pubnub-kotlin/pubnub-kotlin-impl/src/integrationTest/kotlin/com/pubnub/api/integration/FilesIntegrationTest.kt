@@ -32,6 +32,108 @@ class FilesIntegrationTest : BaseIntegrationTest() {
     }
 
     @Test
+    fun uploadListDownloadDeleteWithCipherUseFileWithLegacyCryptoModule(){
+        uploadListDownloadDeleteWithCipherFile(true)
+    }
+
+    @Test
+    fun uploadListDownloadDeleteWithCipherUseFileWithAesCbcCryptoModule(){
+        uploadListDownloadDeleteWithCipherFile(false)
+    }
+
+
+    fun uploadListDownloadDeleteWithCipherFile(withLegacyCrypto: Boolean) {
+        if(withLegacyCrypto){
+            clientConfig = {
+                cryptoModule = CryptoModule.createLegacyCryptoModule("enigma")
+            }
+        } else {
+            clientConfig = {
+                cryptoModule = CryptoModule.createAesCbcCryptoModule("enigma")
+            }
+        }
+
+        val channel: String = randomChannel()
+        val fileName = "logback.xml"
+        val message = "This is message"
+        val meta = "This is meta"
+        val customMessageType = "myCustomType"
+
+        // Read the logback.xml file from resources
+        val logbackResource = this.javaClass.classLoader.getResourceAsStream("logback.xml")
+            ?: throw IllegalStateException("logback.xml not found in resources")
+        val originalContent = logbackResource.readBytes()
+        val originalContentString = String(originalContent, StandardCharsets.UTF_8)
+
+        val connectedLatch = CountDownLatch(1)
+        val fileEventReceived = CountDownLatch(1)
+        pubnub.addListener(
+            object : SubscribeCallback() {
+                override fun status(
+                    pubnub: PubNub,
+                    status: PNStatus,
+                ) {
+                    if (status.category == PNStatusCategory.PNConnectedCategory) {
+                        connectedLatch.countDown()
+                    }
+                }
+
+                override fun file(
+                    pubnub: PubNub,
+                    result: PNFileEventResult,
+                ) {
+                    if (result.file.name == fileName && result.customMessageType == customMessageType) {
+                        fileEventReceived.countDown()
+                    }
+                }
+            },
+        )
+        pubnub.subscribe(channels = listOf(channel))
+        connectedLatch.await(10, TimeUnit.SECONDS)
+
+        val sendResult: PNFileUploadResult? =
+            ByteArrayInputStream(originalContent).use {
+                pubnub.sendFile(
+                    channel = channel,
+                    fileName = fileName,
+                    inputStream = it,
+                    message = message,
+                    meta = meta,
+                    customMessageType = customMessageType
+                ).sync()
+            }
+
+        if (sendResult == null) {
+            Assert.fail()
+            return
+        }
+        fileEventReceived.await(10, TimeUnit.SECONDS)
+
+        val (_, _, _, data) = pubnub.listFiles(channel = channel).sync()
+        val fileFoundOnList = data.find { it.id == sendResult.file.id } != null
+        Assert.assertTrue(fileFoundOnList)
+
+        val (_, byteStream) =
+            pubnub.downloadFile(
+                channel = channel,
+                fileName = fileName,
+                fileId = sendResult.file.id,
+            ).sync()
+
+        byteStream?.use {
+            val downloadedContent = it.readBytes()
+            val downloadedString = String(downloadedContent, StandardCharsets.UTF_8)
+            Assert.assertEquals("Downloaded content should match original logback.xml", originalContentString, downloadedString)
+        }
+
+        pubnub.deleteFile(
+            channel = channel,
+            fileName = fileName,
+            fileId = sendResult.file.id,
+        ).sync()
+    }
+
+    @Test
     fun testSendFileAndDeleteFileOnChannelEntity() {
         val sendFileResultReference: AtomicReference<PNFileUploadResult> = AtomicReference()
         val fileSent = CountDownLatch(1)
@@ -203,6 +305,126 @@ class FilesIntegrationTest : BaseIntegrationTest() {
             fileName = fileName,
             fileId = sendResult.file.id,
         ).sync()
+    }
+
+    @Test
+    fun uploadLargeEncryptedFileWithLegacyCryptoModule() {
+        uploadLargeEncryptedFileWithCryptoModule(withLegacyCrypto = true)
+    }
+
+    @Test
+    fun uploadLargeEncryptedFileWithAesCbcCryptoModule() {
+        uploadLargeEncryptedFileWithCryptoModule(withLegacyCrypto = false)
+    }
+
+    fun uploadLargeEncryptedFileWithCryptoModule(withLegacyCrypto: Boolean) {
+        clientConfig = {
+            cryptoModule = CryptoModule.createLegacyCryptoModule("enigma")
+        }
+        val channel: String = randomChannel()
+        val fileName = "large_file_${System.currentTimeMillis()}.bin"
+
+        // Create a large binary file (1MB) to test encryption
+        val largeContent = ByteArray(1024 * 1024) { it.toByte() }
+
+        val sendResult: PNFileUploadResult? =
+            ByteArrayInputStream(largeContent).use {
+                pubnub.sendFile(
+                    channel = channel,
+                    fileName = fileName,
+                    inputStream = it,
+                    message = "Large encrypted file test",
+                ).sync()
+            }
+
+        if (sendResult == null) {
+            Assert.fail("Failed to upload large encrypted file")
+            return
+        }
+
+        // Download and verify
+        val (_, byteStream) =
+            pubnub.downloadFile(
+                channel = channel,
+                fileName = fileName,
+                fileId = sendResult.file.id,
+            ).sync()
+
+        byteStream?.use {
+            val downloadedContent = it.readBytes()
+            Assert.assertArrayEquals(
+                "Downloaded encrypted content should match original",
+                largeContent,
+                downloadedContent
+            )
+        }
+
+        // Cleanup
+        pubnub.deleteFile(
+            channel = channel,
+            fileName = fileName,
+            fileId = sendResult.file.id,
+        ).sync()
+    }
+
+    @Test
+    fun uploadMultipleSizesWithEncryption() {
+        clientConfig = {
+            cryptoModule = CryptoModule.createLegacyCryptoModule("enigma")
+        }
+        val channel: String = randomChannel()
+
+        val testSizes = listOf(
+            100,      // Small file
+            1024,     // 1KB
+            10240,    // 10KB
+            102400,   // 100KB
+            524288    // 512KB
+        )
+
+        for (size in testSizes) {
+            val fileName = "test_${size}_${System.currentTimeMillis()}.bin"
+            val content = ByteArray(size) { (it % 256).toByte() }
+
+            val sendResult: PNFileUploadResult? =
+                ByteArrayInputStream(content).use {
+                    pubnub.sendFile(
+                        channel = channel,
+                        fileName = fileName,
+                        inputStream = it,
+                        message = "Test file size: $size",
+                    ).sync()
+                }
+
+            if (sendResult == null) {
+                Assert.fail("Failed to upload file of size $size")
+                return
+            }
+
+            // Download and verify
+            val (_, byteStream) =
+                pubnub.downloadFile(
+                    channel = channel,
+                    fileName = fileName,
+                    fileId = sendResult.file.id,
+                ).sync()
+
+            byteStream?.use {
+                val downloadedContent = it.readBytes()
+                Assert.assertArrayEquals(
+                    "Downloaded content should match original for size $size",
+                    content,
+                    downloadedContent
+                )
+            }
+
+            // Cleanup
+            pubnub.deleteFile(
+                channel = channel,
+                fileName = fileName,
+                fileId = sendResult.file.id,
+            ).sync()
+        }
     }
 
     private fun readToString(inputStream: InputStream): String {

@@ -116,6 +116,82 @@ class HeaderParserTest {
         assertEquals(PubNubError.CRYPTOR_DATA_HEADER_SIZE_TO_SMALL, exception.pubnubError)
     }
 
+    @Test
+    fun `createCryptorHeader should use 255 indicator for size 256`() {
+        val cryptorId = byteArrayOf('A'.code.toByte(), 'C'.code.toByte(), 'R'.code.toByte(), 'V'.code.toByte())
+        val cryptorData = ByteArray(256) { it.toByte() }
+
+        val header = objectUnderTest.createCryptorHeader(cryptorId, cryptorData)
+
+        // Header structure: PNED(4) + version(1) + cryptorId(4) + sizeField(3) + data(256)
+        // Total: 268 bytes
+        assertEquals(268, header.size, "Header size should be 268 bytes")
+
+        // Byte 9 should be 255 (0xFF) - the indicator
+        assertEquals(255.toByte(), header[9], "Byte 9 should be 255 (0xFF) indicator")
+
+        // Bytes 10-11 should be 256 in big-endian (0x01, 0x00)
+        assertEquals(1, header[10].toInt() and 0xFF, "Byte 10 should be 1 (high byte of 256)")
+        assertEquals(0, header[11].toInt() and 0xFF, "Byte 11 should be 0 (low byte of 256)")
+    }
+
+    @Test
+    fun `createCryptorHeader should use 255 indicator for size 300`() {
+        val cryptorId = byteArrayOf('A'.code.toByte(), 'C'.code.toByte(), 'R'.code.toByte(), 'V'.code.toByte())
+        val cryptorData = ByteArray(300) { it.toByte() }
+
+        val header = objectUnderTest.createCryptorHeader(cryptorId, cryptorData)
+
+        assertEquals(312, header.size, "Header size should be 312 bytes") // 4+1+4+3+300
+        assertEquals(255.toByte(), header[9], "Byte 9 should be 255 (0xFF) indicator")
+        assertEquals(1, header[10].toInt() and 0xFF, "Byte 10 should be 1 (300 >> 8 = 1)")
+        assertEquals(44, header[11].toInt() and 0xFF, "Byte 11 should be 44 (300 & 0xFF = 44)")
+    }
+
+    @Test
+    fun `createCryptorHeader should use 255 indicator for size 512`() {
+        val cryptorId = byteArrayOf('A'.code.toByte(), 'C'.code.toByte(), 'R'.code.toByte(), 'V'.code.toByte())
+        val cryptorData = ByteArray(512) { it.toByte() }
+
+        val header = objectUnderTest.createCryptorHeader(cryptorId, cryptorData)
+
+        assertEquals(524, header.size, "Header size should be 524 bytes") // 4+1+4+3+512
+        assertEquals(255.toByte(), header[9], "Byte 9 should be 255 (0xFF) indicator")
+        assertEquals(2, header[10].toInt() and 0xFF, "Byte 10 should be 2 (512 >> 8 = 2)")
+        assertEquals(0, header[11].toInt() and 0xFF, "Byte 11 should be 0 (512 & 0xFF = 0)")
+    }
+
+    @Test
+    fun `createCryptorHeader should use 255 indicator for size 65535`() {
+        val cryptorId = byteArrayOf('A'.code.toByte(), 'C'.code.toByte(), 'R'.code.toByte(), 'V'.code.toByte())
+        val cryptorData = ByteArray(65535) { 0 }
+
+        val header = objectUnderTest.createCryptorHeader(cryptorId, cryptorData)
+
+        assertEquals(65547, header.size, "Header size should be 65547 bytes") // 4+1+4+3+65535
+        assertEquals(255.toByte(), header[9], "Byte 9 should be 255 (0xFF) indicator")
+        assertEquals(255.toByte(), header[10], "Byte 10 should be 255 (65535 >> 8 = 255)")
+        assertEquals(255.toByte(), header[11], "Byte 11 should be 255 (65535 & 0xFF = 255)")
+    }
+
+    @Test
+    fun `createCryptorHeader should round-trip with parseDataWithHeader for size 256`() {
+        val cryptorId = byteArrayOf('A'.code.toByte(), 'C'.code.toByte(), 'R'.code.toByte(), 'V'.code.toByte())
+        val originalData = ByteArray(256) { it.toByte() }
+        val encryptedPayload = ByteArray(100) { 0xFF.toByte() }
+
+        val header = objectUnderTest.createCryptorHeader(cryptorId, originalData)
+        val fullData = header + encryptedPayload
+
+        val result = objectUnderTest.parseDataWithHeader(fullData)
+
+        assertTrue(result is ParseResult.Success, "Should parse successfully")
+        result as ParseResult.Success
+        assertTrue(cryptorId.contentEquals(result.cryptoId), "Cryptor ID should match")
+        assertTrue(originalData.contentEquals(result.cryptorData), "Cryptor data should match")
+        assertTrue(encryptedPayload.contentEquals(result.encryptedData), "Encrypted data should match")
+    }
+
     private fun createByteArrayThatHas255Elements(): ByteArray {
         var byteArray: ByteArray = byteArrayOf()
         for (i in 1..255) {
