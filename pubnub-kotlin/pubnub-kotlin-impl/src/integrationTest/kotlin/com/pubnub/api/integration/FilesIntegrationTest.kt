@@ -32,16 +32,16 @@ class FilesIntegrationTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun uploadListDownloadDeleteWithCipherUseFileWithLegacyCryptoModule() {
-        uploadListDownloadDeleteWithCipherFile(true)
+    fun legacyEncryptedFileTransfer() {
+        uploadListDownloadDeleteFileWithCipher(true)
     }
 
     @Test
-    fun uploadListDownloadDeleteWithCipherUseFileWithAesCbcCryptoModule() {
-        uploadListDownloadDeleteWithCipherFile(false)
+    fun aesCbcEncryptedFileTransfer() {
+        uploadListDownloadDeleteFileWithCipher(false)
     }
 
-    fun uploadListDownloadDeleteWithCipherFile(withLegacyCrypto: Boolean) {
+    fun uploadListDownloadDeleteFileWithCipher(withLegacyCrypto: Boolean) {
         if (withLegacyCrypto) {
             clientConfig = {
                 cryptoModule = CryptoModule.createLegacyCryptoModule("enigma")
