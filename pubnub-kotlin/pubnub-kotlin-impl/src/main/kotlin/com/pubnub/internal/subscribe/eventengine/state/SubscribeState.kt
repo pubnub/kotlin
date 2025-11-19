@@ -5,6 +5,7 @@ import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.internal.eventengine.State
 import com.pubnub.internal.eventengine.noTransition
+import com.pubnub.internal.eventengine.noTransitionWithEffects
 import com.pubnub.internal.eventengine.transitionTo
 import com.pubnub.internal.subscribe.eventengine.effect.SubscribeEffectInvocation
 import com.pubnub.internal.subscribe.eventengine.event.SubscribeEvent
@@ -227,17 +228,32 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                 }
 
                 is SubscribeEvent.SubscriptionChanged -> {
-                    transitionTo(
-                        Receiving(event.channels, event.channelGroups, subscriptionCursor),
-                        SubscribeEffectInvocation.EmitStatus(
-                            PNStatus(
-                                PNStatusCategory.PNSubscriptionChanged,
-                                currentTimetoken = subscriptionCursor.timetoken,
-                                affectedChannels = event.channels,
-                                affectedChannelGroups = event.channelGroups,
+                    // If channels and channelGroups haven't changed, emit status without resubscribing
+                    if (event.channels == channels && event.channelGroups == channelGroups) {
+                        noTransitionWithEffects(
+                            SubscribeEffectInvocation.EmitStatus(
+                                PNStatus(
+                                    PNStatusCategory.PNSubscriptionChanged,
+                                    currentTimetoken = subscriptionCursor.timetoken,
+                                    affectedChannels = event.channels,
+                                    affectedChannelGroups = event.channelGroups,
+                                ),
                             ),
-                        ),
-                    )
+                        )
+                    } else {
+                        // Channels changed, need to resubscribe
+                        transitionTo(
+                            Receiving(event.channels, event.channelGroups, subscriptionCursor),
+                            SubscribeEffectInvocation.EmitStatus(
+                                PNStatus(
+                                    PNStatusCategory.PNSubscriptionChanged,
+                                    currentTimetoken = subscriptionCursor.timetoken,
+                                    affectedChannels = event.channels,
+                                    affectedChannelGroups = event.channelGroups,
+                                ),
+                            ),
+                        )
+                    }
                 }
 
                 is SubscribeEvent.SubscriptionRestored -> {
