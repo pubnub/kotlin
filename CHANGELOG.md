@@ -1,3 +1,10 @@
+## v12.0.1
+November 19 2025
+
+#### Fixed
+- Fixed upload/download encrypted file API. When file is encrypted application/octet-stream data format is enforced regardless of original file type (image/jpeg, video/mp4, text/plain) or server's suggested Content-Type from generateUploadUrl.
+- Removed redundant buffering when parsing encrypted data.
+
 ## v12.0.0
 November 10 2025
 
