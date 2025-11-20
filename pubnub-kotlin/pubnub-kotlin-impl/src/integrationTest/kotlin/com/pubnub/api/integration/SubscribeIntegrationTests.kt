@@ -1371,14 +1371,13 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         val channelName02 = randomChannel()
         val expectedMessage = "test_${randomValue()}"
 
-        val connectedLatch = CountDownLatch(1) // Wait for first connection
-        val subscriptionChangedLatch = CountDownLatch(1) // Wait for subscription changed event
-        val messagesLatch = CountDownLatch(2) // Wait for both listeners to receive message
+        val connectedLatch = CountDownLatch(1)
+        val subscriptionChangedLatch = CountDownLatch(1)
+        val messagesLatch = CountDownLatch(2)
 
         val connectedEventCount = AtomicInteger(0)
-        val subscriptionChangedCount =
-            AtomicInteger(0) // status event emitted but no actual resubscribe when channels unchanged
-        val subscribeHttpRequestCount = AtomicInteger(0) // Count actual HTTP subscribe requests
+        val subscriptionChangedCount = AtomicInteger(0)
+        val subscribeHttpRequestCount = AtomicInteger(0)
 
         // Track messages received by each listener
         val listenerAMessageCount = AtomicInteger(0)
@@ -1391,7 +1390,6 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
                     val networkRequestDetails = logMessage.message as LogMessageContent.NetworkRequest
                     if (networkRequestDetails.path.contains("/v2/subscribe/")) {
                         subscribeHttpRequestCount.incrementAndGet()
-                        println("HTTP Subscribe request #${subscribeHttpRequestCount.get()}: ${networkRequestDetails.path}")
                     }
                 }
             }
@@ -1432,7 +1430,6 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
                     pubnub: PubNub,
                     result: PNMessageResult,
                 ) {
-                    println("ListenerA received: ${result.message.asString}")
                     listenerAMessageCount.incrementAndGet()
                     messagesLatch.countDown()
                 }
@@ -1447,7 +1444,6 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
                     pubnub: PubNub,
                     result: PNMessageResult,
                 ) {
-                    println("ListenerB received: ${result.message.asString}")
                     listenerBMessageCount.incrementAndGet()
                     messagesLatch.countDown()
                 }
