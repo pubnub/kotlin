@@ -84,8 +84,44 @@ class TransitionFromReceivingStateTest {
     }
 
     @Test
-    fun can_transit_from_RECEIVING_to_RECEIVING_when_there_is_SUBSCRIPTION_CHANGED_event() {
+    fun can_transit_from_RECEIVING_to_RECEIVING_when_there_is_SUBSCRIPTION_CHANGED_event_with_different_channels_and_groups() {
         // given
+        val newChannels = setOf("Channel2", "Channel3")
+        val newChannelGroups = setOf("ChannelGroup2")
+
+        // when
+        val (state, invocations) =
+            transition(
+                SubscribeState.Receiving(channels, channelGroups, subscriptionCursor),
+                SubscribeEvent.SubscriptionChanged(newChannels, newChannelGroups),
+            )
+
+        // then
+        Assertions.assertTrue(state is SubscribeState.Receiving)
+        state as SubscribeState.Receiving
+
+        assertEquals(newChannels, state.channels)
+        assertEquals(newChannelGroups, state.channelGroups)
+        assertEquals(subscriptionCursor, state.subscriptionCursor)
+        assertEquals(
+            setOf(
+                SubscribeEffectInvocation.CancelReceiveMessages,
+                SubscribeEffectInvocation.EmitStatus(
+                    createSubscriptionChangedStatus(
+                        state.subscriptionCursor,
+                        newChannels,
+                        newChannelGroups,
+                    ),
+                ),
+                SubscribeEffectInvocation.ReceiveMessages(newChannels, newChannelGroups, subscriptionCursor),
+            ),
+            invocations,
+        )
+    }
+
+    @Test
+    fun stays_in_RECEIVING_and_emits_status_without_resubscribing_when_SUBSCRIPTION_CHANGED_event_has_same_channels_and_groups() {
+        // given - channels and channelGroups are the same
         // when
         val (state, invocations) =
             transition(
@@ -100,9 +136,9 @@ class TransitionFromReceivingStateTest {
         assertEquals(channels, state.channels)
         assertEquals(channelGroups, state.channelGroups)
         assertEquals(subscriptionCursor, state.subscriptionCursor)
+        // Should only emit status - no cancel or new receive
         assertEquals(
             setOf(
-                SubscribeEffectInvocation.CancelReceiveMessages,
                 SubscribeEffectInvocation.EmitStatus(
                     createSubscriptionChangedStatus(
                         state.subscriptionCursor,
@@ -110,7 +146,6 @@ class TransitionFromReceivingStateTest {
                         channelGroups,
                     ),
                 ),
-                SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
             ),
             invocations,
         )

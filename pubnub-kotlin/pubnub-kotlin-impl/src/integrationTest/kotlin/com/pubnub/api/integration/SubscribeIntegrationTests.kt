@@ -1366,6 +1366,134 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
     }
 
     @Test
+    fun whenSubscribingToAlreadySubscribedChannelShouldNotResubscribeButShouldEmitSubscriptionChangedStatus() {
+        val channelName = randomChannel()
+        val channelName02 = randomChannel()
+        val expectedMessage = "test_${randomValue()}"
+
+        val connectedLatch = CountDownLatch(1)
+        val subscriptionChangedLatch = CountDownLatch(1)
+        val messagesLatch = CountDownLatch(2)
+
+        val connectedEventCount = AtomicInteger(0)
+        val subscriptionChangedCount = AtomicInteger(0)
+        val subscribeHttpRequestCount = AtomicInteger(0)
+
+        // Track messages received by each listener
+        val listenerAMessageCount = AtomicInteger(0)
+        val listenerBMessageCount = AtomicInteger(0)
+
+        // Custom logger to count HTTP subscribe requests
+        val customLogger = object : CustomLogger {
+            override fun debug(logMessage: LogMessage) {
+                if (logMessage.type == LogMessageType.NETWORK_REQUEST) {
+                    val networkRequestDetails = logMessage.message as LogMessageContent.NetworkRequest
+                    if (networkRequestDetails.path.contains("/v2/subscribe/")) {
+                        subscribeHttpRequestCount.incrementAndGet()
+                    }
+                }
+            }
+        }
+
+        clientConfig = {
+            customLoggers = listOf(customLogger)
+        }
+
+        pubnub.addListener(
+            object : StatusListener {
+                override fun status(
+                    pubnub: PubNub,
+                    status: PNStatus,
+                ) {
+                    when (status.category) {
+                        PNStatusCategory.PNConnectedCategory -> {
+                            connectedEventCount.incrementAndGet()
+                            connectedLatch.countDown()
+                        }
+
+                        PNStatusCategory.PNSubscriptionChanged -> {
+                            subscriptionChangedCount.incrementAndGet()
+                            subscriptionChangedLatch.countDown()
+                        }
+
+                        else -> {}
+                    }
+                }
+            }
+        )
+
+        // First subscription
+        val subscriptionSet1 = pubnub.subscriptionSetOf(setOf(channelName, channelName02))
+        subscriptionSet1.addListener(
+            object : EventListener {
+                override fun message(
+                    pubnub: PubNub,
+                    result: PNMessageResult,
+                ) {
+                    listenerAMessageCount.incrementAndGet()
+                    messagesLatch.countDown()
+                }
+            }
+        )
+
+        // Second subscription (SAME channel, different listener)
+        val subscriptionSet2 = pubnub.subscriptionSetOf(setOf(channelName))
+        subscriptionSet2.addListener(
+            object : EventListener {
+                override fun message(
+                    pubnub: PubNub,
+                    result: PNMessageResult,
+                ) {
+                    listenerBMessageCount.incrementAndGet()
+                    messagesLatch.countDown()
+                }
+            }
+        )
+
+        try {
+            subscriptionSet1.subscribe()
+            assertTrue("Failed to receive PNConnectedCategory", connectedLatch.await(5, TimeUnit.SECONDS))
+
+            subscriptionSet2.subscribe()
+            assertTrue("Failed to receive PNSubscriptionChanged", subscriptionChangedLatch.await(5, TimeUnit.SECONDS))
+
+            // Give a moment for any potential resubscribe to occur
+            Thread.sleep(500)
+
+            // Publish a message - both listeners should receive it
+            pubnub.publish(channelName, expectedMessage).sync()
+            assertTrue("Failed to receive messages on both listeners", messagesLatch.await(5, TimeUnit.SECONDS))
+
+            // Verify both listeners received the message (this works regardless of the bug)
+            assertEquals("ListenerA should receive message", 1, listenerAMessageCount.get())
+            assertEquals("ListenerB should receive message", 1, listenerBMessageCount.get())
+
+            assertEquals(
+                "Should emit PNSubscriptionChanged status but not resubscribe when channels unchanged",
+                1, // Status emitted but no actual resubscribe (no cancel/new receive)
+                subscriptionChangedCount.get()
+            )
+
+            assertEquals(
+                "Should have exactly 1 PNConnectedCategory (initial handshake only)",
+                1,
+                connectedEventCount.get()
+            )
+
+            // Should only have 2 HTTP "/subscribe" requests: handshake + subscribe
+            assertEquals(
+                "Should have exactly 2 HTTP subscribe requests (handshake + subscribe, NO resubscribe)",
+                2,
+                subscribeHttpRequestCount.get()
+            )
+        } finally {
+            // Ensure cleanup happens even if assertions fail
+            subscriptionSet1.close()
+            subscriptionSet2.close()
+        }
+    }
+
+    @Test
     fun shouldDeduplicateChannelSubscriptionsWhenSubscribingToListOfTheSameChannels() {
         // given
         val countDownLatch = CountDownLatch(2) // Only two subscribe calls should occur. Handshake and actual subscribe.
