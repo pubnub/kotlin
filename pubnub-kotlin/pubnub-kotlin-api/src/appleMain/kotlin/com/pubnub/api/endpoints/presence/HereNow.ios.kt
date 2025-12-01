@@ -15,6 +15,7 @@ import com.pubnub.kmp.onFailureHandler
 import com.pubnub.kmp.onSuccessHandler
 import com.pubnub.kmp.safeCast
 import kotlinx.cinterop.ExperimentalForeignApi
+import platform.Foundation.NSNumber
 
 /**
  * @see [PubNub.hereNow]
@@ -37,9 +38,8 @@ class HereNowImpl(
             channelGroups = channelGroups,
             includeState = includeState,
             includeUUIDs = includeUUIDs,
-            // todo pass limit and offset once available
-            // limit = limit,
-            // offset = offset,
+            limit = limit.toLong(),
+            offset = offset?.let { NSNumber(it) },
             onSuccess = callback.onSuccessHandler {
                 PNHereNowResult(
                     totalChannels = it?.totalChannels()?.toInt() ?: 0,
