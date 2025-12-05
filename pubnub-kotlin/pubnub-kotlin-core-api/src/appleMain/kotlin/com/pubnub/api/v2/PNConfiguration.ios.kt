@@ -12,12 +12,6 @@ actual interface PNConfiguration {
     actual val subscribeKey: String
     actual val publishKey: String
     actual val secretKey: String
-
-    @Deprecated(
-        message = "This setting will be removed in the future. Use logLevel instead.",
-        level = DeprecationLevel.WARNING
-    )
-    actual val logVerbosity: PNLogVerbosity
     val logLevel: LogLevel
 
     @Deprecated(
@@ -59,8 +53,6 @@ actual fun createPNConfiguration(
             get() = secretKey.orEmpty()
         override val authKey: String
             get() = authKey.orEmpty()
-        override val logVerbosity: PNLogVerbosity
-            get() = logVerbosity
         override val logLevel: LogLevel
             get() = LogLevel.None
         override val authToken: String?
@@ -68,19 +60,12 @@ actual fun createPNConfiguration(
     }
 }
 
-@Deprecated(
-    message = "logVerbosity is deprecated. Use createPNConfiguration with LogLevel instead.",
-    replaceWith = ReplaceWith(
-        "createPNConfiguration(userId, subscribeKey, publishKey, secretKey, logLevel, authToken)"
-    ),
-    level = DeprecationLevel.WARNING
-)
 actual fun createPNConfiguration(
     userId: UserId,
     subscribeKey: String,
     publishKey: String,
     secretKey: String?,
-    logVerbosity: PNLogVerbosity,
+    logLevel: LogLevel,
     authToken: String?
 ): PNConfiguration {
     return object : PNConfiguration {
@@ -91,38 +76,8 @@ actual fun createPNConfiguration(
             get() = secretKey.orEmpty()
         override val authKey: String
             get() = NO_AUTH_KEY
-        override val logVerbosity: PNLogVerbosity
-            get() = logVerbosity
-        override val logLevel: LogLevel
-            get() = LogLevel.None
-        override val authToken: String?
-            get() = authToken
-    }
-}
-
-fun createPNConfiguration(
-    userId: UserId,
-    subscribeKey: String,
-    publishKey: String = "",
-    secretKey: String? = null,
-    logLevel: LogLevel = LogLevel.None,
-    authToken: String? = null
-): PNConfiguration {
-    return object : PNConfiguration {
-        override val userId: UserId
-            get() = userId
-        override val subscribeKey: String
-            get() = subscribeKey
-        override val publishKey: String
-            get() = publishKey
-        override val secretKey: String
-            get() = secretKey.orEmpty()
-        override val logVerbosity: PNLogVerbosity
-            get() = PNLogVerbosity.NONE
         override val logLevel: LogLevel
             get() = logLevel
-        override val authKey: String
-            get() = NO_AUTH_KEY
         override val authToken: String?
             get() = authToken
     }

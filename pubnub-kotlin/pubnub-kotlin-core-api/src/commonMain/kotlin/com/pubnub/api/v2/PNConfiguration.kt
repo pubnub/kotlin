@@ -1,6 +1,7 @@
 package com.pubnub.api.v2
 
 import com.pubnub.api.UserId
+import com.pubnub.api.enums.LogLevel
 import com.pubnub.api.enums.PNLogVerbosity
 
 expect interface PNConfiguration {
@@ -12,7 +13,6 @@ expect interface PNConfiguration {
      * The secretKey should only be used within a server side and never exposed to client devices.
      */
     val secretKey: String
-    val logVerbosity: PNLogVerbosity
 
     @Deprecated(
         message = "This setting is deprecated because it relates to deprecated Access Manager (PAM V2) and will be removed in the future. " +
@@ -34,7 +34,7 @@ expect interface PNConfiguration {
         "(PAM V3) https://www.pubnub.com/docs/general/resources/migration-guides/pam-v3-migration ",
     level = DeprecationLevel.WARNING,
     replaceWith = ReplaceWith(
-        "createPNConfiguration(userId, subscribeKey, publishKey, secretKey, logVerbosity)"
+        "createPNConfiguration(userId, subscribeKey, publishKey, secretKey, logLevel, authToken)"
     ),
 )
 expect fun createPNConfiguration(
@@ -46,18 +46,11 @@ expect fun createPNConfiguration(
     logVerbosity: PNLogVerbosity = PNLogVerbosity.NONE,
 ): PNConfiguration
 
-@Deprecated(
-    message = "logVerbosity is deprecated. Use createPNConfiguration with LogLevel instead.",
-    replaceWith = ReplaceWith(
-        "createPNConfiguration(userId, subscribeKey, publishKey, secretKey, logLevel, authToken)"
-    ),
-    level = DeprecationLevel.WARNING
-)
 expect fun createPNConfiguration(
     userId: UserId,
     subscribeKey: String,
     publishKey: String,
     secretKey: String? = null,
-    logVerbosity: PNLogVerbosity = PNLogVerbosity.NONE,
+    logLevel: LogLevel = LogLevel.NONE,
     authToken: String? = null
 ): PNConfiguration

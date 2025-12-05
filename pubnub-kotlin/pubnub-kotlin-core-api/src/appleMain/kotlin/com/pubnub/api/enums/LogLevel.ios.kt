@@ -17,7 +17,7 @@ package com.pubnub.api.enums
  *
  * @see [Swift SDK Logging Documentation](https://www.pubnub.com/docs/sdks/swift/logging#log-levels)
  */
-data class LogLevel(val levels: Set<Level>) {
+actual data class LogLevel(val levels: Set<Level>) {
     /**
      * Individual log level flags that can be combined.
      * Each level corresponds to a specific bitmask in the Swift SDK.
@@ -78,9 +78,11 @@ data class LogLevel(val levels: Set<Level>) {
         ALL
     }
 
-    companion object {
+    actual companion object {
+
         /** Logging disabled */
         val None = LogLevel(setOf(Level.NONE))
+        actual val NONE = None
 
         /** Only errors */
         val Error = LogLevel(setOf(Level.ERROR))
