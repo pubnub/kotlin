@@ -23,7 +23,6 @@ public class ReconnectionProblemWithoutRetryConfigurationIT extends AbstractReco
         pnConfiguration.subscribeKey(itPamTestConfig.pamSubKey());
         pnConfiguration.publishKey(itPamTestConfig.pamPubKey());
         pnConfiguration.subscribeTimeout(SUBSCRIBE_TIMEOUT);
-        pnConfiguration.logVerbosity(BODY);
         pnConfiguration.authKey(authKey);
         pnConfiguration.retryConfiguration(RetryConfiguration.None.INSTANCE);
         return PubNub.create(pnConfiguration.build());

@@ -1,6 +1,7 @@
 package com.pubnub.api.v2
 
 import com.pubnub.api.UserId
+import com.pubnub.api.enums.LogLevel
 import com.pubnub.api.enums.PNLogVerbosity
 
 private const val NO_AUTH_KEY = ""
@@ -11,7 +12,13 @@ actual interface PNConfiguration {
     actual val subscribeKey: String
     actual val publishKey: String
     actual val secretKey: String
+
+    @Deprecated(
+        message = "This setting will be removed in the future. Use logLevel instead.",
+        level = DeprecationLevel.WARNING
+    )
     actual val logVerbosity: PNLogVerbosity
+    val logLevel: LogLevel
 
     @Deprecated(
         message = "This setting is deprecated because it relates to deprecated Access Manager (PAM V2) and will be removed in the future. " +
@@ -54,11 +61,20 @@ actual fun createPNConfiguration(
             get() = authKey.orEmpty()
         override val logVerbosity: PNLogVerbosity
             get() = logVerbosity
+        override val logLevel: LogLevel
+            get() = LogLevel.None
         override val authToken: String?
             get() = null
     }
 }
 
+@Deprecated(
+    message = "logVerbosity is deprecated. Use createPNConfiguration with LogLevel instead.",
+    replaceWith = ReplaceWith(
+        "createPNConfiguration(userId, subscribeKey, publishKey, secretKey, logLevel, authToken)"
+    ),
+    level = DeprecationLevel.WARNING
+)
 actual fun createPNConfiguration(
     userId: UserId,
     subscribeKey: String,
@@ -77,6 +93,36 @@ actual fun createPNConfiguration(
             get() = NO_AUTH_KEY
         override val logVerbosity: PNLogVerbosity
             get() = logVerbosity
+        override val logLevel: LogLevel
+            get() = LogLevel.None
+        override val authToken: String?
+            get() = authToken
+    }
+}
+
+fun createPNConfiguration(
+    userId: UserId,
+    subscribeKey: String,
+    publishKey: String = "",
+    secretKey: String? = null,
+    logLevel: LogLevel = LogLevel.None,
+    authToken: String? = null
+): PNConfiguration {
+    return object : PNConfiguration {
+        override val userId: UserId
+            get() = userId
+        override val subscribeKey: String
+            get() = subscribeKey
+        override val publishKey: String
+            get() = publishKey
+        override val secretKey: String
+            get() = secretKey.orEmpty()
+        override val logVerbosity: PNLogVerbosity
+            get() = PNLogVerbosity.NONE
+        override val logLevel: LogLevel
+            get() = logLevel
+        override val authKey: String
+            get() = NO_AUTH_KEY
         override val authToken: String?
             get() = authToken
     }

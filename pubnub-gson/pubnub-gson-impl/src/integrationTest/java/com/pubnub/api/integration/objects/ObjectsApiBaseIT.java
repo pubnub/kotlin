@@ -29,7 +29,6 @@ public abstract class ObjectsApiBaseIT {
             throw new RuntimeException(e);
         }
         pnConfiguration.subscribeKey(itTestConfig.subscribeKey());
-        pnConfiguration.logVerbosity(PNLogVerbosity.BODY);
 
         return PubNub.create(pnConfiguration.build());
     }

@@ -46,6 +46,13 @@ expect fun createPNConfiguration(
     logVerbosity: PNLogVerbosity = PNLogVerbosity.NONE,
 ): PNConfiguration
 
+@Deprecated(
+    message = "logVerbosity is deprecated. Use createPNConfiguration with LogLevel instead.",
+    replaceWith = ReplaceWith(
+        "createPNConfiguration(userId, subscribeKey, publishKey, secretKey, logLevel, authToken)"
+    ),
+    level = DeprecationLevel.WARNING
+)
 expect fun createPNConfiguration(
     userId: UserId,
     subscribeKey: String,

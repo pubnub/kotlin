@@ -333,7 +333,10 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var publishKey: String?
         var cipherKey: String?
         var authKey: String?
+
+        @Deprecated("Use logLevel instead", ReplaceWith("logLevel"))
         var logVerbosity: Boolean?
+        var logLevel: dynamic // Type: JsLogLevel value (e.g., PubNub.LogLevel.Debug)
         var ssl: Boolean?
         var origin: dynamic // String? | Array<String>?
         var presenceTimeout: Number?
@@ -1424,6 +1427,22 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var ExponentialRetryPolicy: Any
 
         fun notificationPayload(title: String, body: String): NotificationsPayload
+
+        // PubNub.LogLevel static property from JavaScript SDK
+        val LogLevel: JsLogLevel
+    }
+
+    /**
+     * External interface representing PubNub.LogLevel enum from JavaScript SDK.
+     * Used as: PubNub.LogLevel.Debug, PubNub.LogLevel.Info, etc.
+     */
+    interface JsLogLevel {
+        val None: dynamic
+        val Error: dynamic
+        val Warn: dynamic
+        val Info: dynamic
+        val Debug: dynamic
+        val Trace: dynamic
     }
 }
 

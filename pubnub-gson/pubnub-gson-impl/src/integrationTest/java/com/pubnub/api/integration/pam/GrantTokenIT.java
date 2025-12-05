@@ -54,7 +54,7 @@ public class GrantTokenIT extends BaseIntegrationTest {
     @Test
     public void happyPath() throws PubNubException {
         //given
-        PubNub pubNubUnderTest = getServer(builder -> builder.logVerbosity(PNLogVerbosity.BODY));
+        PubNub pubNubUnderTest = getServer();
         final int expectedTTL = 1337;
         final String expectedChannelResourceName = "channelResource";
         final String expectedChannelPattern = "channel.*";

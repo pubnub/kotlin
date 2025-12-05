@@ -18,7 +18,6 @@ public class HereNowApp {
         // Configure PubNub instance
         PNConfiguration.Builder configBuilder = PNConfiguration.builder(new UserId("demoUserId"), "demo");
         configBuilder.publishKey("demo");
-        configBuilder.logVerbosity(PNLogVerbosity.BODY);
         configBuilder.secure(true);
 
         PubNub pubnub = PubNub.create(configBuilder.build());

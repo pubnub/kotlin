@@ -1,6 +1,7 @@
 package com.pubnub.api.v2
 
 import com.pubnub.api.UserId
+import com.pubnub.api.enums.LogLevel
 import com.pubnub.api.enums.PNLogVerbosity
 
 private const val NO_AUTH_KEY = ""
@@ -11,7 +12,13 @@ actual interface PNConfiguration {
     actual val subscribeKey: String
     actual val publishKey: String
     actual val secretKey: String
+
+    @Deprecated(
+        message = "This setting will be removed in the future. Use logLevel instead.",
+        level = DeprecationLevel.WARNING
+    )
     actual val logVerbosity: PNLogVerbosity
+    val logLevel: LogLevel
     val enableEventEngine: Boolean
 
     @Deprecated(
@@ -62,9 +69,18 @@ actual fun createPNConfiguration(
             get() = true
         override val logVerbosity: PNLogVerbosity
             get() = logVerbosity
+        override val logLevel: LogLevel
+            get() = LogLevel.NONE
     }
 }
 
+@Deprecated(
+    message = "logVerbosity is deprecated. Use createPNConfiguration with LogLevel instead.",
+    replaceWith = ReplaceWith(
+        "createPNConfiguration(userId, subscribeKey, publishKey, secretKey, logLevel, authToken)"
+    ),
+    level = DeprecationLevel.WARNING
+)
 actual fun createPNConfiguration(
     userId: UserId,
     subscribeKey: String,
@@ -90,5 +106,37 @@ actual fun createPNConfiguration(
             get() = true
         override val logVerbosity: PNLogVerbosity
             get() = logVerbosity
+        override val logLevel: LogLevel
+            get() = LogLevel.NONE
+    }
+}
+
+fun createPNConfiguration(
+    userId: UserId,
+    subscribeKey: String,
+    publishKey: String,
+    secretKey: String? = null,
+    logLevel: LogLevel? = LogLevel.NONE,
+    authToken: String? = null
+): PNConfiguration {
+    return object : PNConfiguration {
+        override val userId: UserId
+            get() = userId
+        override val subscribeKey: String
+            get() = subscribeKey
+        override val publishKey: String
+            get() = publishKey
+        override val secretKey: String
+            get() = secretKey.orEmpty()
+        override val logVerbosity: PNLogVerbosity
+            get() = PNLogVerbosity.NONE
+        override val logLevel: LogLevel
+            get() = logLevel ?: LogLevel.NONE
+        override val enableEventEngine: Boolean
+            get() = true
+        override val authKey: String
+            get() = NO_AUTH_KEY
+        override val authToken: String?
+            get() = authToken
     }
 }

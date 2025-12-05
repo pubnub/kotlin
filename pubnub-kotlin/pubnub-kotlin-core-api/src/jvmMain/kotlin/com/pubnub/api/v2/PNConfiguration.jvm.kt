@@ -48,3 +48,19 @@ actual fun createPNConfiguration(
         this.authToken = authToken
     }.build()
 }
+
+fun createPNConfiguration(
+    userId: UserId,
+    subscribeKey: String,
+    publishKey: String,
+    secretKey: String? = null,
+    authToken: String? = null
+): PNConfiguration {
+    return PNConfiguration.builder(userId, subscribeKey) {
+        this.publishKey = publishKey
+        this.secretKey = secretKey.orEmpty()
+        this.authKey = NO_AUTH_KEY
+        this.secretKey = secretKey.orEmpty()
+        this.authToken = authToken
+    }.build()
+}

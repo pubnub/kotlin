@@ -88,7 +88,6 @@ import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice
 import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDeviceImpl
 import com.pubnub.api.endpoints.push.RemoveChannelsFromPush
 import com.pubnub.api.endpoints.push.RemoveChannelsFromPushImpl
-import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.PNBoundedPage
@@ -143,11 +142,11 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
 
     override val configuration: PNConfiguration
         get() = createPNConfiguration( // todo test this!
-            UserId(jsPubNub.getUUID()),
-            jsPubNub.asDynamic().configuration.subscribeKey,
-            jsPubNub.asDynamic().configuration.publishKey,
-            jsPubNub.asDynamic().configuration.secretKey,
-            jsPubNub.asDynamic().configuration.logVerbosity,
+            userId = UserId(jsPubNub.getUUID()),
+            subscribeKey = jsPubNub.asDynamic().configuration.subscribeKey,
+            publishKey = jsPubNub.asDynamic().configuration.publishKey,
+            secretKey = jsPubNub.asDynamic().configuration.secretKey,
+            logLevel = jsPubNub.asDynamic().configuration.logLevel as? com.pubnub.api.enums.LogLevel,
             authToken = jsPubNub.asDynamic().configuration.authToken
         )
 
@@ -1390,7 +1389,7 @@ fun PNConfiguration.toJs(): PubNubJs.PNConfiguration {
     config.subscribeKey = subscribeKey
     config.publishKey = publishKey
     config.secretKey = secretKey
-    config.logVerbosity = logVerbosity == PNLogVerbosity.BODY
+    config.logLevel = logLevel.toJsEnum()
     config.enableEventEngine = enableEventEngine
 //    config.authKey
 //    config.ssl: Boolean?
@@ -1469,4 +1468,17 @@ private fun MemberInclude.toMemberIncludeOptions(): PubNubJs.IncludeOptions {
         this.statusField = this@toMemberIncludeOptions.includeStatus
         this.typeField = this@toMemberIncludeOptions.includeType
     }
+}
+
+/**
+ * Converts Kotlin LogLevel enum to JavaScript SDK's PubNub.LogLevel enum value.
+ * @internal
+ */
+internal fun com.pubnub.api.enums.LogLevel.toJsEnum(): dynamic = when (this) {
+    com.pubnub.api.enums.LogLevel.NONE -> PubNubJs.LogLevel.None
+    com.pubnub.api.enums.LogLevel.ERROR -> PubNubJs.LogLevel.Error
+    com.pubnub.api.enums.LogLevel.WARN -> PubNubJs.LogLevel.Warn
+    com.pubnub.api.enums.LogLevel.INFO -> PubNubJs.LogLevel.Info
+    com.pubnub.api.enums.LogLevel.DEBUG -> PubNubJs.LogLevel.Debug
+    com.pubnub.api.enums.LogLevel.TRACE -> PubNubJs.LogLevel.Trace
 }

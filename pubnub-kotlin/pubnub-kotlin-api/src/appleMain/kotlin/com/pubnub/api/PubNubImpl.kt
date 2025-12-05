@@ -108,7 +108,6 @@ import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice
 import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDeviceImpl
 import com.pubnub.api.endpoints.push.RemoveChannelsFromPush
 import com.pubnub.api.endpoints.push.RemoveChannelsFromPushImpl
-import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.PNBoundedPage
@@ -171,8 +170,7 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         "", // todo
         "", // todo
         "", // todo
-        pubNubObjC.configObjC().authKey(),
-        PNLogVerbosity.NONE
+        logLevel = pubNubObjC.logLevel
     )
 
     override fun addListener(listener: EventListener) {
