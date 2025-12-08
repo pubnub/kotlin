@@ -1,31 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
 <baseline version="1.0">
-    <file name="src/main/kotlin/com/pubnub/docs/accessManager/ParseTokenOther.kt">
-        <error line="12" column="27" source="standard:argument-list-wrapping" />
-        <error line="12" column="273" source="standard:argument-list-wrapping" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/docs/accessManager/SetTokenOther.kt">
-        <error line="12" column="25" source="standard:argument-list-wrapping" />
-        <error line="12" column="271" source="standard:argument-list-wrapping" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/docs/appContext/GetAllUUIDMetadataMain.kt">
-        <error line="97" column="31" source="standard:no-multi-spaces" />
-        <error line="98" column="29" source="standard:no-multi-spaces" />
-        <error line="137" column="26" source="standard:no-multi-spaces" />
-        <error line="138" column="21" source="standard:no-multi-spaces" />
-        <error line="139" column="31" source="standard:no-multi-spaces" />
-        <error line="140" column="29" source="standard:no-multi-spaces" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/docs/fileSharing/FileSharingMain.kt">
-        <error line="53" column="44" source="standard:no-multi-spaces" />
-        <error line="54" column="45" source="standard:no-multi-spaces" />
-        <error line="55" column="40" source="standard:no-multi-spaces" />
-        <error line="56" column="30" source="standard:no-multi-spaces" />
-        <error line="61" column="27" source="standard:no-multi-spaces" />
-    </file>
-    <file name="src/main/kotlin/com/pubnub/docs/messageReactions/MessageReactionsMain.kt">
-        <error line="101" column="28" source="standard:no-multi-spaces" />
-        <error line="102" column="32" source="standard:no-multi-spaces" />
-        <error line="103" column="45" source="standard:no-multi-spaces" />
-    </file>
 </baseline>
