@@ -1,3 +1,9 @@
+## v12.0.2
+December 09 2025
+
+#### Fixed
+- Prevent resubscribe to previously subscribed entities.
+
 ## v12.0.1
 November 19 2025
 

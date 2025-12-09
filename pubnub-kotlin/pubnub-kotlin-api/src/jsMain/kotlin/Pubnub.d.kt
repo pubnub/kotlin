@@ -763,6 +763,10 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var includeUUIDs: Boolean?
 
         var includeState: Boolean?
+
+        var limit: Number?
+
+        var offset: Number?
     }
 
     interface HereNowOccupantData {
