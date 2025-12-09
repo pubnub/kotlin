@@ -365,6 +365,8 @@ $dokka.location:/PubNub.HereNowParameters/channelGroups/#/PointingToDeclaration/
 $dokka.location:/PubNub.HereNowParameters/channels/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-here-now-parameters/channels.md
 $dokka.location:/PubNub.HereNowParameters/includeState/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-here-now-parameters/include-state.md
 $dokka.location:/PubNub.HereNowParameters/includeUUIDs/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-here-now-parameters/include-u-u-i-ds.md
+$dokka.location:/PubNub.HereNowParameters/limit/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-here-now-parameters/limit.md
+$dokka.location:/PubNub.HereNowParameters/offset/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-here-now-parameters/offset.md
 $dokka.location:/PubNub.HereNowResponse///PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-here-now-response/index.md
 $dokka.location:/PubNub.HereNowResponse/channels/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-here-now-response/channels.md
 $dokka.location:/PubNub.HereNowResponse/totalChannels/#/PointingToDeclaration/pubnub-kotlin-api/pubnub-kotlin-api/[root]/-pub-nub/-here-now-response/total-channels.md
