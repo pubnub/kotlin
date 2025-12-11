@@ -1,5 +1,7 @@
 package com.pubnub.api.enums
 
+import platform.darwin.UInt32
+
 /**
  * Swift SDK log level configuration.
  *
@@ -22,12 +24,12 @@ actual data class LogLevel(val levels: Set<Level>) {
      * Individual log level flags that can be combined.
      * Each level corresponds to a specific bitmask in the Swift SDK.
      */
-    enum class Level {
+    enum class Level(val value: UInt32) {
         /**
          * Logging is disabled (bitmask: 0).
          * Default setting.
          */
-        NONE,
+        NONE(0u),
 
         /**
          * Internal operations: method calls, state-machine transitions, detailed execution flow.
@@ -35,7 +37,7 @@ actual data class LogLevel(val levels: Set<Level>) {
          *
          * Warning: Logs sensitive information. Use only in development.
          */
-        TRACE,
+        TRACE(1u shl 0),
 
         /**
          * User inputs, API parameters, HTTP requests and responses, operation results.
@@ -43,31 +45,31 @@ actual data class LogLevel(val levels: Set<Level>) {
          *
          * Warning: May log sensitive information. Use only in development.
          */
-        DEBUG,
+        DEBUG(1u shl 1),
 
         /**
          * Significant events including successful initialization and configuration changes.
          * Bitmask: 1 << 2
          */
-        INFO,
+        INFO(1u shl 2),
 
         /**
          * Internal PubNub operations or events.
          * Bitmask: 1 << 3
          */
-        EVENT,
+        EVENT(1u shl 3),
 
         /**
          * Unusual conditions and non-breaking validation warnings.
          * Bitmask: 1 << 4
          */
-        WARN,
+        WARN(1u shl 4),
 
         /**
          * Errors, exceptions, and configuration conflicts.
          * Bitmask: 1 << 5
          */
-        ERROR,
+        ERROR(1u shl 5),
 
         /**
          * All log levels will be captured.
@@ -75,11 +77,10 @@ actual data class LogLevel(val levels: Set<Level>) {
          *
          * Warning: Logs sensitive information. Never use in production.
          */
-        ALL
+        ALL(UInt32.MAX_VALUE)
     }
 
     actual companion object {
-
         /** Logging disabled */
         val None = LogLevel(setOf(Level.NONE))
         actual val NONE = None

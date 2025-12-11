@@ -22,8 +22,12 @@ actual class LogLevel private constructor(private val name: String) {
     override fun toString(): String = name
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is LogLevel) return false
+        if (this === other) {
+            return true
+        }
+        if (other !is LogLevel) {
+            return false
+        }
         return name == other.name
     }
 
