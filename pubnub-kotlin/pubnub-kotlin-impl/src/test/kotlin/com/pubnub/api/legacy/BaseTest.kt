@@ -68,7 +68,6 @@ abstract class BaseTest {
             publishKey = "myPublishKey"
             origin = wireMockServer.baseUrl().toHttpUrlOrNull()!!.run { "$host:$port" }
             secure = false
-            logVerbosity = PNLogVerbosity.BODY
             retryConfiguration = RetryConfiguration.None
         }
 

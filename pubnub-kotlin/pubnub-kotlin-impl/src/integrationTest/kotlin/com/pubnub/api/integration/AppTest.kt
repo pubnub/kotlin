@@ -24,7 +24,6 @@ class AppTest {
             PubNub.create(
                 PNConfiguration.builder(userId = UserId(PubNub.generateUUID()), subscribeKey = Keys.subKey) {
                     publishKey = Keys.pubKey
-                    logVerbosity = PNLogVerbosity.BODY
                 }.build(),
             )
     }

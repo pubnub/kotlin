@@ -91,7 +91,6 @@ abstract class BaseIntegrationTest {
             clientConfig.authKey = provideAuthKey()!!
         }
         clientConfig.retryConfiguration = RetryConfiguration.None
-        clientConfig.logVerbosity = PNLogVerbosity.NONE
 
         return clientConfig
     }
@@ -100,7 +99,6 @@ abstract class BaseIntegrationTest {
         serverConfig.subscribeKey = Keys.pamSubKey
         serverConfig.publishKey = Keys.pamPubKey
         serverConfig.secretKey = Keys.pamSecKey
-        serverConfig.logVerbosity = PNLogVerbosity.NONE
         serverConfig.httpLoggingInterceptor = HttpLoggingInterceptor()
         serverConfig.action()
 

@@ -37,7 +37,7 @@ actual fun createPNConfiguration(
     subscribeKey: String,
     publishKey: String,
     secretKey: String?,
-    logLevel: LogLevel,
+    logLevel: LogLevel, // jvm doesn't have logLevel. Slf4j implementation (logback, log4j2) should be used to enable logging.
     authToken: String?
 ): PNConfiguration {
     return PNConfiguration.builder(userId, subscribeKey) {

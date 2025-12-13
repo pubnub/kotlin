@@ -8,9 +8,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-import static com.pubnub.api.enums.PNLogVerbosity.BODY;
-
-
 public class ReconnectionProblemWithoutRetryConfigurationIT extends AbstractReconnectionProblemIT {
     @Override
     protected @NotNull PubNub privilegedClientPubNub() {

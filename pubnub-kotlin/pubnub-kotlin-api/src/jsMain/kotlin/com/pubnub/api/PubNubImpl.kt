@@ -146,7 +146,7 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
             subscribeKey = jsPubNub.asDynamic().configuration.subscribeKey,
             publishKey = jsPubNub.asDynamic().configuration.publishKey,
             secretKey = jsPubNub.asDynamic().configuration.secretKey,
-            logLevel = jsPubNub.asDynamic().configuration.logLevel as? com.pubnub.api.enums.LogLevel,
+            logLevel = jsPubNub.asDynamic().configuration.logLevel as com.pubnub.api.enums.LogLevel,
             authToken = jsPubNub.asDynamic().configuration.authToken
         )
 
@@ -1481,4 +1481,5 @@ internal fun com.pubnub.api.enums.LogLevel.toJsEnum(): dynamic = when (this) {
     com.pubnub.api.enums.LogLevel.INFO -> PubNubJs.LogLevel.Info
     com.pubnub.api.enums.LogLevel.DEBUG -> PubNubJs.LogLevel.Debug
     com.pubnub.api.enums.LogLevel.TRACE -> PubNubJs.LogLevel.Trace
+    else -> {}
 }

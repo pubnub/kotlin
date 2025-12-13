@@ -2,7 +2,6 @@ package com.pubnub.api.integration.pam;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
-import com.pubnub.api.enums.PNLogVerbosity;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
 import com.pubnub.api.java.PubNub;
 import com.pubnub.api.java.SpaceId;

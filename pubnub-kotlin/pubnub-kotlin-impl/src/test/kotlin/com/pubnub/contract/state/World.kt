@@ -19,7 +19,6 @@ class World : WorldState {
         PNConfiguration.builder(userId = UserId(PubNubImpl.generateUUID()), "").apply {
             origin = ContractTestConfig.serverHostPort
             secure = false
-            logVerbosity = PNLogVerbosity.BODY
         }
 
     val pubnub: PubNubImpl by lazy { PubNubImpl(configuration.build()) }

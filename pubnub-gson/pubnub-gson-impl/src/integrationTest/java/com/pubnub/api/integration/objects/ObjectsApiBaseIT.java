@@ -2,7 +2,6 @@ package com.pubnub.api.integration.objects;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
-import com.pubnub.api.enums.PNLogVerbosity;
 import com.pubnub.api.integration.util.ITTestConfig;
 import com.pubnub.api.java.PubNub;
 import com.pubnub.api.java.v2.PNConfiguration;

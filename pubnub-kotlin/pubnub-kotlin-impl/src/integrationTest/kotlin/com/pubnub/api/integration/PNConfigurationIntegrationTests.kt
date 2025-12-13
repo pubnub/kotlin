@@ -36,7 +36,6 @@ class PNConfigurationIntegrationTests : BaseIntegrationTest() {
         val configBuilder = PNConfiguration.builder(UserId(expectedUuid), Keys.subKey) {
             publishKey = Keys.pubKey
             authToken = expectedAuthToken
-            logVerbosity = PNLogVerbosity.NONE
             customLoggers = listOf(CustomLoggerTestImpl())
         }
         val pubNub = PubNub.create(configBuilder.build())
