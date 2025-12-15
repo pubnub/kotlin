@@ -8,44 +8,34 @@
     </file>
     <file name="src/jsMain/kotlin/Pubnub.d.kt">
         <error line="156" column="40" source="standard:comment-wrapping" />
-        <error line="413" column="15" source="standard:class-naming" />
-        <error line="430" column="15" source="standard:class-naming" />
-        <error line="446" column="15" source="standard:class-naming" />
-        <error line="458" column="15" source="standard:class-naming" />
-        <error line="466" column="15" source="standard:class-naming" />
-        <error line="474" column="15" source="standard:class-naming" />
-        <error line="490" column="15" source="standard:class-naming" />
-        <error line="503" column="15" source="standard:class-naming" />
-        <error line="859" column="13" source="standard:property-naming" />
-        <error line="1044" column="15" source="standard:class-naming" />
-        <error line="1050" column="15" source="standard:class-naming" />
-        <error line="1173" column="13" source="standard:property-naming" />
-        <error line="1181" column="13" source="standard:property-naming" />
-        <error line="1183" column="13" source="standard:property-naming" />
-        <error line="1246" column="39" source="standard:comment-wrapping" />
-        <error line="1321" column="15" source="standard:class-naming" />
-        <error line="1347" column="42" source="standard:comment-wrapping" />
-        <error line="1397" column="37" source="standard:comment-wrapping" />
-        <error line="1418" column="13" source="standard:property-naming" />
-        <error line="1419" column="13" source="standard:property-naming" />
-        <error line="1423" column="13" source="standard:property-naming" />
-        <error line="1424" column="13" source="standard:property-naming" />
-        <error line="1443" column="9" source="standard:property-naming" />
-        <error line="1444" column="9" source="standard:property-naming" />
-        <error line="1445" column="9" source="standard:property-naming" />
-        <error line="1446" column="9" source="standard:property-naming" />
-        <error line="1447" column="9" source="standard:property-naming" />
-        <error line="1448" column="9" source="standard:property-naming" />
-        <error line="1449" column="9" source="standard:property-naming" />
-        <error line="1450" column="9" source="standard:property-naming" />
-        <error line="1451" column="9" source="standard:property-naming" />
-        <error line="1452" column="9" source="standard:property-naming" />
-        <error line="1453" column="9" source="standard:property-naming" />
-        <error line="1454" column="9" source="standard:property-naming" />
-        <error line="1458" column="9" source="standard:property-naming" />
-        <error line="1459" column="9" source="standard:property-naming" />
-        <error line="1460" column="9" source="standard:property-naming" />
-        <error line="1461" column="9" source="standard:property-naming" />
+        <error line="416" column="15" source="standard:class-naming" />
+        <error line="433" column="15" source="standard:class-naming" />
+        <error line="449" column="15" source="standard:class-naming" />
+        <error line="461" column="15" source="standard:class-naming" />
+        <error line="469" column="15" source="standard:class-naming" />
+        <error line="477" column="15" source="standard:class-naming" />
+        <error line="493" column="15" source="standard:class-naming" />
+        <error line="506" column="15" source="standard:class-naming" />
+        <error line="862" column="13" source="standard:property-naming" />
+        <error line="1047" column="15" source="standard:class-naming" />
+        <error line="1053" column="15" source="standard:class-naming" />
+        <error line="1176" column="13" source="standard:property-naming" />
+        <error line="1184" column="13" source="standard:property-naming" />
+        <error line="1186" column="13" source="standard:property-naming" />
+        <error line="1249" column="39" source="standard:comment-wrapping" />
+        <error line="1324" column="15" source="standard:class-naming" />
+        <error line="1350" column="42" source="standard:comment-wrapping" />
+        <error line="1400" column="37" source="standard:comment-wrapping" />
+        <error line="1421" column="13" source="standard:property-naming" />
+        <error line="1422" column="13" source="standard:property-naming" />
+        <error line="1426" column="13" source="standard:property-naming" />
+        <error line="1427" column="13" source="standard:property-naming" />
+        <error line="1440" column="13" source="standard:property-naming" />
+        <error line="1441" column="13" source="standard:property-naming" />
+        <error line="1442" column="13" source="standard:property-naming" />
+        <error line="1443" column="13" source="standard:property-naming" />
+        <error line="1444" column="13" source="standard:property-naming" />
+        <error line="1445" column="13" source="standard:property-naming" />
         <error line="1462" column="9" source="standard:property-naming" />
         <error line="1463" column="9" source="standard:property-naming" />
         <error line="1464" column="9" source="standard:property-naming" />
@@ -58,9 +48,6 @@
         <error line="1471" column="9" source="standard:property-naming" />
         <error line="1472" column="9" source="standard:property-naming" />
         <error line="1473" column="9" source="standard:property-naming" />
-        <error line="1474" column="9" source="standard:property-naming" />
-        <error line="1475" column="9" source="standard:property-naming" />
-        <error line="1476" column="9" source="standard:property-naming" />
         <error line="1477" column="9" source="standard:property-naming" />
         <error line="1478" column="9" source="standard:property-naming" />
         <error line="1479" column="9" source="standard:property-naming" />
@@ -78,5 +65,24 @@
         <error line="1491" column="9" source="standard:property-naming" />
         <error line="1492" column="9" source="standard:property-naming" />
         <error line="1493" column="9" source="standard:property-naming" />
+        <error line="1494" column="9" source="standard:property-naming" />
+        <error line="1495" column="9" source="standard:property-naming" />
+        <error line="1496" column="9" source="standard:property-naming" />
+        <error line="1497" column="9" source="standard:property-naming" />
+        <error line="1498" column="9" source="standard:property-naming" />
+        <error line="1499" column="9" source="standard:property-naming" />
+        <error line="1500" column="9" source="standard:property-naming" />
+        <error line="1501" column="9" source="standard:property-naming" />
+        <error line="1502" column="9" source="standard:property-naming" />
+        <error line="1503" column="9" source="standard:property-naming" />
+        <error line="1504" column="9" source="standard:property-naming" />
+        <error line="1505" column="9" source="standard:property-naming" />
+        <error line="1506" column="9" source="standard:property-naming" />
+        <error line="1507" column="9" source="standard:property-naming" />
+        <error line="1508" column="9" source="standard:property-naming" />
+        <error line="1509" column="9" source="standard:property-naming" />
+        <error line="1510" column="9" source="standard:property-naming" />
+        <error line="1511" column="9" source="standard:property-naming" />
+        <error line="1512" column="9" source="standard:property-naming" />
     </file>
 </baseline>
