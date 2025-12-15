@@ -146,7 +146,7 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
             subscribeKey = jsPubNub.asDynamic().configuration.subscribeKey,
             publishKey = jsPubNub.asDynamic().configuration.publishKey,
             secretKey = jsPubNub.asDynamic().configuration.secretKey,
-            logLevel = jsPubNub.asDynamic().configuration.logLevel as com.pubnub.api.enums.LogLevel,
+            logLevel = fromJsEnum(jsPubNub.asDynamic().configuration.logLevel),
             authToken = jsPubNub.asDynamic().configuration.authToken
         )
 
@@ -1482,4 +1482,20 @@ internal fun com.pubnub.api.enums.LogLevel.toJsEnum(): dynamic = when (this) {
     com.pubnub.api.enums.LogLevel.DEBUG -> PubNubJs.LogLevel.Debug
     com.pubnub.api.enums.LogLevel.TRACE -> PubNubJs.LogLevel.Trace
     else -> {}
+}
+
+/**
+ * Converts JavaScript SDK's PubNub.LogLevel enum value to Kotlin LogLevel enum.
+ * @internal
+ */
+internal fun fromJsEnum(jsLogLevel: dynamic): com.pubnub.api.enums.LogLevel {
+    return when (jsLogLevel) {
+        PubNubJs.LogLevel.None -> com.pubnub.api.enums.LogLevel.NONE
+        PubNubJs.LogLevel.Error -> com.pubnub.api.enums.LogLevel.ERROR
+        PubNubJs.LogLevel.Warn -> com.pubnub.api.enums.LogLevel.WARN
+        PubNubJs.LogLevel.Info -> com.pubnub.api.enums.LogLevel.INFO
+        PubNubJs.LogLevel.Debug -> com.pubnub.api.enums.LogLevel.DEBUG
+        PubNubJs.LogLevel.Trace -> com.pubnub.api.enums.LogLevel.TRACE
+        else -> com.pubnub.api.enums.LogLevel.NONE // Default to NONE for unknown values
+    }
 }
