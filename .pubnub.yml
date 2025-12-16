@@ -125,8 +125,7 @@ changelog:
     version: v12.0.3
     changes:
       - type: bug
-        text: "Internal changes - added logLevel for KMP tests."
-  - date: 2025-12-09
+        text: "Internal changes - added logLevel for KMP tests."  - date: 2025-12-09
     version: v12.0.2
     changes:
       - type: bug
