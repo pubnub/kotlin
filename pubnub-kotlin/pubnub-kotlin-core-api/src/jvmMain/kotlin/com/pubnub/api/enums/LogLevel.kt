@@ -12,11 +12,11 @@ actual class LogLevel private constructor(private val name: String) {
         /** Logging disabled (JVM: configure via slf4j) */
         actual val NONE: LogLevel = LogLevel("NONE")
 
-        val ERROR: LogLevel = LogLevel("ERROR")
-        val WARN: LogLevel = LogLevel("WARN")
-        val INFO: LogLevel = LogLevel("INFO")
-        val DEBUG: LogLevel = LogLevel("DEBUG")
-        val TRACE: LogLevel = LogLevel("TRACE")
+        actual val ERROR: LogLevel = LogLevel("ERROR")
+        actual val WARN: LogLevel = LogLevel("WARN")
+        actual val INFO: LogLevel = LogLevel("INFO")
+        actual val DEBUG: LogLevel = LogLevel("DEBUG")
+        actual val TRACE: LogLevel = LogLevel("TRACE")
     }
 
     override fun toString(): String = name
