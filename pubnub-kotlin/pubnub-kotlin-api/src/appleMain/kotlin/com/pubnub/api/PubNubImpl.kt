@@ -1,5 +1,6 @@
 package com.pubnub.api
 
+import cocoapods.PubNubSwift.KMPLogLevel
 import cocoapods.PubNubSwift.KMPPAMPermission
 import cocoapods.PubNubSwift.KMPPAMTokenResource
 import cocoapods.PubNubSwift.KMPPubNub
@@ -12,6 +13,7 @@ import cocoapods.PubNubSwift.channelMetadataWith
 import cocoapods.PubNubSwift.channelWith
 import cocoapods.PubNubSwift.disconnect
 import cocoapods.PubNubSwift.getToken
+import cocoapods.PubNubSwift.logLevel
 import cocoapods.PubNubSwift.parseWithToken
 import cocoapods.PubNubSwift.reconnectWithTimetoken
 import cocoapods.PubNubSwift.removeAllListeners
@@ -108,7 +110,7 @@ import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice
 import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDeviceImpl
 import com.pubnub.api.endpoints.push.RemoveChannelsFromPush
 import com.pubnub.api.endpoints.push.RemoveChannelsFromPushImpl
-import com.pubnub.api.enums.PNLogVerbosity
+import com.pubnub.api.enums.LogLevel
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.PNBoundedPage
@@ -156,7 +158,8 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
         KMPPubNub(
             user = configuration.userId.value,
             subKey = configuration.subscribeKey,
-            pubKey = configuration.publishKey
+            pubKey = configuration.publishKey,
+            logLevel = KMPLogLevel(configuration.logLevel.levels.fold(0u) { acc, level -> acc or level.value })
         )
     )
 
@@ -167,13 +170,18 @@ class PubNubImpl(private val pubNubObjC: KMPPubNub) : PubNub {
     }
 
     override val configuration: PNConfiguration = createPNConfiguration(
-        UserId(pubNubObjC.configObjC().userId()),
-        "", // todo
-        "", // todo
-        "", // todo
-        pubNubObjC.configObjC().authKey(),
-        PNLogVerbosity.NONE
+        userId = UserId(pubNubObjC.configObjC().userId()),
+        subscribeKey = pubNubObjC.configObjC().subscribeKey(),
+        publishKey = pubNubObjC.configObjC().publishKey().orEmpty(),
+        logLevel = mapToLogLevel(pubNubObjC.logLevel())
     )
+
+    private fun mapToLogLevel(level: KMPLogLevel): LogLevel {
+        val currentMask = level.rawValue()
+        val levels = LogLevel.Level.entries.filter { l -> (currentMask and l.value) != 0u }.toSet()
+
+        return LogLevel(levels)
+    }
 
     override fun addListener(listener: EventListener) {
         pubNubObjC.addEventListenerWithListener(listener = listener.underlying)

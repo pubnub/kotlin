@@ -85,7 +85,7 @@ actual interface PNConfiguration {
             "2. Or implement CustomLogger interface and set via customLoggers property",
         level = DeprecationLevel.WARNING
     )
-    actual val logVerbosity: PNLogVerbosity
+    val logVerbosity: PNLogVerbosity
 
     /**
      * Set Heartbeat notification options.

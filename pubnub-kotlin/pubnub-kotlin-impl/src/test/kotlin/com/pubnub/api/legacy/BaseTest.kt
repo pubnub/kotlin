@@ -8,7 +8,6 @@ import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 import com.pubnub.api.UserId
-import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.internal.PubNubImpl
@@ -68,7 +67,6 @@ abstract class BaseTest {
             publishKey = "myPublishKey"
             origin = wireMockServer.baseUrl().toHttpUrlOrNull()!!.run { "$host:$port" }
             secure = false
-            logVerbosity = PNLogVerbosity.BODY
             retryConfiguration = RetryConfiguration.None
         }
 

@@ -2,7 +2,6 @@ package com.pubnub.api.integration.pam;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
-import com.pubnub.api.enums.PNLogVerbosity;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
 import com.pubnub.api.java.PubNub;
 import com.pubnub.api.java.SpaceId;
@@ -54,7 +53,7 @@ public class GrantTokenIT extends BaseIntegrationTest {
     @Test
     public void happyPath() throws PubNubException {
         //given
-        PubNub pubNubUnderTest = getServer(builder -> builder.logVerbosity(PNLogVerbosity.BODY));
+        PubNub pubNubUnderTest = getServer();
         final int expectedTTL = 1337;
         final String expectedChannelResourceName = "channelResource";
         final String expectedChannelPattern = "channel.*";

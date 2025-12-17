@@ -1,6 +1,7 @@
 package com.pubnub.api.v2
 
 import com.pubnub.api.UserId
+import com.pubnub.api.enums.LogLevel
 import com.pubnub.api.enums.PNLogVerbosity
 
 private const val NO_AUTH_KEY = ""
@@ -11,7 +12,7 @@ actual interface PNConfiguration {
     actual val subscribeKey: String
     actual val publishKey: String
     actual val secretKey: String
-    actual val logVerbosity: PNLogVerbosity
+    val logLevel: LogLevel
     val enableEventEngine: Boolean
 
     @Deprecated(
@@ -34,7 +35,7 @@ actual interface PNConfiguration {
         "(PAM V3) https://www.pubnub.com/docs/general/resources/migration-guides/pam-v3-migration ",
     level = DeprecationLevel.WARNING,
     replaceWith = ReplaceWith(
-        "createPNConfiguration(userId, subscribeKey, publishKey, secretKey, logVerbosity)"
+        "createPNConfiguration(userId, subscribeKey, publishKey, secretKey, logLevel, authToken)"
     ),
 )
 actual fun createPNConfiguration(
@@ -60,8 +61,8 @@ actual fun createPNConfiguration(
             get() = null
         override val enableEventEngine: Boolean
             get() = true
-        override val logVerbosity: PNLogVerbosity
-            get() = logVerbosity
+        override val logLevel: LogLevel
+            get() = LogLevel.NONE
     }
 }
 
@@ -70,7 +71,7 @@ actual fun createPNConfiguration(
     subscribeKey: String,
     publishKey: String,
     secretKey: String?,
-    logVerbosity: PNLogVerbosity,
+    logLevel: LogLevel,
     authToken: String?
 ): PNConfiguration {
     return object : PNConfiguration {
@@ -88,7 +89,7 @@ actual fun createPNConfiguration(
             get() = authToken
         override val enableEventEngine: Boolean
             get() = true
-        override val logVerbosity: PNLogVerbosity
-            get() = logVerbosity
+        override val logLevel: LogLevel
+            get() = logLevel
     }
 }

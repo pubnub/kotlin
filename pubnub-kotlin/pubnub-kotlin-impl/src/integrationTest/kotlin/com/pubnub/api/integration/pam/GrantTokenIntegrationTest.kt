@@ -20,7 +20,6 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
     @Test
     fun happyPath_SUM() {
         // given
-        serverConfig.logVerbosity = PNLogVerbosity.BODY
         val pubNubUnderTest = server
         val expectedTTL = 1337
         val expectedAuthorizedUserId = UserId("authorizedUser01")
@@ -74,7 +73,6 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
     @Test
     fun happyPath() {
         // given
-        serverConfig.logVerbosity = PNLogVerbosity.BODY
         val pubNubUnderTest = server
         val expectedTTL = 1337
         val expectedChannelResourceName = "channelResource"

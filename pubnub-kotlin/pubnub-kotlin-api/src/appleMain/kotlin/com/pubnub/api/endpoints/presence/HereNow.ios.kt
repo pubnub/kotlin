@@ -38,7 +38,7 @@ class HereNowImpl(
             channelGroups = channelGroups,
             includeState = includeState,
             includeUUIDs = includeUUIDs,
-            limit = limit.toLong(),
+            limit = NSNumber(limit).integerValue,
             offset = offset?.let { NSNumber(it) },
             onSuccess = callback.onSuccessHandler {
                 PNHereNowResult(

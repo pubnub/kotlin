@@ -1,6 +1,7 @@
 package com.pubnub.api.v2
 
 import com.pubnub.api.UserId
+import com.pubnub.api.enums.LogLevel
 import com.pubnub.api.enums.PNLogVerbosity
 
 private const val NO_AUTH_KEY = ""
@@ -11,7 +12,7 @@ private const val NO_AUTH_KEY = ""
         "(PAM V3) https://www.pubnub.com/docs/general/resources/migration-guides/pam-v3-migration ",
     level = DeprecationLevel.WARNING,
     replaceWith = ReplaceWith(
-        "createPNConfiguration(userId, subscribeKey, publishKey, secretKey, logVerbosity)"
+        "createPNConfiguration(userId, subscribeKey, publishKey, secretKey, logLevel, authToken)"
     ),
 )
 actual fun createPNConfiguration(
@@ -36,7 +37,7 @@ actual fun createPNConfiguration(
     subscribeKey: String,
     publishKey: String,
     secretKey: String?,
-    logVerbosity: PNLogVerbosity,
+    logLevel: LogLevel, // jvm doesn't have logLevel. Slf4j implementation (logback, log4j2) should be used to enable logging.
     authToken: String?
 ): PNConfiguration {
     return PNConfiguration.builder(userId, subscribeKey) {
@@ -44,7 +45,7 @@ actual fun createPNConfiguration(
         this.secretKey = secretKey.orEmpty()
         this.authKey = NO_AUTH_KEY
         this.secretKey = secretKey.orEmpty()
-        this.logVerbosity = logVerbosity
         this.authToken = authToken
+        // jvm doesn't have logLevel. Slf4j implementation (logback, log4j2) should be used to enable logging.
     }.build()
 }

@@ -4,14 +4,12 @@ import com.google.gson.JsonObject;
 import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
-import com.pubnub.api.enums.PNLogVerbosity;
 import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.java.PubNub;
 import com.pubnub.api.java.callbacks.SubscribeCallback;
 import com.pubnub.api.java.v2.PNConfiguration;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.retry.RetryConfiguration;
-import okhttp3.logging.HttpLoggingInterceptor;
 import org.aeonbits.owner.ConfigFactory;
 import org.awaitility.Awaitility;
 import org.awaitility.Durations;
@@ -23,8 +21,6 @@ import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -146,7 +142,6 @@ public abstract class BaseIntegrationTest {
             throw new RuntimeException(e);
         }
         pnConfiguration.retryConfiguration(RetryConfiguration.None.INSTANCE);
-        pnConfiguration.logVerbosity(PNLogVerbosity.NONE);
         if (action != null) {
             action.accept(pnConfiguration);
         }
@@ -162,7 +157,6 @@ public abstract class BaseIntegrationTest {
         }
         pnConfiguration.publishKey(PAM_PUB_KEY);
         pnConfiguration.secretKey(PAM_SEC_KEY);
-        pnConfiguration.logVerbosity(PNLogVerbosity.NONE);
         if (action != null) {
             action.accept(pnConfiguration);
         }

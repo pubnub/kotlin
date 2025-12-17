@@ -1,6 +1,7 @@
 package com.pubnub.api.v2
 
 import com.pubnub.api.UserId
+import com.pubnub.api.enums.LogLevel
 import com.pubnub.api.enums.PNLogVerbosity
 
 private const val NO_AUTH_KEY = ""
@@ -11,7 +12,7 @@ actual interface PNConfiguration {
     actual val subscribeKey: String
     actual val publishKey: String
     actual val secretKey: String
-    actual val logVerbosity: PNLogVerbosity
+    val logLevel: LogLevel
 
     @Deprecated(
         message = "This setting is deprecated because it relates to deprecated Access Manager (PAM V2) and will be removed in the future. " +
@@ -52,8 +53,8 @@ actual fun createPNConfiguration(
             get() = secretKey.orEmpty()
         override val authKey: String
             get() = authKey.orEmpty()
-        override val logVerbosity: PNLogVerbosity
-            get() = logVerbosity
+        override val logLevel: LogLevel
+            get() = LogLevel.None
         override val authToken: String?
             get() = null
     }
@@ -64,7 +65,7 @@ actual fun createPNConfiguration(
     subscribeKey: String,
     publishKey: String,
     secretKey: String?,
-    logVerbosity: PNLogVerbosity,
+    logLevel: LogLevel,
     authToken: String?
 ): PNConfiguration {
     return object : PNConfiguration {
@@ -75,8 +76,8 @@ actual fun createPNConfiguration(
             get() = secretKey.orEmpty()
         override val authKey: String
             get() = NO_AUTH_KEY
-        override val logVerbosity: PNLogVerbosity
-            get() = logVerbosity
+        override val logLevel: LogLevel
+            get() = logLevel
         override val authToken: String?
             get() = authToken
     }

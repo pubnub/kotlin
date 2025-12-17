@@ -2,7 +2,6 @@ package com.pubnub.api.integration
 
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
-import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.test.Keys
@@ -91,7 +90,6 @@ abstract class BaseIntegrationTest {
             clientConfig.authKey = provideAuthKey()!!
         }
         clientConfig.retryConfiguration = RetryConfiguration.None
-        clientConfig.logVerbosity = PNLogVerbosity.NONE
 
         return clientConfig
     }
@@ -100,7 +98,6 @@ abstract class BaseIntegrationTest {
         serverConfig.subscribeKey = Keys.pamSubKey
         serverConfig.publishKey = Keys.pamPubKey
         serverConfig.secretKey = Keys.pamSecKey
-        serverConfig.logVerbosity = PNLogVerbosity.NONE
         serverConfig.httpLoggingInterceptor = HttpLoggingInterceptor()
         serverConfig.action()
 

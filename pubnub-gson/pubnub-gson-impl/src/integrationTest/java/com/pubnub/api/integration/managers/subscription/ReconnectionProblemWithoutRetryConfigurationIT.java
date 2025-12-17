@@ -8,9 +8,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-import static com.pubnub.api.enums.PNLogVerbosity.BODY;
-
-
 public class ReconnectionProblemWithoutRetryConfigurationIT extends AbstractReconnectionProblemIT {
     @Override
     protected @NotNull PubNub privilegedClientPubNub() {
@@ -23,7 +20,6 @@ public class ReconnectionProblemWithoutRetryConfigurationIT extends AbstractReco
         pnConfiguration.subscribeKey(itPamTestConfig.pamSubKey());
         pnConfiguration.publishKey(itPamTestConfig.pamPubKey());
         pnConfiguration.subscribeTimeout(SUBSCRIBE_TIMEOUT);
-        pnConfiguration.logVerbosity(BODY);
         pnConfiguration.authKey(authKey);
         pnConfiguration.retryConfiguration(RetryConfiguration.None.INSTANCE);
         return PubNub.create(pnConfiguration.build());
