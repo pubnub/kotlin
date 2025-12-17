@@ -2,15 +2,8 @@
 
 # logVerbosity
 
-[common, apple, js]\
-[common]\
-expect abstract val [logVerbosity](log-verbosity.md): [PNLogVerbosity](../../com.pubnub.api.enums/-p-n-log-verbosity/index.md)
-
-[apple, js]\
-actual abstract val [logVerbosity](log-verbosity.md): [PNLogVerbosity](../../com.pubnub.api.enums/-p-n-log-verbosity/index.md)
-
 [jvm]\
-actual abstract val [~~logVerbosity~~](log-verbosity.md): [PNLogVerbosity](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.enums/-p-n-log-verbosity/index.md)
+abstract val [~~logVerbosity~~](log-verbosity.md): [PNLogVerbosity](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.enums/-p-n-log-verbosity/index.md)
 
 ---
 

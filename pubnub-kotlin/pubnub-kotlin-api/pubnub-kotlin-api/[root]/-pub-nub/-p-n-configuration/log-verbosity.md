@@ -3,4 +3,17 @@
 # logVerbosity
 
 [js]\
-abstract var [logVerbosity](log-verbosity.md): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)?
+abstract var [~~logVerbosity~~](log-verbosity.md): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)?
+
+---
+
+### Deprecated
+
+Use logLevel instead
+
+#### Replace with
+
+```kotlin
+logLevel
+```
+---

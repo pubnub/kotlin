@@ -12,6 +12,7 @@ object [Companion](index.md)
 | [CATEGORIES](-c-a-t-e-g-o-r-i-e-s.md) | [js]<br>var [CATEGORIES](-c-a-t-e-g-o-r-i-e-s.md): [Any](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html) |
 | [ExponentialRetryPolicy](-exponential-retry-policy.md) | [js]<br>var [ExponentialRetryPolicy](-exponential-retry-policy.md): [Any](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html) |
 | [LinearRetryPolicy](-linear-retry-policy.md) | [js]<br>var [LinearRetryPolicy](-linear-retry-policy.md): [Any](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html) |
+| [LogLevel](-log-level.md) | [js]<br>val [LogLevel](-log-level.md): [PubNub.JsLogLevel](../-js-log-level/index.md) |
 | [OPERATIONS](-o-p-e-r-a-t-i-o-n-s.md) | [js]<br>var [OPERATIONS](-o-p-e-r-a-t-i-o-n-s.md): [Any](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html) |
 
 ## Functions

@@ -78,6 +78,7 @@ open external class [PubNub](index.md)(config: [Any](https://kotlinlang.org/api/
 | [HistoryResponse](-history-response/index.md) | [js]<br>interface [HistoryResponse](-history-response/index.md) |
 | [IncludeCustomFields](-include-custom-fields/index.md) | [js]<br>interface [IncludeCustomFields](-include-custom-fields/index.md) |
 | [IncludeOptions](-include-options/index.md) | [js]<br>interface [IncludeOptions](-include-options/index.md) |
+| [JsLogLevel](-js-log-level/index.md) | [js]<br>interface [JsLogLevel](-js-log-level/index.md)<br>External interface representing PubNub.LogLevel enum from JavaScript SDK. Used as: PubNub.LogLevel.Debug, PubNub.LogLevel.Info, etc. |
 | [KeepAliveSettings](-keep-alive-settings/index.md) | [js]<br>interface [KeepAliveSettings](-keep-alive-settings/index.md) |
 | [LegacyCryptor](-legacy-cryptor/index.md) | [js]<br>interface [LegacyCryptor](-legacy-cryptor/index.md)&lt;[T](-legacy-cryptor/index.md)&gt; |
 | [ListAllGroupsResponse](-list-all-groups-response/index.md) | [js]<br>interface [ListAllGroupsResponse](-list-all-groups-response/index.md) |
