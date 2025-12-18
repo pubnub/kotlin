@@ -5,4 +5,4 @@
 [apple]\
 val [All](-all.md): [LogLevel](../index.md)
 
-Everything including trace. Warning: Logs sensitive information. Never use in production.
+All log levels

@@ -10,6 +10,8 @@ Logging disabled (default)
 [apple]\
 actual val [NONE](-n-o-n-e.md): [LogLevel](../index.md)
 
+Logging disabled
+
 [js]\
 actual val [NONE](-n-o-n-e.md): [LogLevel](../index.md)
 
