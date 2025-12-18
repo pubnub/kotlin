@@ -1,3 +1,9 @@
+## v12.0.4
+December 18 2025
+
+#### Fixed
+- Internal changes.
+
 ## v12.0.3
 December 16 2025
 

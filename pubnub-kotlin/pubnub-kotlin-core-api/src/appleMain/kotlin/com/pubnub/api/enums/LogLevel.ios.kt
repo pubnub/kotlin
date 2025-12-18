@@ -82,38 +82,40 @@ actual data class LogLevel(val levels: Set<Level>) {
 
     actual companion object {
         /** Logging disabled */
-        val None = LogLevel(setOf(Level.NONE))
-        actual val NONE = None
+        actual val NONE = LogLevel(setOf(Level.NONE))
 
         /** Only errors */
-        val Error = LogLevel(setOf(Level.ERROR))
+        actual val ERROR = LogLevel(setOf(Level.ERROR))
 
         /** Warnings and errors */
-        val Warn = LogLevel(setOf(Level.WARN, Level.ERROR))
-
-        /**
-         * Production logging: info, event, warn, error.
-         * Recommended for production environments.
-         */
-        val Standard = LogLevel(setOf(Level.INFO, Level.EVENT, Level.WARN, Level.ERROR))
+        actual val WARN = LogLevel(setOf(Level.WARN, Level.ERROR))
 
         /** Info, event, warnings, and errors */
-        val Info = LogLevel(setOf(Level.INFO, Level.EVENT, Level.WARN, Level.ERROR))
+        actual val INFO = LogLevel(setOf(Level.INFO, Level.EVENT, Level.WARN, Level.ERROR))
 
         /**
          * Debug and above (excludes TRACE).
          * Warning: May log sensitive information.
          */
-        val Debug = LogLevel(setOf(Level.DEBUG, Level.INFO, Level.EVENT, Level.WARN, Level.ERROR))
+        actual val DEBUG = LogLevel(setOf(Level.DEBUG, Level.INFO, Level.EVENT, Level.WARN, Level.ERROR))
 
         /**
          * Everything including trace.
          * Warning: Logs sensitive information. Never use in production.
          */
+        actual val TRACE = LogLevel(setOf(Level.TRACE, Level.DEBUG, Level.INFO, Level.EVENT, Level.WARN, Level.ERROR))
+
+        /**
+         * Production logging: info, event, warn, error.
+         * Recommended for production environments.
+         */
+        val Standard = INFO
+
+        /** All log levels */
         val All = LogLevel(setOf(Level.ALL))
 
         /** Default log level (logging disabled) */
-        val DEFAULT = None
+        val DEFAULT = NONE
 
         /**
          * Create custom combination of log levels.

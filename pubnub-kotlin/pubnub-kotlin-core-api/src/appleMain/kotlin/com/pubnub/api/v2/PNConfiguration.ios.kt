@@ -54,7 +54,7 @@ actual fun createPNConfiguration(
         override val authKey: String
             get() = authKey.orEmpty()
         override val logLevel: LogLevel
-            get() = LogLevel.None
+            get() = LogLevel.NONE
         override val authToken: String?
             get() = null
     }

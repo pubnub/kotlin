@@ -12,6 +12,19 @@ expect class LogLevel {
         /** Logging disabled (default) */
         val NONE: LogLevel
 
-        // Additional common constants can be added
+        /** Logs only error messages */
+        val ERROR: LogLevel
+
+        /** Logs warnings and errors */
+        val WARN: LogLevel
+
+        /** Logs informational messages, warnings, and errors */
+        val INFO: LogLevel
+
+        /** Logs debug information and all higher severity levels */
+        val DEBUG: LogLevel
+
+        /** Most verbose logging level */
+        val TRACE: LogLevel
     }
 }
