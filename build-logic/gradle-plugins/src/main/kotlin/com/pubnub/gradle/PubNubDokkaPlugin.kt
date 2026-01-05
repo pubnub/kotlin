@@ -9,7 +9,6 @@ import org.jetbrains.dokka.gradle.engine.parameters.DokkaSourceSetSpec
 
 class PubNubDokkaPlugin : Plugin<Project> {
     override fun apply(target: Project) = with(target) {
-        // Dokka 2.x plugin id is the same
         pluginManager.apply("org.jetbrains.dokka")
 
         // Dokka 2.x: configure via DokkaExtension
