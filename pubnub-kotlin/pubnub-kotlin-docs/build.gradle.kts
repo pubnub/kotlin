@@ -23,4 +23,13 @@ dependencies {
 
     // ↓ LOGBACK ↓ to use it comment out SLF4J SIMPLE and LOG4J 2 dependencies
     implementation("ch.qos.logback:logback-classic:1.3.15")
+
+    // Dokka V2: Aggregate documentation from all public API modules
+    // Kotlin SDK modules
+    dokka(project(":pubnub-kotlin:pubnub-kotlin-api"))
+    dokka(project(":pubnub-kotlin:pubnub-kotlin-core-api"))
+    dokka(project(":pubnub-kotlin:pubnub-kotlin-coroutines"))
+    // Java/Gson SDK modules
+    dokka(project(":pubnub-gson:pubnub-gson-api"))
+    dokka(project(":pubnub-gson:pubnub-gson-impl"))
 }
