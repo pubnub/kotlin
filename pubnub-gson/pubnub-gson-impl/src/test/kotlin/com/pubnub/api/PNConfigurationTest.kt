@@ -3,6 +3,7 @@ package com.pubnub.api
 import com.pubnub.api.java.v2.PNConfiguration
 import com.pubnub.api.java.v2.PNConfigurationOverride
 import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class PNConfigurationTest {
@@ -87,6 +88,36 @@ class PNConfigurationTest {
             setUserId(UserId("override"))
         }.build()
         Assert.assertEquals("override", override.userId.value)
+    }
+
+    @Test
+    fun canDisableHttpConnectionPool() {
+        val config = PNConfiguration.builder(UserId("abc"), "subscribeKey")
+            // Disable Http pool
+            .connectionPoolMaxIdleConnections(0)
+            .build()
+
+        val pubNub = PubNub.create(config)
+
+        assertEquals(0, config.connectionPoolMaxIdleConnections)
+        assertEquals(0, pubNub.configuration.connectionPoolMaxIdleConnections)
+
+        pubNub.forceDestroy()
+    }
+
+    @Test
+    fun canSpecifyHowLongConnectionStayInactiveInPool() {
+        val config = PNConfiguration.builder(UserId("abc"), "subscribeKey")
+            // Specify how long connection stay inactive in pool
+            .connectionPoolKeepAliveDuration(19)
+            .build()
+
+        val pubNub = PubNub.create(config)
+
+        assertEquals(19, config.connectionPoolKeepAliveDuration)
+        assertEquals(19, pubNub.configuration.connectionPoolKeepAliveDuration)
+
+        pubNub.forceDestroy()
     }
 }
 

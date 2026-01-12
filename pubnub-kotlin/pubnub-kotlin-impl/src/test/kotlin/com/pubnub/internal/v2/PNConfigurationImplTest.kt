@@ -1,5 +1,6 @@
 package com.pubnub.internal.v2
 
+import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
 import com.pubnub.api.crypto.CryptoModule
@@ -240,5 +241,35 @@ class PNConfigurationImplTest {
         val configuration = config.build()
         assertEquals(expectedUserId, configuration.userId)
         assertEquals(expectedSubKey, configuration.subscribeKey)
+    }
+
+    @Test
+    fun canDisableHttpConnectionPool() {
+        val config = PNConfiguration.builder(UserId("abc"), "subscribeKey") {
+            // Disable Http pool
+            connectionPoolMaxIdleConnections = 0
+        }.build()
+
+        val pubNub = PubNub.create(config)
+
+        assertEquals(0, config.connectionPoolMaxIdleConnections)
+        assertEquals(0, pubNub.configuration.connectionPoolMaxIdleConnections)
+
+        pubNub.forceDestroy()
+    }
+
+    @Test
+    fun canSpecifyHowLongConnectionStayInactiveInPool() {
+        val config = PNConfiguration.builder(UserId("abc"), "subscribeKey") {
+            // Specify how long connection stay inactive in pool
+            connectionPoolKeepAliveDuration = 19
+        }.build()
+
+        val pubNub = PubNub.create(config)
+
+        assertEquals(19, config.connectionPoolKeepAliveDuration)
+        assertEquals(19, pubNub.configuration.connectionPoolKeepAliveDuration)
+
+        pubNub.forceDestroy()
     }
 }

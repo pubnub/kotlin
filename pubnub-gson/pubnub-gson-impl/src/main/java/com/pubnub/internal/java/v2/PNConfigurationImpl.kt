@@ -74,6 +74,8 @@ class PNConfigurationImpl(
     ),
     override val managePresenceListManually: Boolean = false,
     override val customLoggers: List<CustomLogger>? = null,
+    override val connectionPoolMaxIdleConnections: Int = CONNECTION_POOL_MAX_IDLE_CONNECTIONS,
+    override val connectionPoolKeepAliveDuration: Int = CONNECTION_POOL_KEEP_ALIVE_DURATION,
 ) : PNConfiguration {
     companion object {
         const val DEFAULT_DEDUPE_SIZE = 100
@@ -82,6 +84,8 @@ class PNConfigurationImpl(
         const val NON_SUBSCRIBE_REQUEST_TIMEOUT = 10
         const val SUBSCRIBE_TIMEOUT = 310
         const val CONNECT_TIMEOUT = 5
+        const val CONNECTION_POOL_MAX_IDLE_CONNECTIONS = 5
+        const val CONNECTION_POOL_KEEP_ALIVE_DURATION = 300
     }
 
     // this method is used from cryptoModuleWithLogConfig using reflection
@@ -409,6 +413,20 @@ class PNConfigurationImpl(
 
             override var customLoggers: List<CustomLogger>? = defaultConfiguration.customLoggers
 
+            override fun connectionPoolMaxIdleConnections(connectionPoolMaxIdleConnections: Int): Builder {
+                this.connectionPoolMaxIdleConnections = connectionPoolMaxIdleConnections
+                return this
+            }
+
+            override var connectionPoolMaxIdleConnections: Int = defaultConfiguration.connectionPoolMaxIdleConnections
+
+            override fun connectionPoolKeepAliveDuration(connectionPoolKeepAliveDuration: Int): Builder {
+                this.connectionPoolKeepAliveDuration = connectionPoolKeepAliveDuration
+                return this
+            }
+
+            override var connectionPoolKeepAliveDuration: Int = defaultConfiguration.connectionPoolKeepAliveDuration
+
             override fun build(): PNConfiguration {
                 return PNConfigurationImpl(
                     userId = userId,
@@ -449,7 +467,9 @@ class PNConfigurationImpl(
                     pnsdkSuffixes = pnsdkSuffixes,
                     retryConfiguration = retryConfiguration,
                     managePresenceListManually = managePresenceListManually,
-                    customLoggers = customLoggers
+                    customLoggers = customLoggers,
+                    connectionPoolMaxIdleConnections = connectionPoolMaxIdleConnections,
+                    connectionPoolKeepAliveDuration = connectionPoolKeepAliveDuration
                 )
             }
         }

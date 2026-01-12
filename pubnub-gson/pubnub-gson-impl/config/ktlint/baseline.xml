@@ -5,5 +5,6 @@
     </file>
     <file name="src/test/kotlin/com/pubnub/api/PNConfigurationTest.kt">
         <error line="93" column="13" source="standard:function-naming" />
+        <error line="124" column="13" source="standard:function-naming" />
     </file>
 </baseline>
