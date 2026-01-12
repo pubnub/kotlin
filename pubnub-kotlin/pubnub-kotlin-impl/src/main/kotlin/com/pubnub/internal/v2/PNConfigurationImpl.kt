@@ -45,6 +45,8 @@ class PNConfigurationImpl(
     override val includeInstanceIdentifier: Boolean = false,
     override val includeRequestIdentifier: Boolean = true,
     override val maximumConnections: Int? = null,
+    override val connectionPoolMaxIdleConnections: Int = CONNECTION_POOL_MAX_IDLE_CONNECTIONS,
+    override val connectionPoolKeepAliveDuration: Int = CONNECTION_POOL_KEEP_ALIVE_DURATION,
     override val googleAppEngineNetworking: Boolean = false,
     override val proxy: Proxy? = null,
     override val proxySelector: ProxySelector? = null,
@@ -82,6 +84,8 @@ class PNConfigurationImpl(
         const val NON_SUBSCRIBE_REQUEST_TIMEOUT = 10
         const val SUBSCRIBE_TIMEOUT = 310
         const val CONNECT_TIMEOUT = 5
+        const val CONNECTION_POOL_MAX_IDLE_CONNECTIONS = 5 // OkHttp default
+        const val CONNECTION_POOL_KEEP_ALIVE_DURATION = 300 // 5 minutes, OkHttp default
     }
 
     fun getCryptoModuleWithLogConfig(logConfig: LogConfig): CryptoModule? {
@@ -179,6 +183,10 @@ class PNConfigurationImpl(
 
         override var maximumConnections: Int? = defaultConfiguration.maximumConnections
 
+        override var connectionPoolMaxIdleConnections: Int = defaultConfiguration.connectionPoolMaxIdleConnections
+
+        override var connectionPoolKeepAliveDuration: Int = defaultConfiguration.connectionPoolKeepAliveDuration
+
         override var googleAppEngineNetworking: Boolean = defaultConfiguration.googleAppEngineNetworking
 
         override var proxy: Proxy? = defaultConfiguration.proxy
@@ -243,6 +251,8 @@ class PNConfigurationImpl(
                 includeInstanceIdentifier = includeInstanceIdentifier,
                 includeRequestIdentifier = includeRequestIdentifier,
                 maximumConnections = maximumConnections,
+                connectionPoolMaxIdleConnections = connectionPoolMaxIdleConnections,
+                connectionPoolKeepAliveDuration = connectionPoolKeepAliveDuration,
                 googleAppEngineNetworking = googleAppEngineNetworking,
                 proxy = proxy,
                 proxySelector = proxySelector,
