@@ -102,22 +102,27 @@ class RetrofitManager(
     ): OkHttpClient {
         val okHttpBuilder = parentOkHttpClient?.newBuilder() ?: OkHttpClient.Builder()
 
-        // OkHttp requires keepAliveDuration > 0 (even if maxIdleConnections == 0).
-        // Be defensive here because configuration can come from non-Kotlin builders / Java callers.
-        val poolMaxIdleConnections = configuration.connectionPoolMaxIdleConnections.coerceAtLeast(0)
-        val poolKeepAliveSeconds = configuration.connectionPoolKeepAliveDuration.coerceAtLeast(1).toLong()
-
         okHttpBuilder
             .retryOnConnectionFailure(false)
             .readTimeout(readTimeout.toLong(), TimeUnit.SECONDS)
             .connectTimeout(configuration.connectTimeout.toLong(), TimeUnit.SECONDS)
-            .connectionPool(
+
+        // Only create a new ConnectionPool if there's no parent (initial creation).
+        // When cloning from a parent, reuse its ConnectionPool to share resources.
+        if (parentOkHttpClient == null) {
+            // OkHttp requires keepAliveDuration > 0 (even if maxIdleConnections == 0).
+            // Be defensive here because configuration can come from non-Kotlin builders / Java callers.
+            val poolMaxIdleConnections = configuration.connectionPoolMaxIdleConnections.coerceAtLeast(0)
+            val poolKeepAliveSeconds = configuration.connectionPoolKeepAliveDuration.coerceAtLeast(1).toLong()
+
+            okHttpBuilder.connectionPool(
                 ConnectionPool(
                     poolMaxIdleConnections,
                     poolKeepAliveSeconds,
                     TimeUnit.SECONDS
                 )
             )
+        }
 
         with(configuration) {
             okHttpBuilder.interceptors().removeAll { interceptor ->
