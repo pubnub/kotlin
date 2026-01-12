@@ -1,3 +1,9 @@
+## v12.1.0
+January 12 2026
+
+#### Added
+- Added config properties: connectionPoolMaxIdleConnections and connectionPoolKeepAliveDuration. connectionPoolMaxIdleConnections allows to disable connection pool when set to 0.
+
 ## v12.0.4
 December 18 2025
 
