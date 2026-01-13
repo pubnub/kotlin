@@ -1,9 +1,9 @@
 name: kotlin
-version: 12.1.0
+version: 12.1.1
 schema: 1
 scm: github.com/pubnub/kotlin
 files:
-  - build/libs/pubnub-kotlin-12.1.0-all.jar
+  - build/libs/pubnub-kotlin-12.1.1-all.jar
 sdks:
   - 
       type: library
@@ -23,8 +23,8 @@ sdks:
             -
               distribution-type: library
               distribution-repository: maven
-              package-name: pubnub-kotlin-12.1.0
-              location: https://repo.maven.apache.org/maven2/com/pubnub/pubnub-kotlin/12.1.0/pubnub-kotlin-12.1.0.jar
+              package-name: pubnub-kotlin-12.1.1
+              location: https://repo.maven.apache.org/maven2/com/pubnub/pubnub-kotlin/12.1.1/pubnub-kotlin-12.1.1.jar
               supported-platforms:
                 supported-operating-systems:
                   Android:
@@ -121,6 +121,11 @@ sdks:
                   license-url: https://www.apache.org/licenses/LICENSE-2.0.txt
                   is-required: Required
 changelog:
+  - date: 2026-01-13
+    version: v12.1.1
+    changes:
+      - type: bug
+        text: "Internal fixes."
   - date: 2026-01-12
     version: v12.1.0
     changes:

@@ -1,3 +1,9 @@
+## v12.1.1
+January 13 2026
+
+#### Fixed
+- Internal fixes.
+
 ## v12.1.0
 January 12 2026
 
