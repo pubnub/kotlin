@@ -323,6 +323,39 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
          */
         val customLoggers: List<CustomLogger>?
 
+        /**
+         * Maximum number of idle connections to keep in the OkHttp connection pool.
+         *
+         * When set to 0, connection pooling is disabled and connections are closed immediately after use.
+         *
+         * Note: This setting affects only OkHttp's *idle* connection pool behavior. It does not control
+         * TCP keep-alive intervals used by the OS, the network, or PubNub servers, and it does not
+         * affect connections that are actively in use (e.g., long-poll subscribe requests).
+         *
+         * The value must be non-negative.
+         *
+         * Defaults to 5 (OkHttp default).
+         *
+         * @see [okhttp3.ConnectionPool]
+         */
+        val connectionPoolMaxIdleConnections: Int
+
+        /**
+         * How long to keep idle connections alive in the OkHttp connection pool before evicting them.
+         *
+         * The value is in seconds and must be at least 1 (OkHttp requirement).
+         * Values less than 1 will be coerced to 1.
+         *
+         * Note: This setting affects only OkHttp's *idle* connection pool behavior. It does not control
+         * TCP keep-alive intervals used by the OS, the network, or PubNub servers, and it does not
+         * affect connections that are actively in use (e.g., long-poll subscribe requests).
+         *
+         * Defaults to 300 seconds (5 minutes, OkHttp default).
+         *
+         * @see [okhttp3.ConnectionPool]
+         */
+        val connectionPoolKeepAliveDuration: Int
+
         override fun build(): PNConfiguration
 
         override fun setUserId(userId: UserId): Builder
@@ -576,6 +609,44 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
          * Use it if your slf4j implementation like logback, log4j2, etc. can't meet your specific logging requirements.
          */
         fun customLoggers(customLoggers: List<CustomLogger>?): Builder
+
+        /**
+         * Maximum number of idle connections to keep in the OkHttp connection pool.
+         *
+         * When set to 0, connection pooling is disabled and connections are closed immediately after use.
+         * This is recommended for mobile applications to minimize battery drain from TCP keep-alive probes.
+         *
+         * Note: This setting affects only OkHttp's *idle* connection pool behavior. It does not control
+         * TCP keep-alive intervals used by the OS, the network, or PubNub servers, and it does not
+         * affect connections that are actively in use (e.g., long-poll subscribe requests).
+         *
+         * The value must be non-negative.
+         *
+         * Defaults to 5 (OkHttp default).
+         *
+         * @see [okhttp3.ConnectionPool]
+         */
+        fun connectionPoolMaxIdleConnections(connectionPoolMaxIdleConnections: Int): Builder
+
+        /**
+         * How long to keep idle connections alive in the OkHttp connection pool before evicting them.
+         *
+         * The value is in seconds and must be at least 1 (OkHttp requirement).
+         * Values less than 1 will be coerced to 1.
+         *
+         * For mobile applications experiencing battery drain from TCP keep-alive probes,
+         * set this to 1 second (the minimum) and set [connectionPoolMaxIdleConnections] to 0
+         * to disable connection pooling entirely.
+         *
+         * Note: This setting affects only OkHttp's *idle* connection pool behavior. It does not control
+         * TCP keep-alive intervals used by the OS, the network, or PubNub servers, and it does not
+         * affect connections that are actively in use (e.g., long-poll subscribe requests).
+         *
+         * Defaults to 300 seconds (5 minutes, OkHttp default).
+         *
+         * @see [okhttp3.ConnectionPool]
+         */
+        fun connectionPoolKeepAliveDuration(connectionPoolKeepAliveDuration: Int): Builder
     }
 }
 

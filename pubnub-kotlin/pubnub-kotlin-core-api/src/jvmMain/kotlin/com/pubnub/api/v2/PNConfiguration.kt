@@ -209,6 +209,39 @@ actual interface PNConfiguration {
     val maximumConnections: Int?
 
     /**
+     * Maximum number of idle connections to keep in the OkHttp connection pool.
+     *
+     * When set to 0, connection pooling is disabled and connections are closed immediately after use.
+     *
+     * Note: This setting affects only OkHttp's *idle* connection pool behavior. It does not control
+     * TCP keep-alive intervals used by the OS, the network, or PubNub servers, and it does not
+     * affect connections that are actively in use (e.g., long-poll subscribe requests).
+     *
+     * The value must be non-negative.
+     *
+     * Defaults to 5 (OkHttp default).
+     *
+     * @see [okhttp3.ConnectionPool]
+     */
+    val connectionPoolMaxIdleConnections: Int
+
+    /**
+     * How long to keep idle connections alive in the OkHttp connection pool before evicting them.
+     *
+     * The value is in seconds and must be at least 1 (OkHttp requirement).
+     * Values less than 1 will be coerced to 1.
+     *
+     * Note: This setting affects only OkHttp's *idle* connection pool behavior. It does not control
+     * TCP keep-alive intervals used by the OS, the network, or PubNub servers, and it does not
+     * affect connections that are actively in use (e.g., long-poll subscribe requests).
+     *
+     * Defaults to 300 seconds (5 minutes, OkHttp default).
+     *
+     * @see [okhttp3.ConnectionPool]
+     */
+    val connectionPoolKeepAliveDuration: Int
+
+    /**
      * Enable Google App Engine networking.
      *
      * Defaults to `false`.
@@ -537,6 +570,39 @@ actual interface PNConfiguration {
          * @see [okhttp3.Dispatcher.setMaxRequestsPerHost]
          */
         var maximumConnections: Int?
+
+        /**
+         * Maximum number of idle connections to keep in the OkHttp connection pool.
+         *
+         * When set to 0, connection pooling is disabled and connections are closed immediately after use.
+         *
+         * Note: This setting affects only OkHttp's *idle* connection pool behavior. It does not control
+         * TCP keep-alive intervals used by the OS, the network, or PubNub servers, and it does not
+         * affect connections that are actively in use (e.g., long-poll subscribe requests).
+         *
+         * The value must be non-negative.
+         *
+         * Defaults to 5 (OkHttp default).
+         *
+         * @see [okhttp3.ConnectionPool]
+         */
+        var connectionPoolMaxIdleConnections: Int
+
+        /**
+         * How long to keep idle connections alive in the OkHttp connection pool before evicting them.
+         *
+         * The value is in seconds and must be at least 1 (OkHttp requirement).
+         * Values less than 1 will be coerced to 1.
+         *
+         * Note: This setting affects only OkHttp's *idle* connection pool behavior. It does not control
+         * TCP keep-alive intervals used by the OS, the network, or PubNub servers, and it does not
+         * affect connections that are actively in use (e.g., long-poll subscribe requests).
+         *
+         * Defaults to 300 seconds (5 minutes, OkHttp default).
+         *
+         * @see [okhttp3.ConnectionPool]
+         */
+        var connectionPoolKeepAliveDuration: Int
 
         /**
          * Enable Google App Engine networking.

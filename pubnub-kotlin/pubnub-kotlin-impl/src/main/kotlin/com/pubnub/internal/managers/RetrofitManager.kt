@@ -20,6 +20,7 @@ import com.pubnub.internal.services.SubscribeService
 import com.pubnub.internal.services.TimeService
 import com.pubnub.internal.vendor.AppEngineFactory.Factory
 import okhttp3.Call
+import okhttp3.ConnectionPool
 import okhttp3.OkHttpClient
 import org.jetbrains.annotations.TestOnly
 import retrofit2.Retrofit
@@ -106,6 +107,23 @@ class RetrofitManager(
             .readTimeout(readTimeout.toLong(), TimeUnit.SECONDS)
             .connectTimeout(configuration.connectTimeout.toLong(), TimeUnit.SECONDS)
 
+        // Only create a new ConnectionPool if there's no parent (initial creation).
+        // When cloning from a parent, reuse its ConnectionPool to share resources.
+        if (parentOkHttpClient == null) {
+            // OkHttp requires keepAliveDuration > 0 (even if maxIdleConnections == 0).
+            // Be defensive here because configuration can come from non-Kotlin builders / Java callers.
+            val poolMaxIdleConnections = configuration.connectionPoolMaxIdleConnections.coerceAtLeast(0)
+            val poolKeepAliveSeconds = configuration.connectionPoolKeepAliveDuration.coerceAtLeast(1).toLong()
+
+            okHttpBuilder.connectionPool(
+                ConnectionPool(
+                    poolMaxIdleConnections,
+                    poolKeepAliveSeconds,
+                    TimeUnit.SECONDS
+                )
+            )
+        }
+
         with(configuration) {
             okHttpBuilder.interceptors().removeAll { interceptor ->
                 interceptor is CustomPnHttpLoggingInterceptor
@@ -176,6 +194,9 @@ class RetrofitManager(
     ) {
         if (client != null) {
             client.dispatcher.cancelAll()
+
+            // Proactively close any idle connections so the OS can tear down sockets immediately.
+            client.connectionPool.evictAll()
 
             val executorService = client.dispatcher.executorService
             executorService.shutdown()
