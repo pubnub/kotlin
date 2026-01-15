@@ -1,0 +1,1425 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>PubNub</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+      if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      } else {
+        const savedDarkMode = JSON.parse(storage)
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/safe-local-storage_blocking.js"></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../ui-kit/ui-kit.min.js" defer></script></head>
+<body>
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../../index.html" tabindex="1">
+                    pubnub-kotlin-docs
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">12.1.2
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":pubnub-gson:pubnub-gson-api/main">jvm</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":pubnub-gson:pubnub-gson-api/main" data-filter=":pubnub-gson:pubnub-gson-api/main">
+                                <span class="checkbox--icon"></span>
+                                jvm
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    pubnub-kotlin-docs
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="pubnub-gson-api::com.pubnub.api.java/PubNub///PointingToDeclaration//412224181">
+  <div class="breadcrumbs"><a href="../../index.html">pubnub-gson-api</a><span class="delimiter">/</span><a href="../index.html">com.pubnub.api.java</a><span class="delimiter">/</span><span class="current">PubNub</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Pub</span><wbr><span><span>Nub</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">PubNub</a> : <a href="../../com.pubnub.api.java.v2.callbacks/-event-emitter/index.html">EventEmitter</a>, <a href="../../com.pubnub.api.java.v2.callbacks/-status-emitter/index.html">StatusEmitter</a></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="TYPE">
+        <h2 class="tableheader">Types</h2>
+        <div class="table"><a data-name="-1305606561%2FClasslikes%2F412224181" anchor-label="Companion" id="-1305606561%2FClasslikes%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-companion/index.html"><span><span>Companion</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1305606561%2FClasslikes%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">object </span><a href="-companion/index.html">Companion</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="tableheader">Properties</h2>
+        <div class="table"><a data-name="1375624378%2FProperties%2F412224181" anchor-label="baseUrl" id="1375624378%2FProperties%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="base-url.html"><span>base</span><wbr><span><span>Url</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1375624378%2FProperties%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="base-url.html">baseUrl</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1378876258%2FProperties%2F412224181" anchor-label="configuration" id="1378876258%2FProperties%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="configuration.html"><span><span>configuration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1378876258%2FProperties%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="configuration.html">configuration</a><span class="token operator">: </span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.v2/-p-n-configuration/index.html">PNConfiguration</a></div><div class="brief "><p class="paragraph">Get the configuration that was used to initialize this PubNub instance. Modifying the values in this configuration is not advised, as it may lead to undefined behavior.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="830820546%2FProperties%2F412224181" anchor-label="timestamp" id="830820546%2FProperties%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="timestamp.html"><span><span>timestamp</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="830820546%2FProperties%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="timestamp.html">timestamp</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1288940032%2FProperties%2F412224181" anchor-label="version" id="-1288940032%2FProperties%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="version.html"><span><span>version</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1288940032%2FProperties%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="version.html">version</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">The current version of the PubNub SDK.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="tableheader">Functions</h2>
+        <div class="table"><a data-name="-422960944%2FFunctions%2F412224181" anchor-label="addChannelsToChannelGroup" id="-422960944%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-channels-to-channel-group.html"><span>add</span><wbr><span>Channels</span><wbr><span>To</span><wbr><span>Channel</span><wbr><span><span>Group</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-422960944%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="add-channels-to-channel-group.html"><span class="token function">addChannelsToChannelGroup</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.channel_groups/-add-channel-channel-group/index.html">AddChannelChannelGroup</a></div><div class="brief "><p class="paragraph">Adds a channel to a channel group.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="28043943%2FFunctions%2F412224181" anchor-label="addListener" id="28043943%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-listener.html"><span>add</span><wbr><span><span>Listener</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="28043943%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="add-listener.html"><span class="token function">addListener</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">listener<span class="token operator">: </span><a href="../../com.pubnub.api.java.callbacks/-subscribe-callback/index.html">SubscribeCallback</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Add a legacy listener for both client status and events. Prefer <code class="lang-kotlin">addListener(EventListener)</code> and <code class="lang-kotlin">addListener(StatusListener)</code> if possible.</p></div><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="../../com.pubnub.api.java.v2.callbacks/-event-emitter/add-listener.html"><span class="token function">addListener</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">listener<span class="token operator">: </span><a href="../../com.pubnub.api.java.v2.callbacks/-event-listener/index.html">EventListener</a></span></span><span class="token punctuation">)</span></div><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="../../com.pubnub.api.java.v2.callbacks/-status-emitter/add-listener.html"><span class="token function">addListener</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">listener<span class="token operator">: </span><a href="../../com.pubnub.api.java.v2.callbacks/-status-listener/index.html">StatusListener</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Add a listener.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1105015930%2FFunctions%2F412224181" anchor-label="addMessageAction" id="-1105015930%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-message-action.html"><span>add</span><wbr><span>Message</span><wbr><span><span>Action</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1105015930%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="add-message-action.html"><span class="token function">addMessageAction</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.message_actions/-add-message-action/index.html">AddMessageAction</a></div><div class="brief "><p class="paragraph">Add an action on a published message. Returns the added action in the response.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="879929542%2FFunctions%2F412224181" anchor-label="addPushNotificationsOnChannels" id="879929542%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-push-notifications-on-channels.html"><span>add</span><wbr><span>Push</span><wbr><span>Notifications</span><wbr><span>On</span><wbr><span><span>Channels</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="879929542%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="add-push-notifications-on-channels.html"><span class="token function">addPushNotificationsOnChannels</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.push/-add-channels-to-push/index.html">AddChannelsToPush</a></div><div class="brief "><p class="paragraph">Enable push notifications on provided set of channels.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="996373174%2FFunctions%2F412224181" anchor-label="auditPushChannelProvisions" id="996373174%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="audit-push-channel-provisions.html"><span>audit</span><wbr><span>Push</span><wbr><span>Channel</span><wbr><span><span>Provisions</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="996373174%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="audit-push-channel-provisions.html"><span class="token function">auditPushChannelProvisions</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.push/-list-push-provisions/index.html">ListPushProvisions</a></div><div class="brief "><p class="paragraph">Request a list of all channels on which push notifications have been enabled using specified <a href="../../../../pubnub-gson/pubnub-gson-api/com.pubnub.api.java.endpoints.push/-list-push-provisions/device-id.html">ListPushProvisions.deviceId</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="597910255%2FFunctions%2F412224181" anchor-label="channel" id="597910255%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="channel.html"><span><span>channel</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="597910255%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="channel.html"><span class="token function">channel</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">name<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.v2.entities/-channel/index.html">Channel</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="701467134%2FFunctions%2F412224181" anchor-label="channelGroup" id="701467134%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="channel-group.html"><span>channel</span><wbr><span><span>Group</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="701467134%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="channel-group.html"><span class="token function">channelGroup</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">name<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.v2.entities/-channel-group/index.html">ChannelGroup</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1402554110%2FFunctions%2F412224181" anchor-label="channelMetadata" id="1402554110%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="channel-metadata.html"><span>channel</span><wbr><span><span>Metadata</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1402554110%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="channel-metadata.html"><span class="token function">channelMetadata</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">id<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.v2.entities/-channel-metadata/index.html">ChannelMetadata</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1326082226%2FFunctions%2F412224181" anchor-label="decrypt" id="1326082226%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="decrypt.html"><span><span>decrypt</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1326082226%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="decrypt.html"><span class="token function">decrypt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">inputString<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Perform Cryptographic decryption of an input string using cipher key provided by PNConfiguration.cipherKey.</p></div><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="decrypt.html"><span class="token function">decrypt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">inputString<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">cipherKey<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Perform Cryptographic decryption of an input string using a cipher key.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1351836276%2FFunctions%2F412224181" anchor-label="decryptInputStream" id="-1351836276%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="decrypt-input-stream.html"><span>decrypt</span><wbr><span>Input</span><wbr><span><span>Stream</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1351836276%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="decrypt-input-stream.html"><span class="token function">decryptInputStream</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">inputStream<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html">InputStream</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html">InputStream</a></div><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="decrypt-input-stream.html"><span class="token function">decryptInputStream</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">inputStream<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html">InputStream</a><span class="token punctuation">, </span></span><span class="parameter ">cipherKey<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html">InputStream</a></div><div class="brief "><p class="paragraph">Perform Cryptographic decryption of an input stream using provided cipher key.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1379870181%2FFunctions%2F412224181" anchor-label="deleteChannelGroup" id="-1379870181%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="delete-channel-group.html"><span>delete</span><wbr><span>Channel</span><wbr><span><span>Group</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1379870181%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="delete-channel-group.html"><span class="token function">deleteChannelGroup</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.channel_groups/-delete-channel-group/index.html">DeleteChannelGroup</a></div><div class="brief "><p class="paragraph">Removes the channel group.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1771035099%2FFunctions%2F412224181" anchor-label="deleteFile" id="1771035099%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="delete-file.html"><span>delete</span><wbr><span><span>File</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1771035099%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="delete-file.html"><span class="token function">deleteFile</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.files/-delete-file/-builder/index.html">DeleteFile.Builder</a></div><div class="brief "><p class="paragraph">Delete file from specified Channel.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1323623669%2FFunctions%2F412224181" anchor-label="deleteMessages" id="-1323623669%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="delete-messages.html"><span>delete</span><wbr><span><span>Messages</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1323623669%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="delete-messages.html"><span class="token function">deleteMessages</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints/-delete-messages/index.html">DeleteMessages</a></div><div class="brief "><p class="paragraph">Removes messages from the history of a specific channel.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-713802466%2FFunctions%2F412224181" anchor-label="destroy" id="-713802466%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="destroy.html"><span><span>destroy</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-713802466%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="destroy.html"><span class="token function">destroy</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Frees up threads eventually and allows for a clean exit.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="624200870%2FFunctions%2F412224181" anchor-label="disconnect" id="624200870%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="disconnect.html"><span><span>disconnect</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="624200870%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="disconnect.html"><span class="token function">disconnect</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Cancel any subscribe and heartbeat loops or ongoing re-connections.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1762880802%2FFunctions%2F412224181" anchor-label="downloadFile" id="-1762880802%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="download-file.html"><span>download</span><wbr><span><span>File</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1762880802%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="download-file.html"><span class="token function">downloadFile</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.files/-download-file/-builder/index.html">DownloadFile.Builder</a></div><div class="brief "><p class="paragraph">Download file from specified Channel.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1967393714%2FFunctions%2F412224181" anchor-label="encrypt" id="1967393714%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="encrypt.html"><span><span>encrypt</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1967393714%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="encrypt.html"><span class="token function">encrypt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">inputString<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="encrypt.html"><span class="token function">encrypt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">inputString<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">cipherKey<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Perform Cryptographic encryption of an input string and a cipher key.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1135203292%2FFunctions%2F412224181" anchor-label="encryptInputStream" id="1135203292%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="encrypt-input-stream.html"><span>encrypt</span><wbr><span>Input</span><wbr><span><span>Stream</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1135203292%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="encrypt-input-stream.html"><span class="token function">encryptInputStream</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">inputStream<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html">InputStream</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html">InputStream</a></div><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="encrypt-input-stream.html"><span class="token function">encryptInputStream</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">inputStream<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html">InputStream</a><span class="token punctuation">, </span></span><span class="parameter ">cipherKey<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html">InputStream</a></div><div class="brief "><p class="paragraph">Perform Cryptographic encryption of an input stream using provided cipher key.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1458662350%2FFunctions%2F412224181" anchor-label="fetchMessages" id="-1458662350%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="fetch-messages.html"><span>fetch</span><wbr><span><span>Messages</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1458662350%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="fetch-messages.html"><span class="token function">fetchMessages</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints/-fetch-messages/index.html">FetchMessages</a></div><div class="brief "><p class="paragraph">Fetch historical messages from multiple channels. The <code class="lang-kotlin">includeMessageActions</code> flag also allows you to fetch message actions along with the messages.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-637209422%2FFunctions%2F412224181" anchor-label="fire" id="-637209422%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="fire.html"><span><span>fire</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-637209422%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="fire.html"><span class="token function"><strike>fire</strike></span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.pubsub/-publish/index.html">Publish</a></div><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="fire.html"><span class="token function">fire</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">message<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html">Any</a><span class="token punctuation">, </span></span><span class="parameter ">channel<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.v2.endpoints.pubsub/-publish-builder/index.html">PublishBuilder</a></div><div class="brief "><p class="paragraph">Send a message to PubNub Functions Event Handlers.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-586850093%2FFunctions%2F412224181" anchor-label="forceDestroy" id="-586850093%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="force-destroy.html"><span>force</span><wbr><span><span>Destroy</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-586850093%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="force-destroy.html"><span class="token function">forceDestroy</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Same as <a href="destroy.html">destroy</a> but immediately.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1412203992%2FFunctions%2F412224181" anchor-label="getAllChannelsMetadata" id="1412203992%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-all-channels-metadata.html"><span>get</span><wbr><span>All</span><wbr><span>Channels</span><wbr><span><span>Metadata</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1412203992%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-all-channels-metadata.html"><span class="token function">getAllChannelsMetadata</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.objects_api.channel/-get-all-channels-metadata/index.html">GetAllChannelsMetadata</a></div><div class="brief "><p class="paragraph">Returns a paginated list of Channel Metadata objects, optionally including the custom data object for each.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1236970387%2FFunctions%2F412224181" anchor-label="getAllUUIDMetadata" id="-1236970387%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-all-u-u-i-d-metadata.html"><span>get</span><wbr><span>All</span><wbr><span><span>UUIDMetadata</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1236970387%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-all-u-u-i-d-metadata.html"><span class="token function">getAllUUIDMetadata</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.objects_api.uuid/-get-all-u-u-i-d-metadata/index.html">GetAllUUIDMetadata</a></div><div class="brief "><p class="paragraph">Returns a paginated list of UUID Metadata objects, optionally including the custom data object for each.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1725634296%2FFunctions%2F412224181" anchor-label="getChannelMembers" id="1725634296%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-channel-members.html"><span>get</span><wbr><span>Channel</span><wbr><span><span>Members</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1725634296%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-channel-members.html"><span class="token function"><strike>getChannelMembers</strike></span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.objects_api.members/-get-channel-members/-builder/index.html">GetChannelMembers.Builder</a></div><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-channel-members.html"><span class="token function">getChannelMembers</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">channelId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.objects_api.members/-get-channel-members-builder/index.html">GetChannelMembersBuilder</a></div><div class="brief "><p class="paragraph">The method returns a list of members in a channel. The list will include user metadata for members that have additional metadata stored in the database.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="606889254%2FFunctions%2F412224181" anchor-label="getChannelMetadata" id="606889254%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-channel-metadata.html"><span>get</span><wbr><span>Channel</span><wbr><span><span>Metadata</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="606889254%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-channel-metadata.html"><span class="token function">getChannelMetadata</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.objects_api.channel/-get-channel-metadata/-builder/index.html">GetChannelMetadata.Builder</a></div><div class="brief "><p class="paragraph">Returns metadata for the specified Channel, optionally including the custom data object for each.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1024977339%2FFunctions%2F412224181" anchor-label="getFileUrl" id="-1024977339%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-file-url.html"><span>get</span><wbr><span>File</span><wbr><span><span>Url</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1024977339%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-file-url.html"><span class="token function">getFileUrl</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.files/-get-file-url/-builder/index.html">GetFileUrl.Builder</a></div><div class="brief "><p class="paragraph">Generate URL which can be used to download file from target Channel.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1557193467%2FFunctions%2F412224181" anchor-label="getMemberships" id="1557193467%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-memberships.html"><span>get</span><wbr><span><span>Memberships</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1557193467%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-memberships.html"><span class="token function">getMemberships</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.objects_api.memberships/-get-memberships/index.html">GetMemberships</a></div><div class="brief "><p class="paragraph">The method returns a list of channel memberships for a user. This method doesn't return a user's subscriptions.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1905245268%2FFunctions%2F412224181" anchor-label="getMessageActions" id="-1905245268%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-message-actions.html"><span>get</span><wbr><span>Message</span><wbr><span><span>Actions</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1905245268%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-message-actions.html"><span class="token function">getMessageActions</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.message_actions/-get-message-actions/index.html">GetMessageActions</a></div><div class="brief "><p class="paragraph">Get a list of message actions in a channel. Returns a list of actions in the response.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2071527778%2FFunctions%2F412224181" anchor-label="getPresenceState" id="2071527778%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-presence-state.html"><span>get</span><wbr><span>Presence</span><wbr><span><span>State</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2071527778%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-presence-state.html"><span class="token function">getPresenceState</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.presence/-get-state/index.html">GetState</a></div><div class="brief "><p class="paragraph">Retrieve state information specific to a subscriber UUID.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="522092379%2FFunctions%2F412224181" anchor-label="getSubscribedChannelGroups" id="522092379%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-subscribed-channel-groups.html"><span>get</span><wbr><span>Subscribed</span><wbr><span>Channel</span><wbr><span><span>Groups</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="522092379%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-subscribed-channel-groups.html"><span class="token function">getSubscribedChannelGroups</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Queries the local subscribe loop for channel groups currently in the mix.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="562663512%2FFunctions%2F412224181" anchor-label="getSubscribedChannels" id="562663512%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-subscribed-channels.html"><span>get</span><wbr><span>Subscribed</span><wbr><span><span>Channels</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="562663512%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-subscribed-channels.html"><span class="token function">getSubscribedChannels</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Queries the local subscribe loop for channels currently in the mix.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-629452168%2FFunctions%2F412224181" anchor-label="getUUIDMetadata" id="-629452168%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-u-u-i-d-metadata.html"><span>get</span><wbr><span><span>UUIDMetadata</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-629452168%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-u-u-i-d-metadata.html"><span class="token function">getUUIDMetadata</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.objects_api.uuid/-get-u-u-i-d-metadata/index.html">GetUUIDMetadata</a></div><div class="brief "><p class="paragraph">Returns metadata for the specified UUID, optionally including the custom data object for each.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-346189572%2FFunctions%2F412224181" anchor-label="grant" id="-346189572%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="grant.html"><span><span>grant</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-346189572%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="grant.html"><span class="token function"><strike>grant</strike></span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.access/-grant/index.html">Grant</a></div><div class="brief "><p class="paragraph">This function establishes access permissions for PubNub Access Manager (PAM) by setting the <code class="lang-kotlin">read</code> or <code class="lang-kotlin">write</code> attribute to <code class="lang-kotlin">true</code>. A grant with <code class="lang-kotlin">read</code> or <code class="lang-kotlin">write</code> set to <code class="lang-kotlin">false</code> (or not included) will revoke any previous grants with <code class="lang-kotlin">read</code> or <code class="lang-kotlin">write</code> set to <code class="lang-kotlin">true</code>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1967615268%2FFunctions%2F412224181" anchor-label="grantToken" id="-1967615268%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="grant-token.html"><span>grant</span><wbr><span><span>Token</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1967615268%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="grant-token.html"><span class="token function"><strike>grantToken</strike></span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.access.builder/-grant-token-builder/index.html">GrantTokenBuilder</a></div><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="grant-token.html"><span class="token function">grantToken</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">ttl<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.access.builder/-grant-token-builder/index.html">GrantTokenBuilder</a></div><div class="brief "><p class="paragraph">This function generates a grant token for PubNub Access Manager (PAM).</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1463648814%2FFunctions%2F412224181" anchor-label="hereNow" id="-1463648814%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="here-now.html"><span>here</span><wbr><span><span>Now</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1463648814%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="here-now.html"><span class="token function">hereNow</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.presence/-here-now/index.html">HereNow</a></div><div class="brief "><p class="paragraph">Obtain information about the current state of a channel including a list of unique user IDs currently subscribed to the channel and the total occupancy count of the channel.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="593000900%2FFunctions%2F412224181" anchor-label="history" id="593000900%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="history.html"><span><span>history</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="593000900%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="history.html"><span class="token function"><strike>history</strike></span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints/-history/index.html">History</a></div><div class="brief "><p class="paragraph">Fetch historical messages of a channel.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1800908626%2FFunctions%2F412224181" anchor-label="listAllChannelGroups" id="-1800908626%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="list-all-channel-groups.html"><span>list</span><wbr><span>All</span><wbr><span>Channel</span><wbr><span><span>Groups</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1800908626%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="list-all-channel-groups.html"><span class="token function">listAllChannelGroups</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.endpoints.channel_groups/-list-all-channel-group/index.html">ListAllChannelGroup</a></div><div class="brief "><p class="paragraph">Lists all registered channel groups for the subscribe key.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-479899135%2FFunctions%2F412224181" anchor-label="listChannelsForChannelGroup" id="-479899135%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="list-channels-for-channel-group.html"><span>list</span><wbr><span>Channels</span><wbr><span>For</span><wbr><span>Channel</span><wbr><span><span>Group</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-479899135%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="list-channels-for-channel-group.html"><span class="token function">listChannelsForChannelGroup</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.channel_groups/-all-channels-channel-group/index.html">AllChannelsChannelGroup</a></div><div class="brief "><p class="paragraph">Lists all the channels of the channel group.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1652699839%2FFunctions%2F412224181" anchor-label="listFiles" id="1652699839%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="list-files.html"><span>list</span><wbr><span><span>Files</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1652699839%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="list-files.html"><span class="token function">listFiles</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.files/-list-files/-builder/index.html">ListFiles.Builder</a></div><div class="brief "><p class="paragraph">Retrieve list of files uploaded to Channel.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="64665931%2FFunctions%2F412224181" anchor-label="manageChannelMembers" id="64665931%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="manage-channel-members.html"><span>manage</span><wbr><span>Channel</span><wbr><span><span>Members</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="64665931%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="manage-channel-members.html"><span class="token function"><strike>manageChannelMembers</strike></span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.objects_api.members/-manage-channel-members/-builder/index.html">ManageChannelMembers.Builder</a></div><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="manage-channel-members.html"><span class="token function">manageChannelMembers</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">channelId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">set<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-collection/index.html">Collection</a><span class="token operator">&lt;</span><a href="../../com.pubnub.api.java.models.consumer.objects_api.member/-p-n-user/index.html">PNUser</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">remove<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-collection/index.html">Collection</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.objects_api.members/-manage-channel-members-builder/index.html">ManageChannelMembersBuilder</a></div><div class="brief "><p class="paragraph">Set or remove members in a channel.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="946509454%2FFunctions%2F412224181" anchor-label="manageMemberships" id="946509454%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="manage-memberships.html"><span>manage</span><wbr><span><span>Memberships</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="946509454%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="manage-memberships.html"><span class="token function"><strike>manageMemberships</strike></span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.objects_api.memberships/-manage-memberships/-builder/index.html">ManageMemberships.Builder</a></div><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="manage-memberships.html"><span class="token function">manageMemberships</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">channelsToSet<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-collection/index.html">Collection</a><span class="token operator">&lt;</span><a href="../../com.pubnub.api.java.models.consumer.objects_api.membership/-p-n-channel-membership/index.html">PNChannelMembership</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">channelsToDelete<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-collection/index.html">Collection</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.objects_api.memberships/-manage-memberships-builder/index.html">ManageMembershipsBuilder</a></div><div class="brief "><p class="paragraph">Add and/or remove channel memberships for a UUID.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1526388275%2FFunctions%2F412224181" anchor-label="messageCounts" id="-1526388275%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="message-counts.html"><span>message</span><wbr><span><span>Counts</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1526388275%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="message-counts.html"><span class="token function">messageCounts</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints/-message-counts/index.html">MessageCounts</a></div><div class="brief "><p class="paragraph">Fetches the number of messages published on one or more channels since a given time. The count returned is the number of messages in history with a timetoken value greater than the passed value in the <a href="../../../../pubnub-gson/pubnub-gson-api/com.pubnub.api.java.endpoints/-message-counts/channels-timetoken.html">MessageCounts.channelsTimetoken</a> parameter.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1506168568%2FFunctions%2F412224181" anchor-label="parseToken" id="-1506168568%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="parse-token.html"><span>parse</span><wbr><span><span>Token</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1506168568%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="parse-token.html"><span class="token function">parseToken</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">token<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.access_manager.v3/-p-n-token/index.html">PNToken</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-790798745%2FFunctions%2F412224181" anchor-label="presence" id="-790798745%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="presence.html"><span><span>presence</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-790798745%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="presence.html"><span class="token function">presence</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.builder/-presence-builder/index.html">PresenceBuilder</a></div><div class="brief "><p class="paragraph">Track the online and offline status of users and devices in real time and store custom state information. When you have Presence enabled, PubNub automatically creates a presence channel for each channel.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1182743342%2FFunctions%2F412224181" anchor-label="publish" id="-1182743342%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="publish.html"><span><span>publish</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1182743342%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="publish.html"><span class="token function"><strike>publish</strike></span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.pubsub/-publish/index.html">Publish</a></div><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="publish.html"><span class="token function">publish</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">message<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html">Any</a><span class="token punctuation">, </span></span><span class="parameter ">channel<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.v2.endpoints.pubsub/-publish-builder/index.html">PublishBuilder</a></div><div class="brief "><p class="paragraph">Send a message to all subscribers of a channel.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1159582234%2FFunctions%2F412224181" anchor-label="publishFileMessage" id="-1159582234%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="publish-file-message.html"><span>publish</span><wbr><span>File</span><wbr><span><span>Message</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1159582234%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="publish-file-message.html"><span class="token function">publishFileMessage</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.files/-publish-file-message/-builder/index.html">PublishFileMessage.Builder</a></div><div class="brief "><p class="paragraph">Publish file message from specified Channel.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1561071821%2FFunctions%2F412224181" anchor-label="reconnect" id="1561071821%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="reconnect.html"><span><span>reconnect</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1561071821%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="reconnect.html"><span class="token function">reconnect</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><br><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="reconnect.html"><span class="token function">reconnect</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">timetoken<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html">Long</a><span class="token operator"> = </span><span class="token constant">0</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Force the SDK to try and reach out PubNub. Monitor the results in <a href="../../com.pubnub.api.java.v2.callbacks/-status-listener/status.html">SubscribeCallback.status</a></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="161789950%2FFunctions%2F412224181" anchor-label="removeAllListeners" id="161789950%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.pubnub.api.java.v2.callbacks/-event-emitter/remove-all-listeners.html"><span>remove</span><wbr><span>All</span><wbr><span><span>Listeners</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="161789950%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="../../com.pubnub.api.java.v2.callbacks/-event-emitter/remove-all-listeners.html"><span class="token function">removeAllListeners</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Removes all listeners.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1942173904%2FFunctions%2F412224181" anchor-label="removeAllPushNotificationsFromDeviceWithPushToken" id="-1942173904%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="remove-all-push-notifications-from-device-with-push-token.html"><span>remove</span><wbr><span>All</span><wbr><span>Push</span><wbr><span>Notifications</span><wbr><span>From</span><wbr><span>Device</span><wbr><span>With</span><wbr><span>Push</span><wbr><span><span>Token</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1942173904%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="remove-all-push-notifications-from-device-with-push-token.html"><span class="token function">removeAllPushNotificationsFromDeviceWithPushToken</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.push/-remove-all-push-channels-for-device/index.html">RemoveAllPushChannelsForDevice</a></div><div class="brief "><p class="paragraph">Disable push notifications from all channels registered with the specified <a href="../../../../pubnub-gson/pubnub-gson-api/com.pubnub.api.java.endpoints.push/-remove-all-push-channels-for-device/device-id.html">RemoveAllPushChannelsForDevice.deviceId</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-723449079%2FFunctions%2F412224181" anchor-label="removeChannelMembers" id="-723449079%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="remove-channel-members.html"><span>remove</span><wbr><span>Channel</span><wbr><span><span>Members</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-723449079%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="remove-channel-members.html"><span class="token function"><strike>removeChannelMembers</strike></span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.objects_api.members/-remove-channel-members/-builder/index.html">RemoveChannelMembers.Builder</a></div><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="remove-channel-members.html"><span class="token function">removeChannelMembers</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">channelId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">channelMembers<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-collection/index.html">Collection</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.objects_api.members/-remove-channel-members-builder/index.html">RemoveChannelMembersBuilder</a></div><div class="brief "><p class="paragraph">Remove members from a Channel.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2079906774%2FFunctions%2F412224181" anchor-label="removeChannelMetadata" id="-2079906774%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="remove-channel-metadata.html"><span>remove</span><wbr><span>Channel</span><wbr><span><span>Metadata</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2079906774%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="remove-channel-metadata.html"><span class="token function">removeChannelMetadata</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.objects_api.channel/-remove-channel-metadata/-builder/index.html">RemoveChannelMetadata.Builder</a></div><div class="brief "><p class="paragraph">Removes the metadata from a specified channel.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-236518936%2FFunctions%2F412224181" anchor-label="removeChannelsFromChannelGroup" id="-236518936%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="remove-channels-from-channel-group.html"><span>remove</span><wbr><span>Channels</span><wbr><span>From</span><wbr><span>Channel</span><wbr><span><span>Group</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-236518936%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="remove-channels-from-channel-group.html"><span class="token function">removeChannelsFromChannelGroup</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.channel_groups/-remove-channel-channel-group/index.html">RemoveChannelChannelGroup</a></div><div class="brief "><p class="paragraph">Removes channels from a channel group.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-656083377%2FFunctions%2F412224181" anchor-label="removeListener" id="-656083377%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.pubnub.api.java.v2.callbacks/-event-emitter/remove-listener.html"><span>remove</span><wbr><span><span>Listener</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-656083377%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="../../com.pubnub.api.java.v2.callbacks/-event-emitter/remove-listener.html"><span class="token function">removeListener</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">listener<span class="token operator">: </span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.callbacks/-listener/index.html">Listener</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Remove a listener.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1562967498%2FFunctions%2F412224181" anchor-label="removeMemberships" id="-1562967498%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="remove-memberships.html"><span>remove</span><wbr><span><span>Memberships</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1562967498%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="remove-memberships.html"><span class="token function"><strike>removeMemberships</strike></span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.objects_api.memberships/-remove-memberships/-builder/index.html">RemoveMemberships.Builder</a></div><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="remove-memberships.html"><span class="token function">removeMemberships</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">channelMemberships<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-collection/index.html">Collection</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.objects_api.memberships/-remove-memberships-builder/index.html">RemoveMembershipsBuilder</a></div><div class="brief "><p class="paragraph">Remove channel memberships for a UUID.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-405282177%2FFunctions%2F412224181" anchor-label="removeMessageAction" id="-405282177%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="remove-message-action.html"><span>remove</span><wbr><span>Message</span><wbr><span><span>Action</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-405282177%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="remove-message-action.html"><span class="token function">removeMessageAction</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.message_actions/-remove-message-action/index.html">RemoveMessageAction</a></div><div class="brief "><p class="paragraph">Remove a previously added action on a published message. Returns an empty response.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1452862292%2FFunctions%2F412224181" anchor-label="removePushNotificationsFromChannels" id="1452862292%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="remove-push-notifications-from-channels.html"><span>remove</span><wbr><span>Push</span><wbr><span>Notifications</span><wbr><span>From</span><wbr><span><span>Channels</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1452862292%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="remove-push-notifications-from-channels.html"><span class="token function">removePushNotificationsFromChannels</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.push/-remove-channels-from-push/index.html">RemoveChannelsFromPush</a></div><div class="brief "><p class="paragraph">Disable push notifications on provided set of channels.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1881370124%2FFunctions%2F412224181" anchor-label="removeUUIDMetadata" id="-1881370124%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="remove-u-u-i-d-metadata.html"><span>remove</span><wbr><span><span>UUIDMetadata</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1881370124%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="remove-u-u-i-d-metadata.html"><span class="token function">removeUUIDMetadata</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.objects_api.uuid/-remove-u-u-i-d-metadata/index.html">RemoveUUIDMetadata</a></div><div class="brief "><p class="paragraph">Removes the metadata from a specified UUID.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="209024677%2FFunctions%2F412224181" anchor-label="revokeToken" id="209024677%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="revoke-token.html"><span>revoke</span><wbr><span><span>Token</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="209024677%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="revoke-token.html"><span class="token function">revokeToken</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.access/-revoke-token/index.html">RevokeToken</a></div><div class="brief "><p class="paragraph">This method allows you to disable an existing token and revoke all permissions embedded within.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1629099614%2FFunctions%2F412224181" anchor-label="sendFile" id="1629099614%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="send-file.html"><span>send</span><wbr><span><span>File</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1629099614%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="send-file.html"><span class="token function">sendFile</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.files/-send-file/-builder/index.html">SendFile.Builder</a></div><div class="brief "><p class="paragraph">Upload file / data to specified Channel.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-754561464%2FFunctions%2F412224181" anchor-label="setChannelMembers" id="-754561464%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-channel-members.html"><span>set</span><wbr><span>Channel</span><wbr><span><span>Members</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-754561464%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="set-channel-members.html"><span class="token function"><strike>setChannelMembers</strike></span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.objects_api.members/-set-channel-members/-builder/index.html">SetChannelMembers.Builder</a></div><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="set-channel-members.html"><span class="token function">setChannelMembers</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">channelId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">channelMembers<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-collection/index.html">Collection</a><span class="token operator">&lt;</span><a href="../../com.pubnub.api.java.models.consumer.objects_api.member/-p-n-user/index.html">PNUser</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.objects_api.members/-set-channel-members-builder/index.html">SetChannelMembersBuilder</a></div><div class="brief "><p class="paragraph">This method sets members in a channel.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-482503118%2FFunctions%2F412224181" anchor-label="setChannelMetadata" id="-482503118%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-channel-metadata.html"><span>set</span><wbr><span>Channel</span><wbr><span><span>Metadata</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-482503118%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="set-channel-metadata.html"><span class="token function">setChannelMetadata</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.objects_api.channel/-set-channel-metadata/-builder/index.html">SetChannelMetadata.Builder</a></div><div class="brief "><p class="paragraph">Set metadata for a Channel in the database, optionally including the custom data object for each.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1632395557%2FFunctions%2F412224181" anchor-label="setMemberships" id="1632395557%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-memberships.html"><span>set</span><wbr><span><span>Memberships</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1632395557%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="set-memberships.html"><span class="token function"><strike>setMemberships</strike></span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.objects_api.memberships/-set-memberships/-builder/index.html">SetMemberships.Builder</a></div><div class="brief "><p class="paragraph">Set channel memberships for a UUID.</p></div><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="set-memberships.html"><span class="token function">setMemberships</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">channelMemberships<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-collection/index.html">Collection</a><span class="token operator">&lt;</span><a href="../../com.pubnub.api.java.models.consumer.objects_api.membership/-p-n-channel-membership/index.html">PNChannelMembership</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.objects_api.memberships/-set-memberships-builder/index.html">SetMembershipsBuilder</a></div><div class="brief "><p class="paragraph">Set channel memberships for a User.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="428635603%2FFunctions%2F412224181" anchor-label="setOnChannelMetadata" id="428635603%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.pubnub.api.java.v2.callbacks/-event-emitter/set-on-channel-metadata.html"><span>set</span><wbr><span>On</span><wbr><span>Channel</span><wbr><span><span>Metadata</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="428635603%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="../../com.pubnub.api.java.v2.callbacks/-event-emitter/set-on-channel-metadata.html"><span class="token function">setOnChannelMetadata</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">onChannelMetadataHandler<span class="token operator">: </span><a href="../../com.pubnub.api.java.v2.callbacks.handlers/-on-channel-metadata-handler/index.html">OnChannelMetadataHandler</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Sets the handler for incoming channelMetadata events. This method allows the assignment of an <a href="../../com.pubnub.api.java.v2.callbacks.handlers/-on-channel-metadata-handler/index.html">OnChannelMetadataHandler</a> implementation or lambda expression to handle incoming presence events.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1820847099%2FFunctions%2F412224181" anchor-label="setOnFile" id="-1820847099%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.pubnub.api.java.v2.callbacks/-event-emitter/set-on-file.html"><span>set</span><wbr><span>On</span><wbr><span><span>File</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1820847099%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="../../com.pubnub.api.java.v2.callbacks/-event-emitter/set-on-file.html"><span class="token function">setOnFile</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">onFileHandler<span class="token operator">: </span><a href="../../com.pubnub.api.java.v2.callbacks.handlers/-on-file-handler/index.html">OnFileHandler</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Sets the handler for incoming file events. This method allows the assignment of an <a href="../../com.pubnub.api.java.v2.callbacks.handlers/-on-file-handler/index.html">OnFileHandler</a> implementation or lambda expression to handle incoming presence events.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1770078737%2FFunctions%2F412224181" anchor-label="setOnMembership" id="1770078737%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.pubnub.api.java.v2.callbacks/-event-emitter/set-on-membership.html"><span>set</span><wbr><span>On</span><wbr><span><span>Membership</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1770078737%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="../../com.pubnub.api.java.v2.callbacks/-event-emitter/set-on-membership.html"><span class="token function">setOnMembership</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">onMembershipHandler<span class="token operator">: </span><a href="../../com.pubnub.api.java.v2.callbacks.handlers/-on-membership-handler/index.html">OnMembershipHandler</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Sets the handler for incoming membership events. This method allows the assignment of an <a href="../../com.pubnub.api.java.v2.callbacks.handlers/-on-membership-handler/index.html">OnMembershipHandler</a> implementation or lambda expression to handle incoming presence events.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="713973683%2FFunctions%2F412224181" anchor-label="setOnMessage" id="713973683%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.pubnub.api.java.v2.callbacks/-event-emitter/set-on-message.html"><span>set</span><wbr><span>On</span><wbr><span><span>Message</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="713973683%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="../../com.pubnub.api.java.v2.callbacks/-event-emitter/set-on-message.html"><span class="token function">setOnMessage</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">onMessageHandler<span class="token operator">: </span><a href="../../com.pubnub.api.java.v2.callbacks.handlers/-on-message-handler/index.html">OnMessageHandler</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Sets the handler for incoming message events. This method allows the assignment of an <a href="../../com.pubnub.api.java.v2.callbacks.handlers/-on-message-handler/index.html">OnMessageHandler</a> implementation or lambda expression to handle incoming messages.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1401062925%2FFunctions%2F412224181" anchor-label="setOnMessageAction" id="-1401062925%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.pubnub.api.java.v2.callbacks/-event-emitter/set-on-message-action.html"><span>set</span><wbr><span>On</span><wbr><span>Message</span><wbr><span><span>Action</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1401062925%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="../../com.pubnub.api.java.v2.callbacks/-event-emitter/set-on-message-action.html"><span class="token function">setOnMessageAction</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">onMessageActionHandler<span class="token operator">: </span><a href="../../com.pubnub.api.java.v2.callbacks.handlers/-on-message-action-handler/index.html">OnMessageActionHandler</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Sets the handler for incoming messageAction events. This method allows the assignment of an <a href="../../com.pubnub.api.java.v2.callbacks.handlers/-on-message-action-handler/index.html">OnMessageActionHandler</a> implementation or lambda expression to handle incoming presence events.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="786082311%2FFunctions%2F412224181" anchor-label="setOnPresence" id="786082311%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.pubnub.api.java.v2.callbacks/-event-emitter/set-on-presence.html"><span>set</span><wbr><span>On</span><wbr><span><span>Presence</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="786082311%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="../../com.pubnub.api.java.v2.callbacks/-event-emitter/set-on-presence.html"><span class="token function">setOnPresence</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">onPresenceHandler<span class="token operator">: </span><a href="../../com.pubnub.api.java.v2.callbacks.handlers/-on-presence-handler/index.html">OnPresenceHandler</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Sets the handler for incoming presence events. This method allows the assignment of an <a href="../../com.pubnub.api.java.v2.callbacks.handlers/-on-presence-handler/index.html">OnPresenceHandler</a> implementation or lambda expression to handle incoming presence events.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1155735661%2FFunctions%2F412224181" anchor-label="setOnSignal" id="1155735661%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.pubnub.api.java.v2.callbacks/-event-emitter/set-on-signal.html"><span>set</span><wbr><span>On</span><wbr><span><span>Signal</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1155735661%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="../../com.pubnub.api.java.v2.callbacks/-event-emitter/set-on-signal.html"><span class="token function">setOnSignal</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">onSignalHandler<span class="token operator">: </span><a href="../../com.pubnub.api.java.v2.callbacks.handlers/-on-signal-handler/index.html">OnSignalHandler</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Sets the handler for incoming signal events. This method allows the assignment of an <a href="../../com.pubnub.api.java.v2.callbacks.handlers/-on-signal-handler/index.html">OnSignalHandler</a> implementation or lambda expression to handle incoming signals.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1873328105%2FFunctions%2F412224181" anchor-label="setOnUuidMetadata" id="1873328105%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.pubnub.api.java.v2.callbacks/-event-emitter/set-on-uuid-metadata.html"><span>set</span><wbr><span>On</span><wbr><span>Uuid</span><wbr><span><span>Metadata</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1873328105%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="../../com.pubnub.api.java.v2.callbacks/-event-emitter/set-on-uuid-metadata.html"><span class="token function">setOnUuidMetadata</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">onUuidMetadataHandler<span class="token operator">: </span><a href="../../com.pubnub.api.java.v2.callbacks.handlers/-on-uuid-metadata-handler/index.html">OnUuidMetadataHandler</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Sets the handler for incoming uuidMetadata events. This method allows the assignment of an <a href="../../com.pubnub.api.java.v2.callbacks.handlers/-on-uuid-metadata-handler/index.html">OnUuidMetadataHandler</a> implementation or lambda expression to handle incoming presence events.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="318440814%2FFunctions%2F412224181" anchor-label="setPresenceState" id="318440814%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-presence-state.html"><span>set</span><wbr><span>Presence</span><wbr><span><span>State</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="318440814%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="set-presence-state.html"><span class="token function">setPresenceState</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.presence/-set-state/index.html">SetState</a></div><div class="brief "><p class="paragraph">Set state information specific to a subscriber UUID.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1043016522%2FFunctions%2F412224181" anchor-label="setToken" id="1043016522%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-token.html"><span>set</span><wbr><span><span>Token</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1043016522%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="set-token.html"><span class="token function">setToken</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">token<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Update the authorization token granted by the server.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-270361364%2FFunctions%2F412224181" anchor-label="setUUIDMetadata" id="-270361364%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-u-u-i-d-metadata.html"><span>set</span><wbr><span><span>UUIDMetadata</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-270361364%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="set-u-u-i-d-metadata.html"><span class="token function">setUUIDMetadata</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.objects_api.uuid/-set-u-u-i-d-metadata/index.html">SetUUIDMetadata</a></div><div class="brief "><p class="paragraph">Set metadata for a UUID in the database, optionally including the custom data object for each.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1371874510%2FFunctions%2F412224181" anchor-label="signal" id="1371874510%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="signal.html"><span><span>signal</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1371874510%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="signal.html"><span class="token function"><strike>signal</strike></span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.pubsub/-signal/index.html">Signal</a></div><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="signal.html"><span class="token function">signal</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">message<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html">Any</a><span class="token punctuation">, </span></span><span class="parameter ">channel<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.v2.endpoints.pubsub/-signal-builder/index.html">SignalBuilder</a></div><div class="brief "><p class="paragraph">Send a signal to all subscribers of a channel.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1015677170%2FFunctions%2F412224181" anchor-label="subscribe" id="-1015677170%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="subscribe.html"><span><span>subscribe</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1015677170%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="subscribe.html"><span class="token function">subscribe</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.builder/-subscribe-builder/index.html">SubscribeBuilder</a></div><div class="brief "><p class="paragraph">Causes the client to create an open TCP socket to the PubNub Real-Time Network and begin listening for messages on a specified channel.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="145483644%2FFunctions%2F412224181" anchor-label="subscriptionSetOf" id="145483644%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="subscription-set-of.html"><span>subscription</span><wbr><span>Set</span><wbr><span><span>Of</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="145483644%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="subscription-set-of.html"><span class="token function">subscriptionSetOf</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">subscriptions<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-set/index.html">Set</a><span class="token operator">&lt;</span><a href="../../com.pubnub.api.java.v2.subscriptions/-subscription/index.html">Subscription</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.v2.subscriptions/-subscription-set/index.html">SubscriptionSet</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-498408619%2FFunctions%2F412224181" anchor-label="time" id="-498408619%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="time.html"><span><span>time</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-498408619%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="time.html"><span class="token function">time</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.endpoints/-time/index.html">Time</a></div><div class="brief "><p class="paragraph">Returns a 17 digit precision Unix epoch from the server.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2057421657%2FFunctions%2F412224181" anchor-label="unsubscribe" id="-2057421657%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="unsubscribe.html"><span><span>unsubscribe</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2057421657%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="unsubscribe.html"><span class="token function">unsubscribe</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.builder/-unsubscribe-builder/index.html">UnsubscribeBuilder</a></div><div class="brief "><p class="paragraph">When subscribed to a single channel, this function causes the client to issue a leave from the channel and close any open socket to the PubNub Network.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1459000270%2FFunctions%2F412224181" anchor-label="unsubscribeAll" id="-1459000270%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="unsubscribe-all.html"><span>unsubscribe</span><wbr><span><span>All</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1459000270%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="unsubscribe-all.html"><span class="token function">unsubscribeAll</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Unsubscribe from all channels and all channel groups</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="551653468%2FFunctions%2F412224181" anchor-label="userMetadata" id="551653468%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="user-metadata.html"><span>user</span><wbr><span><span>Metadata</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="551653468%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="user-metadata.html"><span class="token function">userMetadata</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">id<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.v2.entities/-user-metadata/index.html">UserMetadata</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1507324557%2FFunctions%2F412224181" anchor-label="whereNow" id="-1507324557%2FFunctions%2F412224181" data-filterable-set=":pubnub-gson:pubnub-gson-api/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-gson:pubnub-gson-api/main" data-filterable-set=":pubnub-gson:pubnub-gson-api/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="where-now.html"><span>where</span><wbr><span><span>Now</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1507324557%2FFunctions%2F412224181"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-gson:pubnub-gson-api/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="where-now.html"><span class="token function">whereNow</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.pubnub.api.java.endpoints.presence/-where-now/index.html">WhereNow</a></div><div class="brief "><p class="paragraph">Obtain information about the current list of channels to which a UUID is subscribed to.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2026 Copyright</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,6 +1,0 @@
-//[pubnub-kotlin-api](../../../index.md)/[com.pubnub.api](../index.md)/[[apple]PubNubImpl](index.md)/[setChannelMetadata](set-channel-metadata.md)
-
-# setChannelMetadata
-
-[apple]\
-open override fun [setChannelMetadata](set-channel-metadata.md)(channel: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html), name: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)?, description: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)?, custom: [CustomObject](../../com.pubnub.kmp/-custom-object/index.md)?, includeCustom: [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html), type: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)?, status: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)?, ifMatchesEtag: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)?): [SetChannelMetadata](../../com.pubnub.api.endpoints.objects.channel/-set-channel-metadata/index.md)

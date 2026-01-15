@@ -1,6 +1,0 @@
-//[pubnub-kotlin-api](../../../index.md)/[com.pubnub.api.endpoints.push](../index.md)/[[apple]AddChannelsToPushImpl](index.md)/[AddChannelsToPushImpl](-add-channels-to-push-impl.md)
-
-# AddChannelsToPushImpl
-
-[apple]\
-constructor(pushType: [PNPushType](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.enums/-p-n-push-type/index.md), pubnub: <!---  GfmCommand {"@class":"org.jetbrains.dokka.gfm.ResolveLinkGfmCommand","dri":{"packageName":"","classNames":"<Error class: unknown class>","callable":null,"target":{"@class":"org.jetbrains.dokka.links.PointingToDeclaration"},"extra":null}} --->&lt;Error class: unknown class&gt;<!--- --->, channels: [List](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html)&lt;[String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)&gt;, deviceId: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html), topic: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)?, environment: [PNPushEnvironment](../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.enums/-p-n-push-environment/index.md))

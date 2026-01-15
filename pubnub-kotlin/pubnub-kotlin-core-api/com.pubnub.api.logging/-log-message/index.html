@@ -1,0 +1,269 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>LogMessage</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+      if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      } else {
+        const savedDarkMode = JSON.parse(storage)
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/safe-local-storage_blocking.js"></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../ui-kit/ui-kit.min.js" defer></script></head>
+<body>
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../../index.html" tabindex="1">
+                    pubnub-kotlin-docs
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">12.1.2
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain">jvm</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-filter=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain">
+                                <span class="checkbox--icon"></span>
+                                jvm
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    pubnub-kotlin-docs
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="pubnub-kotlin-core-api::com.pubnub.api.logging/LogMessage///PointingToDeclaration//-654868808">
+  <div class="breadcrumbs"><a href="../../index.html">pubnub-kotlin-core-api</a><span class="delimiter">/</span><a href="../index.html">com.pubnub.api.logging</a><span class="delimiter">/</span><span class="current">LogMessage</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Log</span><wbr><span><span>Message</span></span></h1>
+    <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+      <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">LogMessage</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>message<span class="token operator">: </span><a href="../-log-message-content/index.html">LogMessageContent</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>details<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>type<span class="token operator">: </span><a href="../-log-message-type/index.html">LogMessageType</a><span class="token operator"> = </span>message.inferType()<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>location<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>pubNubId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>logLevel<span class="token operator">: </span><span data-unresolved-link="org.slf4j.event/Level///PointingToDeclaration/">Level</span><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>timestamp<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span>LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.SSS"))</span></span><span class="token punctuation">)</span></div><p class="paragraph">Represents a structured log message with validation and sanitization.</p><h4 class="tableheader">Parameters</h4><div class="table"><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>pub</span><wbr><span>Nub</span><wbr><span><span>Id</span></span></u></div></span></div><div><div class="title"><p class="paragraph">The PubNub instance identifier</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>log</span><wbr><span><span>Level</span></span></u></div></span></div><div><div class="title"><p class="paragraph">The logging level</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span><span>location</span></span></u></div></span></div><div><div class="title"><p class="paragraph">The source location of the log</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span><span>type</span></span></u></div></span></div><div><div class="title"><p class="paragraph">The type of log message (automatically inferred from message content)</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span><span>message</span></span></u></div></span></div><div><div class="title"><p class="paragraph">The log message content</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span><span>details</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Optional additional details (will be sanitized)</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span><span>timestamp</span></span></u></div></span></div><div><div class="title"><p class="paragraph">The timestamp when the log was created</p></div></div></div></div></div></div>    </div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="tableheader">Constructors</h2>
+        <div class="table"><a data-name="-2112508153%2FConstructors%2F-654868808" anchor-label="LogMessage" id="-2112508153%2FConstructors%2F-654868808" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain"></a>
+          <div class="table-row table-row_content" data-togglable="CONSTRUCTOR" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-log-message.html"><span>Log</span><wbr><span><span>Message</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2112508153%2FConstructors%2F-654868808"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">message<span class="token operator">: </span><a href="../-log-message-content/index.html">LogMessageContent</a><span class="token punctuation">, </span></span><span class="parameter ">details<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">type<span class="token operator">: </span><a href="../-log-message-type/index.html">LogMessageType</a><span class="token operator"> = </span>message.inferType()<span class="token punctuation">, </span></span><span class="parameter ">location<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">pubNubId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">logLevel<span class="token operator">: </span><span data-unresolved-link="org.slf4j.event/Level///PointingToDeclaration/">Level</span><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">timestamp<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span>LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.SSS"))</span></span><span class="token punctuation">)</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="tableheader">Properties</h2>
+        <div class="table"><a data-name="-2128253184%2FProperties%2F-654868808" anchor-label="details" id="-2128253184%2FProperties%2F-654868808" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="details.html"><span><span>details</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2128253184%2FProperties%2F-654868808"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="com.google.gson.annotations/SerializedName///PointingToDeclaration/"><span class="token annotation builtin">SerializedName</span></span><span class="token punctuation">(</span><span>value<span class="token operator"> = </span><span class="breakable-word"><span class="token string">"details"</span></span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">val </span><a href="details.html">details</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-477658365%2FProperties%2F-654868808" anchor-label="location" id="-477658365%2FProperties%2F-654868808" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="location.html"><span><span>location</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-477658365%2FProperties%2F-654868808"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="com.google.gson.annotations/SerializedName///PointingToDeclaration/"><span class="token annotation builtin">SerializedName</span></span><span class="token punctuation">(</span><span>value<span class="token operator"> = </span><span class="breakable-word"><span class="token string">"location"</span></span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">val </span><a href="location.html">location</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1223541128%2FProperties%2F-654868808" anchor-label="logLevel" id="-1223541128%2FProperties%2F-654868808" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="log-level.html"><span>log</span><wbr><span><span>Level</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1223541128%2FProperties%2F-654868808"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="com.google.gson.annotations/SerializedName///PointingToDeclaration/"><span class="token annotation builtin">SerializedName</span></span><span class="token punctuation">(</span><span>value<span class="token operator"> = </span><span class="breakable-word"><span class="token string">"logLevel"</span></span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">val </span><a href="log-level.html">logLevel</a><span class="token operator">: </span><span data-unresolved-link="org.slf4j.event/Level///PointingToDeclaration/">Level</span><span class="token operator">?</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1925773531%2FProperties%2F-654868808" anchor-label="message" id="1925773531%2FProperties%2F-654868808" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="message.html"><span><span>message</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1925773531%2FProperties%2F-654868808"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="com.google.gson.annotations/SerializedName///PointingToDeclaration/"><span class="token annotation builtin">SerializedName</span></span><span class="token punctuation">(</span><span>value<span class="token operator"> = </span><span class="breakable-word"><span class="token string">"message"</span></span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">val </span><a href="message.html">message</a><span class="token operator">: </span><a href="../-log-message-content/index.html">LogMessageContent</a></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-379493825%2FProperties%2F-654868808" anchor-label="pubNubId" id="-379493825%2FProperties%2F-654868808" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="pub-nub-id.html"><span>pub</span><wbr><span>Nub</span><wbr><span><span>Id</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-379493825%2FProperties%2F-654868808"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="com.google.gson.annotations/SerializedName///PointingToDeclaration/"><span class="token annotation builtin">SerializedName</span></span><span class="token punctuation">(</span><span>value<span class="token operator"> = </span><span class="breakable-word"><span class="token string">"pubNubId"</span></span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">val </span><a href="pub-nub-id.html">pubNubId</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-508554900%2FProperties%2F-654868808" anchor-label="timestamp" id="-508554900%2FProperties%2F-654868808" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="timestamp.html"><span><span>timestamp</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-508554900%2FProperties%2F-654868808"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="com.google.gson.annotations/SerializedName///PointingToDeclaration/"><span class="token annotation builtin">SerializedName</span></span><span class="token punctuation">(</span><span>value<span class="token operator"> = </span><span class="breakable-word"><span class="token string">"timestamp"</span></span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">val </span><a href="timestamp.html">timestamp</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1608812702%2FProperties%2F-654868808" anchor-label="type" id="1608812702%2FProperties%2F-654868808" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="type.html"><span><span>type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1608812702%2FProperties%2F-654868808"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="com.google.gson.annotations/SerializedName///PointingToDeclaration/"><span class="token annotation builtin">SerializedName</span></span><span class="token punctuation">(</span><span>value<span class="token operator"> = </span><span class="breakable-word"><span class="token string">"type"</span></span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">val </span><a href="type.html">type</a><span class="token operator">: </span><a href="../-log-message-type/index.html">LogMessageType</a></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2026 Copyright</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

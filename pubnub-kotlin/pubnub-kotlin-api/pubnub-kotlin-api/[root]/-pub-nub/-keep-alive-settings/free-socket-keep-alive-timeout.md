@@ -1,6 +1,0 @@
-//[pubnub-kotlin-api](../../../../index.md)/[[root]](../../index.md)/[PubNub](../index.md)/[KeepAliveSettings](index.md)/[freeSocketKeepAliveTimeout](free-socket-keep-alive-timeout.md)
-
-# freeSocketKeepAliveTimeout
-
-[js]\
-abstract var [freeSocketKeepAliveTimeout](free-socket-keep-alive-timeout.md): [Number](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-number/index.html)?

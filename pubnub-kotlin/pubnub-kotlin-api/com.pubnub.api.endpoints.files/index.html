@@ -1,0 +1,354 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>com.pubnub.api.endpoints.files</title>
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+      if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      } else {
+        const savedDarkMode = JSON.parse(storage)
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/safe-local-storage_blocking.js"></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../ui-kit/ui-kit.min.js" defer></script></head>
+<body>
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../index.html" tabindex="1">
+                    pubnub-kotlin-docs
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">12.1.2
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector native-like" data-active="" aria-pressed="true" data-filter=":pubnub-kotlin:pubnub-kotlin-api/appleMain">apple</button>
+                <button class="platform-tag platform-selector common-like" data-active="" aria-pressed="true" data-filter=":pubnub-kotlin:pubnub-kotlin-api/commonMain">common</button>
+                <button class="platform-tag platform-selector js-like" data-active="" aria-pressed="true" data-filter=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button>
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":pubnub-kotlin:pubnub-kotlin-api/jvmMain">jvm</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option native-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":pubnub-kotlin:pubnub-kotlin-api/appleMain" data-filter=":pubnub-kotlin:pubnub-kotlin-api/appleMain">
+                                <span class="checkbox--icon"></span>
+                                apple
+                            </label>
+                        </li>
+                        <li role="option" class="dropdown--option platform-selector-option common-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-filter=":pubnub-kotlin:pubnub-kotlin-api/commonMain">
+                                <span class="checkbox--icon"></span>
+                                common
+                            </label>
+                        </li>
+                        <li role="option" class="dropdown--option platform-selector-option js-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filter=":pubnub-kotlin:pubnub-kotlin-api/jsMain">
+                                <span class="checkbox--icon"></span>
+                                js
+                            </label>
+                        </li>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-filter=":pubnub-kotlin:pubnub-kotlin-api/jvmMain">
+                                <span class="checkbox--icon"></span>
+                                jvm
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    pubnub-kotlin-docs
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="package" id="content" pageids="pubnub-kotlin-api::com.pubnub.api.endpoints.files////PointingToDeclaration//452382498">
+  <div class="breadcrumbs"><a href="../index.html">pubnub-kotlin-api</a><span class="delimiter">/</span><span class="current">com.pubnub.api.endpoints.files</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span><span>Package-level</span></span> <span><span>declarations</span></span></h1>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="TYPE">Types</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="TYPE">
+        <h2 class="tableheader">Types</h2>
+        <div class="table"><a data-name="606667723%2FClasslikes%2F452382498" anchor-label="DeleteFile" id="606667723%2FClasslikes%2F452382498" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain,:pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain,:pubnub-kotlin:pubnub-kotlin-api/jvmMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/commonMain,:pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain,:pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain,:pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain,:pubnub-kotlin:pubnub-kotlin-api/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-delete-file/index.html"><span>Delete</span><wbr><span><span>File</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="606667723%2FClasslikes%2F452382498"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/appleMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/appleMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/appleMain">apple</button><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/commonMain">common</button><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/appleMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">interface </span><a href="-delete-file/index.html">DeleteFile</a> : <span data-unresolved-link="/<ERROR CLASS> ERROR CLASS: Symbol not found for PNFuture<ERROR CLASS: Symbol not found for PNDeleteFileResult>///PointingToDeclaration/">&lt;ERROR CLASS&gt; ERROR CLASS: Symbol not found for PNFuture&lt;ERROR CLASS: Symbol not found for PNDeleteFileResult&gt;</span></div></div><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="symbol monospace"><span class="token keyword">expect </span><span class="token keyword">interface </span><a href="-delete-file/index.html">DeleteFile</a> : <a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.kmp/-p-n-future/index.html">PNFuture</a><span class="token operator">&lt;</span><a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.files/-p-n-delete-file-result/index.html">PNDeleteFileResult</a><span class="token operator">&gt; </span></div></div><div class="content sourceset-dependent-content" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">interface </span><a href="-delete-file/index.html">DeleteFile</a> : <a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.kmp/-p-n-future/index.html">PNFuture</a><span class="token operator">&lt;</span><a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.files/-p-n-delete-file-result/index.html">PNDeleteFileResult</a><span class="token operator">&gt; </span></div></div><div class="content sourceset-dependent-content" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jvmMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">interface </span><a href="-delete-file/index.html">DeleteFile</a> : <a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api/-endpoint/index.html">Endpoint</a><span class="token operator">&lt;</span><a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.files/-p-n-delete-file-result/index.html">PNDeleteFileResult</a><span class="token operator">&gt; </span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1888266101%2FClasslikes%2F-1646227112" anchor-label="DeleteFileImpl" id="-1888266101%2FClasslikes%2F-1646227112" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../../pubnub-kotlin/pubnub-kotlin-api/com.pubnub.api.endpoints.files/[js]-delete-file-impl/index.html"><span>Delete</span><wbr><span>File</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1888266101%2FClasslikes%2F-1646227112"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/appleMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/appleMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/appleMain">apple</button><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/appleMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="[apple]-delete-file-impl/index.html">DeleteFileImpl</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">pubnub<span class="token operator">: </span>ERROR CLASS: Symbol not found for KMPPubNub<span class="token punctuation">, </span></span><span class="parameter ">channel<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">fileName<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">fileId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span> : <a href="-delete-file/index.html">DeleteFile</a></div></div><div class="content sourceset-dependent-content" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="[js]-delete-file-impl/index.html">DeleteFileImpl</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">pubnub<span class="token operator">: </span><a href="../[root]/-pub-nub/index.html">PubNub</a><span class="token punctuation">, </span></span><span class="parameter ">params<span class="token operator">: </span><a href="../[root]/-pub-nub/-file-input-parameters/index.html">PubNub.FileInputParameters</a></span></span><span class="token punctuation">)</span> : <a href="-delete-file/index.html">DeleteFile</a>, <a href="../com.pubnub.api/-endpoint-impl/index.html">EndpointImpl</a><span class="token operator">&lt;</span><a href="../[root]/-pub-nub/-delete-file-response/index.html">PubNub.DeleteFileResponse</a><span class="token punctuation">, </span><a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.files/-p-n-delete-file-result/index.html">PNDeleteFileResult</a><span class="token operator">&gt; </span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-909783602%2FClasslikes%2F452382498" anchor-label="DownloadFile" id="-909783602%2FClasslikes%2F452382498" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain,:pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain,:pubnub-kotlin:pubnub-kotlin-api/jvmMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/commonMain,:pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain,:pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain,:pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain,:pubnub-kotlin:pubnub-kotlin-api/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-download-file/index.html"><span>Download</span><wbr><span><span>File</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-909783602%2FClasslikes%2F452382498"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/appleMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/appleMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/appleMain">apple</button><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/commonMain">common</button><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/appleMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">interface </span><a href="-download-file/index.html">DownloadFile</a> : <span data-unresolved-link="/<ERROR CLASS> ERROR CLASS: Symbol not found for PNFuture<ERROR CLASS: Symbol not found for PNDownloadFileResult>///PointingToDeclaration/">&lt;ERROR CLASS&gt; ERROR CLASS: Symbol not found for PNFuture&lt;ERROR CLASS: Symbol not found for PNDownloadFileResult&gt;</span></div></div><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="symbol monospace"><span class="token keyword">expect </span><span class="token keyword">interface </span><a href="-download-file/index.html">DownloadFile</a> : <a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.kmp/-p-n-future/index.html">PNFuture</a><span class="token operator">&lt;</span><a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.files/-p-n-download-file-result/index.html">PNDownloadFileResult</a><span class="token operator">&gt; </span></div></div><div class="content sourceset-dependent-content" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">interface </span><a href="-download-file/index.html">DownloadFile</a> : <a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.kmp/-p-n-future/index.html">PNFuture</a><span class="token operator">&lt;</span><a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.files/-p-n-download-file-result/index.html">PNDownloadFileResult</a><span class="token operator">&gt; </span></div></div><div class="content sourceset-dependent-content" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jvmMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">interface </span><a href="-download-file/index.html">DownloadFile</a> : <a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api/-endpoint/index.html">Endpoint</a><span class="token operator">&lt;</span><a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.files/-p-n-download-file-result/index.html">PNDownloadFileResult</a><span class="token operator">&gt; </span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="633694478%2FClasslikes%2F-1646227112" anchor-label="DownloadFileImpl" id="633694478%2FClasslikes%2F-1646227112" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../../pubnub-kotlin/pubnub-kotlin-api/com.pubnub.api.endpoints.files/[js]-download-file-impl/index.html"><span>Download</span><wbr><span>File</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="633694478%2FClasslikes%2F-1646227112"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/appleMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/appleMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/appleMain">apple</button><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/appleMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="[apple]-download-file-impl/index.html">DownloadFileImpl</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">pubnub<span class="token operator">: </span>ERROR CLASS: Symbol not found for KMPPubNub<span class="token punctuation">, </span></span><span class="parameter ">channel<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">fileName<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">fileId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span> : <a href="-download-file/index.html">DownloadFile</a></div></div><div class="content sourceset-dependent-content" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="[js]-download-file-impl/index.html">DownloadFileImpl</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">pubnub<span class="token operator">: </span><a href="../[root]/-pub-nub/index.html">PubNub</a><span class="token punctuation">, </span></span><span class="parameter ">params<span class="token operator">: </span><a href="../[root]/-pub-nub/-download-file-parameters/index.html">PubNub.DownloadFileParameters</a></span></span><span class="token punctuation">)</span> : <a href="-download-file/index.html">DownloadFile</a>, <a href="../com.pubnub.api/-endpoint-impl/index.html">EndpointImpl</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html">Any</a><span class="token punctuation">, </span><a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.files/-p-n-download-file-result/index.html">PNDownloadFileResult</a><span class="token operator">&gt; </span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2105622581%2FClasslikes%2F452382498" anchor-label="GetFileUrl" id="2105622581%2FClasslikes%2F452382498" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain,:pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain,:pubnub-kotlin:pubnub-kotlin-api/jvmMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/commonMain,:pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain,:pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain,:pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain,:pubnub-kotlin:pubnub-kotlin-api/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-get-file-url/index.html"><span>Get</span><wbr><span>File</span><wbr><span><span>Url</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2105622581%2FClasslikes%2F452382498"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/appleMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/appleMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/appleMain">apple</button><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/commonMain">common</button><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/appleMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">interface </span><a href="-get-file-url/index.html">GetFileUrl</a> : <span data-unresolved-link="/<ERROR CLASS> ERROR CLASS: Symbol not found for PNFuture<ERROR CLASS: Symbol not found for PNFileUrlResult>///PointingToDeclaration/">&lt;ERROR CLASS&gt; ERROR CLASS: Symbol not found for PNFuture&lt;ERROR CLASS: Symbol not found for PNFileUrlResult&gt;</span></div></div><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="symbol monospace"><span class="token keyword">expect </span><span class="token keyword">interface </span><a href="-get-file-url/index.html">GetFileUrl</a> : <a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.kmp/-p-n-future/index.html">PNFuture</a><span class="token operator">&lt;</span><a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.files/-p-n-file-url-result/index.html">PNFileUrlResult</a><span class="token operator">&gt; </span></div></div><div class="content sourceset-dependent-content" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">interface </span><a href="-get-file-url/index.html">GetFileUrl</a> : <a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.kmp/-p-n-future/index.html">PNFuture</a><span class="token operator">&lt;</span><a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.files/-p-n-file-url-result/index.html">PNFileUrlResult</a><span class="token operator">&gt; </span></div></div><div class="content sourceset-dependent-content" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jvmMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">interface </span><a href="-get-file-url/index.html">GetFileUrl</a> : <a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api/-endpoint/index.html">Endpoint</a><span class="token operator">&lt;</span><a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.files/-p-n-file-url-result/index.html">PNFileUrlResult</a><span class="token operator">&gt; </span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-802992139%2FClasslikes%2F-1646227112" anchor-label="GetFileUrlImpl" id="-802992139%2FClasslikes%2F-1646227112" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../../pubnub-kotlin/pubnub-kotlin-api/com.pubnub.api.endpoints.files/[js]-get-file-url-impl/index.html"><span>Get</span><wbr><span>File</span><wbr><span>Url</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-802992139%2FClasslikes%2F-1646227112"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/appleMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/appleMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/appleMain">apple</button><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/appleMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="[apple]-get-file-url-impl/index.html">GetFileUrlImpl</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">pubnub<span class="token operator">: </span>ERROR CLASS: Symbol not found for KMPPubNub<span class="token punctuation">, </span></span><span class="parameter ">channel<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">fileName<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">fileId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span> : <a href="-get-file-url/index.html">GetFileUrl</a></div></div><div class="content sourceset-dependent-content" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="[js]-get-file-url-impl/index.html">GetFileUrlImpl</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">pubnub<span class="token operator">: </span><a href="../[root]/-pub-nub/index.html">PubNub</a><span class="token punctuation">, </span></span><span class="parameter ">params<span class="token operator">: </span><a href="../[root]/-pub-nub/-file-input-parameters/index.html">PubNub.FileInputParameters</a></span></span><span class="token punctuation">)</span> : <a href="-get-file-url/index.html">GetFileUrl</a>, <a href="../com.pubnub.api/-endpoint-impl/index.html">EndpointImpl</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span><a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.files/-p-n-file-url-result/index.html">PNFileUrlResult</a><span class="token operator">&gt; </span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="836996663%2FClasslikes%2F452382498" anchor-label="ListFiles" id="836996663%2FClasslikes%2F452382498" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain,:pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain,:pubnub-kotlin:pubnub-kotlin-api/jvmMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/commonMain,:pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain,:pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain,:pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain,:pubnub-kotlin:pubnub-kotlin-api/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-list-files/index.html"><span>List</span><wbr><span><span>Files</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="836996663%2FClasslikes%2F452382498"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/appleMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/appleMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/appleMain">apple</button><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/commonMain">common</button><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/appleMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">interface </span><a href="-list-files/index.html">ListFiles</a> : <span data-unresolved-link="/<ERROR CLASS> ERROR CLASS: Symbol not found for PNFuture<ERROR CLASS: Symbol not found for PNListFilesResult>///PointingToDeclaration/">&lt;ERROR CLASS&gt; ERROR CLASS: Symbol not found for PNFuture&lt;ERROR CLASS: Symbol not found for PNListFilesResult&gt;</span></div></div><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="symbol monospace"><span class="token keyword">expect </span><span class="token keyword">interface </span><a href="-list-files/index.html">ListFiles</a> : <a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.kmp/-p-n-future/index.html">PNFuture</a><span class="token operator">&lt;</span><a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.files/-p-n-list-files-result/index.html">PNListFilesResult</a><span class="token operator">&gt; </span></div></div><div class="content sourceset-dependent-content" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">interface </span><a href="-list-files/index.html">ListFiles</a> : <a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.kmp/-p-n-future/index.html">PNFuture</a><span class="token operator">&lt;</span><a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.files/-p-n-list-files-result/index.html">PNListFilesResult</a><span class="token operator">&gt; </span></div></div><div class="content sourceset-dependent-content" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jvmMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">interface </span><a href="-list-files/index.html">ListFiles</a> : <a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api/-endpoint/index.html">Endpoint</a><span class="token operator">&lt;</span><a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.files/-p-n-list-files-result/index.html">PNListFilesResult</a><span class="token operator">&gt; </span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-825570057%2FClasslikes%2F-1646227112" anchor-label="ListFilesImpl" id="-825570057%2FClasslikes%2F-1646227112" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../../pubnub-kotlin/pubnub-kotlin-api/com.pubnub.api.endpoints.files/[js]-list-files-impl/index.html"><span>List</span><wbr><span>Files</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-825570057%2FClasslikes%2F-1646227112"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/appleMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/appleMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/appleMain">apple</button><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/appleMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="[apple]-list-files-impl/index.html">ListFilesImpl</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">pubnub<span class="token operator">: </span>ERROR CLASS: Symbol not found for KMPPubNub<span class="token punctuation">, </span></span><span class="parameter ">channel<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">limit<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">next<span class="token operator">: </span>ERROR CLASS: Symbol not found for PNPage.PNNext?<span class="token operator">?</span></span></span><span class="token punctuation">)</span> : <a href="-list-files/index.html">ListFiles</a></div></div><div class="content sourceset-dependent-content" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="[js]-list-files-impl/index.html">ListFilesImpl</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">pubnub<span class="token operator">: </span><a href="../[root]/-pub-nub/index.html">PubNub</a><span class="token punctuation">, </span></span><span class="parameter ">params<span class="token operator">: </span><a href="../[root]/-pub-nub/-list-files-parameters/index.html">PubNub.ListFilesParameters</a></span></span><span class="token punctuation">)</span> : <a href="-list-files/index.html">ListFiles</a>, <a href="../com.pubnub.api/-endpoint-impl/index.html">EndpointImpl</a><span class="token operator">&lt;</span><a href="../[root]/-pub-nub/-list-files-response/index.html">PubNub.ListFilesResponse</a><span class="token punctuation">, </span><a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.files/-p-n-list-files-result/index.html">PNListFilesResult</a><span class="token operator">&gt; </span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="809114582%2FClasslikes%2F452382498" anchor-label="PublishFileMessage" id="809114582%2FClasslikes%2F452382498" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain,:pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain,:pubnub-kotlin:pubnub-kotlin-api/jvmMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/commonMain,:pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain,:pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain,:pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain,:pubnub-kotlin:pubnub-kotlin-api/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-publish-file-message/index.html"><span>Publish</span><wbr><span>File</span><wbr><span><span>Message</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="809114582%2FClasslikes%2F452382498"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/appleMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/appleMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/appleMain">apple</button><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/commonMain">common</button><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/appleMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">interface </span><a href="-publish-file-message/index.html">PublishFileMessage</a> : <span data-unresolved-link="/<ERROR CLASS> ERROR CLASS: Symbol not found for PNFuture<ERROR CLASS: Symbol not found for PNPublishFileMessageResult>///PointingToDeclaration/">&lt;ERROR CLASS&gt; ERROR CLASS: Symbol not found for PNFuture&lt;ERROR CLASS: Symbol not found for PNPublishFileMessageResult&gt;</span></div></div><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="symbol monospace"><span class="token keyword">expect </span><span class="token keyword">interface </span><a href="-publish-file-message/index.html">PublishFileMessage</a> : <a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.kmp/-p-n-future/index.html">PNFuture</a><span class="token operator">&lt;</span><a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.files/-p-n-publish-file-message-result/index.html">PNPublishFileMessageResult</a><span class="token operator">&gt; </span></div></div><div class="content sourceset-dependent-content" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">interface </span><a href="-publish-file-message/index.html">PublishFileMessage</a> : <a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.kmp/-p-n-future/index.html">PNFuture</a><span class="token operator">&lt;</span><a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.files/-p-n-publish-file-message-result/index.html">PNPublishFileMessageResult</a><span class="token operator">&gt; </span></div></div><div class="content sourceset-dependent-content" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jvmMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">interface </span><a href="-publish-file-message/index.html">PublishFileMessage</a> : <a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api/-endpoint/index.html">Endpoint</a><span class="token operator">&lt;</span><a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.files/-p-n-publish-file-message-result/index.html">PNPublishFileMessageResult</a><span class="token operator">&gt; </span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2111009558%2FClasslikes%2F-1646227112" anchor-label="PublishFileMessageImpl" id="2111009558%2FClasslikes%2F-1646227112" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../../pubnub-kotlin/pubnub-kotlin-api/com.pubnub.api.endpoints.files/[js]-publish-file-message-impl/index.html"><span>Publish</span><wbr><span>File</span><wbr><span>Message</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2111009558%2FClasslikes%2F-1646227112"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/appleMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/appleMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/appleMain">apple</button><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/appleMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="[apple]-publish-file-message-impl/index.html">PublishFileMessageImpl</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">pubnub<span class="token operator">: </span>ERROR CLASS: Symbol not found for KMPPubNub<span class="token punctuation">, </span></span><span class="parameter ">channel<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">fileName<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">fileId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">message<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html">Any</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">meta<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html">Any</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">ttl<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">shouldStore<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">customMessageType<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span> : <a href="-publish-file-message/index.html">PublishFileMessage</a></div></div><div class="content sourceset-dependent-content" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="[js]-publish-file-message-impl/index.html">PublishFileMessageImpl</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">pubnub<span class="token operator">: </span><a href="../[root]/-pub-nub/index.html">PubNub</a><span class="token punctuation">, </span></span><span class="parameter ">params<span class="token operator">: </span><a href="../[root]/-pub-nub/-publish-file-parameters/index.html">PubNub.PublishFileParameters</a></span></span><span class="token punctuation">)</span> : <a href="-publish-file-message/index.html">PublishFileMessage</a>, <a href="../com.pubnub.api/-endpoint-impl/index.html">EndpointImpl</a><span class="token operator">&lt;</span><a href="../[root]/-pub-nub/-publish-file-response/index.html">PubNub.PublishFileResponse</a><span class="token punctuation">, </span><a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.files/-p-n-publish-file-message-result/index.html">PNPublishFileMessageResult</a><span class="token operator">&gt; </span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="547549006%2FClasslikes%2F452382498" anchor-label="SendFile" id="547549006%2FClasslikes%2F452382498" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain,:pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain,:pubnub-kotlin:pubnub-kotlin-api/jvmMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/commonMain,:pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain,:pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain,:pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain,:pubnub-kotlin:pubnub-kotlin-api/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-send-file/index.html"><span>Send</span><wbr><span><span>File</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="547549006%2FClasslikes%2F452382498"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/appleMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/appleMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/appleMain">apple</button><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/commonMain">common</button><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/appleMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">interface </span><a href="-send-file/index.html">SendFile</a> : <span data-unresolved-link="/<ERROR CLASS> ERROR CLASS: Symbol not found for PNFuture<ERROR CLASS: Symbol not found for PNFileUploadResult>///PointingToDeclaration/">&lt;ERROR CLASS&gt; ERROR CLASS: Symbol not found for PNFuture&lt;ERROR CLASS: Symbol not found for PNFileUploadResult&gt;</span></div></div><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="symbol monospace"><span class="token keyword">expect </span><span class="token keyword">interface </span><a href="-send-file/index.html">SendFile</a> : <a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.kmp/-p-n-future/index.html">PNFuture</a><span class="token operator">&lt;</span><a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.files/-p-n-file-upload-result/index.html">PNFileUploadResult</a><span class="token operator">&gt; </span></div></div><div class="content sourceset-dependent-content" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">interface </span><a href="-send-file/index.html">SendFile</a> : <a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.kmp/-p-n-future/index.html">PNFuture</a><span class="token operator">&lt;</span><a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.files/-p-n-file-upload-result/index.html">PNFileUploadResult</a><span class="token operator">&gt; </span></div></div><div class="content sourceset-dependent-content" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jvmMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">interface </span><a href="-send-file/index.html">SendFile</a> : <a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.endpoints.remoteaction/-extended-remote-action/index.html">ExtendedRemoteAction</a><span class="token operator">&lt;</span><a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.files/-p-n-file-upload-result/index.html">PNFileUploadResult</a><span class="token operator">&gt; </span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1640641906%2FClasslikes%2F-1646227112" anchor-label="SendFileImpl" id="-1640641906%2FClasslikes%2F-1646227112" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../../pubnub-kotlin/pubnub-kotlin-api/com.pubnub.api.endpoints.files/[js]-send-file-impl/index.html"><span>Send</span><wbr><span>File</span><wbr><span><span>Impl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1640641906%2FClasslikes%2F-1646227112"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/appleMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/appleMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/appleMain">apple</button><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/appleMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="[apple]-send-file-impl/index.html">SendFileImpl</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">pubnub<span class="token operator">: </span>ERROR CLASS: Symbol not found for KMPPubNub<span class="token punctuation">, </span></span><span class="parameter ">channel<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">fileName<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">inputStream<span class="token operator">: </span><a href="../com.pubnub.kmp/-uploadable/index.html">Uploadable</a><span class="token punctuation">, </span></span><span class="parameter ">message<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html">Any</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">meta<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html">Any</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">ttl<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">shouldStore<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">customMessageType<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span> : <a href="-send-file/index.html">SendFile</a></div></div><div class="content sourceset-dependent-content" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="[js]-send-file-impl/index.html">SendFileImpl</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">pubnub<span class="token operator">: </span><a href="../[root]/-pub-nub/index.html">PubNub</a><span class="token punctuation">, </span></span><span class="parameter ">params<span class="token operator">: </span><a href="../[root]/-pub-nub/-send-file-parameters/index.html">PubNub.SendFileParameters</a></span></span><span class="token punctuation">)</span> : <a href="-send-file/index.html">SendFile</a>, <a href="../com.pubnub.api/-endpoint-impl/index.html">EndpointImpl</a><span class="token operator">&lt;</span><a href="../[root]/-pub-nub/-send-file-response/index.html">PubNub.SendFileResponse</a><span class="token punctuation">, </span><a href="../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.files/-p-n-file-upload-result/index.html">PNFileUploadResult</a><span class="token operator">&gt; </span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2026 Copyright</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

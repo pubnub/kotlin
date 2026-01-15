@@ -1,6 +1,0 @@
-//[pubnub-gson-api](../../../index.md)/[com.pubnub.api.java.endpoints.access](../index.md)/[Grant](index.md)/[manage](manage.md)
-
-# manage
-
-[jvm]\
-abstract fun [manage](manage.md)(manage: [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)): [Grant](index.md)

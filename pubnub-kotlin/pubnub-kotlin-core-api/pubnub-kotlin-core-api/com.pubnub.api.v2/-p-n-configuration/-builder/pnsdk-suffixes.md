@@ -1,6 +1,0 @@
-//[pubnub-kotlin-core-api](../../../../index.md)/[com.pubnub.api.v2](../../index.md)/[PNConfiguration](../index.md)/[Builder](index.md)/[pnsdkSuffixes](pnsdk-suffixes.md)
-
-# pnsdkSuffixes
-
-[jvm]\
-abstract var [pnsdkSuffixes](pnsdk-suffixes.md): [Map](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html), [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)&gt;

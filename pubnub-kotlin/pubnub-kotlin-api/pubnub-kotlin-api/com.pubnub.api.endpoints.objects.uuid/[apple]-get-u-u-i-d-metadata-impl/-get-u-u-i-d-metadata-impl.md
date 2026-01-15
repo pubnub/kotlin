@@ -1,6 +1,0 @@
-//[pubnub-kotlin-api](../../../index.md)/[com.pubnub.api.endpoints.objects.uuid](../index.md)/[[apple]GetUUIDMetadataImpl](index.md)/[GetUUIDMetadataImpl](-get-u-u-i-d-metadata-impl.md)
-
-# GetUUIDMetadataImpl
-
-[apple]\
-constructor(pubnub: <!---  GfmCommand {"@class":"org.jetbrains.dokka.gfm.ResolveLinkGfmCommand","dri":{"packageName":"","classNames":"<Error class: unknown class>","callable":null,"target":{"@class":"org.jetbrains.dokka.links.PointingToDeclaration"},"extra":null}} --->&lt;Error class: unknown class&gt;<!--- --->, metadataId: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)?, includeCustom: [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html))

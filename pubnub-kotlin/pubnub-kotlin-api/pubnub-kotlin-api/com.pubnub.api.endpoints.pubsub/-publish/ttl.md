@@ -1,6 +1,0 @@
-//[pubnub-kotlin-api](../../../index.md)/[com.pubnub.api.endpoints.pubsub](../index.md)/[Publish](index.md)/[ttl](ttl.md)
-
-# ttl
-
-[jvm]\
-abstract val [ttl](ttl.md): [Int](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html)?

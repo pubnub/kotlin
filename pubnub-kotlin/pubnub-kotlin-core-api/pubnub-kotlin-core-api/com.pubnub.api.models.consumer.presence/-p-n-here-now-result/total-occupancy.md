@@ -1,6 +1,0 @@
-//[pubnub-kotlin-core-api](../../../index.md)/[com.pubnub.api.models.consumer.presence](../index.md)/[PNHereNowResult](index.md)/[totalOccupancy](total-occupancy.md)
-
-# totalOccupancy
-
-[common]\
-val [totalOccupancy](total-occupancy.md): [Int](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html)

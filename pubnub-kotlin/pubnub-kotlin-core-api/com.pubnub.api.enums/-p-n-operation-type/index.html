@@ -1,0 +1,1031 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>PNOperationType</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+      if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      } else {
+        const savedDarkMode = JSON.parse(storage)
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/safe-local-storage_blocking.js"></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../ui-kit/ui-kit.min.js" defer></script></head>
+<body>
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../../index.html" tabindex="1">
+                    pubnub-kotlin-docs
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">12.1.2
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector common-like" data-active="" aria-pressed="true" data-filter=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">common</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option common-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filter=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+                                <span class="checkbox--icon"></span>
+                                common
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    pubnub-kotlin-docs
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="pubnub-kotlin-core-api::com.pubnub.api.enums/PNOperationType///PointingToDeclaration//1129576062">
+  <div class="breadcrumbs"><a href="../../index.html">pubnub-kotlin-core-api</a><span class="delimiter">/</span><a href="../index.html">com.pubnub.api.enums</a><span class="delimiter">/</span><span class="current">PNOperationType</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>PNOperation</span><wbr><span><span>Type</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">sealed </span><span class="token keyword">class </span><a href="index.html">PNOperationType</a></div><h4 class="tableheader">Inheritors</h4><div class="table"><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-publish-operation/index.html">PublishOperation</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-history-operation/index.html">HistoryOperation</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-presence-operation/index.html">PresenceOperation</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-channel-group-operation/index.html">ChannelGroupOperation</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-push-notifications-operation/index.html">PushNotificationsOperation</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-p-a-m-operation/index.html">PAMOperation</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-message-counts-operation/index.html">MessageCountsOperation</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-signals-operation/index.html">SignalsOperation</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-objects-operation/index.html">ObjectsOperation</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-p-a-m-v3-operation/index.html">PAMV3Operation</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-message-actions-operation/index.html">MessageActionsOperation</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-time-operation/index.html">TimeOperation</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-file-operation/index.html">FileOperation</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-space-operation/index.html">SpaceOperation</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-user-operation/index.html">UserOperation</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-membership-operation/index.html">MembershipOperation</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-p-n-subscribe-operation/index.html">PNSubscribeOperation</a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="-p-n-disconnect-operation/index.html">PNDisconnectOperation</a></div></span></div><div></div></div></div></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="TYPE">
+        <h2 class="tableheader">Types</h2>
+        <div class="table"><a data-name="-261693403%2FClasslikes%2F1129576062" anchor-label="ChannelGroupOperation" id="-261693403%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-channel-group-operation/index.html"><span>Channel</span><wbr><span>Group</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-261693403%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-channel-group-operation/index.html">ChannelGroupOperation</a> : <a href="index.html">PNOperationType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="380739941%2FClasslikes%2F1129576062" anchor-label="FileOperation" id="380739941%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-file-operation/index.html"><span>File</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="380739941%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-file-operation/index.html">FileOperation</a> : <a href="index.html">PNOperationType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="936536543%2FClasslikes%2F1129576062" anchor-label="HistoryOperation" id="936536543%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-history-operation/index.html"><span>History</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="936536543%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-history-operation/index.html">HistoryOperation</a> : <a href="index.html">PNOperationType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1327647231%2FClasslikes%2F1129576062" anchor-label="MembershipOperation" id="1327647231%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-membership-operation/index.html"><span>Membership</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1327647231%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-membership-operation/index.html">MembershipOperation</a> : <a href="index.html">PNOperationType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2055172705%2FClasslikes%2F1129576062" anchor-label="MessageActionsOperation" id="-2055172705%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-message-actions-operation/index.html"><span>Message</span><wbr><span>Actions</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2055172705%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-message-actions-operation/index.html">MessageActionsOperation</a> : <a href="index.html">PNOperationType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1431295734%2FClasslikes%2F1129576062" anchor-label="MessageCountsOperation" id="1431295734%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-message-counts-operation/index.html"><span>Message</span><wbr><span>Counts</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1431295734%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-message-counts-operation/index.html">MessageCountsOperation</a> : <a href="index.html">PNOperationType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2098080351%2FClasslikes%2F1129576062" anchor-label="ObjectsOperation" id="2098080351%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-objects-operation/index.html"><span>Objects</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2098080351%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-objects-operation/index.html">ObjectsOperation</a> : <a href="index.html">PNOperationType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1614551143%2FClasslikes%2F1129576062" anchor-label="PAMOperation" id="1614551143%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-a-m-operation/index.html"><span><span>PAMOperation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1614551143%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-p-a-m-operation/index.html">PAMOperation</a> : <a href="index.html">PNOperationType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="873154692%2FClasslikes%2F1129576062" anchor-label="PAMV3Operation" id="873154692%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-a-m-v3-operation/index.html"><span><span>PAMV3Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="873154692%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-p-a-m-v3-operation/index.html">PAMV3Operation</a> : <a href="index.html">PNOperationType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-611754750%2FClasslikes%2F1129576062" anchor-label="PNAccessManagerAudit" id="-611754750%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-access-manager-audit/index.html"><span>PNAccess</span><wbr><span>Manager</span><wbr><span><span>Audit</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-611754750%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-access-manager-audit/index.html">PNAccessManagerAudit</a> : <a href="-p-a-m-operation/index.html">PNOperationType.PAMOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1345850655%2FClasslikes%2F1129576062" anchor-label="PNAccessManagerGrant" id="-1345850655%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-access-manager-grant/index.html"><span>PNAccess</span><wbr><span>Manager</span><wbr><span><span>Grant</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1345850655%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-access-manager-grant/index.html">PNAccessManagerGrant</a> : <a href="-p-a-m-operation/index.html">PNOperationType.PAMOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1753936840%2FClasslikes%2F1129576062" anchor-label="PNAccessManagerGrantToken" id="1753936840%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-access-manager-grant-token/index.html"><span>PNAccess</span><wbr><span>Manager</span><wbr><span>Grant</span><wbr><span><span>Token</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1753936840%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-access-manager-grant-token/index.html">PNAccessManagerGrantToken</a> : <a href="-p-a-m-v3-operation/index.html">PNOperationType.PAMV3Operation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1346322486%2FClasslikes%2F1129576062" anchor-label="PNAccessManagerRevokeToken" id="-1346322486%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-access-manager-revoke-token/index.html"><span>PNAccess</span><wbr><span>Manager</span><wbr><span>Revoke</span><wbr><span><span>Token</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1346322486%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-access-manager-revoke-token/index.html">PNAccessManagerRevokeToken</a> : <a href="-p-a-m-v3-operation/index.html">PNOperationType.PAMV3Operation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-170033382%2FClasslikes%2F1129576062" anchor-label="PNAddChannelsToGroupOperation" id="-170033382%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-add-channels-to-group-operation/index.html"><span>PNAdd</span><wbr><span>Channels</span><wbr><span>To</span><wbr><span>Group</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-170033382%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-add-channels-to-group-operation/index.html">PNAddChannelsToGroupOperation</a> : <a href="-channel-group-operation/index.html">PNOperationType.ChannelGroupOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2101165752%2FClasslikes%2F1129576062" anchor-label="PNAddMessageAction" id="2101165752%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-add-message-action/index.html"><span>PNAdd</span><wbr><span>Message</span><wbr><span><span>Action</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2101165752%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-add-message-action/index.html">PNAddMessageAction</a> : <a href="-message-actions-operation/index.html">PNOperationType.MessageActionsOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-878121629%2FClasslikes%2F1129576062" anchor-label="PNAddPushNotificationsOnChannelsOperation" id="-878121629%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-add-push-notifications-on-channels-operation/index.html"><span>PNAdd</span><wbr><span>Push</span><wbr><span>Notifications</span><wbr><span>On</span><wbr><span>Channels</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-878121629%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-add-push-notifications-on-channels-operation/index.html">PNAddPushNotificationsOnChannelsOperation</a> : <a href="-push-notifications-operation/index.html">PNOperationType.PushNotificationsOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-53687676%2FClasslikes%2F1129576062" anchor-label="PNChannelGroupsOperation" id="-53687676%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-channel-groups-operation/index.html"><span>PNChannel</span><wbr><span>Groups</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-53687676%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-channel-groups-operation/index.html">PNChannelGroupsOperation</a> : <a href="-channel-group-operation/index.html">PNOperationType.ChannelGroupOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-410043187%2FClasslikes%2F1129576062" anchor-label="PNChannelsForGroupOperation" id="-410043187%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-channels-for-group-operation/index.html"><span>PNChannels</span><wbr><span>For</span><wbr><span>Group</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-410043187%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-channels-for-group-operation/index.html">PNChannelsForGroupOperation</a> : <a href="-channel-group-operation/index.html">PNOperationType.ChannelGroupOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="307276636%2FClasslikes%2F1129576062" anchor-label="PNDeleteMessageAction" id="307276636%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-delete-message-action/index.html"><span>PNDelete</span><wbr><span>Message</span><wbr><span><span>Action</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="307276636%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-delete-message-action/index.html">PNDeleteMessageAction</a> : <a href="-message-actions-operation/index.html">PNOperationType.MessageActionsOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1331462978%2FClasslikes%2F1129576062" anchor-label="PNDeleteMessagesOperation" id="-1331462978%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-delete-messages-operation/index.html"><span>PNDelete</span><wbr><span>Messages</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1331462978%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-delete-messages-operation/index.html">PNDeleteMessagesOperation</a> : <a href="-history-operation/index.html">PNOperationType.HistoryOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-311969149%2FClasslikes%2F1129576062" anchor-label="PNDisconnectOperation" id="-311969149%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-disconnect-operation/index.html"><span>PNDisconnect</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-311969149%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-disconnect-operation/index.html">PNDisconnectOperation</a> : <a href="index.html">PNOperationType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1091531725%2FClasslikes%2F1129576062" anchor-label="PNFetchMessagesOperation" id="-1091531725%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-fetch-messages-operation/index.html"><span>PNFetch</span><wbr><span>Messages</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1091531725%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-fetch-messages-operation/index.html">PNFetchMessagesOperation</a> : <a href="-history-operation/index.html">PNOperationType.HistoryOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1522776431%2FClasslikes%2F1129576062" anchor-label="PNGetAllChannelsMetadataOperation" id="-1522776431%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-get-all-channels-metadata-operation/index.html"><span>PNGet</span><wbr><span>All</span><wbr><span>Channels</span><wbr><span>Metadata</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1522776431%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-get-all-channels-metadata-operation/index.html">PNGetAllChannelsMetadataOperation</a> : <a href="-objects-operation/index.html">PNOperationType.ObjectsOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2074091676%2FClasslikes%2F1129576062" anchor-label="PNGetAllUUIDMetadataOperation" id="2074091676%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-get-all-u-u-i-d-metadata-operation/index.html"><span>PNGet</span><wbr><span>All</span><wbr><span>UUIDMetadata</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2074091676%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-get-all-u-u-i-d-metadata-operation/index.html">PNGetAllUUIDMetadataOperation</a> : <a href="-objects-operation/index.html">PNOperationType.ObjectsOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-507654141%2FClasslikes%2F1129576062" anchor-label="PNGetChannelMetadataOperation" id="-507654141%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-get-channel-metadata-operation/index.html"><span>PNGet</span><wbr><span>Channel</span><wbr><span>Metadata</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-507654141%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-get-channel-metadata-operation/index.html">PNGetChannelMetadataOperation</a> : <a href="-objects-operation/index.html">PNOperationType.ObjectsOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2086118094%2FClasslikes%2F1129576062" anchor-label="PNGetMembershipsOperation" id="2086118094%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-get-memberships-operation/index.html"><span>PNGet</span><wbr><span>Memberships</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2086118094%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-get-memberships-operation/index.html">PNGetMembershipsOperation</a> : <a href="-objects-operation/index.html">PNOperationType.ObjectsOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1349733666%2FClasslikes%2F1129576062" anchor-label="PNGetMessageActions" id="1349733666%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-get-message-actions/index.html"><span>PNGet</span><wbr><span>Message</span><wbr><span><span>Actions</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1349733666%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-get-message-actions/index.html">PNGetMessageActions</a> : <a href="-message-actions-operation/index.html">PNOperationType.MessageActionsOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-605815367%2FClasslikes%2F1129576062" anchor-label="PNGetState" id="-605815367%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-get-state/index.html"><span>PNGet</span><wbr><span><span>State</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-605815367%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-get-state/index.html">PNGetState</a> : <a href="-presence-operation/index.html">PNOperationType.PresenceOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-838277843%2FClasslikes%2F1129576062" anchor-label="PNGetUUIDMetadataOperation" id="-838277843%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-get-u-u-i-d-metadata-operation/index.html"><span>PNGet</span><wbr><span>UUIDMetadata</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-838277843%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-get-u-u-i-d-metadata-operation/index.html">PNGetUUIDMetadataOperation</a> : <a href="-objects-operation/index.html">PNOperationType.ObjectsOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="591040265%2FClasslikes%2F1129576062" anchor-label="PNHeartbeatOperation" id="591040265%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-heartbeat-operation/index.html"><span>PNHeartbeat</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="591040265%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-heartbeat-operation/index.html">PNHeartbeatOperation</a> : <a href="-presence-operation/index.html">PNOperationType.PresenceOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-261522157%2FClasslikes%2F1129576062" anchor-label="PNHereNowOperation" id="-261522157%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-here-now-operation/index.html"><span>PNHere</span><wbr><span>Now</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-261522157%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-here-now-operation/index.html">PNHereNowOperation</a> : <a href="-presence-operation/index.html">PNOperationType.PresenceOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2093666657%2FClasslikes%2F1129576062" anchor-label="PNHistoryOperation" id="2093666657%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-history-operation/index.html"><span>PNHistory</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2093666657%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-history-operation/index.html">PNHistoryOperation</a> : <a href="-history-operation/index.html">PNOperationType.HistoryOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-158509610%2FClasslikes%2F1129576062" anchor-label="PNManageMemberships" id="-158509610%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-manage-memberships/index.html"><span>PNManage</span><wbr><span><span>Memberships</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-158509610%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-manage-memberships/index.html">PNManageMemberships</a> : <a href="-objects-operation/index.html">PNOperationType.ObjectsOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="939749615%2FClasslikes%2F1129576062" anchor-label="PNMessageCountOperation" id="939749615%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-message-count-operation/index.html"><span>PNMessage</span><wbr><span>Count</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="939749615%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-message-count-operation/index.html">PNMessageCountOperation</a> : <a href="-message-counts-operation/index.html">PNOperationType.MessageCountsOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1116099812%2FClasslikes%2F1129576062" anchor-label="PNPublishOperation" id="-1116099812%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-publish-operation/index.html"><span>PNPublish</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1116099812%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-publish-operation/index.html">PNPublishOperation</a> : <a href="-publish-operation/index.html">PNOperationType.PublishOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-896000999%2FClasslikes%2F1129576062" anchor-label="PNPushNotificationEnabledChannelsOperation" id="-896000999%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-push-notification-enabled-channels-operation/index.html"><span>PNPush</span><wbr><span>Notification</span><wbr><span>Enabled</span><wbr><span>Channels</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-896000999%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-push-notification-enabled-channels-operation/index.html">PNPushNotificationEnabledChannelsOperation</a> : <a href="-push-notifications-operation/index.html">PNOperationType.PushNotificationsOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1670414744%2FClasslikes%2F1129576062" anchor-label="PNRemoveAllPushNotificationsOperation" id="1670414744%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-remove-all-push-notifications-operation/index.html"><span>PNRemove</span><wbr><span>All</span><wbr><span>Push</span><wbr><span>Notifications</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1670414744%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-remove-all-push-notifications-operation/index.html">PNRemoveAllPushNotificationsOperation</a> : <a href="-push-notifications-operation/index.html">PNOperationType.PushNotificationsOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="42423611%2FClasslikes%2F1129576062" anchor-label="PNRemoveChannelMetadataOperation" id="42423611%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-remove-channel-metadata-operation/index.html"><span>PNRemove</span><wbr><span>Channel</span><wbr><span>Metadata</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="42423611%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-remove-channel-metadata-operation/index.html">PNRemoveChannelMetadataOperation</a> : <a href="-objects-operation/index.html">PNOperationType.ObjectsOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-899153298%2FClasslikes%2F1129576062" anchor-label="PNRemoveChannelsFromGroupOperation" id="-899153298%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-remove-channels-from-group-operation/index.html"><span>PNRemove</span><wbr><span>Channels</span><wbr><span>From</span><wbr><span>Group</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-899153298%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-remove-channels-from-group-operation/index.html">PNRemoveChannelsFromGroupOperation</a> : <a href="-channel-group-operation/index.html">PNOperationType.ChannelGroupOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="510640616%2FClasslikes%2F1129576062" anchor-label="PNRemoveGroupOperation" id="510640616%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-remove-group-operation/index.html"><span>PNRemove</span><wbr><span>Group</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="510640616%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-remove-group-operation/index.html">PNRemoveGroupOperation</a> : <a href="-channel-group-operation/index.html">PNOperationType.ChannelGroupOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="435468497%2FClasslikes%2F1129576062" anchor-label="PNRemovePushNotificationsFromChannelsOperation" id="435468497%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-remove-push-notifications-from-channels-operation/index.html"><span>PNRemove</span><wbr><span>Push</span><wbr><span>Notifications</span><wbr><span>From</span><wbr><span>Channels</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="435468497%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-remove-push-notifications-from-channels-operation/index.html">PNRemovePushNotificationsFromChannelsOperation</a> : <a href="-push-notifications-operation/index.html">PNOperationType.PushNotificationsOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-828888331%2FClasslikes%2F1129576062" anchor-label="PNRemoveUUIDMetadataOperation" id="-828888331%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-remove-u-u-i-d-metadata-operation/index.html"><span>PNRemove</span><wbr><span>UUIDMetadata</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-828888331%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-remove-u-u-i-d-metadata-operation/index.html">PNRemoveUUIDMetadataOperation</a> : <a href="-objects-operation/index.html">PNOperationType.ObjectsOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="132451447%2FClasslikes%2F1129576062" anchor-label="PNSetChannelMetadataOperation" id="132451447%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-set-channel-metadata-operation/index.html"><span>PNSet</span><wbr><span>Channel</span><wbr><span>Metadata</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="132451447%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-set-channel-metadata-operation/index.html">PNSetChannelMetadataOperation</a> : <a href="-objects-operation/index.html">PNOperationType.ObjectsOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="836188482%2FClasslikes%2F1129576062" anchor-label="PNSetMembershipsOperation" id="836188482%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-set-memberships-operation/index.html"><span>PNSet</span><wbr><span>Memberships</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="836188482%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-set-memberships-operation/index.html">PNSetMembershipsOperation</a> : <a href="-objects-operation/index.html">PNOperationType.ObjectsOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="325442998%2FClasslikes%2F1129576062" anchor-label="PNSetStateOperation" id="325442998%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-set-state-operation/index.html"><span>PNSet</span><wbr><span>State</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="325442998%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-set-state-operation/index.html">PNSetStateOperation</a> : <a href="-presence-operation/index.html">PNOperationType.PresenceOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-931390151%2FClasslikes%2F1129576062" anchor-label="PNSetUUIDMetadataOperation" id="-931390151%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-set-u-u-i-d-metadata-operation/index.html"><span>PNSet</span><wbr><span>UUIDMetadata</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-931390151%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-set-u-u-i-d-metadata-operation/index.html">PNSetUUIDMetadataOperation</a> : <a href="-objects-operation/index.html">PNOperationType.ObjectsOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1233576975%2FClasslikes%2F1129576062" anchor-label="PNSignalOperation" id="1233576975%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-signal-operation/index.html"><span>PNSignal</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1233576975%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-signal-operation/index.html">PNSignalOperation</a> : <a href="-signals-operation/index.html">PNOperationType.SignalsOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-815765545%2FClasslikes%2F1129576062" anchor-label="PNSubscribeOperation" id="-815765545%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-subscribe-operation/index.html"><span>PNSubscribe</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-815765545%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-subscribe-operation/index.html">PNSubscribeOperation</a> : <a href="index.html">PNOperationType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="238551604%2FClasslikes%2F1129576062" anchor-label="PNTimeOperation" id="238551604%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-time-operation/index.html"><span>PNTime</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="238551604%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-time-operation/index.html">PNTimeOperation</a> : <a href="-time-operation/index.html">PNOperationType.TimeOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1781264674%2FClasslikes%2F1129576062" anchor-label="PNUnsubscribeOperation" id="-1781264674%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-unsubscribe-operation/index.html"><span>PNUnsubscribe</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1781264674%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-unsubscribe-operation/index.html">PNUnsubscribeOperation</a> : <a href="-presence-operation/index.html">PNOperationType.PresenceOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1167036447%2FClasslikes%2F1129576062" anchor-label="PNUpdateMembershipsOperation" id="-1167036447%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-update-memberships-operation/index.html"><span>PNUpdate</span><wbr><span>Memberships</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1167036447%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-update-memberships-operation/index.html">PNUpdateMembershipsOperation</a> : <a href="-objects-operation/index.html">PNOperationType.ObjectsOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-538081066%2FClasslikes%2F1129576062" anchor-label="PNWhereNowOperation" id="-538081066%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-p-n-where-now-operation/index.html"><span>PNWhere</span><wbr><span>Now</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-538081066%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-p-n-where-now-operation/index.html">PNWhereNowOperation</a> : <a href="-presence-operation/index.html">PNOperationType.PresenceOperation</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1612546468%2FClasslikes%2F1129576062" anchor-label="PresenceOperation" id="1612546468%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-presence-operation/index.html"><span>Presence</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1612546468%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-presence-operation/index.html">PresenceOperation</a> : <a href="index.html">PNOperationType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2021737370%2FClasslikes%2F1129576062" anchor-label="PublishOperation" id="2021737370%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-publish-operation/index.html"><span>Publish</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2021737370%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-publish-operation/index.html">PublishOperation</a> : <a href="index.html">PNOperationType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-858295943%2FClasslikes%2F1129576062" anchor-label="PushNotificationsOperation" id="-858295943%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-push-notifications-operation/index.html"><span>Push</span><wbr><span>Notifications</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-858295943%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-push-notifications-operation/index.html">PushNotificationsOperation</a> : <a href="index.html">PNOperationType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1492885078%2FClasslikes%2F1129576062" anchor-label="SignalsOperation" id="1492885078%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-signals-operation/index.html"><span>Signals</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1492885078%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-signals-operation/index.html">SignalsOperation</a> : <a href="index.html">PNOperationType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-203373039%2FClasslikes%2F1129576062" anchor-label="SpaceOperation" id="-203373039%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-space-operation/index.html"><span>Space</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-203373039%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-space-operation/index.html">SpaceOperation</a> : <a href="index.html">PNOperationType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-579507594%2FClasslikes%2F1129576062" anchor-label="TimeOperation" id="-579507594%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-time-operation/index.html"><span>Time</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-579507594%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-time-operation/index.html">TimeOperation</a> : <a href="index.html">PNOperationType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1705098252%2FClasslikes%2F1129576062" anchor-label="UserOperation" id="-1705098252%2FClasslikes%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-user-operation/index.html"><span>User</span><wbr><span><span>Operation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1705098252%2FClasslikes%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-user-operation/index.html">UserOperation</a> : <a href="index.html">PNOperationType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="tableheader">Properties</h2>
+        <div class="table"><a data-name="-590140552%2FProperties%2F1129576062" anchor-label="queryParam" id="-590140552%2FProperties%2F1129576062" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="query-param.html"><span>query</span><wbr><span><span>Param</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-590140552%2FProperties%2F1129576062"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">val </span><a href="query-param.html">queryParam</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2026 Copyright</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

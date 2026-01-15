@@ -1,0 +1,347 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>DeleteFile</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+      if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      } else {
+        const savedDarkMode = JSON.parse(storage)
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/safe-local-storage_blocking.js"></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../ui-kit/ui-kit.min.js" defer></script></head>
+<body>
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../../index.html" tabindex="1">
+                    pubnub-kotlin-docs
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">12.1.2
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector native-like" data-active="" aria-pressed="true" data-filter=":pubnub-kotlin:pubnub-kotlin-api/appleMain">apple</button>
+                <button class="platform-tag platform-selector common-like" data-active="" aria-pressed="true" data-filter=":pubnub-kotlin:pubnub-kotlin-api/commonMain">common</button>
+                <button class="platform-tag platform-selector js-like" data-active="" aria-pressed="true" data-filter=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button>
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":pubnub-kotlin:pubnub-kotlin-api/jvmMain">jvm</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option native-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":pubnub-kotlin:pubnub-kotlin-api/appleMain" data-filter=":pubnub-kotlin:pubnub-kotlin-api/appleMain">
+                                <span class="checkbox--icon"></span>
+                                apple
+                            </label>
+                        </li>
+                        <li role="option" class="dropdown--option platform-selector-option common-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-filter=":pubnub-kotlin:pubnub-kotlin-api/commonMain">
+                                <span class="checkbox--icon"></span>
+                                common
+                            </label>
+                        </li>
+                        <li role="option" class="dropdown--option platform-selector-option js-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filter=":pubnub-kotlin:pubnub-kotlin-api/jsMain">
+                                <span class="checkbox--icon"></span>
+                                js
+                            </label>
+                        </li>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-filter=":pubnub-kotlin:pubnub-kotlin-api/jvmMain">
+                                <span class="checkbox--icon"></span>
+                                jvm
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    pubnub-kotlin-docs
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="pubnub-kotlin-api::com.pubnub.api.endpoints.files/DeleteFile///PointingToDeclaration//452382498">
+  <div class="breadcrumbs"><a href="../../index.html">pubnub-kotlin-api</a><span class="delimiter">/</span><a href="../index.html">com.pubnub.api.endpoints.files</a><span class="delimiter">/</span><span class="current">DeleteFile</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Delete</span><wbr><span><span>File</span></span></h1>
+    <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+      <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/appleMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/appleMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/appleMain">apple</button><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/commonMain">common</button><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/appleMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">interface </span><a href="index.html">DeleteFile</a> : <span data-unresolved-link="/<ERROR CLASS> ERROR CLASS: Symbol not found for PNFuture<ERROR CLASS: Symbol not found for PNDeleteFileResult>///PointingToDeclaration/">&lt;ERROR CLASS&gt; ERROR CLASS: Symbol not found for PNFuture&lt;ERROR CLASS: Symbol not found for PNDeleteFileResult&gt;</span></div><h4 class="tableheader">See also</h4><div class="table"><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/appleMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/appleMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><span>PubNub.</span><wbr><span>deleteFile</span></div></span></div><div></div></div></div></div><h4 class="tableheader">Inheritors</h4><div class="table"><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../[apple]-delete-file-impl/index.html">DeleteFileImpl</a></div></span></div><div></div></div></div></div></div><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="symbol monospace"><span class="token keyword">expect </span><span class="token keyword">interface </span><a href="index.html">DeleteFile</a> : <a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.kmp/-p-n-future/index.html">PNFuture</a><span class="token operator">&lt;</span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.files/-p-n-delete-file-result/index.html">PNDeleteFileResult</a><span class="token operator">&gt; </span></div><h4 class="tableheader">See also</h4><div class="table"><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><span>PubNub.</span><wbr><span>deleteFile</span></div></span></div><div></div></div></div></div></div><div class="content sourceset-dependent-content" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">interface </span><a href="index.html">DeleteFile</a> : <a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.kmp/-p-n-future/index.html">PNFuture</a><span class="token operator">&lt;</span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.files/-p-n-delete-file-result/index.html">PNDeleteFileResult</a><span class="token operator">&gt; </span></div><h4 class="tableheader">See also</h4><div class="table"><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><span>PubNub.</span><wbr><span>deleteFile</span></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../../[root]/-pub-nub/delete-file.html"><span>PubNub.</span><wbr><span>deleteFile</span></a></div></span></div><div></div></div></div></div><h4 class="tableheader">Inheritors</h4><div class="table"><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/appleMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../[js]-delete-file-impl/index.html">DeleteFileImpl</a></div></span></div><div></div></div></div></div></div><div class="content sourceset-dependent-content" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jvmMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">interface </span><a href="index.html">DeleteFile</a> : <a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api/-endpoint/index.html">Endpoint</a><span class="token operator">&lt;</span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.files/-p-n-delete-file-result/index.html">PNDeleteFileResult</a><span class="token operator">&gt; </span></div><h4 class="tableheader">See also</h4><div class="table"><div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jvmMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><span>PubNub.</span><wbr><span>deleteFile</span></div></span></div><div></div></div></div></div></div>    </div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button><button class="section-tab" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION,EXTENSION_PROPERTY,EXTENSION_FUNCTION">Members &amp; Extensions</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="FUNCTION">
+        <h2 class="tableheader">Functions</h2>
+        <div class="table"><a data-name="-1921525049%2FFunctions%2F2135612140" anchor-label="alsoAsync" id="-1921525049%2FFunctions%2F2135612140" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain"></a>
+          <div class="table-row table-row_content" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.pubnub.kmp/also-async.html"><span>also</span><wbr><span><span>Async</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1921525049%2FFunctions%2F2135612140"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="../../com.pubnub.kmp/also-async.html">T</a><span class="token operator">&gt; </span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.kmp/-p-n-future/index.html">PNFuture</a><span class="token operator">&lt;</span><a href="../../com.pubnub.kmp/also-async.html">T</a><span class="token operator">&gt;</span><span class="token punctuation">.</span><a href="../../com.pubnub.kmp/also-async.html"><span class="token function">alsoAsync</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">action<span class="token operator">: </span><span class="token punctuation">(</span><a href="../../com.pubnub.kmp/also-async.html">T</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.kmp/-p-n-future/index.html">PNFuture</a><span class="token operator">&lt;</span><span class="token operator">*</span><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.kmp/-p-n-future/index.html">PNFuture</a><span class="token operator">&lt;</span><a href="../../com.pubnub.kmp/also-async.html">T</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Execute a second PNFuture after this PNFuture completes successfully, and return the <i>original</i> value of this PNFuture after the second PNFuture completes successfully.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="434034432%2FFunctions%2F-1807359060" anchor-label="async" id="434034432%2FFunctions%2F-1807359060" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jvmMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain,:pubnub-kotlin:pubnub-kotlin-api/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jvmMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain,:pubnub-kotlin:pubnub-kotlin-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jvmMain,:pubnub-kotlin:pubnub-kotlin-api/jsMain,:pubnub-kotlin:pubnub-kotlin-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.endpoints.remoteaction/-remote-action/async.html"><span><span>async</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="434034432%2FFunctions%2F-1807359060"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/commonMain">common</button><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="symbol monospace"><span class="token keyword">expect </span><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="../../com.pubnub.api.endpoints.push/-remove-channels-from-push/index.html#-1242275636%2FFunctions%2F2135612140"><span class="token function">async</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">callback<span class="token operator">: </span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.v2.callbacks/-consumer/index.html">Consumer</a><span class="token operator">&lt;</span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.v2.callbacks/-result/index.html">Result</a><span class="token operator">&lt;</span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.files/-p-n-delete-file-result/index.html">PNDeleteFileResult</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div></div><div class="content sourceset-dependent-content" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="../../com.pubnub.api.endpoints.push/-remove-channels-from-push/index.html#-1242275636%2FFunctions%2F244032654"><span class="token function">async</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">callback<span class="token operator">: </span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.v2.callbacks/-consumer/index.html">Consumer</a><span class="token operator">&lt;</span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.v2.callbacks/-result/index.html">Result</a><span class="token operator">&lt;</span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.files/-p-n-delete-file-result/index.html">PNDeleteFileResult</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div></div><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jvmMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="../../com.pubnub.api.endpoints.push/-remove-channels-from-push/index.html#149557464%2FFunctions%2F1645168266"><span class="token function">async</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">callback<span class="token operator">: </span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.v2.callbacks/-consumer/index.html">Consumer</a><span class="token operator">&lt;</span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.v2.callbacks/-result/index.html">Result</a><span class="token operator">&lt;</span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.files/-p-n-delete-file-result/index.html">PNDeleteFileResult</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1777486143%2FFunctions%2F2135612140" anchor-label="catch" id="-1777486143%2FFunctions%2F2135612140" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain"></a>
+          <div class="table-row table-row_content" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.pubnub.kmp/catch.html"><span><span>catch</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1777486143%2FFunctions%2F2135612140"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="../../com.pubnub.kmp/catch.html">T</a><span class="token operator">&gt; </span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.kmp/-p-n-future/index.html">PNFuture</a><span class="token operator">&lt;</span><a href="../../com.pubnub.kmp/catch.html">T</a><span class="token operator">&gt;</span><span class="token punctuation">.</span><a href="../../com.pubnub.kmp/catch.html"><span class="token function">catch</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">action<span class="token operator">: </span><span class="token punctuation">(</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-exception/index.html">Exception</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.v2.callbacks/-result/index.html">Result</a><span class="token operator">&lt;</span><a href="../../com.pubnub.kmp/catch.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.kmp/-p-n-future/index.html">PNFuture</a><span class="token operator">&lt;</span><a href="../../com.pubnub.kmp/catch.html">T</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1387808506%2FFunctions%2F1645168266" anchor-label="map" id="-1387808506%2FFunctions%2F1645168266" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jvmMain"></a>
+          <div class="table-row table-row_content" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.pubnub.api.endpoints.remoteaction/map.html"><span><span>map</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1387808506%2FFunctions%2F1645168266"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jvmMain"><div class="symbol monospace"><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="../../com.pubnub.api.endpoints.remoteaction/map.html">T</a><span class="token punctuation">, </span><a href="../../com.pubnub.api.endpoints.remoteaction/map.html">U</a><span class="token operator">&gt; </span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.endpoints.remoteaction/-extended-remote-action/index.html">ExtendedRemoteAction</a><span class="token operator">&lt;</span><a href="../../com.pubnub.api.endpoints.remoteaction/map.html">T</a><span class="token operator">&gt;</span><span class="token punctuation">.</span><a href="../../com.pubnub.api.endpoints.remoteaction/map.html"><span class="token function">map</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">function<span class="token operator">: </span><span class="token punctuation">(</span><a href="../../com.pubnub.api.endpoints.remoteaction/map.html">T</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="../../com.pubnub.api.endpoints.remoteaction/map.html">U</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.endpoints.remoteaction/-extended-remote-action/index.html">ExtendedRemoteAction</a><span class="token operator">&lt;</span><a href="../../com.pubnub.api.endpoints.remoteaction/map.html">U</a><span class="token operator">&gt;</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1414065386%2FFunctions%2F1645168266" anchor-label="operationType" id="1414065386%2FFunctions%2F1645168266" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jvmMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.pubnub.api.endpoints.push/-remove-channels-from-push/index.html#1414065386%2FFunctions%2F1645168266"><span>operation</span><wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1414065386%2FFunctions%2F1645168266"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jvmMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="../../com.pubnub.api.endpoints.push/-remove-channels-from-push/index.html#1414065386%2FFunctions%2F1645168266"><span class="token function">operationType</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.enums/-p-n-operation-type/index.html">PNOperationType</a></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1936064328%2FFunctions%2F1645168266" anchor-label="overrideConfiguration" id="-1936064328%2FFunctions%2F1645168266" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jvmMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.pubnub.api.endpoints.push/-remove-channels-from-push/index.html#-1593443184%2FFunctions%2F1645168266"><span>override</span><wbr><span><span>Configuration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1936064328%2FFunctions%2F1645168266"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jvmMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="../../com.pubnub.api.endpoints.push/-remove-channels-from-push/index.html#-1593443184%2FFunctions%2F1645168266"><span class="token function">overrideConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">configuration<span class="token operator">: </span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.v2/-p-n-configuration/index.html">PNConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api/-endpoint/index.html">Endpoint</a><span class="token operator">&lt;</span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.files/-p-n-delete-file-result/index.html">PNDeleteFileResult</a><span class="token operator">&gt;</span></div><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="../../com.pubnub.api.endpoints.push/-remove-channels-from-push/index.html#-1396624324%2FFunctions%2F1645168266"><span class="token function">overrideConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">action<span class="token operator">: </span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.v2/-p-n-configuration-override/-builder/index.html">PNConfigurationOverride.Builder</a><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api/-endpoint/index.html">Endpoint</a><span class="token operator">&lt;</span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.files/-p-n-delete-file-result/index.html">PNDeleteFileResult</a><span class="token operator">&gt;</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1824066283%2FFunctions%2F2135612140" anchor-label="remember" id="-1824066283%2FFunctions%2F2135612140" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain"></a>
+          <div class="table-row table-row_content" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.pubnub.kmp/remember.html"><span><span>remember</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1824066283%2FFunctions%2F2135612140"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="../../com.pubnub.kmp/remember.html">T</a><span class="token operator">&gt; </span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.kmp/-p-n-future/index.html">PNFuture</a><span class="token operator">&lt;</span><a href="../../com.pubnub.kmp/remember.html">T</a><span class="token operator">&gt;</span><span class="token punctuation">.</span><a href="../../com.pubnub.kmp/remember.html"><span class="token function">remember</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.kmp/-p-n-future/index.html">PNFuture</a><span class="token operator">&lt;</span><a href="../../com.pubnub.kmp/remember.html">T</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2020801116%2FFunctions%2F1645168266" anchor-label="retry" id="2020801116%2FFunctions%2F1645168266" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jvmMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.pubnub.api.endpoints.push/-remove-channels-from-push/index.html#2020801116%2FFunctions%2F1645168266"><span><span>retry</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2020801116%2FFunctions%2F1645168266"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jvmMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="../../com.pubnub.api.endpoints.push/-remove-channels-from-push/index.html#2020801116%2FFunctions%2F1645168266"><span class="token function">retry</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-675955969%2FFunctions%2F1645168266" anchor-label="silentCancel" id="-675955969%2FFunctions%2F1645168266" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jvmMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.pubnub.api.endpoints.push/-remove-channels-from-push/index.html#-675955969%2FFunctions%2F1645168266"><span>silent</span><wbr><span><span>Cancel</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-675955969%2FFunctions%2F1645168266"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jvmMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="../../com.pubnub.api.endpoints.push/-remove-channels-from-push/index.html#-675955969%2FFunctions%2F1645168266"><span class="token function">silentCancel</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="40193115%2FFunctions%2F1645168266" anchor-label="sync" id="40193115%2FFunctions%2F1645168266" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jvmMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jvmMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.pubnub.api.endpoints.push/-remove-channels-from-push/index.html#40193115%2FFunctions%2F1645168266"><span><span>sync</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="40193115%2FFunctions%2F1645168266"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jvmMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jvmMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="../../com.pubnub.api.endpoints.push/-remove-channels-from-push/index.html#40193115%2FFunctions%2F1645168266"><span class="token function">sync</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.api.models.consumer.files/-p-n-delete-file-result/index.html">PNDeleteFileResult</a></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1373562189%2FFunctions%2F2135612140" anchor-label="then" id="1373562189%2FFunctions%2F2135612140" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain"></a>
+          <div class="table-row table-row_content" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.pubnub.kmp/then.html"><span><span>then</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1373562189%2FFunctions%2F2135612140"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="../../com.pubnub.kmp/then.html">T</a><span class="token punctuation">, </span><a href="../../com.pubnub.kmp/then.html">U</a><span class="token operator">&gt; </span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.kmp/-p-n-future/index.html">PNFuture</a><span class="token operator">&lt;</span><a href="../../com.pubnub.kmp/then.html">T</a><span class="token operator">&gt;</span><span class="token punctuation">.</span><a href="../../com.pubnub.kmp/then.html"><span class="token function">then</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">action<span class="token operator">: </span><span class="token punctuation">(</span><a href="../../com.pubnub.kmp/then.html">T</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="../../com.pubnub.kmp/then.html">U</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.kmp/-p-n-future/index.html">PNFuture</a><span class="token operator">&lt;</span><a href="../../com.pubnub.kmp/then.html">U</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-879364413%2FFunctions%2F2135612140" anchor-label="thenAsync" id="-879364413%2FFunctions%2F2135612140" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain"></a>
+          <div class="table-row table-row_content" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/commonMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.pubnub.kmp/then-async.html"><span>then</span><wbr><span><span>Async</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-879364413%2FFunctions%2F2135612140"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="../../com.pubnub.kmp/then-async.html">T</a><span class="token punctuation">, </span><a href="../../com.pubnub.kmp/then-async.html">U</a><span class="token operator">&gt; </span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.kmp/-p-n-future/index.html">PNFuture</a><span class="token operator">&lt;</span><a href="../../com.pubnub.kmp/then-async.html">T</a><span class="token operator">&gt;</span><span class="token punctuation">.</span><a href="../../com.pubnub.kmp/then-async.html"><span class="token function">thenAsync</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">action<span class="token operator">: </span><span class="token punctuation">(</span><a href="../../com.pubnub.kmp/then-async.html">T</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.kmp/-p-n-future/index.html">PNFuture</a><span class="token operator">&lt;</span><a href="../../com.pubnub.kmp/then-async.html">U</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../../../pubnub-kotlin/pubnub-kotlin-core-api/com.pubnub.kmp/-p-n-future/index.html">PNFuture</a><span class="token operator">&lt;</span><a href="../../com.pubnub.kmp/then-async.html">U</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2026 Copyright</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

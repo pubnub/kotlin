@@ -1,6 +1,0 @@
-//[pubnub-kotlin-api](../../../../index.md)/[com.pubnub.api.endpoints.remoteaction](../../index.md)/[ComposableRemoteAction](../index.md)/[Companion](index.md)/[firstDo](first-do.md)
-
-# firstDo
-
-[jvm]\
-fun &lt;[T](first-do.md)&gt; [firstDo](first-do.md)(remoteAction: [ExtendedRemoteAction](../../../../../../pubnub-kotlin/pubnub-kotlin-core-api/pubnub-kotlin-core-api/com.pubnub.api.endpoints.remoteaction/-extended-remote-action/index.md)&lt;[T](first-do.md)&gt;): [ComposableRemoteAction.ComposableBuilder](../-composable-builder/index.md)&lt;[T](first-do.md)&gt;

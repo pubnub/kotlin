@@ -1,6 +1,0 @@
-//[pubnub-kotlin-api](../../../index.md)/[com.pubnub.api.models.consumer.objects.channel](../index.md)/[PNChannelMetadataArrayResult](index.md)/[data](data.md)
-
-# data
-
-[common]\
-val [data](data.md): [Collection](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-collection/index.html)&lt;[PNChannelMetadata](../-p-n-channel-metadata/index.md)&gt;

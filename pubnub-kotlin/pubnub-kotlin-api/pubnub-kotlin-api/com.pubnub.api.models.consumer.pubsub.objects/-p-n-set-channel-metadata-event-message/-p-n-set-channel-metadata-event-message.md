@@ -1,6 +1,0 @@
-//[pubnub-kotlin-api](../../../index.md)/[com.pubnub.api.models.consumer.pubsub.objects](../index.md)/[PNSetChannelMetadataEventMessage](index.md)/[PNSetChannelMetadataEventMessage](-p-n-set-channel-metadata-event-message.md)
-
-# PNSetChannelMetadataEventMessage
-
-[common]\
-constructor(source: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html), version: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html), event: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html), type: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html), data: [PNChannelMetadata](../../com.pubnub.api.models.consumer.objects.channel/-p-n-channel-metadata/index.md))

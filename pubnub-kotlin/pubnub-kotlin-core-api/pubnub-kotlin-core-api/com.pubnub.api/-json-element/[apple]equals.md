@@ -1,6 +1,0 @@
-//[pubnub-kotlin-core-api](../../../index.md)/[com.pubnub.api](../index.md)/[JsonElement](index.md)/[[apple]equals]([apple]equals.md)
-
-# equals
-
-[apple]\
-open operator override fun [equals]([apple]equals.md)(other: [Any](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html)?): [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html)

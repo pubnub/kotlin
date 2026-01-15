@@ -1,0 +1,571 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>PNConfiguration</title>
+<link href="../../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+      if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      } else {
+        const savedDarkMode = JSON.parse(storage)
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../../scripts/safe-local-storage_blocking.js"></script>
+<script type="text/javascript" src="../../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../../ui-kit/ui-kit.min.js" defer></script></head>
+<body>
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../../../index.html" tabindex="1">
+                    pubnub-kotlin-docs
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">12.1.2
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector js-like" data-active="" aria-pressed="true" data-filter=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option js-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filter=":pubnub-kotlin:pubnub-kotlin-api/jsMain">
+                                <span class="checkbox--icon"></span>
+                                js
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    pubnub-kotlin-docs
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="pubnub-kotlin-api::/PubNub.PNConfiguration///PointingToDeclaration//244032654">
+  <div class="breadcrumbs"><a href="../../../index.html">pubnub-kotlin-api</a><span class="delimiter">/</span><a href="../../index.html">[root]</a><span class="delimiter">/</span><a href="../index.html">PubNub</a><span class="delimiter">/</span><span class="current">PNConfiguration</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span><span>PNConfiguration</span></span></h1>
+    <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+      <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">PNConfiguration</a> : <a href="../../-partial/index.html">Partial</a></div></div>    </div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="PROPERTY">
+        <h2 class="tableheader">Properties</h2>
+        <div class="table"><a data-name="-125294818%2FProperties%2F244032654" anchor-label="authKey" id="-125294818%2FProperties%2F244032654" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="auth-key.html"><span>auth</span><wbr><span><span>Key</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-125294818%2FProperties%2F244032654"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">var </span><a href="auth-key.html">authKey</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-345544033%2FProperties%2F244032654" anchor-label="autoNetworkDetection" id="-345544033%2FProperties%2F244032654" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="auto-network-detection.html"><span>auto</span><wbr><span>Network</span><wbr><span><span>Detection</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-345544033%2FProperties%2F244032654"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">var </span><a href="auto-network-detection.html">autoNetworkDetection</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">?</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-476895487%2FProperties%2F244032654" anchor-label="cipherKey" id="-476895487%2FProperties%2F244032654" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="cipher-key.html"><span>cipher</span><wbr><span><span>Key</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-476895487%2FProperties%2F244032654"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">var </span><a href="cipher-key.html">cipherKey</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1488123464%2FProperties%2F244032654" anchor-label="cryptoModule" id="-1488123464%2FProperties%2F244032654" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="crypto-module.html"><span>crypto</span><wbr><span><span>Module</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1488123464%2FProperties%2F244032654"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">var </span><a href="crypto-module.html">cryptoModule</a><span class="token operator">: </span><a href="../-crypto-module/index.html">PubNub.CryptoModule</a><span class="token operator">?</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="58892273%2FProperties%2F244032654" anchor-label="dedupeOnSubscribe" id="58892273%2FProperties%2F244032654" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="dedupe-on-subscribe.html"><span>dedupe</span><wbr><span>On</span><wbr><span><span>Subscribe</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="58892273%2FProperties%2F244032654"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">var </span><a href="dedupe-on-subscribe.html">dedupeOnSubscribe</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">?</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-791674116%2FProperties%2F244032654" anchor-label="enableEventEngine" id="-791674116%2FProperties%2F244032654" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="enable-event-engine.html"><span>enable</span><wbr><span>Event</span><wbr><span><span>Engine</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-791674116%2FProperties%2F244032654"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">var </span><a href="enable-event-engine.html">enableEventEngine</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">?</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1774093804%2FProperties%2F244032654" anchor-label="heartbeatInterval" id="-1774093804%2FProperties%2F244032654" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="heartbeat-interval.html"><span>heartbeat</span><wbr><span><span>Interval</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1774093804%2FProperties%2F244032654"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">var </span><a href="heartbeat-interval.html">heartbeatInterval</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-number/index.html">Number</a><span class="token operator">?</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1948572045%2FProperties%2F244032654" anchor-label="keepAlive" id="1948572045%2FProperties%2F244032654" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="keep-alive.html"><span>keep</span><wbr><span><span>Alive</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1948572045%2FProperties%2F244032654"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">var </span><a href="keep-alive.html">keepAlive</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">?</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="423733930%2FProperties%2F244032654" anchor-label="keepAliveSettings" id="423733930%2FProperties%2F244032654" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="keep-alive-settings.html"><span>keep</span><wbr><span>Alive</span><wbr><span><span>Settings</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="423733930%2FProperties%2F244032654"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">var </span><a href="keep-alive-settings.html">keepAliveSettings</a><span class="token operator">: </span><a href="../-keep-alive-settings/index.html">PubNub.KeepAliveSettings</a><span class="token operator">?</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="411687524%2FProperties%2F244032654" anchor-label="listenToBrowserNetworkEvents" id="411687524%2FProperties%2F244032654" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="listen-to-browser-network-events.html"><span>listen</span><wbr><span>To</span><wbr><span>Browser</span><wbr><span>Network</span><wbr><span><span>Events</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="411687524%2FProperties%2F244032654"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">var </span><a href="listen-to-browser-network-events.html">listenToBrowserNetworkEvents</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">?</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="855549189%2FProperties%2F244032654" anchor-label="logLevel" id="855549189%2FProperties%2F244032654" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="log-level.html"><span>log</span><wbr><span><span>Level</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="855549189%2FProperties%2F244032654"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">var </span><a href="log-level.html">logLevel</a><span class="token operator">: </span>dynamic</div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1939299874%2FProperties%2F244032654" anchor-label="logVerbosity" id="-1939299874%2FProperties%2F244032654" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="log-verbosity.html"><span>log</span><wbr><span><span>Verbosity</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1939299874%2FProperties%2F244032654"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">var </span><a href="log-verbosity.html"><strike>logVerbosity</strike></a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">?</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1775669590%2FProperties%2F244032654" anchor-label="maintainPresenceState" id="-1775669590%2FProperties%2F244032654" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="maintain-presence-state.html"><span>maintain</span><wbr><span>Presence</span><wbr><span><span>State</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1775669590%2FProperties%2F244032654"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">var </span><a href="maintain-presence-state.html">maintainPresenceState</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">?</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1913472319%2FProperties%2F244032654" anchor-label="origin" id="1913472319%2FProperties%2F244032654" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="origin.html"><span><span>origin</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1913472319%2FProperties%2F244032654"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">var </span><a href="origin.html">origin</a><span class="token operator">: </span>dynamic</div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2102326703%2FProperties%2F244032654" anchor-label="presenceTimeout" id="2102326703%2FProperties%2F244032654" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="presence-timeout.html"><span>presence</span><wbr><span><span>Timeout</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2102326703%2FProperties%2F244032654"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">var </span><a href="presence-timeout.html">presenceTimeout</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-number/index.html">Number</a><span class="token operator">?</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1602558165%2FProperties%2F244032654" anchor-label="publishKey" id="1602558165%2FProperties%2F244032654" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="publish-key.html"><span>publish</span><wbr><span><span>Key</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1602558165%2FProperties%2F244032654"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">var </span><a href="publish-key.html">publishKey</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-97071759%2FProperties%2F244032654" anchor-label="requestMessageCountThreshold" id="-97071759%2FProperties%2F244032654" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="request-message-count-threshold.html"><span>request</span><wbr><span>Message</span><wbr><span>Count</span><wbr><span><span>Threshold</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-97071759%2FProperties%2F244032654"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">var </span><a href="request-message-count-threshold.html">requestMessageCountThreshold</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-number/index.html">Number</a><span class="token operator">?</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1170886663%2FProperties%2F244032654" anchor-label="restore" id="1170886663%2FProperties%2F244032654" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="restore.html"><span><span>restore</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1170886663%2FProperties%2F244032654"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">var </span><a href="restore.html">restore</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">?</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1176347081%2FProperties%2F244032654" anchor-label="retryConfiguration" id="-1176347081%2FProperties%2F244032654" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="retry-configuration.html"><span>retry</span><wbr><span><span>Configuration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1176347081%2FProperties%2F244032654"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">var </span><a href="retry-configuration.html">retryConfiguration</a><span class="token operator">: </span>dynamic</div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-143337946%2FProperties%2F244032654" anchor-label="secretKey" id="-143337946%2FProperties%2F244032654" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="secret-key.html"><span>secret</span><wbr><span><span>Key</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-143337946%2FProperties%2F244032654"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">var </span><a href="secret-key.html">secretKey</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-441058743%2FProperties%2F244032654" anchor-label="ssl" id="-441058743%2FProperties%2F244032654" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="ssl.html"><span><span>ssl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-441058743%2FProperties%2F244032654"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">var </span><a href="ssl.html">ssl</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">?</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1898195088%2FProperties%2F244032654" anchor-label="subscribeKey" id="1898195088%2FProperties%2F244032654" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="subscribe-key.html"><span>subscribe</span><wbr><span><span>Key</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1898195088%2FProperties%2F244032654"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">var </span><a href="subscribe-key.html">subscribeKey</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1500815001%2FProperties%2F244032654" anchor-label="subscribeRequestTimeout" id="1500815001%2FProperties%2F244032654" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="subscribe-request-timeout.html"><span>subscribe</span><wbr><span>Request</span><wbr><span><span>Timeout</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1500815001%2FProperties%2F244032654"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">var </span><a href="subscribe-request-timeout.html">subscribeRequestTimeout</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-number/index.html">Number</a><span class="token operator">?</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="744748666%2FProperties%2F244032654" anchor-label="suppressLeaveEvents" id="744748666%2FProperties%2F244032654" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="suppress-leave-events.html"><span>suppress</span><wbr><span>Leave</span><wbr><span><span>Events</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="744748666%2FProperties%2F244032654"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">var </span><a href="suppress-leave-events.html">suppressLeaveEvents</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">?</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1993026647%2FProperties%2F244032654" anchor-label="useRandomIVs" id="-1993026647%2FProperties%2F244032654" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="use-random-i-vs.html"><span>use</span><wbr><span>Random</span><wbr><span><span>IVs</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1993026647%2FProperties%2F244032654"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">var </span><a href="use-random-i-vs.html">useRandomIVs</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">?</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1732971039%2FProperties%2F244032654" anchor-label="userId" id="1732971039%2FProperties%2F244032654" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="user-id.html"><span>user</span><wbr><span><span>Id</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1732971039%2FProperties%2F244032654"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-api/jsMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-api/jsMain">js</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-api/jsMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">var </span><a href="user-id.html">userId</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2026 Copyright</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
