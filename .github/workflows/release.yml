@@ -78,7 +78,7 @@ jobs:
         uses: ./.github/.release/actions/actions/services/github-pages
         with:
           token: ${{ secrets.GH_TOKEN }}
-          source-folder: build/dokka/gfmMultiModule
+          source-folder: pubnub-kotlin/pubnub-kotlin-docs/build/dokka/html
           jira-api-key: ${{ secrets.JIRA_API_KEY }}
           last-service: true
       - name: Upload test reports

@@ -1,1 +1,1 @@
-./gradlew :dokkaGfmMultiModule
+./gradlew :pubnub-kotlin:pubnub-kotlin-docs:dokkaGenerateHtml
