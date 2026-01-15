@@ -1,3 +1,9 @@
+## v12.1.2
+January 15 2026
+
+#### Fixed
+- Internal changes - updated Dokka lib version.
+
 ## v12.1.1
 January 13 2026
 
