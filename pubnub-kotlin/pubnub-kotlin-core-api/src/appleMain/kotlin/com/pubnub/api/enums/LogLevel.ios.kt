@@ -1,6 +1,7 @@
 package com.pubnub.api.enums
 
 import platform.darwin.UInt32
+import kotlin.experimental.ExperimentalObjCName
 
 /**
  * Swift SDK log level configuration.
@@ -45,6 +46,8 @@ actual data class LogLevel(val levels: Set<Level>) {
          *
          * Warning: May log sensitive information. Use only in development.
          */
+        @OptIn(ExperimentalObjCName::class)
+        @ObjCName("PN_DEBUG")
         DEBUG(1u shl 1),
 
         /**
@@ -97,6 +100,8 @@ actual data class LogLevel(val levels: Set<Level>) {
          * Debug and above (excludes TRACE).
          * Warning: May log sensitive information.
          */
+        @OptIn(ExperimentalObjCName::class)
+        @ObjCName("PN_DEBUG")
         actual val DEBUG = LogLevel(setOf(Level.DEBUG, Level.INFO, Level.EVENT, Level.WARN, Level.ERROR))
 
         /**
