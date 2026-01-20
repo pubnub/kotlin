@@ -16,6 +16,9 @@ import okio.BufferedSource;
 import okio.Okio;
 import okio.Timeout;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import kotlin.jvm.functions.Function0;
+import kotlin.reflect.KClass;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -124,6 +127,32 @@ public class AppEngineFactory implements Call {
     @Override
     public Timeout timeout() {
         return Timeout.NONE;
+    }
+
+    @Nullable
+    @Override
+    public <T> T tag(Class<? extends T> type) {
+        return request.tag(type);
+    }
+
+    @NotNull
+    @Override
+    public <T> T tag(Class<T> type, Function0<? extends T> defaultValue) {
+        T tag = request.tag(type);
+        return tag != null ? tag : defaultValue.invoke();
+    }
+
+    @Nullable
+    @Override
+    public <T> T tag(KClass<T> type) {
+        return request.tag(type);
+    }
+
+    @NotNull
+    @Override
+    public <T> T tag(KClass<T> type, Function0<? extends T> defaultValue) {
+        T tag = request.tag(type);
+        return tag != null ? tag : defaultValue.invoke();
     }
 
     @NotNull
