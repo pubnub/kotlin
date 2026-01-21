@@ -129,32 +129,6 @@ public class AppEngineFactory implements Call {
         return Timeout.NONE;
     }
 
-    @Nullable
-    @Override
-    public <T> T tag(Class<? extends T> type) {
-        return request.tag(type);
-    }
-
-    @NotNull
-    @Override
-    public <T> T tag(Class<T> type, Function0<? extends T> defaultValue) {
-        T tag = request.tag(type);
-        return tag != null ? tag : defaultValue.invoke();
-    }
-
-    @Nullable
-    @Override
-    public <T> T tag(KClass<T> type) {
-        return request.tag(type);
-    }
-
-    @NotNull
-    @Override
-    public <T> T tag(KClass<T> type, Function0<? extends T> defaultValue) {
-        T tag = request.tag(type);
-        return tag != null ? tag : defaultValue.invoke();
-    }
-
     @NotNull
     @Override
     public Call clone() {
