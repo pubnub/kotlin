@@ -2,7 +2,7 @@
 #when updating here update in .pubnub.yml as well
 jupiter = "5.11.3"
 cucumber = "6.10.4"
-logback = "1.2.11"
+logback = "1.3.16"
 okhttp = "4.12.0"
 retrofit2 = "3.0.0"
 nexus = "2.0.0"
