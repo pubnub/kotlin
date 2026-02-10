@@ -1,24 +1,37 @@
 package com.pubnub.api.utils
 
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import kotlin.js.Date
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.nanoseconds
 import kotlin.time.Duration.Companion.seconds
 
-actual class Instant(
+actual data class Instant(
     actual val epochSeconds: Long,
     actual val nanosecondsOfSecond: Int = 0,
 ) : Comparable<Instant> {
+    init {
+        require(nanosecondsOfSecond in 0..999_999_999) {
+            "nanosecondsOfSecond must be in range 0..999_999_999 but was $nanosecondsOfSecond"
+        }
+    }
+
     actual fun toEpochMilliseconds(): Long {
-        return epochSeconds.seconds.inWholeMilliseconds + nanosecondsOfSecond.nanoseconds.inWholeMilliseconds
+        return epochSeconds * 1_000L + nanosecondsOfSecond / 1_000_000
+    }
+
+    @OptIn(kotlin.time.ExperimentalTime::class)
+    actual fun toLocalDateTime(timeZone: TimeZone): LocalDateTime {
+        val ktInstant = kotlin.time.Instant.fromEpochSeconds(epochSeconds, nanosecondsOfSecond)
+        return ktInstant.toLocalDateTime(timeZone)
     }
 
     actual operator fun plus(duration: Duration): Instant {
-        val durationWholeSecondsOnly = duration.inWholeSeconds.seconds
-        val durationNanosOnly = duration - durationWholeSecondsOnly
-        val sum = add(epochSeconds to nanosecondsOfSecond, duration.inWholeSeconds to durationNanosOnly.inWholeNanoseconds.toInt())
-        return Instant(sum.first, sum.second)
+        val durationSeconds = duration.inWholeSeconds
+        val durationNanosRemainder = (duration - durationSeconds.seconds).inWholeNanoseconds
+        return normalize(epochSeconds + durationSeconds, nanosecondsOfSecond.toLong() + durationNanosRemainder)
     }
 
     actual operator fun minus(duration: Duration): Instant {
@@ -35,25 +48,32 @@ actual class Instant(
             ?: nanosecondsOfSecond.compareTo(other.nanosecondsOfSecond)
     }
 
-    private fun add(secondsAndNanos: SecondsAndNanos, secondsAndNanos2: SecondsAndNanos): Pair<Long, Int> {
-        val nanosSum = secondsAndNanos.nanos + secondsAndNanos2.nanos
-        val secondsFromNanos = nanosSum.inWholeSeconds.seconds
-
-        val secondsResult = secondsAndNanos.seconds + secondsAndNanos2.seconds + secondsFromNanos
-        val nanosResult = nanosSum - secondsFromNanos
-        return secondsResult.inWholeSeconds to nanosResult.inWholeNanoseconds.toInt()
-    }
-
     actual companion object {
         actual fun fromEpochMilliseconds(epochMilliseconds: Long): Instant {
-            val wholeSeconds = epochMilliseconds.milliseconds.inWholeSeconds
-            val nanos = (epochMilliseconds.milliseconds - wholeSeconds.seconds).inWholeNanoseconds
-            return Instant(wholeSeconds, nanos.toInt())
+            val seconds = floorDiv(epochMilliseconds, 1_000L)
+            val millisRemainder = floorMod(epochMilliseconds, 1_000L)
+            return Instant(seconds, (millisRemainder * 1_000_000L).toInt())
         }
 
         actual fun fromEpochSeconds(epochSeconds: Long, nanosecondAdjustment: Int): Instant {
-            return Instant(epochSeconds, nanosecondAdjustment)
+            return normalize(epochSeconds, nanosecondAdjustment.toLong())
         }
+
+        private const val NANOS_PER_SECOND = 1_000_000_000L
+
+        private fun normalize(epochSeconds: Long, nanoAdjustment: Long): Instant {
+            val carrySeconds = floorDiv(nanoAdjustment, NANOS_PER_SECOND)
+            val normalizedNanos = floorMod(nanoAdjustment, NANOS_PER_SECOND)
+            return Instant(epochSeconds + carrySeconds, normalizedNanos.toInt())
+        }
+
+        private fun floorDiv(x: Long, y: Long): Long {
+            val r = x / y
+            val m = x % y
+            return if (m == 0L || (x xor y) >= 0) r else r - 1
+        }
+
+        private fun floorMod(x: Long, y: Long): Long = x - floorDiv(x, y) * y
     }
 }
 
@@ -66,8 +86,3 @@ actual interface Clock {
         }
     }
 }
-
-typealias SecondsAndNanos = Pair<Long, Int>
-
-val SecondsAndNanos.seconds get() = this.first.seconds
-val SecondsAndNanos.nanos get() = this.second.nanoseconds

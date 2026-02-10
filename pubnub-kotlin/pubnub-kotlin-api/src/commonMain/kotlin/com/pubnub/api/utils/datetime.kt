@@ -1,5 +1,7 @@
 package com.pubnub.api.utils
 
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
 import kotlin.time.Duration
 
 expect class Instant : Comparable<Instant> {
@@ -7,6 +9,8 @@ expect class Instant : Comparable<Instant> {
     val nanosecondsOfSecond: Int
 
     fun toEpochMilliseconds(): Long
+
+    fun toLocalDateTime(timeZone: TimeZone): LocalDateTime
 
     operator fun plus(duration: Duration): Instant
 

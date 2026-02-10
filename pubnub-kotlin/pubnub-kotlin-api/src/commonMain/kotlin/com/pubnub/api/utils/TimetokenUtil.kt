@@ -1,5 +1,9 @@
 package com.pubnub.api.utils
 
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
+
 /**
  * Utility object for converting PubNub timetokens to various date-time representations and vice versa.
  *
@@ -53,6 +57,26 @@ class TimetokenUtil {
             val nanosecondsForPubNubTimetoken =
                 epochNanoseconds / 100 // PubNub timetoken for nanoseconds store only 7 digits instead of 9
             return pnTimetokenInNanosecondsWithoutNanoPrecision + nanosecondsForPubNubTimetoken
+        }
+
+        /**
+         * Converts [LocalDateTime] in the provided [TimeZone] into a PubNub [Instant].
+         *
+         * This helper avoids exposing experimental kotlin.time/kotlinx.datetime Instant types in the public API.
+         */
+        @OptIn(kotlin.time.ExperimentalTime::class)
+        fun localDateTimeToInstant(localDateTime: LocalDateTime, timeZone: TimeZone): Instant {
+            val ktInstant = localDateTime.toInstant(timeZone)
+            return Instant.fromEpochSeconds(ktInstant.epochSeconds, ktInstant.nanosecondsOfSecond)
+        }
+
+        /**
+         * Converts [LocalDateTime] in the provided [TimeZone] directly to a PubNub timetoken.
+         *
+         * This helper avoids requiring callers to opt-in to experimental time APIs.
+         */
+        fun localDateTimeToTimetoken(localDateTime: LocalDateTime, timeZone: TimeZone): Long {
+            return instantToTimetoken(localDateTimeToInstant(localDateTime, timeZone))
         }
 
         /**

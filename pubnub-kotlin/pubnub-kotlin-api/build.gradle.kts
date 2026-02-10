@@ -15,14 +15,12 @@ kotlin {
             dependencies {
                 api(project(":pubnub-kotlin:pubnub-kotlin-core-api"))
                 implementation(libs.kotlinx.atomicfu)
+                api(libs.kotlinx.datetime)
             }
         }
 
         val nonJs = create("nonJs") {
             dependsOn(commonMain)
-            dependencies {
-                api(libs.kotlinx.datetime)
-            }
         }
 
         val jvmMain by getting {
@@ -41,7 +39,6 @@ kotlin {
             val appleMain by getting {
                 dependsOn(nonJs)
                 dependencies {
-                    api(libs.kotlinx.datetime)
                 }
             }
         }
