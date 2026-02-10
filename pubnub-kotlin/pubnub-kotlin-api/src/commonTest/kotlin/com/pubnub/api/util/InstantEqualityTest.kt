@@ -6,7 +6,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 
 class InstantEqualityTest {
-
     @Test
     fun equalsAndHashCode_areValueBased() {
         val a1 = Instant.fromEpochSeconds(1, 2)

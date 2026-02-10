@@ -67,7 +67,11 @@ data class Instant(
         private fun floorDiv(x: Long, y: Long): Long {
             val r = x / y
             val m = x % y
-            return if (m == 0L || (x xor y) >= 0) r else r - 1
+            return if (m == 0L || (x xor y) >= 0) {
+                r
+            } else {
+                r - 1
+            }
         }
 
         private fun floorMod(x: Long, y: Long): Long = x - floorDiv(x, y) * y

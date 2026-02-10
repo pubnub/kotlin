@@ -9,7 +9,6 @@ import kotlin.test.Test
 import kotlin.test.assertTrue
 
 class ClockSystemTest {
-
     @Test
     fun now_isCloseToKotlinTimeClock() {
         val ktBefore = kotlin.time.Clock.System.now()
@@ -35,4 +34,3 @@ class ClockSystemTest {
         assertTrue(b >= a)
     }
 }
-
