@@ -3,6 +3,11 @@ February 11 2026
 
 #### Added
 - Upgrade kotlinx-datetime to 0.7.1.
+- `com.pubnub.api.utils.Instant` is now an SDK value type and is not implicitly interchangeable with `kotlin.time.Instant` and `kotlinx.datetime.Instant` anymore.
+
+#### Migration
+- If you previously used `kotlinx.datetime` extensions directly on PubNub `Instant`, use `Instant.toLocalDateTime(TimeZone)`.
+- If you previously did `val instant = localDateTime.toInstant(zone)` or `TimetokenUtil.instantToTimetoken(instant)`, use instead `TimetokenUtil.localDateTimeToInstant(localDateTime, zone)` or `TimetokenUtil.localDateTimeToTimetoken(localDateTime, zone)`.
 
 ## v12.1.4
 January 22 2026
