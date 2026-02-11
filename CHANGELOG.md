@@ -1,3 +1,9 @@
+## v13.0.0
+February 11 2026
+
+#### Added
+- Upgrade kotlinx-datetime to 0.7.1.
+
 ## v12.1.4
 January 22 2026
 
