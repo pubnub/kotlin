@@ -1,16 +1,13 @@
 package com.pubnub.api.utils
 
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
-
-actual typealias Instant = Instant
-
 actual interface Clock {
-    actual fun now(): com.pubnub.api.utils.Instant
+    actual fun now(): Instant
 
-    actual object System : com.pubnub.api.utils.Clock {
-        actual override fun now(): com.pubnub.api.utils.Instant {
-            return Clock.System.now()
+    actual object System : Clock {
+        @OptIn(kotlin.time.ExperimentalTime::class)
+        actual override fun now(): Instant {
+            val ktInstant = kotlin.time.Clock.System.now()
+            return Instant(ktInstant.epochSeconds, ktInstant.nanosecondsOfSecond)
         }
     }
 }

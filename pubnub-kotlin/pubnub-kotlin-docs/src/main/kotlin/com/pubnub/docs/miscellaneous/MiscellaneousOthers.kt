@@ -11,8 +11,6 @@ import com.pubnub.api.utils.Instant
 import com.pubnub.api.utils.TimetokenUtil
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toInstant
-import kotlinx.datetime.toLocalDateTime
 import java.io.InputStream
 
 class MiscellaneousOthers {
@@ -136,8 +134,8 @@ class MiscellaneousOthers {
         // snippet.instantToTimetoken
         val localDateTime = LocalDateTime(
             year = 2024,
-            monthNumber = 9,
-            dayOfMonth = 30,
+            month = 9,
+            day = 30,
             hour = 12,
             minute = 12,
             second = 44,
@@ -145,7 +143,7 @@ class MiscellaneousOthers {
         )
 
         val zone = TimeZone.currentSystemDefault()
-        val instant = localDateTime.toInstant(zone)
+        val instant: Instant = TimetokenUtil.localDateTimeToInstant(localDateTime, zone)
         val timetoken = TimetokenUtil.instantToTimetoken(instant)
 
         println("Current date: ${localDateTime.date}")
