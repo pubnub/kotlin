@@ -42,6 +42,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
+import org.junit.Ignore
 import org.junit.Test
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.CountDownLatch
@@ -897,5 +898,198 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         val message: PNMessageResult = receivedMessageFuture.get(10, TimeUnit.SECONDS)
 
         assertEquals(expectedCustomMessageType, message.customMessageType)
+    }
+
+    // ================================
+    // Large Message (V2 Publish) Integration Tests
+    // ================================
+
+    @Test
+    fun testPublishLargeMessageOverV1Limit_Post() {
+        val expectedChannel = randomChannel()
+        // Create a message larger than V1 POST limit (32,768 bytes)
+        // Account for JSON quotes (2 bytes), so 40KB string ensures we exceed the limit
+        val largeMessage = "x".repeat(40_000)
+
+        pubnub.publish(
+            channel = expectedChannel,
+            message = largeMessage,
+            usePost = true,
+        ).await { result ->
+            assertFalse(result.isFailure)
+            assertTrue(result.getOrThrow().timetoken > 0)
+        }
+    }
+
+    @Test
+    fun testPublishLargeMessageOverV1Limit_Get() {
+        val expectedChannel = randomChannel()
+        // Create a message larger than V1 GET path limit (32,752 bytes)
+        val largeMessage = "x".repeat(40_000)
+
+        // Even with usePost=false, large messages should be routed to V2 POST
+        pubnub.publish(
+            channel = expectedChannel,
+            message = largeMessage,
+            usePost = false,
+        ).await { result ->
+            assertFalse(result.isFailure)
+            assertTrue(result.getOrThrow().timetoken > 0)
+        }
+    }
+
+    @Test
+    fun testPublishLargeMessage_History() {
+        val expectedChannel = randomChannel()
+        val largeMessage = "x".repeat(50_000)
+
+        pubnub.publish(
+            channel = expectedChannel,
+            message = largeMessage,
+            usePost = true,
+        ).sync()
+
+        retry {
+            pubnub.fetchMessages(
+                channels = listOf(expectedChannel),
+                page = PNBoundedPage(limit = 1),
+            ).sync().run {
+                assertEquals(1, channels.size)
+                assertEquals(1, channels[expectedChannel]!!.size)
+                assertEquals(largeMessage, channels[expectedChannel]!![0].message.asString)
+            }
+        }
+    }
+
+    @Test
+    fun testPublishLargeMessage_Receive() {
+        val expectedChannel = randomChannel()
+        val largeMessage = "x".repeat(50_000)
+        val success = AtomicBoolean()
+
+        val observer = createPubNub {}
+
+        pubnub.addListener(
+            object : SubscribeCallback() {
+                override fun status(
+                    pubnub: PubNub,
+                    pnStatus: PNStatus,
+                ) {
+                }
+
+                override fun message(
+                    pubnub: PubNub,
+                    event: PNMessageResult,
+                ) {
+                    if (event.message.asString == largeMessage) {
+                        success.set(true)
+                    }
+                }
+            },
+        )
+
+        pubnub.subscribeToBlocking(expectedChannel)
+
+        observer.publish(
+            message = largeMessage,
+            channel = expectedChannel,
+            usePost = true,
+        ).sync()
+
+        success.listen()
+    }
+
+    @Test
+    fun testPublishLargeJsonObject_History() {
+        val expectedChannel = randomChannel()
+        // Create a large JSON object (> 32KB)
+        val largePayload = JSONObject().apply {
+            put("id", randomValue())
+            put("data", "x".repeat(40_000))
+            put("timestamp", System.currentTimeMillis())
+        }
+
+        pubnub.publish(
+            channel = expectedChannel,
+            message = largePayload,
+            usePost = true,
+        ).sync()
+
+        retry {
+            pubnub.fetchMessages(
+                channels = listOf(expectedChannel),
+                page = PNBoundedPage(limit = 1),
+            ).sync().run {
+                assertEquals(1, channels.size)
+                assertEquals(1, channels[expectedChannel]!!.size)
+                val receivedMessage = JSONObject(channels[expectedChannel]!![0].message.toString())
+                assertEquals(largePayload.getString("id"), receivedMessage.getString("id"))
+                assertEquals(largePayload.getString("data"), receivedMessage.getString("data"))
+            }
+        }
+    }
+
+    @Test
+    fun testPublish100KBMessage() {
+        val expectedChannel = randomChannel()
+        val largeMessage = "x".repeat(100_000)
+
+        pubnub.publish(
+            channel = expectedChannel,
+            message = largeMessage,
+            usePost = true,
+        ).await { result ->
+            assertFalse(result.isFailure)
+            assertTrue(result.getOrThrow().timetoken > 0)
+        }
+    }
+
+    @Test
+    fun testPublish500KBMessage() {
+        val expectedChannel = randomChannel()
+        val largeMessage = "x".repeat(500_000)
+
+        pubnub.publish(
+            channel = expectedChannel,
+            message = largeMessage,
+            usePost = true,
+        ).await { result ->
+            assertFalse(result.isFailure)
+            assertTrue(result.getOrThrow().timetoken > 0)
+        }
+    }
+
+    @Test
+    fun testPublish1MBMessage() {
+        val expectedChannel = randomChannel()
+        val largeMessage = "x".repeat(1_000_000)
+
+        pubnub.publish(
+            channel = expectedChannel,
+            message = largeMessage,
+            usePost = true,
+        ).await { result ->
+            assertFalse(result.isFailure)
+            assertTrue(result.getOrThrow().timetoken > 0)
+        }
+    }
+
+    @Test
+//    @Ignore("Message size exceeds server limit - expected to fail")
+    fun testPublishOversizedMessage_ShouldFail() {
+        val expectedChannel = randomChannel()
+        // Create a message > 2MB which should be rejected by server
+        val oversizedMessage = "x".repeat(2_500_000)
+
+        pubnub.publish(
+            channel = expectedChannel,
+            message = oversizedMessage,
+            usePost = true,
+        ).async { result ->
+            // Server should reject messages > 2MB
+            println("")
+            assertTrue(result.isFailure)
+            assertEquals("dfd", result.exceptionOrNull()?.message)
+        }
     }
 }
