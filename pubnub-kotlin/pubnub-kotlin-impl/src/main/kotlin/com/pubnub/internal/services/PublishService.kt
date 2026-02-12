@@ -27,4 +27,18 @@ internal interface PublishService {
         @Body body: Any,
         @QueryMap(encoded = false) options: Map<String, String>,
     ): Call<List<Any>>
+
+    /**
+     * Publish V2 endpoint for large messages (> 32KB, up to 2MB).
+     * Uses V2 signature (includes body in signature calculation).
+     */
+    @POST("v2/publish/{pubKey}/{subKey}/0/{channel}/0")
+    @Headers("Content-Type: application/json; charset=UTF-8")
+    fun publishWithPostV2(
+        @Path("pubKey") pubKey: String,
+        @Path("subKey") subKey: String,
+        @Path("channel") channel: String,
+        @Body body: Any,
+        @QueryMap(encoded = false) options: Map<String, String>,
+    ): Call<List<Any>>
 }
