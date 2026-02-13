@@ -42,6 +42,12 @@ class PublishEndpoint internal constructor(
         // POST body limit: nginx client_max_body_size = 32k
         internal const val PUBLISH_V1_MAX_POST_BODY_BYTES = 32_768
 
+        /**
+         * Publish V2 endpoint max body size.
+         * Server rejects anything above 2MB (HTTP 413).
+         */
+        internal const val PUBLISH_V2_MAX_POST_BODY_BYTES = 2 * 1024 * 1024
+
         // GET path limit: nginx large_client_header_buffers = 32k
         // Request line: "GET {path} HTTP/1.1\r\n" has 15 bytes overhead
         // Maximum path size: 32,768 - 16 = 32,752 bytes
@@ -100,6 +106,7 @@ class PublishEndpoint internal constructor(
                         )
                     )
                 )
+                enforceV2PostBodySizeLimit(bodySizeBytes)
                 retrofitManager.publishService.publishWithPostV2(
                     configuration.publishKey,
                     configuration.subscribeKey,
@@ -140,6 +147,8 @@ class PublishEndpoint internal constructor(
                     )
                 )
                 val payload = getBodyMessage(message)
+                val bodySizeBytes = calculateV1PostBodySizeBytes(payload)
+                enforceV2PostBodySizeLimit(bodySizeBytes)
                 retrofitManager.publishService.publishWithPostV2(
                     configuration.publishKey,
                     configuration.subscribeKey,
@@ -198,6 +207,13 @@ class PublishEndpoint internal constructor(
      */
     private fun calculateV1PostBodySizeBytes(payload: Any): Int {
         return pubnub.mapper.toJson(payload).toByteArray(Charsets.UTF_8).size
+    }
+
+    private fun enforceV2PostBodySizeLimit(bodySizeBytes: Int) {
+        if (bodySizeBytes > PUBLISH_V2_MAX_POST_BODY_BYTES) {
+            // Mirror server-side behavior (HTTP 413) and keep error message stable for consumers/tests.
+            throw PubNubException("Request Entity Too Large", 413, null)
+        }
     }
 
     /**
