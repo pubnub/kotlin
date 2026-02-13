@@ -3,6 +3,7 @@ package com.pubnub.api.integration
 import com.google.gson.JsonObject
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
+import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.crypto.CryptoModule
@@ -42,7 +43,6 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
-import org.junit.Ignore
 import org.junit.Test
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.CountDownLatch
@@ -70,7 +70,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
     @Test
     fun testPublishMessage() {
         val expectedChannel = randomChannel()
-        pubnub.publish(
+        server.publish(
             channel = expectedChannel,
             message = generatePayload(),
             customMessageType = "myType"
@@ -1049,7 +1049,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         val expectedChannel = randomChannel()
         val largeMessage = "x".repeat(500_000)
 
-        pubnub.publish(
+        server.publish(
             channel = expectedChannel,
             message = largeMessage,
             usePost = true,
@@ -1075,7 +1075,6 @@ class PublishIntegrationTests : BaseIntegrationTest() {
     }
 
     @Test
-//    @Ignore("Message size exceeds server limit - expected to fail")
     fun testPublishOversizedMessage_ShouldFail() {
         val expectedChannel = randomChannel()
         // Create a message > 2MB which should be rejected by server
@@ -1085,11 +1084,13 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             channel = expectedChannel,
             message = oversizedMessage,
             usePost = true,
-        ).async { result ->
-            // Server should reject messages > 2MB
-            println("")
+        ).await { result ->
             assertTrue(result.isFailure)
-            assertEquals("dfd", result.exceptionOrNull()?.message)
+            val exception = result.exceptionOrNull()
+            assertNotNull(exception)
+            assertTrue(exception is PubNubException)
+            assertEquals(413, (exception as PubNubException).statusCode)
+            assertTrue(result.exceptionOrNull()!!.errorMessage!!.contains("Request Entity Too Large"))
         }
     }
 }
