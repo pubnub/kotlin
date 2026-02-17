@@ -71,24 +71,24 @@ class PublishEndpoint internal constructor(
     override fun getAffectedChannels() = listOf(channel)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<List<Any>> {
-//        log.debug(
-//            LogMessage(
-//                message = LogMessageContent.Object(
-//                    arguments = mapOf(
-//                        "message" to message,
-//                        "channel" to channel,
-//                        "shouldStore" to (shouldStore ?: true),
-//                        "meta" to (meta ?: ""),
-//                        "usePost" to usePost,
-//                        "ttl" to (ttl ?: 0),
-//                        "replicate" to replicate,
-//                        "customMessageType" to (customMessageType ?: "")
-//                    ),
-//                    operation = this::class.simpleName
-//                ),
-//                details = "Publish API call"
-//            )
-//        )
+        log.debug(
+            LogMessage(
+                message = LogMessageContent.Object(
+                    arguments = mapOf(
+                        "message" to message,
+                        "channel" to channel,
+                        "shouldStore" to (shouldStore ?: true),
+                        "meta" to (meta ?: ""),
+                        "usePost" to usePost,
+                        "ttl" to (ttl ?: 0),
+                        "replicate" to replicate,
+                        "customMessageType" to (customMessageType ?: "")
+                    ),
+                    operation = this::class.simpleName
+                ),
+                details = "Publish API call"
+            )
+        )
 
         addQueryParams(queryParams)
 
@@ -209,10 +209,16 @@ class PublishEndpoint internal constructor(
         return pubnub.mapper.toJson(payload).toByteArray(Charsets.UTF_8).size
     }
 
+    /**
+     * There is a need to have this client side validation. The thing is that when OkHttp send request with
+     * Expect: 100-continue header it waits for 100 Continue status code that server never sends.
+     * In Curl there is mechanism that waits for 100 Continue status code only 1 sec and then when there is no 413 error
+     * it starts transferring data.
+     */
     private fun enforceV2PostBodySizeLimit(bodySizeBytes: Int) {
         if (bodySizeBytes > PUBLISH_V2_MAX_POST_BODY_BYTES) {
             // Mirror server-side behavior (HTTP 413) and keep error message stable for consumers/tests.
-            throw PubNubException("Request Entity Too Large", 413, null)
+            throw PubNubException(errorMessage = "Request Entity Too Large", statusCode = 413, cause = null)
         }
     }
 

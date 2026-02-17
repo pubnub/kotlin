@@ -1,5 +1,6 @@
 package com.pubnub.api.endpoints.pubsub
 
+import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.endpoints.pubsub.PublishEndpoint
@@ -19,6 +20,9 @@ import okhttp3.Request
 import okio.Timeout
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
+import org.junit.Assert.fail
 import org.junit.Test
 import retrofit2.Call
 import retrofit2.Callback
@@ -256,6 +260,111 @@ class PublishV2RoutingTest {
         // GET is called first to measure path length, then V2 POST is used
         verify(exactly = 1) { publishServiceMock.publish(any(), any(), any(), any(), any()) }
         verify(exactly = 1) { publishServiceMock.publishWithPostV2(any(), any(), any(), any(), any()) }
+    }
+
+    // ================================
+    // Secret Key Signature Overhead Tests
+    // ================================
+
+    @Test
+    fun `GET without secret key stays on V1 when path is exactly at limit`() {
+        // GET path layout: /publish/pubKey/subKey/0/testChannel/0/%22<N x's>%22?seqn=1
+        // Fixed overhead: 39 (path prefix) + 6 (two %22 for JSON quotes) + 7 (?seqn=1) = 52 bytes
+        // Path+query length = 52 + N
+        //
+        // N = 32,700 → 52 + 32,700 = 32,752 = PUBLISH_V1_MAX_GET_PATH_BYTES → fits V1
+        val message = "x".repeat(32_700)
+
+        val publish = PublishEndpoint(
+            pubnub = pubNubNoSecretKey,
+            message = message,
+            channel = TEST_CHANNEL,
+            usePost = false,
+        )
+        publish.sync()
+
+        verify(exactly = 1) { publishServiceMock.publish(any(), any(), any(), any(), any()) }
+        verify(exactly = 0) { publishServiceMock.publishWithPostV2(any(), any(), any(), any(), any()) }
+    }
+
+    @Test
+    fun `GET with secret key falls back to V2 when signature overhead pushes path over limit`() {
+        // Same message as above: path+query = 52 + 32,700 = 32,752 bytes (at the V1 limit).
+        // With secret key, SignatureInterceptor adds 78 bytes (timestamp + signature),
+        // so effective length = 32,752 + 78 = 32,830 > 32,752 → must fall back to V2 POST.
+        val message = "x".repeat(32_700)
+
+        val publish = PublishEndpoint(
+            pubnub = pubNubWithSecretKey,
+            message = message,
+            channel = TEST_CHANNEL,
+            usePost = false,
+        )
+        publish.sync()
+
+        // V1 GET is called to build the request and measure path length, then V2 POST is used
+        verify(exactly = 1) { publishServiceMock.publish(any(), any(), any(), any(), any()) }
+        verify(exactly = 1) { publishServiceMock.publishWithPostV2(any(), any(), any(), any(), any()) }
+    }
+
+    // ================================
+    // Oversize Rejection Tests
+    // ================================
+
+    @Test
+    fun `POST with body exceeding 2MB rejects client-side before any network call`() {
+        // PUBLISH_V2_MAX_POST_BODY_BYTES = 2 * 1024 * 1024 = 2,097,152 bytes.
+        // JSON serialization adds 2 bytes for quotes around a string,
+        // so a string of 2,097,151 chars produces 2,097,153 bytes → exceeds the limit.
+        val message = "x".repeat(2_097_151)
+
+        val publish = PublishEndpoint(
+            pubnub = pubNubNoSecretKey,
+            message = message,
+            channel = TEST_CHANNEL,
+            usePost = true,
+        )
+
+        try {
+            publish.sync()
+            fail("Expected PubNubException to be thrown")
+        } catch (e: PubNubException) {
+            assertEquals(413, e.statusCode)
+            assertTrue(e.errorMessage!!.contains("Request Entity Too Large"))
+        }
+
+        // No network calls should have been made — rejection is purely client-side
+        verify(exactly = 0) { publishServiceMock.publishWithPost(any(), any(), any(), any(), any()) }
+        verify(exactly = 0) { publishServiceMock.publishWithPostV2(any(), any(), any(), any(), any()) }
+        verify(exactly = 0) { publishServiceMock.publish(any(), any(), any(), any(), any()) }
+    }
+
+    @Test
+    fun `GET with body exceeding 2MB rejects client-side before any network call`() {
+        // Same validation applies when usePost=false and the message is large enough
+        // to trigger V2 fallback — the 2MB limit check still fires before the V2 call.
+        val message = "x".repeat(2_097_151)
+
+        val publish = PublishEndpoint(
+            pubnub = pubNubNoSecretKey,
+            message = message,
+            channel = TEST_CHANNEL,
+            usePost = false,
+        )
+
+        try {
+            publish.sync()
+            fail("Expected PubNubException to be thrown")
+        } catch (e: PubNubException) {
+            assertEquals(413, e.statusCode)
+            assertTrue(e.errorMessage!!.contains("Request Entity Too Large"))
+        }
+
+        // V1 GET is called to measure path (which exceeds V1 limit), then oversize check fires
+        // before V2 POST is invoked
+        verify(exactly = 1) { publishServiceMock.publish(any(), any(), any(), any(), any()) }
+        verify(exactly = 0) { publishServiceMock.publishWithPostV2(any(), any(), any(), any(), any()) }
+        verify(exactly = 0) { publishServiceMock.publishWithPost(any(), any(), any(), any(), any()) }
     }
 
     // ================================

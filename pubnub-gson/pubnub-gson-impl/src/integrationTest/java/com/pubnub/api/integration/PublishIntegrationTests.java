@@ -947,7 +947,7 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
     public void testPublishOversizedMessage_ShouldFail() {
         final AtomicBoolean success = new AtomicBoolean();
         final String expectedChannel = randomChannel();
-        // Create a message > 2MB which should be rejected by server
+        // Create a message > 2MB which should be rejected by client side validation
         final String oversizedMessage = generateLargeString(2_500_000);
 
         pubNub.publish()

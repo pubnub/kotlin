@@ -1077,7 +1077,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
     @Test
     fun testPublishOversizedMessage_ShouldFail() {
         val expectedChannel = randomChannel()
-        // Create a message > 2MB which should be rejected by server
+        // Create a message > 2MB which should be rejected by client side validation
         val oversizedMessage = "x".repeat(2_500_000)
 
         pubnub.publish(
