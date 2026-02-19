@@ -928,7 +928,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         val largeMessage = "x".repeat(40_000)
 
         // Even with usePost=false, large messages should be routed to V2 POST
-        pubnub.publish(
+        server.publish(
             channel = expectedChannel,
             message = largeMessage,
             usePost = false,
@@ -1060,15 +1060,39 @@ class PublishIntegrationTests : BaseIntegrationTest() {
     }
 
     @Test
-    fun testPublish1MBMessage() {
+    fun testPublish2MBMessage() {
         val expectedChannel = randomChannel()
-        val largeMessage = "x".repeat(1_000_000)
+        // We can't send exactly 2MB of raw content because the payload grows due to
+        // JSON serialization overhead and encryption (if configured).
+        val largeMessage = "x".repeat((1.9 * 1024 * 1024).toInt()) // 1,992,294 chars
 
         pubnub.publish(
             channel = expectedChannel,
             message = largeMessage,
             usePost = true,
-        ).await { result ->
+        ).await(seconds = 10) { result ->
+            assertFalse(result.isFailure)
+            assertTrue(result.getOrThrow().timetoken > 0)
+        }
+    }
+
+    @Test
+    fun testPublish2MBMessageWithCrypto() {
+        val expectedChannel = randomChannel()
+        val pubnubWithCrypto =
+            createPubNub {
+                cryptoModule = CryptoModule.createAesCbcCryptoModule("test", false)
+            }
+
+        // We can't send exactly 2MB of raw content because the payload grows due to
+        // JSON serialization overhead and encryption (if configured).
+        val largeMessage = "x".repeat((1.4 * 1024 * 1024).toInt())
+
+        pubnubWithCrypto.publish(
+            channel = expectedChannel,
+            message = largeMessage,
+            usePost = true,
+        ).await(seconds = 10) { result ->
             assertFalse(result.isFailure)
             assertTrue(result.getOrThrow().timetoken > 0)
         }
