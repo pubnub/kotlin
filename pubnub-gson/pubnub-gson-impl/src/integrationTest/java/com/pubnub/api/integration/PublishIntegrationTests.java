@@ -428,7 +428,7 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
 
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus) {
-
+                // Intentionally left empty
             }
 
             @Override
@@ -469,7 +469,7 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
 
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus) {
-
+                // Intentionally left empty
             }
 
             @Override
@@ -574,7 +574,7 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
 
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus) {
-
+                // Intentionally left empty
             }
 
             @Override
@@ -620,7 +620,7 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
 
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus) {
-
+                // Intentionally left empty
             }
 
             @Override
@@ -676,7 +676,7 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
 
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus) {
-
+                // Intentionally left empty
             }
 
             @Override
@@ -788,9 +788,7 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
         final String largeMessage = generateLargeString(40_000);
 
         // Even with usePost=false, large messages should be routed to V2 POST
-        pubNub.publish()
-                .message(largeMessage)
-                .channel(expectedChannel)
+        pubNub.publish(largeMessage, expectedChannel)
                 .usePOST(false)
                 .async((result) -> {
                     assertFalse(result.isFailure());
@@ -834,6 +832,7 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
         pubNub.addListener(new SubscribeCallback() {
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
+                // Intentionally left empty
             }
 
             @Override
@@ -925,14 +924,14 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
     }
 
     @Test
-    public void testPublish1MBMessage() {
+    public void testPublish2MBMessage() {
         final AtomicBoolean success = new AtomicBoolean();
         final String expectedChannel = randomChannel();
-        final String largeMessage = generateLargeString(1_000_000);
+        // We can't send exactly 2MB of raw content because the payload grows due to
+        // JSON serialization overhead and encryption (if configured).
+        final String largeMessage = generateLargeString(1_992_000);
 
-        server.publish()
-                .message(largeMessage)
-                .channel(expectedChannel)
+        server.publish(largeMessage, expectedChannel)
                 .usePOST(true)
                 .async((result) -> {
                     assertFalse(result.isFailure());
@@ -942,6 +941,31 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
 
         Awaitility.await().atMost(Durations.ONE_MINUTE).untilTrue(success);
     }
+
+    @Test
+    public void testPublish2MBMessageWithCrypto() {
+        final AtomicBoolean success = new AtomicBoolean();
+        final String expectedChannel = randomChannel();
+        // We can't send exactly 2MB of raw content because the payload grows due to
+        // JSON serialization overhead and encryption (if configured).
+        final String largeMessage = generateLargeString(1_400_000);
+        final PubNub pubnubWithCrypto = getPubNub(builder -> builder.cryptoModule(CryptoModule.createAesCbcCryptoModule("test", false)));
+
+
+        pubnubWithCrypto.publish(largeMessage, expectedChannel)
+                .usePOST(true)
+                .async((result) -> {
+                    assertFalse(result.isFailure());
+                    assertTrue(result.getOrNull().getTimetoken() > 0);
+                    success.set(true);
+                });
+
+        Awaitility.await().atMost(Durations.ONE_MINUTE).untilTrue(success);
+    }
+
+
+
+
 
     @Test
     public void testPublishOversizedMessage_ShouldFail() {
