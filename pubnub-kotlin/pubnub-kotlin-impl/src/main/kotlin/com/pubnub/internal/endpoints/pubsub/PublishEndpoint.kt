@@ -213,12 +213,13 @@ class PublishEndpoint internal constructor(
      * There is a need to have this client side validation. The thing is that when OkHttp send request with
      * Expect: 100-continue header it waits for 100 Continue status code that server never sends.
      * In Curl there is mechanism that waits for 100 Continue status code only 1 sec and then when there is no 413 error
-     * it starts transferring data.
+     * it starts transferring data. When there is no Expect: 100-continue header for messages over 2MiB then
+     * sometimes okHttp client get socket termination instead of 413 error from server. We want to present error
+     * to the customer instead of terminating socket.
      */
     private fun enforceV2PostBodySizeLimit(bodySizeBytes: Int) {
         if (bodySizeBytes > PUBLISH_V2_MAX_POST_BODY_BYTES) {
-            // Mirror server-side behavior (HTTP 413) and keep error message stable for consumers/tests.
-            throw PubNubException(errorMessage = "Request Entity Too Large", statusCode = 413, cause = null)
+            throw PubNubException(PubNubError.MESSAGE_TOO_LARGE)
         }
     }
 

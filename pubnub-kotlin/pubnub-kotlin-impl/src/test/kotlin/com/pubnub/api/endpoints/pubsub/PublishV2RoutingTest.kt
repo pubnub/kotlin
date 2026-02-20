@@ -1,5 +1,6 @@
 package com.pubnub.api.endpoints.pubsub
 
+import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
 import com.pubnub.internal.PubNubImpl
@@ -329,8 +330,8 @@ class PublishV2RoutingTest {
             publish.sync()
             fail("Expected PubNubException to be thrown")
         } catch (e: PubNubException) {
-            assertEquals(413, e.statusCode)
-            assertTrue(e.errorMessage!!.contains("Request Entity Too Large"))
+            assertEquals(PubNubError.MESSAGE_TOO_LARGE, e.pubnubError)
+            assertEquals(0, e.statusCode)
         }
 
         // No network calls should have been made — rejection is purely client-side
@@ -356,8 +357,8 @@ class PublishV2RoutingTest {
             publish.sync()
             fail("Expected PubNubException to be thrown")
         } catch (e: PubNubException) {
-            assertEquals(413, e.statusCode)
-            assertTrue(e.errorMessage!!.contains("Request Entity Too Large"))
+            assertEquals(PubNubError.MESSAGE_TOO_LARGE, e.pubnubError)
+            assertEquals(0, e.statusCode)
         }
 
         // V1 GET is called to measure path (which exceeds V1 limit), then oversize check fires
