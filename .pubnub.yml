@@ -73,8 +73,8 @@ sdks:
               requires:
                 -
                   name: kotlin-stdlib
-                  min-version: 1.8.0
-                  location: https://repo1.maven.org/maven2/org/jetbrains/kotlin/kotlin-stdlib/2.0.21/kotlin-stdlib-2.0.21.jar
+                  min-version: 2.2.21
+                  location: https://repo1.maven.org/maven2/org/jetbrains/kotlin/kotlin-stdlib/2.2.21/kotlin-stdlib-2.2.21.jar
                   license: Apache License, Version 2.0
                   license-url: https://www.apache.org/licenses/LICENSE-2.0.txt
                   is-required: Required
@@ -94,10 +94,10 @@ sdks:
                   is-required: Required
                 -
                   name: okhttp
-                  min-version: 4.12.0
-                  location: https://repo.maven.apache.org/maven2/com/squareup/okhttp3/okhttp/4.12.0/okhttp-4.12.0.jar
+                  min-version: 5.3.2
+                  location: https://repo.maven.apache.org/maven2/com/squareup/okhttp3/okhttp/5.3.2/okhttp-5.3.2.jar
                   license: Apache License, Version 2.0
-                  license-url: https://github.com/square/okhttp/blob/parent-4.12.0/LICENSE.txt
+                  license-url: https://github.com/square/okhttp/blob/parent-5.3.2/LICENSE.txt
                   is-required: Required
                 -
                   name: converter-gson
