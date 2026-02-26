@@ -15,6 +15,7 @@ import com.pubnub.api.java.v2.entities.ChannelMetadata;
 import com.pubnub.api.java.v2.entities.UserMetadata;
 import com.pubnub.api.java.v2.subscriptions.Subscription;
 import com.pubnub.api.java.v2.subscriptions.SubscriptionSet;
+import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction;
@@ -169,11 +170,15 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
         pubNub.addListener(new SubscribeCallback.BaseSubscribeCallback() {
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
-                assertEquals(0, pubNub.getSubscribedChannels().size());
-                success.set(true);
+                if (status.getCategory() == PNStatusCategory.PNDisconnectedCategory) {
+                    assertEquals(0, pubNub.getSubscribedChannels().size());
+                    success.set(true);
+                }
             }
         });
 
+        // pause to make sure that we reach receiving state so we can observe PNStatusCategory.PNDisconnectedCategory when unsubscribing
+        pause(2);
         unsubscribeFromAllChannels(pubNub);
         listen(success);
     }
