@@ -9,6 +9,15 @@ plugins {
     id("pubnub.ios-simulator-test")
 }
 
+// Serialize pod build tasks to avoid parallel xcodebuild race conditions on shared DerivedData
+if (enableAnyIosTarget) {
+    tasks.configureEach {
+        if (name.startsWith("podBuild")) {
+            mustRunAfter(":pubnub-kotlin:pubnub-kotlin-core-api:$name")
+        }
+    }
+}
+
 kotlin {
     sourceSets {
         val commonMain by getting {
