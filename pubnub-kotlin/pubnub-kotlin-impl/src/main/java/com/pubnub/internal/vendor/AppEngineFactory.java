@@ -129,6 +129,30 @@ public class AppEngineFactory implements Call {
         return Timeout.NONE;
     }
 
+    @Nullable
+    @Override
+    public <T> T tag(@NotNull KClass<T> type) {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public <T> T tag(@NotNull Class<? extends T> type) {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public <T> T tag(@NotNull KClass<T> type, @NotNull Function0<? extends T> initializer) {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public <T> T tag(@NotNull Class<T> type, @NotNull Function0<? extends T> initializer) {
+        return null;
+    }
+
     @NotNull
     @Override
     public Call clone() {

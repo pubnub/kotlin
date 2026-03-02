@@ -1,3 +1,9 @@
+## v13.1.0
+February 26 2026
+
+#### Added
+-  Update kotlin to 2.2.21 and okHttp to 5.3.2.
+
 ## v13.0.0
 February 11 2026
 
