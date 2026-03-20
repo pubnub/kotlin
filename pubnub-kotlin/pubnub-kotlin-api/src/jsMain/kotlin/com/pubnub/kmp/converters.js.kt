@@ -27,7 +27,7 @@ internal fun SetChannelMetadataResponse.toChannelMetadataResult(): PNChannelMeta
     )
 }
 
-private fun <T> patchValueOf(any: T): PatchValue<T>? {
+internal fun <T> patchValueOf(any: T): PatchValue<T>? {
     return if (any === undefined) {
         null
     } else {

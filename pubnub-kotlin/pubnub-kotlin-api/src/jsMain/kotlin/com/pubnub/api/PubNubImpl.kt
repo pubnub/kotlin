@@ -805,9 +805,9 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
                 this.channels = channels.map {
                     createJsObject<PubNubJs.SetCustom> {
                         this.id = it.channel
-                        this.custom = it.custom?.adjustCollectionTypes()?.unsafeCast<PubNubJs.CustomObject>()
-                        this.status = it.status // todo this doesn't seem to get to the server with JS, or cannot read it back
-                        this.type = it.type
+                        it.custom?.let { custom -> this.custom = custom.adjustCollectionTypes().unsafeCast<PubNubJs.CustomObject>() }
+                        it.status?.let { status -> this.status = status }
+                        it.type?.let { type -> this.type = type }
                     }
                 }.toTypedArray()
                 this.limit = limit
@@ -1014,9 +1014,9 @@ class PubNubImpl(val jsPubNub: PubNubJs) : PubNub {
                 this.uuids = users.map {
                     createJsObject<PubNubJs.SetCustom> {
                         this.id = it.uuid
-                        this.custom = it.custom?.adjustCollectionTypes()?.unsafeCast<PubNubJs.CustomObject>()
-                        this.status = it.status
-                        this.type = it.type
+                        it.custom?.let { custom -> this.custom = custom.adjustCollectionTypes().unsafeCast<PubNubJs.CustomObject>() }
+                        it.status?.let { status -> this.status = status }
+                        it.type?.let { type -> this.type = type }
                     }
                 }.toTypedArray()
                 this.limit = limit
