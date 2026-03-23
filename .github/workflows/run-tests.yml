@@ -33,8 +33,6 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      - name: Clean Xcode DerivedData
-        run: rm -rf ~/Library/Developer/Xcode/DerivedData
       - name: Update CocoaPods trunk
         run: |
           pod repo update
