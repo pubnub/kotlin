@@ -23,7 +23,6 @@ import com.pubnub.api.models.consumer.pubsub.objects.PNSetChannelMetadataEventMe
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetMembershipEvent
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetMembershipEventMessage
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetUUIDMetadataEventMessage
-import com.pubnub.api.utils.PatchValue
 import com.pubnub.api.v2.PNConfiguration
 import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.StatusListener
@@ -166,6 +165,7 @@ actual fun createEventListener(
                         )
 
                         "set" to "membership" -> event.message.data.unsafeCast<PubNubJs.SetMembershipObject>().let {
+                            val dynamicData = it.asDynamic()
                             PNSetMembershipEventMessage(
                                 event.message.source,
                                 event.message.version,
@@ -174,11 +174,11 @@ actual fun createEventListener(
                                 PNSetMembershipEvent(
                                     it.channel.id,
                                     it.uuid.id,
-                                    PatchValue.of(it.custom?.toMap()),
+                                    patchValueOf(it.custom.letIfDefined { value -> value?.toMap() }),
                                     it.eTag,
                                     it.updated,
-                                    PatchValue.of(it.asDynamic().status), // todo missing
-                                    null // todo add type when available
+                                    patchValueOf(dynamicData.status),
+                                    patchValueOf(dynamicData.type),
                                 )
                             )
                         }

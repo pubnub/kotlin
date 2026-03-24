@@ -168,6 +168,105 @@ class MembershipsTest : BaseIntegrationTest() {
     }
 
     @Test
+    fun setMemberships_partial_membership_update_preserves_unchanged_fields() = runTest {
+        val channelForPartialUpdate = "partialUpdate" + randomString()
+        val initialStatus = "initialStatus" + randomString()
+        val initialType = "initialType" + randomString()
+        val initialCustomData = mapOf("key" to "initialValue" + randomString())
+        val initialCustom = createCustomObject(initialCustomData)
+        val updatedType = "updatedType" + randomString()
+
+        // Step 1: Create membership with status, type and custom set
+        pubnub.setMemberships(
+            channels = listOf(
+                PNChannelMembership.Partial(
+                    channelId = channelForPartialUpdate,
+                    custom = initialCustom,
+                    status = initialStatus,
+                    type = initialType,
+                )
+            ),
+            include = MembershipInclude(
+                includeCustom = true,
+                includeStatus = true,
+                includeType = true
+            ),
+        ).await()
+
+        // Step 2: Update only type (status and custom are omitted / null in Partial)
+        val updateResult = pubnub.setMemberships(
+            listOf(PNChannelMembership.Partial(channelForPartialUpdate, type = updatedType)),
+            include = MembershipInclude(
+                includeCustom = true,
+                includeStatus = true,
+                includeType = true
+            ),
+        ).await()
+
+        // Step 3: Verify the direct setMemberships response
+        val membership = updateResult.data.single { it.channel.id == channelForPartialUpdate }
+        assertEquals(updatedType, membership.type?.value, "type should be updated to the new value")
+        assertEquals(initialStatus, membership.status?.value, "status should be preserved from the initial set")
+        assertEquals(initialCustomData, membership.custom?.value, "custom should be preserved from the initial set")
+
+        // Cleanup
+        pubnub.removeMemberships(listOf(channelForPartialUpdate)).await()
+    }
+
+    @Test
+    fun membership_updated_event_contains_only_fields_included_in_updates() = runTest {
+        val channelForUpdate = "partialEvent" + randomString()
+        val initialStatus = "memberStatus" + randomString()
+        val initialType = "memberType" + randomString()
+        val initialCustomData = mapOf("role" to "member" + randomString())
+        val initialCustom = createCustomObject(initialCustomData)
+        val updatedStatus = "moderatorStatus" + randomString()
+
+        // Step 1: Create membership with status, type and custom
+        pubnub.setMemberships(
+            listOf(PNChannelMembership.Partial(channelForUpdate, custom = initialCustom, status = initialStatus, type = initialType)),
+            include = MembershipInclude(
+                includeCustom = true,
+                includeStatus = true,
+                includeType = true
+            ),
+        ).await()
+        pubnub.test(backgroundScope, checkAllEvents = false) {
+            // Step 2: Subscribe to the channel to receive membership events
+            pubnub.awaitSubscribe(listOf(channelForUpdate))
+
+            // Step 3: Partially update only status
+            val directResult = pubnub.setMemberships(
+                listOf(PNChannelMembership.Partial(channelForUpdate, status = updatedStatus)),
+                include = MembershipInclude(
+                    includeCustom = true,
+                    includeStatus = true,
+                    includeType = true
+                ),
+            ).await()
+            // Step 4: Verify direct response
+            val directMembership = directResult.data.single { it.channel.id == channelForUpdate }
+            assertEquals(updatedStatus, directMembership.status?.value, "direct result: status should be updated")
+            assertEquals(initialType, directMembership.type?.value, "direct result: type should be preserved")
+            assertEquals(initialCustomData, directMembership.custom?.value, "direct result: custom should be preserved")
+
+            // Step 5: Verify event callback
+            // The event payload only contains fields included in the update request,
+            // so type and custom won't be present since we only updated status
+            val event = nextEvent<PNObjectEventResult>()
+            val message = event.extractedMessage
+            message as PNSetMembershipEventMessage
+            assertEquals(channelForUpdate, message.data.channel)
+            assertEquals(pubnub.configuration.userId.value, message.data.uuid)
+            assertEquals(updatedStatus, message.data.status?.value, "event: status should be updated")
+
+            // Cleanup
+            println("-=before: removeMemberships")
+            pubnub.removeMemberships(listOf(channelForUpdate)).await()
+        }
+    }
+
+    @Test
     fun can_delete_membership() = runTest {
         if (PLATFORM == "JS" || PLATFORM == "iOS") { // todo enable for JS/iOS once is implemented
             return@runTest

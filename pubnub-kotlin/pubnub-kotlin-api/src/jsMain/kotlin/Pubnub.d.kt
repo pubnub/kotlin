@@ -488,6 +488,8 @@ open external class PubNub(config: Any /* UUID | UserId */) {
         var custom: CustomObject?
         var updated: String
         var eTag: String
+        var status: String?
+        var type: String?
     }
 
     interface `T$13` {
