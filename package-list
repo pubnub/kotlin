@@ -658,6 +658,8 @@ $dokka.location:/PubNub.SetMembershipObject///PointingToDeclaration/pubnub-kotl
 $dokka.location:/PubNub.SetMembershipObject/channel/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-set-membership-object/channel.html
 $dokka.location:/PubNub.SetMembershipObject/custom/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-set-membership-object/custom.html
 $dokka.location:/PubNub.SetMembershipObject/eTag/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-set-membership-object/e-tag.html
+$dokka.location:/PubNub.SetMembershipObject/status/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-set-membership-object/status.html
+$dokka.location:/PubNub.SetMembershipObject/type/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-set-membership-object/type.html
 $dokka.location:/PubNub.SetMembershipObject/updated/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-set-membership-object/updated.html
 $dokka.location:/PubNub.SetMembershipObject/uuid/#/PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-set-membership-object/uuid.html
 $dokka.location:/PubNub.SetMembershipsParameters///PointingToDeclaration/pubnub-kotlin-api/[root]/-pub-nub/-set-memberships-parameters/index.html
