@@ -11,6 +11,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.spyk
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Request
 import okio.Timeout
 import org.hamcrest.MatcherAssert.assertThat
@@ -51,7 +52,7 @@ class PublishTest {
 
     private val encryptedMessageSlot = slot<String>()
 
-    class FakeCall : Call<List<Any>> {
+    class FakeCall(private val message: String = "") : Call<List<Any>> {
         override fun clone(): Call<List<Any>> = this
 
         override fun execute(): Response<List<Any>> = Response.success(listOf("test1", "test2", "10"))
@@ -66,7 +67,9 @@ class PublishTest {
 
         override fun isCanceled(): Boolean = false
 
-        override fun request(): Request = Request.Builder().build()
+        override fun request(): Request = Request.Builder()
+            .url("https://ps.pndsn.com/publish/$TEST_PUBKEY/$TEST_SUBKEY/0/$TEST_CHANNEL/0/$message?seqn=1".toHttpUrl())
+            .build()
 
         override fun timeout(): Timeout = Timeout.NONE
     }
@@ -80,7 +83,7 @@ class PublishTest {
                 capture(encryptedMessageSlot),
                 any(),
             )
-        } answers { FakeCall() }
+        } answers { FakeCall(encryptedMessageSlot.captured) }
         every { retrofitManagerMock.publishService } returns publishServiceMock
 
         every { pubNubHardcodedIVMock.configuration } returns pnConfigurationHardcodedIV

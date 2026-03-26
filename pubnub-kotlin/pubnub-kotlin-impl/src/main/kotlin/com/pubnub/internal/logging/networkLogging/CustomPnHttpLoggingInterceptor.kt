@@ -9,7 +9,6 @@ import com.pubnub.internal.managers.MapperManager
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
-import okhttp3.ResponseBody.Companion.toResponseBody
 import java.io.IOException
 import java.util.Base64
 
@@ -33,9 +32,8 @@ class CustomPnHttpLoggingInterceptor(
         try {
             response = chain.proceed(request)
 
-            // Log response and get the modified response with cloned body
-            val modifiedResponse = logResponse(response, location)
-            return modifiedResponse
+            // Log response (peeks at body without consuming it)
+            return logResponse(response, location)
         } catch (e: Exception) {
             logError(request, location, e, requestStartTime)
 
@@ -93,26 +91,26 @@ class CustomPnHttpLoggingInterceptor(
         // Parse headers
         val headers = response.headers.toMap()
 
-        // Parse body and create modified response with cloned body
-        val (body, modifiedResponse) = response.body?.let { responseBody ->
+        // Peek at the body without consuming it (same approach as OkHttp's HttpLoggingInterceptor).
+        // This ensures the body remains fully readable by Retrofit for error handling.
+        val body: String? = response.body?.let { responseBody ->
             val contentType = responseBody.contentType()?.toString() ?: ""
 
             try {
+                val source = responseBody.source()
+                source.request(Long.MAX_VALUE) // Buffer the entire body without consuming it.
+                val buffer = source.buffer.clone() // Clone for reading.
+
                 if (contentType.contains("application/json") || contentType.startsWith("text/")) {
-                    val bodyString = responseBody.string()
-                    val clonedResponseBody = bodyString.toResponseBody(responseBody.contentType())
-                    val newResponse = response.newBuilder().body(clonedResponseBody).build()
-                    bodyString to newResponse
+                    val charset = responseBody.contentType()?.charset() ?: Charsets.UTF_8
+                    buffer.readString(charset)
                 } else {
-                    val bytes = responseBody.bytes()
-                    val clonedResponseBody = bytes.toResponseBody(responseBody.contentType())
-                    val newResponse = response.newBuilder().body(clonedResponseBody).build()
-                    Base64.getEncoder().encodeToString(bytes) to newResponse
+                    Base64.getEncoder().encodeToString(buffer.readByteArray())
                 }
             } catch (e: IOException) {
-                "[Error reading response body: ${e.message}]" to response
+                "[Error reading response body: ${e.message}]"
             }
-        } ?: (null to response)
+        }
 
         val logMessage = LogMessage(
             message = LogMessageContent.NetworkResponse(
@@ -132,7 +130,7 @@ class CustomPnHttpLoggingInterceptor(
             println("[$PUBNUB_OKHTTP_LOG_TAG] RESPONSE: $jsonMessage")
         }
 
-        return modifiedResponse
+        return response
     }
 
     private fun logError(request: Request, location: String, error: Exception, requestStartTime: Long) {
