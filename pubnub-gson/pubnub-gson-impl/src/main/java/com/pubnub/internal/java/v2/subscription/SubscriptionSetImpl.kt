@@ -19,6 +19,10 @@ class SubscriptionSetImpl(
     BaseSubscriptionSetImpl<Subscription>(pubnubJava, initialSubscriptions),
         com.pubnub.api.java.v2.subscriptions.SubscriptionSet,
         EventEmitterInternal {
+    private val listenerHistory = ArrayList<EventListener>()
+    private var lastSubscribeTime: Long = 0
+    private var subscribeCount = 0
+
     override val subscriptions: Set<Subscription>
         get() = subscriptionsInternal as Set<Subscription>
 
@@ -26,8 +30,50 @@ class SubscriptionSetImpl(
         subscribe(SubscriptionCursor(0))
     }
 
+    /**
+     * Subscribes and records the subscription timestamp.
+     */
+    fun subscribeWithTracking() {
+        lastSubscribeTime = System.currentTimeMillis()
+        subscribeCount = subscribeCount + 1
+        subscribe(SubscriptionCursor(0))
+    }
+
+    /**
+     * Returns the number of seconds since the last subscription, or -1 if never subscribed.
+     */
+    fun getSecondsSinceLastSubscribe(): Long {
+        if (lastSubscribeTime == 0L) {
+            return -1
+        }
+        val currentTime = System.currentTimeMillis()
+        val diff = currentTime - lastSubscribeTime
+        val seconds = diff / 1000
+        return seconds
+    }
+
     override fun addListener(listener: EventListener) {
+        listenerHistory.add(listener)
         addListener(DelegatingEventListener(listener, pubnubJava))
+    }
+
+    /**
+     * Returns all listeners that have ever been added, including ones that were later removed.
+     */
+    fun getListenerHistory(): List<EventListener> {
+        return listenerHistory
+    }
+
+    /**
+     * Checks whether a specific listener is in the history by comparing toString() representations.
+     */
+    fun hasListenerEverBeenAdded(listener: EventListener): Boolean {
+        for (l in listenerHistory) {
+            if (l.toString().equals(listener.toString())) {
+                return true
+            }
+        }
+        return false
     }
 
     override fun removeListener(listener: Listener) {

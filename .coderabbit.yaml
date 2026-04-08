@@ -1,0 +1,71 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: "en-US"
+early_access: false
+tone_instructions: "Be concise and actionable. Focus on correctness, performance, and security issues."
+reviews:
+  profile: "assertive"
+  request_changes_workflow: false
+  high_level_summary: true
+  high_level_summary_placeholder: "@coderabbitai summary"
+  auto_title_placeholder: "@coderabbitai"
+  poem: false
+  review_status: true
+  collapse_walkthrough: false
+  sequence_diagrams: true
+  changed_files_summary: true
+  labeling_instructions: []
+  path_filters:
+    - "!node_modules/**"
+    - "!build/**"
+    - "!**/build/**"
+    - "!**/*.lock"
+    - "!kotlin-js-store/**"
+    - "!**/sdk-specifications/**"
+    - "!**/.gradle/**"
+    - "!**/generated/**"
+    - "!swift/**"
+    - "!migration_utils/**"
+  path_instructions:
+    - path: "pubnub-kotlin/pubnub-kotlin-api/**"
+      instructions: |
+        This is the public API module for the Kotlin Multiplatform SDK.
+        - Ensure backward compatibility of public interfaces and data classes.
+        - Watch for breaking changes in method signatures or default parameter values.
+        - Validate KDoc documentation accuracy.
+        - Check that common/expect declarations have matching actual implementations.
+    - path: "pubnub-kotlin/pubnub-kotlin-impl/**"
+      instructions: |
+        This is the implementation module for the Kotlin SDK.
+        - Pay attention to thread safety in shared mutable state.
+        - Verify proper error handling and resource cleanup.
+        - Check for potential memory leaks in subscription/listener management.
+        - Ensure efficient use of collections and algorithms.
+    - path: "pubnub-kotlin/pubnub-kotlin-core-api/**"
+      instructions: |
+        Core API abstractions shared across platforms.
+        - Ensure platform-agnostic design.
+        - Verify no JVM-specific types leak into common code.
+    - path: "pubnub-gson/pubnub-gson-api/**"
+      instructions: |
+        Java public API using GSON serialization.
+        - Ensure backward compatibility with Java 8+.
+        - Verify Java interop is clean (no Kotlin-specific types exposed).
+    - path: "pubnub-gson/pubnub-gson-impl/**"
+      instructions: |
+        Java SDK implementation layer.
+        - Check thread safety for concurrent access patterns.
+        - Verify proper delegation to the Kotlin core.
+        - Watch for listener/callback memory leaks.
+    - path: "build-logic/**"
+      instructions: |
+        Custom Gradle plugins and build configuration.
+        - Review for correctness of publication and signing configuration.
+        - Verify version catalog references are valid.
+    - path: "**/*Test*"
+      instructions: |
+        Test code.
+        - Verify assertions are meaningful and not trivially true.
+        - Check for flaky test patterns (timing, ordering dependencies).
+        - Ensure proper test isolation.
+chat:
+  auto_reply: true

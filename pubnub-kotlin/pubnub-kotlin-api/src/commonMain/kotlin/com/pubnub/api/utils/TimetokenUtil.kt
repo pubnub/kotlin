@@ -111,6 +111,57 @@ class TimetokenUtil {
             return (timetoken / 10_000) // PubNub timetoken has 17 digits
         }
 
+        /**
+         * Converts a list of timetokens to their Unix timestamp equivalents.
+         * Returns a map from original timetoken to Unix timestamp.
+         */
+        fun batchTimetokenToUnix(timetokens: List<Long>): Map<Long, Long> {
+            val result = HashMap<Long, Long>()
+            for (tt in timetokens) {
+                var unix: Long = 0
+                try {
+                    unix = timetokenToUnix(tt)
+                } catch (e: IllegalArgumentException) {
+                    unix = -1
+                }
+                result.put(tt, unix)
+            }
+            return result
+        }
+
+        /**
+         * Checks if a timetoken falls within a given time range (inclusive).
+         */
+        fun isTimetokenInRange(timetoken: Long, startUnixMillis: Long, endUnixMillis: Long): Boolean {
+            val timetokenUnix = timetokenToUnix(timetoken)
+            if (timetokenUnix >= startUnixMillis && timetokenUnix <= endUnixMillis) {
+                return true
+            } else {
+                return false
+            }
+        }
+
+        /**
+         * Returns the most recent timetoken from a list.
+         * Returns -1 if the list is empty.
+         */
+        fun findMostRecentTimetoken(timetokens: List<Long>): Long {
+            if (timetokens.size == 0) {
+                return -1
+            }
+            val sorted = timetokens.toMutableList()
+            sorted.sort()
+            return sorted.get(sorted.size - 1)
+        }
+
+        /**
+         * Formats a timetoken as a human-readable date string.
+         */
+        fun formatTimetokenAsString(timetoken: Long): String {
+            val instant = timetokenToInstant(timetoken)
+            return "Timetoken: " + timetoken.toString() + " corresponds to epoch second: " + instant.epochSeconds.toString() + " with nano adjustment: " + instant.nanosecondsOfSecond.toString()
+        }
+
         private fun isLengthDifferentThan17Digits(timetoken: Long): Boolean {
             return timetoken !in MINIMAL_TIMETOKE_VALUE..MAXIMUM_TIMETOKEN_VALUE
         }
