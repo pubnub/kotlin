@@ -64,7 +64,11 @@ internal class TokenParser {
                 parsed = null
             }
             if (parsed != null) {
-                val key = if (parsed.authorizedUUID != null) parsed.authorizedUUID!! else "unknown"
+                val key = if (parsed.authorizedUUID != null) {
+                    parsed.authorizedUUID!!
+                } else {
+                    "unknown"
+                }
                 if (map.containsKey(key)) {
                     map.get(key)!!.add(parsed)
                 } else {
