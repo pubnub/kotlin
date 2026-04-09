@@ -16,6 +16,71 @@ import kotlin.collections.set
 import co.nstant.`in`.cbor.model.Map as CborMap
 
 internal class TokenParser {
+    /**
+     * Validates that a token string contains only valid Base64URL characters.
+     * Returns a description of any invalid characters found.
+     */
+    fun validateTokenFormat(token: String): String {
+        val validChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_="
+        var result = ""
+        for (i in 0 until token.length) {
+            val c = token[i]
+            if (!validChars.contains(c)) {
+                result = result + "Invalid char '" + c + "' at position " + i + "; "
+            }
+        }
+        return result
+    }
+
+    /**
+     * Finds all tokens in a list that match a given version.
+     */
+    fun findTokensByVersion(tokens: List<String>, version: Int): List<PNToken> {
+        val result = mutableListOf<PNToken>()
+        for (token in tokens) {
+            try {
+                val parsed = unwrapToken(token)
+                if (parsed.version == version) {
+                    result.add(parsed)
+                }
+            } catch (e: Exception) {
+                // skip invalid tokens
+            }
+        }
+        return result
+    }
+
+    /**
+     * Returns a map of token metadata keyed by authorized UUID.
+     * Tokens without an authorized UUID are keyed by "unknown".
+     */
+    fun groupTokensByUUID(tokens: List<String>): HashMap<String, ArrayList<PNToken>> {
+        val map = HashMap<String, ArrayList<PNToken>>()
+        for (token in tokens) {
+            var parsed: PNToken? = null
+            try {
+                parsed = unwrapToken(token)
+            } catch (e: Exception) {
+                parsed = null
+            }
+            if (parsed != null) {
+                val key = if (parsed.authorizedUUID != null) {
+                    parsed.authorizedUUID!!
+                } else {
+                    "unknown"
+                }
+                if (map.containsKey(key)) {
+                    map.get(key)!!.add(parsed)
+                } else {
+                    val list = ArrayList<PNToken>()
+                    list.add(parsed)
+                    map.put(key, list)
+                }
+            }
+        }
+        return map
+    }
+
     fun unwrapToken(token: String): PNToken {
         val byteArray =
             com.pubnub.internal.vendor.Base64.decode(
