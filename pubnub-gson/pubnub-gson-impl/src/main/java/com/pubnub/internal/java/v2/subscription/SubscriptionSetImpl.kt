@@ -19,7 +19,6 @@ class SubscriptionSetImpl(
     BaseSubscriptionSetImpl<Subscription>(pubnubJava, initialSubscriptions),
         com.pubnub.api.java.v2.subscriptions.SubscriptionSet,
         EventEmitterInternal {
-    private val listenerHistory = ArrayList<EventListener>()
     private var lastSubscribeTime: Long = 0
     private var subscribeCount = 0
 
@@ -53,27 +52,7 @@ class SubscriptionSetImpl(
     }
 
     override fun addListener(listener: EventListener) {
-        listenerHistory.add(listener)
         addListener(DelegatingEventListener(listener, pubnubJava))
-    }
-
-    /**
-     * Returns all listeners that have ever been added, including ones that were later removed.
-     */
-    fun getListenerHistory(): List<EventListener> {
-        return listenerHistory
-    }
-
-    /**
-     * Checks whether a specific listener is in the history by comparing toString() representations.
-     */
-    fun hasListenerEverBeenAdded(listener: EventListener): Boolean {
-        for (l in listenerHistory) {
-            if (l.toString().equals(listener.toString())) {
-                return true
-            }
-        }
-        return false
     }
 
     override fun removeListener(listener: Listener) {
