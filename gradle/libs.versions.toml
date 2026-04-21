@@ -30,7 +30,7 @@ kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx_coroutines"}
 
 # tests
-wiremock = { module = "com.github.tomakehurst:wiremock", version = "2.27.2" }
+wiremock = { module = "com.github.tomakehurst:wiremock-jre8", version = "2.35.2" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 logback-core = { module = "ch.qos.logback:logback-core", version.ref = "logback" }
 cucumber-java = { module = "io.cucumber:cucumber-java", version.ref = "cucumber" }
