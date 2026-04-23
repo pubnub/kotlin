@@ -31,11 +31,11 @@ sdks:
                     runtime-version:
                       - ART
                     target-api-level: 
-                      - 23
+                      - 36
                     minimum-api-level:
                       - 23
                     maximum-api-level:
-                      - 30  
+                      - 36
                     target-architecture:
                       - armeabi-v7a
                       - atom
@@ -57,7 +57,7 @@ sdks:
                     minimum-os-version:
                       - macOS 10.12
                     maximum-os-version:
-                      - macOS 15.0.1
+                      - macOS 26.4.1
                     target-architecture:
                       - x86-64
                   Windows:
