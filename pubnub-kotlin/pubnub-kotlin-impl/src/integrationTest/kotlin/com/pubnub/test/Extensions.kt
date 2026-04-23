@@ -13,13 +13,13 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
-fun <Output> RemoteAction<Output>.await(function: (result: Result<Output>) -> Unit) {
+fun <Output> RemoteAction<Output>.await(seconds: Int = CommonUtils.DEFAULT_LISTEN_DURATION, function: (result: Result<Output>) -> Unit) {
     val success = AtomicBoolean()
     async { result ->
         function.invoke(result)
         success.set(true)
     }
-    success.listen()
+    success.listen(seconds)
 }
 //
 // fun PNStatus.param(param: String) = clientRequest!!.url.queryParameter(param)
