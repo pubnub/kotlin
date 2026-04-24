@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-class EffectDispatcher<T : EffectInvocation>(
+internal class EffectDispatcher<T : EffectInvocation>(
     private val effectFactory: EffectFactory<T>,
     private val effectSource: Source<T>,
     private val managedEffects: ConcurrentHashMap<String, ManagedEffect> = ConcurrentHashMap(),

@@ -1,5 +1,5 @@
 package com.pubnub.api.eventengine
 
-interface ManagedEffect : Effect {
+internal interface ManagedEffect : Effect {
     fun cancel()
 }

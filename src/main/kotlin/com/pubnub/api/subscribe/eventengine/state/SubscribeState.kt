@@ -11,7 +11,7 @@ import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 
-sealed class SubscribeState : State<SubscribeEffectInvocation, SubscribeEvent, SubscribeState> {
+internal sealed class SubscribeState : State<SubscribeEffectInvocation, SubscribeEvent, SubscribeState> {
     object Unsubscribed : SubscribeState() {
         override fun transition(event: SubscribeEvent): Pair<SubscribeState, Set<SubscribeEffectInvocation>> {
             return when (event) {
@@ -51,7 +51,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, SubscribeEvent, S
                         SubscribeEffectInvocation.EmitStatus(
                             PNStatus(
                                 category = PNStatusCategory.PNConnectedCategory,
-                                operation = PNOperationType.PNSubscribeOperation, // todo is PNSubscribeOperation correct operation
+                                operation = PNOperationType.PNSubscribeOperation,
                                 error = false,
                                 affectedChannels = channels.toList(),
                                 affectedChannelGroups = channelGroups.toList()
@@ -65,7 +65,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, SubscribeEvent, S
                 }
 
                 is SubscribeEvent.HandshakeFailure -> {
-                    transitionTo(HandshakeReconnecting(channels, channelGroups, 0, event.reason))
+                    transitionTo(HandshakeReconnecting(channels, channelGroups, 0, event.reason, subscriptionCursor))
                 }
 
                 is SubscribeEvent.SubscriptionChanged -> {
@@ -135,7 +135,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, SubscribeEvent, S
 
                 is SubscribeEvent.HandshakeReconnectSuccess -> {
                     transitionTo(
-                        state = Receiving(channels, channelGroups, subscriptionCursor ?: event.subscriptionCursor),
+                        state = Receiving(channels, channelGroups, subscriptionCursor?.copy(region = event.subscriptionCursor.region) ?: event.subscriptionCursor),
                         SubscribeEffectInvocation.EmitStatus(
                             PNStatus(
                                 category = PNStatusCategory.PNConnectedCategory,
@@ -172,26 +172,27 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, SubscribeEvent, S
         override fun transition(event: SubscribeEvent): Pair<SubscribeState, Set<SubscribeEffectInvocation>> {
             return when (event) {
                 is SubscribeEvent.Reconnect -> {
-                    transitionTo(Handshaking(channels, channelGroups))
+                    transitionTo(Handshaking(channels, channelGroups, event.subscriptionCursor))
                 }
 
                 is SubscribeEvent.SubscriptionChanged -> {
                     transitionTo(
-                        Handshaking(
+                        HandshakeStopped(
                             event.channels,
-                            event.channelGroups
+                            event.channelGroups,
+                            reason = null
                         )
-                    ) // todo transition to HandshakeStopped + update channels/channelGroups list
+                    )
                 }
 
                 is SubscribeEvent.SubscriptionRestored -> {
                     transitionTo(
-                        Receiving(
+                        HandshakeStopped(
                             event.channels,
                             event.channelGroups,
-                            event.subscriptionCursor
+                            reason = null
                         )
-                    ) // todo check with doc. transitionTo Handshaking or self?
+                    )
                 }
 
                 is SubscribeEvent.UnsubscribeAll -> {
@@ -214,10 +215,6 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, SubscribeEvent, S
 
         override fun transition(event: SubscribeEvent): Pair<SubscribeState, Set<SubscribeEffectInvocation>> {
             return when (event) {
-                is SubscribeEvent.HandshakeReconnectRetry -> {
-                    transitionTo(HandshakeReconnecting(channels, channelGroups, 0, reason, subscriptionCursor))
-                }
-
                 is SubscribeEvent.SubscriptionChanged -> {
                     transitionTo(Handshaking(event.channels, event.channelGroups))
                 }
@@ -231,7 +228,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, SubscribeEvent, S
                 }
 
                 is SubscribeEvent.Reconnect -> {
-                    transitionTo(Handshaking(channels, channelGroups))
+                    transitionTo(Handshaking(channels, channelGroups, event.subscriptionCursor))
                 }
 
                 is SubscribeEvent.UnsubscribeAll -> {
@@ -275,8 +272,8 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, SubscribeEvent, S
                         SubscribeEffectInvocation.EmitStatus(
                             PNStatus(
                                 category = PNStatusCategory.PNDisconnectedCategory,
-                                operation = PNOperationType.PNSubscribeOperation,
-                                error = false, // todo is PNDisconnectedCategory error
+                                operation = PNOperationType.PNDisconnectOperation,
+                                error = false,
                                 affectedChannels = channels.toList(),
                                 affectedChannelGroups = channelGroups.toList()
                             )
@@ -289,7 +286,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, SubscribeEvent, S
                 }
 
                 is SubscribeEvent.SubscriptionRestored -> {
-                    transitionTo(Receiving(event.channels, event.channelGroups, event.subscriptionCursor))
+                    transitionTo(Receiving(event.channels, event.channelGroups, SubscriptionCursor(event.subscriptionCursor.timetoken, subscriptionCursor.region)))
                 }
 
                 is SubscribeEvent.ReceiveSuccess -> {
@@ -300,7 +297,18 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, SubscribeEvent, S
                 }
 
                 is SubscribeEvent.UnsubscribeAll -> {
-                    transitionTo(Unsubscribed)
+                    transitionTo(
+                        state = Unsubscribed,
+                        SubscribeEffectInvocation.EmitStatus(
+                            PNStatus(
+                                category = PNStatusCategory.PNDisconnectedCategory,
+                                operation = PNOperationType.PNUnsubscribeOperation,
+                                error = false,
+                                affectedChannels = channels.toList(),
+                                affectedChannelGroups = channelGroups.toList()
+                            )
+                        )
+                    )
                 }
 
                 else -> {
@@ -352,8 +360,8 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, SubscribeEvent, S
                         SubscribeEffectInvocation.EmitStatus(
                             PNStatus(
                                 category = PNStatusCategory.PNDisconnectedCategory,
-                                operation = PNOperationType.PNSubscribeOperation,
-                                error = false, // todo is PNDisconnectedCategory error
+                                operation = PNOperationType.PNDisconnectOperation,
+                                error = false,
                                 affectedChannels = channels.toList(),
                                 affectedChannelGroups = channelGroups.toList()
                             )
@@ -368,7 +376,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, SubscribeEvent, S
                             PNStatus(
                                 category = PNStatusCategory.PNUnexpectedDisconnectCategory,
                                 operation = PNOperationType.PNSubscribeOperation,
-                                error = false, // todo is PNDisconnectedCategory error
+                                error = false,
                                 affectedChannels = channels.toList(),
                                 affectedChannelGroups = channelGroups.toList()
                             )
@@ -380,24 +388,26 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, SubscribeEvent, S
                     transitionTo(
                         state = Receiving(channels, channelGroups, event.subscriptionCursor),
                         SubscribeEffectInvocation.EmitMessages(event.messages),
+                    )
+                }
+
+                is SubscribeEvent.SubscriptionRestored -> {
+                    transitionTo(Receiving(event.channels, event.channelGroups, SubscriptionCursor(event.subscriptionCursor.timetoken, subscriptionCursor.region)))
+                }
+
+                is SubscribeEvent.UnsubscribeAll -> {
+                    transitionTo(
+                        state = Unsubscribed,
                         SubscribeEffectInvocation.EmitStatus(
                             PNStatus(
-                                category = PNStatusCategory.PNConnectedCategory,
-                                operation = PNOperationType.PNSubscribeOperation,
+                                category = PNStatusCategory.PNDisconnectedCategory,
+                                operation = PNOperationType.PNUnsubscribeOperation,
                                 error = false,
                                 affectedChannels = channels.toList(),
                                 affectedChannelGroups = channelGroups.toList()
                             )
                         )
                     )
-                }
-
-                is SubscribeEvent.SubscriptionRestored -> {
-                    transitionTo(Receiving(event.channels, event.channelGroups, subscriptionCursor))
-                }
-
-                is SubscribeEvent.UnsubscribeAll -> {
-                    transitionTo(Unsubscribed)
                 }
 
                 else -> {
@@ -415,27 +425,27 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, SubscribeEvent, S
         override fun transition(event: SubscribeEvent): Pair<SubscribeState, Set<SubscribeEffectInvocation>> {
             return when (event) {
                 is SubscribeEvent.Reconnect -> {
-                    transitionTo(Receiving(channels, channelGroups, subscriptionCursor))
+                    transitionTo(Handshaking(channels, channelGroups, event.subscriptionCursor ?: subscriptionCursor))
                 }
 
                 is SubscribeEvent.SubscriptionChanged -> {
                     transitionTo(
-                        Receiving(
+                        ReceiveStopped(
                             event.channels,
                             event.channelGroups,
                             subscriptionCursor
                         )
-                    ) // todo transition to ReceiveStopped + update channels/channelGroups list
+                    )
                 }
 
                 is SubscribeEvent.SubscriptionRestored -> {
                     transitionTo(
-                        Receiving(
+                        ReceiveStopped(
                             event.channels,
                             event.channelGroups,
                             event.subscriptionCursor
                         )
-                    ) // todo check if this shouldn't go to ReceiveStopped
+                    )
                 }
 
                 is SubscribeEvent.UnsubscribeAll -> {
@@ -457,20 +467,16 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, SubscribeEvent, S
     ) : SubscribeState() {
         override fun transition(event: SubscribeEvent): Pair<SubscribeState, Set<SubscribeEffectInvocation>> {
             return when (event) {
-                is SubscribeEvent.ReceiveReconnectRetry -> {
-                    transitionTo(ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason))
-                }
-
                 is SubscribeEvent.Reconnect -> {
-                    transitionTo(Receiving(channels, channelGroups, subscriptionCursor))
+                    transitionTo(Handshaking(channels, channelGroups, event.subscriptionCursor ?: subscriptionCursor))
                 }
 
                 is SubscribeEvent.SubscriptionChanged -> {
-                    transitionTo(Receiving(event.channels, event.channelGroups, subscriptionCursor))
+                    transitionTo(Handshaking(event.channels, event.channelGroups, subscriptionCursor))
                 }
 
                 is SubscribeEvent.SubscriptionRestored -> {
-                    transitionTo(Receiving(event.channels, event.channelGroups, event.subscriptionCursor))
+                    transitionTo(Handshaking(event.channels, event.channelGroups, event.subscriptionCursor))
                 }
 
                 is SubscribeEvent.UnsubscribeAll -> {

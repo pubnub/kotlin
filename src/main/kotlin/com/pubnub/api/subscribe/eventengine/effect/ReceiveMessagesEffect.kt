@@ -7,7 +7,7 @@ import com.pubnub.api.eventengine.Sink
 import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import org.slf4j.LoggerFactory
 
-class ReceiveMessagesEffect(
+internal class ReceiveMessagesEffect(
     private val receiveMessagesRemoteAction: RemoteAction<ReceiveMessagesResult>,
     private val subscribeEventSink: Sink<SubscribeEvent>,
 ) : ManagedEffect {
@@ -21,7 +21,7 @@ class ReceiveMessagesEffect(
                 subscribeEventSink.add(
                     SubscribeEvent.ReceiveFailure(
                         status.exception
-                            ?: PubNubException("Unknown error") // todo check it that can happen
+                            ?: PubNubException("Unknown error")
                     )
                 )
             } else {

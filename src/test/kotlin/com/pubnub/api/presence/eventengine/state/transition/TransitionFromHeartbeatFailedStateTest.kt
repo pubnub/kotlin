@@ -22,7 +22,7 @@ class TransitionFromHeartbeatFailedStateTest {
         )
 
         // then
-        Assertions.assertEquals(PresenceState.HearbeatInactive, newState)
+        Assertions.assertEquals(PresenceState.HeartbeatInactive, newState)
         Assertions.assertEquals(
             setOf<PresenceEffectInvocation>(PresenceEffectInvocation.Leave(channels, channelGroups)), invocations
         )

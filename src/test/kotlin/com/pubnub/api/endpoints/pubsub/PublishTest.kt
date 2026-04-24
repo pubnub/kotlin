@@ -3,11 +3,13 @@ package com.pubnub.api.endpoints.pubsub
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
+import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.managers.RetrofitManager
 import com.pubnub.api.services.PublishService
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
+import io.mockk.spyk
 import okhttp3.Request
 import okio.Timeout
 import org.hamcrest.MatcherAssert.assertThat
@@ -37,8 +39,8 @@ class PublishTest {
         useRandomInitializationVector = true
     }
 
-    private val pubNubHardcodedIVMock = mockk<PubNub>(relaxed = true)
-    private val pubNubRandomIVMock = mockk<PubNub>(relaxed = true)
+    private val pubNubHardcodedIVMock = spyk(PubNub(pnConfigurationHardcodedIV))
+    private val pubNubRandomIVMock = spyk(PubNub(pnConfigurationRandomIV))
 
     private val retrofitManagerMock = mockk<RetrofitManager>()
     private val publishServiceMock = mockk<PublishService>()
@@ -78,7 +80,9 @@ class PublishTest {
         every { retrofitManagerMock.publishService } returns publishServiceMock
 
         every { pubNubHardcodedIVMock.configuration } returns pnConfigurationHardcodedIV
+        every { pubNubHardcodedIVMock.cryptoModule } returns CryptoModule.createLegacyCryptoModule(CIPHER_KEY)
         every { pubNubRandomIVMock.configuration } returns pnConfigurationRandomIV
+        every { pubNubRandomIVMock.cryptoModule } returns CryptoModule.createLegacyCryptoModule(CIPHER_KEY, false)
 
         every { pubNubHardcodedIVMock.retrofitManager } returns retrofitManagerMock
         every { pubNubRandomIVMock.retrofitManager } returns retrofitManagerMock

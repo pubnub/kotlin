@@ -11,11 +11,10 @@ import java.security.MessageDigest;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Random;
 
-import static com.pubnub.api.vendor.FileEncryptionUtil.CIPHER_TRANSFORMATION;
-import static com.pubnub.api.vendor.FileEncryptionUtil.ENCODING_UTF_8;
-
-
 public class Crypto {
+
+    private static final String ENCODING_UTF_8 = "UTF-8";
+    private static final String CIPHER_TRANSFORMATION = "AES/CBC/PKCS5Padding";
 
     private final boolean dynamicIV;
     byte[] keyBytes = null;
@@ -137,34 +136,7 @@ public class Crypto {
         }
     }
 
-    public static byte[] hexStringToByteArray(String s) {
-        int len = s.length();
-        byte[] data = new byte[len / 2];
-        for (int i = 0; i < len; i += 2) {
-            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4) + Character.digit(s.charAt(i + 1), 16));
-        }
-        return data;
-    }
-
-    /**
-     * Get MD5
-     *
-     * @param input
-     * @return byte[]
-     * @throws PubNubException
-     */
-    public static byte[] md5(String input) throws PubNubException {
-        MessageDigest digest;
-        try {
-            digest = MessageDigest.getInstance("MD5");
-            byte[] hashedBytes = digest.digest(input.getBytes(ENCODING_UTF_8));
-            return hashedBytes;
-        } catch (Exception e) {
-            throw newCryptoError(0, e);
-        }
-    }
-
-    /**
+     /**
      * Get SHA256
      *
      * @param input

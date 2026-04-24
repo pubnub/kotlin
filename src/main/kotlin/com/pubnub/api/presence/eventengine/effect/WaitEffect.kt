@@ -9,9 +9,9 @@ import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
 
-class WaitEffect( // todo handle pubnub.configuration.heartbeatInterval <= 0
-    private val heartbeatInterval: Duration, // todo if the interval is 0 or less, do not start the timer
-    private val presenceEventSink: Sink<PresenceEvent>, // todo this should  be check at PresenceEventEngineCreation
+internal class WaitEffect(
+    private val heartbeatInterval: Duration,
+    private val presenceEventSink: Sink<PresenceEvent>,
     private val executorService: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
 ) : ManagedEffect {
 

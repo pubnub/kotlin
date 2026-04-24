@@ -1,3 +1,3 @@
 package com.pubnub.api.eventengine
 
-interface Event
+internal interface Event

@@ -13,19 +13,19 @@ import java.util.concurrent.ConcurrentHashMap
 
 class EffectDispatcherTest {
 
-    sealed class TestEffectInvocation(override val type: EffectInvocationType) : EffectInvocation {
+    internal sealed class TestEffectInvocation(override val type: EffectInvocationType) : EffectInvocation {
         override val id: String = this::class.java.simpleName
     }
 
-    object TestEffect :
+    internal object TestEffect :
         TestEffectInvocation(Managed)
 
-    object ImmediateEndingTestEffect :
+    internal object ImmediateEndingTestEffect :
         TestEffectInvocation(Managed)
 
-    object CancelTestEffect : TestEffectInvocation(Cancel(TestEffect::class.java.simpleName))
+    internal object CancelTestEffect : TestEffectInvocation(Cancel(TestEffect::class.java.simpleName))
 
-    class EffectHandlerFactoryImpl : EffectFactory<TestEffectInvocation> {
+    internal class EffectHandlerFactoryImpl : EffectFactory<TestEffectInvocation> {
         override fun create(effectInvocation: TestEffectInvocation): ManagedEffect {
             return object : ManagedEffect {
 

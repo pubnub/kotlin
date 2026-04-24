@@ -3,6 +3,9 @@ package com.pubnub.api
 import com.pubnub.api.builder.PubSub
 import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.callbacks.SubscribeCallback
+import com.pubnub.api.crypto.CryptoModule
+import com.pubnub.api.crypto.decryptString
+import com.pubnub.api.crypto.encryptString
 import com.pubnub.api.endpoints.DeleteMessages
 import com.pubnub.api.endpoints.FetchMessages
 import com.pubnub.api.endpoints.History
@@ -54,7 +57,6 @@ import com.pubnub.api.endpoints.push.RemoveChannelsFromPush
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.enums.PNReconnectionPolicy
-import com.pubnub.api.eventengine.EventEngineConf
 import com.pubnub.api.managers.BasePathManager
 import com.pubnub.api.managers.DuplicationManager
 import com.pubnub.api.managers.ListenerManager
@@ -85,27 +87,26 @@ import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.presence.Presence
+import com.pubnub.api.presence.eventengine.effect.effectprovider.HeartbeatProviderImpl
+import com.pubnub.api.presence.eventengine.effect.effectprovider.LeaveProviderImpl
 import com.pubnub.api.subscribe.Subscribe
-import com.pubnub.api.subscribe.eventengine.configuration.SubscribeEventEngineConfImpl
-import com.pubnub.api.vendor.Base64
-import com.pubnub.api.vendor.Crypto
-import com.pubnub.api.vendor.FileEncryptionUtil.decrypt
-import com.pubnub.api.vendor.FileEncryptionUtil.encrypt
+import com.pubnub.api.subscribe.eventengine.configuration.EventEnginesConf
 import com.pubnub.api.workers.SubscribeMessageProcessor
 import java.io.InputStream
+import java.time.Duration
 import java.util.Date
 import java.util.UUID
 
 class PubNub internal constructor(
     val configuration: PNConfiguration,
-    eventEngineConf: EventEngineConf
+    eventEnginesConf: EventEnginesConf
 ) {
 
-    constructor(configuration: PNConfiguration) : this(configuration, SubscribeEventEngineConfImpl())
+    constructor(configuration: PNConfiguration) : this(configuration, EventEnginesConf())
 
     companion object {
         private const val TIMESTAMP_DIVIDER = 1000
-        private const val SDK_VERSION = "7.6.0"
+        private const val SDK_VERSION = "7.7.2"
         private const val MAX_SEQUENCE = 65535
 
         /**
@@ -113,6 +114,9 @@ class PubNub internal constructor(
          */
         fun generateUUID() = "pn-${UUID.randomUUID()}"
     }
+
+    internal val cryptoModule: CryptoModule?
+        get() = configuration.cryptoModule
 
     //region Managers
 
@@ -129,7 +133,22 @@ class PubNub internal constructor(
     private val tokenParser: TokenParser = TokenParser()
     private val listenerManager = ListenerManager(this)
     internal val subscriptionManager = SubscriptionManager(this, listenerManager)
-    private val subscribe = Subscribe.create(this, listenerManager, configuration.retryPolicy, eventEngineConf, SubscribeMessageProcessor(this, DuplicationManager(configuration)))
+    private val subscribe = Subscribe.create(
+        this,
+        listenerManager,
+        configuration.retryPolicy,
+        eventEnginesConf,
+        SubscribeMessageProcessor(this, DuplicationManager(configuration))
+    )
+
+    private val presence = Presence.create(
+        heartbeatProvider = HeartbeatProviderImpl(this),
+        leaveProvider = LeaveProviderImpl(this),
+        heartbeatInterval = Duration.ofSeconds(configuration.heartbeatInterval.toLong()),
+        enableEventEngine = configuration.enableEventEngine,
+        retryPolicy = configuration.retryPolicy,
+        eventEngineConf = eventEnginesConf.presence
+    )
 
     //endregion
 
@@ -302,10 +321,12 @@ class PubNub internal constructor(
         channelGroups: List<String> = emptyList(),
         withPresence: Boolean = false,
         withTimetoken: Long = 0L
-    ) = if (configuration.enableSubscribeBeta)
+    ) = if (configuration.enableEventEngine) {
         subscribe.subscribe(channels.toSet(), channelGroups.toSet(), withPresence, withTimetoken)
-    else
+        presence.joined(channels.toSet(), channelGroups.toSet())
+    } else {
         PubSub.subscribe(subscriptionManager, channels, channelGroups, withPresence, withTimetoken)
+    }
 
     /**
      * When subscribed to a single channel, this function causes the client to issue a leave from the channel
@@ -327,19 +348,23 @@ class PubNub internal constructor(
     fun unsubscribe(
         channels: List<String> = emptyList(),
         channelGroups: List<String> = emptyList()
-    ) = if (configuration.enableSubscribeBeta)
+    ) = if (configuration.enableEventEngine) {
         subscribe.unsubscribe(channels.toSet(), channelGroups.toSet())
-    else
+        presence.left(channels.toSet(), channelGroups.toSet())
+    } else {
         PubSub.unsubscribe(subscriptionManager, channels, channelGroups)
+    }
 
     /**
      * Unsubscribe from all channels and all channel groups
      */
     fun unsubscribeAll() =
-        if (configuration.enableSubscribeBeta)
+        if (configuration.enableEventEngine) {
             subscribe.unsubscribeAll()
-        else
+            presence.leftAll()
+        } else {
             subscriptionManager.unsubscribeAll()
+        }
 
     /**
      * Queries the local subscribe loop for channels currently in the mix.
@@ -347,7 +372,7 @@ class PubNub internal constructor(
      * @return A list of channels the client is currently subscribed to.
      */
     fun getSubscribedChannels() =
-        if (configuration.enableSubscribeBeta)
+        if (configuration.enableEventEngine)
             subscribe.getSubscribedChannels()
         else
             subscriptionManager.getSubscribedChannels()
@@ -358,7 +383,7 @@ class PubNub internal constructor(
      * @return A list of channel groups the client is currently subscribed to.
      */
     fun getSubscribedChannelGroups() =
-        if (configuration.enableSubscribeBeta)
+        if (configuration.enableEventEngine)
             subscribe.getSubscribedChannelGroups()
         else
             subscriptionManager.getSubscribedChannelGroups()
@@ -724,6 +749,7 @@ class PubNub internal constructor(
         channelGroups = channelGroups,
         state = state,
         uuid = uuid
+        // todo involve EE ?
     )
 
     /**
@@ -755,14 +781,15 @@ class PubNub internal constructor(
         channels: List<String> = emptyList(),
         channelGroups: List<String> = emptyList(),
         connected: Boolean = false
-    ) = if (configuration.enableSubscribeBeta)
-        Presence.presence(
-            channels = channels,
-            channelGroups = channelGroups,
+    ) = if (configuration.enableEventEngine) {
+        presence.presence(
+            channels = channels.toSet(),
+            channelGroups = channelGroups.toSet(),
             connected = connected
         )
-    else
+    } else {
         PubSub.presence(subscriptionManager, channels, channelGroups, connected)
+    }
 
     //endregion
 
@@ -1720,7 +1747,7 @@ class PubNub internal constructor(
      *
      * @param channel Channel name
      * @param fileName Name of the file to send.
-     * @param inputStream Input stream with file content.
+     * @param inputStream Input stream with file content. The inputStream will be depleted after the call.
      * @param message The payload.
      *                **Warning:** It is important to note that you should not serialize JSON
      *                when sending signals/messages via PubNub.
@@ -1751,6 +1778,12 @@ class PubNub internal constructor(
         shouldStore: Boolean? = null,
         cipherKey: String? = null
     ): SendFile {
+        val cryptoModule = if (cipherKey != null) {
+            CryptoModule.createLegacyCryptoModule(cipherKey)
+        } else {
+            cryptoModule
+        }
+
         return SendFile(
             channel = channel,
             fileName = fileName,
@@ -1759,12 +1792,12 @@ class PubNub internal constructor(
             meta = meta,
             ttl = ttl,
             shouldStore = shouldStore,
-            cipherKey = cipherKey,
             executorService = retrofitManager.getTransactionClientExecutorService(),
             fileMessagePublishRetryLimit = configuration.fileMessagePublishRetryLimit,
             generateUploadUrlFactory = GenerateUploadUrl.Factory(this),
             publishFileMessageFactory = PublishFileMessage.Factory(this),
-            sendFileToS3Factory = UploadFile.Factory(this)
+            sendFileToS3Factory = UploadFile.Factory(this),
+            cryptoModule = cryptoModule
         )
     }
 
@@ -1823,12 +1856,18 @@ class PubNub internal constructor(
         fileId: String,
         cipherKey: String? = null
     ): DownloadFile {
+        val cryptoModule = if (cipherKey != null) {
+            CryptoModule.createLegacyCryptoModule(cipherKey)
+        } else {
+            cryptoModule
+        }
+
         return DownloadFile(
             pubNub = this,
             channel = channel,
             fileName = fileName,
             fileId = fileId,
-            cipherKey = cipherKey
+            cryptoModule = cryptoModule
         )
     }
 
@@ -1927,7 +1966,7 @@ class PubNub internal constructor(
      * @return String containing the decryption of `inputString` using `cipherKey`.
      * @throws PubNubException throws exception in case of failed decryption.
      */
-    fun decrypt(inputString: String): String = decrypt(inputString, configuration.cipherKey)
+    fun decrypt(inputString: String): String = decrypt(inputString, null)
 
     /**
      * Perform Cryptographic decryption of an input string using a cipher key.
@@ -1938,8 +1977,8 @@ class PubNub internal constructor(
      * @return String containing the decryption of `inputString` using `cipherKey`.
      * @throws PubNubException throws exception in case of failed decryption.
      */
-    fun decrypt(inputString: String, cipherKey: String = configuration.cipherKey): String =
-        Crypto(cipherKey, configuration.useRandomInitializationVector).decrypt(inputString, Base64.DEFAULT)
+    fun decrypt(inputString: String, cipherKey: String? = null): String =
+        getCryptoModuleOrThrow(cipherKey).decryptString(inputString)
 
     /**
      * Perform Cryptographic decryption of an input stream using provided cipher key.
@@ -1952,8 +1991,8 @@ class PubNub internal constructor(
      */
     fun decryptInputStream(
         inputStream: InputStream,
-        cipherKey: String = configuration.cipherKey
-    ): InputStream = decrypt(inputStream, cipherKey)
+        cipherKey: String? = null
+    ): InputStream = getCryptoModuleOrThrow(cipherKey).decryptStream(inputStream)
 
     /**
      * Perform Cryptographic encryption of an input string and a cipher key.
@@ -1964,8 +2003,8 @@ class PubNub internal constructor(
      * @return String containing the encryption of `inputString` using `cipherKey`.
      * @throws PubNubException Throws exception in case of failed encryption.
      */
-    fun encrypt(inputString: String, cipherKey: String = configuration.cipherKey): String =
-        Crypto(cipherKey, configuration.useRandomInitializationVector).encrypt(inputString, Base64.DEFAULT)
+    fun encrypt(inputString: String, cipherKey: String? = null): String =
+        getCryptoModuleOrThrow(cipherKey).encryptString(inputString)
 
     /**
      * Perform Cryptographic encryption of an input stream using provided cipher key.
@@ -1978,17 +2017,23 @@ class PubNub internal constructor(
      */
     fun encryptInputStream(
         inputStream: InputStream,
-        cipherKey: String = configuration.cipherKey
-    ): InputStream = encrypt(inputStream, cipherKey)
+        cipherKey: String? = null
+    ): InputStream = getCryptoModuleOrThrow(cipherKey).encryptStream(inputStream)
+
+    private fun getCryptoModuleOrThrow(cipherKey: String? = null): CryptoModule {
+        return cipherKey?.let {
+            CryptoModule.createLegacyCryptoModule(it, configuration.useRandomInitializationVector)
+        } ?: cryptoModule ?: throw PubNubException("Crypto module is not initialized")
+    }
     //endregion
 
     /**
      * Force the SDK to try and reach out PubNub. Monitor the results in [SubscribeCallback.status]
      */
-    fun reconnect() {
-        if (configuration.enableSubscribeBeta) {
-            // todo handle in Subscribe EE
-            subscribe.reconnect()
+    fun reconnect(timetoken: Long = 0L) {
+        if (configuration.enableEventEngine) {
+            subscribe.reconnect(timetoken)
+            presence.reconnect()
         } else {
             subscriptionManager.reconnect()
         }
@@ -2000,8 +2045,9 @@ class PubNub internal constructor(
      * Monitor the results in [SubscribeCallback.status]
      */
     fun disconnect() {
-        if (configuration.enableSubscribeBeta) {
+        if (configuration.enableEventEngine) {
             subscribe.disconnect()
+            presence.disconnect()
         } else {
             subscriptionManager.disconnect()
         }
@@ -2011,10 +2057,10 @@ class PubNub internal constructor(
      * Frees up threads and allows for a clean exit.
      */
     fun destroy() {
-        if (configuration.enableSubscribeBeta) {
+        if (configuration.enableEventEngine) {
             subscribe.destroy()
+            presence.destroy()
             retrofitManager.destroy()
-            // todo add presenceEventEngineDestroy
         } else {
             subscriptionManager.destroy()
             retrofitManager.destroy()
@@ -2025,10 +2071,10 @@ class PubNub internal constructor(
      * Same as [destroy] but immediately.
      */
     fun forceDestroy() {
-        if (configuration.enableSubscribeBeta) {
+        if (configuration.enableEventEngine) {
             subscribe.destroy()
+            presence.destroy()
             retrofitManager.destroy(true)
-            // todo add presenceEventEngineDestroy
         } else {
             subscriptionManager.destroy(true)
             retrofitManager.destroy(true)

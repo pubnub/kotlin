@@ -10,7 +10,7 @@ import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 
-class ReceiveReconnectEffect(
+internal class ReceiveReconnectEffect(
     private val receiveMessagesRemoteAction: RemoteAction<ReceiveMessagesResult>,
     private val subscribeEventSink: Sink<SubscribeEvent>,
     private val policy: RetryPolicy,

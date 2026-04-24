@@ -30,6 +30,10 @@ interface ContractTestKeysConfig : Config {
     @get:Config.Key("dataFilesLocation")
     @get:Config.DefaultValue("src/test/resources/sdk-specifications/features/data")
     val dataFilesLocation: String
+
+    @get:Config.Key("cryptoFilesLocation")
+    @get:Config.DefaultValue("src/test/resources/sdk-specifications/features/encryption/assets")
+    val cryptoFilesLocation: String
 }
 
 val ContractTestConfig: ContractTestKeysConfig = ConfigFactory.create(ContractTestKeysConfig::class.java, System.getenv())

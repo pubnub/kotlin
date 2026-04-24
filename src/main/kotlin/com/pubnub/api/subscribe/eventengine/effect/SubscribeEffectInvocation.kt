@@ -10,7 +10,7 @@ import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 
-sealed class SubscribeEffectInvocation(override val type: EffectInvocationType) : EffectInvocation {
+internal sealed class SubscribeEffectInvocation(override val type: EffectInvocationType) : EffectInvocation {
 
     override val id: String = "any value for NonManged and Cancel effect"
 

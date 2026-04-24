@@ -10,7 +10,7 @@ import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResu
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import org.slf4j.LoggerFactory
 
-class EmitMessagesEffect(
+internal class EmitMessagesEffect(
     private val messagesConsumer: MessagesConsumer,
     private val messages: List<PNEvent>
 ) : Effect {

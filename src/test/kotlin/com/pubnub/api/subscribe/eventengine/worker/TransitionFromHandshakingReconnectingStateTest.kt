@@ -17,7 +17,6 @@ class TransitionFromHandshakingReconnectingStateTest {
     private val channelGroups = setOf("ChannelGroup1")
     private val timeToken = 12345345452L
     private val region = "42"
-    private val subscriptionCursor = SubscriptionCursor(timeToken, region)
     private val reason = PubNubException("Test")
 
     @Test
@@ -105,14 +104,21 @@ class TransitionFromHandshakingReconnectingStateTest {
 
     @Test
     fun can_transit_from_HANDSHAKE_RECONNECTING_to_RECEIVING_when_there_is_HANDSHAKE_RECONNECT_SUCCESS_event() {
+        // given
+        val subscriptionCursorStoredInHandshakeReconnecting = SubscriptionCursor(timeToken, null)
+        val regionStoredInStoredInHandshakeReconnectSuccess = "12"
+        val timeTokenFromSubscriptionRestored = 99945345452L
+        val subscriptionCursorStoredInHandshakeReconnectSuccess = SubscriptionCursor(timeTokenFromSubscriptionRestored, regionStoredInStoredInHandshakeReconnectSuccess)
+
         // when
         val (state, invocations) = transition(
-            SubscribeState.HandshakeReconnecting(channels, channelGroups, 0, reason),
-            SubscribeEvent.HandshakeReconnectSuccess(subscriptionCursor)
+            SubscribeState.HandshakeReconnecting(channels, channelGroups, 0, reason, subscriptionCursorStoredInHandshakeReconnecting),
+            SubscribeEvent.HandshakeReconnectSuccess(subscriptionCursorStoredInHandshakeReconnectSuccess)
         )
 
         // then
-        assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), state)
+        val expectedSubscriptionCursor = SubscriptionCursor(timeToken, regionStoredInStoredInHandshakeReconnectSuccess)
+        assertEquals(SubscribeState.Receiving(channels, channelGroups, expectedSubscriptionCursor), state)
         assertEquals(
             setOf(
                 SubscribeEffectInvocation.CancelHandshakeReconnect,
@@ -125,7 +131,7 @@ class TransitionFromHandshakingReconnectingStateTest {
                         affectedChannelGroups = channelGroups.toList()
                     )
                 ),
-                SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)
+                SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, expectedSubscriptionCursor)
             ),
             invocations
         )
@@ -133,14 +139,19 @@ class TransitionFromHandshakingReconnectingStateTest {
 
     @Test
     fun can_transit_from_HANDSHAKE_RECONNECTING_to_RECEIVING_when_there_is_SUBSCRIPTION_RESTORED_event() {
+        // given
+        val subscriptionCursorStoredInHandshakeReconnecting = SubscriptionCursor(timeToken, "12")
+        val timeTokenFromSubscriptionRestored = 99945345452L
+        val subscriptionCursorStoredInSubscriptionRestored = SubscriptionCursor(timeTokenFromSubscriptionRestored, "1")
+
         // when
         val (state, invocations) = transition(
-            SubscribeState.HandshakeReconnecting(channels, channelGroups, 0, reason),
-            SubscribeEvent.SubscriptionRestored(channels, channelGroups, subscriptionCursor)
+            SubscribeState.HandshakeReconnecting(channels, channelGroups, 0, reason, subscriptionCursorStoredInHandshakeReconnecting),
+            SubscribeEvent.SubscriptionRestored(channels, channelGroups, subscriptionCursorStoredInSubscriptionRestored)
         )
 
         // then
-        assertEquals(SubscribeState.Handshaking(channels, channelGroups, subscriptionCursor), state)
+        assertEquals(SubscribeState.Handshaking(channels, channelGroups, subscriptionCursorStoredInSubscriptionRestored), state)
         assertEquals(
             setOf(
                 SubscribeEffectInvocation.CancelHandshakeReconnect,

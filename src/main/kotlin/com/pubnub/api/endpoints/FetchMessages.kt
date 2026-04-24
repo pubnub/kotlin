@@ -13,7 +13,7 @@ import com.pubnub.api.models.server.FetchMessagesEnvelope
 import com.pubnub.api.toCsv
 import com.pubnub.extension.limit
 import com.pubnub.extension.nonPositiveToNull
-import com.pubnub.extension.processHistoryMessage
+import com.pubnub.extension.tryDecryptMessage
 import retrofit2.Call
 import retrofit2.Response
 import java.util.Locale
@@ -28,7 +28,7 @@ class FetchMessages internal constructor(
     val includeUUID: Boolean,
     val includeMeta: Boolean,
     val includeMessageActions: Boolean,
-    val includeMessageType: Boolean,
+    val includeMessageType: Boolean
 ) : Endpoint<FetchMessagesEnvelope, PNFetchMessagesResult>(pubnub) {
 
     internal companion object {
@@ -82,7 +82,10 @@ class FetchMessages internal constructor(
         val body = input.body()!!
         val channelsMap = body.channels.mapValues { (_, value) ->
             value.map { serverMessageItem ->
-                val newMessage = serverMessageItem.message.processHistoryMessage(pubnub.configuration, pubnub.mapper)
+                val (newMessage, error) = serverMessageItem.message.tryDecryptMessage(
+                    pubnub.cryptoModule,
+                    pubnub.mapper
+                )
                 val newActions =
                     if (includeMessageActions) serverMessageItem.actions ?: mapOf() else serverMessageItem.actions
                 PNFetchMessageItem(
@@ -92,6 +95,7 @@ class FetchMessages internal constructor(
                     timetoken = serverMessageItem.timetoken,
                     actions = newActions,
                     messageType = if (includeMessageType) HistoryMessageType.of(serverMessageItem.messageType) else null,
+                    error = error
                 )
             }
         }.toMap()

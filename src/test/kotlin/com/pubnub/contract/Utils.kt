@@ -6,6 +6,8 @@ import com.pubnub.api.models.consumer.objects.member.PNMember
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import java.io.File
+import java.nio.file.Files
+import java.nio.file.Paths
 
 val gson = Gson()
 
@@ -19,3 +21,8 @@ fun loadPersonaUUIDMetadata(personaName: String): PNUUIDMetadata = readResourceF
 fun loadChannelMetadata(channelName: String): PNChannelMetadata = readResourceFromDataFile(channelName)
 fun loadChannelMembership(membershipName: String): PNChannelMembership = readResourceFromDataFile(membershipName)
 fun loadMember(memberName: String): PNMember = readResourceFromDataFile(memberName)
+
+fun getFileContentAsByteArray(fileName: String): ByteArray {
+    val cryptoFileLocation = "${ContractTestConfig.cryptoFilesLocation}"
+    return Files.readAllBytes(Paths.get(cryptoFileLocation, fileName))
+}
