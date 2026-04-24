@@ -8,7 +8,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.history.PNHistoryItemResult
 import com.pubnub.api.models.consumer.history.PNHistoryResult
-import com.pubnub.extension.processHistoryMessage
+import com.pubnub.extension.tryDecryptMessage
 import retrofit2.Call
 import retrofit2.Response
 import java.util.HashMap
@@ -25,7 +25,7 @@ class History internal constructor(
     val count: Int,
     val reverse: Boolean,
     val includeTimetoken: Boolean,
-    val includeMeta: Boolean
+    val includeMeta: Boolean,
 ) : Endpoint<JsonElement, PNHistoryResult>(pubnub) {
 
     internal companion object {
@@ -71,12 +71,12 @@ class History internal constructor(
 
                 val historyEntry = iterator.next()
 
-                var message: JsonElement
                 var timetoken: Long? = null
                 var meta: JsonElement? = null
+                val historyMessageWithError: Pair<JsonElement, PubNubError?>
 
                 if (includeTimetoken || includeMeta) {
-                    message = pubnub.mapper.getField(historyEntry, "message")!!.processHistoryMessage(pubnub.configuration, pubnub.mapper)
+                    historyMessageWithError = pubnub.mapper.getField(historyEntry, "message")!!.tryDecryptMessage(pubnub.cryptoModule, pubnub.mapper)
                     if (includeTimetoken) {
                         timetoken = pubnub.mapper.elementToLong(historyEntry, "timetoken")
                     }
@@ -84,13 +84,17 @@ class History internal constructor(
                         meta = pubnub.mapper.getField(historyEntry, "meta")
                     }
                 } else {
-                    message = historyEntry.processHistoryMessage(pubnub.configuration, pubnub.mapper)
+                    historyMessageWithError = historyEntry.tryDecryptMessage(pubnub.cryptoModule, pubnub.mapper)
                 }
+
+                val message: JsonElement = historyMessageWithError.first
+                val error: PubNubError? = historyMessageWithError.second
 
                 val historyItem = PNHistoryItemResult(
                     entry = message,
                     timetoken = timetoken,
-                    meta = meta
+                    meta = meta,
+                    error = error
                 )
 
                 messages.add(historyItem)

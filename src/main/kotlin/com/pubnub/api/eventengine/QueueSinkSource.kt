@@ -3,7 +3,9 @@ package com.pubnub.api.eventengine
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
 
-class QueueSinkSource<T>(private val queue: BlockingQueue<T> = LinkedBlockingQueue()) : Sink<T>, Source<T> {
+internal interface SinkSource<T> : Sink<T>, Source<T>
+
+internal class QueueSinkSource<T>(private val queue: BlockingQueue<T> = LinkedBlockingQueue()) : SinkSource<T> {
     override fun take(): T {
         return queue.take()
     }

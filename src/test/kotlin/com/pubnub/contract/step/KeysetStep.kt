@@ -42,6 +42,6 @@ class KeysetStep(private val world: World) {
     @Given("the demo keyset with event engine enabled")
     fun the_demo_keyset_with_event_engine_enabled() {
         i_have_a_keyset_with_access_manager_enabled_without_secret_key()
-        world.configuration.enableSubscribeBeta = true
+        world.configuration.enableEventEngine = true
     }
 }

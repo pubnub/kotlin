@@ -1,3 +1,27 @@
+## v7.7.2
+November 08 2023
+
+#### Fixed
+- Fixed reading unencrypted history message when crypto is configured.
+
+
+
+## v7.7.1
+October 30 2023
+
+#### Fixed
+- Updated the JSON lib to version 20231013.
+- Changed license type from MIT to PubNub Software Development Kit License.
+
+## v7.7.0
+October 16 2023
+
+#### Added
+- Add crypto module that allows configure SDK to encrypt and decrypt messages.
+
+#### Fixed
+- Improved security of crypto implementation by adding enhanced AES-CBC cryptor.
+
 ## v7.6.0
 August 14 2023
 
