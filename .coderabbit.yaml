@@ -4,6 +4,11 @@ early_access: false
 tone_instructions: "Be concise and actionable. Focus on correctness, performance, and security issues."
 reviews:
   profile: "chill"
+  auto_review:
+    enabled: true
+    base_branches:
+      - "review-base/pre-crypto"
+      - "master"
   request_changes_workflow: false
   high_level_summary: true
   high_level_summary_placeholder: "@coderabbitai summary"
