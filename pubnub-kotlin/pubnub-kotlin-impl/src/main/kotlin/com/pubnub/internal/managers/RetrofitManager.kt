@@ -8,6 +8,7 @@ import com.pubnub.internal.logging.networkLogging.CustomPnHttpLoggingInterceptor
 import com.pubnub.internal.services.AccessManagerService
 import com.pubnub.internal.services.ChannelGroupService
 import com.pubnub.internal.services.FilesService
+import com.pubnub.internal.services.HeartbeatService
 import com.pubnub.internal.services.HistoryService
 import com.pubnub.internal.services.MessageActionService
 import com.pubnub.internal.services.ObjectsService
@@ -34,6 +35,7 @@ class RetrofitManager(
     @get:TestOnly internal var transactionClientInstance: OkHttpClient? = null,
     @get:TestOnly internal var subscriptionClientInstance: OkHttpClient? = null,
     @get:TestOnly internal var noSignatureClientInstance: OkHttpClient? = null,
+    @get:TestOnly internal var heartbeatClientInstance: OkHttpClient? = null,
 ) {
     private var signatureInterceptor: SignatureInterceptor = SignatureInterceptor(configuration)
 
@@ -41,6 +43,7 @@ class RetrofitManager(
     internal val publishService: PublishService
     internal val historyService: HistoryService
     internal val presenceService: PresenceService
+    internal val heartbeatService: HeartbeatService
     internal val messageActionService: MessageActionService
     internal val signalService: SignalService
     internal val channelGroupService: ChannelGroupService
@@ -61,6 +64,7 @@ class RetrofitManager(
         retrofitManager.transactionClientInstance,
         retrofitManager.subscriptionClientInstance,
         retrofitManager.noSignatureClientInstance,
+        retrofitManager.heartbeatClientInstance,
     )
 
     init {
@@ -69,16 +73,19 @@ class RetrofitManager(
             subscriptionClientInstance = createOkHttpClient(configuration.subscribeTimeout, parentOkHttpClient = subscriptionClientInstance)
             noSignatureClientInstance =
                 createOkHttpClient(configuration.nonSubscribeReadTimeout, withSignature = false, parentOkHttpClient = noSignatureClientInstance)
+            heartbeatClientInstance = createOkHttpClient(configuration.nonSubscribeReadTimeout, parentOkHttpClient = heartbeatClientInstance)
         }
 
         val transactionInstance = createRetrofit(transactionClientInstance)
         val subscriptionInstance = createRetrofit(subscriptionClientInstance)
         val noSignatureInstance = createRetrofit(noSignatureClientInstance)
+        val heartbeatInstance = createRetrofit(heartbeatClientInstance)
 
         timeService = transactionInstance.create(TimeService::class.java)
         publishService = transactionInstance.create(PublishService::class.java)
         historyService = transactionInstance.create(HistoryService::class.java)
         presenceService = transactionInstance.create(PresenceService::class.java)
+        heartbeatService = heartbeatInstance.create(HeartbeatService::class.java)
         messageActionService = transactionInstance.create(MessageActionService::class.java)
         signalService = transactionInstance.create(SignalService::class.java)
         channelGroupService = transactionInstance.create(ChannelGroupService::class.java)
@@ -161,7 +168,14 @@ class RetrofitManager(
 
         val okHttpClient = okHttpBuilder.build()
 
-        configuration.maximumConnections?.let { okHttpClient.dispatcher.maxRequestsPerHost = it }
+        // maxRequestsPerHost lives on the Dispatcher instance, and OkHttpClient.newBuilder().build()
+        // returns a client that SHARES the parent's Dispatcher. Mutating it here on a clone would change
+        // the cap for the parent's still-in-flight requests too — so only apply it on initial construction,
+        // the same gate used above for ConnectionPool. An override config can only change
+        // maximumConnections for a net-new RetrofitManager, never as a side-effect on its parent.
+        if (parentOkHttpClient == null) {
+            configuration.maximumConnections?.let { okHttpClient.dispatcher.maxRequestsPerHost = it }
+        }
 
         return okHttpClient
     }
@@ -186,6 +200,7 @@ class RetrofitManager(
         closeExecutor(transactionClientInstance, force)
         closeExecutor(subscriptionClientInstance, force)
         closeExecutor(noSignatureClientInstance, force)
+        closeExecutor(heartbeatClientInstance, force)
     }
 
     private fun closeExecutor(

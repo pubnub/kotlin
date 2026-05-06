@@ -52,7 +52,7 @@ class LeaveEndpoint internal constructor(pubnub: PubNubImpl) : EndpointCore<Void
         )
 
         addQueryParams(queryParams)
-        return retrofitManager.presenceService.leave(
+        return retrofitManager.heartbeatService.leave(
             configuration.subscribeKey,
             channels.toCsv(),
             queryParams,

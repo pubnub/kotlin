@@ -64,14 +64,22 @@ actual interface PNConfiguration {
     /**
      * Custom origin if needed.
      *
-     * Defaults to `ps.pndsn.com`
+     * Defaults to `ps.pndsn.com`, which serves HTTP/1.1 only. To use HTTP/2, set `origin` to an
+     * HTTP/2-capable endpoint provided by PubNub for your keyset.
+     *
+     * When the SDK is pointed at an HTTP/2-capable origin, consider raising [maximumConnections]
+     * to take advantage of HTTP/2 stream multiplexing (a single H/2 connection supports many
+     * concurrent streams — see that field's KDoc for details).
      */
     val origin: String
 
     /**
-     * If set to `true`,  requests will be made over HTTPS.
+     * If set to `true`, requests will be made over HTTPS.
      *
-     * Deafults to `true`.
+     * Defaults to `true`.
+     *
+     * **HTTP/2 impact:** HTTP/2 is only negotiated over TLS via ALPN. Setting `secure = false` produces `http://`
+     * URLs, and OkHttp does not support HTTP/2 over cleartext (`h2c`). Keep `secure = true` (the default) for HTTP/2.
      */
     val secure: Boolean
 
@@ -204,7 +212,24 @@ actual interface PNConfiguration {
     val includeRequestIdentifier: Boolean
 
     /**
-     * @see [okhttp3.Dispatcher.setMaxRequestsPerHost]
+     * Sets [okhttp3.Dispatcher.maxRequestsPerHost] for **asynchronous** SDK calls (`.async { ... }`).
+     * Under HTTP/1.1 this limits concurrent TCP sockets per host; under HTTP/2 it limits concurrent
+     * HTTP/2 **streams** multiplexed on a single connection.
+     *
+     * **Scope — important:** this setting only throttles calls dispatched through OkHttp's async
+     * `Dispatcher`. Synchronous SDK calls (`.sync()`) go through `Call.execute()` and bypass the dispatcher,
+     * so this cap does **not** bound concurrency when an application invokes `.sync()` from multiple threads
+     * in parallel. Applications that fan out concurrent `.sync()` calls are responsible for their own
+     * concurrency limit (e.g. a bounded thread pool) — OkHttp will open as many connections as needed.
+     *
+     * Defaults to 5 (OkHttp's built-in default). Under HTTP/1.1 this caps concurrent TCP sockets per
+     * host — raising it increases async concurrency by opening more parallel sockets, so use higher
+     * values only when that socket pressure is acceptable. Under HTTP/2 this caps concurrent H2 streams
+     * multiplexed over a single connection, where raising it is cheap. The SDK only reaches an
+     * HTTP/2-capable endpoint when [origin] is set to one; the default origin (`ps.pndsn.com`) serves
+     * HTTP/1.1.
+     *
+     * @see [okhttp3.Dispatcher.maxRequestsPerHost]
      */
     val maximumConnections: Int?
 
@@ -220,6 +245,10 @@ actual interface PNConfiguration {
      * The value must be non-negative.
      *
      * Defaults to 5 (OkHttp default).
+     *
+     * **HTTP/2 impact:** Setting this to 0 disables idle connection reuse, forcing a fresh TLS handshake on every
+     * request and eliminating HTTP/2 multiplexing benefits between request bursts. Use 0 only when per-request
+     * connection isolation is required for a specific compliance or security reason.
      *
      * @see [okhttp3.ConnectionPool]
      */
@@ -422,14 +451,16 @@ actual interface PNConfiguration {
         /**
          * Custom origin if needed.
          *
-         * Defaults to `ps.pndsn.com`
+         * Defaults to `ps.pndsn.com` (HTTP/1.1 only). Set to an H/2-capable endpoint to use HTTP/2;
+         * when you do, consider raising [maximumConnections] for stream-multiplexing concurrency.
          */
         var origin: String
 
         /**
-         * If set to `true`,  requests will be made over HTTPS.
+         * If set to `true`, requests will be made over HTTPS.
          *
-         * Deafults to `true`.
+         * Defaults to `true`. Keep `true` for HTTP/2 — HTTP/2 is only negotiated over TLS via ALPN; OkHttp does
+         * not support HTTP/2 over cleartext (`h2c`).
          */
         var secure: Boolean
 
@@ -567,7 +598,19 @@ actual interface PNConfiguration {
         var includeRequestIdentifier: Boolean
 
         /**
-         * @see [okhttp3.Dispatcher.setMaxRequestsPerHost]
+         * Sets [okhttp3.Dispatcher.maxRequestsPerHost] for **asynchronous** SDK calls (`.async { ... }`).
+         * Under HTTP/1.1 this limits concurrent TCP sockets per host; under HTTP/2 it limits concurrent
+         * HTTP/2 **streams** multiplexed on a single connection.
+         *
+         * **Scope — important:** this setting only throttles calls dispatched through OkHttp's async
+         * `Dispatcher`. Synchronous SDK calls (`.sync()`) bypass the dispatcher; consequently, this limit does
+         * **not** bound concurrency when an application invokes `.sync()` from multiple threads in parallel.
+         *
+         * Defaults to 5 (OkHttp's default). On HTTP/1.1, raising this opens more parallel sockets; on
+         * HTTP/2 (see [origin] for how to opt in), raising this allows more concurrent streams on a
+         * single connection.
+         *
+         * @see [okhttp3.Dispatcher.maxRequestsPerHost]
          */
         var maximumConnections: Int?
 
@@ -583,6 +626,10 @@ actual interface PNConfiguration {
          * The value must be non-negative.
          *
          * Defaults to 5 (OkHttp default).
+         *
+         * **HTTP/2 impact:** Setting this to 0 disables idle connection reuse, forcing a fresh TLS handshake on
+         * every request and eliminating HTTP/2 multiplexing benefits between bursts. Use 0 only when per-request
+         * connection isolation is required for a specific compliance or security reason.
          *
          * @see [okhttp3.ConnectionPool]
          */
