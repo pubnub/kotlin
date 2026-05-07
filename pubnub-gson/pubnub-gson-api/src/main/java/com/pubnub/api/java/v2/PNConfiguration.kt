@@ -231,15 +231,19 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
          * **Scope — important:** this setting only throttles calls dispatched through OkHttp's async
          * `Dispatcher`. Synchronous SDK calls (`.sync()`) go through `Call.execute()` and bypass the dispatcher,
          * so this cap does **not** bound concurrency when an application invokes `.sync()` from multiple threads
-         * in parallel. Applications that fan out concurrent `.sync()` calls are responsible for their own
-         * concurrency limit (e.g. a bounded thread pool) — OkHttp will open as many connections as needed.
+         * in parallel — neither the configured value nor the runtime fallback below applies to `.sync()`.
+         * Applications that fan out concurrent `.sync()` calls are responsible for their own concurrency limit
+         * (e.g. a bounded thread pool) — OkHttp will open as many connections as needed.
          *
-         * Defaults to 5 (OkHttp's built-in default). Under HTTP/1.1 this caps concurrent TCP sockets per
-         * host — raising it increases async concurrency by opening more parallel sockets, so use higher
-         * values only when that socket pressure is acceptable. Under HTTP/2 this caps concurrent H2 streams
-         * multiplexed over a single connection, where raising it is cheap. The SDK only reaches an
-         * HTTP/2-capable endpoint when [origin] is set to one; the default origin (`ps.pndsn.com`) serves
-         * HTTP/1.1.
+         * **Public default:** `null` — callers that inspect or copy this configuration will observe `null`.
+         * **Runtime fallback:** when `null`, the SDK does not override the dispatcher, so OkHttp's built-in
+         * `maxRequestsPerHost` of 5 applies to async calls only.
+         *
+         * Under HTTP/1.1 this caps concurrent TCP sockets per host — raising it increases async concurrency
+         * by opening more parallel sockets, so use higher values only when that socket pressure is acceptable.
+         * Under HTTP/2 this caps concurrent H2 streams multiplexed over a single connection, where raising it
+         * is cheap. The SDK only reaches an HTTP/2-capable endpoint when [origin] is set to one; the default
+         * origin (`ps.pndsn.com`) serves HTTP/1.1.
          *
          * @see [okhttp3.Dispatcher.maxRequestsPerHost]
          */
@@ -532,12 +536,16 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
          * HTTP/2 **streams** multiplexed on a single connection.
          *
          * **Scope — important:** this setting only throttles calls dispatched through OkHttp's async
-         * `Dispatcher`. Synchronous SDK calls (`.sync()`) bypass the dispatcher; consequently, this limit does
-         * **not** bound concurrency when an application invokes `.sync()` from multiple threads in parallel.
+         * `Dispatcher`. Synchronous SDK calls (`.sync()`) bypass the dispatcher; consequently, neither the
+         * configured value nor the runtime fallback below applies to `.sync()` calls, even when an
+         * application invokes `.sync()` from multiple threads in parallel.
          *
-         * Defaults to 5 (OkHttp's default). On HTTP/1.1, raising this opens more parallel sockets; on
-         * HTTP/2 (see [origin] for how to opt in), raising this allows more concurrent streams on a
-         * single connection.
+         * **Public default:** `null` — callers that inspect or copy this configuration will observe `null`.
+         * **Runtime fallback:** when `null`, the SDK does not override the dispatcher, so OkHttp's built-in
+         * `maxRequestsPerHost` of 5 applies to async calls only.
+         *
+         * On HTTP/1.1, raising this opens more parallel sockets; on HTTP/2 (see [origin] for how to opt in),
+         * raising this allows more concurrent streams on a single connection.
          *
          * @see [okhttp3.Dispatcher.maxRequestsPerHost]
          */
