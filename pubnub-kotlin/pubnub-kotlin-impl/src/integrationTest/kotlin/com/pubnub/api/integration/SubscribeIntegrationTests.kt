@@ -37,8 +37,8 @@ import org.junit.Assert.assertTrue
 import org.junit.Ignore
 import org.junit.Test
 import org.junit.jupiter.api.Timeout
-import java.util.concurrent.CountDownLatch
 import java.util.concurrent.CopyOnWriteArrayList
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -1578,8 +1578,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
                 }
             },
         )
-        observerSubscription.subscribe()
-        Thread.sleep(2_000)
+        pubnub.awaitConnected { observerSubscription.subscribe() }
 
         val otherClient = createPubNub {}
         try {
@@ -1629,8 +1628,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
                 }
             },
         )
-        observer.subscribe()
-        Thread.sleep(1_000)
+        pubnub.awaitConnected { observer.subscribe() }
 
         // Prove the observer is active: a join event arrives.
         val firstClient = createPubNub {}
@@ -1648,6 +1646,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         // and then called subscribe.unsubscribe with empty sets — which threw
         // CHANNEL_OR_CHANNEL_GROUP_MISSING.
         observer.unsubscribe()
+        // Bounded quiet window: let the subscribe loop cycle without -pnpres before the next trigger.
         Thread.sleep(1_000)
 
         val eventsAfterUnsubscribe = presenceEvents.size
@@ -1656,11 +1655,15 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         val secondClient = createPubNub {}
         try {
             secondClient.subscribeToBlocking(channelName)
+            // Bounded quiet window: asserting absence of presence events after unsubscribe.
             Thread.sleep(3_000)
             val secondUuid = secondClient.configuration.userId.value
             assertTrue(
-                "After unsubscribe, observer must not receive further presence events for $secondUuid; " +
-                    "got after-unsubscribe events: ${presenceEvents.drop(eventsAfterUnsubscribe)}",
+                "After unsubscribe, observer must not receive further presence events for $secondUuid; " + "got after-unsubscribe events: ${
+                    presenceEvents.drop(
+                        eventsAfterUnsubscribe
+                    )
+                }",
                 presenceEvents.drop(eventsAfterUnsubscribe).none { it.uuid == secondUuid },
             )
         } finally {
@@ -1694,11 +1697,12 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
                 }
             },
         )
-        baseSubscription.subscribe()
-        Thread.sleep(2_000)
+        pubnub.awaitConnected { baseSubscription.subscribe() }
 
         // Unsubscribe the combined sub — should tear down both "channel" and "channel-pnpres".
         baseSubscription.unsubscribe()
+        // Bounded quiet window: let the subscribe loop cycle without the removed entries before
+        // asserting the subscribed-channels snapshot.
         Thread.sleep(1_000)
 
         assertFalse(
@@ -1712,6 +1716,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         try {
             triggerClient.subscribeToBlocking(channelName)
             publisher.publish(channel = channelName, message = "after-unsubscribe").sync()
+            // Bounded quiet window: asserting absence of events — no replaceable signal.
             Thread.sleep(2_000)
 
             assertTrue(
@@ -1735,7 +1740,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         val channelName = randomChannel()
 
         val baseSubscription = pubnub.channel(channelName).subscription()
-        baseSubscription.subscribe()
+        pubnub.awaitConnected { baseSubscription.subscribe() }
 
         val observerSubscription = pubnub.channel("$channelName-pnpres").subscription()
         val observerJoinLatch = CountDownLatch(1)
@@ -1751,10 +1756,11 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
                 }
             },
         )
-        observerSubscription.subscribe()
-        Thread.sleep(2_000)
+        pubnub.awaitConnected { observerSubscription.subscribe() }
 
         baseSubscription.unsubscribe()
+        // Bounded quiet window: let the subscribe loop cycle without the base entry before the
+        // trigger client joins. No user-observable signal for "loop cycled".
         Thread.sleep(1_000)
 
         // observer should still receive presence events — this is what would fail if the base
@@ -1819,8 +1825,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
                 }
             },
         )
-        observerSub.subscribe()
-        Thread.sleep(3_000)
+        pubnub.awaitConnected { observerSub.subscribe() }
 
         // Snapshot User1's events now — anything added AFTER this index will be events that
         // arrived after the observer subscribed. If the observer is truly invisible, none of
@@ -1855,16 +1860,12 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
             user2OwnJoinLatch.await(5, TimeUnit.SECONDS),
         )
 
-        // Observer should receive User2's join. Also wait for it to land in the listener.
-        val deadline = System.currentTimeMillis() + 5_000
-        while (System.currentTimeMillis() < deadline &&
-            observerPresenceEvents.none { it.event == "join" && it.uuid == user2Uuid && it.channel == channelA }
-        ) {
-            Thread.sleep(200)
-        }
+        // Observer should receive User2's join.
         assertTrue(
             "Observer should receive a join event for User2($user2Uuid) on $channelA; got: $observerPresenceEvents",
-            observerPresenceEvents.any { it.event == "join" && it.uuid == user2Uuid && it.channel == channelA },
+            awaitPresence(observerPresenceEvents, timeoutMs = 5_000) {
+                it.event == "join" && it.uuid == user2Uuid && it.channel == channelA
+            },
         )
 
         // Snapshot User2's events for the later leave-invisibility check.
@@ -1972,10 +1973,12 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         } finally {
             preTriggerClient.forceDestroy()
         }
+        // Brief settle before issuing the legacy unsubscribe.
         Thread.sleep(1_000)
 
         // Legacy unsubscribe of the base — must tear down "foo" AND "foo-pnpres".
         pubnub.unsubscribe(channels = listOf(channelName))
+        // Bounded quiet window: let the subscribe loop cycle without both entries.
         Thread.sleep(2_000)
 
         val presenceBeforeTrigger = presenceEvents.size
@@ -1986,13 +1989,13 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         try {
             postTrigger.subscribeToBlocking(channelName)
             publisher.publish(channel = channelName, message = "after-unsubscribe").sync()
+            // Bounded quiet window: asserting absence of presence and message events after tear-down.
             Thread.sleep(4_000)
 
             val postTriggerUuid = postTrigger.configuration.userId.value
             val presenceTail = presenceEvents.drop(presenceBeforeTrigger)
             assertTrue(
-                "After unsubscribe(listOf($channelName)), the SDK-owned $channelName-pnpres must " +
-                    "also be torn down. Expected no new join events; got tail: $presenceTail",
+                "After unsubscribe(listOf($channelName)), the SDK-owned $channelName-pnpres must " + "also be torn down. Expected no new join events; got tail: $presenceTail",
                 presenceTail.none { it.event == "join" && it.uuid == postTriggerUuid && it.channel == channelName },
             )
             val messageTail = messageEvents.drop(messagesBeforeTrigger)
@@ -2044,10 +2047,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
                     if (!trackPresenceAfterUnsub.get()) {
                         return
                     }
-                    if (presence.event == "join" &&
-                        presence.channel == channelName &&
-                        presence.uuid == trackedTriggerUuid.get()
-                    ) {
+                    if (presence.event == "join" && presence.channel == channelName && presence.uuid == trackedTriggerUuid.get()) {
                         unexpectedJoinUuidAfterUnsub.set(true)
                     }
                 }
@@ -2055,9 +2055,8 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         )
 
         // Base subscription (no presence) and an independent -pnpres observer.
-        pubnub.subscribe(channels = listOf(channelName))
-        pubnub.subscribe(channels = listOf("$channelName-pnpres"))
-        Thread.sleep(3_000)
+        pubnub.awaitConnected { pubnub.subscribe(channels = listOf(channelName)) }
+        pubnub.awaitConnected { pubnub.subscribe(channels = listOf("$channelName-pnpres")) }
 
         // Sanity: base is live — it can receive a message.
         val publisher = createPubNub {}
@@ -2070,7 +2069,8 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
 
             // Explicit unsubscribe of the presence name — base must stay alive.
             pubnub.unsubscribe(channels = listOf("$channelName-pnpres"))
-            // Give the subscribe loop enough time to cycle without -pnpres.
+            // Bounded quiet window: let the subscribe loop cycle without -pnpres. No user-observable
+            // signal for "loop has cycled without this entry"; absence is the assertion.
             Thread.sleep(5_000)
 
             // From now on we're watching for presence events attributed to the trigger.
@@ -2078,8 +2078,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
 
             publisher.publish(channel = channelName, message = "after-observer-unsub").sync()
             assertTrue(
-                "Base subscription on $channelName must still deliver messages after " +
-                    "unsubscribe(listOf(\"$channelName-pnpres\")); got: $baseMessagesForChannel",
+                "Base subscription on $channelName must still deliver messages after " + "unsubscribe(listOf(\"$channelName-pnpres\")); got: $baseMessagesForChannel",
                 afterUnsubMessageLatch.await(5, TimeUnit.SECONDS),
             )
 
@@ -2088,10 +2087,10 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
             trackedTriggerUuid.set(trigger.configuration.userId.value)
             try {
                 trigger.subscribeToBlocking(channelName)
+                // Bounded quiet window: asserting absence of an erroneous join event.
                 Thread.sleep(5_000)
                 assertFalse(
-                    "After unsubscribe of $channelName-pnpres, the client should not receive a " +
-                        "join event for trigger(${trackedTriggerUuid.get()})",
+                    "After unsubscribe of $channelName-pnpres, the client should not receive a " + "join event for trigger(${trackedTriggerUuid.get()})",
                     unexpectedJoinUuidAfterUnsub.get(),
                 )
             } finally {
@@ -2111,8 +2110,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         val wildcardPresenceEvents = CopyOnWriteArrayList<PNPresenceEventResult>()
         val triggerJoinLatch = CountDownLatch(1)
 
-        val wildcardSub = pubnub.channel("$prefix.*")
-            .subscription(SubscriptionOptions.receivePresenceEvents())
+        val wildcardSub = pubnub.channel("$prefix.*").subscription(SubscriptionOptions.receivePresenceEvents())
         wildcardSub.addListener(
             object : EventListener {
                 override fun presence(
@@ -2126,15 +2124,13 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
                 }
             },
         )
-        wildcardSub.subscribe()
-        Thread.sleep(2_000)
+        pubnub.awaitConnected { wildcardSub.subscribe() }
 
         val triggerClient = createPubNub {}
         try {
             triggerClient.subscribeToBlocking(concreteChannel)
             assertTrue(
-                "Wildcard subscription with receivePresenceEvents() should receive join " +
-                    "events for $concreteChannel; got: $wildcardPresenceEvents",
+                "Wildcard subscription with receivePresenceEvents() should receive join " + "events for $concreteChannel; got: $wildcardPresenceEvents",
                 triggerJoinLatch.await(5, TimeUnit.SECONDS),
             )
             val triggerUuid = triggerClient.configuration.userId.value
@@ -2176,7 +2172,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
                 }
             },
         )
-        wildcardSub.subscribe()
+        pubnub.awaitConnected { wildcardSub.subscribe() }
 
         // Direct -pnpres observer on a concrete channel under the wildcard namespace.
         val observerSub = pubnub.channel("$concreteChannel-pnpres").subscription()
@@ -2193,9 +2189,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
                 }
             },
         )
-        observerSub.subscribe()
-
-        Thread.sleep(2_000)
+        pubnub.awaitConnected { observerSub.subscribe() }
 
         val triggerClient = createPubNub {}
         val publisher = createPubNub {}
@@ -2250,7 +2244,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
                 }
             },
         )
-        plainSub.subscribe()
+        pubnub.awaitConnected { plainSub.subscribe() }
 
         // Direct presence-only observer on the same PubNub instance — its presence -pnpres entry
         // is what the transport actually subscribes to for presence events.
@@ -2268,9 +2262,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
                 }
             },
         )
-        observerSub.subscribe()
-
-        Thread.sleep(2_000)
+        pubnub.awaitConnected { observerSub.subscribe() }
 
         val triggerClient = createPubNub {}
         val publisher = createPubNub {}
@@ -2363,12 +2355,75 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         )
 
         observer.unsubscribe()
+        // Bounded quiet window: asserting absence of any /leave REST calls.
         Thread.sleep(2_000)
 
         assertTrue(
             "Presence-only observer must NOT issue any /v2/presence/.../leave calls after unsubscribe; got: $leaveUrls",
             leaveUrls.isEmpty(),
         )
+    }
+
+    /**
+     * Polls [events] until [predicate] matches, or [timeoutMs] elapses. Returns whether the
+     * predicate matched. Use this when the expected event arrives on a listener whose latch
+     * can't be predetermined (e.g. the target UUID is only known after the listener is wired).
+     */
+    private fun <T> awaitPresence(
+        events: List<T>,
+        timeoutMs: Long = 5_000,
+        predicate: (T) -> Boolean,
+    ): Boolean {
+        val deadline = System.currentTimeMillis() + timeoutMs
+        while (System.currentTimeMillis() < deadline) {
+            if (events.any(predicate)) {
+                return true
+            }
+            Thread.sleep(100)
+        }
+        return events.any(predicate)
+    }
+
+    /**
+     * Registers a [StatusListener] on [pubnub], runs [block], then awaits the next
+     * [PNStatusCategory.PNConnectedCategory] (emitted on the first handshake success) or
+     * [PNStatusCategory.PNSubscriptionChanged] (emitted when a SubscriptionChanged lands while
+     * already in Receiving state). Fails fast on connection errors instead of timing out.
+     */
+    private fun PubNub.awaitConnected(timeoutMs: Long = 5_000, block: () -> Unit) {
+        val latch = CountDownLatch(1)
+        val failureRef = AtomicReference<String?>(null)
+        val listener = object : StatusListener {
+            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
+                when (pnStatus.category) {
+                    PNStatusCategory.PNConnectedCategory,
+                    PNStatusCategory.PNSubscriptionChanged,
+                    -> latch.countDown()
+
+                    PNStatusCategory.PNUnexpectedDisconnectCategory,
+                    PNStatusCategory.PNConnectionError,
+                    -> {
+                        failureRef.set(
+                            pnStatus.exception?.message ?: pnStatus.category.toString(),
+                        )
+                        latch.countDown()
+                    }
+
+                    else -> Unit
+                }
+            }
+        }
+        addListener(listener)
+        try {
+            block()
+            assertTrue(
+                "Timed out after ${timeoutMs}ms waiting for PNConnectedCategory/PNSubscriptionChanged",
+                latch.await(timeoutMs, TimeUnit.MILLISECONDS),
+            )
+            failureRef.get()?.let { error("awaitConnected failed: $it") }
+        } finally {
+            removeListener(listener)
+        }
     }
 
     private fun publishToChannels(channelsList: List<String>) {
