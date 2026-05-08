@@ -1,5 +1,6 @@
 package com.pubnub.internal.v2.entities
 
+import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.v2.entities.ChannelGroup
 import com.pubnub.api.v2.subscriptions.ReceivePresenceEventsImpl
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
@@ -23,7 +24,16 @@ open class ChannelGroupImpl(val pubnub: PubNubImpl, val channelGroupName: Channe
             emptySet(),
             channelGroups,
             SubscriptionOptions.filter { result ->
-                channelGroups.any { it.id == result.subscription }
+                if (result is PNPresenceEventResult) {
+                    // Presence events have their -pnpres suffix stripped from `result.subscription`
+                    // by SubscribeMessageProcessor. Only deliver to subscriptions that asked for
+                    // presence — i.e. whose `channelGroups` set contains the `-pnpres` twin of the
+                    // delivered base name.
+                    channelGroups.any { it.isPresence && it.id.removeSuffix(PRESENCE_CHANNEL_SUFFIX) == result.subscription }
+                } else {
+                    // Regular (non-presence) events: direct name match.
+                    channelGroups.any { it.id == result.subscription }
+                }
             } + options,
         )
     }

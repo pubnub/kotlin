@@ -225,19 +225,11 @@ internal class Subscribe(
     }
 
     private fun removeChannelGroupsFromSubscriptionData(channelGroups: Set<String>) {
-        channelGroups.forEach {
-            subscriptionData.channelGroups.remove(it)
-            val presenceChannelGroup = "$it$PRESENCE_CHANNEL_SUFFIX"
-            subscriptionData.channelGroups.remove(presenceChannelGroup)
-        }
+        subscriptionData.channelGroups.removeAll(channelGroups)
     }
 
     private fun removeChannelsFromSubscriptionData(channels: Set<String>) {
-        channels.forEach {
-            subscriptionData.channels.remove(it)
-            val presenceChannel = "$it$PRESENCE_CHANNEL_SUFFIX"
-            subscriptionData.channels.remove(presenceChannel)
-        }
+        subscriptionData.channels.removeAll(channels)
     }
 
     private fun removeAllChannelsFromLocalStorage() {
