@@ -13,7 +13,6 @@ import com.pubnub.api.java.models.consumer.objects_api.member.PNUUID;
 import com.pubnub.api.java.models.consumer.objects_api.member.PNUser;
 import com.pubnub.api.java.models.consumer.objects_api.uuid.PNUUIDMetadata;
 import com.pubnub.api.utils.PatchValue;
-import org.apache.http.HttpStatus;
 import org.jetbrains.annotations.Nullable;
 import org.junit.After;
 import org.junit.Test;
@@ -31,6 +30,7 @@ import java.util.stream.Collectors;
 
 import static com.pubnub.api.integration.util.Utils.random;
 import static com.pubnub.api.java.endpoints.objects_api.utils.Include.PNUUIDDetailsLevel.UUID_WITH_CUSTOM;
+import static java.net.HttpURLConnection.HTTP_OK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -86,7 +86,7 @@ public class ChannelMembersIT extends ObjectsApiBaseIT {
         assertEquals(STATUS_02, setChannelMembersResult.getData().get(1).getStatus().getValue());
 
         assertNotNull(setChannelMembersResult);
-        assertEquals(HttpStatus.SC_OK, setChannelMembersResult.getStatus());
+        assertEquals(HTTP_OK, setChannelMembersResult.getStatus());
         createdMembersList.add(setChannelMembersResult);
 
         PNMembers pnMember01 = getChannelMemberByUserId(setChannelMembersResult, TEST_UUID1);
@@ -119,7 +119,7 @@ public class ChannelMembersIT extends ObjectsApiBaseIT {
 
         //then
         assertNotNull(setChannelMembersResult);
-        assertEquals(HttpStatus.SC_OK, setChannelMembersResult.getStatus());
+        assertEquals(HTTP_OK, setChannelMembersResult.getStatus());
         createdMembersList.add(setChannelMembersResult);
         final List<String> returnedUUIDs = new ArrayList<>();
         for (final PNMembers pnMembers : setChannelMembersResult.getData()) {
@@ -191,7 +191,7 @@ public class ChannelMembersIT extends ObjectsApiBaseIT {
         assertEquals(TYPE_01, getMembersResult.getData().get(1).getType().getValue());
         assertEquals(TYPE_02, getMembersResult.getData().get(0).getType().getValue());
         assertNotNull(getMembersResult);
-        assertEquals(HttpStatus.SC_OK, getMembersResult.getStatus());
+        assertEquals(HTTP_OK, getMembersResult.getStatus());
         PNMembers pnMember01 = getChannelMemberByUserId(getMembersResult, TEST_UUID1);
         assertEquals(STATUS_01, pnMember01.getStatus().getValue());
         assertEquals(TYPE_01, pnMember01.getType().getValue());
@@ -229,7 +229,7 @@ public class ChannelMembersIT extends ObjectsApiBaseIT {
 
         //then
         assertNotNull(getMembersResult);
-        assertEquals(HttpStatus.SC_OK, getMembersResult.getStatus());
+        assertEquals(HTTP_OK, getMembersResult.getStatus());
         final List<String> returnedUUIDs = new ArrayList<>();
         for (final PNMembers pnMembers : setChannelMembersResult.getData()) {
             final PNUUIDMetadata uuid = pnMembers.getUuid();
@@ -302,7 +302,7 @@ public class ChannelMembersIT extends ObjectsApiBaseIT {
         }
 
         assertNotNull(removeMembersResult);
-        assertEquals(HttpStatus.SC_OK, removeMembersResult.getStatus());
+        assertEquals(HTTP_OK, removeMembersResult.getStatus());
         assertThat(returnedUUIDs, not(hasItem(TEST_UUID2)));
 
         final PNGetChannelMembersResult getMembersResult = pubNubUnderTest
@@ -357,7 +357,7 @@ public class ChannelMembersIT extends ObjectsApiBaseIT {
         }
 
         assertNotNull(removeMembersResult);
-        assertEquals(HttpStatus.SC_OK, removeMembersResult.getStatus());
+        assertEquals(HTTP_OK, removeMembersResult.getStatus());
         assertThat(returnedUUIDs, not(hasItem(TEST_UUID2)));
     }
 
@@ -400,7 +400,7 @@ public class ChannelMembersIT extends ObjectsApiBaseIT {
 
 
         //then
-        assertEquals(HttpStatus.SC_OK, manageChannelMembersResult.getStatus());
+        assertEquals(HTTP_OK, manageChannelMembersResult.getStatus());
         assertEquals(1, manageChannelMembersResult.getData().size());
         PNMembers pnMembers = manageChannelMembersResult.getData().get(0);
         assertEquals(TEST_UUID2, pnMembers.getUuid().getId());
@@ -410,7 +410,7 @@ public class ChannelMembersIT extends ObjectsApiBaseIT {
 
         assertThat(manageChannelMembersResult, allOf(
                 notNullValue(),
-                hasProperty("status", is(HttpStatus.SC_OK)),
+                hasProperty("status", is(HTTP_OK)),
                 hasProperty("data", allOf(
                         hasItem(hasProperty("uuid",
                                 hasProperty("id", is(channelMembersToSet.get(0).getUserId())))),
@@ -447,7 +447,7 @@ public class ChannelMembersIT extends ObjectsApiBaseIT {
         //then
         assertThat(manageChannelMembersResult, allOf(
                 notNullValue(),
-                hasProperty("status", is(HttpStatus.SC_OK)),
+                hasProperty("status", is(HTTP_OK)),
                 hasProperty("data", allOf(
                         hasItem(hasProperty("uuid",
                                 hasProperty("id", is(channelMembersToSet.get(0).getUuid().getId())))),

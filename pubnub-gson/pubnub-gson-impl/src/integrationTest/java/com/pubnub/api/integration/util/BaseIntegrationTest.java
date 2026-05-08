@@ -141,7 +141,7 @@ public abstract class BaseIntegrationTest {
         } catch (PubNubException e) {
             throw new RuntimeException(e);
         }
-        pnConfiguration.retryConfiguration(RetryConfiguration.None.INSTANCE);
+        pnConfiguration.retryConfiguration(new RetryConfiguration.Linear(2, 2));
         if (action != null) {
             action.accept(pnConfiguration);
         }

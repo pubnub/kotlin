@@ -11,7 +11,6 @@ import com.pubnub.api.java.models.consumer.objects_api.membership.PNMembership;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNRemoveMembershipResult;
 import com.pubnub.api.java.models.consumer.objects_api.membership.PNSetMembershipResult;
 import com.pubnub.api.utils.PatchValue;
-import org.apache.http.HttpStatus;
 import org.junit.After;
 import org.junit.Test;
 
@@ -26,6 +25,7 @@ import java.util.stream.Collectors;
 
 import static com.pubnub.api.integration.util.Utils.random;
 import static com.pubnub.api.java.endpoints.objects_api.utils.Include.PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM;
+import static java.net.HttpURLConnection.HTTP_OK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.hasItem;
@@ -141,7 +141,7 @@ public class MembershipIT extends ObjectsApiBaseIT {
         //then
         assertThat(setMembershipResult, allOf(
                 notNullValue(),
-                hasProperty(STATUS, is(HttpStatus.SC_OK))
+                hasProperty(STATUS, is(HTTP_OK))
         ));
         createdMembershipsList.add(setMembershipResult);
 
@@ -269,7 +269,7 @@ public class MembershipIT extends ObjectsApiBaseIT {
         //then
         assertThat(getMembershipsResult, allOf(
                 notNullValue(),
-                hasProperty(STATUS, is(HttpStatus.SC_OK)),
+                hasProperty(STATUS, is(HTTP_OK)),
                 hasProperty("data",
                         hasItem(hasProperty(CHANNEL,
                                 hasProperty("id", is(testChannelId1))))),
@@ -347,7 +347,7 @@ public class MembershipIT extends ObjectsApiBaseIT {
         //then
         assertThat(removeMembershipResult, allOf(
                 notNullValue(),
-                hasProperty(STATUS, is(HttpStatus.SC_OK)),
+                hasProperty(STATUS, is(HTTP_OK)),
                 hasProperty("data",
                         hasItem(hasProperty(CHANNEL,
                                 hasProperty("id", is(testChannelId1))))),
@@ -390,7 +390,7 @@ public class MembershipIT extends ObjectsApiBaseIT {
         createdMembershipsList.add(new PNSetMembershipResult(manageMembershipResult));
 
         //then
-        assertEquals(HttpStatus.SC_OK, manageMembershipResult.getStatus());
+        assertEquals(HTTP_OK, manageMembershipResult.getStatus());
         assertEquals(1, manageMembershipResult.getData().size());
         PNMembership pnMembership = manageMembershipResult.getData().get(0);
         assertEquals(testChannelId2, pnMembership.getChannel().getId());
@@ -429,7 +429,7 @@ public class MembershipIT extends ObjectsApiBaseIT {
         //then
         assertThat(manageMembershipResult, allOf(
                 notNullValue(),
-                hasProperty(STATUS, is(HttpStatus.SC_OK)),
+                hasProperty(STATUS, is(HTTP_OK)),
                 hasProperty("data", allOf(
                         hasItem(hasProperty(CHANNEL,
                                 hasProperty("id", is(channelMembershipsToSet.get(0).getChannel().getId())))),

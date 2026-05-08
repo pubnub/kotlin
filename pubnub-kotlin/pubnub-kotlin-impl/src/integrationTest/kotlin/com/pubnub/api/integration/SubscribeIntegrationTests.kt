@@ -38,6 +38,7 @@ import org.junit.Ignore
 import org.junit.Test
 import org.junit.jupiter.api.Timeout
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -1559,7 +1560,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         ).sync()
 
         val joinLatch = CountDownLatch(1)
-        val joinEvents = mutableListOf<PNPresenceEventResult>()
+        val joinEvents = CopyOnWriteArrayList<PNPresenceEventResult>()
 
         val observerSubscription = pubnub
             .channelGroup("$groupName-pnpres")
@@ -1570,7 +1571,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
                     pubnub: PubNub,
                     result: PNPresenceEventResult,
                 ) {
-                    joinEvents += result
+                    joinEvents.add(result)
                     if (result.event == "join") {
                         joinLatch.countDown()
                     }
@@ -1613,7 +1614,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         val channelName = randomChannel()
         val observer = pubnub.channel("$channelName-pnpres").subscription()
 
-        val presenceEvents = mutableListOf<PNPresenceEventResult>()
+        val presenceEvents = CopyOnWriteArrayList<PNPresenceEventResult>()
         val firstJoinLatch = CountDownLatch(1)
         observer.addListener(
             object : EventListener {
@@ -1621,7 +1622,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
                     pubnub: PubNub,
                     result: PNPresenceEventResult,
                 ) {
-                    presenceEvents += result
+                    presenceEvents.add(result)
                     if (result.event == "join" && result.channel == channelName) {
                         firstJoinLatch.countDown()
                     }
@@ -1674,7 +1675,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         val baseSubscription = pubnub.channel(channelName)
             .subscription(SubscriptionOptions.receivePresenceEvents())
 
-        val presenceEvents = mutableListOf<PNPresenceEventResult>()
+        val presenceEvents = CopyOnWriteArrayList<PNPresenceEventResult>()
         val messageEvents = mutableListOf<PNMessageResult>()
         baseSubscription.addListener(
             object : EventListener {
@@ -1682,7 +1683,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
                     pubnub: PubNub,
                     result: PNPresenceEventResult,
                 ) {
-                    presenceEvents += result
+                    presenceEvents.add(result)
                 }
 
                 override fun message(
@@ -1780,7 +1781,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         // User1 — real subscriber with presence. Tracks every presence event it sees.
         val user1 = createPubNub {}
         val user1Uuid = user1.configuration.userId.value
-        val user1Events = mutableListOf<PNPresenceEventResult>()
+        val user1Events = CopyOnWriteArrayList<PNPresenceEventResult>()
         val user1OwnJoinLatch = CountDownLatch(1)
         user1.channel(channelA)
             .subscription(SubscriptionOptions.receivePresenceEvents())
@@ -1791,7 +1792,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
                             pubnub: PubNub,
                             result: PNPresenceEventResult,
                         ) {
-                            user1Events += result
+                            user1Events.add(result)
                             if (result.event == "join" && result.uuid == user1Uuid) {
                                 user1OwnJoinLatch.countDown()
                             }
@@ -1807,14 +1808,14 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
 
         // Observer — subscribes to the -pnpres stream only. Must stay invisible to others.
         val observerSub = pubnub.channel("$channelA-pnpres").subscription()
-        val observerPresenceEvents = mutableListOf<PNPresenceEventResult>()
+        val observerPresenceEvents = CopyOnWriteArrayList<PNPresenceEventResult>()
         observerSub.addListener(
             object : EventListener {
                 override fun presence(
                     pubnub: PubNub,
                     result: PNPresenceEventResult,
                 ) {
-                    observerPresenceEvents += result
+                    observerPresenceEvents.add(result)
                 }
             },
         )
@@ -1829,7 +1830,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         // User2 — joins after the observer.
         val user2 = createPubNub {}
         val user2Uuid = user2.configuration.userId.value
-        val user2Events = mutableListOf<PNPresenceEventResult>()
+        val user2Events = CopyOnWriteArrayList<PNPresenceEventResult>()
         val user2OwnJoinLatch = CountDownLatch(1)
         user2.channel(channelA)
             .subscription(SubscriptionOptions.receivePresenceEvents())
@@ -1840,7 +1841,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
                             pubnub: PubNub,
                             result: PNPresenceEventResult,
                         ) {
-                            user2Events += result
+                            user2Events.add(result)
                             if (result.event == "join" && result.uuid == user2Uuid) {
                                 user2OwnJoinLatch.countDown()
                             }
@@ -1919,7 +1920,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
     fun legacySubscribeWithPresenceThenUnsubscribeBaseMustTearDownBothBaseAndPresence() {
         val channelName = randomChannel()
 
-        val presenceEvents = mutableListOf<PNPresenceEventResult>()
+        val presenceEvents = CopyOnWriteArrayList<PNPresenceEventResult>()
         val messageEvents = mutableListOf<PNMessageResult>()
         val ownJoinLatch = CountDownLatch(1)
         val preTriggerJoinLatch = CountDownLatch(1)
@@ -1934,7 +1935,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
                     pubnub: PubNub,
                     presence: PNPresenceEventResult,
                 ) {
-                    presenceEvents += presence
+                    presenceEvents.add(presence)
                     if (presence.event == "join" && presence.channel == channelName) {
                         if (presence.uuid == ownUuid) {
                             ownJoinLatch.countDown()
@@ -2107,7 +2108,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         val prefix = "wc_${randomValue()}"
         val concreteChannel = "$prefix.room1"
 
-        val wildcardPresenceEvents = mutableListOf<PNPresenceEventResult>()
+        val wildcardPresenceEvents = CopyOnWriteArrayList<PNPresenceEventResult>()
         val triggerJoinLatch = CountDownLatch(1)
 
         val wildcardSub = pubnub.channel("$prefix.*")
@@ -2118,7 +2119,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
                     pubnub: PubNub,
                     result: PNPresenceEventResult,
                 ) {
-                    wildcardPresenceEvents += result
+                    wildcardPresenceEvents.add(result)
                     if (result.event == "join" && result.channel == concreteChannel) {
                         triggerJoinLatch.countDown()
                     }
@@ -2155,7 +2156,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         val concreteChannel = "$prefix.room"
 
         // Wildcard subscription — no presence requested.
-        val wildcardPresenceEvents = mutableListOf<PNPresenceEventResult>()
+        val wildcardPresenceEvents = CopyOnWriteArrayList<PNPresenceEventResult>()
         val wildcardMessageLatch = CountDownLatch(1)
         val wildcardSub = pubnub.channel("$prefix.*").subscription()
         wildcardSub.addListener(
@@ -2164,7 +2165,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
                     pubnub: PubNub,
                     result: PNPresenceEventResult,
                 ) {
-                    wildcardPresenceEvents += result
+                    wildcardPresenceEvents.add(result)
                 }
 
                 override fun message(
@@ -2229,7 +2230,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         val channelName = randomChannel()
 
         // Plain subscription — no receivePresenceEvents() — should NEVER get presence events.
-        val plainPresenceEvents = mutableListOf<PNPresenceEventResult>()
+        val plainPresenceEvents = CopyOnWriteArrayList<PNPresenceEventResult>()
         val plainMessageLatch = CountDownLatch(1)
         val plainSub = pubnub.channel(channelName).subscription()
         plainSub.addListener(
@@ -2238,7 +2239,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
                     pubnub: PubNub,
                     result: PNPresenceEventResult,
                 ) {
-                    plainPresenceEvents += result
+                    plainPresenceEvents.add(result)
                 }
 
                 override fun message(
