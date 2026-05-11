@@ -131,7 +131,16 @@ changelog:
   - date: 2026-05-11
     version: v13.2.1
     changes:
-
+      - type: feature
+        text: "Added the ability to subscribe to the presence stream of a channel or channel group (channel-pnpres / group-pnpres) as an observer, receiving presence events without becoming an occupant. No heartbeat is sent for the observer, so it does not appear in hereNow and does not trigger join/leave events for other subscribers."
+      - type: bug
+        text: "Fixed plain and wildcard subscriptions without presence enabled leaking presence events when a sibling presence observer existed on the same PubNub instance."
+      - type: bug
+        text: "Fixed unsubscribe(\"foo-pnpres\") incorrectly tearing down the base \"foo\" subscription."
+      - type: bug
+        text: "Fixed CHANNEL_OR_CHANNEL_GROUP_MISSING being thrown when unsubscribing a presence-only observer."
+      - type: bug
+        text: "Fixed unwanted heartbeat / leave REST calls for presence-only observers when heartbeatInterval > 0."
   - date: 2026-03-23
     version: v13.1.1
     changes:
