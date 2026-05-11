@@ -87,8 +87,11 @@ internal class SubscribeTest {
             withPresence = true,
             withTimetoken,
         )
-        val channelsToUnsubscribe: Set<String> = setOf(CHANNEL_01)
-        val channelGroupsToUnsubscribe: Set<String> = setOf(CHANNEL_GROUPS_01)
+        // Callers are now responsible for including the -pnpres twin when unsubscribing, since
+        // Subscribe.unsubscribe no longer auto-strips twins — that would break a direct
+        // -pnpres observer holding an independent reference on the twin name.
+        val channelsToUnsubscribe: Set<String> = setOf(CHANNEL_01, "$CHANNEL_01$PNPRES")
+        val channelGroupsToUnsubscribe: Set<String> = setOf(CHANNEL_GROUPS_01, "$CHANNEL_GROUPS_01$PNPRES")
 
         objectUnderTest.unsubscribe(channelsToUnsubscribe, channelGroupsToUnsubscribe)
 

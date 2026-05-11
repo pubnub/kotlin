@@ -1968,10 +1968,15 @@ open class PubNubImpl(
     ) {
         subscribe.subscribe(channels.toSet(), channelGroups.toSet(), withPresence, withTimetoken)
         if (!configuration.managePresenceListManually) {
-            presence.joined(
-                channels.filterNot { it.endsWith(PRESENCE_CHANNEL_SUFFIX) }.toSet(),
-                channelGroups.filterNot { it.endsWith(PRESENCE_CHANNEL_SUFFIX) }.toSet(),
-            )
+            // presence (heartbeat/leave) is driven by base names only; a -pnpres-only entry
+            // never heartbeated. Skip the call entirely when nothing remains after stripping,
+            // otherwise the presence event engine would fire Heartbeat(emptySet(), emptySet())
+            // which HeartbeatEndpoint rejects.
+            val channelsForPresence = channels.filterNot { it.endsWith(PRESENCE_CHANNEL_SUFFIX) }.toSet()
+            val groupsForPresence = channelGroups.filterNot { it.endsWith(PRESENCE_CHANNEL_SUFFIX) }.toSet()
+            if (channelsForPresence.isNotEmpty() || groupsForPresence.isNotEmpty()) {
+                presence.joined(channelsForPresence, groupsForPresence)
+            }
         }
     }
 
@@ -1979,11 +1984,15 @@ open class PubNubImpl(
         channels: List<String> = emptyList(),
         channelGroups: List<String> = emptyList(),
     ) {
-        val channelSetWithoutPresence = channels.filter { !it.endsWith(PRESENCE_CHANNEL_SUFFIX) }.toSet()
-        val groupSetWithoutPresence = channelGroups.filter { !it.endsWith(PRESENCE_CHANNEL_SUFFIX) }.toSet()
-        subscribe.unsubscribe(channelSetWithoutPresence, groupSetWithoutPresence)
+        subscribe.unsubscribe(channels.toSet(), channelGroups.toSet())
         if (!configuration.managePresenceListManually) {
-            presence.left(channelSetWithoutPresence, groupSetWithoutPresence)
+            // Same rationale as subscribeInternal: presence.left(emptySet(), emptySet()) would
+            // drive the event engine to emit a Leave effect with empty sets, which is nonsense.
+            val channelSetWithoutPresence = channels.filterNot { it.endsWith(PRESENCE_CHANNEL_SUFFIX) }.toSet()
+            val groupSetWithoutPresence = channelGroups.filterNot { it.endsWith(PRESENCE_CHANNEL_SUFFIX) }.toSet()
+            if (channelSetWithoutPresence.isNotEmpty() || groupSetWithoutPresence.isNotEmpty()) {
+                presence.left(channelSetWithoutPresence, groupSetWithoutPresence)
+            }
         }
     }
 
@@ -2061,6 +2070,10 @@ open class PubNubImpl(
                 groupsToSubscribe.filter { !it.isPresence }.partition {
                     groupsToSubscribe.contains(it.withPresence)
                 }
+            val presenceOnlyChannels =
+                channelsToSubscribe.filter { it.isPresence && !channelsToSubscribe.contains(ChannelName(it.id.removeSuffix(PRESENCE_CHANNEL_SUFFIX))) }
+            val presenceOnlyGroups =
+                groupsToSubscribe.filter { it.isPresence && !groupsToSubscribe.contains(ChannelGroupName(it.id.removeSuffix(PRESENCE_CHANNEL_SUFFIX))) }
             if (channelsWithPresence.isNotEmpty() || groupsWithPresence.isNotEmpty()) {
                 subscribeInternal(
                     channels = channelsWithPresence.map(ChannelName::id),
@@ -2069,10 +2082,12 @@ open class PubNubImpl(
                     withTimetoken = cursor.timetoken,
                 )
             }
-            if (channelsNoPresence.isNotEmpty() || groupsNoPresence.isNotEmpty()) {
+            if (channelsNoPresence.isNotEmpty() || groupsNoPresence.isNotEmpty() ||
+                presenceOnlyChannels.isNotEmpty() || presenceOnlyGroups.isNotEmpty()
+            ) {
                 subscribeInternal(
-                    channels = channelsNoPresence.map(ChannelName::id),
-                    channelGroups = groupsNoPresence.map(ChannelGroupName::id),
+                    channels = channelsNoPresence.map(ChannelName::id) + presenceOnlyChannels.map(ChannelName::id),
+                    channelGroups = groupsNoPresence.map(ChannelGroupName::id) + presenceOnlyGroups.map(ChannelGroupName::id),
                     withPresence = false,
                     withTimetoken = cursor.timetoken,
                 )
@@ -2203,16 +2218,24 @@ open class PubNubImpl(
             channelSubscriptionMap.remove(channelName)?.let { sub ->
                 toUnsubscribe.add(sub)
             }
-            channelSubscriptionMap.remove(channelName.withPresence)?.let { sub ->
-                toUnsubscribe.add(sub)
+            // When the caller passed a base name, also tear down the -pnpres twin so that
+            // subscribe(["foo"], withPresence=true) followed by unsubscribe(["foo"]) cleans up
+            // the SDK-created "foo-pnpres" entry. If the caller passed an explicit "foo-pnpres",
+            // don't touch the base subscription.
+            if (!channelName.isPresence) {
+                channelSubscriptionMap.remove(channelName.withPresence)?.let { sub ->
+                    toUnsubscribe.add(sub)
+                }
             }
         }
         channelGroups.filter { it.isNotEmpty() }.map { ChannelGroupName(it) }.forEach { groupName ->
             channelGroupSubscriptionMap.remove(groupName)?.let { sub ->
                 toUnsubscribe.add(sub)
             }
-            channelGroupSubscriptionMap.remove(groupName.withPresence)?.let { sub ->
-                toUnsubscribe.add(sub)
+            if (!groupName.isPresence) {
+                channelGroupSubscriptionMap.remove(groupName.withPresence)?.let { sub ->
+                    toUnsubscribe.add(sub)
+                }
             }
         }
         unsubscribe(*toUnsubscribe.toTypedArray())

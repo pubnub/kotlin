@@ -4,6 +4,7 @@ import com.pubnub.api.endpoints.files.DeleteFile
 import com.pubnub.api.endpoints.files.SendFile
 import com.pubnub.api.endpoints.pubsub.Publish
 import com.pubnub.api.endpoints.pubsub.Signal
+import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.v2.entities.Channel
 import com.pubnub.api.v2.subscriptions.ReceivePresenceEventsImpl
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
@@ -28,12 +29,33 @@ open class ChannelImpl(val pubNubImpl: PubNubImpl, val channelName: ChannelName)
             channels,
             emptySet(),
             SubscriptionOptions.filter { result ->
-                // simple channel name or presence channel
+                if (result is PNPresenceEventResult) {
+                    // Presence events have their -pnpres suffix stripped from `result.channel` and
+                    // `result.subscription` by SubscribeMessageProcessor. Only deliver to
+                    // subscriptions that asked for presence — i.e. whose `channels` set contains
+                    // a -pnpres entry whose stripped form equals the delivered base name, OR a
+                    // wildcard -pnpres entry whose prefix the delivered base name starts with.
+                    return@filter channels.any { entity ->
+                        if (!entity.isPresence) {
+                            return@any false
+                        }
+                        val stripped = entity.id.removeSuffix(PRESENCE_CHANNEL_SUFFIX)
+                        if (stripped == result.channel) {
+                            return@any true
+                        }
+                        // wildcard presence: e.g. entity "foo.*-pnpres" -> stripped "foo.*",
+                        // delivered presence event for "foo.bar".
+                        stripped.endsWith(".*") &&
+                            result.channel.startsWith(stripped.substringBeforeLast("*"))
+                    }
+                }
+
+                // Regular (non-presence) events: direct name match.
                 if (channels.any { it.id == result.channel }) {
                     return@filter true
                 }
 
-                // wildcard channels
+                // wildcard channels (regular events only — presence short-circuited above)
                 if (name.endsWith(".*") &&
                     (
                         result.subscription == name ||

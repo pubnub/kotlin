@@ -7,7 +7,6 @@ import com.pubnub.api.java.models.consumer.objects_api.uuid.PNGetUUIDMetadataRes
 import com.pubnub.api.java.models.consumer.objects_api.uuid.PNRemoveUUIDMetadataResult;
 import com.pubnub.api.java.models.consumer.objects_api.uuid.PNSetUUIDMetadataResult;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.http.HttpStatus;
 import org.junit.After;
 import org.junit.Test;
 
@@ -17,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import static java.net.HttpURLConnection.HTTP_OK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.empty;
@@ -64,7 +64,7 @@ public class UUIDMetadataIT extends ObjectsApiBaseIT {
 
         //then
         assertNotNull(setUUIDMetadataResult);
-        assertEquals(HttpStatus.SC_OK, setUUIDMetadataResult.getStatus());
+        assertEquals(HTTP_OK, setUUIDMetadataResult.getStatus());
         createdUUIDMetadataList.add(setUUIDMetadataResult);
         assertEquals(randomTestUUID, setUUIDMetadataResult.getData().getId());
         assertEquals(randomName, setUUIDMetadataResult.getData().getName().getValue());
@@ -100,7 +100,7 @@ public class UUIDMetadataIT extends ObjectsApiBaseIT {
 
         //then
         assertNotNull(getUUIDMetadataResult);
-        assertEquals(HttpStatus.SC_OK, getUUIDMetadataResult.getStatus());
+        assertEquals(HTTP_OK, getUUIDMetadataResult.getStatus());
 
         assertEquals(randomTestUUID, getUUIDMetadataResult.getData().getId());
         assertEquals(setUUIDMetadataResult.getData().getName(), getUUIDMetadataResult.getData().getName());
@@ -138,7 +138,7 @@ public class UUIDMetadataIT extends ObjectsApiBaseIT {
         //then
         assertThat(getAllUUIDMetadataResult, allOf(
                 notNullValue(),
-                hasProperty("status", equalTo(HttpStatus.SC_OK)),
+                hasProperty("status", equalTo(HTTP_OK)),
                 hasProperty("data", allOf(
                         not(empty()),
                         hasSize(FETCH_LIMIT))),
@@ -170,7 +170,7 @@ public class UUIDMetadataIT extends ObjectsApiBaseIT {
 
         //then
         assertNotNull(removeUUIDMetadataResult);
-        assertEquals(HttpStatus.SC_OK, removeUUIDMetadataResult.getStatus());
+        assertEquals(HTTP_OK, removeUUIDMetadataResult.getStatus());
     }
 
     @After

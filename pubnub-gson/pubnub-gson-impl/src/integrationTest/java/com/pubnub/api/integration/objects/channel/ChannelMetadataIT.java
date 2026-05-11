@@ -8,7 +8,6 @@ import com.pubnub.api.java.models.consumer.objects_api.channel.PNGetChannelMetad
 import com.pubnub.api.java.models.consumer.objects_api.channel.PNRemoveChannelMetadataResult;
 import com.pubnub.api.java.models.consumer.objects_api.channel.PNSetChannelMetadataResult;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.http.HttpStatus;
 import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Test;
@@ -18,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.net.HttpURLConnection.HTTP_OK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -61,7 +61,7 @@ public class ChannelMetadataIT extends ObjectsApiBaseIT {
 
         //then
         assertNotNull(setChannelMetadataResult);
-        assertEquals(HttpStatus.SC_OK, setChannelMetadataResult.getStatus());
+        assertEquals(HTTP_OK, setChannelMetadataResult.getStatus());
         createdChannelMetadataList.add(setChannelMetadataResult);
         assertEquals(randomChannelMetadataId, setChannelMetadataResult.getData().getId());
         assertEquals(randomDescription,
@@ -92,7 +92,7 @@ public class ChannelMetadataIT extends ObjectsApiBaseIT {
 
         //then
         assertNotNull(getChannelMetadataResult);
-        assertEquals(HttpStatus.SC_OK, getChannelMetadataResult.getStatus());
+        assertEquals(HTTP_OK, getChannelMetadataResult.getStatus());
 
         assertEquals(randomChannelMetadataId, getChannelMetadataResult.getData().getId());
         assertEquals(setChannelMetadataResult.getData().getName(), getChannelMetadataResult.getData().getName());
@@ -181,7 +181,7 @@ public class ChannelMetadataIT extends ObjectsApiBaseIT {
         //then
         assertThat(getAllChannelsMetadataResult, allOf(
                 notNullValue(),
-                hasProperty("status", equalTo(HttpStatus.SC_OK)),
+                hasProperty("status", equalTo(HTTP_OK)),
                 hasProperty("data", allOf(
                         not(empty()),
                         hasSize(FETCH_LIMIT))),
@@ -258,7 +258,7 @@ public class ChannelMetadataIT extends ObjectsApiBaseIT {
 
         //then
         assertNotNull(removeChannelMetadataResult);
-        assertEquals(HttpStatus.SC_OK, removeChannelMetadataResult.getStatus());
+        assertEquals(HTTP_OK, removeChannelMetadataResult.getStatus());
     }
 
     @After
