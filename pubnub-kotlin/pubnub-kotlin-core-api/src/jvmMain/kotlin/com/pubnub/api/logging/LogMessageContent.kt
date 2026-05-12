@@ -76,6 +76,8 @@ sealed class LogMessageContent {
         @SerializedName("headers")
         val headers: Map<String, String>? = null,
         @SerializedName("body")
-        val body: String? = null
+        val body: String? = null,
+        @SerializedName("protocol")
+        val protocol: String? = null,
     ) : LogMessageContent()
 }
