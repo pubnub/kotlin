@@ -39,7 +39,7 @@
             </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
         </button>
         <div class="navigation-controls--break ui-kit_mobile-only"></div>
-        <div class="library-version" id="library-version">13.2.1
+        <div class="library-version" id="library-version">13.3.0
         </div>
         <div class="navigation-controls">
         <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
@@ -97,7 +97,7 @@
   </div>
   <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
     <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain">jvm</button></div>
-<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="origin.html">origin</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div><p class="paragraph">Custom origin if needed.</p><p class="paragraph">Defaults to <code class="lang-kotlin">ps.pndsn.com</code></p></div>  </div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="origin.html">origin</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div><p class="paragraph">Custom origin if needed.</p><p class="paragraph">Defaults to <code class="lang-kotlin">ps.pndsn.com</code>, which serves HTTP/1.1 only. To use HTTP/2, set <code class="lang-kotlin">origin</code> to an HTTP/2-capable endpoint provided by PubNub for your keyset.</p><p class="paragraph">When the SDK is pointed at an HTTP/2-capable origin, consider raising <a href="maximum-connections.html">maximumConnections</a> to take advantage of HTTP/2 stream multiplexing (a single H/2 connection supports many concurrent streams — see that field's KDoc for details).</p></div>  </div>
 </div>
     <div class="footer">
         <div class="footer--container">

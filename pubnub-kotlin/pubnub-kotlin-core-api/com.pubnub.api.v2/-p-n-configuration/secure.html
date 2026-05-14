@@ -39,7 +39,7 @@
             </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
         </button>
         <div class="navigation-controls--break ui-kit_mobile-only"></div>
-        <div class="library-version" id="library-version">13.2.1
+        <div class="library-version" id="library-version">13.3.0
         </div>
         <div class="navigation-controls">
         <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
@@ -97,7 +97,7 @@
   </div>
   <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
     <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-filterable-set=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain" data-active="" data-toggle=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain">jvm</button></div>
-<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="secure.html">secure</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><p class="paragraph">If set to <code class="lang-kotlin">true</code>,  requests will be made over HTTPS.</p><p class="paragraph">Deafults to <code class="lang-kotlin">true</code>.</p></div>  </div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":pubnub-kotlin:pubnub-kotlin-core-api/jvmMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="secure.html">secure</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><p class="paragraph">If set to <code class="lang-kotlin">true</code>, requests will be made over HTTPS.</p><p class="paragraph">Defaults to <code class="lang-kotlin">true</code>.</p><p class="paragraph"><strong>HTTP/2 impact:</strong> HTTP/2 is only negotiated over TLS via ALPN. Setting <code class="lang-kotlin">secure = false</code> produces <code class="lang-kotlin">http://</code> URLs, and OkHttp does not support HTTP/2 over cleartext (<code class="lang-kotlin">h2c</code>). Keep <code class="lang-kotlin">secure = true</code> (the default) for HTTP/2.</p></div>  </div>
 </div>
     <div class="footer">
         <div class="footer--container">
