@@ -1679,7 +1679,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
             .subscription(SubscriptionOptions.receivePresenceEvents())
 
         val presenceEvents = CopyOnWriteArrayList<PNPresenceEventResult>()
-        val messageEvents = mutableListOf<PNMessageResult>()
+        val messageEvents = CopyOnWriteArrayList<PNMessageResult>()
         baseSubscription.addListener(
             object : EventListener {
                 override fun presence(
@@ -1693,7 +1693,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
                     pubnub: PubNub,
                     result: PNMessageResult,
                 ) {
-                    messageEvents += result
+                    messageEvents.add(result)
                 }
             },
         )
@@ -1922,7 +1922,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         val channelName = randomChannel()
 
         val presenceEvents = CopyOnWriteArrayList<PNPresenceEventResult>()
-        val messageEvents = mutableListOf<PNMessageResult>()
+        val messageEvents = CopyOnWriteArrayList<PNMessageResult>()
         val ownJoinLatch = CountDownLatch(1)
         val preTriggerJoinLatch = CountDownLatch(1)
         val preTriggerClient = createPubNub {}
@@ -1950,7 +1950,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
                     pubnub: PubNub,
                     message: PNMessageResult,
                 ) {
-                    messageEvents += message
+                    messageEvents.add(message)
                 }
             },
         )
@@ -2013,7 +2013,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
     fun legacyUnsubscribeOfExplicitPresenceNameMustNotTouchBaseSubscription() {
         val channelName = randomChannel()
 
-        val baseMessagesForChannel = mutableListOf<PNMessageResult>()
+        val baseMessagesForChannel = CopyOnWriteArrayList<PNMessageResult>()
         val firstMessageLatch = CountDownLatch(1)
         val afterUnsubMessageLatch = CountDownLatch(1)
         // Tracked as a flag that any listener writes to; this lets us distinguish events that
@@ -2032,7 +2032,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
                     message: PNMessageResult,
                 ) {
                     if (message.channel == channelName) {
-                        baseMessagesForChannel += message
+                        baseMessagesForChannel.add(message)
                         when (message.message.asString) {
                             "before-observer-unsub" -> firstMessageLatch.countDown()
                             "after-observer-unsub" -> afterUnsubMessageLatch.countDown()

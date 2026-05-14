@@ -1,3 +1,10 @@
+## v13.3.0
+May 14 2026
+
+#### Added
+- Isolate heartbeat and leave calls on a dedicated OkHttp client (own dispatcher and connection pool) so transaction-client bursts(publish, signals, history, objects, files, message actions) can't starve heartbeats on HTTP/1.1 or cause TCP head-of-line blocking on HTTP/2.
+- Added HTTP version in Response log message.  .
+
 ## v13.2.1
 May 11 2026
 

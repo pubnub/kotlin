@@ -119,7 +119,8 @@ class CustomPnHttpLoggingInterceptor(
                 url = url,
                 status = status,
                 headers = headers.takeIf { it.isNotEmpty() },
-                body = body
+                body = body,
+                protocol = response.protocol.toString(),
             ),
             details = "HTTP Response",
             location = location,

@@ -196,6 +196,12 @@ class PNConfigurationImplTest {
     }
 
     @Test
+    fun `maximumConnections default is null when not explicitly set`() {
+        val config = PNConfiguration.builder(UserId(PubNub.generateUUID()), "demo").build()
+        assertEquals(null, config.maximumConnections)
+    }
+
+    @Test
     fun `can reset userId and subscribeKey`() {
         val expectedUserId = UserId(PubNub.generateUUID())
         val expectedSubKey = "expectedSubKey"

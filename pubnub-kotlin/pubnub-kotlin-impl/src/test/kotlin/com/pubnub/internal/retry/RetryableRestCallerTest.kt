@@ -14,8 +14,13 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import retrofit2.Call
 import retrofit2.Response
+import java.io.IOException
+import java.net.ConnectException
+import java.net.SocketException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import javax.net.ssl.SSLException
+import javax.net.ssl.SSLHandshakeException
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -371,6 +376,210 @@ class RetryableRestCallerTest {
         verify(exactly = 2) { mockCall.clone() }
         verify(exactly = 3) { mockCall.execute() }
         Assertions.assertTrue(response1.isSuccessful)
+    }
+
+    // --- Heartbeat/leave connection-exception classifier tests ---
+    //
+    // Scope: These tests pin the classifier's behavior for the exception classes that surface on PRESENCE
+    // traffic (heartbeat + leave) when a pooled connection is stale after a network switch. They run with
+    // PRESENCE NOT in excludedOperations so the retry path is actually exercised — this is the heartbeat
+    // shape under a user-opted-in retry config. See the companion test below for default-config behavior.
+    @Test
+    fun `heartbeat - should retry successfully when SocketException is thrown - stale socket after network switch`() {
+        @Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE")
+        val retryConfiguration =
+            RetryConfiguration.Linear.createForTest(
+                delayInSec = 10.milliseconds,
+                maxRetryNumber = 2,
+                excludedOperations = emptyList(),
+                isInternal = true,
+            )
+        val retryableRestCaller = getRetryableRestCaller(
+            retryConfiguration = retryConfiguration,
+            endpointGroupName = RetryableEndpointGroup.PRESENCE,
+        )
+        val mockCall = mockk<Call<FetchMessagesEnvelope>>()
+        val successfulResponse: Response<FetchMessagesEnvelope> = Response.success(null)
+        every { mockCall.execute() } throws SocketException("Socket closed") andThen successfulResponse
+        every { mockCall.clone() } returns mockCall
+
+        val response1 = retryableRestCaller.execute(mockCall)
+
+        verify(exactly = 1) { mockCall.clone() }
+        verify(exactly = 2) { mockCall.execute() }
+        Assertions.assertTrue(response1.isSuccessful)
+    }
+
+    @Test
+    fun `heartbeat - should retry successfully when SSLException is thrown - stale TLS session after network switch`() {
+        @Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE")
+        val retryConfiguration =
+            RetryConfiguration.Linear.createForTest(
+                delayInSec = 10.milliseconds,
+                maxRetryNumber = 2,
+                excludedOperations = emptyList(),
+                isInternal = true,
+            )
+        val retryableRestCaller = getRetryableRestCaller(
+            retryConfiguration = retryConfiguration,
+            endpointGroupName = RetryableEndpointGroup.PRESENCE,
+        )
+        val mockCall = mockk<Call<FetchMessagesEnvelope>>()
+        val successfulResponse: Response<FetchMessagesEnvelope> = Response.success(null)
+        every { mockCall.execute() } throws SSLException("Connection reset") andThen successfulResponse
+        every { mockCall.clone() } returns mockCall
+
+        val response1 = retryableRestCaller.execute(mockCall)
+
+        verify(exactly = 1) { mockCall.clone() }
+        verify(exactly = 2) { mockCall.execute() }
+        Assertions.assertTrue(response1.isSuccessful)
+    }
+
+    @Test
+    fun `heartbeat - should retry successfully when SSLHandshakeException is thrown`() {
+        @Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE")
+        val retryConfiguration =
+            RetryConfiguration.Linear.createForTest(
+                delayInSec = 10.milliseconds,
+                maxRetryNumber = 2,
+                excludedOperations = emptyList(),
+                isInternal = true,
+            )
+        val retryableRestCaller = getRetryableRestCaller(
+            retryConfiguration = retryConfiguration,
+            endpointGroupName = RetryableEndpointGroup.PRESENCE,
+        )
+        val mockCall = mockk<Call<FetchMessagesEnvelope>>()
+        val successfulResponse: Response<FetchMessagesEnvelope> = Response.success(null)
+        every { mockCall.execute() } throws SSLHandshakeException("bad handshake") andThen successfulResponse
+        every { mockCall.clone() } returns mockCall
+
+        val response1 = retryableRestCaller.execute(mockCall)
+
+        verify(exactly = 1) { mockCall.clone() }
+        verify(exactly = 2) { mockCall.execute() }
+        Assertions.assertTrue(response1.isSuccessful)
+    }
+
+    @Test
+    fun `heartbeat - should retry successfully when ConnectException is thrown`() {
+        @Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE")
+        val retryConfiguration =
+            RetryConfiguration.Linear.createForTest(
+                delayInSec = 10.milliseconds,
+                maxRetryNumber = 2,
+                excludedOperations = emptyList(),
+                isInternal = true,
+            )
+        val retryableRestCaller = getRetryableRestCaller(
+            retryConfiguration = retryConfiguration,
+            endpointGroupName = RetryableEndpointGroup.PRESENCE,
+        )
+        val mockCall = mockk<Call<FetchMessagesEnvelope>>()
+        val successfulResponse: Response<FetchMessagesEnvelope> = Response.success(null)
+        every { mockCall.execute() } throws ConnectException("connection refused") andThen successfulResponse
+        every { mockCall.clone() } returns mockCall
+
+        val response1 = retryableRestCaller.execute(mockCall)
+
+        verify(exactly = 1) { mockCall.clone() }
+        verify(exactly = 2) { mockCall.execute() }
+        Assertions.assertTrue(response1.isSuccessful)
+    }
+
+    @Test
+    fun `heartbeat - should retry successfully on H2 stream reset IOException - H2 stale connection`() {
+        // OkHttp's StreamResetException lives in okhttp3.internal.http2 (unstable internal API), but it
+        // extends IOException and is the type the SDK would observe. The SDK's retry classifier treats
+        // IOException as a retryable exception, so throwing a plain IOException with the message OkHttp
+        // would produce ("stream was reset: REFUSED_STREAM") exercises the same code path without
+        // depending on internal OkHttp types.
+        @Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE")
+        val retryConfiguration =
+            RetryConfiguration.Linear.createForTest(
+                delayInSec = 10.milliseconds,
+                maxRetryNumber = 2,
+                excludedOperations = emptyList(),
+                isInternal = true,
+            )
+        val retryableRestCaller = getRetryableRestCaller(
+            retryConfiguration = retryConfiguration,
+            endpointGroupName = RetryableEndpointGroup.PRESENCE,
+        )
+        val mockCall = mockk<Call<FetchMessagesEnvelope>>()
+        val successfulResponse: Response<FetchMessagesEnvelope> = Response.success(null)
+        every { mockCall.execute() } throws IOException("stream was reset: REFUSED_STREAM") andThen successfulResponse
+        every { mockCall.clone() } returns mockCall
+
+        val response1 = retryableRestCaller.execute(mockCall)
+
+        verify(exactly = 1) { mockCall.clone() }
+        verify(exactly = 2) { mockCall.execute() }
+        Assertions.assertTrue(response1.isSuccessful)
+    }
+
+    @Test
+    fun `heartbeat - should retry successfully when IOException 'unexpected end of stream' is thrown`() {
+        @Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE")
+        val retryConfiguration =
+            RetryConfiguration.Linear.createForTest(
+                delayInSec = 10.milliseconds,
+                maxRetryNumber = 2,
+                excludedOperations = emptyList(),
+                isInternal = true,
+            )
+        val retryableRestCaller = getRetryableRestCaller(
+            retryConfiguration = retryConfiguration,
+            endpointGroupName = RetryableEndpointGroup.PRESENCE,
+        )
+        val mockCall = mockk<Call<FetchMessagesEnvelope>>()
+        val successfulResponse: Response<FetchMessagesEnvelope> = Response.success(null)
+        every { mockCall.execute() } throws IOException("unexpected end of stream") andThen successfulResponse
+        every { mockCall.clone() } returns mockCall
+
+        val response1 = retryableRestCaller.execute(mockCall)
+
+        verify(exactly = 1) { mockCall.clone() }
+        verify(exactly = 2) { mockCall.execute() }
+        Assertions.assertTrue(response1.isSuccessful)
+    }
+
+    // --- Characterization test: PRESENCE-excluded RetryConfiguration does not retry heartbeats ---
+    //
+    // Describes the behavior of any RetryConfiguration that has PRESENCE in excludedOperations: a
+    // stale-connection IOException from a network switch propagates unretried, so the user sees a
+    // failed heartbeat on the first post-switch tick. This test fabricates such a config rather than
+    // reading it from PNConfigurationImpl — at time of writing the SDK's default
+    // RetryConfiguration.Exponential also excludes PRESENCE (see PNConfigurationImpl.retryConfiguration),
+    // so this test is representative of the default-path behavior, but it does not anchor on the
+    // default: if someone changes that list, this test will not catch it. Flip the behavior by either
+    // (a) opting in to a retry config that does not exclude PRESENCE, or (b) changing the SDK default
+    // (separate discussion).
+    @Test
+    fun `heartbeat does NOT retry on stale connection when PRESENCE is excluded from retries`() {
+        val retryConfiguration =
+            RetryConfiguration.Exponential(
+                minDelayInSec = 2,
+                maxDelayInSec = 2,
+                maxRetryNumber = 2,
+                excludedOperations = listOf(RetryableEndpointGroup.PRESENCE),
+            )
+        val retryableRestCaller = getRetryableRestCaller(
+            retryConfiguration = retryConfiguration,
+            endpointGroupName = RetryableEndpointGroup.PRESENCE,
+        )
+        val mockCall = mockk<Call<FetchMessagesEnvelope>>()
+        every { mockCall.execute() } throws IOException("stream was reset: REFUSED_STREAM")
+
+        val exception =
+            Assertions.assertThrows(PubNubException::class.java) {
+                retryableRestCaller.execute(mockCall)
+            }
+
+        verify(exactly = 0) { mockCall.clone() }
+        verify(exactly = 1) { mockCall.execute() }
+        Assertions.assertEquals(PubNubError.PARSING_ERROR, exception.pubnubError)
     }
 
     @Test

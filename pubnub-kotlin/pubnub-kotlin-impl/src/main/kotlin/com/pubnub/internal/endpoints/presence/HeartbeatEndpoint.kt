@@ -62,7 +62,7 @@ class HeartbeatEndpoint internal constructor(
                 ","
             }
 
-        return retrofitManager.presenceService.heartbeat(
+        return retrofitManager.heartbeatService.heartbeat(
             configuration.subscribeKey,
             channelsCsv,
             queryParams,
