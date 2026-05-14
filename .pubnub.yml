@@ -1,9 +1,9 @@
 name: kotlin
-version: 13.2.1
+version: 13.3.0
 schema: 1
 scm: github.com/pubnub/kotlin
 files:
-  - build/libs/pubnub-kotlin-13.2.1-all.jar
+  - build/libs/pubnub-kotlin-13.3.0-all.jar
 sdks:
   - 
       type: library
@@ -23,8 +23,8 @@ sdks:
             -
               distribution-type: library
               distribution-repository: maven
-              package-name: pubnub-kotlin-13.2.1
-              location: https://repo.maven.apache.org/maven2/com/pubnub/pubnub-kotlin/13.2.1/pubnub-kotlin-13.2.1.jar
+              package-name: pubnub-kotlin-13.3.0
+              location: https://repo.maven.apache.org/maven2/com/pubnub/pubnub-kotlin/13.3.0/pubnub-kotlin-13.3.0.jar
               supported-platforms:
                 supported-operating-systems:
                   Android:
@@ -128,6 +128,13 @@ sdks:
                   license-url: https://www.apache.org/licenses/LICENSE-2.0.txt
                   is-required: Required
 changelog:
+  - date: 2026-05-14
+    version: v13.3.0
+    changes:
+      - type: feature
+        text: "Isolate heartbeat and leave calls on a dedicated OkHttp client (own dispatcher and connection pool) so transaction-client bursts(publish, signals, history, objects, files, message actions) can't starve heartbeats on HTTP/1.1 or cause TCP head-of-line blocking on HTTP/2."
+      - type: feature
+        text: "Added HTTP version in Response log message.  ."
   - date: 2026-05-11
     version: v13.2.1
     changes:
