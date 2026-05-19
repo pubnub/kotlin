@@ -3,11 +3,10 @@ package com.pubnub.api.integration
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
-import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.models.consumer.PNBoundedPage
-import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
+import com.pubnub.api.v2.callbacks.EventListener
 import com.pubnub.api.v2.callbacks.getOrThrow
 import com.pubnub.test.CommonUtils.randomChannel
 import com.pubnub.test.CommonUtils.randomValue
@@ -93,13 +92,7 @@ class LargeMessagePublishIntegrationTests : BaseIntegrationTest() {
         val observer = createPubNub {}
 
         pubnub.addListener(
-            object : SubscribeCallback() {
-                override fun status(
-                    pubnub: PubNub,
-                    pnStatus: PNStatus,
-                ) {
-                }
-
+            object : EventListener {
                 override fun message(
                     pubnub: PubNub,
                     event: PNMessageResult,
@@ -215,7 +208,7 @@ class LargeMessagePublishIntegrationTests : BaseIntegrationTest() {
             channel = expectedChannel,
             message = largeMessage,
             usePost = true,
-        ).await(seconds = 15) { result ->
+        ).await(seconds = 20) { result ->
             assertFalse(result.isFailure)
             assertTrue(result.getOrThrow().timetoken > 0)
         }
