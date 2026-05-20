@@ -18,6 +18,8 @@ import com.pubnub.internal.extension.numericString
 import com.pubnub.internal.extension.quoted
 import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.logging.PNLogger
+import com.pubnub.internal.logging.getMessageFingerprintInput
+import com.pubnub.internal.logging.prepareMessageLogContent
 import com.pubnub.internal.models.server.files.FileUploadNotification
 import retrofit2.Call
 import retrofit2.Response
@@ -48,6 +50,23 @@ open class PublishFileMessageEndpoint(
 
     @Throws(PubNubException::class)
     override fun doWork(queryParams: HashMap<String, String>): Call<List<Any>> {
+        // The wire payload is the FileUploadNotification envelope (file metadata + user message).
+        // Serialize once, encrypt-once for crypto-on, and reuse the same string for both the log
+        // fingerprint and the retrofit call so pn_mfp covers exactly what is sent.
+        val notification = FileUploadNotification(message, pnFile)
+        val plaintextJson: String = pubnub.mapper.toJson(notification)
+        val encryptedString: String? = pubnub.cryptoModuleWithLogConfig?.encryptString(plaintextJson)
+        val fingerprintInput: String = encryptedString
+            ?: getMessageFingerprintInput(notification, pubnub.mapper, preComputedJson = plaintextJson)
+
+        val logContent = prepareMessageLogContent(
+            plaintext = notification,
+            cap = pubnub.configuration.loggedMessageContentMaxBytes,
+            mapper = pubnub.mapper,
+            fingerprintInput = fingerprintInput,
+            preComputedPlaintextJson = plaintextJson,
+        )
+
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
@@ -55,7 +74,9 @@ open class PublishFileMessageEndpoint(
                         "channel" to channel,
                         "fileName" to pnFile.name,
                         "fileId" to pnFile.id,
-                        "message" to (message ?: ""),
+                        "message" to logContent.display,
+                        "pn_mfp" to logContent.pnMfp,
+                        "totalBytes" to logContent.totalBytes,
                         "meta" to (meta ?: ""),
                         "ttl" to (ttl ?: 0),
                         "shouldStore" to (shouldStore ?: true),
@@ -67,8 +88,7 @@ open class PublishFileMessageEndpoint(
             )
         )
 
-        val stringifiedMessage: String = pubnub.mapper.toJson(FileUploadNotification(message, pnFile))
-        val messageAsString = pubnub.cryptoModuleWithLogConfig?.encryptString(stringifiedMessage)?.quoted() ?: stringifiedMessage
+        val messageAsString = encryptedString?.quoted() ?: plaintextJson
         meta?.let {
             val stringifiedMeta: String = pubnub.mapper.toJson(it)
             queryParams["meta"] = stringifiedMeta
