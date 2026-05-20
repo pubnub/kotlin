@@ -202,7 +202,7 @@ internal class SubscribeMessageProcessor(
         val fingerprintInput: String = getMessageFingerprintInput(payload, pubnub.mapper)
         val logContent = prepareMessageLogContent(
             plaintext = extracted,
-            cap = pubnub.configuration.loggedMessageContentMaxBytes,
+            cap = pubnub.configuration.logContentConfig.loggedMessageContentMaxBytes,
             mapper = pubnub.mapper,
             fingerprintInput = fingerprintInput,
         )

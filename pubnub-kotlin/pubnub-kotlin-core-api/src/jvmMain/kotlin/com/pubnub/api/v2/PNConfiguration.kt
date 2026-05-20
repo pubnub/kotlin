@@ -5,6 +5,7 @@ import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.logging.CustomLogger
+import com.pubnub.api.logging.LogContentConfig
 import com.pubnub.api.retry.RetryConfiguration
 import okhttp3.Authenticator
 import okhttp3.CertificatePinner
@@ -377,13 +378,15 @@ actual interface PNConfiguration {
     val customLoggers: List<CustomLogger>?
 
     /**
-     * Maximum size, in UTF-8 bytes, of message content rendered into the publish/signal/subscribe debug log entry.
+     * Controls the SDK's per-record log content (e.g. message-content cap, network-response cap).
      *
-     * Set to `0` to suppress the content field entirely. Negative values are tolerated and behave the same as `0`.
+     * Logging *delivery* — sinks, levels, formatting — is configured via an SLF4J implementation
+     * (e.g. logback) or a [CustomLogger]. This setting only governs how much detail the SDK
+     * renders into each log record before it reaches the logger.
      *
-     * Defaults to `500`.
+     * Defaults to a [LogContentConfig] with default field values.
      */
-    val loggedMessageContentMaxBytes: Int
+    val logContentConfig: LogContentConfig
 
     @Deprecated(
         level = DeprecationLevel.WARNING,
@@ -771,13 +774,15 @@ actual interface PNConfiguration {
         var customLoggers: List<CustomLogger>?
 
         /**
-         * Maximum size, in UTF-8 bytes, of message content rendered into the publish/signal/subscribe debug log entry.
+         * Controls the SDK's per-record log content (e.g. message-content cap, network-response cap).
          *
-         * Set to `0` to suppress the content field entirely. Negative values are tolerated and behave the same as `0`.
+         * Logging *delivery* — sinks, levels, formatting — is configured via an SLF4J implementation
+         * (e.g. logback) or a [CustomLogger]. This setting only governs how much detail the SDK
+         * renders into each log record before it reaches the logger.
          *
-         * Defaults to `500`.
+         * Defaults to a [LogContentConfig] with default field values.
          */
-        var loggedMessageContentMaxBytes: Int
+        var logContentConfig: LogContentConfig
 
         /**
          * Create a [PNConfiguration] object with values from this builder.

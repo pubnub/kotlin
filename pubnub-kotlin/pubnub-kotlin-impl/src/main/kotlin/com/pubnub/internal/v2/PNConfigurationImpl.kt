@@ -6,6 +6,7 @@ import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.logging.CustomLogger
 import com.pubnub.api.logging.LogConfig
+import com.pubnub.api.logging.LogContentConfig
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.api.v2.PNConfiguration
@@ -76,7 +77,7 @@ class PNConfigurationImpl(
     ),
     override val managePresenceListManually: Boolean = false,
     override val customLoggers: List<CustomLogger>? = null,
-    override val loggedMessageContentMaxBytes: Int = DEFAULT_LOGGED_MESSAGE_CONTENT_MAX_BYTES,
+    override val logContentConfig: LogContentConfig = LogContentConfig(),
 ) : PNConfiguration, PNConfigurationOverride {
     companion object {
         const val DEFAULT_DEDUPE_SIZE = 100
@@ -87,7 +88,6 @@ class PNConfigurationImpl(
         const val CONNECT_TIMEOUT = 5
         const val CONNECTION_POOL_MAX_IDLE_CONNECTIONS = 5 // OkHttp default
         const val CONNECTION_POOL_KEEP_ALIVE_DURATION = 300 // 5 minutes, OkHttp default
-        const val DEFAULT_LOGGED_MESSAGE_CONTENT_MAX_BYTES = 500
     }
 
     fun getCryptoModuleWithLogConfig(logConfig: LogConfig): CryptoModule? {
@@ -228,7 +228,7 @@ class PNConfigurationImpl(
 
         override var customLoggers: List<CustomLogger>? = defaultConfiguration.customLoggers
 
-        override var loggedMessageContentMaxBytes: Int = defaultConfiguration.loggedMessageContentMaxBytes
+        override var logContentConfig: LogContentConfig = defaultConfiguration.logContentConfig
 
         override fun build(): PNConfiguration {
             return PNConfigurationImpl(
@@ -274,7 +274,7 @@ class PNConfigurationImpl(
                 retryConfiguration = retryConfiguration,
                 managePresenceListManually = managePresenceListManually,
                 customLoggers = customLoggers,
-                loggedMessageContentMaxBytes = loggedMessageContentMaxBytes,
+                logContentConfig = logContentConfig,
             )
         }
     }

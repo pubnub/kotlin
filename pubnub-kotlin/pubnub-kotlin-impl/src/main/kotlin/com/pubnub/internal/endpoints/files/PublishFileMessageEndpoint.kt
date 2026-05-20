@@ -61,7 +61,7 @@ open class PublishFileMessageEndpoint(
 
         val logContent = prepareMessageLogContent(
             plaintext = notification,
-            cap = pubnub.configuration.loggedMessageContentMaxBytes,
+            cap = pubnub.configuration.logContentConfig.loggedMessageContentMaxBytes,
             mapper = pubnub.mapper,
             fingerprintInput = fingerprintInput,
             preComputedPlaintextJson = plaintextJson,

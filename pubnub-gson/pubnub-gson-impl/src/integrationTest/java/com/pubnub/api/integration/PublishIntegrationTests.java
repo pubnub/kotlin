@@ -6,6 +6,7 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
 import com.pubnub.api.crypto.CryptoModule;
 import com.pubnub.api.enums.PNStatusCategory;
+import com.pubnub.api.logging.LogContentConfig;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
 import com.pubnub.api.java.PubNub;
 import com.pubnub.api.java.builder.PubNubErrorBuilder;

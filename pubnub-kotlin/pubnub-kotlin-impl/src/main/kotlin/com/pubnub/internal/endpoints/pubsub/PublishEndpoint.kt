@@ -80,7 +80,7 @@ class PublishEndpoint internal constructor(
 
         val logContent = prepareMessageLogContent(
             plaintext = message,
-            cap = pubnub.configuration.loggedMessageContentMaxBytes,
+            cap = pubnub.configuration.logContentConfig.loggedMessageContentMaxBytes,
             mapper = pubnub.mapper,
             fingerprintInput = fingerprintInput,
             preComputedPlaintextJson = plaintextJson,

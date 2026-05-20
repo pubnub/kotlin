@@ -49,7 +49,7 @@ class SignalEndpoint internal constructor(
         val fingerprintInput: String = getMessageFingerprintInput(message, pubnub.mapper, preComputedJson = plaintextJson)
         val logContent = prepareMessageLogContent(
             plaintext = message,
-            cap = pubnub.configuration.loggedMessageContentMaxBytes,
+            cap = pubnub.configuration.logContentConfig.loggedMessageContentMaxBytes,
             mapper = pubnub.mapper,
             fingerprintInput = fingerprintInput,
             preComputedPlaintextJson = plaintextJson,

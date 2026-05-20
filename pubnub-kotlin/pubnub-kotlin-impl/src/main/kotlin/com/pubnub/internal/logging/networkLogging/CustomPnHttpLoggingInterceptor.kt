@@ -10,16 +10,15 @@ import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.Response
-import java.io.IOException
 import java.util.Base64
 
 private const val PUBNUB_OKHTTP_LOG_TAG = "pubnub.okhttp"
-private const val MAX_LOGGED_BODY_BYTES = 24L * 1024
 
 class CustomPnHttpLoggingInterceptor(
     private val logger: PNLogger,
     private val mapperManager: MapperManager,
     private val logVerbosity: PNLogVerbosity,
+    private val maxLoggedBodyBytes: Long,
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
@@ -95,15 +94,20 @@ class CustomPnHttpLoggingInterceptor(
 
         // Peek at the body without consuming it (same approach as OkHttp's HttpLoggingInterceptor).
         // This ensures the body remains fully readable by Retrofit for error handling.
-        // Capped at MAX_LOGGED_BODY_BYTES to avoid flooding logs with large payloads.
+        // Capped at maxLoggedBodyBytes to avoid flooding logs with large payloads.
+        // Catch Throwable so a bad cap or unchecked decode error in the logging path never
+        // aborts the real HTTP request — consistent with describeRequestBody().
         val body: String? = response.body?.let { responseBody ->
+            if (maxLoggedBodyBytes <= 0L) {
+                return@let "[body not logged: disabled (loggedHttpResponseMaxBytes=$maxLoggedBodyBytes)]"
+            }
             val contentType = responseBody.contentType()?.toString() ?: ""
 
             try {
-                val peeked = response.peekBody(MAX_LOGGED_BODY_BYTES)
+                val peeked = response.peekBody(maxLoggedBodyBytes)
                 val totalBytes = responseBody.contentLength()
-                val truncated = totalBytes > MAX_LOGGED_BODY_BYTES ||
-                    (totalBytes < 0 && peeked.contentLength() == MAX_LOGGED_BODY_BYTES)
+                val truncated = totalBytes > maxLoggedBodyBytes ||
+                    (totalBytes < 0 && peeked.contentLength() == maxLoggedBodyBytes)
 
                 val text = if (contentType.contains("application/json") || contentType.startsWith("text/")) {
                     val charset = responseBody.contentType()?.charset() ?: Charsets.UTF_8
@@ -114,12 +118,12 @@ class CustomPnHttpLoggingInterceptor(
 
                 if (truncated) {
                     val totalDesc = if (totalBytes >= 0) "$totalBytes bytes total" else "total size unknown"
-                    "$text… [truncated at $MAX_LOGGED_BODY_BYTES bytes, $totalDesc]"
+                    "$text… [truncated at $maxLoggedBodyBytes bytes, $totalDesc]"
                 } else {
                     text
                 }
-            } catch (e: IOException) {
-                "[Error reading response body: ${e.message}]"
+            } catch (t: Throwable) {
+                "[Error reading response body: ${t.message}]"
             }
         }
 
