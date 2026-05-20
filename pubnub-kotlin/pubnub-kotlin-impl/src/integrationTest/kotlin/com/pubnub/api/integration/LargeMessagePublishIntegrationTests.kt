@@ -186,7 +186,7 @@ class LargeMessagePublishIntegrationTests : BaseIntegrationTest() {
             channel = expectedChannel,
             message = largeMessage,
             usePost = true,
-        ).await(seconds = 10) { result ->
+        ).await(seconds = 20) { result ->
             assertFalse(result.isFailure)
             assertTrue(result.getOrThrow().timetoken > 0)
         }

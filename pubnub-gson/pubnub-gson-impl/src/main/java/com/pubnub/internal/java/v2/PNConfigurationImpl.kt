@@ -76,6 +76,7 @@ class PNConfigurationImpl(
     override val customLoggers: List<CustomLogger>? = null,
     override val connectionPoolMaxIdleConnections: Int = CONNECTION_POOL_MAX_IDLE_CONNECTIONS,
     override val connectionPoolKeepAliveDuration: Int = CONNECTION_POOL_KEEP_ALIVE_DURATION,
+    override val loggedMessageContentMaxBytes: Int = DEFAULT_LOGGED_MESSAGE_CONTENT_MAX_BYTES,
 ) : PNConfiguration {
     companion object {
         const val DEFAULT_DEDUPE_SIZE = 100
@@ -86,6 +87,7 @@ class PNConfigurationImpl(
         const val CONNECT_TIMEOUT = 5
         const val CONNECTION_POOL_MAX_IDLE_CONNECTIONS = 5
         const val CONNECTION_POOL_KEEP_ALIVE_DURATION = 300
+        const val DEFAULT_LOGGED_MESSAGE_CONTENT_MAX_BYTES = 500
     }
 
     // this method is used from cryptoModuleWithLogConfig using reflection
@@ -427,6 +429,13 @@ class PNConfigurationImpl(
 
             override var connectionPoolKeepAliveDuration: Int = defaultConfiguration.connectionPoolKeepAliveDuration
 
+            override fun loggedMessageContentMaxBytes(loggedMessageContentMaxBytes: Int): Builder {
+                this.loggedMessageContentMaxBytes = loggedMessageContentMaxBytes
+                return this
+            }
+
+            override var loggedMessageContentMaxBytes: Int = defaultConfiguration.loggedMessageContentMaxBytes
+
             override fun build(): PNConfiguration {
                 return PNConfigurationImpl(
                     userId = userId,
@@ -469,7 +478,8 @@ class PNConfigurationImpl(
                     managePresenceListManually = managePresenceListManually,
                     customLoggers = customLoggers,
                     connectionPoolMaxIdleConnections = connectionPoolMaxIdleConnections,
-                    connectionPoolKeepAliveDuration = connectionPoolKeepAliveDuration
+                    connectionPoolKeepAliveDuration = connectionPoolKeepAliveDuration,
+                    loggedMessageContentMaxBytes = loggedMessageContentMaxBytes,
                 )
             }
         }

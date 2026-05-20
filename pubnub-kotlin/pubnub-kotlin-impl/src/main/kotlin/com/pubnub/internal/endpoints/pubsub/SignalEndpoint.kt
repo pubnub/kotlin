@@ -12,6 +12,8 @@ import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.logging.PNLogger
+import com.pubnub.internal.logging.getMessageFingerprintInput
+import com.pubnub.internal.logging.prepareMessageLogContent
 import retrofit2.Call
 import retrofit2.Response
 
@@ -40,12 +42,27 @@ class SignalEndpoint internal constructor(
     override fun getAffectedChannels() = listOf(channel)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<List<Any>> {
+        // Serialize once; reused for the retrofit signal call and the log helper.
+        val plaintextJson: String = pubnub.mapper.toJson(message)
+        // Server-rule fingerprint input: string-typed values unquoted, everything else as
+        // canonical JSON — same rule as subscribe so JsonPrimitive("hello") matches.
+        val fingerprintInput: String = getMessageFingerprintInput(message, pubnub.mapper, preComputedJson = plaintextJson)
+        val logContent = prepareMessageLogContent(
+            plaintext = message,
+            cap = pubnub.configuration.loggedMessageContentMaxBytes,
+            mapper = pubnub.mapper,
+            fingerprintInput = fingerprintInput,
+            preComputedPlaintextJson = plaintextJson,
+        )
+
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
                     arguments = mapOf(
                         "channel" to channel,
-                        "message" to message,
+                        "message" to logContent.display,
+                        "pn_mfp" to logContent.pnMfp,
+                        "totalBytes" to logContent.totalBytes,
                         "customMessageType" to (customMessageType ?: "")
                     ),
                     operation = this::class.simpleName
@@ -62,7 +79,7 @@ class SignalEndpoint internal constructor(
             pubKey = configuration.publishKey,
             subKey = configuration.subscribeKey,
             channel = channel,
-            message = pubnub.mapper.toJson(message),
+            message = plaintextJson,
             options = queryParams,
         )
     }

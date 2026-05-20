@@ -8,11 +8,13 @@ import com.pubnub.internal.logging.PNLogger
 import com.pubnub.internal.managers.MapperManager
 import okhttp3.Interceptor
 import okhttp3.Request
+import okhttp3.RequestBody
 import okhttp3.Response
 import java.io.IOException
 import java.util.Base64
 
 private const val PUBNUB_OKHTTP_LOG_TAG = "pubnub.okhttp"
+private const val MAX_LOGGED_BODY_BYTES = 24L * 1024
 
 class CustomPnHttpLoggingInterceptor(
     private val logger: PNLogger,
@@ -63,7 +65,7 @@ class CustomPnHttpLoggingInterceptor(
             method = HttpMethod.fromString(request.method.lowercase()),
             headers = headers.takeIf { it.isNotEmpty() },
             formData = null, // TODO: Parse form data if needed
-            body = request.body.toString(),
+            body = describeRequestBody(request.body),
             timeout = null, // TODO: Extract from request if available
             identifier = null,
             canceled = false,
@@ -93,19 +95,28 @@ class CustomPnHttpLoggingInterceptor(
 
         // Peek at the body without consuming it (same approach as OkHttp's HttpLoggingInterceptor).
         // This ensures the body remains fully readable by Retrofit for error handling.
+        // Capped at MAX_LOGGED_BODY_BYTES to avoid flooding logs with large payloads.
         val body: String? = response.body?.let { responseBody ->
             val contentType = responseBody.contentType()?.toString() ?: ""
 
             try {
-                val source = responseBody.source()
-                source.request(Long.MAX_VALUE) // Buffer the entire body without consuming it.
-                val buffer = source.buffer.clone() // Clone for reading.
+                val peeked = response.peekBody(MAX_LOGGED_BODY_BYTES)
+                val totalBytes = responseBody.contentLength()
+                val truncated = totalBytes > MAX_LOGGED_BODY_BYTES ||
+                    (totalBytes < 0 && peeked.contentLength() == MAX_LOGGED_BODY_BYTES)
 
-                if (contentType.contains("application/json") || contentType.startsWith("text/")) {
+                val text = if (contentType.contains("application/json") || contentType.startsWith("text/")) {
                     val charset = responseBody.contentType()?.charset() ?: Charsets.UTF_8
-                    buffer.readString(charset)
+                    peeked.source().readString(charset)
                 } else {
-                    Base64.getEncoder().encodeToString(buffer.readByteArray())
+                    Base64.getEncoder().encodeToString(peeked.bytes())
+                }
+
+                if (truncated) {
+                    val totalDesc = if (totalBytes >= 0) "$totalBytes bytes total" else "total size unknown"
+                    "$text… [truncated at $MAX_LOGGED_BODY_BYTES bytes, $totalDesc]"
+                } else {
+                    text
                 }
             } catch (e: IOException) {
                 "[Error reading response body: ${e.message}]"
@@ -132,6 +143,31 @@ class CustomPnHttpLoggingInterceptor(
         }
 
         return response
+    }
+
+    // Returns a metadata-only descriptor for the request body — never reads body bytes. The interceptor
+    // is global and shared by sendFile / S3 multipart uploads, so reading bodies here would risk
+    // memory blowups. Publish/signal content is captured at the endpoint layer instead.
+    //
+    // contentLength() can throw on custom RequestBody subclasses (e.g. multipart bodies that lazily
+    // measure their parts), and logRequest runs before chain.proceed(), so a throw here would abort
+    // the HTTP request purely because logging tried to describe it. Catch Throwable to also contain
+    // unchecked errors from custom subclasses.
+    private fun describeRequestBody(body: RequestBody?): String? {
+        if (body == null) {
+            return null
+        }
+        val contentType = body.contentType()?.toString() ?: "unknown"
+        val length = try {
+            body.contentLength()
+        } catch (_: Throwable) {
+            -1L
+        }
+        return if (length >= 0) {
+            "[body not logged: $length bytes, contentType=$contentType]"
+        } else {
+            "[body not logged: unknown size, contentType=$contentType]"
+        }
     }
 
     private fun logError(request: Request, location: String, error: Exception, requestStartTime: Long) {

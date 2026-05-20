@@ -17,6 +17,8 @@ import com.pubnub.internal.extension.quoted
 import com.pubnub.internal.extension.valueString
 import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.logging.PNLogger
+import com.pubnub.internal.logging.getMessageFingerprintInput
+import com.pubnub.internal.logging.prepareMessageLogContent
 import retrofit2.Call
 import retrofit2.Response
 
@@ -71,11 +73,26 @@ class PublishEndpoint internal constructor(
     override fun getAffectedChannels() = listOf(channel)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<List<Any>> {
+        val plaintextJson: String = toJson(message)
+        val encryptedString: String? = pubnub.cryptoModuleWithLogConfig?.encryptString(plaintextJson)
+        val fingerprintInput: String = encryptedString
+            ?: getMessageFingerprintInput(message, pubnub.mapper, preComputedJson = plaintextJson)
+
+        val logContent = prepareMessageLogContent(
+            plaintext = message,
+            cap = pubnub.configuration.loggedMessageContentMaxBytes,
+            mapper = pubnub.mapper,
+            fingerprintInput = fingerprintInput,
+            preComputedPlaintextJson = plaintextJson,
+        )
+
         log.debug(
             LogMessage(
                 message = LogMessageContent.Object(
                     arguments = mapOf(
-                        "message" to message,
+                        "message" to logContent.display,
+                        "pn_mfp" to logContent.pnMfp,
+                        "totalBytes" to logContent.totalBytes,
                         "channel" to channel,
                         "shouldStore" to (shouldStore ?: true),
                         "meta" to (meta ?: ""),
@@ -92,9 +109,15 @@ class PublishEndpoint internal constructor(
 
         addQueryParams(queryParams)
 
+        // Body size for V1/V2 limit checks. Compute once from the payload Retrofit will actually
+        // send: ciphertext re-quoted as a JSON String for encrypted publishes, otherwise the
+        // plaintext JSON we already have. Avoids a second mapper.toJson(message) on multi-MB
+        // unencrypted payloads — the toByteArray pass is cheap; a second Gson walk is not.
+        val bodySizeBytes: Int = (encryptedString?.let { pubnub.mapper.toJson(it) } ?: plaintextJson)
+            .toByteArray(Charsets.UTF_8).size
+
         return if (usePost) {
-            val payload = getBodyMessage(message)
-            val bodySizeBytes = calculateV1PostBodySizeBytes(payload)
+            val payload: Any = encryptedString ?: message
 
             if (bodySizeBytes > PUBLISH_V1_MAX_POST_BODY_BYTES) {
                 // Too large for publish v1 → use publish v2 (POST)
@@ -126,7 +149,7 @@ class PublishEndpoint internal constructor(
             }
         } else {
             // === GET PATH ===
-            val stringifiedMessage = getParamMessage(message)
+            val stringifiedMessage = encryptedString?.quoted() ?: plaintextJson
             val v1GetCall = retrofitManager.publishService.publish(
                 configuration.publishKey,
                 configuration.subscribeKey,
@@ -146,8 +169,7 @@ class PublishEndpoint internal constructor(
                         )
                     )
                 )
-                val payload = getBodyMessage(message)
-                val bodySizeBytes = calculateV1PostBodySizeBytes(payload)
+                val payload: Any = encryptedString ?: message
                 enforceV2PostBodySizeLimit(bodySizeBytes)
                 retrofitManager.publishService.publishWithPostV2(
                     configuration.publishKey,
@@ -193,21 +215,7 @@ class PublishEndpoint internal constructor(
     }
     // endregion
 
-    // region Message parsers
-    private fun getBodyMessage(message: Any): Any = pubnub.cryptoModuleWithLogConfig?.encryptString(toJson(message)) ?: message
-
-    private fun getParamMessage(message: Any): String =
-        pubnub.cryptoModuleWithLogConfig?.encryptString(toJson(message))?.quoted() ?: toJson(message)
-
     private fun toJson(message: Any): String = pubnub.mapper.toJson(message)
-
-    /**
-     * Calculate publish v1 POST request body size by serializing with the same mapper
-     * Retrofit uses. This matches JSON escaping/quoting behavior (including Strings).
-     */
-    private fun calculateV1PostBodySizeBytes(payload: Any): Int {
-        return pubnub.mapper.toJson(payload).toByteArray(Charsets.UTF_8).size
-    }
 
     /**
      * There is a need to have this client side validation. The thing is that when OkHttp send request with

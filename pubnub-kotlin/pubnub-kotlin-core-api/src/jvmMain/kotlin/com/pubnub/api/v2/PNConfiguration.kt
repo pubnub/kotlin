@@ -376,6 +376,15 @@ actual interface PNConfiguration {
      */
     val customLoggers: List<CustomLogger>?
 
+    /**
+     * Maximum size, in UTF-8 bytes, of message content rendered into the publish/signal/subscribe debug log entry.
+     *
+     * Set to `0` to suppress the content field entirely. Negative values are tolerated and behave the same as `0`.
+     *
+     * Defaults to `500`.
+     */
+    val loggedMessageContentMaxBytes: Int
+
     @Deprecated(
         level = DeprecationLevel.WARNING,
         message = """Use UserId instead e.g. config.userId.value""",
@@ -760,6 +769,15 @@ actual interface PNConfiguration {
          * Use it if your slf4j implementation like logback, log4j2, etc. can't meet your specific logging requirements.
          */
         var customLoggers: List<CustomLogger>?
+
+        /**
+         * Maximum size, in UTF-8 bytes, of message content rendered into the publish/signal/subscribe debug log entry.
+         *
+         * Set to `0` to suppress the content field entirely. Negative values are tolerated and behave the same as `0`.
+         *
+         * Defaults to `500`.
+         */
+        var loggedMessageContentMaxBytes: Int
 
         /**
          * Create a [PNConfiguration] object with values from this builder.

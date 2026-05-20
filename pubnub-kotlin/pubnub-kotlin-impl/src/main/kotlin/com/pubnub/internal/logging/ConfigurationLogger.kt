@@ -70,6 +70,13 @@ object ConfigurationLogger {
                     }})"
                 } ?: NOT_SET
             ),
+            "loggedMessageContentMaxBytes" to (
+                if (configuration.loggedMessageContentMaxBytes <= 0) {
+                    "disabled (content not logged; pn_mfp + totalBytes still emitted)"
+                } else {
+                    "${configuration.loggedMessageContentMaxBytes} bytes"
+                }
+            ),
             // Network and proxy settings
             "proxy" to (configuration.proxy?.toString() ?: NOT_SET),
             "proxySelector" to (configuration.proxySelector?.toString() ?: NOT_SET),

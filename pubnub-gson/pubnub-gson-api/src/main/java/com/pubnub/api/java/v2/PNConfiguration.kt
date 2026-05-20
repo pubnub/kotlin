@@ -351,6 +351,15 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
         val customLoggers: List<CustomLogger>?
 
         /**
+         * Maximum size, in UTF-8 bytes, of message content rendered into the publish/signal/subscribe debug log entry.
+         *
+         * Set to `0` to suppress the content field entirely. Negative values are tolerated and behave the same as `0`.
+         *
+         * Defaults to `500`.
+         */
+        val loggedMessageContentMaxBytes: Int
+
+        /**
          * Maximum number of idle connections to keep in the OkHttp connection pool.
          *
          * When set to 0, connection pooling is disabled and connections are closed immediately after use.
@@ -653,6 +662,15 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
          * Use it if your slf4j implementation like logback, log4j2, etc. can't meet your specific logging requirements.
          */
         fun customLoggers(customLoggers: List<CustomLogger>?): Builder
+
+        /**
+         * Maximum size, in UTF-8 bytes, of message content rendered into the publish/signal/subscribe debug log entry.
+         *
+         * Set to `0` to suppress the content field entirely. Negative values are tolerated and behave the same as `0`.
+         *
+         * Defaults to `500`.
+         */
+        fun loggedMessageContentMaxBytes(loggedMessageContentMaxBytes: Int): Builder
 
         /**
          * Maximum number of idle connections to keep in the OkHttp connection pool.
