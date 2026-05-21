@@ -10,7 +10,7 @@ import com.pubnub.api.logging.LogMessageContent
  */
 object LogMessageFormatter {
     private val prettyGson: Gson by lazy {
-        GsonBuilder().setPrettyPrinting().create()
+        GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()
     }
 
     /**
