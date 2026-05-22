@@ -479,6 +479,53 @@ class CompositeLoggerTest {
     }
 
     @Test
+    fun `isDebugEnabled returns true when a custom logger throws but another reports debug enabled`() {
+        every { mockCustomLogger1.name } returns "FailingLogger1"
+        every { mockCustomLogger1.isDebugEnabled() } throws RuntimeException("isDebugEnabled blew up")
+        every { mockCustomLogger2.name } returns "WorkingLogger2"
+        every { mockCustomLogger2.isDebugEnabled() } returns true
+        every { mockSlf4jLogger.isDebugEnabled } returns false
+
+        val compositeLogger = CompositeLogger(
+            slf4jLogger = mockSlf4jLogger,
+            location = testLocation,
+            pnInstanceId = testInstanceId,
+            toPortalLogger = mockToPortalLogger,
+            customLoggers = listOf(mockCustomLogger1, mockCustomLogger2),
+        )
+        every { mockToPortalLogger.isDebugEnabled() } returns false
+
+        val result = compositeLogger.isDebugEnabled()
+
+        assertEquals(true, result)
+        verify { mockSlf4jLogger.error(match<String> { it.contains("FailingLogger1") && it.contains("isDebugEnabled") }) }
+        verify { mockToPortalLogger.error(any()) }
+    }
+
+    @Test
+    fun `isDebugEnabled returns true when all custom loggers throw and primary sinks are debug-disabled`() {
+        every { mockCustomLogger1.name } returns "FailingLogger1"
+        every { mockCustomLogger1.isDebugEnabled() } throws RuntimeException("custom1 blew up")
+        every { mockCustomLogger2.name } returns "FailingLogger2"
+        every { mockCustomLogger2.isDebugEnabled() } throws RuntimeException("custom2 blew up")
+        every { mockSlf4jLogger.isDebugEnabled } returns false
+
+        val compositeLogger = CompositeLogger(
+            slf4jLogger = mockSlf4jLogger,
+            location = testLocation,
+            pnInstanceId = testInstanceId,
+            toPortalLogger = mockToPortalLogger,
+            customLoggers = listOf(mockCustomLogger1, mockCustomLogger2),
+        )
+        every { mockToPortalLogger.isDebugEnabled() } returns false
+
+        val result = compositeLogger.isDebugEnabled()
+
+        assertEquals(true, result)
+        verify { mockSlf4jLogger.error(match<String> { it.contains("FailingLogger1") }) }
+    }
+
+    @Test
     fun `should override existing pubNubId and logLevel in original message`() {
         val compositeLogger = CompositeLogger(
             slf4jLogger = mockSlf4jLogger,

@@ -75,37 +75,7 @@ class PublishEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<List<Any>> {
         val plaintextJson: String = toJson(message)
         val encryptedString: String? = pubnub.cryptoModuleWithLogConfig?.encryptString(plaintextJson)
-        val fingerprintInput: String = encryptedString
-            ?: getMessageFingerprintInput(message, pubnub.mapper, preComputedJson = plaintextJson)
-
-        val logContent = prepareMessageLogContent(
-            plaintext = message,
-            cap = pubnub.configuration.logContentConfig.loggedMessageContentMaxBytes,
-            mapper = pubnub.mapper,
-            fingerprintInput = fingerprintInput,
-            preComputedPlaintextJson = plaintextJson,
-        )
-
-        log.debug(
-            LogMessage(
-                message = LogMessageContent.Object(
-                    arguments = mapOf(
-                        "message" to logContent.display,
-                        "pn_mfp" to logContent.pnMfp,
-                        "totalBytes" to logContent.totalBytes,
-                        "channel" to channel,
-                        "shouldStore" to (shouldStore ?: true),
-                        "meta" to (meta ?: ""),
-                        "usePost" to usePost,
-                        "ttl" to (ttl ?: 0),
-                        "replicate" to replicate,
-                        "customMessageType" to (customMessageType ?: "")
-                    ),
-                    operation = this::class.simpleName
-                ),
-                details = "Publish API call"
-            )
-        )
+        logPublishApiCall(plaintextJson, encryptedString)
 
         addQueryParams(queryParams)
 
@@ -196,7 +166,46 @@ class PublishEndpoint internal constructor(
 
     override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.PUBLISH
 
-    // region Parameters
+    /**
+     * Emits the "Publish API call" debug record. LOGGING ONLY — no side effects, no
+     * externally-visible state. Gated on isDebugEnabled() because fingerprint + content
+     * prep each walk the full plaintext (multi-MB on the 2 MiB ceiling); skip when no
+     * sink will consume the record.
+     */
+    private fun logPublishApiCall(plaintextJson: String, encryptedString: String?) {
+        if (log.isDebugEnabled()) {
+            val fingerprintInput: String = encryptedString
+                ?: getMessageFingerprintInput(message, pubnub.mapper, preComputedJson = plaintextJson)
+            val logContent = prepareMessageLogContent(
+                plaintext = message,
+                cap = pubnub.configuration.logContentConfig.loggedMessageContentMaxBytes,
+                mapper = pubnub.mapper,
+                fingerprintInput = fingerprintInput,
+                preComputedPlaintextJson = plaintextJson,
+            )
+
+            log.debug(
+                LogMessage(
+                    message = LogMessageContent.Object(
+                        arguments = mapOf(
+                            "message" to logContent.display,
+                            "pn_mfp" to logContent.pnMfp,
+                            "totalBytes" to logContent.totalBytes,
+                            "channel" to channel,
+                            "shouldStore" to (shouldStore ?: true),
+                            "meta" to (meta ?: ""),
+                            "usePost" to usePost,
+                            "ttl" to (ttl ?: 0),
+                            "replicate" to replicate,
+                            "customMessageType" to (customMessageType ?: "")
+                        ),
+                        operation = this::class.simpleName
+                    ),
+                    details = "Publish API call"
+                )
+            )
+        }
+    }
 
     /**
      * Add query params to passed HashMap
@@ -213,7 +222,6 @@ class PublishEndpoint internal constructor(
         customMessageType?.let { queryParams[CUSTOM_MESSAGE_TYPE_QUERY_PARAM] = it }
         queryParams["seqn"] = pubnub.publishSequenceManager.nextSequence().toString()
     }
-    // endregion
 
     private fun toJson(message: Any): String = pubnub.mapper.toJson(message)
 

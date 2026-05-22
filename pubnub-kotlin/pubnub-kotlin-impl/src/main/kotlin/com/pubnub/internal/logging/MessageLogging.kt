@@ -28,7 +28,11 @@ internal fun getMessageFingerprintInput(
 ): String =
     when (value) {
         is String -> value
-        is JsonPrimitive -> if (value.isString) value.asString else (preComputedJson ?: mapper.toJson(value))
+        is JsonPrimitive -> if (value.isString) {
+            value.asString
+        } else {
+            (preComputedJson ?: mapper.toJson(value))
+        }
         else -> preComputedJson ?: mapper.toJson(value)
     }
 

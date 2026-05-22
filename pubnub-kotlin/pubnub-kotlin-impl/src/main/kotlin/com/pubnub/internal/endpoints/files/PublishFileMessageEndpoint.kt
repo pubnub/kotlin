@@ -56,37 +56,8 @@ open class PublishFileMessageEndpoint(
         val notification = FileUploadNotification(message, pnFile)
         val plaintextJson: String = pubnub.mapper.toJson(notification)
         val encryptedString: String? = pubnub.cryptoModuleWithLogConfig?.encryptString(plaintextJson)
-        val fingerprintInput: String = encryptedString
-            ?: getMessageFingerprintInput(notification, pubnub.mapper, preComputedJson = plaintextJson)
 
-        val logContent = prepareMessageLogContent(
-            plaintext = notification,
-            cap = pubnub.configuration.logContentConfig.loggedMessageContentMaxBytes,
-            mapper = pubnub.mapper,
-            fingerprintInput = fingerprintInput,
-            preComputedPlaintextJson = plaintextJson,
-        )
-
-        log.debug(
-            LogMessage(
-                message = LogMessageContent.Object(
-                    arguments = mapOf(
-                        "channel" to channel,
-                        "fileName" to pnFile.name,
-                        "fileId" to pnFile.id,
-                        "message" to logContent.display,
-                        "pn_mfp" to logContent.pnMfp,
-                        "totalBytes" to logContent.totalBytes,
-                        "meta" to (meta ?: ""),
-                        "ttl" to (ttl ?: 0),
-                        "shouldStore" to (shouldStore ?: true),
-                        "customMessageType" to (customMessageType ?: "")
-                    ),
-                    operation = this::class.simpleName
-                ),
-                details = "PublishFileMessage API call",
-            )
-        )
+        logPublishFileMessageApiCall(notification, plaintextJson, encryptedString)
 
         val messageAsString = encryptedString?.quoted() ?: plaintextJson
         meta?.let {
@@ -125,6 +96,52 @@ open class PublishFileMessageEndpoint(
     override fun isSubKeyRequired(): Boolean = true
 
     override fun isPubKeyRequired(): Boolean = true
+
+    /**
+     * Emits the "PublishFileMessage API call" debug record. LOGGING ONLY — no side effects, no
+     * externally-visible state. Gated on isDebugEnabled() because fingerprint + content prep
+     * each walk the full plaintext (non-trivial on the 2 MiB ceiling); skip when no sink will
+     * consume the record.
+     */
+    private fun logPublishFileMessageApiCall(
+        notification: FileUploadNotification,
+        plaintextJson: String,
+        encryptedString: String?,
+    ) {
+        if (log.isDebugEnabled()) {
+            val fingerprintInput: String = encryptedString
+                ?: getMessageFingerprintInput(notification, pubnub.mapper, preComputedJson = plaintextJson)
+
+            val logContent = prepareMessageLogContent(
+                plaintext = notification,
+                cap = pubnub.configuration.logContentConfig.loggedMessageContentMaxBytes,
+                mapper = pubnub.mapper,
+                fingerprintInput = fingerprintInput,
+                preComputedPlaintextJson = plaintextJson,
+            )
+
+            log.debug(
+                LogMessage(
+                    message = LogMessageContent.Object(
+                        arguments = mapOf(
+                            "channel" to channel,
+                            "fileName" to pnFile.name,
+                            "fileId" to pnFile.id,
+                            "message" to logContent.display,
+                            "pn_mfp" to logContent.pnMfp,
+                            "totalBytes" to logContent.totalBytes,
+                            "meta" to (meta ?: ""),
+                            "ttl" to (ttl ?: 0),
+                            "shouldStore" to (shouldStore ?: true),
+                            "customMessageType" to (customMessageType ?: "")
+                        ),
+                        operation = this::class.simpleName
+                    ),
+                    details = "PublishFileMessage API call",
+                )
+            )
+        }
+    }
 
     internal class Factory(private val pubNub: PubNubImpl) {
         fun create(

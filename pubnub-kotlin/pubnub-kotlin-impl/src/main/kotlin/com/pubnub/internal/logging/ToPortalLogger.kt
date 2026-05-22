@@ -34,6 +34,9 @@ class ToPortalLogger(
         onLog(ERROR, message)
     }
 
+    override fun isDebugEnabled(): Boolean =
+        isLoggingToPortalEnabled() && shouldLogMessageForThisUser() && shouldLogMessageForThisLevel(DEBUG)
+
     private fun onLog(level: Level, message: LogMessage) {
         if (isLoggingToPortalEnabled() && shouldLogMessageForThisUser() && shouldLogMessageForThisLevel(level)) {
             // todo implement sending to portal

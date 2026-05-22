@@ -117,7 +117,11 @@ class CustomPnHttpLoggingInterceptor(
                 }
 
                 if (truncated) {
-                    val totalDesc = if (totalBytes >= 0) "$totalBytes bytes total" else "total size unknown"
+                    val totalDesc = if (totalBytes >= 0) {
+                        "$totalBytes bytes total"
+                    } else {
+                        "total size unknown"
+                    }
                     "$text… [truncated at $maxLoggedBodyBytes bytes, $totalDesc]"
                 } else {
                     text

@@ -85,4 +85,6 @@ private class NoOpLogger(private val clazz: Class<*>) : PNLogger {
         // Emergency fallback - print to System.err only in critical cases
         System.err.println("CRITICAL: Logger failure in ${clazz.simpleName}: ${message.message}")
     }
+
+    override fun isDebugEnabled(): Boolean = false
 }

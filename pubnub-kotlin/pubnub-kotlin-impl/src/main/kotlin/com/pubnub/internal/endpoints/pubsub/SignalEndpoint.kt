@@ -44,32 +44,8 @@ class SignalEndpoint internal constructor(
     override fun doWork(queryParams: HashMap<String, String>): Call<List<Any>> {
         // Serialize once; reused for the retrofit signal call and the log helper.
         val plaintextJson: String = pubnub.mapper.toJson(message)
-        // Server-rule fingerprint input: string-typed values unquoted, everything else as
-        // canonical JSON — same rule as subscribe so JsonPrimitive("hello") matches.
-        val fingerprintInput: String = getMessageFingerprintInput(message, pubnub.mapper, preComputedJson = plaintextJson)
-        val logContent = prepareMessageLogContent(
-            plaintext = message,
-            cap = pubnub.configuration.logContentConfig.loggedMessageContentMaxBytes,
-            mapper = pubnub.mapper,
-            fingerprintInput = fingerprintInput,
-            preComputedPlaintextJson = plaintextJson,
-        )
 
-        log.debug(
-            LogMessage(
-                message = LogMessageContent.Object(
-                    arguments = mapOf(
-                        "channel" to channel,
-                        "message" to logContent.display,
-                        "pn_mfp" to logContent.pnMfp,
-                        "totalBytes" to logContent.totalBytes,
-                        "customMessageType" to (customMessageType ?: "")
-                    ),
-                    operation = this::class.simpleName
-                ),
-                details = "Signal API call",
-            )
-        )
+        logSignalApiCall(plaintextJson)
 
         customMessageType?.let { customMessageTypeNotNull ->
             queryParams[CUSTOM_MESSAGE_TYPE_QUERY_PARAM] = customMessageTypeNotNull
@@ -82,6 +58,43 @@ class SignalEndpoint internal constructor(
             message = plaintextJson,
             options = queryParams,
         )
+    }
+
+    /**
+     * Emits the "Signal API call" debug record. LOGGING ONLY — no side effects, no
+     * externally-visible state. Gated on isDebugEnabled() because fingerprint + content
+     * prep each walk the full plaintext (non-trivial on the 2 MiB ceiling); skip when
+     * no sink will consume the record.
+     */
+    private fun logSignalApiCall(plaintextJson: String) {
+        if (log.isDebugEnabled()) {
+            // Server-rule fingerprint input: string-typed values unquoted, everything else as
+            // canonical JSON — same rule as subscribe so JsonPrimitive("hello") matches.
+            val fingerprintInput: String = getMessageFingerprintInput(message, pubnub.mapper, preComputedJson = plaintextJson)
+            val logContent = prepareMessageLogContent(
+                plaintext = message,
+                cap = pubnub.configuration.logContentConfig.loggedMessageContentMaxBytes,
+                mapper = pubnub.mapper,
+                fingerprintInput = fingerprintInput,
+                preComputedPlaintextJson = plaintextJson,
+            )
+
+            log.debug(
+                LogMessage(
+                    message = LogMessageContent.Object(
+                        arguments = mapOf(
+                            "channel" to channel,
+                            "message" to logContent.display,
+                            "pn_mfp" to logContent.pnMfp,
+                            "totalBytes" to logContent.totalBytes,
+                            "customMessageType" to (customMessageType ?: "")
+                        ),
+                        operation = this::class.simpleName
+                    ),
+                    details = "Signal API call",
+                )
+            )
+        }
     }
 
     override fun createResponse(input: Response<List<Any>>): PNPublishResult =
