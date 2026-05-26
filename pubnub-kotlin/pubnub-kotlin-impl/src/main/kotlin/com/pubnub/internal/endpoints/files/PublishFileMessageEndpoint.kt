@@ -97,12 +97,6 @@ open class PublishFileMessageEndpoint(
 
     override fun isPubKeyRequired(): Boolean = true
 
-    /**
-     * Emits the "PublishFileMessage API call" debug record. LOGGING ONLY — no side effects, no
-     * externally-visible state. Gated on isDebugEnabled() because fingerprint + content prep
-     * each walk the full plaintext (non-trivial on the 2 MiB ceiling); skip when no sink will
-     * consume the record.
-     */
     private fun logPublishFileMessageApiCall(
         notification: FileUploadNotification,
         plaintextJson: String,

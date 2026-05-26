@@ -166,12 +166,6 @@ class PublishEndpoint internal constructor(
 
     override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.PUBLISH
 
-    /**
-     * Emits the "Publish API call" debug record. LOGGING ONLY — no side effects, no
-     * externally-visible state. Gated on isDebugEnabled() because fingerprint + content
-     * prep each walk the full plaintext (multi-MB on the 2 MiB ceiling); skip when no
-     * sink will consume the record.
-     */
     private fun logPublishApiCall(plaintextJson: String, encryptedString: String?) {
         if (log.isDebugEnabled()) {
             val fingerprintInput: String = encryptedString
