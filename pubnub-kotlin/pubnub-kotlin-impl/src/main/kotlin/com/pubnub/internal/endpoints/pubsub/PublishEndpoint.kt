@@ -190,7 +190,7 @@ class PublishEndpoint internal constructor(
                         arguments = mapOf(
                             "message" to logContent.display,
                             "pn_mfp" to logContent.pnMfp,
-                            "totalBytes" to logContent.totalBytes,
+                            "pn_totalBytes" to logContent.totalBytes,
                             "channel" to channel,
                             "shouldStore" to (shouldStore ?: true),
                             "meta" to (meta ?: ""),

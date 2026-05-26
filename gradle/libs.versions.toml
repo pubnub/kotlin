@@ -12,7 +12,7 @@ ktlint = "12.1.0"
 dokka = "2.1.0"
 kotlinx_datetime = "0.7.1"
 kotlinx_coroutines = "1.10.2"
-pubnub_js = "10.2.6"
+pubnub_js = "11.0.1"
 pubnub_swift = "10.1.2"
 
 [libraries]

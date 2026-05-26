@@ -9,15 +9,15 @@ package com.pubnub.api.logging
  *
  * @property loggedMessageContentMaxBytes Maximum size, in UTF-8 bytes, of message content
  *   rendered into the publish/signal/subscribe debug log entry. Set to `0` to replace the
- *   content field with a placeholder marker noting that content logging is disabled.
- *   Negative values are tolerated and behave the same as `0`.
+ *   content field with the placeholder marker `[...]`. Set to a negative value (e.g. `-1`)
+ *   to log the full content with no size limit.
  *
  *   Defaults to `500`.
  *
  * @property loggedHttpResponseMaxBytes Maximum size, in bytes, of the HTTP response body
  *   peeked into the network-response debug log entry. Set to `0` to replace the body field
- *   with a placeholder marker noting that body logging is disabled. Negative values are
- *   tolerated and behave the same as `0`.
+ *   with the placeholder marker `[...]`. Set to a negative value (e.g. `-1`) to log the full
+ *   response body with no size limit.
  *
  *   Defaults to `2000`.
  */

@@ -1,6 +1,7 @@
 package com.pubnub.internal.logging
 
 import com.google.gson.JsonPrimitive
+import com.pubnub.api.logging.LogContentConfig
 import com.pubnub.internal.managers.MapperManager
 import java.nio.ByteBuffer
 import java.nio.charset.CodingErrorAction
@@ -42,8 +43,7 @@ internal data class MessageLogContent(
     val totalBytes: Int,
 )
 
-private const val ZERO_CAP_MARKER =
-    "[content not logged: set loggedMessageContentMaxBytes (bytes) > 0 to see content]"
+private const val ZERO_CAP_MARKER = "[...]"
 
 /**
  * Builds the message-content fields for a publish/signal/subscribe debug log entry.
@@ -58,8 +58,15 @@ private const val ZERO_CAP_MARKER =
  * pass that string via [preComputedPlaintextJson] to avoid a second `mapper.toJson(plaintext)`
  * call — non-trivial for large messages on the 2 MiB ceiling.
  *
- * Negative caps are treated as `0`: the helper returns the zero-cap marker, so a misconfigured
- * caller never crashes the log path.
+ * Cap semantics:
+ *  - `cap == 0`              → zero-cap marker (content suppressed; pn_mfp + totalBytes still emit).
+ *  - `cap < 0` (e.g. `-1`)   → unlimited; full plaintext is rendered without truncation.
+ *  - `cap > 0`               → UTF-8 byte budget; oversize plaintext is truncated. The truncation
+ *                              suffix (`… [truncated at N bytes, M total — raise … to see more]`)
+ *                              is appended only when [cap] equals the SDK default
+ *                              ([LogContentConfig.DEFAULT_LOGGED_MESSAGE_CONTENT_MAX_BYTES]) — for
+ *                              caller-customized caps the user has already chosen the budget, so
+ *                              the "raise the property" hint is noise.
  */
 internal fun prepareMessageLogContent(
     plaintext: Any,
@@ -73,7 +80,7 @@ internal fun prepareMessageLogContent(
     val totalBytes = plaintextBytes.size
     val mfp = pnMfp(fingerprintInput)
 
-    if (cap <= 0) {
+    if (cap == 0) {
         return MessageLogContent(
             display = ZERO_CAP_MARKER,
             pnMfp = mfp,
@@ -81,12 +88,15 @@ internal fun prepareMessageLogContent(
         )
     }
 
-    return if (totalBytes <= cap) {
+    return if (cap < 0 || totalBytes <= cap) {
         MessageLogContent(display = plaintext, pnMfp = mfp, totalBytes = totalBytes)
     } else {
         val truncated = truncateUtf8(plaintextBytes, cap)
-        val display =
-            "$truncated… [truncated at $cap bytes, $totalBytes total — raise loggedMessageContentMaxBytes (bytes) to see more]"
+        val display = if (cap == LogContentConfig.DEFAULT_LOGGED_MESSAGE_CONTENT_MAX_BYTES) {
+            "$truncated… [truncated at $cap bytes, $totalBytes total — set loggedMessageContentMaxBytes (bytes) to a higher value to see more, 0 to disable message logging, or a negative value to remove the limit]"
+        } else {
+            "$truncated…"
+        }
         MessageLogContent(display = display, pnMfp = mfp, totalBytes = totalBytes)
     }
 }

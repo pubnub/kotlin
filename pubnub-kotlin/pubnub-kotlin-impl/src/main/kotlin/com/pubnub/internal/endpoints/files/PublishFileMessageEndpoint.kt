@@ -129,7 +129,7 @@ open class PublishFileMessageEndpoint(
                             "fileId" to pnFile.id,
                             "message" to logContent.display,
                             "pn_mfp" to logContent.pnMfp,
-                            "totalBytes" to logContent.totalBytes,
+                            "pn_totalBytes" to logContent.totalBytes,
                             "meta" to (meta ?: ""),
                             "ttl" to (ttl ?: 0),
                             "shouldStore" to (shouldStore ?: true),

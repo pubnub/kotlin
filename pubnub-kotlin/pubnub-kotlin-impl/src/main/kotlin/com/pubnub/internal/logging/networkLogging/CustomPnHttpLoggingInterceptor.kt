@@ -2,6 +2,7 @@ package com.pubnub.internal.logging.networkLogging
 
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.logging.HttpMethod
+import com.pubnub.api.logging.LogContentConfig
 import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.internal.logging.PNLogger
@@ -98,16 +99,26 @@ class CustomPnHttpLoggingInterceptor(
         // Catch Throwable so a bad cap or unchecked decode error in the logging path never
         // aborts the real HTTP request — consistent with describeRequestBody().
         val body: String? = response.body?.let { responseBody ->
-            if (maxLoggedBodyBytes <= 0L) {
-                return@let "[body not logged: disabled (loggedHttpResponseMaxBytes=$maxLoggedBodyBytes)]"
+            if (maxLoggedBodyBytes == 0L) {
+                return@let "[...]"
             }
             val contentType = responseBody.contentType()?.toString() ?: ""
+            // Negative cap (e.g. -1) means "unlimited" — peek the full body. Long.MAX_VALUE is
+            // safe as a peek upper bound; peekBody buffers from the source up to whatever the
+            // body actually contains.
+            val peekLimit = if (maxLoggedBodyBytes < 0L) {
+                Long.MAX_VALUE
+            } else {
+                maxLoggedBodyBytes
+            }
 
             try {
-                val peeked = response.peekBody(maxLoggedBodyBytes)
+                val peeked = response.peekBody(peekLimit)
                 val totalBytes = responseBody.contentLength()
-                val truncated = totalBytes > maxLoggedBodyBytes ||
-                    (totalBytes < 0 && peeked.contentLength() == maxLoggedBodyBytes)
+                val truncated = maxLoggedBodyBytes > 0L && (
+                    totalBytes > maxLoggedBodyBytes ||
+                        (totalBytes < 0 && peeked.contentLength() == maxLoggedBodyBytes)
+                )
 
                 val text = if (contentType.contains("application/json") || contentType.startsWith("text/")) {
                     val charset = responseBody.contentType()?.charset() ?: Charsets.UTF_8
@@ -117,12 +128,16 @@ class CustomPnHttpLoggingInterceptor(
                 }
 
                 if (truncated) {
-                    val totalDesc = if (totalBytes >= 0) {
-                        "$totalBytes bytes total"
+                    if (maxLoggedBodyBytes == LogContentConfig.DEFAULT_LOGGED_HTTP_RESPONSE_MAX_BYTES.toLong()) {
+                        val totalDesc = if (totalBytes >= 0) {
+                            "$totalBytes bytes total"
+                        } else {
+                            "total size unknown"
+                        }
+                        "$text… [truncated at $maxLoggedBodyBytes bytes, $totalDesc — set loggedHttpResponseMaxBytes (bytes) to a higher value to see more, 0 to disable HTTP response body logging, or a negative value to remove the limit]"
                     } else {
-                        "total size unknown"
+                        "$text…"
                     }
-                    "$text… [truncated at $maxLoggedBodyBytes bytes, $totalDesc]"
                 } else {
                     text
                 }

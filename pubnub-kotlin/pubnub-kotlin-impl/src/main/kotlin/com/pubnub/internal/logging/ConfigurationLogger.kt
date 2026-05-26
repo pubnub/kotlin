@@ -70,8 +70,8 @@ object ConfigurationLogger {
                     }})"
                 } ?: NOT_SET
             ),
-            "loggedMessageContentMaxBytes" to "${configuration.logContentConfig.loggedMessageContentMaxBytes} bytes",
-            "loggedHttpResponseMaxBytes" to "${configuration.logContentConfig.loggedHttpResponseMaxBytes} bytes",
+            "loggedMessageContentMaxBytes" to formatLogByteCap(configuration.logContentConfig.loggedMessageContentMaxBytes),
+            "loggedHttpResponseMaxBytes" to formatLogByteCap(configuration.logContentConfig.loggedHttpResponseMaxBytes),
             // Network and proxy settings
             "proxy" to (configuration.proxy?.toString() ?: NOT_SET),
             "proxySelector" to (configuration.proxySelector?.toString() ?: NOT_SET),
@@ -98,4 +98,11 @@ object ConfigurationLogger {
             )
         )
     }
+
+    private fun formatLogByteCap(value: Int): String =
+        when {
+            value == 0 -> "disabled"
+            value < 0 -> "unlimited"
+            else -> "$value bytes"
+        }
 }
