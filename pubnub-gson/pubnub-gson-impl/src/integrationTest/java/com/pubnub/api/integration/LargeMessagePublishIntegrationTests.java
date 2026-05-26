@@ -110,7 +110,7 @@ public class LargeMessagePublishIntegrationTests extends BaseIntegrationTest {
         final String expectedChannel = randomChannel();
         final String largeMessage = generateLargeString(50_000);
 
-        pubNub.addListener(new SubscribeCallback() {
+        SubscribeCallback listener = new SubscribeCallback() {
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
                 // Intentionally left empty
@@ -122,17 +122,23 @@ public class LargeMessagePublishIntegrationTests extends BaseIntegrationTest {
                     success.set(true);
                 }
             }
-        });
+        };
+        pubNub.addListener(listener);
 
-        subscribeToChannel(pubNub, expectedChannel);
+        try {
+            subscribeToChannel(pubNub, expectedChannel);
 
-        pubNub.publish()
-                .message(largeMessage)
-                .channel(expectedChannel)
-                .usePOST(true)
-                .sync();
+            pubNub.publish()
+                    .message(largeMessage)
+                    .channel(expectedChannel)
+                    .usePOST(true)
+                    .sync();
 
-        Awaitility.await().atMost(Durations.TEN_SECONDS).untilTrue(success);
+            Awaitility.await().atMost(Durations.TEN_SECONDS).untilTrue(success);
+        } finally {
+            pubNub.removeListener(listener);
+            pubNub.unsubscribeAll();
+        }
     }
 
     @Test

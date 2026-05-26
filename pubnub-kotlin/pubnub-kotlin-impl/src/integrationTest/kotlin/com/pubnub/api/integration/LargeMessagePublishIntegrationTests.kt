@@ -91,28 +91,32 @@ class LargeMessagePublishIntegrationTests : BaseIntegrationTest() {
 
         val observer = createPubNub {}
 
-        pubnub.addListener(
-            object : EventListener {
-                override fun message(
-                    pubnub: PubNub,
-                    event: PNMessageResult,
-                ) {
-                    if (event.message.asString == largeMessage) {
-                        success.set(true)
-                    }
+        val listener = object : EventListener {
+            override fun message(
+                pubnub: PubNub,
+                event: PNMessageResult,
+            ) {
+                if (event.message.asString == largeMessage) {
+                    success.set(true)
                 }
-            },
-        )
+            }
+        }
+        pubnub.addListener(listener)
 
-        pubnub.subscribeToBlocking(expectedChannel)
+        try {
+            pubnub.subscribeToBlocking(expectedChannel)
 
-        observer.publish(
-            message = largeMessage,
-            channel = expectedChannel,
-            usePost = true,
-        ).sync()
+            observer.publish(
+                message = largeMessage,
+                channel = expectedChannel,
+                usePost = true,
+            ).sync()
 
-        success.listen()
+            success.listen()
+        } finally {
+            pubnub.removeListener(listener)
+            pubnub.unsubscribeAll()
+        }
     }
 
     @Test
