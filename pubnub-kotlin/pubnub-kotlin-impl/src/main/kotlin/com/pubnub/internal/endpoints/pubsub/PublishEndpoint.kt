@@ -142,7 +142,6 @@ class PublishEndpoint internal constructor(
                     )
                 )
                 val payload: Any = encryptedString ?: message
-                enforceMaxPublishBodySize(bodySizeBytes)
                 retrofitManager.publishService.publishWithPostV2(
                     configuration.publishKey,
                     configuration.subscribeKey,
