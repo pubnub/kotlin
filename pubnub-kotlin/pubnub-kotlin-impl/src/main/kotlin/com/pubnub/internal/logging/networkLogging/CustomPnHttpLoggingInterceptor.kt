@@ -103,17 +103,9 @@ class CustomPnHttpLoggingInterceptor(
                 return@let "[...]"
             }
             val contentType = responseBody.contentType()?.toString() ?: ""
-            // Negative cap (e.g. -1) means "unlimited" — peek the full body. Long.MAX_VALUE is
-            // safe as a peek upper bound; peekBody buffers from the source up to whatever the
-            // body actually contains.
-            val peekLimit = if (maxLoggedBodyBytes < 0L) {
-                Long.MAX_VALUE
-            } else {
-                maxLoggedBodyBytes
-            }
 
             try {
-                val peeked = response.peekBody(peekLimit)
+                val peeked = response.peekBody(maxLoggedBodyBytes)
                 val totalBytes = responseBody.contentLength()
                 val truncated = maxLoggedBodyBytes > 0L && (
                     totalBytes > maxLoggedBodyBytes ||
@@ -134,7 +126,7 @@ class CustomPnHttpLoggingInterceptor(
                         } else {
                             "total size unknown"
                         }
-                        "$text… [truncated at $maxLoggedBodyBytes bytes, $totalDesc — set loggedHttpResponseMaxBytes (bytes) to a higher value to see more, 0 to disable HTTP response body logging, or a negative value to remove the limit]"
+                        "$text… [truncated at $maxLoggedBodyBytes bytes, $totalDesc — set loggedHttpResponseMaxBytes (bytes) to a higher value to see more, or 0 to disable HTTP response body logging]"
                     } else {
                         "$text…"
                     }

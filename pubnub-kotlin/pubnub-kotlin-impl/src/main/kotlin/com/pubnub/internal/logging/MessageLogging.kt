@@ -58,9 +58,9 @@ private const val ZERO_CAP_MARKER = "[...]"
  * pass that string via [preComputedPlaintextJson] to avoid a second `mapper.toJson(plaintext)`
  * call — non-trivial for large messages on the 2 MiB ceiling.
  *
- * Cap semantics:
+ * Cap semantics ([cap] is always `>= 0`; [LogContentConfig] coerces negatives to `0`):
  *  - `cap == 0`              → zero-cap marker (content suppressed; pn_mfp + totalBytes still emit).
- *  - `cap < 0` (e.g. `-1`)   → unlimited; full plaintext is rendered without truncation.
+ *  - `cap == Int.MAX_VALUE`  → effectively unlimited; full plaintext is rendered without truncation.
  *  - `cap > 0`               → UTF-8 byte budget; oversize plaintext is truncated. The truncation
  *                              suffix (`… [truncated at N bytes, M total — raise … to see more]`)
  *                              is appended only when [cap] equals the SDK default
@@ -88,12 +88,12 @@ internal fun prepareMessageLogContent(
         )
     }
 
-    return if (cap < 0 || totalBytes <= cap) {
+    return if (totalBytes <= cap) {
         MessageLogContent(display = plaintext, pnMfp = mfp, totalBytes = totalBytes)
     } else {
         val truncated = truncateUtf8(plaintextBytes, cap)
         val display = if (cap == LogContentConfig.DEFAULT_LOGGED_MESSAGE_CONTENT_MAX_BYTES) {
-            "$truncated… [truncated at $cap bytes, $totalBytes total — set loggedMessageContentMaxBytes (bytes) to a higher value to see more, 0 to disable message logging, or a negative value to remove the limit]"
+            "$truncated… [truncated at $cap bytes, $totalBytes total — set loggedMessageContentMaxBytes (bytes) to a higher value to see more, or 0 to disable message logging]"
         } else {
             "$truncated…"
         }

@@ -100,9 +100,9 @@ object ConfigurationLogger {
     }
 
     private fun formatLogByteCap(value: Int): String =
-        when {
-            value == 0 -> "disabled"
-            value < 0 -> "unlimited"
+        when (value) {
+            0 -> "disabled"
+            Int.MAX_VALUE -> "unlimited"
             else -> "$value bytes"
         }
 }
