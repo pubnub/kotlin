@@ -19,12 +19,10 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
-import org.junit.Ignore
 import org.junit.Test
 import java.util.concurrent.atomic.AtomicBoolean
 
 // make sure feature is enabled on keyset publish_v2_enabled=1 publish_v2_max_size=2097152
-@Ignore("Large message (V2 publish) integration tests. Remove @Ignore to run on demand.")
 class LargeMessagePublishIntegrationTests : BaseIntegrationTest() {
     @Test
     fun testPublishLargeMessageOverV1Limit_Post() {

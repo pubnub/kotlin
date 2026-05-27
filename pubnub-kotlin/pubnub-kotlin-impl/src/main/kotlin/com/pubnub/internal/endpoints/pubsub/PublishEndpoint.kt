@@ -99,7 +99,7 @@ class PublishEndpoint internal constructor(
                         )
                     )
                 )
-                enforceV2PostBodySizeLimit(bodySizeBytes)
+                enforceMaxPublishBodySize(bodySizeBytes)
                 retrofitManager.publishService.publishWithPostV2(
                     configuration.publishKey,
                     configuration.subscribeKey,
@@ -119,6 +119,8 @@ class PublishEndpoint internal constructor(
             }
         } else {
             // === GET PATH ===
+            enforceMaxPublishBodySize(bodySizeBytes)
+
             val stringifiedMessage = encryptedString?.quoted() ?: plaintextJson
             val v1GetCall = retrofitManager.publishService.publish(
                 configuration.publishKey,
@@ -140,7 +142,7 @@ class PublishEndpoint internal constructor(
                     )
                 )
                 val payload: Any = encryptedString ?: message
-                enforceV2PostBodySizeLimit(bodySizeBytes)
+                enforceMaxPublishBodySize(bodySizeBytes)
                 retrofitManager.publishService.publishWithPostV2(
                     configuration.publishKey,
                     configuration.subscribeKey,
@@ -227,7 +229,7 @@ class PublishEndpoint internal constructor(
      * sometimes okHttp client get socket termination instead of 413 error from server. We want to present error
      * to the customer instead of terminating socket.
      */
-    private fun enforceV2PostBodySizeLimit(bodySizeBytes: Int) {
+    private fun enforceMaxPublishBodySize(bodySizeBytes: Int) {
         if (bodySizeBytes > PUBLISH_V2_MAX_POST_BODY_BYTES) {
             throw PubNubException(PubNubError.MESSAGE_TOO_LARGE)
         }

@@ -14,7 +14,6 @@ import org.awaitility.Durations;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -27,7 +26,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-@Ignore("Large message (V2 publish) integration tests. Remove @Ignore to run on demand.")
+// make sure feature is enabled on keyset publish_v2_enabled=1 publish_v2_max_size=2097152
 public class LargeMessagePublishIntegrationTests extends BaseIntegrationTest {
 
     @Override
