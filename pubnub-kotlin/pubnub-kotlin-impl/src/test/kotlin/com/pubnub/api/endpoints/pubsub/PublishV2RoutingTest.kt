@@ -341,8 +341,7 @@ class PublishV2RoutingTest {
 
     @Test
     fun `GET with body exceeding 2MB rejects client-side before any network call`() {
-        // Same validation applies when usePost=false and the message is large enough
-        // to trigger V2 fallback — the 2MB limit check still fires before the V2 call.
+        // 2 MiB cap fires before any network call is built — neither V1 GET nor V2 POST run.
         val message = "x".repeat(2_097_151)
 
         val publish = PublishEndpoint(
@@ -360,9 +359,7 @@ class PublishV2RoutingTest {
             assertEquals(0, e.statusCode)
         }
 
-        // V1 GET is called to measure path (which exceeds V1 limit), then oversize check fires
-        // before V2 POST is invoked
-        verify(exactly = 1) { publishServiceMock.publish(any(), any(), any(), any(), any()) }
+        verify(exactly = 0) { publishServiceMock.publish(any(), any(), any(), any(), any()) }
         verify(exactly = 0) { publishServiceMock.publishWithPostV2(any(), any(), any(), any(), any()) }
         verify(exactly = 0) { publishServiceMock.publishWithPost(any(), any(), any(), any(), any()) }
     }
