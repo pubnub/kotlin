@@ -467,7 +467,6 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
 
         pubNub.addListener(new SubscribeCallback() {
 
-
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus) {
                 // Intentionally left empty
