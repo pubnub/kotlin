@@ -104,6 +104,38 @@ class CompositeLogger(
         }
     }
 
+    override fun isDebugEnabled(): Boolean {
+        return slf4jLogger.isDebugEnabled ||
+            toPortalLogger?.isDebugEnabled() == true ||
+            customLoggers?.any { isDebugEnabledSafely(it) } == true
+    }
+
+    private fun isDebugEnabledSafely(logger: CustomLogger): Boolean =
+        runCatching { logger.isDebugEnabled() }
+            .onFailure { reportCustomLoggerFailure(logger.name, "isDebugEnabled()", it) }
+            .getOrDefault(true)
+
+    private fun reportCustomLoggerFailure(loggerName: String, action: String, t: Throwable) {
+        try {
+            val logMessage = LogMessage(
+                message = LogMessageContent.Error(
+                    type = this::class.java.simpleName,
+                    message = "Custom logger $loggerName $action failed: ${t.message}",
+                    stack = null
+                ),
+                type = LogMessageType.ERROR,
+                location = "CompositeLogger",
+                pubNubId = pnInstanceId,
+                logLevel = Level.ERROR
+            )
+            slf4jLogger.error(logMessage.simplified())
+            toPortalLogger?.error(logMessage)
+        } catch (_: Exception) {
+            // Primary sinks themselves failed — there is nothing more we can safely do
+            // without risking the caller's operation.
+        }
+    }
+
     private fun sendMessageToCustomLogger(logger: CustomLogger, message: LogMessage) {
         when (message.logLevel) {
             Level.TRACE -> {
@@ -135,31 +167,17 @@ class CompositeLogger(
         }
     }
 
-    private inline fun delegateToCustomLoggers(action: (CustomLogger) -> Unit) {
+    private fun delegateToCustomLoggers(action: (CustomLogger) -> Unit) {
         customLoggers?.forEach { logger ->
             try {
                 action(logger)
-            } catch (e: Exception) {
-                // Log through primary logger if custom logger fails
-                // but don't let it crash the logging system
-                try {
-                    val logMessage = LogMessage(
-                        message = LogMessageContent.Error(
-                            type = this::class.java.simpleName,
-                            message = "Custom logger ${logger.name} failed: ${e.message}",
-                            stack = null
-                        ),
-                        type = LogMessageType.ERROR,
-                        location = "CompositeLogger",
-                        pubNubId = pnInstanceId,
-                        logLevel = Level.ERROR
-                    )
-                    slf4jLogger.error(logMessage.simplified())
-                    toPortalLogger?.error(logMessage)
-                } catch (ignored: Exception) {
-                    // If even primary logger fails, there's nothing more we can do
-                    // Don't let logging crash the application
-                }
+            } catch (t: Throwable) {
+                // A custom logger throwing must not crash the SDK call. Catch Throwable so
+                // unchecked errors (LinkageError, AssertionError, etc.) from a misbehaving
+                // logger cannot unwind through the SDK caller — e.g. aborting an in-flight
+                // HTTP request from CustomPnHttpLoggingInterceptor purely because logging
+                // failed. Report through primary sinks and continue with remaining loggers.
+                reportCustomLoggerFailure(logger.name, "log dispatch", t)
             }
         }
     }

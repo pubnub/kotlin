@@ -127,13 +127,12 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
 
         final String expectedChannel = randomChannel();
 
-        subscribeToChannel(pubNub, expectedChannel);
-
         pubNub.addListener(new SubscribeCallback() {
-
-
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
+                if (status.getCategory() != PNStatusCategory.PNDisconnectedCategory) {
+                    return;
+                }
                 boolean channelSubscribed = false;
                 for (int i = 0; i < pubnub.getSubscribedChannels().size(); i++) {
                     if (pubnub.getSubscribedChannels().get(i).contains(expectedChannel)) {
@@ -148,14 +147,17 @@ public class SubscribeIntegrationTests extends BaseIntegrationTest {
 
             @Override
             public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult message) {
-                success.set(true);
             }
 
             @Override
             public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult presence) {
-                success.set(true);
             }
         });
+
+        subscribeToChannel(pubNub, expectedChannel);
+
+        // pause to make sure that we reach receiving state so we can observe PNDisconnectedCategory when unsubscribing
+        pause(2);
 
         unsubscribeFromChannel(pubNub, expectedChannel);
 

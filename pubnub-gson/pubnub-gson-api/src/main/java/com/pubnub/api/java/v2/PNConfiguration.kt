@@ -5,6 +5,7 @@ import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.logging.CustomLogger
+import com.pubnub.api.logging.LogContentConfig
 import com.pubnub.api.retry.RetryConfiguration
 import okhttp3.Authenticator
 import okhttp3.CertificatePinner
@@ -351,6 +352,17 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
         val customLoggers: List<CustomLogger>?
 
         /**
+         * Controls the SDK's per-record log content (e.g. message-content cap, network-response cap).
+         *
+         * Logging *delivery* — sinks, levels, formatting — is configured via an SLF4J implementation
+         * (e.g. logback) or a [CustomLogger]. This setting only governs how much detail the SDK
+         * renders into each log record before it reaches the logger.
+         *
+         * Defaults to a [LogContentConfig] with default field values.
+         */
+        val logContentConfig: LogContentConfig
+
+        /**
          * Maximum number of idle connections to keep in the OkHttp connection pool.
          *
          * When set to 0, connection pooling is disabled and connections are closed immediately after use.
@@ -653,6 +665,17 @@ interface PNConfiguration : com.pubnub.api.v2.PNConfiguration {
          * Use it if your slf4j implementation like logback, log4j2, etc. can't meet your specific logging requirements.
          */
         fun customLoggers(customLoggers: List<CustomLogger>?): Builder
+
+        /**
+         * Controls the SDK's per-record log content (e.g. message-content cap, network-response cap).
+         *
+         * Logging *delivery* — sinks, levels, formatting — is configured via an SLF4J implementation
+         * (e.g. logback) or a [CustomLogger]. This setting only governs how much detail the SDK
+         * renders into each log record before it reaches the logger.
+         *
+         * Defaults to a [LogContentConfig] with default field values.
+         */
+        fun logContentConfig(logContentConfig: LogContentConfig): Builder
 
         /**
          * Maximum number of idle connections to keep in the OkHttp connection pool.

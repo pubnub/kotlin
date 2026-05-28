@@ -22,6 +22,8 @@ import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.PubNubUtil
 import com.pubnub.internal.extension.tryDecryptMessage
 import com.pubnub.internal.logging.LoggerManager
+import com.pubnub.internal.logging.getMessageFingerprintInput
+import com.pubnub.internal.logging.prepareMessageLogContent
 import com.pubnub.internal.managers.DuplicationManager
 import com.pubnub.internal.models.consumer.pubsub.objects.PNObjectEventMessage
 import com.pubnub.internal.models.consumer.pubsub.objects.toApi
@@ -116,14 +118,23 @@ internal class SubscribeMessageProcessor(
 
             return when (message.type) {
                 null -> {
+                    if (extractedMessage != null) {
+                        logIncomingMessage(channel, message.payload, extractedMessage, "Subscribe message")
+                    }
                     PNMessageResult(result, extractedMessage!!, customMessageType, error)
                 }
 
                 TYPE_MESSAGE -> {
+                    if (extractedMessage != null) {
+                        logIncomingMessage(channel, message.payload, extractedMessage, "Subscribe message")
+                    }
                     PNMessageResult(result, extractedMessage!!, customMessageType, error)
                 }
 
                 TYPE_SIGNAL -> {
+                    if (extractedMessage != null) {
+                        logIncomingMessage(channel, message.payload, extractedMessage, "Subscribe signal")
+                    }
                     PNSignalResult(result, extractedMessage!!, customMessageType)
                 }
 
@@ -182,6 +193,34 @@ internal class SubscribeMessageProcessor(
 
                 else -> null
             }
+        }
+    }
+
+    private fun logIncomingMessage(channel: String, payload: JsonElement?, extracted: Any, details: String) {
+        if (log.isDebugEnabled()) {
+            // Server-rule fingerprint input: a string-typed JsonPrimitive (encrypted ciphertext or
+            // a string message) is hashed unquoted; everything else is hashed as canonical JSON.
+            val fingerprintInput: String = getMessageFingerprintInput(payload, pubnub.mapper)
+            val logContent = prepareMessageLogContent(
+                plaintext = extracted,
+                cap = pubnub.configuration.logContentConfig.loggedMessageContentMaxBytes,
+                mapper = pubnub.mapper,
+                fingerprintInput = fingerprintInput,
+            )
+            log.debug(
+                LogMessage(
+                    message = LogMessageContent.Object(
+                        arguments = mapOf(
+                            "channel" to channel,
+                            "message" to logContent.display,
+                            "pn_mfp" to logContent.pnMfp,
+                            "pn_totalBytes" to logContent.totalBytes,
+                        ),
+                        operation = this::class.simpleName,
+                    ),
+                    details = details,
+                )
+            )
         }
     }
 

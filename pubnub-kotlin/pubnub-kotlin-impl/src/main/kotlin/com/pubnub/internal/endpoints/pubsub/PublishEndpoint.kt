@@ -8,6 +8,7 @@ import com.pubnub.api.logging.LogMessage
 import com.pubnub.api.logging.LogMessageContent
 import com.pubnub.api.models.consumer.PNPublishResult
 import com.pubnub.api.retry.RetryableEndpointGroup
+import com.pubnub.api.v2.PNConfiguration.Companion.isValid
 import com.pubnub.internal.EndpointCore
 import com.pubnub.internal.PubNubImpl
 import com.pubnub.internal.crypto.encryptString
@@ -16,6 +17,8 @@ import com.pubnub.internal.extension.quoted
 import com.pubnub.internal.extension.valueString
 import com.pubnub.internal.logging.LoggerManager
 import com.pubnub.internal.logging.PNLogger
+import com.pubnub.internal.logging.getMessageFingerprintInput
+import com.pubnub.internal.logging.prepareMessageLogContent
 import retrofit2.Call
 import retrofit2.Response
 
@@ -37,6 +40,27 @@ class PublishEndpoint internal constructor(
 
     companion object {
         internal const val CUSTOM_MESSAGE_TYPE_QUERY_PARAM = "custom_message_type"
+
+        // POST body limit: nginx client_max_body_size = 32k
+        internal const val PUBLISH_V1_MAX_POST_BODY_BYTES = 32_768
+
+        /**
+         * Publish V2 endpoint max body size.
+         * Server rejects anything above 2MB (HTTP 413).
+         */
+        internal const val PUBLISH_V2_MAX_POST_BODY_BYTES = 2 * 1024 * 1024
+
+        // GET path limit: nginx large_client_header_buffers = 32k
+        // Request line: "GET {path} HTTP/1.1\r\n" has 15 bytes overhead
+        // Maximum path size: 32,768 - 16 = 32,752 bytes
+        // (nginx limit is exclusive, so we subtract 16 instead of 15)
+        internal const val PUBLISH_V1_MAX_GET_PATH_BYTES = 32_752
+
+        // Signature overhead added by SignatureInterceptor when secret key is configured:
+        // - "&timestamp=XXXXXXXXXX" = 21 bytes (11 + 10 digit Unix timestamp in seconds)
+        // - "&signature=v2.XXX..." = 57 bytes (11 + 3 + 43 base64 HMAC-SHA256)
+        // Total: 78 bytes
+        internal const val SIGNATURE_QUERY_PARAMS_OVERHEAD_BYTES = 78
     }
 
     override fun validateParams() {
@@ -49,47 +73,86 @@ class PublishEndpoint internal constructor(
     override fun getAffectedChannels() = listOf(channel)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<List<Any>> {
-        log.debug(
-            LogMessage(
-                message = LogMessageContent.Object(
-                    arguments = mapOf(
-                        "message" to message,
-                        "channel" to channel,
-                        "shouldStore" to (shouldStore ?: true),
-                        "meta" to (meta ?: ""),
-                        "usePost" to usePost,
-                        "ttl" to (ttl ?: 0),
-                        "replicate" to replicate,
-                        "customMessageType" to (customMessageType ?: "")
-                    ),
-                    operation = this::class.simpleName
-                ),
-                details = "Publish API call"
-            )
-        )
+        val plaintextJson: String = toJson(message)
+        val encryptedString: String? = pubnub.cryptoModuleWithLogConfig?.encryptString(plaintextJson)
+        logPublishApiCall(plaintextJson, encryptedString)
 
         addQueryParams(queryParams)
 
-        return if (usePost) {
-            val payload = getBodyMessage(message)
+        // Body size for V1/V2 limit checks. Compute once from the payload Retrofit will actually
+        // send: ciphertext re-quoted as a JSON String for encrypted publishes, otherwise the
+        // plaintext JSON we already have. Avoids a second mapper.toJson(message) on multi-MB
+        // unencrypted payloads — the toByteArray pass is cheap; a second Gson walk is not.
+        val bodySizeBytes: Int = (encryptedString?.let { pubnub.mapper.toJson(it) } ?: plaintextJson)
+            .toByteArray(Charsets.UTF_8).size
 
-            retrofitManager.publishService.publishWithPost(
-                configuration.publishKey,
-                configuration.subscribeKey,
-                channel,
-                payload,
-                queryParams,
-            )
+        return if (usePost) {
+            val payload: Any = encryptedString ?: message
+
+            if (bodySizeBytes > PUBLISH_V1_MAX_POST_BODY_BYTES) {
+                // Too large for publish v1 → use publish v2 (POST)
+                log.debug(
+                    LogMessage(
+                        message = LogMessageContent.Text(
+                            "POST body size ($bodySizeBytes bytes) exceeds publish v1 limit ($PUBLISH_V1_MAX_POST_BODY_BYTES bytes). " +
+                                "Using V2 POST endpoint."
+                        )
+                    )
+                )
+                enforceMaxPublishBodySize(bodySizeBytes)
+                retrofitManager.publishService.publishWithPostV2(
+                    configuration.publishKey,
+                    configuration.subscribeKey,
+                    channel,
+                    payload,
+                    queryParams,
+                )
+            } else {
+                // Body fits in V1 POST
+                retrofitManager.publishService.publishWithPost(
+                    configuration.publishKey,
+                    configuration.subscribeKey,
+                    channel,
+                    payload,
+                    queryParams,
+                )
+            }
         } else {
-            // HTTP GET request
-            val stringifiedMessage = getParamMessage(message)
-            retrofitManager.publishService.publish(
+            // === GET PATH ===
+            enforceMaxPublishBodySize(bodySizeBytes)
+
+            val stringifiedMessage = encryptedString?.quoted() ?: plaintextJson
+            val v1GetCall = retrofitManager.publishService.publish(
                 configuration.publishKey,
                 configuration.subscribeKey,
                 channel,
                 stringifiedMessage,
                 queryParams,
             )
+            val pathLengthBytes = calculateV1GetPathLengthBytes(v1GetCall)
+
+            if (pathLengthBytes > PUBLISH_V1_MAX_GET_PATH_BYTES) {
+                // Too large for publish v1 → use publish v2 (POST), ignore usePost=false
+                log.debug(
+                    LogMessage(
+                        message = LogMessageContent.Text(
+                            "GET path length ($pathLengthBytes bytes) exceeds publish v1 limit ($PUBLISH_V1_MAX_GET_PATH_BYTES bytes). " +
+                                "Ignoring usePost=false and using V2 POST endpoint."
+                        )
+                    )
+                )
+                val payload: Any = encryptedString ?: message
+                retrofitManager.publishService.publishWithPostV2(
+                    configuration.publishKey,
+                    configuration.subscribeKey,
+                    channel,
+                    payload,
+                    queryParams,
+                )
+            } else {
+                // Path fits in GET
+                v1GetCall
+            }
         }
     }
 
@@ -104,7 +167,40 @@ class PublishEndpoint internal constructor(
 
     override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.PUBLISH
 
-    // region Parameters
+    private fun logPublishApiCall(plaintextJson: String, encryptedString: String?) {
+        if (log.isDebugEnabled()) {
+            val fingerprintInput: String = encryptedString
+                ?: getMessageFingerprintInput(message, pubnub.mapper, preComputedJson = plaintextJson)
+            val logContent = prepareMessageLogContent(
+                plaintext = message,
+                cap = pubnub.configuration.logContentConfig.loggedMessageContentMaxBytes,
+                mapper = pubnub.mapper,
+                fingerprintInput = fingerprintInput,
+                preComputedPlaintextJson = plaintextJson,
+            )
+
+            log.debug(
+                LogMessage(
+                    message = LogMessageContent.Object(
+                        arguments = mapOf(
+                            "message" to logContent.display,
+                            "pn_mfp" to logContent.pnMfp,
+                            "pn_totalBytes" to logContent.totalBytes,
+                            "channel" to channel,
+                            "shouldStore" to (shouldStore ?: true),
+                            "meta" to (meta ?: ""),
+                            "usePost" to usePost,
+                            "ttl" to (ttl ?: 0),
+                            "replicate" to replicate,
+                            "customMessageType" to (customMessageType ?: "")
+                        ),
+                        operation = this::class.simpleName
+                    ),
+                    details = "Publish API call"
+                )
+            )
+        }
+    }
 
     /**
      * Add query params to passed HashMap
@@ -121,14 +217,46 @@ class PublishEndpoint internal constructor(
         customMessageType?.let { queryParams[CUSTOM_MESSAGE_TYPE_QUERY_PARAM] = it }
         queryParams["seqn"] = pubnub.publishSequenceManager.nextSequence().toString()
     }
-    // endregion
-
-    // region Message parsers
-    private fun getBodyMessage(message: Any): Any = pubnub.cryptoModuleWithLogConfig?.encryptString(toJson(message)) ?: message
-
-    private fun getParamMessage(message: Any): String =
-        pubnub.cryptoModuleWithLogConfig?.encryptString(toJson(message))?.quoted() ?: toJson(message)
 
     private fun toJson(message: Any): String = pubnub.mapper.toJson(message)
-    // endregion
+
+    /**
+     * There is a need to have this client side validation. The thing is that when OkHttp send request with
+     * Expect: 100-continue header it waits for 100 Continue status code that server never sends.
+     * In Curl there is mechanism that waits for 100 Continue status code only 1 sec and then when there is no 413 error
+     * it starts transferring data. When there is no Expect: 100-continue header for messages over 2MiB then
+     * sometimes okHttp client get socket termination instead of 413 error from server. We want to present error
+     * to the customer instead of terminating socket.
+     */
+    private fun enforceMaxPublishBodySize(bodySizeBytes: Int) {
+        if (bodySizeBytes > PUBLISH_V2_MAX_POST_BODY_BYTES) {
+            throw PubNubException(PubNubError.MESSAGE_TOO_LARGE)
+        }
+    }
+
+    /**
+     * Calculate the path+query length by asking Retrofit to build the actual request.
+     * This measures what appears in the HTTP request line: "GET {path}?{query} HTTP/1.1\r\n"
+     * We only measure path+query, not the full URL (scheme/host are not part of the request line).
+     *
+     * Note: SignatureInterceptor adds &timestamp and &signature query params AFTER this calculation,
+     * so we must account for that overhead when a secret key is configured.
+     *
+     * @return total length in bytes including signature overhead
+     */
+    private fun calculateV1GetPathLengthBytes(v1GetCall: Call<List<Any>>): Int {
+        val url = v1GetCall.request().url
+        // Path + query string (what appears in the HTTP request line)
+        // URL is ASCII (percent-encoded), so String length matches byte length.
+        val pathAndQuery = url.encodedPath + (url.encodedQuery?.let { "?$it" } ?: "")
+
+        // Account for signature overhead added by SignatureInterceptor
+        val signatureOverhead = if (configuration.secretKey.isValid()) {
+            SIGNATURE_QUERY_PARAMS_OVERHEAD_BYTES
+        } else {
+            0
+        }
+
+        return pathAndQuery.length + signatureOverhead
+    }
 }

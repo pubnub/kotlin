@@ -5,6 +5,7 @@ import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.logging.CustomLogger
+import com.pubnub.api.logging.LogContentConfig
 import com.pubnub.api.retry.RetryConfiguration
 import okhttp3.Authenticator
 import okhttp3.CertificatePinner
@@ -375,6 +376,17 @@ actual interface PNConfiguration {
      * Use it if your slf4j implementation like logback, log4j2, etc. can't meet your specific logging requirements.
      */
     val customLoggers: List<CustomLogger>?
+
+    /**
+     * Controls the SDK's per-record log content (e.g. message-content cap, network-response cap).
+     *
+     * Logging *delivery* — sinks, levels, formatting — is configured via an SLF4J implementation
+     * (e.g. logback) or a [CustomLogger]. This setting only governs how much detail the SDK
+     * renders into each log record before it reaches the logger.
+     *
+     * Defaults to a [LogContentConfig] with default field values.
+     */
+    val logContentConfig: LogContentConfig
 
     @Deprecated(
         level = DeprecationLevel.WARNING,
@@ -760,6 +772,17 @@ actual interface PNConfiguration {
          * Use it if your slf4j implementation like logback, log4j2, etc. can't meet your specific logging requirements.
          */
         var customLoggers: List<CustomLogger>?
+
+        /**
+         * Controls the SDK's per-record log content (e.g. message-content cap, network-response cap).
+         *
+         * Logging *delivery* — sinks, levels, formatting — is configured via an SLF4J implementation
+         * (e.g. logback) or a [CustomLogger]. This setting only governs how much detail the SDK
+         * renders into each log record before it reaches the logger.
+         *
+         * Defaults to a [LogContentConfig] with default field values.
+         */
+        var logContentConfig: LogContentConfig
 
         /**
          * Create a [PNConfiguration] object with values from this builder.

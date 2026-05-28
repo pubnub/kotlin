@@ -248,6 +248,11 @@ enum class PubNubError(private val code: Int, val message: String) {
     FILE_TOO_LARGE(
         code = 183,
         message = "File size exceeds the maximum allowed size for upload.",
+    ),
+
+    MESSAGE_TOO_LARGE(
+        code = 184,
+        message = "Message payload exceeds the maximum allowed size of 2 MiB.",
     )
 
     ;

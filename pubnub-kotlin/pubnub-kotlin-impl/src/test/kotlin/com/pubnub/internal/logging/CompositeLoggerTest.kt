@@ -321,6 +321,39 @@ class CompositeLoggerTest {
     }
 
     @Test
+    fun `should isolate custom logger failures when they throw a non-Exception Throwable`() {
+        every { mockCustomLogger1.name } returns "FailingLogger1"
+        every { mockCustomLogger1.info(logMessage = any()) } throws AssertionError("custom logger asserted")
+        every { mockCustomLogger2.name } returns "WorkingLogger2"
+
+        val customLoggers = listOf(mockCustomLogger1, mockCustomLogger2)
+        val compositeLogger = CompositeLogger(
+            slf4jLogger = mockSlf4jLogger,
+            location = testLocation,
+            pnInstanceId = testInstanceId,
+            toPortalLogger = mockToPortalLogger,
+            customLoggers = customLoggers
+        )
+
+        val testMessage = createTestLogMessage()
+
+        // Must not propagate the Throwable to the caller (e.g. an in-flight HTTP interceptor).
+        compositeLogger.info(testMessage)
+
+        // Primary sinks still ran.
+        verify { mockSlf4jLogger.info(any<String>()) }
+        verify { mockToPortalLogger.info(any()) }
+
+        // Subsequent custom loggers still received the message.
+        verify { mockCustomLogger2.info(logMessage = any()) }
+        verify { mockCustomLogger2.info(message = any<String>()) }
+
+        // Failure was reported through the primary sinks.
+        verify { mockSlf4jLogger.error(match<String> { it.contains("FailingLogger1") && it.contains("failed") }) }
+        verify { mockToPortalLogger.error(any()) }
+    }
+
+    @Test
     fun `should handle failure in error reporting`() {
         every { mockCustomLogger1.name } returns "FailingLogger"
         every { mockCustomLogger1.info(logMessage = any()) } throws RuntimeException("Logger failed")
@@ -476,6 +509,53 @@ class CompositeLoggerTest {
         // Verify required fields are preserved
         assertEquals("test-location", enhancedMessage.location)
         assertEquals(LogMessageType.TEXT, enhancedMessage.type)
+    }
+
+    @Test
+    fun `isDebugEnabled returns true when a custom logger throws but another reports debug enabled`() {
+        every { mockCustomLogger1.name } returns "FailingLogger1"
+        every { mockCustomLogger1.isDebugEnabled() } throws RuntimeException("isDebugEnabled blew up")
+        every { mockCustomLogger2.name } returns "WorkingLogger2"
+        every { mockCustomLogger2.isDebugEnabled() } returns true
+        every { mockSlf4jLogger.isDebugEnabled } returns false
+
+        val compositeLogger = CompositeLogger(
+            slf4jLogger = mockSlf4jLogger,
+            location = testLocation,
+            pnInstanceId = testInstanceId,
+            toPortalLogger = mockToPortalLogger,
+            customLoggers = listOf(mockCustomLogger1, mockCustomLogger2),
+        )
+        every { mockToPortalLogger.isDebugEnabled() } returns false
+
+        val result = compositeLogger.isDebugEnabled()
+
+        assertEquals(true, result)
+        verify { mockSlf4jLogger.error(match<String> { it.contains("FailingLogger1") && it.contains("isDebugEnabled") }) }
+        verify { mockToPortalLogger.error(any()) }
+    }
+
+    @Test
+    fun `isDebugEnabled returns true when all custom loggers throw and primary sinks are debug-disabled`() {
+        every { mockCustomLogger1.name } returns "FailingLogger1"
+        every { mockCustomLogger1.isDebugEnabled() } throws RuntimeException("custom1 blew up")
+        every { mockCustomLogger2.name } returns "FailingLogger2"
+        every { mockCustomLogger2.isDebugEnabled() } throws RuntimeException("custom2 blew up")
+        every { mockSlf4jLogger.isDebugEnabled } returns false
+
+        val compositeLogger = CompositeLogger(
+            slf4jLogger = mockSlf4jLogger,
+            location = testLocation,
+            pnInstanceId = testInstanceId,
+            toPortalLogger = mockToPortalLogger,
+            customLoggers = listOf(mockCustomLogger1, mockCustomLogger2),
+        )
+        every { mockToPortalLogger.isDebugEnabled() } returns false
+
+        val result = compositeLogger.isDebugEnabled()
+
+        assertEquals(true, result)
+        verify { mockSlf4jLogger.error(match<String> { it.contains("FailingLogger1") }) }
     }
 
     @Test

@@ -8,6 +8,7 @@ import com.pubnub.api.java.v2.PNConfiguration
 import com.pubnub.api.java.v2.PNConfigurationOverride
 import com.pubnub.api.logging.CustomLogger
 import com.pubnub.api.logging.LogConfig
+import com.pubnub.api.logging.LogContentConfig
 import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.crypto.CryptoModuleImpl
@@ -76,6 +77,7 @@ class PNConfigurationImpl(
     override val customLoggers: List<CustomLogger>? = null,
     override val connectionPoolMaxIdleConnections: Int = CONNECTION_POOL_MAX_IDLE_CONNECTIONS,
     override val connectionPoolKeepAliveDuration: Int = CONNECTION_POOL_KEEP_ALIVE_DURATION,
+    override val logContentConfig: LogContentConfig = LogContentConfig(),
 ) : PNConfiguration {
     companion object {
         const val DEFAULT_DEDUPE_SIZE = 100
@@ -427,6 +429,13 @@ class PNConfigurationImpl(
 
             override var connectionPoolKeepAliveDuration: Int = defaultConfiguration.connectionPoolKeepAliveDuration
 
+            override fun logContentConfig(logContentConfig: LogContentConfig): Builder {
+                this.logContentConfig = logContentConfig
+                return this
+            }
+
+            override var logContentConfig: LogContentConfig = defaultConfiguration.logContentConfig
+
             override fun build(): PNConfiguration {
                 return PNConfigurationImpl(
                     userId = userId,
@@ -469,7 +478,8 @@ class PNConfigurationImpl(
                     managePresenceListManually = managePresenceListManually,
                     customLoggers = customLoggers,
                     connectionPoolMaxIdleConnections = connectionPoolMaxIdleConnections,
-                    connectionPoolKeepAliveDuration = connectionPoolKeepAliveDuration
+                    connectionPoolKeepAliveDuration = connectionPoolKeepAliveDuration,
+                    logContentConfig = logContentConfig,
                 )
             }
         }
