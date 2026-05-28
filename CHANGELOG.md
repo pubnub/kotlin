@@ -1,3 +1,12 @@
+## v13.4.0
+May 28 2026
+
+#### Added
+- Send messages up to 2 MB.
+- Reject oversized publishes client-side with a clear error.
+- New LogContentConfig with loggedMessageContentMaxBytes + loggedHttpResponseMaxBytes (0 disables, Int.MAX_VALUE unlimited).
+- Fingerprint on publish, signal, subscribe and publishFileMessage debug logs.
+
 ## v13.3.0
 May 14 2026
 
