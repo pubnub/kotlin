@@ -171,7 +171,7 @@ class CompositeLogger(
         customLoggers?.forEach { logger ->
             try {
                 action(logger)
-            } catch (t:  Throwable) {
+            } catch (t: Throwable) {
                 // A custom logger throwing must not crash the SDK call. Catch Throwable so
                 // unchecked errors (LinkageError, AssertionError, etc.) from a misbehaving
                 // logger cannot unwind through the SDK caller — e.g. aborting an in-flight
